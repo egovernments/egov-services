@@ -1293,14 +1293,14 @@ public class PropertyMasterRepository {
 	 * @return {@link Boolean} True /False if code exists/doesn't Exists
 	 */
 	public Boolean checkUniqueCodeForMutation(String code) {
-		Boolean isExist =false;
+		Boolean isExist = false;
 		String query = MutationMasterBuilder.CHECK_UNIQUE_CODE;
 		int count = jdbcTemplate.queryForObject(query, new Object[] { code }, Integer.class);
 
 		if (count == 0)
-			 return isExist;
-		
-		isExist=true;
+			return isExist;
+
+		isExist = true;
 
 		return isExist;
 	}
@@ -1907,9 +1907,10 @@ public class PropertyMasterRepository {
 		return isExists;
 
 	}
-	
+
 	/**
 	 * checks whether guidance value boundary exists or not
+	 * 
 	 * @param tableName
 	 * @param tenantId
 	 * @param guidanceValue

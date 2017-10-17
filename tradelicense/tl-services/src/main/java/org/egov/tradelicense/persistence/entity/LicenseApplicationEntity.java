@@ -45,17 +45,10 @@ public class LicenseApplicationEntity {
 
 	private Long lastModifiedTime;
 
-	// private static List<LicenseFeeDetail> feeDetails;
-	//
-	// private static List<SupportDocument> supportDocuments;
-	//
-	// private List<LicenseFeeDetailEntity> feeDetailEntitys;
-	//
-	// private List<SupportDocumentEntity> supportDocumentEntitys;
-
 	public LicenseApplication toDomain() {
 
 		LicenseApplication licenseApplication = new LicenseApplication();
+		
 		AuditDetails auditDetails = new AuditDetails();
 
 		licenseApplication.setId(this.id);
@@ -80,31 +73,6 @@ public class LicenseApplicationEntity {
 		licenseApplication.setLicenseId(this.licenseId);
 
 		licenseApplication.setLicenseFee(this.licenseFee);
-
-		// feeDetails = new ArrayList<LicenseFeeDetail>();
-		//
-		// if (this.feeDetailEntitys != null) {
-		//
-		// for (LicenseFeeDetailEntity feeDetailEntity : this.feeDetailEntitys)
-		// {
-		//
-		// feeDetails.add(feeDetailEntity.toDomain());
-		// }
-		// }
-		//
-		// licenseApplication.setFeeDetails(feeDetails);
-		//
-		// supportDocuments = new ArrayList<SupportDocument>();
-		//
-		// if (this.supportDocumentEntitys != null) {
-		//
-		// for (SupportDocumentEntity supportDocumentEntity :
-		// this.supportDocumentEntitys) {
-		//
-		// supportDocuments.add(supportDocumentEntity.toDomain());
-		// }
-		// }
-		// licenseApplication.setSupportDocuments(supportDocuments);
 
 		auditDetails.setCreatedBy(this.createdBy);
 
@@ -156,18 +124,6 @@ public class LicenseApplicationEntity {
 		this.createdTime = (auditDetails == null || auditDetails.getCreatedTime() == null) ? System.currentTimeMillis() : auditDetails.getCreatedTime();
 
 		this.lastModifiedTime = (auditDetails == null || auditDetails.getLastModifiedTime() == null) ? System.currentTimeMillis() : auditDetails.getLastModifiedTime();
-		
-//		this.setCreatedBy(licenseApplication.getAuditDetails() == null ? null
-//				: licenseApplication.getAuditDetails().getCreatedBy());
-//
-//		this.setCreatedTime(licenseApplication.getAuditDetails() == null ? System.currentTimeMillis()
-//				: licenseApplication.getAuditDetails().getCreatedTime());
-//
-//		this.setLastModifiedBy(licenseApplication.getAuditDetails() == null ? null
-//				: licenseApplication.getAuditDetails().getLastModifiedBy());
-//
-//		this.setLastModifiedTime(licenseApplication.getAuditDetails() == null ? System.currentTimeMillis()
-//				: licenseApplication.getAuditDetails().getLastModifiedTime());
 
 		return this;
 	}

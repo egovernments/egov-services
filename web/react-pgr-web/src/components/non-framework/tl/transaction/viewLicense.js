@@ -363,7 +363,7 @@ class ViewLicense extends Component{
                     <TableRow selectable={false} key={index}>
                       <TableRowColumn style={styles.customColumnStyle}>{task.lastupdatedSince}</TableRowColumn>
                       <TableRowColumn style={styles.customColumnStyle} className="hidden-xs">{task.senderName}</TableRowColumn>
-                      <TableRowColumn style={styles.customColumnStyle}>{task.status} - {task.action}</TableRowColumn>
+                      <TableRowColumn style={styles.customColumnStyle}>{task.status} {task.action ? ` - ${task.action}` : ''}</TableRowColumn>
                       <TableRowColumn style={styles.customColumnStyle}>{userObj ? userObj.name : ''}</TableRowColumn>
                       <TableRowColumn style={styles.customColumnStyle}>{task.comments}</TableRowColumn>
                     </TableRow>
@@ -458,7 +458,11 @@ class ViewLicense extends Component{
       let status = viewLicense.applications[0].statusName;
       return(
        <div className="text-center">
-         <RaisedButton label={status == 'Acknowledged' ? translate('tl.view.collect.application.fee') : translate('tl.view.collect.license.fee')} primary={true} onClick={(e)=>{this.props.setRoute('/transaction/collection/collection/TRADELICENSE/'+encodeURIComponent(viewLicense.applicationNumber))}}/>
+        {status == 'Acknowledged' ?
+          <RaisedButton label={translate('tl.view.collect.application.fee')} primary={true} onClick={(e)=>{this.props.setRoute('/transaction/collection/collection/TLAPPLNFEE/'+encodeURIComponent(viewLicense.applicationNumber))}}/>
+         :
+         <RaisedButton label={translate('tl.view.collect.license.fee')} primary={true} onClick={(e)=>{this.props.setRoute('/transaction/collection/collection/TRADELICENSE/'+encodeURIComponent(viewLicense.applicationNumber))}}/>
+       }
        </div>
       )
    }
@@ -466,7 +470,7 @@ class ViewLicense extends Component{
   updateWorkFlow = (item, state) => {
     // console.log('came to workflow');
     let {setLoadingStatus, viewLicense} = this.props;
-    if((item.key === 'Reject' || item.key === 'Cancel') && !state.approvalComments){
+    if((item.key === 'Reject' || item.key === 'Cancel') && (state.approvalComments === undefined || !state.approvalComments.trim())){
       self.handleError(`${translate('tl.view.workflow.comments.mandatory')+item.key}`);
       return;
     }
@@ -492,15 +496,17 @@ class ViewLicense extends Component{
 
     // console.log(!state.departmentId, !state.designationId, !state.positionId);
     if(item.key === 'Forward' || item.key === 'Submit'){
-      if(this.state.fieldInspection && (!viewLicense.quantity || !viewLicense.fieldInspectionReport)){
-          if(!viewLicense.quantity){
+      if(this.state.fieldInspection){
+        // console.log(viewLicense.quantity, viewLicense.fieldInspectionReport);
+          if(viewLicense.quantity === undefined || !viewLicense.quantity.toString().trim()){
             self.handleError(translate('tl.view.licenses.groups.TradeValuefortheUOM.mandatory'));
-          }else if(!viewLicense.fieldInspectionReport){
+            return;
+          }else if(viewLicense.fieldInspectionReport === undefined || !viewLicense.fieldInspectionReport.trim()){
             self.handleError(translate('tl.view.fieldInspection.fieldInspectionreport.mandatory'));
+            return;
           }
-          return;
       }
-      //validate pattern for UOM and licensefee
+      //validate pattern for UOM
       var pattern = /^\d{0,10}(\.\d{1,2})?$/;
       if(this.state.fieldInspection && viewLicense.quantity){
         if (pattern.test(viewLicense.quantity)) {
@@ -985,7 +991,7 @@ class ViewLicense extends Component{
 
           {!viewLicense.isLegacy ? this.showHistory() : ''}
           {!viewLicense.isLegacy && this.state.workflowEnabled && this.state.fieldInspection ? this.fieldInspection() : ''}
-          {!viewLicense.isLegacy && this.state.workflowEnabled && viewLicense.applications && viewLicense.applications[0].state_id && (viewLicense.applications[0].statusName != 'Acknowledged' || viewLicense.applications[0].statusName != 'Final approval Completed' || viewLicense.applications[0].statusName != 'License Issued') ?
+          {!viewLicense.isLegacy && this.state.workflowEnabled && viewLicense.applications && viewLicense.applications[0].state_id && viewLicense.applications[0].statusName != 'Acknowledged' && viewLicense.applications[0].statusName != 'Final approval Completed' && viewLicense.applications[0].statusName != 'License Issued' ?
           <div>
             <Card>
               <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >

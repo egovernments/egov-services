@@ -11,6 +11,7 @@ import org.egov.propertyWorkflow.config.PropertiesManager;
 import org.egov.propertyWorkflow.consumer.WorkFlowUtil;
 import org.egov.propertyWorkflow.models.RequestInfo;
 import org.egov.propertyWorkflow.models.WorkflowDetailsRequestInfo;
+import org.egov.tracer.http.LogAwareRestTemplate;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +25,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -39,7 +39,7 @@ public class ProcessWorkflowServiceTest {
 	PropertiesManager propertiesManager;
 
 	@Autowired
-	RestTemplate restTemplate;
+	LogAwareRestTemplate restTemplate;
 
 	@Test
 	public void startWorkflowTest() {

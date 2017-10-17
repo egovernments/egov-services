@@ -356,36 +356,74 @@ public class PropertiesManager {
 	private String taxRates;
 
 	private String taxPeriods;
-	
+
 	private String invalidOwners;
-	
+
 	private String emptyDemandsError;
 
 	private String createNotice;
-	
+
 	private String createPropertyUserValidator;
-	
+
 	private String defaultUserPassword;
-	
+
 	private String specialNoticeAction;
-	
+
 	private String demandSearchType;
 
 	private String boundarySearch;
-	
+
 	private String revenueBoundaryType;
-	
+
 	private String locationBoundaryType;
-	
+
 	private String adminBoundaryType;
-	
+
 	private String locationHierarchyType;
-	
+
 	private String adminHierarchyType;
-	
+
 	private String appConfigKey;
-	
+
 	private String heirarchyTypeError;
+
+	private String vacancyRemissionPropertyDueException;
+
+	private String vacancyRemissionInvalidPeriodException;
+
+	private String createValidatedVacancyRemission;
+
+	private String updateValidatedVacancyRemission;
+
+	private String vacancyRemissionCreateWorkflow;
+
+	private String vacancyRemissionUpdateWorkflow;
+
+	private String vacancyRemissionApproveWorkflow;
+
+	private String invalidPropertyTypeException;
+
+	private String invalidTodateGreaterthanFromDate;
+
+	private String fromOrToDateLessthanCurrentDate;
+
+	private String invalidDateValidation;
+
+	private String invalidSearchParameterException;
+
+	private String cancelAction;
+
+	private String invalidTaxCalculation;
+
+	private String invalidTaxHead;
+
+	private String invalidTenent;
+	
+	private String userCreatepath;
+	
+	private String userUpdatepath;
+	
+	private String rejectAction;
 
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
@@ -475,6 +513,14 @@ public class PropertiesManager {
 
 	public String getUserSearchpath() {
 		return environment.getProperty("egov.services.egov_user.searchpath");
+	} 
+	
+	public String getUserCreatepath() {
+		return environment.getProperty("egov.services.egov_user.createpath");
+	}
+	
+	public String getUserUpdatepath() {
+		return environment.getProperty("egov.services.egov_user.updatepath");
 	}
 
 	// #application properties
@@ -1037,7 +1083,7 @@ public class PropertiesManager {
 		// TODO Auto-generated method stub
 		return environment.getProperty("egov.propertytax.property.invalidtaxperiods");
 	}
-	
+
 	public String getInvalidOwners() {
 		// TODO Auto-generated method stub
 		return environment.getProperty("invalid.owners");
@@ -1050,7 +1096,7 @@ public class PropertiesManager {
 	public String getEmptyDemandsError() {
 		return environment.getProperty("invalid.demands");
 	}
-	
+
 	public String getCreatePropertyUserValidator() {
 		return environment.getProperty("egov.propertytax.create.property.user.validated");
 	}
@@ -1059,44 +1105,112 @@ public class PropertiesManager {
 		return environment.getProperty("default.user.password");
 	}
 
+	public String getVacancyRemissionPropertyDueException() {
+		return environment.getProperty("vacancy.remission.propertydue.exception");
+	}
+
+	public String getVacancyRemissionInvalidPeriodException() {
+		return environment.getProperty("vacancy.remission.invalid.period.exception");
+	}
+
 	public String getSpecialNoticeAction() {
 		return environment.getProperty("special.notice.action");
 	}
 
-	public String getBoundarySearch(){
+	public String getBoundarySearch() {
 		return environment.getProperty("egov.services.egov_location.search");
 	}
-	
-	public String getRevenueBoundaryType(){
+
+	public String getRevenueBoundaryType() {
 		return environment.getProperty("revenue.boundarytype");
 	}
-	
-	public String getLocationBoundaryType(){
+
+	public String getLocationBoundaryType() {
 		return environment.getProperty("location.boundarytype");
 	}
-	
-	public String getAdminBoundaryType(){
+
+	public String getAdminBoundaryType() {
 		return environment.getProperty("admin.boundarytype");
 	}
-	
-	public String getLocationHierarchyType(){
+
+	public String getLocationHierarchyType() {
 		return environment.getProperty("location.hierarchytype");
 	}
-	
-	public String getAdminHierarchyType(){
+
+	public String getAdminHierarchyType() {
 		return environment.getProperty("admin.hierarchytype");
 	}
-	
-	public String getAppConfigKey(){
+
+	public String getAppConfigKey() {
 		return environment.getProperty("appconfiguration.key");
 	}
-	
-	public String getHeirarchyTypeError(){
+
+	public String getHeirarchyTypeError() {
 		return environment.getProperty("invalid.property.appconfiguration.hierarchy");
 	}
 
 	public String getDemandSearchType() {
 		return environment.getProperty("demand.search.type");
+	}
+
+	public String getCreateValidatedVacancyRemission() {
+		return environment.getProperty("egov.propertytax.property.vacancyremission.create.validated");
+	}
+
+	public String getUpdateValidatedVacancyRemission() {
+		return environment.getProperty("egov.propertytax.property.vacancyremission.update.validated");
+	}
+
+	public String getVacancyRemissionCreateWorkflow() {
+		return environment.getProperty("egov.propertytax.property.create.vacancyremission.workflow.started");
+	}
+
+	public String getVacancyRemissionUpdateWorkflow() {
+		return environment.getProperty("egov.propertytax.property.update.vacancyremission.workflow.started");
+	}
+
+	public String getVacancyRemissionApproveWorkflow() {
+		return environment.getProperty("egov.propertytax.property.update.vacancyremission.workflow.approved");
+	}
+
+	public String getInvalidPropertyTypeException() {
+		return environment.getProperty("invalid.propertytype.exception");
+	}
+
+	public String getInvalidTodateGreaterthanFromDate() {
+		return environment.getProperty("invalid.todate.greaterthan.fromdate");
+	}
+
+	public String getFromOrToDateLessthanCurrentDate() {
+		return environment.getProperty("fromortodate.lessthan.currentdate");
+	}
+
+	public String getInvalidDateValidation() {
+		return environment.getProperty("invalid.date.validation");
+	}
+
+	public String getInvalidSearchParameterException() {
+		return environment.getProperty("invalid.search.parameter.exception");
+	}
+
+	public String getCancelAction() {
+		return environment.getProperty("cancel");
+	}
+	
+	public String getRejectAction() {
+		return environment.getProperty("reject");
+	}
+
+	public String getInvalidTaxCalculation() {
+		return environment.getProperty("egov.property.taxcalculation");
+	}
+
+	public String getInvalidTaxHead() {
+		return environment.getProperty("egov.property.taxhead");
+	}
+
+	public String getInvalidTenent() {
+		return environment.getProperty("egov.property.tenant");
 	}
 
 }

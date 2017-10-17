@@ -1,15 +1,17 @@
 package org.egov.property.model;
 
+import org.egov.models.User;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.egov.models.User;
 
 /**
- * This model has User and RequestInfo
- * models This model class is used to send User request
+ * This model has User and RequestInfo models This model class is used to send
+ * User request
  */
 @Setter
 @Getter

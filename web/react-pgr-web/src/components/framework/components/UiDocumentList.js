@@ -14,11 +14,27 @@ export default class UiDocumentList extends Component {
        };
    	}
 
+   	renderFileObject = (item, i) => {
+   		let self = this;
+   		if(self.props.readonly) {
+			return (
+				<a href={window.location.origin + "/filestore/v1/files/id?tenantId=" + localStorage.tenantId + "&fileStoreId=" + self.props.getVal(item.jsonPath + "[" + i + "].fileStoreId")} target="_blank">{translate("wc.craete.file.Download")}</a>
+			);
+		} else {
+			return (
+				<input type="file" onChange={(e) => {
+			    	self.props.handler({target:{value: e.target.files[0]}}, (item.jsonPath + "[" + i + "].fileStoreId"), true, '', item.requiredErrMsg, item.patternErrMsg)
+			    	self.props.handler({target:{value: e.target.files[0].name}}, (item.jsonPath + "[" + i + "].name"), true, '', item.requiredErrMsg, item.patternErrMsg)
+			    }}/>
+			)
+		}
+   	}
+
 	renderDocumentList = (item) => {
 		let self = this;
 		switch (this.props.ui) {
 			case 'google':
-				return self.state.documents.map(function(doc, i) {
+				/*return self.state.documents.map(function(doc, i) {
 					return (
 						<Col xs={12} md={12}>
 							<TextField
@@ -44,7 +60,42 @@ export default class UiDocumentList extends Component {
 							</RaisedButton>
 						</Col>
 					)
-				})
+				})*/
+				return (
+					<Table className="table table-striped table-bordered" cellspacing="0" width="100%" responsive>
+						<thead>
+							<th>#</th>
+							<th>{translate("reports.common.businesskey")}</th>
+							<th>{translate("wc.create.name")}</th>
+							<th>{translate("tl.create.license.table.file")}</th>
+						</thead>
+						<tbody>
+							{
+								self.state.documents.map(function(doc, i) {
+									return (
+										<tr>
+											<td>{i + 1}</td>
+											<td>{doc["displayName"]}</td>
+											<td>
+												<TextField
+													fullWidth={true}
+													isDisabled={self.props.readonly}
+													type="text"
+													value={self.props.getVal(item.jsonPath + "[" + i + "].name")}
+													disabled={item.isDisabled}
+													errorText={self.props.fieldErrors[item.jsonPath]}
+													onChange={(e) => self.props.handler(e, (item.jsonPath + "[" + i + "].name"), true, '', '', '')} />
+											</td>
+											<td>
+												{self.renderFileObject(item, i)}
+											</td>
+										</tr>
+									)
+								})
+							}
+						</tbody>
+					</Table>
+				)
 		}
 	}
 

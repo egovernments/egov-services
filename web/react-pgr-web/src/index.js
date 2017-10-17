@@ -1,3 +1,6 @@
+// import 'materialize-css/dist/css/materialize.min.css';
+// import 'materialize-css/dist/js/materialize.min.js';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {HashRouter} from 'react-router-dom';
@@ -10,7 +13,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import registerServiceWorker from './registerServiceWorker';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import App from "./components/App";
-import $ from "jquery";
+// import $ from "jquery";
 // import {firebaseDBRef} from './firebase/';
 
 import './styles/index.css';
@@ -41,39 +44,39 @@ let themeObject={
   }
 };
 
-var hash = window.location.hash.split("/");
-
-
-if(localStorage.getItem("token") && localStorage.getItem("userRequest"))
-{
-    getTheme(localStorage.getItem("tenantId")?localStorage.getItem("tenantId"):'default');
-}
-else {
-    getTheme(hash[1]?hash[1]:"default");
-}
-
-
-
-function getTheme(tenantId)
-{
-  $.ajax({
-  url: "https://raw.githubusercontent.com/abhiegov/test/master/tenantTheme.json?timestamp="+new Date().getTime(),
-  // dataType: 'application/javascript',
-  success: function(results)
-  {
-      var content = JSON.parse(results);
-      // console.log(content[(hash[1]?hash[1]:"default")]);
-      renderUI(content["theme"][tenantId]);
-  },
-  error: function (results) {
-    renderUI(themeObject);
-  }})
-}
-
-
-
-function renderUI(themeObject)
-{
+// var hash = window.location.hash.split("/");
+//
+//
+// if(localStorage.getItem("token") && localStorage.getItem("userRequest"))
+// {
+//     getTheme(localStorage.getItem("tenantId")?localStorage.getItem("tenantId"):'default');
+// }
+// else {
+//     getTheme(hash[1]?hash[1]:"default");
+// }
+//
+//
+//
+// function getTheme(tenantId)
+// {
+//   $.ajax({
+//   url: "https://raw.githubusercontent.com/abhiegov/test/master/tenantTheme.json?timestamp="+new Date().getTime(),
+//   // dataType: 'application/javascript',
+//   success: function(results)
+//   {
+//       var content = JSON.parse(results);
+//       // console.log(content[(hash[1]?hash[1]:"default")]);
+//       renderUI(content["theme"][tenantId]);
+//   },
+//   error: function (results) {
+//     renderUI(themeObject);
+//   }})
+// }
+//
+//
+//
+// function renderUI(themeObject)
+// {
   const muiTheme = getMuiTheme(themeObject);
 
   ReactDOM.render(
@@ -85,7 +88,7 @@ function renderUI(themeObject)
     </MuiThemeProvider>
   </Provider>, document.getElementById('root'));
   registerServiceWorker();
-}
+// }
 
 
 

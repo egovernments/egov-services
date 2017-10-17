@@ -3,6 +3,7 @@ package org.egov.calculator.service;
 import org.egov.models.CalculationRequest;
 import org.egov.models.CalculationResponse;
 import org.egov.models.LatePaymentPenaltyResponse;
+import org.egov.models.LatePaymentPenaltySearchCriteria;
 import org.egov.models.RequestInfoWrapper;
 import org.egov.models.TransferFeeCalRequest;
 import org.egov.models.TransferFeeCalResponse;
@@ -29,13 +30,12 @@ public interface TaxCalculatorService {
 	 * This will calculate the tax penalty based on the given parameter
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param upicNo
+	 * @param LatePaymentPenaltySearchCriteria
 	 * @return {@link LatePaymentPenaltyResponse}
 	 * @throws Exception
 	 */
-	public LatePaymentPenaltyResponse getLatePaymentPenalty(RequestInfoWrapper requestInfo, String tenantId,
-			String upicNo) throws Exception;
+	public LatePaymentPenaltyResponse getLatePaymentPenalty(RequestInfoWrapper requestInfo,
+			LatePaymentPenaltySearchCriteria latePaymentPenaltySearchCriteria) throws Exception;
 
 	/**
 	 * /** Description: This method will calculate transfer fee

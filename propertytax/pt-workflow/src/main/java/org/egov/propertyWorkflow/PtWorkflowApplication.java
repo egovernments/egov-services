@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
@@ -20,11 +19,6 @@ public class PtWorkflowApplication {
 		SpringApplication.run(PtWorkflowApplication.class, args);
 	}
 
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
-	
 	@Bean
 	public MappingJackson2HttpMessageConverter jacksonConverter() {
 	   MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();

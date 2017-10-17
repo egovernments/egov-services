@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -16,39 +15,32 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * Description : This is initialization  class for  pt-property module
+ * Description : This is initialization class for pt-property module
+ * 
  * @author narendra
  *
  */
 
 @SpringBootApplication
-@Import({TracerConfiguration.class})
-@EnableWebMvc 
+@Import({ TracerConfiguration.class })
+@EnableWebMvc
 public class PtPropertyApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(PtPropertyApplication.class, args);
 
 	}
-	
+
 	@Bean
-	public ResponseInfoFactory responseInfoFactory(){
+	public ResponseInfoFactory responseInfoFactory() {
 		return new ResponseInfoFactory();
 	}
 
-	/**
-	 * This method will create rest template object
-	 */
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
-	
 	@Bean
 	public PropertiesManager getPropertiesManager() {
 		return new PropertiesManager();
 	}
-	
+
 	@Bean
 	public MappingJackson2HttpMessageConverter jacksonConverter() {
 		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();

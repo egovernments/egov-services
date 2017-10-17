@@ -9,6 +9,7 @@ import org.egov.models.DemandId;
 import org.egov.models.DemandUpdateMisRequest;
 import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
+import org.egov.models.WorkFlowDetails;
 import org.egov.property.config.PropertiesManager;
 import org.egov.property.repository.DemandRepository;
 import org.egov.property.repository.PropertyRepository;
@@ -19,7 +20,6 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,9 +36,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @EnableKafka
 public class PropertyConsumer {
-
-	@Autowired
-	RestTemplate restTemplate;
 
 	@Autowired
 	PropertiesManager propertiesManager;
@@ -68,7 +65,8 @@ public class PropertyConsumer {
 		ObjectMapper objectMapper = new ObjectMapper();
 		PropertyRequest propertyRequest = objectMapper.convertValue(consumerRecord, PropertyRequest.class);
 		log.info("consumer topic value is: " + topic + " consumer value is" + propertyRequest);
-		if (topic.equalsIgnoreCase(propertiesManager.getCreateWorkflow())) {
+		if (topic.equalsIgnoreCase(propertiesManager.getCreateWorkflow())
+				|| topic.equalsIgnoreCase(propertiesManager.getModifyWorkflow())) {
 			persisterService.addProperty(propertyRequest);
 		}
 
@@ -93,11 +91,15 @@ public class PropertyConsumer {
 			demandUpdateMisRequest.setId(id);
 			demandRepository.updateMisDemands(demandUpdateMisRequest);
 		} else if (topic.equalsIgnoreCase(propertiesManager.getUpdateWorkflow())) {
-			persisterService.updateProperty(propertyRequest);
+			WorkFlowDetails workFlowDetails = propertyRequest.getProperties().get(0).getPropertyDetail()
+					.getWorkFlowDetails();
+			if (!workFlowDetails.getAction().equalsIgnoreCase(propertiesManager.getCancelAction())
+					&& !workFlowDetails.getAction().equalsIgnoreCase(propertiesManager.getRejectAction())) {
+				persisterService.updateProperty(propertyRequest);
+			}
 		}
 
-		else if (topic.equalsIgnoreCase(propertiesManager.getModifyWorkflow())
-				|| topic.equalsIgnoreCase(propertiesManager.getModifyaprroveWorkflow())) {
+		else if (topic.equalsIgnoreCase(propertiesManager.getModifyaprroveWorkflow())) {
 
 			persisterService.movePropertyToHistory(propertyRequest);
 		}

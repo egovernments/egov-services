@@ -318,6 +318,28 @@ public class WaterConnectionRepository {
 
         return waterConnectionReq;
     }
+    
+    public Long updateLegacyWaterConnection(final WaterConnectionReq waterConnectionReq) {
+    	String updateLegacyConnectionQuery = "" ; 
+    	final Connection connection = waterConnectionReq.getConnection();
+    	if(connection.getId() != 0) { 
+    		updateLegacyConnectionQuery = WaterConnectionQueryBuilder.updateLegacyConnectionQuery();
+    		final Object[] obj = new Object[] {connection.getPipesizeId()
+                    ,connection.getSupplyTypeId(), connection.getSourceTypeId(), connection.getConnectionStatus(),
+                    connection.getSumpCapacity(), connection.getNumberOfTaps(),
+                    connection.getNumberOfPersons(), Long.valueOf(waterConnectionReq.getRequestInfo().getUserInfo().getId()),
+                    new Date(new java.util.Date().getTime()),connection.getUsageTypeId(),connection.getWaterTreatmentId(),
+                    connection.getStatus(), connection.getNumberOfFamily(),connection.getSubUsageTypeId(),
+                    connection.getPlumberName(),connection.getBillSequenceNumber(),
+                    connection.getOutsideULB(),connection.getStorageReservoirId(),connection.getStateId(),
+                    connection.getEstimationNumber(), connection.getWorkOrderNumber(),
+                    connection.getConsumerNumber(), connection.getLegacyConsumerNumber(), connection.getManualConsumerNumber(),
+                    connection.getPropertyIdentifier(), connection.getConsumerNumber(), connection.getTenantId()};
+            int updateStatus = jdbcTemplate.update(updateLegacyConnectionQuery, obj);
+           LOGGER.info("Update Status has been : " + updateStatus ) ;  
+    	}
+    	return waterConnectionReq.getConnection().getId(); 
+    }
 
     public List<Connection> findByApplicationNmber(final String acknowledgeNumber, final String tenantid) {
         final HashMap<String, Object> parametersMap = new HashMap<>();
@@ -361,7 +383,7 @@ public class WaterConnectionRepository {
     public boolean persistEstimationNoticeLog(EstimationNotice estimationNotice, long connectionId, String tenantId,Map<String, Object> estimationNoticeMap) { 
         String persistsEstimationNoticeQuery = WaterConnectionQueryBuilder.persistEstimationNoticeQuery();
         LOGGER.info("Persist Estimation Notice Query : " + persistsEstimationNoticeQuery);
-        if(jdbcTemplate.update(persistsEstimationNoticeQuery, estimationNoticeMap) > 0) { 
+        if(namedParameterJdbcTemplate.update(persistsEstimationNoticeQuery, estimationNoticeMap) > 0) { 
                 return true;
         }
         return false; 
@@ -396,6 +418,16 @@ public class WaterConnectionRepository {
         }
                 
         return documentList;
+    }
+    
+    public void removeConnectionOwnerDetails(WaterConnectionReq waterConnectionRequest, Long connectionId) { 
+    	Connection connection = waterConnectionRequest.getConnection();
+    	final HashMap<String, Object> parametersMap = new HashMap<>();
+        parametersMap.put("waterconnectionid", connectionId);
+        parametersMap.put("tenantid", connection.getTenantId());
+        namedParameterJdbcTemplate.update(WaterConnectionQueryBuilder.removeConnectionUserQuery(),
+                parametersMap); 
+    	
     }
 
 	public void pushUserDetails(WaterConnectionReq waterConnectionRequest,Long connectionId) {

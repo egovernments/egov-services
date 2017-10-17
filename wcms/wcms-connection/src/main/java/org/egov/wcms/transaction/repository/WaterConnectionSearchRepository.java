@@ -88,6 +88,7 @@ public class WaterConnectionSearchRepository {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(WaterConnectionSearchRepository.class);
 	public static final String roleCode = "CITIZEN";
+	public static final int FIRST_RECORD = 0; 
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -108,25 +109,29 @@ public class WaterConnectionSearchRepository {
         final List<Object> preparedCountStatementValues = new ArrayList<>();
         final List<Object> preparedCountForWithoutPropertyStatementValues = new ArrayList<>();
 
-		
+		// Search process for with property cases
         final String countQuery = waterConnectionQueryBuilder.getQuery(waterConnectionGetReq, preparedCountStatementValues,true);
         final String fetchQuery = waterConnectionQueryBuilder.getQuery(waterConnectionGetReq, preparedStatementValues,false);
         LOGGER.info("Get Connection Details Query : " + fetchQuery);
         final List<Connection> connectionList = jdbcTemplate.query(fetchQuery, preparedStatementValues.toArray(),
                 new WaterConnectionRowMapper().new WaterConnectionPropertyRowMapper());
         Long countForWithProperty = jdbcTemplate.queryForObject(countQuery,preparedCountStatementValues.toArray(), Long.class);
-        LOGGER.info(connectionList.size() + " Connection Objects fetched from DB");
-
+        LOGGER.info(connectionList.size() + " Connection Objects fetched from DB for with property cases");
+        
+        // Adding already fetched property information
         addPropertyDetails(propertyInfoList, connectionList);
         if (connectionList.size() == 1 && propertyInfoList.size() == 0) {
+        	// Fetching and  adding property information
             resolvePropertyIdentifierDetails(connectionList, requestInfo);
         } else if (connectionList.size() > 1 && propertyInfoList.size() == 0) {
             List<String> propertyIdentifierList = new ArrayList<>();
             for (Connection connection : connectionList) {
                 propertyIdentifierList.add(connection.getProperty().getPropertyIdentifier());
             }
-            addProperty(propertyIdentifierList,connectionList,requestInfo,connectionList.get(0).getTenantId());
+            addProperty(propertyIdentifierList,connectionList,requestInfo,connectionList.get(FIRST_RECORD).getTenantId());
         }
+        
+        // Search process for without property cases
         final List<Object> secondPreparedStatementValues = new ArrayList<>();
         List<Long> connectionIds = null;
 
@@ -157,7 +162,7 @@ public class WaterConnectionSearchRepository {
             LOGGER.error("Exception encountered while fetching the Connection list without Property : " + ex);
         }
         if(connectionList !=null && connectionList.size()>0)
-            connectionList.get(0).setTotalCount(totalCount);
+            connectionList.get(FIRST_RECORD).setTotalCount(totalCount);
         resolveMasterDetails(connectionList, requestInfo);
         // This condition is added to fetch the Meter Details only in single
         // view case. Not in fetch all case
@@ -172,7 +177,7 @@ public class WaterConnectionSearchRepository {
         StringBuilder connectionOwnerQuery = new StringBuilder(waterConnectionQueryBuilder.getConnectionOwnerQuery());
         connectionOwnerQuery.append(" ("); 
         if (userList.size() >= 1) {
-            connectionOwnerQuery.append("'" + userList.get(0).getId() + "'");
+            connectionOwnerQuery.append("'" + userList.get(FIRST_RECORD).getId() + "'");
             for (int i = 1; i < userList.size(); i++)
                 connectionOwnerQuery.append(",'" + userList.get(i).getId() + "'");
             connectionOwnerQuery.append(")"); 
@@ -267,48 +272,48 @@ public class WaterConnectionSearchRepository {
         }
     }
 
-    private void resolveMasterDetails(List<Connection> connectionList, RequestInfo requestInfo) {
-        LOGGER.info("Resolving the names for the IDs");
-        for (Connection conn : connectionList) {
-            if (StringUtils.isNotBlank(conn.getPipesizeId())) {
-                conn.setHscPipeSizeType(
-                        ConnectionMasterAdapter.getPipeSizeById(conn.getPipesizeId(), conn.getTenantId(), requestInfo));
-            }
-            if (StringUtils.isNotBlank(conn.getSupplyTypeId())) {
-                conn.setSupplyType(ConnectionMasterAdapter.getSupplyTypeById(conn.getSupplyTypeId(), conn.getTenantId(),
-                        requestInfo));
-            }
-            if (StringUtils.isNotBlank(conn.getSourceTypeId())) {
-                conn.setSourceType(ConnectionMasterAdapter.getSourceTypeById(conn.getSourceTypeId(), conn.getTenantId(),
-                        requestInfo));
-            }
-            if (StringUtils.isNotBlank(conn.getWaterTreatmentId())) {
-                conn.setWaterTreatment(ConnectionMasterAdapter.getTreatmentPlantById(conn.getWaterTreatmentId(),
-                        conn.getTenantId(), requestInfo));
-            }
-            if (StringUtils.isNotBlank(conn.getStorageReservoirId())) {
-                conn.setStorageReservoir(ConnectionMasterAdapter.getStorageReservoirById(conn.getStorageReservoirId(),
-                        conn.getTenantId(), requestInfo));
-            }
-            if (StringUtils.isNotBlank(conn.getUsageTypeId())) {
-                String nameAndCode = ConnectionMasterAdapter.getUsageTypeById(conn.getUsageTypeId(), conn.getTenantId(),
-                        requestInfo);
-                if (StringUtils.isNotBlank(nameAndCode)) {
-                    conn.setUsageTypeName(nameAndCode.split("~")[0]);
-                    conn.setUsageType(nameAndCode.split("~")[1]);
-                }
-            }
-            if (StringUtils.isNotBlank(conn.getSubUsageTypeId())) {
-                String nameAndCode = ConnectionMasterAdapter.getSubUsageTypeById(conn.getSubUsageTypeId(),
-                        conn.getTenantId(), requestInfo);
-                if (StringUtils.isNotBlank(nameAndCode)) {
-                    conn.setSubUsageTypeName(nameAndCode.split("~")[0]);
-                    conn.setSubUsageType(nameAndCode.split("~")[1]);
-                }
+	private void resolveMasterDetails(List<Connection> connectionList, RequestInfo requestInfo) {
+		LOGGER.info("Resolving the names for the IDs");
+		for (Connection conn : connectionList) {
+			if (StringUtils.isNotBlank(conn.getPipesizeId())) {
+				conn.setHscPipeSizeType(
+						ConnectionMasterAdapter.getPipeSizeById(conn.getPipesizeId(), conn.getTenantId(), requestInfo));
+			}
+			if (StringUtils.isNotBlank(conn.getSupplyTypeId())) {
+				conn.setSupplyType(ConnectionMasterAdapter.getSupplyTypeById(conn.getSupplyTypeId(), conn.getTenantId(),
+						requestInfo));
+			}
+			if (StringUtils.isNotBlank(conn.getSourceTypeId())) {
+				conn.setSourceType(ConnectionMasterAdapter.getSourceTypeById(conn.getSourceTypeId(), conn.getTenantId(),
+						requestInfo));
+			}
+			if (StringUtils.isNotBlank(conn.getWaterTreatmentId())) {
+				conn.setWaterTreatment(ConnectionMasterAdapter.getTreatmentPlantById(conn.getWaterTreatmentId(),
+						conn.getTenantId(), requestInfo));
+			}
+			if (StringUtils.isNotBlank(conn.getStorageReservoirId())) {
+				conn.setStorageReservoir(ConnectionMasterAdapter.getStorageReservoirById(conn.getStorageReservoirId(),
+						conn.getTenantId(), requestInfo));
+			}
+			if (StringUtils.isNotBlank(conn.getUsageTypeId())) {
+				String nameAndCode = ConnectionMasterAdapter.getUsageTypeById(conn.getUsageTypeId(), conn.getTenantId(),
+						requestInfo);
+				if (StringUtils.isNotBlank(nameAndCode)) {
+					conn.setUsageTypeName(nameAndCode.split("~")[0]);
+					conn.setUsageType(nameAndCode.split("~")[1]);
+				}
+			}
+			if (StringUtils.isNotBlank(conn.getSubUsageTypeId())) {
+				String nameAndCode = ConnectionMasterAdapter.getSubUsageTypeById(conn.getSubUsageTypeId(),
+						conn.getTenantId(), requestInfo);
+				if (StringUtils.isNotBlank(nameAndCode)) {
+					conn.setSubUsageTypeName(nameAndCode.split("~")[0]);
+					conn.setSubUsageType(nameAndCode.split("~")[1]);
+				}
 
-            }
-        }
-    }
+			}
+		}
+	}
 
     private void resolvePropertyIdentifierDetails(List<Connection> connectionList, RequestInfo rInfo) {
         WaterConnectionReq wR = new WaterConnectionReq();
@@ -349,10 +354,10 @@ public class WaterConnectionSearchRepository {
                         prop.setPropertyIdentifier(pInfo.getUpicNumber());
                         prop.setPinCode(null != pInfo.getAddress() ? pInfo.getAddress().getPropertyPinCode() : "");
                         if (null != pInfo.getBoundary() && null != pInfo.getBoundary().getLocationBoundary()) {
-                            prop.setLocality(Long.parseLong(pInfo.getBoundary().getLocationBoundary().getCode()));
+                            prop.setLocality(Long.parseLong(StringUtils.isNotBlank(pInfo.getBoundary().getLocationBoundary().getCode()) ? pInfo.getBoundary().getLocationBoundary().getCode() : "0"));
                         }
                         if (null != pInfo.getBoundary() && null != pInfo.getBoundary().getRevenueBoundary()) {
-                            prop.setZone(Long.parseLong(pInfo.getBoundary().getRevenueBoundary().getCode()));
+                            prop.setZone(Long.parseLong(StringUtils.isNotBlank(pInfo.getBoundary().getRevenueBoundary().getCode()) ? pInfo.getBoundary().getRevenueBoundary().getCode() : "0"));
                         }
                         List<PropertyOwnerInfo> list = new ArrayList<>();
                         for (PropertyOwnerInfo owner : pInfo.getOwners()) {

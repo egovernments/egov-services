@@ -1,0 +1,4 @@
+Dear {{Owner}}, Your new water tap connection application with acknowledgement number {{Application Number}} is being rejected and the reason for rejection {{Rejection comments of the approver}} Please get in touch with ULB official to raise a new application with proper information to get a water connection.
+
+Thanks,
+{{ULB Name}}

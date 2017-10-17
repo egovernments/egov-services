@@ -68,6 +68,45 @@ public class FinancialYearContractRepository {
 		}
 
 	}
+	
+	public FinancialYearContract findFinancialYearByFinRange(String tenantId, String finRange,
+			RequestInfoWrapper requestInfoWrapper) {
+
+		String hostUrl = propertiesManager.getFinancialYearServiceHostName()
+				+ propertiesManager.getFinancialYearServiceBasePath();
+		String searchUrl = propertiesManager.getFinancialYearServiceSearchPath();
+		String url = String.format("%s%s", hostUrl, searchUrl);
+		StringBuffer content = new StringBuffer();
+		
+		if (finRange != null && !finRange.isEmpty()) {
+			content.append("finYearRange=" + finRange);
+		}
+
+		if (tenantId != null && !tenantId.isEmpty()) {
+			content.append("&tenantId=" + tenantId);
+		}
+		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
+		url = url + content.toString();
+		FinancialYearContractResponse financialYearContractResponse = null;
+		try {
+
+			financialYearContractResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper,
+					FinancialYearContractResponse.class);
+
+		} catch (Exception e) {
+			throw new EndPointException("Error connecting to Location end point " + url,
+					requestInfoWrapper.getRequestInfo());
+		}
+
+		if (financialYearContractResponse != null && financialYearContractResponse.getFinancialYears() != null
+				&& financialYearContractResponse.getFinancialYears().size() > 0) {
+
+			return financialYearContractResponse.getFinancialYears().get(0);
+		} else {
+			return null;
+		}
+
+	}
 
 	public FinancialYearContract findFinancialYearIdByDate(String tenantId, Long date,
 			RequestInfoWrapper requestInfoWrapper) {

@@ -2,7 +2,6 @@ package org.egov.tracer.config;
 
 import org.egov.tracer.http.CorrelationIdFilter;
 import org.egov.tracer.http.LogAwareRestTemplate;
-import org.egov.tracer.http.UnhandledExceptionControllerAdvice;
 import org.egov.tracer.kafka.KafkaListenerLoggingAspect;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -50,10 +49,10 @@ public class TracerConfiguration {
         return new LogAwareRestTemplate(tracerProperties);
     }
 
-    @Bean
+   /* @Bean
     public UnhandledExceptionControllerAdvice unhandledExceptionControllerAdvice() {
         return new UnhandledExceptionControllerAdvice();
-    }
+    }*/
 
     @Bean
     @ConditionalOnProperty(name = "org.egov.correlation.body.filter.disabled",

@@ -9,13 +9,11 @@ import org.egov.propertyUser.config.PropertiesManager;
 import org.egov.propertyUser.util.UserUtil;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -33,14 +31,6 @@ public class TitleTransferConsumer {
 	
 	@Autowired
 	private UserUtil userUtil;
-
-	/*
-	 * This method for creating rest template
-	 */
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
 
 	/**
 	 * This method will listen property object from producer and check user

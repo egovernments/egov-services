@@ -46,7 +46,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum NewConnectionStatus {
     CREATED("Created"), VERIFIED("Verified"),APPROVED("Approved"),
     ESTIMATIONNOTICEGENERATED("Estimation Notce Generated"),
-    ESTIMATIONAMOUNTCOLLECTED("Estimation Amount Collected"),
+    APPLICATIONFEESPAID("Application Fees Paid"),
     WORKORDERGENERATED("Work Order Generated"),
     REJECTED("Rejected"), SANCTIONED("Sanctioned");
     

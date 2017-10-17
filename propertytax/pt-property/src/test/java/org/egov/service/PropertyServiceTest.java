@@ -16,31 +16,39 @@ import org.egov.models.Address;
 import org.egov.models.AppConfiguration;
 import org.egov.models.AppConfigurationRequest;
 import org.egov.models.AppConfigurationResponse;
+import org.egov.models.AppConfigurationSearchCriteria;
 import org.egov.models.AuditDetails;
 import org.egov.models.Boundary;
 import org.egov.models.Department;
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
+import org.egov.models.DepartmentSearchCriteria;
 import org.egov.models.Depreciation;
 import org.egov.models.DepreciationRequest;
 import org.egov.models.DepreciationResponse;
+import org.egov.models.DepreciationSearchCriteria;
 import org.egov.models.Document;
 import org.egov.models.DocumentType;
 import org.egov.models.DocumentTypeRequest;
 import org.egov.models.DocumentTypeResponse;
+import org.egov.models.DocumentTypeSearchCriteria;
 import org.egov.models.Floor;
 import org.egov.models.FloorType;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
+import org.egov.models.FloorTypeSearchCriteria;
 import org.egov.models.GuidanceValueBoundary;
 import org.egov.models.GuidanceValueBoundaryRequest;
 import org.egov.models.GuidanceValueBoundaryResponse;
+import org.egov.models.GuidanceValueBoundarySearchCriteria;
 import org.egov.models.MutationMaster;
 import org.egov.models.MutationMasterRequest;
 import org.egov.models.MutationMasterResponse;
+import org.egov.models.MutationMasterSearchCriteria;
 import org.egov.models.OccuapancyMaster;
 import org.egov.models.OccuapancyMasterRequest;
 import org.egov.models.OccuapancyMasterResponse;
+import org.egov.models.OccuapancyMasterSearchCriteria;
 import org.egov.models.Property;
 import org.egov.models.PropertyDetail;
 import org.egov.models.PropertyLocation;
@@ -48,12 +56,14 @@ import org.egov.models.PropertyRequest;
 import org.egov.models.PropertyType;
 import org.egov.models.PropertyTypeRequest;
 import org.egov.models.PropertyTypeResponse;
+import org.egov.models.PropertyTypeSearchCriteria;
 import org.egov.models.RequestInfo;
 import org.egov.models.RequestInfoWrapper;
 import org.egov.models.Role;
 import org.egov.models.RoofType;
 import org.egov.models.RoofTypeRequest;
 import org.egov.models.RoofTypeResponse;
+import org.egov.models.RoofTypeSearchCriteria;
 import org.egov.models.Unit;
 import org.egov.models.UsageMaster;
 import org.egov.models.UsageMasterRequest;
@@ -64,9 +74,11 @@ import org.egov.models.VacantLandDetail;
 import org.egov.models.WallType;
 import org.egov.models.WallTypeRequest;
 import org.egov.models.WallTypeResponse;
+import org.egov.models.WallTypeSearchCriteria;
 import org.egov.models.WoodType;
 import org.egov.models.WoodTypeRequest;
 import org.egov.models.WoodTypeResponse;
+import org.egov.models.WoodTypeSearchCriteria;
 import org.egov.models.WorkFlowDetails;
 import org.egov.property.PtPropertyApplication;
 import org.egov.property.config.PropertiesManager;
@@ -195,21 +207,21 @@ public class PropertyServiceTest {
 
 	@Test
 	public void searchRoofType() {
-
-		String tenantId = "1234";
-		String name = "Mansard  Roof";
-		String code = "256";
-		String nameLocal = "Mansard";
-		Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize().trim());
-		Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
+		Integer[] ids = new Integer[] { roofId.intValue() };
+		RoofTypeSearchCriteria roofTypeSearchCriteria = new RoofTypeSearchCriteria();
+		roofTypeSearchCriteria.setTenantId("1234");
+		roofTypeSearchCriteria.setIds(ids);
+		roofTypeSearchCriteria.setName("Mansard  Roof");
+		roofTypeSearchCriteria.setCode("256");
+		roofTypeSearchCriteria.setNameLocal("Mansard");
+		roofTypeSearchCriteria.setPageSize(Integer.valueOf(propertiesManager.getDefaultPageSize().trim()));
+		roofTypeSearchCriteria.setOffSet(Integer.valueOf(propertiesManager.getDefaultOffset()));
 		RequestInfo requestInfo = getRequestInfoObject();
-
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		try {
-			RoofTypeResponse roofTypeResponse = masterService.getRoofypes(requestInfo, tenantId,
-					new Integer[] { roofId.intValue() }, name, code, nameLocal, pageSize, offset);
+			RoofTypeResponse roofTypeResponse = masterService.getRoofypes(requestInfo, roofTypeSearchCriteria);
 			if (roofTypeResponse.getRoofTypes().size() == 0)
 				assertTrue(false);
 
@@ -305,19 +317,20 @@ public class PropertyServiceTest {
 
 	@Test
 	public void searchWoodType() {
-
-		String tenantId = "1234";
-		String name = "Maple Wood Type";
-		String code = "256";
-		String nameLocal = "Maple";
-		Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize().trim());
-		Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
+		Integer[] ids = new Integer[] { woodId.intValue() };
+		WoodTypeSearchCriteria woodTypeSearchCriteria = new WoodTypeSearchCriteria();
+		woodTypeSearchCriteria.setTenantId("1234");
+		woodTypeSearchCriteria.setIds(ids);
+		woodTypeSearchCriteria.setName("Maple Wood Type");
+		woodTypeSearchCriteria.setCode("256");
+		woodTypeSearchCriteria.setNameLocal("Maple");
+		woodTypeSearchCriteria.setPageSize(Integer.valueOf(propertiesManager.getDefaultPageSize().trim()));
+		woodTypeSearchCriteria.setOffSet(Integer.valueOf(propertiesManager.getDefaultOffset()));
 		RequestInfo requestInfo = getRequestInfoObject();
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		try {
-			WoodTypeResponse woodTypeResponse = masterService.getWoodTypes(requestInfo, tenantId,
-					new Integer[] { woodId.intValue() }, name, code, nameLocal, pageSize, offset);
+			WoodTypeResponse woodTypeResponse = masterService.getWoodTypes(requestInfo, woodTypeSearchCriteria);
 
 			if (woodTypeResponse.getWoodTypes().size() == 0)
 				assertTrue(false);
@@ -417,22 +430,22 @@ public class PropertyServiceTest {
 
 	@Test
 	public void searchFloorType() {
-
-		String tenantId = "1234";
-		String name = "Tile Flooring";
-		String code = "256";
-		String nameLocal = "Tile";
-		Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize().trim());
-		Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
-
+		Integer[] ids = new Integer[] { floorId.intValue() };
+		FloorTypeSearchCriteria floorTypeSearchCriteria = new FloorTypeSearchCriteria();
+		floorTypeSearchCriteria.setTenantId("1234");
+		floorTypeSearchCriteria.setIds(ids);
+		floorTypeSearchCriteria.setName("Tile Flooring");
+		floorTypeSearchCriteria.setCode("256");
+		floorTypeSearchCriteria.setNameLocal("Tile");
+		floorTypeSearchCriteria.setPageSize(Integer.valueOf(propertiesManager.getDefaultPageSize().trim()));
+		floorTypeSearchCriteria.setOffSet(Integer.valueOf(propertiesManager.getDefaultOffset()));
 		RequestInfo requestInfo = getRequestInfoObject();
-
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		try {
-			FloorTypeResponse floorTypeResponse = masterService.getFloorTypeMaster(requestInfo, tenantId,
-					new Integer[] { floorId.intValue() }, name, code, nameLocal, pageSize, offset);
+			FloorTypeResponse floorTypeResponse = masterService.getFloorTypeMaster(requestInfo,
+					floorTypeSearchCriteria);
 
 			if (floorTypeResponse.getFloorTypes().size() == 0)
 				assertTrue(false);
@@ -563,18 +576,18 @@ public class PropertyServiceTest {
 	public void searchOccuapancyMaster() throws Exception {
 		try {
 
-			String tenantId = "default";
-			String name = "anil";
-			String code = "testcode";
-			String nameLocal = "kumar";
-			Boolean active = true;
-			Integer orderNumber = 1;
-			Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize().trim());
-			Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
+			OccuapancyMasterSearchCriteria occuapancyMasterSearchCriteria = new OccuapancyMasterSearchCriteria();
+			occuapancyMasterSearchCriteria.setTenantId("default");
+			occuapancyMasterSearchCriteria.setName("anil");
+			occuapancyMasterSearchCriteria.setCode("testcode");
+			occuapancyMasterSearchCriteria.setNameLocal("kumar");
+			occuapancyMasterSearchCriteria.setActive(true);
+			occuapancyMasterSearchCriteria.setOrderNumber(1);
+			occuapancyMasterSearchCriteria.setPageSize(Integer.valueOf(propertiesManager.getDefaultPageSize().trim()));
+			occuapancyMasterSearchCriteria.setOffSet(Integer.valueOf(propertiesManager.getDefaultOffset()));
 
-			OccuapancyMasterResponse occuapancyMasterResponse = masterService.getOccuapancyMaster(
-					getRequestInfoObject(), tenantId, new Integer[] { Integer.valueOf(occupancyId.toString()) }, name,
-					code, nameLocal, active, orderNumber, pageSize, offset);
+			OccuapancyMasterResponse occuapancyMasterResponse = masterService
+					.getOccuapancyMaster(getRequestInfoObject(), occuapancyMasterSearchCriteria);
 			if (occuapancyMasterResponse.getOccuapancyMasters().size() == 0) {
 				assertTrue(false);
 			}
@@ -682,34 +695,28 @@ public class PropertyServiceTest {
 	 * * Description : test case for searching propertytype master api
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param ids
-	 * @param name
-	 * @param code
-	 * @param nameLocal
-	 * @param active
-	 * @param orderNumber
-	 * @param pageSize
-	 * @param offSet
+	 * @param propertyTypeSearchCriteria
 	 * @throws Exception
 	 */
 	@Test
 	public void searchPropertyTypeMaster() throws Exception {
 		try {
 
-			String tenantId = "default";
 			Integer[] ids = new Integer[] { Integer.valueOf(propertyTypeId.toString()) };
-			String name = "anil";
-			String code = "testingcode";
-			String nameLocal = "kumar";
-			Boolean active = true;
-			Integer orderNumber = 1;
-			Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize().trim());
-			Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
-			String parent = null;
+			PropertyTypeSearchCriteria propertyTypeSearchCriteria = new PropertyTypeSearchCriteria();
+			propertyTypeSearchCriteria.setTenantId("default");
+			propertyTypeSearchCriteria.setIds(ids);
+			propertyTypeSearchCriteria.setName("anil");
+			propertyTypeSearchCriteria.setCode("testingcode");
+			propertyTypeSearchCriteria.setNameLocal("kumar");
+			propertyTypeSearchCriteria.setActive(true);
+			propertyTypeSearchCriteria.setOrderNumber(1);
+			propertyTypeSearchCriteria.setPageSize(Integer.valueOf(propertiesManager.getDefaultPageSize().trim()));
+			propertyTypeSearchCriteria.setOffSet(Integer.valueOf(propertiesManager.getDefaultOffset()));
+			propertyTypeSearchCriteria.setParent(null);
 
 			PropertyTypeResponse propertyTypeResponse = masterService.getPropertyTypeMaster(getRequestInfoObject(),
-					tenantId, ids, name, code, nameLocal, active, orderNumber, pageSize, offset, parent);
+					propertyTypeSearchCriteria);
 			if (propertyTypeResponse.getPropertyTypes().size() == 0) {
 				assertTrue(false);
 			}
@@ -817,31 +824,25 @@ public class PropertyServiceTest {
 	 * * Description : test case for searching department master api
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param ids
-	 * @param category
-	 * @param name
-	 * @param code
-	 * @param nameLocal
-	 * @param pageSize
-	 * @param offSet
+	 * @param departmentSearchCriteria
 	 * @throws Exception
 	 */
 	@Test
 	public void searchDepartmentMaster() throws Exception {
 		try {
-
-			String tenantId = "default";
 			Integer[] ids = new Integer[] { Integer.valueOf(departmentId.toString()) };
-			String category = "software engineer";
-			String name = "anil";
-			String code = "testcode";
-			String nameLocal = "kumar";
-			Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize().trim());
-			Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
+			DepartmentSearchCriteria departmentSearchCriteria = new DepartmentSearchCriteria();
+			departmentSearchCriteria.setTenantId("default");
+			departmentSearchCriteria.setIds(ids);
+			departmentSearchCriteria.setCategory("software engineer");
+			departmentSearchCriteria.setName("anil");
+			departmentSearchCriteria.setCode("testcode");
+			departmentSearchCriteria.setNameLocal("kumar");
+			departmentSearchCriteria.setPageSize(Integer.valueOf(propertiesManager.getDefaultPageSize().trim()));
+			departmentSearchCriteria.setOffSet(Integer.valueOf(propertiesManager.getDefaultOffset()));
 
 			DepartmentResponseInfo departmentResponse = masterService.getDepartmentMaster(getRequestInfoObject(),
-					tenantId, ids, category, name, code, nameLocal, pageSize, offset);
+					departmentSearchCriteria);
 			if (departmentResponse.getDepartments().size() == 0) {
 				assertTrue(false);
 			}
@@ -1012,18 +1013,20 @@ public class PropertyServiceTest {
 	@Test
 	public void searchWallTypeTest() {
 		try {
-			String tenantId = "default";
 			Integer[] ids = new Integer[] { 1 };
-			String name = "Yoyo";
-			String code = "1234";
-			String nameLocal = "test_namelocal";
-			Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize().trim());
-			Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
+			WallTypeSearchCriteria wallTypeSearchCriteria = new WallTypeSearchCriteria();
+			wallTypeSearchCriteria.setTenantId("default");
+			wallTypeSearchCriteria.setIds(ids);
+			wallTypeSearchCriteria.setName("Yoyo");
+			wallTypeSearchCriteria.setCode("1234");
+			wallTypeSearchCriteria.setNameLocal("test_namelocal");
+			wallTypeSearchCriteria.setPageSize(Integer.valueOf(propertiesManager.getDefaultPageSize().trim()));
+			wallTypeSearchCriteria.setOffSet(Integer.valueOf(propertiesManager.getDefaultOffset()));
 			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 			requestInfoWrapper.setRequestInfo(getRequestInfoObject());
 
-			WallTypeResponse wallTypeResponse = masterService.getWallTypeMaster(getRequestInfoObject(), tenantId, ids,
-					name, code, nameLocal, pageSize, offset);
+			WallTypeResponse wallTypeResponse = masterService.getWallTypeMaster(getRequestInfoObject(),
+					wallTypeSearchCriteria);
 			if (wallTypeResponse.getWallTypes().size() == 0)
 				assertTrue(false);
 
@@ -1606,22 +1609,21 @@ public class PropertyServiceTest {
 	@Test
 	public void searchDepreciations() {
 
-		String tenantId = "12345";
 		Integer[] ids = new Integer[] { 1, 2, 7 };
-
-		Integer fromYear = 2015;
-		Integer toYear = 2017;
-		String code = "4567";
-		String nameLocal = "prasad";
-		Integer pageSize = 20;
-		Integer offset = 0;
-		Integer year = null;
-
+		DepreciationSearchCriteria depreciationSearchCriteria = new DepreciationSearchCriteria();
+		depreciationSearchCriteria.setTenantId("12345");
+		depreciationSearchCriteria.setIds(ids);
+		depreciationSearchCriteria.setFromYear(2015);
+		depreciationSearchCriteria.setToYear(2017);
+		depreciationSearchCriteria.setCode("4567");
+		depreciationSearchCriteria.setNameLocal("prasad");
+		depreciationSearchCriteria.setPageSize(20);
+		depreciationSearchCriteria.setOffset(0);
+		depreciationSearchCriteria.setYear(null);
 		DepreciationResponse depreciationResponse = null;
 
 		try {
-			depreciationResponse = masterService.searchDepreciation(getRequestInfoObject(), tenantId, ids, fromYear,
-					toYear, code, nameLocal, pageSize, offset, year);
+			depreciationResponse = masterService.searchDepreciation(getRequestInfoObject(), depreciationSearchCriteria);
 		} catch (Exception e) {
 			assertTrue(false);
 		}
@@ -1721,13 +1723,15 @@ public class PropertyServiceTest {
 
 	@Test
 	public void searchMutationMaster() {
-		String tenantId = "1234";
-		String code = "4567";
+
+		MutationMasterSearchCriteria mutationMasterSearchCriteria = new MutationMasterSearchCriteria();
+		mutationMasterSearchCriteria.setTenantId("1234");
+		mutationMasterSearchCriteria.setCode("4567");
 		MutationMasterResponse mutationMasterResponse = null;
 
 		try {
-			mutationMasterResponse = masterService.searchMutationMaster(getRequestInfoObject(), tenantId, null, null,
-					code, null, null, null);
+			mutationMasterResponse = masterService.searchMutationMaster(getRequestInfoObject(),
+					mutationMasterSearchCriteria);
 		} catch (Exception e) {
 			assertTrue(false);
 		}
@@ -1818,14 +1822,14 @@ public class PropertyServiceTest {
 
 	@Test
 	public void searchDocumentTypeTest() {
-		String tenantId = "default";
-		String name = "veswanth";
-
+		DocumentTypeSearchCriteria documentTypeSearchCriteria = new DocumentTypeSearchCriteria();
+		documentTypeSearchCriteria.setTenantId("default");
+		documentTypeSearchCriteria.setName("veswanth");
 		DocumentTypeResponse documentTypeResponse = null;
 
 		try {
-			documentTypeResponse = masterService.searchDocumentTypeMaster(getRequestInfoObject(), tenantId, name, null,
-					null, null, null);
+			documentTypeResponse = masterService.searchDocumentTypeMaster(getRequestInfoObject(),
+					documentTypeSearchCriteria);
 
 		} catch (Exception e) {
 			assertTrue(false);
@@ -1892,13 +1896,13 @@ public class PropertyServiceTest {
 
 	@Test
 	public void searchGuidanceValueBoundaryTest() {
-		String tenantId = "default";
-		String guidanceValueBoundary1 = "updated-gvb1";
+		GuidanceValueBoundarySearchCriteria guidanceValueBoundarySearchCriteria = new GuidanceValueBoundarySearchCriteria();
+		guidanceValueBoundarySearchCriteria.setTenantId("default");
+		guidanceValueBoundarySearchCriteria.setGuidanceValueBoundary1("updated-gvb1");
 		RequestInfo requestInfo = getRequestInfoObject();
 		GuidanceValueBoundaryResponse guidanceValueBoundaryResponse = null;
 		try {
-			guidanceValueBoundaryResponse = masterService.getGuidanceValueBoundary(requestInfo, tenantId,
-					guidanceValueBoundary1, null, null, null);
+			guidanceValueBoundaryResponse = masterService.getGuidanceValueBoundary(requestInfo, guidanceValueBoundarySearchCriteria);
 			if (guidanceValueBoundaryResponse != null
 					&& guidanceValueBoundaryResponse.getGuidanceValueBoundaries().size() > 0)
 				assertTrue(true);
@@ -1971,17 +1975,61 @@ public class PropertyServiceTest {
 
 	@Test
 	public void searchAppConfigurationTest() {
-		String tenantId = "default";
-		String keyName = "AppConfigUpdated";
+		AppConfigurationSearchCriteria appConfigurationSearchCriteria = new AppConfigurationSearchCriteria();
+		appConfigurationSearchCriteria.setTenantId("default");
+		appConfigurationSearchCriteria.setKeyName("AppConfigUpdated");
 		RequestInfo requestInfo = getRequestInfoObject();
 		AppConfigurationResponse appConfigurationResponse;
 		try {
-			appConfigurationResponse = masterService.getAppConfiguration(requestInfo, tenantId, null, keyName, null,
-					null, null);
+			appConfigurationResponse = masterService.getAppConfiguration(requestInfo, appConfigurationSearchCriteria);
 			if (appConfigurationResponse != null && appConfigurationResponse.getAppConfigurations().size() > 0)
 				assertTrue(true);
 		} catch (Exception e) {
 			assertTrue(false);
 		}
 	}
+	
+	/*@Test
+	public void createVacancyRemissionTest() {
+	
+		VacancyRemissionRequest vacancyRemissionRequest = new VacancyRemissionRequest(); 
+		VacancyRemission vacancyRemission = new VacancyRemission();
+		vacancyRemission.setTenantId("default");
+		vacancyRemission.setApplicationNo("1000123");
+		vacancyRemission.setFromDate("12/12/2017");
+		vacancyRemission.setToDate("13/05/2018");
+		vacancyRemission.setPercentage(25.0);
+		vacancyRemission.setReason(Reason.fromValue("NINTY_DAYS_INACTIVE"));
+		vacancyRemission.setRequestDate("28/02/2018");
+		vacancyRemission.setApprovedDate("30/08/2018");
+		vacancyRemission.setIsApproved(true);
+		vacancyRemission.setRemarks("Test Comment!");
+		
+		List<Document> documents = new ArrayList<> ();
+		Document document = new Document(); 
+		document.setDocumentType("DocumentType");
+		document.setFileStore("TestFileStore");
+		documents.add(document);
+		
+		WorkFlowDetails workFlowDetails = new WorkFlowDetails();
+		workFlowDetails.setDepartment("Revenue");
+		workFlowDetails.setDesignation("Junior Assistant");
+		workFlowDetails.setAssignee(21l);
+		workFlowDetails.setAction("forward");
+		workFlowDetails.setStatus("processing");
+		
+		vacancyRemission.setDocuments(documents);
+		
+		
+	}*/
+	/*
+	@Test
+	public void modifyVacancyRemissionTest() {
+		
+	}
+	
+	@Test
+	public void searchVacancyRemissionTest() {
+		
+	}*/
 }

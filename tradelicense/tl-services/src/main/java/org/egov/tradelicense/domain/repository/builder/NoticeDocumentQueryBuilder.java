@@ -123,8 +123,8 @@ public class NoticeDocumentQueryBuilder {
 
 		if ( noticeDocumentGetRequest.getWard() != null ) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" license.adminward = :ward");
-			preparedStatementValues.addValue("ward", noticeDocumentGetRequest.getWard());
+			selectQuery.append(" upper(license.adminward) = :ward");
+			preparedStatementValues.addValue("ward", noticeDocumentGetRequest.getWard().toUpperCase());
 		}
 
 		if (noticeDocumentGetRequest.getMobileNumber() != null && !noticeDocumentGetRequest.getMobileNumber() .isEmpty()) {
@@ -147,8 +147,14 @@ public class NoticeDocumentQueryBuilder {
 
 		if (noticeDocumentGetRequest.getStatus() != null && !noticeDocumentGetRequest.getStatus().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" upper(app.status) = :status");
+			selectQuery.append(" upper(license.status) = :status");
 			preparedStatementValues.addValue("status",  noticeDocumentGetRequest.getStatus().toUpperCase());
+		}
+		
+		if (noticeDocumentGetRequest.getApplicationStatus() != null && !noticeDocumentGetRequest.getApplicationStatus().isEmpty()) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" upper(app.status) = :appstatus");
+			preparedStatementValues.addValue("appstatus",  noticeDocumentGetRequest.getApplicationStatus().toUpperCase());
 		}
 
 		if (noticeDocumentGetRequest.getApplicationType() != null  && !noticeDocumentGetRequest.getApplicationType().isEmpty()) {

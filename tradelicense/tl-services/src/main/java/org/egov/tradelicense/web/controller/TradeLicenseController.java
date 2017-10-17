@@ -19,6 +19,7 @@ import org.egov.tl.commons.web.response.TradeLicenseResponse;
 import org.egov.tl.commons.web.response.TradeLicenseSearchResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.common.domain.exception.CustomBindException;
+import org.egov.tradelicense.common.domain.exception.CustomDataMigrationBindException;
 import org.egov.tradelicense.common.domain.exception.TradeLicensesNotEmptyException;
 import org.egov.tradelicense.common.domain.exception.TradeLicensesNotFoundException;
 import org.egov.tradelicense.domain.model.AuditDetails;
@@ -41,7 +42,7 @@ public class TradeLicenseController {
 
 	@Autowired
 	TradeLicenseService tradeLicenseService;
-	
+
 	@Autowired
 	TradeLicenseSearchContractRepository tradeLicenseSearchContractRepository;
 
@@ -59,10 +60,13 @@ public class TradeLicenseController {
 		// check for field validation errors
 		if (errors.hasErrors()) {
 
-			throw new CustomBindException(errors, requestInfo);
+			validateDataMigrationFieldErrors(tradeLicenseRequest, errors);
+			
 		}
 		// check for existence of licenses
 		validateExistanceOfLicenses(tradeLicenseRequest, requestInfo);
+		// set default values for the licenses
+		setDefaultValuesForLicense(tradeLicenseRequest, true);
 		// instantiating model mapper
 		ModelMapper model = new ModelMapper();
 		// converting license contract models to domain models
@@ -116,6 +120,8 @@ public class TradeLicenseController {
 		}
 		// check for existence of licenses
 		validateExistanceOfLicenses(tradeLicenseRequest, requestInfo);
+		// set default values for the licenses
+		setDefaultValuesForLicense(tradeLicenseRequest, false);
 		// instantiating model mapper
 		ModelMapper model = new ModelMapper();
 		model.getConfiguration().setAmbiguityIgnored(true);
@@ -184,10 +190,11 @@ public class TradeLicenseController {
 		final LicenseSearch domain = mapper.toSearchDomain(licenseSearchContract);
 		final List<TradeLicense> licenses = tradeLicenseService.search(domain);
 		List<TradeLicenseSearchContract> tradeLicenseSearchContracts = new ArrayList<TradeLicenseSearchContract>();
-		
-		if(licenses != null && licenses.size() > 0){
-			
-			tradeLicenseSearchContracts = tradeLicenseSearchContractRepository.toSearchContractList(requestInfo, licenses);
+
+		if (licenses != null && licenses.size() > 0) {
+
+			tradeLicenseSearchContracts = tradeLicenseSearchContractRepository.toSearchContractList(requestInfo,
+					licenses);
 		}
 
 		final TradeLicenseSearchResponse response = new TradeLicenseSearchResponse();
@@ -197,6 +204,98 @@ public class TradeLicenseController {
 		return response;
 	}
 
+	private void setDefaultValuesForLicense(TradeLicenseRequest tradeLicenseRequest, Boolean isNewRecord) {
+		
+		// this method will set the default values for the license object
+		if(tradeLicenseRequest != null && tradeLicenseRequest.getLicenses() != null
+				&& tradeLicenseRequest.getLicenses().size() > 0){
+			
+			for( TradeLicenseContract tradeLicenseContract: tradeLicenseRequest.getLicenses()){
+				
+				if(tradeLicenseContract.getIsLegacy() == null){
+					tradeLicenseContract.setIsLegacy(false);
+				}
+				if(tradeLicenseContract.getIsPropertyOwner() == null){
+					tradeLicenseContract.setIsPropertyOwner(false);
+				}
+				if(tradeLicenseContract.getActive() == null){
+					tradeLicenseContract.setActive(true);
+				}
+				if(tradeLicenseContract.getIsDataPorting() == null){
+					tradeLicenseContract.setIsDataPorting(false);
+				}
+				//set validity years to 1 only in case of legacy creation and data porting is true and validity years is null
+				if(isNewRecord && tradeLicenseContract.getIsLegacy() 
+						&& tradeLicenseContract.getIsDataPorting() 
+						&& (tradeLicenseContract.getValidityYears() == null)){
+					
+					tradeLicenseContract.setValidityYears(1l);
+				}
+			}
+		}
+		
+	}
+
+	private void validateDataMigrationFieldErrors(TradeLicenseRequest tradeLicenseRequest, BindingResult errors) {
+		
+		RequestInfo requestInfo = tradeLicenseRequest.getRequestInfo();
+		int optionalFieldCount = 0;
+
+		if (errors.hasFieldErrors()) {
+			
+			List<org.springframework.validation.FieldError> fieldErrors = errors.getFieldErrors();
+
+			for (org.springframework.validation.FieldError err : fieldErrors) {
+				
+				TradeLicenseContract tlContract = null;
+				String errField = err.getField().substring(err.getField().indexOf(".") + 1);
+				String licenseIndex = err.getField().substring((err.getField().indexOf("[") + 1),
+						(err.getField().indexOf("[") + 2));
+
+				if (licenseIndex != null && !licenseIndex.isEmpty()) {
+
+					Integer intVal = Integer.valueOf(licenseIndex);
+
+					if (intVal != null && tradeLicenseRequest.getLicenses() != null
+							&& tradeLicenseRequest.getLicenses().get(intVal) != null) {
+
+						tlContract = tradeLicenseRequest.getLicenses().get(intVal);
+					}
+
+					if (tlContract != null && tlContract.getIsLegacy() != null
+							&& tlContract.getIsLegacy() == Boolean.TRUE
+							&& tlContract.getIsDataPorting() != null 
+							&& tlContract.getIsDataPorting() == Boolean.TRUE) {
+
+						if (errField != null && err.getCode() != null 
+								&& (err.getCode().equalsIgnoreCase("NotEmpty") || err.getCode().equalsIgnoreCase("NotNull"))
+								&& (errField.equalsIgnoreCase("mobileNumber")
+								|| errField.equalsIgnoreCase("fatherspousename")
+								|| errField.equalsIgnoreCase("emailid")
+								|| errField.equalsIgnoreCase("ownerAddress")
+								|| errField.equalsIgnoreCase("ownerShipType")
+								|| errField.equalsIgnoreCase("uom")
+								|| errField.equalsIgnoreCase("tradeCommencementDate")
+								|| errField.equalsIgnoreCase("adminWard")
+								|| errField.equalsIgnoreCase("category")
+								|| errField.equalsIgnoreCase("subCategory")
+								|| errField.equalsIgnoreCase("validityYears"))) {
+
+							optionalFieldCount++;
+
+						}
+					}
+				}
+			}
+
+			if (optionalFieldCount != fieldErrors.size()) {
+				
+				throw new CustomDataMigrationBindException(errors, requestInfo, tradeLicenseRequest);
+			}
+
+		}
+	}
+	
 	// validating the existence of licenses
 	private void validateExistanceOfLicenses(TradeLicenseRequest tradeLicenseRequest, RequestInfo requestInfo) {
 

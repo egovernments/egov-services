@@ -8,22 +8,34 @@ import org.springframework.stereotype.Service;
 @Service
 public class NoticeMessageQueueRepository {
 
-    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	public static final String CREATE = "CREATE";
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-    private String createtopicName;
+	private String createtopicName;
 
-    private String createTopicKey;
+	private String createTopicKey;
 
-    public NoticeMessageQueueRepository(LogAwareKafkaTemplate<String, Object> kafkaTemplate,
-                                        @Value("${egov.propertytax.property.notice.create}") final String createtopicName,
-                                        @Value("${egov.propertytax.property.notice.create.key}") final String createTopicKey) {
-        this.kafkaTemplate = kafkaTemplate;
-        this.createtopicName = createtopicName;
-        this.createTopicKey = createTopicKey;
-    }
+	private String updateTopicName;
 
-    public void save(NoticeRequest noticeRequest){
+	private String updateTopicKey;
 
-        kafkaTemplate.send(createtopicName, createTopicKey, noticeRequest);
-    }
+	public NoticeMessageQueueRepository(LogAwareKafkaTemplate<String, Object> kafkaTemplate,
+										@Value("${egov.propertytax.property.notice.create}") final String createtopicName,
+										@Value("${egov.propertytax.property.notice.create.key}") final String createTopicKey,
+										@Value("${egov.propertytax.property.notice.update}") final String updateTopicName,
+										@Value("${egov.propertytax.property.notice.update.key}") final String updateTopicKey) {
+		this.kafkaTemplate = kafkaTemplate;
+		this.createtopicName = createtopicName;
+		this.createTopicKey = createTopicKey;
+		this.updateTopicName = updateTopicName;
+		this.updateTopicKey = updateTopicKey;
+	}
+
+	public void save(NoticeRequest noticeRequest, String action) {
+
+		if(action.equals(CREATE))
+			kafkaTemplate.send(createtopicName, createTopicKey, noticeRequest);
+		else
+			kafkaTemplate.send(updateTopicName, updateTopicKey, noticeRequest);
+	}
 }

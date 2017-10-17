@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
@@ -36,11 +35,4 @@ public class PtUserValidatorApplication {
 	   return converter;
 	}
 	
-	/*
-         * This method for creating rest template
-         */
-        @Bean
-        public RestTemplate restTemplate() {
-                return new RestTemplate();
-        }
 }

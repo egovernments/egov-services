@@ -1,10 +1,15 @@
 package org.egov.property.repository;
 
+import java.io.IOException;
 import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.egov.models.CalculationFactorResponse;
+import org.egov.models.CalculationRequest;
+import org.egov.models.CalculationResponse;
 import org.egov.models.GuidanceValueResponse;
 import org.egov.models.RequestInfo;
 import org.egov.models.RequestInfoWrapper;
@@ -16,18 +21,23 @@ import org.egov.models.TransferFeeCal;
 import org.egov.models.TransferFeeCalRequest;
 import org.egov.models.TransferFeeCalResponse;
 import org.egov.models.Unit;
+import org.egov.models.demand.TaxHeadMasterResponse;
 import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.InvalidCodeException;
 import org.egov.property.exception.InvalidFactorValueException;
 import org.egov.property.exception.InvalidGuidanceValueException;
 import org.egov.property.exception.ValidationUrlNotFoundException;
+import org.egov.tracer.http.LogAwareRestTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Repository
 public class CalculatorRepository {
@@ -38,7 +48,7 @@ public class CalculatorRepository {
 	PropertiesManager propertiesManager;
 
 	@Autowired
-	RestTemplate restTemplate;
+	LogAwareRestTemplate restTemplate;
 
 	@Autowired
 	ResponseInfoFactory responseInfoFactory;
@@ -195,14 +205,9 @@ public class CalculatorRepository {
 		} catch (Exception ex) {
 			throw new InvalidCodeException(propertiesManager.getInvalidTaxRates(), requestInfo);
 		}
-		//TODO First two conditions can be put into one if condition
-		//TODO ex: if (isEmpty(taxPeriodsResponse) || isEmpty(taxPeriodsResponse.getTaxRates()))
-		if (taxRatesResponse != null) {
-			if (taxRatesResponse.getTaxRates() != null) {
-				if (!(taxRatesResponse.getTaxRates().size() > 0)) {
-					throw new InvalidCodeException(propertiesManager.getInvalidTaxRates(), requestInfo);
-				}
-			} else {
+
+		if (taxRatesResponse != null && taxRatesResponse.getTaxRates() != null) {
+			if (!(taxRatesResponse.getTaxRates().size() > 0)) {
 				throw new InvalidCodeException(propertiesManager.getInvalidTaxRates(), requestInfo);
 			}
 		} else {
@@ -228,16 +233,10 @@ public class CalculatorRepository {
 		} catch (Exception ex) {
 			throw new InvalidCodeException(propertiesManager.getInvalidTaxPeriods(), requestInfo);
 		}
-		//TODO First two conditions can be put into one if condition
-		//TODO ex: if (isEmpty(taxPeriodsResponse) || isEmpty(taxPeriodsResponse.getTaxPeriods()))
-		if (taxPeriodsResponse != null) {
 
-			if (taxPeriodsResponse.getTaxPeriods() != null) {
+		if (taxPeriodsResponse != null && taxPeriodsResponse.getTaxPeriods() != null) {
 
-				if (!(taxPeriodsResponse.getTaxPeriods().size() > 0)) {
-					throw new InvalidCodeException(propertiesManager.getInvalidTaxPeriods(), requestInfo);
-				}
-			} else {
+			if (!(taxPeriodsResponse.getTaxPeriods().size() > 0)) {
 				throw new InvalidCodeException(propertiesManager.getInvalidTaxPeriods(), requestInfo);
 			}
 		} else {
@@ -245,4 +244,109 @@ public class CalculatorRepository {
 		}
 		return taxPeriodsResponse;
 	}
+
+	/**
+	 * calculating tax
+	 * 
+	 * @param calculationRequest
+	 * @return CalculationResponse
+	 */
+	public CalculationResponse getCalculation(CalculationRequest calculationRequest) {
+
+		String url = propertiesManager.getCalculatorHostName() + propertiesManager.getCalculatorPath();
+		logger.info("Calculator url is:" + url + "CalculationRequest is:" + calculationRequest);
+		CalculationResponse calculationResponse = null;
+		try {
+			calculationResponse = restTemplate.postForObject(url, calculationRequest, CalculationResponse.class);
+			logger.info("CalculationResponse is:" + calculationResponse);
+
+		} catch (HttpClientErrorException ex) {
+			throw new ValidationUrlNotFoundException(propertiesManager.getInvalidTaxCalculation(), url,
+					calculationRequest.getRequestInfo());
+
+		}
+
+		return calculationResponse;
+	}
+
+	/**
+	 * Fetches the TaxPeriods from pt-calculator service for the given occupancy
+	 * date, till the current date
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param occupancyDateStr
+	 * @return TaxPeriodResponse
+	 */
+	public TaxPeriodResponse getTaxPeriodsForOccupancyDateRepository(RequestInfo requestInfo, String tenantId,
+			String occupancyDateStr, SimpleDateFormat dateFormat) {
+		StringBuffer taxPeriodSearchUrl = new StringBuffer();
+		taxPeriodSearchUrl.append(propertiesManager.getCalculatorHostName());
+		taxPeriodSearchUrl.append(propertiesManager.getCalculatorTaxperiodsSearch());
+
+		String toDate = dateFormat.format(new Date());
+		logger.info("getTaxPeriodsForOccupancyDate() ----------- fromDate ---->> " + occupancyDateStr
+				+ " and toDate ---->> " + toDate);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(taxPeriodSearchUrl.toString())
+				.queryParam("tenantId", tenantId).queryParam("fromDate", occupancyDateStr).queryParam("toDate", toDate);
+
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+
+		logger.info("PropertyServiceImpl BuilderUri : " + builder.buildAndExpand().toUri()
+				+ " \n RequestInfoWrapper  : " + requestInfoWrapper);
+		TaxPeriodResponse taxPeriodResponse = null;
+		try {
+			taxPeriodResponse = restTemplate.postForObject(builder.buildAndExpand().toUri(), requestInfoWrapper,
+					TaxPeriodResponse.class);
+		} catch (HttpClientErrorException ex) {
+			throw new ValidationUrlNotFoundException(propertiesManager.getInvalidTaxPeriods(),
+					taxPeriodSearchUrl.toString(), requestInfo);
+
+		}
+		return taxPeriodResponse;
+	}
+
+	/**
+	 * API fetches TaxHeadMasters from the Billing Service for the occupancy
+	 * date
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param occupancyDate
+	 * @return TaxHeadMasterResponse
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
+	 */
+	public TaxHeadMasterResponse getTaxHeadMastersRepository(RequestInfo requestInfo, String tenantId,
+			Date occupancyDate) throws JsonParseException, JsonMappingException, IOException {
+		TaxHeadMasterResponse taxHeadResponse = null;
+		StringBuffer taxHeadsUrl = new StringBuffer();
+		taxHeadsUrl.append(propertiesManager.getBillingServiceHostname());
+		taxHeadsUrl.append(propertiesManager.getBillingServiceSearchTaxHeads());
+
+		URI uri = UriComponentsBuilder.fromUriString(taxHeadsUrl.toString()).queryParam("tenantId", tenantId)
+				.queryParam("service", "PT").queryParam("validFrom", occupancyDate.getTime())
+				.queryParam("validTill", new Date().getTime()).build(true).encode().toUri();
+
+		logger.info("getTaxHeadMasters taxheads url --> " + uri + " taxheads request --> " + requestInfo);
+		try {
+			String taxHeadsResponseStr = restTemplate.postForObject(uri, requestInfo, String.class);
+			logger.info("getTaxHeadMasters taxheads response string is --> " + taxHeadsResponseStr);
+			if (!taxHeadsResponseStr.isEmpty()) {
+				ObjectMapper objectMapper = new ObjectMapper();
+				taxHeadResponse = objectMapper.readValue(taxHeadsResponseStr, TaxHeadMasterResponse.class);
+
+			} else {
+				throw new InvalidCodeException(propertiesManager.getInvalidTaxHead(), requestInfo);
+			}
+		} catch (HttpClientErrorException ex) {
+			throw new ValidationUrlNotFoundException(propertiesManager.getInvalidTaxPeriods(), taxHeadsUrl.toString(),
+					requestInfo);
+		}
+
+		return taxHeadResponse;
+	}
+
 }

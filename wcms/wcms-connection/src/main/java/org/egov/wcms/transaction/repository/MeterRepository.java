@@ -42,8 +42,10 @@ package org.egov.wcms.transaction.repository;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.MeterReading;
 import org.egov.wcms.transaction.model.enums.BillingType;
 import org.egov.wcms.transaction.repository.builder.WaterConnectionQueryBuilder;
@@ -53,6 +55,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -64,6 +67,9 @@ public class MeterRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public void persistMeterReading(final WaterConnectionReq waterConnectionRequest, final Long meterId) {
         if (!waterConnectionRequest.getConnection().getMeter().get(0).getMeterReadings().isEmpty()) {
@@ -95,7 +101,47 @@ public class MeterRepository {
             }
         }
     }
+    
+    public void removeMeterReading(final WaterConnectionReq waterConnectionRequest, final Long meterId) { 
+    	if (!waterConnectionRequest.getConnection().getMeter().get(0).getMeterReadings().isEmpty()) {
+    		String removeMeterReadingQuery = WaterConnectionQueryBuilder.removeMeterReadingQuery();
+    		final HashMap<String, Object> parametersMap = new HashMap<>();
+            parametersMap.put("meterId", meterId);
+            namedParameterJdbcTemplate.update(removeMeterReadingQuery, parametersMap);
+    	}
+    }
 
+    public void updateMeter(final WaterConnectionReq waterConnectionRequest, Long connectionId) { 
+    	if (connectionId > 0 && null != waterConnectionRequest.getConnection().getBillingType() &&
+                waterConnectionRequest.getConnection().getBillingType().equals(BillingType.METERED.toString()) &&
+                null != waterConnectionRequest.getConnection().getMeter()) {
+    		final String updateMeterQuery = WaterConnectionQueryBuilder.updateMeterQuery();
+    		namedParameterJdbcTemplate.update(updateMeterQuery, getMeterParametersMap(waterConnectionRequest, connectionId));
+    		removeMeterReading(waterConnectionRequest, waterConnectionRequest.getConnection().getMeter().get(0).getId());
+    		persistMeterReading(waterConnectionRequest, waterConnectionRequest.getConnection().getMeter().get(0).getId());
+    	}
+    }
+    
+    public HashMap<String, Object> getMeterParametersMap(WaterConnectionReq waterConnectionRequest, Long connectionId) {
+    	Connection conn = waterConnectionRequest.getConnection();
+		final HashMap<String, Object> parametersMap = new HashMap<>();
+        parametersMap.put("connectionId", connectionId);
+        parametersMap.put("tenantId", conn.getTenantId());
+        parametersMap.put("meterId", conn.getMeter().get(0).getId());
+        parametersMap.put("metermake", conn.getMeter().get(0).getMeterMake());
+        parametersMap.put("initialmeterreading", conn.getMeter().get(0).getInitialMeterReading());
+        parametersMap.put("meterSlNo", conn.getMeter().get(0).getMeterSlNo()); 
+        parametersMap.put("meterCost" , conn.getMeter().get(0).getMeterCost()); 
+        parametersMap.put("lastmodifiedby", waterConnectionRequest.getRequestInfo().getUserInfo().getId()); 
+        parametersMap.put("lastmodifiedtime", new Date(new java.util.Date().getTime()));
+        parametersMap.put("meterowner", conn.getMeter().get(0).getMeterOwner());
+        parametersMap.put("metermodel", conn.getMeter().get(0).getMeterModel());
+        parametersMap.put("maximumMeterReading", conn.getMeter().get(0).getMaximumMeterReading());
+        parametersMap.put("meterStatus", conn.getMeter().get(0).getMeterStatus());
+        return parametersMap; 
+    }
+    
+    
     public WaterConnectionReq persistMeter(final WaterConnectionReq waterConnectionRequest,Long connectionId) {
         if (connectionId > 0 && null != waterConnectionRequest.getConnection().getBillingType() &&
                 waterConnectionRequest.getConnection().getBillingType().equals(BillingType.METERED.toString()) &&

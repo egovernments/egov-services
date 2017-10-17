@@ -162,8 +162,8 @@ const menuConvention={
   "Trade License.License Masters.License Fee Matrix.ModifyTLFEEMATRIX": "/search/tl/FeeMatrix/update",
 
   "Trade License.License Masters.License Penalty Rate.CreateTLPENALTYRATE": "/non-framework/tl/masters/create/createPenaltyRates",
-  "Trade License.License Masters.License Penalty Rate.ViewTLPENALTYRATE": "/search/tl/LicensePenaltyRates/view",
-  "Trade License.License Masters.License Penalty Rate.ModifyTLPENALTYRATE": "/search/tl/LicensePenaltyRates/update",
+  "Trade License.License Masters.License Penalty Rate.ViewTLPENALTYRATE": "/non-framework/tl/masters/search/penaltyRatesSearch",
+  "Trade License.License Masters.License Penalty Rate.ModifyTLPENALTYRATE": "/non-framework/tl/masters/search/penaltyRatesUpdateSearch",
 
   "Water Charge.Wcms Reports.WCOutstandingReport":"/report/wcms/OutstandingRegister",
   "Water Charge.Wcms Reports.WCDemandRegister":"/report/wcms/DemandRegister",
@@ -211,8 +211,18 @@ const menuConvention={
 "Water Charge.WCMS Masters.Meter Status Master.CreateMeterStatusMaster":"/create/wc/meterStatus",
 "Water Charge.WCMS Masters.Meter Status Master.UpdateMeterStatusMaster":"/search/wc/meterStatus/update",
 "Water Charge.WCMS Masters.Meter Status Master.SearchMeterStatusMaster":"/search/wc/meterStatus/view",
+"Water Charge.Wcms Reports.Connection Status Report":"/wcms-connection/report/_connectionstatusreport",
 
-
+"Asset Management.Asset Masters.Asset Category.CreateAssetCategory":"/create/asset/createAssetCategroy",
+"Asset Management.Asset Masters.Asset Category.ViewAssetCategory":"/search/asset/createAssetCategroy/view",
+"Asset Management.Asset Masters.Asset Category.ModifyAssetCategory":"/search/asset/createAssetCategroy/update",
+"Asset Management.Asset Masters.Asset.CreateAsset":"/create/asset/assetImmovable",
+"Asset Management.Asset Masters.Asset.ViewAsset":"/search/asset/assetImmovable/view",
+"Asset Management.Asset Masters.Asset.ModifyAsset":"/search/asset/assetImmovable/update",
+"Asset Management.Asset Transactions.Asset Revaluation.AssetRevaluationSearchToCreate":"/transactionRevaluation/asset/revaluationAsset",
+"Asset Management.Asset Transactions.Asset Revaluation.AssetRevaluationSearchToView":"",
+"Asset Management.Asset Transactions.Asset Sale And Disposal.AssetSaleAndDisposalSearchToCreate":"/transactionTransfer/asset/translateAsset",
+"Asset Management.Asset Transactions.Asset Sale And Disposal.AssetSaleAndDisposalSearchToView":"",
 }
 
 const style = {

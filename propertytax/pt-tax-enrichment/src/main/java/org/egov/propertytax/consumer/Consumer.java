@@ -69,7 +69,14 @@ public class Consumer {
 		} else if (topic.equalsIgnoreCase(propertiesManager.getModifyPropertyTaxCalculated())
 				|| topic.equalsIgnoreCase(propertiesManager.getUpdatePropertyTaxCalculated())) {
 			PropertyRequest propertyRequest = objectMapper.convertValue(consumerRecord, PropertyRequest.class);
-			demandService.updateDemand(propertyRequest);
+			
+			Boolean isModify = Boolean.FALSE;
+			if (topic.equalsIgnoreCase(propertiesManager.getModifyPropertyTaxCalculated())){
+				isModify = Boolean.TRUE;
+			}
+				
+			
+			demandService.updateDemand(propertyRequest,isModify);
 
 			if (topic.equalsIgnoreCase(propertiesManager.getModifyPropertyTaxCalculated()))
 				kafkaTemplate.send(propertiesManager.getModifyPropertyTaxGenerated(), propertyRequest);

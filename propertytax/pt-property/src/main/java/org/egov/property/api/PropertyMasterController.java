@@ -4,37 +4,55 @@ import javax.validation.Valid;
 
 import org.egov.models.ApartmentRequest;
 import org.egov.models.ApartmentResponse;
+import org.egov.models.ApartmentSearchCriteria;
 import org.egov.models.AppConfigurationRequest;
 import org.egov.models.AppConfigurationResponse;
+import org.egov.models.AppConfigurationSearchCriteria;
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
+import org.egov.models.DepartmentSearchCriteria;
 import org.egov.models.DepreciationRequest;
 import org.egov.models.DepreciationResponse;
+import org.egov.models.DepreciationSearchCriteria;
 import org.egov.models.DocumentTypeRequest;
 import org.egov.models.DocumentTypeResponse;
+import org.egov.models.DocumentTypeSearchCriteria;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
+import org.egov.models.FloorTypeSearchCriteria;
 import org.egov.models.GuidanceValueBoundaryRequest;
 import org.egov.models.GuidanceValueBoundaryResponse;
+import org.egov.models.GuidanceValueBoundarySearchCriteria;
 import org.egov.models.MutationMasterRequest;
 import org.egov.models.MutationMasterResponse;
+import org.egov.models.MutationMasterSearchCriteria;
 import org.egov.models.OccuapancyMasterRequest;
 import org.egov.models.OccuapancyMasterResponse;
+import org.egov.models.OccuapancyMasterSearchCriteria;
 import org.egov.models.PropertyTypeRequest;
 import org.egov.models.PropertyTypeResponse;
+import org.egov.models.PropertyTypeSearchCriteria;
 import org.egov.models.RequestInfoWrapper;
 import org.egov.models.RoofTypeRequest;
 import org.egov.models.RoofTypeResponse;
+import org.egov.models.RoofTypeSearchCriteria;
 import org.egov.models.StructureClassRequest;
 import org.egov.models.StructureClassResponse;
+import org.egov.models.StructureClassSearchCriteria;
 import org.egov.models.UsageMasterRequest;
 import org.egov.models.UsageMasterResponse;
+import org.egov.models.UsageMasterSearchCriteria;
 import org.egov.models.WallTypeRequest;
 import org.egov.models.WallTypeResponse;
+import org.egov.models.WallTypeSearchCriteria;
 import org.egov.models.WoodTypeRequest;
 import org.egov.models.WoodTypeResponse;
+import org.egov.models.WoodTypeSearchCriteria;
+import org.egov.property.exception.InvalidSearchParameterException;
 import org.egov.property.services.Masterservice;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -55,6 +73,13 @@ public class PropertyMasterController {
 	@Autowired
 	Masterservice masterService;
 
+	/**
+	 * Description : This api for creating Department master
+	 * 
+	 * @param tenantId
+	 * @param departmentRequest
+	 * @return DepartmentResponseInfo
+	 */
 	@RequestMapping(path = "/departments/_create", method = RequestMethod.POST)
 	public DepartmentResponseInfo createDepartmentMaster(@RequestParam String tenantId,
 			@Valid @RequestBody DepartmentRequest departmentRequest) {
@@ -63,6 +88,12 @@ public class PropertyMasterController {
 
 	}
 
+	/**
+	 * Description : This api for updating Department master
+	 * 
+	 * @param departmentRequest
+	 * @return DepartmentResponseInfo
+	 */
 	@RequestMapping(path = "/departments/_update", method = RequestMethod.POST)
 	public DepartmentResponseInfo updateDepartmentMaster(@Valid @RequestBody DepartmentRequest departmentRequest) {
 
@@ -70,36 +101,42 @@ public class PropertyMasterController {
 
 	}
 
+	/**
+	 * Description : This api for fetching Departments based on search criteria
+	 * 
+	 * @param requestInfo
+	 * @param departmentSearchCriteria
+	 * @param bindingResult
+	 * @return DepartmentResponseInfo
+	 * @throws Exception
+	 */
 	@RequestMapping(path = "/departments/_search", method = RequestMethod.POST)
 	public DepartmentResponseInfo getDeparmentMaster(@RequestBody RequestInfoWrapper requestInfo,
-			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
-			@RequestParam(required = false) String category, @RequestParam(required = false) String name,
-			@RequestParam(required = false) String code, @RequestParam(required = false) String nameLocal,
-			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) Integer offSet)
+			@ModelAttribute @Valid DepartmentSearchCriteria departmentSearchCriteria, BindingResult bindingResult)
 			throws Exception {
-		return masterService.getDepartmentMaster(requestInfo.getRequestInfo(), tenantId, ids, category, name, code,
-				nameLocal, pageSize, offSet);
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
+		}
+		return masterService.getDepartmentMaster(requestInfo.getRequestInfo(), departmentSearchCriteria);
 
 	}
 
 	/**
 	 * Description : This api for getting floor master details
 	 * 
-	 * @param tenantId
-	 * @param code
 	 * @param requestInfo
+	 * @param floorTypeSearchCriteria
 	 * @return masterResponseInfo
 	 * @throws Exception
 	 */
-
 	@RequestMapping(path = "/floortypes/_search", method = RequestMethod.POST)
 	public FloorTypeResponse getFloorTypeMaster(@RequestBody RequestInfoWrapper requestInfo,
-			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
-			@RequestParam(required = false) String name, @RequestParam(required = false) String code,
-			@RequestParam(required = false) String nameLocal, @RequestParam(required = false) Integer pageSize,
-			@RequestParam(required = false) Integer offSet) throws Exception {
-		return masterService.getFloorTypeMaster(requestInfo.getRequestInfo(), tenantId, ids, name, code, nameLocal,
-				pageSize, offSet);
+			@ModelAttribute @Valid FloorTypeSearchCriteria floorTypeSearchCriteria, BindingResult bindingResult)
+			throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
+		}
+		return masterService.getFloorTypeMaster(requestInfo.getRequestInfo(), floorTypeSearchCriteria);
 
 	}
 
@@ -140,25 +177,18 @@ public class PropertyMasterController {
 	 * </p>
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param ids
-	 * @param name
-	 * @param code
-	 * @param nameLocal
-	 * @param pageSize
-	 * @param offSet
-	 * @return
+	 * @param woodTypeSearchCriteria
+	 * @return WoodTypeResponse
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "/woodtypes/_search", method = RequestMethod.POST)
 	public WoodTypeResponse searchWoodType(@RequestBody RequestInfoWrapper requestInfo,
-			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
-			@RequestParam(required = false) String name, @RequestParam(required = false) String code,
-			@RequestParam(required = false) String nameLocal, @RequestParam(required = false) Integer pageSize,
-			@RequestParam(required = false) Integer offSet) throws Exception {
-
-		return masterService.getWoodTypes(requestInfo.getRequestInfo(), tenantId, ids, name, code, nameLocal, pageSize,
-				offSet);
+			@ModelAttribute @Valid WoodTypeSearchCriteria woodTypeSearchCriteria, BindingResult bindingResult)
+			throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
+		}
+		return masterService.getWoodTypes(requestInfo.getRequestInfo(), woodTypeSearchCriteria);
 
 	}
 
@@ -194,33 +224,24 @@ public class PropertyMasterController {
 		return masterService.updateWoodType(woodTypeRequest);
 	}
 
-	// Roof types
 	/**
 	 * <p>
 	 * This Api
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param ids
-	 * @param name
-	 * @param code
-	 * @param nameLocal
-	 * @param pageSize
-	 * @param offSet
-	 * @return
+	 * @param roofTypeSearchCriteria
+	 * @return RoofTypeResponse
 	 * @throws Exception
 	 */
 
 	@RequestMapping(path = "/rooftypes/_search", method = RequestMethod.POST)
 	public RoofTypeResponse searchRoofType(@RequestBody RequestInfoWrapper requestInfo,
-			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
-			@RequestParam(required = false) String name, @RequestParam(required = false) String code,
-			@RequestParam(required = false) String nameLocal, @RequestParam(required = false) Integer pageSize,
-			@RequestParam(required = false) Integer offSet) throws Exception {
-
-		return masterService.getRoofypes(requestInfo.getRequestInfo(), tenantId, ids, name, code, nameLocal, pageSize,
-				offSet);
-
+			@ModelAttribute @Valid RoofTypeSearchCriteria roofTypeSearchCriteria, BindingResult bindingResult)
+			throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
+		}
+		return masterService.getRoofypes(requestInfo.getRequestInfo(), roofTypeSearchCriteria);
 	}
 
 	/**
@@ -289,29 +310,18 @@ public class PropertyMasterController {
 	 * Description : This api for searching strctureClass master
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param ids
-	 * @param name
-	 * @param code
-	 * @param nameLocal
-	 * @param active
-	 * @param orderNumber
-	 * @param pageSize
-	 * @param offSet
+	 * @param structureClassSearchCriteria
 	 * @return structureClassResponse
 	 * @throws Exception
 	 */
-
 	@RequestMapping(path = "structureclasses/_search", method = RequestMethod.POST)
 	public StructureClassResponse getStructureClassMaster(@RequestBody RequestInfoWrapper requestInfo,
-			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
-			@RequestParam(required = false) String name, @RequestParam(required = false) String code,
-			@RequestParam(required = false) String nameLocal, @RequestParam(required = false) Boolean active,
-			@RequestParam(required = false) Integer orderNumber, @RequestParam(required = false) Integer pageSize,
-			@RequestParam(required = false) Integer offSet) throws Exception {
-		return masterService.getStructureClassMaster(requestInfo.getRequestInfo(), tenantId, ids, name, code, nameLocal,
-				active, orderNumber, pageSize, offSet);
-
+			@ModelAttribute @Valid StructureClassSearchCriteria structureClassSearchCriteria,
+			BindingResult bindingResult) throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
+		}
+		return masterService.getStructureClassMaster(requestInfo.getRequestInfo(), structureClassSearchCriteria);
 	}
 
 	/**
@@ -350,29 +360,18 @@ public class PropertyMasterController {
 	 * Description : This api for searching propertyType master
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param ids
-	 * @param name
-	 * @param code
-	 * @param nameLocal
-	 * @param active
-	 * @param orderNumber
-	 * @param pageSize
-	 * @param offSet
-	 * @return
+	 * @param propertyTypeSearchCriteria
+	 * @return PropertyTypeResponse
 	 * @throws Exception
 	 */
-
 	@RequestMapping(path = "/propertytypes/_search", method = RequestMethod.POST)
 	public PropertyTypeResponse getPropertyTypeMaster(@RequestBody RequestInfoWrapper requestInfo,
-			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
-			@RequestParam(required = false) String name, @RequestParam(required = false) String code,
-			@RequestParam(required = false) String nameLocal, @RequestParam(required = false) Boolean active,
-			@RequestParam(required = false) Integer orderNumber, @RequestParam(required = false) Integer pageSize,
-			@RequestParam(required = false) Integer offSet, @RequestParam(required = false) String parent)
+			@ModelAttribute @Valid PropertyTypeSearchCriteria propertyTypeSearchCriteria, BindingResult bindingResult)
 			throws Exception {
-		return masterService.getPropertyTypeMaster(requestInfo.getRequestInfo(), tenantId, ids, name, code, nameLocal,
-				active, orderNumber, pageSize, offSet, parent);
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
+		}
+		return masterService.getPropertyTypeMaster(requestInfo.getRequestInfo(), propertyTypeSearchCriteria);
 
 	}
 
@@ -411,52 +410,37 @@ public class PropertyMasterController {
 	 * Description : This api for searching occupancy type master
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param ids
-	 * @param name
-	 * @param code
-	 * @param nameLocal
-	 * @param active
-	 * @param orderNumber
-	 * @param pageSize
-	 * @param offSet
-	 * @return
+	 * @param OccuapancyMasterSearchCriteria
+	 * @return OccuapancyMasterResponse
 	 * @throws Exception
 	 */
-
 	@RequestMapping(path = "/occuapancies/_search", method = RequestMethod.POST)
 	public OccuapancyMasterResponse getOccuapancyMaster(@RequestBody RequestInfoWrapper requestInfo,
-			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
-			@RequestParam(required = false) String name, @RequestParam(required = false) String code,
-			@RequestParam(required = false) String nameLocal, @RequestParam(required = false) Boolean active,
-			@RequestParam(required = false) Integer orderNumber, @RequestParam(required = false) Integer pageSize,
-			@RequestParam(required = false) Integer offSet) throws Exception {
-		return masterService.getOccuapancyMaster(requestInfo.getRequestInfo(), tenantId, ids, name, code, nameLocal,
-				active, orderNumber, pageSize, offSet);
+			@ModelAttribute @Valid OccuapancyMasterSearchCriteria occuapancyMasterSearchCriteria,
+			BindingResult bindingResult) throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
+		}
+		return masterService.getOccuapancyMaster(requestInfo.getRequestInfo(), occuapancyMasterSearchCriteria);
 
 	}
 
 	/**
 	 * Description : This api for getting wall type master details
 	 * 
-	 * @param tenantId
-	 * @param code
 	 * @param requestInfo
+	 * @param WallTypeSearchCriteria
 	 * @return masterResponse
 	 * @throws Exception
 	 */
-
 	@RequestMapping(path = "/walltypes/_search", method = RequestMethod.POST)
 	public WallTypeResponse getWallTypeMaster(@RequestBody RequestInfoWrapper requestInfo,
-			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
-			@RequestParam(required = false) String category, @RequestParam(required = false) String name,
-			@RequestParam(required = false) String code, @RequestParam(required = false) String nameLocal,
-			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) Integer offSet)
+			@ModelAttribute @Valid WallTypeSearchCriteria wallTypeSearchCriteria, BindingResult bindingResult)
 			throws Exception {
-
-		return masterService.getWallTypeMaster(requestInfo.getRequestInfo(), tenantId, ids, name, code, nameLocal,
-				pageSize, offSet);
-
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
+		}
+		return masterService.getWallTypeMaster(requestInfo.getRequestInfo(), wallTypeSearchCriteria);
 	}
 
 	/**
@@ -493,24 +477,19 @@ public class PropertyMasterController {
 	/**
 	 * Description : This api for getting usage type master details
 	 * 
-	 * @param tenantId
-	 * @param code
 	 * @param requestInfo
-	 * @return masterResponse
+	 * @param UsageMasterSearchCriteria
+	 * @return UsageMasterResponse
 	 * @throws Exception
 	 */
-
 	@RequestMapping(path = "/usages/_search", method = RequestMethod.POST)
 	public UsageMasterResponse getUsageMaster(@RequestBody RequestInfoWrapper requestInfo,
-			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
-			@RequestParam(required = false) String name, @RequestParam(required = false) String code,
-			@RequestParam(required = false) String nameLocal, @RequestParam(required = false) Boolean active,
-			@RequestParam(required = false) Boolean isResidential, @RequestParam(required = false) Integer orderNumber,
-			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) Integer offSet,
-			@RequestParam(required = false) String parent,@RequestParam(required = false) String[] service) throws Exception {
-		return masterService.getUsageMaster(requestInfo.getRequestInfo(), tenantId, ids, name, code, nameLocal, active,
-				isResidential, orderNumber, pageSize, offSet, parent,service);
-
+			@ModelAttribute @Valid UsageMasterSearchCriteria usageMasterSearchCriteria, BindingResult bindingResult)
+			throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
+		}
+		return masterService.getUsageMaster(requestInfo.getRequestInfo(), usageMasterSearchCriteria);
 	}
 
 	/**
@@ -575,27 +554,18 @@ public class PropertyMasterController {
 	 * This will search the depreciations based on the given inputs.
 	 * 
 	 * @param requestInfoWrapper
-	 * @param tenantId
-	 * @param ids
-	 * @param fromYear
-	 * @param toYear
-	 * @param code
-	 * @param nameLocal
-	 * @param pageSize
-	 * @param offset
-	 * @param year
+	 * @param DepreciationSearchCriteria
 	 * @return {@link DepreciationResponse}
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "/depreciations/_search", method = RequestMethod.POST)
 	public DepreciationResponse searchDepreciation(@RequestBody RequestInfoWrapper requestInfoWrapper,
-			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
-			@RequestParam(required = false) Integer fromYear, @RequestParam(required = false) Integer toYear,
-			@RequestParam(required = false) String code, @RequestParam(required = false) String nameLocal,
-			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) Integer offset,
-			@RequestParam(required = false) Integer year) throws Exception {
-		return masterService.searchDepreciation(requestInfoWrapper.getRequestInfo(), tenantId, ids, fromYear, toYear,
-				code, nameLocal, pageSize, offset, year);
+			@ModelAttribute @Valid DepreciationSearchCriteria depreciationSearchCriteria, BindingResult bindingResult)
+			throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfoWrapper.getRequestInfo());
+		}
+		return masterService.searchDepreciation(requestInfoWrapper.getRequestInfo(), depreciationSearchCriteria);
 	}
 
 	/**
@@ -633,24 +603,18 @@ public class PropertyMasterController {
 	 * This will search the mutation master based on the given parameters
 	 * 
 	 * @param requestInfoWrapper
-	 * @param tenatId
-	 * @param ids
-	 * @param name
-	 * @param code
-	 * @param nameLocal
-	 * @param pageSize
-	 * @param offSet
+	 * @param MutationMasterSearchCriteria
 	 * @return {@link MutationMasterResponse}
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "/mutationmasters/_search", method = RequestMethod.POST)
 	public MutationMasterResponse searchMutationMaster(@RequestBody RequestInfoWrapper requestInfoWrapper,
-			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
-			@RequestParam(required = false) String name, @RequestParam(required = false) String code,
-			@RequestParam(required = false) String nameLocal, @RequestParam(required = false) Integer pageSize,
-			@RequestParam(required = false) Integer offSet) throws Exception {
-		return masterService.searchMutationMaster(requestInfoWrapper.getRequestInfo(), tenantId, ids, name, code,
-				nameLocal, pageSize, offSet);
+			@ModelAttribute @Valid MutationMasterSearchCriteria mutationMasterSearchCriteria,
+			BindingResult bindingResult) throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfoWrapper.getRequestInfo());
+		}
+		return masterService.searchMutationMaster(requestInfoWrapper.getRequestInfo(), mutationMasterSearchCriteria);
 
 	}
 
@@ -683,23 +647,17 @@ public class PropertyMasterController {
 	 * This will search for the Document type master
 	 * 
 	 * @param requestInfoWrapper
-	 * @param tenantId
-	 * @param name
-	 * @param code
-	 * @param application
-	 * @param pageSize
-	 * @param offSet
+	 * @param DocumentTypeSearchCriteria
 	 * @return DocumentTypeResponse
 	 */
 	@RequestMapping(path = "/documenttypes/_search", method = RequestMethod.POST)
 	public DocumentTypeResponse searchDocumentTypeMaster(@RequestBody RequestInfoWrapper requestInfoWrapper,
-			@RequestParam(required = true) String tenantId, @RequestParam(required = false) String name,
-			@RequestParam(required = false) String code, @RequestParam(required = false) String application,
-			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) Integer offSet)
+			@ModelAttribute @Valid DocumentTypeSearchCriteria documentTypeSearchCriteria, BindingResult bindingResult)
 			throws Exception {
-
-		return masterService.searchDocumentTypeMaster(requestInfoWrapper.getRequestInfo(), tenantId, name, code,
-				application, pageSize, offSet);
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfoWrapper.getRequestInfo());
+		}
+		return masterService.searchDocumentTypeMaster(requestInfoWrapper.getRequestInfo(), documentTypeSearchCriteria);
 	}
 
 	/**
@@ -734,27 +692,18 @@ public class PropertyMasterController {
 	 * This will search for Apartment
 	 * 
 	 * @param requestInfoWrapper
-	 * @param tenantId
-	 * @param apartmentCode
-	 * @param apartmentName
-	 * @param liftFacility
-	 * @param powerBackUp
-	 * @param parkingFacility
-	 * @param pageSize
-	 * @param offSet
+	 * @param ApartmentSearchCriteria
 	 * @return ApartmentResponse
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "/apartment/_search", method = RequestMethod.POST)
 	public ApartmentResponse searchApartment(@RequestBody RequestInfoWrapper requestInfoWrapper,
-			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
-			@RequestParam(required = false) String name, @RequestParam(required = false) String code,
-			@RequestParam(required = false) Boolean liftFacility, @RequestParam(required = false) Boolean powerBackUp,
-			@RequestParam(required = false) Boolean parkingFacility, @RequestParam(required = false) Integer pageSize,
-			@RequestParam(required = false) Integer offSet) throws Exception {
-
-		return masterService.searchApartment(requestInfoWrapper.getRequestInfo(), tenantId, ids, name, code,
-				liftFacility, powerBackUp, parkingFacility, pageSize, offSet);
+			@ModelAttribute @Valid ApartmentSearchCriteria apartmentSearchCriteria, BindingResult bindingResult)
+			throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfoWrapper.getRequestInfo());
+		}
+		return masterService.searchApartment(requestInfoWrapper.getRequestInfo(), apartmentSearchCriteria);
 	}
 
 	/**
@@ -789,29 +738,22 @@ public class PropertyMasterController {
 	 * This will give GuidanceValueBoundary search
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param guidancevalueboundary1
-	 * @param guidancevalueboundary2
-	 * @param orderNumber
-	 * @param pageSize
-	 * @param offSet
-	 * @return
+	 * @param GuidanceValueBoundarySearchCriteria
+	 * @return GuidanceValueBoundaryResponse
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "/guidancevalueboundary/_search", method = RequestMethod.POST)
 	public GuidanceValueBoundaryResponse getGuidanceValueBoundary(@RequestBody RequestInfoWrapper requestInfo,
-			@RequestParam(required = true) String tenantId,
-			@RequestParam(required = true) String guidanceValueBoundary1,
-			@RequestParam(required = false) String guidanceValueBoundary2,
-			@RequestParam(required = false) Integer pageSize,
-			@RequestParam(required = false) Integer offSet)
-			throws Exception {
-		return masterService.getGuidanceValueBoundary(requestInfo.getRequestInfo(), tenantId, guidanceValueBoundary1,
-				guidanceValueBoundary2, pageSize, offSet);
+			@ModelAttribute @Valid GuidanceValueBoundarySearchCriteria guidanceValueBoundarySearchCriteria,
+			BindingResult bindingResult) throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
+		}
+		return masterService.getGuidanceValueBoundary(requestInfo.getRequestInfo(),
+				guidanceValueBoundarySearchCriteria);
 
 	}
 
-	
 	/**
 	 * This will create the AppConfiguration
 	 * 
@@ -834,24 +776,28 @@ public class PropertyMasterController {
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "/appconfiguration/_update", method = RequestMethod.POST)
-	public AppConfigurationResponse updateAppConfiguration(@Valid @RequestBody AppConfigurationRequest appConfigurationRequest)
-			throws Exception {
+	public AppConfigurationResponse updateAppConfiguration(
+			@Valid @RequestBody AppConfigurationRequest appConfigurationRequest) throws Exception {
 
 		return masterService.updateAppConfiguration(appConfigurationRequest);
 	}
-	
+
+	/**
+	 * This will fetch AppConfigurations based on search criteria params
+	 * 
+	 * @param requestInfo
+	 * @param appConfigurationSearchCriteria
+	 * @param bindingResult
+	 * @return AppConfigurationResponse
+	 * @throws Exception
+	 */
 	@RequestMapping(path = "/appconfiguration/_search", method = RequestMethod.POST)
 	public AppConfigurationResponse getAppConfiguration(@RequestBody RequestInfoWrapper requestInfo,
-			@RequestParam(required = true) String tenantId,
-			@RequestParam(required = false) Long[] ids,
-			@RequestParam(required = false) String keyName,
-			@RequestParam(required = false) String effectiveFrom,
-			@RequestParam(required = false) Integer pageSize,
-			@RequestParam(required = false) Integer offSet)
-			throws Exception {
-		return masterService.getAppConfiguration(requestInfo.getRequestInfo(), tenantId, ids,
-				keyName,effectiveFrom, pageSize, offSet);
-
+			@ModelAttribute @Valid AppConfigurationSearchCriteria appConfigurationSearchCriteria,
+			BindingResult bindingResult) throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
+		}
+		return masterService.getAppConfiguration(requestInfo.getRequestInfo(), appConfigurationSearchCriteria);
 	}
-
 }

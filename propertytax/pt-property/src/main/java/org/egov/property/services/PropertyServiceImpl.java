@@ -4,7 +4,6 @@ import static org.springframework.util.StringUtils.isEmpty;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,6 +19,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.egov.enums.StatusEnum;
 import org.egov.models.Address;
 import org.egov.models.AppConfigurationResponse;
+import org.egov.models.AppConfigurationSearchCriteria;
 import org.egov.models.AttributeNotFoundException;
 import org.egov.models.Demand;
 import org.egov.models.DemandDetail;
@@ -31,9 +31,7 @@ import org.egov.models.ErrorRes;
 import org.egov.models.Floor;
 import org.egov.models.FloorSpec;
 import org.egov.models.HeadWiseTax;
-import org.egov.models.IdGenerationRequest;
 import org.egov.models.IdGenerationResponse;
-import org.egov.models.IdRequest;
 import org.egov.models.Owner;
 import org.egov.models.Property;
 import org.egov.models.PropertyDCB;
@@ -43,6 +41,7 @@ import org.egov.models.PropertyDetail;
 import org.egov.models.PropertyLocation;
 import org.egov.models.PropertyRequest;
 import org.egov.models.PropertyResponse;
+import org.egov.models.PropertySearchCriteria;
 import org.egov.models.RequestInfo;
 import org.egov.models.RequestInfoWrapper;
 import org.egov.models.ResponseInfo;
@@ -57,6 +56,7 @@ import org.egov.models.TaxPeriodResponse;
 import org.egov.models.TitleTransfer;
 import org.egov.models.TitleTransferRequest;
 import org.egov.models.TitleTransferResponse;
+import org.egov.models.TitleTransferSearchCriteria;
 import org.egov.models.TotalTax;
 import org.egov.models.TransferFeeCal;
 import org.egov.models.Unit;
@@ -72,28 +72,28 @@ import org.egov.property.exception.InvalidUpdatePropertyException;
 import org.egov.property.exception.InvalidVacantLandException;
 import org.egov.property.exception.PropertyTaxPendingException;
 import org.egov.property.exception.PropertyUnderWorkflowException;
-import org.egov.property.exception.ValidationUrlNotFoundException;
 import org.egov.property.model.TitleTransferSearchResponse;
 import org.egov.property.model.UserCreateRequest;
 import org.egov.property.model.UserCreateResponse;
 import org.egov.property.repository.CalculatorRepository;
 import org.egov.property.repository.DemandRepository;
 import org.egov.property.repository.DemandRestRepository;
+import org.egov.property.repository.IdgenRepository;
 import org.egov.property.repository.PropertyMasterRepository;
 import org.egov.property.repository.PropertyRepository;
+import org.egov.property.repository.TenantRepository;
 import org.egov.property.repository.UserRestRepository;
 import org.egov.property.repository.WorkFlowRepository;
 import org.egov.property.utility.PropertyValidator;
 import org.egov.property.utility.TimeStampUtil;
 import org.egov.property.utility.UpicNoGeneration;
+import org.egov.property.utility.UserUtil;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -132,6 +132,12 @@ public class PropertyServiceImpl implements PropertyService {
 	@Autowired
 	MasterServiceImpl masterServiceImpl;
 
+	@Autowired
+	TenantRepository tenantRepository;
+
+	@Autowired
+	UserUtil userUtil;
+
 	private static final Logger logger = LoggerFactory.getLogger(PropertyServiceImpl.class);
 
 	@Autowired
@@ -145,13 +151,15 @@ public class PropertyServiceImpl implements PropertyService {
 
 	@Autowired
 	DemandRestRepository demandRestRepository;
-	
+
 	@Autowired
 	UserRestRepository userRestRepository;
 
+	@Autowired
+	IdgenRepository idgenRepository;
+
 	@Override
-	public PropertyResponse createProperty(PropertyRequest propertyRequest)  throws Exception{
-		// TODO Auto-generated method stub
+	public PropertyResponse createProperty(PropertyRequest propertyRequest) throws Exception {
 
 		for (Property property : propertyRequest.getProperties()) {
 			propertyValidator.validatePropertyMasterData(property, propertyRequest.getRequestInfo());
@@ -160,32 +168,32 @@ public class PropertyServiceImpl implements PropertyService {
 					propertyRequest.getRequestInfo());
 			property.getPropertyDetail().setApplicationNo(acknowldgementNumber);
 			property.getPropertyDetail().setStatus(StatusEnum.WORKFLOW);
-			//TODO Instead of creating new PropertyRequest same property object can be used while pushing to kafa template
-			// TODO ex: new PropertyRequest(propertyRequest.getRequestInfo(), Collections.singleTonList(property));
-			PropertyRequest updatedPropertyRequest = new PropertyRequest();
-			updatedPropertyRequest.setRequestInfo(propertyRequest.getRequestInfo());
-			List<Property> updatedPropertyList = new ArrayList<Property>();
+
+			PropertyRequest updatedPropertyRequest = new PropertyRequest(propertyRequest.getRequestInfo(),
+					Collections.singletonList(property));
+
 			if (property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())) {
 
 				String upicNumber = upicNoGeneration.generateUpicNo(property, propertyRequest.getRequestInfo());
 				property.setUpicNumber(upicNumber);
 
+			} else {
+				property.setIsUnderWorkflow(Boolean.TRUE);
 			}
-			
+
 			List<User> users = property.getOwners();
 			createUsers(users, propertyRequest.getRequestInfo());
 
-			updatedPropertyList.add(property);
-			updatedPropertyRequest.setProperties(updatedPropertyList);
-			
 			if (property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())) {
 				kafkaTemplate.send(propertiesManager.getCreateWorkflow(), propertyRequest);
-			}
-			else{
-			kafkaTemplate.send(propertiesManager.getCreatePropertyUserValidator(), updatedPropertyRequest);
+			} else {
+				kafkaTemplate.send(propertiesManager.getCreatePropertyUserValidator(), updatedPropertyRequest);
 			}
 		}
-		//TODO Below code to create responseInfo can be moved to common method since this will be used in many places.
+		return getResponseInfo(propertyRequest);
+	}
+
+	private PropertyResponse getResponseInfo(PropertyRequest propertyRequest) {
 		ResponseInfo responseInfo = responseInfoFactory
 				.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(), true);
 		PropertyResponse propertyResponse = new PropertyResponse();
@@ -209,6 +217,9 @@ public class PropertyServiceImpl implements PropertyService {
 			}
 			if (user.getPassword() == null) {
 				user.setPassword(propertiesManager.getDefaultUserPassword());
+			}
+			if (user.getActive() == null) {
+				user.setActive(true);
 			}
 			UserCreateRequest userCreateRequest = new UserCreateRequest();
 
@@ -237,8 +248,9 @@ public class PropertyServiceImpl implements PropertyService {
 		return userName;
 
 	}
+
 	@Override
-	public PropertyResponse updateProperty(PropertyRequest propertyRequest) {
+	public PropertyResponse updateProperty(PropertyRequest propertyRequest) throws Exception {
 		for (Property property : propertyRequest.getProperties()) {
 			propertyValidator.validatePropertyBoundary(property, propertyRequest.getRequestInfo());
 			if (property.getPropertyDetail().getPropertyType().equalsIgnoreCase(propertiesManager.getVacantLand())) {
@@ -251,31 +263,42 @@ public class PropertyServiceImpl implements PropertyService {
 
 					throw new InvalidFloorException(propertiesManager.getInvalidPropertyFloor(),
 							propertyRequest.getRequestInfo());
-
 				}
-
 			}
+
 			propertyValidator.validateWorkflowDeatails(property, propertyRequest.getRequestInfo());
 			String action = property.getPropertyDetail().getWorkFlowDetails().getAction();
-			if (action.equalsIgnoreCase(propertiesManager.getApproveProperty()) && (property.getUpicNumber()==null ||property.getUpicNumber().isEmpty() )) {
+			if (action.equalsIgnoreCase(propertiesManager.getApproveProperty())
+					&& (property.getUpicNumber() == null || property.getUpicNumber().isEmpty())) {
 				String upicNumber = upicNoGeneration.generateUpicNo(property, propertyRequest.getRequestInfo());
 				property.setUpicNumber(upicNumber);
 			}
 			property.getPropertyDetail().setStatus(StatusEnum.WORKFLOW);
-			PropertyRequest updatedPropertyRequest = new PropertyRequest();
-			updatedPropertyRequest.setRequestInfo(propertyRequest.getRequestInfo());
-			List<Property> updatedPropertyList = new ArrayList<Property>();
-			updatedPropertyList.add(property);
-			updatedPropertyRequest.setProperties(updatedPropertyList);
-			kafkaTemplate.send(propertiesManager.getUpdateValidatedProperty(), updatedPropertyRequest);
+			WorkFlowDetails workFlowDetails = propertyRequest.getProperties().get(0).getPropertyDetail()
+					.getWorkFlowDetails();
+
+			for (User user : property.getOwners()) {
+				if (user.getActive() == null) {
+					user.setActive(true);
+				}
+				if (user.getId() == null) {
+					user = userUtil.createNewUser(user, propertyRequest.getRequestInfo());
+				} else {
+					userUtil.updateUser(user, propertyRequest.getRequestInfo());
+				}
+			}
+
+			PropertyRequest updatedPropertyRequest = new PropertyRequest(propertyRequest.getRequestInfo(),
+					Collections.singletonList(property));
+
+			kafkaTemplate.send(propertiesManager.getUpdateValidatedUser(), updatedPropertyRequest);
+
+			if (workFlowDetails.getAction().equalsIgnoreCase(propertiesManager.getCancelAction())) {
+				propertyRepository.updateIsUnderWorkflowbyId(property.getId());
+			}
 		}
 
-		ResponseInfo responseInfo = responseInfoFactory
-				.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(), true);
-		PropertyResponse propertyResponse = new PropertyResponse();
-		propertyResponse.setResponseInfo(responseInfo);
-		propertyResponse.setProperties(propertyRequest.getProperties());
-		return propertyResponse;
+		return getResponseInfo(propertyRequest);
 	}
 
 	/**
@@ -287,33 +310,11 @@ public class PropertyServiceImpl implements PropertyService {
 	 */
 	public String generateAcknowledegeMentNumber(String tenantId, RequestInfo requestInfo) {
 
-		StringBuffer idGenerationUrl = new StringBuffer();
-		idGenerationUrl.append(propertiesManager.getIdHostName());
-		idGenerationUrl.append(propertiesManager.getIdCreatepath());
-
 		// generating acknowledgement number for all properties
 		String acknowledegeMentNumber = null;
-		List<IdRequest> idRequests = new ArrayList<>();
-		IdRequest idrequest = new IdRequest();
-		idrequest.setFormat(propertiesManager.getIdFormat());
-		idrequest.setIdName(propertiesManager.getIdName());
-		idrequest.setTenantId(tenantId);
-		IdGenerationRequest idGeneration = new IdGenerationRequest();
-		idRequests.add(idrequest);
-		idGeneration.setIdRequests(idRequests);
-		idGeneration.setRequestInfo(requestInfo);
 		String response = null;
-
-		RestTemplate restTemplate = new RestTemplate();
-		try {
-			logger.info("PropertyServiceImpl idGenerationUrl : " + idGenerationUrl.toString()
-					+ " \n IdGenerationRequest  : " + idGeneration);
-			response = restTemplate.postForObject(idGenerationUrl.toString(), idGeneration, String.class);
-			logger.info("PropertyServiceImpl IdGenerationResponse : " + response);
-		} catch (Exception ex) {
-			throw new ValidationUrlNotFoundException(propertiesManager.getInvalidIdServiceUrl(),
-					idGenerationUrl.toString(), requestInfo);
-		}
+		response = idgenRepository.getIdGeneration(tenantId, requestInfo, propertiesManager.getIdFormat(),
+				propertiesManager.getIdName());
 		Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 		ErrorRes errorResponse = gson.fromJson(response, ErrorRes.class);
 		IdGenerationResponse idResponse = gson.fromJson(response, IdGenerationResponse.class);
@@ -339,24 +340,7 @@ public class PropertyServiceImpl implements PropertyService {
 	 * 
 	 * @author Prasad
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param active
-	 * @param upicNo
-	 * @param pageSize
-	 * @param pageNumber
-	 * @param sort
-	 * @param oldUpicNo
-	 * @param mobileNumber
-	 * @param aadhaarNumber
-	 * @param houseNoBldgApt
-	 * @param revenueZone
-	 * @param revenueWard
-	 * @param locality
-	 * @param ownerName
-	 * @param demandFrom
-	 * @param demandTo
-	 * @param propertyId
-	 * @param oldestUpicNo
+	 * @param propertySearchCriteria
 	 * @return Property Object if search is successful or Error Object if search
 	 *         will fail
 	 * @throws IOException
@@ -365,18 +349,22 @@ public class PropertyServiceImpl implements PropertyService {
 	 */
 
 	@SuppressWarnings("unchecked")
-	public PropertyResponse searchProperty(RequestInfo requestInfo, String tenantId, Boolean active, String upicNo,
-			Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
-			String aadhaarNumber, String houseNoBldgApt, String revenueZone, String revenueWard, String locality,
-			String ownerName, Double demandFrom, Double demandTo, String propertyId, String applicationNo, String usage,
-			String adminBoundary, String oldestUpicNo) throws Exception {
+	public PropertyResponse searchProperty(RequestInfo requestInfo, PropertySearchCriteria propertySearchCriteria)
+			throws Exception {
 
 		List<Property> updatedPropety = null;
 
-		Map<String, Object> map = propertyRepository.searchProperty(requestInfo, tenantId, active, upicNo, pageSize,
-				pageNumber, sort, oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt, revenueZone, revenueWard,
-				locality, ownerName, demandFrom, demandTo, propertyId, applicationNo, usage, adminBoundary,
-				oldestUpicNo);
+		Map<String, Object> map = propertyRepository.searchProperty(requestInfo, propertySearchCriteria.getTenantId(),
+				propertySearchCriteria.getActive(), propertySearchCriteria.getUpicNumber(),
+				propertySearchCriteria.getPageSize(), propertySearchCriteria.getPageNumber(),
+				propertySearchCriteria.getSort(), propertySearchCriteria.getOldUpicNo(),
+				propertySearchCriteria.getMobileNumber(), propertySearchCriteria.getAadhaarNumber(),
+				propertySearchCriteria.getHouseNoBldgApt(), propertySearchCriteria.getRevenueZone(),
+				propertySearchCriteria.getRevenueWard(), propertySearchCriteria.getLocality(),
+				propertySearchCriteria.getOwnerName(), propertySearchCriteria.getDemandFrom(),
+				propertySearchCriteria.getDemandTo(), propertySearchCriteria.getPropertyId(),
+				propertySearchCriteria.getApplicationNo(), propertySearchCriteria.getUsage(),
+				propertySearchCriteria.getAdminBoundary(), propertySearchCriteria.getOldestUpicNo());
 
 		List<Property> property = (List<Property>) map.get("properties");
 		List<User> users = (List<User>) map.get("users");
@@ -582,9 +570,12 @@ public class PropertyServiceImpl implements PropertyService {
 					titleTransferRequest.getRequestInfo());
 		}
 
-		AppConfigurationResponse appConfiguration = masterServiceImpl.getAppConfiguration(
-				titleTransferRequest.getRequestInfo(), titleTransferRequest.getTitleTransfer().getTenantId(), null,
-				propertiesManager.getTitleTransferFeeFactorKeyName(), null, null, null);
+		AppConfigurationSearchCriteria appConfigurationSearchCriteria = new AppConfigurationSearchCriteria();
+		appConfigurationSearchCriteria.setTenantId(titleTransferRequest.getTitleTransfer().getTenantId());
+		appConfigurationSearchCriteria.setKeyName(propertiesManager.getTitleTransferFeeFactorKeyName());
+
+		AppConfigurationResponse appConfiguration = masterServiceImpl
+				.getAppConfiguration(titleTransferRequest.getRequestInfo(), appConfigurationSearchCriteria);
 		String feeFactor = null;
 		if (appConfiguration != null) {
 			if (appConfiguration.getAppConfigurations().size() > 0) {
@@ -808,9 +799,12 @@ public class PropertyServiceImpl implements PropertyService {
 		String upicNo = specialNoticeRequest.getUpicNo();
 		String tenantId = specialNoticeRequest.getTenantId();
 
-		PropertyResponse propertyRespone = searchProperty(specialNoticeRequest.getRequestInfo(), tenantId, null, upicNo,
-				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
-				null);
+		PropertySearchCriteria propertySearchCriteria = new PropertySearchCriteria();
+		propertySearchCriteria.setTenantId(tenantId);
+		propertySearchCriteria.setUpicNumber(upicNo);
+
+		PropertyResponse propertyRespone = searchProperty(specialNoticeRequest.getRequestInfo(),
+				propertySearchCriteria);
 		Property property = propertyRespone.getProperties().get(0);
 		notice.setUpicNo(specialNoticeRequest.getUpicNo());
 		notice.setTenantId(specialNoticeRequest.getTenantId());
@@ -841,21 +835,9 @@ public class PropertyServiceImpl implements PropertyService {
 		notice.setNoticeNumber(noticeNumber);
 		notice.setNoticeDate(new SimpleDateFormat(propertiesManager.getSimpleDateFormat()).format(new Date()));
 
-		StringBuffer taxPeriodSearchUrl = new StringBuffer();
-		taxPeriodSearchUrl.append(propertiesManager.getCalculatorHostName());
-		taxPeriodSearchUrl.append(propertiesManager.getCalculatorTaxperiodsSearch());
-		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(taxPeriodSearchUrl.toString())
-				.queryParam("tenantId", tenantId).queryParam("validDate", notice.getNoticeDate());
+		TaxPeriodResponse taxPeriodResponse = calculatorRepository.getTaxPeriods(tenantId, notice.getNoticeDate(),
+				specialNoticeRequest.getRequestInfo());
 
-		TaxPeriodResponse taxPeriodResponse = null;
-
-		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		requestInfoWrapper.setRequestInfo(specialNoticeRequest.getRequestInfo());
-		logger.info("PropertyServiceImpl BuilderUri : " + builder.buildAndExpand().toUri()
-				+ " \n RequestInfoWrapper  : " + requestInfoWrapper);
-		RestTemplate restTemplate = new RestTemplate();
-		taxPeriodResponse = restTemplate.postForObject(builder.buildAndExpand().toUri(), requestInfoWrapper,
-				TaxPeriodResponse.class);
 		logger.info("PropertyServiceImpl taxPeriodResponse : " + taxPeriodResponse);
 		ObjectMapper mapper = new ObjectMapper();
 
@@ -988,21 +970,9 @@ public class PropertyServiceImpl implements PropertyService {
 	private String getUlbCodeForTenant(String tenantId, RequestInfo requestInfo) throws Exception {
 
 		String ulbCode = "";
-
-		StringBuilder tenantCodeUrl = new StringBuilder();
-		tenantCodeUrl.append(propertiesManager.getTenantHostName());
-		tenantCodeUrl.append(propertiesManager.getTenantBasepath());
-		tenantCodeUrl.append(propertiesManager.getTenantSearchpath());
-
-		String url = tenantCodeUrl.toString();
-		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url).queryParam("code", tenantId);
 		SearchTenantResponse searchTenantResponse = null;
-		RestTemplate restTemplate = new RestTemplate();
-		logger.info("PropertyServiceImpl Calling tenant service url = " + tenantCodeUrl.toString() + " request = "
-				+ requestInfo + " tenantId =" + tenantId);
-		String response = restTemplate.postForObject(builder.buildAndExpand().toUri(), requestInfo, String.class);
-		logger.info("PropertyServiceImpl after calling the tenant service  response = " + response);
-
+		String response = null;
+		response = tenantRepository.getTenantRepository(tenantId, requestInfo);
 		if (response != null) {
 			ObjectMapper mapper = new ObjectMapper();
 			searchTenantResponse = mapper.readValue(response, SearchTenantResponse.class);
@@ -1026,23 +996,10 @@ public class PropertyServiceImpl implements PropertyService {
 	private String generateNoticeNumber(RequestInfo requestInfo, String tenantId) throws Exception {
 
 		String noticeNumber = "";
-		StringBuffer idGenerationUrl = new StringBuffer();
-		idGenerationUrl.append(propertiesManager.getIdHostName());
-		idGenerationUrl.append(propertiesManager.getIdCreatepath());
+		String response = null;
 
-		List<IdRequest> idRequests = new ArrayList<>();
-		IdRequest idrequest = new IdRequest();
-		idrequest.setFormat(propertiesManager.getUlbFormat());
-		idrequest.setIdName(propertiesManager.getUlbName());
-		idrequest.setTenantId(tenantId);
-		IdGenerationRequest idGeneration = new IdGenerationRequest();
-		idRequests.add(idrequest);
-		idGeneration.setIdRequests(idRequests);
-		idGeneration.setRequestInfo(requestInfo);
-		RestTemplate restTemplate = new RestTemplate();
-		logger.info("PropertyServiceImpl calling the idgenearion service url = " + idGenerationUrl.toString()
-				+ " Request = " + idGeneration.toString());
-		String response = restTemplate.postForObject(idGenerationUrl.toString(), idGeneration, String.class);
+		response = idgenRepository.getIdGeneration(tenantId, requestInfo, propertiesManager.getUlbFormat(),
+				propertiesManager.getUlbName());
 
 		logger.info("PropertyServiceImpl After the calling  idgenearion  response = " + response);
 		if (response != null && response.length() > 0) {
@@ -1120,10 +1077,11 @@ public class PropertyServiceImpl implements PropertyService {
 			String upicNumber) throws Exception {
 		DemandResponse demandResponse = null;
 		int noOfPeriods = 0;
-		// RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		PropertyResponse propertyResponse = searchProperty(requestInfoWrapper.getRequestInfo(), tenantId, null,
-				upicNumber, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
-				null, null, null);
+		PropertySearchCriteria propertySearchCriteria = new PropertySearchCriteria();
+		propertySearchCriteria.setTenantId(tenantId);
+		propertySearchCriteria.setUpicNumber(upicNumber);
+
+		PropertyResponse propertyResponse = searchProperty(requestInfoWrapper.getRequestInfo(), propertySearchCriteria);
 
 		if (propertyResponse != null) {
 			Property property = propertyResponse.getProperties().get(0);
@@ -1205,22 +1163,20 @@ public class PropertyServiceImpl implements PropertyService {
 				}
 				demandResponse.setDemands(finalDemandList);
 			}
-			if(!demandResponse.getDemands().isEmpty()){
+			if (!demandResponse.getDemands().isEmpty()) {
 				DemandDetail newDemandDetail;
 				List<DemandDetail> demandDetailList;
 				List<String> demandDetailCodes;
-				List<String> taxHeadCodes = taxHeadResponse.getTaxHeadMasters()
-						.stream().map(TaxHeadMaster::getCode)
+				List<String> taxHeadCodes = taxHeadResponse.getTaxHeadMasters().stream().map(TaxHeadMaster::getCode)
 						.collect(Collectors.toList());
-				for(Demand demand : demandResponse.getDemands()) {
+				for (Demand demand : demandResponse.getDemands()) {
 					demandDetailList = demand.getDemandDetails();
-					demandDetailCodes = demandDetailList.
-							stream().map(DemandDetail::getTaxHeadMasterCode)
+					demandDetailCodes = demandDetailList.stream().map(DemandDetail::getTaxHeadMasterCode)
 							.collect(Collectors.toList());
-					logger.info("-------- demanddetail codes --------- "+demandDetailCodes);
-					logger.info("-------- tax heads --------- "+taxHeadCodes);
-					for(String taxHead : taxHeadCodes){
-						if(!"ADVANCE".equalsIgnoreCase(taxHead) && !demandDetailCodes.contains(taxHead)){
+					logger.info("-------- demanddetail codes --------- " + demandDetailCodes);
+					logger.info("-------- tax heads --------- " + taxHeadCodes);
+					for (String taxHead : taxHeadCodes) {
+						if (!"ADVANCE".equalsIgnoreCase(taxHead) && !demandDetailCodes.contains(taxHead)) {
 							newDemandDetail = new DemandDetail();
 							newDemandDetail.setTenantId(tenantId);
 							newDemandDetail.setTaxHeadMasterCode(taxHead);
@@ -1228,7 +1184,7 @@ public class PropertyServiceImpl implements PropertyService {
 						}
 					}
 					Collections.sort(demandDetailList, Comparator.comparing(DemandDetail::getTaxHeadMasterCode));
-					logger.info("----------- final demanddetails list ------------ "+demandDetailList);
+					logger.info("----------- final demanddetails list ------------ " + demandDetailList);
 					demand.setDemandDetails(demandDetailList);
 				}
 			}
@@ -1247,24 +1203,8 @@ public class PropertyServiceImpl implements PropertyService {
 	 */
 	private TaxPeriodResponse getTaxPeriodsForOccupancyDate(RequestInfo requestInfo, String tenantId,
 			String occupancyDateStr, SimpleDateFormat dateFormat) {
-		StringBuffer taxPeriodSearchUrl = new StringBuffer();
-		taxPeriodSearchUrl.append(propertiesManager.getCalculatorHostName());
-		taxPeriodSearchUrl.append(propertiesManager.getCalculatorTaxperiodsSearch());
-
-		String toDate = dateFormat.format(new Date());
-		logger.info("getTaxPeriodsForOccupancyDate() ----------- fromDate ---->> " + occupancyDateStr
-				+ " and toDate ---->> " + toDate);
-		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(taxPeriodSearchUrl.toString())
-				.queryParam("tenantId", tenantId).queryParam("fromDate", occupancyDateStr).queryParam("toDate", toDate);
-
-		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		requestInfoWrapper.setRequestInfo(requestInfo);
-		logger.info("PropertyServiceImpl BuilderUri : " + builder.buildAndExpand().toUri()
-				+ " \n RequestInfoWrapper  : " + requestInfoWrapper);
-		RestTemplate restTemplate = new RestTemplate();
-		TaxPeriodResponse taxPeriodResponse = restTemplate.postForObject(builder.buildAndExpand().toUri(),
-				requestInfoWrapper, TaxPeriodResponse.class);
-		return taxPeriodResponse;
+		return calculatorRepository.getTaxPeriodsForOccupancyDateRepository(requestInfo, tenantId, occupancyDateStr,
+				dateFormat);
 	}
 
 	/**
@@ -1275,31 +1215,14 @@ public class PropertyServiceImpl implements PropertyService {
 	 * @param tenantId
 	 * @param occupancyDate
 	 * @return TaxHeadMasterResponse
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
 	 */
-	private TaxHeadMasterResponse getTaxHeadMasters(RequestInfo requestInfo, String tenantId, Date occupancyDate) {
-		TaxHeadMasterResponse taxHeadResponse = null;
-		RestTemplate restTemplate = new RestTemplate();
-		StringBuffer taxHeadsUrl = new StringBuffer();
-		taxHeadsUrl.append(propertiesManager.getBillingServiceHostname());
-		taxHeadsUrl.append(propertiesManager.getBillingServiceSearchTaxHeads());
+	private TaxHeadMasterResponse getTaxHeadMasters(RequestInfo requestInfo, String tenantId, Date occupancyDate)
+			throws JsonParseException, JsonMappingException, IOException {
 
-		URI uri = UriComponentsBuilder.fromUriString(taxHeadsUrl.toString()).queryParam("tenantId", tenantId)
-				.queryParam("service", "PT").queryParam("validFrom", occupancyDate.getTime())
-				.queryParam("validTill", new Date().getTime()).build(true).encode().toUri();
-
-		logger.info("getTaxHeadMasters taxheads url --> " + uri + " taxheads request --> " + requestInfo);
-
-		String taxHeadsResponseStr = restTemplate.postForObject(uri, requestInfo, String.class);
-		logger.info("getTaxHeadMasters taxheads response string is --> " + taxHeadsResponseStr);
-		if (!taxHeadsResponseStr.isEmpty()) {
-			ObjectMapper objectMapper = new ObjectMapper();
-			try {
-				taxHeadResponse = objectMapper.readValue(taxHeadsResponseStr, TaxHeadMasterResponse.class);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return taxHeadResponse;
+		return calculatorRepository.getTaxHeadMastersRepository(requestInfo, tenantId, occupancyDate);
 	}
 
 	/**
@@ -1357,11 +1280,13 @@ public class PropertyServiceImpl implements PropertyService {
 	}
 
 	@Override
-	public TitleTransferSearchResponse searchTitleTransfer(RequestInfoWrapper requestInfo, String tenantId,
-			Integer pageSize, Integer pageNumber, String[] sort, String upicNo, String oldUpicNo, String applicationNo)
-			throws Exception {
+	public TitleTransferSearchResponse searchTitleTransfer(RequestInfoWrapper requestInfo,
+			TitleTransferSearchCriteria titleTransferSearchCriteria) throws Exception {
 		List<TitleTransfer> titleTransfers = propertyRepository.searchTitleTransfer(requestInfo.getRequestInfo(),
-				tenantId, pageSize, pageNumber, sort, upicNo, oldUpicNo, applicationNo);
+				titleTransferSearchCriteria.getTenantId(), titleTransferSearchCriteria.getPageSize(),
+				titleTransferSearchCriteria.getPageNumber(), titleTransferSearchCriteria.getSort(),
+				titleTransferSearchCriteria.getUpicNo(), titleTransferSearchCriteria.getOldUpicNo(),
+				titleTransferSearchCriteria.getApplicationNo());
 		TitleTransferSearchResponse titleTransferSearchResponse = new TitleTransferSearchResponse();
 		titleTransferSearchResponse.setTitleTransfers(titleTransfers);
 		titleTransferSearchResponse.setResponseInfo(
@@ -1372,12 +1297,19 @@ public class PropertyServiceImpl implements PropertyService {
 	@Override
 	public PropertyDCBResponse updateDcbDemand(PropertyDCBRequest propertyDCBRequest, String tenantId)
 			throws Exception {
+
 		PropertyDCB propertyDCB = propertyDCBRequest.getPropertyDCB();
+		PropertySearchCriteria propertySearchCriteria = new PropertySearchCriteria();
+		propertySearchCriteria.setTenantId(tenantId);
+		propertySearchCriteria.setActive(true);
+		propertySearchCriteria.setPageSize(10);
+		propertySearchCriteria.setPageNumber(1);
+		propertySearchCriteria.setOldUpicNo(propertyDCB.getOldUpicNumber());
 
 		if (isEmpty(propertyDCB.getUpicNumber()) && !isEmpty(propertyDCB.getOldUpicNumber())) {
-			PropertyResponse propertyResponse = searchProperty(propertyDCBRequest.getRequestInfo(), tenantId, true,
-					null, 10, 1, null, propertyDCB.getOldUpicNumber(), null, null, null, null, null, null, null, null,
-					null, null, null, null, null, null);
+			propertySearchCriteria.setOldUpicNo(propertyDCB.getOldUpicNumber());
+			PropertyResponse propertyResponse = searchProperty(propertyDCBRequest.getRequestInfo(),
+					propertySearchCriteria);
 
 			updateUpicNumberAndOwnerInDemands(propertyDCB, propertyResponse);
 		}
@@ -1421,7 +1353,7 @@ public class PropertyServiceImpl implements PropertyService {
 					propertyRequest.getRequestInfo());
 			property.getPropertyDetail().setApplicationNo(acknowldgementNumber);
 
-			 validModifyProperty(property, propertyRequest.getRequestInfo());
+			validModifyProperty(property, propertyRequest.getRequestInfo());
 
 			PropertyRequest updatedPropertyRequest = new PropertyRequest();
 			updatedPropertyRequest.setRequestInfo(propertyRequest.getRequestInfo());
@@ -1433,12 +1365,7 @@ public class PropertyServiceImpl implements PropertyService {
 
 		}
 
-		ResponseInfo responseInfo = responseInfoFactory
-				.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(), true);
-		PropertyResponse propertyResponse = new PropertyResponse();
-		propertyResponse.setResponseInfo(responseInfo);
-		propertyResponse.setProperties(propertyRequest.getProperties());
-		return propertyResponse;
+		return getResponseInfo(propertyRequest);
 
 	}
 

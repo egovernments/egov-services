@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.wcms.utils.WcmsWorkFlowConstants;
 import org.egov.wcms.workflow.config.ApplicationProperties;
 import org.egov.wcms.workflow.model.contract.ProcessInstanceRequest;
 import org.egov.wcms.workflow.model.contract.ProcessInstanceResponse;
@@ -26,6 +25,7 @@ import org.egov.wcms.workflow.models.WorkflowDetails;
 import org.egov.wcms.workflow.repository.WorkflowRepository;
 import org.egov.wcms.workflow.repository.contract.Designation;
 import org.egov.wcms.workflow.repository.contract.Employee;
+import org.egov.wcms.workflow.utils.WcmsWorkFlowConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,14 +64,7 @@ public class ConnectionWorkflowService {
                 workflowEnrichedMap);
     }
 
-    public void loggedInUserGrade()
-    {
-        final StringBuilder searchUrl = new StringBuilder();
-        searchUrl.append(applicationProperties.getUserHostName());
-        searchUrl.append(applicationProperties.getUserBasePath());
-        searchUrl.append(applicationProperties.getUserSearchPath());
-       
-    }
+    
     public void updateWorkFlow(final Map<String, Object> consumerRecord, final HashMap<String, Object> workflowEnrichedMap,
             final WaterConnectionReq waterConnectionReq) {
         enrichWorkflow(waterConnectionReq, waterConnectionReq.getRequestInfo(), applicationProperties.getBusinessKey());
@@ -114,9 +107,12 @@ public class ConnectionWorkflowService {
 
             WorkflowDetails workflowDet=connection.getWorkflowDetails();
             TaskResponse taskResponse = null;
+            Long assignee=null;
             final WorkFlowRequestInfo req = prepareWorkFlowRequestInfo(connection, requestInfo);
             if(workflowDet.getAssignee() == null)
-            getApproverPosition(waterConnectionReq);
+                assignee= getApproverPosition(waterConnectionReq);
+            if(  assignee !=null ){
+         
             final TaskRequest taskRequest = prepareTaskRequest(businessKey, connection, workflowDet, req);
             taskResponse = workflowRepository.update(taskRequest);
             taskRequest.setRequestInfo(req);
@@ -124,11 +120,12 @@ public class ConnectionWorkflowService {
                 update(taskResponse, connection);
 
         }
+        }
         waterConnectionReq.setConnection(connection);
         return waterConnectionReq;
     }
     
-    public void getApproverPosition(final WaterConnectionReq waterConnectionReq)
+    public Long getApproverPosition(final WaterConnectionReq waterConnectionReq)
     {
         List<Designation> designations = null;
         
@@ -159,6 +156,7 @@ public class ConnectionWorkflowService {
                   && employees.get(0).getAssignments() != null && !employees.get(0).getAssignments().isEmpty())
               connection.getWorkflowDetails().setAssignee(employees.get(0).getAssignments().get(0).getPosition());
           }
+          return connection.getWorkflowDetails().getAssignee();
     }
 
     protected TaskRequest prepareTaskRequest(final String businessKey, final Connection connection, WorkflowDetails workflowDet,

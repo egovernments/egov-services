@@ -2,6 +2,7 @@ package org.egov.property.exception;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +34,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+	public static final String MESSAGE = "One of Application number or Upic number is mandatory";
+	public static final String DESCRIPTION = "Mandatory fields value missing";
 	@Autowired
 	private PropertiesManager propertiesManager;
 
@@ -84,16 +87,23 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(DemandUpdateException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ErrorResponse processDemandUpdateException(HttpStatusCodeException ex){
-		if(ex.getStatusCode().equals(HttpStatus.BAD_REQUEST))
+	public ErrorResponse processDemandUpdateException(HttpStatusCodeException ex) {
+		if (ex.getStatusCode().equals(HttpStatus.BAD_REQUEST))
 			try {
-				return objectMapper.readValue(ex.getResponseBodyAsString(),
-                        ErrorResponse.class);
+				return objectMapper.readValue(ex.getResponseBodyAsString(), ErrorResponse.class);
 			} catch (IOException e) {
 
 			}
 
 		return ErrorResponse.builder().build();
+	}
+
+	@ExceptionHandler(NoticeMandatoryFieldException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorRes noticeMandatoryException(NoticeMandatoryFieldException exception) {
+		Error error = new Error(HttpStatus.BAD_REQUEST.toString(), MESSAGE, DESCRIPTION, null);
+
+		return new ErrorRes(null, Arrays.asList(error));
 	}
 
 	/**
@@ -288,7 +298,7 @@ public class GlobalExceptionHandler {
 			return new ErrorRes(responseInfo, errorList);
 		} else if (ex instanceof PropertyTaxPendingException) {
 			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidTaxMessage(),
-					((PropertyTaxPendingException) ex).getMessage(), new HashMap<String, String>());
+					((PropertyTaxPendingException) ex).getCustomMsg(), new HashMap<String, String>());
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setApiId(((PropertyTaxPendingException) ex).getRequestInfo().getApiId());
 			responseInfo.setVer(((PropertyTaxPendingException) ex).getRequestInfo().getVer());
@@ -298,6 +308,56 @@ public class GlobalExceptionHandler {
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
 			responseInfo.setStatus(propertiesManager.getFailed());
+			return new ErrorRes(responseInfo, errorList);
+		} else if (ex instanceof InvalidVacancyRemissionPeriod) {
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidDateValidation(),
+					((InvalidVacancyRemissionPeriod) ex).getCustomMsg(), new HashMap<String, String>());
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((InvalidVacancyRemissionPeriod) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((InvalidVacancyRemissionPeriod) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((InvalidVacancyRemissionPeriod) ex).getRequestInfo().getMsgId());
+			responseInfo.setTs(new Date().getTime());
+			responseInfo.setStatus(propertiesManager.getFailed());
+			List<Error> errorList = new ArrayList<Error>();
+			errorList.add(error);
+			responseInfo.setStatus(propertiesManager.getFailed());
+			return new ErrorRes(responseInfo, errorList);
+		} else if (ex instanceof InvalidPropertyTypeException) {
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
+					propertiesManager.getInvalidPropertyTypeException(),
+					((InvalidPropertyTypeException) ex).getCustomMsg(), new HashMap<String, String>());
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((InvalidPropertyTypeException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((InvalidPropertyTypeException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((InvalidPropertyTypeException) ex).getRequestInfo().getMsgId());
+			responseInfo.setTs(new Date().getTime());
+			responseInfo.setStatus(propertiesManager.getFailed());
+			List<Error> errorList = new ArrayList<Error>();
+			errorList.add(error);
+			responseInfo.setStatus(propertiesManager.getFailed());
+			return new ErrorRes(responseInfo, errorList);
+
+		} else if (ex instanceof InvalidSearchParameterException) {
+
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((InvalidSearchParameterException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((InvalidSearchParameterException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((InvalidSearchParameterException) ex).getRequestInfo().getMsgId());
+			responseInfo.setTs(new Date().getTime());
+			responseInfo.setStatus(propertiesManager.getFailed());
+
+			Error error = new Error();
+			error.setCode(HttpStatus.BAD_REQUEST.toString());
+			error.setMessage(propertiesManager.getInvalidSearchParameterException());
+			error.setDescription(propertiesManager.getInvalidSearchParameterException());
+			Map<String, String> errors = new HashMap<String, String>();
+
+			for (FieldError fieldError : ((InvalidSearchParameterException) ex).bindingResult.getFieldErrors()) {
+				errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+			}
+			error.setFileds(errors);
+			List<Error> errorList = new ArrayList<Error>();
+			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);
 		}
 

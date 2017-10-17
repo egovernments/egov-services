@@ -70,6 +70,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/eligibleleaves")
@@ -114,12 +115,16 @@ public class EligibleLeavesController {
             yearStartDate = LocalDate.parse("01/01/" + asondate.getYear(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         }
         final List<EmployeeInfo> employees = employeeRepository.getEmployeeById(requestInfo, tenantId, employeeid);
-
+        Long designationid = null;
 
         if (employees.size() > 0 && employees.get(0).getDateOfAppointment() != null) {
             dateOfAppointment = LocalDate.parse(new SimpleDateFormat("yyyy-MM-dd").format(employees.get(0).getDateOfAppointment()));
+            if (!employees.get(0).getAssignments().isEmpty()) {
+                List<Assignment> assignments = employees.get(0).getAssignments().stream()
+                        .filter(assign -> (assign.getIsPrimary().equals(true) && assign.getToDate().after(new Date()))).collect(Collectors.toList());
+                designationid = assignments.stream().map(assign -> assign.getDesignation()).collect(Collectors.toList()).get(0);
+            }
         }
-
 
         if (dateOfAppointment != null && dateOfAppointment.isAfter(yearStartDate))
             yearStartDate = dateOfAppointment;
@@ -154,7 +159,7 @@ public class EligibleLeavesController {
 
         final LeaveAllotmentGetRequest leaveAllotmentGetRequest = new LeaveAllotmentGetRequest();
 
-        leaveAllotmentGetRequest.getDesignationId().add(designationId);
+        leaveAllotmentGetRequest.getDesignationId().add(designationid);
 
         leaveAllotmentGetRequest.getLeaveType().add(leaveType);
 
@@ -229,6 +234,7 @@ public class EligibleLeavesController {
             iPart++;
 
         eligibleLeave.setNoOfDays(iPart.floatValue());
+
         return getSuccessResponse(Collections.singletonList(eligibleLeave), requestInfo);
     }
 

@@ -53,8 +53,9 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class SmsMessage {
-
-    private String mobileNumber;
+    
     private String message;
+    private String mobileNumber;
+   
 
 }

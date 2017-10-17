@@ -23,6 +23,7 @@ import org.egov.models.AuditDetails;
 import org.egov.models.CalculationFactor;
 import org.egov.models.CalculationFactorRequest;
 import org.egov.models.CalculationFactorResponse;
+import org.egov.models.CalculationFactorSearchCriteria;
 import org.egov.models.GuidanceValue;
 import org.egov.models.GuidanceValueRequest;
 import org.egov.models.GuidanceValueResponse;
@@ -31,9 +32,11 @@ import org.egov.models.ResponseInfo;
 import org.egov.models.TaxPeriod;
 import org.egov.models.TaxPeriodRequest;
 import org.egov.models.TaxPeriodResponse;
+import org.egov.models.TaxPeriodSearchCriteria;
 import org.egov.models.TaxRates;
 import org.egov.models.TaxRatesRequest;
 import org.egov.models.TaxRatesResponse;
+import org.egov.models.TaxRatesSearchCriteria;
 import org.egov.models.TransferFeeRate;
 import org.egov.models.TransferFeeRateSearchCriteria;
 import org.egov.models.TransferFeeRatesRequest;
@@ -162,8 +165,7 @@ public class TaxCalculatorMasterControllerTest {
 
 		try {
 
-			when(taxCalculatorMasterService.getFactor(any(RequestInfo.class), any(String.class), any(String.class),
-					any(String.class), any(String.class))).thenReturn(calculationFactorResponse);
+			when(taxCalculatorMasterService.getFactor(any(RequestInfo.class), any(CalculationFactorSearchCriteria.class))).thenReturn(calculationFactorResponse);
 
 			mockMvc.perform(post("/properties/taxes/factor/_search").param("tenantId", "default")
 					.param("factorType", "building").param("validDate", "10/06/2007").param("code", "propertytax")
@@ -393,8 +395,8 @@ public class TaxCalculatorMasterControllerTest {
 		taxPeriodResponse.setTaxPeriods(taxPeriods);
 
 		try {
-			when(taxCalculatorMasterService.getTaxPeriod(any(RequestInfo.class), anyString(), anyString(), anyString(),
-					anyString(), anyString(), anyString())).thenReturn(taxPeriodResponse);
+			when(taxCalculatorMasterService.getTaxPeriod(any(RequestInfo.class), any(TaxPeriodSearchCriteria.class)))
+					.thenReturn(taxPeriodResponse);
 
 			mockMvc.perform(post("/properties/taxes/taxperiods/_search").param("tenantId", "1234")
 					.param("validDate", "02/02/2017").param("code", "ganesha").param("fromDate", "01/02/2017")
@@ -498,8 +500,7 @@ public class TaxCalculatorMasterControllerTest {
 
 		try {
 
-			when(taxCalculatorMasterService.getTaxRate(any(RequestInfo.class), any(String.class), any(String.class),
-					any(String.class), any(Double.class), any(String.class), any(String.class), any(String.class)))
+			when(taxCalculatorMasterService.getTaxRate(any(RequestInfo.class), any(TaxRatesSearchCriteria.class)))
 							.thenReturn(taxRatesResponse);
 
 			mockMvc.perform(post("/properties/taxes/taxrates/_search").param("tenantId", "default")

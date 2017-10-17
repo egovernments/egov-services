@@ -6,13 +6,17 @@ import org.egov.calculator.exception.InvalidSearchParameterException;
 import org.egov.calculator.service.TaxCalculatorMasterService;
 import org.egov.models.CalculationFactorRequest;
 import org.egov.models.CalculationFactorResponse;
+import org.egov.models.CalculationFactorSearchCriteria;
 import org.egov.models.GuidanceValueRequest;
 import org.egov.models.GuidanceValueResponse;
+import org.egov.models.GuidanceValueSearchCriteria;
 import org.egov.models.RequestInfoWrapper;
 import org.egov.models.TaxPeriodRequest;
 import org.egov.models.TaxPeriodResponse;
+import org.egov.models.TaxPeriodSearchCriteria;
 import org.egov.models.TaxRatesRequest;
 import org.egov.models.TaxRatesResponse;
+import org.egov.models.TaxRatesSearchCriteria;
 import org.egov.models.TransferFeeRateSearchCriteria;
 import org.egov.models.TransferFeeRatesRequest;
 import org.egov.models.TransferFeeRatesResponse;
@@ -80,13 +84,13 @@ public class TaxCalculatorMasterController {
 	 */
 	@RequestMapping(path = "/factor/_search", method = RequestMethod.POST)
 	public CalculationFactorResponse getFactor(@RequestBody RequestInfoWrapper requestInfo,
-			@RequestParam(required = true) String tenantId, @RequestParam(required = true) String factorType,
-			@RequestParam(required = true) String validDate, @RequestParam(required = false) String code)
-					throws Exception {
+			@ModelAttribute @Valid CalculationFactorSearchCriteria calculationFactorSearchCriteria,
+			BindingResult bindingResult) throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
+		}
 
-		return taxCalculationMasterService.getFactor(requestInfo.getRequestInfo(), tenantId, factorType, validDate,
-				code);
-
+		return taxCalculationMasterService.getFactor(requestInfo.getRequestInfo(), calculationFactorSearchCriteria);
 	}
 
 	/**
@@ -123,27 +127,19 @@ public class TaxCalculatorMasterController {
 	 * Description : This api for getting guidancevalue details
 	 * 
 	 * @param tenantId
-	 * @param boundary
-	 * @param structure
-	 * @param usage
-	 * @param subUsage
-	 * @param occupancy
-	 * @param validDate
-	 * @param code
-	 * @param requestInfo
+	 * @param guidanceValueSearchCriteria
 	 * @return GuidanceValueResponse
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "/guidancevalue/_search", method = RequestMethod.POST)
 	public GuidanceValueResponse getGuidanceValue(@RequestBody RequestInfoWrapper requestInfo,
-			@RequestParam(required = true) String tenantId, @RequestParam(required = true) String boundary,
-			@RequestParam(required = false) String structure, @RequestParam(required = false) String usage,
-			@RequestParam(required = false) String subUsage, @RequestParam(required = false) String occupancy,
-			@RequestParam(required = true) String validDate) throws Exception {
+			@ModelAttribute @Valid GuidanceValueSearchCriteria guidanceValueSearchCriteria, BindingResult bindingResult)
+			throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
+		}
 
-		return taxCalculationMasterService.getGuidanceValue(requestInfo.getRequestInfo(), tenantId, boundary, structure,
-				usage, subUsage, occupancy, validDate);
-
+		return taxCalculationMasterService.getGuidanceValue(requestInfo.getRequestInfo(), guidanceValueSearchCriteria);
 	}
 
 	/**
@@ -179,27 +175,19 @@ public class TaxCalculatorMasterController {
 	/**
 	 * Description : This api for getting taxRate details
 	 * 
-	 * @param tenantId
-	 * @param taxHead
-	 * @param validDate
-	 * @param validARVAmount
-	 * @param parentTaxHead
 	 * @param requestInfo
-	 * @param usage
-	 * @param propertyType
+	 * @param taxRatesSearchCriteria
 	 * @return TaxRatesResponse
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "/taxrates/_search", method = RequestMethod.POST)
 	public TaxRatesResponse getTaxRate(@RequestBody RequestInfoWrapper requestInfo,
-			@RequestParam(required = true) String tenantId, @RequestParam(required = false) String taxHead,
-			@RequestParam(required = true) String validDate, @RequestParam(required = false) Double validARVAmount,
-			@RequestParam(required = false) String parentTaxHead, @RequestParam(required = false) String usage,
-			@RequestParam(required = false) String propertyType) throws Exception {
-
-		return taxCalculationMasterService.getTaxRate(requestInfo.getRequestInfo(), tenantId, taxHead, validDate,
-				validARVAmount, parentTaxHead, usage, propertyType);
-
+			@ModelAttribute @Valid TaxRatesSearchCriteria taxRatesSearchCriteria, BindingResult bindingResult)
+			throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
+		}
+		return taxCalculationMasterService.getTaxRate(requestInfo.getRequestInfo(), taxRatesSearchCriteria);
 	}
 
 	/**
@@ -238,24 +226,18 @@ public class TaxCalculatorMasterController {
 	 * parameter
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param validDate
-	 * @param code
-	 * @param fromDate
-	 * @param toDate
+	 * @param taxPeriodSearchCriteria
 	 * @return TaxPeriodResponse
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "/taxperiods/_search", method = RequestMethod.POST)
 	public TaxPeriodResponse getTaxPeriod(@RequestBody RequestInfoWrapper requestInfo,
-			@RequestParam(required = true) String tenantId, @RequestParam(required = false) String validDate,
-			@RequestParam(required = false) String code, @RequestParam(required = false) String fromDate,
-			@RequestParam(required = false) String toDate, @RequestParam(required = false) String sortTaxPeriod)
-					throws Exception {
-
-		return taxCalculationMasterService.getTaxPeriod(requestInfo.getRequestInfo(), tenantId, validDate, code,
-				fromDate, toDate, sortTaxPeriod);
-
+			@ModelAttribute @Valid TaxPeriodSearchCriteria taxPeriodSearchCriteria, BindingResult bindingResult)
+			throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
+		}
+		return taxCalculationMasterService.getTaxPeriod(requestInfo.getRequestInfo(), taxPeriodSearchCriteria);
 	}
 
 	/**
@@ -291,10 +273,7 @@ public class TaxCalculatorMasterController {
 	 * parameters
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param feeFactor
-	 * @param validDate
-	 * @param validValue
+	 * @param transferFeeRateSearchCriteria
 	 * @return TransferFeeRatesResponse
 	 * @throws Exception
 	 */

@@ -197,4 +197,6 @@ public class TradeLicense {
 
 	@JsonProperty("userid")
     private Long userId;
+	
+	private Boolean isDataPorting = false;
 }

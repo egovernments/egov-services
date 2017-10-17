@@ -75,6 +75,7 @@ class UiMultiSelectField extends Component {
 							style={{"display": (item.hide ? 'none' : 'block')}}
 							errorStyle={{"float":"left"}}
 							fullWidth={true}
+							hintText="Please Select"
 							multiple={true}
 							floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
 							value={this.props.getVal(item.jsonPath)}

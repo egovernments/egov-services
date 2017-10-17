@@ -1,38 +1,30 @@
 package org.egov.propertyWorkflow.consumer;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.enums.StatusEnum;
-import org.egov.models.ErrorRes;
-import org.egov.models.IdGenerationRequest;
-import org.egov.models.IdGenerationResponse;
-import org.egov.models.IdRequest;
 import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
 import org.egov.models.WorkFlowDetails;
 import org.egov.propertyWorkflow.config.PropertiesManager;
-import org.egov.propertyWorkflow.models.City;
 import org.egov.propertyWorkflow.models.ProcessInstance;
 import org.egov.propertyWorkflow.models.RequestInfo;
-import org.egov.propertyWorkflow.models.SearchTenantResponse;
 import org.egov.propertyWorkflow.models.TaskResponse;
 import org.egov.propertyWorkflow.models.WorkflowDetailsRequestInfo;
+import org.egov.propertyWorkflow.repository.IdgenRepository;
+import org.egov.propertyWorkflow.repository.PropertyRepository;
+import org.egov.propertyWorkflow.repository.TenantRepository;
+import org.egov.tracer.http.LogAwareRestTemplate;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * 
@@ -52,10 +44,19 @@ public class WorkflowConsumer {
 	PropertiesManager propertiesManager;
 
 	@Autowired
-	RestTemplate restTemplate;
+	LogAwareRestTemplate restTemplate;
 
 	@Autowired
-	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	TenantRepository tenantRepository;
+
+	@Autowired
+	IdgenRepository idgenRepository;
+
+	@Autowired
+	PropertyRepository propertyRepository;
+
+	@Autowired
+	LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	/**
 	 * This method will listen property object from producer and will process
@@ -107,10 +108,16 @@ public class WorkflowConsumer {
 				String action = workflowDetailsRequestInfo.getWorkflowDetails().getAction();
 				if (action.equalsIgnoreCase(propertiesManager.getApproveProperty())) {
 					property.getPropertyDetail().setStatus(StatusEnum.ACTIVE);
+
+					if (propertyRepository.checkWhetherPropertyExistsWithUpic(property.getUpicNumber(),
+							property.getTenantId(), propertyRequest.getRequestInfo())) {
+						kafkaTemplate.send(propertiesManager.getModifyaprroveWorkflow(), propertyRequest);
+					}
 					kafkaTemplate.send(propertiesManager.getApproveWorkflow(), propertyRequest);
 				} else {
 					kafkaTemplate.send(propertiesManager.getUpdateWorkflow(), propertyRequest);
-					if (action.equalsIgnoreCase(propertiesManager.getReject())) {
+					if (action.equalsIgnoreCase(propertiesManager.getReject())
+							|| action.equalsIgnoreCase(propertiesManager.getCancel())) {
 						kafkaTemplate.send(propertiesManager.getRejectProperty(), propertyRequest);
 					}
 				}
@@ -173,39 +180,11 @@ public class WorkflowConsumer {
 	 * @param property
 	 * @param propertyRequest
 	 * @return upicNumber
+	 * @throws Exception
 	 */
-	private String generateUpicNo(Property property, PropertyRequest propertyRequest) {
+	public String generateUpicNo(Property property, PropertyRequest propertyRequest) throws Exception {
 
-		String upicNumber = null;
-		StringBuilder tenantCodeUrl = new StringBuilder();
-		tenantCodeUrl.append(propertiesManager.getTenantHostName());
-		tenantCodeUrl.append(propertiesManager.getTenantBasepath());
-		tenantCodeUrl.append(propertiesManager.getTenantSearchpath());
-		String url = tenantCodeUrl.toString();
-		// Query parameters
-		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-				// Add query parameter
-				.queryParam("code", property.getTenantId());
-		logger.info("WorkflowConsumer builderuri :" + builder.buildAndExpand().toUri()
-				+ "\n WorkflowConsumer PropertyRequest :" + propertyRequest.getRequestInfo());
-		try {
-			SearchTenantResponse searchTenantResponse = restTemplate.postForObject(builder.buildAndExpand().toUri(),
-					propertyRequest.getRequestInfo(), SearchTenantResponse.class);
-			logger.info("WorkflowConsumer SearchTenantResponse  ---->>  " + searchTenantResponse);
-			if (searchTenantResponse.getTenant().size() > 0) {
-				City city = searchTenantResponse.getTenant().get(0).getCity();
-				String cityCode = city.getCode();
-				String upicFormat = propertiesManager.getUpicNumberFormat();
-				upicNumber = getUpicNumber(property.getTenantId(), propertyRequest, upicFormat);
-				upicNumber = String.format("%08d", Integer.parseInt(upicNumber));
-				if (cityCode != null) {
-					upicNumber = cityCode + upicNumber;
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return upicNumber;
+		return tenantRepository.generateUpicNoRepository(property, propertyRequest);
 	}
 
 	/**
@@ -215,48 +194,11 @@ public class WorkflowConsumer {
 	 * @param propertyRequest
 	 * @param upicFormat
 	 * @return UpicNumber
+	 * @throws Exception
 	 */
-	public String getUpicNumber(String tenantId, PropertyRequest propertyRequest, String upicFormat) {
+	public String getUpicNumber(String tenantId, PropertyRequest propertyRequest, String upicFormat) throws Exception {
 
-		StringBuffer idGenerationUrl = new StringBuffer();
-		idGenerationUrl.append(propertiesManager.getIdHostName());
-		idGenerationUrl.append(propertiesManager.getIdBasepath());
-		idGenerationUrl.append(propertiesManager.getIdCreatepath());
-
-		// generating acknowledgement number for all properties
-		String UpicNumber = null;
-		List<IdRequest> idRequests = new ArrayList<>();
-		IdRequest idrequest = new IdRequest();
-		idrequest.setFormat(upicFormat);
-		idrequest.setIdName(propertiesManager.getIdName());
-		idrequest.setTenantId(tenantId);
-		IdGenerationRequest idGeneration = new IdGenerationRequest();
-		idRequests.add(idrequest);
-		idGeneration.setIdRequests(idRequests);
-		idGeneration.setRequestInfo(propertyRequest.getRequestInfo());
-		String response = null;
-		logger.info("WorkflowConsumer idGenerationUrl :" + idGenerationUrl.toString()
-				+ "\n WorkflowConsumer idGenerationRequest :" + idGeneration);
-		try {
-			response = restTemplate.postForObject(idGenerationUrl.toString(), idGeneration, String.class);
-			logger.info("WorkflowConsumer getupicnumber response  ---->>  " + response);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-		ErrorRes errorResponse = gson.fromJson(response, ErrorRes.class);
-		IdGenerationResponse idResponse = gson.fromJson(response, IdGenerationResponse.class);
-
-		if (errorResponse.getErrors() != null && errorResponse.getErrors().size() > 0) {
-			// TODO throw error exception
-			// Error error = errorResponse.getErrors().get(0);
-		} else if (idResponse.getResponseInfo() != null) {
-			if (idResponse.getResponseInfo().getStatus().toString().equalsIgnoreCase(propertiesManager.getSuccess())) {
-				if (idResponse.getIdResponses() != null && idResponse.getIdResponses().size() > 0)
-					UpicNumber = idResponse.getIdResponses().get(0).getId();
-			}
-		}
-
-		return UpicNumber;
+		return idgenRepository.getUpicNumberRepository(tenantId, propertyRequest, upicFormat);
 	}
+
 }

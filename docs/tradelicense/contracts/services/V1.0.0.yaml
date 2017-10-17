@@ -368,7 +368,7 @@ paths:
           description: Id of the Admin ward of the Trade License for which Notice Document belongs to.
           type: integer
           format: int64
-        - name: status
+        - name: applicationStatus
           in: query
           required: false
           description: Application Status  of the Trade License for which Notice Document belongs to.
@@ -773,6 +773,9 @@ definitions:
       status:
         type: string
         description: Unique identifier (code) of the Trade license Status
+      userId:
+        type: integer
+        description: Unique identifier of the user for which License belongs to
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -1217,6 +1220,9 @@ definitions:
       status:
         type: string
         description: Unique identifier (code) of the Trade license Status
+      userId:
+        type: integer
+        description: Unique identifier of the user for which License belongs to
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:

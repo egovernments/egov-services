@@ -21,7 +21,7 @@ public class InvalidFactorValueException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
 	private String customMsg;
-	
+
 	private String msgDetails;
 
 	private RequestInfo requestInfo;

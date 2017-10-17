@@ -69,7 +69,7 @@ public class DemandService {
     	billingServiceRepository.updateDemandForTittleTransfer(titleTransferRequest);
     }
 
-	public DemandResponse updateDemand(PropertyRequest propertyRequest) throws Exception {
+	public DemandResponse updateDemand(PropertyRequest propertyRequest,Boolean isModify) throws Exception {
 
 		List<TaxCalculation> calculationList = new ArrayList<>();
 		Property property = propertyRequest.getProperties().get(0);
@@ -81,7 +81,7 @@ public class DemandService {
 			e.printStackTrace();
 		}
 		logger.info("pt-tax-enrichment DemandService calculationList --> " + calculationList);
-		return billingServiceRepository.updateDemand(calculationList, property, propertyRequest.getRequestInfo());
+		return billingServiceRepository.updateDemand(calculationList, property, propertyRequest.getRequestInfo(),isModify);
 
 	}
 

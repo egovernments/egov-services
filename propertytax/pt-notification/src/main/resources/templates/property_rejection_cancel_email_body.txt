@@ -1,0 +1,18 @@
+<html><body>
+<p>
+Dear {{Owner name}},
+</p>
+<p>
+Your New Property registration application with acknowledgement number is {{Acknowledgement Number}} is being 
+rejected and the reason for rejection is "{{Approval/Rejection comment}}". <br/>Please get in touch with Clerk/CFC official to raise a new Create New Property application with proper information for Create New Property. Rejection letter for your application is attached.<br/>
+This is computer generated email and does not need any signature and also please do not reply to this email.
+</p>
+<p>
+Click on below link to download the Rejection letter<br/>
+{{{rejectionLetterUrl}}}
+</p>
+
+Thanks,<br/>
+Chief Officer 
+{{Corporation/Municipality/Nagara Panchayat name}}
+</body></html>

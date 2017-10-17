@@ -11,6 +11,7 @@ import org.egov.models.TaskResponse;
 import org.egov.models.WorkFlowDetails;
 import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.ValidationUrlNotFoundException;
+import org.egov.tracer.http.LogAwareRestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,7 +19,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
@@ -35,7 +35,7 @@ public class WorkFlowRepository {
 	PropertiesManager propertiesManager;
 
 	@Autowired
-	RestTemplate restTemplate;
+	LogAwareRestTemplate restTemplate;
 
 	public TaskResponse updateWorkFlowDetails(WorkFlowDetails workFlowDetails, RequestInfo requestInfo, String tenantId,
 			String stateId) {
@@ -63,8 +63,8 @@ public class WorkFlowRepository {
 					builder.buildAndExpand(uriParams).toUri(), HttpMethod.POST, requestEntity, TaskResponse.class);
 			taskResponse = responseEntity.getBody();
 		} catch (Exception exception) {
-			throw new ValidationUrlNotFoundException(propertiesManager.getWorkflowValidation(),
-					exception.getMessage(), requestInfo);
+			throw new ValidationUrlNotFoundException(propertiesManager.getWorkflowValidation(), exception.getMessage(),
+					requestInfo);
 		}
 		return taskResponse;
 	}

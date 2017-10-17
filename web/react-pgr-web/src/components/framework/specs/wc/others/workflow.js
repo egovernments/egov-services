@@ -2,8 +2,8 @@ var dat = {
     "wc.create": {
         "numCols": 12 / 3,
         "version": "v1",
-        "url": "/wcms-connection/connection/_create",
-        "idJsonPath": "Connection[0].acknowledgementNumber",
+        // "url": "/wcms-connection/connection/_create",
+        // "idJsonPath": "Connection[0].acknowledgementNumber",
         "useTimestamp": true,
         "tenantIdRequired": true, //Instead of boolean value give json path
         "objectName": "Connection",
@@ -17,7 +17,6 @@ var dat = {
                 {
                   "name": "With Property",
                   "jsonPath": "Connection[0].withProperty",
-                  "label": "wc.group.withProperty",
                   "pattern": "",
                   "type": "radio",
                   "isRequired": false,
@@ -29,12 +28,12 @@ var dat = {
                   "showHideFields": [{
                    "ifValue": false,
                    "hide": [{
-                    "name": "applicantDetails",
+                    "name": "applicantDetailsWithProp",
                     "isGroup": true,
                     "isField": false
                    }],
                    "show": [{
-                   "name": "applicantDetailsWithProp",
+                   "name": "applicantDetailsWithoutProp",
                    "isGroup": true,
                    "isField": false
                  }]
@@ -43,7 +42,7 @@ var dat = {
         },
         {
           "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
-          "name": "applicantDetailsWithProp", //Follow Title case pattern,
+          "name": "applicantDetailsWithoutProp", //Follow Title case pattern,
           "hide":true,
           "multiple": false,
           "fields": [{
@@ -194,7 +193,8 @@ var dat = {
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
-              "isConfig":true
+              "configUrl": "/wcms/masters/waterchargesconfig/_search?name=HIERACHYTYPEFORWC",
+              "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName={WaterConfigurationValue[0].value}|$.Boundary.*.code|$.Boundary.*.name"
             },
             // {
             //   "name": "Primary Owner",
@@ -212,7 +212,7 @@ var dat = {
           },
             {
             "label": "wc.create.groups.applicationParticular.title", //Cut short labels by taking initial path from parent
-            "name": "applicantDetails", //Follow Title case pattern
+            "name": "applicantDetailsWithProp", //Follow Title case pattern
             "children": [],
             "multiple": false,
             "hide":false,
@@ -318,7 +318,8 @@ var dat = {
                     "isDisabled": true,
                     "requiredErrMsg": "",
                     "patternErrMsg": "",
-                    "isConfig":true
+                    "configUrl": "/wcms/masters/waterchargesconfig/_search?name=HIERACHYTYPEFORWC",
+                    "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName={WaterConfigurationValue[0].value}|$.Boundary.*.code|$.Boundary.*.name" 
                 },
                 {
                     "name": "adharNumber",
@@ -382,7 +383,7 @@ var dat = {
               "label": "wc.create.groups.connectionDetails.hscPipeSizeType",
               "pattern": "",
               "type": "singleValueList",
-              "isRequired": false,
+              "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
@@ -421,7 +422,7 @@ var dat = {
               "label": "wc.create.groups.connectionDetails.billingType",
               "pattern": "",
               "type": "singleValueList",
-              "isRequired": false,
+              "isRequired": true,
               "isDisabled": false,
               "url": "/wcms-connection/connection/_getbillingtypes?|$..key|$..object",
               "requiredErrMsg": "",
@@ -433,7 +434,7 @@ var dat = {
               "label": "wc.create.groups.connectionDetails.connectionType",
               "pattern": "",
               "type": "singleValueList",
-              "isRequired": false,
+              "isRequired": true,
               "isDisabled": false,
               "url": "/wcms-connection/connection/_getconnectiontypes?|$..key|$..object",
               "requiredErrMsg": "",
@@ -445,7 +446,7 @@ var dat = {
               "label": "wc.create.groups.connectionDetails.sourceType",
               "pattern": "",
               "type": "singleValueList",
-              "isRequired": false,
+              "isRequired": true,
               "isDisabled": false,
               "url": "/wcms/masters/sourcetypes/_search?|$..name|$..name",
               "requiredErrMsg": "",
@@ -499,37 +500,6 @@ var dat = {
               "patternErrMsg": ""
             },
             {
-              "name": "numberOfPersons",
-              "jsonPath": "Connection[0].numberOfPersons",
-              "label": "wc.create.groups.connectionDetails.fields.numberOfPersons",
-              "type": "number",
-              "pattern":"^(0|[1-9][0-9]*)$",
-              "isRequired": false,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": "",
-              "depedants":[{
-                  "jsonPath":"Connection.numberOfFamily",
-                  "type":"textField",
-                  "pattern":"getVal('Connection.numberOfPersons')!=''? (Math.ceil(getVal('Connection.numberOfPersons')/4)):0",
-                  "rg":"",
-                  "isRequired": false,
-                  "requiredErrMsg": "",
-                  "patternErrMsg": ""
-                }]
-            },
-            {
-              "name": "numberOfFamily",
-              "jsonPath": "Connection[0].numberOfFamily",
-              "label": "wc.create.numberOfFamily",
-              "pattern": "",
-              "type": "number",
-              "isRequired": false,
-              "isDisabled": true,
-              "requiredErrMsg": "",
-              "patternErrMsg": ""
-            },
-            {
               "name": "Sequence No",
               "jsonPath": "Connection[0].billSequenceNumber",
               "label": "wc.create.groups.connectionDetails.fields.billingNumber",
@@ -545,7 +515,7 @@ var dat = {
               "jsonPath": "Connection[0].plumberName",
               "label": "wc.create.groups.connectionDetails.fields.plumberName",
               "pattern": "",
-              "type": "textarea",
+              "type": "text",
               "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -603,6 +573,37 @@ var dat = {
               "type": "text",
               "isRequired": false,
               "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": ""
+            },
+            {
+              "name": "numberOfPersons",
+              "jsonPath": "Connection[0].numberOfPersons",
+              "label": "wc.create.groups.connectionDetails.fields.numberOfPersons",
+              "type": "number",
+              "pattern":"^(0|[1-9][0-9]*)$",
+              "isRequired": true,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": "",
+              "depedants":[{
+                  "jsonPath":"Connection.numberOfFamily",
+                  "type":"textField",
+                  "pattern":"getVal('Connection.numberOfPersons')!=''? (Math.ceil(getVal('Connection.numberOfPersons')/4)):0",
+                  "rg":"",
+                  "isRequired": false,
+                  "requiredErrMsg": "",
+                  "patternErrMsg": ""
+                }]
+            },
+            {
+              "name": "numberOfFamily",
+              "jsonPath": "Connection[0].numberOfFamily",
+              "label": "wc.create.numberOfFamily",
+              "pattern": "",
+              "type": "number",
+              "isRequired": false,
+              "isDisabled": true,
               "requiredErrMsg": "",
               "patternErrMsg": ""
             },

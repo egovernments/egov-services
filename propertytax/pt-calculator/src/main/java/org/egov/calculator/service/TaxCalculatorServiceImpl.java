@@ -34,8 +34,10 @@ import org.egov.models.DemandResponse;
 import org.egov.models.Factors;
 import org.egov.models.Floor;
 import org.egov.models.GuidanceValueResponse;
+import org.egov.models.GuidanceValueSearchCriteria;
 import org.egov.models.HeadWiseTax;
 import org.egov.models.LatePaymentPenaltyResponse;
+import org.egov.models.LatePaymentPenaltySearchCriteria;
 import org.egov.models.Penalty;
 import org.egov.models.Property;
 import org.egov.models.RequestInfo;
@@ -219,10 +221,17 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 				wrapper.setFactors(factors);
 				List<TaxRates> taxRates = getTaxRateByTenantAndDate(tenantId, date);
 				wrapper.setTaxRates(taxRates);
-				GuidanceValueResponse guidanceValueResponse = taxCalculatorMasterService.getGuidanceValue(
-						calculationRequest.getRequestInfo(), tenantId,
-						calculationRequest.getProperty().getBoundary().getGuidanceValueBoundary(),
-						unit.getStructure(), unit.getUsage(), null, unit.getOccupancyType(), unit.getOccupancyDate());
+				GuidanceValueSearchCriteria guidanceValueSearchCriteria = new GuidanceValueSearchCriteria();
+				guidanceValueSearchCriteria.setTenantId(tenantId);
+				guidanceValueSearchCriteria
+						.setBoundary(calculationRequest.getProperty().getBoundary().getGuidanceValueBoundary());
+				guidanceValueSearchCriteria.setStructure(unit.getStructure());
+				guidanceValueSearchCriteria.setUsage(unit.getUsage());
+				guidanceValueSearchCriteria.setOccupancy(unit.getOccupancyType());
+				guidanceValueSearchCriteria.setValidDate(unit.getOccupancyDate());
+
+				GuidanceValueResponse guidanceValueResponse = taxCalculatorMasterService
+						.getGuidanceValue(calculationRequest.getRequestInfo(), guidanceValueSearchCriteria);
 				Double guidanceValue = guidanceValueResponse.getGuidanceValues().get(0).getValue();
 				wrapper.setGuidanceValue(guidanceValue);
 			}
@@ -662,10 +671,11 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 	}
 
 	@Override
-	public LatePaymentPenaltyResponse getLatePaymentPenalty(RequestInfoWrapper requestInfo, String tenantId,
-			String upicNo) throws Exception {
+	public LatePaymentPenaltyResponse getLatePaymentPenalty(RequestInfoWrapper requestInfo,
+			LatePaymentPenaltySearchCriteria latePaymentPenaltySearchCriteria) throws Exception {
 
-		DemandResponse demandResponse = demandRepository.getDemands(upicNo, tenantId, requestInfo);
+		DemandResponse demandResponse = demandRepository.getDemands(latePaymentPenaltySearchCriteria.getUpicNo(),
+				latePaymentPenaltySearchCriteria.getTenantId(), requestInfo);
 		if (demandResponse != null) {
 			List<Penalty> penalityList = new ArrayList<Penalty>();
 			List<Demand> demands = demandResponse.getDemands();

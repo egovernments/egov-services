@@ -373,14 +373,14 @@ public class PropertiesManager {
 	@Value("${tl.error.licensefee.notzero}")
 	private String licenseFeeNotZeroErrorMsg;
 	
-	@Value("${egov.services.tl.admin.hierarchy}")
-	private String adminBoundryHierarchy;
+	@Value("${egov.services.tl.admin.hierarchy.key}")
+	private String adminBoundryHierarchyKey;
 	
-	@Value("${egov.services.tl.location.hierarchy}")
-	private String locationBoundryHierarchy;
+	@Value("${egov.services.tl.location.hierarchy.key}")
+	private String locationBoundryHierarchyKey;
 	
-	@Value("${egov.services.tl.revenue.hierarchy}")
-	private String revenueBoundryHierarchy;
+	@Value("${egov.services.tl.revenue.hierarchy.key}")
+	private String revenueBoundryHierarchyKey;
 	
 	@Value("${tl.application.fee.master.code}")
 	private String applicationFeeMasterCode;

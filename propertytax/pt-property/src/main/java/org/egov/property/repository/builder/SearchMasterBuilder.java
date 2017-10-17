@@ -153,7 +153,7 @@ public class SearchMasterBuilder {
 	private static String getSearchQueryForStrings(String[] service) {
 
 		StringBuilder query = new StringBuilder();
-		if (service!=null) {
+		if (service != null) {
 
 			String[] list = service;
 			query.append("'" + list[0].toLowerCase() + "'");

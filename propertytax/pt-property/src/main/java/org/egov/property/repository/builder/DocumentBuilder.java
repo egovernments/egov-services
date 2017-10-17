@@ -21,4 +21,6 @@ public class DocumentBuilder {
 
 	public static final String AUDIT_DETAILS_QUERY = "select createdBy,lastModifiedBy,createdTime,"
 			+ "lastModifiedTime from egpt_document where id= ?";
+	
+	public static final String DELETE_DOCUMENT_BY_ID = "delete from egpt_document where id = ?";
 }

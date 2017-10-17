@@ -8,11 +8,14 @@ import org.egov.common.contract.response.Error;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ErrorResponse;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.tl.commons.web.contract.TradeLicenseContract;
+import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tradelicense.common.domain.exception.AdhaarNotFoundException;
 import org.egov.tradelicense.common.domain.exception.AgreeMentDateNotFoundException;
 import org.egov.tradelicense.common.domain.exception.AgreeMentNotFoundException;
 import org.egov.tradelicense.common.domain.exception.AgreeMentNotValidException;
 import org.egov.tradelicense.common.domain.exception.CustomBindException;
+import org.egov.tradelicense.common.domain.exception.CustomDataMigrationBindException;
 import org.egov.tradelicense.common.domain.exception.CustomInvalidInputException;
 import org.egov.tradelicense.common.domain.exception.DuplicateTradeApplicationException;
 import org.egov.tradelicense.common.domain.exception.DuplicateTradeLicenseException;
@@ -123,6 +126,94 @@ public class CustomControllerAdvice {
 						+ errs.getCode();
 				ErrorField f = new ErrorField(errorCode.toLowerCase(), errs.getDefaultMessage(), errs.getField());
 				error.getFields().add(f);
+			}
+		}
+		errRes.setError(error);
+		return errRes;
+	}
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(CustomDataMigrationBindException.class)
+	public ErrorResponse handleBindingErrors(CustomDataMigrationBindException ex) {
+		ErrorResponse errRes = new ErrorResponse();
+		BindingResult errors = ex.getErrors();
+		ResponseInfo responseInfo = new ResponseInfo();
+		TradeLicenseRequest tradeLicenseRequest = ((CustomDataMigrationBindException) ex).getTradeLicenseRequest();
+		responseInfo.setApiId(((CustomDataMigrationBindException) ex).getRequestInfo().getApiId());
+		responseInfo.setVer(((CustomDataMigrationBindException) ex).getRequestInfo().getVer());
+		responseInfo.setMsgId(((CustomDataMigrationBindException) ex).getRequestInfo().getMsgId());
+		responseInfo.setTs(new Date().toString());
+		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
+		errRes.setResponseInfo(responseInfo);
+		Error error = new Error();
+		if (errors.getGlobalError() != null) {
+			error.setCode(Integer.valueOf(errors.getGlobalError().getCode()));
+			error.setMessage(errors.getGlobalError().getObjectName());
+			error.setDescription(errors.getGlobalError().getDefaultMessage());
+		} else {
+			if (errors.getFieldErrorCount() > 0) {
+				error.setMessage("tl.error.missingfields");
+				error.setCode(400);
+				error.setDescription("Missing fields");
+			}
+		}
+		if (errors.hasFieldErrors()) {
+			List<org.springframework.validation.FieldError> fieldErrors = errors.getFieldErrors();
+			error.setFields(new ArrayList<>());
+			for (org.springframework.validation.FieldError errs : fieldErrors) {
+				
+				TradeLicenseContract tlContract = null;
+                String errField = errs.getField().substring(errs.getField().indexOf(".") + 1);
+                String licenseIndex = errs.getField().substring((errs.getField().indexOf("[") + 1), (errs.getField().indexOf("[") + 2));
+                
+                if(licenseIndex != null && !licenseIndex.isEmpty()){
+                    
+                    Integer intVal = Integer.valueOf(licenseIndex);
+                    
+                    if(intVal != null && tradeLicenseRequest.getLicenses() != null 
+                            && tradeLicenseRequest.getLicenses().get(intVal) != null){
+                        
+                        tlContract = tradeLicenseRequest.getLicenses().get(intVal);
+                    }
+                    
+                    if(tlContract != null && tlContract.getIsLegacy() != null 
+                            && tlContract.getIsLegacy() == Boolean.TRUE
+                            && tlContract.getIsDataPorting() != null 
+							&& tlContract.getIsDataPorting() == Boolean.TRUE){
+                        
+                    	if (errField != null && errs.getCode() != null 
+								&& (errs.getCode().equalsIgnoreCase("NotEmpty") || errs.getCode().equalsIgnoreCase("NotNull"))
+								&& (errField.equalsIgnoreCase("mobileNumber")
+								|| errField.equalsIgnoreCase("fatherspousename")
+								|| errField.equalsIgnoreCase("emailid")
+								|| errField.equalsIgnoreCase("ownerAddress")
+								|| errField.equalsIgnoreCase("ownerShipType")
+								|| errField.equalsIgnoreCase("uom")
+								|| errField.equalsIgnoreCase("tradeCommencementDate")
+								|| errField.equalsIgnoreCase("adminWard")
+								|| errField.equalsIgnoreCase("category")
+								|| errField.equalsIgnoreCase("subCategory")
+								|| errField.equalsIgnoreCase("validityYears"))){
+                        
+                        	//nothing to do here
+                        } else {
+                        	
+                        	String errorCode = "tl.error." + errs.getField().substring(errs.getField().indexOf(".") + 1) + "."
+            						+ errs.getCode();
+            				ErrorField f = new ErrorField(errorCode.toLowerCase(), errs.getDefaultMessage(), errs.getField());
+            				error.getFields().add(f);
+                        }
+                        
+                    } else {
+                    	
+                    	String errorCode = "tl.error." + errs.getField().substring(errs.getField().indexOf(".") + 1) + "."
+        						+ errs.getCode();
+        				ErrorField f = new ErrorField(errorCode.toLowerCase(), errs.getDefaultMessage(), errs.getField());
+        				error.getFields().add(f);
+                    }
+                }
+                
+				
 			}
 		}
 		errRes.setError(error);

@@ -7,6 +7,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.helper.CollectionReceiptRequest;
 import org.egov.demand.model.DemandUpdateMisRequest;
+import org.egov.demand.model.enums.Status;
 import org.egov.demand.repository.BillRepository;
 import org.egov.demand.service.BusinessServDetailService;
 import org.egov.demand.service.DemandService;
@@ -101,7 +102,7 @@ public class BillingServiceConsumer {
 						.receipt(receipts).requestInfo(requestInfo)
 						.tenantId(collectionReceiptRequest.getTenantId()).build();
 				log.debug("the receipt request is -------------------"+receiptRequest);
-				demandService.updateDemandFromReceipt(receiptRequest);
+				demandService.updateDemandFromReceipt(receiptRequest,Status.CREATED);
 			}
 			else if(applicationProperties.getSaveCollectedReceipts().equals(topic))
 				demandService.saveCollectedReceipts(objectMapper.convertValue(consumerRecord, BillRequest.class));

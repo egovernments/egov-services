@@ -15,7 +15,72 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.enums.ApplicationEnum;
-import org.egov.models.*;
+import org.egov.models.Apartment;
+import org.egov.models.ApartmentRequest;
+import org.egov.models.ApartmentResponse;
+import org.egov.models.ApartmentSearchCriteria;
+import org.egov.models.AppConfiguration;
+import org.egov.models.AppConfigurationRequest;
+import org.egov.models.AppConfigurationResponse;
+import org.egov.models.AppConfigurationSearchCriteria;
+import org.egov.models.AuditDetails;
+import org.egov.models.Department;
+import org.egov.models.DepartmentRequest;
+import org.egov.models.DepartmentResponseInfo;
+import org.egov.models.DepartmentSearchCriteria;
+import org.egov.models.Depreciation;
+import org.egov.models.DepreciationRequest;
+import org.egov.models.DepreciationResponse;
+import org.egov.models.DepreciationSearchCriteria;
+import org.egov.models.DocumentType;
+import org.egov.models.DocumentTypeRequest;
+import org.egov.models.DocumentTypeResponse;
+import org.egov.models.DocumentTypeSearchCriteria;
+import org.egov.models.FloorType;
+import org.egov.models.FloorTypeRequest;
+import org.egov.models.FloorTypeResponse;
+import org.egov.models.FloorTypeSearchCriteria;
+import org.egov.models.GuidanceValueBoundary;
+import org.egov.models.GuidanceValueBoundaryRequest;
+import org.egov.models.GuidanceValueBoundaryResponse;
+import org.egov.models.GuidanceValueBoundarySearchCriteria;
+import org.egov.models.MutationMaster;
+import org.egov.models.MutationMasterRequest;
+import org.egov.models.MutationMasterResponse;
+import org.egov.models.MutationMasterSearchCriteria;
+import org.egov.models.OccuapancyMaster;
+import org.egov.models.OccuapancyMasterRequest;
+import org.egov.models.OccuapancyMasterResponse;
+import org.egov.models.OccuapancyMasterSearchCriteria;
+import org.egov.models.PropertyType;
+import org.egov.models.PropertyTypeRequest;
+import org.egov.models.PropertyTypeResponse;
+import org.egov.models.PropertyTypeSearchCriteria;
+import org.egov.models.RequestInfo;
+import org.egov.models.ResponseInfo;
+import org.egov.models.RoofType;
+import org.egov.models.RoofTypeRequest;
+import org.egov.models.RoofTypeResponse;
+import org.egov.models.RoofTypeSearchCriteria;
+import org.egov.models.SpecialNotice;
+import org.egov.models.SpecialNoticeRequest;
+import org.egov.models.SpecialNoticeResponse;
+import org.egov.models.StructureClass;
+import org.egov.models.StructureClassRequest;
+import org.egov.models.StructureClassResponse;
+import org.egov.models.StructureClassSearchCriteria;
+import org.egov.models.UsageMaster;
+import org.egov.models.UsageMasterRequest;
+import org.egov.models.UsageMasterResponse;
+import org.egov.models.UsageMasterSearchCriteria;
+import org.egov.models.WallType;
+import org.egov.models.WallTypeRequest;
+import org.egov.models.WallTypeResponse;
+import org.egov.models.WallTypeSearchCriteria;
+import org.egov.models.WoodType;
+import org.egov.models.WoodTypeRequest;
+import org.egov.models.WoodTypeResponse;
+import org.egov.models.WoodTypeSearchCriteria;
 import org.egov.property.PtPropertyApplication;
 import org.egov.property.services.Masterservice;
 import org.egov.property.services.NoticeService;
@@ -147,8 +212,7 @@ public class PropertyMasterControllerTest {
 		floorTypeResponse.setFloorTypes(floorTypes);
 
 		try {
-			when(masterService.getFloorTypeMaster(any(RequestInfo.class), anyString(), any(Integer[].class),
-					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class)))
+			when(masterService.getFloorTypeMaster(any(RequestInfo.class), any(FloorTypeSearchCriteria.class)))
 							.thenReturn(floorTypeResponse);
 
 			mockMvc.perform(post("/property/floortypes/_search").param("tenantId", "1234")
@@ -257,8 +321,7 @@ public class PropertyMasterControllerTest {
 		roofTypeResponse.setResponseInfo(new ResponseInfo());
 
 		try {
-			when(masterService.getRoofypes(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class)))
+			when(masterService.getRoofypes(any(RequestInfo.class), any(RoofTypeSearchCriteria.class)))
 							.thenReturn(roofTypeResponse);
 
 			mockMvc.perform(post("/property/rooftypes/_search").param("tenantId", "1234")
@@ -367,8 +430,7 @@ public class PropertyMasterControllerTest {
 		woodTypeResponse.setWoodTypes(woodTypes);
 
 		try {
-			when(masterService.getWoodTypes(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class)))
+			when(masterService.getWoodTypes(any(RequestInfo.class), any(WoodTypeSearchCriteria.class)))
 							.thenReturn(woodTypeResponse);
 
 			mockMvc.perform(post("/property/woodtypes/_search").param("tenantId", "1237")
@@ -482,9 +544,8 @@ public class PropertyMasterControllerTest {
 		departmentResponse.setResponseInfo(new ResponseInfo());
 		departmentResponse.setDepartments(departments);
 		try {
-			when(masterService.getDepartmentMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(String.class), any(String.class), any(String.class), any(String.class), any(Integer.class),
-					any(Integer.class))).thenReturn(departmentResponse);
+			when(masterService.getDepartmentMaster(any(RequestInfo.class), any(DepartmentSearchCriteria.class)))
+					.thenReturn(departmentResponse);
 
 			mockMvc.perform(post("/property/departments/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("departmentsearchrequest.json")))
@@ -598,9 +659,8 @@ public class PropertyMasterControllerTest {
 		occuapancyResponse.setResponseInfo(new ResponseInfo());
 		occuapancyResponse.setOccuapancyMasters(occuapancies);
 		try {
-			when(masterService.getOccuapancyMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(String.class), any(String.class), any(String.class), any(Boolean.class), any(Integer.class),
-					any(Integer.class), any(Integer.class))).thenReturn(occuapancyResponse);
+			when(masterService.getOccuapancyMaster(any(RequestInfo.class), any(OccuapancyMasterSearchCriteria.class)))
+					.thenReturn(occuapancyResponse);
 
 			mockMvc.perform(post("/property/occuapancies/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("occupanciessearchrequest.json")))
@@ -717,9 +777,8 @@ public class PropertyMasterControllerTest {
 		propertyTypeResponse.setResponseInfo(new ResponseInfo());
 		propertyTypeResponse.setPropertyTypes(propertyTypes);
 		try {
-			when(masterService.getPropertyTypeMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(String.class), any(String.class), any(String.class), any(Boolean.class), any(Integer.class),
-					any(Integer.class), any(Integer.class), any(String.class))).thenReturn(propertyTypeResponse);
+			when(masterService.getPropertyTypeMaster(any(RequestInfo.class), any(PropertyTypeSearchCriteria.class)))
+					.thenReturn(propertyTypeResponse);
 
 			mockMvc.perform(post("/property/propertytypes/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON)
@@ -828,9 +887,8 @@ public class PropertyMasterControllerTest {
 
 		try {
 
-			when(masterService.getStructureClassMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(String.class), any(String.class), any(String.class), any(Boolean.class), any(Integer.class),
-					any(Integer.class), any(Integer.class))).thenReturn(structureClassResponse);
+			when(masterService.getStructureClassMaster(any(RequestInfo.class), any(StructureClassSearchCriteria.class)))
+					.thenReturn(structureClassResponse);
 
 			mockMvc.perform(post("/property/structureclasses/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON)
@@ -870,9 +928,7 @@ public class PropertyMasterControllerTest {
 
 		try {
 
-			when(masterService.getUsageMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(String.class), any(String.class), any(String.class), any(Boolean.class), any(Boolean.class),
-					any(Integer.class), any(Integer.class), any(Integer.class), any(String.class), any(String[].class)))
+			when(masterService.getUsageMaster(any(RequestInfo.class), any(UsageMasterSearchCriteria.class)))
 							.thenReturn(usageMasterResponse);
 
 			mockMvc.perform(post("/property/usages/_search").param("tenantId", "default")
@@ -979,8 +1035,7 @@ public class PropertyMasterControllerTest {
 
 		try {
 
-			when(masterService.getWallTypeMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class)))
+			when(masterService.getWallTypeMaster(any(RequestInfo.class), any(WallTypeSearchCriteria.class)))
 							.thenReturn(wallTypeResponse);
 
 			mockMvc.perform(post("/property/walltypes/_search").param("tenantId", "default")
@@ -1159,9 +1214,7 @@ public class PropertyMasterControllerTest {
 		depreciationResponse.setDepreciations(depreciations);
 
 		try {
-			when(masterService.searchDepreciation(any(RequestInfo.class), anyString(), any(Integer[].class),
-					any(Integer.class), any(Integer.class), anyString(), anyString(), any(Integer.class),
-					any(Integer.class), any(Integer.class))).thenReturn(depreciationResponse);
+			when(masterService.searchDepreciation(any(RequestInfo.class), any(DepreciationSearchCriteria.class))).thenReturn(depreciationResponse);
 			mockMvc.perform(post("/property/depreciations/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("searchDepreciationRequest.json")))
 					.andExpect(status().isOk())
@@ -1263,8 +1316,7 @@ public class PropertyMasterControllerTest {
 		mutationMasters.add(mutationMaster);
 		mutationMasterResponse.setMutationMasters(mutationMasters);
 		try {
-			when(masterService.searchMutationMaster(any(RequestInfo.class), anyString(), any(Integer[].class),
-					anyString(), anyString(), anyString(), any(Integer.class), any(Integer.class)))
+			when(masterService.searchMutationMaster(any(RequestInfo.class), any(MutationMasterSearchCriteria.class)))
 							.thenReturn(mutationMasterResponse);
 			mockMvc.perform(post("/property/mutationmasters/_search").param("tenantId", "tenantid")
 					.contentType(MediaType.APPLICATION_JSON)
@@ -1363,8 +1415,7 @@ public class PropertyMasterControllerTest {
 		documentTypes.add(documentType);
 		documentTypeResponse.setDocumentType(documentTypes);
 		try {
-			when(masterService.searchDocumentTypeMaster(any(RequestInfo.class), anyString(), anyString(), anyString(),
-					anyString(), any(Integer.class), any(Integer.class))).thenReturn(documentTypeResponse);
+			when(masterService.searchDocumentTypeMaster(any(RequestInfo.class), any(DocumentTypeSearchCriteria.class))).thenReturn(documentTypeResponse);
 			mockMvc.perform(post("/property/documenttypes/_search").param("tenantId", "tenantid")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("searchDocumentTypeRequest.json")))
 					.andExpect(status().isOk())
@@ -1506,9 +1557,7 @@ public class PropertyMasterControllerTest {
 
 		try {
 
-			when(masterService.searchApartment(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(String.class), any(String.class), any(Boolean.class), any(Boolean.class), any(Boolean.class),
-					any(Integer.class), any(Integer.class))).thenReturn(apartmentResponse);
+			when(masterService.searchApartment(any(RequestInfo.class), any(ApartmentSearchCriteria.class))).thenReturn(apartmentResponse);
 			mockMvc.perform(post("/property/apartment/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("searchApartmentcomplexRequest.json"))).andExpect(status().isOk())
@@ -1597,8 +1646,7 @@ public class PropertyMasterControllerTest {
 		guidanceValueBoundaryResponse.setGuidanceValueBoundaries(guidanceValueBoundaries);
 
 		try {
-			when(masterService.getGuidanceValueBoundary(any(RequestInfo.class), any(String.class), any(String.class),
-					any(String.class), any(Integer.class), any(Integer.class)))
+			when(masterService.getGuidanceValueBoundary(any(RequestInfo.class), any(GuidanceValueBoundarySearchCriteria.class)))
 							.thenReturn(guidanceValueBoundaryResponse);
 			mockMvc.perform(post("/property/guidancevalueboundary/_search").param("tenantId", "default")
 					.param("guidanceValueBoundary1", "updated-gvb1").contentType(MediaType.APPLICATION_JSON)
@@ -1698,8 +1746,7 @@ public class PropertyMasterControllerTest {
 		appConfigurationResponse.setAppConfigurations(appConfigurations);
 
 		try {
-			when(masterService.getAppConfiguration(any(RequestInfo.class), any(String.class), any(Long[].class),
-					any(String.class), any(String.class), any(Integer.class), any(Integer.class)))
+			when(masterService.getAppConfiguration(any(RequestInfo.class), any(AppConfigurationSearchCriteria.class)))
 							.thenReturn(appConfigurationResponse);
 			mockMvc.perform(post("/property/appconfiguration/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON)

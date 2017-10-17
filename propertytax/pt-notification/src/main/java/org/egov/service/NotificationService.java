@@ -2,8 +2,10 @@ package org.egov.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.egov.models.Demand;
 import org.egov.models.DemandDetail;
@@ -23,8 +25,8 @@ import org.egov.notification.model.SmsMessage;
 import org.egov.notification.repository.DemandRepository;
 import org.egov.notification.repository.NoticeRepository;
 import org.egov.notification.repository.PropertyRepository;
-import org.egov.notificationConsumer.Consumer;
 import org.egov.notificationConsumer.NotificationUtil;
+import org.egov.notificationConsumer.TimeStampUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -225,7 +227,8 @@ public class NotificationService {
 
 			propertyMessage.put("acknowledgementNo", property.getPropertyDetail().getApplicationNo());
 			propertyMessage.put("upicNo", property.getUpicNumber());
-			propertyMessage.put("assessmentDate", property.getAssessmentDate());
+			String assessmentDate = TimeStampUtil.getDateWithoutTimezone(property.getAssessmentDate());
+			propertyMessage.put("assessmentDate", assessmentDate);
 			propertyMessage.put("tenantId", property.getTenantId());
 
 			for (User user : property.getOwners()) {
@@ -262,22 +265,16 @@ public class NotificationService {
 
 			propertyMessage.put("acknowledgementNo", property.getPropertyDetail().getApplicationNo());
 			propertyMessage.put("upicNo", property.getUpicNumber());
-			propertyMessage.put("assessmentDate", property.getAssessmentDate());
+			String assessmentDate = TimeStampUtil.getDateWithoutTimezone(property.getAssessmentDate());
+			propertyMessage.put("assessmentDate", assessmentDate);
 			propertyMessage.put("tenantId", property.getTenantId());
-			// total Propertytax calculation logic
-			/*
-			 * String taxCalculations =
-			 * property.getPropertyDetail().getTaxCalculations(); Gson gson =
-			 * new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-			 * TaxCalculationResponse taxCalculationResponse =
-			 * gson.fromJson(taxCalculations, TaxCalculationResponse.class);
-			 */
 			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 			requestInfoWrapper.setRequestInfo(requestInfo);
-			Double propertyTax = getTotalTax(property.getTenantId(), property.getUpicNumber(), requestInfoWrapper);
+			Double propertyTax = getTotalTax(property.getTenantId(), property, requestInfoWrapper);
 
 			propertyMessage.put("propertyTax", propertyTax);
-			propertyMessage.put("effectiveDate", property.getOccupancyDate());
+			String occupancytDate = TimeStampUtil.getDateWithoutTimezone(property.getOccupancyDate());
+			propertyMessage.put("effectiveDate", occupancytDate);
 			propertyMessage.put("municipalityName", property.getTenantId());
 			for (User user : property.getOwners()) {
 
@@ -312,8 +309,9 @@ public class NotificationService {
 
 		Map<Object, Object> propertyMessage = new HashMap<Object, Object>();
 		for (Property property : propertyRequest.getProperties()) {
-			
+			EmailMessage emailMessage = null;
 			RequestInfo requestInfo= propertyRequest.getRequestInfo();
+			String action = property.getPropertyDetail().getWorkFlowDetails().getAction();
 			String tenantId = property.getTenantId();
 			String applicationNo = property.getPropertyDetail().getApplicationNo();
 			String noticeType = propertiesManager.getRejectionLetter();
@@ -331,20 +329,23 @@ public class NotificationService {
 				propertyMessage.put("Approval/Rejection comment", propertiesManager.getApprovalOrRejectionComment());
 			}
 			
-
-			if (tenantId != null && applicationNo != null) {
+			if (action.equalsIgnoreCase(propertiesManager.getCancel())) {
 				
-				filestorePath = filestorePath.replace(":tenantId", tenantId);
-				String fileStoreId = noticeRepository.getfileStoreId(requestInfo, tenantId, applicationNo, noticeType);
-				log.info("filestoreId for download link: " + fileStoreId);
-				if (fileStoreId != null) {
+				if (tenantId != null && applicationNo != null) {
+					
+					filestorePath = filestorePath.replace(":tenantId", tenantId);
+					String fileStoreId = noticeRepository.getfileStoreId(requestInfo, tenantId, applicationNo, noticeType);
+					log.info("filestoreId for download link: " + fileStoreId);
+					if (fileStoreId != null) {
 
-					filestorePath = filestorePath.replace(":fileStoreId", fileStoreId);
+						filestorePath = filestorePath.replace(":fileStoreId", fileStoreId);
+					}
+
+					String urlLink = "<a href =" + filestorePath + ">Download Link</a>";
+					propertyMessage.put("rejectionLetterUrl", urlLink);
 				}
-
-				String urlLink = "<a href =" + filestorePath + ">Download Link</a>";
-				propertyMessage.put("rejectionLetterUrl", urlLink);
 			}
+			
 
 			for (User user : property.getOwners()) {
 
@@ -355,11 +356,22 @@ public class NotificationService {
 						propertyMessage);
 				SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
 				EmailMessageContext emailMessageContext = new EmailMessageContext();
-				emailMessageContext.setBodyTemplateName(propertiesManager.getPropertyRejectEmailBody());
-				emailMessageContext.setBodyTemplateValues(propertyMessage);
 				emailMessageContext.setSubjectTemplateName(propertiesManager.getPropertyRejectEmailSubject());
 				emailMessageContext.setSubjectTemplateValues(propertyMessage);
-				EmailMessage emailMessage = notificationUtil.buildRejectionEmailTemplate(emailMessageContext, emailAddress);
+				
+				if (action.equalsIgnoreCase(propertiesManager.getCancel())) {
+					emailMessageContext.setBodyTemplateName(propertiesManager.getPropertyRejectCancelEmailBody());
+					emailMessageContext.setBodyTemplateValues(propertyMessage);
+					emailMessage = notificationUtil.buildRejectionEmailTemplate(emailMessageContext,
+							emailAddress);
+					
+				} else {
+					emailMessageContext.setBodyTemplateName(propertiesManager.getPropertyRejectEmailBody());
+					emailMessageContext.setBodyTemplateValues(propertyMessage);
+					
+					EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
+					emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
+				}				
 				kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
 				kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
 			}
@@ -596,10 +608,15 @@ public class NotificationService {
 		}
 	}
 
-	private Double getTotalTax(String tenantId, String upicNo, RequestInfoWrapper requestInfo) {
+	private Double getTotalTax(String tenantId, Property property, RequestInfoWrapper requestInfo) {
 		Double totalPropertyTax = 0.0;
 		try {
-			DemandResponse demandResponse = demandRepository.getDemands(upicNo, tenantId, requestInfo);
+			
+
+			Set<String> id = new HashSet<String>();
+			List<Demand> demands=property.getDemands();
+			demands.forEach((demand) -> id.add(demand.getId()));
+			DemandResponse demandResponse = demandRepository.getDemands(id, tenantId, requestInfo);
 			if (demandResponse != null) {
 				for (Demand demand : demandResponse.getDemands()) {
 

@@ -9,8 +9,7 @@ import lombok.Setter;
 
 /**
  * 
- * @author Prasad 
- * Duplicate Tenant & code combination custom Exception class
+ * @author Prasad Duplicate Tenant & code combination custom Exception class
  *
  */
 @Getter

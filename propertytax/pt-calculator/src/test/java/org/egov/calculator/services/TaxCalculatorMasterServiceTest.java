@@ -14,16 +14,20 @@ import org.egov.models.AuditDetails;
 import org.egov.models.CalculationFactor;
 import org.egov.models.CalculationFactorRequest;
 import org.egov.models.CalculationFactorResponse;
+import org.egov.models.CalculationFactorSearchCriteria;
 import org.egov.models.GuidanceValue;
 import org.egov.models.GuidanceValueRequest;
 import org.egov.models.GuidanceValueResponse;
+import org.egov.models.GuidanceValueSearchCriteria;
 import org.egov.models.RequestInfo;
 import org.egov.models.TaxPeriod;
 import org.egov.models.TaxPeriodRequest;
 import org.egov.models.TaxPeriodResponse;
+import org.egov.models.TaxPeriodSearchCriteria;
 import org.egov.models.TaxRates;
 import org.egov.models.TaxRatesRequest;
 import org.egov.models.TaxRatesResponse;
+import org.egov.models.TaxRatesSearchCriteria;
 import org.egov.models.TransferFeeRate;
 import org.egov.models.TransferFeeRateSearchCriteria;
 import org.egov.models.TransferFeeRatesRequest;
@@ -145,28 +149,28 @@ public class TaxCalculatorMasterServiceTest {
     }
 
     @Test
-    public void searchFactor() {
+	public void searchFactor() {
 
-        String tenantId = "default";
-        String factorType = "age";
-        String validDate = "16/06/2007";
-        String code = "propertytax";
-        RequestInfo requestInfo = getRequestInfoObject();
+		CalculationFactorSearchCriteria calculationFactorSearchCriteria = new CalculationFactorSearchCriteria();
+		calculationFactorSearchCriteria.setTenantId("default");
+		calculationFactorSearchCriteria.setFactorType("age");
+		calculationFactorSearchCriteria.setValidDate("16/06/2007");
+		calculationFactorSearchCriteria.setCode("propertytax");
+		RequestInfo requestInfo = getRequestInfoObject();
 
-        try {
-            CalculationFactorResponse calculationFactorResponse = taxCalculatorMasterService.getFactor(requestInfo,
-                    tenantId, factorType, validDate, code);
-            if (calculationFactorResponse.getCalculationFactors().size() == 0) {
-                assertTrue(false);
-            }
+		try {
+			CalculationFactorResponse calculationFactorResponse = taxCalculatorMasterService.getFactor(requestInfo,
+					calculationFactorSearchCriteria);
+			if (calculationFactorResponse.getCalculationFactors().size() == 0) {
+				assertTrue(false);
+			}
 
-            assertTrue(true);
+			assertTrue(true);
 
-        } catch (Exception e) {
-            assertTrue(false);
-        }
-
-    }
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+	}
 
     /**
      * Description: test case for create guidance value
@@ -276,17 +280,16 @@ public class TaxCalculatorMasterServiceTest {
     @Test
     public void searchGuidanceValue() throws Exception {
         try {
-
-            String tenantId = "default";
-            String boundary = "b2";
-            String validDate = "25-11-2016";
-            String structure = "rectangle";
-            String usage = "propertyuse";
-            String subUsage = "propertyusage";
-            String occupancy = "anil";
-
+        	GuidanceValueSearchCriteria guidanceValueSearchCriteria = new GuidanceValueSearchCriteria();
+        	guidanceValueSearchCriteria.setTenantId("default");
+        	guidanceValueSearchCriteria.setBoundary("b2");
+        	guidanceValueSearchCriteria.setValidDate("25-11-2016");
+        	guidanceValueSearchCriteria.setStructure("rectangle");
+        	guidanceValueSearchCriteria.setUsage("propertyuse");
+        	guidanceValueSearchCriteria.setSubUsage("propertyusage");
+        	guidanceValueSearchCriteria.setOccupancy("anil");
             GuidanceValueResponse guidanceValueResponse = taxCalculatorMasterService.getGuidanceValue(
-                    getRequestInfoObject(), tenantId, boundary, structure, usage, subUsage, occupancy, validDate);
+                    getRequestInfoObject(), guidanceValueSearchCriteria);
             if (guidanceValueResponse.getGuidanceValues().size() == 0) {
                 assertTrue(false);
             }
@@ -390,28 +393,27 @@ public class TaxCalculatorMasterServiceTest {
     /**
      * This will test whether the search will be successful or not for tax periods
      */
-    @Ignore
-    public void searchTaxPeriod() {
+	@Ignore
+	public void searchTaxPeriod() {
+		TaxPeriodSearchCriteria taxPeriodSearchCriteria = new TaxPeriodSearchCriteria();
+		taxPeriodSearchCriteria.setTenantId("1234");
+		taxPeriodSearchCriteria.setCode("YEAR");
+		taxPeriodSearchCriteria.setFromDate("02/02/2017");
+		taxPeriodSearchCriteria.setToDate("05-02-2017");
+		TaxPeriodResponse taxPeriodResponse = null;
+		try {
+			taxPeriodResponse = taxCalculatorMasterService.getTaxPeriod(getRequestInfoObject(),
+					taxPeriodSearchCriteria);
 
-        String tenantId = "1234";
-        String code = "YEAR";
-        String fromDate = "02/02/2017";
-		String toDate = "05-02-2017";
+			if (taxPeriodResponse.getTaxPeriods().size() == 0) {
+				assertTrue(false);
+			}
+			assertTrue(true);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
 
-        TaxPeriodResponse taxPeriodResponse = null;
-        try {
-            taxPeriodResponse = taxCalculatorMasterService.getTaxPeriod(getRequestInfoObject(), tenantId, null,
-                    code, fromDate, toDate, null);
-
-            if (taxPeriodResponse.getTaxPeriods().size() == 0) {
-                assertTrue(false);
-            }
-            assertTrue(true);
-        } catch (Exception e) {
-            assertTrue(false);
-        }
-
-    }
+	}
 
     @Test
     public void createTaxRateServiceTest() {
@@ -511,32 +513,31 @@ public class TaxCalculatorMasterServiceTest {
         }
     }
 
-    @Test
-        public void searchTaxRateServiceTest() {
+	@Test
+	public void searchTaxRateServiceTest() {
 
-                String tenantId = "default";
-                String taxHead = "taxHead-UU";
-                String validDate = "04-06-2017";
-                Double validARVAmount = 1100.0;
-                String parentTaxHead = "dependentTaxHead-UU";
-                String usage ="car usage";
-                String propertyType="vaccant land";
+		TaxRatesSearchCriteria taxRatesSearchCriteria = new TaxRatesSearchCriteria();
+		taxRatesSearchCriteria.setTenantId("default");
+		taxRatesSearchCriteria.setTaxHead("taxHead-UU");
+		taxRatesSearchCriteria.setValidDate("04-06-2017");
+		taxRatesSearchCriteria.setValidARVAmount(1100.0);
+		taxRatesSearchCriteria.setParentTaxHead("dependentTaxHead-UU");
+		taxRatesSearchCriteria.setUsage("car usage");
+		taxRatesSearchCriteria.setPropertyType("vaccant land");
+		TaxRatesResponse taxRatesResponse = null;
+		try {
+			taxRatesResponse = taxCalculatorMasterService.getTaxRate(getRequestInfoObject(), taxRatesSearchCriteria);
 
-                TaxRatesResponse taxRatesResponse = null;
-                try {
-                        taxRatesResponse = taxCalculatorMasterService.getTaxRate(getRequestInfoObject(), tenantId, taxHead,
-                                        validDate, validARVAmount, parentTaxHead,usage,propertyType);
+			if (taxRatesResponse.getTaxRates().size() == 0) {
+				assertTrue(false);
+			}
 
-                        if (taxRatesResponse.getTaxRates().size() == 0) {
-                                assertTrue(false);
-                        }
+			assertTrue(true);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+	}
 
-                        assertTrue(true);
-                } catch (Exception e) {
-                        assertTrue(false);
-                }
-    }
-    
     /**
 	 * This test will test whether the TransferFeeRate will be created successfully or
 	 * not

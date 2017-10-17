@@ -1,0 +1,8 @@
+Dear {{Owner}},
+
+Your new water tap connection application is being rejected and the reason for rejection {{Rejection comments of the approver}}
+ Please get in touch with ULB official to raise a new application with proper information to get a water connection. You can download rejection letter in the following URL: XXXXXXXXX.
+This is computer generated email and does not need any signature and also please do not reply to this email.
+
+Thanks ,
+{{ULB Name}}

@@ -38,4 +38,8 @@ public class PropertyDetailBuilder {
 	public static final String MOVE_PROPERTY_DETAIL_TO_HISTORY = "WITH moved_rows AS ( DELETE FROM egpt_propertydetails WHERE"
 			+ " property=? RETURNING *) INSERT INTO egpt_propertydetails_history SELECT * FROM moved_rows";
 
+	public static final String PROPERTY_DETAIL_ID_BY_PROPERTY_ID = "select id from egpt_propertydetails where property=?";
+
+	public static final String UPDATE_PROPERTYDETAIL_STATUS = "update egpt_propertydetails set status=? where id=?";
+
 }

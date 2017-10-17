@@ -190,6 +190,10 @@ class updatePenaltyRates extends Component {
     let hashLocation = window.location.hash;
     let self = this;
 
+    localStorage.getItem("penaltyResult")
+    var penaltyLocalRaw = localStorage.getItem("penaltyResult");
+    var penaltyRates = JSON.parse(penaltyLocalRaw);
+
     specifications =typeof(results)=="string" ? JSON.parse(results) : results;
     let obj = specifications[`tl.update`];
     reqRequired = [];
@@ -200,46 +204,50 @@ class updatePenaltyRates extends Component {
     setModuleName("tl");
     setActionName("update");
 
+    self.props.setFormData(penaltyRates);
+    self.calculatefeeMatrixDetails();
+    // if(self.props.match.params.id) {
+    //
+    //   var url = specifications[`tl.update`].searchUrl.split("?")[0];
+    //   var id = self.props.match.params.id || self.props.match.params.master;
+    //   var query = {
+    //     [specifications[`tl.update`].searchUrl.split("?")[1].split("=")[0]]: id
+    //   };
 
-    if(self.props.match.params.id) {
+    //   if(window.location.href.indexOf("?") > -1) {
+    //    var qs =  window.location.href.split("?")[1];
+    //    if(qs && qs.indexOf("=") > -1) {
+    //      qs = qs.indexOf("&") > -1 ? qs.split("&") : [qs];
+    //      for(var i=0; i<qs.length; i++) {
+    //        query[qs[i].split("=")[0]] = qs[i].split("=")[1];
+    //      }
+    //    }
+    //  }
+      // Api.commonApiPost(url, query, {}, false, specifications[`tl.update`].useTimestamp).then(function(res){
+      //     if(specifications[`tl.update`].isResponseArray) {
+      //       var obj = {};
+      //       _.set(obj, specifications[`tl.update`].objectName, jp.query(res, "$..[0]")[0]);
+      //       self.props.setFormData(obj);
+      //       self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), 'tl', 'update', specifications[`tl.update`].objectName);
+      //     } else {
+      //       self.props.setFormData(res);
+      //       self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), 'tl', 'update', specifications[`tl.update`].objectName);
+      //     }
+      //     let obj1 = specifications[`tl.update`];
+      //
+      //   self.depedantValue(obj1.groups);
+      // }, function(err){
+      //
+      // }
 
-      var url = specifications[`tl.update`].searchUrl.split("?")[0];
-      var id = self.props.match.params.id || self.props.match.params.master;
-      var query = {
-        [specifications[`tl.update`].searchUrl.split("?")[1].split("=")[0]]: id
-      };
-      if(window.location.href.indexOf("?") > -1) {
-       var qs =  window.location.href.split("?")[1];
-       if(qs && qs.indexOf("=") > -1) {
-         qs = qs.indexOf("&") > -1 ? qs.split("&") : [qs];
-         for(var i=0; i<qs.length; i++) {
-           query[qs[i].split("=")[0]] = qs[i].split("=")[1];
-         }
-       }
-     }
-      Api.commonApiPost(url, query, {}, false, specifications[`tl.update`].useTimestamp).then(function(res){
-          if(specifications[`tl.update`].isResponseArray) {
-            var obj = {};
-            _.set(obj, specifications[`tl.update`].objectName, jp.query(res, "$..[0]")[0]);
-            self.props.setFormData(obj);
-            self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), 'tl', 'update', specifications[`tl.update`].objectName);
-          } else {
-            self.props.setFormData(res);
-            self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), 'tl', 'update', specifications[`tl.update`].objectName);
-          }
-          let obj1 = specifications[`tl.update`];
+    //)
 
-        self.depedantValue(obj1.groups);
-      }, function(err){
-
-      })
-
-    } else {
-       var formData = {};
-      if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
-      setFormData(formData);
-      self.calculatefeeMatrixDetails();
-   }
+  //   } else {
+  //      var formData = {};
+  //     if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
+  //     setFormData(formData);
+  //     self.calculatefeeMatrixDetails();
+  //  }
 
     this.setState({
       pathname:this.props.history.location.pathname
@@ -271,7 +279,7 @@ class updatePenaltyRates extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.state.pathname!=nextProps.history.location.pathname) {
+    if (this.state.pathname && this.state.pathname!=nextProps.history.location.pathname) {
       this.initData();
     }
   }
@@ -316,7 +324,8 @@ class updatePenaltyRates extends Component {
             }
           }
 
-          self.props.setRoute(hash);
+         
+          self.props.setRoute(hash + (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].queryString || ''));
         }
       }, 1500);
     }, function(err) {
@@ -348,7 +357,9 @@ class updatePenaltyRates extends Component {
     e.preventDefault();
     self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
+    console.log(formData);
     delete formData.responseInfo;
+
     if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
       if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
         formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
@@ -545,6 +556,20 @@ class updatePenaltyRates extends Component {
                 removeFieldErrors(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
               }
             }
+
+            if (_mockData[moduleName + "." + actionName].groups[i].children && _mockData[moduleName + "." + actionName].groups[i].children.length ) {
+              for (var z = 0; z < _mockData[moduleName + "." + actionName].groups[i].children.length; z++) {
+                for (var y = 0; y < _mockData[moduleName + "." + actionName].groups[i].children[z].groups.length; y++) {
+                  for (var x = 0; x < _mockData[moduleName + "." + actionName].groups[i].children[z].groups[y].fields.length; x++) {
+                    if (_mockData[moduleName + "." + actionName].groups[i].children[z].groups[y].fields[x].isRequired) {
+                      _rReq.push(_mockData[moduleName + "." + actionName].groups[i].children[z].groups[y].fields[x].jsonPath);
+                      removeFieldErrors(_mockData[moduleName + "." + actionName].groups[i].children[z].groups[y].fields[x].jsonPath);
+                    }
+                  }
+                }
+              }
+            }
+
             delRequiredFields(_rReq);
           }
           break;
@@ -678,17 +703,51 @@ class updatePenaltyRates extends Component {
   }
 
 
+
+  removeRow = (index) =>{
+
+    let self = this;
+    var currentData = self.props.formData;
+console.log(currentData);
+    if(index != 0){
+      if(index == (currentData.penaltyRates.length - 1)){
+        FeeMatrixDetails = currentData.penaltyRates;
+        FeeMatrixDetails.splice(index, 1);
+        self.props.handleChange({target:{value:FeeMatrixDetails}},"penaltyRates");
+        console.log(currentData.penaltyRates);
+    }
+    else {
+      self.props.toggleSnackbarAndSetText(true, "Try deleting from last row", false, true);
+    }
+  }
+  else {
+    self.props.toggleSnackbarAndSetText(true, "First row can not be deleted", false, true);
+  }
+  }
+
+
     calculatefeeMatrixDetails = (isAdd = false) => {
       let self = this;
       var currentData = self.props.formData;
 
+      localStorage.getItem("penaltyResult")
+      var penaltyLocalRaw = localStorage.getItem("penaltyResult");
+      var penaltyLocalResult = JSON.parse(penaltyLocalRaw);
+      console.log(penaltyLocalResult[0].applicationType);
+//self.props.handleChange({target:{value:penaltyLocalResult[0].applicationType}},"penaltyRates[0].applicationType");
+      console.log(penaltyLocalResult[0].applicationType);
+self.props.handleChange({target:{value:penaltyLocalResult}},"penaltyRates");
   console.log(self.props.formData);
       if(isAdd){
-        if((currentData.penaltyRates[0].fromRange)){
+        console.log(currentData.penaltyRates[0].fromRange);
+        if((currentData.penaltyRates[0].fromRange >= 0) && (currentData.penaltyRates[0].fromRange != null)){
      if((currentData.penaltyRates[currentData.penaltyRates.length - 1].toRange) && (currentData.penaltyRates[currentData.penaltyRates.length - 1].rate)){
        if(Number(currentData.penaltyRates[currentData.penaltyRates.length - 1].toRange) > Number(currentData.penaltyRates[currentData.penaltyRates.length - 1].fromRange)){
-            let penaltyRatesTwo = {"applicationType": "", "fromRange": currentData.penaltyRates[currentData.penaltyRates.length - 1].toRange, "toRange": "", "rate": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
-            self.props.handleChange({target:{value:penaltyRatesTwo}},"penaltyRates[" + (currentData.penaltyRates.length) + "]");
+            let penaltyRatesTwo = {"applicationType": penaltyLocalResult[0].applicationType, "fromRange": currentData.penaltyRates[currentData.penaltyRates.length - 1].toRange, "toRange": "", "rate": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
+          //let penaltyRatesTwo =   penaltyLocalResult;
+          console.log(penaltyRatesTwo);
+          self.props.handleChange({target:{value:penaltyRatesTwo}},"penaltyRates[" + (currentData.penaltyRates.length) + "]");
+
             console.log(currentData.penaltyRates);
           }
           else {
@@ -707,35 +766,14 @@ class updatePenaltyRates extends Component {
       else if(!self.props.match.params.id){
         console.log(self.props.formData);
         let penaltyRatesTwo = {"applicationType": "", "fromRange": "", "toRange": "", "rate": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
-
+      //let penaltyRatesTwo =   penaltyLocalResult;
         self.props.handleChange({target:{value:penaltyRatesTwo}},"penaltyRates[0]");
 
       }
 
-        //self.props.handleChange({target:{value:FeeMatrixDetails}},"feeMatrices[0].feeMatrixDetails");
-
       }
 
-      removeRow = (index) =>{
 
-        let self = this;
-        var currentData = self.props.formData;
-
-        if(index != 0){
-          if(index == (currentData.penaltyRates.length - 1)){
-            FeeMatrixDetails = currentData.penaltyRates;
-            FeeMatrixDetails.splice(index, 1);
-            self.props.handleChange({target:{value:FeeMatrixDetails}},"penaltyRates");
-            console.log(currentData.penaltyRates);
-        }
-        else {
-          self.props.toggleSnackbarAndSetText(true, "Try deleting from last row", false, true);
-        }
-      }
-      else {
-        self.props.toggleSnackbarAndSetText(true, "First row can not be deleted", false, true);
-      }
-      }
 
 
   handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
@@ -744,27 +782,6 @@ class updatePenaltyRates extends Component {
       let hashLocation = window.location.hash;
       let obj = specifications[`tl.update`];
       // console.log(obj);
-
-
-
-
-      if (property == "feeMatrices[0].subCategoryId") {
-        console.log(e.target.value);
-        Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value, "type":"subcategory"}).then(function(response)
-       {
-console.log(response);
-          handleChange({target:{value:_.filter(response.categories[0].details)[0].uomName}}, "feeMatrices[0].uomName");
-          handleChange({target:{value:_.filter(response.categories[0].details)[0].rateType}}, "feeMatrices[0].rateType");
-
-        },function(err) {
-            console.log(err);
-
-        });
-      }
-
-
-
-
 
 
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
@@ -1000,115 +1017,57 @@ console.log(response);
       }
   }
 
-  // addNewCard = (group, jsonPath, groupName) => {
-  //   let self = this;
-  //   let {setMockData, metaData, moduleName, actionName, setFormData, formData} = this.props;
-  //   let mockData = {...this.props.mockData};
-  //   if(!jsonPath) {
-  //     for(var i=0; i<metaData[moduleName + "." + actionName].groups.length; i++) {
-  //       if(groupName == metaData[moduleName + "." + actionName].groups[i].name) {
-  //         var _groupToBeInserted = {...metaData[moduleName + "." + actionName].groups[i]};
-  //         for(var j=(mockData[moduleName + "." + actionName].groups.length-1); j>=0; j--) {
-  //           if(groupName == mockData[moduleName + "." + actionName].groups[j].name) {
-  //             var regexp = new RegExp(mockData[moduleName + "." + actionName].groups[j].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", "g");
-  //             var stringified = JSON.stringify(_groupToBeInserted);
-  //             var ind = mockData[moduleName + "." + actionName].groups[j].index || 0;
-  //             //console.log(ind);
-  //             _groupToBeInserted = JSON.parse(stringified.replace(regexp, mockData[moduleName + "." + actionName].groups[i].jsonPath + "[" + (ind+1) + "]"));
-  //             _groupToBeInserted.index = ind+1;
-  //             mockData[moduleName + "." + actionName].groups.splice(j+1, 0, _groupToBeInserted);
-  //             //console.log(mockData[moduleName + "." + actionName].groups);
-  //             setMockData(mockData);
-  //             var temp = {...formData};
-  //             self.setDefaultValues(mockData[moduleName + "." + actionName].groups, temp);
-  //             setFormData(temp);
-  //             break;
-  //           }
-  //         }
-  //         break;
-  //       }
-  //     }
-  //   } else {
-  //     group = JSON.parse(JSON.stringify(group));
-  //     //Increment the values of indexes
-  //     var grp = _.get(metaData[moduleName + "." + actionName], self.getPath(jsonPath)+ '[0]');
-  //     group = this.incrementIndexValue(grp, jsonPath);
-  //     //Push to the path
-  //     var updatedSpecs = this.getNewSpecs(group, JSON.parse(JSON.stringify(mockData)), self.getPath(jsonPath));
-  //     //Create new mock data
-  //     setMockData(updatedSpecs);
-  //   }
-  // }
-
-  // removeCard = (jsonPath, index, groupName) => {
-  //   //Remove at that index and update upper array values
-  //   let {setMockData, moduleName, actionName, setFormData} = this.props;
-  //   let _formData = {...this.props.formData};
-  //   let self = this;
-  //   let mockData = {...this.props.mockData};
-  //
-  //   if(!jsonPath) {
-  //     var ind = 0;
-  //     for(let i=0; i<mockData[moduleName + "." + actionName].groups.length; i++) {
-  //       if(index == i && groupName == mockData[moduleName + "." + actionName].groups[i].name) {
-  //         mockData[moduleName + "." + actionName].groups.splice(i, 1);
-  //         ind = i;
-  //         break;
-  //       }
-  //     }
-  //
-  //     for(let i=ind; i<mockData[moduleName + "." + actionName].groups.length; i++) {
-  //       if(mockData[moduleName + "." + actionName].groups[i].name == groupName) {
-  //         var regexp = new RegExp(mockData[moduleName + "." + actionName].groups[i].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", "g");
-  //         //console.log(regexp);
-  //         //console.log(mockData[moduleName + "." + actionName].groups[i].index);
-  //         //console.log(mockData[moduleName + "." + actionName].groups[i].index);
-  //         var stringified = JSON.stringify(mockData[moduleName + "." + actionName].groups[i]);
-  //         mockData[moduleName + "." + actionName].groups[i] = JSON.parse(stringified.replace(regexp, mockData[moduleName + "." + actionName].groups[i].jsonPath + "[" + (mockData[moduleName + "." + actionName].groups[i].index-1) + "]"));
-  //
-  //         if(_.get(_formData, mockData[moduleName + "." + actionName].groups[i].jsonPath)) {
-  //           var grps = [..._.get(_formData, mockData[moduleName + "." + actionName].groups[i].jsonPath)];
-  //           //console.log(mockData[moduleName + "." + actionName].groups[i].index-1);
-  //           grps.splice((mockData[moduleName + "." + actionName].groups[i].index-1), 1);
-  //           //console.log(grps);
-  //           _.set(_formData, mockData[moduleName + "." + actionName].groups[i].jsonPath, grps);
-  //           //console.log(_formData);
-  //           setFormData(_formData);
-  //         }
-  //       }
-  //     }
-  //     //console.log(mockData[moduleName + "." + actionName].groups);
-  //     setMockData(mockData);
-  //   } else {
-  //     var _groups = _.get(mockData[moduleName + "." + actionName], self.getPath(jsonPath));
-  //     _groups.splice(index, 1);
-  //     var regexp = new RegExp("\\[\\d{1}\\]", "g");
-  //     for(var i=index; i<_groups.length; i++) {
-  //       var stringified = JSON.stringify(_groups[i]);
-  //       _groups[i] = JSON.parse(stringified.replace(regexp, "[" + i + "]"));
-  //     }
-  //
-  //     _.set(mockData, self.getPath(jsonPath), _groups);
-  //     setMockData(mockData);
-  //     }
-  // }
 
   render() {
-
-    // const actions = [
-    //       <ContentAdd
-    //         label="No"
-    //         primary={true}
-    //         onClick={this.calculatefeeMatrixDetails}
-    //       />
-    //     ];
 
     let {resultList, rowClickHandler,showDataTable,showHeader} = this.props;
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
 
 console.log(this.props.formData);
-console.log(formData.hasOwnProperty("feeMatrices"));
+
+const penaltyRatesResult = function() {
+  // localStorage.getItem("penaltyResult")
+  // var penaltyLocalRaw = localStorage.getItem("penaltyResult");
+  // var penaltyLocalResult = JSON.parse(penaltyLocalRaw);
+
+  console.log(formData.penaltyRates);
+  // for(i=0; i=<penaltyLocalResult.length; i++){
+  //
+  // }
+return (
+
+  <Table id={(showDataTable==undefined)?"searchTable":(showDataTable?"searchTable":"")} bordered responsive className="table-striped">
+  <thead>
+    <tr>
+      <th>{translate("tl.create.groups.penaltyRates.fromDays")}</th>
+      <th>{translate("tl.create.groups.penaltyRates.toDays")}</th>
+      <th>{translate("tl.create.groups.penaltyRates.range")}</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+
+    {formData && formData.hasOwnProperty("penaltyRates")  && formData.penaltyRates.map((item,index)=>{
+      return (
+        <tr key={index}>
+          <td>{index==0 ? <TextField  disabled = {formData.penaltyRates[index + 1]} value={getVal("penaltyRates["+index+"].fromRange")} errorText={fieldErrors["penaltyRates["+index+"].fromRange"]} onChange= {(e) => handleChange (e, "penaltyRates["+index+"].fromRange", true, "^[-0-9]{1,10}?$","","Enter Numbers only")} /> : item.fromRange} </td>
+          <td><TextField disabled = {formData.penaltyRates[index + 1]} value={getVal("penaltyRates["+index+"].toRange")} errorText={fieldErrors["penaltyRates["+index+"].toRange"]} onChange= {(e) => handleChange (e, "penaltyRates["+index+"].toRange", true, "^[-0-9]{1,10}?$","","Enter Numbers only")}/></td>
+          <td><TextField value={getVal("penaltyRates["+index+"].rate")} errorText={fieldErrors["penaltyRates["+index+"].rate"]} onChange= {(e) => handleChange (e, "penaltyRates["+index+"].rate", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
+          <td><FloatingActionButton disabled = {index == 0 || (formData.penaltyRates[index + 1])} mini={true}>
+          <ContentRemove disabled = {index == 0 || (formData.penaltyRates[index + 1])}
+          onClick={() => {this.remove()}}
+           />
+          </FloatingActionButton></td>
+        </tr>
+      )
+    })}
+  </tbody>
+  </Table>
+)
+
+}
+
     return (
       <div className="Report">
         <form onSubmit={(e) => {
@@ -1130,14 +1089,14 @@ console.log(formData.hasOwnProperty("feeMatrices"));
           <Card className="uiCard">
               <CardHeader title={<strong></strong>}/>
               <CardText>
-
+              <div style={{"textAlign":"right", padding : "15px"}}><FloatingActionButton mini={true}><ContentAdd onClick={() => {this.calculatefeeMatrixDetails(true)}} /></FloatingActionButton></div>
               <Table id={(showDataTable==undefined)?"searchTable":(showDataTable?"searchTable":"")} bordered responsive className="table-striped">
               <thead>
                 <tr>
                   <th>{translate("tl.create.groups.penaltyRates.fromDays")}</th>
                   <th>{translate("tl.create.groups.penaltyRates.toDays")}</th>
                   <th>{translate("tl.create.groups.penaltyRates.range")}</th>
-
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -1148,12 +1107,17 @@ console.log(formData.hasOwnProperty("feeMatrices"));
                       <td>{index==0 ? <TextField  disabled = {formData.penaltyRates[index + 1]} value={getVal("penaltyRates["+index+"].fromRange")} errorText={fieldErrors["penaltyRates["+index+"].fromRange"]} onChange= {(e) => handleChange (e, "penaltyRates["+index+"].fromRange", true, "^[-0-9]{1,10}?$","","Enter Numbers only")} /> : item.fromRange} </td>
                       <td><TextField disabled = {formData.penaltyRates[index + 1]} value={getVal("penaltyRates["+index+"].toRange")} errorText={fieldErrors["penaltyRates["+index+"].toRange"]} onChange= {(e) => handleChange (e, "penaltyRates["+index+"].toRange", true, "^[-0-9]{1,10}?$","","Enter Numbers only")}/></td>
                       <td><TextField value={getVal("penaltyRates["+index+"].rate")} errorText={fieldErrors["penaltyRates["+index+"].rate"]} onChange= {(e) => handleChange (e, "penaltyRates["+index+"].rate", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
-
+                      <td><FloatingActionButton disabled = {index == 0 || (formData.penaltyRates[index + 1])} mini={true}>
+                      <ContentRemove disabled = {index == 0 || (formData.penaltyRates[index + 1])}
+                      onClick={() => {this.removeRow(index)}}
+                       />
+                      </FloatingActionButton></td>
                     </tr>
                   )
                 })}
               </tbody>
               </Table>
+
 
             </CardText>
             </Card>

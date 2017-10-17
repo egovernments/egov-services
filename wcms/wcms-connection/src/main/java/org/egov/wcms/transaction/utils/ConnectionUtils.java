@@ -44,6 +44,7 @@ import java.util.List;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.transaction.config.ConfigurationManager;
+import org.egov.wcms.transaction.demand.contract.Demand;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.common.contract.request.User;
 import org.egov.wcms.transaction.model.EstimationNotice;
@@ -76,7 +77,7 @@ public class ConnectionUtils {
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
     
-    public RequestInfo prepareRequestInfoFromResponseInfo(ResponseInfo responseInfo) {
+    public RequestInfo prepareRequestInfoFromResponseInfo(ResponseInfo responseInfo,Demand demand) {
 
         RequestInfo requestInfo = new RequestInfo();
         String apiId = responseInfo.getApiId();
@@ -91,6 +92,8 @@ public class ConnectionUtils {
         String msgId = responseInfo.getMsgId();
         requestInfo.setMsgId(msgId);
         requestInfo.setUserInfo(new User());
+        if(demand.getAuditDetail()!=null  && demand.getAuditDetail().getLastModifiedBy()!=null)
+            requestInfo.getUserInfo().setId(Long.valueOf(demand.getAuditDetail().getLastModifiedBy()));
         return requestInfo;
 }
     public String buildUrlToInvoke(final WaterConnectionGetReq waterConnectionGetReq) {

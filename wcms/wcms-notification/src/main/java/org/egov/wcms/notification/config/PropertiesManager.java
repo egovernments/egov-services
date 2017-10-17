@@ -109,7 +109,7 @@ public class PropertiesManager {
     @Value("${wcms.email.subject.payment.estimation.done}")
     private String waterConnectionPaymentEstiamtionDoneEmailSubject;
     
-    @Value("$wcms.sms.workorder.generated.msg}")
+    @Value("${wcms.sms.workorder.generated.msg}")
     private String waterConnectionWorkOrderGeneratedSms;
 
     @Value("${wcms.email.body.workorder.generated.done}")
@@ -117,5 +117,23 @@ public class PropertiesManager {
 
     @Value("${wcms.email.subject.workorder.generated.done}")
     private String waterConnectionWorkOrderGeneratedEmailSubject;
+    
+    @Value("${wcms.sms.connection.sanctioned.msg}")
+    private String waterConnectionSanctionedSms;
+
+    @Value("${wcms.email.body.connection.sanctioned.done}")
+    private String waterConnectionSanctionedEmailBody;
+
+    @Value("${wcms.email.subject.connection.sanctioned.done}")
+    private String waterConnectionSanctionedEmailSubject;
+    
+    @Value("${wcms.sms.connection.rejected.msg}")
+    private String waterConnectionRejectedSms;
+
+    @Value("${wcms.email.body.connection.rejected.done}")
+    private String waterConnectionRejectedEmailBody;
+
+    @Value("${wcms.email.subject.connection.rejected.done}")
+    private String waterConnectionRejectedEmailSubject;
 
 }

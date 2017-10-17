@@ -415,6 +415,9 @@ var localization_EN_Data = {
 
 
     "pt.create.button": "Forward",
+    "pt.create.button.viewdcb": "View DCB",
+    "pt.create.button.viewdcb.close": "Close",
+    "pt.create.button.viewdcb.headwisedcb": "Head wise DCB",
     "pt.create.groups.ownerDetails.fields.aadhaarNumber": "Aadhaar Number",
     "pt.create.groups.ownerDetails.fields.phoneNumber": "Phone Number",
     "pt.create.groups.ownerDetails.fields.ownerName": "Owner Name",
@@ -548,11 +551,14 @@ var localization_EN_Data = {
     //Add Demand
     "pt.create.groups.addDemand.fields.installment": "Installment",
     "pt.create.groups.addDemand.fields.propertytax": "Property tax",
+    "pt.create.groups.addDemand.fields.penalty": "Penalty",
     "pt.create.groups.addDemand.fields.educationCess": "Education Cess",
     "pt.create.groups.addDemand.fields.employmentGuaranteeCess": "Employment Guarantee Cess",
     "pt.create.groups.addDemand.fields.treetax": "Tree Tax",
     "pt.create.groups.addDemand.fields.totalPropertyTax": "Total Property Tax",
     "pt.create.groups.addDemand.fields.collection": "Collection",
+    "pt.create.groups.addDemand.fields.balance": "Balance",
+    
 
     //pt construction details
     "pt.create.groups.constructionDetails.fields.orderDate": "Commencement Date",
@@ -1189,6 +1195,7 @@ var localization_EN_Data = {
     "wc.create.groups.applicationParticular.title": "Application Particular",
     "wc.create.groups.applicationParticular.title": "Application Particular",
 
+    "collection.search.categorytype.collectedReceipts": "Collected Receipts",
     "collection.search.categorytype.title": "Search Receipt",
     "collection.create.serviceType": "Service Type",
     "collection.create.fromDate": "From Date",
@@ -2268,7 +2275,11 @@ var localization_MR_Data = {
     "pt.create.groups.propertyAddress.fields.pin": "पिन ",
     "pt.create.groups.propertyAddress.fields.isCorrespondanceAddressDifferentFromAddress": " पत्रव्यवाहाराचा पता व मालमत्तेचा पत्ता वेगळा आहे का ? ",
     "pt.create.groups.propertyAddress.fields.address1": "पत्ता 1",
-
+    "pt.create.button.viewdcb": "View DCB",
+    "pt.create.button.viewdcb.close": "Close",
+    "pt.create.button.viewdcb.headwisedcb": "Head wise DCB",
+    
+    
 
 
     "pt.create.groups.assessmentDetails.fields.creationReason": " निर्मितीसाठी कारण",
@@ -2745,6 +2756,7 @@ var localization_MR_Data = {
     "collection.create.toDate": "तार्खेपार्यंत",
     "collection.create.receiptNumber": "पावती क्रमांक",
     "collection.create.collectedBy": "संग्रहित केलेल्याचे नाव",
+    "collection.search.categorytype.collectedReceipts": "Collected Receipts",
     "collection.create.status": "स्थिती",
     "collection.create.modeOfPayment": "भरण्याची पद्धत",
     "collection.search.receiptDate": "पावती तारीख",

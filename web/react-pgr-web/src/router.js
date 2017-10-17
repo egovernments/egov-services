@@ -85,6 +85,7 @@ import BuildingClassification from './components/contents/propertyTax/master/Bui
 import CreateProperty from './components/contents/propertyTax/master/CreateProperty';
 import DataEntry from './components/contents/propertyTax/master/DataEntry';
 import ViewProperty from './components/contents/propertyTax/master/viewProperty';
+import ViewDCB from './components/non-framework/pt/viewDCB';
 import Workflow from './components/contents/propertyTax/master/workflow';
 import Acknowledgement from './components/contents/propertyTax/master/Acknowledgement';
 import DataEntryAcknowledgement from './components/contents/propertyTax/master/Acknowledgement_dataEntry';
@@ -260,6 +261,7 @@ const Main = () => {
 		  <Route exact path={base+'/propertyTax/addDemand/:upicNumber'} component={AddDemand}/>
 		  <Route exact path={base+'/propertyTax/create-dataEntry'} component={DataEntry}/>
 		  <Route exact path={base+'/propertyTax/view-property/:searchParam/:type?'} component={ViewProperty}/>
+		  <Route exact path={base+'/propertyTax/view-dcb/:searchParam/:type?'} component={ViewDCB}/>
           <Route exact path={base+'/propertyTax/workflow/:searchParam/:type?'} component={Workflow}/>
 		  <Route exact path={base+'/propertyTax/acknowledgement'} component={Acknowledgement}/>
 		  <Route exact path={base+'/propertyTax/dataEntry-acknowledgement'} component={DataEntryAcknowledgement}/>

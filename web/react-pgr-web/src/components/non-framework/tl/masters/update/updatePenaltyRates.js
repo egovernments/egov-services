@@ -719,12 +719,13 @@ console.log(currentData);
       var penaltyLocalRaw = localStorage.getItem("penaltyResult");
       var penaltyLocalResult = JSON.parse(penaltyLocalRaw);
       console.log(penaltyLocalResult[0].applicationType);
-self.props.handleChange({target:{value:penaltyLocalResult[0].applicationType}},"penaltyRates[0].applicationType");
-      console.log(penaltyLocalResult);
+//self.props.handleChange({target:{value:penaltyLocalResult[0].applicationType}},"penaltyRates[0].applicationType");
+      console.log(penaltyLocalResult[0].applicationType);
 self.props.handleChange({target:{value:penaltyLocalResult}},"penaltyRates");
   console.log(self.props.formData);
       if(isAdd){
-        if((currentData.penaltyRates[0].fromRange)){
+        console.log(currentData.penaltyRates[0].fromRange);
+        if((currentData.penaltyRates[0].fromRange >= 0) && (currentData.penaltyRates[0].fromRange != null)){
      if((currentData.penaltyRates[currentData.penaltyRates.length - 1].toRange) && (currentData.penaltyRates[currentData.penaltyRates.length - 1].rate)){
        if(Number(currentData.penaltyRates[currentData.penaltyRates.length - 1].toRange) > Number(currentData.penaltyRates[currentData.penaltyRates.length - 1].fromRange)){
             let penaltyRatesTwo = {"applicationType": penaltyLocalResult[0].applicationType, "fromRange": currentData.penaltyRates[currentData.penaltyRates.length - 1].toRange, "toRange": "", "rate": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};

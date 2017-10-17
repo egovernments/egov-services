@@ -384,50 +384,59 @@ ReportDefinitions:
     label: reports.wcms.fromdate
     type: epoch
     source: wcms
+    searchClause: and connview.executiondate >= $fromDate
     isMandatory: false
   - name: toDate
     label: reports.wcms.todate
     type: epoch
     source: wcms
+    searchClause: and connview.executiondate >= $toDate
     isMandatory: false 
-  query: select * from (select boundary.name as boundaryname,prop.hscno as hscno, prop.oldhscno as oldhscno, prop.username as consumerName,prop.pipesize as   pipesize,
-         ut.name  as usage,prop.address as connectionAddress,
-         prop.connectiontype as connectiontype, prop.watersource as waterSourceType,
-         prop.connectionstatus as connectionstatus,
-         SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_CURRENT_DEMAND         
-         from egwtr_connection_view prop, eg_boundary boundary ,egwtr_usage_type  ut,egbs_demand demand, egbs_demanddetail dd where    prop.wardid=boundary.id and 
-         NULLIF(prop.usagetype, '')::int  = ut.id
-         and  demand.consumercode=prop.hscno 
-         and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE
-         fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
-         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and prop.tenantid=$tenantid          
-         FULLJOIN 
-         (select boundary.name as boundaryname,prop.hscno as hscno, prop.oldhscno as oldhscno, prop.username as consumerName,prop.pipesize as   pipesize,
-         ut.name  as usage,prop.address as connectionAddress,
-         prop.connectiontype as connectiontype, prop.watersource as waterSourceType,
-         prop.connectionstatus as connectionstatus,
-         SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_ARREAR_DEMAND         
-         from egwtr_connection_view prop, eg_boundary boundary ,egwtr_usage_type  ut,egbs_demand demand, egbs_demanddetail dd where prop.wardid=boundary.id and 
-         NULLIF(prop.usagetype, '')::int  = ut.id
-         and  demand.consumercode=prop.hscno 
-         and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE
-         fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
-         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and prop.tenantid=$tenantid
-         FULLJOIN
-         (select boundary.name as boundaryname,prop.hscno as hscno, prop.oldhscno as oldhscno, prop.username as consumerName,prop.pipesize as   pipesize,
-         ut.name  as usage,prop.address as connectionAddress,
-         prop.connectiontype as connectiontype, prop.watersource as waterSourceType,
-         prop.connectionstatus as connectionstatus,
+  query: select boundary.name as boundaryname,connview.hscno as hscno, connview.oldhscno as oldhscno,
+          connview.username as consumerName,connview.pipesize as   pipesize,ut.name  as usage,
+          connview.address as connectionAddress,connview.connectiontype as connectiontype, 
+          connview.watersource as waterSourceType, connview.connectionstatus as connectionstatus,
+          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_CURRENT_DEMAND         
+          from egwtr_connection_view connview, eg_boundary boundary ,egwtr_usage_type  ut,egbs_demand demand, egbs_demanddetail dd where     
+          connview.wardid=boundary.id and  NULLIF(connview.usagetype, '')  = ut.name
+          and  demand.consumercode=connview.hscno and demand.id=dd.demandid 
+          and demand.taxperiodfrom = (select fromdate from egbs_taxperiod 
+          WHERE
+          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
+          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid='mh.rohatest' and periodcycle='ANNUAL')
+          and connview.tenantid='mh.rohatest' 
+          group by boundaryname,hscno,oldhscno,consumerName,connectionAddress,connectiontype,usage,connectionstatus,waterSourceType,pipesize 
+        UNION 
+          select boundary.name as boundaryname,connview.hscno as hscno, connview.oldhscno as oldhscno, connview.username as consumerName,
+          connview.pipesize as   pipesize,ut.name  as usage,connview.address as connectionAddress,
+          connview.connectiontype as connectiontype, connview.watersource as waterSourceType,
+          connview.connectionstatus as connectionstatus,
+          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_ARREAR_DEMAND         
+          from egwtr_connection_view connview, eg_boundary boundary ,egwtr_usage_type  ut,egbs_demand demand, egbs_demanddetail dd where   
+          connview.wardid=boundary.id and  NULLIF(connview.usagetype, '') = ut.name
+          and  demand.consumercode=connview.hscno 
+          and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod 
+          WHERE
+          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
+          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid='mh.rohatest' and periodcycle='ANNUAL') and      
+          connview.tenantid='mh.rohatest'
+  group By: group by boundaryname,hscno,oldhscno,consumerName,connectionAddress,connectiontype,usage,connectionstatus,waterSourceType,pipesize 
+      UNION 
+        select boundary.name as boundaryname,connview.hscno as hscno, connview.oldhscno as oldhscno, connview.username as         
+         consumerName,connview.pipesize as   pipesize,
+         ut.name  as usage,connview.address as connectionAddress,
+         connview.connectiontype as connectiontype, connview.watersource as waterSourceType,
+         connview.connectionstatus as connectionstatus,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_TOTAL_DEMAND         
-         from egwtr_connection_view prop, eg_boundary boundary ,egwtr_usage_type  ut,egbs_demand demand, egbs_demanddetail dd where prop.wardid=boundary.id and 
-         NULLIF(prop.usagetype, '')::int  = ut.id
-         and  demand.consumercode=prop.hscno 
-         and demand.id=dd.demandid and demand.taxperiodfrom <= (select fromdate from egbs_taxperiod WHERE
+         from egwtr_connection_view connview, eg_boundary boundary ,egwtr_usage_type  ut,egbs_demand demand, egbs_demanddetail dd where     
+         connview.wardid=boundary.id and NULLIF(connview.usagetype, '') = ut.name
+         and  demand.consumercode=connview.hscno 
+         and demand.id=dd.demandid and demand.taxperiodfrom <= (select fromdate from egbs_taxperiod 
+         WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
-         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and prop.tenantid=$tenantid
-  
-  groupBy: group by boundaryname,hscno,oldhscno,consumerName,connectionAddress,connectiontype,usage,connectionstatus,waterSourceType,pipesize) $result using (boundaryname,hscno,oldhscno,consumerName,connectionAddress,connectiontype,usage,connectionstatus,waterSourceType,pipesize)
-  
+         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid='mh.rohatest'  and periodcycle='ANNUAL') and     
+          connview.tenantid='mh.rohatest' 
+   group BY: group by boundaryname,hscno,oldhscno,consumerName,connectionAddress,connectiontype,usage,connectionstatus,waterSourceType,pipesize
   # DemandRegister
 - reportName: DemandRegister
   summary: Demand Register Report

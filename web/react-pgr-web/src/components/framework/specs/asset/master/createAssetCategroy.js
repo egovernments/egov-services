@@ -192,7 +192,7 @@ var dat = {
 						"pattern": "",
 						"type": "singleValueList",
 						"url": "",
-						"isRequired": true,
+						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""

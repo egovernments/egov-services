@@ -279,7 +279,7 @@ class updatePenaltyRates extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.state.pathname!=nextProps.history.location.pathname) {
+    if (this.state.pathname && this.state.pathname!=nextProps.history.location.pathname) {
       this.initData();
     }
   }
@@ -324,7 +324,8 @@ class updatePenaltyRates extends Component {
             }
           }
 
-          self.props.setRoute(hash);
+         
+          self.props.setRoute(hash + (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].queryString || ''));
         }
       }, 1500);
     }, function(err) {
@@ -555,6 +556,20 @@ class updatePenaltyRates extends Component {
                 removeFieldErrors(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
               }
             }
+
+            if (_mockData[moduleName + "." + actionName].groups[i].children && _mockData[moduleName + "." + actionName].groups[i].children.length ) {
+              for (var z = 0; z < _mockData[moduleName + "." + actionName].groups[i].children.length; z++) {
+                for (var y = 0; y < _mockData[moduleName + "." + actionName].groups[i].children[z].groups.length; y++) {
+                  for (var x = 0; x < _mockData[moduleName + "." + actionName].groups[i].children[z].groups[y].fields.length; x++) {
+                    if (_mockData[moduleName + "." + actionName].groups[i].children[z].groups[y].fields[x].isRequired) {
+                      _rReq.push(_mockData[moduleName + "." + actionName].groups[i].children[z].groups[y].fields[x].jsonPath);
+                      removeFieldErrors(_mockData[moduleName + "." + actionName].groups[i].children[z].groups[y].fields[x].jsonPath);
+                    }
+                  }
+                }
+              }
+            }
+
             delRequiredFields(_rReq);
           }
           break;

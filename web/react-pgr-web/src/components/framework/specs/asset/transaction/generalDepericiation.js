@@ -6,13 +6,13 @@ var dat = {
     "objectName": "",
     "useTimestamp": true,
     "groups": [{
-        "label": "wc.search.categorytype.title",
+        "label": "ac.transaction.gd.title",
         "name": "createCategoryType",
         "fields": [
           {
             "name": "DateofDepreciation",
             "jsonPath": "",
-            "label": "Date of Depreciation",
+            "label": "ac.create.Date.of.Depreciation",
             "pattern": "^[\s.]*([^\s.][\s.]*){0,100}",
             "type": "date",
             "isRequired": true,
@@ -35,7 +35,7 @@ var dat = {
           {
             "name": "AssetCategoryType",
             "jsonPath": "",
-            "label": "Asset Sub Category",
+            "label": "ac.create.Asset.SubCategory",
             "pattern": "",
             "type": "singleValueList",
             "url": "",
@@ -50,7 +50,7 @@ var dat = {
         "header": [{
             "name": "SelectButon",
             "jsonPath": "",
-            "label": "Select",
+            "label": "ac.create.Select",
             "pattern": "",
             "type": "checkbox",
             "isRequired": true,
@@ -63,7 +63,7 @@ var dat = {
 					{
             "name": "AssetCode",
             "jsonPath": "",
-            "label": "Asset Code",
+            "label": "ac.create.Asset.Code",
             "pattern": "",
             "type": "text",
             "isRequired": false,
@@ -76,7 +76,7 @@ var dat = {
           {
             "name": "NameAsset",
             "jsonPath": "",
-            "label": "Name of Asset",
+            "label": "ac.create.Name.of.Asset",
             "pattern": "",
             "type": "label",
             "isRequired": false,
@@ -89,7 +89,7 @@ var dat = {
           {
             "name": "WdvValue",
             "jsonPath": "",
-            "label": "WDV Value",
+            "label": "ac.create.WDV.Value",
             "pattern": "",
             "type": "label",
             "isRequired": false,
@@ -102,7 +102,7 @@ var dat = {
           {
             "name": "DepreciationRate",
             "jsonPath": "",
-            "label": "Depreciation Rate (%)",
+            "label": "ac.create.Depreciation.Rate",
             "pattern": "",
             "type": "label",
             "isRequired": false,
@@ -115,7 +115,7 @@ var dat = {
           {
             "name": "DepreciationAmount",
             "jsonPath": "",
-            "label": "Depreciation Amount",
+            "label": "ac.create.Depreciation.Amount",
             "pattern": "",
             "type": "label",
             "isRequired": false,
@@ -128,7 +128,7 @@ var dat = {
           {
             "name": "WdvAfterDepreciation",
             "jsonPath": "",
-            "label": "WDV after Depreciation",
+            "label": "ac.create.WDV.after.Depreciation",
             "pattern": "",
             "type": "label",
             "isRequired": false,
@@ -147,7 +147,14 @@ var dat = {
         // "rowClickUrlView": "/view/wc/pipeSize/{id}"
       },
 			"transaction": [{
-	      
+				"label": "",
+			 "name": "OtherDetails",
+			 "children": [],
+			 "fields": [
+				{
+					
+				}
+			]
 	    }]
 	}
 }

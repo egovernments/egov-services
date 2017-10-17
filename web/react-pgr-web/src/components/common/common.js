@@ -1787,6 +1787,7 @@ var localization_EN_Data = {
 
     "ac.create.title": "Asset Categroy Create",
     "ac.create.asset.sub.categroy": "Asset Sub Categroy Name",
+    "ac.create.asset.category.name": "Name",
     "ac.create.asset.asset.category.type":"Asset Category Type",
     "ac.create.asset.category": "Asset Category Name",
     "ac.create.depericiation.method": "Depericiation Method",
@@ -1851,7 +1852,16 @@ var localization_EN_Data = {
     "ac.create.Closing.written.Down.Value": "Closing written Down Value",
     "ac.create.Asset.Category": "Asset Category",
     "ac.create.No.of.Quantity": "No of Quantity",
-
+    "ac.transaction.gd.title": "",
+    "ac.create.Date.of.Depreciation": "Date of Depreciation",
+    "ac.create.Asset.SubCategory": "Asset Sub Category",
+    "ac.create.Select": "Select",
+    "ac.create.Asset.Code": "Asset Code",
+    "ac.create.Name.of.Asset": "Name of Asset",
+    "ac.create.WDV.Value": "WDV Value",
+    "ac.create.Depreciation.Rate": "Depreciation Rate (%)",
+    "ac.create.Depreciation.Amount": "Depreciation Amount",
+    "ac.create.WDV.after.Depreciation": "WDV after Depreciation",
 
 
 

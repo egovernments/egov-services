@@ -16,7 +16,7 @@ var dat = {
               "pattern": "",
               "type": "singleValueList",
               "url": "",
-              "isRequired": false,
+              "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
@@ -28,7 +28,7 @@ var dat = {
               "pattern": "",
               "type": "singleValueList",
               "url": "",
-              "isRequired": false,
+              "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""

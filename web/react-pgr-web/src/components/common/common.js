@@ -1862,6 +1862,19 @@ var localization_EN_Data = {
     "ac.create.Depreciation.Rate": "Depreciation Rate (%)",
     "ac.create.Depreciation.Amount": "Depreciation Amount",
     "ac.create.WDV.after.Depreciation": "WDV after Depreciation",
+    "ac.search.asset.title": "Asset Search",
+    "ac.search.asset.code": "Code",
+    "ac.search.asset.name": "Name",
+    "ac.search.category": "Asset Category",
+    "ac.search.department": "Department",
+    "ac.search.status": "Status",
+    "ac.transaction.create.datePurchaseConstruction": "Date of Purchase/Construction/Acquisition",
+    "ac.transaction.create.order.no": "Order No",
+    "ac.transaction.create.order.date": "Order Date",
+    "ac.transaction.create.valuation.amount": "Valuation Amount",
+    "ac.transaction.create.AdditionDeductedAmount": "Addition/ deducted amount",
+
+
 
 
 

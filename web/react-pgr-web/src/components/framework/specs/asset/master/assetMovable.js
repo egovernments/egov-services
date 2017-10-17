@@ -534,6 +534,88 @@ var dat = {
 				]
 			}
 		]
+	},
+	"asset.search": {
+		"numCols": 12/3,
+		"url": "/wcms/masters/categorytype/_search",
+		"tenantIdRequired": true,
+		"useTimestamp": true,
+		"objectName": "CategoryType",
+		"groups": [
+			{
+				"label": "ac.search.asset.title",
+				"name": "createCategoryType",
+				"fields": [
+					{
+						"name": "AssetSearchCode",
+						"jsonPath": "",
+						"label": "ac.search.asset.code",
+						"pattern": "",
+						"type": "text",
+						"url": "",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "AssetSearchName",
+						"jsonPath": "",
+						"label": "ac.search.asset.name",
+						"pattern": "",
+						"type": "text",
+						"url": "",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "AssetSearchAssetCategory",
+						"jsonPath": "",
+						"label": "ac.search.category",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "AssetSearchDepartment",
+						"jsonPath": "",
+						"label": "ac.search.department",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "AssetSearchStatus",
+						"jsonPath": "",
+						"label": "ac.search.status",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					}
+				]
+			}
+		],
+		"result": {
+			"header": [{label: "ac.create.Asset.account.code"},{label: "ac.create.Asset.Name"}, {label: "ac.create.asset.asset.category.type"}, {label: "ac.create.Department"}, {label: "ac.search.status"}],
+			"values": ["code","name", "category", "department", "status"],
+			"resultPath": "CategoryTypes",
+			"rowClickUrlUpdate": "/update/wc/categoryType/{id}",
+			"rowClickUrlView": "/view/wc/categoryType/{id}"
+			}
 	}
 }
 

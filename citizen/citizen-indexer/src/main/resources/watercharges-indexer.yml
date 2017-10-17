@@ -6,6 +6,6 @@ ServiceMaps:
     indexes:
     - name: watercharges
       type: consumerdetails
-      id: $.Connection.id, $.Connection.tenantId
+      id: $.Connection.id,$.Connection.tenantId
       isBulk: false
       jsonPath:

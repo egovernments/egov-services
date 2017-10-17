@@ -661,4 +661,154 @@ ReportDefinitions:
          where prop.wardid=boundary.id and prop.tenantid=$tenantid and boundary.name = $zoneid 
  
   groupBy: group by hscno) $result using (hscno)
+  
+  # Base Register Report
+- reportName: BaseRegisterReport
+  summary: Base Register Report
+  version: 1.0.0
+  moduleName: wcms
+  sourceColumns:
+  - name: hscno
+    label: reports.wcms.hscno
+    type: string
+    source: wcms
+  - name: upic
+    label: reports.wcms.upic
+    type: string
+    source: wcms
+  - name: tapOwnerType 
+    label: reports.wcms.tapOwnerType
+    type: string
+    source: wcms
+  - name: ownerName
+    label: reports.wcms.ownerName
+    type: string
+    source: wcms
+  - name: mobileNumber
+    label: reports.wcms.mobileNumber
+    type: string
+    source: wcms
+  - name: doorNo
+    label: reports.wcms.doorNo
+    type: string
+    source: wcms
+  - name: zone
+    label: reports.wcms.zone
+    type: string
+    source: wcms
+  - name: ward
+    label: reports.wcms.ward
+    type: string
+    source: wcms
+  - name: usageType
+    label: reports.wcms.usageType
+    type: string
+    source: wcms
+  - name: subUsageType
+    label: reports.wcms.subUsageType
+    type: string
+    source: wcms
+  - name: noOfTaps
+    label: reports.wcms.noOfTaps
+    type: number
+    source: wcms
+  - name: meterNonmeter
+    label: reports.wcms.meterNonmeter
+    type: string
+    source: wcms
+  - name: category
+    label: reports.wcms.category
+    type: string
+    source: wcms
+  - name: connectionPipeSize
+    label: reports.wcms.connectionPipeSize
+    type: number
+    source: wcms
+  - name: residentialFlats
+    label: reports.wcms.residentialFlats
+    type: string
+    source: wcms
+  - name: nonResidentialFlats
+    label: reports.wcms.nonResidentialFlats
+    type: string
+    source: wcms
+  - name: specialDepositAmountPaid
+    label: reports.wcms.specialDepositAmountPaid
+    type: string
+    source: wcms
+  - name: estimationChargesPaid
+    label: reports.wcms.estimationChargesPaid
+    type: string
+    source: wcms
+  - name: arrearPeriod
+    label: reports.wcms.arrearPeriod
+    type: number
+    source: wcms
+  - name: arrearWaterCharges
+    label: reports.wcms.arrearWaterCharges
+    type: string
+    source: wcms
+  - name: arrearsCess
+    label: reports.wcms.arrearsCess
+    type: string
+    source: wcms
+  - name: penaltyOnArrears
+    label: reports.wcms.penaltyOnArrears
+    type: string
+    source: wcms
+  - name: currentWaterCharges
+    label: reports.wcms.currentWaterCharges
+    type: string
+    source: wcms
+  - name: currentCess
+    label: reports.wcms.currentCess
+    type: string
+    source: wcms
+  - name: penaltyOnCurrentTax
+    label: reports.wcms.penaltyOnCurrentTax
+    type: string
+    source: wcms
+  - name: currentTotal
+    label: reports.wcms.currentTotal
+    type: string
+    source: wcms
+  - name: totalDemand
+    label: reports.wcms.totalDemand
+    type: string
+    source: wcms
+  searchParams:
+  - name: zone
+    label: reports.wcms.zone
+    type: multivaluelist
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..code|$..name
+    source: wcms
+    isMandatory: false
+    searchClause: and bndry.id=$zone
+  - name: ward
+    label: reports.wcms.ward
+    type: multivaluelist
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..code|$..name
+    source: wcms
+    searchClause: and bndry.id=$ward
+    isMandatory: false
+  - name: block
+    label: reports.wcms.block
+    type: multivaluelist
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=BLOCK&hierarchyTypeName=REVENUE&pageSize=500|$..code|$..name
+    source: wcms
+    searchClause: and bndry.id=$block
+    isMandatory: false
+  query: select wtrview.hscno as hscno,
+       wtrview.usagetype as usagetype ,
+       wtrview.subusagetype as subusagetype,
+       wtrview.numberofftaps as nooftaps,      
+       wtrview.donationcharges as  speshaldepositamountpaid,
+       wtrview.username as ownername,
+       wtrview.mobileno as mobilenumber,
+       wtrview.pipesize as Connectionpipesize,
+       wtrview.billingtype as meteredNonmetered
+       from egwtr_connection_view  wtrview
+       where  
+       wtrview.tenantid = $tenantid
+  
 

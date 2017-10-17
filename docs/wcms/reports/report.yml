@@ -47,15 +47,16 @@ ReportDefinitions:
   - name: usage
     label: reports.wcms.usage
     type: singlevaluelist
-    pattern: http://wcms-masters:8080/wcms/masters/usagetypes/_search?tenantId=$tenantid&pageSize=500|$..id|$..name
+    pattern: http://wcms-masters:8080/wcms/masters/usagetypes/_search?tenantId=$tenantid&pageSize=500|$..name|$..name
     source: wcms
     isMandatory: false
-    searchClause: and wtrview.usagetype =cast($usage to string)
+    searchClause: and wtrview.usagetype =$usage
   - name: subUsage
     label: reports.wcms.subUsage
     type: singlevaluelist
-    pattern: http://wcms-masters:8080/wcms/masters/usagetypes/_search?tenantId=$tenantid&isSubUsageType=true&pageSize=500|$..id|$..name
+    pattern: http://wcms-masters:8080/wcms/masters/usagetypes/_search?tenantId=$tenantid&isSubUsageType=true&pageSize=500|$..name|$..name
     source: wcms
+    searchClause: and wtrview.subusagetype =$subUsage
     isMandatory: false
   - name: connectionType
     label: reports.wcms.connectiontype

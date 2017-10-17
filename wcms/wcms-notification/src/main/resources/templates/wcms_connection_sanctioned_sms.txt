@@ -1,0 +1,4 @@
+Dear {{Owner}}, Water tap connection with Consumer number {{Consumer Number}} is installed at your site on {{Execution Date}} by our Engineer and and your monthly water charge demand will be Rs.{{LOI charges}}/-. Please pay the charge before the due date to avail uninterrupted service.
+
+Thanks, 
+{{ULB Name}}

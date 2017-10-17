@@ -1,0 +1,7 @@
+Dear {{Owner}},
+
+  Water tap connection with consumer number {{Consumer Number}} is installed at your site on {{Execution Date}} by our Deputy Engineer and your monthly water charge demand will be Rs.{{LOI charges}}/-. Please pay the charge before the due date to avail uninterrupted service.
+  This is computer generated email and does not need any signature and also please do not reply to this email.
+  
+ Thanks ,
+{{ULB Name}}

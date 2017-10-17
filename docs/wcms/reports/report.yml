@@ -480,20 +480,20 @@ ReportDefinitions:
   - name: usage
     label: reports.wcms.usage
     type: singlevaluelist
-    pattern: http://localhost:8080/wcms/masters/usagetypes/_search?tenantId=$tenantid&pageSize=500|$..id|$..name
+    pattern: http://wcms-masters:8080/wcms/masters/usagetypes/_search?tenantId=$tenantid&pageSize=500|$..id|$..name
     source: wcms
     isMandatory: false
     searchClause: and prop.usagetype =cast($usage to string)
   - name: subUsage
     label: reports.wcms.subUsage
     type: singlevaluelist
-    pattern: http://localhost:8080/wcms/masters/usagetypes/_search?tenantId=$tenantid&isSubUsageType=true&pageSize=500|$..id|$..name
+    pattern: http://wcms-masters:8080/wcms/masters/usagetypes/_search?tenantId=$tenantid&isSubUsageType=true&pageSize=500|$..id|$..name
     source: wcms
     isMandatory: false
     searchClause: and prop.subusagetype =cast($subUsage to string)
   - name: connectionType
     label: reports.wcms.connectiontype
-    type: string
+    type: singlevaluelist
     pattern: 'list://METERED:METERED,NONMETERED:NON-METERED'
     source: wcms
     isMandatory: false

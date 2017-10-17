@@ -103,7 +103,7 @@ ReportDefinitions:
   moduleName: wcms
   sourceColumns:
   - name: boundaryname
-    label: reports.wcms.wardno
+    label: reports.wcms.ward
     type: string
     source: wcms
   - name: hscno
@@ -115,7 +115,7 @@ ReportDefinitions:
     type: number
     source: wcms
   - name: pipesize
-    label: reports.wcms.pipesize
+    label: reports.wcms.size
     type: number
     source: wcms
   - name: usage
@@ -144,6 +144,26 @@ ReportDefinitions:
     source: wcms
     searchClause: and connview.executiondate <= $toDate
     isMandatory: false
+  - name: wardid
+    label: reports.wcms.ward
+    type: singlevaluelist
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
+    source: wcms
+    isMandatory: false
+    searchClause: and connview.wardid = $wardid
+  - name: zoneid
+    label: reports.wcms.zoneid
+    type: singlevaluelist
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
+    source: wcms
+    isMandatory: false
+    searchClause: and connview.zoneid = $zoneid
+  - name: consumerNumber
+    label: reports.wcms.consumerno
+    type: string
+    source: wcms
+    isMandatory: false
+    searchClause: and connview.hscno = $consumerNumber
   query: select boundary.name as boundaryname,connview.hscno as hscno,connview.username as consumerName,connview.pipesize as pipesize,
           connview.usagetype  as usage,
           'CURRENT' as STATE,

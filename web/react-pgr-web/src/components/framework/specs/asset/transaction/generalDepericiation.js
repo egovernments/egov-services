@@ -147,66 +147,7 @@ var dat = {
         // "rowClickUrlView": "/view/wc/pipeSize/{id}"
       },
 			"transaction": [{
-	      "label": "",
-	      "name": "OtherDetails",
-	      "children": [],
-	      "fields": [
-	        {
-	          "name": "ValuationDate",
-	          "jsonPath": "",
-	          "label": "Valuation date",
-	          "pattern": "",
-	          "type": "date",
-	          "isRequired": true,
-	          "isDisabled": false,
-	          "requiredErrMsg": "",
-	          "patternErrMsg": "",
-	        },
-	        {
-	          "name": "OrderNo",
-	          "jsonPath": "",
-	          "label": "Order No",
-	          "pattern": "",
-	          "type": "text",
-	          "isRequired": true,
-	          "isDisabled": false,
-	          "requiredErrMsg": "", //Remove required messages
-	          "patternErrMsg": ""
-	        },
-	        {
-	          "name": "OrderDate",
-	          "jsonPath": "",
-	          "label": "Order Date",
-	          "pattern": "",
-	          "type": "date",
-	          "isRequired": true,
-	          "isDisabled": false,
-	          "requiredErrMsg": "", //Remove required messages
-	          "patternErrMsg": "",
-	        },
-	        {
-	          "name": "ValuationAmount",
-	          "jsonPath": "",
-	          "label": "Valuation Amount",
-	          "pattern": "",
-	          "type": "text",
-	          "isRequired": true,
-	          "isDisabled": false,
-	          "requiredErrMsg": "", //Remove required messages
-	          "patternErrMsg": ""
-	        },
-					{
-	          "name": "Addition/deductedAmount",
-	          "jsonPath": "",
-	          "label": "Addition/ deducted amount",
-	          "pattern": "",
-	          "type": "text",
-	          "isRequired": false,
-	          "isDisabled": true,
-	          "requiredErrMsg": "", //Remove required messages
-	          "patternErrMsg": ""
-	        }
-	      ]
+	      
 	    }]
 	}
 }

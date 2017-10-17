@@ -138,6 +138,20 @@ var dat = {
 	      "name": "OtherDetails",
 	      "children": [],
 	      "fields": [
+					{
+            "name": "TypeofAsset",
+            "jsonPath": "",
+            "label": "",
+            "pattern": "",
+            "type": "radio",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "values": [{"label":"Transfer of Asset", "value":true},{"label":"Disposal of Asset", "value":false}],
+            "defaultValue":true
+          },,
 	        {
 	          "name": "Transfer/DisposalDate",
 	          "jsonPath": "",

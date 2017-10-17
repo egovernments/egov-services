@@ -403,8 +403,8 @@ ReportDefinitions:
           and demand.taxperiodfrom = (select fromdate from egbs_taxperiod 
           WHERE
           fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
-          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid='mh.rohatest' and periodcycle='ANNUAL')
-          and connview.tenantid='mh.rohatest' 
+          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL')
+          and connview.tenantid=$tenantid 
           group by boundaryname,hscno,oldhscno,consumerName,connectionAddress,connectiontype,usage,connectionstatus,waterSourceType,pipesize 
         UNION 
           select boundary.name as boundaryname,connview.hscno as hscno, connview.oldhscno as oldhscno, connview.username as consumerName,
@@ -418,9 +418,9 @@ ReportDefinitions:
           and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod 
           WHERE
           fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
-          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid='mh.rohatest' and periodcycle='ANNUAL') and      
-          connview.tenantid='mh.rohatest'
-  group By: group by boundaryname,hscno,oldhscno,consumerName,connectionAddress,connectiontype,usage,connectionstatus,waterSourceType,pipesize 
+          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and      
+          connview.tenantid=$tenantid
+  groupBy: group by boundaryname,hscno,oldhscno,consumerName,connectionAddress,connectiontype,usage,connectionstatus,waterSourceType,pipesize 
       UNION 
         select boundary.name as boundaryname,connview.hscno as hscno, connview.oldhscno as oldhscno, connview.username as         
          consumerName,connview.pipesize as   pipesize,
@@ -434,9 +434,9 @@ ReportDefinitions:
          and demand.id=dd.demandid and demand.taxperiodfrom <= (select fromdate from egbs_taxperiod 
          WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
-         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid='mh.rohatest'  and periodcycle='ANNUAL') and     
-          connview.tenantid='mh.rohatest' 
-   group BY: group by boundaryname,hscno,oldhscno,consumerName,connectionAddress,connectiontype,usage,connectionstatus,waterSourceType,pipesize
+         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid  and periodcycle='ANNUAL') and     
+          connview.tenantid=$tenantid 
+   groupBY: group by boundaryname,hscno,oldhscno,consumerName,connectionAddress,connectiontype,usage,connectionstatus,waterSourceType,pipesize
   # DemandRegister
 - reportName: DemandRegister
   summary: Demand Register Report

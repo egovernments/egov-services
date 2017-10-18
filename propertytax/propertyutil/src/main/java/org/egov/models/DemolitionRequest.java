@@ -22,7 +22,7 @@ import lombok.ToString;
 @ToString
 public class DemolitionRequest {
 	
-	@JsonProperty("requestInfo")
+	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 	
 	@JsonProperty("demolition")

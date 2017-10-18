@@ -1,0 +1,126 @@
+{
+	"id": "5d69de98-1f98-114b-e026-a728cc55460d",
+	"name": "Demolition_Master",
+	"description": "",
+	"order": [
+		"7b3d00e6-6247-fbeb-5164-a4c7761e0758",
+		"31cf0346-b8ce-ed00-72c8-14653a762830",
+		"f49a1d6f-9658-8054-ad98-6f086694e157"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1508341929431,
+	"owner": "2338793",
+	"public": false,
+	"requests": [
+		{
+			"id": "31cf0346-b8ce-ed00-72c8-14653a762830",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8080/pt-property/property/demolitionreason/_update",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "5d69de98-1f98-114b-e026-a728cc55460d",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Demolition_mstr_update",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1508341967817,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\r\n\r\n\"RequestInfo\": {\r\n\t\t\"apiId\": \"org.egov.pt\",\r\n\t\t\"ver\": \"1.0\",\r\n\t\t\"ts\": 1503743889632,\r\n\t    \"responseStatus\":\"SUCCESSFUL\",\r\n\t\t\"action\": \"asd\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":74\r\n\t\t},\r\n\t\t\"did\": \"4354648646\",\r\n\t\t\"key\": \"xyz\",\r\n\t\t\"msgId\": \"654654\",\r\n\t\t\"requesterId\": \"61\",\r\n\t\t\"authToken\": \"2440dfc8-cf05-4dbe-9445-3ac4b86493b7\"\r\n},\r\n\t\t\"demolitionReasons\":[{\r\n\t\t\t\"id\":\"1\",\r\n\t\t\t\"tenantId\":\"default\",\r\n\t\t\t\"name\":\"agrawal\",\r\n\t\t\t\"code\":\"104\",\r\n\t\t\t\"description\":null\r\n\t\t}]\r\n\r\n\t}\r\n"
+		},
+		{
+			"id": "7b3d00e6-6247-fbeb-5164-a4c7761e0758",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8080/pt-property/property/demolitionreason/_create?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "5d69de98-1f98-114b-e026-a728cc55460d",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Demolition_Master_Create",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1508341932489,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\r\n\r\n\"RequestInfo\": {\r\n\t\t\"apiId\": \"org.egov.pt\",\r\n\t\t\"ver\": \"1.0\",\r\n\t\t\"ts\": 1503743889632,\r\n\t    \"responseStatus\":\"SUCCESSFUL\",\r\n\t\t\"action\": \"asd\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":74\r\n\t\t},\r\n\t\t\"did\": \"4354648646\",\r\n\t\t\"key\": \"xyz\",\r\n\t\t\"msgId\": \"654654\",\r\n\t\t\"requesterId\": \"61\",\r\n\t\t\"authToken\": \"2440dfc8-cf05-4dbe-9445-3ac4b86493b7\"\r\n},\r\n\t\t\"demolitionReasons\":[{\r\n\t\t\t\"id\":\"1\",\r\n\t\t\t\"tenantId\":\"default\",\r\n\t\t\t\"name\":\"kumar\",\r\n\t\t\t\"code\":\"103\",\r\n\t\t\t\"description\":null\r\n\t\t}]\r\n\r\n\t}\r\n"
+		},
+		{
+			"id": "f49a1d6f-9658-8054-ad98-6f086694e157",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8080/pt-property/property/demolitionreason/_search?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "5d69de98-1f98-114b-e026-a728cc55460d",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Demolition_Master_Search",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1508341998005,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\r\n\r\n\"RequestInfo\": {\r\n\t\t\"apiId\": \"org.egov.pt\",\r\n\t\t\"ver\": \"1.0\",\r\n\t\t\"ts\": 1503743889632,\r\n\t    \"responseStatus\":\"SUCCESSFUL\",\r\n\t\t\"action\": \"asd\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":74\r\n\t\t},\r\n\t\t\"did\": \"4354648646\",\r\n\t\t\"key\": \"xyz\",\r\n\t\t\"msgId\": \"654654\",\r\n\t\t\"requesterId\": \"61\",\r\n\t\t\"authToken\": \"2440dfc8-cf05-4dbe-9445-3ac4b86493b7\"\r\n},\r\n\t\t\"demolitionReasons\":[{\r\n\t\t\t\"id\":\"1\",\r\n\t\t\t\"tenantId\":\"default\",\r\n\t\t\t\"name\":\"agrawal\",\r\n\t\t\t\"code\":\"104\",\r\n\t\t\t\"description\":null\r\n\t\t}]\r\n\r\n\t}\r\n"
+		}
+	]
+}

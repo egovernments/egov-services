@@ -176,18 +176,21 @@ public class BasePage {
             if (value.contains(",") && value.contains("numbers")) {
                 value = (value.split(",")[0] +
                         getRandomNumber(Integer.parseInt(value.split(",")[1].replaceAll("[^0-9]+", ""))));
+            } else if (value.contains(",") && value.contains("characters") && value.contains("upper")) {
+                value = (value.split(",")[0] +
+                        getRandomUpperCaseCharacters(Integer.parseInt(value.split(",")[1].replaceAll("[^0-9]+", ""))));
+            } else if (value.contains(",") && value.contains("characters") && value.contains("lower")) {
+                value = (value.split(",")[0] +
+                        getRandomLowerCaseCharacters(Integer.parseInt(value.split(",")[1].replaceAll("[^0-9]+", ""))));
             } else if (value.contains(",") && value.contains("characters")) {
                 value = value.split(",")[0] +
                         getRandomMixedCaseCharacters(Integer.parseInt(value.split(",")[1].replaceAll("[^0-9]+", "")));
-            } else if (value.contains("characters")) {
-                value = (value.split(",")[0] +
-                        getRandomMixedCaseCharacters(Integer.parseInt(value.split(",")[1].replaceAll("[^0-9]+", ""))));
             } else if (value.contains("characters") && value.contains("upper")) {
-                value = (value.split(",")[0] +
-                        getRandomUpperCaseCharacters(Integer.parseInt(value.split(",")[1].replaceAll("[^0-9]+", ""))));
+                value = getRandomUpperCaseCharacters(Integer.parseInt(value.replaceAll("[^0-9]+", "")));
             } else if (value.contains("characters") && value.contains("lower")) {
-                value = (value.split(",")[0] +
-                        getRandomLowerCaseCharacters(Integer.parseInt(value.split(",")[1].replaceAll("[^0-9]+", ""))));
+                value = getRandomLowerCaseCharacters(Integer.parseInt(value.replaceAll("[^0-9]+", "")));
+            } else if (value.contains("characters")) {
+                value = getRandomMixedCaseCharacters(Integer.parseInt(value.replaceAll("[^0-9]+", "")));
             } else if (value.contains("email")) {
                 value = getRandomEmail();
             } else if (value.contains("current date")) {
@@ -202,7 +205,7 @@ public class BasePage {
                 value = getCurrentYear();
             } else if (value.contains("current time")) {
                 value = getCurrentTime();
-            } else if(value.contains("number") || value.contains("numbers")){
+            } else if (value.contains("number") || value.contains("numbers")) {
                 value = getRandomNumber(Integer.parseInt(value.replaceAll("[^0-9]+", "")));
             }
         }

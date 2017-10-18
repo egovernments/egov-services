@@ -1298,12 +1298,12 @@ definitions:
 
   Document:
     type: object
-    description: This object holds list of documents attached during the transaciton for a agreement
+    description: This object holds list of documents attached during the transaciton for a property
     properties:
       id:
         type: integer
         format: int64
-        description: unique id of the ApplicationType.
+        description: unique id of the Document.
       documentType:
         type: string
         description: unique document type code, should be validated with document type master

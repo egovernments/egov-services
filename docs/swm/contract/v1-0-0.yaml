@@ -1,0 +1,1855 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: eGov Solid Waste Management Masters
+  description: eGov Solid Waste Management Masters manages all the masters belongs to solid waste management tax.
+  contact:
+    name: Venkataramana B
+    email: venki@egovernments.org
+  
+basePath: "/swm-masters/v1"
+
+paths:
+
+    /vehiclefuellingdetails/_search:
+      post:
+        summary: Get the list of vehiclefuellingdetails
+        description: vehiclefuellingdetails
+        tags: 
+          - VehicleFuellingDetails
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+              format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: VehicleFuellingDetails(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/VehicleFuellingDetailsResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /vehiclefuellingdetails/_create:
+      post:
+        summary: Create new vehiclefuellingdetails(s)
+        description: Create new vehiclefuellingdetails(s)
+        tags: 
+          - VehicleFuellingDetails
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: vehicleFuellingDetailsRequest
+            in: body
+            description: VehicleFuellingDetails Request
+            schema:
+              $ref: '#/definitions/VehicleFuellingDetailsRequest'
+        responses:
+          201:
+            description: VehicleFuellingDetails(s) created Successfully
+            schema:
+              $ref: '#/definitions/VehicleFuellingDetailsResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /vehiclefuellingdetails/_update:
+      post:
+        summary: Update any of the vehiclefuellingdetails
+        description: Update any of the vehiclefuellingdetails
+        tags: 
+          - VehicleFuellingDetails
+        parameters:
+          - name: vehicleFuellingDetailsRequest
+            in: body
+            description: VehicleFuellingDetails Request
+            schema:
+              $ref: '#/definitions/VehicleFuellingDetailsRequest'
+        responses:
+          200:
+            description: VehicleFuellingDetails updated Successfully
+            schema:
+              $ref: '#/definitions/VehicleFuellingDetailsResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /vehiclemaintenancedetails/_search:
+      post:
+        summary: Get the list of vehiclemaintenancedetails
+        description: vehiclemaintenancedetails
+        tags: 
+          - VehicleMaintenanceDetails
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+              format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: VehicleMaintenanceDetails(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/VehicleMaintenanceDetailsResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /vehiclemaintenancedetails/_create:
+      post:
+        summary: Create new vehiclemaintenancedetails(s)
+        description: Create new vehiclemaintenancedetails(s)
+        tags: 
+          - VehicleMaintenanceDetails
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: vehicleMaintenanceDetailsRequest
+            in: body
+            description: VehicleMaintenanceDetails Request
+            schema:
+              $ref: '#/definitions/VehicleMaintenanceDetailsRequest'
+        responses:
+          201:
+            description: VehicleMaintenanceDetails(s) created Successfully
+            schema:
+              $ref: '#/definitions/VehicleMaintenanceDetailsResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /vehiclemaintenancedetails/_update:
+      post:
+        summary: Update any of the vehiclemaintenancedetails
+        description: Update any of the vehiclemaintenancedetails
+        tags: 
+          - VehicleMaintenanceDetails
+        parameters:
+          - name: vehicleMaintenanceDetailsRequest
+            in: body
+            description: VehicleMaintenanceDetails Request
+            schema:
+              $ref: '#/definitions/VehicleMaintenanceDetailsRequest'
+        responses:
+          200:
+            description: VehicleMaintenanceDetails updated Successfully
+            schema:
+              $ref: '#/definitions/VehicleMaintenanceDetailsResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /vehicletripsheetdetails/_search:
+      post:
+        summary: Get the list of vehicletripsheetdetails
+        description: vehicletripsheetdetails
+        tags: 
+          - VehicleTripSheetDetails
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+              format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: VehicleTripSheetDetails(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/VehicleTripSheetDetailsResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /vehicletripsheetdetails/_create:
+      post:
+        summary: Create new vehicletripsheetdetails(s)
+        description: Create new vehicletripsheetdetails(s)
+        tags: 
+          - VehicleTripSheetDetails
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: vehicleTripSheetDetailsRequest
+            in: body
+            description: VehicleTripSheetDetails Request
+            schema:
+              $ref: '#/definitions/VehicleTripSheetDetailsRequest'
+        responses:
+          201:
+            description: VehicleTripSheetDetails(s) created Successfully
+            schema:
+              $ref: '#/definitions/VehicleTripSheetDetailsResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /vehicletripsheetdetails/_update:
+      post:
+        summary: Update any of the vehicletripsheetdetails
+        description: Update any of the vehicletripsheetdetails
+        tags: 
+          - VehicleTripSheetDetails
+        parameters:
+          - name: vehicleTripSheetDetailsRequest
+            in: body
+            description: VehicleTripSheetDetails Request
+            schema:
+              $ref: '#/definitions/VehicleTripSheetDetailsRequest'
+        responses:
+          200:
+            description: VehicleTripSheetDetails updated Successfully
+            schema:
+              $ref: '#/definitions/VehicleTripSheetDetailsResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /sourcesegregation/_search:
+      post:
+        summary: Get the list of sourcesegregation
+        description: sourcesegregation
+        tags: 
+          - SourceSegregation
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+              format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: SourceSegregation(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/SourceSegregationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /sourcesegregation/_create:
+      post:
+        summary: Create new sourcesegregation(s)
+        description: Create new sourcesegregation(s)
+        tags: 
+          - SourceSegregation
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: sourceSegregationRequest
+            in: body
+            description: SourceSegregation Request
+            schema:
+              $ref: '#/definitions/SourceSegregationRequest'
+        responses:
+          201:
+            description: SourceSegregation(s) created Successfully
+            schema:
+              $ref: '#/definitions/SourceSegregationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /sourcesegregation/_update:
+      post:
+        summary: Update any of the sourcesegregation
+        description: Update any of the sourcesegregation
+        tags: 
+          - SourceSegregation
+        parameters:
+          - name: sourceSegregationRequest
+            in: body
+            description: SourceSegregation Request
+            schema:
+              $ref: '#/definitions/SourceSegregationRequest'
+        responses:
+          200:
+            description: SourceSegregation updated Successfully
+            schema:
+              $ref: '#/definitions/SourceSegregationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /vendorpaymentdetails/_search:
+      post:
+        summary: Get the list of vendorpaymentdetails
+        description: vendorpaymentdetails
+        tags: 
+          - VendorPaymentDetails
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+              format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: VendorPaymentDetails(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/VendorPaymentDetailsResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /vendorpaymentdetails/_create:
+      post:
+        summary: Create new vendorpaymentdetails(s)
+        description: Create new vendorpaymentdetails(s)
+        tags: 
+          - VendorPaymentDetails
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: vendorPaymentDetailsRequest
+            in: body
+            description: VendorPaymentDetails Request
+            schema:
+              $ref: '#/definitions/VendorPaymentDetailsRequest'
+        responses:
+          201:
+            description: VendorPaymentDetails(s) created Successfully
+            schema:
+              $ref: '#/definitions/VendorPaymentDetailsResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /vendorpaymentdetails/_update:
+      post:
+        summary: Update any of the vendorpaymentdetails
+        description: Update any of the vendorpaymentdetails
+        tags: 
+          - VendorPaymentDetails
+        parameters:
+          - name: vendorPaymentDetailsRequest
+            in: body
+            description: VendorPaymentDetails Request
+            schema:
+              $ref: '#/definitions/VendorPaymentDetailsRequest'
+        responses:
+          200:
+            description: VendorPaymentDetails updated Successfully
+            schema:
+              $ref: '#/definitions/VendorPaymentDetailsResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+definitions:
+
+    CollectionPoint:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the CollectionPoint
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the CollectionPoint
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the CollectionPoint
+          maxLength: 128
+          minLength: 4
+        ward:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        zone:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        street:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        colony:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        assetOrBinId:
+          type: string
+          description: asset or BIN Id of the Collection Point
+          maxLength: 256
+          minLength: 0
+        rfidAssigned:
+          type: boolean
+          description: Option should be selected if RFID is assigned
+        rfid:
+          type: string
+          description: rfid of the Collection Point
+          maxLength: 256
+          minLength: 0
+        latitude:
+          type: number 
+          format: double
+          description: latitude of the Collection Point
+        longitude:
+          type: number 
+          format: double
+          description: longitude of the Collection Point
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - name
+      - ward
+      - zone
+      - street
+      - colony
+      
+    Route:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Route
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the Route
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the Route
+          maxLength: 128
+          minLength: 4
+        ward:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        zone:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        street:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        colony:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        collectionType:
+          $ref: "#/definitions/CollectionType"
+        startingPoint:
+          $ref: "#/definitions/CollectionPoint"
+        endingPoint:
+          $ref: "#/definitions/CollectionPoint"
+        stopsSelection:
+          type: array
+          description: List of CollectionPoint for Route
+          items:
+            $ref: '#/definitions/CollectionPoint'
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - name
+      - ward
+      - zone
+      - street
+      - colony
+      - collectionType
+      - startingPoint
+      - endingPoint
+      - stopsSelection
+      
+    VehicleType:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the VehicleType
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the VehicleType
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the VehicleType
+          maxLength: 128
+          minLength: 4
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - name
+      
+    Vehicle:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Vehicle
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the Vehicle
+          maxLength: 128
+          minLength: 4
+        vehicleType:
+          $ref: "#/definitions/VehicleType"
+        regNumber:
+          type: string
+          description: registration Number of the Vehicle
+          maxLength: 256
+          minLength: 0
+        engineSrNumber:
+          type: string
+          description: engine serial number of the Vehicle
+          maxLength: 256
+          minLength: 0
+        chassisSrNumber:
+          type: string
+          description: chassis serial number of the Vehicle
+          maxLength: 256
+          minLength: 0
+        vehicleCapacity:
+          type: integer
+          format: int64
+          description: capacity of the Vehicle
+        numberOfPersonsReq:
+          type: integer
+          format: int64
+          description: number Of Persons Required of the Vehicle
+        model:
+          type: string
+          description: model of the Vehicle
+          maxLength: 256
+          minLength: 0
+        ulbOwnedVehicle:
+          type: boolean
+          description: Option should be selected if  it ULB owned  vehicle
+        vendorName:
+          type: string
+          description: vendor name of the Vehicle
+          maxLength: 256
+          minLength: 0
+        vehicleDriverName:
+          type: string
+          description: driver name of the Vehicle
+          maxLength: 256
+          minLength: 0
+        purchaseDate:
+          type: string
+          format: date
+        yearOfPurchase:
+          type: string
+          description: driver name of the Vehicle
+          maxLength: 256
+          minLength: 0
+        price:
+          type: number 
+          format: double
+          description: price of the Vehicle
+        sourceOfPurchase:
+          type: string
+          description: source of purchase of the Vehicle
+          maxLength: 256
+          minLength: 0
+        remarks:
+          type: string
+          description: source of purchase of the Vehicle
+          maxLength: 300
+          minLength: 15
+        insuranceNumber:
+          type: string
+          description: source of purchase of the Vehicle
+          maxLength: 256
+          minLength: 1
+        insuranceValidityDate:
+          type: string
+          format: date
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - vehicleType
+      - regNumber
+      - engineSrNumber
+      - chassisSrNumber
+      - vehicleCapacity
+      - numberOfPersonsReq
+      - model
+      - insuranceNumber
+      - insuranceValidityDate
+      
+    WasteType:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the WasteType
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the WasteType
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the WasteType
+          maxLength: 128
+          minLength: 4
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - name
+      
+    WasteSubType:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the WasteSubType
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the WasteSubType
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the WasteSubType
+          maxLength: 128
+          minLength: 1
+        wasteType:
+          $ref: "#/definitions/WasteType"
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - name
+      - wasteType
+      
+    DumpingGround:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the DumpingGround
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the DumpingGround
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the DumpingGround
+          maxLength: 128
+          minLength: 4
+        ward:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        zone:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        street:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        colony:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        area:
+          type: integer
+          format: int64
+          description: area of the Dumping Ground
+        capacity:
+          type: integer
+          format: int64
+          description: capacity of the Dumping Ground
+        address:
+          type: string
+          description: address of the Dumping Ground
+          maxLength: 500
+          minLength: 1
+        latitude:
+          type: number 
+          format: double
+          description: latitude of the Dumping Ground
+        longitude:
+          type: number 
+          format: double
+          description: longitude of the Dumping Ground
+        wasteTypes:
+          description: waste types to be dump or process
+          type: array
+          items: 
+            type: string
+        mpcbAuthorisation:
+          type: boolean 
+          description: Option should be selected if MPCB Authorisation is required
+        bankGuarantee:
+          type: boolean 
+          description: Option should be selected if Bank Guarantee is required
+        bankName:
+          type: string
+          description: bank name of the Dumping Ground
+          maxLength: 256
+          minLength: 0
+        bankValidityFrom:
+          type: string
+          format: date
+        bankValidityTo:
+          type: string
+          format: date
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - name
+      - ward
+      - zone
+      - street
+      - colony
+      - area
+      - capacity
+      - address
+      - latitude
+      - longitude
+      - wasteTypes
+      
+    Vendor:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Vendor
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the Vendor
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the Vendor
+          maxLength: 128
+          minLength: 4
+        ward:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        zone:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        street:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        colony:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        registrationNo:
+          type: string
+          description: registration number of the vendor
+          maxLength: 256
+          minLength: 1
+        email:
+          type: string
+          description: email id of the vendor
+          maxLength: 256
+          minLength: 1
+        tinNumber:
+          type: string
+          description: TIN number of the vendor
+          maxLength: 256
+          minLength: 1
+        gst:
+          type: string
+          description: GST of the vendor
+          maxLength: 256
+          minLength: 1
+        phoneNo:
+          type: string
+          description: phone number of the vendor
+          maxLength: 256
+          minLength: 0
+        contactNo:
+          type: string
+          description: contact number of the vendor
+          maxLength: 256
+          minLength: 1
+        faxNumber:
+          type: string
+          description: FAX number of the vendor
+          maxLength: 256
+          minLength: 0
+        address:
+          type: string
+          description: address of the Vendor
+          maxLength: 500
+          minLength: 1
+        services:
+          type: string
+          description: service of the vendor
+          maxLength: 256
+          minLength: 0
+        details:
+          type: string
+          description: details if service is selected is others
+          maxLength: 500
+          minLength: 1
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - name
+      - ward
+      - zone
+      - street
+      - colony
+      - registrationNo
+      - email
+      - tinNumber
+      - gst
+      - contactNo
+      - address
+      - services
+      
+    VendorContract:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Vendor
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the Vendor
+          maxLength: 128
+          minLength: 4
+        contractNo:
+          type: string
+          description: contract number of the Vendor Contract
+          maxLength: 128
+          minLength: 1
+        vendorName:
+          $ref: "#/definitions/Vendor"
+        contractDate:
+          type: string
+          format: date
+        contractPeriodFrom:
+          type: string
+          format: date
+        contractPeriodTo:
+          type: string
+          format: date
+        securityDeposit:
+          type: number 
+          format: double
+          description: securityDeposit of the Vendor Contract
+        servicesOffered:
+          type: array
+          description: List of Vendor for Vendor Contract
+          items:
+            $ref: '#/definitions/Vendor'
+        paymentTerms:
+          type: string
+          description: payment terms  of the Vendor Contract
+          maxLength: 256
+          minLength: 1
+        remarks:
+          type: string
+          description: TIN number of the vendor
+          maxLength: 500
+          minLength: 0
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - contractNo
+      - vendorName
+      - contractDate
+      - contractPeriodFrom
+      - contractPeriodTo
+      - securityDeposit
+      - servicesOffered
+      - paymentTerms
+      
+    ShiftType:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the ShiftType
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the ShiftType
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the ShiftType
+          maxLength: 128
+          minLength: 4
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - name
+      
+    Shift:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Shift
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the Shift
+          maxLength: 128
+          minLength: 4
+        shiftType:
+          $ref: '#/definitions/ShiftType'
+        department:
+          type: string
+          description: department of the Shift
+          maxLength: 128
+          minLength: 4
+        designation:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/hr/contracts/hr-masters/v1-0-0.yml#/definitions/Designation'
+        shiftStartTime:
+          type: string
+          format: date
+        shiftEndTime:
+          type: string
+          format: date
+        lunchStartTime:
+          type: string
+          format: date
+        lunchEndTime:
+          type: string
+          format: date
+        graceTimeFrom:
+          type: string
+          format: date
+        graceTimeTo:
+          type: string
+          format: date
+        remarks:
+          type: string
+          description: TIN number of the vendor
+          maxLength: 500
+          minLength: 0
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - shiftType
+      - department
+      - designation
+      - shiftStartTime
+      - shiftEndTime
+      - lunchStartTime
+      - lunchEndTime
+      - graceTimeFrom
+      - graceTimeTo
+      
+    CollectionType:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the CollectionType
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the CollectionType
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the CollectionType
+          maxLength: 128
+          minLength: 4
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - name
+      
+    CollectionPointDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the CollectionPointDetails
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the CollectionPointDetails
+          maxLength: 128
+          minLength: 4
+        collectionPointType:
+          $ref: '#/definitions/CollectionType'
+        collectionPointName:
+          $ref: '#/definitions/CollectionPoint'
+        garbageEstimate:
+          type: integer
+          format: int64
+          description: garbage Estimate of the CollectionPointDetails
+        description:
+          type: string
+          description: rfid of the CollectionPointDetails
+          maxLength: 300
+          minLength: 15
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - collectionPointType
+      - collectionPointName
+      - garbageEstimate
+      - description
+      
+    VehicleMaintenance:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the VehicleMaintenance
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the VehicleMaintenance
+          maxLength: 128
+          minLength: 4
+        ward:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        zone:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        street:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        colony:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        vehicleType:
+          $ref: "#/definitions/VehicleType"
+        maintenanceAfter:
+          type: integer
+          format: int64
+          description: maintenance After of the VehicleMaintenance
+        downtimeforMaintenance:
+          type: integer
+          format: int64
+          description: downtime for Maintenance of the VehicleMaintenance
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - ward
+      - zone
+      - street
+      - colony
+      - vehicleType
+      - maintenanceAfter
+      - downtimeforMaintenance
+      
+    Population:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Population
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the Population
+          maxLength: 128
+          minLength: 4
+        ward:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        zone:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        censusYear:
+          type: string
+          description: census Year of the Population
+          maxLength: 256
+          minLength: 1
+        population:
+          type: integer
+          format: int64
+          description: population of the Population
+        garbageToBeCollected:
+          type: integer
+          format: int64
+          description: garbage To Be Collected of the Population
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - ward
+      - zone
+      - censusYear
+      - population
+      - garbageToBeCollected
+      
+    RefillingPumpStation:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the RefillingPumpStation
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the RefillingPumpStation
+          maxLength: 128
+          minLength: 4
+        ward:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        zone:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        street:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        colony:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        name:
+          type: string
+          description: name of the RefillingPumpStation
+          maxLength: 256
+          minLength: 1
+        type:
+          type: string
+          description: pump Type of the RefillingPumpStation
+          maxLength: 256
+          minLength: 1
+        remarks:
+          type: string
+          description: pump Type of the RefillingPumpStation
+          maxLength: 300
+          minLength: 15
+        typeOfFuel:
+          type: string
+          description: type of the fuel of  RefillingPumpStation
+          maxLength: 256
+          minLength: 1
+        quantity:
+          type: integer
+          format: int64
+          description: quantity of the RefillingPumpStation
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - ward
+      - zone
+      - street
+      - name
+      - type
+      - typeOfFuel
+      - quantity
+      
+    Toilet:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Toilet
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the Toilet
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the Toilet
+          maxLength: 128
+          minLength: 4
+        ward:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        zone:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        street:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        colony:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        latitude:
+          type: number 
+          format: double
+          description: latitude of the Collection Point
+        longitude:
+          type: number 
+          format: double
+          description: longitude of the Collection Point
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - name
+      - ward
+      - zone
+      - street
+      - colony
+      - latitude
+      - longitude
+      
+    VehicleSchedule:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the SetVehicleSchedule
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the SetVehicleSchedule
+          maxLength: 128
+          minLength: 4
+        ward:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        zone:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        street:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        colony:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        scheduledFrom:
+          type: string
+          format: date
+        scheduledTo:
+          type: string
+          format: date
+        route:
+         $ref: "#/definitions/Route"
+        vehicleType:
+          $ref: "#/definitions/VehicleType"
+        vehicleRegNo:
+          $ref: "#/definitions/Vehicle"
+        targetedGarbage:
+          type: integer
+          format: int64
+          description: targetedvGarbage of the RefillingPumpStation in tones
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - ward
+      - zone
+      - street
+      - colony
+      - scheduledFrom
+      - scheduledTo
+      - route
+      - vehicleType
+      - vehicleRegNo
+      - targetedGarbage
+      
+    SanitationStaffTarget:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the SanitationStaffTarget
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the SanitationStaffTarget
+          maxLength: 128
+          minLength: 1
+        targetNo:
+          type: string
+          description: name of the SanitationStaffTarget
+          maxLength: 256
+          minLength: 1
+        targetFrom:
+          type: string
+          format: date
+          description: target From of SanitationStaffTarget
+        targetTo:
+          type: string
+          format: date
+          description: target to of SanitationStaffTarget
+        swmProcess:
+          type: string
+          description: SWM process of SanitationStaffTarget
+          maxLength: 256
+          minLength: 1
+        ward:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        zone:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        street:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        colony:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        route:
+          $ref: "#/definitions/Route"
+        department:
+          type: string
+          description: department of SanitationStaffTarget
+          maxLength: 256
+          minLength: 1
+        designation:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/hr/contracts/hr-masters/v1-0-0.yml#/definitions/Designation'
+        employeeName:
+          type: string
+          description: employee name of the SanitationStaffTarget
+          maxLength: 256
+          minLength: 1
+        locationName:
+          type: string
+          description: location name of the SanitationStaffTarget
+          maxLength: 256
+          minLength: 1
+        targetedGarbage:
+          type: integer
+          format: int64
+          description: targeted Garbage of the SanitationStaffTarget
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - targetNo
+      - targetFrom
+      - targetTo
+      - swmProcess
+      - ward
+      - zone
+      - street
+      - colony
+      - route
+      - department
+      - designation
+      - employeeName
+      - locationName
+      - targetedGarbage
+      
+    VehicleFuellingDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the VehicleFuellingDetails
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the VehicleFuellingDetails
+          maxLength: 128
+          minLength: 4
+        transactionId:
+          type: string
+          description: transactionId of the VehicleFuellingDetails
+          maxLength: 256
+          minLength: 1
+        transactionDate:
+          type: string
+          format: date
+          description: transactionDate of the VehicleFuellingDetails
+        vehicleType:
+          $ref: "#/definitions/VehicleType"
+        vehicleRegNo:
+          $ref: "#/definitions/Vehicle"
+        vehicleReadingDuringFuelling:
+          type: integer
+          format: int64
+          description: vehicle Reading During Fuelling
+        refuellingStation:
+          $ref: "#/definitions/RefillingPumpStation"
+        fuelFilled:
+          type: string
+          description: fuel Filled Number of the VehicleFuellingDetails in liters
+          maxLength: 256
+          minLength: 1
+        typeOfFuel:
+          type: string
+          description: Type of Fuel of the VehicleFuellingDetails
+          maxLength: 256
+          minLength: 1
+        totalCostIncurred:
+          type: number 
+          format: double
+          description: total Cost Incurred of the VehicleFuellingDetails
+        receiptNo:
+          type: string
+          description: receipt Number of the VehicleFuellingDetails
+          maxLength: 256
+          minLength: 1
+        receiptDate:
+          type: string
+          format: date
+          description: receipt date of the VehicleFuellingDetails
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - transactionId
+      - transactionDate
+      - vehicleType
+      - vehicleRegNo
+      - vehicleReadingDuringFuelling
+      - refuellingStation
+      - fuelFilled
+      - typeOfFuel
+      - totalCostIncurred
+      - receiptNo
+      - receiptDate
+    
+    VehicleFuellingDetailsRequest:
+      description: Contract class to receive request. Array of VehicleFuellingDetails items are used in case of create, whereas single VehicleFuellingDetails item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        vehicleFuellingDetails:
+          description: Used for search result and create only
+          type: array
+          items:
+            $ref: '#/definitions/VehicleFuellingDetails'
+            
+    VehicleFuellingDetailsResponse:
+      description: Contract class to send response. Array of VehicleFuellingDetails items are used in case of search results or response for create, whereas single VehicleFuellingDetails item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        vehicleFuellingDetails:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/VehicleFuellingDetails'  
+    
+    VehicleMaintenanceDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the VehicleMaintenanceDetails
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the VehicleMaintenanceDetails
+          maxLength: 128
+          minLength: 4
+        maintenanceType:
+          type: string
+          description: transactionId of the VehicleMaintenanceDetails
+          maxLength: 256
+          minLength: 1
+        vehicleType:
+          $ref: "#/definitions/VehicleType"
+        vehicleRegNo:
+          $ref: "#/definitions/Vehicle"
+        actualMaintenanceDate:
+          type: string
+          format: date
+          description: actual Maintenance Date of the VehicleMaintenanceDetails
+        vehicleScheduledMaintenanceDate:
+          type: string
+          format: date
+          description: vehicle Scheduled Maintenance Date of the VehicleMaintenanceDetails
+        costIncurred:
+          type: number 
+          format: double
+          description: cost Incurred of the VehicleMaintenanceDetails
+        vehicleDowntimeDefined:
+          type: integer
+          format: int64
+          description: vehicle downtime  defined
+        vehicleDowntimeActual:
+          type: string
+          format: date
+          description: vehicle Downtime Actual Date of the VehicleMaintenanceDetails
+        vehicleReadingDuringMaintenance:
+          type: integer
+          format: int64
+          description: vehicle reading during maintenance
+        remarks:
+          type: string
+          description: remarks of the VehicleMaintenanceDetails in liters
+          maxLength: 300
+          minLength: 0
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - maintenanceType
+      - vehicleType
+      - vehicleRegNo
+      - actualMaintenanceDate
+      - vehicleScheduledMaintenanceDate
+      - costIncurred
+      - vehicleDowntimeDefined
+      - vehicleDowntimeActual
+      - vehicleReadingDuringMaintenance
+      
+    VehicleMaintenanceDetailsRequest:
+      description: Contract class to receive request. Array of VehicleMaintenanceDetails items are used in case of create, whereas single VehicleMaintenanceDetails item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        vehicleMaintenanceDetails:
+          description: Used for search result and create only
+          type: array
+          items:
+            $ref: '#/definitions/VehicleMaintenanceDetails'
+    VehicleMaintenanceDetailsResponse:
+      description: Contract class to send response. Array of VehicleMaintenanceDetails items are used in case of search results or response for create, whereas single VehicleMaintenanceDetails item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        vehicleMaintenanceDetails:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/VehicleMaintenanceDetails'
+    
+    VehicleTripSheetDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the VehicleTripSheetDetails
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the VehicleTripSheetDetails
+          maxLength: 128
+          minLength: 4
+        dumpingGoundName:
+          type: string
+          description: dumpingGoundName of the VehicleTripSheetDetails
+          maxLength: 128
+          minLength: 1
+        tripNo:
+          type: string
+          description: tripNo of the VehicleTripSheetDetails
+          maxLength: 128
+          minLength: 0
+        vendorName:
+          $ref: "#/definitions/Vendor"
+        scheduleStartDate:
+          type: string 
+          format: date
+          description: schedule start date of the VehicleTripSheetDetails
+        scheduleEndDate:
+          type: string 
+          format: date
+          description: schedule end date of the VehicleTripSheetDetails
+        ward:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        zone:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        street:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        colony:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        inTime:
+          type: string 
+          format: date
+          description: in time of the VehicleTripSheetDetails
+        outTime:
+          type: string 
+          format: date
+          description: out time of the VehicleTripSheetDetails
+        entryWeight:
+          type: integer
+          format: int64
+        exitWeight:
+          type: integer
+          format: int64
+        distanceCovered:
+          type: integer
+          format: int64
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - dumpingGoundName
+      - vendorName
+      - scheduleStartDate
+      - scheduleEndDate
+      - inTime
+      - outTime
+      - entryWeight
+      - exitWeight
+      - distanceCovered
+      
+    VehicleTripSheetDetailsRequest:
+      description: Contract class to receive request. Array of VehicleTripSheetDetails items are used in case of create, whereas single VehicleTripSheetDetails item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        vehicleTripSheetDetails:
+          description: Used for search result and create only
+          type: array
+          items:
+            $ref: '#/definitions/VehicleTripSheetDetails'
+    VehicleTripSheetDetailsResponse:
+      description: Contract class to send response. Array of VehicleTripSheetDetails items are used in case of search results or response for create, whereas single VehicleTripSheetDetails item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        vehicleTripSheetDetails:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/VehicleTripSheetDetails'
+    
+    SourceSegregation:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the SourceSegregation
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the SourceSegregation
+          maxLength: 128
+          minLength: 4
+        dumpingGoundName:
+          type: string
+          description: dumping Gound Name of the SourceSegregation
+          maxLength: 128
+          minLength: 1
+        date:
+          type: string 
+          format: date
+          description: schedule start date of the SourceSegregation
+        ward:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        zone:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        street:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        colony:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        collectionType:
+          $ref: "#/definitions/CollectionType"
+        quantityOfWetWasteCollected:
+          type: integer
+          format: int64
+        quantityOfDryWasteCollected:
+          type: integer
+          format: int64
+        exitWeight:
+          type: integer
+          format: int64
+        distanceCovered:
+          type: integer
+          format: int64
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - dumpingGoundName
+      - date
+      - collectionType
+      - quantityOfWetWasteCollected
+      - quantityOfDryWasteCollected
+      
+    SourceSegregationRequest:
+      description: Contract class to receive request. Array of SourceSegregation items are used in case of create, whereas single SourceSegregation item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        sourceSegregation:
+          description: Used for search result and create only
+          type: array
+          items:
+            $ref: '#/definitions/SourceSegregation'
+    SourceSegregationResponse:
+      description: Contract class to send response. Array of SourceSegregation items are used in case of search results or response for create, whereas single SourceSegregation item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        sourceSegregation:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/SourceSegregation'
+      
+    VendorPaymentDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the SourceSegregation
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the SourceSegregation
+          maxLength: 128
+          minLength: 4
+        vendorName:
+          $ref: "#/definitions/Vendor"
+        contractNo:
+          type: string
+          description: contract No of the SourceSegregation
+          maxLength: 256
+          minLength: 0
+        approvalAmount:
+          type: number 
+          format: double
+          description: approval amount of the SourceSegregation
+        vendorInvoiceAmount:
+          type: number 
+          format: double
+          description: vendor Invoice amount of the SourceSegregation
+        documents:
+          type: array
+          description: List of Documents for Trade License
+          items:
+            $ref: '#/definitions/Documents'
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - vendorName
+      - vendorInvoiceAmount
+      
+    Documents:
+      type: object
+      description: An Object to hold the support document detail for a given Trade License
+      properties:
+        id: 
+          type: integer
+          format: int64
+          description: Unique Identifier of the Support Document
+        tenantId:
+          type: string
+          description: tenant id of the Trade License
+          maxLength: 128
+          minLength: 4
+        licenseId:
+          type: integer
+          format: int64
+          description: Unique Identifier of the Trade License
+        documentTypeId:
+          type: integer
+          format: int64
+          description: Unique Identifier of the Document Type
+        fileStoreId:
+          type: string
+          description: Unique Identifier of the FileStore
+        comments:
+          type: string
+          maxLength: 1024
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+      - licenseId
+      - tenantId
+      - documentTypeId
+      - fileStoreId
+      
+    VendorPaymentDetailsRequest:
+      description: Contract class to receive request. Array of VendorPaymentDetails items are used in case of create, whereas single VendorPaymentDetails item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        vendorPaymentDetails:
+          description: Used for search result and create only
+          type: array
+          items:
+            $ref: '#/definitions/VendorPaymentDetails'
+    VendorPaymentDetailsResponse:
+      description: Contract class to send response. Array of VendorPaymentDetails items are used in case of search results or response for create, whereas single VendorPaymentDetails item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        vendorPaymentDetails:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/VendorPaymentDetails'
+
+parameters:
+    pageSize:
+      name: pageSize
+      type: integer
+      format: int32
+      in: query
+      description: Number of records in a per page in  the Search Results, Default value is 20
+    
+    offSet:
+      name: offSet
+      type: integer
+      format: int32
+      in: query
+      description: page number of the Search Results, Default value is 0

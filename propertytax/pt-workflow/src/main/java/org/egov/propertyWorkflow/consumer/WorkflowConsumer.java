@@ -5,6 +5,8 @@ import java.util.Date;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.enums.StatusEnum;
+import org.egov.models.Demolition;
+import org.egov.models.DemolitionRequest;
 import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
 import org.egov.models.WorkFlowDetails;
@@ -67,10 +69,60 @@ public class WorkflowConsumer {
 
 	@KafkaListener(topics = { "#{propertiesManager.getTaxGenerated()}",
 			"#{propertiesManager.getModifyPropertTaxGenerated()}",
-			"#{propertiesManager.getUpdatePropertyTaxGenerated()}" })
+			"#{propertiesManager.getUpdatePropertyTaxGenerated()}",
+			"#{propertiesManager.getUpdateValidatedDemolition()}",
+			"#{propertiesManager.getCreateValidatedDemolition()}"})
 	public void listen(ConsumerRecord<String, Object> record) throws Exception {
 		ObjectMapper objectMapper = new ObjectMapper();
+		
+		if (record.topic().equalsIgnoreCase(propertiesManager.getCreateValidatedDemolition())){
+			DemolitionRequest demolitionRequest = objectMapper.convertValue(record.value(), DemolitionRequest.class);
 
+			Demolition demolition = demolitionRequest.getDemolition();
+			WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getDemolitionWorkFlowDetails(demolitionRequest.getDemolition(),
+					demolitionRequest);
+			logger.info(
+					"WorkflowConsumer  listen() WorkflowDetailsRequestInfo ---->>  " + workflowDetailsRequestInfo);
+			
+			
+			ProcessInstance processInstance = workflowUtil.startWorkflow(workflowDetailsRequestInfo,
+					propertiesManager.getBusinessKey(), propertiesManager.getType(),
+					propertiesManager.getComment());
+			demolition.setStateId(processInstance.getId());
+			kafkaTemplate.send(propertiesManager.getCreateDemolitionWorkflow(), demolitionRequest);
+			
+		}
+		
+		else if (record.topic().equalsIgnoreCase(propertiesManager.getUpdateValidatedDemolition())){
+			DemolitionRequest demolitionRequest = objectMapper.convertValue(record.value(), DemolitionRequest.class);
+			Demolition demolition = demolitionRequest.getDemolition();
+			WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getDemolitionWorkFlowDetails(demolitionRequest.getDemolition(),
+					demolitionRequest);
+			logger.info(
+					"WorkflowConsumer  listen() WorkflowDetailsRequestInfo ---->>  " + workflowDetailsRequestInfo);
+			
+			TaskResponse taskResponse = workflowUtil.updateWorkflow(workflowDetailsRequestInfo,
+					demolition.getStateId(), propertiesManager.getBusinessKey());
+			demolition.setStateId(taskResponse.getTask().getId());
+			String action = workflowDetailsRequestInfo.getWorkflowDetails().getAction();
+			if (action.equalsIgnoreCase(propertiesManager.getApproveProperty())) {
+				kafkaTemplate.send(propertiesManager.getApproveDemolitionWorkflow(), demolitionRequest);
+			}
+			else if(action.equalsIgnoreCase(propertiesManager.getReject())
+					|| action.equalsIgnoreCase(propertiesManager.getCancel())) {
+				kafkaTemplate.send(propertiesManager.getRejectDemolition(), demolitionRequest);
+			}
+			else{
+				
+				kafkaTemplate.send(propertiesManager.getUpdateDemolitionWorkflow(), demolitionRequest);
+			}
+			
+			
+			
+			
+		}
+
+		else {
 		PropertyRequest propertyRequest = objectMapper.convertValue(record.value(), PropertyRequest.class);
 		logger.info("WorkflowConsumer  listen() propertyRequest ---->>  " + propertyRequest);
 
@@ -123,6 +175,8 @@ public class WorkflowConsumer {
 				}
 			}
 		}
+		
+		}
 	}
 
 	/**
@@ -139,6 +193,19 @@ public class WorkflowConsumer {
 		WorkflowDetailsRequestInfo workflowDetailsRequestInfo = new WorkflowDetailsRequestInfo();
 		workflowDetailsRequestInfo.setTenantId(property.getTenantId());
 		RequestInfo requestInfo = setWorkFlowRequestInfoFromPropertyRequest(propertyRequest, property.getTenantId());
+		workflowDetailsRequestInfo.setRequestInfo(requestInfo);
+		workflowDetailsRequestInfo.setWorkflowDetails(workflowDetails);
+		return workflowDetailsRequestInfo;
+	}
+	
+	
+	private WorkflowDetailsRequestInfo getDemolitionWorkFlowDetails(Demolition demolition,DemolitionRequest demolitionRequest){
+		
+
+		WorkFlowDetails workflowDetails = demolition.getWorkFlowDetails();
+		WorkflowDetailsRequestInfo workflowDetailsRequestInfo = new WorkflowDetailsRequestInfo();
+		workflowDetailsRequestInfo.setTenantId(demolition.getTenantId());
+		RequestInfo requestInfo = setWorkFlowRequestInfoFromDemolitionRequest(demolitionRequest, demolition.getTenantId());
 		workflowDetailsRequestInfo.setRequestInfo(requestInfo);
 		workflowDetailsRequestInfo.setWorkflowDetails(workflowDetails);
 		return workflowDetailsRequestInfo;
@@ -170,6 +237,37 @@ public class WorkflowConsumer {
 		requestInfo.setVer(propertyRequest.getRequestInfo().getVer());
 		requestInfo.setTenantId(tenantId);
 		requestInfo.setUserInfo(propertyRequest.getRequestInfo().getUserInfo());
+
+		return requestInfo;
+	}
+	
+
+	/**
+	 * This method will generate RequestInfo from the PropertyRequest
+	 * 
+	 * @param PropertyRequest
+	 * @param tenantId
+	 * @return RequestInfo
+	 */
+	private RequestInfo setWorkFlowRequestInfoFromDemolitionRequest(DemolitionRequest demolitionRequest, String tenantId) {
+
+		RequestInfo requestInfo = new RequestInfo();
+		requestInfo.setAction(demolitionRequest.getRequestInfo().getAction());
+		requestInfo.setApiId(demolitionRequest.getRequestInfo().getApiId());
+		requestInfo.setAuthToken(demolitionRequest.getRequestInfo().getAuthToken());
+		requestInfo.setDid(demolitionRequest.getRequestInfo().getDid());
+		requestInfo.setKey(demolitionRequest.getRequestInfo().getMsgId());
+		requestInfo.setRequesterId(demolitionRequest.getRequestInfo().getRequesterId());
+		// TODO temporary fix for date format and need to replace with actual ts
+		// value
+		String dateValue = null;
+		Date date = new Date();
+		dateValue = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(date);
+		requestInfo.setTs(dateValue);
+		// requestInfo.setTs(String.valueOf(propertyRequest.getRequestInfo().getTs()));
+		requestInfo.setVer(demolitionRequest.getRequestInfo().getVer());
+		requestInfo.setTenantId(tenantId);
+		requestInfo.setUserInfo(demolitionRequest.getRequestInfo().getUserInfo());
 
 		return requestInfo;
 	}

@@ -149,6 +149,18 @@ public class PropertiesManager {
 	private String propertyBasepath;
 
 	private String propertySearch;
+	
+	private String createValidatedDemolition;
+	
+	private String updateValidatedDemolition;
+	
+	private String approveDemolitionWorkflow;
+	
+	private String createDemolitionWorkflow;
+	
+	private String rejectDemolition;
+	
+	private String updateDemolitionWorkflow;
 
 	public String getWorkflowHostName() {
 		return environment.getProperty("egov.services.egov-common-workflows.hostname");
@@ -406,5 +418,30 @@ public class PropertiesManager {
 	public String getPropertySearch() {
 		return environment.getProperty("egov.services.pt_property.search");
 	}
+	
+	public String getCreateValidatedDemolition() {
+		return environment.getProperty("egov.propertytax.create.demolition.validated");
+	}
+
+	public String getUpdateValidatedDemolition() {
+		return environment.getProperty("egov.propertytax.update.demolition.validated");
+	}
+
+	public String getApproveDemolitionWorkflow() {
+		return environment.getProperty("egov.propertytax.demolition.approved");
+	}
+
+	public String getCreateDemolitionWorkflow() {
+		return environment.getProperty("egov.propertytax.create.demolition.workflow.started");
+	}
+
+	public String getRejectDemolition() {
+		return environment.getProperty("egov.propertytax.demolition.rejected");
+	}
+
+	public String getUpdateDemolitionWorkflow() {
+		return environment.getProperty("egov.propertytax.demolition.update.workflow.started");
+	}
+
 
 }

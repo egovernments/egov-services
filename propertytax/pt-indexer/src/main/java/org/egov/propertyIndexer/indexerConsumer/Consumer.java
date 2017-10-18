@@ -3,6 +3,8 @@ package org.egov.propertyIndexer.indexerConsumer;
 import java.io.IOException;
 import java.util.Map;
 
+import org.egov.models.Demolition;
+import org.egov.models.DemolitionRequest;
 import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
 import org.egov.models.TitleTransfer;
@@ -43,7 +45,7 @@ public class Consumer {
 
 	@Autowired
 	JestClient client = null;
-	
+
 	@Autowired
 	IndexerRepository indexerRepository;
 
@@ -72,9 +74,11 @@ public class Consumer {
 
 	@KafkaListener(topics = { "#{propertiesManager.getCreateWorkflow()}", "#{propertiesManager.getUpdateWorkflow()}",
 			"#{propertiesManager.getCreateTitleTranfer()}", "#{propertiesManager.getUpdateTitleTransfer()}",
-			"#{propertiesManager.getApproveWorkflow()}", "#{propertiesManager.getApproveTitleTransfer()}" })
+			"#{propertiesManager.getApproveWorkflow()}", "#{propertiesManager.getApproveTitleTransfer()}",
+			"#{propertiesManager.getApproveDemolition()}", "#{propertiesManager.getCreateDemolitionWorkflow()}",
+			"#{propertiesManager.getUpdateDemolitionWorkflow()" })
 	public void receive(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic)
-			throws IOException,Exception {
+			throws IOException, Exception {
 
 		if (topic.equalsIgnoreCase(propertiesManager.getCreateWorkflow())
 				|| topic.equalsIgnoreCase(propertiesManager.getUpdateWorkflow())
@@ -83,7 +87,7 @@ public class Consumer {
 			PropertyRequest propertyRequest = new ObjectMapper().convertValue(consumerRecord, PropertyRequest.class);
 			log.info("consumer topic value is: " + topic + " consumer value is" + propertyRequest);
 			for (Property property : propertyRequest.getProperties()) {
-				
+
 				PropertyES propertyData = indexerRepository.addMasterData(property, propertyRequest.getRequestInfo());
 				client.execute(new Index.Builder(propertyData).index(propertiesManager.getPropertyIndex())
 						.type(propertiesManager.getPropertyIndexType())
@@ -92,8 +96,8 @@ public class Consumer {
 		}
 
 		else if (topic.equalsIgnoreCase(propertiesManager.getCreateTitleTranfer())
-				|| topic.equalsIgnoreCase(propertiesManager.getUpdateTitleTransfer()) ||
-				topic.equalsIgnoreCase(propertiesManager.getApproveTitleTransfer() )) {
+				|| topic.equalsIgnoreCase(propertiesManager.getUpdateTitleTransfer())
+				|| topic.equalsIgnoreCase(propertiesManager.getApproveTitleTransfer())) {
 			TitleTransferRequest titleTransferRequest = new ObjectMapper().convertValue(consumerRecord,
 					TitleTransferRequest.class);
 
@@ -101,6 +105,18 @@ public class Consumer {
 			String titleTransferData = new ObjectMapper().writeValueAsString(titleTransfer);
 			client.execute(new Index.Builder(titleTransferData).index(propertiesManager.getTitleTransferIndex())
 					.type(propertiesManager.getTitleTransferType()).id(titleTransfer.getApplicationNo()).build());
+		} 
+		else if (topic.equalsIgnoreCase(propertiesManager.getCreateDemolitionWorkflow())
+				|| topic.equalsIgnoreCase(propertiesManager.getApproveDemolition())
+				|| topic.equalsIgnoreCase(propertiesManager.getUpdateDemolitionWorkflow())) {
+
+			DemolitionRequest demolitionRequest = new ObjectMapper().convertValue(consumerRecord,
+					DemolitionRequest.class);
+
+			Demolition demolition = demolitionRequest.getDemolition();
+			client.execute(new Index.Builder(demolition).index(propertiesManager.getDemolitionIndex())
+					.type(propertiesManager.getDemolitionIndexType()).id(demolition.getApplicationNo()).build());
+
 		}
 
 	}

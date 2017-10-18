@@ -47,5 +47,11 @@ public class PropertyBuilder {
 			+ "RETURNING *) INSERT INTO egpt_property_history SELECT * FROM moved_rows";
 
 	public static final String ACTIVE_PROPERTY_BY_UPIC_NUMBER = "select id from egpt_property where upicnumber=? and active=?";
+	
+	public static final String PROPERTY_ID_BY_UPIC="select id from egpt_property where upicnumber=?";
+	
+	public static final String UPDATE_PROPETY_AFTER_DEMOLITION ="update egpt_property set sequenceno=?,isunderworkflow=?,isauthorised=? where id=?";
+	
+	
 
 }

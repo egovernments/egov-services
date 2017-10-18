@@ -22,6 +22,8 @@ import org.egov.models.AuditDetails;
 import org.egov.models.BuilderDetail;
 import org.egov.models.Demand;
 import org.egov.models.DemandId;
+import org.egov.models.Demolition;
+import org.egov.models.DemolitionRequest;
 import org.egov.models.Document;
 import org.egov.models.Factors;
 import org.egov.models.Floor;
@@ -1269,6 +1271,12 @@ public class PropertyRepository {
 		Object[] arguments = { true, upicNo };
 		jdbcTemplate.update(query, arguments);
 	}
+	
+	public void setIsPropertyUnderWorkFlowFalse(String upicNo){
+		String query = PropertyBuilder.updatePropertyIsUnderWokflow;
+		Object[] arguments = { false, upicNo };
+		jdbcTemplate.update(query, arguments);
+	}
 
 	/**
 	 * This will give the audit details for the given addressId
@@ -2279,4 +2287,29 @@ public class PropertyRepository {
 		Object[] arguments = { false, propertyId };
 		jdbcTemplate.update(query, arguments);
 	}
+
+
+	/**
+	 * This will Update the property object based on th demolition
+	 * @param property
+	 * @param demolitionRequest
+	 */
+	@Transactional
+	public void updateProperyAfterDemolition(Property property,DemolitionRequest demolitionRequest) {
+		
+		Demolition demolition = demolitionRequest.getDemolition();
+		Long propertyId = property.getId();
+		PropertyDetail propertyDetail = property.getPropertyDetail();
+		
+		Object [] propertsyDetailArgs ={propertiesManager.getVacantLand(),demolition.getPropertySubType(),demolition.getUsageType()
+		,demolition.getUsageSubType(),demolition.getTotalArea(),propertyDetail.getId()};
+		
+		jdbcTemplate.update(PropertyDetailBuilder.UPDATE_PROPETY_DETAILS_AFTER_DEMOLITION, propertsyDetailArgs);
+		
+		jdbcTemplate.update(PropertyBuilder.UPDATE_PROPETY_AFTER_DEMOLITION,new Object[] {demolition.getSequenceNo(),Boolean.FALSE,demolition.getIsLegal(),propertyId});
+		
+	}
 }
+	
+
+

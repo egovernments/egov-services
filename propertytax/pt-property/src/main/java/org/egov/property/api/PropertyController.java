@@ -5,11 +5,13 @@ import static org.springframework.util.StringUtils.isEmpty;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import javax.validation.Valid;
-
 import org.egov.enums.NoticeType;
 import org.egov.models.DemandResponse;
+import org.egov.models.DemolitionRequest;
+import org.egov.models.DemolitionResponse;
+import org.egov.models.DemolitionSearchCriteria;
+import org.egov.models.DemolitionSearchResponse;
 import org.egov.models.Error;
 import org.egov.models.ErrorRes;
 import org.egov.models.NoticeRequest;
@@ -263,4 +265,49 @@ public class PropertyController {
 
 		return NoticeSearchResponse.builder().responseInfo(new ResponseInfo()).notices(notices).build();
 	}
+	
+	
+	/**
+	 * This API will create a new demolition
+	 * @param demolitionRequest
+	 * @return {@link DemolitionResponse}
+	 * @throws Exception
+	 */
+	@RequestMapping(path="demolition/_create",method=RequestMethod.POST)
+	public DemolitionResponse createDemolition(@RequestBody DemolitionRequest demolitionRequest) throws Exception{
+		return propertyService.createDemolition(demolitionRequest);
+		
+	}
+	
+	/**
+	 * This API will update the Existisng demolition
+	 * @param demolitionRequest
+	 * @return {@link DemolitionResponse}
+	 * @throws Exception
+	 */
+	@RequestMapping(path="demolition/_update",method=RequestMethod.POST)
+	public DemolitionResponse updateDemolition(@RequestBody DemolitionRequest demolitionRequest) throws Exception{
+		return propertyService.updateDemolition(demolitionRequest);
+		
+	}
+
+	/**
+	 * This API will search the demolitions based on the given parameters
+	 * @param requestInfoWrapper
+	 * @param demolitionSearchCriteria
+	 * @param bindingResult
+	 * @return {@link DemolitionResponse}
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "demolition/_search", method = RequestMethod.POST)
+	public DemolitionSearchResponse searchDemolitions(@RequestBody RequestInfoWrapper requestInfoWrapper,
+			@ModelAttribute @Valid DemolitionSearchCriteria demolitionSearchCriteria, BindingResult bindingResult)
+			throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfoWrapper.getRequestInfo());
+		}
+		return propertyService.searchDemolition(requestInfoWrapper.getRequestInfo(),demolitionSearchCriteria);
+
+	}
+	
 }

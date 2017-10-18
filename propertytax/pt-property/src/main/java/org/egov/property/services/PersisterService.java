@@ -4,9 +4,11 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.egov.enums.StatusEnum;
 import org.egov.models.AuditDetails;
+import org.egov.models.Demolition;
+import org.egov.models.DemolitionRequest;
+import org.egov.models.DemolitionSearchCriteria;
 import org.egov.models.Document;
 import org.egov.models.Floor;
 import org.egov.models.Property;
@@ -23,6 +25,7 @@ import org.egov.models.User;
 import org.egov.models.WorkFlowDetails;
 import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.PropertySearchException;
+import org.egov.property.repository.DemolitionRepository;
 import org.egov.property.repository.PropertyMasterRepository;
 import org.egov.property.repository.PropertyRepository;
 import org.egov.property.utility.ConstantUtility;
@@ -57,6 +60,9 @@ public class PersisterService {
 
 	@Autowired
 	PropertyServiceImpl propertyServiceImpl;
+	
+	@Autowired
+	DemolitionRepository demolitionRepository;
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
@@ -596,5 +602,84 @@ public class PersisterService {
 			log.error("Unable to move property to history");
 		}
 
+	}
+	
+	/**
+	 * This API will persist the Demolition Object in Database
+	 * @param demolitionRequest
+	 * @throws Exception
+	 */
+	public void saveDemolition(DemolitionRequest demolitionRequest) throws Exception{
+		Long demolitionId = demolitionRepository.saveDemolition(demolitionRequest.getDemolition());
+		AuditDetails auditDetails = getAuditDetail(demolitionRequest.getRequestInfo());
+		demolitionRepository.saveDemolitionDocuments(demolitionRequest.getDemolition(), demolitionId, auditDetails);
+		
+	}
+	
+	public void updateDemolition(DemolitionRequest demolitionRequest) throws Exception{
+		
+		Demolition demolition = demolitionRequest.getDemolition();
+		
+		
+		for( Document document:demolition.getDocuments() ){
+			AuditDetails auditDetails = getUpdatedAuditDetails(demolitionRequest.getRequestInfo(), "egpt_demolition_document", document.getId());
+			document.setAuditDetails(auditDetails);
+		}
+		
+		demolitionRepository.updateDemolition(demolitionRequest);
+
+		}
+		
+	
+	public List<Demolition> searchDemolitions(RequestInfo requestInfo,DemolitionSearchCriteria demolitionSearchCriteria)  throws Exception{
+		return demolitionRepository.searchDemolitions(demolitionSearchCriteria);
+		
+	}
+	
+	
+
+	/**
+	 * Search property based on upic no
+	 * 
+	 * @param titleTransferRequest
+	 * @return
+	 * @throws Exception
+	 */
+	public Property getPropertyUsingUpicNo(DemolitionRequest demolitionRequest) throws Exception {
+		RequestInfo requestInfo = demolitionRequest.getRequestInfo();
+		Demolition demolition = demolitionRequest.getDemolition();
+		Property property = null;
+		PropertySearchCriteria propertySearchCriteria = new PropertySearchCriteria();
+		propertySearchCriteria.setTenantId(demolition.getTenantId());
+		propertySearchCriteria.setUpicNumber(demolition.getUpicNumber());
+
+		try {
+			PropertyResponse propertyResponse = propertyServiceImpl.searchProperty(requestInfo, propertySearchCriteria);
+			if (propertyResponse != null && propertyResponse.getProperties().size() > 0) {
+				property = propertyResponse.getProperties().get(0);
+			}
+		} catch (Exception e) {
+			throw new PropertySearchException(propertiesManager.getInvalidInput(), requestInfo);
+		}
+		return property;
+	}
+	
+	/**
+	 * This API will copy the Image of the property object to history table and
+	 * will update the object based on the demolition object
+	 * @param demolitionRequest
+	 * @throws Exception
+	 */
+	public void savePropertyTohistoryAndUpdateProperty(DemolitionRequest demolitionRequest) throws Exception{
+		
+		Property property = getPropertyUsingUpicNo(demolitionRequest);
+		savePropertyHistory(property);
+		propertyRepository.updateIsUnderWorkflowbyId(property.getId());
+		propertyRepository.updateProperyAfterDemolition(property,demolitionRequest);
+		
+	}
+	
+	public void updateIsUnderWorkflow(Long propertyId){
+		propertyRepository.updateIsUnderWorkflowbyId(propertyId);
 	}
 }

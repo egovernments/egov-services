@@ -1,6 +1,10 @@
 package org.egov.property.services;
 
 import org.egov.models.DemandResponse;
+import org.egov.models.DemolitionRequest;
+import org.egov.models.DemolitionResponse;
+import org.egov.models.DemolitionSearchCriteria;
+import org.egov.models.DemolitionSearchResponse;
 import org.egov.models.PropertyDCBRequest;
 import org.egov.models.PropertyDCBResponse;
 import org.egov.models.PropertyRequest;
@@ -121,5 +125,32 @@ public interface PropertyService {
 	 * @param propertyRequest
 	 */
 	public PropertyResponse modifyProperty(PropertyRequest propertyRequest) throws Exception;
+	
+	
+	/**
+	 * This API will create the demolition
+	 * @param demolitionRequest
+	 * @return {@link DemolitionResponse}
+	 * @throws Exception
+	 */
+	public DemolitionResponse createDemolition(DemolitionRequest demolitionRequest) throws Exception;
+	
+	
+	/**
+	 * This API will update the demolition
+	 * @param demolitionRequest
+	 * @return {@link DemolitionResponse}
+	 * @throws Exception
+	 */
+	public DemolitionResponse updateDemolition(DemolitionRequest demolitionRequest) throws Exception;
+	
+	
+	/**
+	 * This API will search the demolitions
+	 * @param demolitionRequest
+	 * @return {@link DemolitionResponse}
+	 * @throws Exception
+	 */
+	public DemolitionSearchResponse searchDemolition(RequestInfo requestInfo,DemolitionSearchCriteria demolitionSearchCriteria) throws Exception;
 
 }

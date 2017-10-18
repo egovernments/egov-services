@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.egov.enums.StatusEnum;
 import org.egov.models.Address;
@@ -25,6 +24,11 @@ import org.egov.models.Demand;
 import org.egov.models.DemandDetail;
 import org.egov.models.DemandRequest;
 import org.egov.models.DemandResponse;
+import org.egov.models.Demolition;
+import org.egov.models.DemolitionRequest;
+import org.egov.models.DemolitionResponse;
+import org.egov.models.DemolitionSearchCriteria;
+import org.egov.models.DemolitionSearchResponse;
 import org.egov.models.Document;
 import org.egov.models.Error;
 import org.egov.models.ErrorRes;
@@ -88,6 +92,7 @@ import org.egov.property.utility.PropertyValidator;
 import org.egov.property.utility.TimeStampUtil;
 import org.egov.property.utility.UpicNoGeneration;
 import org.egov.property.utility.UserUtil;
+import org.egov.property.utility.ValidatorUtil;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -157,6 +162,9 @@ public class PropertyServiceImpl implements PropertyService {
 
 	@Autowired
 	IdgenRepository idgenRepository;
+	
+	@Autowired
+	ValidatorUtil validatorUtil;
 
 	@Override
 	public PropertyResponse createProperty(PropertyRequest propertyRequest) throws Exception {
@@ -1353,7 +1361,7 @@ public class PropertyServiceImpl implements PropertyService {
 					propertyRequest.getRequestInfo());
 			property.getPropertyDetail().setApplicationNo(acknowldgementNumber);
 
-			validModifyProperty(property, propertyRequest.getRequestInfo());
+			validatorUtil.isDemandCollected(property.getUpicNumber(),property.getTenantId(), propertyRequest.getRequestInfo());
 
 			PropertyRequest updatedPropertyRequest = new PropertyRequest();
 			updatedPropertyRequest.setRequestInfo(propertyRequest.getRequestInfo());
@@ -1369,25 +1377,69 @@ public class PropertyServiceImpl implements PropertyService {
 
 	}
 
-	private void validModifyProperty(Property property, RequestInfo requestInfo) throws Exception {
 
-		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		requestInfoWrapper.setRequestInfo(requestInfo);
-		DemandResponse demandResponse = demandRepository.getDemands(property.getUpicNumber(), property.getTenantId(),
-				requestInfoWrapper);
+	@Override
+	public DemolitionResponse createDemolition(DemolitionRequest demolitionRequest) throws Exception {
+		
+		//TODO After Vishal Integration do  the master validaion for demolition check for unique code and tenantId
+		
 
-		if (demandResponse != null) {
-			for (Demand demand : demandResponse.getDemands()) {
-				Double totalTax = 0.0;
-				Double collectedAmount = 0.0;
-				for (DemandDetail demandDetail : demand.getDemandDetails()) {
-					totalTax += demandDetail.getTaxAmount().doubleValue();
-					collectedAmount += demandDetail.getCollectionAmount().doubleValue();
-				}
-				if (totalTax != collectedAmount) {
-					throw new PropertyTaxPendingException(propertiesManager.getInvalidTaxMessage(), requestInfo);
-				}
-			}
-		}
+		validatorUtil.isPropertyUnderWorkflow(demolitionRequest.getDemolition().getUpicNumber(), demolitionRequest.getRequestInfo());
+		String acknowldgementNumber = generateAcknowledegeMentNumber(demolitionRequest.getDemolition().getTenantId(),
+				demolitionRequest.getRequestInfo());
+		demolitionRequest.getDemolition().setApplicationNo(acknowldgementNumber);
+		propertyRepository.updateIsPropertyUnderWorkflow(demolitionRequest.getDemolition().getUpicNumber());
+		
+		kafkaTemplate.send(propertiesManager.getCreateValidatedDemolition(), demolitionRequest);
+		return getDemolitionResposne(demolitionRequest);
+	}
+
+	public DemolitionResponse updateDemolition(DemolitionRequest demolitionRequest) throws Exception {
+
+	
+		validatorUtil.validateWorkflowDeatails(demolitionRequest.getDemolition().getApplicationNo(), demolitionRequest.getDemolition().getWorkFlowDetails(), demolitionRequest.getRequestInfo());
+		validatorUtil.isDemandCollected(demolitionRequest.getDemolition().getUpicNumber(),demolitionRequest.getDemolition().getTenantId() , demolitionRequest.getRequestInfo());
+
+        if ( demolitionRequest.getDemolition().getWorkFlowDetails().getAction().equalsIgnoreCase(propertiesManager.getCancelAction())
+        		||demolitionRequest.getDemolition().getWorkFlowDetails().getAction().equalsIgnoreCase(propertiesManager.getRejectAction())){
+        	propertyRepository.setIsPropertyUnderWorkFlowFalse(demolitionRequest.getDemolition().getUpicNumber());
+        	
+        }
+	
+		kafkaTemplate.send(propertiesManager.getUpdateValidatedDemolition(), demolitionRequest);
+
+		return getDemolitionResposne(demolitionRequest);
+
+	}
+
+	@Override
+	public DemolitionSearchResponse searchDemolition(RequestInfo requestInfo,DemolitionSearchCriteria demolitionSearchCriteria) throws Exception {
+		List<Demolition> demolitions = persisterService.searchDemolitions(requestInfo, demolitionSearchCriteria);
+		
+		return getDemolitionSearchResposne(demolitions, requestInfo);
+	}
+	
+	
+	/**
+	 * This API will give you the Demolition Response 
+	 * @param demolitionRequest
+	 * @return {@link DemolitionResponse}
+	 */
+	private DemolitionResponse getDemolitionResposne(DemolitionRequest demolitionRequest){
+		
+		DemolitionResponse demolitionResponse = new DemolitionResponse();
+		demolitionResponse.setDemolition(demolitionRequest.getDemolition());
+		demolitionResponse.setResponseInfo(
+				responseInfoFactory.createResponseInfoFromRequestInfo(demolitionRequest.getRequestInfo(), true));
+		
+		return demolitionResponse;
+	}
+	
+	private DemolitionSearchResponse getDemolitionSearchResposne(List<Demolition> demolitions,RequestInfo requestInfo) {
+		DemolitionSearchResponse demolitionSearchResponse = new DemolitionSearchResponse();
+		demolitionSearchResponse.setDemolitions(demolitions);
+		demolitionSearchResponse.setResponseInfo(
+				responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
+		return demolitionSearchResponse;
 	}
 }

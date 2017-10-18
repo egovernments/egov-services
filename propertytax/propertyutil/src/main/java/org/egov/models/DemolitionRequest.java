@@ -1,5 +1,7 @@
 package org.egov.models;
 
+import javax.validation.Valid;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -23,7 +25,8 @@ public class DemolitionRequest {
 	@JsonProperty("requestInfo")
 	private RequestInfo requestInfo;
 	
-	@JsonProperty("requestInfo")
+	@JsonProperty("demolition")
+	@Valid
 	private Demolition demolition;
 
 }

@@ -419,11 +419,25 @@ public class PropertiesManager {
 
 	private String invalidTenent;
 	
+
 	private String userCreatepath;
 	
 	private String userUpdatepath;
 	
 	private String rejectAction;
+
+	private String createValidatedDemolition;
+	
+	private String updateValidatedDemolition;
+	
+	private String approveDemolitionWorkflow;
+	
+	private String createDemolitionWorkflow;
+	
+	private String rejectDemolition;
+	
+	private String updateDemolitionWorkflow;
+
 
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
@@ -1212,5 +1226,30 @@ public class PropertiesManager {
 	public String getInvalidTenent() {
 		return environment.getProperty("egov.property.tenant");
 	}
+
+	public String getCreateValidatedDemolition() {
+		return environment.getProperty("egov.propertytax.create.demolition.validated");
+	}
+
+	public String getUpdateValidatedDemolition() {
+		return environment.getProperty("egov.propertytax.update.demolition.validated");
+	}
+	
+	public String getApproveDemolition() {
+		return environment.getProperty("egov.propertytax.demolition.approved");
+	}
+	
+	public String getCreateDemolitionWorkflow() {
+		return environment.getProperty("egov.propertytax.create.demolition.workflow.started");
+	}
+	
+	public String getRejectDemolition() {
+		return environment.getProperty("egov.propertytax.demolition.rejected");
+	}
+
+	public String getUpdateDemolitionWorkflow() {
+		return environment.getProperty("egov.propertytax.demolition.update.workflow.started");
+	}
+
 
 }

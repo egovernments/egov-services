@@ -810,5 +810,86 @@ ReportDefinitions:
        from egwtr_connection_view  wtrview
        where  
        wtrview.tenantid = $tenantid
+       
+# Defaulters Report
+- reportName: defaultersReport
+  summary: Defaulters Report
+  version: 1.0.0
+  moduleName: wcms
+  sourceColumns:
+  - name: slNo
+    label: reports.wcms.slNo
+    type: number
+    source: wcms
+  - name: hscno
+    label: reports.wcms.hscno
+    type: string
+    source: wcms
+  - name: ownerName
+    label: reports.wcms.ownerName
+    type: string
+    source: wcms
+  - name: revenueWard
+    label: reports.wcms.revenueWard
+    type: string
+    source: wcms
+  - name: doorNo
+    label: reports.wcms.doorNo
+    type: string
+    source: wcms
+  - name: Locality
+    label: reports.wcms.locality
+    type: string
+    source: wcms
+  - name: mobileNumber
+    label: reports.wcms.mobileNumber
+    type: number
+    source: wcms
+  - name: duePeriodFrom
+    label: reports.wcms.duePeriodFrom
+    type: string
+    source: wcms
+  - name: arrearsAmount
+    label: reports.wcms.arrearsAmount
+    type: number
+    source: wcms
+  - name: currentAmount
+    label: reports.wcms.currentAmount
+    type: number
+    source: wcms
+  - name: total
+    label: reports.wcms.total
+    type: number
+    source: wcms
+  searchParams:
+  - name: ward
+    label: reports.wcms.ward
+    type: multivaluelist
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..code|$..name
+    source: wcms
+    searchClause: and bndry.id=$ward
+    isMandatory: false
+  - name: fromAmount
+    label: reports.wcms.fromAmount
+    type: number
+    source: wcms
+    isMandatory: false
+  - name: toAmount
+    label: reports.wcms.toAmount
+    type: number
+    source: wcms
+    isMandatory: false
+  - name: topDefaulters
+    label: reports.wcms.topDefaulters
+    type: singlevaluelist
+    pattern: 'list://10:10,50:50,100:100,500:500,1000:1000'
+    source: wcms
+    isMandatory: false
+  query: select connview.hscno as hscno,
+          connview.username as ownername,
+          connview.mobileno as mobileno
+          from egwtr_connection_view connview 
+          where connview.tenantid=$tenantid
+
   
 

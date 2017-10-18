@@ -19,6 +19,10 @@ import org.egov.models.AppConfigurationResponse;
 import org.egov.models.AppConfigurationSearchCriteria;
 import org.egov.models.AuditDetails;
 import org.egov.models.Boundary;
+import org.egov.models.DemolitionReason;
+import org.egov.models.DemolitionReasonRequest;
+import org.egov.models.DemolitionReasonResponse;
+import org.egov.models.DemolitionReasonSearchCriteria;
 import org.egov.models.Department;
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
@@ -112,6 +116,8 @@ public class PropertyServiceTest {
 
 	@Autowired
 	PersisterService persisterService;
+	
+	
 
 	public Long floorId = 1l;
 	public Long roofId = 1l;
@@ -122,6 +128,7 @@ public class PropertyServiceTest {
 	public Long usageId = 1l;
 	public Integer wallTypeId = 1;
 	public Long propertyTypeId = 1l;
+	public Long demolitionId =1l;
 
 	@Test
 	public void createRoofType() {
@@ -2032,4 +2039,98 @@ public class PropertyServiceTest {
 	public void searchVacancyRemissionTest() {
 		
 	}*/
+	
+	
+	@Test
+	public void createDemolitionReason() {
+		String tenantId = "default";
+		RequestInfo requestInfo = getRequestInfoObject();
+
+		List<DemolitionReason> demolitionReasons = new ArrayList<>();
+
+		DemolitionReason demolitionReason = new DemolitionReason();
+		demolitionReason.setTenantId("1234");
+		demolitionReason.setName("vishal kumar");
+		demolitionReason.setCode("111");
+		
+		demolitionReasons.add(demolitionReason);
+
+		DemolitionReasonRequest demolitionReasonRequest = new DemolitionReasonRequest();
+		demolitionReasonRequest.setDemolitionReasons(demolitionReasons);
+		demolitionReasonRequest.setRequestInfo(requestInfo);
+
+		try {
+			DemolitionReasonResponse demolitionReasonResponse = masterService.createDemolitionReason(tenantId,demolitionReasonRequest);
+			if (demolitionReasonResponse.getDemolitionReason().size() == 0)
+				assertTrue(false);
+
+			assertTrue(true);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertTrue(false);
+		}
+
+	}
+	@Test
+	public void updateDemolitionReason() {
+		RequestInfo requestInfo = getRequestInfoObject();
+		List<DemolitionReason> demolitionReasons = new ArrayList<>();
+        DemolitionReason demolitionReason = new DemolitionReason();
+		demolitionReason.setId(demolitionId);
+		demolitionReason.setTenantId("1234");
+		demolitionReason.setName("vishal  kumar");
+		demolitionReason.setCode("111");
+		long createdTime = new Date().getTime();
+
+		AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setCreatedBy("vishal");
+		auditDetails.setLastModifiedBy("vishal");
+		auditDetails.setCreatedTime(createdTime);
+		auditDetails.setLastModifiedTime(createdTime);
+
+		demolitionReason.setAuditDetails(auditDetails);
+		demolitionReasons.add(demolitionReason);
+
+		DemolitionReasonRequest demolitionReasonRequest = new DemolitionReasonRequest();
+		demolitionReasonRequest.setDemolitionReasons(demolitionReasons);
+		demolitionReasonRequest.setRequestInfo(requestInfo);
+
+		try {
+			DemolitionReasonResponse demolitionReasonResponse = masterService.updateDemolitionReason(demolitionReasonRequest);
+
+			if (demolitionReasonResponse.getDemolitionReason().size() == 0)
+				assertTrue(false);
+
+			assertTrue(true);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertTrue(false);
+		}
+
+	}
+
+	@Test
+	public void searchDemolitionReason() {
+
+		DemolitionReasonSearchCriteria demolitionReasonSearchCriteria = new DemolitionReasonSearchCriteria();
+		  demolitionReasonSearchCriteria.setTenantId("1234");
+		RequestInfo requestInfo = getRequestInfoObject();
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+
+		try {
+			DemolitionReasonResponse demolitionReasonResponse = masterService.getDemolitionReason(requestInfo, demolitionReasonSearchCriteria);
+			if (demolitionReasonResponse.getDemolitionReason().size() == 0)
+				assertTrue(false);
+
+			assertTrue(true);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertTrue(false);
+		}
+
+	}
 }

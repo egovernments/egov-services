@@ -1,0 +1,18 @@
+{
+    "responseInfo": {
+        
+    },
+    "demolitionReason": [
+        {
+            "tenantId": "default",
+            "name": "manish",
+            "code": "123654",
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null,
+                "createdTime": null,
+                "lastModifiedTime": null
+            }
+        }
+    ]
+}

@@ -13,6 +13,8 @@ import org.egov.enums.ApplicationEnum;
 import org.egov.models.Apartment;
 import org.egov.models.AppConfiguration;
 import org.egov.models.AuditDetails;
+import org.egov.models.DemolitionReason;
+import org.egov.models.DemolitionReasonSearchCriteria;
 import org.egov.models.Department;
 import org.egov.models.Depreciation;
 import org.egov.models.DocumentType;
@@ -31,6 +33,7 @@ import org.egov.property.model.ExcludeFileds;
 import org.egov.property.repository.builder.ApartmentBuilder;
 import org.egov.property.repository.builder.AppConfigurationBuilder;
 import org.egov.property.repository.builder.AuditDetailsBuilder;
+import org.egov.property.repository.builder.DemolitionReasonQueryBuilder;
 import org.egov.property.repository.builder.DepartmentQueryBuilder;
 import org.egov.property.repository.builder.DepreciationBuilder;
 import org.egov.property.repository.builder.DocumentTypeBuilder;
@@ -1930,4 +1933,120 @@ public class PropertyMasterRepository {
 
 		return isExists;
 	}
+
+	/**
+	 * This will persist the Demolition reason in the database
+	 * 
+	 * @param tenantId
+	 * @param demolitionReason
+	 * @return {@link Long} Id of the inserted row
+	 */
+	public Long saveDemolitionReason(String tenantId, DemolitionReason demolitionReason) {
+
+		final PreparedStatementCreator psc = new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+				final PreparedStatement ps = connection.prepareStatement(
+						DemolitionReasonQueryBuilder.INSERT_DEMOLITIONREASON_QUERY, new String[] { "id" });
+
+				ps.setString(1, demolitionReason.getTenantId());
+				ps.setString(2, demolitionReason.getName());
+				ps.setString(3, demolitionReason.getCode());
+				ps.setString(4, demolitionReason.getDescription());
+				ps.setString(5, demolitionReason.getAuditDetails().getCreatedBy());
+				ps.setString(6, demolitionReason.getAuditDetails().getLastModifiedBy());
+				ps.setLong(7, demolitionReason.getAuditDetails().getCreatedTime());
+				ps.setLong(8, demolitionReason.getAuditDetails().getLastModifiedTime());
+
+				return ps;
+			}
+		};
+
+		// The newly generated key will be saved in this object
+		final KeyHolder holder = new GeneratedKeyHolder();
+
+		jdbcTemplate.update(psc, holder);
+		return Long.valueOf(holder.getKey().intValue());
+	}
+
+	/**
+	 * This will update the Demolition object based on the given id
+	 * 
+	 * @param demolitionReason
+	 */
+	public void updateDemolitionReason(DemolitionReason demolitionReason) {
+
+		String updateDepartmentSql = DemolitionReasonQueryBuilder.UPDATE_DEMOLITIONREASON_QUERY;
+
+		final PreparedStatementCreator psc = new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+				final PreparedStatement ps = connection.prepareStatement(updateDepartmentSql, new String[] { "id" });
+
+				ps.setString(1, demolitionReason.getTenantId());
+				ps.setString(2, demolitionReason.getName());
+				ps.setString(3, demolitionReason.getCode());
+				ps.setString(4, demolitionReason.getDescription());
+				ps.setString(5, demolitionReason.getAuditDetails().getLastModifiedBy());
+				ps.setLong(6, demolitionReason.getAuditDetails().getLastModifiedTime());
+				ps.setLong(7, demolitionReason.getId());
+				return ps;
+			}
+		};
+
+		jdbcTemplate.update(psc);
+	}
+
+	/**
+	 * This will search the demolition based on the given parameters
+	 * 
+	 * @param demolitionReasonSearchCriteria
+	 * @return {@link DemolitionReason}
+	 */
+	public List<DemolitionReason> searchDemolitionReasonClass(
+			DemolitionReasonSearchCriteria demolitionReasonSearchCriteria) {
+
+		List<Object> preparedStatementValues = new ArrayList<>();
+		String demolitionReasonSearchQuery = DemolitionReasonQueryBuilder.getSearchQuery(demolitionReasonSearchCriteria,
+				preparedStatementValues);
+
+		List<DemolitionReason> demolitionReasons = getDemolitions(demolitionReasonSearchQuery, preparedStatementValues);
+
+		for (DemolitionReason demolitionReasonType : demolitionReasons) {
+			demolitionReasonType.setTenantId(demolitionReasonType.getTenantId());
+			demolitionReasonType.setCode(demolitionReasonType.getCode());
+			demolitionReasonType.setName(demolitionReasonType.getName());
+			demolitionReasonType.setAuditDetails(demolitionReasonType.getAuditDetails());
+		}
+
+		return demolitionReasons;
+
+	}
+
+	private List<DemolitionReason> getDemolitions(String query, List<Object> preparedStatementsValues) {
+
+		List<DemolitionReason> demolitionReasons = new ArrayList<DemolitionReason>();
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, preparedStatementsValues.toArray());
+
+		for (Map row : rows) {
+			DemolitionReason demolitionReason = new DemolitionReason();
+			demolitionReason.setId(getLong(row.get("id")));
+			demolitionReason.setTenantId(getString(row.get("tenantid")));
+			demolitionReason.setName(getString(row.get("name")));
+			demolitionReason.setCode(getString(row.get("code")));
+			demolitionReason.setDescription(getString(row.get("description")));
+
+			AuditDetails auditDetails = new AuditDetails();
+			auditDetails.setCreatedBy(getString(row.get("createdby")));
+			auditDetails.setCreatedTime(getLong(row.get("createdtime")));
+			auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));
+			auditDetails.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
+			demolitionReason.setAuditDetails(auditDetails);
+
+			demolitionReasons.add(demolitionReason);
+
+		}
+		return demolitionReasons;
+	}
+
 }

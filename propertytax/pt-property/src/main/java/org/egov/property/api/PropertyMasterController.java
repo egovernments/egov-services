@@ -8,6 +8,9 @@ import org.egov.models.ApartmentSearchCriteria;
 import org.egov.models.AppConfigurationRequest;
 import org.egov.models.AppConfigurationResponse;
 import org.egov.models.AppConfigurationSearchCriteria;
+import org.egov.models.DemolitionReasonRequest;
+import org.egov.models.DemolitionReasonResponse;
+import org.egov.models.DemolitionReasonSearchCriteria;
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
 import org.egov.models.DepartmentSearchCriteria;
@@ -799,5 +802,42 @@ public class PropertyMasterController {
 			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
 		}
 		return masterService.getAppConfiguration(requestInfo.getRequestInfo(), appConfigurationSearchCriteria);
+	}
+
+	/**
+	 * This will create the demolition
+	 * 
+	 * @param tenantId
+	 * @param demolitionReasonRequest
+	 * @return {@link DemolitionReasonResponse}
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/demolitionreason/_create", method = RequestMethod.POST)
+	public DemolitionReasonResponse createDemolitionReason(@RequestParam(required = true) String tenantId,
+			@Valid @RequestBody DemolitionReasonRequest demolitionReasonRequest) throws Exception {
+		return masterService.createDemolitionReason(tenantId, demolitionReasonRequest);
+	}
+
+	/**
+	 * 
+	 * @param demolitiontReasonRequest
+	 * @return
+	 */
+	@RequestMapping(path = "/demolitionreason/_update", method = RequestMethod.POST)
+	public DemolitionReasonResponse updateDemolitionReason(
+			@Valid @RequestBody DemolitionReasonRequest demolitiontReasonRequest) throws Exception{
+
+		return masterService.updateDemolitionReason(demolitiontReasonRequest);
+
+	}
+
+	@RequestMapping(path = "/demolitionreason/_search", method = RequestMethod.POST)
+	public DemolitionReasonResponse getDemolitionReason(@RequestBody RequestInfoWrapper requestInfo,
+			@ModelAttribute @Valid DemolitionReasonSearchCriteria demolitionReasonSearchCriteria,
+			BindingResult bindingResult) throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
+		}
+		return masterService.getDemolitionReason(requestInfo.getRequestInfo(), demolitionReasonSearchCriteria);
 	}
 }

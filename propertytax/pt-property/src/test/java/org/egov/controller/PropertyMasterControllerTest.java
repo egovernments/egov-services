@@ -24,6 +24,10 @@ import org.egov.models.AppConfigurationRequest;
 import org.egov.models.AppConfigurationResponse;
 import org.egov.models.AppConfigurationSearchCriteria;
 import org.egov.models.AuditDetails;
+import org.egov.models.DemolitionReason;
+import org.egov.models.DemolitionReasonRequest;
+import org.egov.models.DemolitionReasonResponse;
+import org.egov.models.DemolitionReasonSearchCriteria;
 import org.egov.models.Department;
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
@@ -1759,5 +1763,118 @@ public class PropertyMasterControllerTest {
 			e.printStackTrace();
 		}
 		assertTrue(Boolean.TRUE);
+	}
+	
+	@Test
+	public void testCreateDemolitionReason() throws Exception {
+
+		List<DemolitionReason> demolitionReasons = new ArrayList<>();
+		DemolitionReason demolitionReason = new DemolitionReason();
+		demolitionReason.setTenantId("default");
+		demolitionReason.setName("manish");
+		demolitionReason.setCode("123654");
+
+		AuditDetails auditDetails = new AuditDetails();
+		demolitionReason.setAuditDetails(auditDetails);
+
+		DemolitionReasonResponse demolitionReasonResponse = new DemolitionReasonResponse();
+		demolitionReasons.add(demolitionReason);
+
+		demolitionReasonResponse.setResponseInfo(new ResponseInfo());
+		demolitionReasonResponse.setDemolitionReason(demolitionReasons);
+
+		try {
+			when(masterService.createDemolitionReason(any(String.class), any(DemolitionReasonRequest.class)))
+			      .thenReturn(demolitionReasonResponse);
+
+			mockMvc.perform(post("/property/demolitionreason/_create").param("tenantId", "default")
+					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("createDemolitionReasonRequest.json")))
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("createDemolitionReasonResponse.json")));
+
+		} catch (Exception e) {
+
+			assertTrue(Boolean.FALSE);
+		}
+
+		assertTrue(Boolean.TRUE);
+
+	}
+
+	@Test
+	public void testUpdateDemolitionReason() throws Exception {
+
+		DemolitionReasonResponse demolitionReasonResponse = new DemolitionReasonResponse();
+		List<DemolitionReason> demolitionReasons = new ArrayList<>();
+		DemolitionReason demolitionReason = new DemolitionReason();
+		demolitionReason.setId((long)9);
+		demolitionReason.setTenantId("default");
+		demolitionReason.setName("pallu");
+		demolitionReason.setCode("102");
+
+		AuditDetails auditDetails = new AuditDetails();
+		demolitionReason.setAuditDetails(auditDetails);
+
+		demolitionReasons.add(demolitionReason);
+
+		demolitionReasonResponse.setResponseInfo(new ResponseInfo());
+		demolitionReasonResponse.setDemolitionReason(demolitionReasons);;
+
+		try {
+
+			when(masterService.updateDemolitionReason(any(DemolitionReasonRequest.class)))
+			.thenReturn(demolitionReasonResponse);
+			mockMvc.perform(post("/property/demolitionreason/_update").param("tenantId", "default")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("updateDemolitionReasonRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("updateDemolitionReasonResponse.json")));
+
+		} catch (Exception e) {
+
+			assertTrue(Boolean.FALSE);
+			e.printStackTrace();
+		}
+
+		assertTrue(Boolean.TRUE);
+
+	}
+
+	@Test
+	public void testSearchDemolitionReason() throws Exception {
+
+		DemolitionReasonResponse demolitionReasonResponse = new DemolitionReasonResponse();
+		List<DemolitionReason> demolitionReasons = new ArrayList<>();
+		DemolitionReason demolitionReason = new DemolitionReason();
+		demolitionReason.setTenantId("default");
+		demolitionReason.setName("pallu");
+		demolitionReason.setCode("456");
+
+		AuditDetails auditDetails = new AuditDetails();
+		demolitionReason.setAuditDetails(auditDetails);
+
+		demolitionReasons.add(demolitionReason);
+
+		demolitionReasonResponse.setResponseInfo(new ResponseInfo());
+		demolitionReasonResponse.setDemolitionReason(demolitionReasons);
+
+		try {
+			when(masterService.getDemolitionReason(any(RequestInfo.class), any(DemolitionReasonSearchCriteria.class)))
+					.thenReturn(demolitionReasonResponse);
+			mockMvc.perform(post("/property/demolitionreason/_search").param("tenantId", "default")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("searchDemolitionReasonRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("searchDemolitionReasonResponse.json")));
+
+		} catch (Exception e) {
+
+			assertTrue(Boolean.FALSE);
+			e.printStackTrace();
+		}
+
+		assertTrue(Boolean.TRUE);
+
 	}
 }

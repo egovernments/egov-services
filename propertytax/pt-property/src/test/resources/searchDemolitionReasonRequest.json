@@ -1,0 +1,18 @@
+{
+
+"RequestInfo": {
+		"apiId": "org.egov.pt",
+		"ver": "1.0",
+		"ts": 1503743889632,
+	    "responseStatus":"SUCCESSFUL",
+		"action": "asd",
+		"userInfo":{
+			"id":74
+		},
+		"did": "4354648646",
+		"key": "xyz",
+		"msgId": "654654",
+		"requesterId": "61",
+		"authToken": "62393104-62cf-4703-9dcb-68b11b871769"
+}
+	}

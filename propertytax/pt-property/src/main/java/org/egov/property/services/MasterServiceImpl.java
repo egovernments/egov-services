@@ -14,6 +14,10 @@ import org.egov.models.AppConfigurationRequest;
 import org.egov.models.AppConfigurationResponse;
 import org.egov.models.AppConfigurationSearchCriteria;
 import org.egov.models.AuditDetails;
+import org.egov.models.DemolitionReason;
+import org.egov.models.DemolitionReasonRequest;
+import org.egov.models.DemolitionReasonResponse;
+import org.egov.models.DemolitionReasonSearchCriteria;
 import org.egov.models.Department;
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
@@ -1648,6 +1652,81 @@ public class MasterServiceImpl implements Masterservice {
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		appConfigurationResponse.setResponseInfo(responseInfo);
 		return appConfigurationResponse;
+	}
+	
+	
+	@Override
+	@Transactional
+	public DemolitionReasonResponse createDemolitionReason(String tenantId,
+			DemolitionReasonRequest demolitionReasonRequest) throws Exception {
+		for (DemolitionReason demolitionReason : demolitionReasonRequest.getDemolitionReasons()) {
+
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(demolitionReason.getTenantId(),
+					demolitionReason.getCode(), ConstantUtility.DEMOLITIONREASON_TABLE_NAME, null);
+			if (isExists)
+				throw new DuplicateIdException(demolitionReasonRequest.getRequestInfo());
+
+			AuditDetails auditDetails = getAuditDetail(demolitionReasonRequest.getRequestInfo());
+			demolitionReason.setAuditDetails(auditDetails);
+			Long id = propertyMasterRepository.saveDemolitionReason(tenantId, demolitionReason);
+			demolitionReason.setId(id);
+		}
+
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(demolitionReasonRequest.getRequestInfo(), true);
+		DemolitionReasonResponse demolitionReasonResponse = new DemolitionReasonResponse();
+		demolitionReasonResponse.setResponseInfo(responseInfo);
+		demolitionReasonResponse.setDemolitionReason(demolitionReasonRequest.getDemolitionReasons());
+		return demolitionReasonResponse;
+	}
+
+	@Override
+	@Transactional
+	public DemolitionReasonResponse updateDemolitionReason(DemolitionReasonRequest demolitionReasonRequest)
+			throws Exception {
+
+		for (DemolitionReason demolitionReason : demolitionReasonRequest.getDemolitionReasons()) {
+
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(demolitionReason.getTenantId(),
+					demolitionReason.getCode(), ConstantUtility.DEMOLITIONREASON_TABLE_NAME, demolitionReason.getId());
+
+			if (isExists)
+				throw new DuplicateIdException(demolitionReasonRequest.getRequestInfo());
+
+			AuditDetails auditDetails = getUpdatedAuditDetails(demolitionReasonRequest.getRequestInfo(),
+					ConstantUtility.DEMOLITIONREASON_TABLE_NAME, demolitionReason.getId());
+			demolitionReason.setAuditDetails(auditDetails);
+
+			propertyMasterRepository.updateDemolitionReason(demolitionReason);
+		}
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(demolitionReasonRequest.getRequestInfo(), true);
+		DemolitionReasonResponse demolitionReasonResponse = new DemolitionReasonResponse();
+		demolitionReasonResponse.setDemolitionReason(demolitionReasonRequest.getDemolitionReasons());
+		demolitionReasonResponse.setResponseInfo(responseInfo);
+
+		return demolitionReasonResponse;
+	}
+
+	@Override
+	public DemolitionReasonResponse getDemolitionReason(RequestInfo requestInfo,
+			DemolitionReasonSearchCriteria demolitionReasonSearchCriteria) {
+
+		DemolitionReasonResponse demolitionReasonResponse = new DemolitionReasonResponse();
+		try {
+
+			List<DemolitionReason> demolitionReasons = propertyMasterRepository
+					.searchDemolitionReasonClass(demolitionReasonSearchCriteria);
+			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+			demolitionReasonResponse.setDemolitionReason(demolitionReasons);
+			demolitionReasonResponse.setResponseInfo(responseInfo);
+
+		} catch (Exception e) {
+			throw new PropertySearchException("invalid input", requestInfo);
+		}
+
+		return demolitionReasonResponse;
+
 	}
 
 }

@@ -1,11 +1,11 @@
 ServiceMaps:
-serviceName: Solid Waste Management Service
-version: 1.0.0
-mappings:
- - topic: swm-vehiclefuellingdetails-indexer-topic
-   indexes:
-   - name: vehiclefuellingdetails
-     type: vehiclefuellingdetails
-     id: $.vehicleFuellingDetailses.*.id
-     isBulk: false
-     jsonPath:
+ serviceName: swdm
+ version: 1.0.0
+ mappings:
+  - topic: swm-vehiclefuellingdetails-indexer-topic
+    indexes:
+    - name: vehiclefuellingdetails
+      type: vehiclefuellingdetails
+      id: $.vehicleFuellingDetailses.*.id
+      isBulk: false
+      jsonPath:

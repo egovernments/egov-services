@@ -1,0 +1,52 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "name": {
+            "type": "keyword"
+        },
+        "transactionId": {
+            "type": "keyword"
+        },
+        "transactionDate": {
+            "type": "keyword"
+        },
+        "vehicleType": {
+            "type": "object"
+        },
+        "vehicleRegNo": {
+            "type": "object"
+        },
+        "vehicleReadingDuringFuelling": {
+            "type": "keyword"
+        },
+        "refuellingStation": {
+            "type": "object"
+        },
+        "fuelFilled": {
+            "type": "keyword"
+        },
+        "typeOfFuel": {
+            "type": "keyword"
+        },
+        "totalCostIncurred": {
+            "type": "keyword"
+        },
+        "receiptNo": {
+            "type": "keyword"
+        },
+        "receiptDate": {
+            "type": "keyword"
+        },
+        "AuditDetails": {
+            "type": "object"
+        },
+        "tenantId": {
+            "type": "keyword"
+        }
+    }
+}

@@ -17,10 +17,15 @@ public class VehicleFuellingDetailsRepository {
 
 	@Value("${egov.swm.vehiclefuellingdetails.update.topic}")
 	private String updateTopic;
+	
+	@Value("${egov.swm.vehiclefuellingdetails.indexer.topic}")
+	private String indexerTopic;
 
 	public VehicleFuellingDetailsRequest save(VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
 
 		kafkaTemplate.send(saveTopic, vehicleFuellingDetailsRequest);
+		
+		kafkaTemplate.send(indexerTopic, vehicleFuellingDetailsRequest);
 
 		return vehicleFuellingDetailsRequest;
 
@@ -29,6 +34,8 @@ public class VehicleFuellingDetailsRepository {
 	public VehicleFuellingDetailsRequest update(VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
 
 		kafkaTemplate.send(updateTopic, vehicleFuellingDetailsRequest);
+		
+		kafkaTemplate.send(indexerTopic, vehicleFuellingDetailsRequest);
 
 		return vehicleFuellingDetailsRequest;
 

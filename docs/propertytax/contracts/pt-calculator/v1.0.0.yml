@@ -765,26 +765,34 @@ definitions:
         type: number
         format: double
         description: The rebate has been given during the tax calculation. Rounded to 2 decimal digits
-      calculatedARV:
+      calculatedRV:
         type: number
         format: double
-        description: Annual Rental Value calcualted. Rounded to nearest rupee
-      manualARV:
+        description: Ratable Value calculated. Rounded to nearest rupee
+      manualRV:
         type: number
         format: double
-        description: Annual Rental Value entered manually.  Rounded to nearest rupee
-      residentialARV:
+        description: Ratable Value entered manually.  Rounded to nearest rupee
+      residentialRV:
         type: number
         format: double
-        description: Residential Annual Rental Value. Rounded to nearest rupee
-      nonResidentialARV:
+        description: Residential Ratable Value. Rounded to nearest rupee
+      nonResidentialRV:
         type: number
         format: double
-        description: Non Residential Annual Rental Value. Rounded to nearest rupee
+        description: Non Residential Ratable Value. Rounded to nearest rupee
       totalTax:
         type: number
         format: double
         description: Total tax for the unit. Rounded to nearest rupee
+      calculatedARV:
+        type: number
+        format: double
+        description: Annual Rental Value calculated. Rounded to nearest rupee
+      calculatedMRV:
+        type: number
+        format: double
+        description: Monthly Rental Value calculated. Rounded to nearest rupee
       headWiseTaxes:
         description: Head wise taxes
         type: array

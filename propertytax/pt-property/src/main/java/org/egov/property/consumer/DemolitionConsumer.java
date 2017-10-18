@@ -26,37 +26,35 @@ public class DemolitionConsumer {
 
 	@Autowired
 	PropertiesManager propertiesManager;
-	
+
 	@Autowired
 	PersisterService persisterService;
-	
+
 	@Autowired
 	UpicNoGeneration upicNoGeneration;
 
 	@KafkaListener(topics = { "#{propertiesManager.getApproveDemolition()}",
-			"#{propertiesManager.getCreateDemolitionWorkflow()}",
-			"#{propertiesManager.getRejectDemolition()}",
-			"#{propertiesManager.getUpdateDemolitionWorkflow()}"})
+			"#{propertiesManager.getCreateDemolitionWorkflow()}", "#{propertiesManager.getRejectDemolition()}",
+			"#{propertiesManager.getUpdateDemolitionWorkflow()}" })
 	public void receive(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic)
 			throws Exception {
-		
+
 		ObjectMapper objectMapper = new ObjectMapper();
 		DemolitionRequest demolitionRequest = objectMapper.convertValue(consumerRecord, DemolitionRequest.class);
-		
-		if (topic.equalsIgnoreCase(propertiesManager.getCreateDemolitionWorkflow())){
-		persisterService.saveDemolition(demolitionRequest);
+
+		if (topic.equalsIgnoreCase(propertiesManager.getCreateDemolitionWorkflow())) {
+			persisterService.saveDemolition(demolitionRequest);
 		}
-		
-		else if ( topic.equalsIgnoreCase(propertiesManager.getApproveDemolition())){
+
+		else if (topic.equalsIgnoreCase(propertiesManager.getApproveDemolition())) {
 			persisterService.updateDemolition(demolitionRequest);
 			persisterService.savePropertyTohistoryAndUpdateProperty(demolitionRequest);
-			
+
 		}
-		
-		else if ( topic.equalsIgnoreCase(propertiesManager.getUpdateDemolitionWorkflow())){
+
+		else if (topic.equalsIgnoreCase(propertiesManager.getUpdateDemolitionWorkflow())) {
 			persisterService.updateDemolition(demolitionRequest);
 		}
-		
-		
-}
+
+	}
 }

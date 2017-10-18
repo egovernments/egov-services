@@ -23,27 +23,27 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ValidatorUtil {
-	
-	
-	
+
 	@Autowired
 	PropertiesManager propertiesManager;
-	
+
 	@Autowired
 	DemandRepository demandRepository;
-	
+
 	@Autowired
 	PropertyRepository propertyRepository;
 
 	/**
-	 * This API will validate the workflow details based on the given application No and Workflow details
+	 * This API will validate the workflow details based on the given
+	 * application No and Workflow details
+	 * 
 	 * @param acknowledgementNo
 	 * @param workflowDetails
 	 * @param requestInfo
 	 * @throws AttributeNotFoundException
 	 */
-	public void validateWorkflowDeatails(String acknowledgementNo ,WorkFlowDetails workflowDetails, RequestInfo requestInfo) throws AttributeNotFoundException {
-
+	public void validateWorkflowDeatails(String acknowledgementNo, WorkFlowDetails workflowDetails,
+			RequestInfo requestInfo) throws AttributeNotFoundException {
 
 		if (acknowledgementNo == null) {
 			throw new AttributeNotFoundException(propertiesManager.getAcknowledgementNotfound(), requestInfo);
@@ -72,21 +72,20 @@ public class ValidatorUtil {
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * This API will check whether the any dues are there or not
+	 * 
 	 * @param upicNumber
 	 * @param tenantId
 	 * @param requestInfo
 	 * @throws Exception
 	 */
-	public void isDemandCollected(String upicNumber,String tenantId, RequestInfo requestInfo) throws Exception {
+	public void isDemandCollected(String upicNumber, String tenantId, RequestInfo requestInfo) throws Exception {
 
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
-		DemandResponse demandResponse = demandRepository.getDemands(upicNumber, tenantId,
-				requestInfoWrapper);
+		DemandResponse demandResponse = demandRepository.getDemands(upicNumber, tenantId, requestInfoWrapper);
 
 		if (demandResponse != null) {
 			for (Demand demand : demandResponse.getDemands()) {
@@ -102,26 +101,24 @@ public class ValidatorUtil {
 			}
 		}
 	}
-	
-	
+
 	/**
-	 * This will Check whether the property with the given upic is under workflow,
-	 * if yes then it will throw an Exception
+	 * This will Check whether the property with the given upic is under
+	 * workflow, if yes then it will throw an Exception
+	 * 
 	 * @param upicNumber
 	 * @param requestInfo
 	 * @throws Exception
 	 */
-	public void isPropertyUnderWorkflow(String upicNumber,RequestInfo requestInfo) throws Exception{
+	public void isPropertyUnderWorkflow(String upicNumber, RequestInfo requestInfo) throws Exception {
 
-	Boolean isPropertyUnderWorkflow = propertyRepository.isPropertyUnderWorkflow(upicNumber);
+		Boolean isPropertyUnderWorkflow = propertyRepository.isPropertyUnderWorkflow(upicNumber);
 
-	if (isPropertyUnderWorkflow) {
-		throw new PropertyUnderWorkflowException(propertiesManager.getInvalidPropertyStatus(),
-				requestInfo);
+		if (isPropertyUnderWorkflow) {
+			throw new PropertyUnderWorkflowException(propertiesManager.getInvalidPropertyStatus(), requestInfo);
+
+		}
 
 	}
-	
-	}
-
 
 }

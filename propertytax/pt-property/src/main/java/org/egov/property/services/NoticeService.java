@@ -35,7 +35,7 @@ public class NoticeService {
 		noticeMessageQueueRepository.save(noticeRequest, "CREATE");
 	}
 
-	public void pushToQueueForUpdate(NoticeRequest noticeRequest){
+	public void pushToQueueForUpdate(NoticeRequest noticeRequest) {
 		updateAuditDetailsForUpdate(noticeRequest);
 		noticeValidator.validateNotice(noticeRequest.getNotice());
 		noticeMessageQueueRepository.save(noticeRequest, "UPDATE");
@@ -45,7 +45,7 @@ public class NoticeService {
 		noticeRepository.save(noticeRequest.getNotice());
 	}
 
-	public void update(NoticeRequest noticeRequest){
+	public void update(NoticeRequest noticeRequest) {
 
 	}
 
@@ -68,7 +68,7 @@ public class NoticeService {
 		}
 	}
 
-	private void updateAuditDetailsForUpdate(NoticeRequest noticeRequest){
+	private void updateAuditDetailsForUpdate(NoticeRequest noticeRequest) {
 		AuditDetails auditDetails = noticeRequest.getNotice().getAuditDetails();
 		auditDetails.setLastModifiedBy(noticeRequest.getRequestInfo().getUserInfo().getId().toString());
 		auditDetails.setLastModifiedTime(new Date().getTime());

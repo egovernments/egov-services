@@ -88,7 +88,7 @@ public class TitleTransferConsumer {
 
 				kafkaTemplate.send(propertiesManager.getApproveTitletransfer(), titleTransferRequest);
 			else {
-
+				
 				kafkaTemplate.send(propertiesManager.getUpdateTitletransferWorkflow(), titleTransferRequest);
 				if (action.equalsIgnoreCase(propertiesManager.getReject())) {
 					kafkaTemplate.send(propertiesManager.getTitleTransferRejectTopic(), titleTransferRequest);

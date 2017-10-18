@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.egov.enums.StatusEnum;
 import org.egov.models.Address;
@@ -55,6 +56,11 @@ import org.egov.models.SpecialNotice;
 import org.egov.models.SpecialNoticeRequest;
 import org.egov.models.SpecialNoticeResponse;
 import org.egov.models.TaxCalculation;
+import org.egov.models.TaxExemption;
+import org.egov.models.TaxExemptionRequest;
+import org.egov.models.TaxExemptionResponse;
+import org.egov.models.TaxExemptionSearchCriteria;
+import org.egov.models.TaxExemptionSearchResponse;
 import org.egov.models.TaxPeriod;
 import org.egov.models.TaxPeriodResponse;
 import org.egov.models.TitleTransfer;
@@ -85,6 +91,7 @@ import org.egov.property.repository.DemandRestRepository;
 import org.egov.property.repository.IdgenRepository;
 import org.egov.property.repository.PropertyMasterRepository;
 import org.egov.property.repository.PropertyRepository;
+import org.egov.property.repository.TaxExemptionRepository;
 import org.egov.property.repository.TenantRepository;
 import org.egov.property.repository.UserRestRepository;
 import org.egov.property.repository.WorkFlowRepository;
@@ -143,6 +150,9 @@ public class PropertyServiceImpl implements PropertyService {
 	@Autowired
 	UserUtil userUtil;
 
+	@Autowired
+	TaxExemptionRepository taxExemptionRepository;
+
 	private static final Logger logger = LoggerFactory.getLogger(PropertyServiceImpl.class);
 
 	@Autowired
@@ -162,7 +172,7 @@ public class PropertyServiceImpl implements PropertyService {
 
 	@Autowired
 	IdgenRepository idgenRepository;
-	
+
 	@Autowired
 	ValidatorUtil validatorUtil;
 
@@ -1361,7 +1371,8 @@ public class PropertyServiceImpl implements PropertyService {
 					propertyRequest.getRequestInfo());
 			property.getPropertyDetail().setApplicationNo(acknowldgementNumber);
 
-			validatorUtil.isDemandCollected(property.getUpicNumber(),property.getTenantId(), propertyRequest.getRequestInfo());
+			validatorUtil.isDemandCollected(property.getUpicNumber(), property.getTenantId(),
+					propertyRequest.getRequestInfo());
 
 			PropertyRequest updatedPropertyRequest = new PropertyRequest();
 			updatedPropertyRequest.setRequestInfo(propertyRequest.getRequestInfo());
@@ -1377,35 +1388,36 @@ public class PropertyServiceImpl implements PropertyService {
 
 	}
 
-
 	@Override
 	public DemolitionResponse createDemolition(DemolitionRequest demolitionRequest) throws Exception {
-		
-		//TODO After Vishal Integration do  the master validaion for demolition check for unique code and tenantId
-		
 
-		validatorUtil.isPropertyUnderWorkflow(demolitionRequest.getDemolition().getUpicNumber(), demolitionRequest.getRequestInfo());
+		// TODO After Vishal Integration do the master validaion for demolition
+		// check for unique code and tenantId
+
+		validatorUtil.isPropertyUnderWorkflow(demolitionRequest.getDemolition().getUpicNumber(),
+				demolitionRequest.getRequestInfo());
 		String acknowldgementNumber = generateAcknowledegeMentNumber(demolitionRequest.getDemolition().getTenantId(),
 				demolitionRequest.getRequestInfo());
 		demolitionRequest.getDemolition().setApplicationNo(acknowldgementNumber);
 		propertyRepository.updateIsPropertyUnderWorkflow(demolitionRequest.getDemolition().getUpicNumber());
-		
+
 		kafkaTemplate.send(propertiesManager.getCreateValidatedDemolition(), demolitionRequest);
 		return getDemolitionResposne(demolitionRequest);
 	}
 
 	public DemolitionResponse updateDemolition(DemolitionRequest demolitionRequest) throws Exception {
 
-	
-		validatorUtil.validateWorkflowDeatails(demolitionRequest.getDemolition().getApplicationNo(), demolitionRequest.getDemolition().getWorkFlowDetails(), demolitionRequest.getRequestInfo());
-		validatorUtil.isDemandCollected(demolitionRequest.getDemolition().getUpicNumber(),demolitionRequest.getDemolition().getTenantId() , demolitionRequest.getRequestInfo());
+		validatorUtil.validateWorkflowDeatails(demolitionRequest.getDemolition().getApplicationNo(),
+				demolitionRequest.getDemolition().getWorkFlowDetails(), demolitionRequest.getRequestInfo());
+		validatorUtil.isDemandCollected(demolitionRequest.getDemolition().getUpicNumber(),
+				demolitionRequest.getDemolition().getTenantId(), demolitionRequest.getRequestInfo());
 
-        if ( demolitionRequest.getDemolition().getWorkFlowDetails().getAction().equalsIgnoreCase(propertiesManager.getCancelAction())
-        		||demolitionRequest.getDemolition().getWorkFlowDetails().getAction().equalsIgnoreCase(propertiesManager.getRejectAction())){
-        	propertyRepository.setIsPropertyUnderWorkFlowFalse(demolitionRequest.getDemolition().getUpicNumber());
-        	
-        }
-	
+		if (demolitionRequest.getDemolition().getWorkFlowDetails().getAction()
+				.equalsIgnoreCase(propertiesManager.getCancelAction())) {
+			propertyRepository.setIsPropertyUnderWorkFlowFalse(demolitionRequest.getDemolition().getUpicNumber());
+
+		}
+
 		kafkaTemplate.send(propertiesManager.getUpdateValidatedDemolition(), demolitionRequest);
 
 		return getDemolitionResposne(demolitionRequest);
@@ -1413,33 +1425,116 @@ public class PropertyServiceImpl implements PropertyService {
 	}
 
 	@Override
-	public DemolitionSearchResponse searchDemolition(RequestInfo requestInfo,DemolitionSearchCriteria demolitionSearchCriteria) throws Exception {
+	public DemolitionSearchResponse searchDemolition(RequestInfo requestInfo,
+			DemolitionSearchCriteria demolitionSearchCriteria) throws Exception {
 		List<Demolition> demolitions = persisterService.searchDemolitions(requestInfo, demolitionSearchCriteria);
-		
+
 		return getDemolitionSearchResposne(demolitions, requestInfo);
 	}
-	
-	
+
 	/**
-	 * This API will give you the Demolition Response 
+	 * This API will give you the Demolition Response
+	 * 
 	 * @param demolitionRequest
 	 * @return {@link DemolitionResponse}
 	 */
-	private DemolitionResponse getDemolitionResposne(DemolitionRequest demolitionRequest){
-		
+	private DemolitionResponse getDemolitionResposne(DemolitionRequest demolitionRequest) {
+
 		DemolitionResponse demolitionResponse = new DemolitionResponse();
 		demolitionResponse.setDemolition(demolitionRequest.getDemolition());
 		demolitionResponse.setResponseInfo(
 				responseInfoFactory.createResponseInfoFromRequestInfo(demolitionRequest.getRequestInfo(), true));
-		
+
 		return demolitionResponse;
 	}
-	
-	private DemolitionSearchResponse getDemolitionSearchResposne(List<Demolition> demolitions,RequestInfo requestInfo) {
+
+	private DemolitionSearchResponse getDemolitionSearchResposne(List<Demolition> demolitions,
+			RequestInfo requestInfo) {
 		DemolitionSearchResponse demolitionSearchResponse = new DemolitionSearchResponse();
 		demolitionSearchResponse.setDemolitions(demolitions);
-		demolitionSearchResponse.setResponseInfo(
-				responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
+		demolitionSearchResponse
+				.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
 		return demolitionSearchResponse;
 	}
+
+	@Override
+	public TaxExemptionResponse createTaxExemption(TaxExemptionRequest taxExemptionRequest) throws Exception {
+
+		validatorUtil.isPropertyUnderWorkflow(taxExemptionRequest.getTaxExemption().getUpicNumber(),
+				taxExemptionRequest.getRequestInfo());
+
+		validatorUtil.isDemandCollected(taxExemptionRequest.getTaxExemption().getUpicNumber(),
+				taxExemptionRequest.getTaxExemption().getTenantId(), taxExemptionRequest.getRequestInfo());
+
+		TaxExemptionResponse taxExemptionResponse = null;
+
+		String acknowldgeMentNumber = generateAcknowledegeMentNumber(
+				taxExemptionRequest.getTaxExemption().getTenantId(), taxExemptionRequest.getRequestInfo());
+
+		taxExemptionRequest.getTaxExemption().setApplicationNo(acknowldgeMentNumber);
+
+		kafkaTemplate.send(propertiesManager.getCreateValidatedTaxExemption(), taxExemptionRequest);
+
+		taxExemptionResponse = new TaxExemptionResponse();
+		taxExemptionResponse.setResponseInfo(
+				responseInfoFactory.createResponseInfoFromRequestInfo(taxExemptionRequest.getRequestInfo(), true));
+		taxExemptionResponse.setTaxExemption(taxExemptionRequest.getTaxExemption());
+
+		return taxExemptionResponse;
+	}
+
+	@Override
+	@Transactional
+	public TaxExemptionResponse updateTaxExemption(TaxExemptionRequest taxExemptionRequest) throws Exception {
+
+		validatorUtil.validateWorkflowDeatails(taxExemptionRequest.getTaxExemption().getApplicationNo(),
+				taxExemptionRequest.getTaxExemption().getWorkFlowDetails(), taxExemptionRequest.getRequestInfo());
+
+		kafkaTemplate.send(propertiesManager.getUpdateValidatedTaxExemption(), taxExemptionRequest);
+
+		if (taxExemptionRequest.getTaxExemption().getWorkFlowDetails().getAction()
+				.equalsIgnoreCase(propertiesManager.getCancelAction())) {
+			propertyRepository.updateIsPropertyUnderWorkflow(taxExemptionRequest.getTaxExemption().getUpicNumber());
+		}
+		TaxExemptionResponse taxExemptionResponse = null;
+		taxExemptionResponse = new TaxExemptionResponse();
+		taxExemptionResponse.setResponseInfo(
+				responseInfoFactory.createResponseInfoFromRequestInfo(taxExemptionRequest.getRequestInfo(), true));
+		taxExemptionResponse.setTaxExemption(taxExemptionRequest.getTaxExemption());
+
+		return taxExemptionResponse;
+	}
+
+	/**
+	 * Save property history and update property for Tax Exemption
+	 * 
+	 * @param taxExemptionRequest
+	 * @throws Exception
+	 */
+	@Transactional
+	public PropertyRequest savePropertyHistoryandUpdateProperty(TaxExemptionRequest taxExemptionRequest)
+			throws Exception {
+		Property property = persisterService.getPropertyUsingUpicNo(taxExemptionRequest);
+		persisterService.addPropertyHistoryForTaxExemption(taxExemptionRequest, property);
+		Property updatedProperty = persisterService.updateTaxExemptionProperty(taxExemptionRequest, property);
+		PropertyRequest propertyRequest = new PropertyRequest();
+		propertyRequest.setRequestInfo(taxExemptionRequest.getRequestInfo());
+		List<Property> properties = new ArrayList<Property>();
+		properties.add(updatedProperty);
+		propertyRequest.setProperties(properties);
+		return propertyRequest;
+	}
+
+	@Override
+	public TaxExemptionSearchResponse searchTaxExemption(RequestInfoWrapper requestInfo,
+			TaxExemptionSearchCriteria taxExemptionSearchCriteria) throws Exception {
+		List<TaxExemption> taxExemptions = taxExemptionRepository.searchTaxExemption(requestInfo.getRequestInfo(),
+				taxExemptionSearchCriteria);
+		TaxExemptionSearchResponse taxExemptionSearchResponse = new TaxExemptionSearchResponse();
+		taxExemptionSearchResponse.setTaxExemptions(taxExemptions);
+		taxExemptionSearchResponse.setResponseInfo(
+				responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo.getRequestInfo(), true));
+		return taxExemptionSearchResponse;
+	}
+
 }

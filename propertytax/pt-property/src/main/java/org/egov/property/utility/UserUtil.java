@@ -26,7 +26,7 @@ public class UserUtil {
 		if (user.getPassword() == null) {
 			user.setPassword(propertiesManager.getDefaultUserPassword());
 		}
-		if(user.getActive() == null){
+		if (user.getActive() == null) {
 			user.setActive(true);
 		}
 		UserCreateRequest userCreateRequest = new UserCreateRequest();
@@ -36,7 +36,7 @@ public class UserUtil {
 
 		UserCreateResponse userCreateResponse = userRestRepository.createUser(userCreateRequest);
 		user.setId(userCreateResponse.getUser().get(0).getId());
-		
+
 		return user;
 	}
 

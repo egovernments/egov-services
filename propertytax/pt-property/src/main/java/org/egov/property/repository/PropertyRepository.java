@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import org.egov.enums.ChannelEnum;
 import org.egov.enums.CreationReasonEnum;
 import org.egov.enums.SourceEnum;
@@ -1271,8 +1272,8 @@ public class PropertyRepository {
 		Object[] arguments = { true, upicNo };
 		jdbcTemplate.update(query, arguments);
 	}
-	
-	public void setIsPropertyUnderWorkFlowFalse(String upicNo){
+
+	public void setIsPropertyUnderWorkFlowFalse(String upicNo) {
 		String query = PropertyBuilder.updatePropertyIsUnderWokflow;
 		Object[] arguments = { false, upicNo };
 		jdbcTemplate.update(query, arguments);
@@ -2288,28 +2289,27 @@ public class PropertyRepository {
 		jdbcTemplate.update(query, arguments);
 	}
 
-
 	/**
 	 * This will Update the property object based on th demolition
+	 * 
 	 * @param property
 	 * @param demolitionRequest
 	 */
 	@Transactional
-	public void updateProperyAfterDemolition(Property property,DemolitionRequest demolitionRequest) {
-		
+	public void updateProperyAfterDemolition(Property property, DemolitionRequest demolitionRequest) {
+
 		Demolition demolition = demolitionRequest.getDemolition();
 		Long propertyId = property.getId();
 		PropertyDetail propertyDetail = property.getPropertyDetail();
-		
-		Object [] propertsyDetailArgs ={propertiesManager.getVacantLand(),demolition.getPropertySubType(),demolition.getUsageType()
-		,demolition.getUsageSubType(),demolition.getTotalArea(),propertyDetail.getId()};
-		
+
+		Object[] propertsyDetailArgs = { propertiesManager.getVacantLand(), demolition.getPropertySubType(),
+				demolition.getUsageType(), demolition.getUsageSubType(), demolition.getTotalArea(),
+				propertyDetail.getId() };
+
 		jdbcTemplate.update(PropertyDetailBuilder.UPDATE_PROPETY_DETAILS_AFTER_DEMOLITION, propertsyDetailArgs);
-		
-		jdbcTemplate.update(PropertyBuilder.UPDATE_PROPETY_AFTER_DEMOLITION,new Object[] {demolition.getSequenceNo(),Boolean.FALSE,demolition.getIsLegal(),propertyId});
-		
+
+		jdbcTemplate.update(PropertyBuilder.UPDATE_PROPETY_AFTER_DEMOLITION,
+				new Object[] { demolition.getSequenceNo(), Boolean.FALSE, demolition.getIsLegal(), propertyId });
+
 	}
 }
-	
-
-

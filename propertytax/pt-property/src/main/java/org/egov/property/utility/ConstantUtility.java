@@ -54,4 +54,8 @@ public class ConstantUtility {
 	public static final String CONFIGURATION_VALUES_TABLE_NAME = "egpt_mstr_configurationvalues";
 
 	public static final String GUIDANCEVALUEBOUNDARY_TABLE_NAME = "egpt_mstr_guidancevalueboundary";
+
+	public static final String TAXEXEMPTION_TABLE_NAME = "egpt_taxexemption";
+
+	public static final String TAXEXEMPTION_DOCUMENT_TABLE_NAME = "egpt_taxexemption_document";
 }

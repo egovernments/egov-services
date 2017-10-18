@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 import org.egov.models.AuditDetails;
 import org.egov.models.Demolition;
 import org.egov.models.DemolitionRequest;
@@ -158,10 +159,9 @@ public class DemolitionRepository {
 		}
 	}
 
-	
 	@Transactional
 	public void updateDemolition(DemolitionRequest demolitionRequest) throws Exception {
-		
+
 		Demolition demolition = demolitionRequest.getDemolition();
 
 		Object[] demolitionArgs = { demolition.getTenantId(), demolition.getUpicNumber(), demolition.getApplicationNo(),
@@ -174,8 +174,8 @@ public class DemolitionRepository {
 				getLong(demolition.getAuditDetails().getLastModifiedTime()), demolition.getId() };
 
 		jdbcTemplate.update(DemolitionBuilder.UPDATE_DEMOLITION, demolitionArgs);
-		
-		updateDemolitionDocument(demolition,demolitionRequest.getRequestInfo());
+
+		updateDemolitionDocument(demolition, demolitionRequest.getRequestInfo());
 	}
 
 	private void updateDemolitionDocument(Demolition demolition, RequestInfo requestInfo) throws Exception {

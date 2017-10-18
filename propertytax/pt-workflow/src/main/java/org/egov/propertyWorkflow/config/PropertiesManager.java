@@ -162,6 +162,28 @@ public class PropertiesManager {
 	
 	private String updateDemolitionWorkflow;
 
+	private String createValidatedTaxExemption;
+
+	private String updateValidatedTaxExemption;
+
+	private String taxExemptionCreateWorkflow;
+
+	private String taxExemptionUpdateWorkflow;
+
+	private String taxExemptionApproveWorkflow;
+
+	private String taxExemptionBusinesskey;
+
+	private String taxExemptionType;
+
+	private String taxExemptionState;
+
+	private String taxExemptionComment;
+
+	private String rejectTaxExemption;
+
+	private String approveTaxExemption;
+
 	public String getWorkflowHostName() {
 		return environment.getProperty("egov.services.egov-common-workflows.hostname");
 	}
@@ -443,5 +465,49 @@ public class PropertiesManager {
 		return environment.getProperty("egov.propertytax.demolition.update.workflow.started");
 	}
 
+
+	public String getCreateValidatedTaxExemption() {
+		return environment.getProperty("egov.propertytax.property.taxexemption.create.validated");
+	}
+
+	public String getUpdateValidatedTaxExemption() {
+		return environment.getProperty("egov.propertytax.property.taxexemption.update.validated");
+	}
+
+	public String getTaxExemptionCreateWorkflow() {
+		return environment.getProperty("egov.propertytax.property.create.taxexemption.workflow.started");
+	}
+
+	public String getTaxExemptionUpdateWorkflow() {
+		return environment.getProperty("egov.propertytax.property.update.taxexemption.workflow.started");
+	}
+
+	public String getTaxExemptionApproveWorkflow() {
+		return environment.getProperty("egov.propertytax.property.update.taxexemption.workflow.approved");
+	}
+
+	public String getRejectTaxExemption() {
+		return environment.getProperty("egov.propertytax.property.taxexemption.workflow.rejected");
+	}
+
+	public String getTaxExemptionBusinesskey() {
+		return environment.getProperty("taxexemption.businesskey");
+	}
+
+	public String getTaxExemptionType() {
+		return environment.getProperty("taxexemption.type");
+	}
+
+	public String getTaxExemptionState() {
+		return environment.getProperty("taxexemption.state");
+	}
+
+	public String getTaxExemptionComment() {
+		return environment.getProperty("taxexemption.comment");
+	}
+
+	public String getApproveTaxExemption() {
+		return environment.getProperty("taxexemption.approved");
+	}
 
 }

@@ -14,6 +14,10 @@ import org.egov.models.RequestInfo;
 import org.egov.models.RequestInfoWrapper;
 import org.egov.models.SpecialNoticeRequest;
 import org.egov.models.SpecialNoticeResponse;
+import org.egov.models.TaxExemptionRequest;
+import org.egov.models.TaxExemptionResponse;
+import org.egov.models.TaxExemptionSearchCriteria;
+import org.egov.models.TaxExemptionSearchResponse;
 import org.egov.models.TitleTransferRequest;
 import org.egov.models.TitleTransferResponse;
 import org.egov.models.TitleTransferSearchCriteria;
@@ -125,32 +129,73 @@ public interface PropertyService {
 	 * @param propertyRequest
 	 */
 	public PropertyResponse modifyProperty(PropertyRequest propertyRequest) throws Exception;
-	
-	
+
 	/**
 	 * This API will create the demolition
+	 * 
 	 * @param demolitionRequest
 	 * @return {@link DemolitionResponse}
 	 * @throws Exception
 	 */
 	public DemolitionResponse createDemolition(DemolitionRequest demolitionRequest) throws Exception;
-	
-	
+
 	/**
 	 * This API will update the demolition
+	 * 
 	 * @param demolitionRequest
 	 * @return {@link DemolitionResponse}
 	 * @throws Exception
 	 */
 	public DemolitionResponse updateDemolition(DemolitionRequest demolitionRequest) throws Exception;
-	
-	
+
 	/**
 	 * This API will search the demolitions
+	 * 
 	 * @param demolitionRequest
 	 * @return {@link DemolitionResponse}
 	 * @throws Exception
 	 */
-	public DemolitionSearchResponse searchDemolition(RequestInfo requestInfo,DemolitionSearchCriteria demolitionSearchCriteria) throws Exception;
+	public DemolitionSearchResponse searchDemolition(RequestInfo requestInfo,
+			DemolitionSearchCriteria demolitionSearchCriteria) throws Exception;
+
+	/**
+	 * This api for creating tax exemption request for property
+	 * 
+	 * @param taxExemptionRequest
+	 * @return taxExemptionResponse
+	 * @throws Exception
+	 */
+
+	public TaxExemptionResponse createTaxExemption(TaxExemptionRequest taxExemptionRequest) throws Exception;
+
+	/**
+	 * This api for updating tax exemption request for property
+	 * 
+	 * @param taxExemptionRequest
+	 * @return taxExemptionResponse
+	 * @throws Exception
+	 */
+
+	public TaxExemptionResponse updateTaxExemption(TaxExemptionRequest taxExemptionRequest) throws Exception;
+
+	/**
+	 * Save property history and update property
+	 * 
+	 * @param taxExemptionRequest
+	 * @throws Exception
+	 */
+	public PropertyRequest savePropertyHistoryandUpdateProperty(TaxExemptionRequest taxExemptionRequest)
+			throws Exception;
+
+	/**
+	 * Tax Exemption Search
+	 * 
+	 * @param requestInfo
+	 * @param taxExemptionSearchCriteria
+	 * @return
+	 * @throws Exception
+	 */
+	public TaxExemptionSearchResponse searchTaxExemption(RequestInfoWrapper requestInfo,
+			TaxExemptionSearchCriteria taxExemptionSearchCriteria) throws Exception;
 
 }

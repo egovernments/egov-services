@@ -12,3 +12,6 @@ Egov-Persister is a service running independently on seperate server. This servi
 
 ### Raw yml configuration : 
 - https://github.com/egovernments/egov-services/tree/master/docs/persist-infra/configuration-yaml
+
+### Sample json which we are posting to kafka
+- https://github.com/egovernments/egov-services/blob/master/citizen/citizen-persister/kafka-json.json

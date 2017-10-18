@@ -21,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
 
 @RestController
-@RequestMapping("mdms/v11")
 @Slf4j
 public class MDMSController {
 

@@ -4,7 +4,9 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.egov.swm.domain.model.AuditDetails;
+import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.VehicleFuellingDetails;
+import org.egov.swm.domain.model.VehicleFuellingDetailsSearch;
 import org.egov.swm.domain.repository.VehicleFuellingDetailsRepository;
 import org.egov.swm.web.requests.VehicleFuellingDetailsRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,6 @@ public class VehicleFuellingDetailsService {
 
 			setAuditDetails(v, vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo().getId());
 			v.setId(UUID.randomUUID().toString().replace("-", ""));
-			
 
 		}
 
@@ -44,6 +45,11 @@ public class VehicleFuellingDetailsService {
 
 		return vehicleFuellingDetailsRepository.update(vehicleFuellingDetailsRequest);
 
+	}
+
+	public Pagination<VehicleFuellingDetails> search(VehicleFuellingDetailsSearch vehicleFuellingDetailsSearch) {
+
+		return vehicleFuellingDetailsRepository.search(vehicleFuellingDetailsSearch);
 	}
 
 	private void setAuditDetails(VehicleFuellingDetails contract, Long userId) {

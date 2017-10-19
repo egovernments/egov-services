@@ -42,7 +42,6 @@ package org.egov.eis.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import org.egov.eis.model.enums.BloodGroup;
 import org.egov.eis.model.enums.Gender;
 import org.egov.eis.model.enums.MaritalStatus;
 import org.egov.eis.model.enums.UserType;
@@ -86,7 +85,15 @@ public class EmployeeInfo {
 
     private String permanentAddress;
 
+    private String permanentCity;
+
+    private String permanentPinCode;
+
     private String correspondenceAddress;
+
+    private String correspondenceCity;
+
+    private String correspondencePinCode;
 
     private String guardian;
 

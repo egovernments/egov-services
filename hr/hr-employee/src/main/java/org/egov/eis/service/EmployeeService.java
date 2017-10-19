@@ -252,6 +252,7 @@ public class EmployeeService {
         empCriteria.setId(ids);
         usersList = userService.getUsers(empCriteria, requestInfo);
         log.debug("usersList returned by UsersService is :: " + usersList);
+        empInfoList = employeeUserMapper.mapUsersWithEmployeesForReport(empInfoList, usersList);
 
         return empInfoList;
     }

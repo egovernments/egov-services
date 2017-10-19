@@ -38,11 +38,8 @@ import SearchEscalation from './components/contents/pgr/master/escalationTime/se
 import DefineEscalationTime from './components/contents/pgr/master/escalationTime/defineEscalationTime';
 import ServiceTypeCreate from './components/contents/pgr/master/serviceType/serviceTypeCreate';
 import Report from './components/contents/reports/report';
-<<<<<<< Updated upstream
 import PGRCharts from './components/contents/pgr/dashboards/index';
-=======
 import PgrAnalytics from './components/contents/pgr/dashboards/PgrAnalytics';
->>>>>>> Stashed changes
 
 //WC
 import CategoryTypeCreate from './components/contents/wc/master/categoryType/categoryTypeCreate';

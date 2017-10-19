@@ -116,25 +116,19 @@ public class IndexerService {
 	public String buildIndexJsonWithJsonpath(Index index, String kafkaJson, boolean isBulk){
         StringBuilder jsonTobeIndexed = new StringBuilder();
         String result = null;
-        String jsonArray = null;
+        JSONArray kafkaJsonArray = null;
         ObjectMapper mapper = new ObjectMapper();
         final String format = "{ \"index\" : {\"_id\" : \"%s\" } }%n ";
         try {
-        	if(isBulk){
-        		//Validating if the request is a valid json array.
-				jsonArray = pullArrayOutOfString(kafkaJson);
-				if(!(jsonArray.startsWith("[") && jsonArray.endsWith("]"))){
-					logger.info("Invalid request for a json array!");
-					return null;
-		        }
-            }else{
-            	jsonArray = "[" + kafkaJson + "]";
-            	logger.info("constructed json array: "+jsonArray);
-            }
-			JSONArray kafkaJsonArray = new JSONArray(jsonArray);
+        	kafkaJsonArray = validateAndConstructJsonArray(kafkaJson, index, isBulk);
+        	logger.info("jsonArray to be indexed: "+kafkaJsonArray);
 			for(int i = 0; i < kafkaJsonArray.length() ; i++){
 				logger.info("Object - "+(i+1)+" : "+kafkaJsonArray.get(i));
-				Object indexJsonObj = JsonPath.read(buildString(kafkaJsonArray.get(i)), index.getJsonPath());
+				Object indexJsonObj = null;
+				if(!isBulk)
+					indexJsonObj = JsonPath.read(buildString(kafkaJsonArray.get(i)), index.getJsonPath());
+				else
+					indexJsonObj = buildString(kafkaJsonArray.get(i));
 				String indexJson = mapper.writeValueAsString(indexJsonObj);
 				logger.info("Index json: "+indexJson);
 				String stringifiedObject = buildString(kafkaJsonArray.get(i));
@@ -164,22 +158,10 @@ public class IndexerService {
 	public String buildIndexJsonWithoutJsonpath(Index index, String kafkaJson, boolean isBulk){
         StringBuilder jsonTobeIndexed = new StringBuilder();
         String result = null;
-        String jsonArray = null;
+        JSONArray kafkaJsonArray = null;
         final String format = "{ \"index\" : {\"_id\" : \"%s\" } }%n ";
         try {
-        	if(isBulk){
-        		//Validating if the request is a valid json array.
-					jsonArray = pullArrayOutOfString(kafkaJson);
-					if(!(jsonArray.startsWith("[") && jsonArray.endsWith("]"))){
-						logger.info("Invalid request for a json array!");
-						return null;
-					}
-            }else{
-            	jsonArray = "[" + kafkaJson + "]";
-            	logger.info("constructed json array: "+jsonArray);
-
-            }
-			JSONArray kafkaJsonArray = new JSONArray(jsonArray);
+        	kafkaJsonArray = validateAndConstructJsonArray(kafkaJson, index, isBulk);
 			for(int i = 0; i < kafkaJsonArray.length() ; i++){
 				String stringifiedObject = buildString(kafkaJsonArray.get(i));
 				if(null != index.getId()){
@@ -208,21 +190,10 @@ public class IndexerService {
 	public String buildCustomJsonForBulk(Index index, String kafkaJson, String urlForMap, boolean isBulk){
         StringBuilder jsonTobeIndexed = new StringBuilder();
         String result = null;
-        String jsonArray = null;
+        JSONArray kafkaJsonArray = null;
         final String format = "{ \"index\" : {\"_id\" : \"%s\" } }%n ";
         try {
-        	if(isBulk){
-        		//Validating if the request is a valid json array.
-					jsonArray = pullArrayOutOfString(kafkaJson);
-					if(!(jsonArray.startsWith("[") && jsonArray.endsWith("]"))){
-						logger.info("Invalid request for a json array!");
-						return null;
-					}
-            }else{
-            	jsonArray = "[" + kafkaJson + "]";
-            	logger.info("constructed json array: "+jsonArray);
-            }
-			JSONArray kafkaJsonArray = new JSONArray(jsonArray);
+        	kafkaJsonArray = validateAndConstructJsonArray(kafkaJson, index, isBulk);
 			for(int i = 0; i < kafkaJsonArray.length() ; i++){
 				String stringifiedObject = buildString(kafkaJsonArray.get(i));
 				String customIndexJson = buildCustomJsonForIndex(index.getCustomJsonMapping(), stringifiedObject, urlForMap);
@@ -405,11 +376,40 @@ public class IndexerService {
 				for(int j = 0; j < idFormat.length; j++){
 					logger.info("path: "+idFormat[j]);
 					id.append(JsonPath.read(stringifiedObject, idFormat[j]).toString());
-				}
+				} 
 			}
 		}catch(Exception e){
 			logger.error("No id found at the given jsonpath: ", e);
 		}
 		return id.toString();
+	}
+	
+	public JSONArray validateAndConstructJsonArray(String kafkaJson, Index index, boolean isBulk){
+        String jsonArray = null;
+        JSONArray kafkaJsonArray = null;
+        ObjectMapper mapper = new ObjectMapper();
+        try{
+	    	if(isBulk){
+	    		//Validating if the request is a valid json array.
+				jsonArray = pullArrayOutOfString(kafkaJson);    
+	    		if(JsonPath.read(kafkaJson, index.getJsonPath()) instanceof net.minidev.json.JSONArray){
+	    			String inputArray = mapper.writeValueAsString(JsonPath.read(kafkaJson, index.getJsonPath()));
+	    			kafkaJsonArray = new JSONArray(inputArray);
+	    		}else if((jsonArray.startsWith("[") && jsonArray.endsWith("]"))){
+	    			kafkaJsonArray = new JSONArray(jsonArray);
+		        }else{
+					logger.info("Invalid request for a json array!");
+					return null;
+		        }
+	        }else{
+	        	jsonArray = "[" + kafkaJson + "]";
+	        	logger.info("constructed json array out of input json object: "+jsonArray);
+				kafkaJsonArray = new JSONArray(jsonArray);
+	        }
+        }catch(Exception e){
+        	logger.error("Exception while constructing json array for bulk index: ", e);
+        }
+    	
+    	return kafkaJsonArray;
 	}
 }

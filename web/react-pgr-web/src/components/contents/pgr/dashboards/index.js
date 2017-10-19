@@ -114,7 +114,7 @@ class charts extends Component{
       <Grid fluid={true}>
         <Row>
           <Col xs={12} sm={6} md={6} lg={6}>
-            <Card style={styles.marginStyle}>
+            <Card style={styles.cardMargin}>
               <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
                 No. of Complaints
                < /div>}/>
@@ -134,7 +134,7 @@ class charts extends Component{
             </Card>
           </Col>
           <Col xs={12} sm={6} md={6} lg={6}>
-            <Card style={styles.marginStyle}>
+            <Card style={styles.cardMargin}>
               <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
                 No. of Complaints
                < /div>}/>
@@ -153,7 +153,7 @@ class charts extends Component{
             </Card>
           </Col>
           <Col xs={12} sm={12} md={12} lg={12}>
-            <Card style={styles.marginStyle}>
+            <Card style={styles.cardMargin}>
               <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
                 Complaint Type Share
                < /div>}/>

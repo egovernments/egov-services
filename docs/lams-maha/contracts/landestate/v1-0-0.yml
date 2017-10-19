@@ -885,7 +885,6 @@ definitions:
         type: string
         description: Name of the property
         maxLength: 256
-        minLength: 1
       propertyType:
         type: string
         description: type of the property
@@ -919,7 +918,6 @@ definitions:
         type: string
         description: mode of acquisition for a Estate
         maxLength: 64
-        minLength: 1
       carpetArea:
         type: number
         format: double
@@ -928,12 +926,10 @@ definitions:
         type: string
         description: type of holding for a Estate
         maxLength: 64
-        minLength: 1
       landID:
         type: string
         description: Land id of the Estate
         maxLength: 64
-        minLength: 1
       constructionStartDate:
         type: string
         format: date
@@ -958,13 +954,106 @@ definitions:
         type: number
         format: double
         description: longitude of the Estate (A location longitude)
+      floors:
+        type: array
+        items:
+          $ref: '#/definitions/FloorDetail'
       comments:
         type: string
         description: description or comments for a land
         maxLength: 1024
-        minLength: 1
     required:
       - registerName
+      - subRegisterName
+      - regionalOffice
+      - location
+      - propertyType
+      - propertyAddress
+      - surveyNo
+      - gattNo
+      - purpose
+      - modeOfAcquisition
+      - holdingType
+      - constructionStartDate
+      - constructionEndDate
+      - floors
+      
+  FloorDetail:
+    type: object
+    description: A Object holds the data for a floor details of Estate
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the FloorDetail.
+      floorNo:
+        type: string
+        description: Floor no
+        maxLength: 64
+        minLength: 1
+      floorArea:
+        type: number
+        format: double
+        description: Area of a floor
+      noOfUnits:
+        type: number
+        format: int
+        description: No.of units in a floor
+      units:
+        type: array
+        items:
+          $ref: '#/definitions/UnitDetail'
+    required:
+      - floorNo
+      - floorArea
+      - noOfUnits
+      - units
+        
+  UnitDetail:
+    type: object
+    description: A Object holds the data for a unit details of floor
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the UnitDetail.
+      floor:
+        type: string
+        $ref: "#/definitions/FloorDetail"
+      usageType:
+        type: string
+        description: Usage type of a unit
+        maxLength: 64
+        minLength: 1
+      previousUnitNo:
+        type: string
+        description: Previous unitno of a unit
+        maxLength: 64
+        minLength: 1
+      builtUpArea:
+        type: number
+        format: double
+        description: Built up area of a unit
+      holdingType:
+        type: string
+        description: holding type of a unit.
+        maxLength: 64
+        minLength: 1
+      departmentName:
+        type: string
+        description: Department name in a unit.
+        maxLength: 64
+        minLength: 1
+      description:
+        type: string
+        description: description of a unit.
+        maxLength: 512
+        minLength: 1
+    required:
+      - floor
+      - usageType
+      - builtUpArea
+      - holdingType
       
   EstateRegisterRequest:
     description: Contract class to receive request. Array of EstateRegister items are used in case of create. Where as single EstateRegister item is used for update

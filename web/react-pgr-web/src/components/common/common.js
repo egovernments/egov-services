@@ -558,7 +558,7 @@ var localization_EN_Data = {
     "pt.create.groups.addDemand.fields.totalPropertyTax": "Total Property Tax",
     "pt.create.groups.addDemand.fields.collection": "Collection",
     "pt.create.groups.addDemand.fields.balance": "Balance",
-    
+
 
     //pt construction details
     "pt.create.groups.constructionDetails.fields.orderDate": "Commencement Date",
@@ -1500,6 +1500,11 @@ var localization_EN_Data = {
     "pgr.searchresult": " Search Result",
     "pgr.title.create.account": " Create an account",
     "pgr.title.create.grievence": " Create Grievance",
+    "pgr.dashboard.pendency":"Pendency",
+    "pgr.dashboard.type.distribution":"Type Distribution",
+    "pgr.dashboard.top5.complaint.types":"Top Five Complaint Types",
+    "pgr.dashboard.gisanalysis":"GIS Analysis",
+    "pgr.dashboar.chart.agewise" : "Age Wise Break Up",
     "reports.pgr.ageing.between.0_2days": " Ageing Between 0 to 2 Days",
     "reports.pgr.ageing.between.10_30days": " Ageing Between 10 to 30 Days",
     "reports.pgr.ageing.between.2_5days": " Ageing Between 2 to 5 Day",
@@ -2278,8 +2283,8 @@ var localization_MR_Data = {
     "pt.create.button.viewdcb": "View DCB",
     "pt.create.button.viewdcb.close": "Close",
     "pt.create.button.viewdcb.headwisedcb": "Head wise DCB",
-    
-    
+
+
 
 
     "pt.create.groups.assessmentDetails.fields.creationReason": " निर्मितीसाठी कारण",

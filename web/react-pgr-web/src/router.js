@@ -38,7 +38,11 @@ import SearchEscalation from './components/contents/pgr/master/escalationTime/se
 import DefineEscalationTime from './components/contents/pgr/master/escalationTime/defineEscalationTime';
 import ServiceTypeCreate from './components/contents/pgr/master/serviceType/serviceTypeCreate';
 import Report from './components/contents/reports/report';
+<<<<<<< Updated upstream
 import PGRCharts from './components/contents/pgr/dashboards/index';
+=======
+import PgrAnalytics from './components/contents/pgr/dashboards/PgrAnalytics';
+>>>>>>> Stashed changes
 
 //WC
 import CategoryTypeCreate from './components/contents/wc/master/categoryType/categoryTypeCreate';
@@ -174,6 +178,7 @@ const Main = () => {
         <Route exact path={base+'/administration/searchUserRole'} component={searchUserRole}/>
         <Route exact path={base+'/administration/updateUserRole/:userId'} component={updateUserRole}/>
         <Route exact path={base+'/services/apply/:serviceCode/:serviceName'} component={VisibleNewServiceRequest}/>
+        <Route exact path={base+'/pgr/analytics'} component={PgrAnalytics}/>
         <Route exact path={base+'/pgr/createGrievance'} component={grievanceCreate}/>
         <Route exact path={base+'/pgr/viewGrievance/:srn'} component={grievanceView}/>
         <Route exact path={base+'/pgr/searchGrievance'} component={grievanceSearch}/>

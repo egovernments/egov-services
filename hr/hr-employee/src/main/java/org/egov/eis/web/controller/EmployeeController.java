@@ -40,14 +40,8 @@
 
 package org.egov.eis.web.controller;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.Employee;
@@ -58,13 +52,7 @@ import org.egov.eis.service.EmployeeService;
 import org.egov.eis.service.exception.EmployeeIdNotFoundException;
 import org.egov.eis.service.exception.IdGenerationException;
 import org.egov.eis.service.exception.UserException;
-import org.egov.eis.web.contract.EmployeeBulkRequest;
-import org.egov.eis.web.contract.EmployeeCriteria;
-import org.egov.eis.web.contract.EmployeeGetRequest;
-import org.egov.eis.web.contract.EmployeeInfoResponse;
-import org.egov.eis.web.contract.EmployeeRequest;
-import org.egov.eis.web.contract.EmployeeResponse;
-import org.egov.eis.web.contract.RequestInfoWrapper;
+import org.egov.eis.web.contract.*;
 import org.egov.eis.web.contract.factory.ResponseEntityFactory;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
@@ -78,16 +66,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ValidationUtils;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-import lombok.extern.slf4j.Slf4j;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Slf4j
 @RestController
@@ -153,6 +139,32 @@ public class EmployeeController {
         return responseEntityFactory.getSuccessResponse(employeeMap, requestInfo);
     }
 
+
+    @PostMapping("_baseregisterreport")
+    @ResponseBody
+    public ResponseEntity<?> baseregisterreport(@ModelAttribute @Valid BaseRegisterReportRequest baseRegisterReportRequest,
+                                                BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+                                                BindingResult requestBodyBindingResult) {
+        RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+
+        ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo,
+                modelAttributeBindingResult, requestBodyBindingResult);
+
+        if (errorResponseEntity != null)
+            return errorResponseEntity;
+
+        // Call service
+        List<EmployeeInfo> employeesList = null;
+        try {
+            employeesList = employeeService.getEmployeeUserInfo(baseRegisterReportRequest, requestInfo);
+        } catch (Exception exception) {
+            log.error("Error while processing request " + baseRegisterReportRequest, exception);
+            return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+        }
+
+        return getSuccessResponseForSearch(employeesList, requestInfo);
+    }
+
     /**
      * Maps Post Requests for _loggedinemployee & returns ResponseEntity of either
      * EmployeeResponse type or ErrorResponse type
@@ -164,7 +176,7 @@ public class EmployeeController {
     @PostMapping("_loggedinemployee")
     @ResponseBody
     public ResponseEntity<?> loggedInEmployee(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
-            BindingResult requestBodyBindingResult) {
+                                              BindingResult requestBodyBindingResult) {
         RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
         ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, null,
                 requestBodyBindingResult);
@@ -251,8 +263,8 @@ public class EmployeeController {
             log.error("Error while processing request ", ie);
             return errorHandler.getResponseEntityForIdGenerationErrors(ie);
         } catch (InvalidDataException ex) {
-			return	 errorHandler.getErrorInvalidData(ex, employeeRequest.getRequestInfo());
-		}	catch (Exception exception) {
+            return errorHandler.getErrorInvalidData(ex, employeeRequest.getRequestInfo());
+        } catch (Exception exception) {
             log.error("Error while processing request ", exception);
             return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());
         }
@@ -263,7 +275,7 @@ public class EmployeeController {
      * FIXME : This method contains logic that should be there in service. For meeting deadline did this. Needs to be fixed.
      * Earlier was calling bulkCreate of EmployeeService, which was calling same service's create employee API & failing.
      * For reference check previous commit for the same hr-employee service.
-     *
+     * <p>
      * Maps Post Requests for _bulkcreate & returns ResponseEntity of either EmployeeResponse type or ErrorResponse type
      *
      * @param employeeBulkRequest
@@ -294,23 +306,21 @@ public class EmployeeController {
                 org.egov.eis.model.bulk.Assignment assignment = bulkEmployee.getAssignments().get(assignIndex);
                 Department department = employeeService.getDepartmentService().getDepartment(
                         assignment.getDepartment().getCode(), bulkEmployee.getTenantId(), requestInfoWrapper);
-        		InvalidDataException invalidDataException = new InvalidDataException();
+                InvalidDataException invalidDataException = new InvalidDataException();
 
-                if(department==null)
-                {
-                	invalidDataException.setFieldName("Department");
-    				invalidDataException.setMessageKey("the field department should have a valid value which exists in the system " );
-    				invalidDataException.setFieldValue(assignment.getDepartment().getCode());
-    				return	 errorHandler.getErrorInvalidData(invalidDataException, employeeBulkRequest.getRequestInfo());
+                if (department == null) {
+                    invalidDataException.setFieldName("Department");
+                    invalidDataException.setMessageKey("the field department should have a valid value which exists in the system ");
+                    invalidDataException.setFieldValue(assignment.getDepartment().getCode());
+                    return errorHandler.getErrorInvalidData(invalidDataException, employeeBulkRequest.getRequestInfo());
                 }
                 org.egov.eis.model.bulk.Designation designation = employeeService.getDesignationService().getDesignation(
                         assignment.getDesignation().getCode(), bulkEmployee.getTenantId(), requestInfoWrapper);
-                if(designation==null)
-                {
-   	        	 	invalidDataException.setFieldName("Designation");
-    				invalidDataException.setMessageKey("the field designations should have a valid value which exists in the system " );
-    				invalidDataException.setFieldValue(assignment.getDesignation().getCode());
-    				return	 errorHandler.getErrorInvalidData(invalidDataException, employeeBulkRequest.getRequestInfo());
+                if (designation == null) {
+                    invalidDataException.setFieldName("Designation");
+                    invalidDataException.setMessageKey("the field designations should have a valid value which exists in the system ");
+                    invalidDataException.setFieldValue(assignment.getDesignation().getCode());
+                    return errorHandler.getErrorInvalidData(invalidDataException, employeeBulkRequest.getRequestInfo());
                 }
                 assignment.setDepartment(department);
                 assignment.setDesignation(designation);

@@ -42,11 +42,14 @@ package org.egov.eis.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.egov.eis.model.enums.BloodGroup;
 import org.egov.eis.model.enums.Gender;
+import org.egov.eis.model.enums.MaritalStatus;
 import org.egov.eis.model.enums.UserType;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,65 +64,118 @@ import java.util.List;
 @ToString
 public class EmployeeInfo {
 
-	private Long id;
+    private Long id;
 
-	@Size(min=1, max=256)
-	private String code;
+    @Size(min = 1, max = 256)
+    private String code;
 
-	@Size(max=5)
-	private String salutation;
+    @Size(max = 5)
+    private String salutation;
 
-	@Size(min=3, max=100)
-	private String name;
+    @Size(min = 3, max = 100)
+    private String name;
 
-	@Size(min=1, max=64)
-	private String userName;
+    @Size(min = 1, max = 64)
+    private String userName;
 
-	private Gender gender;
+    private Gender gender;
 
-	@Size(max=10)
-	private String mobileNumber;
+    private MaritalStatus maritalStatus;
 
-	@Size(min=5, max=128)
-	private String emailId;
+    private String bloodGroup;
 
-	@Size(max=10)
-	private String pan;
+    private String permanentAddress;
 
-	@Size(max=12)
-	private String aadhaarNumber;
+    private String correspondenceAddress;
 
-	private Boolean active;
+    private String guardian;
 
-	@Valid
-	private UserType type = UserType.EMPLOYEE;
+    @Size(max = 10)
+    private String mobileNumber;
 
-	private Long employeeStatus;
+    @Size(max = 10)
+    private String altContactNumber;
 
-	private Long employeeType;
+    @Size(min = 5, max = 128)
+    private String emailId;
 
-	@Valid
-	private List<Assignment> assignments = new ArrayList<Assignment>();
+    @Size(max = 10)
+    private String pan;
 
-	private List<Long> jurisdictions = new ArrayList<Long>();
+    @Size(max = 12)
+    private String aadhaarNumber;
 
-	private Long bank;
+    @Size(max = 200)
+    private String placeOfBirth;
 
-	private Long bankBranch;
+    private Boolean active;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date dateOfRetirement;
+    @Valid
+    private UserType type = UserType.EMPLOYEE;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date dateOfAppointment;
+    private List<Long> languagesKnown = new ArrayList<>();
 
-	@Size(max=20)
-	private String bankAccount;
+    private Long employeeStatus;
 
-	private List<String> documents = new ArrayList<String>();
+    private Long employeeType;
 
-	private String tenantId;
+    private Long group;
+
+    private Long motherTongue;
+
+    private String identificationMark;
+
+    private String passportNo;
+
+    private String gpfNo;
+
+    private Long recruitmentMode;
+
+    private Long recruitmentType;
+
+    private Long recruitmentQuota;
+
+    @Valid
+    private List<Assignment> assignments = new ArrayList<Assignment>();
+
+    private List<Long> jurisdictions = new ArrayList<Long>();
+
+    private Long bank;
+
+    private Long bankBranch;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date dateOfRetirement;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date dateOfAppointment;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date dateOfJoining;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date dob;
+
+    @Max(100)
+    private Short retirementAge;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date dateOfResignation;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date dateOfTermination;
+
+    @Size(max = 20)
+    private String bankAccount;
+
+    private List<String> documents = new ArrayList<String>();
+
+    private String tenantId;
 
 }

@@ -79,4 +79,35 @@ public class EmployeeUserMapper {
 			}
 		return finalEmployeeList;
 	}
+
+	public List<EmployeeInfo> mapUsersWithEmployeesForReport(List<EmployeeInfo> employeeInfoList, List<User> userInfoList) {
+		Map<Long, User> userInfoMap = new HashMap<Long, User>();
+		List<EmployeeInfo> finalEmployeeList = new ArrayList<EmployeeInfo>();
+		if (userInfoList != null)
+			for (User userInfo : userInfoList) {
+				userInfoMap.put(userInfo.getId(), userInfo);
+			}
+
+		if (employeeInfoList != null)
+			for (EmployeeInfo employeeInfo : employeeInfoList) {
+				if (userInfoMap.containsKey(employeeInfo.getId())) {
+					User userInfo = userInfoMap.get(employeeInfo.getId());
+
+              		employeeInfo.setName(userInfo.getName());
+					employeeInfo.setUserName(userInfo.getUserName());
+					employeeInfo.setGender(userInfo.getGender());
+					employeeInfo.setMobileNumber(userInfo.getMobileNumber());
+					employeeInfo.setAltContactNumber(userInfo.getAltContactNumber());
+					employeeInfo.setGuardian(userInfo.getFatherOrHusbandName());
+					employeeInfo.setBloodGroup(userInfo.getBloodGroup());
+                    employeeInfo.setIdentificationMark(userInfo.getIdentificationMark());
+					employeeInfo.setEmailId(userInfo.getEmailId());
+					employeeInfo.setPan(userInfo.getPan());
+					employeeInfo.setAadhaarNumber(userInfo.getAadhaarNumber());
+					employeeInfo.setActive(userInfo.getActive());
+					finalEmployeeList.add(employeeInfo);
+				}
+			}
+		return finalEmployeeList;
+	}
 }

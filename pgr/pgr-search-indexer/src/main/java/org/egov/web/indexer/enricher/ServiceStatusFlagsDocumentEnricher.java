@@ -22,12 +22,13 @@ public class ServiceStatusFlagsDocumentEnricher implements ServiceRequestDocumen
     private static final String COMPLAINT_FORWARDED = "FORWARDED";
     private static final String COMPLAINT_REGISTERED = "REGISTERED";
     private static final String COMPLAINT_REOPENED = "REOPENED";
+    private static final String COMPLAINT_ONHOLD = "ONHOLD";
     private static final String DELIVERY_SERVICE_NEW = "DSNEW";
     private static final String DELIVERY_SERVICE_IN_PROGRESS = "DSPROGRESS";
     private static final String DELIVERY_SERVICE_APPROVED = "DSAPPROVED";
     private static final String DELIVERY_SERVICE_REJECTED = "DSREJECTED";
     private static final List<String> IN_PROGRESS_STATUSES =
-        Arrays.asList(COMPLAINT_PROCESSING, COMPLAINT_FORWARDED, DELIVERY_SERVICE_IN_PROGRESS);
+        Arrays.asList(COMPLAINT_PROCESSING, COMPLAINT_FORWARDED, DELIVERY_SERVICE_IN_PROGRESS, COMPLAINT_ONHOLD);
     private static final List<String> REJECTED_STATUSES =
         Arrays.asList(COMPLAINT_REJECTED, DELIVERY_SERVICE_REJECTED);
     private static final List<String> SUCCESSFULLY_COMPLETED_STATUSES =

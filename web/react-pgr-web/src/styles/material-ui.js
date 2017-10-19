@@ -6,7 +6,7 @@ const styles = {
     width: '100%'
   },
   marginStyle:{ //card layout margin
-    margin: 15
+    margin: '15px 0 0 0'
   },
   cardSpacing:{
     margin: 15,

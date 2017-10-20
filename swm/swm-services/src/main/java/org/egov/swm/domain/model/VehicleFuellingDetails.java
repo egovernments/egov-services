@@ -27,7 +27,6 @@ public class VehicleFuellingDetails {
 	@JsonProperty("tenantId")
 	private String tenantId = null;
 
-	@NotNull
 	@Size(min = 1, max = 256)
 	@JsonProperty("transactionNo")
 	private String transactionNo = null;

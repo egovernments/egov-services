@@ -23,7 +23,7 @@ public class VehicleFuellingDetailsEntity {
 
 	private String tenantId = null;
 
-	private String transactionId = null;
+	private String transactionNo = null;
 
 	private Long transactionDate = null;
 
@@ -58,7 +58,7 @@ public class VehicleFuellingDetailsEntity {
 		VehicleFuellingDetails vehicleFuellingDetails = new VehicleFuellingDetails();
 		vehicleFuellingDetails.setId(id);
 		vehicleFuellingDetails.setTenantId(tenantId);
-		vehicleFuellingDetails.setTransactionId(transactionId);
+		vehicleFuellingDetails.setTransactionNo(transactionNo);
 		vehicleFuellingDetails.setTransactionDate(transactionDate);
 		vehicleFuellingDetails.setVehicleType(VehicleType.builder().id(vehicleType).build());
 		vehicleFuellingDetails.setVehicleRegNo(Vehicle.builder().id(vehicleRegNo).build());

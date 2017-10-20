@@ -29,8 +29,8 @@ public class VehicleFuellingDetails {
 
 	@NotNull
 	@Size(min = 1, max = 256)
-	@JsonProperty("transactionId")
-	private String transactionId = null;
+	@JsonProperty("transactionNo")
+	private String transactionNo = null;
 
 	@NotNull
 	@JsonProperty("transactionDate")

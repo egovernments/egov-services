@@ -2,7 +2,7 @@
 Create table egswm_vehiclefuellingdetails( 
   id varchar(256) NOT NULL,
   tenantId varchar(128) NOT NULL,
-  transactionId varchar(256) NOT NULL,
+  transactionNo varchar(256) NOT NULL,
   transactionDate bigint NOT NULL,
   vehicleType varchar(50) NOT NULL,
   vehicleRegNo varchar(50) NOT NULL,

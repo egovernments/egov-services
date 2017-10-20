@@ -39,7 +39,7 @@ public class VehicleFuellingDetailsController {
 		vehicleFuellingDetailsRequest = vehicleFuellingDetailsService.create(vehicleFuellingDetailsRequest);
 
 		vehicleFuellingDetailsResponse
-				.setVehicleFuellingDetailses(vehicleFuellingDetailsRequest.getVehicleFuellingDetailses());
+				.setVehicleFuellingDetails(vehicleFuellingDetailsRequest.getVehicleFuellingDetails());
 
 		return vehicleFuellingDetailsResponse;
 	}
@@ -55,7 +55,7 @@ public class VehicleFuellingDetailsController {
 		vehicleFuellingDetailsRequest = vehicleFuellingDetailsService.update(vehicleFuellingDetailsRequest);
 
 		vehicleFuellingDetailsResponse
-				.setVehicleFuellingDetailses(vehicleFuellingDetailsRequest.getVehicleFuellingDetailses());
+				.setVehicleFuellingDetails(vehicleFuellingDetailsRequest.getVehicleFuellingDetails());
 
 		return vehicleFuellingDetailsResponse;
 	}
@@ -71,7 +71,7 @@ public class VehicleFuellingDetailsController {
 				.search(vehicleFuellingDetailsSearch);
 
 		VehicleFuellingDetailsResponse response = new VehicleFuellingDetailsResponse();
-		response.setVehicleFuellingDetailses(vehicleFuellingDetailsList.getPagedData());
+		response.setVehicleFuellingDetails(vehicleFuellingDetailsList.getPagedData());
 		response.setResponseInfo(getResponseInfo(requestInfo));
 
 		return response;

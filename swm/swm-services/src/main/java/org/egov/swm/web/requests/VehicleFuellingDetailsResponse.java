@@ -14,6 +14,6 @@ import lombok.Data;
 @JsonInclude(value = Include.NON_NULL)
 public @Data class VehicleFuellingDetailsResponse {
 	private ResponseInfo responseInfo;
-	private List<VehicleFuellingDetails> vehicleFuellingDetailses;
+	private List<VehicleFuellingDetails> vehicleFuellingDetails;
 	private Pagination page;
 }

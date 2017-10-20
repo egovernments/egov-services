@@ -23,7 +23,7 @@ public class VehicleFuellingDetailsService {
 	@Transactional
 	public VehicleFuellingDetailsRequest create(VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
 
-		for (VehicleFuellingDetails v : vehicleFuellingDetailsRequest.getVehicleFuellingDetailses()) {
+		for (VehicleFuellingDetails v : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
 
 			setAuditDetails(v, vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo().getId());
 			v.setId(UUID.randomUUID().toString().replace("-", ""));
@@ -37,7 +37,7 @@ public class VehicleFuellingDetailsService {
 	@Transactional
 	public VehicleFuellingDetailsRequest update(VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
 
-		for (VehicleFuellingDetails v : vehicleFuellingDetailsRequest.getVehicleFuellingDetailses()) {
+		for (VehicleFuellingDetails v : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
 
 			setAuditDetails(v, vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo().getId());
 

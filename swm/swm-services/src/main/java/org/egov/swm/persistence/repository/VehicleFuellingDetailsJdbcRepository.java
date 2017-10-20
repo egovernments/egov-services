@@ -34,7 +34,7 @@ public class VehicleFuellingDetailsJdbcRepository {
 			validateEntityFieldName(searchRequest.getSortBy(), VehicleFuellingDetailsSearch.class);
 		}
 
-		String orderBy = "order by transactionId";
+		String orderBy = "order by transactionNo";
 		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
 			orderBy = "order by " + searchRequest.getSortBy();
 		}
@@ -60,12 +60,12 @@ public class VehicleFuellingDetailsJdbcRepository {
 			params.append("id =:id");
 			paramValues.put("id", searchRequest.getId());
 		}
-		if (searchRequest.getTransactionId() != null) {
+		if (searchRequest.getTransactionNo() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("transactionId =:transactionId");
-			paramValues.put("transactionId", searchRequest.getTransactionId());
+			params.append("transactionNo =:transactionNo");
+			paramValues.put("transactionNo", searchRequest.getTransactionNo());
 		}
 		if (searchRequest.getTransactionDate() != null) {
 			if (params.length() > 0) {

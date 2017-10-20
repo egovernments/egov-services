@@ -32,7 +32,7 @@ public class VehicleFuellingDetailsRepository {
 
 		kafkaTemplate.send(saveTopic, vehicleFuellingDetailsRequest);
 
-		kafkaTemplate.send(indexerTopic, vehicleFuellingDetailsRequest);
+		kafkaTemplate.send(indexerTopic, vehicleFuellingDetailsRequest.getVehicleFuellingDetails());
 
 		return vehicleFuellingDetailsRequest;
 
@@ -42,7 +42,7 @@ public class VehicleFuellingDetailsRepository {
 
 		kafkaTemplate.send(updateTopic, vehicleFuellingDetailsRequest);
 
-		kafkaTemplate.send(indexerTopic, vehicleFuellingDetailsRequest);
+		kafkaTemplate.send(indexerTopic, vehicleFuellingDetailsRequest.getVehicleFuellingDetails());
 
 		return vehicleFuellingDetailsRequest;
 

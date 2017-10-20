@@ -14,5 +14,5 @@ public @Data class VehicleFuellingDetailsRequest {
 	@Valid
 	private RequestInfo requestInfo = new RequestInfo();
 	@Valid
-	private List<VehicleFuellingDetails> vehicleFuellingDetailses = new ArrayList<VehicleFuellingDetails>();
+	private List<VehicleFuellingDetails> vehicleFuellingDetails = new ArrayList<VehicleFuellingDetails>();
 }

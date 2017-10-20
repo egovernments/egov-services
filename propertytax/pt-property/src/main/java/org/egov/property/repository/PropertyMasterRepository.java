@@ -26,6 +26,8 @@ import org.egov.models.PropertyType;
 import org.egov.models.RequestInfo;
 import org.egov.models.RoofType;
 import org.egov.models.StructureClass;
+import org.egov.models.TaxExemptionReason;
+import org.egov.models.TaxExemptionReasonSearchCriteria;
 import org.egov.models.UsageMaster;
 import org.egov.models.WallType;
 import org.egov.models.WoodType;
@@ -37,6 +39,7 @@ import org.egov.property.repository.builder.DemolitionReasonQueryBuilder;
 import org.egov.property.repository.builder.DepartmentQueryBuilder;
 import org.egov.property.repository.builder.DepreciationBuilder;
 import org.egov.property.repository.builder.DocumentTypeBuilder;
+import org.egov.property.repository.builder.ExemptionReasonBuilder;
 import org.egov.property.repository.builder.FloorTypeBuilder;
 import org.egov.property.repository.builder.GuidanceValueBoundaryBuilder;
 import org.egov.property.repository.builder.MutationMasterBuilder;
@@ -2049,4 +2052,93 @@ public class PropertyMasterRepository {
 		return demolitionReasons;
 	}
 
+	public Long saveTaxExemptionReason(TaxExemptionReason exemptionReason, String data) {
+
+		final PreparedStatementCreator psc = new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+
+				final PreparedStatement ps = connection.prepareStatement(
+						ExemptionReasonBuilder.INSERT_TAXEXEMPTIONREASON_QUERY, new String[] { "id" });
+
+				PGobject jsonObject = new PGobject();
+				jsonObject.setType("jsonb");
+				jsonObject.setValue(data);
+				ps.setString(1, exemptionReason.getTenantId());
+				ps.setString(2, exemptionReason.getName());
+				ps.setString(3, exemptionReason.getCode());
+				ps.setString(4, exemptionReason.getDescription());
+				ps.setBoolean(5, exemptionReason.getActive());
+				ps.setDouble(6, exemptionReason.getPercentageRate());
+				ps.setObject(7, jsonObject);
+				ps.setString(8, exemptionReason.getAuditDetails().getCreatedBy());
+				ps.setString(9, exemptionReason.getAuditDetails().getLastModifiedBy());
+				ps.setLong(10, exemptionReason.getAuditDetails().getCreatedTime());
+				ps.setLong(11, exemptionReason.getAuditDetails().getLastModifiedTime());
+				return ps;
+			}
+		};
+		final KeyHolder holder = new GeneratedKeyHolder();
+		jdbcTemplate.update(psc, holder);
+		return Long.valueOf(holder.getKey().intValue());
+	}
+
+	public void updateTaxExemptionReason(TaxExemptionReason exemptionReason, String data) {
+
+		final PreparedStatementCreator psc = new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+				final PreparedStatement ps = connection
+						.prepareStatement(ExemptionReasonBuilder.UPDATE_TAXEXEMPTIONREASON_QUERY);
+
+				PGobject jsonObject = new PGobject();
+				jsonObject.setType("jsonb");
+				jsonObject.setValue(data);
+				ps.setString(1, exemptionReason.getTenantId());
+				ps.setString(2, exemptionReason.getName());
+				ps.setString(3, exemptionReason.getCode());
+				ps.setString(4, exemptionReason.getDescription());
+				ps.setBoolean(5, exemptionReason.getActive());
+				ps.setDouble(6, exemptionReason.getPercentageRate());
+				ps.setObject(7, jsonObject);
+				ps.setString(8, exemptionReason.getAuditDetails().getLastModifiedBy());
+				ps.setLong(9, exemptionReason.getAuditDetails().getLastModifiedTime());
+				ps.setLong(10, exemptionReason.getId());
+				return ps;
+			}
+		};
+
+		jdbcTemplate.update(psc);
+	}
+
+	public List<TaxExemptionReason> searchTaxExemptionReason(
+			TaxExemptionReasonSearchCriteria taxExemptionReasonSearchCriteria) {
+
+		List<Object> preparedStatementValues = new ArrayList<>();
+		String SearchTaxExemptionReasonQuery = SearchMasterBuilder.buildSearchQuery(
+				ConstantUtility.TAXEXEMPTIONREASON_MASTER_TABLE_NAME, taxExemptionReasonSearchCriteria.getTenantId(),
+				taxExemptionReasonSearchCriteria.getIds(), taxExemptionReasonSearchCriteria.getName(), null,
+				taxExemptionReasonSearchCriteria.getCode(), taxExemptionReasonSearchCriteria.getActive(), null, null,
+				null, taxExemptionReasonSearchCriteria.getPageSize(), taxExemptionReasonSearchCriteria.getOffSet(),
+				preparedStatementValues, null, null, null, null, null);
+
+		List<TaxExemptionReason> taxExemptionReasons = jdbcTemplate.query(SearchTaxExemptionReasonQuery,
+				preparedStatementValues.toArray(), new BeanPropertyRowMapper(TaxExemptionReason.class));
+		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+
+		for (TaxExemptionReason taxExemptionReason : taxExemptionReasons) {
+			TaxExemptionReason taxExemptionReasonData = gson.fromJson(taxExemptionReason.getData(),
+					TaxExemptionReason.class);
+			taxExemptionReason.setTenantId(taxExemptionReason.getTenantId());
+			taxExemptionReason.setName(taxExemptionReason.getName());
+			taxExemptionReason.setCode(taxExemptionReason.getCode());
+			taxExemptionReason.setDescription(taxExemptionReason.getDescription());
+			taxExemptionReason.setActive(taxExemptionReason.getActive());
+			taxExemptionReason.setPercentageRate(taxExemptionReason.getPercentageRate());
+			taxExemptionReason.setTaxHeads(taxExemptionReasonData.getTaxHeads());
+			taxExemptionReason.setAuditDetails(taxExemptionReasonData.getAuditDetails());
+		}
+
+		return taxExemptionReasons;
+	}
 }

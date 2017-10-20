@@ -1,0 +1,35 @@
+{
+  "RequestInfo":{
+    "action":"create",
+    "did":1, 
+    "msgId":null, 
+    "requesterId":"yoyo",
+    "userInfo":{
+        "id":1
+    },
+    "authToken": "39ab1c04-d082-4912-8779-438655181135",
+    "apiId":"emp",
+    "ver":"1.0", 
+    "ts":12345687944, 
+    "key":"20170310130900", 
+    "tenantId":"default"
+},
+  "taxExemptionReasons": [
+    {
+      "id":1,
+      "tenantId": "default",
+      "name": "UPDATE-MAN",
+      "code": "UPDATE-ZIPCODE",
+      "description": "Test Update Reason!",
+      "percentageRate":45,
+      "taxHeads":["Test 1 TAXHEAD1"],
+      "active":true,
+      "auditDetails": {
+        "createdBy": null,
+        "lastModifiedBy": null,
+        "createdTime": null,
+        "lastModifiedTime": null
+      }
+    }
+  ]
+}

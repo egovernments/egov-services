@@ -1,5 +1,9 @@
 package org.egov.models;
 
+import java.util.List;
+
+import javax.validation.Valid;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -7,20 +11,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * 
- * @author Yosadhara
- *
- */
 @Setter
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
-public class VacancyRemissionRequest {
-
+@AllArgsConstructor
+public class TaxExemptionReasonRequest {
+	
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 
-	@JsonProperty("remission")
-	VacancyRemission vacancyRemission;
+	@Valid
+	@JsonProperty("taxExemptionReasons")
+	private List<TaxExemptionReason> taxExemptionReasons;
 }

@@ -1152,9 +1152,6 @@ definitions:
           $ref: '#/definitions/DocumentDetail'
       status:
         $ref: '#/definitions/ProjectStatus'
-      approvalComent:
-        description: approval comment while approving Abstract Estimate
-        type: string
       beneficiary:
         $ref: '#/definitions/Beneficiary'
       modeOfAllotment:
@@ -1192,22 +1189,22 @@ definitions:
         description: Epoch time of the council resolution date
       workOrderCreated:
         type: boolean
-        description: boolean value if work order created or not
+        description: boolean value to identifiy whether the work order created or not for spill over data
       billsCreated: 
         type: boolean
-        description: boolean value if bills created or not
+        description: boolean value to identify whether bills created or not for spill over data
       spillOverFlag:  
         type: boolean
-        description: boolean value if spill over or not
+        description: boolean value to identify whether  spill over data or not
       cancellationReason:
         type: string
         description: Reason for cancellation of the Abstract Estimate
       cancellationRemarks:
         type: string
-        description: remarks for cancellation of the Abstract Estimate
+        description: Remarks for cancellation of the Abstract Estimate
       detailedEstimateCreated:
         type: boolean
-        description: boolean value if the detailed estimate created or not
+        description: boolean value to identify whether the detailed estimate created or not for spill over data
       workFlowDetails:
         $ref: '#/definitions/WorkFlowDetails'
       auditDetails:
@@ -1239,11 +1236,11 @@ definitions:
         $ref: '#/definitions/AbstractEstimate'
       nameOfWork:
         type: string
-        description: name Of Work of the Abstract Estimate Details
+        description: Name Of Work of the Abstract Estimate Details
       estimateAmount:
         type: number
         format: double
-        description: estimate amount for the Abstract Estimate Details
+        description: Estimate amount for the Abstract Estimate Details
       estimateNumber:
         type: string
         description: Estimate number of the Abstract Estimate Details.
@@ -1293,6 +1290,11 @@ definitions:
       fileStore:
         type: string
         description: Filestore reference of the document which is attached 
+      tenantId:
+        type: string
+        description: Tenant Id of the Document detail
+        maxLength: 128
+        minLength: 4
     
   EstimateAppropriation:
     type: object
@@ -1329,7 +1331,7 @@ definitions:
         description: Unique Identifier of the EstimatePhotographs
       tenantId:
         type: string
-        description: tenant id of the Abstract Estimate Details
+        description: Tenant id of the Estimate Photographs
         maxLength: 128
         minLength: 4
       abstractEstimateDetails:
@@ -1432,6 +1434,7 @@ definitions:
         abstractEstimates:
           description: Used for create and update only
           type: array
+          minimum: 1
           maximum: 100
           items:
             $ref: '#/definitions/DetailedEstimate'
@@ -1476,9 +1479,6 @@ definitions:
       description:
         type: string
         description : description for the Detailed Estimate
-      userDepartment:
-        type: string
-        description: Department for which Detailed Estimate user belongs to
       department:
         type: string
         description: Department for which Detailed Estimate belongs to
@@ -1657,16 +1657,16 @@ definitions:
           description: tenant id of the AssetsForEstimate
           maxLength: 128
           minLength: 4
-        code:
+        assetCode:
           type: string
-          description: code of the Asset
+          description: Code of the Asset
         detailedEstimate:
           $ref: '#/definitions/DetailedEstimate'
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
       - tenantId
-      - code
+      - assetCode
       - detailedEstimate
       
   Activity:
@@ -1687,7 +1687,7 @@ definitions:
           $ref: '#/definitions/NonSOR'
         uom:
           $ref: '#/definitions/UOM'
-        rate:
+        unitRate:
           type: integer
           format: double
           description: Rate of the Activity
@@ -1720,7 +1720,7 @@ definitions:
       - tenantId
       - uom
       - detailedEstimate
-      - rate
+      - unitRate
     
   MeasurementSheet:
       type: object
@@ -1786,7 +1786,7 @@ definitions:
           minLength: 4
         financialYear:
           type: string
-          description: financialYear of the MultiYearEstimate
+          description: Financial Year of the MultiYearEstimate
         detailedEstimate:
           $ref: '#/definitions/DetailedEstimate'
         percentage:
@@ -2059,8 +2059,7 @@ definitions:
         type: string
         description: Status Date of Offline Status
       objectId:
-        type: integer
-        format: int64
+        type: string
         description: Unique Identifier for the specified obect type.
 
       auditDetails:
@@ -2074,7 +2073,7 @@ definitions:
     
   WorkOrderActivity:
     type: object
-    description: A Object holds the basic data for a WorkOrder Esitmate
+    description: A Object holds the basic data for a Letter Of Acceptance Esitmate
     properties:
       id:
         type: string
@@ -2206,7 +2205,7 @@ definitions:
           description: tenant id of the Assets
           maxLength: 128
           minLength: 4
-        code:
+        assetCode:
           type: string
           description: code of the Asset
         letterOfAcceptanceEstimate:
@@ -2215,7 +2214,7 @@ definitions:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
       - tenantId
-      - code
+      - assetCode
       - letterOfAcceptanceEstimate
     
   LetterOfAcceptanceEstimate:
@@ -2227,7 +2226,7 @@ definitions:
         description: Unique Identifier of the Letter Of Acceptance Estimate.
       tenantId:
         type: string
-        description: tenant id of the Letter Of Acceptance Estimate
+        description: Tenant id of the Letter Of Acceptance Estimate
         maxLength: 128
         minLength: 4
       letterOfAcceptance:
@@ -2266,12 +2265,18 @@ definitions:
         type: number
         format: double
         description: Amount of Security Deposit should be calculated as per percentage
+      tenantId:
+        type: string
+        description: tenant id of the Assets
+        maxLength: 128
+        minLength: 4
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
     - mode
     - percentage
     - amount
+    - tenantId
 
   LetterOfAcceptanceRequest:
       description: Contract class to send response. Array of LetterOfAcceptance items are used in case of search results, also multiple  Letter Of Acceptance item is used for create and update
@@ -2281,6 +2286,7 @@ definitions:
         letterOfAcceptances:
           description: Used for create and update only
           type: array
+          minimum: 1
           maximum: 100
           items:
             $ref: '#/definitions/LetterOfAcceptance'
@@ -2361,6 +2367,7 @@ definitions:
         workOrders:
           description: Used for create and update only
           type: array
+          minimum: 1
           maximum: 100
           items:
             $ref: '#/definitions/WorkOrder'
@@ -2443,6 +2450,7 @@ definitions:
         notices:
           description: Used for create and update only
           type: array
+          minimum: 1
           maximum: 100
           items:
             $ref: '#/definitions/Notice'
@@ -2480,25 +2488,26 @@ definitions:
         type: string
         description: Comments for the measurement book
       mbDate:
-        type: string
-        description: Date of the measurement book
+        type: integer
+        format: int64
+        description: Epoch time of when the measurement book created
       mbIssuedDate:
-        type: string
-        description: Issued date of the measurement book
+        type: integer
+        format: int64
+        description: Epoch time of Issued date of the measurement book
       mbAbstract:
-        type: number
+        type: string
         description: Abstract comments for the measurement book
       fromPageNo:
-        type: number
+        type: integer
         description: From page number for the measurement book
       toPageNo:
         type: integer
         description: To page number for the measurement book
       letterOfAcceptanceEstimate:
         $ref: '#/definitions/LetterOfAcceptanceEstimate'
-      egBillregister:
-        type: number
-        description: egBillregister %
+      billregister:
+        $ref: '#/definitions/BillRegister'
       status:
         $ref: '#/definitions/ProjectStatus'
       measurementBookDetails:
@@ -2533,7 +2542,6 @@ definitions:
     - mbDate
     - mbAbstract
     - fromPageNo
-    - toPageNo
     - mbAmount
     
   MeasurementBookDetails:
@@ -2545,7 +2553,7 @@ definitions:
         description: Unique Identifier of the MBDetail
       tenantId:
         type: string
-        description: tenant id of the MBDetail
+        description: tenant id of the MB Detail
         maxLength: 128
         minLength: 4
       measurementBook:
@@ -2563,17 +2571,10 @@ definitions:
       remarks:
         type: string
         description: Remarks for the Measurement book details
-      mbDetailsDate:
-        type: string
-        description: Measurement book details Date
       amount:
         type: number
         format: double
         description: Amount for the Measurement book details
-      orderNumber:
-        type: number
-        format: double
-        description: OrderNumber for the Measurement book details
       measurementSheets:
         type: array
         description: Array of Measurement Book Measurement Sheet
@@ -2585,7 +2586,6 @@ definitions:
     required:
     - tenantId
     - rate
-    - mbDetailsDate
     - amount
     - measurementSheets
         
@@ -2684,6 +2684,7 @@ definitions:
         mbheaders:
           description: Used for create and update only
           type: array
+          minimum: 1
           maximum: 100
           items:
             $ref: '#/definitions/MeasurementBook'
@@ -2708,7 +2709,8 @@ definitions:
         contractorBills:
           description: Used for create and update only
           type: array
-          maximum: 500
+          minimum: 1
+          maximum: 100
           items:
             $ref: '#/definitions/ContractorBill'
             
@@ -2872,10 +2874,10 @@ definitions:
       typeOfWork:
         type: string
         description: type Of Work code for the Statutory Deduction
-      egBillPayeeDtls:
+      billPayeeDetail:
         description: Bill Payee Details for the Statutory Deduction
         $ref: '#/definitions/BillPayeeDetail'
-      egBillReg:
+      contractorBill:
         $ref: '#/definitions/ContractorBill'
         description: Bill reference in the Deduction Type
       auditDetails:
@@ -2893,6 +2895,11 @@ definitions:
         maxLength: 50
         description: |
           Unique Identifier of the BillRegister
+      tenantId:
+        type: string
+        description: Tenant id of the Bill
+        maxLength: 128
+        minLength: 4
       billType:
         type: string
         maxLength: 50
@@ -3023,6 +3030,11 @@ definitions:
         type: string
         description: |
           Unique Identifier of the BillDetail
+      tenantId:
+        type: string
+        description: Tenant id of the Bill Detail
+        maxLength: 128
+        minLength: 4
       orderId:
         type: integer
         format: int32
@@ -3074,6 +3086,11 @@ definitions:
         type: string
         description: |
           Unique Identifier of the BillPayeeDetail
+      tenantId:
+        type: string
+        description: Tenant id of the Bill Payee Detail
+        maxLength: 128
+        minLength: 4
       accountDetailType:
         type: string
         description: |

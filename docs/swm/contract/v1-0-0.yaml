@@ -29,10 +29,10 @@ paths:
             in: query
             maxItems: 50
             description: comma seperated list of Ids
-          - name: transactionId
+          - name: transactionNo
             type: string
             in: query
-            description: transactionId of the VehicleFuellingDetails
+            description: transactionNo of the VehicleFuellingDetails
             maxLength: 265
           - name: transactionDate
             type: string
@@ -1494,9 +1494,9 @@ definitions:
           description: tenant id of the VehicleFuellingDetails
           maxLength: 128
           minLength: 4
-        transactionId:
+        transactionNo:
           type: string
-          description: transactionId. unique across the system
+          description: transactionNo. unique across the system
           maxLength: 256
           minLength: 1
         transactionDate:
@@ -1542,7 +1542,7 @@ definitions:
       required:
       - id
       - tenantId
-      - transactionId
+      - transactionNo
       - transactionDate
       - vehicleType
       - vehicleRegNo
@@ -1955,4 +1955,5 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 

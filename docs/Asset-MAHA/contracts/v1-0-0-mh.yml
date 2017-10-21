@@ -1209,7 +1209,7 @@ definitions:
         description: Boundary door number.
       pinCode:
         type: integer
-        format: int32
+        format: int64
         description: pin code of the location.
   Revaluation:
     description: Hold the asset Revaluation information.

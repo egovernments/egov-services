@@ -3567,7 +3567,7 @@ definitions:
         description: Description of the Schedule Of Rate
         maxLength: 20
         minLength: 1
-      category:
+      scheduleCategory:
         $ref: '#/definitions/ScheduleCategory'
       uom:
         $ref: '#/definitions/UOM'
@@ -3584,7 +3584,8 @@ definitions:
     required:
     - tenantId
     - code
-    - category
+    - description
+    - scheduleCategory
     - uom
 
   SORRate:
@@ -3621,14 +3622,14 @@ definitions:
 
   MarketRate:
     type: object
-    description: An Object that hold Market Rate Detail for a given SOR
+    description: An Object that hold Market Rate Details for a given SOR
     properties:
       id:
         type: string
-        description: Unique Identifier of the Market Rate Detail
+        description: Unique Identifier of the Market Rate Details
       tenantId:
         type: string
-        description: tenant id of the Market Rate Detail
+        description: tenant id of the Market Rate Details
         maxLength: 128
         minLength: 4
       scheduleOfRate:
@@ -3720,6 +3721,7 @@ definitions:
     - code
     - status
     - moduletype
+    - description
     
   ContractorClass:
     type: object
@@ -3878,9 +3880,6 @@ definitions:
     - email
     - mobileNumber
     - panNumber
-    - tinNumber
-    - bankAccountNumber
-    - ifscCode
     - contractorClass
       
   MilestoneTemplate:
@@ -3932,7 +3931,6 @@ definitions:
     - templateName
     - templateCode
     - status
-    - description
     - typeOfWork
     - subTypeOfWork
     - milestoneTemplateActivities
@@ -4096,7 +4094,6 @@ definitions:
     - name
     - code
     - status
-    - description
     - typeOfWork
     - subTypeOfWork
     - estimateTemplateActivities
@@ -4253,58 +4250,59 @@ definitions:
     - tenantId
     - endDate
     
-  Remark:
+  Remarks:
     type: object
+    description: An Object that holds Remarks Master data
     properties:
       id:
         type: string
-        description: Unique Identifier of the Remark
+        description: Unique Identifier of the Remarks Master
       tenantId:
         type: string
-        description: Tenant id of the Remark
+        description: Tenant id of the Remarks Master
         maxLength: 128
         minLength: 4
       typeOfDocument:
         type: string
-        description: Type Of Document of the Remark
+        description: Type Of Document of the Remarks MAster
         maxLength: 100
         minLength: 1
-      remarkType:
+      remarksType:
         type: string
-        description: Remark Type of the Remark
+        description: Remarks Type of the Remarks Master
         maxLength: 100
         minLength: 1
-      remarkDetails:
+      remarksDetails:
         type: array
         minItems: 1
-        description: Array of Remark Details
+        description: Array of Remarks Details
         items:
-          $ref: '#/definitions/RemarkDetail'
+          $ref: '#/definitions/RemarksDetail'
 
     required:
     - tenantId
     - typeOfDocument
-    - remarkType
-    - remarkDetails
+    - remarksType
+    - remarksDetails
     
-  RemarkDetail:
+  RemarksDetail:
     type: object
-    description: An Object that holds Remark Details for a given Remark
+    description: An Object that holds Remarks Details for a given Remarks Master
     properties:
       id:
         type: string
-        description: Unique Identifier of the Remark Detail
+        description: Unique Identifier of the Remarks Detail
       tenantId:
         type: string
-        description: Tenant id of the Remark Detail
+        description: Tenant id of the Remarks Detail
         maxLength: 128
         minLength: 4
-      remark:
-        $ref: '#/definitions/Remark'
       remarks:
+        $ref: '#/definitions/Remarks'
+      remarksDescription:
         type: string
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
-        description: Remarks detailed description for given remark
+        description: Detailed description for given remarks master
         maxLength: 1024
       editable:
         type: boolean
@@ -4313,8 +4311,8 @@ definitions:
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
-    - remark
     - remarks
+    - remarksDescription
     - tenantId
     - editable
     

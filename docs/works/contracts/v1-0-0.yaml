@@ -19,7 +19,7 @@ info:
   
   title: eGov Works Management System.
   description: |
-    APIs for Works Management module. This modules handles creation of Abstract Estimate, Detailed Estimate, Letter of Acceptance, Work Order, Measurement Book, Milestone/Track Milestone, Contractor Bill etc,.
+    APIs for Works Management module. This modules handles creation of Abstract Estimate, Detailed Estimate, Letter of Acceptance, Work Order, Notice, Measurement Book, Milestone/Track Milestone, Contractor Bill etc,.
   contact:
     name: eGovernments Foundation
     email : contacts@egovernments.org
@@ -49,7 +49,7 @@ paths:
         - $ref: "#/parameters/sortProperty"
         - name: adminSanctionNumber
           in: query
-          description: Unique Admin Sanction Number of Abstract Estimate
+          description: Comma seperated list of Admin Sanction Number of Abstract Estimate
           required: false
           type: string
           allowEmptyValue: true
@@ -110,13 +110,17 @@ paths:
         - name: abstractEstimateNumber
           in: query
           required: false
-          description: Unique number of the Abstract Estimate.
-          type: string
+          description: Comma seperated list of abstract estimate number of the Abstract Estimate.
+          type: array
+          items:
+            type: string
         - name: workIdentificationNumber
           in: query
-          description: Work Identification Number assigned to Abstract Estimate.
+          description: Comma seperated list of Work Identification Number assigned to Abstract Estimate.
           required: false
-          type: string
+          type: array
+          items:
+            type: string
         - name: abstractEstimateStatus
           in: query
           description: Status of the Abstract Estimate.
@@ -139,11 +143,13 @@ paths:
       summary: Create new Abstract Estimate(s).
       description: |
           To create new Abstract Estimate in the system. API supports bulk creation with max limit as defined in the Abstract Estimate Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Abstract Estimate, please pass array with one Abstract Estimate object.
+          Reference type will be allowed to edit in case of on going abstract estimate and disabled for spillover abstract estimate.
+          All the flags like spillover, detiled estimate and bills created flag will be allowed to select only in case Spillover abstract estimate.
           
       parameters:
         - name: AbstractEstimateRequest
           in: body
-          description: Details for the new AbstractEstimate(s) + RequestInfo meta data.
+          description: Details for the new AbstractEstimate(s).
           required: true
           schema:
             $ref: '#/definitions/AbstractEstimateRequest'
@@ -169,11 +175,12 @@ paths:
       description: |
           To update existing Abstract Estimate in the system. API supports bulk updation with max limit as defined in the Abstract Estimate Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Abstract Estimate, please pass array with one Abstract Estimate object.
           In update all the fields are disabled except the Work Flow Deatils and the fields which needs to be captured at different status are enabled.
+          At the last level of workflow gross amount billed amount will be editable.
           
       parameters:
         - name: AbstractEstimateRequest
           in: body
-          description: Details for the new AbstractEstimate(s) + RequestInfo meta data.
+          description: Details for the new AbstractEstimate(s).
           required: true
           schema:
             $ref: '#/definitions/AbstractEstimateRequest'
@@ -213,9 +220,11 @@ paths:
         - $ref: "#/parameters/sortProperty"
         - name: detailedEstimateNumber
           in: query
-          description: Unique Estimate Number for a Detailed Estimate
+          description: Comma seperated list of Estimate Number for a Detailed Estimate
           required: false
-          type: string
+          type: array
+          items:
+            type: string
           allowEmptyValue: true
         - name: ids
           type: array
@@ -249,13 +258,17 @@ paths:
         - name: workIdentificationNumber
           in: query
           required: false
-          description: The Work Identification Number of the Detailed Estimate.
-          type: string
+          description: Comma Seaprated List of Work Identification Number of the Detailed Estimate.
+          type: array
+          items:
+            type: string
         - name: abstractEstimateNumber
           in: query
           required: false
-          description: Abstract Estimate Number Detailed Estimate.
-          type: string
+          description: Comma seaprated list of Abstract Estimate Number Detailed Estimate.
+          type: array
+          items:
+            type: string
         - name: estimateAmount
           in: query
           required: false
@@ -299,11 +312,16 @@ paths:
       summary: Create new Detailed Estimate(s).
       description: |
           To create new Detailed Estimate in the system. API supports bulk creation with max limit as defined in the Detailed Estimate Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Detailed Estimate, please pass array with one Detailed Estimate object.
+          Detailed Estimate will created for Approved Abstract Estimate.
+          To create an Detailed estimate Atleast one SOR is mandatory.
+          All the fields related to Abstract estimate are in disabled mode.
+          If overhead's are selected then based on that (percentage or amount) will be applacable on Estimate value.
+          If deduction's are selected then based on that (percentage or amount) will be applacable on Estimate value.
           
       parameters:
         - name: DetailedEstimateRequest
           in: body
-          description: Details for the new Detailed Estimate(s) + RequestInfo meta data.
+          description: Details for the new Detailed Estimate(s).
           required: true
           schema:
             $ref: '#/definitions/DetailedEstimateRequest'
@@ -333,7 +351,7 @@ paths:
       parameters:
         - name: DetailedEstimateRequest
           in: body
-          description: Details for the new Detailed Estimate(s) + RequestInfo meta data.
+          description: Details for the new Detailed Estimate(s).
           required: true
           schema:
             $ref: '#/definitions/DetailedEstimateRequest'
@@ -358,6 +376,9 @@ paths:
       summary: Create new Letter Of Acceptance(s).
       description: |
           To create new Letter Of Acceptance in the system. API supports bulk creation with max limit as defined in the Letter Of Acceptance Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Letter Of Acceptance, please pass array with one Letter Of Acceptance object.
+          Letter Of Acceptance can be created for approved detailed estimate.
+          The sor selected while creating the detailed estimate will be populated in LOA as bill of quantity(BOQ)
+          In case of Spillover LOA Letter Of Acceptance Number will be allowed to edit.
           
       parameters:
         - name: LetterOfAcceptanceRequest
@@ -448,8 +469,10 @@ paths:
         - name: detailedEstimateNumber
           in: query
           required: false
-          description: The unique Detailed Estimate Number for a Detailed Estimate
-          type: string
+          description: Comma seperated list of unique Detailed Estimate Number for a Detailed Estimate
+          type: array
+          items:
+            type: string
         - name: fileNumber
           in: query
           required: false
@@ -479,9 +502,11 @@ paths:
           type: string
         - name: contractorName
           in: query
-          description: Name of the contractor to which Letter Of Acceptance belongs to.
+          description: Comma seperated list of Name of the contractor to which Letter Of Acceptance belongs to.
           required: false
-          type: string
+          type: array
+          items:
+            type: string
       responses:
         200:
           description: Letter Of Acceptance(s) Retrieved Successfully
@@ -510,28 +535,41 @@ paths:
         - $ref: "#/parameters/sortProperty"
         - name: workOrderNumber
           in: query
-          pattern: '[a-zA-Z0-9-]'
-          description: Unique Work Order Number for a Work Order
+          pattern: '[a-zA-Z0-9-\\]'
+          description: Comma seperated list of Work Order Number for a Work Order
           required: false
-          type: string
+          type: array
+          items:
+            type: string
           allowEmptyValue: true
         - name: loaNumber
-          pattern: '[a-zA-Z0-9-]'
+          pattern: '[a-zA-Z0-9-\\]'
           in: query
-          description: Unique LOA Number for a Letter Of Acceptance
+          description: Comma Seaprated List of LOA Number for a Letter Of Acceptance
           required: false
-          type: string
+          type: array
+          items:
+            type: string
           allowEmptyValue: true
         - name: detailedEstimateNumber
           in: query
           required: false
-          description: The unique Detailed Estimate Number for a Detailed Estimate
-          type: string
+          description: Comma seperated list of Detailed Estimate Number for a Detailed Estimate
+          type: array
+          items:
+            type: string
         - name: status
           in: query
           required: false
           description: The different status for the object
           type: string
+        - name: workIdentificationNumber
+          in: query
+          required: false
+          description: Comma Seaprated List of Work Identification Number.
+          type: array
+          items:
+            type: string
       responses:
         200:
           description: Offline Status(s) Retrieved Successfully
@@ -638,6 +676,7 @@ paths:
       summary: Create new Work Order(s).
       description: |
           To create new Work Order in the system. API supports bulk creation with max limit as defined in the Work Order Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Work Order, please pass array with one Work Order object.
+          Only for Approved LOA workorder can be crated.
           
       parameters:
         - name: WorkOrderRequest
@@ -711,7 +750,7 @@ paths:
         - $ref: "#/parameters/sortProperty"
         - name: workOrderNumber
           in: query
-          description: Unique Work Order Number for a Work Order
+          description: Comma seperated list of Work Order Number for a Work Order
           required: false
           type: array
           allowEmptyValue: true
@@ -729,6 +768,34 @@ paths:
           description: Status of the Work Order.
           required: false
           type: string
+        - name: loaNumber
+          pattern: '[a-zA-Z0-9-\\]'
+          in: query
+          description: Comma Seaprated List of LOA Number for a Letter Of Acceptance
+          required: false
+          type: array
+          items:
+            type: string
+          allowEmptyValue: true
+        - name: detailedEstimateNumber
+          in: query
+          required: false
+          description: The unique Detailed Estimate Number for a Detailed Estimate
+          type: array
+          items:
+            type: string
+        - name: status
+          in: query
+          required: false
+          description: The different status for the object
+          type: string
+        - name: workIdentificationNumber
+          in: query
+          required: false
+          description: Comma Seaprated List of Work Identification Number.
+          type: array
+          items:
+            type: string
       responses:
         200:
           description: Work Order(s) Retrieved Successfully
@@ -746,6 +813,8 @@ paths:
       summary: Create new Notice(s).
       description: |
           To create new Notice in the system. API supports bulk creation with max limit as defined in the Notice Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Notice, please pass array with one Notice object.
+          
+          Notice can only created for approved workorder and after seeting offline status to Agreement order signed.
           
       parameters:
         - name: NoticeRequest
@@ -835,6 +904,34 @@ paths:
           description: Status of the Work Order.
           required: false
           type: string
+        - name: loaNumber
+          pattern: '[a-zA-Z0-9-\\]'
+          in: query
+          description: Comma Seaprated List of LOA Number for a Letter Of Acceptance
+          required: false
+          type: array
+          items:
+            type: string
+          allowEmptyValue: true
+        - name: detailedEstimateNumber
+          in: query
+          required: false
+          description: The unique Detailed Estimate Number for a Detailed Estimate
+          type: array
+          items:
+            type: string
+        - name: status
+          in: query
+          required: false
+          description: The different status for the object
+          type: string
+        - name: workIdentificationNumber
+          in: query
+          required: false
+          description: Comma Seaprated List of Work Identification Number.
+          type: array
+          items:
+            type: string
       responses:
         200:
           description: Notice(s) Retrieved Successfully
@@ -852,6 +949,7 @@ paths:
       summary: Create new Measurement Book(s).
       description: |
           To create new Measurement Book in the system. API supports bulk creation with max limit as defined in the Measurement Book Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Measurement Book, please pass array with one Measurement Book object.
+          To create Measurement book Notice must be genrated and its offlice status should be Work commenced.
           
       parameters:
         - name: MeasurementBookRequest
@@ -882,6 +980,7 @@ paths:
       description: |
           To update existing Measurement Book in the system. API supports bulk updation with max limit as defined in the Measurement Book Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Measurement Book, please pass array with one Measurement Book object.
           In update all the fields are disabled except the Work Flow Deatils and the fields which needs to be captured at different status are enabled.
+          In updade fields can be modified based on confguration defined in the system.
           
       parameters:
         - name: MeasurementBookRequest
@@ -924,18 +1023,6 @@ paths:
         - $ref: "#/parameters/pageSize"
         - $ref: "#/parameters/pageNumber"
         - $ref: "#/parameters/sortProperty"
-        - name: workOrderNumber
-          in: query
-          description: Unique Work Order Number for a Work Order
-          required: false
-          type: string
-          allowEmptyValue: true
-        - name: loaNumber
-          in: query
-          description: Unique LOA Number for a Letter Of Acceptance
-          required: false
-          type: string
-          allowEmptyValue: true
         - name: ids
           type: array
           items:
@@ -948,6 +1035,41 @@ paths:
           description: Status of the Measurement Book.
           required: false
           type: string
+        - name: workOrderNumber
+          in: query
+          description: Comma Seaprated List of Work Order Number for a WorkOrder
+          required: false
+          type: string
+          allowEmptyValue: true
+        - name: mbRefNumber
+          in: query
+          description: Comma seperated list of Work Order Number for a WorkOrder
+          required: false
+          type: string
+          allowEmptyValue: true
+        - name: loaNumber
+          pattern: '[a-zA-Z0-9-\\]'
+          in: query
+          description: Comma Seaprated List of LOA Number for a Letter Of Acceptance
+          required: false
+          type: array
+          items:
+            type: string
+          allowEmptyValue: true
+        - name: detailedEstimateNumber
+          in: query
+          required: false
+          description: Comma Seaprated List of Detailed Estimate Number for a Detailed Estimate
+          type: array
+          items:
+            type: string
+        - name: workIdentificationNumber
+          in: query
+          required: false
+          description: Comma Seaprated List of Work Identification Number.
+          type: array
+          items:
+            type: string
       responses:
         200:
           description: Measurement Book(s) Retrieved Successfully
@@ -976,9 +1098,11 @@ paths:
         - $ref: "#/parameters/sortProperty"
         - name: letterOfAcceptanceNumber
           in: query
-          description: Unique Letter of Acceptance Number for a Letter Of Acceptance
+          description: Comma seperated list of Letter of Acceptance Number for a Letter Of Acceptance
           required: false
-          type: string
+          type: array
+          items:
+            type: string
           allowEmptyValue: true
         - name: billFromDate
           in: query
@@ -1007,17 +1131,21 @@ paths:
         - name: workIdentificationNumber
           in: query
           required: false
-          description: The Work Identification Number of the Contractor Bill
-          type: string
+          description: Comma seperated list of Work Identification Number of the Contractor Bill
+          type: array
+          items:
+            type: string
         - name: contractorName
           in: query
           required: false
-          description: The contractorName of the Contractor Bill
-          type: string
-        - name: departmentCode
+          description: Comma seperated list of contractorName of the Contractor Bill
+          type: array
+          items:
+            type: string
+        - name: department
           in: query
           required: false
-          description: The departmentCode of the Contractor Bill
+          description: The department of the Contractor Bill
           type: string
         - name: spillOverFlag
           in: query
@@ -1045,7 +1173,7 @@ paths:
       parameters:
         - name: ContractorBillRequest
           in: body
-          description: Details for the new Contractor Bill(s) + RequestInfo meta data.
+          description: Details for the new Contractor Bill(s).
           required: true
           schema:
             $ref: '#/definitions/ContractorBillRequest'
@@ -1075,7 +1203,7 @@ paths:
       parameters:
         - name: ContractorBillRequest
           in: body
-          description: Details for the Contractor Bill(s) + RequestInfo meta data.
+          description: Details for the Contractor Bill(s).
           required: true
           schema:
             $ref: '#/definitions/ContractorBillRequest'
@@ -1171,12 +1299,6 @@ paths:
         - $ref: "#/parameters/pageSize"
         - $ref: "#/parameters/pageNumber"
         - $ref: "#/parameters/sortProperty"
-        - name: workOrderNumber
-          in: query
-          description: Unique Work Order Number for a WorkOrder
-          required: false
-          type: string
-          allowEmptyValue: true
         - name: ids
           type: array
           items:
@@ -1189,6 +1311,35 @@ paths:
           description: Status of the Milestone.
           required: false
           type: string
+        - name: workOrderNumber
+          in: query
+          description: Comma Seaprated List of Work Order Number for a WorkOrder
+          required: false
+          type: string
+          allowEmptyValue: true
+        - name: loaNumber
+          pattern: '[a-zA-Z0-9-\\]'
+          in: query
+          description: Comma Seaprated List of LOA Number for a Letter Of Acceptance
+          required: false
+          type: array
+          items:
+            type: string
+          allowEmptyValue: true
+        - name: detailedEstimateNumber
+          in: query
+          required: false
+          description: Comma Seaprated List of Detailed Estimate Number for a Detailed Estimate
+          type: array
+          items:
+            type: string
+        - name: workIdentificationNumber
+          in: query
+          required: false
+          description: Comma Seaprated List of Work Identification Number.
+          type: array
+          items:
+            type: string
       responses:
         200:
           description: Milestone(s) Retrieved Successfully
@@ -1295,6 +1446,29 @@ paths:
           description: Status of the Track Milestone.
           required: false
           type: string
+        - name: loaNumber
+          pattern: '[a-zA-Z0-9-\\]'
+          in: query
+          description: Comma Seaprated List of LOA Number for a Letter Of Acceptance
+          required: false
+          type: array
+          items:
+            type: string
+          allowEmptyValue: true
+        - name: detailedEstimateNumber
+          in: query
+          required: false
+          description: Comma Seaprated List of Detailed Estimate Number for a Detailed Estimate
+          type: array
+          items:
+            type: string
+        - name: workIdentificationNumber
+          in: query
+          required: false
+          description: Comma Seaprated List of Work Identification Number.
+          type: array
+          items:
+            type: string
       responses:
         200:
           description: Track Milestone(s) Retrieved Successfully
@@ -1353,20 +1527,28 @@ definitions:
         minLength: 4
       abstractEstimateNumber:
         type: string
-        pattern: '[a-zA-Z0-9-]'
+        pattern: '[a-zA-Z0-9-\\]'
         description: Unique number for the Abstract Estimate
+        maxLength: 20
+        minLength: 3
       subject:
         type: string
         description: Subject of Abstract Estimate
+        maxLength: 100
+        minLength: 3
       fund:
         type: string
         description: Fund of the Abstract Estimate
       referenceType:
         type: string
         description: Reference Type of the Abstract Estimate
+        maxLength: 128
+        minLength: 3
       referenceNumber:
         type: string
         description: Letter Reference Number of the Abstract Estimate
+        maxLength: 100
+        minLength: 3
       function:
         type: string
         description: Function of the Abstract Estimate
@@ -1375,6 +1557,7 @@ definitions:
         description : description for the Abstract Estimate
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
         maxLength: 1024
+        minLength: 3
       budgetHead:
         type: string
         description: Budget head of the Abstract Estimate
@@ -1393,8 +1576,10 @@ definitions:
         description: Department for which Abstract Estimate belongs to
       adminSanctionNumber:
         type: string
-        pattern: '[a-zA-Z0-9-]'
+        pattern: '[a-zA-Z0-9-\\]'
         description: Unique number after admin sanction for the Abstract Estimate
+        maxLength: 50
+        minLength: 3
       adminSanctionDate:
         type: integer
         format: int64
@@ -1418,8 +1603,7 @@ definitions:
       beneficiary:
         $ref: '#/definitions/Beneficiary'
       modeOfAllotment:
-        type: string
-        description: Mode of allotment of the Abstract Estimate
+        $ref: '#/definitions/ModeOfAllotment'
       typeOfWork:
         $ref: '#/definitions/TypeOfWork'
       subTypeOfWork:
@@ -1430,8 +1614,10 @@ definitions:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
       technicalSanctionNumber: 
         type: string
-        pattern: '[a-zA-Z0-9-]'
+        pattern: '[a-zA-Z0-9-\\]'
         description: Technical sanction number of the Abstract Estimate
+        maxLength: 50
+        minLength: 3        
       technicalSanctionDate: 
         type: integer
         format: int64
@@ -1445,7 +1631,7 @@ definitions:
         $ref: '#/definitions/WorkCategory'
       councilResolutionNumber:
         type: string
-        pattern: '[a-zA-Z0-9-]'
+        pattern: '[a-zA-Z0-9-\\]'
         description: Council resolution number of the Abstract Estimate
       councilResolutionDate:
         type: string
@@ -1462,9 +1648,13 @@ definitions:
       cancellationReason:
         type: string
         description: Reason for cancellation of the Abstract Estimate, Required only while cancelling Abstract Estimate
+        maxLength: 512
+        minLength: 3
       cancellationRemarks:
         type: string
         description: Remarks for cancellation of the Abstract Estimate, Required only while cancelling Abstract Estimate
+        maxLength: 512
+        minLength: 3
       detailedEstimateCreated:
         type: boolean
         description: Boolean value if the detailed estimate created or not. Required only if Abstract Estimate is Spill Over
@@ -1521,14 +1711,18 @@ definitions:
       nameOfWork:
         type: string
         description: Name Of Work of the Abstract Estimate Details
+        maxLength: 1024
+        minLength: 3
       estimateAmount:
         type: number
-        format: double
+        format: BigDecimal
         description: Estimate amount for the Abstract Estimate Details
       estimateNumber:
         type: string
-        pattern: '[a-zA-Z0-9-]'
+        pattern: '[a-zA-Z0-9-\\]'
         description: Estimate number of the Abstract Estimate Details.
+        maxLength: 50
+        minLength: 3
       quantity:
         type: number
         format: double
@@ -1572,9 +1766,13 @@ definitions:
       objectType:
         type: string
         description: Object type of the document for which documents are attached.
+        maxLength: 100
+        minLength: 3
       fileStore:
         type: string
         description: Filestore reference of the document which is attached 
+        maxLength: 256
+        minLength: 3
       tenantId:
         type: string
         description: Tenant Id of the Document detail
@@ -1600,6 +1798,8 @@ definitions:
       budgetUsage:
         type: string
         description: Refrernce of Budget Usage of the Estimate Appropriation
+        maxLength: 100
+        minLength: 3
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -1632,7 +1832,7 @@ definitions:
         type: string
         description: Description of the photograph
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
-        maxLength: 024
+        maxLength: 1024
       dateOfCapture:
         type: integer
         format: int64
@@ -1665,6 +1865,8 @@ definitions:
       designation:
         type: string
         description: designation of the workflow processing authority
+        maxLength: 1024
+        minLength: 3
       assignee:
         type: integer
         format: int64
@@ -1744,6 +1946,8 @@ definitions:
       id:
         type: string
         description: Unique Identifier of the Detailed Estimate
+        maxLength: 256
+        minLength: 3
       tenantId:
         type: string
         description: Tenant id of the Detailed Estimate
@@ -1751,8 +1955,10 @@ definitions:
         minLength: 4
       estimateNumber:
         type: string
-        pattern: '[a-zA-Z0-9-]'
+        pattern: '[a-zA-Z0-9-\\]'
         description: Unique number for the Detailed Estimate
+        maxLength: 50
+        minLength: 3
       estimateDate:
         type: integer
         format: int64
@@ -1760,18 +1966,22 @@ definitions:
       nameOfWork:
         type: string
         description: name of the work of Detailed Estimate Details
+        maxLength: 1024
+        minLength: 3
       fundSource:
         type: string
         description: Fund Source of the Detailed Estimate
       description:
         type: string
         description : description for the Detailed Estimate
+        maxLength: 1024
+        minLength: 3
       department:
         type: string
         description: Department for which Detailed Estimate belongs to
       adminSanctionNumber:
         type: string
-        pattern: '[a-zA-Z0-9-]'
+        pattern: '[a-zA-Z0-9-\\]'
         description: Unique number after admin sanction for the Detailed Estimate
       adminSanctionDate:
         type: integer
@@ -1786,10 +1996,16 @@ definitions:
         type: integer
         format: double
         description: Work value of the Detailed Estimate
+        pattern: "[0-9]"
+        maxLength: 20
+        minLength: 3
       estimateValue:
         type: integer
         format: double
         description: Estimate value of the Detailed Estimate
+        pattern: "[0-9]"
+        maxLength: 20
+        minLength: 3
       projectCode:
         $ref: '#/definitions/ProjectCode'
       parent:
@@ -1809,11 +2025,12 @@ definitions:
       approvalComent:
         description: approval comment while approving Detailed Estimate
         type: string
+        maxLength: 512
+        minLength: 3
       beneficiary:
         $ref: '#/definitions/Beneficiary'
       modeOfAllotment:
-        type: string
-        description: mode of allotment of the Detailed Estimate
+        $ref: '#/definitions/ModeOfAllotment'
       parentCategory:
         $ref: '#/definitions/TypeOfWork'
       category:
@@ -1842,6 +2059,8 @@ definitions:
       councilResolutionNumber:
         type: string
         description: council resolution number of the Detailed Estimate
+        maxLength: 50
+        minLength: 3
       councilResolutionDate:
         type: string
         description: Epoch time of the council resolution date
@@ -1856,7 +2075,7 @@ definitions:
         description: Boolean value to identify whether the spill over or not
       grossAmountBilled:  
         type: integer
-        format: double
+        format: BigDecimal
         description: Gross Amount Billed if billsCreated flag is true 
       cancellationReason:
         type: string
@@ -1864,9 +2083,11 @@ definitions:
       cancellationRemarks:
         type: string
         description: Remarks for cancellation of the Detailed Estimate, Required only while cancelling Detailed Estimate
+        maxLength: 512
+        minLength: 3
       totalIncludingRE:
         type: integer
-        format: double
+        format: BigDecimal
         description: Total Estimate Amount including Revision Estimates
       abstractEstimateDetails:
         type: array
@@ -1925,7 +2146,7 @@ definitions:
           $ref: '#/definitions/Overhead'
         amount:
           type: integer
-          format: double
+          format: BigDecimal
           pattern: "[0-9]"
           description: Overhead amount
         detailedEstimate:
@@ -1953,6 +2174,7 @@ definitions:
         assetCode:
           type: string
           description: Code of the Asset
+          pattern: '[a-zA-Z0-9-\\]'
           minLength: 1
           maxLength: 100
         detailedEstimate:
@@ -2032,32 +2254,53 @@ definitions:
         slNo:
           type: integer
           description: sl No of the Measurement sheet
+          pattern: "[0-9]"
+          maxLength: 10
+          minLength: 3
         identifier:
           type: string
           description: identifier of the Measurement sheet
         remarks:
           type: string
           description: remarks of the Measurement sheet
+          pattern: "[0-9]"
+          maxLength: 1024
+          minLength: 3
         no:
           type: integer
           format: BigDecimal
           description: no of the Measurement sheet
+          pattern: "[0-9]"
+          maxLength: 10
+          minLength: 1
         length:
           type: integer
           format: BigDecimal
           description: length of the Measurement sheet
+          pattern: "[0-9]"
+          maxLength: 10
+          minLength: 1
         width:
           type: integer
           format: BigDecimal
           description: width of the Measurement sheet
+          pattern: "[0-9]"
+          maxLength: 10
+          minLength: 1
         depthOrHeight:
           type: integer
           format: BigDecimal
           description: depthOrHeight of the Measurement sheet
+          pattern: "[0-9]"
+          maxLength: 10
+          minLength: 1
         quantity:
           type: integer
           format: BigDecimal
           description: quantity of the Measurement sheet
+          pattern: "[0-9]"
+          maxLength: 10
+          minLength: 1
         activity:
           $ref: '#/definitions/Activity'
         parent:
@@ -2153,8 +2396,10 @@ definitions:
           minLength: 4
         technicalSanctionNumber:
           type: string
-          pattern: '[a-zA-Z0-9-]'
+          pattern: '[a-zA-Z0-9-\\]'
           description: Technical Sanction Number of the EstimateTechnicalSanction
+          maxLength: 50
+          minLength: 1
         detailedEstimate:
           $ref: '#/definitions/DetailedEstimate'
         technicalSanctionDate:
@@ -2200,6 +2445,8 @@ definitions:
           type: integer
           format: BigDecimal
           pattern: "[0-9]"
+          maxLength: 10
+          minLength: 1
           description: Amount for the Detailed Estimate Deduction
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
@@ -2221,6 +2468,7 @@ definitions:
         code:
           type: string
           description: Code of the Project 
+          pattern: '[a-zA-Z0-9-\\]'
           minLength: 1
           maxLength: 100
         detailedEstimate:
@@ -2359,13 +2607,22 @@ definitions:
         type: number
         format: double
         description: Approved Rate for the work order.
+        pattern: "[0-9]"
+        maxLength: 50
+        minLength: 1
       approvedAmount:
         type: number
-        format: double
+        format: BigDecimal
         description: Approved Amount for the work order.
+        pattern: "[0-9]"
+        maxLength: 50
+        minLength: 1
       remarks:
         type: string
         description: Remarks for the work order.
+        pattern: "[0-9]"
+        maxLength: 1024
+        minLength: 1
       workOrderMeasurements:
         type: array
         description: Array of work order measurement sheet
@@ -2397,17 +2654,21 @@ definitions:
         description: Epoch tine of LOA Date
       loaNumber:
         type: string
-        pattern: '[a-zA-Z0-9-]'
+        pattern: '[a-zA-Z0-9-\\]'
         description: LOA Number of the Letter Of Acceptance
       contractPeriod:
         type: number
         pattern: "[0-9]"
         description: Contract Period (In days) for the Letter Of Acceptance
+        maxLength: 10
+        minLength: 1
       emdAmountDeposited:
         type: number
         format: double
         pattern: "[0-9]"
         description: EMD Amount Deposited for the Letter Of Acceptance
+        maxLength: 50
+        minLength: 1
       securityDeposit:
         type: array
         description: Array to hold the Security Deposit details
@@ -2420,13 +2681,14 @@ definitions:
       defectLiabilityPeriod:
         type: number
         format: double
-        
         description: Defect Liability Period (In Years) for the Letter Of Acceptance
       loaAmount:
         type: number
-        format: double
+        format: BigDecimal
         pattern: "[0-9]"
         description: LOA Amount for the Letter Of Acceptance
+        maxLength: 50
+        minLength: 1
       documentDetails:
         type: array
         description: Array of document details
@@ -2456,9 +2718,13 @@ definitions:
       cancellationReason:
         type: string
         description: Reason for cancellation of the LOA, Required only while cancelling LOA
+        maxLength: 1024
+        minLength: 1
       cancellationRemarks:
         type: string
         description: remarks for cancellation of the LOA, Required only while cancelling LOA
+        maxLength: 1024
+        minLength: 1
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -2519,7 +2785,8 @@ definitions:
         type: string
         description: Work Completion Date of Letter Of Acceptance Estimate
       estimateLOAAmount:
-        type: string
+        type: integer
+        format: BigDecimal
         pattern: "[0-9]"
         description: Estimate wise LOA amount of the Letter Of Acceptance
       assetForLOA:
@@ -2544,10 +2811,16 @@ definitions:
       percentage:
         type: string
         description: Percentage for the given mode
+        pattern: "[0-9]"
+        maxLength: 10
+        minLength: 1
       amount:
         type: number
-        format: double
+        format: BigDecimal
         description: Amount of Security Deposit should be calculated as per percentage
+        pattern: "[0-9]"
+        maxLength: 50
+        minLength: 1
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -2606,8 +2879,10 @@ definitions:
         description: Epoch time of Work Order Date
       workOrderNumber:
         type: string
-        pattern: '[a-zA-Z0-9-]'
+        pattern: '[a-zA-Z0-9-\\]'
         description: Work Order Number
+        maxLength: 10
+        minLength: 1
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -2630,6 +2905,8 @@ definitions:
       remarks:
         type: string
         description: Remarks for the Work Order.
+        maxLength: 1024
+        minLength: 1
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -2713,6 +2990,8 @@ definitions:
       remarks:
         type: string
         description: Remarks for the Notice.
+        maxLength: 1024
+        minLength: 1
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -2761,9 +3040,13 @@ definitions:
         type: string
         pattern: "[0-9]"
         description: Referance number for the measurement book. 
+        maxLength: 50
+        minLength: 1
       contractorComments:
         type: string
         description: Comments for the measurement book
+        maxLength: 1024
+        minLength: 1
       mbDate:
         type: integer
         format: int64
@@ -2775,14 +3058,20 @@ definitions:
       mbAbstract:
         type: string
         description: Abstract comments for the measurement book
+        maxLength: 1024
+        minLength: 1
       fromPageNo:
         type: integer
         pattern: "[0-9]"
         description: From page number for the measurement book
+        maxLength: 10
+        minLength: 1
       toPageNo:
         type: integer
         pattern: "[0-9]"
         description: To page number for the measurement book
+        maxLength: 10
+        minLength: 1
       letterOfAcceptanceEstimate:
         $ref: '#/definitions/LetterOfAcceptanceEstimate'
       billregister:
@@ -2800,9 +3089,11 @@ definitions:
         description: True if Measurement Book is legacy
       mbAmount:
         type: number
-        format: double
+        format: BigDecimal
         pattern: "[0-9]"
         description: Amount for the Measurement book.
+        maxLength: 50
+        minLength: 1
       approvedDate:
         type: integer
         format: int64
@@ -2820,9 +3111,13 @@ definitions:
       cancellationReason:
         type: string
         description: Reason for cancellation of the Measurement book, Required only while cancelling Measurement book
+        maxLength: 1024
+        minLength: 1
       cancellationRemarks:
         type: string
         description: Remarks for cancellation of the Measurement book, Required only while cancelling Measurement book
+        maxLength: 1024
+        minLength: 1
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -2855,18 +3150,26 @@ definitions:
         pattern: "[0-9]"
         format: double
         description: Quantity for the Measurement book details
+        maxLength: 20
+        minLength: 1
       rate:
         type: number
         format: double
         description: Rate for the Measurement book details
+        maxLength: 20
+        minLength: 1
       remarks:
         type: string
         description: Remarks for the Measurement book details
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        maxLength: 1024
+        minLength: 1
       amount:
         type: number
-        format: double
+        format: BigDecimal
         description: Amount for the Measurement book details
+        maxLength: 20
+        minLength: 1
       measurementSheets:
         type: array
         description: Array of Measurement Book Measurement Sheet
@@ -2896,14 +3199,19 @@ definitions:
           type: string
           description: Remarks of the Measurement sheet
           pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+          maxLength: 1024
+          minLength: 1
         no:
           type: integer
           format: BigDecimal
           description: No. of the Measurement sheet
+          maxLength: 20
+          minLength: 1
         length:
           type: integer
           format: BigDecimal
           description: Length of the Measurement sheet
+          maxLength: 20
         width:
           type: integer
           format: BigDecimal
@@ -2912,10 +3220,12 @@ definitions:
           type: integer
           format: BigDecimal
           description: Depth or Height of the Measurement sheet
+          maxLength: 20
         quantity:
           type: integer
           format: BigDecimal
           description: Quantity of the Measurement sheet
+          maxLength: 20
         measurementBookDetails:
           $ref: '#/definitions/MeasurementBookDetails'
         loaMeasurementSheet:
@@ -2942,10 +3252,12 @@ definitions:
           type: integer
           format: BigDecimal
           description: No. of the Measurement sheet
+          maxLength: 20
         length:
           type: integer
           format: BigDecimal
           description: Length of the Measurement sheet
+          maxLength: 20
         width:
           type: integer
           format: BigDecimal
@@ -2954,10 +3266,13 @@ definitions:
           type: integer
           format: BigDecimal
           description: Depth or Height of the Measurement sheet
+          maxLength: 20
         quantity:
           type: integer
           format: BigDecimal
           description: Quantity of the Measurement sheet
+          maxLength: 20
+          minLength: 1
         loaActivity:
           $ref: '#/definitions/WorkOrderActivity'
         measurementSheet:
@@ -3035,6 +3350,7 @@ definitions:
       billSequenceNumber:
         type: string
         description: Bill sequence number of the Bill
+        pattern: '[a-zA-Z0-9-\\]'
       approvedDate:
         type: integer
         format: int64
@@ -3045,9 +3361,13 @@ definitions:
       cancellationReason:
         type: string
         description: Reason for cancellation of the Bill, Required only while cancelling Contractor Bill
+        maxLength: 1024
+        minLength: 4
       cancellationRemarks:
         type: string
         description: Remarks for cancellation of the Bill, Required only while cancelling Bill
+        maxLength: 1024
+        minLength: 4
       assetDetailsList:
         type: array
         description: Array of Asset details for the Bill
@@ -3081,12 +3401,16 @@ definitions:
       assetCode:
         type: string
         description: Asset code of the Contractor Bill
+        maxLength: 50
+        minLength: 4
       chartOfAccounts:
         type: string
         description: Chart of Accounts for the Assets for Bill
       description:
         type: string
         description: Description for the Asset for Bill
+        maxLength: 1024
+        minLength: 4
       amount:
         type: number
         format: BigDecimal
@@ -3132,7 +3456,7 @@ definitions:
           for example ContractorBill will have subType as "FinalBill"
       billNumber:
         type: string
-        pattern: '[a-zA-Z0-9-]'
+        pattern: '[a-zA-Z0-9-\\]'
         maxLength: 50
         description: |
           billNumber refers to the unique number generated for the bill.
@@ -3143,14 +3467,14 @@ definitions:
           billDate is the date when the bill is created.
       billAmount:
         type: number
-        format: double
+        format: BigDecimal
         description: |
           billAmount is the total bill Amount .
           even though the bill is created for billAmount of x
           it may be passed for amount x-k
       passedAmount:
         type: number
-        format: double
+        format: BigDecimal
         description: |
           passedAmount refers to the amount passed by ulb .
           even though the bill is created for billAmount of x
@@ -3213,7 +3537,7 @@ definitions:
           if the budget check not done.
       partyBillNumber:
         type: string
-        pattern: '[a-zA-Z0-9-]'
+        pattern: '[a-zA-Z0-9-\\]'
         maxLength: 50
         description: |
           partyBillNumber is the manual bill number .
@@ -3224,7 +3548,7 @@ definitions:
           partyBillDate is the manual bill date .
       description:
         type: string
-        maxLength: 256
+        maxLength: 1024
         description: |
           description is the more detailed information about the bill
       billDetails:
@@ -3270,12 +3594,12 @@ definitions:
           glcode of the BillDetail
       debitAmount:
         type: number
-        format: double
+        format: BigDecimal
         description: |
           debit amount of the BillDetail
       creditAmount:
         type: number
-        format: double
+        format: BigDecimal
         description: |
           credit amount of the BillDetail
       function:
@@ -3320,7 +3644,7 @@ definitions:
           account detail key of the BillPayeeDetail
       amount:
         type: number
-        format: double
+        format: BigDecimal
         description: |
           amount of the BillPayeeDetail
     required:
@@ -3364,9 +3688,13 @@ definitions:
       cancellationReason:
         type: string
         description: Reason for cancellation of the Milestone, Required only while cancelling Milestone
+        maxLength: 1024
+        minLength: 4
       cancellationRemarks:
         type: string
         description: Remarks for cancellation of the Milestone, Required only while cancelling Milestone
+        maxLength: 1024
+        minLength: 4
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -3392,6 +3720,8 @@ definitions:
       description:
         type: string
         description: Descritpion for Milestone Activity.
+        maxLength: 1024
+        minLength: 4
       stageOrderNumber:
         type: string
         description: Stage Order Number for Milestone Activity.
@@ -3482,6 +3812,8 @@ definitions:
       remarks:
         type: string
         description: Remarks for the Track milestone activity
+        maxLength: 1024
+        minLength: 4
       completionDate:
         type: string
         description: Completion Date for the milestone.
@@ -3516,6 +3848,34 @@ definitions:
         items:
           $ref: '#/definitions/TrackMilestone'
       
+
+  ModeOfAllotment:
+    type: object
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Mode Of Allotment
+      tenantId:
+        type: string
+        description: Tenant id of the Mode Of Allotment
+        maxLength: 128
+        minLength: 4
+      name:
+        type: string
+        description: Unique name of the Mode Of Allotment
+        pattern: '[a-zA-Z0-9\s\.,]'
+        maxLength: 100
+        minLength: 1
+      code:
+        type: string
+        description: Unique code of the Mode Of Allotment
+        pattern: '[a-zA-Z0-9-\\]'
+        maxLength: 100
+        minLength: 1
+    required:
+    - tenantId
+    - name
+    - code
       
 ##### MASTERS #######
       
@@ -3539,6 +3899,7 @@ definitions:
       code:
         type: string
         description: Unique code of the Schedule Category
+        pattern: '[a-zA-Z0-9-\\]'
         maxLength: 100
         minLength: 1
     required:
@@ -3672,6 +4033,7 @@ definitions:
       code:
         type: string
         description: code of the UOM
+        pattern: '[a-zA-Z0-9-\\]'
         maxLength: 20
         minLength: 1
       active:
@@ -3698,6 +4060,7 @@ definitions:
       code:
         type: string
         description: Status Code of the Project Status
+        pattern: '[a-zA-Z0-9-\\]'
         maxLength: 100
         minLength: 1
       status:
@@ -3740,20 +4103,20 @@ definitions:
         maxLength: 100
         minLength: 1
       description:
-        type: number
-        format: double
+        type: string
         description: Description of the Contractor Class.
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
         maxLength: 1024
         minLength: 1
       minAmount:
         type: number
-        format: double
+        format: BigDecimal
         description: Minimum Amount of the Contractor Class.
         maxLength: 100
         minLength: 1
       maxAmount:
-        type: string
+        type: number
+        format: BigDecimal
         description: Maximum Amount of the Contractor Class.
         maxLength: 20
         minLength: 1
@@ -3784,6 +4147,7 @@ definitions:
       code:
         type: string
         description: Name of the Contractor.
+        pattern: '[a-zA-Z0-9-\\]'
         maxLength: 100
         minLength: 3
       correspondenceAddress:
@@ -3858,6 +4222,7 @@ definitions:
       epfRegistrationNumber:
         type: string
         description: EPF Registration Number of the Contractor,Only Number value with decimal should be accepted
+        pattern: '[a-zA-Z0-9-\\]'
         maxLength: 20
         minLength: 1
       accountCode:
@@ -3902,6 +4267,7 @@ definitions:
       templateCode:
         type: string
         description: Code of the Milestone Template
+        pattern: '[a-zA-Z0-9-\\]'
         maxLength: 100
         minLength: 1
       status:
@@ -3992,6 +4358,7 @@ definitions:
       code:
         type: string
         description: Unique code of the Type Of Work
+        pattern: '[a-zA-Z0-9-\\]'
         maxLength: 100
         minLength: 3
       description:
@@ -4029,6 +4396,7 @@ definitions:
       code:
         type: string
         description: Unique code of the Sub Type Of Work
+        pattern: '[a-zA-Z0-9-\\]'
         maxLength: 100
         minLength: 3
       description:
@@ -4066,6 +4434,7 @@ definitions:
       code:
         type: string
         description: Code of the Estimate Template
+        pattern: '[a-zA-Z0-9-\\]'
         maxLength: 100
         minLength: 3
       status:
@@ -4151,6 +4520,7 @@ definitions:
       code:
         type: string
         description: Unique code of the Non SOR
+        pattern: '[a-zA-Z0-9-\\]'
         maxLength: 100
         minLength: 3
       description:
@@ -4186,6 +4556,7 @@ definitions:
       code:
         type: string
         description: Name of the Overhead
+        pattern: '[a-zA-Z0-9-\\]'
         maxLength: 100
         minLength: 3
       accountCode:
@@ -4335,6 +4706,7 @@ definitions:
       code:
         type: string
         description: Code of the Nature Of Work
+        pattern: '[a-zA-Z0-9-\\]'
         maxLength: 100
         minLength: 1
       expenditureType:

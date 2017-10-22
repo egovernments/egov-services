@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import Drawer from 'material-ui/Drawer';
+
 import { withRouter } from 'react-router'
 
 import Header from './common/Header';
@@ -10,6 +12,7 @@ import Snackbar from 'material-ui/Snackbar';
 import LoadingIndicator from './common/LoadingIndicator';
 import router from "../router";
 import Api from "../api/api";
+import CustomMenu from './common/CustomMenu';
 
 window.urlCheck = false;
 class App extends Component {
@@ -165,7 +168,7 @@ class App extends Component {
   }
 
   render() {
-    var {toggleDailogAndSetText,toggleSnackbarAndSetText, isDialogOpen, msg, isSnackBarOpen, toastMsg, loadingStatus, isSuccess, isError} = this.props;
+    var {toggleDailogAndSetText,toggleSnackbarAndSetText, isDialogOpen, msg, isSnackBarOpen, toastMsg, loadingStatus, isSuccess, isError,showMenu,actionList} = this.props;
 
     const actions = [
       <FlatButton
@@ -176,6 +179,12 @@ class App extends Component {
     ];
     return (
       <div className="App">
+
+
+          <Drawer containerClassName="side-bar" open={showMenu ||false} >
+           {actionList && actionList.length>0 && <CustomMenu menuItems={[]} actionList={actionList} />}
+          </Drawer>
+
           <Header/>
 
               {router}
@@ -220,7 +229,9 @@ const mapStateToProps = state => ({
     toastMsg: state.form.toastMsg,
     loadingStatus: state.form.loadingStatus,
     isSuccess: state.form.isSuccess,
-    isError: state.form.isError
+    isError: state.form.isError,
+    showMenu: state.common.showMenu,
+    actionList:state.common.actionList
 });
 
 // this.props.appLoaded

@@ -82,7 +82,7 @@ definitions:
         maxLength: 64
         minLength: 1
       register:
-        $ref: '#/definitions/RegisterNameMaster'
+        $ref: '#/definitions/RegisterName'
       subRegisterName:
         type: string
         description: name of sub register

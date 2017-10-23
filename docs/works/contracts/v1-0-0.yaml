@@ -1714,7 +1714,7 @@ definitions:
         items:
           $ref: '#/definitions/DocumentDetail'
       status:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/ProjectStatus'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/AbstractEstimateStatus'
       beneficiary:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/Beneficiary'
       modeOfAllotment:
@@ -2104,7 +2104,7 @@ definitions:
         type: string
         description: user who admin sanctioned
       status:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/ProjectStatus'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/DetailedEstimateStatus'
       workValue:
         type: number
         format: BigDecimal
@@ -2293,16 +2293,16 @@ definitions:
         - assetCode
         - detailedEstimate
       
-  Activity:
+  EstimateActivity:
       type: object
-      description: An Object holds the basic data for a Activity
+      description: An Object holds the basic data for a Estimate Activity
       properties:
         id:
           type: string
-          description: Unique Identifier of the Activity
+          description: Unique Identifier of the Estimate Activity
         tenantId:
           type: string
-          description: Tenant id of the Activity
+          description: Tenant id of the Estimate Activity
           maxLength: 128
           minLength: 4
         schedule:
@@ -2314,28 +2314,28 @@ definitions:
         unitRate:
           type: integer
           format: double
-          description: Unit Rate of the Activity
+          description: Unit Rate of the Estimate Activity
         estimateRate:
           type: integer
           format: double
-          description: Estimate Rate of the Activity
+          description: Estimate Rate of the Estimate Activity
         quantity:
           type: integer
           format: double
-          description: Quantity of the Activity
+          description: Quantity of the Estimate Activity
         serviceTaxPerc:
           type: integer
           format: double
-          description: Service Tax Percentage of the Activity
+          description: Service Tax Percentage of the Estimate Activity
         revisionType:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/RevisionType'
         parent:
-          $ref: '#/definitions/Activity'
+          $ref: '#/definitions/EstimateActivity'
         detailedEstimate:
           $ref: '#/definitions/DetailedEstimate'
         measurementSheetList:
           type: array
-          description: Measurement sheet list for the Activity
+          description: Measurement sheet list for the Estimate Activity
           items:
             $ref: '#/definitions/MeasurementSheet'
         auditDetails:
@@ -2404,8 +2404,8 @@ definitions:
           description: quantity of the Measurement sheet
           pattern: "[0-9.]"
           maxLength: 10
-        activity:
-          $ref: '#/definitions/Activity'
+        estimateActivity:
+          $ref: '#/definitions/EstimateActivity'
         parent:
           $ref: '#/definitions/MeasurementSheet'
         auditDetails:
@@ -2413,7 +2413,7 @@ definitions:
       required:
         - tenantId
         - quantity
-        - activity
+        - estimateActivity
         
   MultiYearEstimate:
       type: object
@@ -2585,7 +2585,7 @@ definitions:
           description: Name of the Project
           maxLength: 100
         status:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/ProjectStatus'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/ProjectCodeStatus'
         projectValue:
           type: integer
           format: BigDecimal
@@ -2643,7 +2643,8 @@ definitions:
         type: string
         description: Object type for the offline status
       status:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/ProjectStatus'
+        type: string
+        description: Offline status for the object type.
       statusDate:
         type: integer
         format: int64
@@ -2661,7 +2662,7 @@ definitions:
       - statusDate
       - objectId
     
-  WorkOrderActivity:
+  LOAActivity:
     type: object
     description: An Object holds the basic data for Letter Of Acceptance
     properties:
@@ -2675,12 +2676,10 @@ definitions:
         minLength: 4
      #letterOfAcceptanceEstimate:
        # $ref: '#/definitions/LetterOfAcceptanceEstimate'
-      activity:
-        $ref: '#/definitions/Activity'
+      estimateActivity:
+        $ref: '#/definitions/EstimateActivity'
       parent:
-        $ref: '#/definitions/WorkOrderActivity'
-      status:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/ProjectStatus'
+        $ref: '#/definitions/LOAActivity'
       approvedRate:
         type: number
         format: BigDecimal
@@ -2706,7 +2705,7 @@ definitions:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - tenantId
-      - activity
+      - estimateActivity
       - approvedAmount
       - approvedRate
       #- letterOfAcceptanceEstimate
@@ -2770,7 +2769,7 @@ definitions:
         items:
           $ref: '#/definitions/DocumentDetail'
       status:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/ProjectStatus'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/LOAStatus'
       tenderFinalizedPercentage:
         type: string
         description: Tender Finalized Percentage for the Letter Of Acceptance
@@ -3161,7 +3160,7 @@ definitions:
       # billregister:
       #   $ref: '#/definitions/BillRegister'
       status:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/ProjectStatus'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/MeasurementBookStatus'
       measurementBookDetails:
         type: array
         description: Array of Measurement Book Details
@@ -3227,8 +3226,8 @@ definitions:
         minLength: 4
       measurementBook:
         $ref: '#/definitions/MeasurementBook'
-      workOrderActivity:
-        $ref: '#/definitions/WorkOrderActivity'        
+      loaActivity:
+        $ref: '#/definitions/LOAActivity'        
       quantity:
         type: number
         pattern: "[0-9]"
@@ -3267,7 +3266,7 @@ definitions:
       - rate
       - quantity
       - amount
-      - workOrderActivity
+      - loaActivity
       - measurementBook
         
   MBMeasurementSheet:
@@ -3362,7 +3361,7 @@ definitions:
           maxLength: 20
           minLength: 1
         loaActivity:
-          $ref: '#/definitions/WorkOrderActivity'
+          $ref: '#/definitions/LOAActivity'
         measurementSheet:
           $ref: '#/definitions/MeasurementSheet'
         auditDetails:
@@ -3529,7 +3528,7 @@ definitions:
       letterOfAcceptanceEstimate:
         $ref: '#/definitions/LetterOfAcceptanceEstimate'
       status:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/ProjectStatus'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/MilestoneStatus'
       milestoneActivities:
         type: array
         description: Array of Milestone Activity
@@ -3639,7 +3638,7 @@ definitions:
       milestone:
         $ref: '#/definitions/Milestone'
       status:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/ProjectStatus'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/TrackMilestoneStatus'
       totalPercentage:
         type: integer
         format: BigDecimal

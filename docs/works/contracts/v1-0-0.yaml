@@ -3904,19 +3904,11 @@ parameters:
     type: integer
     default: 1
   sortProperty:
-    name: sort
+    name: sortBy
     in: query
-    description: Abstract Estimate results will be sorted by id ascending by default if this parameter is not provided.
-    type: array
-    uniqueItems: true
-    minItems: 1
-    maxItems: 3
-    collectionFormat: pipes
-    items:
-      type: string
-      pattern: '[-+](id|abstractEstimateNumber|adminSanctionNumber)'
-    default:
-      - +id
+    description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
+    type: string
+    default: id
 tags:
   - name: Abstract Estimate
     description: APIs required for Abstract Estimate.

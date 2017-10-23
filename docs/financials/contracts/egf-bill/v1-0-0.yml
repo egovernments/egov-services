@@ -387,41 +387,50 @@ definitions:
           description: |
             moduleName is the name of the module who is posting the bill in financials
         status:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/FinancialStatus"
-          description: |
-            status refers to the status of the bill like ,created,approved etc
+          allOf:
+            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/FinancialStatus"
+            - description: |
+                status refers to the status of the bill like ,created,approved etc
         fund:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Fund"
-          description: |
-            fundsource refers to the fundsounce master
+          allOf:
+            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Fund"
+            - description: |
+                fundsource refers to the fundsounce master
         function:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Function"
-          description: |
-            function refers to the function master
+          allOf:
+            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Function"
+            - description: |
+                function refers to the function master
         fundsource:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Fundsource"
-          description: |
-            fundsource of the BillRegister
+          allOf:
+            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Fundsource"
+            - description: |
+                fundsource of the BillRegister
         scheme:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Scheme"
-          description: |
-            scheme of the BillRegister
+          allOf:
+            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Scheme"
+            - description: |
+                scheme of the BillRegister
         subScheme:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/SubScheme"
-          description: |
-            sub scheme of the BillRegister
+          allOf:
+            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/SubScheme"
+            - description: |
+                sub scheme of the BillRegister
         functionary:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Functionary"
-          description: |
-            functionary of the BillRegister
+          allOf:
+            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Functionary"
+            - description: |
+                functionary of the BillRegister
         division:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary"
-          description: |
-            division of the BillRegister
+          allOf:
+            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary"
+            - description: |
+                division of the BillRegister
         department:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/Department"
-          description: |
-            department of the BillRegister
+          allOf:
+            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/Department"
+            - description: |
+                department of the BillRegister
         sourcePath:
           type: string
           maxLength: 256
@@ -479,9 +488,10 @@ definitions:
           description: |
             order id of the BillDetail
         chartOfAccount:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/ChartOfAccount"
-          description: |
-            chart of account of the BillDetail
+          allOf:
+            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/ChartOfAccount"
+            - description: |
+                chart of account of the BillDetail
         glcode:
           type: string
           maxLength: 16
@@ -498,9 +508,10 @@ definitions:
           description: |
             credit amount of the BillDetail
         function:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Function"
-          description: |
-            function of the BillDetail
+          allOf:
+            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Function"
+            - description: |
+                function of the BillDetail
         billPayeeDetails:
           type:  array
           description:  |
@@ -524,13 +535,15 @@ definitions:
           description: |
             Unique Identifier of the BillPayeeDetail
         accountDetailType:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/AccountDetailType"
-          description: |
-            account detail type of the BillPayeeDetail
+          allOf:
+            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/AccountDetailType"
+            - description: |
+                account detail type of the BillPayeeDetail
         accountDetailKey:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/AccountDetailKey"
-          description: |
-            account detail key of the BillPayeeDetail
+          allOf:
+            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/AccountDetailKey"
+            - description: |
+                account detail key of the BillPayeeDetail
         amount:
           type: number
           format: double
@@ -635,13 +648,15 @@ definitions:
             tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc.
             represents the client for which the transaction is created.
         createdBy:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User"
-          description: |
-            createdBy is the logged in user who is conducting transaction
+          allOf:
+            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User"
+            - description: |
+                createdBy is the logged in user who is conducting transaction
         lastModifiedBy:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User"
-          description: |
-            lastModifiedBy is the logged in user who is updating transaction
+          allOf:
+            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User"
+            - description: |
+                lastModifiedBy is the logged in user who is updating transaction
         createdDate:
           type: string
           format: date

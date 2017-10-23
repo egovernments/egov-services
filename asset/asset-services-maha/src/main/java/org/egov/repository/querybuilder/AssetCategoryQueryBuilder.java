@@ -1,4 +1,4 @@
-package org.egov.repository.queryuilder;
+package org.egov.repository.querybuilder;
 
 
 import java.util.List;

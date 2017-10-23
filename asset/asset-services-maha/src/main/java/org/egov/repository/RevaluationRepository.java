@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.egov.model.Revaluation;
 import org.egov.model.criteria.RevaluationCriteria;
-import org.egov.repository.queryuilder.RevaluationQueryBuilder;
+import org.egov.repository.querybuilder.RevaluationQueryBuilder;
 import org.egov.repository.rowmapper.RevaluationRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

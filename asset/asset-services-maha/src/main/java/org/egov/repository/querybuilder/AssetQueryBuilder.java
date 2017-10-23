@@ -1,7 +1,6 @@
-package org.egov.repository.queryuilder;
+package org.egov.repository.querybuilder;
 
 
-import java.util.Date;
 import java.util.List;
 
 import org.egov.config.ApplicationProperties;

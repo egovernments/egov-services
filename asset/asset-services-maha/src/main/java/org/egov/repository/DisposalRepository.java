@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.egov.model.Disposal;
 import org.egov.model.criteria.DisposalCriteria;
-import org.egov.repository.queryuilder.DisposalQueryBuilder;
+import org.egov.repository.querybuilder.DisposalQueryBuilder;
 import org.egov.repository.rowmapper.DisposalRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

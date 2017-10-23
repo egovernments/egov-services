@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.egov.model.AssetCategory;
 import org.egov.model.AssetCategoryCriteria;
-import org.egov.repository.queryuilder.AssetCategoryQueryBuilder;
+import org.egov.repository.querybuilder.AssetCategoryQueryBuilder;
 import org.egov.repository.rowmapper.AssetCategoryRowMapper;
 import org.egov.service.AssetCommonService;
 import org.springframework.beans.factory.annotation.Autowired;

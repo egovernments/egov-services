@@ -1,26 +1,18 @@
 package org.egov.repository;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.contract.AssetRequest;
 import org.egov.model.Asset;
 import org.egov.model.criteria.AssetCriteria;
-import org.egov.repository.queryuilder.AssetQueryBuilder;
+import org.egov.repository.querybuilder.AssetQueryBuilder;
 import org.egov.repository.rowmapper.AssetRowMapper;
 import org.egov.service.AssetCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.xml.internal.bind.v2.runtime.Location;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -37,19 +37,19 @@ definitions:
       id:
         type: integer
         format: int64
-        description: Unique Identifier of the RegisterNameMaster
+        description: Unique Identifier of the RegisterName
       tenantId:
         type: string
         readOnly: true
-        description: tenant id of the RegisterNameMaster
+        description: tenant id of the RegisterName
         maxLength: 128
         minLength: 2
       code:
         type: string
-        description: code of the RegisterNameMaster
+        description: code of the RegisterName
         maxLength: 64
         minLength: 1
-      registerName:
+      name:
         type: string
         description: name of register
         maxLength: 128
@@ -59,7 +59,8 @@ definitions:
         description: is register is active.
     required:
       - tenantId
-      - registerName
+      - code
+      - name
       - isActive
 
   SubRegisterName:
@@ -69,21 +70,21 @@ definitions:
       id:
         type: integer
         format: int64
-        description: Unique Identifier of the SubRegisterNameMaster
+        description: Unique Identifier of the SubRegisterName
       tenantId:
         type: string
         readOnly: true
-        description: tenant id of the SubRegisterNameMaster
+        description: tenant id of the SubRegisterName
         maxLength: 128
         minLength: 2
       code:
         type: string
-        description: code of the SubRegisterNameMaster
+        description: code of the SubRegisterName
         maxLength: 64
         minLength: 1
       register:
         $ref: '#/definitions/RegisterName'
-      subRegisterName:
+      name:
         type: string
         description: name of sub register
         maxLength: 128
@@ -93,7 +94,8 @@ definitions:
         description: is sub register is active.
     required:
       - tenantId
-      - subRegisterName
+      - code
+      - name
       - register
       - isActive
 
@@ -104,19 +106,19 @@ definitions:
       id:
         type: integer
         format: int64
-        description: Unique Identifier of the PurposeMaster
+        description: Unique Identifier of the Purpose
       tenantId:
         type: string
         readOnly: true
-        description: tenant id of the PurposeMaster
+        description: tenant id of the Purpose
         maxLength: 128
         minLength: 2
       code:
         type: string
-        description: code of the PurposeMaster
+        description: code of the Purpose
         maxLength: 64
         minLength: 1
-      purpose:
+      name:
         type: string
         description: name of purpose
         maxLength: 128
@@ -126,7 +128,8 @@ definitions:
         description: is purpose is active.
     required:
       - tenantId
-      - purpose
+      - code
+      - name
       - isActive
 
   ModeOfAcquisition:
@@ -136,29 +139,30 @@ definitions:
       id:
         type: integer
         format: int64
-        description: Unique Identifier of the ModeOfAcquisitionMaster
+        description: Unique Identifier of the ModeOfAcquisition
       tenantId:
         type: string
         readOnly: true
-        description: tenant id of the ModeOfAcquisitionMaster
+        description: tenant id of the ModeOfAcquisition
         maxLength: 128
         minLength: 2
       code:
         type: string
-        description: code of the ModeOfAcquisitionMaster
+        description: code of the ModeOfAcquisition
         maxLength: 64
         minLength: 1
-      modeOfAcquisition:
+      name:
         type: string
         description: Mode Of Acquisition Master
         maxLength: 128
         minLength: 1
       isActive:
         type: boolean
-        description: is ModeOfAcquisitionMaster is active.
+        description: is ModeOfAcquisition is active.
     required:
       - tenantId
-      - modeOfAcquisition
+      - code
+      - name
       - isActive
 
   HoldingType:
@@ -168,29 +172,30 @@ definitions:
       id:
         type: integer
         format: int64
-        description: Unique Identifier of the HoldingTypeMaster
+        description: Unique Identifier of the HoldingType
       tenantId:
         type: string
         readOnly: true
-        description: tenant id of the HoldingTypeMaster
+        description: tenant id of the HoldingType
         maxLength: 128
         minLength: 2
       code:
         type: string
-        description: code of the HoldingTypeMaster
+        description: code of the HoldingType
         maxLength: 64
         minLength: 1
-      holdingType:
+      name:
         type: string
         description: type of holding
         maxLength: 128
         minLength: 1
       isActive:
         type: boolean
-        description: is HoldingTypeMaster is active.
+        description: is HoldingType is active.
     required:
       - tenantId
-      - holdingType
+      - code
+      - name
       - isActive
 
   CompensationMode:
@@ -200,29 +205,30 @@ definitions:
       id:
         type: integer
         format: int64
-        description: Unique Identifier of the CompensationModeMaster
+        description: Unique Identifier of the CompensationMode
       tenantId:
         type: string
         readOnly: true
-        description: tenant id of the CompensationModeMaster
+        description: tenant id of the CompensationMode
         maxLength: 128
         minLength: 2
       code:
         type: string
-        description: code of the CompensationModeMaster
+        description: code of the CompensationMode
         maxLength: 64
         minLength: 1
-      compensationMode:
+      name:
         type: string
         description: mode of compensation
         maxLength: 128
         minLength: 1
       isActive:
         type: boolean
-        description: is CompensationModeMaster active.
+        description: is CompensationMode active.
     required:
       - tenantId
-      - compensationMode
+      - code
+      - name
       - isActive 
 
   RoadType:
@@ -232,29 +238,30 @@ definitions:
       id:
         type: integer
         format: int64
-        description: Unique Identifier of the RoadTypeMaster
+        description: Unique Identifier of the RoadType
       tenantId:
         type: string
         readOnly: true
-        description: tenant id of the RoadTypeMaster
+        description: tenant id of the RoadType
         maxLength: 128
         minLength: 2
       code:
         type: string
-        description: code of the RoadTypeMaster
+        description: code of the RoadType
         maxLength: 64
         minLength: 1
-      roadType:
+      name:
         type: string
         description: name of Mode Of Acquisition Master
         maxLength: 128
         minLength: 1
       isActive:
         type: boolean
-        description: is RoadTypeMaster active.
+        description: is RoadType active.
     required:
       - tenantId
-      - roadType
+      - code
+      - name
       - isActive
   
   PlaningType:
@@ -264,29 +271,30 @@ definitions:
       id:
         type: integer
         format: int64
-        description: Unique Identifier of the PlanningTypeMaster
+        description: Unique Identifier of the PlanningType
       tenantId:
         type: string
         readOnly: true
-        description: tenant id of the PlanningTypeMaster
+        description: tenant id of the PlanningType
         maxLength: 128
         minLength: 2
       code:
         type: string
-        description: code of the PlanningTypeMaster
+        description: code of the PlanningType
         maxLength: 64
         minLength: 1
-      planningType:
+      name:
         type: string
         description: name of planning Type
         maxLength: 128
         minLength: 1
       isActive:
         type: boolean
-        description: is PlanningTypeMaster active.
+        description: is PlanningType active.
     required:
       - tenantId
-      - planningType
+      - code
+      - name
       - isActive
 
   UsageType:
@@ -296,19 +304,19 @@ definitions:
       id:
         type: integer
         format: int64
-        description: Unique Identifier of the UsageTypeMaster
+        description: Unique Identifier of the UsageType
       tenantId:
         type: string
         readOnly: true
-        description: tenant id of the UsageTypeMaster
+        description: tenant id of the UsageType
         maxLength: 128
         minLength: 2
       code:
         type: string
-        description: code of the UsageTypeMaster
+        description: code of the UsageType
         maxLength: 64
         minLength: 1
-      usageType:
+      name:
         type: string
         description: name of usage Type
         maxLength: 128
@@ -318,7 +326,47 @@ definitions:
         description: is usageType active.
     required:
       - tenantId
-      - usageType
+      - code
+      - name
+      - isActive
+
+  SubUsageType:
+    type: object
+    description: An object which holds the  sub usage Type Master info
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the SubUsageType
+      tenantId:
+        type: string
+        readOnly: true
+        description: tenant id of the SubUsageType
+        maxLength: 128
+        minLength: 2
+      usage:
+        type: string
+        description: code of the UsageType
+        maxLength: 64
+        minLength: 1
+      code:
+        type: string
+        description: code of the SubUsageType
+        maxLength: 64
+        minLength: 1
+      name:
+        type: string
+        description: name of SubUsageType
+        maxLength: 128
+        minLength: 1
+      isActive:
+        type: boolean
+        description: is SubUsageType active.
+    required:
+      - tenantId
+      - usage
+      - code
+      - name
       - isActive
  
   RenewalScheduler:
@@ -328,11 +376,11 @@ definitions:
       id:
         type: integer
         format: int64
-        description: Unique Identifier of the RenewalSchedulerMaster
+        description: Unique Identifier of the RenewalScheduler
       tenantId:
         type: string
         readOnly: true
-        description: tenant id of the RenewalSchedulerMaster
+        description: tenant id of the RenewalScheduler
         maxLength: 128
         minLength: 2
       licenseType:
@@ -390,6 +438,39 @@ definitions:
       - period
       - noOfDaysPerYear
 
+  PropertyType:
+    type: object
+    description: An object which holds the  planning Type Master info
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the PlanningType
+      tenantId:
+        type: string
+        readOnly: true
+        description: tenant id of the PlanningType
+        maxLength: 128
+        minLength: 2
+      code:
+        type: string
+        description: code of the PlanningType
+        maxLength: 64
+        minLength: 1
+      name:
+        type: string
+        description: name of planning Type
+        maxLength: 128
+        minLength: 1
+      isActive:
+        type: boolean
+        description: is PlanningType active.
+    required:
+      - tenantId
+      - code
+      - name
+      - isActive
+
   BillFrequency:
     type: object
     description: An object which holds the bill frequency Master info
@@ -433,4 +514,3 @@ definitions:
       - fromDate
       - toDate
       - licenseNumber
-        

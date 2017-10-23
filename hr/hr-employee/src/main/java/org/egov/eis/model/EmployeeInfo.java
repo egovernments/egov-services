@@ -43,10 +43,12 @@ package org.egov.eis.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.egov.eis.model.enums.Gender;
+import org.egov.eis.model.enums.MaritalStatus;
 import org.egov.eis.model.enums.UserType;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,65 +63,129 @@ import java.util.List;
 @ToString
 public class EmployeeInfo {
 
-	private Long id;
+    private Long id;
 
-	@Size(min=1, max=256)
-	private String code;
+    @Size(min = 1, max = 256)
+    private String code;
 
-	@Size(max=5)
-	private String salutation;
+    @Size(max = 5)
+    private String salutation;
 
-	@Size(min=3, max=100)
-	private String name;
+    @Size(min = 3, max = 100)
+    private String name;
 
-	@Size(min=1, max=64)
-	private String userName;
+    @Size(min = 1, max = 64)
+    private String userName;
 
-	private Gender gender;
+    private Gender gender;
 
-	@Size(max=10)
-	private String mobileNumber;
+    private MaritalStatus maritalStatus;
 
-	@Size(min=5, max=128)
-	private String emailId;
+    private String bloodGroup;
 
-	@Size(max=10)
-	private String pan;
+    private String permanentAddress;
 
-	@Size(max=12)
-	private String aadhaarNumber;
+    private String permanentCity;
 
-	private Boolean active;
+    private String permanentPinCode;
 
-	@Valid
-	private UserType type = UserType.EMPLOYEE;
+    private String correspondenceAddress;
 
-	private Long employeeStatus;
+    private String correspondenceCity;
 
-	private Long employeeType;
+    private String correspondencePinCode;
 
-	@Valid
-	private List<Assignment> assignments = new ArrayList<Assignment>();
+    private String guardian;
 
-	private List<Long> jurisdictions = new ArrayList<Long>();
+    @Size(max = 10)
+    private String mobileNumber;
 
-	private Long bank;
+    @Size(max = 10)
+    private String altContactNumber;
 
-	private Long bankBranch;
+    @Size(min = 5, max = 128)
+    private String emailId;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date dateOfRetirement;
+    @Size(max = 10)
+    private String pan;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date dateOfAppointment;
+    @Size(max = 12)
+    private String aadhaarNumber;
 
-	@Size(max=20)
-	private String bankAccount;
+    @Size(max = 200)
+    private String placeOfBirth;
 
-	private List<String> documents = new ArrayList<String>();
+    private Boolean active;
 
-	private String tenantId;
+    @Valid
+    private UserType type = UserType.EMPLOYEE;
+
+    private List<Long> languagesKnown = new ArrayList<>();
+
+    private Long employeeStatus;
+
+    private Long employeeType;
+
+    private Long group;
+
+    private Long motherTongue;
+
+    private String identificationMark;
+
+    private String passportNo;
+
+    private String gpfNo;
+
+    private Long recruitmentMode;
+
+    private Long recruitmentType;
+
+    private Long recruitmentQuota;
+
+    @Valid
+    private List<Assignment> assignments = new ArrayList<Assignment>();
+
+    private List<Long> jurisdictions = new ArrayList<Long>();
+
+    private Long bank;
+
+    private Long bankBranch;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date dateOfRetirement;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date dateOfAppointment;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date dateOfJoining;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date dob;
+
+    @Max(100)
+    private Short retirementAge;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date dateOfResignation;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date dateOfTermination;
+
+    @Size(max = 20)
+    private String bankAccount;
+
+    @Size(max = 20)
+    private String ifscCode;
+
+    private List<String> documents = new ArrayList<String>();
+
+    private String tenantId;
 
 }

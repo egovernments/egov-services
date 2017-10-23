@@ -66,6 +66,16 @@ public class PropertiesManager {
 	private String tenantBasePath;
 	
 	private String tenantSearchPath;
+	
+	private String approveDemolitionWorkflow;
+	
+	private String createDemolitionWorkflow;
+	
+	private String updateDemolitionWorkflow;
+	
+	private String demolitionIndex;
+	
+	private String demolitionIndexType;
 
 	public String getBootstrapServer() {
 		return environment.getProperty("spring.kafka.bootstrap.servers");
@@ -158,6 +168,26 @@ public class PropertiesManager {
 
 	public String getTenatSearchPath() {
 		return environment.getProperty("egov.services.tenant.searchpath");
+	}
+	
+	public String getApproveDemolition() {
+		return environment.getProperty("egov.propertytax.demolition.approved");
+	}
+	
+	public String getCreateDemolitionWorkflow() {
+		return environment.getProperty("egov.propertytax.create.demolition.workflow.started");
+	}
+	
+	public String getUpdateDemolitionWorkflow() {
+		return environment.getProperty("egov.propertytax.demolition.update.workflow.started");
+	}
+
+	public String getDemolitionIndex() {
+		return environment.getProperty("demolition.index");
+	}
+
+	public String getDemolitionIndexType() {
+		return environment.getProperty("demolition.index.type");
 	}
 
 }

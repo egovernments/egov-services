@@ -18,9 +18,6 @@ public class SupportDocument {
 	@JsonProperty("id")
 	private Long id;
 
-//	@JsonProperty("licenseId")
-//	private Long licenseId;
-
 	@JsonProperty("tenantId")
 	private String tenantId;
 	

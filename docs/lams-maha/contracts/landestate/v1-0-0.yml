@@ -1,0 +1,1584 @@
+swagger: '2.0'
+# eGSP YAML Template Version: 1.0 
+
+info:
+  version: 1.0.0
+  ######################################################
+  # All API's are POST. _create,_search,_update for post,get and put. RequestInfo will be part of body. For multiple records we can pass multiple value with comman seperated values*.
+  # All _search will be synchronous and all _create and _update will be asynchronous*.
+  # RequestInfo and ResponseInfo object should be reffered from Common*.
+  # In _search API, tenantId should be passed in query param. In _create/_update, tenantId should be passed in the model.
+  # Readonly means that even if these fields are passed in the request, it will be ignored in create/update and will not be added/updated in the entities. The readonly fields might be passed to the _search API's to make use of fields for the search Query API. while calling _search API's even mandatory fields might not be available, it is mandatory only in the _create API's*.
+  # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message.
+  # Definition must start with Upper case followed by camel case.
+  # Every model will have tenantId. Validate tenantId on create.
+  # Parameter name must start with small case followed by camel case.
+  # Path must be in small case.
+  ######################################################
+  
+  title: eGov LAMS (Leases And Agreements System) APIs
+  description: eGov LAMS manages the Lease data for immovable assets owned by a ULB. This module aim is to improve lease operations in ULB. This will gives a comprehensive details of agreements for immovable assets like Land, Shopping Complex, Market, Kalyanamandapam, etc.
+  contact:
+    name:  eGov
+    email: info@egovernments.org
+schemes:
+  - https
+basePath: '/lams-maha/v1'
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
+
+paths:
+  /lands/_search:
+    post:
+      summary: Get the list of LandRegisters defined in the system.
+      description: |
+        Get the LandRegisters list based on the input parameters.
+      # This is array of GET operation parameters:
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortLandRegister"
+        - name: landRegisterId
+          in: query
+          description: Primary key of LandRegister object.
+          required: false
+          type: string
+          format: varchar
+        - name: registerName
+          in: query
+          required: false
+          description: The Register Name for a LandRegister.
+          type: string
+          minLength: 1
+          maxLength: 64
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: subRegisterName
+          in: query
+          required: false
+          description: The Sub Register Name for a LandRegister.
+          type: string
+          minLength: 1
+          maxLength: 64
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: surveyNo
+          in: query
+          required: false
+          description: Land Survey no
+          type: string
+          minLength: 1
+          maxLength: 64
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: gattNo
+          in: query
+          required: false
+          description: Gatt or CTS no for a Land
+          type: string
+          minLength: 1
+          maxLength: 64
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: oldOwnerName
+          in: query
+          required: false
+          description: Old owner name of a Land
+          type: string
+          minLength: 1
+          maxLength: 64
+        - name: landType
+          in: query
+          required: false
+          description: Land Type of the land
+          type: string
+          minLength: 1
+          maxLength: 64
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: location
+          in: query
+          required: false
+          description: The boundary location where the land is located.
+          type: integer
+          format: int64
+        - name: regionalOffice
+          in: query
+          required: false
+          description: The boundary ward where the land is located.
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/LandRegisterResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Land
+       
+  /lands/_create:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  ######################################################
+    post:
+      summary: Create new LandRegisters.
+      description: API to create new LandRegisters.
+      parameters:
+        - name: landRegister
+          in: body
+          description: Details for the new landRegister + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/LandRegisterRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: LandRegister(s) created sucessfully
+          schema:
+            $ref: '#/definitions/LandRegisterResponse'
+        400:
+          description: LandRegister(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Land  
+        
+  /lands/_update:
+    post:
+      description: Updates a given `LandRegister` with newer details.
+      parameters:
+        - name: landRegister
+          in: body
+          description: Request header for the landRegister Request.
+          required: true
+          schema:
+            $ref: '#/definitions/LandRegisterRequest'
+      tags:
+        - Land
+      responses:
+        '200':
+          description: Update LandRegister(s) successful
+          schema:
+            $ref: '#/definitions/LandRegisterResponse'
+        '400':
+          description: Update LandRegister(s) failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /estates/_search:
+    post:
+      summary: Get the list of EstateRegisters defined in the system.
+      description: |
+        Get the EstateRegisters list based on the input parameters.
+      # This is array of GET operation parameters:
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortEstateRegister"
+        - name: estateRegisterId
+          in: query
+          description: Primary key of EstateRegister object.
+          required: false
+          type: string
+          format: varchar
+        - name: registerName
+          in: query
+          required: false
+          description: The Register Name for a EstateRegister.
+          type: string
+          minLength: 1
+          maxLength: 64
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: subRegisterName
+          in: query
+          required: false
+          description: The Sub Register Name for a EstateRegister.
+          type: string
+          minLength: 1
+          maxLength: 64
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: propertyType
+          in: query
+          required: false
+          description: type of the property for a Estate
+          type: string
+          minLength: 1
+          maxLength: 64
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: surveyNo
+          in: query
+          required: false
+          description: Estate Survey no
+          type: string
+          minLength: 1
+          maxLength: 64
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: gattNo
+          in: query
+          required: false
+          description: Gatt or CTS no for a Estate
+          type: string
+          minLength: 1
+          maxLength: 64
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: location
+          in: query
+          required: false
+          description: The boundary location where the land is located.
+          type: integer
+          format: int64
+        - name: regionalOffice
+          in: query
+          required: false
+          description: The boundary ward where the land is located.
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/EstateRegisterResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Estate
+       
+  /estates/_create:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  ######################################################
+    post:
+      summary: Create new EstateRegisters.
+      description: API to create new EstateRegisters.
+      parameters:
+        - name: estateRegister
+          in: body
+          description: Details for the new estateRegister + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/EstateRegisterRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: EstateRegister(s) created sucessfully
+          schema:
+            $ref: '#/definitions/EstateRegisterResponse'
+        400:
+          description: EstateRegister(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Estate  
+        
+  /estates/_update:
+    post:
+      description: Updates a given `EstateRegister` with newer details.
+      parameters:
+        - name: estateRegister
+          in: body
+          description: Request header for the estateRegister Request.
+          required: true
+          schema:
+            $ref: '#/definitions/EstateRegisterRequest'
+      tags:
+        - Estate
+      responses:
+        '200':
+          description: Update EstateRegister(s) successful
+          schema:
+            $ref: '#/definitions/EstateRegisterResponse'
+        '400':
+          description: Update EstateRegister(s) failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /agreements/_search:
+    post:
+      summary: Agreement List
+      description: |
+        Returns a list of `Agreement` for given different input params.
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - name: agreementId
+          in: query
+          description: Primary key of Agreement object.
+          required: false
+          type: string
+          format: varchar
+        - name: agreementNumber
+          in: query
+          description: Agreement number.
+          required: false
+          type: string
+          format: varchar
+        - name: tenderNumber
+          in: query
+          description: Tender number for which asset is auctioned.
+          required: false
+          type: string
+          format: varchar
+        - name: fromDate
+          in: query
+          description: Agreement date, here search will happen as agreement date is greater or equal to given fromDate.
+          required: false
+          type: string
+          format: varchar
+        - name: toDate
+          in: query
+          description: Agreement date, here search will happen as agreement date is lesser or equal to given toDate.
+          required: false
+          type: string
+          format: varchar
+        - name: status
+          in: query
+          description: Agreement status.
+          required: false
+          type: string
+          format: varchar
+        - name: tinNumber
+          in: query
+          description: Tax Identification number.
+          required: false
+          type: string
+          format: varchar
+        - name: tradelicenseNumber
+          in: query
+          description: Trade License number of the trade going to continue in the asset.
+          required: false
+          type: string
+          format: varchar
+        - name: assetCategory
+          in: query
+          description: Asset category against which agreement made
+          required: false
+          type: string
+          format: varchar
+        - name: shoppingCommplexNo
+          in: query
+          description: Shopping complex number against which agreement made
+          required: false
+          type: string
+          format: varchar
+        - name: assetCode
+          in: query
+          description: Asset code against which agreement made
+          required: false
+          type: string
+          format: varchar
+        - name: locality
+          in: query
+          description: Locality boundary where the asset is located against which the agreement made.
+          required: false
+          type: string
+          format: varchar
+        - name: revenueWard
+          in: query
+          description: Revenue ward boundary where the asset is located against which the agreement made.
+          required: false
+          type: string
+          format: varchar
+        - name: electionWard
+          in: query
+          description: Election ward boundary where the asset is located against which the agreement made.
+          required: false
+          type: string
+          format: varchar
+        - name: doorno
+          in: query
+          description: Door no of a asset against which agreement made
+          required: false
+          type: string
+          format: varchar
+        - name: allotteeName
+          in: query
+          description: Name of allottee against whom the agreement made.
+          required: false
+          type: string
+          format: varchar
+        - name: mobileNumber
+          in: query
+          description: Contact number of allottee against whom the agreement made.
+          required: false
+          type: string
+          format: varchar
+        - name: acknowledgementNumber
+          in: query
+          description: Acknowldgement number given to allottee on submitting the application.
+          required: false
+          type: string
+          format: varchar
+        - name: offset
+          in: query
+          description: Offset value for a the page (in case of pagination on result)
+          required: false
+          type: string
+          format: varchar
+        - name: size
+          in: query
+          description: No.of agreement to be returned by API
+          required: false
+          type: string
+          format: varchar
+      tags:
+        - Agreement
+      responses:
+        '200':
+          description: returns list of agreements.
+          schema:
+            $ref: '#/definitions/AgreementResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /agreements/_create:
+    post:
+      description: Creates a new `Agreement` to lease a asset to `Allottee`.
+      parameters:
+        - name: agreement
+          in: body
+          description: Details for the new Agreement to lease a asset.
+          required: true
+          schema:
+            $ref: '#/definitions/AgreementRequest'
+      tags:
+        - Agreement
+      responses:
+        '201':
+          description: Agreement created
+          schema:
+            $ref: '#/definitions/AgreementResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+  
+  /agreements/_renew:
+    post:
+      description: “Renewal of Agreement” implies that the agreement is renewed before the expiry of the current agreement.
+      parameters:
+        - name: renewal
+          in: body
+          description: Details of the existing agreement which needs to be renew.
+          required: true
+          schema:
+            $ref: '#/definitions/AgreementRequest'
+      tags:
+        - Renewal
+      responses:
+        '201':
+          description: Agreement renewed successfully.
+          schema:
+            $ref: '#/definitions/AgreementResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /agreements/_cancel:
+    post:
+      description: Cancellation of Agreement is a process that is initiated either by the ULB or by the Allottee due to various reasons. Agreement can be cancelled by either party at any given point of time, for the active shop agreement.
+      parameters:
+        - name: cancellation
+          in: body
+          description: Details of the existing agreement which needs to be cancel.
+          required: true
+          schema:
+            $ref: '#/definitions/AgreementRequest'
+      tags:
+        - Cancellation
+      responses:
+        '201':
+          description: Agreement canceled successfully.
+          schema:
+            $ref: '#/definitions/AgreementResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /agreements/_eviction:
+    post:
+      description: “Eviction of Agreement” implies that the agreement is evicted at any time. This eviction is valid only for the asset category Shop.
+      parameters:
+        - name: eviction
+          in: body
+          description: Details of the existing agreement which needs to be evicted.
+          required: true
+          schema:
+            $ref: '#/definitions/AgreementRequest'
+      tags:
+        - Renewal
+      responses:
+        '201':
+          description: Agreement evicted successfully.
+          schema:
+            $ref: '#/definitions/AgreementResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /agreements/_update/{agreementId}:
+    post:
+      description: Updates a given `Agreement` with newer details.
+      parameters:
+        - name: tenantId
+          in: query
+          description: Unique id for ulb.
+          required: true
+          type: string
+          format: varchar
+        - name: agreementId
+          in: path
+          description: Unique service code for service to be updated .
+          required: true
+          type: string
+          format: varchar
+        - name: agreement
+          in: body
+          description: Request header for the agreement Request.
+          required: true
+          schema:
+            $ref: '#/definitions/AgreementRequest'
+      tags:
+        - Agreement
+      responses:
+        '200':
+          description: agreement updated
+          schema:
+            $ref: '#/definitions/AgreementResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+  /agreement/notice/_create:
+    post:
+      description: >
+        Generates a notice for a agreement.
+      parameters:
+        - name: agreement
+          in: body
+          description: Details for the new Agreement to lease a asset.
+          required: true
+          schema:
+            $ref: '#/definitions/NoticeRequest'
+      tags:
+        - Notice
+      responses:
+        '200':
+          description: returns a notice.
+          schema:
+            $ref: '#/definitions/NoticeResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /agreement/notice/_search:
+    post:
+      description: |
+        Returns a list of `Notice` for given different input params.
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - name: noticeId
+          in: query
+          description: Primary key of Agreement object.
+          required: false
+          type: string
+          format: varchar
+        - name: agreementNumber
+          in: query
+          description: Agreement number.
+          required: false
+          type: string
+          format: varchar
+        - name: noticeNumber
+          in: query
+          description: Notice number.
+          required: false
+          type: string
+          format: varchar
+        - name: fromDate
+          in: query
+          description: Notice date, here search will happen as notice date is greater or equal to given fromDate.
+          required: false
+          type: string
+          format: varchar
+        - name: toDate
+          in: query
+          description: Notice date, here search will happen as notice date is lesser or equal to given toDate.
+          required: false
+          type: string
+          format: varchar
+        - name: ackNumber
+          in: query
+          description: Agreement acknowledgement number.
+          required: false
+          type: string
+          format: varchar
+        - name: assetCategory
+          in: query
+          description: Asset category against which agreement made
+          required: false
+          type: string
+          format: varchar
+        - name: zone
+          in: query
+          description: Zone boundary where the asset is located against which the agreement made.
+          required: false
+          type: string
+          format: varchar
+        - name: locality
+          in: query
+          description: Locality boundary where the asset is located against which the agreement made.
+          required: false
+          type: string
+          format: varchar
+        - name: revenueWard
+          in: query
+          description: Revenue ward boundary where the asset is located against which the agreement made.
+          required: false
+          type: string
+          format: varchar
+        - name: electionWard
+          in: query
+          description: Election ward boundary where the asset is located against which the agreement made.
+          required: false
+          type: string
+          format: varchar
+        - name: offset
+          in: query
+          description: Offset value for a the page (in case of pagination on result)
+          required: false
+          type: string
+          format: varchar
+        - name: size
+          in: query
+          description: No.of notices to be returned by API
+          required: false
+          type: string
+          format: varchar
+      tags:
+        - Notice
+      responses:
+        '200':
+          description: returns list of agreements.
+          schema:
+            $ref: '#/definitions/NoticeResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+definitions:
+  LandRegister:
+    type: object
+    description: A Object holds the data for a Land
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the LandRegister.
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant 
+        maxLength: 128
+        minLength: 4
+      landNumber:
+        type: string
+        description: Unique Land ref. no
+        maxLength: 64
+        minLength: 1
+      acquisitionType:
+        type: string
+        description: Land acquisition type.
+        enum:
+         - NEW
+         - EXISTING
+      acquisitionNo:
+        type: string
+        description: Land acquisition no.
+        maxLength: 64
+        minLength: 1
+      registerName:
+        type: string
+        description: Register name
+        maxLength: 64
+        minLength: 1
+      subRegisterName:
+        type: string
+        description: Register name
+        maxLength: 64
+        minLength: 1
+      regionalOffice:
+        description: The boundary ward where the land is located.
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+      location:
+        description: The boundary location where the land is located.
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+      surveyNo:
+        type: string
+        description: Land Survey no
+        maxLength: 64
+        minLength: 1
+      gattNo:
+        type: string
+        description: Gatt or CTS no for a Land
+        maxLength: 64
+        minLength: 1
+      oldOwnerName:
+        type: string
+        description: Old owner name of a Land
+        maxLength: 256
+        minLength: 1
+      purpose:
+        type: string
+        description: purpose of the land
+        maxLength: 64
+        minLength: 1
+      width:
+        type: number
+        format: double
+        description: width of the land
+      roadType:
+        type: string
+        description: Road Type of the land
+        maxLength: 64
+        minLength: 1
+      landType:
+        type: string
+        description: Land Type of the land
+        maxLength: 64
+        minLength: 1
+      reservationArea:
+        type: number
+        format: double
+        description: Reservation Area of the land
+      landArea:
+        type: number
+        format: double
+        description: Land Area
+      areaAsPerRegister:
+        type: number
+        format: double
+        description: Land Area as per register
+      possessionDate:
+        type: string
+        format: date
+        description: possession date of a land
+      modeOfAcquisition:
+        type: string
+        description: mode of acquisition for a land
+        maxLength: 64
+        minLength: 1
+      typeOfHolding:
+        type: string
+        description: type of holding for a land
+        maxLength: 64
+        minLength: 1
+      modeOfCompensation:
+        type: string
+        description: mode of compensation for a land
+        maxLength: 64
+        minLength: 1
+      costOfAcquisition:
+        type: number
+        format: double
+        description: cost of acquisition for a land
+      dateOfPayment:
+        type: string
+        format: date
+        description: payment date of a land
+      buildingReference:
+        type: string
+        description: Building Reference for a land
+        maxLength: 64
+        minLength: 1
+      typeOfPlanning:
+        type: string
+        description: Type Of Planning for a land
+        maxLength: 64
+        minLength: 1
+      codeOfReservation:
+        type: string
+        description: Code Of Reservation for a land
+        maxLength: 64
+        minLength: 1
+      documents:
+        type: array
+        items:
+          $ref: '#/definitions/Document'
+      stateId:
+        type: string
+        description: Work flow ref id.
+      workFlowDetails:
+        $ref: '#/definitions/WorkFlowDetails'
+      comments:
+        type: string
+        description: description or comments for a land
+        maxLength: 1024
+        minLength: 1
+    required:
+      - tenantId
+      - landNumber
+      - acquisitionNo
+      - acquisitionType
+      - registerName
+      - regionalOffice
+      - location
+      - surveyNo
+      - oldOwnerName
+      - purpose
+      - width
+      - landType
+      - landArea
+      - areaAsPerRegister
+      - possessionDate
+      - modeOfAcquisition
+      - typeOfHolding
+      - costOfAcquisition
+        
+  LandRegisterRequest:
+    description: Contract class to receive request. Array of LandRegister items are used in case of create. Where as single LandRegister item is used for update
+    properties:
+      requestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      landRegisters:
+        description: Used for search result and create only
+        type:  array
+        minimum: 1
+        maximum: 100
+        items:
+          $ref: '#/definitions/LandRegister'
+    type: object
+
+  LandRegisterResponse:
+    description: Contract class to send response. Array of LandRegister items  are used in case of search results or response for create. Where as single LandRegister item is used for update
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      landRegisters:
+        description: Used for search result and create only
+        type:  array
+        items:
+          $ref: '#/definitions/LandRegister'
+    
+  EstateRegister:
+    type: object
+    description: A Object holds the data for a Estate
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the EstateRegister.
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant 
+        maxLength: 128
+        minLength: 4
+      estateNumber:
+        type: string
+        description: Unique Estate ref. no
+        maxLength: 64
+        minLength: 1
+      registerName:
+        type: string
+        description: Register name
+        maxLength: 64
+        minLength: 1
+      subRegisterName:
+        type: string
+        description: Register name
+        maxLength: 64
+        minLength: 1
+      regionalOffice:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+      location:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+      propertyName:
+        type: string
+        description: Name of the property
+        maxLength: 256
+      propertyType:
+        type: string
+        description: type of the property
+        maxLength: 64
+        minLength: 1
+      propertyAddress:
+        type: string
+        description: Address of the property
+        maxLength: 512
+        minLength: 1
+      surveyNo:
+        type: string
+        description: Estate Survey no
+        maxLength: 64
+        minLength: 1
+      gattNo:
+        type: string
+        description: Gatt or CTS no for a Estate
+        maxLength: 64
+        minLength: 1
+      buildUpArea:
+        type: number
+        format: double
+        description: built up area of the Estate
+      purpose:
+        type: string
+        description: purpose of the Estate
+        maxLength: 64
+        minLength: 1
+      modeOfAcquisition:
+        type: string
+        description: mode of acquisition for a Estate
+        maxLength: 64
+      carpetArea:
+        type: number
+        format: double
+        description: Carpet Area of the Estate
+      holdingType:
+        type: string
+        description: type of holding for a Estate
+        maxLength: 64
+      landID:
+        type: string
+        description: Land id of the Estate
+        maxLength: 64
+      constructionStartDate:
+        type: string
+        format: date
+        description: construction start date of a Estate
+      constructionEndDate:
+        type: string
+        format: date
+        description: construction end date of a Estate
+      proposedBuildingBudget:
+        type: number
+        format: double
+        description: Proposed Building Expense of the Estate
+      actualBuildingExpense:
+        type: number
+        format: double
+        description: Actual Building Expense of the Estate
+      latitude:
+        type: number
+        format: double
+        description: latitude of the Estate (A location latitude)
+      longitude:
+        type: number
+        format: double
+        description: longitude of the Estate (A location longitude)
+      floors:
+        type: array
+        items:
+          $ref: '#/definitions/FloorDetail'
+      stateId:
+        type: string
+        description: Work flow ref id.
+      workFlowDetails:
+        $ref: '#/definitions/WorkFlowDetails'
+      comments:
+        type: string
+        description: description or comments for a land
+        maxLength: 1024
+    required:
+      - registerName
+      - subRegisterName
+      - regionalOffice
+      - location
+      - propertyType
+      - propertyAddress
+      - surveyNo
+      - gattNo
+      - purpose
+      - modeOfAcquisition
+      - holdingType
+      - constructionStartDate
+      - constructionEndDate
+      - floors
+      
+  FloorDetail:
+    type: object
+    description: A Object holds the data for a floor details of Estate
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the FloorDetail.
+      floorNo:
+        type: string
+        description: Floor no
+        maxLength: 64
+        minLength: 1
+      floorArea:
+        type: number
+        format: double
+        description: Area of a floor
+      noOfUnits:
+        type: number
+        format: int
+        description: No.of units in a floor
+      units:
+        type: array
+        items:
+          $ref: '#/definitions/UnitDetail'
+    required:
+      - floorNo
+      - floorArea
+      - noOfUnits
+      - units
+        
+  UnitDetail:
+    type: object
+    description: A Object holds the data for a unit details of floor
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the UnitDetail.
+      floor:
+        type: string
+        $ref: "#/definitions/FloorDetail"
+      usageType:
+        type: string
+        description: Usage type of a unit
+        maxLength: 64
+        minLength: 1
+      previousUnitNo:
+        type: string
+        description: Previous unitno of a unit
+        maxLength: 64
+        minLength: 1
+      builtUpArea:
+        type: number
+        format: double
+        description: Built up area of a unit
+      holdingType:
+        type: string
+        description: holding type of a unit.
+        maxLength: 64
+        minLength: 1
+      departmentName:
+        type: string
+        description: Department name in a unit.
+        maxLength: 64
+        minLength: 1
+      description:
+        type: string
+        description: description of a unit.
+        maxLength: 512
+        minLength: 1
+    required:
+      - floor
+      - usageType
+      - builtUpArea
+      - holdingType
+      
+  EstateRegisterRequest:
+    description: Contract class to receive request. Array of EstateRegister items are used in case of create. Where as single EstateRegister item is used for update
+    properties:
+      requestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      EstateRegisters:
+        description: Used for search result and create only
+        type:  array
+        minimum: 1
+        maximum: 100
+        items:
+          $ref: '#/definitions/EstateRegister'
+    type: object
+
+  EstateRegisterResponse:
+    description: Contract class to send response. Array of EstateRegister items  are used in case of search results or response for create. Where as single EstateRegister item is used for update
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      EstateRegisters:
+        description: Used for search result and create only
+        type:  array
+        items:
+          $ref: '#/definitions/EstateRegister'
+    
+  Allottee:
+    type: object
+    description: Allottee is a citizen with whom the agreement is done
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the allotee.
+      name:
+        type: string
+        description: Allotee name
+      address:
+        type: string
+        description: Allottee address
+      mobileNumber:
+        type: number
+        description: Allottee contact number
+      aadhaarNumber:
+        type: string
+        description: Allottee aadhaar number
+      pan:
+        type: string
+        description: Allottee pan number
+      emailId:
+        type: string
+        description: Allottee emailid
+    required:
+      - name
+      - address
+      - mobileNumber
+    
+  Agreement:
+    type: object
+    description: This is a 
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the agreement.
+      tenantId:
+        type: string
+        description: Unique Identifier of which tenant this data is defined. For example, AP, AP.Kurnool etc.
+        maxLength: 128
+      action:
+        type: string
+        description: enumeration of action on agreement.
+        enum:
+          - Create
+          - Cancelation
+          - Eviction
+          - Renewal
+          - Objection
+      agreementNumber:
+        type: string
+        description: unique agreement number.
+        maxLength: 64
+      landEstateNo:
+        type: string
+        description: Land or Estate registration no for which the agreement being done.
+        maxLength: 64
+      allottee:
+        $ref: '#/definitions/Allottee'
+      registrationNo:
+        type: string
+        description: Registration no for agreement.
+        maxLength: 64
+      registrationDate:
+        type: string
+        format: date
+        description: Registration date for agreement.
+      registerPageNo:
+        type: string
+        description: Registar page no for agreement.
+        maxLength: 64
+      depositAmount:
+        type: number
+        format: double
+        description: Deposit amount.
+      electricityBillAmount:
+        type: number
+        format: double
+        description: Electricity Bill Amount.
+      propertyOutstanding:
+        type: number
+        format: double
+        description: Property Outstanding.
+      propertyTax:
+        type: number
+        format: double
+        description: Property Tax.
+      penalty:
+        type: number
+        format: double
+        description: penalty.
+      rent:
+        type: number
+        format: double
+        description: rent to be paid per payment cycle.
+      bugdetHead:
+        type: string
+        description: Bugdet Head for agreement.
+        maxLength: 16
+      currentElectricityBillAmount:
+        type: number
+        format: double
+        description: Current Electricity Bill Amount.
+      rentIncrement:
+        type: number
+        format: double
+        description: rent increment amount.
+      currentPenalty:
+        type: number
+        format: double
+        description: Current Penalty.
+      agreementFromDate:
+        type: string
+        format: date
+        description: date of agreement.
+      agreementToDate:
+        type: string
+        format: date
+        description: End date of agreement.
+      holdingType:
+        type: string
+        description: Holding Type
+        maxLength: 64
+      GBResolutionNo:
+        type: string
+        description: GB resolution number.
+        maxLength: 64
+      status:
+        type: string
+        description: enumeration of agreement statuses.
+        enum:
+          - ACTIVE
+          - CANCELED
+          - EVICTED
+          - RENEWED
+          - WORKFLOW
+      paymentCycle:
+        type: string
+        description: payment cycle on which the rent has to be paid against agreement.
+        enum:
+          - MONTH
+          - QUARTER
+          - HALFYEAR
+          - ANNUAL
+      Source:
+        type: string
+        description: source from which agreement is being persisted.
+        enum:
+          - SYSTEM
+          - DATE_ENTRY
+          - MIGRATION
+      remarks:
+        type: string
+        description: Comments.
+        maxLength: 256
+      acknowledgementNumber:
+        type: string
+        description: Acknowldgement number given to allottee on submitting the application. 
+        maxLength: 64
+      documents:
+        type: array
+        items:
+          $ref: '#/definitions/Document'
+      demands:
+        type: array
+        items:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/billingservice/contracts/v1-0-0.yml#/definitions/Demand'
+      stateId:
+        type: string
+        description: Work flow ref id.
+      workFlowDetails:
+        $ref: '#/definitions/WorkFlowDetails'
+      renewal:
+        $ref: '#/definitions/Renewal'
+      cancellation:
+        $ref: '#/definitions/Cancellation'
+    required:
+      - id
+      - tenantId
+      - agreementNumber
+      - landEstateNo
+      - agreementFromDate
+      - agreementToDate
+      - allottee
+      - status
+      - rent
+      - rentIncrement
+      - paymentCycle
+      
+  Document:
+    type: object
+    description: This object holds list of documents attached during the transaciton
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the Document.
+      documentType:
+        type: string
+        description: unique document type code, should be validated with document type master
+      fileStore:
+        type: string
+        description: File store reference key.
+
+  Renewal:
+    type: object
+    description: This object holds Agreement Renewal Details.
+    properties:
+      renewalOrderNo:
+        type: string
+        description: User should enter Renewal order number which provided by corporation/municipality
+      renewalOrderDate:
+        type: string
+        format: date
+        description: enter renewal order date.
+      reasonForRenewal:
+        type: string
+        format: date
+        description: User should able to enter reason for renewal.
+        
+  Cancellation:
+    type: object
+    description: This object holds Agreements Cancellation details. percentage or flat rates for a given asset category.
+    properties:
+      reasonForCancellation:
+        type: string
+        enum:
+          - Termination
+          - Cancellation
+        description: Termination and cancellation options to be displayed in the drop down. Options may increase in future.
+      terminationDate:
+        type: string
+        format: date
+        description: Date should accept current and future date.
+      orderNo:
+        type: string
+        format: date
+        description: Order number for cancelling agreement issued by the competent authority.
+      orderDate:
+        type: string
+        format: date
+        description: Date on which order was signed for cancelling agreement
+
+  WorkFlowDetails:
+    type: object
+    description: This object holds info about the assignee and other workflow related info
+    properties:
+      department:
+        type: string
+        description: Selected department.
+      designation:
+        type: string
+        description: Selected designation.
+      assignee:
+        type: integer
+        format: int64
+        description: Selected assignee.
+      action:
+        type: string
+        description: chosen action.
+      status:
+        type: string
+        description: current status.
+
+  AgreementRequest:
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      Agreement:
+        $ref: '#/definitions/Agreement'
+    type: object
+
+  AgreementResponse:
+    properties:
+      ResponseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      Agreements:
+        type: array
+        items:
+          $ref: '#/definitions/Agreement'
+    type: object
+
+  Notice:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the Notice.
+      tenantId:
+        type: string
+        description: unique id for a ULB
+      noticeNo:
+        type: string
+        description: notice number
+      notice  Date:
+        type: string
+        format: date
+        description: Date of Commencement of Agreement.
+      agreementNumber:
+        type: string
+        description: unique agreement number.
+        maxLength: 64
+      assetCategory:
+        type: string
+        description: Asset category of the asset on which the agreement is done.
+        format: String
+        maxLength: 64
+      acknowledgementNumber:
+        type: string
+        description: Acknowldgement number given to allottee on submitting the application. 
+        maxLength: 64
+      assetNo:
+        type: string
+        description: Asset no on which the agreement is done. 
+        maxLength: 32
+      allotteeName:
+        type: string
+        description: Allotee name
+        maxLength: 100
+      allotteeAddress:
+        type: string
+        description: Allottee address
+        maxLength: 256
+      allotteeMobileNumber:
+        type: number
+        description: Allottee contact number
+        maxLength: 10
+      agreementPeriod:
+        type: number
+        description: The validity of agreement period,value will be in no.of months.
+      commencementDate:
+        type: string
+        format: date
+        description: Date of Commencement of Agreement.
+      templateVersion:
+        type: string
+        description: Notice template version.
+      expiryDate:
+        type: string
+        format: date
+        description: Date of expiry for Agreement.
+      rent:
+        type: number
+        format: double
+        description: rent to be paid per payment cycle.
+      rentInWord:
+        type: string
+        description: rent amount in word.
+      securityDeposit:
+        type: number
+        format: double
+        description: Security deposit amount.
+      collectedSecurityDeposit:
+        type: number
+        format: double
+        description: Security deposit amount collected in partial payment.
+      securityDepositInWord:
+        type: number
+        format: double
+        description: Security deposit amount in word.
+      commissionerName:
+        type: string
+        description: Name of the city commissioner.
+      locality:
+        type: number
+        description: locality (a boundary in a ULB) which the asset belongs to on which the agreement is done
+      street:
+        type: number
+        description: Street (a boundary in a ULB) which the asset belongs to on which the agreement is done
+      zone:
+        type: number
+        description: Zone (a boundary in a ULB) which the asset belongs to on which the agreement is done
+      ward:
+        type: number
+        description: Ward (a boundary in a ULB) which the asset belongs to on which the agreement is done
+      block:
+        type: number
+        description: Block (a boundary in a ULB) which the asset belongs to on which the agreement is done
+      electionward:
+        type: number
+        description: Election Ward (a boundary in a ULB) which the asset belongs to on which the agreement is done
+        
+  NoticeRequest:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      Notice:
+        $ref: '#/definitions/Notice'
+        
+  NoticeResponse:
+    properties:
+      ResponseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      Notices:
+        type: array
+        items:
+          $ref: '#/definitions/Notice'
+    type: object
+
+parameters:
+##########################################################
+#Parameter name must start with small case followed by camel case.
+##########################################################
+  pageSize:
+    name: pageSize
+    in: query
+    description: Number of records returned.
+    type: integer
+    minimum: 0
+    exclusiveMinimum: true
+    maximum: 100
+    exclusiveMaximum: false
+    multipleOf: 10
+    default: 20
+  pageNumber:
+    name: pageNumber
+    in: query
+    description: Page number
+    type: integer
+    default: 1
+  sortLandRegister:
+    name: sort
+    in: query
+    description: LandRegister results will be sorted by id ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 3
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](id)'
+    default:
+      - +id
+  sortEstateRegister:
+    name: sort
+    in: query
+    description: EstateRegister results will be sorted by id ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 3
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](id)'
+    default:
+      - +id

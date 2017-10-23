@@ -15,9 +15,12 @@ import org.egov.tl.commons.web.contract.LicenseStatus;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.SupportDocumentSearchContract;
 import org.egov.tl.commons.web.contract.TradeLicenseSearchContract;
+import org.egov.tl.commons.web.contract.TradePartnerContract;
+import org.egov.tl.commons.web.contract.TradeShiftContract;
 import org.egov.tl.commons.web.contract.UOM;
 import org.egov.tl.commons.web.contract.enums.ApplicationTypeEnum;
 import org.egov.tl.commons.web.contract.enums.BusinessNatureEnum;
+import org.egov.tl.commons.web.contract.enums.Gender;
 import org.egov.tl.commons.web.contract.enums.OwnerShipTypeEnum;
 import org.egov.tl.commons.web.requests.DocumentTypeV2Response;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
@@ -29,6 +32,8 @@ import org.egov.tradelicense.domain.model.LicenseApplication;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
+import org.egov.tradelicense.domain.model.TradePartner;
+import org.egov.tradelicense.domain.model.TradeShift;
 import org.egov.tradelicense.web.contract.Boundary;
 import org.egov.tradelicense.web.contract.FinancialYearContract;
 import org.egov.tradelicense.web.response.BoundaryResponse;
@@ -105,15 +110,49 @@ public class TradeLicenseSearchContractRepository {
 				licenseSearchContract.setTenantId(domain.getTenantId());
 				licenseSearchContract.setLicenseNumber(domain.getLicenseNumber());
 				licenseSearchContract.setOldLicenseNumber(domain.getOldLicenseNumber());
-				licenseSearchContract.setAdhaarNumber(domain.getAdhaarNumber());
-				licenseSearchContract.setMobileNumber(domain.getMobileNumber());
+				licenseSearchContract.setOwnerAadhaarNumber(domain.getOwnerAadhaarNumber());
+				licenseSearchContract.setOwnerMobileNumber(domain.getOwnerMobileNumber());
 				licenseSearchContract.setOwnerName(domain.getOwnerName());
+				if(domain.getOwnerType() != null){
+					licenseSearchContract.setOwnerType(domain.getOwnerType().toString());
+				}
 				if(domain.getOwnerGender() != null){
 					licenseSearchContract.setOwnerGender(domain.getOwnerGender().toString());
 				}
+				licenseSearchContract.setOwnerBirthYear(domain.getOwnerBirthYear());
+				licenseSearchContract.setOwnerCorrAddress(domain.getOwnerCorrAddress());
+				licenseSearchContract.setOwnerCity(domain.getOwnerCity());
+				licenseSearchContract.setOwnerPinCode(domain.getOwnerPinCode());
+				licenseSearchContract.setOwnerEmailId(domain.getOwnerEmailId());
+				licenseSearchContract.setOwnerPhoneNumber(domain.getOwnerPhoneNumber());
+				licenseSearchContract.setOwnerPhoto(domain.getOwnerPhoto());
 				licenseSearchContract.setFatherSpouseName(domain.getFatherSpouseName());
-				licenseSearchContract.setEmailId(domain.getEmailId());
 				licenseSearchContract.setOwnerAddress(domain.getOwnerAddress());
+				if(domain.getEstablishmentType() != null){
+					licenseSearchContract.setEstablishmentType(domain.getEstablishmentType().toString());
+				}
+				licenseSearchContract.setEstablishmentName(domain.getEstablishmentName());
+				licenseSearchContract.setEstablishmentRegNo(domain.getEstablishmentRegNo());
+				licenseSearchContract.setEstablishmentCorrAddress(domain.getEstablishmentCorrAddress());
+				licenseSearchContract.setEstablishmentCity(domain.getEstablishmentCity());
+				licenseSearchContract.setEstablishmentPinCode(domain.getEstablishmentPinCode());
+				licenseSearchContract.setEstablishmentPhoneNo(domain.getEstablishmentPhoneNo());
+				licenseSearchContract.setEstablishmentMobNo(domain.getEstablishmentMobNo());
+				licenseSearchContract.setEstablishmentEmailId(domain.getEstablishmentEmailId());
+				licenseSearchContract.setSurveyOrGatNo(domain.getSurveyOrGatNo());
+				licenseSearchContract.setCtsOrFinalPlotNo(domain.getCtsOrFinalPlotNo());
+				licenseSearchContract.setPlotNo(domain.getPlotNo());
+				licenseSearchContract.setWaterConnectionNo(domain.getWaterConnectionNo());
+				licenseSearchContract.setLandOwnerName(domain.getLandOwnerName());
+				licenseSearchContract.setIsConsentLetterTaken(domain.getIsConsentLetterTaken());
+				licenseSearchContract.setBusinessDescription(domain.getBusinessDescription());
+				licenseSearchContract.setPrevLicenseNo(domain.getPrevLicenseNo());
+				licenseSearchContract.setPrevLicenseDate(domain.getPrevLicenseDate());
+				licenseSearchContract.setTotalEmployees(domain.getTotalEmployees());
+				licenseSearchContract.setTotalMachines(domain.getTotalMachines());
+				licenseSearchContract.setLicenseRejBefrForSamePremise(domain.getLicenseRejBefrForSamePremise());
+				licenseSearchContract.setExplLicenseNo(domain.getExplLicenseNo());
+				licenseSearchContract.setTotalShifts(domain.getTotalShifts());
 				licenseSearchContract.setPropertyAssesmentNo(domain.getPropertyAssesmentNo());
 				licenseSearchContract.setLocality(domain.getLocality());
 				licenseSearchContract.setLocalityName(localityName);
@@ -124,11 +163,11 @@ public class TradeLicenseSearchContractRepository {
 				licenseSearchContract.setStatus(domain.getStatus());
 				licenseSearchContract.setStatusName(statusName);
 				licenseSearchContract.setTradeAddress(domain.getTradeAddress());
+				licenseSearchContract.setTradeTitle(domain.getTradeTitle());
 				if (domain.getOwnerShipType() != null) {
 					licenseSearchContract
 							.setOwnerShipType(OwnerShipTypeEnum.valueOf(domain.getOwnerShipType().toString()));
 				}
-				licenseSearchContract.setTradeTitle(domain.getTradeTitle());
 				if (domain.getTradeType() != null) {
 					licenseSearchContract.setTradeType(BusinessNatureEnum.valueOf(domain.getTradeType().toString()));
 				}
@@ -176,6 +215,18 @@ public class TradeLicenseSearchContractRepository {
 					auditDetails.setLastModifiedTime(domain.getAuditDetails().getLastModifiedTime());
 					licenseSearchContract.setAuditDetails(auditDetails);
 				}
+				
+				if(domain.getPartners() != null && domain.getPartners().size() > 0){
+					
+					List<TradePartnerContract> partners = toLicensePartnerContract(requestInfo, domain.getPartners());
+					licenseSearchContract.setPartners(partners);
+				}
+				
+				if(domain.getShifts() != null && domain.getShifts().size() > 0){
+					
+					List<TradeShiftContract> shifts = toLicenseShiftContract(requestInfo, domain.getShifts());
+					licenseSearchContract.setShifts(shifts);
+				}
 
 				if (domain.getApplications() != null && domain.getApplications().size() > 0) {
 
@@ -221,6 +272,83 @@ public class TradeLicenseSearchContractRepository {
 		return licenseSearchContracts;
 	}
 
+	private List<TradeShiftContract> toLicenseShiftContract(RequestInfo requestInfo, List<TradeShift> shifts) {
+		
+		List<TradeShiftContract> tradeShiftContracts = new ArrayList<TradeShiftContract>();
+
+		for (TradeShift tradeShift : shifts) {
+
+			TradeShiftContract tradeShiftContract = new TradeShiftContract();
+
+			tradeShiftContract.setId(tradeShift.getId());
+			tradeShiftContract.setTenantId(tradeShift.getTenantId());
+			tradeShiftContract.setLicenseId(tradeShift.getLicenseId());
+			tradeShiftContract.setShiftNo(tradeShift.getShiftNo());
+			tradeShiftContract.setFromTime(tradeShift.getFromTime());
+			tradeShiftContract.setToTime(tradeShift.getToTime());
+			tradeShiftContract.setRemarks(tradeShift.getRemarks());
+
+			if (tradeShift.getAuditDetails() != null) {
+
+				AuditDetails auditDetails = new AuditDetails();
+				auditDetails.setCreatedBy(tradeShift.getAuditDetails().getCreatedBy());
+				auditDetails.setCreatedTime(tradeShift.getAuditDetails().getCreatedTime());
+				auditDetails.setLastModifiedBy(tradeShift.getAuditDetails().getLastModifiedBy());
+				auditDetails.setLastModifiedTime(tradeShift.getAuditDetails().getLastModifiedTime());
+
+				tradeShiftContract.setAuditDetails(auditDetails);
+			}
+			
+			tradeShiftContracts.add(tradeShiftContract);
+			
+		}
+
+		return tradeShiftContracts;
+	}
+
+	private List<TradePartnerContract> toLicensePartnerContract(RequestInfo requestInfo, List<TradePartner> partners) {
+		
+		List<TradePartnerContract> tradePartnerContracts = new ArrayList<TradePartnerContract>();
+
+		for (TradePartner tradePartner : partners) {
+
+			TradePartnerContract tradePartnerContract = new TradePartnerContract();
+
+			tradePartnerContract.setId(tradePartner.getId());
+			tradePartnerContract.setTenantId(tradePartner.getTenantId());
+			tradePartnerContract.setLicenseId(tradePartner.getLicenseId());
+			tradePartnerContract.setAadhaarNumber(tradePartner.getAadhaarNumber());;
+			tradePartnerContract.setFullName(tradePartner.getFullName());
+			if(tradePartner.getGender() != null){
+				tradePartnerContract.setGender(Gender.valueOf(tradePartner.getGender().toString()));
+			}
+			tradePartnerContract.setBirthYear(tradePartner.getBirthYear());
+			tradePartnerContract.setEmailId(tradePartner.getEmailId());
+			tradePartnerContract.setDesignation(tradePartner.getDesignation());
+			tradePartnerContract.setResidentialAddress(tradePartner.getResidentialAddress());
+			tradePartnerContract.setCorrespondenceAddress(tradePartner.getCorrespondenceAddress());
+			tradePartnerContract.setPhoneNumber(tradePartner.getPhoneNumber());
+			tradePartnerContract.setMobileNumber(tradePartner.getMobileNumber());
+			tradePartnerContract.setPhoto(tradePartner.getPhoto());
+
+			if (tradePartner.getAuditDetails() != null) {
+
+				AuditDetails auditDetails = new AuditDetails();
+				auditDetails.setCreatedBy(tradePartner.getAuditDetails().getCreatedBy());
+				auditDetails.setCreatedTime(tradePartner.getAuditDetails().getCreatedTime());
+				auditDetails.setLastModifiedBy(tradePartner.getAuditDetails().getLastModifiedBy());
+				auditDetails.setLastModifiedTime(tradePartner.getAuditDetails().getLastModifiedTime());
+
+				tradePartnerContract.setAuditDetails(auditDetails);
+			}
+			
+			tradePartnerContracts.add(tradePartnerContract);
+			
+		}
+
+		return tradePartnerContracts;
+	}
+	
 	private List<LicenseApplicationSearchContract> toApplicationSearchContract(RequestInfo requestInfo,
 			List<LicenseApplication> licenseApplications) {
 
@@ -367,7 +495,7 @@ public class TradeLicenseSearchContractRepository {
 
 		return supportDocumentSearchContracts;
 	}
-
+	
 	private List<LicenseFeeDetailContract> toFeeDetailsContract(RequestInfo requestInfo,
 			List<LicenseFeeDetail> licenseFeeDetails) {
 

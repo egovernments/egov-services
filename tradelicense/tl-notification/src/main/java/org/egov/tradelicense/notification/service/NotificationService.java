@@ -71,8 +71,8 @@ public class NotificationService {
 
 			String applicationNumber = "";
 			String ownerName = tradeLicenseContract.getOwnerName();
-			String emailAddress = tradeLicenseContract.getEmailId();
-			String mobileNumber = tradeLicenseContract.getMobileNumber();
+			String emailAddress = tradeLicenseContract.getOwnerEmailId();
+			String mobileNumber = tradeLicenseContract.getOwnerMobileNumber();
 			Long applicationDate = null;
 			String ulbName = getULB(tradeLicenseContract.getTenantId(), tradeLicenseRequest.getRequestInfo());
 
@@ -168,8 +168,8 @@ public class NotificationService {
 		String applicationNumber = "";
 		String ownerName = tradeLicenseContract.getOwnerName();
 		Double amount = null;
-		String emailAddress = tradeLicenseContract.getEmailId();
-		String mobileNumber = tradeLicenseContract.getMobileNumber();
+		String emailAddress = tradeLicenseContract.getOwnerEmailId();
+		String mobileNumber = tradeLicenseContract.getOwnerMobileNumber();
 		Long applicationDate = null;
 		String ulbName = getULB(tradeLicenseContract.getTenantId(), requestInfo);
 
@@ -220,8 +220,8 @@ public class NotificationService {
 
 		String applicationNumber = "";
 		String ownerName = tradeLicenseContract.getOwnerName();
-		String emailAddress = tradeLicenseContract.getEmailId();
-		String mobileNumber = tradeLicenseContract.getMobileNumber();
+		String emailAddress = tradeLicenseContract.getOwnerEmailId();
+		String mobileNumber = tradeLicenseContract.getOwnerMobileNumber();
 		String ulbName = getULB(tradeLicenseContract.getTenantId(), requestInfo);
 
 		if (tradeLicenseContract.getApplication() != null) {
@@ -259,8 +259,8 @@ public class NotificationService {
 		String applicationNumber = "";
 		String ownerName = tradeLicenseContract.getOwnerName();
 		Double amount = null;
-		String emailAddress = tradeLicenseContract.getEmailId();
-		String mobileNumber = tradeLicenseContract.getMobileNumber();
+		String emailAddress = tradeLicenseContract.getOwnerEmailId();
+		String mobileNumber = tradeLicenseContract.getOwnerMobileNumber();
 		String ulbName = getULB(tradeLicenseContract.getTenantId(), requestInfo);
 
 		if (tradeLicenseContract.getApplication() != null) {
@@ -306,8 +306,8 @@ public class NotificationService {
 		String applicationNumber = "";
 		String ownerName = tradeLicenseIndexerContract.getOwnerName();
 		Double amount = null;
-		String emailAddress = tradeLicenseIndexerContract.getEmailId();
-		String mobileNumber = tradeLicenseIndexerContract.getMobileNumber();
+		String emailAddress = tradeLicenseIndexerContract.getOwnerEmailId();
+		String mobileNumber = tradeLicenseIndexerContract.getOwnerMobileNumber();
 		String ReceiptNumber = "";
 		String ulbName = getULB(tenantId, requestInfo);
 
@@ -359,8 +359,8 @@ public class NotificationService {
 		String applicationNumber = "";
 		String ownerName = tradeLicenseContract.getOwnerName();
 		String remarks = "";
-		String emailAddress = tradeLicenseContract.getEmailId();
-		String mobileNumber = tradeLicenseContract.getMobileNumber();
+		String emailAddress = tradeLicenseContract.getOwnerEmailId();
+		String mobileNumber = tradeLicenseContract.getOwnerMobileNumber();
 		String ulbName = getULB(tradeLicenseContract.getTenantId(), requestInfo);
 		String localHostAddress = propertiesManager.getEgovServicesHost();
 		String rejectionDownloadPath = propertiesManager.getRejectionDownloadPath();

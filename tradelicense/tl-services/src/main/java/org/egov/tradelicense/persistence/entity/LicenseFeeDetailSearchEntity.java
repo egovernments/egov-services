@@ -16,7 +16,7 @@ public class LicenseFeeDetailSearchEntity {
 	public static final String SEQUENCE_NAME = "seq_egtl_fee_details";
 
 	private Long id;
-	
+
 	private Long applicationId;
 
 	private String tenantId;
@@ -42,10 +42,10 @@ public class LicenseFeeDetailSearchEntity {
 		AuditDetails auditDetails = new AuditDetails();
 
 		licenseFeeDetail.setId(this.id);
-		
-		licenseFeeDetail.setTenantId( this.tenantId);
-		
-		licenseFeeDetail.setApplicationId( this.applicationId);
+
+		licenseFeeDetail.setTenantId(this.tenantId);
+
+		licenseFeeDetail.setApplicationId(this.applicationId);
 
 		licenseFeeDetail.setFinancialYear(this.financialYear);
 
@@ -75,7 +75,7 @@ public class LicenseFeeDetailSearchEntity {
 		this.id = licenseFeeDetail.getId();
 
 		this.tenantId = licenseFeeDetail.getTenantId();
-		
+
 		this.applicationId = licenseFeeDetail.getApplicationId();
 
 		this.financialYear = licenseFeeDetail.getFinancialYear();

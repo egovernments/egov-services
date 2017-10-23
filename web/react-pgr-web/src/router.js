@@ -38,6 +38,8 @@ import SearchEscalation from './components/contents/pgr/master/escalationTime/se
 import DefineEscalationTime from './components/contents/pgr/master/escalationTime/defineEscalationTime';
 import ServiceTypeCreate from './components/contents/pgr/master/serviceType/serviceTypeCreate';
 import Report from './components/contents/reports/report';
+import PGRCharts from './components/contents/pgr/dashboards/index';
+import PgrAnalytics from './components/contents/pgr/dashboards/PgrAnalytics';
 
 //WC
 import CategoryTypeCreate from './components/contents/wc/master/categoryType/categoryTypeCreate';
@@ -85,6 +87,7 @@ import BuildingClassification from './components/contents/propertyTax/master/Bui
 import CreateProperty from './components/contents/propertyTax/master/CreateProperty';
 import DataEntry from './components/contents/propertyTax/master/DataEntry';
 import ViewProperty from './components/contents/propertyTax/master/viewProperty';
+import ViewDCB from './components/non-framework/pt/viewDCB';
 import Workflow from './components/contents/propertyTax/master/workflow';
 import Acknowledgement from './components/contents/propertyTax/master/Acknowledgement';
 import DataEntryAcknowledgement from './components/contents/propertyTax/master/Acknowledgement_dataEntry';
@@ -172,6 +175,7 @@ const Main = () => {
         <Route exact path={base+'/administration/searchUserRole'} component={searchUserRole}/>
         <Route exact path={base+'/administration/updateUserRole/:userId'} component={updateUserRole}/>
         <Route exact path={base+'/services/apply/:serviceCode/:serviceName'} component={VisibleNewServiceRequest}/>
+        <Route exact path={base+'/pgr/analytics'} component={PgrAnalytics}/>
         <Route exact path={base+'/pgr/createGrievance'} component={grievanceCreate}/>
         <Route exact path={base+'/pgr/viewGrievance/:srn'} component={grievanceView}/>
         <Route exact path={base+'/pgr/searchGrievance'} component={grievanceSearch}/>
@@ -204,6 +208,7 @@ const Main = () => {
         <Route exact path={base+'/pgr/defineEscalationTime'} component={DefineEscalationTime}/>
         <Route exact path={base+'/pgr/createServiceType'} component={ServiceTypeCreate}/>
         <Route exact path={base+'/report/:moduleName/:reportName'} component={Report}/>
+        <Route exact path={base+'/pgr/dashboard'} component={PGRCharts}/>
 
         <Route exact path={base+'/wc/createCategoryType'} component={CategoryTypeCreate}/>
         <Route exact name="createCategoryType" path={base+'/wc/createCategoryType/:id?'} component={CategoryTypeCreate}/>
@@ -260,6 +265,7 @@ const Main = () => {
 		  <Route exact path={base+'/propertyTax/addDemand/:upicNumber'} component={AddDemand}/>
 		  <Route exact path={base+'/propertyTax/create-dataEntry'} component={DataEntry}/>
 		  <Route exact path={base+'/propertyTax/view-property/:searchParam/:type?'} component={ViewProperty}/>
+		  <Route exact path={base+'/propertyTax/view-dcb/:searchParam/:type?'} component={ViewDCB}/>
           <Route exact path={base+'/propertyTax/workflow/:searchParam/:type?'} component={Workflow}/>
 		  <Route exact path={base+'/propertyTax/acknowledgement'} component={Acknowledgement}/>
 		  <Route exact path={base+'/propertyTax/dataEntry-acknowledgement'} component={DataEntryAcknowledgement}/>

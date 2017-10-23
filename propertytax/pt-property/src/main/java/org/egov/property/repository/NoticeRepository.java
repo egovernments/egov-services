@@ -28,7 +28,7 @@ public class NoticeRepository {
 		namedParameterJdbcTemplate.update(noticeQueryBuilder.getInsertQuery(), getInsertNamedQueryMap(notice));
 	}
 
-	public void update(Notice notice){
+	public void update(Notice notice) {
 		namedParameterJdbcTemplate.update(noticeQueryBuilder.getUpdateQuery(), getUpdateNamedQueryMap(notice));
 	}
 
@@ -54,7 +54,7 @@ public class NoticeRepository {
 		return parametersMap;
 	}
 
-	private HashMap getUpdateNamedQueryMap(Notice notice){
+	private HashMap getUpdateNamedQueryMap(Notice notice) {
 		HashMap<String, Object> parametersMap = new HashMap<>();
 		parametersMap.put("tenantid", notice.getTenantId());
 		parametersMap.put("applicationnumber", notice.getApplicationNo());

@@ -1,0 +1,129 @@
+{
+	"variables": [],
+	"info": {
+		"name": "taxexemption",
+		"_postman_id": "52501839-4f8c-28d6-91db-caf1d34ab19c",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "taxexemption",
+			"request": {
+				"url": "http://localhost:8080/pt-property/properties/taxexemption/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \t\"RequestInfo\": {\n\t\t\"apiId\": \"org.egov.pt\",\n\t\t\"ver\": \"1.0\",\n\t\t\"ts\": 1503743889632,\n\t\t\"action\": \"asd\",\n\t\t\"userInfo\":{\n\t\t\t\"id\":74\n\t\t},\n\t\t\"did\": \"4354648646\",\n\t\t\"key\": \"xyz\",\n\t\t\"msgId\": \"654654\",\n\t\t\"requesterId\": \"61\",\n\t\t\"authToken\": \"6fd9aeb2-04ab-4425-9465-cd62e1e913f1\"\n\t},\n  \"taxExemption\": {\n    \"id\": 0,\n    \"tenantId\": \"default\",\n    \"upicNumber\": \"defa00009410\",\n    \"applicationNo\": \"MH-PT-2017/10/13-010288-12\",\n    \"exemptionReason\": \"Tax Exemption\",\n    \"exemptionPercentage\": 10,\n    \"documents\": [\n      {\n        \"id\": 0,\n        \"documentType\": \"tax exemption\",\n        \"fileStore\": \"tax exemption\"\n      }\n    ],\n    \"comments\": \"tax exemption\",\n    \"stateId\": null,\n    \"workFlowDetails\": {\n\t\"department\": \"REVENUE\",\n\t\"designation\": \"Revenue Officer\",\n\t\"assignee\": 1120,\n\t\"action\": \"Forward\",\n\t\"status\":\"Revenue Officer Approved\"\n\t}\n  }\n}"
+				},
+				"description": "http://localhost:8080/pt-property/properties/taxexemption/_create"
+			},
+			"response": []
+		},
+		{
+			"name": "taxexemption-update",
+			"request": {
+				"url": "http://localhost:8080/pt-property/properties/taxexemption/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \t\"RequestInfo\": {\n\t\t\"apiId\": \"org.egov.pt\",\n\t\t\"ver\": \"1.0\",\n\t\t\"ts\": 1503743889632,\n\t\t\"action\": \"asd\",\n\t\t\"userInfo\":{\n\t\t\t\"id\":74\n\t\t},\n\t\t\"did\": \"4354648646\",\n\t\t\"key\": \"xyz\",\n\t\t\"msgId\": \"654654\",\n\t\t\"requesterId\": \"61\",\n\t\t\"authToken\": \"d7bf3ee4-4423-4910-87b5-abe8796dbcd9\"\n\t},\n  \"taxExemption\":  {\n            \"id\": 2,\n            \"tenantId\": \"default\",\n            \"upicNumber\": \"defa00009410\",\n            \"applicationNo\": \"MH-PT-2017/10/18-010410-20\",\n            \"exemptionReason\": \"Tax Exemption Test\",\n            \"exemptionPercentage\": 15,\n            \"documents\": [\n                {\n                    \"id\": 2,\n                    \"documentType\": \"tax exemption1\",\n                    \"fileStore\": \"tax exemption1\",\n                    \"auditDetails\": {\n                        \"createdBy\": \"74\",\n                        \"lastModifiedBy\": \"74\",\n                        \"createdTime\": 1508314948755,\n                        \"lastModifiedTime\": 1508314948755\n                    }\n                }\n            ],\n            \"comments\": \"tax exemption\",\n            \"stateId\": \"156\",\n           \"workFlowDetails\": {\n\t\t        \"department\": \"1\",\n\t\t        \"designation\": \"9\",\n\t\t        \"assignee\": 40,\n\t\t        \"action\": \"Forward\",\n\t\t        \"status\": \"Assistant Approved\",\n\t\t        \"comment\":\"test\"\n\t\t   },\n            \"auditDetails\": {\n                \"createdBy\": \"74\",\n                \"lastModifiedBy\": \"74\",\n                \"createdTime\": 1508314948755,\n                \"lastModifiedTime\": 1508314948755\n            }\n        }\n}"
+				},
+				"description": "http://localhost:8080/pt-property/properties/taxexemption/_update"
+			},
+			"response": []
+		},
+		{
+			"name": "taxexemption search",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/pt-property/properties/taxexemption/_search?tenantId=default&upicNo=defa00009410&pageNumber=1&pageSize=1&applicationNo=MH-PT-2017/10/13-010288-12&taxExemptionId=1&sort=applicationNo,id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pt-property",
+						"properties",
+						"taxexemption",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "upicNo",
+							"value": "defa00009410",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "pageNumber",
+							"value": "1",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "pageSize",
+							"value": "1",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "applicationNo",
+							"value": "MH-PT-2017/10/13-010288-12",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "taxExemptionId",
+							"value": "1",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "sort",
+							"value": "applicationNo,id",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"750d4aa9-2436-4bc4-a8f4-3796e3bfd465\"\n    }\n    }"
+				},
+				"description": "http://localhost:8080/pt-property/properties/taxexemption/_search?tenantId=default&upicNo=defa00009410&pageNumber=1&pageSize=1&applicationNo=MH-PT-2017/10/13-010288-12&taxExemptionId=1&sort=applicationNo,id"
+			},
+			"response": []
+		}
+	]
+}

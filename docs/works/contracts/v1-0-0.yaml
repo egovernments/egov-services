@@ -1,0 +1,3934 @@
+swagger: '2.0'
+# eGSP YAML Template Version: 1.0 
+# This is a version number for the YAML template. This must not be changed.
+
+info:
+  version: 1.0.0
+  ######################################################
+  # All API's are POST. _create,_search,_update for post,get and put. RequestInfo will be part of body. For multiple records we can pass multiple value with comman seperated values*.
+  # All _search will be synchronous and all _create and _update will be asynchronous*.
+  # RequestInfo and ResponseInfo object should be reffered from Common*.
+  # In _search API, tenantId should be passed in query param. In _create/_update, tenantId should be passed in the model.
+  # Readonly means that even if these fields are passed in the request, it will be ignored in create/update and will not be added/updated in the entities. The readonly fields might be passed to the _search API's to make use of fields for the search Query API. while calling _search API's even mandatory fields might not be available, it is mandatory only in the _create API's*.
+  # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message.
+  # Definition must start with Upper case followed by camel case.
+  # Every model will have tenantId. Validate tenantId on create.
+  # Parameter name must start with small case followed by camel case.
+  # Path must be in small case.
+  ######################################################
+  
+  title: eGov Works Management System.
+  description: |
+    APIs for Works Management module. This modules handles creation of Abstract Estimate, Detailed Estimate, Letter of Acceptance, Work Order, Notice Generation, Measurement Book, Milestone/Track Milestone, Contractor Bill etc,.
+  contact:
+    name: eGovernments Foundation
+    email : contacts@egovernments.org
+schemes:
+  - https
+basePath: '/works-services/v1'
+x-api-id: 'org.egov.works.services'
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
+paths:
+  /abstractestimates/_search:
+    post:
+      summary: Get the list of Abstract Estimate(s) defined in the system.
+      description: |
+          Search and get Abstract Estimate(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Abstract Estimate(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of Abstract Estimate as defined in AbstractEstimateResponse model.
+          
+          Search results will be sorted by the sortProperty Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortProperty"
+        - name: adminSanctionNumbers
+          in: query
+          description: Comma separated list of Admin Sanction Numbers of Abstract Estimates
+          required: false
+          type: string
+          allowEmptyValue: true
+        - name: ids
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: Comma separated list of Ids of Abstract Estimate to get the Abstract Estimates
+        - name: estimateNumbers
+          in: query
+          required: false
+          description: Comma separated list of estimate numbers of Abstract Estimate
+          type: string
+        - name: departmentCode
+          in: query
+          required: false
+          description: The Department code for which Abstract Estimate belongs to.
+          type: string
+        - name: fundCode
+          in: query
+          required: false
+          description: The Fund code for which Abstract Estimate belongs to.
+          type: string
+        - name: functionCode
+          in: query
+          required: false
+          description: The Function code for which Abstract Estimate belongs to.
+          type: string
+        - name: budgetHeadCode
+          in: query
+          required: false
+          description: The Budget Head Code for which Abstract Estimate belongs to.
+          type: string
+        - name: adminSanctionFromDate
+          in: query
+          required: false
+          description: Epoch time from when the Abstract Estimate is Admin Sanctioned
+          type: integer
+          format: int64
+        - name: adminSanctionToDate
+          in: query
+          description: Epoch time till the Abstract Estimate is Admin Sanctioned
+          required: false
+          type: integer
+          format: int64
+        - name: spillOverFlag
+          in: query
+          description: Boolean value to identify whether the Abstract Estimate is Spill over or not.
+          required: false
+          type: boolean
+        - name: createdBy
+          in: query
+          description: Unique user name of the User who created the Abstract Estimate.
+          required: false
+          type: string
+        - name: abstractEstimateNumbers
+          in: query
+          required: false
+          description: Comma separated list of abstract estimate numbers of the Abstract Estimate.
+          type: array
+          items:
+            type: string
+        - name: workIdentificationNumbers
+          in: query
+          description: Comma separated list of Work Identification Numbers assigned to Abstract Estimate.
+          required: false
+          type: array
+          items:
+            type: string
+        - name: status
+          in: query
+          description: Status of the Abstract Estimate.
+          required: false
+          type: string
+      responses:
+        200:
+          description: Abstract Estimate(s) Retrieved Successfully
+          schema:
+            $ref: "#/definitions/AbstractEstimateResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Abstract Estimate
+       
+  /abstractestimates/_create:
+    post:
+      summary: Create new Abstract Estimate(s).
+      description: |
+          To create new Abstract Estimate in the system. API supports bulk creation with max limit as defined in the Abstract Estimate Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Abstract Estimate, please pass array with one Abstract Estimate object.
+          Reference type will be allowed to edit in case of on going abstract estimate and disabled for spillover abstract estimate.
+          All the flags like spillover, detiled estimate and bills created flag will be allowed to select only in case Spillover abstract estimate.
+          
+      parameters:
+        - name: AbstractEstimateRequest
+          in: body
+          description: Details of new AbstractEstimate(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/AbstractEstimateRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Abstract Estimate(s) created successfully
+          schema:
+            $ref: '#/definitions/AbstractEstimateResponse'
+        400:
+          description: Abstract Estimate(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Abstract Estimate
+        
+  /abstractestimates/_update:
+    post:
+      summary: Update existing Abstract Estimate(s).
+      description: |
+          To update existing Abstract Estimate in the system. API supports bulk updation with max limit as defined in the Abstract Estimate Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Abstract Estimate, please pass array with one Abstract Estimate object.
+          In update all the fields are disabled except the Work Flow Deatils and the fields which needs to be captured at different status are enabled.
+          At the last level of workflow gross amount billed amount will be editable.
+          
+      parameters:
+        - name: AbstractEstimateRequest
+          in: body
+          description: Details of AbstractEstimate(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/AbstractEstimateRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Abstract Estimate(s) updated successfully
+          schema:
+            $ref: '#/definitions/AbstractEstimateResponse'
+        400:
+          description: Abstract Estimate(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Abstract Estimate
+        
+  /detailedestimates/_search:
+    post:
+      summary: Get the list of Detailed Estimate(s) defined in the system.
+      description: |
+          Search and get Detailed Estimate(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Detailed Estimate(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of Detailed Estimate as defined in DetailedEstimateResponse model.
+          
+          Search results will be sorted by the sortProperty Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortProperty"
+        - name: detailedEstimateNumbers
+          in: query
+          description: Comma separated list of Detailed Estimate Numbers to get the Detailed Estimates
+          required: false
+          type: array
+          items:
+            type: string
+          allowEmptyValue: true
+        - name: ids
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: Comma separated list of Ids of Detailed Estimate to get the Detailed Estimates
+        - name: fromDate
+          in: query
+          required: false
+          description: Epoch time from when the Detailed Estimate created
+          type: integer
+          format: int64
+        - name: toDate
+          in: query
+          required: false
+          description: Epoch time till when the Detailed Estimate created
+          type: integer
+          format: int64
+        - name: departmentCode
+          in: query
+          required: false
+          description: The Department code for which Detailed Estimate belongs to.
+          type: string
+        - name: status
+          in: query
+          required: false
+          description: The Status of the Detailed Estimate.
+          type: string
+        - name: workIdentificationNumber
+          in: query
+          required: false
+          description: Comma Separated List of Work Identification Numbers of the Detailed Estimate.
+          type: array
+          items:
+            type: string
+        - name: abstractEstimateNumbers
+          in: query
+          required: false
+          description: Comma separated list of Abstract Estimate Numbers for which Detailed Estimate belongs to.
+          type: array
+          items:
+            type: string
+        - name: estimateAmount
+          in: query
+          required: false
+          description: Estimate Amount of the Detailed Estimate
+          type: integer
+          format: double
+        - name: wardCode
+          in: query
+          required: false
+          description: Ward code for which Detailed Estimate belongs to
+          type: string
+        - name: spillOverFlag
+          in: query
+          description: Boolean value of the Detailed Estimate whether its Spill over or not.
+          required: false
+          type: boolean
+        - name: createdBy
+          in: query
+          description: Unique user name of the User who created the Detailed Estimate.
+          required: false
+          type: string
+        - name: currentOwner
+          in: query
+          description: Unique user name of the User who owns(work flow user) the Detailed Estimate.
+          required: false
+          type: string
+      responses:
+        200:
+          description: Detailed Estimate(s) Retrieved Successfully
+          schema:
+            $ref: "#/definitions/DetailedEstimateResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Detailed Estimate
+       
+  /detailedestimates/_create:
+    post:
+      summary: Create new Detailed Estimate(s).
+      description: |
+          To create new Detailed Estimate in the system. API supports bulk creation with max limit as defined in the Detailed Estimate Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Detailed Estimate, please pass array with one Detailed Estimate object.
+          Detailed Estimate will created for Approved Abstract Estimate.
+          To create an Detailed estimate Atleast one SOR is mandatory.
+          All the fields related to Abstract estimate are in disabled mode.
+          If overhead's are selected then based on that (percentage or amount) will be applacable on Estimate value.
+          If deduction's are selected then based on that (percentage or amount) will be applacable on Estimate value.
+          
+      parameters:
+        - name: DetailedEstimateRequest
+          in: body
+          description: Details of the new Detailed Estimate(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/DetailedEstimateRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Detailed Estimate(s) created successfully
+          schema:
+            $ref: '#/definitions/DetailedEstimateResponse'
+        400:
+          description: Detailed Estimate(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Detailed Estimate 
+        
+  /detailedestimates/_update:
+    post:
+      summary: Update existing Detailed Estimate(s).
+      description: |
+          To update existing Detailed Estimate in the system. API supports bulk updation with max limit as defined in the Detailed Estimate Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Detailed Estimate, please pass array with one Detailed Estimate object.
+          In update all the fields are disabled except the Work Flow Deatils and the fields which needs to be captured at different status are enabled.
+          
+      parameters:
+        - name: DetailedEstimateRequest
+          in: body
+          description: Details of Detailed Estimate(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/DetailedEstimateRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Detailed Estimate(s) updated successfully
+          schema:
+            $ref: '#/definitions/DetailedEstimateResponse'
+        400:
+          description: Detailed Estimate(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Detailed Estimate
+        
+  /letterofacceptances/_create:
+    post:
+      summary: Create new Letter Of Acceptance(s).
+      description: |
+          To create new Letter Of Acceptance in the system. API supports bulk creation with max limit as defined in the Letter Of Acceptance Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Letter Of Acceptance, please pass array with one Letter Of Acceptance object.
+          Letter Of Acceptance can be created for approved detailed estimate.
+          The sor selected while creating the detailed estimate will be populated in LOA as bill of quantity(BOQ)
+          In case of Spillover LOA Letter Of Acceptance Number will be allowed to edit.
+          
+      parameters:
+        - name: LetterOfAcceptanceRequest
+          in: body
+          description: Details of new Letter Of Acceptance(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/LetterOfAcceptanceRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Letter Of Acceptance(s) created successfully
+          schema:
+            $ref: '#/definitions/LetterOfAcceptanceResponse'
+        400:
+          description: Letter Of Acceptance(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Letter Of Acceptance 
+        
+  /letterofacceptances/_update:
+    post:
+      summary: Update existing Letter Of Acceptance(s).
+      description: |
+          To update existing Letter Of Acceptance in the system. API supports bulk updation with max limit as defined in the Letter Of Acceptance Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Letter Of Acceptance, please pass array with one Letter Of Acceptance object.
+          In update all the fields are disabled except the Work Flow Deatils and the fields which needs to be captured at different status are enabled.
+          
+      parameters:
+        - name: LetterOfAcceptanceRequest
+          in: body
+          description: Details of Letter Of Acceptance(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/LetterOfAcceptanceRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Letter Of Acceptance(s) updated successfully
+          schema:
+            $ref: '#/definitions/LetterOfAcceptanceResponse'
+        400:
+          description: Letter Of Acceptance(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Letter Of Acceptance
+        
+  /letterofacceptances/_search:
+    post:
+      summary: Get the list of Letter Of Acceptance(s) defined in the system.
+      description: |
+          Search and get Letter Of Acceptance(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Letter Of Acceptance(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of Letter Of Acceptance as defined in LetterOfAcceptanceResponse model.
+          
+          Search results will be sorted by the sortProperty Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortProperty"
+        - name: loaNumbers
+          in: query
+          description: Comma separated list of LOA Number to get Letter Of Acceptance(s)
+          required: false
+          type: array
+          allowEmptyValue: true
+          items:
+            type: string
+        - name: ids
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: Comma separated list of Ids of Letter Of Acceptance to get the Letter Of Acceptance(s)
+        - name: detailedEstimateNumbers
+          in: query
+          required: false
+          description: Comma seperated list of Detailed Estimate Numbers to get the Letter Of Acceptance(s)
+          type: array
+          items:
+            type: string
+        - name: fileNumber
+          in: query
+          required: false
+          description: The file number for a Letter Of Acceptance
+          type: string
+        - name: fromDate
+          in: query
+          required: false
+          description: Epoch time for Letter Of Acceptance when it is created in the system
+          type: integer
+          format: int64
+        - name: toDate
+          in: query
+          description: Epoch time for Letter Of Acceptance when it is created in the system.
+          required: false
+          type: integer
+          format: int64
+        - name: department
+          in: query
+          required: false
+          description: The Department for which Letter Of Acceptance belongs to.
+          type: string
+        - name: status
+          in: query
+          description: Status of the Letter Of Acceptance.
+          required: false
+          type: string
+        - name: contractorNames
+          in: query
+          description: Comma separated list of Names of the contractor to which Letter Of Acceptance belongs to.
+          required: false
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: Letter Of Acceptance(s) Retrieved Successfully
+          schema:
+            $ref: "#/definitions/LetterOfAcceptanceResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Letter Of Acceptance
+       
+  /offlinestatuses/_search:
+    post:
+      summary: Get the list of Offline Status(s) defined in the system.
+      description: |
+          Search and get Offline Status(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          Search results will be sorted by the sort Property Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortProperty"
+        - name: workOrderNumbers
+          in: query
+          pattern: '[a-zA-Z0-9-\\]'
+          description: Comma separated list of Work Order Numbers
+          required: false
+          type: array
+          items:
+            type: string
+          allowEmptyValue: true
+        - name: loaNumbers
+          pattern: '[a-zA-Z0-9-\\]'
+          in: query
+          description: Comma Seaprated List of LOA Number
+          required: false
+          type: array
+          items:
+            type: string
+          allowEmptyValue: true
+        - name: detailedEstimateNumber
+          in: query
+          required: false
+          description: Comma separated list of Detailed Estimate Numbers
+          type: array
+          items:
+            type: string
+        - name: status
+          in: query
+          required: false
+          description: The different status for the object
+          type: string
+        - name: workIdentificationNumbers
+          in: query
+          required: false
+          description: Comma separated list of Work Identification Numbers
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: Offline Status(s) Retrieved Successfully
+          schema:
+            $ref: "#/definitions/OfflineStatusResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Offline Status
+       
+  /offlinestatuses/_create:
+    post:
+      summary: Create new offline status(s).
+      description: |
+          To create new offline status in the system. API supports bulk creation with max limit as defined in the offline status Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one offline status, please pass array with one offline status object.
+          List of offline status to be used to set Detailed Estimate
+                  - NOTICEINVITINGTENDERRELEASED
+                  - TENDER_DOCUMENT_RELEASED
+                  - TENDER_OPENED
+                  - TECHNICAL_EVALUATION_DONE
+                  - COMMERCIAL_EVALUATION_DONE
+                  - L1_TENDER_FINALIZED
+          List of offline status to be used to set LOA
+                  - ACCEPTANCE_LETTER_ISSUED
+                  - ACCEPTANCE_LETTER_ACKNOWLEDGED
+                  - AGREEMENT_ORDER_SIGNED
+          List of offline status to be used to set Work Order
+                  - WORK_ORDER_ACKNOWLEDGED
+                  - SITE_HANDED_OVER
+                  - WORK_COMMENCED
+          
+      parameters:
+        - name: OfflineStatusRequest
+          in: body
+          description: Details of new offline status(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/OfflineStatusRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Offline Status(s) created successfully.
+          schema:
+            $ref: '#/definitions/OfflineStatusResponse'
+        400:
+          description: Offline status(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Offline Status 
+        
+  /offlinestatuses/_update:
+    post:
+      summary: Update existing Offline Status(s).
+      description: |
+          To update existing Offline Status in the system. API supports bulk updation with max limit as defined in the Offline Status Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Offline Status, please pass array with one Offline Status object.
+          List of offline status to be used to set Detailed Estimate
+                  - NOTICEINVITINGTENDERRELEASED
+                  - TENDER_DOCUMENT_RELEASED
+                  - TENDER_OPENED
+                  - TECHNICAL_EVALUATION_DONE
+                  - COMMERCIAL_EVALUATION_DONE
+                  - L1_TENDER_FINALIZED
+          List of offline status to be used to set LOA
+                  - ACCEPTANCE_LETTER_ISSUED
+                  - ACCEPTANCE_LETTER_ACKNOWLEDGED
+                  - AGREEMENT_ORDER_SIGNED
+          List of offline status to be used to set Work Order
+                  - WORK_ORDER_ACKNOWLEDGED
+                  - SITE_HANDED_OVER
+                  - WORK_COMMENCED
+          For a particular object type if any offline status is already setted then that field will be disabled in update mode.
+          
+      parameters:
+        - name: OfflineStatusRequest
+          in: body
+          description: Details of Offline Status(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/OfflineStatusRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Offline Status(s) updated successfully
+          schema:
+            $ref: '#/definitions/OfflineStatusResponse'
+        400:
+          description: Offline Status(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Offline Status
+        
+  /workorders/_create:
+    post:
+      summary: Create new Work Order(s).
+      description: |
+          To create new Work Order in the system. API supports bulk creation with max limit as defined in the Work Order Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Work Order, please pass array with one Work Order object.
+          Only for Approved LOA workorder can be crated.
+          
+      parameters:
+        - name: WorkOrderRequest
+          in: body
+          description: Details of new Work Order(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/WorkOrderRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Work Order(s) created successfully
+          schema:
+            $ref: '#/definitions/WorkOrderResponse'
+        400:
+          description: Work Order(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Work Order  
+        
+  /workorders/_update:
+    post:
+      summary: Update existing Work Order(s).
+      description: |
+          To update existing Work Order in the system. API supports bulk updation with max limit as defined in the Work Order Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Work Order, please pass array with one Work Order object.
+          
+      parameters:
+        - name: WorkOrderRequest
+          in: body
+          description: Details of Work Order(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/WorkOrderRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Work Order(s) updated successfully
+          schema:
+            $ref: '#/definitions/WorkOrderResponse'
+        400:
+          description: Work Order(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Work Order
+        
+  /workorders/_search:
+    post:
+      summary: Get the list of Work Order(s) defined in the system.
+      description: |
+          Search and get Work Order(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Work Order(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of Work Order as defined in WorkOrderResponse model.
+          
+          Search results will be sorted by the sortProperty Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortProperty"
+        - name: workOrderNumbera
+          in: query
+          description: Comma separated list of Work Order Numbers
+          required: false
+          type: array
+          allowEmptyValue: true
+          items:
+            type: string
+        - name: ids
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: Comma separated list of Ids of Work Order to get the Work Orders
+        - name: status
+          in: query
+          description: Status of the Work Order.
+          required: false
+          type: string
+        - name: loaNumbers
+          pattern: '[a-zA-Z0-9-\\]'
+          in: query
+          description: Comma separated list of LOA Numbers
+          required: false
+          type: array
+          items:
+            type: string
+          allowEmptyValue: true
+        - name: detailedEstimateNumbers
+          in: query
+          required: false
+          description: Comma separated list of Detailed Estimate Numbers
+          type: array
+          items:
+            type: string
+        - name: workIdentificationNumbers
+          in: query
+          required: false
+          description: Comma separated list of Work Identification Numbers.
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: Work Order(s) Retrieved Successfully
+          schema:
+            $ref: "#/definitions/WorkOrderResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Work Order
+       
+  /notices/_create:
+    post:
+      summary: Create new Notice(s).
+      description: |
+          To create new Notice in the system. API supports bulk creation with max limit as defined in the Notice Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Notice, please pass array with one Notice object.
+          
+          Notice can only created for approved workorder and after seeting offline status to Agreement order signed.
+          
+      parameters:
+        - name: NoticeRequest
+          in: body
+          description: Details of new Notice(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/NoticeRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Notice(s) created successfully
+          schema:
+            $ref: '#/definitions/NoticeResponse'
+        400:
+          description: Notice(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Notice  
+        
+  /notices/_update:
+    post:
+      summary: Update existing Notice(s).
+      description: |
+          To update existing Notice in the system. API supports bulk updation with max limit as defined in the Notice Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Notice, please pass array with one Notice object.
+          
+      parameters:
+        - name: NoticeRequest
+          in: body
+          description: Details of Notice(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/NoticeRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Notice(s) updated successfully
+          schema:
+            $ref: '#/definitions/NoticeResponse'
+        400:
+          description: Notice(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Notice
+        
+  /notices/_search:
+    post:
+      summary: Get the list of Notice(s) defined in the system.
+      description: |
+          Search and get Notice(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Notice(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of Notice as defined in NoticeResponse model.
+          
+          Search results will be sorted by the sortProperty Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortProperty"
+        - name: workOrderNumbers
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          allowEmptyValue: true
+          required: false
+          description: Comma separated list of Work Order Numbers
+        - name: ids
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: Comma separated list of Ids of Notice(s)        
+        - name: loaNumbers
+          in: query
+          description: Comma separated list of LOA Numbers
+          required: false
+          type: array
+          items:
+            type: string
+          allowEmptyValue: true
+        - name: detailedEstimateNumbers
+          in: query
+          required: false
+          description: Comma separated list of Detailed Estimate Numbers
+          type: array
+          items:
+            type: string
+        - name: workIdentificationNumbers
+          in: query
+          required: false
+          description: Comma separated list of Work Identification Numbers
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: Notice(s) Retrieved Successfully
+          schema:
+            $ref: "#/definitions/NoticeResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Notice
+       
+  /measurementbooks/_create:
+    post:
+      summary: Create new Measurement Book(s).
+      description: |
+          To create new Measurement Book in the system. API supports bulk creation with max limit as defined in the Measurement Book Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Measurement Book, please pass array with one Measurement Book object.
+          To create Measurement book Notice must be genrated and its offlice status should be Work commenced.
+          
+      parameters:
+        - name: MeasurementBookRequest
+          in: body
+          description: Details of new Measurement Book(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/MeasurementBookRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Measurement Book(s) created successfully
+          schema:
+            $ref: '#/definitions/MeasurementBookResponse'
+        400:
+          description: Measurement Book(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Measurement Book  
+        
+  /measurementbooks/_update:
+    post:
+      summary: Update existing Measurement Book(s).
+      description: |
+          To update existing Measurement Book in the system. API supports bulk updation with max limit as defined in the Measurement Book Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Measurement Book, please pass array with one Measurement Book object.
+          In update all the fields are disabled except the Work Flow Deatils and the fields which needs to be captured at different status are enabled.
+          In updade fields can be modified based on confguration defined in the system.
+          
+      parameters:
+        - name: MeasurementBookRequest
+          in: body
+          description: Details of Measurement Book(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/MeasurementBookRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Measurement Book(s) updated successfully
+          schema:
+            $ref: '#/definitions/MeasurementBookResponse'
+        400:
+          description: Measurement Book(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Measurement Book
+        
+  /measurementbooks/_search:
+    post:
+      summary: Get the list of Measurement Book(s) defined in the system.
+      description: |
+          Search and get Measurement Book(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Measurement Book(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of Notice as defined in MeasurementBookResponse model.
+          
+          Search results will be sorted by the sortProperty Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortProperty"
+        - name: ids
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: Comma separated list of Ids of Measurement Book to get the Measurement Books.
+        - name: status
+          in: query
+          description: Status of the Measurement Book.
+          required: false
+          type: string
+        - name: workOrderNumbers
+          type: array
+          items:
+            type: string
+          in: query
+          description: Comma separated list of Work Order Numbers
+        - name: mbRefNumbers
+          type: array
+          items:
+            type: string
+          in: query
+          description: Comma separated list of MB Reference Numbers          
+        - name: loaNumbers
+          type: array
+          items:
+            type: string
+          in: query
+          description: Comma separated list of LOA Numbers
+        - name: detailedEstimateNumbers
+          type: array
+          items:
+            type: string
+          in: query
+          description: Comma separated list of Detailed Estimate Numbers
+        - name: workIdentificationNumbers
+          in: query
+          description: Comma separated list of Work Identification Numbers
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: Measurement Book(s) Retrieved Successfully
+          schema:
+            $ref: "#/definitions/MeasurementBookResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Measurement Book
+       
+  /contractorbills/_search:
+    post:
+      summary: Get the list of Contractor Bill(s) defined in the system.
+      description: |
+          Search and get Contractor Bill(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          Search results will be sorted by the sort Property Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortProperty"
+        - name: ids
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: Comma separated list of Ids of Contractor Bills.
+        - name: letterOfAcceptanceNumbers
+          in: query
+          description: Comma separated list of Letter of Acceptance Numbers
+          required: false
+          type: array
+          items:
+            type: string
+          allowEmptyValue: true
+        - name: billFromDate
+          in: query
+          description: Epoch time from when bill is created
+          required: false
+          type: integer
+          format: int64
+          allowEmptyValue: true
+        - name: billType
+          in: query
+          description: Epoch time till when bill is created
+          required: false
+          type: integer
+          format: int64
+          allowEmptyValue: true
+        - name: billNumbers
+          type: array
+          items:
+            type: string
+          in: query
+          description: Comma separated list of bill numbers
+        - name: status
+          in: query
+          required: false
+          description: The status of the Contractor Bill
+          type: string
+        - name: workIdentificationNumber
+          in: query
+          required: false
+          description: Comma separated list of Work Identification Numbers
+          type: array
+          items:
+            type: string
+        - name: contractorNames
+          in: query
+          required: false
+          description: Comma separated list of contractor names
+          type: array
+          items:
+            type: string
+        - name: department
+          in: query
+          required: false
+          description: The department of the Contractor Bill
+          type: string
+        - name: spillOverFlag
+          in: query
+          required: false
+          description: The spillover flag of the Contractor Bill
+          type: boolean
+      responses:
+        200:
+          description: Contractor Bill(s) Retrieved Successfully
+          schema:
+            $ref: "#/definitions/ContractorBillResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Contractor Bill
+        
+  /contractorbills/_create:
+    post:
+      summary: Create new Contractor Bill(s).
+      description: |
+          To create new Contractor Bill in the system. API supports bulk creation with max limit as defined in the Contractor Bill Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Contractor Bill, please pass array with one Contractor Bill object.
+          
+      parameters:
+        - name: ContractorBillRequest
+          in: body
+          description: Details of new Contractor Bill(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/ContractorBillRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Contractor Bill(s) created successfully
+          schema:
+            $ref: '#/definitions/ContractorBillResponse'
+        400:
+          description: Contractor Bill(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Contractor Bill
+        
+  /contractorbills/_update:
+    post:
+      summary: Update Contractor Bill(s).
+      description: |
+          To update Contractor Bill in the system. API supports bulk updation with max limit as defined in the Contractor Bill Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Contractor Bill, please pass array with one Contractor Bill object.
+          In update all the fields are disabled except the Work Flow Deatils and the fields which needs to be captured at different status are enabled.
+          
+      parameters:
+        - name: ContractorBillRequest
+          in: body
+          description: Details of Contractor Bill(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/ContractorBillRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Contractor Bill(s) updated successfully
+          schema:
+            $ref: '#/definitions/ContractorBillResponse'
+        400:
+          description: Contractor Bill(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Contractor Bill
+        
+  /milestones/_create:
+    post:
+      summary: Create new Milestone(s).
+      description: |
+          To create new Milestone in the system. API supports bulk creation with max limit as defined in the Milestone Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Milestone, please pass array with one Milestone object.
+          
+      parameters:
+        - name: MilestoneRequest
+          in: body
+          description: Details of new Milestone(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/MilestoneRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Milestone(s) created successfully
+          schema:
+            $ref: '#/definitions/NoticeResponse'
+        400:
+          description: Milestone(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Milestone  
+        
+  /milestones/_update:
+    post:
+      summary: Update existing Milestone(s).
+      description: |
+          To update existing Milestone in the system. API supports bulk updation with max limit as defined in the Milestone Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Milestone, please pass array with one Milestone object.
+          
+      parameters:
+        - name: MilestoneRequest
+          in: body
+          description: Details of Milestone(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/MilestoneRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Milestone(s) updated successfully
+          schema:
+            $ref: '#/definitions/NoticeResponse'
+        400:
+          description: Milestone(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Milestone
+        
+  /milestones/_search:
+    post:
+      summary: Get the list of Milestone(s) defined in the system.
+      description: |
+          Search and get Milestone(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Milestone(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of Milestone as defined in MilestoneResponse model.
+          
+          Search results will be sorted by the sortProperty Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortProperty"
+        - name: ids
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: Comma separated list of Ids of Milestone to get the Milestones
+        - name: status
+          in: query
+          description: Status of the Milestone.
+          required: false
+          type: string
+        - name: workOrderNumbers
+          type: array
+          items:
+            type: string
+          in: query
+          description: Comma separated list of Work Order Numbers
+        - name: loaNumbers
+          pattern: '[a-zA-Z0-9-\\]'
+          type: array
+          items:
+            type: string
+          in: query
+          description: Comma separated list of LOA Numbers
+        - name: detailedEstimateNumbers
+          in: query
+          required: false
+          description: Comma separated list of Detailed Estimate Numbers
+          type: array
+          items:
+            type: string
+        - name: workIdentificationNumbers
+          in: query
+          required: false
+          description: Comma separated list of Work Identification Numbers
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: Milestone(s) Retrieved Successfully
+          schema:
+            $ref: "#/definitions/MilestoneResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Milestone
+       
+  /trackMilestones/_create:
+    post:
+      summary: Create new Track Milestone(s).
+      description: |
+          To create new Track Milestone in the system. API supports bulk creation with max limit as defined in the Track Milestone Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Track Milestone, please pass array with one Track Milestone object.
+          
+      parameters:
+        - name: TrackMilestoneRequest
+          in: body
+          description: Details of new Track Milestone(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/TrackMilestoneRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Track Milestone(s) created successfully
+          schema:
+            $ref: '#/definitions/TrackMilestoneResponse'
+        400:
+          description: Track Milestone(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Track Milestone  
+        
+  /trackMilestones/_update:
+    post:
+      summary: Update existing Track Milestone(s).
+      description: |
+          To update existing Track Milestone in the system. API supports bulk updation with max limit as defined in the Track Milestone Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Track Milestone, please pass array with one Track Milestone object.
+          
+      parameters:
+        - name: TrackMilestoneRequest
+          in: body
+          description: Details of Track Milestone(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/TrackMilestoneRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Track Milestone(s) updated successfully
+          schema:
+            $ref: '#/definitions/TrackMilestoneResponse'
+        400:
+          description: Track Milestone(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Track Milestone
+        
+  /trackMilestones/_search:
+    post:
+      summary: Get the list of Track Milestone(s) defined in the system.
+      description: |
+          Search and get Track Milestone(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Track Milestone(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of Track Milestone as defined in Track MilestoneResponse model.
+          
+          Search results will be sorted by the sortProperty provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortProperty"
+        - name: workOrderNumbers
+          type: array
+          items:
+            type: string
+          in: query
+          description: Comma separated list of Work Order Numbers         
+        - name: ids
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: Comma separated list of Ids of Track Milestone to get the Track Milestones
+        - name: status
+          in: query
+          description: Status of the Track Milestone.
+          required: false
+          type: string
+        - name: loaNumbers
+          in: query
+          description: Comma separated list of LOA Numbers
+          required: false
+          type: array
+          items:
+            type: string
+          allowEmptyValue: true
+        - name: detailedEstimateNumbers
+          in: query
+          required: false
+          description: Comma separated list of Detailed Estimate Numbers
+          type: array
+          items:
+            type: string
+        - name: workIdentificationNumbers
+          in: query
+          required: false
+          description: Comma separated list of Work Identification Numbers
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: Track Milestone(s) Retrieved Successfully
+          schema:
+            $ref: "#/definitions/TrackMilestoneResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Track Milestone
+       
+  /qualitytestings/_create:
+    post:
+      summary: Create new Quality Testing(s).
+      description: |
+          To create new Quality Testing in the system. API supports bulk creation with max limit as defined in the Quality Testing Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Quality Testing, please pass array with one Quality Testing object.
+          
+          Quality Testing can only created for approved workorder.
+          
+      parameters:
+        - name: QualityTestingRequest
+          in: body
+          description: Details of new Quality Testing(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/QualityTestingRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Quality Testing(s) created successfully
+          schema:
+            $ref: '#/definitions/QualityTestingResponse'
+        400:
+          description: Quality Testing(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Quality Testing  
+        
+  /qualitytestings/_update:
+    post:
+      summary: Update existing Quality Testing(s).
+      description: |
+          To update existing Quality Testing in the system. API supports bulk updation with max limit as defined in the Quality Testing Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Quality Testing, please pass array with one Quality Testing object.
+          
+      parameters:
+        - name: QualityTestingRequest
+          in: body
+          description: Details of Quality Testing(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/QualityTestingRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Quality Testing(s) updated successfully
+          schema:
+            $ref: '#/definitions/QualityTestingResponse'
+        400:
+          description: Quality Testing(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Quality Testing
+        
+  /qualitytestings/_search:
+    post:
+      summary: Get the list of Quality Testing(s) defined in the system.
+      description: |
+          Search and get Quality Testing(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Quality Testing(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of Quality Testing as defined in QualityTestingResponse model.
+          
+          Search results will be sorted by the sortProperty Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortProperty"
+        - name: workOrderNumbers
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          allowEmptyValue: true
+          required: false
+          description: Comma separated list of Work Order Numbers
+        - name: ids
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: Comma separated list of Ids of Quality Testing(s)
+        - name: loaNumbers
+          in: query
+          description: Comma separated list of LOA Numbers
+          required: false
+          type: array
+          items:
+            type: string
+          allowEmptyValue: true
+        - name: detailedEstimateNumbers
+          in: query
+          required: false
+          description: Comma separated list of Detailed Estimate Numbers
+          type: array
+          items:
+            type: string
+        - name: workIdentificationNumbers
+          in: query
+          required: false
+          description: Comma separated list of Work Identification Numbers
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: Quality Testing(s) Retrieved Successfully
+          schema:
+            $ref: "#/definitions/QualityTestingResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Quality Testing
+       
+definitions:
+########################################################
+#RequestInfo and ResponseInfo object should be reffered from Common.
+#Definition must start with Upper case followed by camel case.
+#Every model will have tenantId
+########################################################
+
+  AbstractEstimateRequest:
+      description: Contract class to send response. Array of AbstractEstimate items are used in case of search results, also multiple  AbstractEstimate item is used for create and update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        abstractEstimates:
+          description: Used for create and update only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: '#/definitions/AbstractEstimate'
+
+  AbstractEstimateResponse:
+      description: Contract class to send response. Array of AbstractEstimate items are used in case of search results, also multiple  AbstractEstimate item is used for create and update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        abstractEstimates:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/AbstractEstimate'
+    
+  AbstractEstimate:
+    type: object
+    description: Object holds the basic data for a AbstractEstimate
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Abstract Estimate
+      tenantId:
+        type: string
+        description: Tenant id of the Abstract Estimate
+        maxLength: 128
+        minLength: 4
+      abstractEstimateNumber:
+        type: string
+        pattern: '[a-zA-Z0-9-\\]'
+        description: Unique number for the Abstract Estimate
+        maxLength: 20
+        minLength: 3
+      subject:
+        type: string
+        description: Subject of Abstract Estimate
+        maxLength: 100
+        minLength: 3
+      fund:
+        type: string
+        description: Fund of the Abstract Estimate
+      referenceType:
+        type: string
+        description: Reference Type of the Abstract Estimate
+        maxLength: 128
+        minLength: 3
+      referenceNumber:
+        type: string
+        description: Letter Reference Number of the Abstract Estimate
+        maxLength: 100
+        minLength: 3
+      function:
+        type: string
+        description: Function of the Abstract Estimate
+      description:
+        type: string
+        description : description for the Abstract Estimate
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        maxLength: 1024
+        minLength: 3
+      budgetHead:
+        type: string
+        description: Budget head of the Abstract Estimate
+      scheme:
+        type: string
+        description: Scheme of the Abstract Estimate
+      subScheme:
+        type: string
+        description: Sub scheme of the Abstract Estimate
+      dateOfPropsal:
+        type: integer
+        format: int64
+        description: Epoch time of the Date of Proposal
+      department:
+        type: string
+        description: Department for which Abstract Estimate belongs to
+      adminSanctionNumber:
+        type: string
+        pattern: '[a-zA-Z0-9-\\]'
+        description: Unique number after admin sanction for the Abstract Estimate
+        maxLength: 50
+        minLength: 3
+      adminSanctionDate:
+        type: integer
+        format: int64
+        description:  Epoch time of when the admin santion done
+      adminSanctionBy:
+        type: string
+        description: User who admin sanctioned
+      abstractEstimateDetails:
+        type: array
+        description: Array of Abstract Estimate Details
+        minItems: 1
+        items:
+          $ref: '#/definitions/AbstractEstimateDetails'
+      documentDetails:
+        type: array
+        description: Array of document details
+        items:
+          $ref: '#/definitions/DocumentDetail'
+      status:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/ProjectStatus'
+      beneficiary:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/Beneficiary'
+      modeOfAllotment:
+        $ref: '#/definitions/ModeOfAllotment'
+      typeOfWork:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/TypeOfWork'
+      subTypeOfWork:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/TypeOfWork'
+      natureOfWork: 
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/NatureOfWork'
+      ward:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+      technicalSanctionNumber: 
+        type: string
+        pattern: '[a-zA-Z0-9-\\]'
+        description: Technical sanction number of the Abstract Estimate
+        maxLength: 50
+        minLength: 3        
+      technicalSanctionDate: 
+        type: integer
+        format: int64
+        description: Epoch time of when technical sanctioned
+      technicalSanctionBy:
+        type: string
+        description: User who technical sanctioned
+      locality: 
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+      workCategory:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/WorkCategory'
+      councilResolutionNumber:
+        type: string
+        pattern: '[a-zA-Z0-9-\\]'
+        description: Council resolution number of the Abstract Estimate
+      councilResolutionDate:
+        type: string
+        description: Epoch time of the council resolution date
+      workOrderCreated:
+        type: boolean
+        description: Boolean value if work order created or not, Required only if Abstract Estimate is Spill Over
+      billsCreated: 
+        type: boolean
+        description: Boolean value if bills created or not. Required only if Abstract Estimate is Spill Over
+      spillOverFlag:  
+        type: boolean
+        description: Boolean value if spill over or not. Required only if Abstract Estimate is Spill Over
+      cancellationReason:
+        type: string
+        description: Reason for cancellation of the Abstract Estimate, Required only while cancelling Abstract Estimate
+        maxLength: 512
+        minLength: 3
+      cancellationRemarks:
+        type: string
+        description: Remarks for cancellation of the Abstract Estimate, Required only while cancelling Abstract Estimate
+        maxLength: 512
+        minLength: 3
+      detailedEstimateCreated:
+        type: boolean
+        description: Boolean value if the detailed estimate created or not. Required only if Abstract Estimate is Spill Over
+      workFlowDetails:
+        $ref: '#/definitions/WorkFlowDetails'
+      stateId:
+        type: string
+        description: State id of the workflow
+      asset:
+        type: string
+        description: Asset for which this Abstract Estimate created
+      implementationPeriod:
+        type: integer
+        description: Approximate period of implementation of the work.
+      fundAvailable:
+        type: boolean
+        description: Boolean vlaue to capture whether the fund available to execute this work.
+      fundSanctioningAuthority:
+        type: string
+        description: The sanctioning Authority for fund to carry out the work.
+      pmcRequired:
+        type: boolean
+        description: Boolean vlaue to capture whether the PMC need to appoint or not.
+      pmcType:
+        type: string
+        description: If PMC required is yes then to capture PMC is from Panel or New Appointment.
+      pmcName:
+        type: string
+        description: Name of the PMC Panel/New Appointment.
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - dateOfPropsal
+      - referenceNumber
+      - department
+      - subject
+      - description
+      - abstractEstimateDetails
+      - modeOfAllotment
+      - typeOfWork
+      - beneficiary
+      - natureOfWork
+      - ward
+      - workCategory
+      - status
+  
+  AbstractEstimateDetails:
+    type: object
+    description: An Object that hold Abstract Estimate Detail for a given Abstract Estimate
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the AbstractEstimateDetail
+      tenantId:
+        type: string
+        description: Tenant id of the Abstract Estimate Details
+        maxLength: 128
+        minLength: 4
+      abstractEstimate:
+        $ref: '#/definitions/AbstractEstimate'
+      nameOfWork:
+        type: string
+        description: Name Of Work of the Abstract Estimate Details
+        maxLength: 1024
+        minLength: 1
+      estimateAmount:
+        type: number
+        format: BigDecimal
+        description: Estimate amount for the Abstract Estimate Details
+      estimateNumber:
+        type: string
+        pattern: '[a-zA-Z0-9-\\]'
+        description: Estimate number of the Abstract Estimate Details.
+        maxLength: 50
+        minLength: 1
+      grossAmountBilled:
+        type: number
+        format: double
+        description: Gross Billed amount of the Abstract Estimate Details
+      projectCode:
+        $ref: '#/definitions/ProjectCode'
+      abstractEstimateAppropriations:
+        $ref: '#/definitions/EstimateAppropriation'
+      estimatePhotographsList:
+        $ref: '#/definitions/EstimatePhotographs'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - nameOfWork
+      - estimateAmount
+      - estimateNumber
+      - tenantId
+    
+  DocumentDetail:
+    type: object
+    description: An Object that hold Document Details (Uploaded files/documents) for all the objects
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Document Detail
+      objectId:
+        type: string
+        description: Object id of the Document for which documents are attached.
+      objectType:
+        type: string
+        description: Object type of the document for which documents are attached.
+        maxLength: 100
+        minLength: 1
+      fileStore:
+        type: string
+        description: Filestore reference of the document which is attached 
+        maxLength: 256
+        minLength: 1
+      tenantId:
+        type: string
+        description: Tenant Id of the Document detail
+        maxLength: 128
+        minLength: 4
+    required:
+      - fileStore
+      - tenantId
+      - objectId
+      - objectType
+    
+  EstimateAppropriation:
+    type: object
+    description: An Object that hold Estimate Appropriation for a given Abstract Estimate Details
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the EstimateAppropriation
+      tenantId:
+        type: string
+        description: Tenant id for which this object belongs to
+        maxLength: 128
+        minLength: 4
+      abstractEstimateDetails:
+        $ref: '#/definitions/AbstractEstimateDetails'
+      detailedEstimate:
+        $ref: '#/definitions/DetailedEstimate'
+      budgetUsage:
+        type: string
+        description: Refrernce of Budget Usage of the Estimate Appropriation
+        maxLength: 100
+        minLength: 3
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - budgetUsage
+      - tenantId
+    
+  EstimatePhotographs:
+    type: object
+    description: An Object that hold Photographs attached to Estimate
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the EstimatePhotographs
+      tenantId:
+        type: string
+        description: Tenant id of the Abstract Estimate Details
+        maxLength: 128
+        minLength: 4
+      abstractEstimateDetails:
+        $ref: '#/definitions/AbstractEstimateDetails'
+      latitude:
+        type: integer
+        format: double
+        description: Latitude of the photograph taken
+      longitude:
+        type: integer
+        format: double
+        description: Longitude of the photograph taken
+      description:
+        type: string
+        description: Description of the photograph
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        maxLength: 1024
+      dateOfCapture:
+        type: integer
+        format: int64
+        description: Epoch time of when photo has captured
+      fileStoreMapper:
+        type: string
+        description: Reference of the file store
+      workProgress:
+        $ref: '#/definitions/WorkProgress'
+      detailedEstimate:
+        $ref: '#/definitions/DetailedEstimate'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - workProgress
+      - tenantId
+      - fileStoreMapper
+      
+  WorkFlowDetails:
+    type: object
+    description: An Object to hold the Application workflow details for a given Abstract Estimate
+    properties:
+      type:
+        type: string
+        description: Workflow type to be processed for an application the Abstract Estimate
+      businessKey:
+        type: string
+        description: Businesskey of the workflow processing application
+      department:
+        type: string
+        description: Department of the workflow processing authority
+      designation:
+        type: string
+        description: Designation of the workflow processing authority
+        maxLength: 1024
+        minLength: 3
+      assignee:
+        type: integer
+        format: int64
+        description: Assignee id
+      action:
+        type: string
+        description: Action to be taken for processing workflow
+      status:
+        type: string
+        description: Status of the application
+      comments:
+        type: string
+        description: Comments given by the workflow processing person
+      senderName:
+        type: string
+        description: Name of the workflow processing person
+      details:
+        type: string
+        description: Details about the workflow process
+      stateId:
+        type: string
+        description: State id of the workflow
+        
+  WorkProgress:
+    type: string
+    enum:
+      - BEFORE
+      - DURING
+      - AFTER
+      
+  WorkCategory:
+    type: string
+    enum:
+      - NON_SLUM
+      - NOTIFIED_SLUM
+      - NON_NOTIFIED_SLUM
+      
+  Beneficiary:
+    type: string
+    enum:
+      - SC
+      - ST
+      - BC
+      - MINORITY
+      - WOMEN_CHILDREN_WELFARE
+      - GENERAL
+      
+  DetailedEstimateRequest:
+      description: Contract class to send response. Array of DetailedEstimate items are used in case of search results, also multiple  DetailedEstimate item is used for create and update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        abstractEstimates:
+          description: Used for create and update only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: '#/definitions/DetailedEstimate'
+
+  DetailedEstimateResponse:
+      description: Contract class to send response. Array of DetailedEstimate items are used in case of search results, also multiple  DetailedEstimate item is used for create and update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        abstractEstimates:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/DetailedEstimate'
+            
+  DetailedEstimate:
+    type: object
+    description: An Object holds the basic data for a DetailedEstimate
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Detailed Estimate
+      tenantId:
+        type: string
+        description: Tenant id of the Detailed Estimate
+        maxLength: 128
+        minLength: 4
+      estimateNumber:
+        type: string
+        pattern: '[a-zA-Z0-9-\\]'
+        description: Unique number for the Detailed Estimate
+        maxLength: 50
+        minLength: 1
+      estimateDate:
+        type: integer
+        format: int64
+        description: Epoch time of the Detailed Estimate Created
+      nameOfWork:
+        type: string
+        description: name of the work of Detailed Estimate Details
+        maxLength: 1024
+        minLength: 1
+      description:
+        type: string
+        description : description for the Detailed Estimate
+        maxLength: 1024
+        minLength: 1
+      department:
+        type: string
+        description: Department for which Detailed Estimate belongs to
+      adminSanctionNumber:
+        type: string
+        pattern: '[a-zA-Z0-9-\\]'
+        description: Unique number after admin sanction for the Detailed Estimate
+      adminSanctionDate:
+        type: integer
+        format: int64
+        description:  Epoch time of when the admin santion done
+      adminSanctionBy:
+        type: string
+        description: user who admin sanctioned
+      status:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/ProjectStatus'
+      workValue:
+        type: number
+        format: BigDecimal
+        description: Work value of the Detailed Estimate
+        maxLength: 20
+      estimateValue:
+        type: number
+        format: BigDecimal
+        description: Estimate value of the Detailed Estimate
+        maxLength: 20
+      projectCode:
+        $ref: '#/definitions/ProjectCode'
+      parent:
+        $ref: '#/definitions/DetailedEstimate'
+      copiedFrom:
+        $ref: '#/definitions/DetailedEstimate'
+      approvedDate:
+        type: integer
+        format: int64
+        description: Epoch time of when Detailed Estimate created
+      approvedBy:
+        type: string
+        description: Unique username of the user who approved Detailed Estimate
+      copiedEstimate:
+        type: boolean
+        description: Boolean value to identify whether the Detailed Estimate is copied from another estimate      
+      beneficiary:
+        $ref: '#/definitions/Beneficiary'
+      modeOfAllotment:
+        $ref: '#/definitions/ModeOfAllotment'
+      worksType:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/TypeOfWork'
+      worksSubtype:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/TypeOfWork'
+      natureOfWork: 
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/NatureOfWork'
+      ward:
+        type: string
+        description: Ward of the Detailed Estimate
+      location:
+        type: string
+        description: Location of the Detailed Estimate
+      latitude:
+        type: integer
+        format: double
+        description: Latitude of the location
+      longitude:
+        type: integer
+        format: double
+        description: Longitude of the location
+      workCategory:
+        $ref: '#/definitions/WorkCategory'
+      locality:
+        type: string
+        description: Locality of the Detailed Estimate
+      councilResolutionNumber:
+        type: string
+        description: council resolution number of the Detailed Estimate
+        maxLength: 50
+        minLength: 3
+      councilResolutionDate:
+        type: string
+        description: Epoch time of the council resolution date
+      workOrderCreated:
+        type: boolean
+        description: Boolean value to identify whether the work order created or not for spillover data 
+      billsCreated: 
+        type: boolean
+        description: Boolean value to identify whether the bills created or not for spillover data 
+      spillOverFlag:  
+        type: boolean
+        description: Boolean value to identify whether the spill over or not
+      grossAmountBilled:  
+        type: integer
+        format: BigDecimal
+        description: Gross Amount Billed if billsCreated flag is true 
+      cancellationReason:
+        type: string
+        description: Reason for cancellation of the Detailed Estimate, Required only while cancelling Detailed Estimate
+      cancellationRemarks:
+        type: string
+        description: Remarks for cancellation of the Detailed Estimate, Required only while cancelling Detailed Estimate
+        maxLength: 512
+        minLength: 3
+      totalIncludingRE:
+        type: integer
+        format: BigDecimal
+        description: Total Estimate Amount including Revision Estimates
+      abstractEstimateDetails:
+        type: array
+        description: Array of Detailed Estimate Details
+        items:
+          $ref: '#/definitions/AbstractEstimateDetails'
+      documentDetails:
+        type: array
+        description: Array of document details
+        items:
+          $ref: '#/definitions/DocumentDetail'
+      assetValues:
+        type: array
+        description: Asstet Values for Abstract Estimate
+        items:
+          $ref: '#/definitions/AssetsForEstimate'
+      overheadValues:
+        type: array
+        description: Array of Overhead Values
+        items:
+          $ref: '#/definitions/OverheadValue'
+      estimatePhotographsList:
+        type: array
+        description: Array of Estimate Photographs List
+        items:
+          $ref: '#/definitions/EstimatePhotographs'
+      workFlowDetails:
+        $ref: '#/definitions/WorkFlowDetails'
+      stateId:
+        type: string
+        description: State id of the workflow
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - estimateNumber
+      - nameOfWork
+      - estimateDate
+      - worksType
+      - natureOfWork
+      - ward
+      - status
+      - department
+      - description
+  
+  OverheadValue:
+      type: object
+      description: An Object holds the basic data for a Over Head Value
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the OverheadValue
+        tenantId:
+          type: string
+          description: Tenant id of the OverheadValue
+          maxLength: 128
+          minLength: 4
+        overhead:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/Overhead'
+        amount:
+          type: integer
+          format: BigDecimal
+          pattern: "[0-9]"
+          description: Overhead amount
+        detailedEstimate:
+          $ref: '#/definitions/DetailedEstimate'
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - tenantId
+        - overhead
+        - amount
+        - detailedEstimate
+      
+  AssetsForEstimate:
+      type: object
+      description: An Object holds the basic data for a Assets for Estimate
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the AssetsForEstimate
+        tenantId:
+          type: string
+          description: Tenant id of the AssetsForEstimate
+          maxLength: 128
+          minLength: 4
+        assetCode:
+          type: string
+          description: Code of the Asset
+          pattern: '[a-zA-Z0-9-\\]'
+          minLength: 1
+          maxLength: 100
+        detailedEstimate:
+          $ref: '#/definitions/DetailedEstimate'
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - tenantId
+        - assetCode
+        - detailedEstimate
+      
+  Activity:
+      type: object
+      description: An Object holds the basic data for a Activity
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Activity
+        tenantId:
+          type: string
+          description: Tenant id of the Activity
+          maxLength: 128
+          minLength: 4
+        schedule:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/ScheduleOfRate'
+        nonSor:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/NonSOR'
+        uom:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/UOM'
+        unitRate:
+          type: integer
+          format: double
+          description: Unit Rate of the Activity
+        estimateRate:
+          type: integer
+          format: double
+          description: Estimate Rate of the Activity
+        quantity:
+          type: integer
+          format: double
+          description: Quantity of the Activity
+        serviceTaxPerc:
+          type: integer
+          format: double
+          description: Service Tax Percentage of the Activity
+        revisionType:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/RevisionType'
+        parent:
+          $ref: '#/definitions/Activity'
+        detailedEstimate:
+          $ref: '#/definitions/DetailedEstimate'
+        measurementSheetList:
+          type: array
+          description: Measurement sheet list for the Activity
+          items:
+            $ref: '#/definitions/MeasurementSheet'
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - tenantId
+        - uom
+        - unitRate
+        - estimateRate
+        - detailedEstimate
+        - quantity
+    
+  MeasurementSheet:
+      type: object
+      description: An Object holds the basic data for a Measurement Sheet
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Measurement Sheet
+        tenantId:
+          type: string
+          description: tenant id of the Measurement Sheet
+          maxLength: 128
+          minLength: 4
+        slNo:
+          type: integer
+          description: sl No of the Measurement sheet
+          pattern: "[0-9]"
+          maxLength: 10
+          minLength: 1
+        identifier:
+          type: string
+          description: identifier of the Measurement sheet
+        remarks:
+          type: string
+          description: remarks of the Measurement sheet
+          pattern: "[0-9.]"
+          maxLength: 1024
+        no:
+          type: integer
+          format: BigDecimal
+          description: no of the Measurement sheet
+          pattern: "[0-9.]"
+          maxLength: 10
+        length:
+          type: integer
+          format: BigDecimal
+          description: length of the Measurement sheet
+          pattern: "[0-9.]"
+          maxLength: 10
+        width:
+          type: integer
+          format: BigDecimal
+          description: width of the Measurement sheet
+          pattern: "[0-9.]"
+          maxLength: 10
+        depthOrHeight:
+          type: integer
+          format: BigDecimal
+          description: depthOrHeight of the Measurement sheet
+          pattern: "[0-9.]"
+          maxLength: 10
+        quantity:
+          type: integer
+          format: BigDecimal
+          description: quantity of the Measurement sheet
+          pattern: "[0-9.]"
+          maxLength: 10
+        activity:
+          $ref: '#/definitions/Activity'
+        parent:
+          $ref: '#/definitions/MeasurementSheet'
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - tenantId
+        - quantity
+        - activity
+        
+  MultiYearEstimate:
+      type: object
+      description: An Object holds the basic data for a Multi Year Estimate
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Multi Year Estimate
+        tenantId:
+          type: string
+          description: Tenant id of the Multi Year Estimate
+          maxLength: 128
+          minLength: 4
+        financialYear:
+          type: string
+          description: Financial Year of the Multi Year Estimate
+        detailedEstimate:
+          $ref: '#/definitions/DetailedEstimate'
+        percentage:
+          type: integer
+          format: double
+          description: Percentage for the MultiYearEstimate
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - tenantId
+        - financialYear
+        - detailedEstimate
+        - percentage
+      
+  FinancialDetail:
+      type: object
+      description: An Object holds the basic data for a Financial Detail
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Financial Detail
+        tenantId:
+          type: string
+          description: Tenant id of the Financial Detail
+          maxLength: 128
+          minLength: 4
+        fund:
+          type: string
+          description: Fund of the Detailed Estimate
+        function:
+          type: string
+          description: Function of the Detailed Estimate
+        functionary:
+          type: string
+          description: Functionary of the Detailed Estimate
+        scheme:
+          type: string
+          description: Scheme of the Detailed Estimate
+        subScheme:
+          type: string
+          description: Sub Scheme of the Detailed Estimate
+        budgetGroup:
+          type: string
+          description: Budget Group of the Detailed Estimate
+        chartOfAccounts:
+          type: string
+          description: Chart Of Accounts of the Detailed Estimate
+        detailedEstimate:
+          $ref: '#/definitions/DetailedEstimate'
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - tenantId
+        - detailedEstimate
+      
+  EstimateTechnicalSanction:
+      type: object
+      description: An Object holds the basic data for a Estimate Technical Sanction
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Detailed Estimate
+        tenantId:
+          type: string
+          description: Tenant id of the Detailed Estimate
+          maxLength: 128
+          minLength: 4
+        technicalSanctionNumber:
+          type: string
+          pattern: '[a-zA-Z0-9-\\]'
+          description: Technical Sanction Number of the Detailed Estimate
+          maxLength: 50
+          minLength: 1
+        detailedEstimate:
+          $ref: '#/definitions/DetailedEstimate'
+        technicalSanctionDate:
+          type: integer
+          format: int64
+          description: Epoch time of the Technical Sanction Date
+        technicalSanctionBy:
+          type: string
+          description: User who technical sanctioned Detailed Estimate
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - tenantId
+        - technicalSanctionNumber
+        - detailedEstimate
+        - technicalSanctionDate
+        - technicalSanctionBy
+      
+  DetailedEstimateDeduction:
+      type: object
+      description: An Object holds the basic data for a Detailed Estimate Deduction
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Detailed Estimate Deduction
+        tenantId:
+          type: string
+          description: Tenant id of the Detailed Estimate Deduction
+          maxLength: 128
+          minLength: 4
+        chartOfAccounts:
+          type: string
+          description: Chart Of Accounts of the Detailed Estimate Deduction
+        detailedEstimate:
+          $ref: '#/definitions/DetailedEstimate'
+        percentage:
+          type: integer
+          format: double
+          pattern: "[0-9.]"
+          description: Percentage for the Detailed Estimate Deduction
+          minimum: 0.0
+        amount:
+          type: integer
+          format: BigDecimal
+          maxLength: 12
+          minLength: 1
+          description: Amount for the Detailed Estimate Deduction
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - tenantId
+      
+  ProjectCode:
+      type: object
+      description: An Object holds the basic data for a Project Code
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Project Code
+        tenantId:
+          type: string
+          description: Tenant id of the Project Code
+          maxLength: 128
+          minLength: 4
+        code:
+          type: string
+          description: Code of the Project 
+          pattern: '[a-zA-Z0-9-\\]'
+          minLength: 1
+          maxLength: 100
+        detailedEstimate:
+          $ref: '#/definitions/DetailedEstimate'
+        description:
+          type: string
+          pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+          description: Description of the Project
+          maxLength: 1024
+        name:
+          type: string
+          description: Name of the Project
+          maxLength: 100
+        status:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/ProjectStatus'
+        projectValue:
+          type: integer
+          format: BigDecimal
+          pattern: "[0-9.]"
+          description: Value for the Project
+        completionDate:
+          type: integer
+          format: int64
+          description: Epoch time for the project completion date
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - tenantId
+        - code
+        - name
+
+  OfflineStatusRequest:
+    description: Contract class to send response. Array of offlineStatuses items are used in case of search results, also multiple  offlineStatuses item is used for create and update
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      offlineStatuses:
+        description: Used for create and update only
+        type: array
+        minimum: 1
+        maximum: 100
+        items:
+          $ref: '#/definitions/OfflineStatus'
+          
+  OfflineStatusResponse:
+    description: Contract class to send response. Array of offlineStatuses items are used in case of search results, also multiple  offlineStatuses item is used for create and update
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      offlineStatuses:
+        description: Used for search result and create only
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/OfflineStatus'
+
+  OfflineStatus:
+    type: object
+    description: An Object holds the basic data for a Offline Status
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Offline Status
+      tenantId:
+        type: string
+        description: tenant id of the Offline Status
+        maxLength: 128
+        minLength: 4
+      objectType:
+        type: string
+        description: Object type for the offline status
+      status:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/ProjectStatus'
+      statusDate:
+        type: integer
+        format: int64
+        description: Epoch time of Offline Status Date
+      objectId:
+        type: string
+        description: Unique Identifier for the specified obect type.
+
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - objectType
+      - status
+      - statusDate
+      - objectId
+    
+  WorkOrderActivity:
+    type: object
+    description: An Object holds the basic data for Letter Of Acceptance
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Work Order Activity
+      tenantId:
+        type: string
+        description: Tenant id of the Work Order Activity
+        maxLength: 128
+        minLength: 4
+     #letterOfAcceptanceEstimate:
+       # $ref: '#/definitions/LetterOfAcceptanceEstimate'
+      activity:
+        $ref: '#/definitions/Activity'
+      parent:
+        $ref: '#/definitions/WorkOrderActivity'
+      status:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/ProjectStatus'
+      approvedRate:
+        type: number
+        format: BigDecimal
+        description: Approved Rate for the work order.
+        maxLength: 12
+        minLength: 1
+      approvedAmount:
+        type: number
+        format: BigDecimal
+        description: Approved Amount for the work order.       
+        maxLength: 12
+        minLength: 1
+      remarks:
+        type: string
+        description: Remarks for the work order.
+        maxLength: 1024
+      workOrderMeasurements:
+        type: array
+        description: Array of work order measurement sheet
+        items:
+          $ref: '#/definitions/LOAMeasurementSheet'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - activity
+      - approvedAmount
+      - approvedRate
+      #- letterOfAcceptanceEstimate
+    
+  LetterOfAcceptance:
+    type: object
+    description: An Object holds the basic data for a Letter Of Acceptance
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Letter Of Acceptance
+      tenantId:
+        type: string
+        description: Tenant id of the Letter Of Acceptance
+        maxLength: 128
+        minLength: 4
+      contractor:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/Contractor'
+      loaDate:
+        type: integer
+        format: int64
+        description: Epoch time of LOA Date
+      loaNumber:
+        type: string
+        pattern: '[a-zA-Z0-9-\\]'
+        description: LOA Number of the Letter Of Acceptance
+      contractPeriod:
+        type: number
+        pattern: "[0-9]"
+        description: Contract Period (In days) for the Letter Of Acceptance
+        maxLength: 10
+        minLength: 1
+      emdAmountDeposited:
+        type: number
+        format: BigDecimal
+        description: EMD Amount Deposited for the Letter Of Acceptance
+        maxLength: 50
+        minLength: 1
+      securityDeposit:
+        type: array
+        description: Array to hold the Security Deposit details
+        minItems: 1
+        items:
+          $ref: '#/definitions/SecurityDeposit'
+      engineerIncharge:
+        type: string
+        description: Employee Code for the Letter Of Acceptance.
+      defectLiabilityPeriod:
+        type: number
+        format: double
+        description: Defect Liability Period (In Years) for the Letter Of Acceptance
+      loaAmount:
+        type: number
+        format: BigDecimal
+        description: LOA Amount for the Letter Of Acceptance
+        maxLength: 12
+        minLength: 1
+      documentDetails:
+        type: array
+        description: Array of document details
+        items:
+          $ref: '#/definitions/DocumentDetail'
+      status:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/ProjectStatus'
+      tenderFinalizedPercentage:
+        type: string
+        description: Tender Finalized Percentage for the Letter Of Acceptance
+      approvedDate:
+        type: integer
+        format: int64
+        description: Epoch time of Date on which Letter Of Acceptance approved.
+      fileNumber:
+        type: string
+        description: File Number of Letter Of Acceptance.
+      fileDate:
+        type: integer
+        format: int64
+        description: Epoch time of File Date of the Letter Of Acceptance.
+      parent:
+        $ref: '#/definitions/LetterOfAcceptance'
+      workFlowDetails:
+        $ref: '#/definitions/WorkFlowDetails'
+      stateId:
+        type: string
+        description: State id of the workflow
+      cancellationReason:
+        type: string
+        description: Reason for cancellation of the LOA, Required only while cancelling LOA
+        maxLength: 1024
+        minLength: 1
+      cancellationRemarks:
+        type: string
+        description: remarks for cancellation of the LOA, Required only while cancelling LOA
+        maxLength: 1024
+        minLength: 1
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - contractor
+      - contractPeriod
+      - engineerIncharge
+      - loaAmount
+      - status
+      - tenderFinalizedPercentage
+      - loaNumber
+    
+  AssetsForLOA:
+      type: object
+      description: An Object holds the basic data of Assets for LOA
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Assets for LOA
+        tenantId:
+          type: string
+          description: Tenant id of the Assets for LOAD
+          maxLength: 128
+          minLength: 4
+        assetCode:
+          type: string
+          description: Code of the Asset
+          minLength: 1
+          maxLength: 100
+        letterOfAcceptanceEstimate:
+          $ref: '#/definitions/LetterOfAcceptanceEstimate'
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - tenantId
+        - assetCode
+        - letterOfAcceptanceEstimate
+    
+  LetterOfAcceptanceEstimate:
+    type: object
+    description: A Object holds the basic data for a Letter Of Acceptance
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Letter Of Acceptance Estimate.
+      tenantId:
+        type: string
+        description: Tenant id of the Letter Of Acceptance Estimate
+        maxLength: 128
+        minLength: 4
+      letterOfAcceptance:
+        $ref: '#/definitions/LetterOfAcceptance'
+      detailedEstimate:
+        $ref: '#/definitions/DetailedEstimate'
+      workCompletionDate:
+        type: string
+        description: Work Completion Date of Letter Of Acceptance Estimate
+      estimateLOAAmount:
+        type: integer
+        format: BigDecimal
+        pattern: "[0-9]"
+        description: Estimate wise LOA amount of the Letter Of Acceptance
+      assetForLOA:
+        $ref: '#/definitions/AssetsForLOA'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - detailedEstimate
+      - letterOfAcceptance
+    
+  SecurityDeposit:
+    type: object
+    description: An Object that hold Rate Details for the given LOA. At least one data should be given to create an LOA
+    properties:
+      letterOfAcceptance:
+        $ref: '#/definitions/LetterOfAcceptance'
+      tenantId:
+        type: string
+        description: Tenant id of the Security Deposit
+        maxLength: 128
+        minLength: 4
+      mode:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/CollectionMode'
+      percentage:
+        type: string
+        description: Percentage for the given mode
+        pattern: "[0-9]"
+        maxLength: 10
+        minLength: 1
+      amount:
+        type: number
+        format: BigDecimal
+        description: Amount of Security Deposit should be calculated as per percentage
+        pattern: "[0-9]"
+        maxLength: 50
+        minLength: 1
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - mode
+      - percentage
+      - amount
+
+  LetterOfAcceptanceRequest:
+      description: Contract class to send response. Array of LetterOfAcceptance items are used in case of search results, also multiple  Letter Of Acceptance item is used for create and update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        letterOfAcceptances:
+          description: Used for create and update only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: '#/definitions/LetterOfAcceptance'
+            
+  LetterOfAcceptanceResponse:
+    description: Contract class to send response. Array of Letter Of Acceptance items are used in case of search results, also multiple  Letter Of Acceptance item is used for create and update
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      letterOfAcceptances:
+        description: Used for search result and create only
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/LetterOfAcceptance'
+          
+  WorkOrder:
+    type: object
+    description: An Object holds the basic data for a Work Order
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Work Order
+      tenantId:
+        type: string
+        description: Tenant id of the Work Order
+        maxLength: 128
+        minLength: 4
+      letterOfAcceptance:
+        $ref: '#/definitions/LetterOfAcceptance'
+      workOrderDetails:
+        type: array
+        description: Array of Work Order Details
+        minItems: 1
+        items:
+          $ref: '#/definitions/WorkOrderDetail'
+      workOrderDate:
+        type: integer
+        format: int64
+        description: Epoch time of Work Order Date
+      workOrderNumber:
+        type: string
+        pattern: '[a-zA-Z0-9-\\]'
+        description: Work Order Number
+        maxLength: 10
+        minLength: 1
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - workOrderDate
+      - workOrderNumber
+      - letterOfAcceptance
+    
+  WorkOrderDetail:
+    type: object
+    description: An Object holds the basic data for a Work Order Details
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Work Order Details
+      tenantId:
+        type: string
+        description: tenant id of the Work Order Details
+        maxLength: 128
+        minLength: 4
+      workOrder:
+        $ref: '#/definitions/WorkOrder'
+      remarks:
+        type: string
+        description: Remarks for the Work Order.
+        maxLength: 1024
+        minLength: 1
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - workOrder
+            
+  WorkOrderRequest:
+      description: Contract class to send response. Array of Wor kOrder items are used in case of search results, also multiple  Work Order item is used for create and update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        workOrders:
+          description: Used for create and update only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: '#/definitions/WorkOrder'
+            
+  WorkOrderResponse:
+    description: Contract class to send response. Array of Work Order items are used in case of search results, also multiple  Work Order item is used for create and update
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      workOrders:
+        description: Used for search result and create only
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/WorkOrder'
+  
+  Notice:
+    type: object
+    description: An Object holds the basic data for a Notice
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Notice
+      tenantId:
+        type: string
+        description: Tenant id of the Notice
+        maxLength: 128
+        minLength: 4
+      letterOfAcceptance:
+        $ref: '#/definitions/LetterOfAcceptance'
+      noticeDetails:
+        type: array
+        description: Array of Notice Detail
+        minItems: 1
+        items:
+          $ref: '#/definitions/NoticeDetail'
+      closingLine:
+        type: string
+        description: Closing Line for the work
+      daysOfReply:
+        type: integer
+        description: The number of Days for reply to Notice
+      documentDetails:
+        type: array
+        description: Array of document details
+        items:
+          $ref: '#/definitions/DocumentDetail'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - letterOfAcceptance
+    
+  NoticeDetail:
+    type: object
+    description: An Object holds the basic data for a Notice Detail
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Notice Detail
+      tenantId:
+        type: string
+        description: Tenant id of the Notice Detail
+        maxLength: 128
+        minLength: 4
+      notice:
+        $ref: '#/definitions/Notice'
+      remarks:
+        type: string
+        description: Remarks for the Notice.
+        maxLength: 1024
+        minLength: 1
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - notice
+          
+  NoticeRequest:
+      description: Contract class to send response. Array of Notice items are used in case of search results, also multiple  Notice item is used for create and update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        notices:
+          description: Used for create and update only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: '#/definitions/Notice'
+            
+  NoticeResponse:
+    description: Contract class to send response. Array of Notice items are used in case of search results, also multiple  Notice item is used for create and update
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      notices:
+        description: Used for search result and create only
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/Notice'
+          
+  MeasurementBook:
+    type: object
+    description: A Object holds the basic data for a Measurement Book data
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Measurement Book
+      tenantId:
+        type: string
+        description: Tenant id of the Measurement Book
+        maxLength: 128
+        minLength: 4
+      letterOfAcceptance:
+        $ref: '#/definitions/LetterOfAcceptance'
+      mbRefNo:
+        type: string
+        pattern: "[0-9]"
+        description: Referance number for the measurement book. 
+        maxLength: 50
+        minLength: 1
+      contractorComments:
+        type: string
+        description: Comments for the measurement book
+        maxLength: 1024
+        minLength: 1
+      mbDate:
+        type: integer
+        format: int64
+        description: Epoch time of when the measurement book created
+      mbIssuedDate:
+        type: integer
+        format: int64
+        description: Epoch time of Issued date of the measurement book
+      mbAbstract:
+        type: string
+        description: Abstract comments for the measurement book
+        maxLength: 1024
+        minLength: 1
+      fromPageNo:
+        type: integer
+        pattern: "[0-9]"
+        description: From page number for the measurement book
+        maxLength: 10
+        minLength: 1
+      toPageNo:
+        type: integer
+        pattern: "[0-9]"
+        description: To page number for the measurement book
+        maxLength: 10
+      letterOfAcceptanceEstimate:
+        $ref: '#/definitions/LetterOfAcceptanceEstimate'
+      # billregister:
+      #   $ref: '#/definitions/BillRegister'
+      status:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/ProjectStatus'
+      measurementBookDetails:
+        type: array
+        description: Array of Measurement Book Details
+        minItems: 1
+        items:
+          $ref: '#/definitions/MeasurementBookDetails'
+      isLegacyMB:
+        type: boolean
+        description: True if Measurement Book is legacy
+      mbAmount:
+        type: number
+        format: BigDecimal
+        pattern: "[0-9]"
+        description: Amount for the Measurement book.
+        maxLength: 50
+        minLength: 1
+      approvedDate:
+        type: integer
+        format: int64
+        description: Epoch time of the Measurement book Approved date 
+      documentDetails:
+        type: array
+        description: Array of document details
+        items:
+          $ref: '#/definitions/DocumentDetail'
+      workFlowDetails:
+        $ref: '#/definitions/WorkFlowDetails'
+      stateId:
+        type: string
+        description: State id of the workflow
+      cancellationReason:
+        type: string
+        description: Reason for cancellation of the Measurement book, Required only while cancelling Measurement book
+        maxLength: 1024
+        minLength: 1
+      cancellationRemarks:
+        type: string
+        description: Remarks for cancellation of the Measurement book, Required only while cancelling Measurement book
+        maxLength: 1024
+        minLength: 1
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - letterOfAcceptance
+      - mbRefNo
+      - mbDate
+      - mbAbstract
+      - fromPageNo
+      - mbAmount
+    
+  MeasurementBookDetails:
+    type: object
+    description: An Object that hold Details for the given Measuremnet book. At least one data should be given to create an Measurement book
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the MB Detail
+      tenantId:
+        type: string
+        description: Tenant id of the MB Detail
+        maxLength: 128
+        minLength: 4
+      measurementBook:
+        $ref: '#/definitions/MeasurementBook'
+      workOrderActivity:
+        $ref: '#/definitions/WorkOrderActivity'        
+      quantity:
+        type: number
+        pattern: "[0-9]"
+        format: double
+        description: Quantity for the Measurement book details
+        maxLength: 20
+        minLength: 1
+      rate:
+        type: number
+        format: double
+        description: Rate for the Measurement book details
+        maxLength: 20
+        minLength: 1
+      remarks:
+        type: string
+        description: Remarks for the Measurement book details
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        maxLength: 1024
+        minLength: 1
+      amount:
+        type: number
+        format: BigDecimal
+        description: Amount for the Measurement book details
+        maxLength: 12
+        minLength: 1
+      measurementSheets:
+        type: array
+        description: Array of Measurement Book Measurement Sheet
+        minItems: 1
+        items:
+          $ref: '#/definitions/MBMeasurementSheet'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - rate
+      - quantity
+      - amount
+      - workOrderActivity
+      - measurementBook
+        
+  MBMeasurementSheet:
+      type: object
+      description: An Object holds the basic data for a MB Measurement Sheet
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Measurement Sheet
+        tenantId:
+          type: string
+          description: Tenant id of the Measurement Sheet
+          maxLength: 128
+          minLength: 4
+        remarks:
+          type: string
+          description: Remarks of the Measurement sheet
+          pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+          maxLength: 1024
+          minLength: 1
+        no:
+          type: integer
+          format: BigDecimal
+          description: No. of the Measurement sheet
+          maxLength: 20
+        length:
+          type: integer
+          format: BigDecimal
+          description: Length of the Measurement sheet
+          maxLength: 20
+        width:
+          type: integer
+          format: BigDecimal
+          description: Width of the Measurement sheet
+        depthOrHeight:
+          type: integer
+          format: BigDecimal
+          description: Depth or Height of the Measurement sheet
+          maxLength: 20
+        quantity:
+          type: integer
+          format: BigDecimal
+          description: Quantity of the Measurement sheet
+          maxLength: 20
+        measurementBookDetails:
+          $ref: '#/definitions/MeasurementBookDetails'
+        loaMeasurementSheet:
+          $ref: '#/definitions/LOAMeasurementSheet'
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - tenantId
+        - quantity
+        - measurementBookDetails
+        - loaMeasurementSheet
+        
+  LOAMeasurementSheet:
+      type: object
+      description: An Object holds the basic data for a LOA Measurement Sheet
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Measurement Sheet
+        tenantId:
+          type: string
+          description: Tenant id of the Measurement Sheet
+          maxLength: 128
+          minLength: 4
+        no:
+          type: integer
+          format: BigDecimal
+          description: No. of the Measurement sheet
+          maxLength: 20
+        length:
+          type: integer
+          format: BigDecimal
+          description: Length of the Measurement sheet
+          maxLength: 20
+        width:
+          type: integer
+          format: BigDecimal
+          description: Width of the Measurement sheet
+        depthOrHeight:
+          type: integer
+          format: BigDecimal
+          description: Depth or Height of the Measurement sheet
+          maxLength: 20
+        quantity:
+          type: integer
+          format: BigDecimal
+          description: Quantity of the Measurement sheet
+          maxLength: 20
+          minLength: 1
+        loaActivity:
+          $ref: '#/definitions/WorkOrderActivity'
+        measurementSheet:
+          $ref: '#/definitions/MeasurementSheet'
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - tenantId
+        - quantity
+        - measurementSheet
+        - loaActivity
+      
+  MeasurementBookRequest:
+      description: Contract class to send response. Array of Measurement Book items are used in case of search results, also multiple  Measurement Book item is used for create and update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        measurementBooks:
+          description: Used for create and update only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: '#/definitions/MeasurementBook'
+            
+  MeasurementBookResponse:
+    description: Contract class to send response. Array of Measurement Book items are used in case of search results, also multiple  Measurement Book item is used for create and update
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      measurementBooks:
+        description: Used for search result and create only
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/MeasurementBook'
+          
+  ContractorBillRequest:
+      description: Contract class to send response. Array of ContractorBill items are used in case of search results, whereas single ContractorBill item is used for create and update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        contractorBills:
+          description: Used for create and update only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: '#/definitions/ContractorBill'
+            
+  ContractorBillResponse:
+    description: Contract class to send response. Array of ContractorBill items are used in case of search results, whereas single ContractorBill item is used for create and update
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      contractorBills:
+        description: Used for search result and create only
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/ContractorBill'
+          
+  ContractorBill:
+    type: object
+    description: Object holds the basic data for a Contractor Bill
+    allOf:
+    - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-bill/v1-0-0.yml#/definitions/BillRegister'
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Contractor Bill
+      tenantId:
+        type: string
+        description: Tenant id of the Contractor Bill
+        maxLength: 128
+        minLength: 4
+      billSequenceNumber:
+        type: string
+        description: Bill sequence number of the Bill
+        pattern: '[a-zA-Z0-9-\\]'
+      approvedDate:
+        type: integer
+        format: int64
+        description: Epoch time of when the Bill approved
+      approvedBy:
+        type: string
+        description: User name of the User who approved the Bill
+      cancellationReason:
+        type: string
+        description: Reason for cancellation of the Bill, Required only while cancelling Contractor Bill
+        maxLength: 100
+        minLength: 1
+      cancellationRemarks:
+        type: string
+        description: Remarks for cancellation of the Bill, Required only while cancelling Bill
+        maxLength: 1024
+        minLength: 1
+      assetDetailsList:
+        type: array
+        description: Array of Asset details for the Bill
+        items:
+          $ref: '#/definitions/AssetForBill'
+      letterOfAcceptanceEstimate:
+        description: LOA and Estimate reference for the Bill
+        $ref: '#/definitions/LetterOfAcceptanceEstimate'
+      workFlowDetails:
+        $ref: '#/definitions/WorkFlowDetails'
+      stateId:
+        type: string
+        description: State id of the workflow
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      
+  AssetForBill:
+    type: object
+    description: Asset information for the Contractor Bill
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Asset for Contractor Bill
+      tenantId:
+        type: string
+        description: Tenant id of the Asset for Contractor Bill
+        maxLength: 128
+        minLength: 4
+      assetCode:
+        type: string
+        description: Asset code of the Contractor Bill
+        maxLength: 50
+        minLength: 1
+      chartOfAccounts:
+        type: string
+        description: Chart of Accounts for the Assets for Bill
+      description:
+        type: string
+        description: Description for the Asset for Bill
+        maxLength: 1024
+      amount:
+        type: number
+        format: BigDecimal
+        description: Asset wise Amount for the Bill
+      contractorBill:
+        $ref: '#/definitions/ContractorBill'
+        description: Bill reference in the Asset
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - assetCode
+      - contractorBill
+
+  Milestone: 
+    type: object
+    description: An Object holds the basic data for a Milestone
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Milestone
+      tenantId:
+        type: string
+        description: Tenant id of the Milestone
+        maxLength: 128
+        minLength: 4
+      letterOfAcceptanceEstimate:
+        $ref: '#/definitions/LetterOfAcceptanceEstimate'
+      status:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/ProjectStatus'
+      milestoneActivities:
+        type: array
+        description: Array of Milestone Activity
+        minItems: 1
+        items:
+          $ref: '#/definitions/MilestoneActivity'
+      trackMilestones:
+        type: array
+        description: Array of Track Milestone
+        minItems: 1
+        items:
+          $ref: '#/definitions/TrackMilestone'
+      cancellationReason:
+        type: string
+        description: Reason for cancellation of the Milestone, Required only while cancelling Milestone
+        maxLength: 100
+      cancellationRemarks:
+        type: string
+        description: Remarks for cancellation of the Milestone, Required only while cancelling Milestone
+        maxLength: 1024
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - milestoneActivities
+      - status
+      - letterOfAcceptanceEstimate
+    
+  MilestoneActivity:
+    type: object
+    description: An Object that hold Activity for the given Milestone. At least one data should be given to create an Milestone
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Milestone Activity
+      tenantId:
+        type: string
+        description: Tenant id of the Milestone Activity
+        maxLength: 128
+        minLength: 4
+      milestone:
+        $ref: '#/definitions/Milestone'
+      scheduleStartDate:
+        type: integer
+        format: int64
+        description: Epoch time of the Schedule start date for activity
+      scheduleEndDate:
+        type: integer
+        format: int64
+        description: Epoch time of the Schedule end date for activity
+      percentage:
+        type: integer
+        format: BigDecimal
+        description: Percentage for the given Milestone Activity.
+      description:
+        type: string
+        description: Descritpion for Milestone Activity.
+        maxLength: 1024
+      stageOrderNumber:
+        type: string
+        description: Stage Order Number for Milestone Activity.
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - percentage
+      - stageOrderNumber
+      - milestone
+
+  MilestoneRequest:
+      description: Contract class to send response. Array of Milestone items are used in case of search results, also multiple  Milestone item is used for create and update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        milestones:
+          description: Used for create and update only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: '#/definitions/Milestone'
+            
+  MilestoneResponse:
+    description: Contract class to send response. Array of Letter Of Acceptance items are used in case of search results, also multiple  Milestone item is used for create and update
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      milestones:
+        description: Used for search result and create only
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/Milestone'
+    
+  TrackMilestone:
+    type: object
+    description: An Object holds the basic data for a Track Milestone
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Track Milestone
+      tenantId:
+        type: string
+        description: Tenant id of the  Track Milestone
+        maxLength: 128
+        minLength: 4
+      milestone:
+        $ref: '#/definitions/Milestone'
+      status:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/ProjectStatus'
+      totalPercentage:
+        type: integer
+        format: BigDecimal
+        description: Unit Rate of Track Milestone
+      projectCompleted:
+        type: boolean
+        description: True if project completed.
+      trackMilestoneActivities:
+        type: array
+        description: Array of Track Milestone Activity
+        minItems: 1
+        items:
+          $ref: '#/definitions/TrackMilestoneActivity'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - milestone
+      - trackMilestoneActivities
+      - status
+    
+  TrackMilestoneActivity:
+    type: object
+    description: An Object that hold Activity for the given Track  Milestone. At least one data should be given to create an Track Milestone
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Track Milestone Activity
+      tenantId:
+        type: string
+        description: Tenant id of the Track Milestone Activity
+        maxLength: 128
+        minLength: 4
+      trackMilestone:
+        $ref: '#/definitions/TrackMilestone'
+      milestoneActivities:
+        type: array
+        description: Array of Milestone Activity
+        minItems: 1
+        items:
+          $ref: '#/definitions/MilestoneActivity'
+      remarks:
+        type: string
+        description: Remarks for the Track milestone activity
+        maxLength: 1024
+        minLength: 4
+      percentage:
+        type: integer
+        format: BigDecimal
+        description: Percentage for the Completed Percentage in Track Milestone Activity.
+      completionDate:
+        type: integer
+        format: int64
+        description: Epoch time of the Completion Date for the milestone.
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - percentage
+      - trackMilestone
+      - milestoneActivities
+
+  TrackMilestoneRequest:
+      description: Contract class to send response. Array of Track Milestone items are used in case of search results, also multiple  Track Milestone item is used for create and update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        trackMilestones:
+          description: Used for create and update only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: '#/definitions/TrackMilestone'
+            
+  TrackMilestoneResponse:
+    description: Contract class to send response. Array of Track Milestone items are used in case of search results, also multiple  Track Milestone item is used for create and update
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      trackMilestones:
+        description: Used for search result and create only
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/TrackMilestone'
+      
+
+  ModeOfAllotment:
+    type: object
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Mode Of Allotment
+      tenantId:
+        type: string
+        description: Tenant id of the Mode Of Allotment
+        maxLength: 128
+        minLength: 4
+      name:
+        type: string
+        description: Unique name of the Mode Of Allotment
+        pattern: '[a-zA-Z0-9\s\.,]'
+        maxLength: 100
+        minLength: 1
+      code:
+        type: string
+        description: Unique code of the Mode Of Allotment
+        pattern: '[a-zA-Z0-9-\\]'
+        maxLength: 100
+        minLength: 1
+    required:
+      - tenantId
+      - name
+      - code
+    
+  QualityTesting:
+    type: object
+    description: An Object holds the basic data for a Quality Testing
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Quality Testing
+      tenantId:
+        type: string
+        description: Tenant id of the Quality Testing
+        maxLength: 128
+        minLength: 4
+      letterOfAcceptanceEstimate:
+        $ref: '#/definitions/LetterOfAcceptanceEstimate'
+      qualityTestingDetails:
+        type: array
+        description: Array of Quality Testing Detail
+        minItems: 1
+        items:
+          $ref: '#/definitions/QualityTestingDetail'
+      remarks:
+        type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        description: Remarks for the Quality Testing
+      testReports:
+        type: array
+        description: Array of test reports in PDF format
+        items:
+          $ref: '#/definitions/DocumentDetail'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - remarks
+    
+  QualityTestingDetail:
+    type: object
+    description: An Object holds the basic data for a Quality Testing
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Quality Testing Detail
+      tenantId:
+        type: string
+        description: Tenant id of the Quality Testing Detail
+        maxLength: 128
+        minLength: 4
+      qualityTesting:
+        $ref: '#/definitions/QualityTesting'
+      materialName:
+        type: string
+        description: Material name for the Quality Testing
+        pattern: '[a-zA-Z0-9-\\]'
+        maxLength: 100
+        minLength: 2
+      testName:
+        type: string
+        maxLength: 100
+        minLength: 2
+        pattern: '[a-zA-Z0-9-\\]'
+        description: Test name for the Quality Testing
+      resultUnit:
+        type: string
+        description: Result unit for the Quality Testing
+      minimumValue:
+        type: number
+        format: BigDecimal
+        maxLength: 20
+        minLength: 1
+        description: Minimum Value for the Quality Testing
+      maximumValue:
+        type: number
+        format: BigDecimal
+        maxLength: 20
+        minLength: 1
+        description: Maximum value for the Quality Testing
+      hodRemarks:
+        type: string
+        maxLength: 1024
+        minLength: 2
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        description: HOD remarksname for the Quality Testing
+      coRemarks:
+        type: string
+        maxLength: 1024
+        minLength: 2
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        description: CO remarks for the Quality Testing
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - qualityTesting
+      - coRemarks
+      - hodRemarks
+      - maximumValue
+      - minimumValue
+      - resultUnit
+      - testName
+      - materialName
+          
+  QualityTestingRequest:
+      description: Contract class to send response. Array of Quality Testing items are used in case of search results, also multiple  Quality Testing item is used for create and update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        qualityTestings:
+          description: Used for create and update only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: '#/definitions/QualityTesting'
+            
+  QualityTestingResponse:
+    description: Contract class to send response. Array of Quality Testing items are used in case of search results, also multiple  Quality Testing item is used for create and update
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      qualityTestings:
+        description: Used for search result and create only
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/QualityTesting'
+
+parameters:
+##########################################################
+#Parameter name must start with small case followed by camel case.
+##########################################################
+  pageSize:
+    name: pageSize
+    in: query
+    description: Number of records returned.
+    type: integer
+    minimum: 0
+    exclusiveMinimum: true
+    maximum: 100
+    exclusiveMaximum: false
+    multipleOf: 10
+    default: 20
+  pageNumber:
+    name: pageNumber
+    in: query
+    description: Page number
+    type: integer
+    default: 1
+  sortProperty:
+    name: sortBy
+    in: query
+    description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
+    type: string
+    default: id
+tags:
+  - name: Abstract Estimate
+    description: APIs required for Abstract Estimate.
+  - name: Detailed Estimate
+    description: APIs required for Detailed Estimate.
+  - name: Letter Of Acceptance
+    description: APIs required for Letter Of Acceptance.
+  - name: Offline Status
+    description: APIs required for Offline Status.
+  - name: Work Order
+    description: APIs required for Work Order.
+  - name: Notice
+    description: APIs required for Notice.
+  - name: Measurement Book
+    description: APIs required for Measurement Book.
+  - name: Contractor Bill
+    description: APIs required for Contractor Bill.
+  - name: Milestone
+    description: APIs required for Milestone.
+  - name: Track Milestone
+    description: APIs required for Track Milestone.
+  - name: Quality Testing
+    description: APIs required for Quality Testing.

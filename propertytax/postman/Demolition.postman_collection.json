@@ -1,0 +1,128 @@
+{
+	"id": "947d2568-ab8a-7b96-4da5-9ce6643057ca",
+	"name": "Demolition",
+	"description": "",
+	"order": [
+		"105c47af-abb2-8634-1194-2a84618ecab6",
+		"56d02f33-51cc-faa4-a0f8-3f848f01c9e7",
+		"42272459-0671-b48e-6ac9-0a0a29ad3919"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1508137354272,
+	"owner": "2338793",
+	"public": false,
+	"requests": [
+		{
+			"id": "105c47af-abb2-8634-1194-2a84618ecab6",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:9090/pt-property/properties/demolition/_create",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1508341300573,
+			"name": "Demolition_Create",
+			"description": "",
+			"collectionId": "947d2568-ab8a-7b96-4da5-9ce6643057ca",
+			"responses": [],
+			"rawModeData": "{\n\t\"RequestInfo\": {\n\t\t\"apiId\": \"org.egov.pt\",\n\t\t\"ver\": \"1.0\",\n\t\t\"ts\": 1503743889632,\n\t\t\"action\": \"asd\",\n\t\t\"userInfo\":{\n\t\t\t\"id\":74\n\t\t},\n\t\t\"did\": \"4354648646\",\n\t\t\"key\": \"xyz\",\n\t\t\"msgId\": \"654654\",\n\t\t\"requesterId\": \"61\",\n\t\t\"authToken\": \"dadd7122-0388-45c6-aab5-0b3528232627\"\n\t},\n\t\"demolition\":{\n\t\t\"tenantId\":\"default\",\n\t\t\"upicNumber\":\"defa00009410\",\n\t\t\"applicationNo\":\"1234\",\n\t\t\"sequenceNo\":2,\n\t\t\t\"auditDetails\": {\n\t\t\t\"createdBy\": \"narendra\",\n\t\t\t\"lastModifiedBy\": \"narendra\",\n\t\t\t\"createdTime\": 1503743889632,\n\t\t\t\"lastModifiedTime\": 1503743889632\n\t\t},\n\t\t\"workFlowDetails\":{\n\t \"department\": \"1\",\n        \"designation\": \"9\",\n        \"assignee\": 40,\n        \"action\": \"Forward\",\n        \"status\": \"Assistant Approved\"\t\n\t\t},\n\t\t\"documents\":[{\n\t\t\"id\":1,\n\t\t\"documentType\":\"roha\",\n\t\t\"fileStore\":\"roha\"\n\t\t},\n\t\t{\n\t\t\t\"id\":1,\n\t\t\"documentType\":\"pankaj\",\n\t\t\"fileStore\":\"pankaj\"\n\t\t}]\n\t}\n}"
+		},
+		{
+			"id": "42272459-0671-b48e-6ac9-0a0a29ad3919",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:9090/pt-property/properties/demolition/_search?tenantId=default&upicNumber=defa00009410&applicationNo=MH-PT-2017/10/17-010380-19",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "upicNumber",
+					"value": "defa00009410",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "applicationNo",
+					"value": "MH-PT-2017/10/17-010380-19",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "947d2568-ab8a-7b96-4da5-9ce6643057ca",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Demolition_Search",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1508341272826,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n\t\"RequestInfo\": {\n\t\t\"apiId\": \"org.egov.pt\",\n\t\t\"ver\": \"1.0\",\n\t\t\"ts\": 1503743889632,\n\t\t\"action\": \"asd\",\n\t\t\"userInfo\":{\n\t\t\t\"id\":74\n\t\t},\n\t\t\"did\": \"4354648646\",\n\t\t\"key\": \"xyz\",\n\t\t\"msgId\": \"654654\",\n\t\t\"requesterId\": \"61\",\n\t\t\"authToken\":\"f4997c86-22e5-4442-b859-c1c8c3c0d573\"\n\t}\n}"
+		},
+		{
+			"id": "56d02f33-51cc-faa4-a0f8-3f848f01c9e7",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:9090/pt-property/properties/demolition/_update",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1508341306462,
+			"name": "Demolition_Update",
+			"description": "",
+			"collectionId": "947d2568-ab8a-7b96-4da5-9ce6643057ca",
+			"responses": [],
+			"rawModeData": "{\n\t\"RequestInfo\": {\n\t\t\"apiId\": \"org.egov.pt\",\n\t\t\"ver\": \"1.0\",\n\t\t\"ts\": 1503743889632,\n\t\t\"action\": \"asd\",\n\t\t\"userInfo\":{\n\t\t\t\"id\":74\n\t\t},\n\t\t\"did\": \"4354648646\",\n\t\t\"key\": \"xyz\",\n\t\t\"msgId\": \"654654\",\n\t\t\"requesterId\": \"61\",\n\t\t\"authToken\":\"e53a1701-2d84-4ce2-9a65-b967c681f958\"\n\t},\n\t\"demolition\":{\n\t\t\"id\":23,\n\t\t\"upicNumber\":\"defa00009410\",\n\t\t\"tenantId\":\"default\",\n\t\t\"applicationNo\":\"MH-PT-2017/10/17-010385-13\",\n\t\t\"sequence\":25,\n\t\t\"propertySubType\":\"propertySubType\",\n\t\t\"usageType\":\"usageType\",\n\t\t\"usageSubType\":\"usageSubType\",\n\t\t\"totalArea\":300.00,\n\t\t\"isLegal\":true,\n\t\t\"stateId\":147,\n\t\t\t\"auditDetails\": {\n\t\t\t\"createdBy\": \"prasad\",\n\t\t\t\"lastModifiedBy\": \"prasad\",\n\t\t\t\"createdTime\": 1503743889632,\n\t\t\t\"lastModifiedTime\": 1503743889632\n\t\t},\n\t\t\"workFlowDetails\":{\n\t\t\t   \"department\": \"department\",\n        \"designation\": \"designation\",\n        \"initiatorPosition\": 1,\n        \"assignee\": 1,\n        \"action\": \"Cancel\",\n        \"status\": \"Revenue Officer Approved\" \n\t\t},\n\t\t\"documents\":[{\n\t\t\"id\":null,\n\t\t\"documentType\":\"prasad\",\n\t\t\"fileStore\":\"prasad\"\n\t\t},\n\t\t{\n\t\t\"id\":72,\n\t\t\"documentType\":\"krishna\",\n\t\t\"fileStore\":\"krishna\"\n\t\t}]\n\t}\n}"
+		}
+	]
+}

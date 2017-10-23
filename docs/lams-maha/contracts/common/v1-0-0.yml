@@ -1,0 +1,516 @@
+swagger: '2.0'
+# eGSP YAML Template Version: 1.0 
+
+info:
+  version: 1.0.0
+  ######################################################
+  # All API's are POST. _create,_search,_update for post,get and put. RequestInfo will be part of body. For multiple records we can pass multiple value with comman seperated values*.
+  # All _search will be synchronous and all _create and _update will be asynchronous*.
+  # RequestInfo and ResponseInfo object should be reffered from Common*.
+  # In _search API, tenantId should be passed in query param. In _create/_update, tenantId should be passed in the model.
+  # Readonly means that even if these fields are passed in the request, it will be ignored in create/update and will not be added/updated in the entities. The readonly fields might be passed to the _search API's to make use of fields for the search Query API. while calling _search API's even mandatory fields might not be available, it is mandatory only in the _create API's*.
+  # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message.
+  # Definition must start with Upper case followed by camel case.
+  # Every model will have tenantId. Validate tenantId on create.
+  # Parameter name must start with small case followed by camel case.
+  # Path must be in small case.
+  ######################################################
+  title: Master and Object Definitions
+  description: Definitions of Master and Object used across LandEstate, Acquisition and Advertisement Tax.
+  contact:
+    name:  eGov
+    email: info@egovernments.org
+host: phoenix-qa.egovernments.org
+
+schemes:
+  - https
+basePath: '/lams-maha/v1/definitions'
+
+paths: {}
+
+definitions:
+
+  RegisterName:
+    type: object
+    description: An object which holds the Register Name Master info
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the RegisterName
+      tenantId:
+        type: string
+        readOnly: true
+        description: tenant id of the RegisterName
+        maxLength: 128
+        minLength: 2
+      code:
+        type: string
+        description: code of the RegisterName
+        maxLength: 64
+        minLength: 1
+      name:
+        type: string
+        description: name of register
+        maxLength: 128
+        minLength: 1
+      isActive:
+        type: boolean
+        description: is register is active.
+    required:
+      - tenantId
+      - code
+      - name
+      - isActive
+
+  SubRegisterName:
+    type: object
+    description: An object which holds the Register Name Master info
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the SubRegisterName
+      tenantId:
+        type: string
+        readOnly: true
+        description: tenant id of the SubRegisterName
+        maxLength: 128
+        minLength: 2
+      code:
+        type: string
+        description: code of the SubRegisterName
+        maxLength: 64
+        minLength: 1
+      register:
+        $ref: '#/definitions/RegisterName'
+      name:
+        type: string
+        description: name of sub register
+        maxLength: 128
+        minLength: 1
+      isActive:
+        type: boolean
+        description: is sub register is active.
+    required:
+      - tenantId
+      - code
+      - name
+      - register
+      - isActive
+
+  Purpose:
+    type: object
+    description: An object which holds the Register Name Master info
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the Purpose
+      tenantId:
+        type: string
+        readOnly: true
+        description: tenant id of the Purpose
+        maxLength: 128
+        minLength: 2
+      code:
+        type: string
+        description: code of the Purpose
+        maxLength: 64
+        minLength: 1
+      name:
+        type: string
+        description: name of purpose
+        maxLength: 128
+        minLength: 1
+      isActive:
+        type: boolean
+        description: is purpose is active.
+    required:
+      - tenantId
+      - code
+      - name
+      - isActive
+
+  ModeOfAcquisition:
+    type: object
+    description: An object which holds the Mode Of Acquisition Master info
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the ModeOfAcquisition
+      tenantId:
+        type: string
+        readOnly: true
+        description: tenant id of the ModeOfAcquisition
+        maxLength: 128
+        minLength: 2
+      code:
+        type: string
+        description: code of the ModeOfAcquisition
+        maxLength: 64
+        minLength: 1
+      name:
+        type: string
+        description: Mode Of Acquisition Master
+        maxLength: 128
+        minLength: 1
+      isActive:
+        type: boolean
+        description: is ModeOfAcquisition is active.
+    required:
+      - tenantId
+      - code
+      - name
+      - isActive
+
+  HoldingType:
+    type: object
+    description: An object which holds the Holding Type Master info
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the HoldingType
+      tenantId:
+        type: string
+        readOnly: true
+        description: tenant id of the HoldingType
+        maxLength: 128
+        minLength: 2
+      code:
+        type: string
+        description: code of the HoldingType
+        maxLength: 64
+        minLength: 1
+      name:
+        type: string
+        description: type of holding
+        maxLength: 128
+        minLength: 1
+      isActive:
+        type: boolean
+        description: is HoldingType is active.
+    required:
+      - tenantId
+      - code
+      - name
+      - isActive
+
+  CompensationMode:
+    type: object
+    description: An object which holds the  Compensation Mode Master info
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the CompensationMode
+      tenantId:
+        type: string
+        readOnly: true
+        description: tenant id of the CompensationMode
+        maxLength: 128
+        minLength: 2
+      code:
+        type: string
+        description: code of the CompensationMode
+        maxLength: 64
+        minLength: 1
+      name:
+        type: string
+        description: mode of compensation
+        maxLength: 128
+        minLength: 1
+      isActive:
+        type: boolean
+        description: is CompensationMode active.
+    required:
+      - tenantId
+      - code
+      - name
+      - isActive 
+
+  RoadType:
+    type: object
+    description: An object which holds the  Road Type Master info
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the RoadType
+      tenantId:
+        type: string
+        readOnly: true
+        description: tenant id of the RoadType
+        maxLength: 128
+        minLength: 2
+      code:
+        type: string
+        description: code of the RoadType
+        maxLength: 64
+        minLength: 1
+      name:
+        type: string
+        description: name of Mode Of Acquisition Master
+        maxLength: 128
+        minLength: 1
+      isActive:
+        type: boolean
+        description: is RoadType active.
+    required:
+      - tenantId
+      - code
+      - name
+      - isActive
+  
+  PlaningType:
+    type: object
+    description: An object which holds the  planning Type Master info
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the PlanningType
+      tenantId:
+        type: string
+        readOnly: true
+        description: tenant id of the PlanningType
+        maxLength: 128
+        minLength: 2
+      code:
+        type: string
+        description: code of the PlanningType
+        maxLength: 64
+        minLength: 1
+      name:
+        type: string
+        description: name of planning Type
+        maxLength: 128
+        minLength: 1
+      isActive:
+        type: boolean
+        description: is PlanningType active.
+    required:
+      - tenantId
+      - code
+      - name
+      - isActive
+
+  UsageType:
+    type: object
+    description: An object which holds the  usage Type Master info
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the UsageType
+      tenantId:
+        type: string
+        readOnly: true
+        description: tenant id of the UsageType
+        maxLength: 128
+        minLength: 2
+      code:
+        type: string
+        description: code of the UsageType
+        maxLength: 64
+        minLength: 1
+      name:
+        type: string
+        description: name of usage Type
+        maxLength: 128
+        minLength: 1
+      isActive:
+        type: boolean
+        description: is usageType active.
+    required:
+      - tenantId
+      - code
+      - name
+      - isActive
+
+  SubUsageType:
+    type: object
+    description: An object which holds the  sub usage Type Master info
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the SubUsageType
+      tenantId:
+        type: string
+        readOnly: true
+        description: tenant id of the SubUsageType
+        maxLength: 128
+        minLength: 2
+      usage:
+        type: string
+        description: code of the UsageType
+        maxLength: 64
+        minLength: 1
+      code:
+        type: string
+        description: code of the SubUsageType
+        maxLength: 64
+        minLength: 1
+      name:
+        type: string
+        description: name of SubUsageType
+        maxLength: 128
+        minLength: 1
+      isActive:
+        type: boolean
+        description: is SubUsageType active.
+    required:
+      - tenantId
+      - usage
+      - code
+      - name
+      - isActive
+ 
+  RenewalScheduler:
+    type: object
+    description: An object which holds the  Renewal Schedule Type Master info
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the RenewalScheduler
+      tenantId:
+        type: string
+        readOnly: true
+        description: tenant id of the RenewalScheduler
+        maxLength: 128
+        minLength: 2
+      licenseType:
+        type: string
+        description: name of license Type
+      licenseSubType:
+        type: string
+        description: name of license sub Type  
+      fromDate:
+        type: integer
+        format: int64
+        description: Time in epoch, From date. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
+      toDate:
+        type: integer
+        format: int64
+        description: Time in epoch, To date. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
+      licensePeriod:
+        type: string
+        description: period of license
+      startDate:
+        type: integer
+        format: int64
+        description: Time in epoch. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
+      startMonth:
+        type: integer
+        format: int64
+        description: Time in epoch. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
+      endDate:
+        type: integer
+        format: int64
+        description: Time in epoch, . Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
+      endMonth:
+        type: integer
+        format: int64
+        description: Time in epoch,  Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
+      period:
+        type: integer
+        format: int64
+        description: period
+      noOfDaysPerYear:
+        type: integer
+        format: int64
+        description: number of days in a year
+    required:
+      - tenantId
+      - licenseType
+      - licenseSubType
+      - fromDate
+      - toDate
+      - licensePeriod
+      - startDate
+      - startMonth
+      - endDate
+      - endMonth
+      - period
+      - noOfDaysPerYear
+
+  PropertyType:
+    type: object
+    description: An object which holds the  planning Type Master info
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the PlanningType
+      tenantId:
+        type: string
+        readOnly: true
+        description: tenant id of the PlanningType
+        maxLength: 128
+        minLength: 2
+      code:
+        type: string
+        description: code of the PlanningType
+        maxLength: 64
+        minLength: 1
+      name:
+        type: string
+        description: name of planning Type
+        maxLength: 128
+        minLength: 1
+      isActive:
+        type: boolean
+        description: is PlanningType active.
+    required:
+      - tenantId
+      - code
+      - name
+      - isActive
+
+  BillFrequency:
+    type: object
+    description: An object which holds the bill frequency Master info
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the bill frequency master
+      tenantId:
+        type: string
+        readOnly: true
+        description: tenant id of the BillFrequencyMaster
+        maxLength: 128
+        minLength: 2
+      frequencyType:
+        type: string
+        description: name of license Type
+        enum:
+        - MONTHLY
+        - YEARLY
+      year:
+        type: integer
+        format: int64
+        description: year of the bill
+      fromDate:
+        type: integer
+        format: int64
+        description: Time in epoch, From date. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
+      toDate:
+        type: integer
+        format: int64
+        description: Time in epoch, To date. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
+      licenseNumber:
+        type: integer
+        format: int64
+        description: license number
+    required:
+      - tenantId
+      - frequencyType
+      - year
+      - fromDate
+      - toDate
+      - licenseNumber

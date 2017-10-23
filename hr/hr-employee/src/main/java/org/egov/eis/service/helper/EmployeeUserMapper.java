@@ -40,43 +40,80 @@
 
 package org.egov.eis.service.helper;
 
+import org.egov.eis.model.EmployeeInfo;
+import org.egov.eis.model.User;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.eis.model.EmployeeInfo;
-import org.egov.eis.model.User;
-import org.springframework.stereotype.Component;
-
 @Component
 public class EmployeeUserMapper {
 
-	public List<EmployeeInfo> mapUsersWithEmployees(List<EmployeeInfo> employeeInfoList, List<User> userInfoList) {
-		Map<Long, User> userInfoMap = new HashMap<Long, User>();
-		List<EmployeeInfo> finalEmployeeList = new ArrayList<EmployeeInfo>();
-		if (userInfoList != null)
-			for (User userInfo : userInfoList) {
-				userInfoMap.put(userInfo.getId(), userInfo);
-			}
-		if (employeeInfoList != null)
-			for (EmployeeInfo employeeInfo : employeeInfoList) {
-				if (userInfoMap.containsKey(employeeInfo.getId())) {
-					User userInfo = userInfoMap.get(employeeInfo.getId());
+    public List<EmployeeInfo> mapUsersWithEmployees(List<EmployeeInfo> employeeInfoList, List<User> userInfoList) {
+        Map<Long, User> userInfoMap = new HashMap<Long, User>();
+        List<EmployeeInfo> finalEmployeeList = new ArrayList<EmployeeInfo>();
+        if (userInfoList != null)
+            for (User userInfo : userInfoList) {
+                userInfoMap.put(userInfo.getId(), userInfo);
+            }
+        if (employeeInfoList != null)
+            for (EmployeeInfo employeeInfo : employeeInfoList) {
+                if (userInfoMap.containsKey(employeeInfo.getId())) {
+                    User userInfo = userInfoMap.get(employeeInfo.getId());
 
-					employeeInfo.setSalutation(userInfo.getSalutation());
-					employeeInfo.setName(userInfo.getName());
-					employeeInfo.setUserName(userInfo.getUserName());
-					employeeInfo.setGender(userInfo.getGender());
-					employeeInfo.setMobileNumber(userInfo.getMobileNumber());
-					employeeInfo.setEmailId(userInfo.getEmailId());
-					employeeInfo.setPan(userInfo.getPan());
-					employeeInfo.setAadhaarNumber(userInfo.getAadhaarNumber());
-					employeeInfo.setType(userInfo.getType());
-					employeeInfo.setActive(userInfo.getActive());
-					finalEmployeeList.add(employeeInfo);
-				}
-			}
-		return finalEmployeeList;
-	}
+                    employeeInfo.setSalutation(userInfo.getSalutation());
+                    employeeInfo.setName(userInfo.getName());
+                    employeeInfo.setUserName(userInfo.getUserName());
+                    employeeInfo.setGender(userInfo.getGender());
+                    employeeInfo.setMobileNumber(userInfo.getMobileNumber());
+                    employeeInfo.setEmailId(userInfo.getEmailId());
+                    employeeInfo.setPan(userInfo.getPan());
+                    employeeInfo.setAadhaarNumber(userInfo.getAadhaarNumber());
+                    employeeInfo.setType(userInfo.getType());
+                    employeeInfo.setActive(userInfo.getActive());
+                    finalEmployeeList.add(employeeInfo);
+                }
+            }
+        return finalEmployeeList;
+    }
+
+    public List<EmployeeInfo> mapUsersWithEmployeesForReport(List<EmployeeInfo> employeeInfoList, List<User> userInfoList) {
+        Map<Long, User> userInfoMap = new HashMap<Long, User>();
+        List<EmployeeInfo> finalEmployeeList = new ArrayList<EmployeeInfo>();
+        if (userInfoList != null)
+            for (User userInfo : userInfoList) {
+                userInfoMap.put(userInfo.getId(), userInfo);
+            }
+
+        if (employeeInfoList != null)
+            for (EmployeeInfo employeeInfo : employeeInfoList) {
+                if (userInfoMap.containsKey(employeeInfo.getId())) {
+                    User userInfo = userInfoMap.get(employeeInfo.getId());
+
+                    employeeInfo.setName(userInfo.getName());
+                    employeeInfo.setUserName(userInfo.getUserName());
+                    employeeInfo.setGender(userInfo.getGender());
+                    employeeInfo.setMobileNumber(userInfo.getMobileNumber());
+                    employeeInfo.setAltContactNumber(userInfo.getAltContactNumber());
+                    employeeInfo.setGuardian(userInfo.getFatherOrHusbandName());
+                    employeeInfo.setBloodGroup(userInfo.getBloodGroup());
+                    employeeInfo.setIdentificationMark(userInfo.getIdentificationMark());
+                    employeeInfo.setEmailId(userInfo.getEmailId());
+                    employeeInfo.setPan(userInfo.getPan());
+                    employeeInfo.setAadhaarNumber(userInfo.getAadhaarNumber());
+                    employeeInfo.setPermanentAddress(userInfo.getPermanentAddress());
+                    employeeInfo.setPermanentCity(userInfo.getPermanentCity());
+                    employeeInfo.setPermanentPinCode(userInfo.getPermanentPinCode());
+                    employeeInfo.setCorrespondenceAddress(userInfo.getCorrespondenceAddress());
+                    employeeInfo.setCorrespondenceCity(userInfo.getCorrespondenceCity());
+                    employeeInfo.setCorrespondencePinCode(userInfo.getCorrespondencePinCode());
+                    employeeInfo.setActive(userInfo.getActive());
+                    finalEmployeeList.add(employeeInfo);
+                }
+            }
+        return finalEmployeeList;
+    }
 }

@@ -14,6 +14,10 @@ import org.egov.models.AppConfigurationRequest;
 import org.egov.models.AppConfigurationResponse;
 import org.egov.models.AppConfigurationSearchCriteria;
 import org.egov.models.AuditDetails;
+import org.egov.models.DemolitionReason;
+import org.egov.models.DemolitionReasonRequest;
+import org.egov.models.DemolitionReasonResponse;
+import org.egov.models.DemolitionReasonSearchCriteria;
 import org.egov.models.Department;
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
@@ -26,6 +30,10 @@ import org.egov.models.DocumentType;
 import org.egov.models.DocumentTypeRequest;
 import org.egov.models.DocumentTypeResponse;
 import org.egov.models.DocumentTypeSearchCriteria;
+import org.egov.models.TaxExemptionReason;
+import org.egov.models.TaxExemptionReasonRequest;
+import org.egov.models.TaxExemptionReasonResponse;
+import org.egov.models.TaxExemptionReasonSearchCriteria;
 import org.egov.models.Floor;
 import org.egov.models.FloorType;
 import org.egov.models.FloorTypeRequest;
@@ -1649,5 +1657,161 @@ public class MasterServiceImpl implements Masterservice {
 		appConfigurationResponse.setResponseInfo(responseInfo);
 		return appConfigurationResponse;
 	}
+	
+	
+	@Override
+	@Transactional
+	public DemolitionReasonResponse createDemolitionReason(String tenantId,
+			DemolitionReasonRequest demolitionReasonRequest) throws Exception {
+		for (DemolitionReason demolitionReason : demolitionReasonRequest.getDemolitionReasons()) {
 
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(demolitionReason.getTenantId(),
+					demolitionReason.getCode(), ConstantUtility.DEMOLITIONREASON_TABLE_NAME, null);
+			if (isExists)
+				throw new DuplicateIdException(demolitionReasonRequest.getRequestInfo());
+
+			AuditDetails auditDetails = getAuditDetail(demolitionReasonRequest.getRequestInfo());
+			demolitionReason.setAuditDetails(auditDetails);
+			Long id = propertyMasterRepository.saveDemolitionReason(tenantId, demolitionReason);
+			demolitionReason.setId(id);
+		}
+
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(demolitionReasonRequest.getRequestInfo(), true);
+		DemolitionReasonResponse demolitionReasonResponse = new DemolitionReasonResponse();
+		demolitionReasonResponse.setResponseInfo(responseInfo);
+		demolitionReasonResponse.setDemolitionReason(demolitionReasonRequest.getDemolitionReasons());
+		return demolitionReasonResponse;
+	}
+
+	@Override
+	@Transactional
+	public DemolitionReasonResponse updateDemolitionReason(DemolitionReasonRequest demolitionReasonRequest)
+			throws Exception {
+
+		for (DemolitionReason demolitionReason : demolitionReasonRequest.getDemolitionReasons()) {
+
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(demolitionReason.getTenantId(),
+					demolitionReason.getCode(), ConstantUtility.DEMOLITIONREASON_TABLE_NAME, demolitionReason.getId());
+
+			if (isExists)
+				throw new DuplicateIdException(demolitionReasonRequest.getRequestInfo());
+
+			AuditDetails auditDetails = getUpdatedAuditDetails(demolitionReasonRequest.getRequestInfo(),
+					ConstantUtility.DEMOLITIONREASON_TABLE_NAME, demolitionReason.getId());
+			demolitionReason.setAuditDetails(auditDetails);
+
+			propertyMasterRepository.updateDemolitionReason(demolitionReason);
+		}
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(demolitionReasonRequest.getRequestInfo(), true);
+		DemolitionReasonResponse demolitionReasonResponse = new DemolitionReasonResponse();
+		demolitionReasonResponse.setDemolitionReason(demolitionReasonRequest.getDemolitionReasons());
+		demolitionReasonResponse.setResponseInfo(responseInfo);
+
+		return demolitionReasonResponse;
+	}
+
+	@Override
+	public DemolitionReasonResponse getDemolitionReason(RequestInfo requestInfo,
+			DemolitionReasonSearchCriteria demolitionReasonSearchCriteria) {
+
+		DemolitionReasonResponse demolitionReasonResponse = new DemolitionReasonResponse();
+		try {
+
+			List<DemolitionReason> demolitionReasons = propertyMasterRepository
+					.searchDemolitionReasonClass(demolitionReasonSearchCriteria);
+			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+			demolitionReasonResponse.setDemolitionReason(demolitionReasons);
+			demolitionReasonResponse.setResponseInfo(responseInfo);
+
+		} catch (Exception e) {
+			throw new PropertySearchException("invalid input", requestInfo);
+		}
+
+		return demolitionReasonResponse;
+
+	}
+
+	@Override
+	public TaxExemptionReasonResponse createTaxExemptionReason(TaxExemptionReasonRequest taxExemptionReasonRequest)
+			throws Exception {
+
+		taxExemptionReasonRequest.getTaxExemptionReasons().forEach(taxExemptionReason -> {
+
+			AuditDetails auditDetails = getAuditDetail(taxExemptionReasonRequest.getRequestInfo());
+			Boolean isExists = checkCodeAndTenatIdExists(taxExemptionReason.getTenantId(), taxExemptionReason.getCode(),
+					ConstantUtility.TAXEXEMPTIONREASON_MASTER_TABLE_NAME, null);
+			if (isExists) {
+				throw new DuplicateIdException(taxExemptionReasonRequest.getRequestInfo());
+			}
+			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+			String data = gson.toJson(taxExemptionReason);
+			taxExemptionReason.setAuditDetails(auditDetails);
+			try {
+				Long id = propertyMasterRepository.saveTaxExemptionReason(taxExemptionReason, data);
+				taxExemptionReason.setId(id);
+			} catch (Exception e) {
+				throw new InvalidInputException(taxExemptionReasonRequest.getRequestInfo());
+			}
+		});
+		
+		TaxExemptionReasonResponse taxExemptionReasonResponse = new TaxExemptionReasonResponse();
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(taxExemptionReasonRequest.getRequestInfo(), true);
+		taxExemptionReasonResponse.setResponseInfo(responseInfo);
+		taxExemptionReasonResponse.setTaxExemptionReasons(taxExemptionReasonRequest.getTaxExemptionReasons());
+		return taxExemptionReasonResponse;
+	}
+
+	@Override
+	public TaxExemptionReasonResponse updateTaxExemptionReason(TaxExemptionReasonRequest taxExemptionReasonRequest)
+			throws Exception {
+
+		taxExemptionReasonRequest.getTaxExemptionReasons().forEach(taxExemptionReason -> {
+
+			AuditDetails auditDetails = getUpdatedAuditDetails(taxExemptionReasonRequest.getRequestInfo(),
+					ConstantUtility.TAXEXEMPTIONREASON_MASTER_TABLE_NAME, taxExemptionReason.getId());
+			taxExemptionReason.setAuditDetails(auditDetails);
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(taxExemptionReason.getTenantId(),
+					taxExemptionReason.getCode(), ConstantUtility.TAXEXEMPTIONREASON_MASTER_TABLE_NAME,
+					taxExemptionReason.getId());
+			if (isExists) {
+				throw new DuplicateIdException(taxExemptionReasonRequest.getRequestInfo());
+			}
+			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+			String data = gson.toJson(taxExemptionReason);
+
+			try {
+				propertyMasterRepository.updateTaxExemptionReason(taxExemptionReason, data);
+			} catch (Exception e) {
+				throw new InvalidInputException(taxExemptionReasonRequest.getRequestInfo());
+			}
+		});
+
+		TaxExemptionReasonResponse taxExemptionReasonResponse = new TaxExemptionReasonResponse();
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(taxExemptionReasonRequest.getRequestInfo(), true);
+		taxExemptionReasonResponse.setResponseInfo(responseInfo);
+		taxExemptionReasonResponse.setTaxExemptionReasons(taxExemptionReasonRequest.getTaxExemptionReasons());
+		return taxExemptionReasonResponse;
+	}
+
+	@Override
+	public TaxExemptionReasonResponse getTaxExemptionReason(RequestInfo requestInfo,
+			TaxExemptionReasonSearchCriteria taxExemptionReasonSearchCriteria) throws Exception {
+
+		List<TaxExemptionReason> taxExemptionReasons = null;
+		try {
+			taxExemptionReasons = propertyMasterRepository.searchTaxExemptionReason(taxExemptionReasonSearchCriteria);
+		} catch (Exception e) {
+			throw new InvalidInputException(requestInfo);
+		}
+
+		TaxExemptionReasonResponse taxExemptionReasonResponse = new TaxExemptionReasonResponse();
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		taxExemptionReasonResponse.setResponseInfo(responseInfo);
+		taxExemptionReasonResponse.setTaxExemptionReasons(taxExemptionReasons);
+		return taxExemptionReasonResponse;
+	}
 }

@@ -5,8 +5,11 @@ const styles = {
   fullWidth:{
     width: '100%'
   },
+  cardMargin:{
+    margin:'15px 0 0 0'
+  },
   marginStyle:{ //card layout margin
-    margin: 15
+    margin: '15px'
   },
   cardSpacing:{
     margin: 15,

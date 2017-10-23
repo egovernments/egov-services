@@ -9,6 +9,22 @@ Correlation id and logging support addons to Spring Web and Spring Kafka.
 - Success & failure response from Kafka when pushing of message fails.
 - Message payload and topic name for messages received by Kafka consumer using the KafkaListener annotation.
 - Outgoing http request URI and payload along with response code and response body when using RestTemplate.
+- Format validator & error queue 
+
+###### Format Validator & Error Queue
+- Format validator & ErrorQ are the part of new version of tracer library
+####### How to use it:
+- Do not keep the "bindingresult" as an argument in the controller eg. ``` throw new CustomBindingResultExceprion(bindingResult); ```
+
+- throw customException which takes 2 arguments ErrorCode & ErrorMsg. eg. ``` throw new CustomException("usr_001","invalid user role"); ```
+- Throw customException if you want to throw multiple errors at a time by passing an argument Map<string, String>.Map key is representing the ErrorCode & value is ErrorMsg. eg. 
+```
+Map<String, String> map = new HashMap<>();
+		map.put("asset_001", "Invalid user");
+		map.put("asset_002", "invalid name");
+		
+		throw new CustomException(map);
+```        
 
 ###### Toggle logging detail -
 The logging of the http request/response body and Kakfa message body can be toggled on/off using 

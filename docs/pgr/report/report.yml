@@ -82,14 +82,14 @@ ReportDefinitions:
     isMandatory: true
   query: SELECT ctype.name,
     count(CASE WHEN cs.status::text = 'REGISTERED'::text THEN 1 ELSE NULL::integer END) AS registered,
-    count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,
+    count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text, 'ONHOLD'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,
     count(CASE WHEN cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text,'WITHDRAWN'::character varying::text]) THEN 1 ELSE NULL::integer END) AS completed,
     count(CASE WHEN cs.status::text = 'REOPENED'::text THEN 1 ELSE NULL::integer END) AS reopened,
     count(CASE WHEN cs.status::text ='REJECTED'::text THEN 1 ELSE NULL::integer END) AS rejected,
-    sum(CASE WHEN (cs.status in ('COMPLETED',  'REJECTED','WITHDRAWN' , 'PROCESSING' , 'REGISTERED','REOPENED'))
+    sum(CASE WHEN (cs.status in ('COMPLETED',  'REJECTED','WITHDRAWN' , 'PROCESSING' , 'REGISTERED','REOPENED', 'ONHOLD'))
     AND (cs.lastmodifieddate - cs.createddate) < ('01:00:00'::interval * ctype.slahours::double  precision)
     AND   (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 1 ELSE 0 END) AS withinsla,
-    sum(CASE WHEN (cs.status in ('COMPLETED',  'REJECTED','WITHDRAWN' , 'PROCESSING' , 'REGISTERED','REOPENED'))
+    sum(CASE WHEN (cs.status in ('COMPLETED',  'REJECTED','WITHDRAWN' , 'PROCESSING' , 'REGISTERED','REOPENED', 'ONHOLD'))
     AND (cs.lastmodifieddate - cs.createddate)   > ('01:00:00'::interval * ctype.slahours::double precision)
     AND (now() - cs.createddate::timestamp   with time zone) > ('01:00:00'::interval * ctype.slahours::double precision) THEN 1 ELSE 0 END) AS beyondsla,
     CASE WHEN bool_or((cs.status::text = ANY (ARRAY['COMPLETED'::character
@@ -240,7 +240,7 @@ ReportDefinitions:
     source: egpgr_complainttype
     isMandatory: true
   query: select cs.crn,cs.createddate,cs.name as complainantname,requesteraddress as address,cs.details,cs.status,(select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback, CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS withinsla from submission cs,egpgr_complainttype ctype ,servicetype_keyword sk  where ctype.code=cs.servicecode and cs.createddate >= $fromDate and cs.createddate <=$toDate and ctype.code = $complainttype
-        AND cs.status::text = ANY (ARRAY['REGISTERED'::character varying::text, 'PROCESSING'::character varying::text, 'COMPLETED'::character varying::text, 'REJECTED'::character varying::text, 'REOPENED'::character varying::text])
+        AND cs.status::text = ANY (ARRAY['REGISTERED'::character varying::text, 'PROCESSING'::character varying::text, 'COMPLETED'::character varying::text, 'REJECTED'::character varying::text, 'REOPENED'::character varying::text, 'ONHOLD'::character varying::text])
         AND (cs.lastmodifieddate - cs.createddate) < ('01:00:00'::interval * ctype.slahours::double precision)
         AND (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) and ctype.code=sk.servicecode
         and sk.keyword='complaint'
@@ -310,7 +310,7 @@ ReportDefinitions:
     source: egpgr_complainttype
     isMandatory: true
   query: select cs.crn,cs.createddate,cs.name as complainantname,requesteraddress as address,cs.details,cs.status,(select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback, CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS withinsla from submission cs,egpgr_complainttype ctype ,servicetype_keyword sk  where  ctype.code=cs.servicecode and cs.createddate >= $fromDate and cs.createddate <=$toDate and ctype.code = $complainttype
-         AND cs.status::text = ANY(ARRAY['REGISTERED'::character varying::text, 'PROCESSING'::character varying::text, 'COMPLETED'::character varying::text, 'REJECTED'::character varying::text, 'REOPENED'::character varying::text])
+         AND cs.status::text = ANY(ARRAY['REGISTERED'::character varying::text, 'PROCESSING'::character varying::text, 'COMPLETED'::character varying::text, 'REJECTED'::character varying::text, 'REOPENED'::character varying::text, 'ONHOLD'::character varying::text])
          AND (cs.lastmodifieddate - cs.createddate) > ('01:00:00'::interval * ctype.slahours::double precision)
          AND (now() - cs.createddate::timestamp with time zone) > ('01:00:00'::interval * ctype.slahours::double precision) AND ctype.code=sk.servicecode AND sk.keyword='complaint'
          AND sk.tenantid=$tenantid
@@ -393,17 +393,17 @@ ReportDefinitions:
     isMandatory: true
   query: SELECT us.username AS employeename, count(CASE WHEN cs.status::text = 'REGISTERED'::text
     THEN 1 ELSE NULL::integer END) AS registered, count(CASE WHEN cs.status::text =
-    ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text,
+    ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text, 'ONHOLD'::character varying::text, 
     'NOTCOMPLETED'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,
     count(CASE WHEN cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text,
     'WITHDRAWN'::character varying::text, 'CLOSED'::character varying::text]) THEN
     1 ELSE NULL::integer END) AS completed, count(CASE WHEN cs.status::text = 'REOPENED'::text
     THEN 1 ELSE NULL::integer END) AS reopened, count(CASE WHEN cs.status::text = 'REJECTED'::text
     THEN 1 ELSE NULL::integer END) AS rejected,
-    sum(CASE WHEN (cs.status in ('COMPLETED',  'REJECTED','WITHDRAWN' , 'PROCESSING' , 'REGISTERED','REOPENED'))
+    sum(CASE WHEN (cs.status in ('COMPLETED',  'REJECTED','WITHDRAWN' , 'PROCESSING' , 'REGISTERED','REOPENED', 'ONHOLD'))
     AND (cs.lastmodifieddate - cs.createddate) < ('01:00:00'::interval * ctype.slahours::double  precision)
     AND (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 1 ELSE 0 END) AS withinsla,
-    sum(CASE WHEN (cs.status in ('COMPLETED',  'REJECTED','WITHDRAWN' , 'PROCESSING' , 'REGISTERED','REOPENED'))
+    sum(CASE WHEN (cs.status in ('COMPLETED',  'REJECTED','WITHDRAWN' , 'PROCESSING' , 'REGISTERED','REOPENED', 'ONHOLD'))
     AND (cs.lastmodifieddate - cs.createddate)   > ('01:00:00'::interval * ctype.slahours::double precision)
     AND (now() - cs.createddate::timestamp   with time zone) > ('01:00:00'::interval * ctype.slahours::double precision) THEN 1 ELSE 0 END) AS beyondsla,
     CASE WHEN bool_or((cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text, 'REJECTED'::character varying::text,
@@ -585,7 +585,7 @@ ReportDefinitions:
          and cs.createddate >= ass.fromdate
          and cs.createddate <= ass.todate
          and isprimary=true and us.username =$username
-         AND cs.status::text = ANY (ARRAY['REGISTERED'::character varying::text, 'PROCESSING'::character varying::text, 'COMPLETED'::character varying::text, 'REJECTED'::character varying::text, 'REOPENED'::character varying::text])
+         AND cs.status::text = ANY (ARRAY['REGISTERED'::character varying::text, 'PROCESSING'::character varying::text, 'COMPLETED'::character varying::text, 'REJECTED'::character varying::text, 'REOPENED'::character varying::text, 'ONHOLD'::character varying::text])
          AND ctype.code=sk.servicecode
          and sk.keyword='complaint'
          AND (cs.lastmodifieddate - cs.createddate) < ('01:00:00'::interval * ctype.slahours::double precision)
@@ -673,7 +673,7 @@ ReportDefinitions:
          AND cs.createddate >= ass.fromdate
          AND cs.createddate <= ass.todate and isprimary=true
          AND us.username =$username
-         AND cs.status::text = ANY(ARRAY['REGISTERED'::character varying::text, 'PROCESSING'::character varying::text, 'COMPLETED'::character varying::text, 'REJECTED'::character varying::text, 'REOPENED'::character varying::text])
+         AND cs.status::text = ANY(ARRAY['REGISTERED'::character varying::text, 'PROCESSING'::character varying::text, 'COMPLETED'::character varying::text, 'REJECTED'::character varying::text, 'REOPENED'::character varying::text, 'ONHOLD'::character varying::text])
          AND ctype.code=sk.servicecode
          AND sk.keyword='complaint'
          AND (cs.lastmodifieddate - cs.createddate) > ('01:00:00'::interval * ctype.slahours::double precision)
@@ -735,7 +735,7 @@ ReportDefinitions:
     source: seva
     isMandatory: true
   query: select dept.name, count(CASE WHEN cs.status::text = 'REGISTERED'::text THEN 1 ELSE NULL::integer END) AS registered,
-         count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,
+         count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text, 'ONHOLD'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,
          count(CASE WHEN cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text,'WITHDRAWN'::character varying::text]) THEN 1 ELSE NULL::integer END) AS completed,
          count(CASE WHEN cs.status::text = 'REOPENED'::text THEN 1 ELSE NULL::integer END) AS reopened,
          count(CASE WHEN cs.status::text ='REJECTED'::text THEN 1 ELSE NULL::integer END) AS rejected,
@@ -818,7 +818,7 @@ ReportDefinitions:
     isMandatory: true
   query: SELECT ctype.name, count(CASE WHEN cs.status::text = 'REGISTERED'::text
     THEN 1 ELSE NULL::integer END) AS registered, count(CASE WHEN cs.status::text
-    = ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text,
+    = ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text, 'ONHOLD'::character varying::text, 
     'NOTCOMPLETED'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,
     count(CASE WHEN cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text,
     'WITHDRAWN'::character varying::text, 'CLOSED'::character varying::text]) THEN
@@ -909,7 +909,7 @@ ReportDefinitions:
     source: seva
     isMandatory: true
   query: SELECT us.username as userposition,count(CASE WHEN cs.status::text = 'REGISTERED'::text THEN 1 ELSE NULL::integer END) AS registered,
-         count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,
+         count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text, 'ONHOLD'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,
          count(CASE WHEN cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text,'WITHDRAWN'::character varying::text]) THEN 1 ELSE NULL::integer END) AS completed,
          count(CASE WHEN cs.status::text = 'REOPENED'::text THEN 1 ELSE NULL::integer END) AS reopened,
          count(CASE WHEN cs.status::text ='REJECTED'::text THEN 1 ELSE NULL::integer END) AS rejected,sum(CASE WHEN (cs.status::text
@@ -1063,7 +1063,7 @@ ReportDefinitions:
     source: seva
     isMandatory: true
   query: SELECT boundary.name, count(CASE WHEN cs.status::text = 'REGISTERED'::text THEN 1 ELSE NULL::integer END) AS registered,
-         count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,
+         count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text, 'ONHOLD'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,
          count(CASE WHEN cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text,'WITHDRAWN'::character varying::text]) THEN 1 ELSE NULL::integer END) AS completed,
          count(CASE WHEN cs.status::text = 'REOPENED'::text THEN 1 ELSE NULL::integer END) AS reopened,
          count(CASE WHEN cs.status::text ='REJECTED'::text THEN 1 ELSE NULL::integer END) AS rejected,
@@ -1152,7 +1152,7 @@ ReportDefinitions:
     isMandatory: true
   query: SELECT boundary.name,
      count(CASE WHEN cs.status::text = 'REGISTERED'::text THEN 1 ELSE NULL::integer END) AS registered,
-     count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,
+     count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text, 'ONHOLD'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,
      count(CASE WHEN cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text,'WITHDRAWN'::character varying::text]) THEN 1 ELSE NULL::integer END) AS completed,
      count(CASE WHEN cs.status::text = 'REOPENED'::text THEN 1 ELSE NULL::integer END) AS reopened,
      count(CASE WHEN cs.status::text ='REJECTED'::text THEN 1 ELSE NULL::integer END) AS rejected,
@@ -1247,7 +1247,7 @@ ReportDefinitions:
     isMandatory: true
   query: SELECT dept.name,
     count(CASE WHEN cs.status::text = 'REGISTERED'::text THEN 1 ELSE NULL::integer END) AS registered,
-    count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,
+    count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text, 'ONHOLD'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,
     count(CASE WHEN cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text,'WITHDRAWN'::character varying::text]) THEN 1 ELSE NULL::integer END) AS completed,
     count(CASE WHEN cs.status::text = 'REOPENED'::text THEN 1 ELSE NULL::integer END) AS reopened,
     count(CASE WHEN cs.status::text ='REJECTED'::text THEN 1 ELSE NULL::integer END) AS rejected,sum(CASE WHEN (cs.status::text
@@ -1342,7 +1342,7 @@ ReportDefinitions:
     isMandatory: true
   query: SELECT ctype.name,
      count(CASE WHEN cs.status::text = 'REGISTERED'::text THEN 1 ELSE NULL::integer END) AS registered,
-     count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,
+     count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text, 'ONHOLD'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,
      count(CASE WHEN cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text,'WITHDRAWN'::character varying::text]) THEN 1 ELSE NULL::integer END) AS completed,
      count(CASE WHEN cs.status::text = 'REOPENED'::text THEN 1 ELSE NULL::integer END) AS reopened,
      count(CASE WHEN cs.status::text ='REJECTED'::text THEN 1 ELSE NULL::integer END) AS rejected,
@@ -1448,7 +1448,7 @@ ReportDefinitions:
     isMandatory: true
   query : SELECT us.username as userposition,
       count(CASE WHEN cs.status::text = 'REGISTERED'::text THEN 1 ELSE NULL::integer END) AS registered,
-      count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,
+      count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text, 'ONHOLD'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,
       count(CASE WHEN cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text,'WITHDRAWN'::character varying::text]) THEN 1 ELSE NULL::integer END) AS completed,
       count(CASE WHEN cs.status::text = 'REOPENED'::text THEN 1 ELSE NULL::integer END) AS reopened,
       count(CASE WHEN cs.status::text ='REJECTED'::text THEN 1 ELSE NULL::integer END) AS rejected,
@@ -1475,7 +1475,7 @@ ReportDefinitions:
       and cs.positionid = ass.positionid and ass.employeeid=us.id and cs.createddate >= ass.fromdate and cs.createddate <= ass.todate and isprimary=true
       and ctype.code = (select code from egpgr_complainttype where name=$complainttype and tenantid=$tenantid)
       and sa.tenantid  = $tenantid and cs.tenantid = $tenantid  and ctype.tenantid = $tenantid
-      and us.tenantid = $tenantid   and pos.tenantid = $tenantid   and boundary.tenantid = $tenantid	  GROUP BY us.username,pos.name;
+      and us.tenantid = $tenantid   and pos.tenantid = $tenantid   and boundary.tenantid = $tenantid    GROUP BY us.username,pos.name;
 
 - reportName: DrillDownByBoundaryLocalityDepartmentUserNamePositionGetComplaints
   summary: Drill Down By Boundary Locality Department UserName Position GetComplaints
@@ -1612,7 +1612,7 @@ ReportDefinitions:
   - name: grievancestatustype
     label: reports.pgr.grievancestatustype
     type: singlevaluelist
-    pattern: 'list://COMPLETED''_''WITHDRAWN:COMPLETED,REGISTERED''_''FORWARDED''_''PROCESSING''_''REOPENED:PENDING,REJECTED:REJECTED'
+    pattern: 'list://COMPLETED''_''WITHDRAWN:COMPLETED,REGISTERED''_''FORWARDED''_''PROCESSING''_''REOPENED''_''ONHOLD:PENDING,REJECTED:REJECTED'
     source: seva
     isMandatory: true
   query: SELECT dept.name, count(CASE WHEN (date_part('epoch'::text, cs.lastmodifieddate
@@ -1761,7 +1761,7 @@ ReportDefinitions:
          'Complaint No.'|| sub.crn||' regarding '||
          (select name from egpgr_complainttype where code =sub.servicecode AND tenantid=sub.tenantid) ||' in '|| sub_a.code as details,
          replace('_url?/pgr/viewGrievance/:srn',':srn',sub.crn::character varying) as url from submission sub inner join submission_attribute sub_a on  sub.crn = sub_a.crn where
-         sub_a.key in('systemStatus','status') and sub_a.code in ('REGISTERED','FORWARDED','PROCESSING','REOPENED') and sub.positionid IN ($positionId) and sub.tenantid = $tenantid order by createdDate desc)
+         sub_a.key in('systemStatus','status') and sub_a.code in ('REGISTERED','FORWARDED','PROCESSING','REOPENED','ONHOLD') and sub.positionid IN ($positionId) and sub.tenantid = $tenantid order by createdDate desc)
          union
          (select createddate as createddate,sendername as sendername,natureoftask as natureoftask,value as status,
           property.id::character varying ||':'||comments as details,
@@ -1833,7 +1833,7 @@ ReportDefinitions:
   - name: grievancestatustype
     label: reports.pgr.grievancestatustype
     type: singlevaluelist
-    pattern: 'list://COMPLETED''_''WITHDRAWN:COMPLETED,REGISTERED''_''FORWARDED''_''PROCESSING''_''REOPENED:PENDING,REJECTED:REJECTED'
+    pattern: 'list://COMPLETED''_''WITHDRAWN:COMPLETED,REGISTERED''_''FORWARDED''_''PROCESSING''_''REOPENED''_''ONHOLD:PENDING,REJECTED:REJECTED'
     source: seva
     isMandatory: true
   query: SELECT boundary.name, count(CASE WHEN (date_part('epoch'::text, cs.lastmodifieddate

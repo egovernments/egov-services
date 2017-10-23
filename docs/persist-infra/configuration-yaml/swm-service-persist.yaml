@@ -1,0 +1,90 @@
+serviceMaps:
+ serviceName: Solid Waste Management Service
+ mappings:
+ - version: 1.0
+   name: vehicleFuellingDetails create
+   description: create vehicleFuellingDetails in egbs_bill
+   fromTopic: swm-vehiclefuellingdetails-save-topic
+   queryMaps: 
+    - query: INSERT INTO egswm_vehiclefuellingdetails(id, tenantid, transactionno, transactiondate, vehicletype, vehicleregno, vehiclereadingduringfuelling, refuellingstation, fuelfilled, typeoffuel, totalcostincurred, receiptno, receiptdate, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.vehicleFuellingDetails.*
+      jsonMaps:
+       
+       - jsonPath: $.vehicleFuellingDetails.*.id
+
+       - jsonPath: $.vehicleFuellingDetails.*.tenantId
+         
+       - jsonPath: $.vehicleFuellingDetails.*.transactionNo
+         
+       - jsonPath: $.vehicleFuellingDetails.*.transactionDate
+         dbType: LONG
+
+       - jsonPath: $.vehicleFuellingDetails.*.vehicleType.id
+         
+       - jsonPath: $.vehicleFuellingDetails.*.vehicleRegNo.id
+       
+       - jsonPath: $.vehicleFuellingDetails.*.vehicleReadingDuringFuelling
+
+       - jsonPath: $.vehicleFuellingDetails.*.refuellingStation.id
+
+       - jsonPath: $.vehicleFuellingDetails.*.fuelFilled
+
+       - jsonPath: $.vehicleFuellingDetails.*.typeOfFuel
+
+       - jsonPath: $.vehicleFuellingDetails.*.totalCostIncurred
+
+       - jsonPath: $.vehicleFuellingDetails.*.receiptNo
+
+       - jsonPath: $.vehicleFuellingDetails.*.receiptDate
+         dbType: LONG
+
+       - jsonPath: $.vehicleFuellingDetails.*.auditDetails.createdBy
+
+       - jsonPath: $.vehicleFuellingDetails.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.vehicleFuellingDetails.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.vehicleFuellingDetails.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+ - version: 1.0
+   name: vehicleFuellingDetails update
+   description: update vehicleFuellingDetails in egbs_bill
+   fromTopic: swm-vehiclefuellingdetails-update-topic
+   queryMaps: 
+
+    - query: UPDATE public.egswm_vehiclefuellingdetails SET transactiondate=?,vehicletype=?,vehicleregno=?,vehiclereadingduringfuelling=?, refuellingstation=?,fuelfilled=?,typeoffuel=?,totalcostincurred=?,receiptno=?,receiptdate=?,lastmodifiedby=?,lastmodifiedtime=? WHERE id=? AND tenantid=?;
+      basePath: $.vehicleFuellingDetails.*
+      jsonMaps:
+
+       - jsonPath: $.vehicleFuellingDetails.*.transactionDate
+         dbType: LONG
+
+       - jsonPath: $.vehicleFuellingDetails.*.vehicleType.id
+         
+       - jsonPath: $.vehicleFuellingDetails.*.vehicleRegNo.id
+       
+       - jsonPath: $.vehicleFuellingDetails.*.vehicleReadingDuringFuelling
+
+       - jsonPath: $.vehicleFuellingDetails.*.refuellingStation.id
+
+       - jsonPath: $.vehicleFuellingDetails.*.fuelFilled
+
+       - jsonPath: $.vehicleFuellingDetails.*.typeOfFuel
+
+       - jsonPath: $.vehicleFuellingDetails.*.totalCostIncurred
+
+       - jsonPath: $.vehicleFuellingDetails.*.receiptNo
+
+       - jsonPath: $.vehicleFuellingDetails.*.receiptDate
+         dbType: LONG
+
+       - jsonPath: $.vehicleFuellingDetails.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.vehicleFuellingDetails.*.auditDetails.lastModifiedTime
+         dbType: LONG
+         
+       - jsonPath: $.vehicleFuellingDetails.*.id
+
+       - jsonPath: $.vehicleFuellingDetails.*.tenantId

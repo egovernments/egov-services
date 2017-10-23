@@ -9,8 +9,6 @@ import org.egov.tradelicense.domain.model.LicenseApplicationSearch;
 import org.egov.tradelicense.domain.model.LicenseFeeDetailSearch;
 import org.egov.tradelicense.domain.model.SupportDocumentSearch;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -46,11 +44,11 @@ public class LicenseApplicationSearchEntity {
 	private Long createdTime;
 
 	private Long lastModifiedTime;
-	
+
 	private Double licenseFee;
-	
+
 	private String fieldInspectionReport;
-	
+
 	private String statusName;
 
 	private static List<LicenseFeeDetailSearch> feeDetails;
@@ -82,9 +80,9 @@ public class LicenseApplicationSearchEntity {
 		licenseAppSearch.setAuditDetails(auditDetails);
 
 		licenseAppSearch.setFieldInspectionReport(this.fieldInspectionReport);
-		licenseAppSearch.setLicenseFee( this.licenseFee);
+		licenseAppSearch.setLicenseFee(this.licenseFee);
 		licenseAppSearch.setStatusName(this.statusName);
-		
+
 		feeDetails = new ArrayList<LicenseFeeDetailSearch>();
 
 		if (this.feeDetailEntitys != null) {
@@ -116,30 +114,30 @@ public class LicenseApplicationSearchEntity {
 	public LicenseApplicationSearchEntity toEntity(LicenseApplicationSearch licenseApplicationSearch) {
 
 		this.setId(licenseApplicationSearch.getId());
-		
+
 		this.tenantId = licenseApplicationSearch.getTenantId();
 
 		AuditDetails auditDetails = licenseApplicationSearch.getAuditDetails();
 
 		this.setApplicationNumber(licenseApplicationSearch.getApplicationNumber());
 
-		if(licenseApplicationSearch.getApplicationType() != null){
-			
+		if (licenseApplicationSearch.getApplicationType() != null) {
+
 			this.setApplicationType(licenseApplicationSearch.getApplicationType().toString());
 		}
-		
-		if(licenseApplicationSearch.getStatus() != null){
-			
+
+		if (licenseApplicationSearch.getStatus() != null) {
+
 			this.setStatus(licenseApplicationSearch.getStatus().toString());
 		}
-		
+
 		this.setStatusName(licenseApplicationSearch.getStatusName());
-		
+
 		this.applicationDate = licenseApplicationSearch.getApplicationDate();
 
 		this.setFieldInspectionReport(licenseApplicationSearch.getFieldInspectionReport());
-		
-		this.setLicenseId( licenseApplicationSearch.getLicenseId());
+
+		this.setLicenseId(licenseApplicationSearch.getLicenseId());
 
 		this.createdBy = (auditDetails == null) ? null : auditDetails.getCreatedBy();
 

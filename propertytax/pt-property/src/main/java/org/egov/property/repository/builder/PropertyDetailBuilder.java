@@ -42,4 +42,7 @@ public class PropertyDetailBuilder {
 
 	public static final String UPDATE_PROPERTYDETAIL_STATUS = "update egpt_propertydetails set status=? where id=?";
 
+	public static final String UPDATE_PROPETY_DETAILS_AFTER_DEMOLITION = "update egpt_propertydetails set propertytype=?"
+			+ ",category=?,usage=?,subusage=?,sitalarea=? where id=?";
+
 }

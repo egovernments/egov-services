@@ -18,7 +18,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VacancyRemissionRequest {
 
-	@JsonProperty("requestInfo")
+	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 
 	@JsonProperty("remission")

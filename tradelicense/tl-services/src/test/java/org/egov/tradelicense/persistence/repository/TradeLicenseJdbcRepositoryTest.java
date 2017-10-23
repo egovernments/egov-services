@@ -11,13 +11,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.tradelicense.common.util.TimeStampUtil;
 import org.egov.tradelicense.domain.enums.ApplicationType;
 import org.egov.tradelicense.domain.enums.BusinessNature;
+import org.egov.tradelicense.domain.enums.EstablishmentType;
+import org.egov.tradelicense.domain.enums.Gender;
 import org.egov.tradelicense.domain.enums.OwnerShipType;
+import org.egov.tradelicense.domain.enums.OwnerType;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
+import org.egov.tradelicense.domain.model.TradePartner;
+import org.egov.tradelicense.domain.model.TradeShift;
 import org.egov.tradelicense.persistence.entity.TradeLicenseEntity;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,14 +65,14 @@ public class TradeLicenseJdbcRepositoryTest {
 		TradeLicenseEntity tradeLicenseEntity = new TradeLicenseEntity();
 		TradeLicense tradeLicense = getTradeLicenseDomain();
 		tradeLicenseEntity.setActive(tradeLicense.getActive());
-		tradeLicenseEntity.setAdhaarNumber(tradeLicense.getAdhaarNumber());
+		tradeLicenseEntity.setOwnerAadhaarNumber(tradeLicense.getOwnerAadhaarNumber());
 		tradeLicenseEntity.setAdminWard(tradeLicense.getAdminWard());
 		tradeLicenseEntity.setApplicationDate(new Timestamp(tradeLicense.getApplicationDate()));
 		tradeLicenseEntity.setApplicationNumber(tradeLicense.getApplicationNumber());
 		tradeLicenseEntity.setAgreementNo(tradeLicense.getAgreementNo());
 		tradeLicenseEntity.setApplicationType(tradeLicense.getApplicationType().toString());
 		tradeLicenseEntity.setCategory(tradeLicense.getCategory());
-		tradeLicenseEntity.setEmailId(tradeLicense.getEmailId());
+		tradeLicenseEntity.setOwnerEmailId(tradeLicense.getOwnerEmailId());
 		tradeLicenseEntity.setExpiryDate(new Timestamp(tradeLicense.getExpiryDate()));
 		tradeLicenseEntity.setFatherSpouseName(tradeLicense.getFatherSpouseName());
 		tradeLicenseEntity.setId(tradeLicense.getId());
@@ -76,10 +80,11 @@ public class TradeLicenseJdbcRepositoryTest {
 		tradeLicenseEntity.setLicenseNumber(tradeLicense.getLicenseNumber());
 		tradeLicenseEntity.setLicenseValidFromDate(new Timestamp(tradeLicense.getLicenseValidFromDate()));
 		tradeLicenseEntity.setLocality(tradeLicense.getLocality());
-		tradeLicenseEntity.setMobileNumber(tradeLicense.getMobileNumber());
+		tradeLicenseEntity.setOwnerMobileNumber(tradeLicense.getOwnerMobileNumber());
 		tradeLicenseEntity.setOldLicenseNumber(tradeLicense.getOldLicenseNumber());
 		tradeLicenseEntity.setOwnerAddress(tradeLicense.getOwnerAddress());
 		tradeLicenseEntity.setOwnerName(tradeLicense.getOwnerName());
+		tradeLicenseEntity.setOwnerType(tradeLicense.getOwnerType().toString());
 		tradeLicenseEntity.setOwnerShipType(tradeLicense.getOwnerShipType().toString());
 		tradeLicenseEntity.setPropertyAssesmentNo(tradeLicense.getPropertyAssesmentNo());
 		tradeLicenseEntity.setQuantity(tradeLicense.getQuantity());
@@ -96,6 +101,19 @@ public class TradeLicenseJdbcRepositoryTest {
 		tradeLicenseEntity.setTradeType(tradeLicense.getTradeType().toString());
 		tradeLicenseEntity.setUom(tradeLicense.getUom());
 		tradeLicenseEntity.setStatus(tradeLicense.getStatus());
+		tradeLicenseEntity.setEstablishmentCity(tradeLicense.getEstablishmentCity());
+		tradeLicenseEntity.setEstablishmentCorrAddress(tradeLicense.getEstablishmentCorrAddress());
+		tradeLicenseEntity.setEstablishmentEmailId(tradeLicense.getEstablishmentEmailId());
+		tradeLicenseEntity.setEstablishmentMobNo(tradeLicense.getEstablishmentMobNo());
+		tradeLicenseEntity.setEstablishmentName(tradeLicense.getEstablishmentName());
+		tradeLicenseEntity.setEstablishmentPhoneNo(tradeLicense.getEstablishmentPhoneNo());
+		tradeLicenseEntity.setEstablishmentPinCode(tradeLicense.getEstablishmentPinCode());
+		tradeLicenseEntity.setEstablishmentRegNo(tradeLicense.getEstablishmentRegNo());
+		tradeLicenseEntity.setEstablishmentType(tradeLicense.getEstablishmentType().toString());
+		tradeLicenseEntity.setLandOwnerName(tradeLicense.getLandOwnerName());
+		tradeLicenseEntity.setBusinessDescription(tradeLicense.getBusinessDescription());
+		tradeLicenseEntity.setTotalEmployees(tradeLicense.getTotalEmployees());
+		tradeLicenseEntity.setLicenseRejBefrForSamePremise(tradeLicense.getLicenseRejBefrForSamePremise());
 
 		return tradeLicenseEntity;
 	}
@@ -105,7 +123,7 @@ public class TradeLicenseJdbcRepositoryTest {
 		TradeLicense tradeLicense = new TradeLicense();
 
 		tradeLicense.setActive(true);
-		tradeLicense.setAdhaarNumber("123456781234");
+		tradeLicense.setOwnerAadhaarNumber("123456781234");
 		tradeLicense.setAdminWard("7");
 		tradeLicense.setAgreementDate((new Date("15/08/2017")).getTime()/1000);
 		tradeLicense.setAgreementNo("232323");
@@ -113,7 +131,7 @@ public class TradeLicenseJdbcRepositoryTest {
 		tradeLicense.setApplicationNumber("12345");
 		tradeLicense.setApplicationType(ApplicationType.NEW);
 		tradeLicense.setCategory("Flammables");
-		tradeLicense.setEmailId("abc@xyz.com");
+		tradeLicense.setOwnerEmailId("abc@xyz.com");
 		tradeLicense.setExpiryDate((new Date("15/08/2017")).getTime()/1000);
 		tradeLicense.setFatherSpouseName("fatherSpouseName");
 		tradeLicense.setFeeDetails(getLicenseFeeDetailsDomain());
@@ -122,10 +140,11 @@ public class TradeLicenseJdbcRepositoryTest {
 		tradeLicense.setLicenseNumber("123456789");
 		tradeLicense.setLicenseValidFromDate((new Date("15/08/2017")).getTime()/1000);
 		tradeLicense.setLocality("20");
-		tradeLicense.setMobileNumber("9999999999");
+		tradeLicense.setOwnerMobileNumber("9999999999");
 		tradeLicense.setOldLicenseNumber("123456789");
 		tradeLicense.setOwnerAddress("ownerAddress");
 		tradeLicense.setOwnerName("ownerName");
+		tradeLicense.setOwnerType(OwnerType.INDIVIDUAL);
 		tradeLicense.setOwnerShipType(OwnerShipType.RENTED);
 		tradeLicense.setPropertyAssesmentNo(null);
 		tradeLicense.setQuantity(10.0);
@@ -143,8 +162,62 @@ public class TradeLicenseJdbcRepositoryTest {
 		tradeLicense.setTradeType(BusinessNature.PERMANENT);
 		tradeLicense.setUom("Area");
 		tradeLicense.setStatus("Inforce");
+		tradeLicense.setPartners(getTradePartners());
+		tradeLicense.setShifts(getTradeShifts());
+		tradeLicense.setEstablishmentCorrAddress("establishmentCorrAddress");
+		tradeLicense.setEstablishmentEmailId("test.gmail.com");
+		tradeLicense.setEstablishmentMobNo("1234566543");
+		tradeLicense.setEstablishmentName("establishmentName");
+		tradeLicense.setEstablishmentPhoneNo("1234566543");
+		tradeLicense.setEstablishmentPinCode("523260");
+		tradeLicense.setEstablishmentRegNo("3423654");
+		tradeLicense.setEstablishmentType(EstablishmentType.BANK);
+		tradeLicense.setEstablishmentCity("hyderbad");
+		tradeLicense.setLandOwnerName("hgfhsadf");
+		tradeLicense.setBusinessDescription("gsdfghks");
+		tradeLicense.setTotalEmployees(50);
+		tradeLicense.setLicenseRejBefrForSamePremise(true);
 
 		return tradeLicense;
+	}
+
+	private List<TradeShift> getTradeShifts() {
+		
+		List<TradeShift> tradeShifts = new ArrayList<TradeShift>();
+		TradeShift tradeShift = new TradeShift();
+		
+		tradeShift.setFromTime(new Date().getTime());
+		tradeShift.setRemarks("test");
+		tradeShift.setShiftNo(1);
+		tradeShift.setToTime(new Date().getTime());
+		tradeShift.setTenantId("default");
+		
+		tradeShifts.add(tradeShift);
+		
+		return tradeShifts;
+	}
+
+	private List<TradePartner> getTradePartners() {
+		
+		List<TradePartner> tradePartners = new ArrayList<TradePartner>();
+		TradePartner tradePartner = new TradePartner();
+		
+		tradePartner.setAadhaarNumber("123456781234");
+		tradePartner.setBirthYear("1988");
+		tradePartner.setCorrespondenceAddress("hyderabad");
+		tradePartner.setDesignation("BA");
+		tradePartner.setEmailId("test.gmail.com");
+		tradePartner.setFullName("test");
+		tradePartner.setGender(Gender.MALE);
+		tradePartner.setMobileNumber("1234567890");
+		tradePartner.setPhoneNumber("1234567890");
+		tradePartner.setPhoto("photo");
+		tradePartner.setResidentialAddress("hyderabad");
+		tradePartner.setTenantId("default");
+		
+		tradePartners.add(tradePartner);
+		
+		return tradePartners;
 	}
 
 	private List<LicenseFeeDetail> getLicenseFeeDetailsDomain() {

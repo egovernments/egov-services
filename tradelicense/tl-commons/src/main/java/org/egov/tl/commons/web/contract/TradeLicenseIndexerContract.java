@@ -4,12 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.egov.tl.commons.web.contract.enums.BusinessNatureEnum;
 import org.egov.tl.commons.web.contract.enums.OwnerShipTypeEnum;
-import org.hibernate.validator.constraints.Email;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -37,58 +35,206 @@ public class TradeLicenseIndexerContract {
 	@JsonProperty("oldLicenseNumber")
 	private String oldLicenseNumber;
 
-	@JsonProperty("adhaarNumber")
-	@Pattern(regexp = "[0-9]{12}")
-	@Size(min = 12, max = 12)
-	private String adhaarNumber;
+	@JsonProperty("ownerAadhaarNumber")
+	private String ownerAadhaarNumber;
 
-	@NotNull
-	@JsonProperty("mobileNumber")
-	private String mobileNumber;
+	@JsonProperty("ownerMobileNumber")
+	private String ownerMobileNumber;
 
-	@NotNull
-	@Size(min = 4, max = 32)
 	@JsonProperty("ownerName")
 	private String ownerName;
 
-	@NotNull
-	@Size(min = 4, max = 32)
+	@JsonProperty("ownerType")
+	private String ownerType;
+
+	@JsonProperty("ownerGender")
+	private String ownerGender;
+
+	@JsonProperty("ownerBirthYear")
+	private String ownerBirthYear;
+
+	@JsonProperty("ownerCorrAddress")
+	private String ownerCorrAddress;
+
+	@JsonProperty("ownerCity")
+	private String ownerCity;
+
+	@JsonProperty("ownerPinCode")
+	private String ownerPinCode;
+
+	@JsonProperty("ownerEmailId")
+	private String ownerEmailId;
+
+	@JsonProperty("ownerPhoneNumber")
+	private String ownerPhoneNumber;
+
+	@JsonProperty("ownerPhoto")
+	private String ownerPhoto;
+
 	@JsonProperty("fatherSpouseName")
 	private String fatherSpouseName;
 
-	@NotNull
-	@Email
-	@JsonProperty("emailId")
-	private String emailId;
-
-	@NotNull
-	@Size(max = 256)
 	@JsonProperty("ownerAddress")
 	private String ownerAddress;
+
+	@JsonProperty("establishmentType")
+	private String establishmentType;
+
+	@JsonProperty("establishmentName")
+	private String establishmentName;
+
+	@JsonProperty("establishmentRegNo")
+	private String establishmentRegNo;
+
+	@JsonProperty("establishmentCorrAddress")
+	private String establishmentCorrAddress;
+
+	@JsonProperty("establishmentCity")
+	private String establishmentCity;
+
+	@JsonProperty("establishmentPinCode")
+	private String establishmentPinCode;
+
+	@JsonProperty("establishmentPhoneNo")
+	private String establishmentPhoneNo;
+
+	@JsonProperty("establishmentMobNo")
+	private String establishmentMobNo;
+
+	@JsonProperty("establishmentEmailId")
+	private String establishmentEmailId;
+
+	@JsonProperty("surveyOrGatNo")
+	private String surveyOrGatNo;
+
+	@JsonProperty("ctsOrFinalPlotNo")
+	private String ctsOrFinalPlotNo;
+
+	@JsonProperty("plotNo")
+	private String plotNo;
+
+	@JsonProperty("waterConnectionNo")
+	private String waterConnectionNo;
+
+	@JsonProperty("landOwnerName")
+	private String landOwnerName;
+
+	@JsonProperty("isConsentLetterTaken")
+	private Boolean isConsentLetterTaken;
+
+	@JsonProperty("businessDescription")
+	private String businessDescription;
+
+	@JsonProperty("prevLicenseNo")
+	private String prevLicenseNo;
+
+	@JsonProperty("prevLicenseDate")
+	private Long prevLicenseDate;
+
+	@JsonProperty("totalEmployees")
+	private Integer totalEmployees;
+
+	@JsonProperty("totalMachines")
+	private Integer totalMachines;
+
+	@JsonProperty("licenseRejBefrForSamePremise")
+	private Boolean licenseRejBefrForSamePremise;
+
+	@JsonProperty("explLicenseNo")
+	private String explLicenseNo;
+
+	@JsonProperty("totalShifts")
+	private Integer totalShifts;
 
 	@JsonProperty("propertyAssesmentNo")
 	private String propertyAssesmentNo;
 
-	@NotNull
 	@JsonProperty("locality")
 	private String locality;
 
 	@JsonProperty("localityName")
 	private String localityName;
 
-	@NotNull
+	@JsonProperty("adminWard")
+	private String adminWard;
+
+	@JsonProperty("adminWardName")
+	private String adminWardName;
+
 	@JsonProperty("revenueWard")
 	private String revenueWard;
 
 	@JsonProperty("revenueWardName")
 	private String revenueWardName;
 
-	@NotNull
-	@JsonProperty("adminWard")
-	private String adminWard;
+	@JsonProperty("tradeAddress")
+	private String tradeAddress;
 
-	@JsonProperty("adminWardName")
-	private String adminWardName;
+	@JsonProperty("ownerShipType")
+	private OwnerShipTypeEnum ownerShipType;
+
+	@JsonProperty("tradeTitle")
+	private String tradeTitle;
+
+	@JsonProperty("tradeType")
+	private BusinessNatureEnum tradeType;
+
+	@JsonProperty("category")
+	private String category;
+
+	@JsonProperty("categoryName")
+	private String categoryName;
+
+	@JsonProperty("subCategory")
+	private String subCategory;
+
+	@JsonProperty("subCategoryName")
+	private String subCategoryName;
+
+	@JsonProperty("uom")
+	private String uom;
+
+	@JsonProperty("uomName")
+	private String uomName;
+
+	@JsonProperty("status")
+	private String status;
+
+	@JsonProperty("statusName")
+	private String statusName;
+
+	@JsonProperty("quantity")
+	private Double quantity;
+
+	@JsonProperty("remarks")
+	private String remarks;
+
+	@JsonProperty("tradeCommencementDate")
+	private String tradeCommencementDate;
+
+	@JsonProperty("issuedDate")
+	private String issuedDate;
+
+	@JsonProperty("licenseValidFromDate")
+	private String licenseValidFromDate;
+
+	@JsonProperty("isPropertyOwner")
+	private Boolean isPropertyOwner = false;
+
+	@JsonProperty("agreementDate")
+	private String agreementDate;
+
+	@JsonProperty("agreementNo")
+	private String agreementNo;
+
+	@JsonProperty("isLegacy")
+	private Boolean isLegacy = false;
+
+	@JsonProperty("active")
+	private Boolean active = true;
+
+	@JsonProperty("expiryDate")
+	private String expiryDate;
 
 	@JsonProperty("cityCode")
 	private String cityCode;
@@ -108,84 +254,18 @@ public class TradeLicenseIndexerContract {
 	@JsonProperty("cityName")
 	private String cityName;
 
-	@NotNull
-	@JsonProperty("tradeAddress")
-	@Size(max = 256)
-	private String tradeAddress;
-
-	@NotNull
-	@JsonProperty("ownerShipType")
-	private OwnerShipTypeEnum ownerShipType;
-
-	@NotNull
-	@JsonProperty("tradeTitle")
-	@Size(max = 33)
-	private String tradeTitle;
-
-	@NotNull
-	@JsonProperty("tradeType")
-	private BusinessNatureEnum tradeType;
-
-	@NotNull
-	@JsonProperty("category")
-	private String category;
-
-	@JsonProperty("categoryName")
-	private String categoryName;
-
-	@NotNull
-	@JsonProperty("subCategory")
-	private String subCategory;
-
-	@JsonProperty("subCategoryName")
-	private String subCategoryName;
-
-	@NotNull
-	@JsonProperty("uom")
-	private String uom;
-
-	@JsonProperty("uomName")
-	private String uomName;
-
-	@NotNull
-	@JsonProperty("quantity")
-	private Double quantity;
-
-	@NotNull
 	@JsonProperty("validityYears")
 	private Long validityYears;
 
-	@JsonProperty("remarks")
-	private String remarks;
+	@JsonProperty("userid")
+	private Long userId;
 
-	@NotNull
-	@JsonProperty("tradeCommencementDate")
-	private String tradeCommencementDate;
+	@JsonIgnore
+	@JsonProperty("licenseData")
+	private Map<String, Object> licenseData;
 
-	@NotNull
-	@JsonProperty("licenseValidFromDate")
-	private String licenseValidFromDate;
-
-	@JsonProperty("issuedDate")
-	private String issuedDate;
-
-	@JsonProperty("agreementDate")
-	private String agreementDate;
-
-	@JsonProperty("agreementNo")
-	private String agreementNo;
-
-	@JsonProperty("isLegacy")
-	private Boolean isLegacy = false;
-
-	@JsonProperty("isPropertyOwner")
-	private Boolean isPropertyOwner = false;
-
-	@JsonProperty("active")
-	private Boolean active = true;
-
-	@JsonProperty("expiryDate")
-	private String expiryDate;
+	@JsonProperty("auditDetails")
+	private AuditDetails auditDetails;
 
 	@JsonProperty("feeDetails")
 	private List<LicenseFeeDetailContract> feeDetails;
@@ -196,16 +276,9 @@ public class TradeLicenseIndexerContract {
 	@JsonProperty("applications")
 	private List<LicenseApplicationSearchContract> applications;
 
-	@JsonProperty("status")
-	private String status;
+	@JsonProperty("partners")
+	private List<TradePartnerContract> partners;
 
-	@JsonProperty("statusName")
-	private String statusName;
-
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails;
-	
-	@JsonIgnore
-	@JsonProperty("licenseData")
-	private Map<String, Object> licenseData;
+	@JsonProperty("shifts")
+	private List<TradeShiftContract> shifts;
 }

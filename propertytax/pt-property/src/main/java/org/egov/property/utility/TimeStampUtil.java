@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 
 public class TimeStampUtil {
 
@@ -61,5 +63,43 @@ public class TimeStampUtil {
 		}
 
 		return year;
+	}
+	
+public static Boolean checkValidPeriod(String fromDate, String toDate) {
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		LocalDate startDate = LocalDate.parse(fromDate, formatter);
+		LocalDate endDate = LocalDate.parse(toDate, formatter);
+		long numberOfmonths = ChronoUnit.MONTHS.between(startDate, endDate);
+		if (numberOfmonths>3)
+			return true;
+		else 
+			return false;
+	}
+	
+	public static Boolean compareDates(String fromDate, String toDate) throws Exception {
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		Date date1 = sdf.parse(fromDate);
+		Date date2 = sdf.parse(toDate);
+		// after() will return true if and only if date1 is after date 2
+		if (date1.after(date2))
+			return false;
+		else
+			return true;
+	}
+	
+	public static Boolean ValidDates(String fromDate, String toDate) throws Exception {
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");		
+		String currentDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+		Date date1 = sdf.parse(fromDate);
+		Date date2 = sdf.parse(toDate);
+		Date date = sdf.parse(currentDate);
+		
+		if ((date1.equals(date) || date1.after(date)) && (date2.equals(date) || date2.after(date)))
+			return true;
+		else
+			return false;
 	}
 }

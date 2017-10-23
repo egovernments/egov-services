@@ -116,14 +116,14 @@ public class LicenseUserService {
 		user.setType(ROLECODE);
 		user.setPassword(propertiesManager.getDefaultPassword());
 		user.setRoles(roleList);
-		if (StringUtils.isNotBlank(tradeLicense.getAdhaarNumber()))
-			user.setAadhaarNumber(tradeLicense.getAdhaarNumber());
-		if (StringUtils.isNotBlank(tradeLicense.getEmailId()))
-			user.setEmailId(tradeLicense.getEmailId());
+		if (StringUtils.isNotBlank(tradeLicense.getOwnerAadhaarNumber()))
+			user.setAadhaarNumber(tradeLicense.getOwnerAadhaarNumber());
+		if (StringUtils.isNotBlank(tradeLicense.getOwnerEmailId()))
+			user.setEmailId(tradeLicense.getOwnerEmailId());
 		if (StringUtils.isNotBlank(tradeLicense.getOwnerAddress()))
 			user.setPermanentAddress(tradeLicense.getOwnerAddress());
-		if (StringUtils.isNotBlank(tradeLicense.getMobileNumber()))
-			user.setMobileNumber(tradeLicense.getMobileNumber());
+		if (StringUtils.isNotBlank(tradeLicense.getOwnerMobileNumber()))
+			user.setMobileNumber(tradeLicense.getOwnerMobileNumber());
 		if (tradeLicense.getOwnerGender() != null
 				&& StringUtils.isNotBlank(tradeLicense.getOwnerGender().toString()))
 			user.setGender(tradeLicense.getOwnerGender().toString());

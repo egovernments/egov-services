@@ -10,6 +10,10 @@ import javax.validation.Valid;
 
 import org.egov.enums.NoticeType;
 import org.egov.models.DemandResponse;
+import org.egov.models.DemolitionRequest;
+import org.egov.models.DemolitionResponse;
+import org.egov.models.DemolitionSearchCriteria;
+import org.egov.models.DemolitionSearchResponse;
 import org.egov.models.Error;
 import org.egov.models.ErrorRes;
 import org.egov.models.NoticeRequest;
@@ -25,9 +29,17 @@ import org.egov.models.RequestInfoWrapper;
 import org.egov.models.ResponseInfo;
 import org.egov.models.SpecialNoticeRequest;
 import org.egov.models.SpecialNoticeResponse;
+import org.egov.models.TaxExemptionRequest;
+import org.egov.models.TaxExemptionResponse;
+import org.egov.models.TaxExemptionSearchCriteria;
+import org.egov.models.TaxExemptionSearchResponse;
 import org.egov.models.TitleTransferRequest;
 import org.egov.models.TitleTransferResponse;
 import org.egov.models.TitleTransferSearchCriteria;
+import org.egov.models.VacancyRemissionRequest;
+import org.egov.models.VacancyRemissionResponse;
+import org.egov.models.VacancyRemissionSearchCriteria;
+import org.egov.models.VacancyRemissionSearchResponse;
 import org.egov.property.exception.InvalidSearchParameterException;
 import org.egov.property.model.TitleTransferSearchResponse;
 import org.egov.property.services.NoticeService;
@@ -225,10 +237,10 @@ public class PropertyController {
 	}
 
 	@RequestMapping(path = "notice/_update", method = RequestMethod.POST)
-	public ResponseEntity<?> updateNotice(@RequestBody @Valid NoticeRequest noticeRequest,
-										  final BindingResult errors) throws  Exception{
-		if(errors.hasErrors()){
-			Error error = new Error(HttpStatus.BAD_REQUEST.toString(),errors.getFieldError().toString(), null,
+	public ResponseEntity<?> updateNotice(@RequestBody @Valid NoticeRequest noticeRequest, final BindingResult errors)
+			throws Exception {
+		if (errors.hasErrors()) {
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), errors.getFieldError().toString(), null,
 					new HashMap<String, String>());
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setStatus("FAILED");
@@ -238,7 +250,7 @@ public class PropertyController {
 			return new ResponseEntity<>(errorRes, HttpStatus.BAD_REQUEST);
 		}
 
-		NoticeResponse noticeResponse = new NoticeResponse(new ResponseInfo(),noticeRequest.getNotice());
+		NoticeResponse noticeResponse = new NoticeResponse(new ResponseInfo(), noticeRequest.getNotice());
 		return new ResponseEntity<>(noticeResponse, HttpStatus.OK);
 	}
 
@@ -263,4 +275,136 @@ public class PropertyController {
 
 		return NoticeSearchResponse.builder().responseInfo(new ResponseInfo()).notices(notices).build();
 	}
+
+	/**
+	 * This API will create a new demolition
+	 * 
+	 * @param demolitionRequest
+	 * @return {@link DemolitionResponse}
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "demolition/_create", method = RequestMethod.POST)
+	public DemolitionResponse createDemolition(@RequestBody DemolitionRequest demolitionRequest) throws Exception {
+		return propertyService.createDemolition(demolitionRequest);
+
+	}
+
+	/**
+	 * This API will update the Existisng demolition
+	 * 
+	 * @param demolitionRequest
+	 * @return {@link DemolitionResponse}
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "demolition/_update", method = RequestMethod.POST)
+	public DemolitionResponse updateDemolition(@RequestBody DemolitionRequest demolitionRequest) throws Exception {
+		return propertyService.updateDemolition(demolitionRequest);
+
+	}
+
+	/**
+	 * This API will search the demolitions based on the given parameters
+	 * 
+	 * @param requestInfoWrapper
+	 * @param demolitionSearchCriteria
+	 * @param bindingResult
+	 * @return {@link DemolitionResponse}
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "demolition/_search", method = RequestMethod.POST)
+	public DemolitionSearchResponse searchDemolitions(@RequestBody RequestInfoWrapper requestInfoWrapper,
+			@ModelAttribute @Valid DemolitionSearchCriteria demolitionSearchCriteria, BindingResult bindingResult)
+			throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfoWrapper.getRequestInfo());
+		}
+		return propertyService.searchDemolition(requestInfoWrapper.getRequestInfo(), demolitionSearchCriteria);
+
+	}
+
+	/**
+	 * Description: This api for creating tax exemption request for property
+	 * 
+	 * @param taxExemptionRequest
+	 * @return taxExemptionResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "taxexemption/_create", method = RequestMethod.POST)
+	public TaxExemptionResponse createTitleTransfer(@RequestBody TaxExemptionRequest taxExemptionRequest)
+			throws Exception {
+
+		return propertyService.createTaxExemption(taxExemptionRequest);
+	}
+
+	/**
+	 *
+	 * @param taxExemptionRequest
+	 * @return taxExemptionResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "taxexemption/_update", method = RequestMethod.POST)
+	public TaxExemptionResponse updateTitleTransfer(@RequestBody TaxExemptionRequest taxExemptionRequest)
+			throws Exception {
+
+		return propertyService.updateTaxExemption(taxExemptionRequest);
+	}
+
+	/**
+	 * 
+	 * @param requestInfo
+	 * @param TaxExemptionSearchCriteria
+	 * @return {@link TaxExemptionSearchResponse}
+	 */
+	@RequestMapping(path = "taxexemption/_search", method = RequestMethod.POST)
+	public TaxExemptionSearchResponse searchTaxExemption(@RequestBody RequestInfoWrapper requestInfo,
+			@ModelAttribute @Valid TaxExemptionSearchCriteria taxExemptionSearchCriteria, BindingResult bindingResult)
+			throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
+		}
+		return propertyService.searchTaxExemption(requestInfo, taxExemptionSearchCriteria);
+	}
+	
+	/**
+	 * Description : This will create Vacancy Remission
+	 * 
+	 * @param vacancyRemissionRequest
+	 * @return VacancyRemissionResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/vacancyremission/_create", method = RequestMethod.POST)
+	public VacancyRemissionResponse createVacancyRemission(
+			@Valid @RequestBody VacancyRemissionRequest vacancyRemissionRequest) throws Exception {
+		return propertyService.createVacancyRemission(vacancyRemissionRequest);
+	}
+	
+	/**
+	 * Description : This will update Vacancy Remission
+	 * 
+	 * @param vacancyRemissionRequest
+	 * @return VacancyRemissionResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/vacancyremission/_update", method = RequestMethod.POST)
+	public VacancyRemissionResponse updateVacancyRemission(
+			@Valid @RequestBody VacancyRemissionRequest vacancyRemissionRequest) throws Exception {
+		return propertyService.updateVacancyRemission(vacancyRemissionRequest);
+	}
+	
+	/**
+	 * @param upicNumber
+	 * @param VacancyRemissionSearchCriteria
+	 * @return VacancyRemissionSearchResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/vacancyremission/_search", method = RequestMethod.POST)
+	public VacancyRemissionSearchResponse searchVacancyRemission(@RequestBody RequestInfoWrapper requestInfoWrapper,
+			@ModelAttribute @Valid VacancyRemissionSearchCriteria vacancyRemissionSearchCriteria,
+			BindingResult bindingResult) throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfoWrapper.getRequestInfo());
+		}
+		return propertyService.searchVacancyRemission(requestInfoWrapper, vacancyRemissionSearchCriteria);
+	}
+
 }

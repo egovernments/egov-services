@@ -33,6 +33,8 @@ public class DemolitionSearchCriteria {
 	
 	private String upicNo;
 	
+	private String oldUpicNo;
+	
 	private String applicationNo;
 	
 	private Long demolitionId;

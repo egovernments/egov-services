@@ -1,10 +1,10 @@
 package org.egov.infra.indexer;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLConnection;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.egov.infra.indexer.web.contract.Mapping;
@@ -32,6 +32,9 @@ public class IndexerApplicationRunnerImpl implements ApplicationRunner {
 	    
     @Value("${egov.indexer.file.path}")
     private String yamllistfile;
+    
+    @Value("${egov.indexer.yml.repo.path}")
+    private String yamllist;
 	
 	public static final Logger logger = LoggerFactory.getLogger(IndexerApplicationRunnerImpl.class);
 
@@ -51,13 +54,12 @@ public class IndexerApplicationRunnerImpl implements ApplicationRunner {
     	ConcurrentHashMap<String, Mapping> mappingsMap = new ConcurrentHashMap<>();
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		Services service = null;
-		try {
-			URL url = new URL(yamllistfile);
-			URLConnection urlConnection = url.openConnection();
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-			try{
-				String yamlLocation;
-				while(null != (yamlLocation = bufferedReader.readLine())){
+		try{
+				List<String> ymlUrlS = Arrays.asList(yamllist.split(","));
+				if(0 == ymlUrlS.size()){
+					ymlUrlS.add(yamllist);
+				}
+				for(String yamlLocation : ymlUrlS){
 					if(yamlLocation.startsWith("https://") || yamlLocation.startsWith("http://")) {
 						logger.info("Reading....: "+yamlLocation);
 						URL yamlFile = new URL(yamlLocation);
@@ -91,9 +93,6 @@ public class IndexerApplicationRunnerImpl implements ApplicationRunner {
 			}catch(Exception e){
 				logger.error("Exception while loading yaml files: ",e);
 			}
-		} catch (Exception e) {
-			logger.error("Exception while loading file containing yaml locations: ",e);
-		}
 		//validateServiceMaps(mappingsMap);
 		mappingMaps = mappingsMap;
     }

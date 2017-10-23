@@ -7,6 +7,9 @@ import java.util.stream.Collectors;
 
 import org.egov.enums.StatusEnum;
 import org.egov.models.AuditDetails;
+import org.egov.models.Demolition;
+import org.egov.models.DemolitionRequest;
+import org.egov.models.DemolitionSearchCriteria;
 import org.egov.models.Document;
 import org.egov.models.Floor;
 import org.egov.models.Property;
@@ -16,15 +19,20 @@ import org.egov.models.PropertyResponse;
 import org.egov.models.PropertySearchCriteria;
 import org.egov.models.RequestInfo;
 import org.egov.models.ResponseInfoFactory;
+import org.egov.models.TaxExemption;
+import org.egov.models.TaxExemptionRequest;
 import org.egov.models.TitleTransfer;
 import org.egov.models.TitleTransferRequest;
 import org.egov.models.Unit;
 import org.egov.models.User;
 import org.egov.models.WorkFlowDetails;
+import org.egov.models.VacancyRemissionRequest;
 import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.PropertySearchException;
+import org.egov.property.repository.DemolitionRepository;
 import org.egov.property.repository.PropertyMasterRepository;
 import org.egov.property.repository.PropertyRepository;
+import org.egov.property.repository.TaxExemptionRepository;
 import org.egov.property.utility.ConstantUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -59,7 +67,13 @@ public class PersisterService {
 	PropertyServiceImpl propertyServiceImpl;
 
 	@Autowired
+	DemolitionRepository demolitionRepository;
+
+	@Autowired
 	JdbcTemplate jdbcTemplate;
+
+	@Autowired
+	TaxExemptionRepository taxExemptionRepository;
 
 	/**
 	 * Description: save property
@@ -565,6 +579,69 @@ public class PersisterService {
 		}
 		return property;
 	}
+	
+	/**
+	 * Description: save VacancyRemission
+	 * 
+	 * @param VacancyRemission
+	 * @throws SQLException
+	 */
+	@Transactional
+	public void addVacancyRemission(VacancyRemissionRequest vacancyRemissionRequest) throws Exception {
+		saveVacancyRemission(vacancyRemissionRequest);
+
+	}
+
+	/**
+	 * Description : This method will use for insert VacancyRemission related
+	 * data in database
+	 * 
+	 * @param VacancyRemission
+	 */
+	private void saveVacancyRemission(VacancyRemissionRequest vacancyRemissionRequest) throws Exception {
+
+		if (vacancyRemissionRequest.getVacancyRemission().getIsApproved() == null) {
+			vacancyRemissionRequest.getVacancyRemission().setIsApproved(false);
+		}
+
+		AuditDetails auditDetails = getAuditDetail(vacancyRemissionRequest.getRequestInfo());
+		vacancyRemissionRequest.getVacancyRemission().setAuditDetails(auditDetails);
+		Long vacancyRemissionId = propertyRepository
+				.saveVacancyRemission(vacancyRemissionRequest.getVacancyRemission());
+
+		if (vacancyRemissionRequest.getVacancyRemission().getDocuments() != null) {
+			for (Document document : vacancyRemissionRequest.getVacancyRemission().getDocuments()) {
+				document.setAuditDetails(auditDetails);
+				propertyRepository.saveVacancyRemissionDocument(document, vacancyRemissionId);
+			}
+		}
+	}
+
+	/**
+	 * Description : This method will use for update VacancyRemission related
+	 * data in database
+	 * 
+	 * @param VacancyRemission
+	 */
+	@Transactional
+	public void updateVacancyRemission(VacancyRemissionRequest vacancyRemissionRequest) throws Exception {
+
+		if (vacancyRemissionRequest.getVacancyRemission().getIsApproved() == null) {
+			vacancyRemissionRequest.getVacancyRemission().setIsApproved(false);
+		}
+		AuditDetails auditDetails = getUpdatedAuditDetails(vacancyRemissionRequest.getRequestInfo(),
+				ConstantUtility.VACANCYREMISSION_TABLE_NAME, vacancyRemissionRequest.getVacancyRemission().getId());
+		vacancyRemissionRequest.getVacancyRemission().setAuditDetails(auditDetails);
+		propertyRepository.updateVacancyRemission(vacancyRemissionRequest.getVacancyRemission());
+
+		if (vacancyRemissionRequest.getVacancyRemission().getDocuments() != null) {
+			for (Document document : vacancyRemissionRequest.getVacancyRemission().getDocuments()) {
+				document.setAuditDetails(auditDetails);
+				propertyRepository.updateVacancyRemissionDocument(document,
+						vacancyRemissionRequest.getVacancyRemission().getId());
+			}
+		}
+	}
 
 	private AuditDetails getAuditDetail(RequestInfo requestInfo) {
 		String userId = requestInfo.getUserInfo().getId().toString();
@@ -597,4 +674,205 @@ public class PersisterService {
 		}
 
 	}
+
+	/**
+	 * This API will persist the Demolition Object in Database
+	 * 
+	 * @param demolitionRequest
+	 * @throws Exception
+	 */
+	public void saveDemolition(DemolitionRequest demolitionRequest) throws Exception {
+		Long demolitionId = demolitionRepository.saveDemolition(demolitionRequest.getDemolition());
+		AuditDetails auditDetails = getAuditDetail(demolitionRequest.getRequestInfo());
+		demolitionRepository.saveDemolitionDocuments(demolitionRequest.getDemolition(), demolitionId, auditDetails);
+
+	}
+
+	public void updateDemolition(DemolitionRequest demolitionRequest) throws Exception {
+
+		Demolition demolition = demolitionRequest.getDemolition();
+
+		for (Document document : demolition.getDocuments()) {
+			AuditDetails auditDetails = getUpdatedAuditDetails(demolitionRequest.getRequestInfo(),
+					"egpt_demolition_document", document.getId());
+			document.setAuditDetails(auditDetails);
+		}
+
+		demolitionRepository.updateDemolition(demolitionRequest);
+
+	}
+
+	public List<Demolition> searchDemolitions(RequestInfo requestInfo,
+			DemolitionSearchCriteria demolitionSearchCriteria) throws Exception {
+		return demolitionRepository.searchDemolitions(demolitionSearchCriteria);
+
+	}
+
+	/**
+	 * Search property based on upic no
+	 * 
+	 * @param titleTransferRequest
+	 * @return
+	 * @throws Exception
+	 */
+	public Property getPropertyUsingUpicNo(DemolitionRequest demolitionRequest) throws Exception {
+		RequestInfo requestInfo = demolitionRequest.getRequestInfo();
+		Demolition demolition = demolitionRequest.getDemolition();
+		Property property = null;
+		PropertySearchCriteria propertySearchCriteria = new PropertySearchCriteria();
+		propertySearchCriteria.setTenantId(demolition.getTenantId());
+		propertySearchCriteria.setUpicNumber(demolition.getUpicNumber());
+
+		try {
+			PropertyResponse propertyResponse = propertyServiceImpl.searchProperty(requestInfo, propertySearchCriteria);
+			if (propertyResponse != null && propertyResponse.getProperties().size() > 0) {
+				property = propertyResponse.getProperties().get(0);
+			}
+		} catch (Exception e) {
+			throw new PropertySearchException(propertiesManager.getInvalidInput(), requestInfo);
+		}
+		return property;
+	}
+
+	/**
+	 * This API will copy the Image of the property object to history table and
+	 * will update the object based on the demolition object
+	 * 
+	 * @param demolitionRequest
+	 * @throws Exception
+	 */
+	public void savePropertyTohistoryAndUpdateProperty(DemolitionRequest demolitionRequest) throws Exception {
+
+		Property property = getPropertyUsingUpicNo(demolitionRequest);
+		savePropertyHistory(property);
+		propertyRepository.updateIsUnderWorkflowbyId(property.getId());
+		propertyRepository.updateProperyAfterDemolition(property, demolitionRequest);
+
+	}
+
+	public void updateIsUnderWorkflow(Long propertyId) {
+		propertyRepository.updateIsUnderWorkflowbyId(propertyId);
+	}
+
+	/**
+	 * Description: save TaxExemption
+	 * 
+	 * @param TaxExemptionRequest
+	 * @throws SQLException
+	 */
+	@Transactional
+	public void addTaxExemption(TaxExemptionRequest taxExemptionRequest) throws Exception {
+
+		saveTaxExemption(taxExemptionRequest);
+
+	}
+
+	/**
+	 * Description : This method will use for insert property related data in
+	 * database
+	 * 
+	 * @param properties
+	 */
+	private void saveTaxExemption(TaxExemptionRequest taxExemptionRequest) throws Exception {
+
+		AuditDetails auditDetails = getAuditDetail(taxExemptionRequest.getRequestInfo());
+		taxExemptionRequest.getTaxExemption().setAuditDetails(auditDetails);
+		Long taxExemptionId = taxExemptionRepository.saveTaxExemption(taxExemptionRequest.getTaxExemption());
+
+		if (taxExemptionRequest.getTaxExemption().getDocuments() != null) {
+			for (Document document : taxExemptionRequest.getTaxExemption().getDocuments()) {
+				document.setAuditDetails(auditDetails);
+				taxExemptionRepository.saveTaxExemptionDocument(document, taxExemptionId);
+			}
+		}
+
+	}
+
+	/**
+	 * Description : This method will use for update tax exemption related data
+	 * in database
+	 * 
+	 * @param TaxExemption
+	 */
+	@Transactional
+	public void updateTaxExemption(TaxExemptionRequest taxExemptionRequest) throws Exception {
+
+		AuditDetails auditDetails = getUpdatedAuditDetails(taxExemptionRequest.getRequestInfo(),
+				ConstantUtility.TAXEXEMPTION_TABLE_NAME, taxExemptionRequest.getTaxExemption().getId());
+		taxExemptionRequest.getTaxExemption().setAuditDetails(auditDetails);
+
+		taxExemptionRepository.updateTaxExemption(taxExemptionRequest.getTaxExemption());
+
+		if (taxExemptionRequest.getTaxExemption().getDocuments() != null) {
+			for (Document document : taxExemptionRequest.getTaxExemption().getDocuments()) {
+				document.setAuditDetails(auditDetails);
+				taxExemptionRepository.updateTaxExemptionDocument(document,
+						taxExemptionRequest.getTaxExemption().getId());
+			}
+		}
+	}
+
+	/**
+	 * Description: save property history for Tax Exemption
+	 * 
+	 * @param properties
+	 * @throws SQLException
+	 */
+
+	public void addPropertyHistoryForTaxExemption(TaxExemptionRequest taxExemptionRequest, Property property)
+			throws Exception {
+		savePropertyHistory(property);
+	}
+
+	/**
+	 * Description : This method will use for update main property (property
+	 * details) isexemption and exemption reason in database
+	 * 
+	 * @param Property
+	 */
+
+	public Property updateTaxExemptionProperty(TaxExemptionRequest taxExemptionRequest, Property property)
+			throws Exception {
+		TaxExemption taxExemption = taxExemptionRequest.getTaxExemption();
+		AuditDetails auditDetails = getUpdatedAuditDetails(taxExemptionRequest.getRequestInfo(),
+				ConstantUtility.PROPERTY_TABLE_NAME, property.getId());
+		property.getPropertyDetail().setIsExempted(true);
+		property.getPropertyDetail().setExemptionReason(taxExemption.getExemptionReason());
+		property.getPropertyDetail().setAuditDetails(auditDetails);
+		updateTaxExemption(taxExemptionRequest);
+		property.setAuditDetails(auditDetails);
+
+		taxExemptionRepository.updateTaxExemptionPropertyDetail(property.getPropertyDetail());
+
+		return property;
+	}
+
+	/**
+	 * Search property based on upic no
+	 * 
+	 * @param Tax
+	 *            Exemption
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public Property getPropertyUsingUpicNo(TaxExemptionRequest taxExemptionRequest) throws Exception {
+		RequestInfo requestInfo = taxExemptionRequest.getRequestInfo();
+		TaxExemption taxExemption = taxExemptionRequest.getTaxExemption();
+		Property property = null;
+		PropertySearchCriteria propertySearchCriteria = new PropertySearchCriteria();
+		propertySearchCriteria.setTenantId(taxExemption.getTenantId());
+		propertySearchCriteria.setUpicNumber(taxExemption.getUpicNumber());
+
+		try {
+			PropertyResponse propertyResponse = propertyServiceImpl.searchProperty(requestInfo, propertySearchCriteria);
+			if (propertyResponse != null && propertyResponse.getProperties().size() > 0) {
+				property = propertyResponse.getProperties().get(0);
+			}
+		} catch (Exception e) {
+			throw new PropertySearchException(propertiesManager.getInvalidInput(), requestInfo);
+		}
+		return property;
+	}
+
 }

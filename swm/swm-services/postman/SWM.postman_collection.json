@@ -1,0 +1,198 @@
+{
+	"id": "f9d736be-3091-c2a6-6ba1-30ee33171698",
+	"name": "SWM",
+	"description": "",
+	"order": [
+		"0ee1f010-612a-13ee-42d9-7653fe286050",
+		"26c8317a-2e62-10ce-aff3-1d1cdb3e7de7",
+		"56b47e38-8a78-f967-445d-0cd1b3c0885f"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1508333316521,
+	"owner": "2928437",
+	"public": false,
+	"requests": [
+		{
+			"id": "0ee1f010-612a-13ee-42d9-7653fe286050",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8899/swm-services/vehiclefuellingdetailses/_create",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1508515285807,
+			"name": "VehicleFuellingDetailses Create",
+			"description": "",
+			"collectionId": "f9d736be-3091-c2a6-6ba1-30ee33171698",
+			"responses": [],
+			"rawModeData": "{\n  \"requestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"b1393ee7-b122-445a-a1fa-46d4e11b5b89\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vehicleFuellingDetails\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n            \"transactionNo\" : \"transactionNo 1\",\n            \"transactionDate\" : \"1508323548\",\n            \"vehicleType\" :{\n            \t\"id\":\"vehicle Type 1\"\n            },\n             \"vehicleRegNo\" :{\n            \t\"id\":\"vehicle Registration 1\"\n            },\n            \"refuellingStation\" :{\n            \t\"id\":\"RefuellingStation 1\"\n            },\n            \"vehicleReadingDuringFuelling\" : \"100\",\n            \"fuelFilled\" : \"fuelFilled\",\n            \"typeOfFuel\":\"typeOfFuel\",\n            \"totalCostIncurred\":100,\n            \"receiptNo\":\"receiptNo\",\n            \"receiptDate\":\"1508323548\"\n      },\n      {\n\t\t\t\"tenantId\":\"default\",\n            \"transactionNo\" : \"transactionNo 2\",\n            \"transactionDate\" : \"1508323548\",\n            \"vehicleType\" :{\n            \t\"id\":\"vehicle Type 2\"\n            },\n             \"vehicleRegNo\" :{\n            \t\"id\":\"vehicle Registration 2\"\n            },\n            \"refuellingStation\" :{\n            \t\"id\":\"RefuellingStation 2\"\n            },\n            \"vehicleReadingDuringFuelling\" : \"100\",\n            \"fuelFilled\" : \"fuelFilled 2\",\n            \"typeOfFuel\":\"typeOfFuel 2\",\n            \"totalCostIncurred\":100,\n            \"receiptNo\":\"receiptNo 2\" ,\n            \"receiptDate\":\"1508323548\"\n      }\n   ]\n } "
+		},
+		{
+			"id": "26c8317a-2e62-10ce-aff3-1d1cdb3e7de7",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8899/swm-services/vehiclefuellingdetailses/_update",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1508515289144,
+			"name": "Vehicle Fuelling Detailses Update",
+			"description": "",
+			"collectionId": "f9d736be-3091-c2a6-6ba1-30ee33171698",
+			"responses": [],
+			"rawModeData": "{\n  \"requestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"b1393ee7-b122-445a-a1fa-46d4e11b5b89\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vehicleFuellingDetails\":[\n      {\n      \t\t\"id\":\"b8f46f2a89a54a20931f580192323d4d\",\n\t\t\t\"tenantId\":\"default\",\n            \"transactionNo\" : \"transactionNo 1 U\",\n            \"transactionDate\" : \"1508323548\",\n            \"vehicleType\" :{\n            \t\"id\":\"vehicle Type 1 U\"\n            },\n             \"vehicleRegNo\" :{\n            \t\"id\":\"vehicle Registration 1 U\"\n            },\n            \"refuellingStation\" :{\n            \t\"id\":\"RefuellingStation 1 U\"\n            },\n            \"vehicleReadingDuringFuelling\" : \"100\",\n            \"fuelFilled\" : \"fuelFilled 1 U\",\n            \"typeOfFuel\":\"typeOfFuel 1 U\",\n            \"totalCostIncurred\":100,\n            \"receiptNo\":\"receiptNo 1 U\",\n            \"receiptDate\":\"1508323548\"\n      },\n      {\n      \t\t\"id\":\"5346f055f0614770b892cc86b3ada2eb\",\n\t\t\t\"tenantId\":\"default\",\n            \"transactionNo\" : \"transactionNo 2 U\",\n            \"transactionDate\" : \"1508323548\",\n            \"vehicleType\" :{\n            \t\"id\":\"vehicle Type 2 U\"\n            },\n             \"vehicleRegNo\" :{\n            \t\"id\":\"vehicle Registration 2 U\"\n            },\n            \"refuellingStation\" :{\n            \t\"id\":\"RefuellingStation 2 U\"\n            },\n            \"vehicleReadingDuringFuelling\" : \"100\",\n            \"fuelFilled\" : \"fuelFilled 2 U\",\n            \"typeOfFuel\":\"typeOfFuel 2 U\",\n            \"totalCostIncurred\":100,\n            \"receiptNo\":\"receiptNo 2 U\" ,\n            \"receiptDate\":\"1508323548\"\n      }\n   ]\n } "
+		},
+		{
+			"id": "56b47e38-8a78-f967-445d-0cd1b3c0885f",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8899/swm-services/vehiclefuellingdetailses/_search?tenantId=default&ids=b8f46f2a89a54a20931f580192323d4d&transactionNo=transactionNo 1&transactionDate=1508323548&vehicleType.id=vehicle Type 1 U&vehicleRegNo.id=vehicle Registration 1 U&vehicleReadingDuringFuelling=100&refuellingStation.id=RefuellingStation 1 U&fuelFilled=fuelFilled 1 U&typeOfFuel=typeOfFuel 1 U&totalCostIncurred=100&receiptNo=receiptNo 1 U&receiptDate=1508323548",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "ids",
+					"value": "b8f46f2a89a54a20931f580192323d4d",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "transactionNo",
+					"value": "transactionNo 1",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "transactionDate",
+					"value": "1508323548",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "vehicleType.id",
+					"value": "vehicle Type 1 U",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "vehicleRegNo.id",
+					"value": "vehicle Registration 1 U",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "vehicleReadingDuringFuelling",
+					"value": "100",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "refuellingStation.id",
+					"value": "RefuellingStation 1 U",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "fuelFilled",
+					"value": "fuelFilled 1 U",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "typeOfFuel",
+					"value": "typeOfFuel 1 U",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "totalCostIncurred",
+					"value": "100",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "receiptNo",
+					"value": "receiptNo 1 U",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "receiptDate",
+					"value": "1508323548",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1508515282423,
+			"name": "Vehicle Fuelling Detailses Search With All Filters",
+			"description": "",
+			"collectionId": "f9d736be-3091-c2a6-6ba1-30ee33171698",
+			"responses": [],
+			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"fcc41223-524a-4be0-802b-90bc09bce84f\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+		}
+	]
+}

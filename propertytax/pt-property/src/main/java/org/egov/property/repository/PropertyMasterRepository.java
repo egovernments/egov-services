@@ -13,6 +13,8 @@ import org.egov.enums.ApplicationEnum;
 import org.egov.models.Apartment;
 import org.egov.models.AppConfiguration;
 import org.egov.models.AuditDetails;
+import org.egov.models.DemolitionReason;
+import org.egov.models.DemolitionReasonSearchCriteria;
 import org.egov.models.Department;
 import org.egov.models.Depreciation;
 import org.egov.models.DocumentType;
@@ -24,6 +26,8 @@ import org.egov.models.PropertyType;
 import org.egov.models.RequestInfo;
 import org.egov.models.RoofType;
 import org.egov.models.StructureClass;
+import org.egov.models.TaxExemptionReason;
+import org.egov.models.TaxExemptionReasonSearchCriteria;
 import org.egov.models.UsageMaster;
 import org.egov.models.WallType;
 import org.egov.models.WoodType;
@@ -31,9 +35,11 @@ import org.egov.property.model.ExcludeFileds;
 import org.egov.property.repository.builder.ApartmentBuilder;
 import org.egov.property.repository.builder.AppConfigurationBuilder;
 import org.egov.property.repository.builder.AuditDetailsBuilder;
+import org.egov.property.repository.builder.DemolitionReasonQueryBuilder;
 import org.egov.property.repository.builder.DepartmentQueryBuilder;
 import org.egov.property.repository.builder.DepreciationBuilder;
 import org.egov.property.repository.builder.DocumentTypeBuilder;
+import org.egov.property.repository.builder.ExemptionReasonBuilder;
 import org.egov.property.repository.builder.FloorTypeBuilder;
 import org.egov.property.repository.builder.GuidanceValueBoundaryBuilder;
 import org.egov.property.repository.builder.MutationMasterBuilder;
@@ -1929,5 +1935,210 @@ public class PropertyMasterRepository {
 			isExists = Boolean.FALSE;
 
 		return isExists;
+	}
+
+	/**
+	 * This will persist the Demolition reason in the database
+	 * 
+	 * @param tenantId
+	 * @param demolitionReason
+	 * @return {@link Long} Id of the inserted row
+	 */
+	public Long saveDemolitionReason(String tenantId, DemolitionReason demolitionReason) {
+
+		final PreparedStatementCreator psc = new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+				final PreparedStatement ps = connection.prepareStatement(
+						DemolitionReasonQueryBuilder.INSERT_DEMOLITIONREASON_QUERY, new String[] { "id" });
+
+				ps.setString(1, demolitionReason.getTenantId());
+				ps.setString(2, demolitionReason.getName());
+				ps.setString(3, demolitionReason.getCode());
+				ps.setString(4, demolitionReason.getDescription());
+				ps.setString(5, demolitionReason.getAuditDetails().getCreatedBy());
+				ps.setString(6, demolitionReason.getAuditDetails().getLastModifiedBy());
+				ps.setLong(7, demolitionReason.getAuditDetails().getCreatedTime());
+				ps.setLong(8, demolitionReason.getAuditDetails().getLastModifiedTime());
+
+				return ps;
+			}
+		};
+
+		// The newly generated key will be saved in this object
+		final KeyHolder holder = new GeneratedKeyHolder();
+
+		jdbcTemplate.update(psc, holder);
+		return Long.valueOf(holder.getKey().intValue());
+	}
+
+	/**
+	 * This will update the Demolition object based on the given id
+	 * 
+	 * @param demolitionReason
+	 */
+	public void updateDemolitionReason(DemolitionReason demolitionReason) {
+
+		String updateDepartmentSql = DemolitionReasonQueryBuilder.UPDATE_DEMOLITIONREASON_QUERY;
+
+		final PreparedStatementCreator psc = new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+				final PreparedStatement ps = connection.prepareStatement(updateDepartmentSql, new String[] { "id" });
+
+				ps.setString(1, demolitionReason.getTenantId());
+				ps.setString(2, demolitionReason.getName());
+				ps.setString(3, demolitionReason.getCode());
+				ps.setString(4, demolitionReason.getDescription());
+				ps.setString(5, demolitionReason.getAuditDetails().getLastModifiedBy());
+				ps.setLong(6, demolitionReason.getAuditDetails().getLastModifiedTime());
+				ps.setLong(7, demolitionReason.getId());
+				return ps;
+			}
+		};
+
+		jdbcTemplate.update(psc);
+	}
+
+	/**
+	 * This will search the demolition based on the given parameters
+	 * 
+	 * @param demolitionReasonSearchCriteria
+	 * @return {@link DemolitionReason}
+	 */
+	public List<DemolitionReason> searchDemolitionReasonClass(
+			DemolitionReasonSearchCriteria demolitionReasonSearchCriteria) {
+
+		List<Object> preparedStatementValues = new ArrayList<>();
+		String demolitionReasonSearchQuery = DemolitionReasonQueryBuilder.getSearchQuery(demolitionReasonSearchCriteria,
+				preparedStatementValues);
+
+		List<DemolitionReason> demolitionReasons = getDemolitions(demolitionReasonSearchQuery, preparedStatementValues);
+
+		for (DemolitionReason demolitionReasonType : demolitionReasons) {
+			demolitionReasonType.setTenantId(demolitionReasonType.getTenantId());
+			demolitionReasonType.setCode(demolitionReasonType.getCode());
+			demolitionReasonType.setName(demolitionReasonType.getName());
+			demolitionReasonType.setAuditDetails(demolitionReasonType.getAuditDetails());
+		}
+
+		return demolitionReasons;
+
+	}
+
+	private List<DemolitionReason> getDemolitions(String query, List<Object> preparedStatementsValues) {
+
+		List<DemolitionReason> demolitionReasons = new ArrayList<DemolitionReason>();
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, preparedStatementsValues.toArray());
+
+		for (Map row : rows) {
+			DemolitionReason demolitionReason = new DemolitionReason();
+			demolitionReason.setId(getLong(row.get("id")));
+			demolitionReason.setTenantId(getString(row.get("tenantid")));
+			demolitionReason.setName(getString(row.get("name")));
+			demolitionReason.setCode(getString(row.get("code")));
+			demolitionReason.setDescription(getString(row.get("description")));
+
+			AuditDetails auditDetails = new AuditDetails();
+			auditDetails.setCreatedBy(getString(row.get("createdby")));
+			auditDetails.setCreatedTime(getLong(row.get("createdtime")));
+			auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));
+			auditDetails.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
+			demolitionReason.setAuditDetails(auditDetails);
+
+			demolitionReasons.add(demolitionReason);
+
+		}
+		return demolitionReasons;
+	}
+
+	public Long saveTaxExemptionReason(TaxExemptionReason exemptionReason, String data) {
+
+		final PreparedStatementCreator psc = new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+
+				final PreparedStatement ps = connection.prepareStatement(
+						ExemptionReasonBuilder.INSERT_TAXEXEMPTIONREASON_QUERY, new String[] { "id" });
+
+				PGobject jsonObject = new PGobject();
+				jsonObject.setType("jsonb");
+				jsonObject.setValue(data);
+				ps.setString(1, exemptionReason.getTenantId());
+				ps.setString(2, exemptionReason.getName());
+				ps.setString(3, exemptionReason.getCode());
+				ps.setString(4, exemptionReason.getDescription());
+				ps.setBoolean(5, exemptionReason.getActive());
+				ps.setDouble(6, exemptionReason.getPercentageRate());
+				ps.setObject(7, jsonObject);
+				ps.setString(8, exemptionReason.getAuditDetails().getCreatedBy());
+				ps.setString(9, exemptionReason.getAuditDetails().getLastModifiedBy());
+				ps.setLong(10, exemptionReason.getAuditDetails().getCreatedTime());
+				ps.setLong(11, exemptionReason.getAuditDetails().getLastModifiedTime());
+				return ps;
+			}
+		};
+		final KeyHolder holder = new GeneratedKeyHolder();
+		jdbcTemplate.update(psc, holder);
+		return Long.valueOf(holder.getKey().intValue());
+	}
+
+	public void updateTaxExemptionReason(TaxExemptionReason exemptionReason, String data) {
+
+		final PreparedStatementCreator psc = new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+				final PreparedStatement ps = connection
+						.prepareStatement(ExemptionReasonBuilder.UPDATE_TAXEXEMPTIONREASON_QUERY);
+
+				PGobject jsonObject = new PGobject();
+				jsonObject.setType("jsonb");
+				jsonObject.setValue(data);
+				ps.setString(1, exemptionReason.getTenantId());
+				ps.setString(2, exemptionReason.getName());
+				ps.setString(3, exemptionReason.getCode());
+				ps.setString(4, exemptionReason.getDescription());
+				ps.setBoolean(5, exemptionReason.getActive());
+				ps.setDouble(6, exemptionReason.getPercentageRate());
+				ps.setObject(7, jsonObject);
+				ps.setString(8, exemptionReason.getAuditDetails().getLastModifiedBy());
+				ps.setLong(9, exemptionReason.getAuditDetails().getLastModifiedTime());
+				ps.setLong(10, exemptionReason.getId());
+				return ps;
+			}
+		};
+
+		jdbcTemplate.update(psc);
+	}
+
+	public List<TaxExemptionReason> searchTaxExemptionReason(
+			TaxExemptionReasonSearchCriteria taxExemptionReasonSearchCriteria) {
+
+		List<Object> preparedStatementValues = new ArrayList<>();
+		String SearchTaxExemptionReasonQuery = SearchMasterBuilder.buildSearchQuery(
+				ConstantUtility.TAXEXEMPTIONREASON_MASTER_TABLE_NAME, taxExemptionReasonSearchCriteria.getTenantId(),
+				taxExemptionReasonSearchCriteria.getIds(), taxExemptionReasonSearchCriteria.getName(), null,
+				taxExemptionReasonSearchCriteria.getCode(), taxExemptionReasonSearchCriteria.getActive(), null, null,
+				null, taxExemptionReasonSearchCriteria.getPageSize(), taxExemptionReasonSearchCriteria.getOffSet(),
+				preparedStatementValues, null, null, null, null, null);
+
+		List<TaxExemptionReason> taxExemptionReasons = jdbcTemplate.query(SearchTaxExemptionReasonQuery,
+				preparedStatementValues.toArray(), new BeanPropertyRowMapper(TaxExemptionReason.class));
+		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+
+		for (TaxExemptionReason taxExemptionReason : taxExemptionReasons) {
+			TaxExemptionReason taxExemptionReasonData = gson.fromJson(taxExemptionReason.getData(),
+					TaxExemptionReason.class);
+			taxExemptionReason.setTenantId(taxExemptionReason.getTenantId());
+			taxExemptionReason.setName(taxExemptionReason.getName());
+			taxExemptionReason.setCode(taxExemptionReason.getCode());
+			taxExemptionReason.setDescription(taxExemptionReason.getDescription());
+			taxExemptionReason.setActive(taxExemptionReason.getActive());
+			taxExemptionReason.setPercentageRate(taxExemptionReason.getPercentageRate());
+			taxExemptionReason.setTaxHeads(taxExemptionReasonData.getTaxHeads());
+			taxExemptionReason.setAuditDetails(taxExemptionReasonData.getAuditDetails());
+		}
+
+		return taxExemptionReasons;
 	}
 }

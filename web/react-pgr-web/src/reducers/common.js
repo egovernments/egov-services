@@ -79,7 +79,7 @@ export default (state = defaultState, action) => {
     case 'MENU_TOGGLE':
       return {
         ...state,
-        showMenu: action.showMenu
+        showMenu: !state.showMenu
       }
     case 'SET_ACTION_LIST':
         return {

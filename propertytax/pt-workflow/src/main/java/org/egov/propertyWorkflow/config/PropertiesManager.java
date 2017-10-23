@@ -150,6 +150,62 @@ public class PropertiesManager {
 
 	private String propertySearch;
 
+	private String createValidatedDemolition;
+	
+	private String updateValidatedDemolition;
+	
+	private String approveDemolitionWorkflow;
+	
+	private String createDemolitionWorkflow;
+	
+	private String rejectDemolition;
+	
+	private String updateDemolitionWorkflow;
+
+	private String createValidatedTaxExemption;
+
+	private String updateValidatedTaxExemption;
+
+	private String taxExemptionCreateWorkflow;
+
+	private String taxExemptionUpdateWorkflow;
+
+	private String taxExemptionApproveWorkflow;
+
+	private String taxExemptionBusinesskey;
+
+	private String taxExemptionType;
+
+	private String taxExemptionState;
+
+	private String taxExemptionComment;
+
+	private String rejectTaxExemption;
+
+	private String approveTaxExemption;
+
+	private String createValidatedVacancyRemission;
+
+	private String updateValidatedVacancyRemission;
+
+	private String vacancyRemissionCreateWorkflow;
+
+	private String vacancyRemissionUpdateWorkflow;
+
+	private String vacancyRemissionApproveWorkflow;
+	
+	private String vacancyRemissionBusinesskey;
+
+	private String vacancyRemissionType;
+
+	private String vacancyRemissionState;
+
+	private String vacancyRemissionComment;
+	
+	private String rejectVacancyRemission;
+	
+	private String approveVacancyRemission;
+
 	public String getWorkflowHostName() {
 		return environment.getProperty("egov.services.egov-common-workflows.hostname");
 	}
@@ -406,5 +462,114 @@ public class PropertiesManager {
 	public String getPropertySearch() {
 		return environment.getProperty("egov.services.pt_property.search");
 	}
+	
+	public String getCreateValidatedDemolition() {
+		return environment.getProperty("egov.propertytax.create.demolition.validated");
+	}
 
+	public String getUpdateValidatedDemolition() {
+		return environment.getProperty("egov.propertytax.update.demolition.validated");
+	}
+
+	public String getApproveDemolitionWorkflow() {
+		return environment.getProperty("egov.propertytax.demolition.approved");
+	}
+
+	public String getCreateDemolitionWorkflow() {
+		return environment.getProperty("egov.propertytax.create.demolition.workflow.started");
+	}
+
+	public String getRejectDemolition() {
+		return environment.getProperty("egov.propertytax.demolition.rejected");
+	}
+
+	public String getUpdateDemolitionWorkflow() {
+		return environment.getProperty("egov.propertytax.demolition.update.workflow.started");
+	}
+
+	public String getCreateValidatedVacancyRemission() {
+		return environment.getProperty("egov.propertytax.property.vacancyremission.create.validated");
+	}
+
+	public String getUpdateValidatedVacancyRemission() {
+		return environment.getProperty("egov.propertytax.property.vacancyremission.update.validated");
+	}
+
+	public String getVacancyRemissionCreateWorkflow() {
+		return environment.getProperty("egov.propertytax.property.create.vacancyremission.workflow.started");
+	}
+
+	public String getVacancyRemissionUpdateWorkflow() {
+		return environment.getProperty("egov.propertytax.property.update.vacancyremission.workflow.started");
+	}
+
+	public String getCreateValidatedTaxExemption() {
+		return environment.getProperty("egov.propertytax.property.taxexemption.create.validated");
+	}
+
+	public String getUpdateValidatedTaxExemption() {
+		return environment.getProperty("egov.propertytax.property.taxexemption.update.validated");
+	}
+
+	public String getTaxExemptionCreateWorkflow() {
+		return environment.getProperty("egov.propertytax.property.create.taxexemption.workflow.started");
+	}
+
+	public String getTaxExemptionUpdateWorkflow() {
+		return environment.getProperty("egov.propertytax.property.update.taxexemption.workflow.started");
+	}
+
+	public String getTaxExemptionApproveWorkflow() {
+		return environment.getProperty("egov.propertytax.property.update.taxexemption.workflow.approved");
+	}
+
+	public String getRejectTaxExemption() {
+		return environment.getProperty("egov.propertytax.property.taxexemption.workflow.rejected");
+	}
+
+	public String getTaxExemptionBusinesskey() {
+		return environment.getProperty("taxexemption.businesskey");
+	}
+
+	public String getTaxExemptionType() {
+		return environment.getProperty("taxexemption.type");
+	}
+
+	public String getTaxExemptionState() {
+		return environment.getProperty("taxexemption.state");
+	}
+
+	public String getTaxExemptionComment() {
+		return environment.getProperty("taxexemption.comment");
+	}
+
+	public String getApproveTaxExemption() {
+		return environment.getProperty("taxexemption.approved");
+	}
+
+	public String getVacancyRemissionApproveWorkflow() {
+		return environment.getProperty("egov.propertytax.property.update.vacancyremission.workflow.approved");
+	}
+	
+	public String getVacancyRemissionBusinesskey() {
+		return environment.getProperty("vacancyremission.businesskey");
+	}
+
+	public String getVacancyRemissionType() {
+		return environment.getProperty("vacancyremission.type");
+	}
+
+	public String getVacancyRemissionState() {
+		return environment.getProperty("vacancyremission.state");
+	}
+
+	public String getVacancyRemissionComment() {
+		return environment.getProperty("vacancyremission.comment");
+	}	
+	public String getRejectVacancyRemission() {
+		return environment.getProperty("egov.propertytax.property.vacancyremission.workflow.rejected");
+	}
+	public String getApproveVacancyRemission() {
+		return environment.getProperty("vacancyremission.approved");
+	}
 }

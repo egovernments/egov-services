@@ -38,6 +38,10 @@ public class Demolition {
 	@Size(min = 6, max = 128)
 	private String upicNumber = null;
 	
+	@JsonProperty("applicationNo")
+	@Size(min=1,max =128)
+	private String applicationNo=null;
+	
 	@JsonProperty("propertySubType")
 	private String propertySubType =null;
 	
@@ -51,7 +55,7 @@ public class Demolition {
 	private Double totalArea =null;
 	
 	@JsonProperty("sequenceNo")
-	private Long sequenceNo =null;
+	private Integer sequenceNo =null;
 	
 	@JsonProperty("isLegal")
 	private Boolean isLegal =null;
@@ -73,6 +77,5 @@ public class Demolition {
 	
 	@JsonProperty("workFlowDetails")
 	private WorkFlowDetails workFlowDetails;
-	
 
 }

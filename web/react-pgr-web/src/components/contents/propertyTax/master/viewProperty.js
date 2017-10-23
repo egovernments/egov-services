@@ -937,6 +937,13 @@ class ViewProperty extends Component {
 									<div className="clearfix"></div>
 							  </CardText>
 							</Card>
+							{item.upicNumber ? 
+							<div style={{textAlign:'center', paddingTop:10}}> 
+								<RaisedButton type="button" primary={true} label={translate('pt.create.button.viewdcb')} style={{margin:'0 5px'}}  onClick={()=>{
+									this.props.history.push('/propertyTax/view-dcb/'+ item.upicNumber)
+								}}/>
+							</div> : null}
+
 							<div style={{textAlign:'center', paddingTop:10}}> 
 								
 									<RaisedButton type="button" primary={true} label={translate('pt.search.searchProperty')} style={{margin:'0 5px'}}  onClick={()=>{

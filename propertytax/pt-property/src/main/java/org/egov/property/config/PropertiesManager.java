@@ -418,12 +418,34 @@ public class PropertiesManager {
 	private String invalidTaxHead;
 
 	private String invalidTenent;
-	
+
 	private String userCreatepath;
-	
+
 	private String userUpdatepath;
-	
+
 	private String rejectAction;
+
+	private String createValidatedDemolition;
+
+	private String updateValidatedDemolition;
+
+	private String approveDemolitionWorkflow;
+
+	private String createDemolitionWorkflow;
+
+	private String rejectDemolition;
+
+	private String updateDemolitionWorkflow;
+
+	private String createValidatedTaxExemption;
+
+	private String updateValidatedTaxExemption;
+
+	private String taxExemptionCreateWorkflow;
+
+	private String taxExemptionUpdateWorkflow;
+
+	private String taxExemptionApproveWorkflow;
 
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
@@ -513,12 +535,12 @@ public class PropertiesManager {
 
 	public String getUserSearchpath() {
 		return environment.getProperty("egov.services.egov_user.searchpath");
-	} 
-	
+	}
+
 	public String getUserCreatepath() {
 		return environment.getProperty("egov.services.egov_user.createpath");
 	}
-	
+
 	public String getUserUpdatepath() {
 		return environment.getProperty("egov.services.egov_user.updatepath");
 	}
@@ -1196,7 +1218,7 @@ public class PropertiesManager {
 	public String getCancelAction() {
 		return environment.getProperty("cancel");
 	}
-	
+
 	public String getRejectAction() {
 		return environment.getProperty("reject");
 	}
@@ -1211,6 +1233,50 @@ public class PropertiesManager {
 
 	public String getInvalidTenent() {
 		return environment.getProperty("egov.property.tenant");
+	}
+
+	public String getCreateValidatedDemolition() {
+		return environment.getProperty("egov.propertytax.create.demolition.validated");
+	}
+
+	public String getUpdateValidatedDemolition() {
+		return environment.getProperty("egov.propertytax.update.demolition.validated");
+	}
+
+	public String getApproveDemolition() {
+		return environment.getProperty("egov.propertytax.demolition.approved");
+	}
+
+	public String getCreateDemolitionWorkflow() {
+		return environment.getProperty("egov.propertytax.create.demolition.workflow.started");
+	}
+
+	public String getRejectDemolition() {
+		return environment.getProperty("egov.propertytax.demolition.rejected");
+	}
+
+	public String getUpdateDemolitionWorkflow() {
+		return environment.getProperty("egov.propertytax.demolition.update.workflow.started");
+	}
+
+	public String getCreateValidatedTaxExemption() {
+		return environment.getProperty("egov.propertytax.property.taxexemption.create.validated");
+	}
+
+	public String getUpdateValidatedTaxExemption() {
+		return environment.getProperty("egov.propertytax.property.taxexemption.update.validated");
+	}
+
+	public String getTaxExemptionCreateWorkflow() {
+		return environment.getProperty("egov.propertytax.property.create.taxexemption.workflow.started");
+	}
+
+	public String getTaxExemptionUpdateWorkflow() {
+		return environment.getProperty("egov.propertytax.property.update.taxexemption.workflow.started");
+	}
+
+	public String getTaxExemptionApproveWorkflow() {
+		return environment.getProperty("egov.propertytax.property.update.taxexemption.workflow.approved");
 	}
 
 }

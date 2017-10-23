@@ -8,6 +8,9 @@ import org.egov.models.ApartmentSearchCriteria;
 import org.egov.models.AppConfigurationRequest;
 import org.egov.models.AppConfigurationResponse;
 import org.egov.models.AppConfigurationSearchCriteria;
+import org.egov.models.DemolitionReasonRequest;
+import org.egov.models.DemolitionReasonResponse;
+import org.egov.models.DemolitionReasonSearchCriteria;
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
 import org.egov.models.DepartmentSearchCriteria;
@@ -39,6 +42,9 @@ import org.egov.models.RoofTypeSearchCriteria;
 import org.egov.models.StructureClassRequest;
 import org.egov.models.StructureClassResponse;
 import org.egov.models.StructureClassSearchCriteria;
+import org.egov.models.TaxExemptionReasonRequest;
+import org.egov.models.TaxExemptionReasonResponse;
+import org.egov.models.TaxExemptionReasonSearchCriteria;
 import org.egov.models.UsageMasterRequest;
 import org.egov.models.UsageMasterResponse;
 import org.egov.models.UsageMasterSearchCriteria;
@@ -800,4 +806,88 @@ public class PropertyMasterController {
 		}
 		return masterService.getAppConfiguration(requestInfo.getRequestInfo(), appConfigurationSearchCriteria);
 	}
+
+	/**
+	 * This will create the demolition
+	 * 
+	 * @param tenantId
+	 * @param demolitionReasonRequest
+	 * @return {@link DemolitionReasonResponse}
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/demolitionreason/_create", method = RequestMethod.POST)
+	public DemolitionReasonResponse createDemolitionReason(@RequestParam(required = true) String tenantId,
+			@Valid @RequestBody DemolitionReasonRequest demolitionReasonRequest) throws Exception {
+		return masterService.createDemolitionReason(tenantId, demolitionReasonRequest);
+	}
+
+	/**
+	 * 
+	 * @param demolitiontReasonRequest
+	 * @return
+	 */
+	@RequestMapping(path = "/demolitionreason/_update", method = RequestMethod.POST)
+	public DemolitionReasonResponse updateDemolitionReason(
+			@Valid @RequestBody DemolitionReasonRequest demolitiontReasonRequest) throws Exception{
+
+		return masterService.updateDemolitionReason(demolitiontReasonRequest);
+
+	}
+
+	@RequestMapping(path = "/demolitionreason/_search", method = RequestMethod.POST)
+	public DemolitionReasonResponse getDemolitionReason(@RequestBody RequestInfoWrapper requestInfo,
+			@ModelAttribute @Valid DemolitionReasonSearchCriteria demolitionReasonSearchCriteria,
+			BindingResult bindingResult) throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
+		}
+		return masterService.getDemolitionReason(requestInfo.getRequestInfo(), demolitionReasonSearchCriteria);
+	}
+	/**
+	 * Description: This api create ExemptionReasonMaster
+	 * 
+	 * @param tenantId
+	 * @param TaxExemptionReasonRequest
+	 * @return {@link TaxExemptionReasonResponse}
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/taxexemptionreason/_create", method = RequestMethod.POST)
+	public TaxExemptionReasonResponse createExemptionReason(
+			@Valid @RequestBody TaxExemptionReasonRequest taxExemptionReasonRequest) throws Exception {
+		return masterService.createTaxExemptionReason(taxExemptionReasonRequest);
+	}
+
+	/**
+	 * Description: This api update ExemptionReasonMaster
+	 * 
+	 * @param TaxExemptionReasonRequest
+	 * @return ExemptionReasonResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/taxexemptionreason/_update", method = RequestMethod.POST)
+	public TaxExemptionReasonResponse updateExemptionReason(
+			@Valid @RequestBody TaxExemptionReasonRequest taxExemptionReasonRequest) throws Exception {
+		return masterService.updateTaxExemptionReason(taxExemptionReasonRequest);
+	}
+
+	/**
+	 * Description: This api fetch ExemptionReasons based search criteria
+	 * parameter
+	 * 
+	 * @param requestInfo
+	 * @param TaxExemptionReasonSearchCriteria
+	 * @return ExemptionReasonResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/taxexemptionreason/_search", method = RequestMethod.POST)
+	public TaxExemptionReasonResponse getExemptionReason(@RequestBody RequestInfoWrapper requestInfo,
+			@ModelAttribute @Valid TaxExemptionReasonSearchCriteria taxExemptionReasonSearchCriteria,
+			BindingResult bindingResult) throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
+		}
+
+		return masterService.getTaxExemptionReason(requestInfo.getRequestInfo(), taxExemptionReasonSearchCriteria);
+	}
+
 }

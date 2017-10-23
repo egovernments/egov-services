@@ -2,7 +2,11 @@ package org.egov;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +42,8 @@ public class MDMSApplicationRunnerImpl {
 	public void run() {
 		try {
 			log.info("Reading yaml files from: "+mdmsFileDirectory);
-			readDirectory(mdmsFileDirectory);
+			//readDirectory(mdmsFileDirectory);
+			readUrl(mdmsFileDirectory);
 			log.info("tenantMap:" + tenantMap);
 		} catch (Exception e) {
 			log.error("Exception while loading yaml files: ", e);
@@ -101,6 +106,26 @@ public class MDMSApplicationRunnerImpl {
 
 	}
 
+	public void readUrl(String path) {
+		ObjectMapper yamlReader = new ObjectMapper(new YAMLFactory());
+		ObjectMapper jsonReader = new ObjectMapper();
+		List<String> ymlUrlS = Arrays.asList(path.split(","));
+		for(String yamlLocation : ymlUrlS){
+			try {
+				URL yamlFile = new URL(yamlLocation);
+				Map<String, Object> map = jsonReader.readValue(new InputStreamReader(yamlFile.openStream()), Map.class);
+				System.out.println(map);
+				filterMaster(map);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+
+	}
+	
 	private void filterMaster(Map<String, Object> map) {
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {

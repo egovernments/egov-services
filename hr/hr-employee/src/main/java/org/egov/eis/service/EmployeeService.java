@@ -41,7 +41,6 @@
 package org.egov.eis.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.ArrayUtils;
@@ -63,16 +62,13 @@ import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.Error;
 import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.egov.eis.web.errorhandler.ErrorResponse;
-import org.egov.eis.web.errorhandler.UserErrorResponse;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpClientErrorException;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -236,6 +232,28 @@ public class EmployeeService {
         }
 
         empCriteria.setId(idSearchCriteria);
+        return empInfoList;
+    }
+
+    public List<EmployeeInfo> getEmployeeUserInfo(BaseRegisterReportRequest baseRegisterReportRequest, RequestInfo requestInfo) throws CloneNotSupportedException {
+        List<User> usersList = null;
+        List<Long> ids = null;
+        EmployeeCriteria empCriteria = new EmployeeCriteria();
+        empCriteria.setTenantId(baseRegisterReportRequest.getTenantId());
+
+        List<EmployeeInfo> empInfoList = employeeRepository.findForReportRequest(baseRegisterReportRequest);
+
+        if (isEmpty(empInfoList)) {
+            return Collections.EMPTY_LIST;
+        }
+
+        ids = empInfoList.stream().map(employeeInfo -> employeeInfo.getId()).collect(Collectors.toList());
+        log.debug("Employee ids are :: " + ids);
+        empCriteria.setId(ids);
+        usersList = userService.getUsers(empCriteria, requestInfo);
+        log.debug("usersList returned by UsersService is :: " + usersList);
+        empInfoList = employeeUserMapper.mapUsersWithEmployeesForReport(empInfoList, usersList);
+
         return empInfoList;
     }
 

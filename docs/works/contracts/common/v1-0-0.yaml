@@ -145,7 +145,7 @@ definitions:
       - WOMEN_CHILDREN_WELFARE
       - GENERAL
       
-  OfflineStatusesForDetailedEstimate:
+  DetailedEstimateOfflineStatus:
     type: string
     enum:
       - NOTICEINVITINGTENDERRELEASED
@@ -155,14 +155,14 @@ definitions:
       - COMMERCIAL_EVALUATION_DONE
       - L1_TENDER_FINALIZED
   
-  OfflineStatusesForLOA:
+  LOAOfflineStatuses:
     type: string
     enum:
       - ACCEPTANCE_LETTER_ISSUED
       - ACCEPTANCE_LETTER_ACKNOWLEDGED
       - AGREEMENT_ORDER_SIGNED
 
-  OfflineStatusesForWorkOrder:
+  WorkOrderOfflineStatus:
     type: string
     enum:
       - WORK_ORDER_ACKNOWLEDGED

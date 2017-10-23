@@ -126,7 +126,7 @@ app.post('/yaml/create', function(req, res) {
     }
 })
 
-const port = process.env.PORT || '8081';
+const port = process.env.PORT || '3000';
 app.listen(port, function() {
-    console.log('Parser listening on port 8081!')
+    console.log('Parser listening on port: ' + port);
 })

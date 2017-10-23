@@ -42,12 +42,6 @@ public class ApplicationProperties {
 
     @Value("${kafka.topics.update.asset}")
     private String updateAssetTopicName;
-
-    @Value("${kafka.topics.save.assetcategory}")
-    private String createAssetCategoryTopicName;
-
-    @Value("${kafka.topics.update.assetcategory}")
-    private String updateAssetCategoryTopicName;
     
     @Value("${kafka.topics.save.revaluation}")
     private String revaluationSaveTopic;

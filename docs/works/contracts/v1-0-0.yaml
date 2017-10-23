@@ -19,7 +19,7 @@ info:
   
   title: eGov Works Management System.
   description: |
-    APIs for Works Management module. This modules handles creation of Abstract Estimate, Detailed Estimate, Letter of Acceptance, Work Order, Notice Generation, Measurement Book, Milestone/Track Milestone, Contractor Bill etc,.
+    APIs for Works Management module. This module handles creation of Abstract Estimate, Detailed Estimate, Letter of Acceptance, Work Order, Notice Generation, Measurement Book, Milestone/Track Milestone, Contractor Bill etc,.
   contact:
     name: eGovernments Foundation
     email : contacts@egovernments.org
@@ -1682,7 +1682,7 @@ definitions:
       subScheme:
         type: string
         description: Sub scheme of the Abstract Estimate
-      dateOfPropsal:
+      dateOfProposal:
         type: integer
         format: int64
         description: Epoch time of the Date of Proposal
@@ -1803,7 +1803,7 @@ definitions:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - tenantId
-      - dateOfPropsal
+      - dateOfProposal
       - referenceNumber
       - department
       - subject
@@ -1901,7 +1901,7 @@ definitions:
     properties:
       id:
         type: string
-        description: Unique Identifier of the EstimateAppropriation
+        description: Unique Identifier of the Estimate Appropriation
       tenantId:
         type: string
         description: Tenant id for which this object belongs to
@@ -2033,7 +2033,7 @@ definitions:
       - GENERAL
       
   DetailedEstimateRequest:
-      description: Contract class to send response. Array of DetailedEstimate items are used in case of search results, also multiple  DetailedEstimate item is used for create and update
+      description: Contract class to send response. Array of Detailed Estimate items are used in case of search results, also multiple  Detailed Estimate item is used for create and update
       properties:
         responseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
@@ -2046,7 +2046,7 @@ definitions:
             $ref: '#/definitions/DetailedEstimate'
 
   DetailedEstimateResponse:
-      description: Contract class to send response. Array of DetailedEstimate items are used in case of search results, also multiple  DetailedEstimate item is used for create and update
+      description: Contract class to send response. Array of Detailed Estimate items are used in case of search results, also multiple  Detailed Estimate item is used for create and update
       properties:
         responseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
@@ -2059,7 +2059,7 @@ definitions:
             
   DetailedEstimate:
     type: object
-    description: An Object holds the basic data for a DetailedEstimate
+    description: An Object holds the basic data for a Detailed Estimate
     properties:
       id:
         type: string
@@ -2099,7 +2099,7 @@ definitions:
       adminSanctionDate:
         type: integer
         format: int64
-        description:  Epoch time of when the admin santion done
+        description:  Epoch time of when the admin santion is done
       adminSanctionBy:
         type: string
         description: user who admin sanctioned
@@ -2223,6 +2223,24 @@ definitions:
       stateId:
         type: string
         description: State id of the workflow
+      fund:
+        type: string
+        description: Fund of the Detailed Estimate
+      function:
+        type: string
+        description: Function of the Detailed Estimate
+      functionary:
+        type: string
+        description: Functionary of the Detailed Estimate
+      scheme:
+        type: string
+        description: Scheme of the Detailed Estimate
+      subScheme:
+        type: string
+        description: Sub Scheme of the Detailed Estimate
+      budgetGroup:
+        type: string
+        description: Budget Group of the Detailed Estimate
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -2243,10 +2261,10 @@ definitions:
       properties:
         id:
           type: string
-          description: Unique Identifier of the OverheadValue
+          description: Unique Identifier of the Overhead Value
         tenantId:
           type: string
-          description: Tenant id of the OverheadValue
+          description: Tenant id of the Overhead Value
           maxLength: 128
           minLength: 4
         overhead:
@@ -2272,10 +2290,10 @@ definitions:
       properties:
         id:
           type: string
-          description: Unique Identifier of the AssetsForEstimate
+          description: Unique Identifier of the Assets For Estimate
         tenantId:
           type: string
-          description: Tenant id of the AssetsForEstimate
+          description: Tenant id of the Assets For Estimate
           maxLength: 128
           minLength: 4
         assetCode:
@@ -2395,7 +2413,7 @@ definitions:
         depthOrHeight:
           type: integer
           format: BigDecimal
-          description: depthOrHeight of the Measurement sheet
+          description: depth Or Height of the Measurement sheet
           pattern: "[0-9.]"
           maxLength: 10
         quantity:
@@ -2435,7 +2453,7 @@ definitions:
         percentage:
           type: integer
           format: double
-          description: Percentage for the MultiYearEstimate
+          description: Percentage for the Multi Year Estimate
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -2444,57 +2462,16 @@ definitions:
         - detailedEstimate
         - percentage
       
-  FinancialDetail:
-      type: object
-      description: An Object holds the basic data for a Financial Detail
-      properties:
-        id:
-          type: string
-          description: Unique Identifier of the Financial Detail
-        tenantId:
-          type: string
-          description: Tenant id of the Financial Detail
-          maxLength: 128
-          minLength: 4
-        fund:
-          type: string
-          description: Fund of the Detailed Estimate
-        function:
-          type: string
-          description: Function of the Detailed Estimate
-        functionary:
-          type: string
-          description: Functionary of the Detailed Estimate
-        scheme:
-          type: string
-          description: Scheme of the Detailed Estimate
-        subScheme:
-          type: string
-          description: Sub Scheme of the Detailed Estimate
-        budgetGroup:
-          type: string
-          description: Budget Group of the Detailed Estimate
-        chartOfAccounts:
-          type: string
-          description: Chart Of Accounts of the Detailed Estimate
-        detailedEstimate:
-          $ref: '#/definitions/DetailedEstimate'
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      required:
-        - tenantId
-        - detailedEstimate
-      
   EstimateTechnicalSanction:
       type: object
       description: An Object holds the basic data for a Estimate Technical Sanction
       properties:
         id:
           type: string
-          description: Unique Identifier of the Detailed Estimate
+          description: Unique Identifier of the Estimate Technical Sanction
         tenantId:
           type: string
-          description: Tenant id of the Detailed Estimate
+          description: Tenant id of the Estimate Technical Sanction
           maxLength: 128
           minLength: 4
         technicalSanctionNumber:
@@ -2822,7 +2799,7 @@ definitions:
           description: Unique Identifier of the Assets for LOA
         tenantId:
           type: string
-          description: Tenant id of the Assets for LOAD
+          description: Tenant id of the Assets for LOA
           maxLength: 128
           minLength: 4
         assetCode:

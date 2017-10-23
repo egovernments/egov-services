@@ -48,7 +48,7 @@ let searchTemplate = function (module, numCols, path, config, definition, uiInfo
 		}
 	}
 
-	if(uiInfoDef.SearchResult && uiInfoDef.SearchResult.length) {
+	if(uiInfoDef.SearchResult && Object.keys(uiInfoDef.SearchResult).length) {
 		specifications.result.resultPath = uiInfoDef.SearchResult.resultObjectName;
 		specifications.result.rowClickUrlView = uiInfoDef.SearchResult.rowClickUrlView;
 		specifications.result.rowClickUrlUpdate = uiInfoDef.SearchResult.rowClickUrlUpdate;

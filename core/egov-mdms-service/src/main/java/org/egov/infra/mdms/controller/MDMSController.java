@@ -22,22 +22,24 @@ import net.minidev.json.JSONArray;
 
 @RestController
 @Slf4j
+@RequestMapping(value = "/v1")
 public class MDMSController {
 
 	@Autowired
 	private MDMSService mdmsService;
-	
-    @PostMapping("_search")
-    @ResponseBody
-    private ResponseEntity<?> search(@RequestBody @Valid MdmsCriteriaReq mdmsCriteriaReq){
-    	log.info("MDMSController mdmsCriteriaReq:"+mdmsCriteriaReq);
-    	/*if(bindingResult.hasErrors()) {
-    		throw new CustomBindingResultExceprion(bindingResult);
-    	}*/
-    	Map<String, List<Map<String, JSONArray>>> response = mdmsService.getMaster(mdmsCriteriaReq);
-    	MdmsResponse mdmsResponse = new MdmsResponse();
-    	mdmsResponse.setMdmsRes(response);
-		return new ResponseEntity<>(mdmsResponse ,HttpStatus.OK);
 
-    }
+	@PostMapping("_search")
+	@ResponseBody
+	private ResponseEntity<?> search(@RequestBody @Valid MdmsCriteriaReq mdmsCriteriaReq) {
+		log.info("MDMSController mdmsCriteriaReq:" + mdmsCriteriaReq);
+		/*
+		 * if(bindingResult.hasErrors()) { throw new
+		 * CustomBindingResultExceprion(bindingResult); }
+		 */
+		Map<String, List<Map<String, JSONArray>>> response = mdmsService.getMaster(mdmsCriteriaReq);
+		MdmsResponse mdmsResponse = new MdmsResponse();
+		mdmsResponse.setMdmsRes(response);
+		return new ResponseEntity<>(mdmsResponse, HttpStatus.OK);
+
+	}
 }

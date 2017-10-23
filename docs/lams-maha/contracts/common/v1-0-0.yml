@@ -257,7 +257,7 @@ definitions:
       - roadType
       - isActive
   
-  PlanningType:
+  PlaningType:
     type: object
     description: An object which holds the  planning Type Master info
     properties:

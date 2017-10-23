@@ -848,7 +848,24 @@ definitions:
         maxLength: 1024
         minLength: 1
     required:
+      - tenantId
+      - landNumber
+      - acquisitionNo
       - acquisitionType
+      - registerName
+      - regionalOffice
+      - location
+      - surveyNo
+      - oldOwnerName
+      - purpose
+      - width
+      - landType
+      - landArea
+      - areaAsPerRegister
+      - possessionDate
+      - modeOfAcquisition
+      - typeOfHolding
+      - costOfAcquisition
         
   LandRegisterRequest:
     description: Contract class to receive request. Array of LandRegister items are used in case of create. Where as single LandRegister item is used for update
@@ -1151,6 +1168,10 @@ definitions:
         type: integer
         format: int64
         description: unique id of the agreement.
+      tenantId:
+        type: string
+        description: Unique Identifier of which tenant this data is defined. For example, AP, AP.Kurnool etc.
+        maxLength: 128
       action:
         type: string
         description: enumeration of action on agreement.
@@ -1209,23 +1230,15 @@ definitions:
       bugdetHead:
         type: string
         description: Bugdet Head for agreement.
-        maxLength: 64
+        maxLength: 16
       currentElectricityBillAmount:
         type: number
         format: double
         description: Current Electricity Bill Amount.
-      tenderDate:
-        type: string
-        format: date
-        description: Tender or Auction date.
-      councilNumber:
-        type: string
-        description: Council or committee resolution number.
-        maxLength: 64
-      councilDate:
-        type: string
-        format: date
-        description: Council or committee resolution date.
+      rentIncrement:
+        type: number
+        format: double
+        description: rent increment amount.
       currentPenalty:
         type: number
         format: double
@@ -1285,8 +1298,7 @@ definitions:
       demands:
         type: array
         items:
-          type: integer
-          format: int64
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/billingservice/contracts/v1-0-0.yml#/definitions/Demand'
       stateId:
         type: string
         description: Work flow ref id.
@@ -1296,23 +1308,18 @@ definitions:
         $ref: '#/definitions/Renewal'
       cancellation:
         $ref: '#/definitions/Cancellation'
-      tenantId:
-        type: string
-        description: Unique Identifier of which tenant this data is defined. For example, AP, AP-Kurnool etc.
-      isAdvancePaid:
-       description: parameter to indicate whether advance amount is collected or not, updated in DCB back update on collection.
-       type: boolean
-       default: false
     required:
       - id
+      - tenantId
       - agreementNumber
-      - agreementDate
+      - landEstateNo
+      - agreementFromDate
+      - agreementToDate
       - allottee
       - status
-      - natureOfAllotment
       - rent
+      - rentIncrement
       - paymentCycle
-      - commencementDate
       
   Document:
     type: object

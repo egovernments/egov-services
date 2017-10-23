@@ -1,0 +1,59 @@
+package org.egov.config;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.annotation.Order;
+import org.springframework.core.env.Environment;
+
+import lombok.Getter;
+
+@Configuration
+@PropertySource(value = { "classpath:config/application-config.properties" }, ignoreResourceNotFound = true)
+@Order(0)
+@Getter
+public class ApplicationProperties {
+
+    private final String searchPageSizeDefault = "default.page.size";
+    private final String searchPagenoMax = "search.pageno.max";
+    private final String searchPageSizeMax = "search.pagesize.max";
+
+    public String getSearchPageSizeDefault() {
+        return environment.getProperty(searchPageSizeDefault);
+    }
+
+    public String getSearchPagenoMax() {
+        return environment.getProperty(searchPagenoMax);
+    }
+
+    public String getSearchPageSizeMax() {
+        return environment.getProperty(searchPageSizeMax);
+    }
+    
+    public String getBootstrapServer() {
+        return environment.getProperty("spring.kafka.bootstrap.servers");
+    }
+
+    @Value("${kafka.topics.save.asset}")
+    private String createAssetTopicName;
+
+    @Value("${kafka.topics.update.asset}")
+    private String updateAssetTopicName;
+
+    @Value("${kafka.topics.save.assetcategory}")
+    private String createAssetCategoryTopicName;
+
+    @Value("${kafka.topics.update.assetcategory}")
+    private String updateAssetCategoryTopicName;
+    
+    @Value("${kafka.topics.save.revaluation}")
+    private String revaluationSaveTopic;
+    
+    @Value("${kafka.topics.save.disposal}")
+    private String disposalSaveTopicName;
+    
+    @Autowired
+    private Environment environment;
+
+}

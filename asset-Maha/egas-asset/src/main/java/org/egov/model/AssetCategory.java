@@ -43,15 +43,15 @@ public class AssetCategory {
 
 	private Boolean isAssetAllow;
 
-	private Long assetAccount;
+	private String assetAccount;
 
-	private Long accumulatedDepreciationAccount;
+	private String accumulatedDepreciationAccount;
 
-	private Long revaluationReserveAccount;
+	private String revaluationReserveAccount;
 
-	private Long depreciationExpenseAccount;
+	private String depreciationExpenseAccount;
 
-	private Long unitOfMeasurement;
+	private String unitOfMeasurement;
 
 	private String version;
 	

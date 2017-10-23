@@ -25,8 +25,8 @@ public class AssetCategoryRowMapper implements RowMapper<AssetCategory>{
 	public AssetCategory mapRow(ResultSet rs, int rowNum) throws SQLException {
 		
 		AssetCategory assetCategory=new AssetCategory();
-		assetCategory.setAccumulatedDepreciationAccount((Long)rs.getObject("accumulateddepreciationaccount"));
-		assetCategory.setAssetAccount((Long)rs.getObject("assetaccount"));
+		assetCategory.setAccumulatedDepreciationAccount(rs.getString("accumulateddepreciationaccount"));
+		assetCategory.setAssetAccount(rs.getString("assetaccount"));
 		assetCategory.setAssetCategoryType(AssetCategoryType.fromValue(rs.getString("assetcategorytype")));
 		assetCategory.setCode(rs.getString("code"));
 		String json=rs.getString("customfields");
@@ -47,7 +47,7 @@ public class AssetCategoryRowMapper implements RowMapper<AssetCategory>{
 		if(obj!=null) 
 		assetCategory.setAssetFieldsDefination(obj.getAssetFieldsDefination());
 		
-		assetCategory.setDepreciationExpenseAccount((Long)rs.getObject("depreciationexpenseaccount"));
+		assetCategory.setDepreciationExpenseAccount(rs.getString("depreciationexpenseaccount"));
 		assetCategory.setDepreciationMethod(DepreciationMethod.fromValue(rs.getString("depreciationmethod")));
 	
 		assetCategory.setDepreciationRate(rs.getDouble("depreciationrate"));
@@ -55,8 +55,8 @@ public class AssetCategoryRowMapper implements RowMapper<AssetCategory>{
 		assetCategory.setTenantId(rs.getString("tenantid"));
 		assetCategory.setName(rs.getString("name"));
 		assetCategory.setParent((Long)rs.getObject("parentid"));
-		assetCategory.setRevaluationReserveAccount((Long)rs.getObject("revaluationreserveaccount"));
-		assetCategory.setUnitOfMeasurement((Long)rs.getObject("unitofmeasurement"));
+		assetCategory.setRevaluationReserveAccount(rs.getString("revaluationreserveaccount"));
+		assetCategory.setUnitOfMeasurement(rs.getString("unitofmeasurement"));
 		assetCategory.setIsAssetAllow(rs.getBoolean("isassetallow"));
 		assetCategory.setVersion(rs.getString("version"));
 		assetCategory.setIsDepreciationApplicable(rs.getBoolean("isdepreciationapplicable"));

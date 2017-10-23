@@ -60,19 +60,19 @@ public class Revaluation   {
   private String voucherReference;
 
   @JsonProperty("fixedAssetsWrittenOffAccount")
-  private Long fixedAssetsWrittenOffAccount;
+  private String fixedAssetsWrittenOffAccount;
 
   @JsonProperty("function")
-  private Long function;
+  private String function;
 
   @JsonProperty("fund")
-  private Long fund;
+  private String fund;
 
   @JsonProperty("scheme")
-  private Long scheme;
+  private String scheme;
 
   @JsonProperty("subScheme")
-  private Long subScheme;
+  private String subScheme;
 
   @JsonProperty("comments")
   private String comments;

@@ -66,7 +66,7 @@ public class Disposal   {
   private String profitLossVoucherReference;
 
   @JsonProperty("assetSaleAccount")
-  private Long assetSaleAccount;
+  private String assetSaleAccount;
 
   @JsonProperty("status")
   private String status;

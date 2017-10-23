@@ -32,7 +32,7 @@ public class DisposalRowMapper implements RowMapper<Disposal> {
         disposal.setAssetCurrentValue(rs.getBigDecimal("assetcurrentvalue"));
         disposal.setSaleValue(rs.getBigDecimal("salevalue"));
         disposal.setTransactionType(TransactionType.fromValue(rs.getString("transactiontype")));
-        disposal.setAssetSaleAccount((Long) rs.getObject("id"));
+        disposal.setAssetSaleAccount(rs.getString("assetsaleaccount"));
 
         final AuditDetails auditDetails = new AuditDetails();
         auditDetails.setCreatedBy(rs.getString("createdby"));

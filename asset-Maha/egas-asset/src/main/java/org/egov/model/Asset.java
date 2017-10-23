@@ -60,16 +60,16 @@ public class Asset   {
 	  private BigDecimal originalValue = null;
 
 	  @JsonProperty("assetAccount")
-	  private Long assetAccount = null;
+	  private String assetAccount = null;
 
 	  @JsonProperty("accumulatedDepreciationAccount")
-	  private Long accumulatedDepreciationAccount = null;
+	  private String accumulatedDepreciationAccount = null;
 
 	  @JsonProperty("revaluationReserveAccount")
-	  private Long revaluationReserveAccount = null;
+	  private String revaluationReserveAccount = null;
 
 	  @JsonProperty("depreciationExpenseAccount")
-	  private Long depreciationExpenseAccount = null;
+	  private String depreciationExpenseAccount = null;
 
 	  @JsonProperty("titleDocumentsAvalable")
 	  private List<String> titleDocumentsAvalable = null;
@@ -132,7 +132,7 @@ public class Asset   {
 	  private String oldCode = null;
 
 	  @JsonProperty("department")
-	  private Department department = null;
+	  private String departmentCode = null;
 
 	  @JsonProperty("assetCategory")
 	  private AssetCategory assetCategory = null;

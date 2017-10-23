@@ -87,7 +87,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
 
                 final Department department = new Department();
                 department.setId((Long) rs.getObject("department"));
-                asset.setDepartment(department);
+                asset.setDepartmentCode(rs.getString("departmentCode"));
 
                 final Location location = new Location();
                 location.setBlock((Long) rs.getObject("block"));

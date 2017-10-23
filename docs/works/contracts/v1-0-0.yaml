@@ -3158,8 +3158,8 @@ definitions:
         maxLength: 10
       letterOfAcceptanceEstimate:
         $ref: '#/definitions/LetterOfAcceptanceEstimate'
-      billregister:
-        $ref: '#/definitions/BillRegister'
+      # billregister:
+      #   $ref: '#/definitions/BillRegister'
       status:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/ProjectStatus'
       measurementBookDetails:
@@ -3427,7 +3427,7 @@ definitions:
     type: object
     description: Object holds the basic data for a Contractor Bill
     allOf:
-    - $ref: '#/definitions/BillRegister'
+    - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-bill/v1-0-0.yml#/definitions/BillRegister'
     properties:
       id:
         type: string
@@ -3475,8 +3475,7 @@ definitions:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - tenantId
-      - letterOfAcceptanceEstimate
-    
+      
   AssetForBill:
     type: object
     description: Asset information for the Contractor Bill
@@ -3515,235 +3514,6 @@ definitions:
       - assetCode
       - contractorBill
 
-  BillRegister:
-    type: object
-    description: |
-        
-    allOf:
-      - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-    properties:
-      id:
-        type: string
-        maxLength: 50
-        description: |
-          Unique Identifier of the BillRegister
-      tenantId:
-        type: string
-        description: Tenant id of the Bill
-        maxLength: 128
-        minLength: 4
-      billType:
-        type: string
-        maxLength: 50
-        description: |
-          billType is the type of the bill
-          example is ExpenseBill,ContractorBill,PurchaseBill,SalaryBill etc
-      billSubType:
-        type: string
-        maxLength: 50
-        description: |
-          billSubType refers with each type of bill what is the subtype .
-          
-          for example ContractorBill will have subType as "FinalBill"
-      billNumber:
-        type: string
-        pattern: '[a-zA-Z0-9-\\]'
-        maxLength: 50
-        description: |
-          billNumber refers to the unique number generated for the bill.
-      billDate:
-        type: string
-        format: date
-        description: |
-          billDate is the date when the bill is created.
-      billAmount:
-        type: number
-        format: BigDecimal
-        description: |
-          billAmount is the total bill Amount .
-          even though the bill is created for billAmount of x
-          it may be passed for amount x-k
-      passedAmount:
-        type: number
-        format: BigDecimal
-        description: |
-          passedAmount refers to the amount passed by ulb .
-          even though the bill is created for billAmount of x
-          it may be passed for amount x-k
-      moduleName:
-        type: string
-        maxLength: 50
-        description: |
-          moduleName is the name of the module who is posting the bill in financials
-      status:
-        type: string
-        description: |
-          status refers to the status of the bill like ,created,approved etc
-      fund:
-        type: string
-        description: |
-          fund refers to the fundsounce master
-      function:
-        type: string
-        description: |
-          function refers to the function master
-      fundsource:
-        type: string
-        description: |
-          fundsource of the BillRegister
-      scheme:
-        type: string
-        description: |
-          scheme of the BillRegister
-      subScheme:
-        type: string
-        description: |
-          sub scheme of the BillRegister
-      functionary:
-        type: string
-        description: |
-          functionary of the BillRegister
-      division:
-        type: string
-        description: |
-          division of the BillRegister
-      department:
-        type: string
-        description: |
-          department of the BillRegister
-      sourcePath:
-        type: string
-        maxLength: 256
-        description: |
-          source path of the BillRegister
-      budgetCheckRequired:
-        type: boolean
-        description: |
-          budgetCheckRequired is a boolean field is the budget check is required or not default is true
-      budgetAppropriationNo:
-        type: string
-        maxLength: 50
-        description: |
-          budgetAppropriationNo is the number generated after budget check. This field will be null
-          if the budget check not done.
-      partyBillNumber:
-        type: string
-        pattern: '[a-zA-Z0-9-\\]'
-        maxLength: 50
-        description: |
-          partyBillNumber is the manual bill number .
-      partyBillDate:
-        type: string
-        format: date
-        description: |
-          partyBillDate is the manual bill date .
-      description:
-        type: string
-        maxLength: 1024
-        description: |
-          Description is the more detailed information about the bill
-      billDetails:
-        type:  array
-        description:  |
-          Bill details of the BillRegister
-        items:
-          $ref: "#/definitions/BillDetail"
-    required:
-      - tenantId
-      - billNumber
-      - billType
-      - billDate
-      - billAmount
-      - billDetails
-      
-  BillDetail:
-    type: object
-    description: |
-        
-    allOf:
-      - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-    properties:
-      id:
-        type: string
-        description: |
-          Unique Identifier of the BillDetail
-      tenantId:
-        type: string
-        description: Tenant id of the Bill Detail
-        maxLength: 128
-        minLength: 4
-      orderId:
-        type: integer
-        format: int32
-        description: |
-          order id of the BillDetail
-      chartOfAccount:
-        type: string
-        description: |
-          chart of account of the BillDetail
-      glcode:
-        type: string
-        maxLength: 16
-        description: |
-          glcode of the BillDetail
-      debitAmount:
-        type: number
-        format: BigDecimal
-        description: |
-          debit amount of the BillDetail
-      creditAmount:
-        type: number
-        format: BigDecimal
-        description: |
-          credit amount of the BillDetail
-      function:
-        type: string
-        description: |
-          function of the BillDetail
-      billPayeeDetails:
-        type:  array
-        description:  |
-          bill payee details of the BillDetail
-        items:
-          $ref: "#/definitions/BillPayeeDetail"
-    required:
-    - chartOfAccount
-    - glcode
-    
-  BillPayeeDetail:
-    type: object
-    description: |
-        
-    allOf:
-      - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-    properties:
-      id:
-        type: string
-        description: |
-          Unique Identifier of the BillPayeeDetail
-      tenantId:
-        type: string
-        description: Tenant id of the Bill Payee Details
-        maxLength: 128
-        minLength: 4
-      accountDetailType:
-        type: string
-        description: |
-          account detail type of the BillPayeeDetail
-      accountDetailKey:
-        type: string
-        description: |
-          account detail key of the BillPayeeDetail
-      amount:
-        type: number
-        format: BigDecimal
-        description: |
-          amount of the BillPayeeDetail
-    required:
-      - accountDetailKey
-      - amount
-      - accountDetailType
-      
   Milestone: 
     type: object
     description: An Object holds the basic data for a Milestone

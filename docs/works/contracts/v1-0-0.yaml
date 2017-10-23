@@ -872,7 +872,7 @@ paths:
           
           In case multiple parameters are passed Notice(s) will be searched as an AND combination of all the parameters.
           
-          Maximum result size is restricted based on the maxlength of Notice as defined in WorkOrderResponse model.
+          Maximum result size is restricted based on the maxlength of Notice as defined in NoticeResponse model.
           
           Search results will be sorted by the sortProperty Provided in the parameters
       parameters:
@@ -1467,6 +1467,134 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
        - Track Milestone
+       
+  /qualitytestings/_create:
+    post:
+      summary: Create new Quality Testing(s).
+      description: |
+          To create new Quality Testing in the system. API supports bulk creation with max limit as defined in the Quality Testing Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Quality Testing, please pass array with one Quality Testing object.
+          
+          Quality Testing can only created for approved workorder.
+          
+      parameters:
+        - name: QualityTestingRequest
+          in: body
+          description: Details of new Quality Testing(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/QualityTestingRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Quality Testing(s) created successfully
+          schema:
+            $ref: '#/definitions/QualityTestingResponse'
+        400:
+          description: Quality Testing(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Quality Testing  
+        
+  /qualitytestings/_update:
+    post:
+      summary: Update existing Quality Testing(s).
+      description: |
+          To update existing Quality Testing in the system. API supports bulk updation with max limit as defined in the Quality Testing Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Quality Testing, please pass array with one Quality Testing object.
+          
+      parameters:
+        - name: QualityTestingRequest
+          in: body
+          description: Details of Quality Testing(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/QualityTestingRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Quality Testing(s) updated successfully
+          schema:
+            $ref: '#/definitions/QualityTestingResponse'
+        400:
+          description: Quality Testing(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Quality Testing
+        
+  /qualitytestings/_search:
+    post:
+      summary: Get the list of Quality Testing(s) defined in the system.
+      description: |
+          Search and get Quality Testing(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Quality Testing(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of Quality Testing as defined in QualityTestingResponse model.
+          
+          Search results will be sorted by the sortProperty Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortProperty"
+        - name: workOrderNumbers
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          allowEmptyValue: true
+          required: false
+          description: Comma separated list of Work Order Numbers
+        - name: ids
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: Comma separated list of Ids of Quality Testing(s)
+        - name: loaNumbers
+          in: query
+          description: Comma separated list of LOA Numbers
+          required: false
+          type: array
+          items:
+            type: string
+          allowEmptyValue: true
+        - name: detailedEstimateNumbers
+          in: query
+          required: false
+          description: Comma separated list of Detailed Estimate Numbers
+          type: array
+          items:
+            type: string
+        - name: workIdentificationNumbers
+          in: query
+          required: false
+          description: Comma separated list of Work Identification Numbers
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: Quality Testing(s) Retrieved Successfully
+          schema:
+            $ref: "#/definitions/QualityTestingResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Quality Testing
        
 definitions:
 ########################################################
@@ -3858,6 +3986,113 @@ definitions:
       - name
       - code
     
+  QualityTesting:
+    type: object
+    description: An Object holds the basic data for a QualityTesting
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the QualityTesting
+      tenantId:
+        type: string
+        description: Tenant id of the QualityTesting
+        maxLength: 128
+        minLength: 4
+      letterOfAcceptanceEstimate:
+        $ref: '#/definitions/LetterOfAcceptanceEstimate'
+      qualityTestingDetails:
+        type: array
+        description: Array of Quality Testing Detail
+        minItems: 1
+        items:
+          $ref: '#/definitions/QualityTestingDetail'
+      remarks:
+        type: string
+        description: Remarks for the Quality Testing
+      testReports:
+        type: array
+        description: Array of test reports in PDF format
+        items:
+          $ref: '#/definitions/DocumentDetail'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+    
+  QualityTestingDetail:
+    type: object
+    description: An Object holds the basic data for a Quality Testing
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Quality Testing Detail
+      tenantId:
+        type: string
+        description: Tenant id of the Quality Testing Detail
+        maxLength: 128
+        minLength: 4
+      qualityTesting:
+        $ref: '#/definitions/QualityTesting'
+      materialName:
+        type: string
+        description: Material name for the Quality Testing
+      testName:
+        type: string
+        description: Test name for the Quality Testing
+      resultUnit:
+        type: string
+        description: Result unit for the Quality Testing
+      minimumValue:
+        type: number
+        format: BigDecimal
+        description: Minimum Value for the Quality Testing
+      maximumValue:
+        type: number
+        format: BigDecimal
+        description: Maximum value for the Quality Testing
+      hodRemarks:
+        type: string
+        description: HOD remarksname for the Quality Testing
+      coRemarks:
+        type: string
+        description: CO remarks for the Quality Testing
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - qualityTesting
+      - coRemarks
+      - hodRemarks
+      - maximumValue
+      - minimumValue
+      - resultUnit
+      - testName
+      - materialName
+          
+  QualityTestingRequest:
+      description: Contract class to send response. Array of Quality Testing items are used in case of search results, also multiple  Quality Testing item is used for create and update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        qualityTestings:
+          description: Used for create and update only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: '#/definitions/QualityTesting'
+            
+  QualityTestingResponse:
+    description: Contract class to send response. Array of Quality Testing items are used in case of search results, also multiple  Quality Testing item is used for create and update
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      qualityTestings:
+        description: Used for search result and create only
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/QualityTesting'
 
 parameters:
 ##########################################################
@@ -3915,3 +4150,5 @@ tags:
     description: APIs required for Milestone.
   - name: Track Milestone
     description: APIs required for Track Milestone.
+  - name: Quality Testing
+    description: APIs required for Quality Testing.

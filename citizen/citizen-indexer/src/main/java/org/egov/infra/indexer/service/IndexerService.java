@@ -49,7 +49,7 @@ public class IndexerService {
 			logger.info("Mapping to be used: "+mapping);
 			try{
 				for(Index index: mapping.getIndexes()){
-					indexCurrentValue(index, kafkaJson,
+					indexProccessor(index, kafkaJson,
 							(index.getIsBulk() == null || index.getIsBulk() == false) ? false : true);
 				}
 			}catch(Exception e){
@@ -60,56 +60,26 @@ public class IndexerService {
 		}
 	}
 	
-	public void indexCurrentValue(Index index, String kafkaJson, boolean isBulk) {
+	public void indexProccessor(Index index, String kafkaJson, boolean isBulk) {
 		StringBuilder url = new StringBuilder();
 		url.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/")
 		   .append("_bulk");	
-        
         logger.info("Index Metadata: "+index);
         logger.info("kafkaJson: "+kafkaJson);
-		
 	    if (index.getJsonPath() != null) {
 				logger.info("Indexing IndexNode JSON to elasticsearch " + kafkaJson);
-				String finalJson = buildIndexJsonWithJsonpath(index, kafkaJson, isBulk);
-				if(null == finalJson){
-					logger.info("Indexing will not be done, please modify the data and retry.");
-					logger.info("Advice: Looks like isBulk = true in the config yaml but the record sent on the queue is a json object and not an array of objects. In that case, change either of them.");
-				}else{
-					if(finalJson.startsWith("{ \"index\""))
-						bulkIndexer.indexJsonOntoES(url.toString(), finalJson);
-					else{
-						indexWithESId(index, finalJson);
-					}			
-				}
+				validateAndIndex(buildIndexJsonWithJsonpath(index, kafkaJson, isBulk), 
+						url.toString(), index);
 		} else if(!(null == index.getCustomJsonMapping())){
 			    logger.info("Building custom json using the mapping: "+index.getCustomJsonMapping());
 			    StringBuilder urlForMap = new StringBuilder();
 			    urlForMap.append(esHostUrl).append(index.getName()).append("/").append("_mapping").append("/").append(index.getType());	
-				String finalJson = buildCustomJsonForBulk(index, kafkaJson, urlForMap.toString(), isBulk);
-				if(null == finalJson){
-					logger.info("Indexing will not be done, please modify the data and retry.");
-					logger.info("Advice: Looks like isBulk = true in the config yaml but the record sent on the queue is a json object and not an array of objects. In that case, change either of them.");
-				}else{
-					if(finalJson.startsWith("{ \"index\""))
-						bulkIndexer.indexJsonOntoES(url.toString(), finalJson);
-					else{
-						indexWithESId(index, finalJson);
-					}		
-				}		
+				validateAndIndex(buildCustomJsonForBulk(index, kafkaJson, urlForMap.toString(), isBulk), 
+						url.toString(), index);		
 		}else {
 				logger.info("Indexing entire request JSON to elasticsearch" + kafkaJson);
-				String finalJson = buildIndexJsonWithoutJsonpath(index, kafkaJson, isBulk);
-				if(null == finalJson){
-					logger.info("Indexing will not be done, please modify the data and retry.");
-				    logger.info("Advice: Looks like isBulk = true in the config yaml but the record sent on the queue is a json object and not an array of objects. In that case, change either of them.");
-
-				}else{
-					if(finalJson.startsWith("{ \"index\""))
-						bulkIndexer.indexJsonOntoES(url.toString(), finalJson);
-					else{
-						indexWithESId(index, finalJson);
-					}
-				}
+				validateAndIndex(buildIndexJsonWithoutJsonpath(index, kafkaJson, isBulk), 
+						url.toString(), index);
 		}
 	}
 	
@@ -288,13 +258,6 @@ public class IndexerService {
 		return customJson.toString(); //jsonString has to be converted to string
 	}
 	
-	public void indexWithESId(Index index, String finalJson){
-		logger.info("Non bulk indexing...");
-		StringBuilder urlForNonBulk = new StringBuilder();
-		urlForNonBulk.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/").append("_index");
-		bulkIndexer.indexJsonOntoES(urlForNonBulk.toString(), finalJson);
-	}
-	
 	public String pullArrayOutOfString(String jsonString){
 		String[] array = jsonString.split(":");
 		StringBuilder jsonArray = new StringBuilder(); 
@@ -413,5 +376,29 @@ public class IndexerService {
         }
     	
     	return kafkaJsonArray;
+	}
+	
+	public void validateAndIndex(String finalJson, String url, Index index){
+		if(null == finalJson){
+			logger.info("Indexing will not be done, please modify the data and retry.");
+		    logger.info("Advice: Looks like isBulk = true in the config yaml but the record sent on the queue is a json object and not an array of objects. In that case, change either of them.");
+		}else{
+			doIndexing(finalJson, url.toString(), index);
+		}
+	}
+	
+	public void doIndexing(String finalJson, String url, Index index){
+		if(finalJson.startsWith("{ \"index\""))
+			bulkIndexer.indexJsonOntoES(url.toString(), finalJson);
+		else{
+			indexWithESId(index, finalJson);
+		}
+	}
+	
+	public void indexWithESId(Index index, String finalJson){
+		logger.info("Non bulk indexing...");
+		StringBuilder urlForNonBulk = new StringBuilder();
+		urlForNonBulk.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/").append("_index");
+		bulkIndexer.indexJsonOntoES(urlForNonBulk.toString(), finalJson);
 	}
 }

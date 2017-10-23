@@ -6,7 +6,7 @@ const getQuery = utilities.getQuery;
 
 let localeFields = {};
 let errors = {};
-let searchTemplate = function (module, numCols, path, config, definition) {
+let searchTemplate = function (module, numCols, path, config, definition, uiInfoDef) {
 	localeFields[module + ".search.title"] = getTitleCase("search");
 	let specifications = {
 		numCols: numCols,
@@ -48,7 +48,26 @@ let searchTemplate = function (module, numCols, path, config, definition) {
 		}
 	}
 
+	if(uiInfoDef.SearchResult && uiInfoDef.SearchResult.length) {
+		specifications.result.resultPath = uiInfoDef.SearchResult.resultObjectName;
+		specifications.result.rowClickUrlView = uiInfoDef.SearchResult.rowClickUrlView;
+		specifications.result.rowClickUrlUpdate = uiInfoDef.SearchResult.rowClickUrlUpdate;
+		for (var i=0; i< uiInfoDef.SearchResult.columns.length; i++) {
+			specifications.result.values.push(uiInfoDef.SearchResult.values[i]);
+			specifications.result.header.push({
+				label: module + ".search.result." + getTitleCase(uiInfoDef.SearchResult.columns[i])
+			});
+		}
+	} else {
+		errors["search-results"] = "SearchResult not present in x-ui-info. REFERENCE PATH: " + uiInfoDef.referencePath
+	}
+
 	setLabels(localeFields, "./output/" + module);
+
+	if(Object.keys(errors).length) {
+		return {specifications: specifications, errors: errors};	
+	}
+
 	return {specifications: specifications};
 }
 

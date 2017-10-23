@@ -1642,7 +1642,7 @@ definitions:
       RequestInfo:
         $ref: >-
           https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
-      Assets:
+      Asset:
         $ref: '#/definitions/Asset'
     type: object
     description: Hold the Asset Request information.

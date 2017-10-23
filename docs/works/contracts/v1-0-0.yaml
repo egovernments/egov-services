@@ -2328,7 +2328,8 @@ definitions:
         nonSor:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/NonSOR'
         uom:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/UOM'
+          type: string
+          description: UOM for the Estimate Activity
         unitRate:
           type: integer
           format: double

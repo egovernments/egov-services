@@ -232,7 +232,8 @@ definitions:
       scheduleCategory:
         $ref: '#/definitions/ScheduleCategory'
       uom:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/UOM'
+        type: string
+        description: UOM for the SOR
       sorRates:
         type: array
         description: Array of Rate Details, Either of the rate details or marketRateDetails is mandatory for creating Schedule of rate.
@@ -698,7 +699,8 @@ definitions:
       scheduleOfRate:
         $ref: '#/definitions/ScheduleOfRate'
       uom:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/UOM'
+        type: string
+        description: UOM for the Estimate Template
       nonSOR:
         $ref: '#/definitions/NonSOR'
       unitRate:
@@ -731,7 +733,8 @@ definitions:
         maxLength: 1024
         minLength: 1
       uom:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/UOM'
+        type: string
+        description: UOM for the NonSOR
     required:
       - tenantId
       - description

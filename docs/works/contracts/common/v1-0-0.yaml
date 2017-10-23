@@ -25,6 +25,15 @@ definitions:
       - BEFORE
       - DURING
       - AFTER
+
+  Mode:
+    type: string
+    enum:
+      - CASH
+      - CHEQUE
+      - DD
+      - Fixed Deposit Receipt
+      - Bank Guarantee
       
   WorkCategory:
     type: string

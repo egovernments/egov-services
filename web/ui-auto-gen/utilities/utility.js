@@ -53,11 +53,12 @@ function getTitleCase(field) {
 
 
 function getQuery(url, key, val) {
+    var query = "";
     if(url.indexOf("?") == -1) {
-        url = url + "?";
+        query = "?";
     }
 
-    return (url + "|" + key + "|" + val);
+    return (query + "|" + key + "|" + val);
 }
 
 exports.getTitleCase = getTitleCase;

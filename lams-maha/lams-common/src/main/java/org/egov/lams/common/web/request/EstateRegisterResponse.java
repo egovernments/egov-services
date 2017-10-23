@@ -3,10 +3,8 @@ package org.egov.lams.common.web.request;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.Valid;
-
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.lams.common.web.contract.EstateRegister;
-import org.egov.lams.common.web.contract.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -15,18 +13,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Created by ramki on 23/10/17.
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EstateRegisterRequest {
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo = null;
+public class EstateRegisterResponse {
 
-    @JsonProperty("landRegisters")
-    @Valid
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
+	
+	@JsonProperty("landRegisters")
     private List<EstateRegister> landRegisters = new ArrayList<EstateRegister>();
 }

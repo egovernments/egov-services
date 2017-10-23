@@ -4,7 +4,7 @@ var dat = {
 		"url": "",
 		"tenantIdRequired": true,
 		"idJsonPath": "",
-		"objectName": "",
+		"objectName": "AssetCategory",
 		"groups": [
 			{
 				"label": "ac.create.title",
@@ -12,18 +12,18 @@ var dat = {
 				"fields": [
 						{
 							"name": "SubCategoryName",
-							"jsonPath": "asset[0].name",
-							"label": "ac.create.asset.sub.categroy",
-							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
+							"jsonPath": "AssetCategory[0].name",
+							"label": "ac.create.asset.category.name",
+							"pattern": "^.[a-zA-Z. ]{2,99}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Enter Valid Name"
 						},
             {
   						"name": "AssetCategoryType",
-  						"jsonPath": "",
+  						"jsonPath": "AssetCategory[0].assetCategoryType",
   						"label": "ac.create.asset.asset.category.type",
   						"pattern": "",
   						"type": "singleValueList",
@@ -35,8 +35,8 @@ var dat = {
   					},
             {
   						"name": "AssetCategoryName",
-  						"jsonPath": "",
-  						"label": "ac.create.asset.category.name",
+  						"jsonPath": "AssetCategory[0].parent",
+  						"label": "ac.create.asset.sub.categroy",
   						"pattern": "",
   						"type": "singleValueList",
   						"url": "",
@@ -47,19 +47,19 @@ var dat = {
   					},
             {
   						"name": "DepericiationMethod",
-  						"jsonPath": "",
+  						"jsonPath": "AssetCategory[0].depreciationMethod",
   						"label": "ac.create.depericiation.method",
   						"pattern": "",
   						"type": "singleValueList",
   						"url": "",
-  						"isRequired": true,
+  						"isRequired": false,
   						"isDisabled": false,
   						"requiredErrMsg": "",
   						"patternErrMsg": ""
   					},
             {
   						"name": "UnitOfMeasurement",
-  						"jsonPath": "",
+  						"jsonPath": "AssetCategory[0].unitOfMeasurement",
   						"label": "ac.create.unit.of.measurement",
   						"pattern": "",
   						"type": "singleValueList",
@@ -71,7 +71,7 @@ var dat = {
   					},
             {
   						"name": "DepericiationRate",
-  						"jsonPath": "",
+  						"jsonPath": "AssetCategory[0].depreciationRate",
   						"label": "ac.create.depericiation.rate",
   						"pattern": "",
   						"type": "number",
@@ -83,12 +83,12 @@ var dat = {
   					},
 						{
 							"name": "IsDepreciationApplicable",
-							"jsonPath": "",
+							"jsonPath": "AssetCategory[0].isDepreciationApplicable",
 							"label": "ac.create.depreciation.applicable",
+							"url": "",
 							"pattern": "",
-							"type": "checkbox",
+							"type": "singleValueList",
 							"isRequired": false,
-							"defaultValue":true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -96,14 +96,15 @@ var dat = {
 				]
 			},
       {
-				"label": "ac.create.additional.field",
+				//"label": "ac.create.additional.field",
+				"label": "",
 				"name": "AdditionalField",
         "multiple":true,
         "jsonPath":"",
 				"fields": [
 						{
 							"name": "additionalName",
-							"jsonPath": "",
+							"jsonPath": "AssetCategory[0].assetFieldsDefination[0].name",
 							"label": "ac.create.additional.field.name",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -114,43 +115,43 @@ var dat = {
 						},
             {
   						"name": "additionalDataType",
-  						"jsonPath": "",
+  						"jsonPath": "AssetCategory[0].assetFieldsDefination[0].type",
   						"label": "ac.create.additional.field.data.type",
   						"pattern": "",
   						"type": "singleValueList",
   						"url": "",
-  						"isRequired": false,
+  						"isRequired": true,
   						"isDisabled": false,
   						"requiredErrMsg": "",
   						"patternErrMsg": ""
   					},
             {
   						"name": "Active",
-  						"jsonPath": "",
+  						"jsonPath": "AssetCategory[0].assetFieldsDefination[0].isActive",
   						"label": "wc.create.active",
   						"pattern": "",
   						"type": "checkbox",
   						"isRequired": false,
   						"isDisabled": false,
-  						"defaultValue":true,
+  						"defaultValue":false,
   						"requiredErrMsg": "",
   						"patternErrMsg": ""
   					},
             {
   						"name": "Mandatory",
-  						"jsonPath": "",
+  						"jsonPath": "AssetCategory[0].assetFieldsDefination[0].isMandatory",
   						"label": "wc.create.mandatory",
   						"pattern": "",
   						"type": "checkbox",
   						"isRequired": false,
   						"isDisabled": false,
-  						"defaultValue":true,
+  						"defaultValue":false,
   						"requiredErrMsg": "",
   						"patternErrMsg": ""
   					},
             {
 							"name": "additionalOrder",
-							"jsonPath": "",
+							"jsonPath": "AssetCategory[0].assetFieldsDefination[0].order",
 							"label": "ac.create.additional.field.order",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -161,7 +162,7 @@ var dat = {
 						},
             {
 							"name": "additionalValue",
-							"jsonPath": "",
+							"jsonPath": "AssetCategory[0].assetFieldsDefination[0].values",
 							"label": "ac.create.additional.field.value",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -176,21 +177,21 @@ var dat = {
 	},
 	"asset.search": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/categorytype/_search",
+		"url": "/asset-services/assetCategories/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "CategoryType",
+		"objectName": "AssetCategory",
 		"groups": [
 			{
-				"label": "wc.search.categorytype.title",
+				"label": "ac.search.assetCategory.title",
 				"name": "createCategoryType",
 				"fields": [
 					{
 						"name": "AssetCategoryName",
-						"jsonPath": "",
+						"jsonPath": "name",
 						"label": "ac.create.asset.category.name",
 						"pattern": "",
-						"type": "singleValueList",
+						"type": "text",
 						"url": "",
 						"isRequired": false,
 						"isDisabled": false,
@@ -199,7 +200,7 @@ var dat = {
 					},
 					{
 						"name": "AssetCategoryType",
-						"jsonPath": "",
+						"jsonPath": "assetCategoryType",
 						"label": "ac.create.asset.asset.category.type",
 						"pattern": "",
 						"type": "singleValueList",
@@ -214,10 +215,10 @@ var dat = {
 		],
 		"result": {
 			"header": [{label: "code"},{label: "ac.create.asset.category.name"}, {label: "ac.create.asset.asset.category.type"}, {label: "Parent Category"}, {label: "ac.create.unit.of.measurement"}],
-			"values": ["code","name", "description", "active", "UOM"],
-			"resultPath": "CategoryTypes",
-			"rowClickUrlUpdate": "/update/wc/categoryType/{id}",
-			"rowClickUrlView": "/view/wc/categoryType/{id}"
+			"values": ["code","name", "assetCategoryType", "parent", "unitOfMeasurement"],
+			"resultPath": "AssetCategory",
+			// "rowClickUrlUpdate": "/update/wc/categoryType/{id}",
+			// "rowClickUrlView": "/view/wc/categoryType/{id}"
 			}
 	}
 }

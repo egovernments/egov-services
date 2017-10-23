@@ -3,7 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "",
     "tenantIdRequired": true,
-    "objectName": "",
+    "objectName": "Revaluations",
     "useTimestamp": true,
     "groups": [{
         "label": "ac.transaction.RA.title",
@@ -11,7 +11,7 @@ var dat = {
         "fields": [
             {
               "name": "AssetCategoryType",
-              "jsonPath": "",
+              "jsonPath": "Revaluations[0].",
               "label": "ac.create.asset.asset.category.type",
               "pattern": "",
               "type": "singleValueList",
@@ -23,7 +23,7 @@ var dat = {
             },
             {
               "name": "AssetCategoryType",
-              "jsonPath": "",
+              "jsonPath": "Revaluations[0].",
               "label": "ac.create.Asset.SubCategory",
               "pattern": "",
               "type": "singleValueList",
@@ -35,7 +35,7 @@ var dat = {
             },
             {
               "name": "AssetCode",
-              "jsonPath": "",
+              "jsonPath": "Revaluations[0].",
               "label": "ac.create.Asset.Code",
               "pattern": "",
               "type": "text",
@@ -47,7 +47,7 @@ var dat = {
             },
             {
               "name": "AssetName",
-              "jsonPath": "",
+              "jsonPath": "Revaluations[0].",
               "label": "ac.create.Asset.Name",
               "pattern": "",
               "type": "text",
@@ -62,7 +62,7 @@ var dat = {
       "result": {
         "header": [{
             "name": "SelectButon",
-            "jsonPath": "",
+            "jsonPath": "Revaluations[0].",
             "label": "ac.create.Select",
             "pattern": "",
             "type": "checkbox",
@@ -75,7 +75,7 @@ var dat = {
           },
 					{
             "name": "AssetCode",
-            "jsonPath": "",
+            "jsonPath": "Revaluations[0].",
             "label": "ac.create.Asset.Code",
             "pattern": "",
             "type": "text",
@@ -88,7 +88,7 @@ var dat = {
           },
           {
             "name": "NameAsset",
-            "jsonPath": "",
+            "jsonPath": "Revaluations[0].",
             "label": "ac.create.Name.of.Asset",
             "pattern": "",
             "type": "label",
@@ -101,7 +101,7 @@ var dat = {
           },
           {
             "name": "DateofPurchase/Construction/Acquisition",
-            "jsonPath": "",
+            "jsonPath": "Revaluations[0].",
             "label": "ac.transaction.create.datePurchaseConstruction",
             "pattern": "",
             "type": "label",
@@ -114,7 +114,7 @@ var dat = {
           },
           {
             "name": "WdvValue",
-            "jsonPath": "",
+            "jsonPath": "Revaluations[0].",
             "label": "ac.create.WDV.Value",
             "pattern": "",
             "type": "label",
@@ -140,8 +140,9 @@ var dat = {
 	      "fields": [
 	        {
 	          "name": "ValuationDate",
-	          "jsonPath": "",
-	          "label": "ac.create.Revaluation.date",
+	          "jsonPath": "Revaluations[0].revaluationDate",
+	          //"label": "ac.create.Revaluation.date",
+						"label": "Revaluation date",
 	          "pattern": "",
 	          "type": "date",
 	          "isRequired": true,
@@ -151,7 +152,7 @@ var dat = {
 	        },
 	        {
 	          "name": "OrderNo",
-	          "jsonPath": "",
+	          "jsonPath": "Revaluations[0].orderNumber",
 	          "label": "Order No",
 	          "pattern": "",
 	          "type": "text",
@@ -162,8 +163,9 @@ var dat = {
 	        },
 	        {
 	          "name": "OrderDate",
-	          "jsonPath": "",
-	          "label": "ac.transaction.create.order.date",
+	          "jsonPath": "Revaluations[0].orderDate",
+	          //"label": "ac.transaction.create.order.date",
+						"label": "Order Date",
 	          "pattern": "",
 	          "type": "date",
 	          "isRequired": true,
@@ -173,7 +175,7 @@ var dat = {
 	        },
 	        {
 	          "name": "ValuationAmount",
-	          "jsonPath": "",
+	          "jsonPath": "Revaluations[0].valueAfterRevaluation",
 	          "label": "Valuation Amount",
 	          "pattern": "",
 	          "type": "text",
@@ -184,8 +186,9 @@ var dat = {
 	        },
 					{
 	          "name": "Addition/deductedAmount",
-	          "jsonPath": "",
-	          "label": "ac.transaction.create.AdditionDeductedAmount",
+	          "jsonPath": "Revaluations[0].revaluationAmount",
+	          //"label": "ac.transaction.create.AdditionDeductedAmount",
+						"label": "Addition/ deducted amount",
 	          "pattern": "",
 	          "type": "text",
 	          "isRequired": false,

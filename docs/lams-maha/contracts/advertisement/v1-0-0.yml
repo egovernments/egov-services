@@ -1,0 +1,720 @@
+swagger: '2.0'
+# eGSP YAML Template Version: 1.0 
+
+info:
+  version: 1.0.0
+  ######################################################
+  # All API's are POST. _create,_search,_update for post,get and put. RequestInfo will be part of body. For multiple records we can pass multiple value with comman seperated values*.
+  # All _search will be synchronous and all _create and _update will be asynchronous*.
+  # RequestInfo and ResponseInfo object should be reffered from Common*.
+  # In _search API, tenantId should be passed in query param. In _create/_update, tenantId should be passed in the model.
+  # Readonly means that even if these fields are passed in the request, it will be ignored in create/update and will not be added/updated in the entities. The readonly fields might be passed to the _search API's to make use of fields for the search Query API. while calling _search API's even mandatory fields might not be available, it is mandatory only in the _create API's*.
+  # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message.
+  # Definition must start with Upper case followed by camel case.
+  # Every model will have tenantId. Validate tenantId on create.
+  # Parameter name must start with small case followed by camel case.
+  # Path must be in small case.
+  ######################################################
+  
+  title: eGov Advertisement Management 
+  description: |
+    APIs for Advertisement management module. This modules handles Advertisement/Hoarding license application (create,update,search,generate license,Letter of intimation), agreement, renewal of agreement, cancellation of agreement, ramdom inspection, show cause notice generation, suspension of license and demand generation of hoarding within the ulb jurisdiction.
+  contact:
+    name: eGovernments Foundation
+    email : contacts@egovernments.org
+schemes:
+  - https
+basePath: '/lams-maha/v1'
+x-api-id: 'org.egov.lcms-maha.advertisement.services'
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
+paths:
+  /advertisementlicense/_search:
+    post:
+      summary: Get the list of Advertisement Liceses defined in the system.
+      description: |
+        Get the advertisement licenses  list based on the input parameters.
+      # This is array of GET operation parameters:
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortAdvertisementLicense"
+        - name: advertisementLicenseId
+          in: query
+          description: Primary key of license application object.
+          required: false
+          type: string
+          format: varchar
+        - name: licenseNumber
+          in: query
+          required: false
+          description: The license number
+          type: string
+          maxLength: 64
+          exclusiveMaximum: false
+        - name: applicationNumber
+          in: query
+          required: false
+          description: The application number
+          type: string
+          maxLength: 64
+          exclusiveMaximum: false
+        - name: applicationDate
+          in: query
+          description: application date
+          required: false
+          type: string
+        - name: applicantType
+          in: query
+          required: false
+          description: applicant type drop down 
+          type: string
+          maxLength: 64
+          exclusiveMaximum: false
+        - name: applicantName
+          in: query
+          required: false
+          description: Applicant name
+          type: string
+          maxLength: 64
+          exclusiveMaximum: false
+        - name: advertisementType
+          in: query
+          required: false
+          description: Advertisement type. Drop down values.
+          type: string
+          maxLength: 64
+        - name: advertisementSubType
+          in: query
+          required: false
+          description: Advertisement sub type. Drop down values.
+          type: string
+          maxLength: 64
+          exclusiveMaximum: false
+      tags:
+       - AdvertisementLicense
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: "#/definitions/AdvertisementLicenseResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      
+  /advertisementlicense/v1/_create:
+    post:
+      summary: Create new Advertisement Liceses detail
+      description: |
+          To create new Advertisement Liceses detail
+      parameters:
+        - name: advertisementLicenseRequest
+          in: body
+          description: Details for the new Advertisement Liceses detail + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/AdvertisementLicenseRequest'
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: ReponseInfo with Advertisement Liceses detail created successfully
+          schema:
+            $ref: '#/definitions/AdvertisementLicenseResponse'
+        400:
+          description: Advertisement Liceses detail(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - AdvertisementLicense  
+  /advertisementlicense/v1/_update:
+    post:
+      summary: update existing Advertisement Liceses detail.
+      description: |
+          To update existing Advertisement Liceses details in the system. 
+      parameters:
+        - name: advertisementLicenseRequest
+          in: body
+          description: Details for the new Advertisement Liceses detail + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/AdvertisementLicenseRequest'
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: ReponseInfo with Advertisement Liceses details updated sudcessfully
+          schema:
+            $ref: '#/definitions/AdvertisementLicenseResponse'
+        400:
+          description: Advertisement Liceses detail(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - AdvertisementLicense
+  /advertisementlicense/notice/_search:
+    post:
+      summary: Get the list of notices generated for adverticesement license application.
+      description: |
+        Get the notice list based on the input parameters.
+      # This is array of GET operation parameters:
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortAdvertisementLicense"
+        - name: advertisementLicenseId
+          in: query
+          description: Primary key of license application object.
+          required: false
+          type: string
+          format: varchar
+        - name: licenseNumber
+          in: query
+          required: false
+          description: The license number
+          type: string
+          maxLength: 64
+          exclusiveMaximum: false
+        - name: noticeNumber
+          in: query
+          required: false
+          description: The notice number
+          type: string
+          maxLength: 64
+          exclusiveMaximum: false
+        - name: noticeDate
+          in: query
+          description: notice date
+          required: false
+          type: string
+        - name: applicantType
+          in: query
+          required: false
+          description: applicant type drop down 
+          type: string
+          maxLength: 64
+          exclusiveMaximum: false
+        
+      tags:
+       - Notice
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: "#/definitions/NoticeResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      
+  /advertisementlicense/acknowledgement/_create:
+     post:
+      description: Generates a acknowledgement for a advertisement license application .
+      parameters:
+        - name: notice
+          in: body
+          description: Notice details
+          required: true
+          schema:
+            $ref: '#/definitions/NoticeRequest'
+      tags:
+        - AdvertisementLicense
+      responses:
+        '200':
+          description: returns a notice.
+          schema:
+            $ref: '#/definitions/NoticeResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+  /advertisementlicense/license/_create:
+    post:
+      description: Generates a license for a advertisement license application.
+      parameters:
+        - name: notice
+          in: body
+          description: Notice details
+          required: true
+          schema:
+            $ref: '#/definitions/NoticeRequest'
+      tags:
+        - AdvertisementLicense
+      responses:
+        '200':
+          description: returns a notice.
+          schema:
+            $ref: '#/definitions/NoticeResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+  /advertisementlicense/letterofintimation/_create:
+    post:
+      description: Generates a Letter of information for a advertisement license application.
+      parameters:
+        - name: notice
+          in: body
+          description: Notice details
+          required: true
+          schema:
+            $ref: '#/definitions/NoticeRequest'
+      tags:
+        - AdvertisementLicense
+      responses:
+        '200':
+          description: returns a notice.
+          schema:
+            $ref: '#/definitions/NoticeResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /advertisementlicense/rejectionletter/_create:
+    post:
+      description: Generates a rejection letter for a advertisement license application.
+      parameters:
+        - name: notice
+          in: body
+          description: Notice details
+          required: true
+          schema:
+            $ref: '#/definitions/NoticeRequest'
+      tags:
+        - AdvertisementLicense
+      responses:
+        '200':
+          description: returns a notice.
+          schema:
+            $ref: '#/definitions/NoticeResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+         
+definitions:
+########################################################
+#RequestInfo and ResponseInfo object should be reffered from Common.
+#Definition must start with Upper case followed by camel case.
+#Every model will have tenantId
+########################################################
+  Agency:
+    type: object
+    description: Agency details
+    properties:
+      id: 
+        type: integer
+        format: int64
+        description: Id of the agency master.
+      tenantId:
+        type: string
+        description: tenant id of
+        maxLength: 128
+        minLength: 4
+      name:
+        type: string
+        description : agency name
+        maxLength: 50
+      address:
+        type: string
+        description: agency address
+        minLength: 1
+        maxLength: 50
+      resolutionNumber:
+        type: string
+        description: council resolution number.
+      resolutionDate:
+        type: integer
+        format: int64
+        description: resolution Date in epoch format 
+      registrationDate:
+        type: integer
+        format: int64
+        description: agency registration Date in epoch format   
+      contactNumber: 
+        type: string
+        description: Contact number of agency
+        pattern: "[0-9]"
+        maxLength: 20
+      panNumber:
+        type: string
+        description: PAN number of the agency
+        maxLength: 10  
+    required:
+      - id
+      - name
+      - address
+  OwnerDetail:
+    type: object
+    description: Advertisement licence applicant owner detail
+    properties:
+      owner:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User"
+      isAdditionalOwner:
+        type: boolean
+        default: false
+        description: is additional owner. 
+  Notice:
+    type: object
+    description: Generated documents for license application. Acknowledgement will be generated on save of license application.Rejection letter, if record rejected in approval cycle. Letter of intimation(LOI) in case of license approved. Finally license will be generated in system on payment of LOI fee.
+    properties:
+      id: 
+        type: integer
+        format: int64
+        description: Id of the notice.
+      tenantId:
+        type: string
+        description: tenant id 
+        maxLength: 128
+        minLength: 4
+      number:
+        type: string
+        description: acknowledge number or rejection number or license number or LOI number
+        maxLength: 128
+      noticeType:
+        type: string
+        description: ulb holder witness.Use employee master
+        enum:
+          - ACKNOWLEDGE
+          - REJECTION
+          - LICENSE
+          - LOI
+      advertisementLicense:
+        $ref: '#/definitions/AdvertisementLicense'
+    required:
+      - id
+      - noticeType   
+      - number
+      - tenantId
+  Inspection:
+    type: object
+    description: Advertisement licence application inspection details
+    properties:
+      id: 
+        type: integer
+        format: int64
+        description: Id of the inspection master.
+      tenantId:
+        type: string
+        description: tenant id 
+        maxLength: 128
+        minLength: 4
+      licenseHolderwitness:
+        type: string
+        description: License holder witness
+        maxLength: 128
+      ulbWitness:
+        type: string
+        description: ulb holder witness.Use employee master
+        maxLength: 128  
+      inspectedBy:
+        type: string
+        description: inspected user information.Use employee master
+        maxLength: 128  
+      advertisementLicense:
+        $ref: '#/definitions/AdvertisementLicense'
+      inspectionTime:
+        type: string
+        description: inspection time
+        minLength: 1
+        maxLength: 10
+      inspectionDate:
+        type: integer
+        format: int64
+        description: inspection date  in epoch  
+      inspectiondetail:
+        type: string
+        description: inspection details
+        maxLength: 256 
+      inspectionNumber:
+        type: string
+        description: inspection number unique in system.
+      remarks:
+        type: string
+        description: inspection remarks
+        maxLength: 512  
+      document:
+        type: string
+        description: filestoreId of the document attached
+    required:
+      - id
+      - inspectionTime   
+      - inspectionDate
+      - licenseHolderwitness
+      - ulbWitness
+      - inspectionNumber
+      - inspectedBy
+      
+  AdvertisementLicense:
+    type: object
+    description: Advertisement licence application details
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the license application
+      tenantId:
+        type: string
+        description: tenant id 
+        maxLength: 128
+        minLength: 4
+      applicantType:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/ApplicantType'
+      status:
+        type: string
+        description: application status
+        enum:
+          - ACTIVE
+          - LOI GENERATED
+          - IN WORKFLOW
+          - INSPECTION IN PROGRESS
+          - INSPECTION COMPLETED
+          - INSPECTION PENDING
+          - REJECTED
+          - APPROVED
+      workFlowDetails:
+        $ref: '#/definitions/WorkFlowDetails'
+      agency:
+        $ref: '#/definitions/Agency'
+      applicationDate:
+        type: integer
+        format: int64
+        description: Application date  in epoch
+      source:
+        type: string
+        description: source of application. The application details submitted by mobileapp,ulb,offline,dataentry or online  
+        maxLength: 64
+      applicationNumber:
+        type: string
+        description: Application number will be generated on successful application submission.
+        maxLength: 64
+      licenseNumber:
+        type: string
+        description: License number will be generated on successful approval of license application.
+        maxLength: 64  
+      propertyNumber:
+        type: string
+        description: property number if the hoarding linked with property
+        maxLength: 64
+      nameOf_Company_Society_Orgn:
+        type: string
+        description: Name of company or society or organization. Decided based on applicant type
+        maxLength : 128
+      addressOf_Company_Society_Orgn:
+        type: string
+        description: Address of company or society or organization
+        maxLength : 256
+      description: 
+        type: string
+        description: License description if any
+        maxLength: 512
+      length:
+        type: number
+        format: double
+        description: length of hoarding in meter
+      breadth:
+        type: number
+        format: double
+        description: breadth of hoarding in meter
+      location:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'  
+      startDate:
+        type: integer
+        format: int64
+        description:  License application start date as epoch    
+      endDate:
+        type: integer
+        format: int64
+        description:  License application end date as epoch  
+      applicant:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User"
+      advertisementType:  
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/AdvertisementType"
+      advertisementSubType:  
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/AdvertisementSubType"
+      supportDocuments:
+        type: array
+        description: List of Support Documents for advertisement license
+        items:
+          $ref: '#/definitions/Advertisementdocs'
+      ownerDetails:
+        type: array
+        description: List of owners jointly applied for advertisement license application
+        items:
+          $ref: '#/definitions/OwnerDetail'      
+      inspections:    
+        type: array
+        description: List of inspections of advertisement license application
+        items:
+          $ref: '#/definitions/Inspection' 
+      notices:
+        type: array
+        description: List of notices generated for advertisement license application
+        items:
+          $ref: '#/definitions/Notice' 
+      
+    required:
+    - tenantId
+    - applicationDate
+    - applicationNumber
+    - applicantType
+    - length
+    - breadth
+    - startDate
+    - endDate
+  Advertisementdocs:
+    type: object
+    description: An Object to hold the support document detail for a given advertisement license 
+    properties:
+      id: 
+        type: integer
+        format: int64
+        description: Unique Identifier of the Support Document
+      tenantId:
+        type: string
+        description: tenant id of the land acquisiton
+        maxLength: 128
+        minLength: 4
+      advertisementLicense:
+        $ref: '#/definitions/AdvertisementLicense' 
+      fileStoreId:
+        type: string
+        description: Unique Identifier of the FileStore
+      comments:
+        type: string
+        maxLength: 1024
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+    - advertisementLicense
+    - tenantId
+    - fileStoreId
+  
+  AdvertisementLicenseRequest:
+      description:  Contract class to receive request. Array of advertisement license items are used in case of create, whereas single advertisement license item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        license:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/AdvertisementLicense'
+            
+  AdvertisementLicenseResponse:
+      description: Contract class to send response. Array of advertisement license detail items are used in case of search results or response for create, whereas single advertisement license detail item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        license:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/AdvertisementLicense'
+  NoticeRequest:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      notice:
+        $ref: '#/definitions/Notice'
+        
+  NoticeResponse:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      notices:
+        type: array
+        items:
+          $ref: '#/definitions/Notice'
+    
+  WorkFlowDetails:
+    type: object
+    description: An Object to hold the Application workflow details for a given advertisement license, agreement and cancel and renewal agreement
+    properties:
+      type:
+        type: string
+        description: workflow type to be processed 
+      businessKey:
+        type: string
+        description: businesskey of the workflow processing application
+      department:
+        type: string
+        description: department of the workflow processing authority
+      designation:
+        type: string
+        description: designation of the workflow processing authority
+      assignee:
+        type: integer
+        format: int64
+        description: assignee id
+      action:
+        type: string
+        description: action to be taken for processing workflow
+      status:
+        type: string
+        description: status of the application
+      comments:
+        type: string
+        description: comments given by the workflow processing person
+      senderName:
+        type: string
+        description: name of the workflow processing person
+      details:
+        type: string
+        description: details about the workflow process
+      stateId:
+        type: string
+        description: state id of the workflow
+parameters:
+##########################################################
+#Parameter name must start with small case followed by camel case.
+##########################################################
+  pageSize:
+    name: pageSize
+    in: query
+    description: Number of records returned.
+    type: integer
+    minimum: 0
+    exclusiveMinimum: true
+    maximum: 100
+    exclusiveMaximum: false
+    multipleOf: 10
+    default: 20
+  sortAdvertisementLicense:
+    name: sort
+    in: query
+    description: Advertisement Liceses  results will be sorted by id ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 3
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](id)'
+    default:
+      - +id  
+  pageNumber:
+    name: pageNumber
+    in: query
+    description: Page number
+    type: integer
+    default: 1
+  
+  
+tags:
+  - name: AdvertisementLicense
+    description: APIs required for advertisement license
+  - name: Notice  
+    description: APIs required to search notices generated for advertisement license application

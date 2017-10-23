@@ -45,7 +45,7 @@ public class Asset   {
 	  private Long warrantyExpiryDate = null;
 
 	  @JsonProperty("defectLiabilityPeriod")
-	  private DefectLiability defectLiabilityPeriod = null;
+	  private DefectLiability defectLiabilityPeriod = new DefectLiability();
 
 	  @JsonProperty("securityDepositRetained")
 	  private BigDecimal securityDepositRetained = null;

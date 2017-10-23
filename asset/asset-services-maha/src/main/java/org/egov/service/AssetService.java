@@ -47,7 +47,7 @@ public class AssetService {
 
 		log.debug("assetRequest createAsync::" + assetRequest);
 
-		logAwareKafkaTemplate.send(applicationProperties.getCreateAssetTopicName(), assetRequest);
+		logAwareKafkaTemplate.send(applicationProperties.getCreateAssetTopicNameTemp(), assetRequest);
 
 		final List<Asset> assets = new ArrayList<>();
 		assets.add(asset);

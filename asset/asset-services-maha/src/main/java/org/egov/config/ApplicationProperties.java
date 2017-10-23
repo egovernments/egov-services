@@ -37,6 +37,8 @@ public class ApplicationProperties {
 
     @Value("${kafka.topics.save.asset}")
     private String createAssetTopicName;
+    
+    private String createAssetTopicNameTemp = "save-asset-maha";
 
     @Value("${kafka.topics.update.asset}")
     private String updateAssetTopicName;

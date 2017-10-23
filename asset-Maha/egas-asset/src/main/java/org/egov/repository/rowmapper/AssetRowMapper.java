@@ -13,6 +13,7 @@ import java.util.Map;
 import org.egov.model.Asset;
 import org.egov.model.AssetCategory;
 import org.egov.model.Attributes;
+import org.egov.model.DefectLiability;
 import org.egov.model.Department;
 import org.egov.model.Location;
 import org.egov.model.enums.ModeOfAcquisitionEnum;
@@ -50,26 +51,53 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 asset.setName(rs.getString("name"));
                 asset.setCode(rs.getString("code"));
                 asset.setOldCode(rs.getString("oldcode"));
-       
+               
                 asset.setTenantId(rs.getString("tenantId"));
                 asset.setModeOfAcquisition(ModeOfAcquisitionEnum.fromValue(rs.getString("modeofacquisition")));
                 asset.setStatus(rs.getString("status"));
+                asset.setGrossValue((rs.getBigDecimal("grossvalue")));
+                asset.setAccumulatedDepreciation(rs.getBigDecimal("accumulateddepreciation"));
                 asset.setDescription(rs.getString("description"));
-                asset.setDateOfCreation(rs.getLong("dateOfCreation"));
+                asset.setDateOfCreation((Long) rs.getObject("dateOfCreation"));
                 asset.setRemarks(rs.getString("remarks"));
+                asset.setVersion(rs.getString("version"));
+                asset.setAssetReference((Long) rs.getObject("assetreference"));
+                asset.setEnableYearWiseDepreciation(rs.getBoolean("enableyearwisedepreciation"));
+                asset.setDepreciationRate(getDoubleFromBigDecimal(rs.getBigDecimal("depreciationrate")));
+                asset.setAnticipatedLife((Long) rs.getObject("anticipatedlife"));
+                asset.setOrderNumber(rs.getString("ordernumber"));
+                asset.setOrderDate((Long) rs.getObject("orderdate"));
+                asset.setWipReferenceNo(rs.getString("wipreferenceno"));
+                asset.setAcquiredFrom(rs.getString("acquiredfrom"));
+                asset.setWarrantyAvailable(rs.getBoolean("warrantyavailable"));
+                asset.setWarrantyExpiryDate((Long) rs.getObject("warrantyexpirydate"));
+                asset.setSecurityDepositRealized(rs.getBigDecimal("securitydepositrealized"));
+                asset.setSecurityDepositRetained(rs.getBigDecimal("securitydepositretained"));
+                asset.setAcquisitionDate((Long) rs.getObject("acquisitiondate"));
+                asset.setOriginalValue(rs.getBigDecimal("originalvalue"));
+                asset.setAssetAccount(rs.getString("assetaccount"));
+                asset.setAccumulatedDepreciationAccount(rs.getString("accumulateddepreciationaccount"));
+                asset.setRevaluationReserveAccount(rs.getString("revaluationreserveaccount"));
+                asset.setDepreciationExpenseAccount(rs.getString("depreciationexpenseaccount"));
+                String titleDocument = rs.getString("titledocumentsavalable");
+                List<String> titleDocumentsAvalable= new ArrayList<>();
+                titleDocumentsAvalable.add(titleDocument);
+                asset.setTitleDocumentsAvalable(titleDocumentsAvalable);
+                asset.setUsage(rs.getString("usage"));
                 asset.setLength(getDoubleFromBigDecimal(rs.getBigDecimal("length")));
                 asset.setWidth(getDoubleFromBigDecimal(rs.getBigDecimal("width")));
                 asset.setHeight(getDoubleFromBigDecimal(rs.getBigDecimal("height")));
                 asset.setTotalArea(getDoubleFromBigDecimal(rs.getBigDecimal("totalArea")));
                 asset.setPlinthArea(getDoubleFromBigDecimal(rs.getBigDecimal("plintHarea")));
-                asset.setEnableYearWiseDepreciation(rs.getBoolean("enableyearwisedepreciation"));
-                asset.setDepreciationRate(getDoubleFromBigDecimal(rs.getBigDecimal("depreciationrate")));
-                asset.setAccumulatedDepreciation(rs.getBigDecimal("accumulateddepreciation"));
-
-              
-                asset.setGrossValue(rs.getBigDecimal("grossvalue"));
+                asset.setAddress(rs.getString("address"));
+                asset.setLongitude(getDoubleFromBigDecimal(rs.getBigDecimal("longitude")));
+                asset.setLatitude(getDoubleFromBigDecimal(rs.getBigDecimal("latitude")));
+                asset.setFloors((Long) rs.getObject("floors"));
+                asset.setLandSurveyNo(rs.getString("landsurveyno"));
+                asset.setCubicContents(rs.getString("cubiccontents"));
+                asset.setQuantity((Long) rs.getObject("quantity"));
                 asset.setAssetReference((Long) rs.getObject("assetreference"));
-                asset.setVersion(rs.getString("version"));
+              
 
                 final String properties = rs.getString("assetAttributes");
                 List<Attributes> asset2 = null;
@@ -84,11 +112,13 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 }
 
                 asset.setAssetAttributes(asset2);
-
-                final Department department = new Department();
-                department.setId((Long) rs.getObject("department"));
                 asset.setDepartmentCode(rs.getString("departmentCode"));
 
+                final  DefectLiability defectLiabilityPeriod= new DefectLiability();
+                defectLiabilityPeriod.setDay((Long) rs.getObject("defectliabilityday"));
+                defectLiabilityPeriod.setMonth((Long) rs.getObject("defectliabilitymonth"));
+                defectLiabilityPeriod.setYear((Long) rs.getObject("defectliabilityyear"));
+                asset.setDefectLiabilityPeriod(defectLiabilityPeriod);
                 final Location location = new Location();
                 location.setBlock((Long) rs.getObject("block"));
                 location.setLocality((Long) rs.getObject("locality"));
@@ -129,7 +159,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
     assetCategory.setName(rs.getString("assetCategoryName"));
     assetCategory.setCode(rs.getString("assetcategorycode"));
     assetCategory.setParent((Long) rs.getObject("parentId"));
-    assetCategory.setDepreciationRate(rs.getDouble("depreciationrate"));
+    assetCategory.setDepreciationRate(rs.getBigDecimal("depreciationrate"));
     assetCategory.setDepreciationExpenseAccount((Long) rs.getObject("depreciationExpenseAccount"));
     assetCategory.setDepreciationMethod(DepreciationMethod.fromValue(rs.getString("depreciationMethod")));
     assetCategory.setAccumulatedDepreciationAccount((Long) rs.getObject("accumulatedDepreciationAccount"));

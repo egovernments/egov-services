@@ -35,6 +35,99 @@ definitions:
       - Fixed Deposit Receipt
       - Bank Guarantee
       
+  AbstractEstimateStatus:
+    type: string
+    enum:
+      - NEW
+      - CREATED
+      - ADMIN_SANCTIONED
+      - REJECTED
+      - CANCELLED
+      - APPROVED
+      - RESUBMITTED
+      - CHECKED
+      
+  DetailedEstimateStatus:
+    type: string
+    enum:
+      - NEW
+      - CREATED
+      - REJECTED
+      - RESUBMITTED
+      - CANCELLED
+      - APPROVED
+  
+  LOAStatus:
+    type: string
+    enum:
+      - CREATED
+      - REJECTED
+      - APPROVED
+      - CANCELLED
+      - RESUBMITTED
+      - CHECKED
+      
+  WorkOrderStatus:
+    type: string
+    enum:
+      - CREATED
+      - REJECTED
+      - APPROVED
+      - CANCELLED
+      - RESUBMITTED
+      - CHECKED
+      
+  ContractorAdvanceStatus:
+    type: string
+    enum:
+      - NEW
+      - CREATED
+      - CHECKED
+      - APPROVED
+      - REJECTED
+      - RESUBMITTED
+      - CANCELLED
+      
+  MeasurementBookStatus:
+    type: string
+    enum:
+      - NEW
+      - CREATED
+      - CHECKED
+      - APPROVED
+      - REJECTED
+      - RESUBMITTED
+      - CANCELLED
+      
+  ContractorBillStatus:
+    type: string
+    enum:
+      - NEW
+      - CREATED
+      - CHECKED
+      - APPROVED
+      - REJECTED
+      - RESUBMITTED
+      - CANCELLED
+      
+  MilestoneStatus:
+    type: string
+    enum:
+      - APPROVED
+      - CANCELLED
+      
+  ProjectCodeStatus:
+    type: string
+    enum:
+      - CREATED
+      - CLOSED
+      
+  TrackMilestoneStatus:
+    type: string
+    enum:
+      - APPROVED
+      - CANCELLED
+      
   WorkCategory:
     type: string
     enum:
@@ -51,18 +144,6 @@ definitions:
       - MINORITY
       - WOMEN_CHILDREN_WELFARE
       - GENERAL
-        
-  EstimateStatus:
-    type: string
-    enum:
-      - NEW
-      - CREATED
-      - ADMIN_SANCTIONED
-      - REJECTED
-      - CANCELLED
-      - APPROVED
-      - RESUBMITTED
-      - CHECKED
       
   OfflineStatusesForDetailedEstimate:
     type: string
@@ -73,6 +154,20 @@ definitions:
       - TECHNICAL_EVALUATION_DONE
       - COMMERCIAL_EVALUATION_DONE
       - L1_TENDER_FINALIZED
+  
+  OfflineStatusesForLOA:
+    type: string
+    enum:
+      - ACCEPTANCE_LETTER_ISSUED
+      - ACCEPTANCE_LETTER_ACKNOWLEDGED
+      - AGREEMENT_ORDER_SIGNED
+
+  OfflineStatusesForWorkOrder:
+    type: string
+    enum:
+      - WORK_ORDER_ACKNOWLEDGED
+      - SITE_HANDED_OVER
+      - WORK_COMMENCED
       
   RevisionType:
     type: string
@@ -225,46 +320,6 @@ definitions:
       - fromDate
       - rate
 
-  ProjectStatus:
-    type: object
-    properties:
-      id:
-        type: string
-        description: Unique Identifier of the Project Status
-      tenantId:
-        type: string
-        description: Tenant id of the Project Status
-        maxLength: 128
-        minLength: 4
-      code:
-        type: string
-        description: Status Code of the Project Status
-        pattern: '[a-zA-Z0-9-\\]'
-        maxLength: 100
-        minLength: 1
-      status:
-        type: string
-        description: Status of the Project Status
-        maxLength: 20
-        minLength: 1
-      moduletype:
-        type: string
-        description: Module type for the status.
-        maxLength: 100
-        minLength: 1
-      description:
-        type: string
-        description: Description Of the Status.
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
-        maxLength: 1024
-        minLength: 1
-    required:
-      - tenantId
-      - code
-      - status
-      - moduletype
-      - description
-    
   ContractorClass:
     type: object
     properties:

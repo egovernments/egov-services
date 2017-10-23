@@ -44,7 +44,7 @@ public class CompensationMode {
 
   @NotNull
   @Size(min = 1, max = 256)
-  private String compensationMode = null;
+  private String name = null;
 
   @NotNull
   private Boolean isActive = null;

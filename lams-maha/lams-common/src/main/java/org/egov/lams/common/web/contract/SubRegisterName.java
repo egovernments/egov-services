@@ -28,7 +28,7 @@ public class SubRegisterName {
 
   @NotNull
   @Size(min = 1, max = 128)
-  private String subRegisterName = null;
+  private String name = null;
 
   @NotNull
   private Boolean isActive = null;

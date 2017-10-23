@@ -1,9 +1,9 @@
-package org.egov.lams.common.web.request;
+package org.egov.lams.common.web.response;
 
 import java.util.List;
 
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.lams.common.web.contract.LandAcquisition;
-import org.egov.lams.common.web.contract.ResponseInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

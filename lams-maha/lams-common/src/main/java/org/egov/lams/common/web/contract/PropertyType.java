@@ -2,25 +2,22 @@
 
 package org.egov.lams.common.web.contract;
 
+import lombok.*;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 /**
- * An object which holds the Mode Of Acquisition Master info
+ * An object which holds the  Property Type Master info
  */
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ModeOfAcquisition {
-  @NotNull
+public class PropertyType {
+
+   @NotNull
   private Long id = null;
 
   @NotNull
@@ -37,4 +34,6 @@ public class ModeOfAcquisition {
 
   @NotNull
   private Boolean isActive = null;
+  
 }
+

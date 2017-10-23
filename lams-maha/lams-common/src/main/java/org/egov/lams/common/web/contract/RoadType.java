@@ -27,7 +27,7 @@ public class RoadType {
 
   @NotNull
   @Size(min = 1, max = 128)
-  private String roadType = null;
+  private String name = null;
 
   @NotNull
   private Boolean isActive = null;

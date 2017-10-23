@@ -31,7 +31,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Agreement {
-  @NotNull
   private Long id = null;
 
   @NotNull
@@ -50,7 +49,7 @@ public class Agreement {
   private String landEstateNo = null;
 
   @NotNull
-  private Allottee allottee = null;
+  private User allottee = null;
 
   @Size(min = 1, max = 64)
   private String registrationNo = null;
@@ -88,8 +87,7 @@ public class Agreement {
   private Long agreementToDate = null;
 
   @NotNull
-  @Size(min = 1, max = 64)
-  private String holdingType = null;
+  private HoldingType holdingType = null;
 
   @Size(max = 64)
   private String GBResolutionNo = null;

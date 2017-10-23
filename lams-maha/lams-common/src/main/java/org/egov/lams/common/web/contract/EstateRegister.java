@@ -43,12 +43,10 @@ public class EstateRegister {
   private String estateNumber = null;
 
   @NotNull
-  @Size(min = 1, max = 64)
-  private String registerName = null;
+  private RegisterName registerName = null;
 
   @NotNull
-  @Size(min = 1, max = 64)
-  private String subRegisterName = null;
+  private SubRegisterName subRegisterName = null;
 
   @NotNull
   private Boundary regionalOffice = null;
@@ -60,8 +58,7 @@ public class EstateRegister {
   private String propertyName = null;
 
   @NotNull
-  @Size(min = 1, max = 64)
-  private String propertyType = null;
+  private PropertyType propertyType = null;
 
   @NotNull
   @Size(min = 1, max = 512)

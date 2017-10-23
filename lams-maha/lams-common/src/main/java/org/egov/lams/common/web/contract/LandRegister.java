@@ -42,20 +42,17 @@ public class LandRegister {
   private String landNumber = null;
 
   @NotNull
-  @Size(min = 1, max = 64)
-  private String acquisitionType = null;
+  private ModeOfAcquisition acquisitionType = null;
 
   @NotNull
   @Size(min = 1, max = 64)
   private String acquisitionNo = null;
 
   @NotNull
-  @Size(min = 1, max = 64)
-  private String registerName = null;
+  private RegisterName registerName = null;
 
   @NotNull
-  @Size(min = 1, max = 64)
-  private String subRegisterName = null;
+  private SubRegisterName subRegisterName = null;
 
   @NotNull
   private Boundary regionalOffice = null;
@@ -75,14 +72,12 @@ public class LandRegister {
   private String oldOwnerName = null;
 
   @NotNull
-  @Size(min = 1, max = 64)
-  private String purpose = null;
+  private Purpose purpose = null;
 
   @NotNull
   private Double width = null;
 
-  @Size(max = 64)
-  private String roadType = null;
+  private RoadType roadType = null;
 
   @NotNull
   @Size(min = 1, max = 64)
@@ -100,15 +95,12 @@ public class LandRegister {
   private Long possessionDate = null;
 
   @NotNull
-  @Size(min = 1, max = 64)
-  private String modeOfAcquisition = null;
+  private ModeOfAcquisition modeOfAcquisition = null;
 
   @NotNull
-  @Size(min = 1, max = 64)
-  private String typeOfHolding = null;
+  private HoldingType typeOfHolding = null;
 
-  @Size(max = 64)
-  private String modeOfCompensation = null;
+  private CompensationMode modeOfCompensation = null;
 
   @NotNull
   private Double costOfAcquisition = null;
@@ -118,8 +110,7 @@ public class LandRegister {
   @Size(max = 64)
   private String buildingReference = null;
 
-  @Size(max = 64)
-  private String typeOfPlanning = null;
+  private PlanningType typeOfPlanning = null;
 
   @Size(max = 64)
   private String codeOfReservation = null;

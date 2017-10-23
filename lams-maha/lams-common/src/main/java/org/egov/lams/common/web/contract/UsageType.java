@@ -34,7 +34,7 @@ public class UsageType {
 
   @NotNull
   @Size(min = 1, max = 128)
-  private String usageType = null;
+  private String name = null;
 
   @NotNull
   private Boolean isActive = null;

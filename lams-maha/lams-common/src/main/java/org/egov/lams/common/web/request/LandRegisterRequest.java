@@ -1,8 +1,8 @@
 package org.egov.lams.common.web.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.lams.common.web.contract.LandRegister;
-import org.egov.lams.common.web.contract.RequestInfo;
 
 import javax.validation.Valid;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package org.egov.lams.common.web.request;
+package org.egov.lams.common.web.response;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -2,8 +2,8 @@ package org.egov.lams.common.web.request;
 
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.lams.common.web.contract.LandAcquisition;
-import org.egov.lams.common.web.contract.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

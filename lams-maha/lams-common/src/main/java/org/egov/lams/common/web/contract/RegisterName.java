@@ -28,7 +28,7 @@ public class RegisterName {
 
   @NotNull
   @Size(min = 1, max = 128)
-  private String registerName = null;
+  private String name = null;
 
   @NotNull
   private Boolean isActive = null;

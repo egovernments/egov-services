@@ -34,7 +34,7 @@ public class HoldingType {
 
   @NotNull
   @Size(min = 1, max = 128)
-  private String holdingType = null;
+  private String name = null;
 
   @NotNull
   private Boolean isActive = null;

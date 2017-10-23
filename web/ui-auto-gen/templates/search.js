@@ -54,8 +54,9 @@ let searchTemplate = function (module, numCols, path, config, definition, uiInfo
 		specifications.result.rowClickUrlUpdate = uiInfoDef.SearchResult.rowClickUrlUpdate;
 		for (var i=0; i< uiInfoDef.SearchResult.columns.length; i++) {
 			specifications.result.values.push(uiInfoDef.SearchResult.values[i]);
+			localeFields[module + ".search.result." + uiInfoDef.SearchResult.columns[i]] = getTitleCase(uiInfoDef.SearchResult.columns[i]);
 			specifications.result.header.push({
-				label: module + ".search.result." + getTitleCase(uiInfoDef.SearchResult.columns[i])
+				label: module + ".search.result." + uiInfoDef.SearchResult.columns[i]
 			});
 		}
 	} else {

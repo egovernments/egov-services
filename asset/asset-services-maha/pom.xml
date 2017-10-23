@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.egas</groupId>
-	<artifactId>egas-asset</artifactId>
+	<artifactId>asset-services-maha</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>egas-asset</name>

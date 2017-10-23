@@ -1,6 +1,8 @@
-const getType = require('../utilities/utility').getType;
-const getTitleCase = require('../utilities/utility').getTitleCase;
-const setLabels = require('../utilities/utility').setLabels;
+var utilities = require('../utilities/utility');
+const getType = utilities.getType;
+const getTitleCase = utilities.getTitleCase;
+const setLabels = utilities.setLabels;
+const getQuery = utilities.getQuery;
 
 let localeFields = {};
 let errors = {};
@@ -18,7 +20,9 @@ let searchTemplate = function (module, numCols, path, config, definition) {
 		result: {
 			header: [],
 			values: [],
-			resultPath: ""
+			resultPath: "",
+			rowClickUrlUpdate: "",
+			rowClickUrlView: ""
 		}
 	};
 	let fields = {};

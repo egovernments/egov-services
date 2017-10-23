@@ -1,6 +1,8 @@
-const getType = require('../utilities/utility').getType;
-const getTitleCase = require('../utilities/utility').getTitleCase;
-const setLabels = require('../utilities/utility').setLabels;
+var utilities = require('../utilities/utility');
+const getType = utilities.getType;
+const getTitleCase = utilities.getTitleCase;
+const setLabels = utilities.setLabels;
+const getQuery = utilities.getQuery;
 
 let localeFields = {};
 let errors = {};
@@ -73,13 +75,14 @@ let updateTemplate = function(module, numCols, path, config, definition, uiInfoD
     getFieldsFromInnerObject(reference, fields, definition, module, isArr ? (specifications.objectName + "[0]") : specifications.objectName);
 
     //=======================CUSTOM FILE LOGIC==========================>>
-    if(uiInfoDef.ExternalData && typeof uiInfoDef.ExternalData == "object" && Object.keys(uiInfoDef.ExternalData).length) {
-        for(var key in uiInfoDef.ExternalData) {
-            if (fields[key]) {
-                fields[key].url = uiInfoDef.ExternalData[key];
-                fields[key].type = "singleValueList";
-            } else
-                errors[key] = "Field exists in x-ui-info ExternalData section but not present in API specifications. REFERENCE PATH: " + uiInfoDef.referencePath;
+    if (uiInfoDef.ExternalData && typeof uiInfoDef.ExternalData == "object" && uiInfoDef.ExternalData.length) {
+        for(var i=0; i<uiInfoDef.ExternalData.length; i++) {
+            if(uiInfoDef.ExternalData[i].fieldName) {
+                fields[uiInfoDef.ExternalData[i].fieldName].url = uiInfoDef.ExternalData[i].url + getQuery(uiInfoDef.ExternalData[i].url, uiInfoDef.ExternalData[i].keyPath, uiInfoDef.ExternalData[i].valPath);
+                fields[uiInfoDef.ExternalData[i].fieldName].type = 'singleValueList';
+            } else {
+                errors[uiInfoDef.ExternalData[i].fieldName] = "Field exists in x-ui-info ExternalData section but not present in API specifications. REFERENCE PATH: " + uiInfoDef.referencePath;
+            }
         }
     }
 

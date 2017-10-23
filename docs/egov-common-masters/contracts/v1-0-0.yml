@@ -2109,7 +2109,9 @@ definitions:
         type: number
         format: double
         description: Receivable Amount.
-   -  $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
       BusinessDetails:
         type: number
         format: integer

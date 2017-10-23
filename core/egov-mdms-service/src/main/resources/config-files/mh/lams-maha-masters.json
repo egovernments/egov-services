@@ -5,14 +5,14 @@
     {
       "id": 1,
       "tenantId": "mh",
-      "code": "LAMS_REGISTERNAME1",
+      "code": "REGNAME_REGISTERNAME1",
       "registerName": "Fake Register Name1",
       "isActive": true
     },
     {
       "id": 2,
       "tenantId": "mh",
-      "code": "LAMS_REGISTERNAME2",
+      "code": "REGNAME_REGISTERNAME2",
       "registerName": "Fake Register Name2",
       "isActive": true
     }
@@ -21,7 +21,7 @@
     {
       "id": 1,
       "tenantId": "mh",
-      "code": "LAMS_SUBREGISTERNAME1",
+      "code": "SUBREGNAME_SUBREGISTERNAME1",
       "registerName": 1,
       "subRegisterName": "Fake Sub Register Name1",
       "isactive": true
@@ -29,7 +29,7 @@
     {
       "id": 1,
       "tenantId": "mh",
-      "code": "LAMS_SUBREGISTERNAME2",
+      "code": "SUBREGNAME_SUBREGISTERNAME2",
       "registerName": 2,
       "subRegisterName": "Fake Sub Register Name2",
       "isactive": true
@@ -39,14 +39,14 @@
     {
       "id": 1,
       "tenantid": "mh",
-      "code": "LAMS_PURPOSE1",
+      "code": "PURPOSE_PURPOSE1",
       "purpose": "Fake Purpose1",
       "isActive": true
     },
     {
       "id": 2,
       "tenantid": "mh",
-      "code": "LAMS_PURPOSE2",
+      "code": "PURPOSE_PURPOSE2",
       "purpose": "Fake Purpose2",
       "isActive": true
     }
@@ -55,15 +55,15 @@
     {
       "id": 1,
       "tenantId": "mh",
-      "code": "LAMS_MODEOFACQUISITION1",
-      "modeOfAcquisition": "Fake ModeOfAquisition1",
+      "code": "ACQMODE_MODEOFACQUISITION1",
+      "name": "Fake ModeOfAquisition1",
       "isActive": true
     },
     {
       "id": 2,
       "tenantId": "mh",
-      "code": "LAMS_MODEOFACQUISITION2",
-      "modeOfAcquisition": "Fake ModeOfAquisition1",
+      "code": "ACQMODE_MODEOFACQUISITION2",
+      "name": "Fake ModeOfAquisition1",
       "isActive": true
     }
   ],
@@ -71,15 +71,15 @@
     {
       "id": 1,
       "tenantId": "mh",
-      "code": "LAMS_HOLDINGTYPE1",
-      "holdingType": "Fake HoldingType1",
+      "code": "HOLDING_HOLDINGTYPE1",
+      "name": "Fake HoldingType1",
       "isActive": true
     },
     {
       "id": 2,
       "tenantId": "mh",
-      "code": "LAMS_HOLDINGTYPE2",
-      "holdingType": "Fake HoldingType2",
+      "code": "HOLDING_HOLDINGTYPE2",
+      "name": "Fake HoldingType2",
       "isActive": true
     }
   ],
@@ -87,15 +87,15 @@
     {
       "id": 1,
       "tenantId": "mh",
-      "code": "LAMS_COMPENSATIONMODE1",
-      "compensationMode": "Fake Compensation Mode1",
+      "code": "COMPMODE_COMPENSATIONMODE1",
+      "name": "Fake Compensation Mode1",
       "isActive": true
     },
     {
       "id": 2,
       "tenantId": "mh",
-      "code": "LAMS_COMPENSATIONMODE2",
-      "compensationMode": "Fake Compensation Mode2",
+      "code": "COMPMODE_COMPENSATIONMODE2",
+      "name": "Fake Compensation Mode2",
       "isActive": true
     }
   ],
@@ -103,31 +103,31 @@
     {
       "id": 1,
       "tenantId": "mh",
-      "code": "LAMS_ROADTYPE1",
-      "roadType": "Fake RoadType1",
+      "code": "ROAD_ROADTYPE1",
+      "name": "Fake RoadType1",
       "isActive": true
     },
     {
       "id": 2,
       "tenantId": "mh",
-      "code": "LAMS_ROADTYPE2",
-      "roadType": "Fake RoadType2",
+      "code": "ROAD_ROADTYPE2",
+      "name": "Fake RoadType2",
       "isActive": false
     }
   ],
-  "PlanningType": [
+  "PlaningType": [
     {
       "id": 1,
       "tenantId": "mh",
-      "code": "LAMS_PLANINGTYPE1",
-      "planningType": "Fake Land PlanningType1",
+      "code": "PLANING_PLANINGTYPE1",
+      "name": "Fake Land PlanningType1",
       "isActive": true
     },
     {
       "id": 2,
       "tenantId": "mh",
-      "code": "LAMS_PLANINGTYPE2",
-      "planningType": "Fake Land PlanningType2",
+      "code": "PLANING_PLANINGTYPE2",
+      "name": "Fake Land PlanningType2",
       "isActive": false
     }
   ],
@@ -135,8 +135,49 @@
     {
       "id": 1,
       "tenantId": "mh",
-      "code": "LAMS_USAGETYPE1",
-      "usageType": "Fake Land UsageType1",
+      "code": "USAGE_USAGETYPE1",
+      "name": "Fake Land UsageType1",
+      "isActive": true
+    },
+    {
+      "id": 1,
+      "tenantId": "mh",
+      "code": "USAGE_USAGETYPE2",
+      "name": "Fake Land UsageType2",
+      "isActive": true
+    }
+  ],
+  "SubUsageType": [
+    {
+      "id": 1,
+      "tenantId": "mh",
+	  "usage":"USAGE_USAGETYPE1",
+      "code": "SUBUSAGE_SUBUSAGETYPE1",
+      "name": "Fake Land Sub UsageType1",
+      "isActive": true
+    },
+    {
+      "id": 1,
+      "tenantId": "mh",
+	  "usage":"USAGE_USAGETYPE1",
+      "code": "SUBUSAGE_SUBUSAGETYPE2",
+      "name": "Fake Land UsageType2",
+      "isActive": true
+    },
+    {
+      "id": 1,
+      "tenantId": "mh",
+	  "usage":"USAGE_USAGETYPE2",
+      "code": "SUBUSAGE_SUBUSAGETYPE3",
+      "name": "Fake Land Sub UsageType3",
+      "isActive": true
+    },
+    {
+      "id": 1,
+      "tenantId": "mh",
+	  "usage":"USAGE_USAGETYPE2",
+      "code": "SUBUSAGE_SUBUSAGETYPE4",
+      "name": "Fake Land UsageType4",
       "isActive": true
     }
   ],
@@ -156,6 +197,171 @@
       "endMonth": 12,
       "period": 567,
       "noOfDaysPerYear": 365
+    }
+  ],
+  "PropertyType": [
+    {
+      "id": 1,
+      "tenantId": "mh",
+      "code": "PTYPE_PROPERTYTYPE1",
+      "name": "Fake Land PropertyType1",
+      "isActive": true
+    },
+    {
+      "id": 1,
+      "tenantId": "mh",
+      "code": "PTYPE_PROPERTYTYPE2",
+      "name": "Fake Land PropertyType2",
+      "isActive": true
+    }
+  ],
+  "ApplicantType": [
+    {
+      "id": 1,
+      "tenantId": "mh",
+      "code": "APPLTYPE_INDIVIDUAL",
+      "name": "Individual",
+      "isActive": true
+    },
+    {
+      "id": 1,
+      "tenantId": "mh",
+      "code": "APPLTYPE_SOCIETY",
+      "name": "Society",
+      "isActive": true
+    },
+    {
+      "id": 1,
+      "tenantId": "mh",
+      "code": "APPLTYPE_AGENCY",
+      "name": "Agency",
+      "isActive": true
+    },
+    {
+      "id": 1,
+      "tenantId": "mh",
+      "code": "COMPANY",
+      "name": "Company",
+      "isActive": true
+    },
+    {
+      "id": 1,
+      "tenantId": "mh",
+      "code": "APPLTYPE_ORGANIZATION",
+      "name": "Organization",
+      "isActive": true
+    }
+  ],
+  "AdvertisementType": [
+    {
+      "id": 1,
+      "tenantId": "mh",
+      "code": "ADDTYPE_HOARDINGS",
+      "name": "Hoardings",
+      "isActive": true
+    },
+    {
+      "id": 1,
+      "tenantId": "mh",
+      "code": "ADDTYPE_CINEMAS",
+      "name": "Cinemas",
+      "isActive": true
+    },
+    {
+      "id": 1,
+      "tenantId": "mh",
+      "code": "ADDTYPE_BALOONSANDUMBRELLAS",
+      "name": "Baloons and Umbrellas",
+      "isActive": true
+    },
+    {
+      "id": 1,
+      "tenantId": "mh",
+      "code": "ADDTYPE_MOVINGSADS",
+      "name": "Moving Ads",
+      "isActive": true
+    },
+    {
+      "id": 1,
+      "tenantId": "mh",
+      "code": "ADDTYPE_OTHERS",
+      "name": "Others",
+      "isActive": true
+    }
+
+  ],
+  "AdvertisementSubType": [
+    {
+      "id": 1,
+      "tenantId": "mh",
+	  "advertisement":"ADDTYPE_HOARDINGS",
+      "code": "ADDSUBTYPE_REGULAR_ILLUMINATED",
+      "name": "Regular - Illuminated",
+      "isActive": true
+    },
+    {
+      "id": 1,
+      "tenantId": "mh",
+	  "advertisement":"ADDTYPE_HOARDINGS",
+      "code": "ADDSUBTYPE_REGULAR_NON_ILLUMINATED",
+      "name": "Regular - Non Illuminated",
+      "isActive": true
+    },
+    {
+      "id": 1,
+      "tenantId": "mh",
+	  "advertisement":"ADDTYPE_HOARDINGS",
+      "code": "ADDSUBTYPE_LAND_WALLS_ILLUMINATED",
+      "name": "Land and walls - Illuminated",
+      "isActive": true
+    },
+    {
+      "id": 1,
+      "tenantId": "mh",
+	  "advertisement":"ADDTYPE_CINEMAS",
+      "code": "ADDSUBTYPE_TRAILERS",
+      "name": "Trailers",
+      "isActive": true
+    },
+    {
+      "id": 1,
+      "tenantId": "mh",
+	  "advertisement":"ADDTYPE_CINEMAS",
+      "code": "ADDSUBTYPE_SLIDES",
+      "name": "Slides",
+      "isActive": true
+    },
+    {
+      "id": 1,
+      "tenantId": "mh",
+	  "advertisement":"ADDTYPE_CINEMAS",
+      "code": "ADDSUBTYPE_POSTERS",
+      "name": "Posters",
+      "isActive": true
+    },
+    {
+      "id": 1,
+      "tenantId": "mh",
+	  "advertisement":"ADDTYPE_BALOONSANDUMBRELLAS",
+      "code": "ADDSUBTYPE_TRAILERS",
+      "name": "Baloons and Umbrellas",
+      "isActive": true
+    },
+    {
+      "id": 1,
+      "tenantId": "mh",
+	  "advertisement":"ADDTYPE_MOVINGSADS",
+      "code": "ADDSUBTYPE_SLIDES",
+      "name": "Autos",
+      "isActive": true
+    },
+    {
+      "id": 1,
+      "tenantId": "mh",
+	  "advertisement":"ADDTYPE_OTHERS",
+      "code": "ADDSUBTYPE_POSTERS",
+      "name": "Auction Sites",
+      "isActive": true
     }
   ]
 }

@@ -38,7 +38,7 @@ import SearchEscalation from './components/contents/pgr/master/escalationTime/se
 import DefineEscalationTime from './components/contents/pgr/master/escalationTime/defineEscalationTime';
 import ServiceTypeCreate from './components/contents/pgr/master/serviceType/serviceTypeCreate';
 import Report from './components/contents/reports/report';
-import PGRCharts from './components/contents/pgr/dashboards/index';
+import PGRDashboard from './components/contents/pgr/dashboards/index';
 import PgrAnalytics from './components/contents/pgr/dashboards/PgrAnalytics';
 
 //WC
@@ -208,7 +208,7 @@ const Main = () => {
         <Route exact path={base+'/pgr/defineEscalationTime'} component={DefineEscalationTime}/>
         <Route exact path={base+'/pgr/createServiceType'} component={ServiceTypeCreate}/>
         <Route exact path={base+'/report/:moduleName/:reportName'} component={Report}/>
-        <Route exact path={base+'/pgr/dashboard'} component={PGRCharts}/>
+        <Route exact path={base+'/pgr/dashboard'} component={PGRDashboard}/>
 
         <Route exact path={base+'/wc/createCategoryType'} component={CategoryTypeCreate}/>
         <Route exact name="createCategoryType" path={base+'/wc/createCategoryType/:id?'} component={CategoryTypeCreate}/>

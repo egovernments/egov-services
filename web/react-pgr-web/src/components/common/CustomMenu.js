@@ -75,6 +75,7 @@ const menuConvention={
   "Grievance Redressal.Masters.Escalation.Create Escalation":"/pgr/defineEscalation",
   // "Grievance Redressal.Masters.Escalation.Update Escalation":"",
   "Grievance Redressal.Masters.Escalation.Search Escalation":"/pgr/bulkEscalationGeneration",
+  "Grievance Redressal.Dashboards.Monthly Dashboard" : "/pgr/dashboard",
 
 	"Water Charge.Water Transactions.CreateNewConnectionAPI":"/createWc/wc",
 	"Water Charge.WCMS Masters.CategoryMasters.CreateCategoryMasterApi":"/create/wc/categoryType",

@@ -108,7 +108,8 @@ public class BaseRegisterReportRowMapper implements ResultSetExtractor<List<Empl
                     throw new SQLException("Parse exception while parsing date");
                 }
                 empInfo.setPlaceOfBirth(rs.getString("e_placeOfBirth"));
-                empInfo.setMaritalStatus(MaritalStatus.fromValue(rs.getString("e_maritalStatus")));
+                MaritalStatus maritalStatus = isEmpty(rs.getString("e_maritalStatus")) ? null : MaritalStatus.fromValue(rs.getString("e_maritalStatus"));
+                empInfo.setMaritalStatus(maritalStatus);
                 empInfo.setMotherTongue(rs.getLong("e_motherTongueId"));
                 empInfo.setPassportNo(rs.getString("e_passportNo"));
                 empInfo.setGpfNo(rs.getString("e_gpfNo"));

@@ -65,205 +65,212 @@ import java.util.stream.Collectors;
 @Builder
 public class Employee {
 
-	private Long id;
+    private Long id;
 
-	@Size(min=1, max=256)
-	private String code;
+    @Size(min = 1, max = 256)
+    private String code;
 
-	@NotNull
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date dateOfAppointment;
+    @NotNull
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date dateOfAppointment;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date dateOfJoining;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date dateOfJoining;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date dateOfRetirement;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date dateOfRetirement;
 
-	@NotNull
-	private Long employeeStatus;
+    @NotNull
+    private Long employeeStatus;
 
-	private Long recruitmentMode;
+    private Long recruitmentMode;
 
-	private Long recruitmentType;
+    private Long recruitmentType;
 
-	private Long recruitmentQuota;
+    private Long recruitmentQuota;
 
-	@Max(100)
-	private Short retirementAge;
+    @Max(100)
+    private Short retirementAge;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date dateOfResignation;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date dateOfResignation;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date dateOfTermination;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date dateOfTermination;
 
-	@NotNull
-	private Long employeeType;
+    @NotNull
+    private Long employeeType;
 
-	@Valid
-	@NotNull
-	@Size(min=1)
-	private List<Assignment> assignments = new ArrayList<>();
+    @Valid
+    @NotNull
+    @Size(min = 1)
+    private List<Assignment> assignments = new ArrayList<>();
 
-	@NotNull
-	@Size(min=1)
-	private List<Long> jurisdictions = new ArrayList<>();
+    @NotNull
+    @Size(min = 1)
+    private List<Long> jurisdictions = new ArrayList<>();
 
-	private Long motherTongue;
+    private Long motherTongue;
 
-	private Long religion;
+    private Long religion;
 
-	private Long community;
+    private Long community;
 
-	private Long category;
+    private Long category;
 
-	private Boolean physicallyDisabled;
+    private Boolean physicallyDisabled;
 
-	private Boolean medicalReportProduced;
+    private Boolean medicalReportProduced;
 
-	private List<Long> languagesKnown = new ArrayList<>();
+    private List<Long> languagesKnown = new ArrayList<>();
 
-	@Valid
-	@NotNull
-	private MaritalStatus maritalStatus;
+    @Valid
+    @NotNull
+    private MaritalStatus maritalStatus;
 
-	private String passportNo;
+    private String passportNo;
 
-	private String gpfNo;
+    private String gpfNo;
 
-	private Long bank;
+    private Long bank;
 
-	private Long bankBranch;
+    @NotNull
+    private Long bankBranch;
 
-	@Size(max=20)
-	private String bankAccount;
+    @NotNull
+    @Size(max = 20)
+    private String bankAccount;
 
-	private Long group;
+    @NotNull
+    @Size(max = 20)
+    private String ifscCode;
 
-	@Size(max=200)
-	private String placeOfBirth;
+    private Long group;
 
-	@Valid
-	private List<ServiceHistory> serviceHistory = new ArrayList<>();
+    @Size(max = 200)
+    private String placeOfBirth;
 
-	@Valid
-	private List<Probation> probation = new ArrayList<>();
+    @Valid
+    private List<ServiceHistory> serviceHistory = new ArrayList<>();
 
-	@Valid
-	private List<Regularisation> regularisation = new ArrayList<>();
+    @Valid
+    private List<Probation> probation = new ArrayList<>();
 
-	@Valid
-	private List<TechnicalQualification> technical = new ArrayList<>();
+    @Valid
+    private List<Regularisation> regularisation = new ArrayList<>();
 
-	@Valid
-	private List<EducationalQualification> education = new ArrayList<>();
+    @Valid
+    private List<TechnicalQualification> technical = new ArrayList<>();
 
-	@Valid
-	private List<DepartmentalTest> test = new ArrayList<>();
+    @Valid
+    private List<EducationalQualification> education = new ArrayList<>();
 
-	@Valid
-	@JsonProperty("APRDetails")
-	private List<APRDetail> aprDetails = new ArrayList<>();
+    @Valid
+    private List<DepartmentalTest> test = new ArrayList<>();
 
-	private List<String> documents = new ArrayList<>();
+    @Valid
+    @JsonProperty("APRDetails")
+    private List<APRDetail> aprDetails = new ArrayList<>();
 
-	private Long createdBy;
+    private List<String> documents = new ArrayList<>();
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date createdDate;
+    private Long createdBy;
 
-	private Long lastModifiedBy;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date createdDate;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date lastModifiedDate;
+    private Long lastModifiedBy;
 
-	@Valid
-	@NotNull
-	private User user;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date lastModifiedDate;
 
-	@NotNull
-	@Size(max=256)
-	private String tenantId;
+    @Valid
+    @NotNull
+    private User user;
+
+    @NotNull
+    @Size(max = 256)
+    private String tenantId;
 
 
-	public org.egov.eis.model.Employee toDomain() {
-		List<org.egov.eis.model.Assignment> assignmentList = assignments.stream().map(assignment ->
-				org.egov.eis.model.Assignment.builder()
-						.id(assignment.getId())
-						.position(assignment.getPosition())
-						.fund(assignment.getFund())
-						.functionary(assignment.getFunctionary())
-						.function(assignment.getFunction())
-						.department(assignment.getDepartment().getId())
-						.designation(assignment.getDesignation().getId())
-						.hod(assignment.getHod())
-						.isPrimary(assignment.getIsPrimary())
-						.fromDate(assignment.getFromDate())
-						.toDate(assignment.getToDate())
-						.grade(assignment.getGrade())
-						.govtOrderNumber(assignment.getGovtOrderNumber())
-						.documents(assignment.getDocuments())
-						.createdBy(assignment.getCreatedBy())
-						.createdDate(assignment.getCreatedDate())
-						.lastModifiedBy(assignment.getLastModifiedBy())
-						.lastModifiedDate(assignment.getLastModifiedDate())
-						.tenantId(assignment.getTenantId())
-						.build()
-		).collect(Collectors.toList());
+    public org.egov.eis.model.Employee toDomain() {
+        List<org.egov.eis.model.Assignment> assignmentList = assignments.stream().map(assignment ->
+                org.egov.eis.model.Assignment.builder()
+                        .id(assignment.getId())
+                        .position(assignment.getPosition())
+                        .fund(assignment.getFund())
+                        .functionary(assignment.getFunctionary())
+                        .function(assignment.getFunction())
+                        .department(assignment.getDepartment().getId())
+                        .designation(assignment.getDesignation().getId())
+                        .hod(assignment.getHod())
+                        .isPrimary(assignment.getIsPrimary())
+                        .fromDate(assignment.getFromDate())
+                        .toDate(assignment.getToDate())
+                        .grade(assignment.getGrade())
+                        .govtOrderNumber(assignment.getGovtOrderNumber())
+                        .documents(assignment.getDocuments())
+                        .createdBy(assignment.getCreatedBy())
+                        .createdDate(assignment.getCreatedDate())
+                        .lastModifiedBy(assignment.getLastModifiedBy())
+                        .lastModifiedDate(assignment.getLastModifiedDate())
+                        .tenantId(assignment.getTenantId())
+                        .build()
+        ).collect(Collectors.toList());
 
-		return org.egov.eis.model.Employee.builder()
-				.id(id)
-				.code(code)
-				.dateOfAppointment(dateOfAppointment)
-				.dateOfJoining(dateOfJoining)
-				.dateOfRetirement(dateOfRetirement)
-				.employeeStatus(employeeStatus)
-				.recruitmentMode(recruitmentMode)
-				.recruitmentType(recruitmentType)
-				.recruitmentQuota(recruitmentQuota)
-				.retirementAge(retirementAge)
-				.dateOfResignation(dateOfResignation)
-				.dateOfTermination(dateOfTermination)
-				.employeeType(employeeType)
-				.assignments(assignmentList)
-				.jurisdictions(jurisdictions)
-				.motherTongue(motherTongue)
-				.religion(religion)
-				.community(community)
-				.category(category)
-				.physicallyDisabled(physicallyDisabled)
-				.medicalReportProduced(medicalReportProduced)
-				.languagesKnown(languagesKnown)
-				.maritalStatus(maritalStatus)
-				.passportNo(passportNo)
-				.gpfNo(gpfNo)
-				.bank(bank)
-				.bankBranch(bankBranch)
-				.bankAccount(bankAccount)
-				.group(group)
-				.placeOfBirth(placeOfBirth)
-				.serviceHistory(serviceHistory)
-				.probation(probation)
-				.regularisation(regularisation)
-				.technical(technical)
-				.education(education)
-				.test(test)
-				.aprDetails(aprDetails)
-				.documents(documents)
-				.createdBy(createdBy)
-				.createdDate(createdDate)
-				.lastModifiedBy(lastModifiedBy)
-				.lastModifiedDate(lastModifiedDate)
-				.user(user)
-				.tenantId(tenantId)
-				.build();
-	}
+        return org.egov.eis.model.Employee.builder()
+                .id(id)
+                .code(code)
+                .dateOfAppointment(dateOfAppointment)
+                .dateOfJoining(dateOfJoining)
+                .dateOfRetirement(dateOfRetirement)
+                .employeeStatus(employeeStatus)
+                .recruitmentMode(recruitmentMode)
+                .recruitmentType(recruitmentType)
+                .recruitmentQuota(recruitmentQuota)
+                .retirementAge(retirementAge)
+                .dateOfResignation(dateOfResignation)
+                .dateOfTermination(dateOfTermination)
+                .employeeType(employeeType)
+                .assignments(assignmentList)
+                .jurisdictions(jurisdictions)
+                .motherTongue(motherTongue)
+                .religion(religion)
+                .community(community)
+                .category(category)
+                .physicallyDisabled(physicallyDisabled)
+                .medicalReportProduced(medicalReportProduced)
+                .languagesKnown(languagesKnown)
+                .maritalStatus(maritalStatus)
+                .passportNo(passportNo)
+                .gpfNo(gpfNo)
+                .bank(bank)
+                .bankBranch(bankBranch)
+                .bankAccount(bankAccount)
+                .ifscCode(ifscCode)
+                .group(group)
+                .placeOfBirth(placeOfBirth)
+                .serviceHistory(serviceHistory)
+                .probation(probation)
+                .regularisation(regularisation)
+                .technical(technical)
+                .education(education)
+                .test(test)
+                .aprDetails(aprDetails)
+                .documents(documents)
+                .createdBy(createdBy)
+                .createdDate(createdDate)
+                .lastModifiedBy(lastModifiedBy)
+                .lastModifiedDate(lastModifiedDate)
+                .user(user)
+                .tenantId(tenantId)
+                .build();
+    }
 }

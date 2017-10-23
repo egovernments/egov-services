@@ -181,6 +181,9 @@ public class EmployeeInfo {
     @Size(max = 20)
     private String bankAccount;
 
+    @Size(max = 20)
+    private String ifscCode;
+
     private List<String> documents = new ArrayList<String>();
 
     private String tenantId;

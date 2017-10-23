@@ -40,7 +40,11 @@
 
 package org.egov.eis.repository.rowmapper;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
+import org.egov.eis.model.Employee;
+import org.egov.eis.model.enums.MaritalStatus;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -48,76 +52,73 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.egov.eis.model.Employee;
-import org.egov.eis.model.enums.MaritalStatus;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.stereotype.Component;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class EmployeeTableRowMapper implements ResultSetExtractor<Employee> {
 
-	@Override
-	public Employee extractData(ResultSet rs) throws SQLException, DataAccessException {
-		if (!rs.next())
-			return null;
+    @Override
+    public Employee extractData(ResultSet rs) throws SQLException, DataAccessException {
+        if (!rs.next())
+            return null;
 
-		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-		Employee employee = new Employee();
-		employee.setId((Long) rs.getObject("id"));
-		employee.setCode(rs.getString("code"));
-		employee.setEmployeeStatus((Long) rs.getObject("employeeStatus"));
-		employee.setRecruitmentMode((Long) rs.getObject("recruitmentmodeid"));
-		employee.setRecruitmentType((Long) rs.getObject("recruitmenttypeid"));
-		employee.setRecruitmentQuota((Long) rs.getObject("recruitmentquotaid"));
-		employee.setRetirementAge(isEmpty(rs.getObject("retirementage")) ? null
-				: Short.parseShort((rs.getObject("retirementage").toString())));
-		employee.setEmployeeType((Long) rs.getObject("employeetypeid"));
-		employee.setMotherTongue((Long) rs.getObject("mothertongueid"));
-		employee.setReligion((Long) rs.getObject("religionid"));
-		employee.setCommunity((Long) rs.getObject("communityid"));
-		employee.setCategory((Long) rs.getObject("categoryid"));
-		employee.setPhysicallyDisabled((Boolean) rs.getObject("physicallydisabled"));
-		employee.setMedicalReportProduced((Boolean) rs.getObject("medicalReportproduced"));
-		employee.setMaritalStatus(
-				isEmpty(rs.getString("maritalStatus")) ? null : MaritalStatus.fromValue(rs.getString("maritalStatus")));
-		employee.setPassportNo(rs.getString("passportno"));
-		employee.setGpfNo(rs.getString("gpfno"));
-		employee.setBank((Long) rs.getObject("bankid"));
-		employee.setBankBranch((Long) rs.getObject("bankbranchid"));
-		employee.setBankAccount(rs.getString("bankaccount"));
-		employee.setGroup((Long) rs.getObject("groupid"));
-		employee.setPlaceOfBirth(rs.getString("placeofbirth"));
-		employee.setCreatedBy((Long) rs.getObject("createdBy"));
-		employee.setLastModifiedBy((Long) rs.getObject("lastModifiedBy"));
-		employee.setTenantId(rs.getString("tenantid"));
-		try {
-			Date date = isEmpty(rs.getDate("dateofappointment")) ? null
-					: sdf.parse(sdf.format(rs.getDate("dateofappointment")));
-			employee.setDateOfAppointment(date);
-			date = isEmpty(rs.getDate("dateofjoining")) ? null : sdf.parse(sdf.format(rs.getDate("dateofjoining")));
-			employee.setDateOfJoining(date);
-			date = isEmpty(rs.getDate("dateofretirement")) ? null
-					: sdf.parse(sdf.format(rs.getDate("dateofretirement")));
-			employee.setDateOfRetirement(date);
-			date = isEmpty(rs.getDate("dateofresignation")) ? null
-					: sdf.parse(sdf.format(rs.getDate("dateofresignation")));
-			employee.setDateOfResignation(date);
-			date = isEmpty(rs.getDate("dateoftermination")) ? null
-					: sdf.parse(sdf.format(rs.getDate("dateoftermination")));
-			employee.setDateOfTermination(date);
-			date = isEmpty(rs.getDate("createdDate")) ? null
-					: sdf.parse(sdf.format(rs.getDate("createdDate")));
-			employee.setCreatedDate(date);
-			date = isEmpty(rs.getDate("lastModifiedDate")) ? null
-					: sdf.parse(sdf.format(rs.getDate("lastModifiedDate")));
-			employee.setLastModifiedDate(date);
-		} catch (ParseException e) {
-			e.printStackTrace();
-			throw new SQLException("Parse exception while parsing date");
-		}
+        Employee employee = new Employee();
+        employee.setId((Long) rs.getObject("id"));
+        employee.setCode(rs.getString("code"));
+        employee.setEmployeeStatus((Long) rs.getObject("employeeStatus"));
+        employee.setRecruitmentMode((Long) rs.getObject("recruitmentmodeid"));
+        employee.setRecruitmentType((Long) rs.getObject("recruitmenttypeid"));
+        employee.setRecruitmentQuota((Long) rs.getObject("recruitmentquotaid"));
+        employee.setRetirementAge(isEmpty(rs.getObject("retirementage")) ? null
+                : Short.parseShort((rs.getObject("retirementage").toString())));
+        employee.setEmployeeType((Long) rs.getObject("employeetypeid"));
+        employee.setMotherTongue((Long) rs.getObject("mothertongueid"));
+        employee.setReligion((Long) rs.getObject("religionid"));
+        employee.setCommunity((Long) rs.getObject("communityid"));
+        employee.setCategory((Long) rs.getObject("categoryid"));
+        employee.setPhysicallyDisabled((Boolean) rs.getObject("physicallydisabled"));
+        employee.setMedicalReportProduced((Boolean) rs.getObject("medicalReportproduced"));
+        employee.setMaritalStatus(
+                isEmpty(rs.getString("maritalStatus")) ? null : MaritalStatus.fromValue(rs.getString("maritalStatus")));
+        employee.setPassportNo(rs.getString("passportno"));
+        employee.setGpfNo(rs.getString("gpfno"));
+        employee.setBank((Long) rs.getObject("bankid"));
+        employee.setBankBranch((Long) rs.getObject("bankbranchid"));
+        employee.setBankAccount(rs.getString("bankaccount"));
+        employee.setIfscCode(rs.getString("ifscCode"));
+        employee.setGroup((Long) rs.getObject("groupid"));
+        employee.setPlaceOfBirth(rs.getString("placeofbirth"));
+        employee.setCreatedBy((Long) rs.getObject("createdBy"));
+        employee.setLastModifiedBy((Long) rs.getObject("lastModifiedBy"));
+        employee.setTenantId(rs.getString("tenantid"));
+        try {
+            Date date = isEmpty(rs.getDate("dateofappointment")) ? null
+                    : sdf.parse(sdf.format(rs.getDate("dateofappointment")));
+            employee.setDateOfAppointment(date);
+            date = isEmpty(rs.getDate("dateofjoining")) ? null : sdf.parse(sdf.format(rs.getDate("dateofjoining")));
+            employee.setDateOfJoining(date);
+            date = isEmpty(rs.getDate("dateofretirement")) ? null
+                    : sdf.parse(sdf.format(rs.getDate("dateofretirement")));
+            employee.setDateOfRetirement(date);
+            date = isEmpty(rs.getDate("dateofresignation")) ? null
+                    : sdf.parse(sdf.format(rs.getDate("dateofresignation")));
+            employee.setDateOfResignation(date);
+            date = isEmpty(rs.getDate("dateoftermination")) ? null
+                    : sdf.parse(sdf.format(rs.getDate("dateoftermination")));
+            employee.setDateOfTermination(date);
+            date = isEmpty(rs.getDate("createdDate")) ? null
+                    : sdf.parse(sdf.format(rs.getDate("createdDate")));
+            employee.setCreatedDate(date);
+            date = isEmpty(rs.getDate("lastModifiedDate")) ? null
+                    : sdf.parse(sdf.format(rs.getDate("lastModifiedDate")));
+            employee.setLastModifiedDate(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            throw new SQLException("Parse exception while parsing date");
+        }
 
-		return employee;
-	}
+        return employee;
+    }
 }

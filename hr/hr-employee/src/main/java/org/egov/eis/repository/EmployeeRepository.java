@@ -69,17 +69,17 @@ public class EmployeeRepository {
             + " (id, code, dateOfAppointment, dateOfJoining, dateOfRetirement, employeeStatus, recruitmentModeId,"
             + " recruitmentTypeId, recruitmentQuotaId, retirementAge, dateOfResignation, dateOfTermination,"
             + " employeeTypeId, motherTongueId, religionId, communityId, categoryId, physicallyDisabled,"
-            + " medicalReportProduced, maritalStatus, passportNo, gpfNo, bankId, bankBranchId, bankAccount, groupId,"
+            + " medicalReportProduced, maritalStatus, passportNo, gpfNo, bankId, bankBranchId, bankAccount, ifscCode, groupId,"
             + " placeOfBirth, createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId)"
-            + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
     public static final String UPDATE_EMPLOYEE_QUERY = "UPDATE egeis_employee"
             + " SET (dateOfAppointment, dateOfJoining, dateOfRetirement, employeeStatus, recruitmentModeId,"
             + " recruitmentTypeId, recruitmentQuotaId, retirementAge, dateOfResignation, dateOfTermination,"
             + " employeeTypeId, motherTongueId, religionId, communityId, categoryId, physicallyDisabled,"
             + " medicalReportProduced, maritalStatus, passportNo, gpfNo, bankId, bankBranchId, bankAccount,"
-            + " groupId, placeOfBirth, lastModifiedBy, lastModifiedDate)"
-            + " = (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+            + " ifscCode, groupId, placeOfBirth, lastModifiedBy, lastModifiedDate)"
+            + " = (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
             + " WHERE id = ? AND tenantId = ?";
 
     public static final String EMPLOYEE_EXISTENCE_CHECK_QUERY = "SELECT exists(SELECT id FROM egeis_employee"
@@ -96,7 +96,7 @@ public class EmployeeRepository {
             + " id, code, dateOfAppointment, dateOfJoining, dateOfRetirement, employeeStatus, recruitmentModeId,"
             + " recruitmentTypeId, recruitmentQuotaId, maritalStatus, retirementAge, dateOfResignation, dateOfTermination,"
             + " employeeTypeId, motherTongueId, religionId, communityId, categoryId, physicallyDisabled, placeOfBirth,"
-            + " medicalReportProduced, passportNo, gpfNo, bankId, bankBranchId, bankAccount, groupId,"
+            + " medicalReportProduced, passportNo, gpfNo, bankId, bankBranchId, bankAccount, ifscCode, groupId,"
             + " createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId"
             + " FROM egeis_employee" + " WHERE id = ? AND tenantId = ? ";
 
@@ -190,7 +190,7 @@ public class EmployeeRepository {
                 employee.getEmployeeType(), employee.getMotherTongue(), employee.getReligion(), employee.getCommunity(),
                 employee.getCategory(), employee.getPhysicallyDisabled(), employee.getMedicalReportProduced(),
                 employee.getMaritalStatus().toString(), employee.getPassportNo(), employee.getGpfNo(),
-                employee.getBank(), employee.getBankBranch(), employee.getBankAccount(), employee.getGroup(),
+                employee.getBank(), employee.getBankBranch(), employee.getBankAccount(), employee.getIfscCode(), employee.getGroup(),
                 employee.getPlaceOfBirth(), employee.getCreatedBy(), new Date(), employee.getLastModifiedBy(),
                 new Date(), employee.getTenantId()};
 
@@ -210,7 +210,7 @@ public class EmployeeRepository {
                 employee.getMotherTongue(), employee.getReligion(), employee.getCommunity(), employee.getCategory(),
                 employee.getPhysicallyDisabled(), employee.getMedicalReportProduced(),
                 employee.getMaritalStatus().toString(), employee.getPassportNo(), employee.getGpfNo(),
-                employee.getBank(), employee.getBankBranch(), employee.getBankAccount(), employee.getGroup(),
+                employee.getBank(), employee.getBankBranch(), employee.getBankAccount(), employee.getIfscCode(), employee.getGroup(),
                 employee.getPlaceOfBirth(), employee.getLastModifiedBy(), new Date(),
                 employee.getId(), employee.getTenantId()};
 

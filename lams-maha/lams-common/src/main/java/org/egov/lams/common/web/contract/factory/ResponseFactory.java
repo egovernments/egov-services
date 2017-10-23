@@ -3,12 +3,11 @@ package org.egov.lams.common.web.contract.factory;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.Error;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ErrorResponse;
-import org.egov.lams.common.web.contract.ErrorRes;
-import org.egov.lams.common.web.contract.RequestInfo;
-import org.egov.lams.common.web.contract.ResponseInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.Errors;

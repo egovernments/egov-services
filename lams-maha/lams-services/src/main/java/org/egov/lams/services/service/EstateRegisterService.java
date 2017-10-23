@@ -3,11 +3,11 @@ package org.egov.lams.services.service;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.lams.common.util.SequenceGenUtil;
 import org.egov.lams.common.web.contract.EstateRegister;
 import org.egov.lams.common.web.contract.factory.ResponseFactory;
 import org.egov.lams.common.web.request.EstateRegisterRequest;
 import org.egov.lams.common.web.request.EstateRegisterResponse;
+import org.egov.lams.services.util.SequenceGenUtil;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +30,7 @@ public class EstateRegisterService {
 	
 	public EstateRegisterResponse createAsync(EstateRegisterRequest estateRegisterRequest){
 		
-		List<String> ids=sequenceGenService.getIds(estateRegisterRequest.getLandRegisters().size(), "");
+		List<Long> ids=sequenceGenService.getIds(estateRegisterRequest.getLandRegisters().size(), "");
 		int index=0;
 		for(EstateRegister estateRegister: estateRegisterRequest.getLandRegisters()){
 			estateRegister.setId(ids.get(index++));

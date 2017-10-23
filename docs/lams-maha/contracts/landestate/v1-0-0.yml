@@ -730,15 +730,9 @@ definitions:
         maxLength: 64
         minLength: 1
       registerName:
-        type: string
-        description: Register name
-        maxLength: 64
-        minLength: 1
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/RegisterName'
       subRegisterName:
-        type: string
-        description: Register name
-        maxLength: 64
-        minLength: 1
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/SubRegisterName'
       regionalOffice:
         description: The boundary ward where the land is located.
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
@@ -761,19 +755,13 @@ definitions:
         maxLength: 256
         minLength: 1
       purpose:
-        type: string
-        description: purpose of the land
-        maxLength: 64
-        minLength: 1
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/Purpose'
       width:
         type: number
         format: double
         description: width of the land
       roadType:
-        type: string
-        description: Road Type of the land
-        maxLength: 64
-        minLength: 1
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/RoadType'
       landType:
         type: string
         description: Land Type of the land
@@ -792,24 +780,15 @@ definitions:
         format: double
         description: Land Area as per register
       possessionDate:
-        type: string
-        format: date
-        description: possession date of a land
+        type: integer
+        format: int64
+        description: possession date of a land, time in epoch
       modeOfAcquisition:
-        type: string
-        description: mode of acquisition for a land
-        maxLength: 64
-        minLength: 1
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/ModeOfAcquisition'
       typeOfHolding:
-        type: string
-        description: type of holding for a land
-        maxLength: 64
-        minLength: 1
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/HoldingType'
       modeOfCompensation:
-        type: string
-        description: mode of compensation for a land
-        maxLength: 64
-        minLength: 1
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/CompensationMode'
       costOfAcquisition:
         type: number
         format: double
@@ -824,10 +803,7 @@ definitions:
         maxLength: 64
         minLength: 1
       typeOfPlanning:
-        type: string
-        description: Type Of Planning for a land
-        maxLength: 64
-        minLength: 1
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/PlaningType'
       codeOfReservation:
         type: string
         description: Code Of Reservation for a land
@@ -912,15 +888,9 @@ definitions:
         maxLength: 64
         minLength: 1
       registerName:
-        type: string
-        description: Register name
-        maxLength: 64
-        minLength: 1
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/RegisterName'
       subRegisterName:
-        type: string
-        description: Register name
-        maxLength: 64
-        minLength: 1
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/SubRegisterName'
       regionalOffice:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
       location:
@@ -930,10 +900,7 @@ definitions:
         description: Name of the property
         maxLength: 256
       propertyType:
-        type: string
-        description: type of the property
-        maxLength: 64
-        minLength: 1
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/PropertyType'
       propertyAddress:
         type: string
         description: Address of the property
@@ -975,13 +942,13 @@ definitions:
         description: Land id of the Estate
         maxLength: 64
       constructionStartDate:
-        type: string
-        format: date
-        description: construction start date of a Estate
+        type: integer
+        format: int64
+        description: construction start date of a Estate, time in epoch
       constructionEndDate:
-        type: string
-        format: date
-        description: construction end date of a Estate
+        type: integer
+        format: int64
+        description: construction end date of a Estate, time in epoch
       proposedBuildingBudget:
         type: number
         format: double
@@ -1129,37 +1096,6 @@ definitions:
         items:
           $ref: '#/definitions/EstateRegister'
     
-  Allottee:
-    type: object
-    description: Allottee is a citizen with whom the agreement is done
-    properties:
-      id:
-        type: integer
-        format: int64
-        description: unique id of the allotee.
-      name:
-        type: string
-        description: Allotee name
-      address:
-        type: string
-        description: Allottee address
-      mobileNumber:
-        type: number
-        description: Allottee contact number
-      aadhaarNumber:
-        type: string
-        description: Allottee aadhaar number
-      pan:
-        type: string
-        description: Allottee pan number
-      emailId:
-        type: string
-        description: Allottee emailid
-    required:
-      - name
-      - address
-      - mobileNumber
-    
   Agreement:
     type: object
     description: This is a 
@@ -1190,15 +1126,15 @@ definitions:
         description: Land or Estate registration no for which the agreement being done.
         maxLength: 64
       allottee:
-        $ref: '#/definitions/Allottee'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
       registrationNo:
         type: string
         description: Registration no for agreement.
         maxLength: 64
       registrationDate:
-        type: string
-        format: date
-        description: Registration date for agreement.
+        type: integer
+        format: int64
+        description: Registration date for agreement. Time in epoch
       registerPageNo:
         type: string
         description: Registar page no for agreement.
@@ -1248,13 +1184,11 @@ definitions:
         format: date
         description: date of agreement.
       agreementToDate:
-        type: string
-        format: date
-        description: End date of agreement.
+        type: integer
+        format: int64
+        description: End date of agreement. Time in epoch
       holdingType:
-        type: string
-        description: Holding Type
-        maxLength: 64
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/HoldingType'
       GBResolutionNo:
         type: string
         description: GB resolution number.
@@ -1344,9 +1278,9 @@ definitions:
         type: string
         description: User should enter Renewal order number which provided by corporation/municipality
       renewalOrderDate:
-        type: string
-        format: date
-        description: enter renewal order date.
+        type: integer
+        format: int64
+        description: enter renewal order date. Time in epoch
       reasonForRenewal:
         type: string
         format: date
@@ -1371,9 +1305,9 @@ definitions:
         format: date
         description: Order number for cancelling agreement issued by the competent authority.
       orderDate:
-        type: string
-        format: date
-        description: Date on which order was signed for cancelling agreement
+        type: integer
+        format: int64
+        description: Date on which order was signed for cancelling agreement. Time in epoch
 
   WorkFlowDetails:
     type: object
@@ -1428,9 +1362,9 @@ definitions:
         type: string
         description: notice number
       notice  Date:
-        type: string
-        format: date
-        description: Date of Commencement of Agreement.
+        type: integer
+        format: int64
+        description: Date of Commencement of Agreement. Time in epoch
       agreementNumber:
         type: string
         description: unique agreement number.
@@ -1471,9 +1405,9 @@ definitions:
         type: string
         description: Notice template version.
       expiryDate:
-        type: string
-        format: date
-        description: Date of expiry for Agreement.
+        type: integer
+        format: int64
+        description: Date of expiry for Agreement. Time in epoch
       rent:
         type: number
         format: double

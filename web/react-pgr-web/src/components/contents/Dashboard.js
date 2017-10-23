@@ -763,7 +763,9 @@ class Dashboard extends Component {
                           <Card>
                             <CardHeader title="My Service Requests"/>
                               <CardText>
-                                <Table id="requestTable">
+                              <div className="table-responsive">
+
+                                <table id="requestTable">
                                     <thead>
                                         <tr>
                                           <th>
@@ -796,7 +798,8 @@ class Dashboard extends Component {
 
                                         }) }
                                     </tbody>
-                                </Table>
+                                </table>
+                                </div>
                               </CardText>
                           </Card>
                           <br/>
@@ -804,7 +807,8 @@ class Dashboard extends Component {
                         <Card>
                             <CardHeader title="My Grievances"/>
                               <CardText>
-                              <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
+                              <div className="table-responsive">
+                              <table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered className="table-striped">
                                <thead>
                                 <tr>
                                   <th>#</th>
@@ -820,7 +824,8 @@ class Dashboard extends Component {
                                 <tbody>
                                 {renderBody()}
                                 </tbody>
-                            </Table>
+                            </table>
+                            </div>
                               </CardText>
                           </Card>
 
@@ -833,7 +838,8 @@ class Dashboard extends Component {
 						 <Grid style={{"paddingTop":"0"}}>
                     <Row>
                       <div className="col-md-12">
-                          <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
+                        <div className="table-responsive">
+                          <table id="searchTable" style={{color:"black",fontWeight: "normal"}} className="table-striped">
                             <thead>
                               <tr>
                                 {
@@ -862,7 +868,8 @@ class Dashboard extends Component {
                                 })
                               }
                             </tbody>
-                          </Table>
+                          </table>
+                        </div>
                       </div>
 				{/*<div  className="tableLayout">
             <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">

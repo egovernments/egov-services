@@ -1,21 +1,88 @@
+@import url('https://fonts.googleapis.com/css?family=Lato');
 html, body{
-	/*font-family: 'ralewayregular';*/
+	/*font-family: 'ralewayregular';
 	font-size: 14px;
 	line-height: 18px;
 	top: 0px !important;
+	overflow-x: hidden !important;*/
 	background-color: #f2f2f2 !important;
-	overflow-x: hidden !important;
+	font-family: 'Lato', sans-serif;
+	height:100%;
 }
 
 /*th { font-size: 12px; }
 td { font-size: 11px; }*/
 
 /* fallback */
-@font-face {
+/*@font-face {
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
   src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v22/2fcrYFNaTjcS6g4U3t-Y5UEw0lE80llgEseQY3FEmqw.woff2) format('woff2');
+}*/
+
+/*input,
+select,
+textarea {
+	border-right: 0 !important;
+	box-shadow: inset 0 1px 0px rgba(0, 0, 0, 0.075) !important;
+	border-radius: 5px !important;*/
+	/*padding-left: 20px !important;*/
+	/*border: 1px solid rgba(221, 226, 232, 0.49) !important;
+	position: relative !important;
+	background-color: rgba(255,255,255,0.9) !important;
+	top:24px !important;
+	height: 56% !important;*/
+
+	/*height: 0 !important;*/
+    /*border: 1px solid #CE5454 !important;
+    box-shadow: 0 0 4px -2px #CE5454 !important;
+
+    left: 0 !important;
+    -moz-animation: .7s 1 shake linear !important;
+    -webkit-animation: 0.7s 1 shake linear !important;*/
+/*}*/
+
+.drawer-backGround {
+	background-color: #009688 !important;
+	color: white !important;
+}
+
+.icon-left-style {
+	color: #555 !important;
+}
+
+.app-bar-bg {
+	background-color: #eee !important;
+	color: black !important;
+}
+
+.app-bar{
+  -moz-transition: left 218ms cubic-bezier(0.4, 0, 0.2, 1);
+  -o-transition: left 218ms cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-transition: left 218ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: left 218ms cubic-bezier(0.4, 0, 0.2, 1);
+  left: 0;
+  width: auto !important;
+  right: 0 !important;
+  position: fixed !important;
+}
+
+.app-content{
+  -moz-transition: padding-left 218ms cubic-bezier(0.4, 0, 0.2, 1);
+  -o-transition: padding-left 218ms cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-transition: padding-left 218ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: padding-left 218ms cubic-bezier(0.4, 0, 0.2, 1);
+  /*padding-right: 20px !important;
+  padding-top: 64px !important;*/
+}
+
+.app-bar.expanded{
+  left: 255px;
+}
+
+.app-content.expanded{
+  padding-left: 255px;
 }
 
 /* style sheet for "A4" printing */

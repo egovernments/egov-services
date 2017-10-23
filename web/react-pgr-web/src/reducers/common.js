@@ -81,6 +81,13 @@ export default (state = defaultState, action) => {
         ...state,
         showMenu: !state.showMenu
       }
+
+    case 'MENU_DONT_TOGGLE':
+      return {
+        ...state,
+        showMenu:action.state
+      }
+
     case 'SET_ACTION_LIST':
         return {
           ...state,

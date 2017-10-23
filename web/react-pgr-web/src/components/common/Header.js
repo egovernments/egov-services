@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 // import {Link} from 'react-router-dom';
 import AppBar from 'material-ui/AppBar';
-// import Drawer from 'material-ui/Drawer';
+import Drawer from 'material-ui/Drawer';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
@@ -13,12 +13,13 @@ import Api from '../../api/api';
 import {logo, tenantName} from './temp/local';
 import {getTitleCase} from '../framework/utility/utility';
 import $ from 'jquery';
+import classnames from 'classnames'
 // import {history} from 'react-router-dom'
 
 // import {Grid, Row, Col} from 'react-bootstrap';
 
 
-// import CustomMenu from './CustomMenu';
+import CustomMenu from './CustomMenu';
 
 // var base='/';
 var tenantContent = {
@@ -82,17 +83,26 @@ const Logo = (props) => {
   /*if(props.tenantInfo && props.tenantInfo[0] && props.tenantInfo[0].imageId) {
 
   } else */
-  if(props.tenantInfo.length>0 && props.tenantInfo[0].hasOwnProperty("logoId") && props.tenantInfo[0].logoId) {
-    return (<img width="64" src={require(props.tenantInfo[0].logoId+".png")} style={styles.mainLogo} alt="logo"/>);
-  } else {
-    // if(logo[getTenantId()]) {
-    //     return (<img width="64" src={logo[getTenantId()]} style={styles.mainLogo} alt="logo"/>);
-    // } else if(logo["default"]) {
-    //     return (<img width="64" src={logo["default"]} style={styles.mainLogo} alt="logo"/>);
-    // } else {
-        return (<img width="64" src={require("../../images/headerLogo.png")} style={styles.mainLogo} alt="logo"/>);
-    // }
-  }
+  // if(props.tenantInfo.length>0 && props.tenantInfo[0].hasOwnProperty("logoId") && props.tenantInfo[0].logoId) {
+  //   return (<img width="64" src={require(props.tenantInfo[0].logoId+".png")} style={styles.mainLogo} alt="logo"/>);
+  // } else {
+  //   // if(logo[getTenantId()]) {
+  //   //     return (<img width="64" src={logo[getTenantId()]} style={styles.mainLogo} alt="logo"/>);
+  //   // } else if(logo["default"]) {
+  //   //     return (<img width="64" src={logo["default"]} style={styles.mainLogo} alt="logo"/>);
+  //   // } else {
+  //       return (<img width="64" src={require("../../images/headerLogo.png")} style={styles.mainLogo} alt="logo"/>);
+  //   // }
+  // }
+  return (<div style={{
+    fontSize: "15px",
+    marginLeft: "0px",
+   lineHeight: "21px"}}>
+      <span style={{color:"orange"}}>Government of Maharastra</span><br/>
+      <span style={{color:"black"}}>Maharastra Shasan</span><br/>
+      <span style={{color:"green"}}>Integrated citizenservice portal</span>
+  </div>)
+
 }
 
 const getTitle = (tenantInfo, tenantContext) => {
@@ -107,32 +117,35 @@ const RightIcon = (props) => {
   if (props.token) {
     return (
       <div>
-      <img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>
-      <span style={{color:"white"}}>{window.localStorage.getItem("userRequest")?JSON.parse(window.localStorage.getItem("userRequest")).name:""}</span>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <i onClick={()=>{
-        if(localStorage.getItem("token"))
-          props.setRoute("/prd/dashboard");
-        else
-          props.setRoute("/" + (localStorage.tenantId || "default"));
-      }} className="material-icons" style={{"color":"white", "cursor": "pointer"}}>home</i>
+      {/*<img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>*/}
+      <span style={{color:"#555"}}>{"मराठी"}</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style={{color:"#555"}}>{"English"}</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <i style={{color:"#555"}} className="material-icons">account_circle</i>&nbsp;
+      <span style={{color:"#555"}}>{window.localStorage.getItem("userRequest")?JSON.parse(window.localStorage.getItem("userRequest")).name:""}</span>
       <IconMenu
-            iconButtonElement={<IconButton style={{color:"white"}}><i className="material-icons">more_vert</i></IconButton>}
+            iconButtonElement={<IconButton style={{color:"#555"}}><i className="material-icons">more_vert</i></IconButton>}
             anchorOrigin={{horizontal: 'left', vertical: 'top'}}
             targetOrigin={{horizontal: 'left', vertical: 'top'}}
           >
             <MenuItem primaryText="Sign Out" onClick={(e)=>{
                 props.logout(localStorage.getItem('tenantId'));
+                props.handleToggle()
                 props.signOut();
-            }} leftIcon={<i className="material-icons">lock</i>}></MenuItem>
+            }} leftIcon={<i style={{color:"#555"}} className="material-icons">lock</i>}></MenuItem>
      </IconMenu>
+     <i onClick={()=>{
+       if(localStorage.getItem("token"))
+         props.setRoute("/prd/dashboard");
+       else
+         props.setRoute("/" + (localStorage.tenantId || "default"));
+     }} className="material-icons" style={{"color":"#555", "cursor": "pointer"}}>home</i>
 
 
       </div>
     );
   } else if(window.location.hash === "#/") {
     return(
-      <img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>
+      {/*<img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>*/}
     )
   } else {
     return(
@@ -140,8 +153,8 @@ const RightIcon = (props) => {
         {props.showHome && <i onClick={()=>{
           props.setRoute("/");
         }} className="material-icons"
-           style={{"color":"white", "cursor": "pointer"}}>home</i>}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>
+           style={{"color":"#555", "cursor": "pointer"}}>home</i>}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {/*<img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>*/}
       </div>
     )
 
@@ -202,20 +215,27 @@ class Header extends Component {
 
   render() {
     let {tenantContext} = this.state;
+    let {showMenu,actionList,menuDontToggle,handleToggle}=this.props;
     return (
       <div className="Header">
-        <AppBar title={<div><Logo tenantInfo={this.props.tenantInfo} tenantContext={tenantContext}/> {this.props.tenantInfo.length>0 && this.props.tenantInfo[0].hasOwnProperty("city") && this.props.tenantInfo[0].city.hasOwnProperty("name") && this.props.tenantInfo[0].city.name} </div>}
-                onLeftIconButtonTouchTap={this.props.handleToggle}
-                iconElementLeft={this.props.token && this.props.currentUser.type !== "CITIZEN" ? <IconButton><i className="material-icons">menu</i></IconButton> : <div></div>}
-                iconElementRight={< RightIcon showHome={this.props.showHome} signOut={this.signOut} token={this.props.token} logout={this.props.logout} setRoute={this.props.setRoute}/>}/>
+        <AppBar
+                onLeftIconButtonTouchTap={handleToggle}
+                iconElementLeft={this.props.token && this.props.currentUser.type !== "CITIZEN" ? <IconButton ><i className="material-icons icon-left-style">menu</i></IconButton> : <div></div>}
+                className="app-bar-bg"
+                title={<div><Logo tenantInfo={this.props.tenantInfo} tenantContext={tenantContext}/> </div>}
+                iconElementRight={< RightIcon showHome={this.props.showHome} signOut={this.signOut} token={this.props.token} logout={this.props.logout} setRoute={this.props.setRoute}/>} />
 
-        {/*<Drawer containerClassName="side-bar" open={this.props.showMenu || false} >
-         {this.props.actionList && this.props.actionList.length>0 && <CustomMenu menuItems={this.state.menuItems} actionList={this.props.actionList} />}
-        </Drawer>*/}
+        <Drawer containerClassName="drawer-backGround" open={showMenu}>
+          {actionList && actionList.length>0 && <CustomMenu menuItems={[]} actionList={actionList} />}
+        </Drawer>
       </div>
     );
   }
 }
+
+//
+
+
 
 const mapStateToProps = state => ({
     labels: state.labels,
@@ -227,8 +247,8 @@ const mapStateToProps = state => ({
     pleaseWait: state.common.pleaseWait,
     // isDialogOpen: state.form.dialogOpen,
     // msg: state.form.msg,
-    // showMenu: state.common.showMenu,
-    // actionList:state.common.actionList,
+    showMenu: state.common.showMenu ||false,
+    actionList:state.common.actionList,
     showHome: state.common.showHome,
     tenantInfo: state.common.tenantInfo || []
 
@@ -243,6 +263,7 @@ const mapDispatchToProps = dispatch => ({
     // onRedirect: () => dispatch({type: 'REDIRECT'}),
     setLabels: payload => dispatch({type: 'LABELS', payload}),
     logout:(tenantId)=>dispatch({type:'LOGOUT',tenantId}),
+    menuDontToggle:(state)=>dispatch({type:"MENU_DONT_TOGGLE",state})
     // onUpdateAuth: (value, key) => dispatch({type: 'UPDATE_FIELD_AUTH', key, value}),
     // onLogin: (username, password) => {
     //     dispatch({

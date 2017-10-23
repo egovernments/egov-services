@@ -31,10 +31,14 @@ injectTapEventPlugin();
 document.title="eGov";
 
 let themeObject={
+  fontFamily:"Lato, sans",
+  textColor:"rgba(0, 0, 0, 0.68)",
+  fontSize:"15px",
   palette: {
-    primary1Color: "#51bad9",
+    primary1Color: "#009688",
     primary2Color: "#f58720",
-    textColor:"#5f5c62"
+    textColor:"#5f5c62",
+    canvasColor: '#eee',
   },
   raisedButton: {
     primaryColor: "#f58720"

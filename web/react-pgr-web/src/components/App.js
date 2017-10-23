@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import {Grid, Row, Col} from 'react-bootstrap';
 import Drawer from 'material-ui/Drawer';
 
 import { withRouter } from 'react-router'
@@ -13,6 +14,8 @@ import LoadingIndicator from './common/LoadingIndicator';
 import router from "../router";
 import Api from "../api/api";
 import CustomMenu from './common/CustomMenu';
+import classnames from 'classnames'
+
 
 window.urlCheck = false;
 class App extends Component {
@@ -181,14 +184,17 @@ class App extends Component {
       <div className="App">
 
 
-          <Drawer containerClassName="side-bar" open={showMenu ||false} >
+          {/*<Drawer className="drawer-backGround" docked={true} open={showMenu ||false} >
            {actionList && actionList.length>0 && <CustomMenu menuItems={[]} actionList={actionList} />}
-          </Drawer>
+          </Drawer>*/}
 
-          <Header/>
+          <div className={classnames('app-content', {'expanded': showMenu ||false})}>
+            <Header/>
+                {router}
+            <Footer/>
+          </div>
 
-              {router}
-          <Footer/>
+
 
           {msg && <Dialog
             style={{zIndex:2000}}

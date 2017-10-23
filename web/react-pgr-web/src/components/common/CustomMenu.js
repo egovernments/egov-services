@@ -227,9 +227,33 @@ const menuConvention={
 
 const style = {
   display: 'inline-block',
-  margin: '14px 32px 16px 0',
-
+  margin: '14px 32px 16px 0'
 };
+
+const styles={
+  mainLogo: {
+    height: 60,
+    borderRadius: '50%',
+    marginTop: -6
+  }
+}
+
+const Logo = (props) => {
+  /*if(props.tenantInfo && props.tenantInfo[0] && props.tenantInfo[0].imageId) {
+
+  } else */
+  if(props.tenantInfo.length>0 && props.tenantInfo[0].hasOwnProperty("logoId") && props.tenantInfo[0].logoId) {
+    return (<img width="64" src={require(props.tenantInfo[0].logoId+".png")} style={styles.mainLogo} alt="logo"/>);
+  } else {
+    // if(logo[getTenantId()]) {
+    //     return (<img width="64" src={logo[getTenantId()]} style={styles.mainLogo} alt="logo"/>);
+    // } else if(logo["default"]) {
+    //     return (<img width="64" src={logo["default"]} style={styles.mainLogo} alt="logo"/>);
+    // } else {
+        return (<img width="64" src={require("../../images/headerLogo.png")} style={styles.mainLogo} alt="logo"/>);
+    // }
+  }
+}
 
 class CustomMenu extends Component {
   constructor(props) {
@@ -296,7 +320,7 @@ class CustomMenu extends Component {
 
   handleClickOutside(event) {
       if (this.wrapperRef && !this.wrapperRef.contains(event.target) && event.target.innerHTML != "menu") {
-          this.props.handleToggle(false);
+          // this.props.handleToggle(false);
       }
   }
 
@@ -420,7 +444,7 @@ class CustomMenu extends Component {
               if (!item.url) {
                 return (
                           <MenuItem
-                               style={{whiteSpace: "initial"}}
+                               style={{whiteSpace: "initial",color:"white"}}
                                key={index}
                                leftIcon={<i className="material-icons marginLeft">view_module</i>}
                                primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name}</span><span>{item.name}</span></div>}
@@ -437,9 +461,9 @@ class CustomMenu extends Component {
                   return(
 
                           <MenuItem
-                               style={{whiteSpace: "initial"}}
+                               style={{whiteSpace: "initial",color:"white"}}
                                key={index}
-                               onTouchTap={()=>{checkUrl(item); document.title=item.name; handleToggle(false); changeRoute(menuConvention[item.path])}}
+                               onTouchTap={()=>{checkUrl(item); document.title=item.name; changeRoute(menuConvention[item.path])}}
                                leftIcon={<i className="material-icons marginLeft">view_module</i>}
                                primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name}</span><span>{item.name}</span></div>}
                             />
@@ -461,7 +485,7 @@ class CustomMenu extends Component {
                   return (
                            <a key={index} href={base+item.url+((item.queryParams!="" && item.queryParams)?"?"+item.queryParams:"")} target="_blank">
                              <MenuItem
-                                  style={{whiteSpace: "initial"}}
+                                  style={{whiteSpace: "initial",color:"white"}}
                                   leftIcon={<i style={{top: "12px", margin: "0px", left: "24px"}} className="material-icons marginLeft">view_module</i>}
                                   primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name}</span><span>{item.name}</span></div>}
                                />
@@ -483,8 +507,8 @@ class CustomMenu extends Component {
                 return(
                       <Link  key={index} to={menuConvention[item.path]}>
                         <MenuItem
-                            style={{whiteSpace: "initial"}}
-                             onTouchTap={()=>{checkUrl(item); document.title=item.displayName; handleToggle(false)}}
+                            style={{whiteSpace: "initial",color:"white"}}
+                             onTouchTap={()=>{checkUrl(item); document.title=item.displayName;}}
                              leftIcon={<i className="material-icons marginLeft">view_module</i>}
                              primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.displayName}</span><span>{item.displayName}</span></div>}
                           />
@@ -506,7 +530,7 @@ class CustomMenu extends Component {
                 return (
                          <a key={index} href={base+item.url} target="_blank">
                            <MenuItem
-                                style={{whiteSpace: "initial"}}
+                                style={{whiteSpace: "initial",color:"white"}}
                                 leftIcon={<i className="material-icons marginLeft">view_module</i>}
                                 primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.displayName}</span><span>{item.displayName}</span></div>}
                              />
@@ -526,12 +550,15 @@ class CustomMenu extends Component {
 
       return (
       <div className="custom-menu" style={style}  ref={this.setWrapperRef}>
+          <Logo tenantInfo={this.props.tenantInfo}/>
+          <h4>Quick Actions</h4>
           {
             <TextField
                hintText = "&nbsp;&nbsp;Search"
                onChange={this.handleChange}
                value={searchText}
-			   className="searchMargin"
+			         className="searchMargin"
+               style={{color:"white"}}
              />
           }
 
@@ -543,8 +570,8 @@ class CustomMenu extends Component {
         <Menu desktop={true}>
 
 
-		{(path|| searchText) &&  <div className="pull-left" style={{marginLeft:12, marginBottom:10, cursor:'pointer'}}  onTouchTap={()=>{changeLevel(path)}}><i className="material-icons" style={{"color": "#757575"}}>arrow_back</i></div>}
-        { path &&  <div className="pull-right" style={{marginRight:12,marginBottom:10,cursor:'pointer'}} onTouchTap={()=>{handleToggle(false); changeLevel("")}} ><i className="material-icons" style={{"color": "#757575"}}>home</i></div>}
+		{(path|| searchText) &&  <div className="pull-left" style={{marginLeft:12, marginBottom:10, cursor:'pointer'}}  onTouchTap={()=>{changeLevel(path)}}><i className="material-icons" style={{"color": "white"}}>arrow_back</i></div>}
+        { path &&  <div className="pull-right" style={{marginRight:12,marginBottom:10,cursor:'pointer'}} onTouchTap={()=>{changeLevel("")}} ><i className="material-icons" style={{"color": "white"}}>home</i></div>}
 
 		<div className="clearfix"></div>
 
@@ -559,7 +586,7 @@ class CustomMenu extends Component {
 }
 
 
-const mapStateToProps = state => ({menuConvention:state.common.menuConvention});
+const mapStateToProps = state => ({menuConvention:state.common.menuConvention,tenantInfo: state.common.tenantInfo || []});
 const mapDispatchToProps = dispatch => ({
   handleToggle: (showMenu) => dispatch({type: 'MENU_TOGGLE', showMenu}),
   setRoute:(route)=>dispatch({type:'SET_ROUTE',route})

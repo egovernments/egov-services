@@ -2,7 +2,6 @@ package org.egov.pgrrest.read.web.controller;
 
 import org.egov.pgrrest.read.domain.service.DashboardService;
 import org.egov.pgrrest.read.web.contract.DashboardResponse;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

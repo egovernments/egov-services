@@ -137,7 +137,7 @@ definitions:
       scheduleCategory:
         $ref: '#/definitions/ScheduleCategory'
       uom:
-        $ref: '#/definitions/UOM'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/UOM'
       sorRates:
         type: array
         description: Array of Rate Details, Either of the rate details or marketRateDetails is mandatory for creating Schedule of rate.
@@ -224,39 +224,6 @@ definitions:
       - tenantId
       - fromDate
       - rate
-    
-  UOM:
-    type: object
-    properties:
-      id:
-        type: string
-        description: Unique Identifier of the UOM
-      tenantId:
-        type: string
-        description: tenant id of the UOM
-        maxLength: 128
-        minLength: 4
-      name:
-        type: string
-        description: Name of the UOM
-        pattern: '[a-zA-Z0-9\s\.,]'
-        maxLength: 100
-        minLength: 1
-      code:
-        type: string
-        description: Code of the UOM
-        pattern: '[a-zA-Z0-9-\\]'
-        maxLength: 50
-        minLength: 1
-      active:
-        type: boolean
-        description: True if UOM is active and False if UOM is inactive
-      auditDetails:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
-    required:
-      - tenantId
-      - name
-      - code
 
   ProjectStatus:
     type: object
@@ -676,7 +643,7 @@ definitions:
       scheduleOfRate:
         $ref: '#/definitions/ScheduleOfRate'
       uom:
-        $ref: '#/definitions/UOM'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/UOM'
       nonSOR:
         $ref: '#/definitions/NonSOR'
       unitRate:
@@ -709,7 +676,7 @@ definitions:
         maxLength: 1024
         minLength: 1
       uom:
-        $ref: '#/definitions/UOM'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/UOM'
     required:
       - tenantId
       - description

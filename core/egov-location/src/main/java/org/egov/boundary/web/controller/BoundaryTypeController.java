@@ -38,10 +38,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class BoundaryTypeController {
 	@Autowired
 	private BoundaryTypeService boundaryTypeService;
-	
+
 	@Autowired
 	private HierarchyTypeService hierarchyTypeService;
 
+	private static final String[] taskAction = { "create", "update" };
 
 	@PostMapping()
 	public ResponseEntity<?> create(@RequestBody BoundaryTypeRequest boundaryTypeRequest, BindingResult errors) {
@@ -50,7 +51,7 @@ public class BoundaryTypeController {
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
 
-		final ErrorResponse errorResponses = validateBoundaryTypeRequest(boundaryTypeRequest);
+		final ErrorResponse errorResponses = validateBoundaryTypeRequest(boundaryTypeRequest, taskAction[0]);
 		if (errorResponses.getError() != null && errorResponses.getError().getErrorFields().size() > 0)
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
@@ -58,7 +59,8 @@ public class BoundaryTypeController {
 		if (boundaryTypeRequest.getBoundaryType() != null && boundaryTypeRequest.getBoundaryType().getTenantId() != null
 				&& !boundaryTypeRequest.getBoundaryType().getTenantId().isEmpty()) {
 			RequestInfo requestInfo = boundaryTypeRequest.getRequestInfo();
-			BoundaryType contractBoundaryType = boundaryTypeService.createBoundaryType(boundaryTypeRequest.getBoundaryType());
+			BoundaryType contractBoundaryType = boundaryTypeService
+					.createBoundaryType(boundaryTypeRequest.getBoundaryType());
 			boundaryTypeResponse.getBoundaryTypes().add(contractBoundaryType);
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setStatus(HttpStatus.CREATED.toString());
@@ -77,13 +79,17 @@ public class BoundaryTypeController {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
 		}
+		boundaryTypeRequest.getBoundaryType().setCode(code);
+		boundaryTypeRequest.getBoundaryType().setTenantId(tenantId);
+		final ErrorResponse errorResponses = validateBoundaryTypeRequest(boundaryTypeRequest, taskAction[1]);
+		if (errorResponses.getError() != null && errorResponses.getError().getErrorFields().size() > 0)
+			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
 		BoundaryTypeResponse boundaryTypeResponse = new BoundaryTypeResponse();
 		if (tenantId != null && !tenantId.isEmpty()) {
 			RequestInfo requestInfo = boundaryTypeRequest.getRequestInfo();
-			boundaryTypeRequest.getBoundaryType().setCode(code);
-			boundaryTypeRequest.getBoundaryType().setTenantId(tenantId);
-			BoundaryType contractBoundaryType = boundaryTypeService.updateBoundaryType(boundaryTypeRequest.getBoundaryType());
+			BoundaryType contractBoundaryType = boundaryTypeService
+					.updateBoundaryType(boundaryTypeRequest.getBoundaryType());
 			boundaryTypeResponse.getBoundaryTypes().add(contractBoundaryType);
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setStatus(HttpStatus.OK.toString());
@@ -98,10 +104,9 @@ public class BoundaryTypeController {
 	public ResponseEntity<?> search(@ModelAttribute BoundaryTypeRequest boundaryTypeRequest) {
 		BoundaryTypeResponse boundaryTypeResponse = new BoundaryTypeResponse();
 		ResponseInfo responseInfo = new ResponseInfo();
-		if (boundaryTypeRequest.getBoundaryType()!=null && boundaryTypeRequest.getBoundaryType().getTenantId() != null
+		if (boundaryTypeRequest.getBoundaryType() != null && boundaryTypeRequest.getBoundaryType().getTenantId() != null
 				&& !boundaryTypeRequest.getBoundaryType().getTenantId().isEmpty()) {
-			List<BoundaryType> allBoundaryTypes = boundaryTypeService
-					.getAllBoundaryTypes(boundaryTypeRequest);
+			List<BoundaryType> allBoundaryTypes = boundaryTypeService.getAllBoundaryTypes(boundaryTypeRequest);
 			boundaryTypeResponse.getBoundaryTypes().addAll(allBoundaryTypes);
 			responseInfo.setStatus(HttpStatus.OK.toString());
 			// responseInfo.setApi_id(body.getRequestInfo().getApi_id());
@@ -120,10 +125,10 @@ public class BoundaryTypeController {
 
 		BoundaryTypeResponse boundaryTypeResponse = new BoundaryTypeResponse();
 		ResponseInfo responseInfo = new ResponseInfo();
-		if (boundaryTypeSearchRequest.getBoundaryType()!=null && boundaryTypeSearchRequest.getBoundaryType().getTenantId() != null
+		if (boundaryTypeSearchRequest.getBoundaryType() != null
+				&& boundaryTypeSearchRequest.getBoundaryType().getTenantId() != null
 				&& !boundaryTypeSearchRequest.getBoundaryType().getTenantId().isEmpty()) {
-			List<BoundaryType> allBoundaryTypes = boundaryTypeService
-					.getAllBoundaryTypes(boundaryTypeSearchRequest);
+			List<BoundaryType> allBoundaryTypes = boundaryTypeService.getAllBoundaryTypes(boundaryTypeSearchRequest);
 			boundaryTypeResponse.getBoundaryTypes().addAll(allBoundaryTypes);
 			responseInfo.setStatus(HttpStatus.CREATED.toString());
 			// responseInfo.setApi_id(body.getRequestInfo().getApi_id());
@@ -145,7 +150,8 @@ public class BoundaryTypeController {
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setStatus(HttpStatus.OK.toString());
 			boundaryTypeResponse.setResponseInfo(responseInfo);
-			List<BoundaryType> boundaryTypes = boundaryTypeService.getAllBoundarTypesByHierarchyTypeIdAndTenantName(hierarchyTypeName, tenantId);
+			List<BoundaryType> boundaryTypes = boundaryTypeService
+					.getAllBoundarTypesByHierarchyTypeIdAndTenantName(hierarchyTypeName, tenantId);
 			boundaryTypeResponse.setBoundaryTypes(boundaryTypes);
 			return new ResponseEntity<>(boundaryTypeResponse, HttpStatus.OK);
 		} else
@@ -170,26 +176,28 @@ public class BoundaryTypeController {
 		return errRes;
 	}
 
-	private ErrorResponse validateBoundaryTypeRequest(final BoundaryTypeRequest boundaryTypeRequest) {
+	private ErrorResponse validateBoundaryTypeRequest(final BoundaryTypeRequest boundaryTypeRequest, String action) {
 		final ErrorResponse errorResponse = new ErrorResponse();
-		final Error error = getError(boundaryTypeRequest);
+		final Error error = getError(boundaryTypeRequest, action);
 		errorResponse.setError(error);
 		return errorResponse;
 	}
 
-	private Error getError(final BoundaryTypeRequest boundaryTypeRequest) {
-		final List<ErrorField> errorFields = getErrorFields(boundaryTypeRequest);
+	private Error getError(final BoundaryTypeRequest boundaryTypeRequest, String action) {
+		final List<ErrorField> errorFields = getErrorFields(boundaryTypeRequest, action);
 		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-				.message(BoundaryConstants.INVALID_HIERARCHYtype_REQUEST_MESSAGE).errorFields(errorFields).build();
+				.message(BoundaryConstants.INVALID_BOUNDARYRequest_REQUEST_MESSAGE).errorFields(errorFields).build();
 	}
 
-	private List<ErrorField> getErrorFields(final BoundaryTypeRequest boundaryTypeRequest) {
+	private List<ErrorField> getErrorFields(final BoundaryTypeRequest boundaryTypeRequest, String action) {
 		final List<ErrorField> errorFields = new ArrayList<>();
 		addTenantIdValidationError(boundaryTypeRequest, errorFields);
 		addBoundaryTypeNameValidationError(boundaryTypeRequest, errorFields);
 		addBoundaryTypeHierarchyValidationError(boundaryTypeRequest, errorFields);
 		addBoundaryTypeHierarchyTypeValidationError(boundaryTypeRequest, errorFields);
 		addBoundaryTypeParentValidationError(boundaryTypeRequest, errorFields);
+		addBoundaryTypeCodeUniqueValidationError(boundaryTypeRequest, errorFields,action);
+
 		return errorFields;
 	}
 
@@ -249,7 +257,7 @@ public class BoundaryTypeController {
 					.field(BoundaryConstants.BOUNDARYTYPE_HIERARCHYTYPECODE_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
 		} else if (boundaryTypeRequest.getBoundaryType().getHierarchyType() != null
-				&& boundaryTypeRequest.getBoundaryType().getHierarchyType().getId() != null) {
+				&& boundaryTypeRequest.getBoundaryType().getHierarchyType().getCode() != null) {
 
 			if (!(hierarchyTypeService.findByCodeAndTenantId(
 					boundaryTypeRequest.getBoundaryType().getHierarchyType().getCode(),
@@ -268,8 +276,9 @@ public class BoundaryTypeController {
 			final List<ErrorField> errorFields) {
 
 		if (boundaryTypeRequest.getBoundaryType().getParent() != null
-				&& boundaryTypeRequest.getBoundaryType().getParent().getId() != null) {
-			if (!(boundaryTypeService.findByTenantIdAndCode(boundaryTypeRequest.getBoundaryType().getTenantId(),boundaryTypeRequest.getBoundaryType().getParent().getCode())!= null)) {
+				&& boundaryTypeRequest.getBoundaryType().getParent().getCode() != null) {
+			if (!(boundaryTypeService.findByTenantIdAndCode(boundaryTypeRequest.getBoundaryType().getTenantId(),
+					boundaryTypeRequest.getBoundaryType().getParent().getCode()) != null)) {
 				final ErrorField errorField = ErrorField.builder()
 						.code(BoundaryConstants.BOUNDARYTYPE_PARENT_INVALID_CODE)
 						.message(BoundaryConstants.BOUNDARYTYPE_PARENT_INVALID_ERROR_MESSAGE)
@@ -277,6 +286,29 @@ public class BoundaryTypeController {
 				errorFields.add(errorField);
 			}
 		}
+		return errorFields;
+	}
+
+	private List<ErrorField> addBoundaryTypeCodeUniqueValidationError(final BoundaryTypeRequest boundaryTypeRequest,
+			final List<ErrorField> errorFields,String action) {
+		if (boundaryTypeRequest.getBoundaryType() != null && (boundaryTypeRequest.getBoundaryType().getCode() == null || boundaryTypeRequest.getBoundaryType().getCode().isEmpty())) {
+			final ErrorField errorField = ErrorField.builder().code(BoundaryConstants.BOUNDARYTYPE_CODE_MANDATORY_CODE)
+					.message(BoundaryConstants.BOUNDARYTYPE_CODE_MANADATORY_ERROR_MESSAGE)
+					.field(BoundaryConstants.BOUNDARYTYPE_CODE_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+
+		} else if (boundaryTypeRequest.getBoundaryType().getTenantId() != null
+				&& boundaryTypeRequest.getBoundaryType().getCode() != null) {
+			if (boundaryTypeService.findByTenantIdAndCode(boundaryTypeRequest.getBoundaryType().getTenantId(),
+					boundaryTypeRequest.getBoundaryType().getCode()) != null && action.equals("create")) {
+				final ErrorField errorField = ErrorField.builder()
+						.code(BoundaryConstants.BOUNDARYTYPE_CODE_TENANT_UNIQUE_CODE)
+						.message(BoundaryConstants.BOUNDARYTYPE_CODE_TENANT_UNIQUE_ERROR_MESSAGE)
+						.field(BoundaryConstants.BOUNDARYTYPE_CODE_TENANT_UNIQUE_FIELD_NAME).build();
+				errorFields.add(errorField);
+			}
+		}
+
 		return errorFields;
 	}
 

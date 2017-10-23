@@ -17,9 +17,15 @@ public class BoundaryRowMapper implements RowMapper<Boundary> {
 
 		BoundaryType boundaryType = BoundaryType.builder().id(String.valueOf(rs.getLong("btId"))).hierarchy(rs.getLong("btHierarchy"))
 				.name(rs.getString("btName")).createdBy(rs.getLong("btCreatedBy"))
-				.lastModifiedBy(rs.getLong("btLastModifiedBy")).createdDate(rs.getDate("btCreatedDate").getTime())
-				.lastModifiedDate(rs.getDate("btLastModifiedDate").getTime()).localName(rs.getString("btLocalName"))
+				.lastModifiedBy(rs.getLong("btLastModifiedBy")).localName(rs.getString("btLocalName"))
 				.code(rs.getString("btCode")).tenantId(rs.getString("btTenantId")).build();
+		
+		if(rs.getDate("btCreatedDate")!=null){
+			boundaryType.setCreatedDate(rs.getDate("btCreatedDate").getTime());	
+		}
+		if(rs.getDate("btLastModifiedDate")!=null){
+			boundaryType.setLastModifiedDate(rs.getDate("btLastModifiedDate").getTime());	
+		}
 		
 		HierarchyType hierarchyType =new HierarchyType();
 		hierarchyType.setId(rs.getLong("btHierarchyType"));
@@ -28,10 +34,16 @@ public class BoundaryRowMapper implements RowMapper<Boundary> {
 		final Boundary boundary = Boundary.builder().id(rs.getLong("bId")).name(rs.getString("bName")).localName(rs.getString("bLocalName"))
 				.boundaryNum(rs.getLong("bBoundaryNum")).fromDate(rs.getDate("bFromdate")).toDate(rs.getDate("bToDate"))
 				.bndryId(rs.getLong("bBndryid")).materializedPath(rs.getString("bMaterialiedPath")).code(rs.getString("bCode"))
-				.isHistory(rs.getBoolean("bHistory")).createdDate(rs.getDate("bCreatedDate").getTime())
-				.lastModifiedDate(rs.getDate("bLastModifiedDate").getTime()).createdBy(rs.getLong("bCreatedBy"))
+				.isHistory(rs.getBoolean("bHistory")).createdBy(rs.getLong("bCreatedBy"))
 				.lastModifiedBy(rs.getLong("bLastModifiedBy")).tenantId(rs.getString("bTenantId"))
 				.boundaryType(boundaryType).build();
+		
+		if(rs.getDate("bCreatedDate")!=null){
+			boundary.setCreatedDate(rs.getDate("bCreatedDate").getTime());
+		}
+		if(rs.getDate("bLastModifiedDate")!=null){
+			boundary.setLastModifiedDate(rs.getDate("bLastModifiedDate").getTime());
+		}
 
 		if (rs.getFloat("bLongitude") != 0) {
 			boundary.setLongitude(rs.getFloat("bLongitude"));

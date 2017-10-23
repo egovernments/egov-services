@@ -15,9 +15,15 @@ public class BoundaryTypeNameRowMapper implements RowMapper<BoundaryType> {
 		
 		BoundaryType boundaryType = BoundaryType.builder().id(String.valueOf(rs.getLong("id"))).hierarchy(rs.getLong("hierarchy"))
 				.name(rs.getString("name")).createdBy(rs.getLong("createdby"))
-				.lastModifiedBy(rs.getLong("lastmodifiedby")).createdDate(rs.getDate("createddate").getTime())
-				.lastModifiedDate(rs.getDate("lastmodifieddate").getTime()).localName(rs.getString("localname"))
+				.lastModifiedBy(rs.getLong("lastmodifiedby")).localName(rs.getString("localname"))
 				.code(rs.getString("code")).tenantId(rs.getString("tenantid")).build();
+		
+		if(rs.getDate("createddate")!=null){
+			boundaryType.setCreatedDate(rs.getDate("createddate").getTime());
+		}
+		if(rs.getDate("lastmodifieddate")!=null){
+			boundaryType.setLastModifiedDate(rs.getDate("lastmodifieddate").getTime());
+		}
 		
 		return boundaryType;
 	}

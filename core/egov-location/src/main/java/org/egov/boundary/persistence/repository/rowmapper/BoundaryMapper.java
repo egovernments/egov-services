@@ -16,10 +16,15 @@ public class BoundaryMapper implements RowMapper<Boundary> {
 		final Boundary boundary = Boundary.builder().id(rs.getLong("id")).name(rs.getString("name"))
 				.boundaryNum(rs.getLong("boundarynum")).fromDate(rs.getDate("fromdate")).toDate(rs.getDate("todate"))
 				.bndryId(rs.getLong("bndryid")).materializedPath(rs.getString("materializedpath"))
-				.isHistory(rs.getBoolean("ishistory")).createdDate(rs.getDate("createddate").getTime())
-				.lastModifiedDate(rs.getDate("lastmodifieddate").getTime()).createdBy(rs.getLong("createdby"))
+				.isHistory(rs.getBoolean("ishistory")).createdBy(rs.getLong("createdby"))
 				.lastModifiedBy(rs.getLong("lastmodifiedby")).tenantId(rs.getString("tenantid")).build();
 
+		if(rs.getDate("createddate")!=null){
+			boundary.setCreatedDate(rs.getDate("createddate").getTime());
+		}
+		if(rs.getDate("lastmodifieddate")!=null){
+			boundary.setLastModifiedDate(rs.getDate("lastmodifieddate").getTime());
+		}
 		if (rs.getFloat("longitude") != 0) {
 			boundary.setLongitude(rs.getFloat("longitude"));
 		}

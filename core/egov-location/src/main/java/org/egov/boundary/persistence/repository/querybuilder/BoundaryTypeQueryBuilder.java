@@ -45,6 +45,6 @@ public class BoundaryTypeQueryBuilder {
 	}
 
 	public static String getAllByHierarchyTypeAndTenant() {
-		return "select * from eg_boundary_Type where hierarchytype in (select id from eg_hierarchy_type where upper(name)=upper(:hierarchyTypeName) and tenantId=:tenantId) and tenantId=:tenantId";
+		return "select * from eg_boundary_type where hierarchytype in (select id from eg_hierarchy_type where upper(name)=upper(:hierarchyTypeName) and tenantId=:tenantId) and tenantId=:tenantId";
 	}
 }

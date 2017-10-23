@@ -20,9 +20,12 @@ public class HierarchyTypeRowMapper implements RowMapper<HierarchyType> {
 		hierarchyType.setTenantId(rs.getString("tenantid"));
 		hierarchyType.setCreatedBy(rs.getLong("createdby"));
 		hierarchyType.setLastModifiedBy(rs.getLong("lastmodifiedby"));
-		hierarchyType.setCreatedDate(rs.getDate("createddate").getTime());
-		hierarchyType.setLastModifiedDate(rs.getDate("lastmodifieddate").getTime());
-		
+		if(rs.getDate("createddate")!=null){
+			hierarchyType.setCreatedDate(rs.getDate("createddate").getTime());
+		}
+		if(rs.getDate("lastmodifieddate")!=null){
+			hierarchyType.setLastModifiedDate(rs.getDate("lastmodifieddate").getTime());
+		}
 		if(hierarchyType.getId() == null){
 			hierarchyType.setNew(true);
 		}

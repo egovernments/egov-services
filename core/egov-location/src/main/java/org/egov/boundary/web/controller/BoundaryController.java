@@ -62,6 +62,8 @@ public class BoundaryController {
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 	
+	private static final String[] taskAction = { "create", "update" };
+	
 	@PostMapping
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid BoundaryRequest boundaryRequest, BindingResult errors) {
@@ -70,7 +72,7 @@ public class BoundaryController {
 			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		RequestInfo requestInfo = boundaryRequest.getRequestInfo();
-		final ErrorResponse errorResponses = validateBoundaryRequest(boundaryRequest);
+		final ErrorResponse errorResponses = validateBoundaryRequest(boundaryRequest,taskAction[0]);
 		if (errorResponses.getError() != null && errorResponses.getError().getErrorFields().size() > 0)
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 		Boundary boundary = mapToContractBoundary(boundaryService.createBoundary(boundaryRequest.getBoundary()));
@@ -94,12 +96,15 @@ public class BoundaryController {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
 		}
+		boundaryRequest.getBoundary().setTenantId(tenantId);
+		boundaryRequest.getBoundary().setCode(code);
+		final ErrorResponse errorResponses = validateBoundaryRequest(boundaryRequest,taskAction[1]);
+		if (errorResponses.getError() != null && errorResponses.getError().getErrorFields().size() > 0)
+			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
 		BoundaryResponse boundaryResponse = new BoundaryResponse();
 		if (tenantId != null && !tenantId.isEmpty()) {
 			RequestInfo requestInfo = boundaryRequest.getRequestInfo();
-			boundaryRequest.getBoundary().setTenantId(tenantId);
-			boundaryRequest.getBoundary().setCode(code);
 			Boundary contractBoundary = mapToContractBoundary(boundaryService.updateBoundary(boundaryRequest.getBoundary()));
 			boundaryResponse.getBoundarys().add(contractBoundary);
 			ResponseInfo responseInfo = new ResponseInfo();
@@ -381,24 +386,24 @@ public class BoundaryController {
 		return list;
 	}
 
-	private ErrorResponse validateBoundaryRequest(final BoundaryRequest boundaryRequest) {
+	private ErrorResponse validateBoundaryRequest(final BoundaryRequest boundaryRequest,String action) {
 		final ErrorResponse errorResponse = new ErrorResponse();
-		final Error error = getError(boundaryRequest);
+		final Error error = getError(boundaryRequest,action);
 		errorResponse.setError(error);
 		return errorResponse;
 	}
 
-	private Error getError(final BoundaryRequest boundaryRequest) {
-		final List<ErrorField> errorFields = getErrorFields(boundaryRequest);
+	private Error getError(final BoundaryRequest boundaryRequest,String action) {
+		final List<ErrorField> errorFields = getErrorFields(boundaryRequest,action);
 		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
 				.message(BoundaryConstants.INVALID_BOUNDARY_REQUEST_MESSAGE).errorFields(errorFields).build();
 	}
 
-	private List<ErrorField> getErrorFields(final BoundaryRequest boundaryRequest) {
+	private List<ErrorField> getErrorFields(final BoundaryRequest boundaryRequest,String action) {
 		final List<ErrorField> errorFields = new ArrayList<>();
 		addTenantIdValidationError(boundaryRequest, errorFields);
 		addBoundaryNameNotNullValidationError(boundaryRequest, errorFields);
-		addBoundaryCodeNotNullValidationError(boundaryRequest, errorFields);
+		addBoundaryCodeNotNullValidationError(boundaryRequest, errorFields,action);
 		addBoundaryTypeNotNullValidationError(boundaryRequest, errorFields);
 		addBoundaryNumberNotNullValidationError(boundaryRequest, errorFields);
 		addBoundaryInvalidTypeIdValidationError(boundaryRequest, errorFields);
@@ -430,14 +435,14 @@ public class BoundaryController {
 	}
 
 	private List<ErrorField> addBoundaryCodeNotNullValidationError(final BoundaryRequest boundaryRequest,
-			final List<ErrorField> errorFields) {
+			final List<ErrorField> errorFields,String action) {
 
 		if (boundaryRequest.getBoundary().getCode() == null || boundaryRequest.getBoundary().getCode().isEmpty()) {
 			final ErrorField errorField = ErrorField.builder().code(BoundaryConstants.BOUNDARY_CODE_MANDATORY_CODE)
 					.message(BoundaryConstants.BOUNDARY_CODE_MANADATORY_ERROR_MESSAGE)
 					.field(BoundaryConstants.BOUNDARY_CODE_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
-		} else if(boundaryRequest.getBoundary().getCode() !=null && !boundaryRequest.getBoundary().getCode().isEmpty()){
+		} else if(boundaryRequest.getBoundary().getCode() !=null && !boundaryRequest.getBoundary().getCode().isEmpty() && action.equals("create")){
 			if(boundaryService.findByTenantIdAndCode(boundaryRequest.getBoundary().getTenantId(), boundaryRequest.getBoundary().getCode()) !=null){
 				final ErrorField errorField = ErrorField.builder()
 						.code(BoundaryConstants.BOUNDARY_CODE_TENANT_UNIQUE_CODE)
@@ -468,24 +473,6 @@ public class BoundaryController {
 					.message(BoundaryConstants.BOUNDARY_NUMBER_MANADATORY_ERROR_MESSAGE)
 					.field(BoundaryConstants.BOUNDARY_NUMBER_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
-		}
-		return errorFields;
-	}
-
-	private List<ErrorField> addBoundaryNumberAndTypeUniqueValidationError(final BoundaryRequest boundaryRequest,
-			final List<ErrorField> errorFields) {
-		if (boundaryRequest.getBoundary() != null && boundaryRequest.getBoundary().getBoundaryNum() != null
-				&& boundaryRequest.getBoundary().getBoundaryType() != null
-				&& boundaryRequest.getBoundary().getBoundaryType().getId() != null) {
-
-			if (boundaryService.checkBoundaryExistByTypeAndNumber(boundaryRequest.getBoundary().getBoundaryNum(),
-					Long.valueOf(boundaryRequest.getBoundary().getBoundaryType().getId()))) {
-				final ErrorField errorField = ErrorField.builder()
-						.code(BoundaryConstants.BOUNDARY_NUMBER_TYPE__UNIQUE_CODE)
-						.message(BoundaryConstants.BOUNDARY_NUMBER__TYPE_UNIQUE_ERROR_MESSAGE)
-						.field(BoundaryConstants.BOUNDARY_NUMBER__TYPE_UNIQUE_FIELD_NAME).build();
-				errorFields.add(errorField);
-			}
 		}
 		return errorFields;
 	}

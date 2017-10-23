@@ -6,7 +6,6 @@ import java.util.Set;
 
 import org.egov.boundary.web.contract.BoundaryType;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -26,7 +25,6 @@ import lombok.Setter;
 public class Boundary {
 
 	private Long id;
-	@NotBlank
 	private String name;
 	private Long boundaryNum;
 	private String code;

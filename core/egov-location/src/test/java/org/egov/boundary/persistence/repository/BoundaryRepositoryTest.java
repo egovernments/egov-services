@@ -16,7 +16,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -72,55 +71,6 @@ public class BoundaryRepositoryTest {
 		assertTrue(boundarys.get(0).getBoundaryType().getId().equals("1"));
 		assertTrue(boundarys.get(0).getLocalName().equals("Srikakulam  Municipality"));
 		assertTrue(boundarys.get(0).isHistory() == false);
-	}
-	
-	
-	@Test
-	@Sql(scripts = { "/sql/clearBoundary.sql", "/sql/createBoundary.sql" })
-	
-	public void testShouldFindAllBoundariesByNumberAndType(){
-		
-		List<Long> list = new ArrayList<Long>();
-		list.add(1l);
-		List<Boundary> boundarys = boundaryRepository.findAllBoundariesByNumberAndType("default", list,list);
-		
-		assertTrue(boundarys.size() == 1);
-		assertTrue(boundarys!=null);
-		assertTrue(boundarys.get(0).getId() == 1);
-		assertTrue(boundarys.get(0).getName().equals("Srikakulam  Municipality"));
-		assertTrue(boundarys.get(0).getBoundaryNum().equals(1l));
-		assertTrue(boundarys.get(0).getBoundaryType().getId().equals("1"));
-		assertTrue(boundarys.get(0).getLocalName().equals("Srikakulam  Municipality"));
-		assertTrue(boundarys.get(0).isHistory() == false);
-	}
-	
-	@Test
-	@Sql(scripts = { "/sql/clearBoundary.sql", "/sql/createBoundary.sql" })
-	public void testShouldGetAllBoundaryByTenantIdAndNumber(){
-		
-		List<Long> list = new ArrayList<Long>();
-		list.add(1l);
-		List<Boundary> boundarys = boundaryRepository.getAllBoundaryByTenantIdAndNumber("default",list);
-		
-		assertTrue(boundarys.size() == 1);
-		assertTrue(boundarys!=null);
-		assertTrue(boundarys.get(0).getId() == 1);
-		assertTrue(boundarys.get(0).getName().equals("Srikakulam  Municipality"));
-		assertTrue(boundarys.get(0).getBoundaryNum().equals(1l));
-		assertTrue(boundarys.get(0).getBoundaryType().getId().equals("1"));
-		assertTrue(boundarys.get(0).getLocalName().equals("Srikakulam  Municipality"));
-		assertTrue(boundarys.get(0).isHistory() == false);
-	}
-	
-	@Test
-	@Sql(scripts = { "/sql/clearBoundary.sql", "/sql/createBoundary.sql" })
-	public void testShouldNotGetAllBoundaryByTenantIdAndNumber(){
-		
-		List<Long> list = new ArrayList<Long>();
-		list.add(2l);
-		List<Boundary> boundarys = boundaryRepository.getAllBoundaryByTenantIdAndNumber("default", list);
-		
-		assertTrue(boundarys.isEmpty());
 	}
 	
 	@Test

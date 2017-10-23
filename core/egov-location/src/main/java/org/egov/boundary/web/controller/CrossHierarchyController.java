@@ -56,7 +56,6 @@ public class CrossHierarchyController {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		
 		final ErrorResponse errorResponses = validateCrossHierarchyRequest(crossHierarchyRequest);
 		if (errorResponses.getError() != null && errorResponses.getError().getErrorFields().size() > 0)
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);

@@ -2,17 +2,14 @@ package org.egov.boundary.domain.service;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.boundary.domain.model.Boundary;
-import org.egov.boundary.web.contract.BoundaryType;
 import org.egov.boundary.persistence.repository.BoundaryRepository;
+import org.egov.boundary.web.contract.BoundaryType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -72,111 +69,6 @@ public class BoundaryServiceTest {
 		boundaryService.getAllBoundariesByBoundaryTypeIdAndTenantId(1l, "tenantId");
 
 		verify(boundaryRepository).getAllBoundariesByBoundaryTypeIdAndTenantId(1l, "tenantId");
-	}
-
-/*	@Test
-	@Transactional
-	public void test_should_fetch_boundaries_for_id_and_tenantid() {
-
-		boundaryService.getBoundariesByIdAndTenantId(1l, "tenantId");
-
-		verify(boundaryRepository).getBoundariesByIdAndTenantId(1l, "tenantId");
-	}*/
-	
-	@Test
-	public void testShouldGetAllBoundariesByNumberAndType(){
-		
-		when(boundaryRepository.findAllBoundariesByNumberAndType(any(String.class),anyListOf(Long.class),anyListOf(Long.class)))
-		.thenReturn(getBoundaries());
-		
-		List<Long> list = new ArrayList<Long>();
-		list.add(1l);
-		list.add(2l);
-		
-		List<Boundary> boundaryList = boundaryService.getAllBoundariesByNumberAndType("default",list,list);
-		
-		assertTrue(boundaryList.size() == 2);
-		assertFalse(boundaryList.isEmpty());
-		assertTrue(boundaryList != null);
-		assertTrue(boundaryList.get(0).getName().equals("Srikakulam  Municipality"));
-		assertTrue(boundaryList.get(0).getTenantId().equals("default"));
-	}
-	
-	@Test
-	public void testShouldGetAllBoundariesByBoundaryIdsAndTenant(){
-		
-		when(boundaryRepository.findAllBoundariesByIdsAndTenant(any(String.class),anyListOf(Long.class)))
-		.thenReturn(getBoundaries());
-		
-		List<Long> list = new ArrayList<Long>();
-		list.add(1l);
-		list.add(2l);
-		
-		List<Boundary> boundaryList = boundaryService.getAllBoundariesByBoundaryIdsAndTenant("default",list);
-		
-		assertTrue(boundaryList.size() == 2);
-		assertFalse(boundaryList.isEmpty());
-		assertTrue(boundaryList != null);
-		assertTrue(boundaryList.get(0).getName().equals("Srikakulam  Municipality"));
-		assertTrue(boundaryList.get(0).getTenantId().equals("default"));
-	}
-	
-	@Test
-	public void testshouldGetAllBoundaryByTenantIdAndNumber(){
-		
-		when(boundaryRepository.getAllBoundaryByTenantIdAndNumber(any(String.class),anyListOf(Long.class)))
-		.thenReturn(getBoundaries());
-		
-		List<Long> list = new ArrayList<Long>();
-		list.add(1l);
-		list.add(2l);
-		
-		List<Boundary> boundaryList = boundaryService.getAllBoundaryByTenantIdAndNumber("default",list);
-		
-		assertTrue(boundaryList.size() == 2);
-		assertFalse(boundaryList.isEmpty());
-		assertTrue(boundaryList != null);
-		assertTrue(boundaryList.get(0).getName().equals("Srikakulam  Municipality"));
-		assertTrue(boundaryList.get(0).getTenantId().equals("default"));
-	}
-	
-	
-	@Test
-	public void testshouldGetAllBoundaryByTenantIdAndTypeIds(){
-		
-		when(boundaryRepository.getAllBoundaryByTenantIdAndTypeIds(any(String.class),anyListOf(Long.class)))
-		.thenReturn(getBoundaries());
-		
-		List<Long> list = new ArrayList<Long>();
-		list.add(1l);
-		list.add(2l);
-		
-		List<Boundary> boundaryList = boundaryService.getAllBoundaryByTenantIdAndTypeIds("default",list);
-		
-		assertTrue(boundaryList.size() == 2);
-		assertFalse(boundaryList.isEmpty());
-		assertTrue(boundaryList != null);
-		assertTrue(boundaryList.get(0).getName().equals("Srikakulam  Municipality"));
-		assertTrue(boundaryList.get(0).getTenantId().equals("default"));
-	}
-	
-	@Test
-	public void testshouldGetAllBoundaryByTenantId(){
-		
-		when(boundaryRepository.findAllByTenantId(any(String.class)))
-		.thenReturn(getBoundaries());
-		
-		List<Long> list = new ArrayList<Long>();
-		list.add(1l);
-		list.add(2l);
-		
-		List<Boundary> boundaryList = boundaryService.getAllBoundaryByTenantId("default");
-		
-		assertTrue(boundaryList.size() == 2);
-		assertFalse(boundaryList.isEmpty());
-		assertTrue(boundaryList != null);
-		assertTrue(boundaryList.get(0).getName().equals("Srikakulam  Municipality"));
-		assertTrue(boundaryList.get(0).getTenantId().equals("default"));
 	}
 
 	private List<Boundary> getBoundaries() {

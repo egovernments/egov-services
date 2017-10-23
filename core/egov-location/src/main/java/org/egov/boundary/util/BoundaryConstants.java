@@ -3,7 +3,7 @@ package org.egov.boundary.util;
 public class BoundaryConstants {
 
 	public static final String INVALID_BOUNDARY_REQUEST_MESSAGE = "BoundaryRequest is invalid";
-
+	public static final String INVALID_BOUNDARYRequest_REQUEST_MESSAGE = "BoundaryTypeRequest is invalid";
 	public static final String INVALID_HIERARCHYtype_REQUEST_MESSAGE = "HierarchyType Request is invalid";
 
 	public static final String BOUNDARY_NUMBER__MANDATORY_CODE = "boundary.0001";
@@ -27,12 +27,12 @@ public class BoundaryConstants {
 	public static final String BOUNDARY_TYPE_MANADATORY_ERROR_MESSAGE = "boundaryType is Required";
 
 	public static final String BOUNDARY_TYPE_CODE_INVALID_CODE = "boundary.0006";
-	public static final String BOUNDARY_TYPE_CODE_INVALID_FIELD_NAME = "CODE";
+	public static final String BOUNDARY_TYPE_CODE_INVALID_FIELD_NAME = "code";
 	public static final String BOUNDARY_TYPE_CODE_INVALID_ERROR_MESSAGE = "BoundaryType Code Does Not Exist.";
 
 	public static final String BOUNDARY_TYPE_CODE_MANDATORY_CODE = "boundary.0007";
-	public static final String BOUNDARY_TYPE_CODE_MANDATORY_FIELD_NAME = "id";
-	public static final String BOUNDARY_TYPE_CODE_MANDATORY_ERROR_MESSAGE = "BoundaryTypeId is Required.";
+	public static final String BOUNDARY_TYPE_CODE_MANDATORY_FIELD_NAME = "code";
+	public static final String BOUNDARY_TYPE_CODE_MANDATORY_ERROR_MESSAGE = "BoundaryTypeCode is Required.";
 
 	public static final String BOUNDARY_TYPE_INVALID_CODE = "boundary.0008";
 	public static final String BOUNDARY_TYPE_INVALID_FIELD_NAME = "boundaryType";
@@ -76,7 +76,7 @@ public class BoundaryConstants {
 
 	public static final String BOUNDARYTYPE_PARENT_INVALID_CODE = "boundary.0018";
 	public static final String BOUNDARYTYPE_PARENT_INVALID_FIELD_NAME = "id";
-	public static final String BOUNDARYTYPE_PARENT_INVALID_ERROR_MESSAGE = "BoundaryType ParentId Does Not Exist.";
+	public static final String BOUNDARYTYPE_PARENT_INVALID_ERROR_MESSAGE = "BoundaryType ParentCode Does Not Exist.";
 
 	public static final String CROSSHIERARCHY_PARENT_MANDATORY_CODE = "boundary.0019";
 	public static final String CROSSHIERARCHY_PARENT_MANADATORY_FIELD_NAME = "parent";
@@ -125,4 +125,12 @@ public class BoundaryConstants {
 	public static final String BOUNDARY_CODE_TENANT_UNIQUE_CODE = "boundary.0030";
 	public static final String BOUNDARY_CODE_TENANT_UNIQUE_FIELD_NAME = "code and tenant";
 	public static final String BOUNDARY_CODE_TENANT_UNIQUE_ERROR_MESSAGE = "Combination Of code and tenantId Already Exist.";
+	
+	public static final String BOUNDARYTYPE_CODE_TENANT_UNIQUE_CODE = "boundary.0030";
+	public static final String BOUNDARYTYPE_CODE_TENANT_UNIQUE_FIELD_NAME = "code and tenant";
+	public static final String BOUNDARYTYPE_CODE_TENANT_UNIQUE_ERROR_MESSAGE = "Combination Of code and tenantId Already Exist.";
+	
+	public static final String BOUNDARYTYPE_CODE_MANDATORY_CODE = "boundary.0028";
+	public static final String BOUNDARYTYPE_CODE_MANADATORY_FIELD_NAME = "code";
+	public static final String BOUNDARYTYPE_CODE_MANADATORY_ERROR_MESSAGE = "Boundary Type Code is required";
 }

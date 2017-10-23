@@ -14,5 +14,8 @@ public class DashboardResponse {
     @JsonProperty("REGISTERED")
     private Integer count;
 
+    @JsonProperty("RESOLVED")
+    private Integer closedCount;
+
     private String name;
 }

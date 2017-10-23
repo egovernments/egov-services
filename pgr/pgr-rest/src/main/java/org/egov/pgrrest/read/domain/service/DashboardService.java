@@ -15,8 +15,14 @@ public class DashboardService {
         this.dashboardRepository = dashboardRepository;
     }
 
-    public List<DashboardResponse> getComplaintTypeWiseCount(String tenantId){
-        List<DashboardResponse> response = dashboardRepository.getCountByComplaintType(tenantId);
+    public List<DashboardResponse> getComplaintTypeWiseCount(String tenantId, String type){
+
+        List<DashboardResponse> response;
+
+        if(type.equalsIgnoreCase("weekly"))
+            response = dashboardRepository.getWeeklyRegisteredAndClosedComplaintsCount(tenantId);
+        else
+            response = dashboardRepository.getCountByComplaintType(tenantId);
 
         return response;
     }

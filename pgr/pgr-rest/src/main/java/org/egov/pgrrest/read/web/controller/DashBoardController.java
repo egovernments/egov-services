@@ -21,8 +21,12 @@ public class DashBoardController {
     }
 
     @PostMapping
-    public List<DashboardResponse> getDashboardResponse(@RequestParam(value = "tenantId", defaultValue = "default") String tenantId){
-        List<org.egov.pgrrest.read.domain.model.DashboardResponse> response = dashboardService.getComplaintTypeWiseCount(tenantId);
+    public List<DashboardResponse> getDashboardResponse(@RequestParam(value = "tenantId", defaultValue = "default") String tenantId,
+                                                        @RequestParam(value = "type", defaultValue = "Monthly") String type){
+        List<org.egov.pgrrest.read.domain.model.DashboardResponse> response = dashboardService.getComplaintTypeWiseCount(tenantId,type);
+
+        if(type.equalsIgnoreCase("weekly"))
+            return getWeeklyResponseList(response);
 
         return getResponseList(response);
     }
@@ -30,6 +34,12 @@ public class DashBoardController {
     private List<DashboardResponse> getResponseList(List<org.egov.pgrrest.read.domain.model.DashboardResponse> responseList){
         return responseList.stream()
             .map(record -> record.toContract(record))
+            .collect(Collectors.toList());
+    }
+
+    private List<DashboardResponse> getWeeklyResponseList(List<org.egov.pgrrest.read.domain.model.DashboardResponse> responseList){
+        return responseList.stream()
+            .map(record -> record.toWeeklyContract(record))
             .collect(Collectors.toList());
     }
 

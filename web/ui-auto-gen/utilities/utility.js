@@ -57,7 +57,7 @@ function getQuery(url, key, val) {
         url = url + "?";
     }
 
-    url = url + "|" + key + "|" + val;
+    return (url + "|" + key + "|" + val);
 }
 
 exports.getTitleCase = getTitleCase;

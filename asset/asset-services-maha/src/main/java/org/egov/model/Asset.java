@@ -131,7 +131,7 @@ public class Asset   {
 	  @JsonProperty("oldCode")
 	  private String oldCode = null;
 
-	  @JsonProperty("department")
+	  @JsonProperty("departmentCode")
 	  private String departmentCode = null;
 
 	  @JsonProperty("assetCategory")

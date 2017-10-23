@@ -14,7 +14,6 @@ import org.egov.model.Asset;
 import org.egov.model.AssetCategory;
 import org.egov.model.Attributes;
 import org.egov.model.DefectLiability;
-import org.egov.model.Department;
 import org.egov.model.Location;
 import org.egov.model.enums.ModeOfAcquisitionEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
 
-    @Autowired
+	@Autowired
     private ObjectMapper objectMapper;
 
     @Override
@@ -159,7 +158,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
     assetCategory.setName(rs.getString("assetCategoryName"));
     assetCategory.setCode(rs.getString("assetcategorycode"));
     assetCategory.setParent((Long) rs.getObject("parentId"));
-    assetCategory.setDepreciationRate(rs.getBigDecimal("depreciationrate"));
+    assetCategory.setDepreciationRate(rs.getDouble("depreciationrate"));
     assetCategory.setDepreciationExpenseAccount((Long) rs.getObject("depreciationExpenseAccount"));
     assetCategory.setDepreciationMethod(DepreciationMethod.fromValue(rs.getString("depreciationMethod")));
     assetCategory.setAccumulatedDepreciationAccount((Long) rs.getObject("accumulatedDepreciationAccount"));

@@ -1,0 +1,517 @@
+---
+ReportDefinitions:
+#  1. Advertisement/ Hoardings Report
+- reportName:  AdvertisementHoardingsReport
+  summary:  Advertisement/ Hoardings Report
+  version: 1.0.0
+  moduleName: lams
+  sourceColumns:
+  - name: city/Zone/Ward/Street
+    label: reports.lams.city/Zone/Ward/StreetLevel
+    type: string
+    source: lams
+  - name: advertisingHoardingAppNo
+    label: reports.lams.advertisingHoardingAppNo
+    type: string
+    source: lams
+  - name: advertisingHoardingType
+    label: reports.lams.advertisingHoardingType
+    type: string
+    source: lams
+  - name: advertisingHoardingSubType
+    label: reports.lams.advertisingHoardingSubType
+    type: string
+    source: lams
+  - name: advertisingHoardingDescription
+    label: reports.lams.advertisingHoardingDescription
+    type: string
+    source: lams
+  - name: length
+    label: reports.lams.length
+    type: number
+    source: lams
+  - name: breath
+    label: reports.lams.breath
+    type: number
+    source: lams
+  - name: location
+    label: reports.lams.location
+    type: number
+    source: lams
+  searchParams:
+  - name: fromDate
+    label: reports.lams.fromdate
+    type: epoch
+    searchClause: and  = $fromDate
+    isMandatory: false
+    source : lams
+  - name: toDate
+    label: reports.lams.toDate
+    type: epoch
+    searchClause: and  = $toDate
+    isMandatory: false
+    source : lams
+  query: 
+  groupBy : 
+  
+# 2. List of demand generated against the Advertising/Hoarding  
+- reportName:  demandGeneratedAgainstTheAdvertisingHoarding
+  summary:  List of demand generated against the Advertising/Hoarding
+  version: 1.0.0
+  moduleName: lams
+  sourceColumns:
+  - name: demandNo
+    label: reports.lams.demandNo
+    type: string
+    source: lams
+  - name: demandGenerationDate
+    label: reports.lams.demandGenerationDate
+    type: string
+    source: lams
+  - name: propertyId
+    label: reports.lams.propertyId
+    type: string
+    source: lams
+  - name: ward
+    label: reports.lams.ward
+    type: string
+    source: lams
+  - name: department
+    label: reports.lams.department
+    type: string
+    source: lams
+  - name: propertyNamer
+    label: reports.lams.propertyNamer
+    type: string
+    source: lams
+  - name: propertyAddress
+    label: reports.lams.propertyAddress
+    type: string
+    source: lams
+  - name: occupierName
+    label: reports.lams.occupierName
+    type: string
+    source: lams
+  - name: advertisingHoardingAppNo
+    label: reports.lams.advertisingHoardingAppNo
+    type: string
+    source: lams
+  searchParams:
+  - name: fromDate
+    label: reports.lams.fromdate
+    type: epoch
+    searchClause: and  = $fromDate
+    isMandatory: false
+    source : lams
+  - name: toDate
+    label: reports.lams.toDate
+    type: epoch
+    searchClause: and  = $toDate
+    isMandatory: false
+    source : lams
+  query: 
+  groupBy : 
+  
+  # 3.  Defaulter list – Advertisement/Hoarding   
+- reportName:  defaulterListReport
+  summary: Defaulter list – Advertisement/Hoarding 
+  version: 1.0.0
+  moduleName: lams
+  sourceColumns:
+  - name: demandNo
+    label: reports.lams.demandNo
+    type: string
+    source: lams
+  - name: demandGenerationDate
+    label: reports.lams.demandGenerationDate
+    type: string
+    source: lams
+  - name: agreementNo
+    label: reports.lams.agreementNo
+    type: string
+    source: lams
+  - name: agreementDate
+    label: reports.lams.agreementDate
+    type: string
+    source: lams
+  - name: agreementRentAmount
+    label: reports.lams.agreementRentAmount
+    type: number
+    source: lams
+  - name: agreementDeposit
+    label: reports.lams.agreementDeposit
+    type: number
+    source: lams
+  - name: agreementFromDate
+    label: reports.lams.agreementFromDate
+    type: string
+    source: lams
+  - name: agreementToDate
+    label: reports.lams.agreementToDate
+    type: string
+    source: lams
+  - name: dueAmount
+    label: reports.lams.dueAmount
+    type: number
+    source: lams
+  searchParams:
+  - name: fromDate
+    label: reports.lams.fromdate
+    type: epoch
+    searchClause: and  = $fromDate
+    isMandatory: false
+    source : lams
+  - name: toDate
+    label: reports.lams.toDate
+    type: epoch
+    searchClause: and  = $toDate
+    isMandatory: false
+    source : lams
+  query: 
+  groupBy : 
+  
+   # 4. Collection Report (Ward/Zone wise) – Advertising and Hoarding  
+- reportName:  collectionReport
+  summary:  Collection Report (Ward/Zone wise) – Advertising and Hoarding 
+  version: 1.0.0
+  moduleName: lams
+  sourceColumns:
+  - name: ward
+    label: reports.lams.ward
+    type: string
+    source: lams
+  - name: zone
+    label: reports.lams.zone
+    type: string
+    source: lams
+  - name: advertisingHoardingNo
+    label: reports.lams.advertisingHoardingNo
+    type: string
+    source: lams
+  - name: advertisingHoardingType
+    label: reports.lams.advertisingHoardingType
+    type: string
+    source: lams
+  - name: advertisingHoardingSubType
+    label: reports.lams.advertisingHoardingSubType
+    type: string
+    source: lams
+  - name: nameOfOccupier
+    label: reports.lams.nameOfOccupier
+    type: number
+    source: lams
+  - name: agreementDate
+    label: reports.lams.agreementDate
+    type: string
+    source: lams
+  - name: agreementRentAmount
+    label: reports.lams.agreementRentAmount
+    type: number
+    source: lams
+  - name: agreementDeposit
+    label: reports.lams.agreementDeposit
+    type: number
+    source: lams
+  - name: propertyTax
+    label: reports.lams.propertyTax
+    type: number
+    source: lams
+  - name: penalty
+    label: reports.lams.penalty
+    type: number
+    source: lams
+  - name: electricTax
+    label: reports.lams.electricTax
+    type: number
+    source: lams
+  - name: arrearAmount
+    label: reports.lams.arrearAmt
+    type: number
+    source: lams
+  - name: currentAmount
+    label: reports.lams.currentAmt
+    type: number
+    source: lams
+  - name: total
+    label: reports.lams.total
+    type: number
+    source: lams
+  searchParams:
+  - name: fromDate
+    label: reports.lams.fromdate
+    type: epoch
+    searchClause: and  = $fromDate
+    isMandatory: false
+    source : lams
+  - name: toDate
+    label: reports.lams.toDate
+    type: epoch
+    searchClause: and  = $toDate
+    isMandatory: false
+    source : lams
+  query: 
+  groupBy : 
+
+ # 5. Outstanding Report – Estate on (Rent/Lease)   
+- reportName:  outStandingReport
+  summary:  Outstanding Report – Estate on (Rent/Lease) 
+  version: 1.0.0
+  moduleName: lams
+  sourceColumns:
+  - name: ward
+    label: reports.lams.ward
+    type: string
+    source: lams
+  - name: zone
+    label: reports.lams.zone
+    type: string
+    source: lams
+  - name: estateRegNo
+    label: reports.lams.estateRegNo
+    type: string
+    source: lams
+  - name: holdingType
+    label: reports.lams.holdingType
+    type: string
+    source: lams
+  - name: agreementNo
+    label: reports.lams.agreementNo
+    type: string
+    source: lams
+  - name: nameOfOccupier
+    label: reports.lams.nameOfOccupier
+    type: number
+    source: lams
+  - name: agreementDate
+    label: reports.lams.agreementDate
+    type: string
+    source: lams
+  - name: agreementRentAmount
+    label: reports.lams.agreementRentAmount
+    type: number
+    source: lams
+  - name: agreementDeposit
+    label: reports.lams.agreementDeposit
+    type: number
+    source: lams
+  - name: arrearAmount
+    label: reports.lams.arrearAmt
+    type: number
+    source: lams
+  - name: currentAmount
+    label: reports.lams.currentAmt
+    type: number
+    source: lams
+  - name: total
+    label: reports.lams.total
+    type: number
+    source: lams
+  searchParams:
+  - name: fromDate
+    label: reports.lams.fromdate
+    type: epoch
+    searchClause: and  = $fromDate
+    isMandatory: false
+    source : lams
+  - name: toDate
+    label: reports.lams.toDate
+    type: epoch
+    searchClause: and  = $toDate
+    isMandatory: false
+    source : lams
+  query: 
+  groupBy : 
+  
+ # 6. Collection Report (Ward/Zone wise) – Estate on (Rent/Lease)  
+- reportName:  collectionReportEstateOn
+  summary: Collection Report (Ward/Zone wise) – Estate on (Rent/Lease) 
+  version: 1.0.0
+  moduleName: lams
+  sourceColumns:
+  - name: ward
+    label: reports.lams.ward
+    type: string
+    source: lams
+  - name: zone
+    label: reports.lams.zone
+    type: string
+    source: lams
+  - name: estateRegNo
+    label: reports.lams.estateRegNo
+    type: string
+    source: lams
+  - name: holdingType
+    label: reports.lams.holdingType
+    type: string
+    source: lams
+  - name: agreementNo
+    label: reports.lams.agreementNo
+    type: string
+    source: lams
+  - name: nameOfOccupier
+    label: reports.lams.nameOfOccupier
+    type: number
+    source: lams
+  - name: agreementDate
+    label: reports.lams.agreementDate
+    type: string
+    source: lams
+  - name: agreementRentAmount
+    label: reports.lams.agreementRentAmount
+    type: number
+    source: lams
+  - name: agreementDeposit
+    label: reports.lams.agreementDeposit
+    type: number
+    source: lams
+  - name: propertyTax
+    label: reports.lams.propertyTax
+    type: number
+    source: lams
+  - name: penalty
+    label: reports.lams.penalty
+    type: number
+    source: lams
+  - name: electricTax
+    label: reports.lams.electricTax
+    type: number
+    source: lams
+  - name: arrearAmount
+    label: reports.lams.arrearAmt
+    type: number
+    source: lams
+  - name: currentAmount
+    label: reports.lams.currentAmt
+    type: number
+    source: lams
+  - name: total
+    label: reports.lams.total
+    type: number
+    source: lams
+  searchParams:
+  - name: fromDate
+    label: reports.lams.fromdate
+    type: epoch
+    searchClause: and  = $fromDate
+    isMandatory: false
+    source : lams
+  - name: toDate
+    label: reports.lams.toDate
+    type: epoch
+    searchClause: and  = $toDate
+    isMandatory: false
+    source : lams
+  query: 
+  groupBy : 
+  
+# 7. List of details of all lease holders per advertising agent 
+- reportName:  listOfLeaseHolders
+  summary: List of details of all lease holders per advertising agent) 
+  version: 1.0.0
+  moduleName: lams
+  sourceColumns:
+  - name: holdingType
+    label: reports.lams.holdingType
+    type: string
+    source: lams
+  - name: licenseAppNo
+    label: reports.lams.licenseAppNo
+    type: string
+    source: lams
+  - name: applicationDate
+    label: reports.lams.applicationDate
+    type: string
+    source: lams
+  - name: agency/Org/Individual/SocietyName
+    label: reports.lams.agency/Org/Individual/SocietyName
+    type: string
+    source: lams
+  - name: agency/Org/Individual/SocietyType
+    label: reports.lams.agency/Org/Individual/SocietyType
+    type: string
+    source: lams
+  - name: agreementDate
+    label: reports.lams.agreementDate
+    type: number
+    source: lams
+  - name: agreementRentAmount
+    label: reports.lams.agreementRentAmount
+    type: number
+    source: lams
+  - name: agreementDeposit
+    label: reports.lams.agreementDeposit
+    type: number
+    source: lams
+  - name: demandNo
+    label: reports.lams.demandNo
+    type: number
+    source: lams
+  - name: demandDate
+    label: reports.lams.demandDate
+    type: number
+    source: lams
+  searchParams:
+  - name: fromDate
+    label: reports.lams.fromdate
+    type: epoch
+    searchClause: and  = $fromDate
+    isMandatory: false
+    source : lams
+  - name: toDate
+    label: reports.lams.toDate
+    type: epoch
+    searchClause: and  = $toDate
+    isMandatory: false
+    source : lams
+  query: 
+  groupBy : 
+  
+#  8. Land Acquisition Report
+- reportName:  landAcquisitionReport
+  summary: Land Acquisition Report
+  version: 1.0.0
+  moduleName: lams
+  sourceColumns:
+  - name: landAcquisitionNo
+    label: reports.lams.landAcquisitionNo
+    type: string
+    source: lams
+  - name: resolutionNo
+    label: reports.lams.resolutionNo
+    type: number
+    source: lams
+  - name: resolutionDate
+    label: reports.lams.resolutionDate
+    type: string
+    source: lams
+  - name: newsPaperNoticeNo
+    label: reports.lams.newsPaperNoticeNo
+    type: number
+    source: lams
+  - name: advoctePanel/AdvocteName
+    label: reports.lams.advoctePanel/AdvocteName
+    type: string
+    source: lams
+  - name: valuationAmount
+    label: reports.lams.valuationAmount
+    type: number
+    source: lams
+  - name: valuationRate
+    label: reports.lams.valuationRate
+    type: number
+    source: lams
+  - name: reservationCode
+    label: reports.lams.reservationCode
+    type: string
+    source: lams
+  searchParams:
+  - name: fromDate
+    label: reports.lams.fromdate
+    type: epoch
+    searchClause: and  = $fromDate
+    isMandatory: false
+    source : lams
+  query: 
+  groupBy : 
+ 
+  

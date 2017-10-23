@@ -26,4 +26,11 @@ public class PropertiesManager {
 	
 	@Value("${kafka.topic.save.estate}")
 	public String createEstateKafkaTopic;
+	
+	@Value("${kafka.topic.save.landAcquisition}")
+	public String createLandAcquisitionKafkaTopic;
+	
+	@Value("${kafka.topic.update.landAcquisition}")
+	public String updateLandAcquisitionKafkaTopic;
+	
 }

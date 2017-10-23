@@ -25,7 +25,7 @@ public class LandPossession {
 	private String surveyNumber;
 	private String remarks;
 	@NotNull
-	private Integer possessionDate;
+	private Long possessionDate;
 	private String tdrCertificate;
 	@NotNull
 	private String landAcquisition;

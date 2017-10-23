@@ -39,16 +39,16 @@ public class LandAcquisition {
 	private String pinCode;
 	private String reservationCode;
 	private String resolutionNumber;
-	private Integer resolutionDate;
-	private Integer latitude;
-	private Integer longitude;
+	private Long resolutionDate;
+	private Long latitude;
+	private Long longitude;
 	private String landAcquisitionOfficerName;
 	private String landAcquisitionOfficerRemark;
 	@NotNull
 	private String paperNoticeNumber;
 	@NotNull
 	private String advocateName;
-	private Integer panelAppoIntegermentDate;
+	private Long panelAppoIntegermentDate;
 	private String status;
 	private WorkFlowDetails workFlowDetails;
 	private AuditDetails auditDetails;

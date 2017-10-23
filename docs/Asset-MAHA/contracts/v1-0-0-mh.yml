@@ -807,26 +807,26 @@ definitions:
           value of the asset when it was created originally, will be same as
           gross value if the asset is being created from the system.
       assetAccount:
-        type: integer
-        format: int64
+        type: string
+        format: string
         description: >-
           Options are from the  chart of account master for the account code
           purpose "Fixed Asset".
       accumulatedDepreciationAccount:
-        type: integer
-        format: int64
+        type: string
+        format: string
         description: >-
           Options are from the  chart of account master for the account code
           purpose "Accumulated Depreciation".
       revaluationReserveAccount:
-        type: integer
-        format: int64
+        type: string
+        format: string
         description: >-
           Options are from the  chart of account master for the account code
           purpose "Revaluation Reserve Account".
       depreciationExpenseAccount:
-        type: integer
-        format: int64
+        type: string
+        format: string
         description: >-
           Options are from the  chart of account master for the account code
           purpose "Depreciation Expense Account".
@@ -914,8 +914,9 @@ definitions:
           Old Asset ID should be entered for Asset Older than go live Date of
           this module.
         format: varchar
-      department:
-        $ref: '#/definitions/Department'
+      departmentCode:
+        type: string
+        description: code of the department to which the asset belongs
       assetCategory:
         $ref: '#/definitions/AssetCategory'
       modeOfAcquisition:
@@ -991,7 +992,7 @@ definitions:
           $ref: '#/definitions/YearWiseDepreciation'
     required:
       - name
-      - department
+      - departmentCode
       - assetCategory
       - grossValue
       - originalValue
@@ -1029,22 +1030,6 @@ definitions:
           data type is multivaluelist then value will be list, if datatype is
           table then value will be the key value pair where key is  column name
           and value is column value).
-        format: varchar
-  Department:
-    type: object
-    description: Department of the Asset.
-    properties:
-      id:
-        type: integer
-        format: int64
-        description: Unique identifier of the department
-      name:
-        type: string
-        description: Name of the department.
-        format: varchar
-      code:
-        type: string
-        description: Department code.
         format: varchar
   AssetCategory:
     type: object
@@ -1099,32 +1084,32 @@ definitions:
           category.
         format: boolean
       assetAccount:
-        type: integer
-        format: int64
+        type: string
+        format: string
         description: >-
           Options are from the  chart of account master for the account code
           purpose "Fixed Asset".
       accumulatedDepreciationAccount:
-        type: integer
-        format: int64
+        type: string
+        format: string
         description: >-
           Options are from the  chart of account master for the account code
           purpose "Accumulated Depreciation".
       revaluationReserveAccount:
-        type: integer
-        format: int64
+        type: string
+        format: string
         description: >-
           Options are from the  chart of account master for the account code
           purpose "Revaluation Reserve Account".
       depreciationExpenseAccount:
-        type: integer
-        format: int64
+        type: string
+        format: string
         description: >-
           Options are from the  chart of account master for the account code
           purpose "Depreciation Expense Account".
       unitOfMeasurement:
-        type: integer
-        format: int64
+        type: string
+        format: string
         description: Options are from UOM.
       version:
         type: string
@@ -1280,34 +1265,34 @@ definitions:
         description: Remarks.
         format: varchar
       voucherReference:
-        type: integer
-        format: int64
+        type: string
+        format: string
         description: >-
           The voucher id that is getting created as part of revaluation of the
           asset.
       fixedAssetsWrittenOffAccount:
-        type: integer
-        format: int64
+        type: string
+        format: string
         description: >-
           The chartofaccount code that is used for accounting which is based on
           specific account code purpose "Fixed Assets Written Off".
       function:
-        type: integer
-        format: int64
+        type: string
+        format: string
         description: Option based on the function related with financials.
       fund:
-        type: integer
-        format: int64
+        type: string
+        format: string
         description: >-
           Option based on the fund related with financials-Defaulted to Capital
           Fund.
       scheme:
-        type: integer
-        format: int64
+        type: string
+        format: string
         description: Option based on the selected fund from the master.
       subScheme:
-        type: integer
-        format: int64
+        type: string
+        format: string
         description: Option based on the selected  scheme from master.
       comments:
         type: string
@@ -1325,8 +1310,9 @@ definitions:
     required:
       - tenantId
       - assetId
-      - typeOfChange
       - revaluationAmount
+      - orderNumber
+      - orderDate
   Disposal:
     description: Holds the Asset Sale/Disposal information.
     type: object
@@ -1406,14 +1392,14 @@ definitions:
           - SALE
           - DISPOSAL
       profLossVoucherReference:
-        type: integer
-        format: int64
+        type: string
+        format: string
         description: >-
           The voucher id that is getting created as part of SALE/DISPOSAL of the
           asset.
       assetSaleAccount:
-        type: integer
-        format: int64
+        type: string
+        format: string
         description: >-
           Select the Asset Sale account code- populate it based on purpose code
           from financials detailed code master.
@@ -1429,6 +1415,8 @@ definitions:
     required:
       - disposalReason
       - disposalDate
+      - orderNumber
+      - orderDate
   AttributeDefinition:
     description: Hold the Asset dynamic fields details as list of json object.
     type: object

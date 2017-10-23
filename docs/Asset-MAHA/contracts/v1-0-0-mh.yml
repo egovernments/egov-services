@@ -997,6 +997,16 @@ definitions:
       - originalValue
       - description
       - dateOfCreation
+      - wipReferenceNo
+      - anticipatedLife
+      - acquisitionDate
+      - address
+      - assetAccount
+      - accumulatedDepreciationAccount
+      - revaluationReserveAccount
+      - depreciationExpenseAccount
+      
+      
   Attributes:
     type: object
     description: >-

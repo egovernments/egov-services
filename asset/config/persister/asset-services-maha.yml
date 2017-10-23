@@ -1,0 +1,538 @@
+serviceMaps:
+ serviceName: User Service
+ mappings:
+ - version: 1.0
+   name: Asset
+   description: Persists asset details in eg_asset table
+   fromTopic: save-asset-maha
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO egasset_asset(id, name, code, oldcode, departmentcode, assetcategory, modeofacquisition,status, grossvalue, accumulateddepreciation, description, dateofcreation,remarks, version, assetreference, enableyearwisedepreciation,assetattributes, depreciationrate, anticipatedlife, ordernumber,orderdate, wipreferenceno, acquiredfrom, warrantyavailable, warrantyexpirydate,defectliabilityyear, defectliabilitymonth, defectliabilityday,securitydepositretained, securitydepositrealized, acquisitiondate,originalvalue, assetaccount, accumulateddepreciationaccount,revaluationreserveaccount, depreciationexpenseaccount, titledocumentsavalable,usage, length, width, height, totalarea, plintharea, address,longitude, latitude, floors, landsurveyno, cubiccontents, quantity,tenantid, zone, revenueward, street, electionward, doorno, pincode,locality, block) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: Asset
+      jsonMaps:
+         
+       - jsonPath: $.Asset.id
+         
+       - jsonPath: $.Asset.name
+         
+       - jsonPath: $.Asset.code
+       
+       - jsonPath: $.Asset.oldCode
+       
+       - jsonPath: $.Asset.departmentCode
+       
+       - jsonPath: $.Asset.assetCategory.id
+       
+       - jsonPath: $.Asset.modeOfAcquisition
+       
+       - jsonPath: $.Asset.status
+       
+       - jsonPath: $.Asset.grossValue
+         type: BIGDECIMAL
+         
+       - jsonPath: $.Asset.accumulatedDepreciation
+         type: BIGDECIMAL
+         
+       - jsonPath: $.Asset.description
+         
+       - jsonPath: $.Asset.dateOfCreation
+         type: LONG
+         
+       - jsonPath: $.Asset.remarks
+       
+       - jsonPath: $.Asset.version       
+       
+       - jsonPath: $.Asset.assetReference
+       
+       - jsonPath: $.Asset.enableYearWiseDepreciation
+       
+       - jsonPath: $.Asset.assetAttributes
+         type: JSON
+         dbType: JSONB
+         
+       - jsonPath: $.Asset.depreciationRate
+         type: DOUBLE
+         
+       - jsonPath: $.Asset.anticipatedLife
+         
+       - jsonPath: $.Asset.orderNumber
+       
+       - jsonPath: $.Asset.orderDate
+       
+       - jsonPath: $.Asset.wipReferenceNo
+       
+       - jsonPath: $.Asset.acquiredFrom
+       
+       - jsonPath: $.Asset.warrantyAvailable
+         type: BOOLEAN
+       
+       - jsonPath: $.Asset.warrantyExpiryDate
+       
+       - jsonPath: $.Asset.defectLiabilityPeriod.year
+       
+       - jsonPath: $.Asset.defectLiabilityPeriod.month
+       
+       - jsonPath: $.Asset.defectLiabilityPeriod.day
+       
+       - jsonPath: $.Asset.securityDepositRetained
+         type: BIGDECIMAL
+       
+       - jsonPath: $.Asset.securityDepositRealized
+         type: BIGDECIMAL
+       
+       - jsonPath: $.Asset.acquisitionDate
+       
+       - jsonPath: $.Asset.originalValue
+         type: BIGDECIMAL
+         
+       - jsonPath: $.Asset.assetAccount
+       
+       - jsonPath: $.Asset.accumulatedDepreciationAccount
+       
+       - jsonPath: $.Asset.revaluationReserveAccount
+       
+       - jsonPath: $.Asset.depreciationExpenseAccount
+       
+       - jsonPath: $.Asset.titleDocumentsAvalable
+         type: JSON
+         dbType: JSONB
+       
+       - jsonPath: $.Asset.usage
+       
+       - jsonPath: $.Asset.length
+         type: DOUBLE
+       
+       - jsonPath: $.Asset.width
+         type: DOUBLE
+         
+       - jsonPath: $.Asset.height
+         type: DOUBLE
+         
+       - jsonPath: $.Asset.totalArea
+         type: DOUBLE
+       
+       - jsonPath: $.Asset.plinthArea
+         type: DOUBLE
+       
+       - jsonPath: $.Asset.address
+       
+       - jsonPath: $.Asset.longitude
+         type: DOUBLE
+       
+       - jsonPath: $.Asset.latitude
+         type: DOUBLE
+       
+       - jsonPath: $.Asset.floors
+       
+       - jsonPath: $.Asset.landSurveyNo
+       
+       - jsonPath: $.Asset.cubicContents
+       
+       - jsonPath: $.Asset.quantity
+         
+       - jsonPath: $.Asset.tenantId
+         
+       - jsonPath: $.Asset.locationDetails.zone
+         
+       - jsonPath: $.Asset.locationDetails.revenueWard
+         
+       - jsonPath: $.Asset.locationDetails.street
+         
+       - jsonPath: $.Asset.locationDetails.electionWard
+         
+       - jsonPath: $.Asset.locationDetails.doorNo
+         
+       - jsonPath: $.Asset.locationDetails.pinCode
+         
+       - jsonPath: $.Asset.locationDetails.locality
+         
+       - jsonPath: $.Asset.locationDetails.block
+       
+ - version: 1.0
+   name: Asset
+   description: Persists asset details in eg_asset table
+   fromTopic: update-asset-maha
+   isTransaction: true
+   queryMaps:
+    - query: UPDATE public.egasset_asset SET id=?, name=?, code=?, oldcode=?, departmentcode=?, assetcategory=?,modeofacquisition=?, status=?, grossvalue=?, accumulateddepreciation=?,description=?, dateofcreation=?, remarks=?, version=?, assetreference=?,enableyearwisedepreciation=?, assetattributes=?, depreciationrate=?,anticipatedlife=?, ordernumber=?, orderdate=?, wipreferenceno=?,acquiredfrom=?, warrantyavailable=?, warrantyexpirydate=?, defectliabilityyear=?,defectliabilitymonth=?, defectliabilityday=?, securitydepositretained=?,securitydepositrealized=?, acquisitiondate=?, originalvalue=?,assetaccount=?, accumulateddepreciationaccount=?, revaluationreserveaccount=?,depreciationexpenseaccount=?, titledocumentsavalable=?, usage=?,length=?, width=?, height=?, totalarea=?, plintharea=?, address=?,longitude=?, latitude=?, floors=?, landsurveyno=?, cubiccontents=?,quantity=?, tenantid=?, zone=?, revenueward=?, street=?, electionward=?,doorno=?, pincode=?, locality=?, block=? WHERE id = ? AND tenantId = ?;
+      basePath: Asset
+      jsonMaps:
+         
+       - jsonPath: $.Asset.id
+         
+       - jsonPath: $.Asset.name
+         
+       - jsonPath: $.Asset.code
+       
+       - jsonPath: $.Asset.oldCode
+       
+       - jsonPath: $.Asset.departmentcode
+       
+       - jsonPath: $.Asset.assetCategory.id
+       
+       - jsonPath: $.Asset.modeOfAcquisition
+       
+       - jsonPath: $.Asset.status
+       
+       - jsonPath: $.Asset.grossValue
+         type: BIGDECIMAL
+         
+       - jsonPath: $.Asset.accumulatedDepreciation
+         type: BIGDECIMAL
+         
+       - jsonPath: $.Asset.description
+         
+       - jsonPath: $.Asset.dateOfCreation
+         type: LONG
+         
+       - jsonPath: $.Asset.remarks
+       
+       - jsonPath: $.Asset.version       
+       
+       - jsonPath: $.Asset.assetReference
+       
+       - jsonPath: $.Asset.enableYearWiseDepreciation
+       
+       - jsonPath: $.Asset.assetAttributes
+         type: JSON
+         dbType: JSONB
+         
+       - jsonPath: $.Asset.depreciationRate
+         type: DOUBLE
+         
+       - jsonPath: $.Asset.anticipatedLife
+         
+       - jsonPath: $.Asset.orderNumber
+       
+       - jsonPath: $.Asset.orderDate
+       
+       - jsonPath: $.Asset.wipReferenceNo
+       
+       - jsonPath: $.Asset.acquiredFrom
+       
+       - jsonPath: $.Asset.warrantyAvailable
+         type: BOOLEAN
+       
+       - jsonPath: $.Asset.warrantyExpiryDate
+       
+       - jsonPath: $.Asset.defectLiabilityPeriod.year
+       
+       - jsonPath: $.Asset.defectLiabilityPeriod.month
+       
+       - jsonPath: $.Asset.defectLiabilityPeriod.day
+       
+       - jsonPath: $.Asset.securityDepositRetained
+         type: BIGDECIMAL
+       
+       - jsonPath: $.Asset.securityDepositRealized
+         type: BIGDECIMAL
+       
+       - jsonPath: $.Asset.acquisitionDate
+       
+       - jsonPath: $.Asset.originalValue
+         type: BIGDECIMAL
+         
+       - jsonPath: $.Asset.assetAccount
+       
+       - jsonPath: $.Asset.accumulatedDepreciationAccount
+       
+       - jsonPath: $.Asset.revaluationReserveAccount
+       
+       - jsonPath: $.Asset.depreciationExpenseAccount
+       
+       - jsonPath: $.Asset.titleDocumentsAvalable
+         type: JSON
+         dbType: JSONB
+       
+       - jsonPath: $.Asset.usage
+       
+       - jsonPath: $.Asset.length
+         type: DOUBLE
+       
+       - jsonPath: $.Asset.width
+         type: DOUBLE
+         
+       - jsonPath: $.Asset.height
+         type: DOUBLE
+         
+       - jsonPath: $.Asset.totalArea
+         type: DOUBLE
+       
+       - jsonPath: $.Asset.plinthArea
+         type: DOUBLE
+       
+       - jsonPath: $.Asset.address
+       
+       - jsonPath: $.Asset.longitude
+         type: DOUBLE
+       
+       - jsonPath: $.Asset.latitude
+         type: DOUBLE
+       
+       - jsonPath: $.Asset.floors
+       
+       - jsonPath: $.Asset.landSurveyNo
+       
+       - jsonPath: $.Asset.cubicContents
+       
+       - jsonPath: $.Asset.quantity
+         
+       - jsonPath: $.Asset.tenantId
+         
+       - jsonPath: $.Asset.locationDetails.zone
+         
+       - jsonPath: $.Asset.locationDetails.revenueWard
+         
+       - jsonPath: $.Asset.locationDetails.street
+         
+       - jsonPath: $.Asset.locationDetails.electionWard
+         
+       - jsonPath: $.Asset.locationDetails.doorNo
+         
+       - jsonPath: $.Asset.locationDetails.pinCode
+         
+       - jsonPath: $.Asset.locationDetails.locality
+         
+       - jsonPath: $.Asset.locationDetails.block
+       
+       - jsonPath: $.Asset.id
+       
+       - jsonPath: $.Asset.tenantId     
+       
+       
+ - version: 1.0
+   name: Revaluation
+   description: Persists asset revaluation in egasset_revaluation table
+   fromTopic: save-revaluation-maha
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO public.egasset_revalution(id, tenantid, assetid, currentcapitalizedvalue, typeofchange,revaluationamount, valueafterrevaluation, revaluationdate, revaluatedby,reasonforrevaluation, fixedassetswrittenoffaccount, function,fund, scheme, subscheme, comments, status, remarks, ordernumber,orderdate, createdby, createddate, lastmodifiedby, lastmodifieddate, voucherreference) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);
+      basePath: Revaluation
+      jsonMaps:
+         
+       - jsonPath: $.Revaluation.id
+         
+       - jsonPath: $.Revaluation.tenantId
+         
+       - jsonPath: $.Revaluation.assetId
+       
+       - jsonPath: $.Revaluation.currentCapitalizedValue
+         type: BIGDECIMAL
+       
+       - jsonPath: $.Revaluation.typeOfChange
+       
+       - jsonPath: $.Revaluation.revaluationAmount
+         type: BIGDECIMAL
+       
+       - jsonPath: $.Revaluation.valueAfterRevaluation
+         type: BIGDECIMAL
+       
+       - jsonPath: $.Revaluation.revaluationDate
+         
+       - jsonPath: $.Revaluation.revaluatedBy
+         
+       - jsonPath: $.Revaluation.reasonForRevaluation
+         
+       - jsonPath: $.Revaluation.fixedAssetsWrittenOffAccount
+         type: LONG
+         
+       - jsonPath: $.Revaluation.function
+       
+       - jsonPath: $.Revaluation.fund       
+       
+       - jsonPath: $.Revaluation.scheme
+       
+       - jsonPath: $.Revaluation.subScheme
+              
+       - jsonPath: $.Revaluation.comments
+       
+       - jsonPath: $.Revaluation.status
+       
+       - jsonPath: $.Revaluation.remarks
+       
+       - jsonPath: $.Revaluation.orderNumber
+       
+       - jsonPath: $.Revaluation.orderDate
+       
+       - jsonPath: $.Revaluation.auditDetails.createdBy
+       
+       - jsonPath: $.Revaluation.auditDetails.createdDate
+       
+       - jsonPath: $.Revaluation.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.Revaluation.auditDetails.lastModifiedDate
+       
+       - jsonPath: $.Revaluation.voucherReference
+       
+ - version: 1.0
+   name: Revaluation
+   description: Persists Revaluation details in eg_Revaluation table
+   fromTopic: update-Revaluation-maha
+   isTransaction: true
+   queryMaps:
+    - query: UPDATE public.egasset_revalution SET id=?, tenantid=?, assetid=?, currentcapitalizedvalue=?, typeofchange=?, revaluationamount=?, valueafterrevaluation=?, revaluationdate=?,revaluatedby=?, reasonforrevaluation=?, fixedassetswrittenoffaccount=?, function=?, fund=?, scheme=?, subscheme=?, comments=?, status=?, remarks=?, ordernumber=?, orderdate=?, createdby=?, createddate=?, lastmodifiedby=?, lastmodifieddate=?, voucherreference=? WHERE id=? AND tenantid = ?;
+      basePath: Revaluation
+      jsonMaps:
+         
+       - jsonPath: $.Revaluation.id
+         
+       - jsonPath: $.Revaluation.tenantId
+         
+       - jsonPath: $.Revaluation.assetId
+       
+       - jsonPath: $.Revaluation.currentCapitalizedValue
+         type: BIGDECIMAL
+       
+       - jsonPath: $.Revaluation.typeOfChange
+       
+       - jsonPath: $.Revaluation.revaluationAmount
+         type: BIGDECIMAL
+       
+       - jsonPath: $.Revaluation.valueAfterRevaluation
+         type: BIGDECIMAL
+       
+       - jsonPath: $.Revaluation.revaluationDate
+         
+       - jsonPath: $.Revaluation.revaluatedBy
+         
+       - jsonPath: $.Revaluation.reasonForRevaluation
+         
+       - jsonPath: $.Revaluation.fixedAssetsWrittenOffAccount
+         type: LONG
+         
+       - jsonPath: $.Revaluation.function
+       
+       - jsonPath: $.Revaluation.fund       
+       
+       - jsonPath: $.Revaluation.scheme
+       
+       - jsonPath: $.Revaluation.subScheme
+              
+       - jsonPath: $.Revaluation.comments
+       
+       - jsonPath: $.Revaluation.status
+       
+       - jsonPath: $.Revaluation.remarks
+       
+       - jsonPath: $.Revaluation.orderNumber
+       
+       - jsonPath: $.Revaluation.orderDate
+       
+       - jsonPath: $.Revaluation.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.Revaluation.auditDetails.lastModifiedDate
+       
+       - jsonPath: $.Revaluation.voucherReference
+       
+       - jsonPath: $.Revaluation.id
+       
+       - jsonPath: $.Revaluation.tenantId
+       
+       
+ - version: 1.0
+   name: Revaluation
+   description: Persists asset revaluation in egasset_revaluation table
+   fromTopic: save-disposal-maha
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO public.egasset_disposal(id, tenantid, assetid, ordernumber, orderdate, remarks, buyername, buyeraddress,disposalreason, disposaldate, pancardnumber, aadharcardnumber,assetcurrentvalue, salevalue, transactiontype, assetsaleaccount,createdby, createddate, lastmodifiedby, lastmodifieddate, profitlossvoucherreference) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: Disposal
+      jsonMaps:
+         
+       - jsonPath: $.Disposal.id
+         
+       - jsonPath: $.Disposal.tenantId
+         
+       - jsonPath: $.Disposal.assetId
+       
+       - jsonPath: $.Disposal.orderNumber
+       
+       - jsonPath: $.Disposal.orderDate
+       
+       - jsonPath: $.Disposal.remarks
+       
+       - jsonPath: $.Disposal.buyerName
+       
+       - jsonPath: $.Disposal.buyerAddress
+       
+       - jsonPath: $.Disposal.disposalReason
+       
+       - jsonPath: $.Disposal.disposalDate
+       
+       - jsonPath: $.Disposal.panCardNumber
+         
+       - jsonPath: $.Disposal.aadharCardNumber
+         
+       - jsonPath: $.Disposal.assetCurrentValue
+         type: BIGDECIMAL
+         
+       - jsonPath: $.Disposal.saleValue
+         type: BIGDECIMAL
+         
+       - jsonPath: $.Disposal.transactionType
+       
+       - jsonPath: $.Disposal.assetSaleAccount       
+                   
+       - jsonPath: $.Disposal.auditDetails.createdBy
+       
+       - jsonPath: $.Disposal.auditDetails.createdDate
+       
+       - jsonPath: $.Disposal.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.Disposal.auditDetails.lastModifiedDate
+       
+       - jsonPath: $.Disposal.profitLossVoucherReference       
+       
+ - version: 1.0
+   name: Disposal
+   description: Persists Disposal details in eg_Disposal table
+   fromTopic: update-disposal-maha
+   isTransaction: true
+   queryMaps:
+    - query: UPDATE public.egasset_disposal SET id=?, tenantid=?, assetid=?, ordernumber=?, orderdate=?, remarks=?, buyername=?, buyeraddress=?, disposalreason=?, disposaldate=?, pancardnumber=?, aadharcardnumber=?, assetcurrentvalue=?, salevalue=?, transactiontype=?, assetsaleaccount=?, createdby=?, createddate=?, lastmodifiedby=?, lastmodifieddate=?, profitlossvoucherreference=? WHERE id=? AND tenantId=?;
+      basePath: Disposal
+      jsonMaps:
+         
+       - jsonPath: $.Disposal.id
+         
+       - jsonPath: $.Disposal.tenantId
+         
+       - jsonPath: $.Disposal.assetId
+       
+       - jsonPath: $.Disposal.orderNumber
+       
+       - jsonPath: $.Disposal.orderDate
+       
+       - jsonPath: $.Disposal.remarks
+       
+       - jsonPath: $.Disposal.buyerName
+       
+       - jsonPath: $.Disposal.buyerAddress
+       
+       - jsonPath: $.Disposal.disposalReason
+       
+       - jsonPath: $.Disposal.disposalDate
+       
+       - jsonPath: $.Disposal.panCardNumber
+         
+       - jsonPath: $.Disposal.aadharCardNumber
+         
+       - jsonPath: $.Disposal.assetCurrentValue
+         type: BIGDECIMAL
+         
+       - jsonPath: $.Disposal.saleValue
+         type: BIGDECIMAL
+         
+       - jsonPath: $.Disposal.transactionType
+       
+       - jsonPath: $.Disposal.assetSaleAccount       
+       
+       - jsonPath: $.Disposal.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.Disposal.auditDetails.lastModifiedDate
+       
+       - jsonPath: $.Disposal.profitLossVoucherReference       
+
+       - jsonPath: $.Disposal.id
+       
+       - jsonPath: $.Disposal.tenantId

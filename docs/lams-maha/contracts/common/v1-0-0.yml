@@ -345,10 +345,7 @@ definitions:
         maxLength: 128
         minLength: 2
       usage:
-        type: string
-        description: code of the UsageType
-        maxLength: 64
-        minLength: 1
+        $ref: "#/definitions/UsageType"
       code:
         type: string
         description: code of the SubUsageType
@@ -467,6 +464,108 @@ definitions:
         description: is PlanningType active.
     required:
       - tenantId
+      - code
+      - name
+      - isActive
+      
+  ApplicantType:
+    type: object
+    description: An object which holds the  Applicant Type Master info
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the ApplicantType
+      tenantId:
+        type: string
+        readOnly: true
+        description: tenant id of the ApplicantType
+        maxLength: 128
+        minLength: 2
+      code:
+        type: string
+        description: code of the ApplicantType
+        maxLength: 64
+        minLength: 1
+      name:
+        type: string
+        description: name of ApplicantType
+        maxLength: 128
+        minLength: 1
+      isActive:
+        type: boolean
+        description: is ApplicantType active.
+    required:
+      - tenantId
+      - code
+      - name
+      - isActive
+      
+  AdvertisementType:
+    type: object
+    description: An object which holds the  Advertisement Type Master info
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the AdvertisementType
+      tenantId:
+        type: string
+        readOnly: true
+        description: tenant id of the AdvertisementType
+        maxLength: 128
+        minLength: 2
+      code:
+        type: string
+        description: code of the AdvertisementType
+        maxLength: 64
+        minLength: 1
+      name:
+        type: string
+        description: name of AdvertisementType
+        maxLength: 128
+        minLength: 1
+      isActive:
+        type: boolean
+        description: is AdvertisementType active.
+    required:
+      - tenantId
+      - code
+      - name
+      - isActive
+      
+  AdvertisementSubType:
+    type: object
+    description: An object which holds the  Advertisement Sub Type Master info
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the AdvertisementSubType
+      tenantId:
+        type: string
+        readOnly: true
+        description: tenant id of the AdvertisementSubType
+        maxLength: 128
+        minLength: 2
+      advertisement:
+        $ref: '#/definitions/AdvertisementType'
+      code:
+        type: string
+        description: code of the AdvertisementSubType
+        maxLength: 64
+        minLength: 1
+      name:
+        type: string
+        description: name of AdvertisementSubType
+        maxLength: 128
+        minLength: 1
+      isActive:
+        type: boolean
+        description: is AdvertisementSubType active.
+    required:
+      - tenantId
+      - advertisement
       - code
       - name
       - isActive

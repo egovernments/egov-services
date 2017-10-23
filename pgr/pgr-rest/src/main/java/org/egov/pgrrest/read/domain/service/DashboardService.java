@@ -1,6 +1,7 @@
 package org.egov.pgrrest.read.domain.service;
 
 import org.egov.pgrrest.read.domain.model.DashboardResponse;
+import org.egov.pgrrest.read.domain.model.TopComplaintTypesResponse;
 import org.egov.pgrrest.read.persistence.repository.DashBoardRepository;
 import org.springframework.stereotype.Service;
 
@@ -25,5 +26,9 @@ public class DashboardService {
             response = dashboardRepository.getCountByComplaintType(tenantId);
 
         return response;
+    }
+
+    public List<TopComplaintTypesResponse> getTopComplaintTypes(String tenantId, int size){
+        return dashboardRepository.getTopComplaintTypeWithCount(tenantId, size);
     }
 }

@@ -1,5 +1,6 @@
 package org.egov.pgrrest.read.web.controller;
 
+import org.egov.pgrrest.read.domain.model.TopComplaintTypesResponse;
 import org.egov.pgrrest.read.domain.service.DashboardService;
 import org.egov.pgrrest.read.web.contract.DashboardResponse;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +32,15 @@ public class DashBoardController {
         return getResponseList(response);
     }
 
+    @PostMapping("/complainttype")
+    public List<org.egov.pgrrest.read.web.contract.TopComplaintTypesResponse> getTopComplaintTypesCount(@RequestParam(value = "tenantId", defaultValue = "default") String tenantId,
+                                                                                                        @RequestParam(value = "size", defaultValue = "5") Integer size){
+
+        List<TopComplaintTypesResponse> responseList = dashboardService.getTopComplaintTypes(tenantId, size);
+
+        return getTopComplaintTypesList(responseList);
+    }
+
     private List<DashboardResponse> getResponseList(List<org.egov.pgrrest.read.domain.model.DashboardResponse> responseList){
         return responseList.stream()
             .map(record -> record.toContract(record))
@@ -40,6 +50,14 @@ public class DashBoardController {
     private List<DashboardResponse> getWeeklyResponseList(List<org.egov.pgrrest.read.domain.model.DashboardResponse> responseList){
         return responseList.stream()
             .map(record -> record.toWeeklyContract(record))
+            .collect(Collectors.toList());
+    }
+
+    private List<org.egov.pgrrest.read.web.contract.TopComplaintTypesResponse> getTopComplaintTypesList(
+        List<TopComplaintTypesResponse> responseList){
+
+        return responseList.stream()
+            .map(record -> record.toContract())
             .collect(Collectors.toList());
     }
 

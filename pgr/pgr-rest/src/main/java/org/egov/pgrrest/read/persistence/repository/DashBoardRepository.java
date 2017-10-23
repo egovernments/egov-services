@@ -1,8 +1,10 @@
 package org.egov.pgrrest.read.persistence.repository;
 
 import org.egov.pgrrest.read.domain.model.DashboardResponse;
+import org.egov.pgrrest.read.domain.model.TopComplaintTypesResponse;
 import org.egov.pgrrest.read.persistence.rowmapper.DailyCountRowMapper;
 import org.egov.pgrrest.read.persistence.rowmapper.DashboardRowMapper;
+import org.egov.pgrrest.read.persistence.rowmapper.TopComplaintsRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -45,9 +47,18 @@ public class DashBoardRepository {
             "order by date_trunc('day',createddate), status";
 
         return namedParameterJdbcTemplate.query(query,getSearchMap(tenantId),dailyCountRowMapper);
+    }
 
+    public List<TopComplaintTypesResponse> getTopComplaintTypeWithCount(String tenantId, int size){
 
+        String query = "select count(*) as count, ctype.name as complainttypename" +
+            " from submission cs, egpgr_complainttype ctype, servicetype_keyword sk" +
+            " where cs.servicecode = ctype.code and ctype.code = sk.servicecode and sk.keyword = 'complaint'" +
+            " and cs.tenantid = :tenantId and sk.tenantid = :tenantId and ctype.tenantid = :tenantId " +
+            "group by cs.servicecode, complainttypename order by count DESC LIMIT :size";
 
+        return namedParameterJdbcTemplate.query(query, getSearchMapForTopComplaints(tenantId, size),
+            new TopComplaintsRowMapper());
     }
 
     private HashMap getSearchMap(String tenantId) {
@@ -57,4 +68,15 @@ public class DashBoardRepository {
 
         return parametersMap;
     }
+
+    private HashMap getSearchMapForTopComplaints(String tenantId, int size) {
+        HashMap<String, Object> parametersMap = new HashMap<>();
+
+        parametersMap.put("tenantId", tenantId);
+        parametersMap.put("size", size);
+
+        return parametersMap;
+    }
+
+
 }

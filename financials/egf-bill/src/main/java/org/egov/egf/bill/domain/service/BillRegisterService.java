@@ -143,6 +143,10 @@ public class BillRegisterService {
 		    throw new InvalidDataException("billregisters", ErrorCode.NOT_NULL.getCode(), null);
 		}
 		for (BillRegister billRegister : billregisters) {
+			if(billRegister.getPassedAmount().compareTo(billRegister.getBillAmount()) > 0){
+				errors.addError(new FieldError("billRegister", "passedAmount", billRegister.getPassedAmount(), false,
+                        new String[] { "Invalid Amount" }, null, "passedAmount must be less than billAmount"));
+			}
 		    validator.validate(billRegister, errors);
 		    if (!billRegisterRepository.uniqueCheck("id", billRegister)) {
                 errors.addError(new FieldError("billRegister", "id", billRegister.getId(), false,

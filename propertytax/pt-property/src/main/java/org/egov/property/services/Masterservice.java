@@ -18,6 +18,9 @@ import org.egov.models.DepreciationSearchCriteria;
 import org.egov.models.DocumentTypeRequest;
 import org.egov.models.DocumentTypeResponse;
 import org.egov.models.DocumentTypeSearchCriteria;
+import org.egov.models.TaxExemptionReasonRequest;
+import org.egov.models.TaxExemptionReasonResponse;
+import org.egov.models.TaxExemptionReasonSearchCriteria;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
 import org.egov.models.FloorTypeSearchCriteria;
@@ -558,4 +561,36 @@ public interface Masterservice {
 	public DemolitionReasonResponse getDemolitionReason(RequestInfo requestInfo,
 			DemolitionReasonSearchCriteria demolitionReasonSearchCriteria)  throws Exception;
 
+	
+	/**
+	 * Description: This api create ExemptionReasonMaster
+	 * 
+	 * @param exemptionReasonRequest
+	 * @return ExemptionReasonResponse
+	 * @throws Exception
+	 */
+	public TaxExemptionReasonResponse createTaxExemptionReason(
+			TaxExemptionReasonRequest taxExemptionReasonRequest) throws Exception;
+	
+	/**
+	 * Description: This api update ExemptionReasonMaster
+	 * 
+	 * @param TaxExemptionReasonRequest
+	 * @return ExemptionReasonResponse
+	 * @throws Exception
+	 */
+	public TaxExemptionReasonResponse updateTaxExemptionReason(
+			TaxExemptionReasonRequest taxExemptionReasonRequest) throws Exception;
+	
+	/**
+	 * Description: This api fetch ExemptionReasons based search criteria
+	 * parameter
+	 * 
+	 * @param requestInfo
+	 * @param TaxExemptionReasonSearchCriteria
+	 * @return ExemptionReasonResponse
+	 * @throws Exception
+	 */
+	public TaxExemptionReasonResponse getTaxExemptionReason(RequestInfo requestInfo,
+			TaxExemptionReasonSearchCriteria taxExemptionReasonSearchCriteria) throws Exception;
 }

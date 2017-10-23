@@ -60,5 +60,9 @@ public class ConstantUtility {
 	public static final String TAXEXEMPTION_DOCUMENT_TABLE_NAME = "egpt_taxexemption_document";
 
 	public static final String DEMOLITIONREASON_TABLE_NAME="egpt_mstr_Demolition";
+
+	public static final String VACANCYREMISSION_TABLE_NAME = "egpt_vacancyremission";
+	
+	public static final String TAXEXEMPTIONREASON_MASTER_TABLE_NAME = "egpt_taxexemptionreason_master";
 }
 

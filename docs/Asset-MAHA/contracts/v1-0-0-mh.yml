@@ -1209,7 +1209,7 @@ definitions:
         description: Boundary door number.
       pinCode:
         type: integer
-        format: int32
+        format: int64
         description: pin code of the location.
   Revaluation:
     description: Hold the asset Revaluation information.
@@ -1642,7 +1642,7 @@ definitions:
       RequestInfo:
         $ref: >-
           https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
-      Assets:
+      Asset:
         $ref: '#/definitions/Asset'
     type: object
     description: Hold the Asset Request information.

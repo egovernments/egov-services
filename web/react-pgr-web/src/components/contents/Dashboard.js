@@ -129,6 +129,17 @@ const content=[
                 to: '#/non-framework/citizenServices/fireNoc/fill/create',
             }
         ],
+    },
+    {
+        icon: 'icon-class-name',
+        label: 'Grievance Redressal',
+        content: [
+            {
+                icon: 'icon-class-name',
+                label: 'Create Grievance',
+                to: '#/pgr/createGrievance',
+            }
+        ],
     }
     // ,
     // {
@@ -639,7 +650,7 @@ class Dashboard extends Component {
 
   rowClickHandler = (item) => {
     if(["WATER_NEWCONN", "BPA_FIRE_NOC", "TL_NEWCONN"].indexOf(item.serviceCode) > -1 && item.status == "PAYMENTFAILED") {
-      
+
     } else if(item.serviceCode == "WATER_NEWCONN") {
       this.props.setRoute("/non-framework/citizenServices/view/update/wc/" + encodeURIComponent(item.serviceRequestId));
     } else if(item.serviceCode == "BPA_FIRE_NOC") {
@@ -790,7 +801,7 @@ class Dashboard extends Component {
                           </Card>
                           <br/>
 
-                        {/*  <Card>
+                        <Card>
                             <CardHeader title="My Grievances"/>
                               <CardText>
                               <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
@@ -811,7 +822,7 @@ class Dashboard extends Component {
                                 </tbody>
                             </Table>
                               </CardText>
-                          </Card>*/}
+                          </Card>
 
                       </Col>
                   </Row>

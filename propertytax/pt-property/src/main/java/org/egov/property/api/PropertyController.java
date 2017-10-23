@@ -36,6 +36,10 @@ import org.egov.models.TaxExemptionSearchResponse;
 import org.egov.models.TitleTransferRequest;
 import org.egov.models.TitleTransferResponse;
 import org.egov.models.TitleTransferSearchCriteria;
+import org.egov.models.VacancyRemissionRequest;
+import org.egov.models.VacancyRemissionResponse;
+import org.egov.models.VacancyRemissionSearchCriteria;
+import org.egov.models.VacancyRemissionSearchResponse;
 import org.egov.property.exception.InvalidSearchParameterException;
 import org.egov.property.model.TitleTransferSearchResponse;
 import org.egov.property.services.NoticeService;
@@ -359,6 +363,48 @@ public class PropertyController {
 			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
 		}
 		return propertyService.searchTaxExemption(requestInfo, taxExemptionSearchCriteria);
+	}
+	
+	/**
+	 * Description : This will create Vacancy Remission
+	 * 
+	 * @param vacancyRemissionRequest
+	 * @return VacancyRemissionResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/vacancyremission/_create", method = RequestMethod.POST)
+	public VacancyRemissionResponse createVacancyRemission(
+			@Valid @RequestBody VacancyRemissionRequest vacancyRemissionRequest) throws Exception {
+		return propertyService.createVacancyRemission(vacancyRemissionRequest);
+	}
+	
+	/**
+	 * Description : This will update Vacancy Remission
+	 * 
+	 * @param vacancyRemissionRequest
+	 * @return VacancyRemissionResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/vacancyremission/_update", method = RequestMethod.POST)
+	public VacancyRemissionResponse updateVacancyRemission(
+			@Valid @RequestBody VacancyRemissionRequest vacancyRemissionRequest) throws Exception {
+		return propertyService.updateVacancyRemission(vacancyRemissionRequest);
+	}
+	
+	/**
+	 * @param upicNumber
+	 * @param VacancyRemissionSearchCriteria
+	 * @return VacancyRemissionSearchResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/vacancyremission/_search", method = RequestMethod.POST)
+	public VacancyRemissionSearchResponse searchVacancyRemission(@RequestBody RequestInfoWrapper requestInfoWrapper,
+			@ModelAttribute @Valid VacancyRemissionSearchCriteria vacancyRemissionSearchCriteria,
+			BindingResult bindingResult) throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfoWrapper.getRequestInfo());
+		}
+		return propertyService.searchVacancyRemission(requestInfoWrapper, vacancyRemissionSearchCriteria);
 	}
 
 }

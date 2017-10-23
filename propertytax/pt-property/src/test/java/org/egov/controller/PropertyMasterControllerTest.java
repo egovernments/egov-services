@@ -73,6 +73,10 @@ import org.egov.models.StructureClass;
 import org.egov.models.StructureClassRequest;
 import org.egov.models.StructureClassResponse;
 import org.egov.models.StructureClassSearchCriteria;
+import org.egov.models.TaxExemptionReason;
+import org.egov.models.TaxExemptionReasonRequest;
+import org.egov.models.TaxExemptionReasonResponse;
+import org.egov.models.TaxExemptionReasonSearchCriteria;
 import org.egov.models.UsageMaster;
 import org.egov.models.UsageMasterRequest;
 import org.egov.models.UsageMasterResponse;
@@ -217,7 +221,7 @@ public class PropertyMasterControllerTest {
 
 		try {
 			when(masterService.getFloorTypeMaster(any(RequestInfo.class), any(FloorTypeSearchCriteria.class)))
-							.thenReturn(floorTypeResponse);
+					.thenReturn(floorTypeResponse);
 
 			mockMvc.perform(post("/property/floortypes/_search").param("tenantId", "1234")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("searchFloorTypeRequest.json")))
@@ -326,7 +330,7 @@ public class PropertyMasterControllerTest {
 
 		try {
 			when(masterService.getRoofypes(any(RequestInfo.class), any(RoofTypeSearchCriteria.class)))
-							.thenReturn(roofTypeResponse);
+					.thenReturn(roofTypeResponse);
 
 			mockMvc.perform(post("/property/rooftypes/_search").param("tenantId", "1234")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("searchRoofTypeRequest.json")))
@@ -435,7 +439,7 @@ public class PropertyMasterControllerTest {
 
 		try {
 			when(masterService.getWoodTypes(any(RequestInfo.class), any(WoodTypeSearchCriteria.class)))
-							.thenReturn(woodTypeResponse);
+					.thenReturn(woodTypeResponse);
 
 			mockMvc.perform(post("/property/woodtypes/_search").param("tenantId", "1237")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("searchWoodTypeRequest.json")))
@@ -933,7 +937,7 @@ public class PropertyMasterControllerTest {
 		try {
 
 			when(masterService.getUsageMaster(any(RequestInfo.class), any(UsageMasterSearchCriteria.class)))
-							.thenReturn(usageMasterResponse);
+					.thenReturn(usageMasterResponse);
 
 			mockMvc.perform(post("/property/usages/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("usageMasterSearchRequest.json")))
@@ -1040,7 +1044,7 @@ public class PropertyMasterControllerTest {
 		try {
 
 			when(masterService.getWallTypeMaster(any(RequestInfo.class), any(WallTypeSearchCriteria.class)))
-							.thenReturn(wallTypeResponse);
+					.thenReturn(wallTypeResponse);
 
 			mockMvc.perform(post("/property/walltypes/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("wallTypeSearchRequest.json")))
@@ -1218,7 +1222,8 @@ public class PropertyMasterControllerTest {
 		depreciationResponse.setDepreciations(depreciations);
 
 		try {
-			when(masterService.searchDepreciation(any(RequestInfo.class), any(DepreciationSearchCriteria.class))).thenReturn(depreciationResponse);
+			when(masterService.searchDepreciation(any(RequestInfo.class), any(DepreciationSearchCriteria.class)))
+					.thenReturn(depreciationResponse);
 			mockMvc.perform(post("/property/depreciations/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("searchDepreciationRequest.json")))
 					.andExpect(status().isOk())
@@ -1321,7 +1326,7 @@ public class PropertyMasterControllerTest {
 		mutationMasterResponse.setMutationMasters(mutationMasters);
 		try {
 			when(masterService.searchMutationMaster(any(RequestInfo.class), any(MutationMasterSearchCriteria.class)))
-							.thenReturn(mutationMasterResponse);
+					.thenReturn(mutationMasterResponse);
 			mockMvc.perform(post("/property/mutationmasters/_search").param("tenantId", "tenantid")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("searchMutationMasterRequest.json"))).andExpect(status().isOk())
@@ -1419,7 +1424,8 @@ public class PropertyMasterControllerTest {
 		documentTypes.add(documentType);
 		documentTypeResponse.setDocumentType(documentTypes);
 		try {
-			when(masterService.searchDocumentTypeMaster(any(RequestInfo.class), any(DocumentTypeSearchCriteria.class))).thenReturn(documentTypeResponse);
+			when(masterService.searchDocumentTypeMaster(any(RequestInfo.class), any(DocumentTypeSearchCriteria.class)))
+					.thenReturn(documentTypeResponse);
 			mockMvc.perform(post("/property/documenttypes/_search").param("tenantId", "tenantid")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("searchDocumentTypeRequest.json")))
 					.andExpect(status().isOk())
@@ -1561,7 +1567,8 @@ public class PropertyMasterControllerTest {
 
 		try {
 
-			when(masterService.searchApartment(any(RequestInfo.class), any(ApartmentSearchCriteria.class))).thenReturn(apartmentResponse);
+			when(masterService.searchApartment(any(RequestInfo.class), any(ApartmentSearchCriteria.class)))
+					.thenReturn(apartmentResponse);
 			mockMvc.perform(post("/property/apartment/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("searchApartmentcomplexRequest.json"))).andExpect(status().isOk())
@@ -1650,8 +1657,8 @@ public class PropertyMasterControllerTest {
 		guidanceValueBoundaryResponse.setGuidanceValueBoundaries(guidanceValueBoundaries);
 
 		try {
-			when(masterService.getGuidanceValueBoundary(any(RequestInfo.class), any(GuidanceValueBoundarySearchCriteria.class)))
-							.thenReturn(guidanceValueBoundaryResponse);
+			when(masterService.getGuidanceValueBoundary(any(RequestInfo.class),
+					any(GuidanceValueBoundarySearchCriteria.class))).thenReturn(guidanceValueBoundaryResponse);
 			mockMvc.perform(post("/property/guidancevalueboundary/_search").param("tenantId", "default")
 					.param("guidanceValueBoundary1", "updated-gvb1").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("searchGuidanceValueBoundaryRequest.json"))).andExpect(status().isOk())
@@ -1751,7 +1758,7 @@ public class PropertyMasterControllerTest {
 
 		try {
 			when(masterService.getAppConfiguration(any(RequestInfo.class), any(AppConfigurationSearchCriteria.class)))
-							.thenReturn(appConfigurationResponse);
+					.thenReturn(appConfigurationResponse);
 			mockMvc.perform(post("/property/appconfiguration/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("searchAppConfigurationRequest.json"))).andExpect(status().isOk())
@@ -1764,7 +1771,7 @@ public class PropertyMasterControllerTest {
 		}
 		assertTrue(Boolean.TRUE);
 	}
-	
+
 	@Test
 	public void testCreateDemolitionReason() throws Exception {
 
@@ -1785,11 +1792,11 @@ public class PropertyMasterControllerTest {
 
 		try {
 			when(masterService.createDemolitionReason(any(String.class), any(DemolitionReasonRequest.class)))
-			      .thenReturn(demolitionReasonResponse);
+					.thenReturn(demolitionReasonResponse);
 
 			mockMvc.perform(post("/property/demolitionreason/_create").param("tenantId", "default")
-					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("createDemolitionReasonRequest.json")))
-					.andExpect(status().isOk())
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("createDemolitionReasonRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("createDemolitionReasonResponse.json")));
 
@@ -1808,7 +1815,7 @@ public class PropertyMasterControllerTest {
 		DemolitionReasonResponse demolitionReasonResponse = new DemolitionReasonResponse();
 		List<DemolitionReason> demolitionReasons = new ArrayList<>();
 		DemolitionReason demolitionReason = new DemolitionReason();
-		demolitionReason.setId((long)9);
+		demolitionReason.setId((long) 9);
 		demolitionReason.setTenantId("default");
 		demolitionReason.setName("pallu");
 		demolitionReason.setCode("102");
@@ -1819,12 +1826,13 @@ public class PropertyMasterControllerTest {
 		demolitionReasons.add(demolitionReason);
 
 		demolitionReasonResponse.setResponseInfo(new ResponseInfo());
-		demolitionReasonResponse.setDemolitionReason(demolitionReasons);;
+		demolitionReasonResponse.setDemolitionReason(demolitionReasons);
+		;
 
 		try {
 
 			when(masterService.updateDemolitionReason(any(DemolitionReasonRequest.class)))
-			.thenReturn(demolitionReasonResponse);
+					.thenReturn(demolitionReasonResponse);
 			mockMvc.perform(post("/property/demolitionreason/_update").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("updateDemolitionReasonRequest.json"))).andExpect(status().isOk())
@@ -1876,5 +1884,117 @@ public class PropertyMasterControllerTest {
 
 		assertTrue(Boolean.TRUE);
 
+	}
+
+	@Test
+	public void creatTaxExemptionReasonTest() {
+
+		TaxExemptionReasonResponse taxExemptionReasonResponse = new TaxExemptionReasonResponse();
+		List<TaxExemptionReason> exemptionReasons = new ArrayList<>();
+		List<String> taxHeads = new ArrayList<>();
+		taxHeads.add("THU");
+		TaxExemptionReason taxExemptionReason = new TaxExemptionReason();
+		taxExemptionReason.setTenantId("default");
+		taxExemptionReason.setCode("ZIPCODE");
+		taxExemptionReason.setName("X-MAN");
+		taxExemptionReason.setPercentageRate(45d);
+		taxExemptionReason.setDescription("Test Update Reason!");
+		taxExemptionReason.setActive(true);
+		taxExemptionReason.setTaxHeads(taxHeads);
+		AuditDetails auditDetails = new AuditDetails();
+		taxExemptionReason.setAuditDetails(auditDetails);
+		taxExemptionReasonResponse.setResponseInfo(new ResponseInfo());
+		exemptionReasons.add(taxExemptionReason);
+		taxExemptionReasonResponse.setTaxExemptionReasons(exemptionReasons);
+
+		try {
+			when(masterService.createTaxExemptionReason(any(TaxExemptionReasonRequest.class)))
+					.thenReturn(taxExemptionReasonResponse);
+			mockMvc.perform(post("/property/taxexemptionreason/_create").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("createTaxExemptionReasonRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("createTaxExemptionReasonResponse.json")));
+		} catch (Exception e) {
+			assertTrue(false);
+			e.printStackTrace();
+		}
+		assertTrue(true);
+	}
+
+	@Test
+	public void updateTaxExemptionReasonTest() {
+
+		TaxExemptionReasonResponse taxExemptionReasonResponse = new TaxExemptionReasonResponse();
+		List<TaxExemptionReason> taxExemptionReasons = new ArrayList<>();
+		List<String> taxHeads = new ArrayList<>();
+		taxHeads.add("Test 1 TAXHEAD1");
+		TaxExemptionReason taxExemptionReason = new TaxExemptionReason();
+		taxExemptionReason.setId(1l);
+		taxExemptionReason.setTenantId("default");
+		taxExemptionReason.setCode("UPDATE-ZIPCODE");
+		taxExemptionReason.setName("UPDATE-MAN");
+		taxExemptionReason.setPercentageRate(45d);
+		taxExemptionReason.setDescription("Test Update Reason!");
+		taxExemptionReason.setActive(true);
+		taxExemptionReason.setTaxHeads(taxHeads);
+		AuditDetails auditDetails = new AuditDetails();
+		taxExemptionReason.setAuditDetails(auditDetails);
+		taxExemptionReasonResponse.setResponseInfo(new ResponseInfo());
+		taxExemptionReasons.add(taxExemptionReason);
+		taxExemptionReasonResponse.setTaxExemptionReasons(taxExemptionReasons);
+
+		try {
+			when(masterService.updateTaxExemptionReason(any(TaxExemptionReasonRequest.class)))
+					.thenReturn(taxExemptionReasonResponse);
+			mockMvc.perform(post("/property/taxexemptionreason/_update").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("updateTaxExemptionReasonRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("updateTaxExemptionReasonResponse.json")));
+		} catch (Exception e) {
+			assertTrue(false);
+			e.printStackTrace();
+		}
+		assertTrue(true);
+	}
+
+	@Test
+	public void searchTaxExemptionReasonTest() {
+
+		List<TaxExemptionReason> taxExemptionReasons = new ArrayList<>();
+		TaxExemptionReasonSearchCriteria exemptionReasonSearchCriteria = new TaxExemptionReasonSearchCriteria();
+		exemptionReasonSearchCriteria.setTenantId("default");
+		exemptionReasonSearchCriteria.setCode("UPDATE-ZIPCODE");
+		List<String> taxHeads = new ArrayList<>();
+		taxHeads.add("Test 1 TAXHEAD1");
+		TaxExemptionReason taxExemptionReason = new TaxExemptionReason();
+		taxExemptionReason.setId(1l);
+		taxExemptionReason.setTenantId("default");
+		taxExemptionReason.setCode("UPDATE-ZIPCODE");
+		taxExemptionReason.setName("UPDATE-MAN");
+		taxExemptionReason.setPercentageRate(50.0);
+		taxExemptionReason.setDescription("Test Update Reason!");
+		taxExemptionReason.setActive(true);
+		taxExemptionReason.setTaxHeads(taxHeads);
+		AuditDetails auditDetails = new AuditDetails();
+		taxExemptionReason.setAuditDetails(auditDetails);
+		taxExemptionReasons.add(taxExemptionReason);
+		TaxExemptionReasonResponse exemptionReasonResponse = new TaxExemptionReasonResponse();
+		exemptionReasonResponse.setResponseInfo(new ResponseInfo());
+		exemptionReasonResponse.setTaxExemptionReasons(taxExemptionReasons);
+
+		try {
+			when(masterService.getTaxExemptionReason((any(RequestInfo.class)),
+					any(TaxExemptionReasonSearchCriteria.class))).thenReturn(exemptionReasonResponse);
+			mockMvc.perform(post("/property/taxexemptionreason/_search").param("tenantId", "default")
+					.param("code", "UPDATE-CODE").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("searchTaxExemptionReasonRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("searchTaxExemptionReasonResponse.json")));
+
+		} catch (Exception e) {
+			assertTrue(Boolean.FALSE);
+			e.printStackTrace();
+		}
+		assertTrue(Boolean.TRUE);
 	}
 }

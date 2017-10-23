@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 // import {Link} from 'react-router-dom';
 import AppBar from 'material-ui/AppBar';
-import Drawer from 'material-ui/Drawer';
+// import Drawer from 'material-ui/Drawer';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
@@ -18,7 +18,7 @@ import $ from 'jquery';
 // import {Grid, Row, Col} from 'react-bootstrap';
 
 
-import CustomMenu from './CustomMenu';
+// import CustomMenu from './CustomMenu';
 
 // var base='/';
 var tenantContent = {
@@ -177,10 +177,10 @@ class Header extends Component {
     });
   }
 
-  handleToggle = () => {
-    var self = this;
-    self.props.handleToggle(!self.props.showMenu);
-  };
+  // handleToggle = () => {
+  //   var self = this;
+  //   self.props.handleToggle(self.props.showMenu);
+  // };
 
   initDat() {
 
@@ -205,13 +205,13 @@ class Header extends Component {
     return (
       <div className="Header">
         <AppBar title={<div><Logo tenantInfo={this.props.tenantInfo} tenantContext={tenantContext}/> {this.props.tenantInfo.length>0 && this.props.tenantInfo[0].hasOwnProperty("city") && this.props.tenantInfo[0].city.hasOwnProperty("name") && this.props.tenantInfo[0].city.name} </div>}
-                onLeftIconButtonTouchTap={this.handleToggle}
+                onLeftIconButtonTouchTap={this.props.handleToggle}
                 iconElementLeft={this.props.token && this.props.currentUser.type !== "CITIZEN" ? <IconButton><i className="material-icons">menu</i></IconButton> : <div></div>}
                 iconElementRight={< RightIcon showHome={this.props.showHome} signOut={this.signOut} token={this.props.token} logout={this.props.logout} setRoute={this.props.setRoute}/>}/>
 
-        <Drawer containerClassName="side-bar" open={this.props.showMenu || false} >
+        {/*<Drawer containerClassName="side-bar" open={this.props.showMenu || false} >
          {this.props.actionList && this.props.actionList.length>0 && <CustomMenu menuItems={this.state.menuItems} actionList={this.props.actionList} />}
-        </Drawer>
+        </Drawer>*/}
       </div>
     );
   }
@@ -227,8 +227,8 @@ const mapStateToProps = state => ({
     pleaseWait: state.common.pleaseWait,
     // isDialogOpen: state.form.dialogOpen,
     // msg: state.form.msg,
-    showMenu: state.common.showMenu,
-    actionList:state.common.actionList,
+    // showMenu: state.common.showMenu,
+    // actionList:state.common.actionList,
     showHome: state.common.showHome,
     tenantInfo: state.common.tenantInfo || []
 
@@ -238,7 +238,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setRoute: (route) => dispatch({type: "SET_ROUTE", route}),
-    handleToggle: (showMenu) => dispatch({type: 'MENU_TOGGLE', showMenu}),
+    handleToggle: () => dispatch({type: 'MENU_TOGGLE'}),
     // onLoad: (payload, token) => dispatch({type: 'APP_LOAD', payload, token, skipTracking: true}),
     // onRedirect: () => dispatch({type: 'REDIRECT'}),
     setLabels: payload => dispatch({type: 'LABELS', payload}),

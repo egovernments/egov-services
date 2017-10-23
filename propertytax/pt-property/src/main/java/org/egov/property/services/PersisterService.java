@@ -26,6 +26,7 @@ import org.egov.models.TitleTransferRequest;
 import org.egov.models.Unit;
 import org.egov.models.User;
 import org.egov.models.WorkFlowDetails;
+import org.egov.models.VacancyRemissionRequest;
 import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.PropertySearchException;
 import org.egov.property.repository.DemolitionRepository;
@@ -577,6 +578,69 @@ public class PersisterService {
 			propertyRepository.getOwnerForHistory(owner, property.getId());
 		}
 		return property;
+	}
+	
+	/**
+	 * Description: save VacancyRemission
+	 * 
+	 * @param VacancyRemission
+	 * @throws SQLException
+	 */
+	@Transactional
+	public void addVacancyRemission(VacancyRemissionRequest vacancyRemissionRequest) throws Exception {
+		saveVacancyRemission(vacancyRemissionRequest);
+
+	}
+
+	/**
+	 * Description : This method will use for insert VacancyRemission related
+	 * data in database
+	 * 
+	 * @param VacancyRemission
+	 */
+	private void saveVacancyRemission(VacancyRemissionRequest vacancyRemissionRequest) throws Exception {
+
+		if (vacancyRemissionRequest.getVacancyRemission().getIsApproved() == null) {
+			vacancyRemissionRequest.getVacancyRemission().setIsApproved(false);
+		}
+
+		AuditDetails auditDetails = getAuditDetail(vacancyRemissionRequest.getRequestInfo());
+		vacancyRemissionRequest.getVacancyRemission().setAuditDetails(auditDetails);
+		Long vacancyRemissionId = propertyRepository
+				.saveVacancyRemission(vacancyRemissionRequest.getVacancyRemission());
+
+		if (vacancyRemissionRequest.getVacancyRemission().getDocuments() != null) {
+			for (Document document : vacancyRemissionRequest.getVacancyRemission().getDocuments()) {
+				document.setAuditDetails(auditDetails);
+				propertyRepository.saveVacancyRemissionDocument(document, vacancyRemissionId);
+			}
+		}
+	}
+
+	/**
+	 * Description : This method will use for update VacancyRemission related
+	 * data in database
+	 * 
+	 * @param VacancyRemission
+	 */
+	@Transactional
+	public void updateVacancyRemission(VacancyRemissionRequest vacancyRemissionRequest) throws Exception {
+
+		if (vacancyRemissionRequest.getVacancyRemission().getIsApproved() == null) {
+			vacancyRemissionRequest.getVacancyRemission().setIsApproved(false);
+		}
+		AuditDetails auditDetails = getUpdatedAuditDetails(vacancyRemissionRequest.getRequestInfo(),
+				ConstantUtility.VACANCYREMISSION_TABLE_NAME, vacancyRemissionRequest.getVacancyRemission().getId());
+		vacancyRemissionRequest.getVacancyRemission().setAuditDetails(auditDetails);
+		propertyRepository.updateVacancyRemission(vacancyRemissionRequest.getVacancyRemission());
+
+		if (vacancyRemissionRequest.getVacancyRemission().getDocuments() != null) {
+			for (Document document : vacancyRemissionRequest.getVacancyRemission().getDocuments()) {
+				document.setAuditDetails(auditDetails);
+				propertyRepository.updateVacancyRemissionDocument(document,
+						vacancyRemissionRequest.getVacancyRemission().getId());
+			}
+		}
 	}
 
 	private AuditDetails getAuditDetail(RequestInfo requestInfo) {

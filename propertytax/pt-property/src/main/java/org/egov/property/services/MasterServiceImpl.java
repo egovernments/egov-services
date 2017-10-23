@@ -30,6 +30,10 @@ import org.egov.models.DocumentType;
 import org.egov.models.DocumentTypeRequest;
 import org.egov.models.DocumentTypeResponse;
 import org.egov.models.DocumentTypeSearchCriteria;
+import org.egov.models.TaxExemptionReason;
+import org.egov.models.TaxExemptionReasonRequest;
+import org.egov.models.TaxExemptionReasonResponse;
+import org.egov.models.TaxExemptionReasonSearchCriteria;
 import org.egov.models.Floor;
 import org.egov.models.FloorType;
 import org.egov.models.FloorTypeRequest;
@@ -1729,4 +1733,85 @@ public class MasterServiceImpl implements Masterservice {
 
 	}
 
+	@Override
+	public TaxExemptionReasonResponse createTaxExemptionReason(TaxExemptionReasonRequest taxExemptionReasonRequest)
+			throws Exception {
+
+		taxExemptionReasonRequest.getTaxExemptionReasons().forEach(taxExemptionReason -> {
+
+			AuditDetails auditDetails = getAuditDetail(taxExemptionReasonRequest.getRequestInfo());
+			Boolean isExists = checkCodeAndTenatIdExists(taxExemptionReason.getTenantId(), taxExemptionReason.getCode(),
+					ConstantUtility.TAXEXEMPTIONREASON_MASTER_TABLE_NAME, null);
+			if (isExists) {
+				throw new DuplicateIdException(taxExemptionReasonRequest.getRequestInfo());
+			}
+			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+			String data = gson.toJson(taxExemptionReason);
+			taxExemptionReason.setAuditDetails(auditDetails);
+			try {
+				Long id = propertyMasterRepository.saveTaxExemptionReason(taxExemptionReason, data);
+				taxExemptionReason.setId(id);
+			} catch (Exception e) {
+				throw new InvalidInputException(taxExemptionReasonRequest.getRequestInfo());
+			}
+		});
+		
+		TaxExemptionReasonResponse taxExemptionReasonResponse = new TaxExemptionReasonResponse();
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(taxExemptionReasonRequest.getRequestInfo(), true);
+		taxExemptionReasonResponse.setResponseInfo(responseInfo);
+		taxExemptionReasonResponse.setTaxExemptionReasons(taxExemptionReasonRequest.getTaxExemptionReasons());
+		return taxExemptionReasonResponse;
+	}
+
+	@Override
+	public TaxExemptionReasonResponse updateTaxExemptionReason(TaxExemptionReasonRequest taxExemptionReasonRequest)
+			throws Exception {
+
+		taxExemptionReasonRequest.getTaxExemptionReasons().forEach(taxExemptionReason -> {
+
+			AuditDetails auditDetails = getUpdatedAuditDetails(taxExemptionReasonRequest.getRequestInfo(),
+					ConstantUtility.TAXEXEMPTIONREASON_MASTER_TABLE_NAME, taxExemptionReason.getId());
+			taxExemptionReason.setAuditDetails(auditDetails);
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(taxExemptionReason.getTenantId(),
+					taxExemptionReason.getCode(), ConstantUtility.TAXEXEMPTIONREASON_MASTER_TABLE_NAME,
+					taxExemptionReason.getId());
+			if (isExists) {
+				throw new DuplicateIdException(taxExemptionReasonRequest.getRequestInfo());
+			}
+			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+			String data = gson.toJson(taxExemptionReason);
+
+			try {
+				propertyMasterRepository.updateTaxExemptionReason(taxExemptionReason, data);
+			} catch (Exception e) {
+				throw new InvalidInputException(taxExemptionReasonRequest.getRequestInfo());
+			}
+		});
+
+		TaxExemptionReasonResponse taxExemptionReasonResponse = new TaxExemptionReasonResponse();
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(taxExemptionReasonRequest.getRequestInfo(), true);
+		taxExemptionReasonResponse.setResponseInfo(responseInfo);
+		taxExemptionReasonResponse.setTaxExemptionReasons(taxExemptionReasonRequest.getTaxExemptionReasons());
+		return taxExemptionReasonResponse;
+	}
+
+	@Override
+	public TaxExemptionReasonResponse getTaxExemptionReason(RequestInfo requestInfo,
+			TaxExemptionReasonSearchCriteria taxExemptionReasonSearchCriteria) throws Exception {
+
+		List<TaxExemptionReason> taxExemptionReasons = null;
+		try {
+			taxExemptionReasons = propertyMasterRepository.searchTaxExemptionReason(taxExemptionReasonSearchCriteria);
+		} catch (Exception e) {
+			throw new InvalidInputException(requestInfo);
+		}
+
+		TaxExemptionReasonResponse taxExemptionReasonResponse = new TaxExemptionReasonResponse();
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		taxExemptionReasonResponse.setResponseInfo(responseInfo);
+		taxExemptionReasonResponse.setTaxExemptionReasons(taxExemptionReasons);
+		return taxExemptionReasonResponse;
+	}
 }

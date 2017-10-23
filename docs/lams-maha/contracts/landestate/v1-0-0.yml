@@ -707,6 +707,17 @@ definitions:
         type: integer
         format: int64
         description: unique id of the LandRegister.
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant 
+        maxLength: 128
+        minLength: 4
+      landNumber:
+        type: string
+        description: Unique Land ref. no
+        maxLength: 64
+        minLength: 1
       acquisitionType:
         type: string
         description: Land acquisition type.
@@ -826,13 +837,35 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Document'
+      stateId:
+        type: string
+        description: Work flow ref id.
+      workFlowDetails:
+        $ref: '#/definitions/WorkFlowDetails'
       comments:
         type: string
         description: description or comments for a land
         maxLength: 1024
         minLength: 1
     required:
+      - tenantId
+      - landNumber
+      - acquisitionNo
       - acquisitionType
+      - registerName
+      - regionalOffice
+      - location
+      - surveyNo
+      - oldOwnerName
+      - purpose
+      - width
+      - landType
+      - landArea
+      - areaAsPerRegister
+      - possessionDate
+      - modeOfAcquisition
+      - typeOfHolding
+      - costOfAcquisition
         
   LandRegisterRequest:
     description: Contract class to receive request. Array of LandRegister items are used in case of create. Where as single LandRegister item is used for update
@@ -867,6 +900,17 @@ definitions:
         type: integer
         format: int64
         description: unique id of the EstateRegister.
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant 
+        maxLength: 128
+        minLength: 4
+      estateNumber:
+        type: string
+        description: Unique Estate ref. no
+        maxLength: 64
+        minLength: 1
       registerName:
         type: string
         description: Register name
@@ -958,6 +1002,11 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/FloorDetail'
+      stateId:
+        type: string
+        description: Work flow ref id.
+      workFlowDetails:
+        $ref: '#/definitions/WorkFlowDetails'
       comments:
         type: string
         description: description or comments for a land
@@ -1119,6 +1168,10 @@ definitions:
         type: integer
         format: int64
         description: unique id of the agreement.
+      tenantId:
+        type: string
+        description: Unique Identifier of which tenant this data is defined. For example, AP, AP.Kurnool etc.
+        maxLength: 128
       action:
         type: string
         description: enumeration of action on agreement.
@@ -1132,48 +1185,80 @@ definitions:
         type: string
         description: unique agreement number.
         maxLength: 64
-      agreementDate:
+      landEstateNo:
+        type: string
+        description: Land or Estate registration no for which the agreement being done.
+        maxLength: 64
+      allottee:
+        $ref: '#/definitions/Allottee'
+      registrationNo:
+        type: string
+        description: Registration no for agreement.
+        maxLength: 64
+      registrationDate:
+        type: string
+        format: date
+        description: Registration date for agreement.
+      registerPageNo:
+        type: string
+        description: Registar page no for agreement.
+        maxLength: 64
+      depositAmount:
+        type: number
+        format: double
+        description: Deposit amount.
+      electricityBillAmount:
+        type: number
+        format: double
+        description: Electricity Bill Amount.
+      propertyOutstanding:
+        type: number
+        format: double
+        description: Property Outstanding.
+      propertyTax:
+        type: number
+        format: double
+        description: Property Tax.
+      penalty:
+        type: number
+        format: double
+        description: penalty.
+      rent:
+        type: number
+        format: double
+        description: rent to be paid per payment cycle.
+      bugdetHead:
+        type: string
+        description: Bugdet Head for agreement.
+        maxLength: 16
+      currentElectricityBillAmount:
+        type: number
+        format: double
+        description: Current Electricity Bill Amount.
+      rentIncrement:
+        type: number
+        format: double
+        description: rent increment amount.
+      currentPenalty:
+        type: number
+        format: double
+        description: Current Penalty.
+      agreementFromDate:
         type: string
         format: date
         description: date of agreement.
-      expiryDate:
+      agreementToDate:
         type: string
         format: date
         description: End date of agreement.
-      allottee:
-        $ref: '#/definitions/Allottee'
-      tenderNumber:
+      holdingType:
         type: string
-        description: Tender or Auction number.
+        description: Holding Type
         maxLength: 64
-      tenderDate:
+      GBResolutionNo:
         type: string
-        format: date
-        description: Tender or Auction date.
-      councilNumber:
-        type: string
-        description: Council or committee resolution number.
+        description: GB resolution number.
         maxLength: 64
-      councilDate:
-        type: string
-        format: date
-        description: Council or committee resolution date.
-      bankGuaranteeAmount:
-        type: number
-        format: double
-        description: Bank guarantee amount.
-      bankGuaranteeDate:
-        type: string
-        format: date
-        description: Bank guarantee date.
-      securityDeposit:
-        type: number
-        format: double
-        description: Security deposit.
-      securityDepositDate:
-        type: string
-        format: date
-        description: Security deposit date.
       status:
         type: string
         description: enumeration of agreement statuses.
@@ -1183,45 +1268,6 @@ definitions:
           - EVICTED
           - RENEWED
           - WORKFLOW
-      natureOfAllotment:
-        type: string
-        description: enumeration of nature of allotment.
-        enum:
-          - TENDER
-          - DIRECT
-          - AUCTION
-      registrationFee:
-        type: number
-        format: double
-        description: Registration fee for agreement
-      caseNumber:
-        type: string
-        description: Case no.
-        maxLength: 64
-      commencementDate:
-        type: string
-        format: date
-        description: Date of Commencement of Agreement.
-      orderDetails:
-        type: string
-        description: order details.
-        maxLength: 256
-      rent:
-        type: number
-        format: double
-        description: rent to be paid per payment cycle.
-      goodWillAmount:
-        type: number
-        format: double
-        description: Corporations charge good will of the asset depends up on asset demand/area.
-      collectedGoodWillAmount:
-        type: number
-        format: double
-        description: collected partial good will of the agreement demand/area.
-      tradeLicenseNumber:
-        type: string
-        description: Trade license number assigned to the shop should be captured.
-        maxLength: 64
       paymentCycle:
         type: string
         description: payment cycle on which the rent has to be paid against agreement.
@@ -1236,38 +1282,11 @@ definitions:
         enum:
           - SYSTEM
           - DATE_ENTRY
-      orderNumber:
-        type: string
-        description: order number.
-        maxLength: 64
-      orderDate:
-        type: string
-        format: date
-        description: order date.
-      rrReadingNumber:
-        type: string
-        description: Electiricty meter number.
-        maxLength: 64
+          - MIGRATION
       remarks:
         type: string
         description: Comments.
         maxLength: 256
-      solvencyCertificateNo:
-        type: string
-        description: solvency certificate no.
-        maxLength: 64        
-      solvencyCertificateDate:
-        type: string
-        format: date
-        description: solvency certificate date.
-      tinNumber:
-        type: string
-        description: Tin no.
-        maxLength: 64
-      timePeriod:
-        type: string
-        description: The validity of agreement period,value will be in no.of years. 
-        maxLength: 64
       acknowledgementNumber:
         type: string
         description: Acknowldgement number given to allottee on submitting the application. 
@@ -1279,8 +1298,7 @@ definitions:
       demands:
         type: array
         items:
-          type: integer
-          format: int64
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/billingservice/contracts/v1-0-0.yml#/definitions/Demand'
       stateId:
         type: string
         description: Work flow ref id.
@@ -1290,23 +1308,18 @@ definitions:
         $ref: '#/definitions/Renewal'
       cancellation:
         $ref: '#/definitions/Cancellation'
-      tenantId:
-        type: string
-        description: Unique Identifier of which tenant this data is defined. For example, AP, AP-Kurnool etc.
-      isAdvancePaid:
-       description: parameter to indicate whether advance amount is collected or not, updated in DCB back update on collection.
-       type: boolean
-       default: false
     required:
       - id
+      - tenantId
       - agreementNumber
-      - agreementDate
+      - landEstateNo
+      - agreementFromDate
+      - agreementToDate
       - allottee
       - status
-      - natureOfAllotment
       - rent
+      - rentIncrement
       - paymentCycle
-      - commencementDate
       
   Document:
     type: object

@@ -125,10 +125,7 @@ public class IndexerService {
 			for(int i = 0; i < kafkaJsonArray.length() ; i++){
 				logger.info("Object - "+(i+1)+" : "+kafkaJsonArray.get(i));
 				Object indexJsonObj = null;
-				if(!isBulk)
-					indexJsonObj = JsonPath.read(buildString(kafkaJsonArray.get(i)), index.getJsonPath());
-				else
-					indexJsonObj = buildString(kafkaJsonArray.get(i));
+				indexJsonObj = buildString(kafkaJsonArray.get(i));
 				String indexJson = mapper.writeValueAsString(indexJsonObj);
 				logger.info("Index json: "+indexJson);
 				String stringifiedObject = buildString(kafkaJsonArray.get(i));
@@ -402,8 +399,13 @@ public class IndexerService {
 					return null;
 		        }
 	        }else{
-	        	jsonArray = "[" + kafkaJson + "]";
-	        	logger.info("constructed json array out of input json object: "+jsonArray);
+	        	if(null != index.getJsonPath()){
+	        		kafkaJson = JsonPath.read(kafkaJson, index.getJsonPath());
+		        	jsonArray = "[" + kafkaJson + "]";
+	        	}else{
+		        	jsonArray = "[" + kafkaJson + "]";
+		        	logger.info("constructed json array out of input json object: "+jsonArray);
+	        	}
 				kafkaJsonArray = new JSONArray(jsonArray);
 	        }
         }catch(Exception e){

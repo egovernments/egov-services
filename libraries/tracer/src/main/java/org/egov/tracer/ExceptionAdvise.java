@@ -24,9 +24,11 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -52,6 +54,7 @@ public class ExceptionAdvise {
 	public ResponseEntity<?> exceptionHandler(HttpServletRequest request ,Exception ex) {
 	
 		log.info("ExceptionAdvise exceptio  webRequest:");
+		System.out.println(ex instanceof BindException);
 		ex.printStackTrace();
 		String body = readRequestBody(request);
 		ErrorRes errorRes = new ErrorRes();
@@ -79,6 +82,26 @@ public class ExceptionAdvise {
 			LinkedHashMap<Object, Object> linkedHashMap = documentContext.json();
 			return new ResponseEntity<>(linkedHashMap, HttpStatus.BAD_REQUEST);
 			
+		} else if (ex instanceof MissingServletRequestParameterException) {
+			MissingServletRequestParameterException exception = (MissingServletRequestParameterException) ex;
+			Error error = new Error();
+			error.setCode("");
+			error.setMessage(exception.getMessage());
+			//error.setDescription(exception.getCause().toString());
+			List<String> params = new ArrayList<>();
+			params.add(exception.getParameterName());
+			error.setParams(params);
+			errors.add(error);
+			errorRes.setErrors(errors);
+		} else if (ex instanceof BindException) {
+			BindException bindException = (BindException) ex;
+			bindException.getBindingResult();
+			log.info("bindException block:"+bindException);
+			log.info("bindException.getBindingResult() block:"+bindException.getBindingResult());
+
+			errorRes.setErrors(getBindingErrors(bindException.getBindingResult(), errors));
+
+			//errorRes.setErrors(errors);
 		}
 		
 		sendErrorMessage(body, ex, request.getRequestURL().toString(),errorRes);

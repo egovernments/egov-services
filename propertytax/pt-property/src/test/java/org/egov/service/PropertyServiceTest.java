@@ -68,6 +68,10 @@ import org.egov.models.RoofType;
 import org.egov.models.RoofTypeRequest;
 import org.egov.models.RoofTypeResponse;
 import org.egov.models.RoofTypeSearchCriteria;
+import org.egov.models.TaxExemptionReason;
+import org.egov.models.TaxExemptionReasonRequest;
+import org.egov.models.TaxExemptionReasonResponse;
+import org.egov.models.TaxExemptionReasonSearchCriteria;
 import org.egov.models.Unit;
 import org.egov.models.UsageMaster;
 import org.egov.models.UsageMasterRequest;
@@ -116,8 +120,6 @@ public class PropertyServiceTest {
 
 	@Autowired
 	PersisterService persisterService;
-	
-	
 
 	public Long floorId = 1l;
 	public Long roofId = 1l;
@@ -128,7 +130,7 @@ public class PropertyServiceTest {
 	public Long usageId = 1l;
 	public Integer wallTypeId = 1;
 	public Long propertyTypeId = 1l;
-	public Long demolitionId =1l;
+	public Long demolitionId = 1l;
 
 	@Test
 	public void createRoofType() {
@@ -1909,7 +1911,8 @@ public class PropertyServiceTest {
 		RequestInfo requestInfo = getRequestInfoObject();
 		GuidanceValueBoundaryResponse guidanceValueBoundaryResponse = null;
 		try {
-			guidanceValueBoundaryResponse = masterService.getGuidanceValueBoundary(requestInfo, guidanceValueBoundarySearchCriteria);
+			guidanceValueBoundaryResponse = masterService.getGuidanceValueBoundary(requestInfo,
+					guidanceValueBoundarySearchCriteria);
 			if (guidanceValueBoundaryResponse != null
 					&& guidanceValueBoundaryResponse.getGuidanceValueBoundaries().size() > 0)
 				assertTrue(true);
@@ -1995,52 +1998,48 @@ public class PropertyServiceTest {
 			assertTrue(false);
 		}
 	}
-	
-	/*@Test
-	public void createVacancyRemissionTest() {
-	
-		VacancyRemissionRequest vacancyRemissionRequest = new VacancyRemissionRequest(); 
-		VacancyRemission vacancyRemission = new VacancyRemission();
-		vacancyRemission.setTenantId("default");
-		vacancyRemission.setApplicationNo("1000123");
-		vacancyRemission.setFromDate("12/12/2017");
-		vacancyRemission.setToDate("13/05/2018");
-		vacancyRemission.setPercentage(25.0);
-		vacancyRemission.setReason(Reason.fromValue("NINTY_DAYS_INACTIVE"));
-		vacancyRemission.setRequestDate("28/02/2018");
-		vacancyRemission.setApprovedDate("30/08/2018");
-		vacancyRemission.setIsApproved(true);
-		vacancyRemission.setRemarks("Test Comment!");
-		
-		List<Document> documents = new ArrayList<> ();
-		Document document = new Document(); 
-		document.setDocumentType("DocumentType");
-		document.setFileStore("TestFileStore");
-		documents.add(document);
-		
-		WorkFlowDetails workFlowDetails = new WorkFlowDetails();
-		workFlowDetails.setDepartment("Revenue");
-		workFlowDetails.setDesignation("Junior Assistant");
-		workFlowDetails.setAssignee(21l);
-		workFlowDetails.setAction("forward");
-		workFlowDetails.setStatus("processing");
-		
-		vacancyRemission.setDocuments(documents);
-		
-		
-	}*/
+
 	/*
-	@Test
-	public void modifyVacancyRemissionTest() {
-		
-	}
-	
-	@Test
-	public void searchVacancyRemissionTest() {
-		
-	}*/
-	
-	
+	 * @Test public void createVacancyRemissionTest() {
+	 * 
+	 * VacancyRemissionRequest vacancyRemissionRequest = new
+	 * VacancyRemissionRequest(); VacancyRemission vacancyRemission = new
+	 * VacancyRemission(); vacancyRemission.setTenantId("default");
+	 * vacancyRemission.setApplicationNo("1000123");
+	 * vacancyRemission.setFromDate("12/12/2017");
+	 * vacancyRemission.setToDate("13/05/2018");
+	 * vacancyRemission.setPercentage(25.0);
+	 * vacancyRemission.setReason(Reason.fromValue("NINTY_DAYS_INACTIVE"));
+	 * vacancyRemission.setRequestDate("28/02/2018");
+	 * vacancyRemission.setApprovedDate("30/08/2018");
+	 * vacancyRemission.setIsApproved(true);
+	 * vacancyRemission.setRemarks("Test Comment!");
+	 * 
+	 * List<Document> documents = new ArrayList<> (); Document document = new
+	 * Document(); document.setDocumentType("DocumentType");
+	 * document.setFileStore("TestFileStore"); documents.add(document);
+	 * 
+	 * WorkFlowDetails workFlowDetails = new WorkFlowDetails();
+	 * workFlowDetails.setDepartment("Revenue");
+	 * workFlowDetails.setDesignation("Junior Assistant");
+	 * workFlowDetails.setAssignee(21l); workFlowDetails.setAction("forward");
+	 * workFlowDetails.setStatus("processing");
+	 * 
+	 * vacancyRemission.setDocuments(documents);
+	 * 
+	 * 
+	 * }
+	 */
+	/*
+	 * @Test public void modifyVacancyRemissionTest() {
+	 * 
+	 * }
+	 * 
+	 * @Test public void searchVacancyRemissionTest() {
+	 * 
+	 * }
+	 */
+
 	@Test
 	public void createDemolitionReason() {
 		String tenantId = "default";
@@ -2052,7 +2051,7 @@ public class PropertyServiceTest {
 		demolitionReason.setTenantId("1234");
 		demolitionReason.setName("vishal kumar");
 		demolitionReason.setCode("111");
-		
+
 		demolitionReasons.add(demolitionReason);
 
 		DemolitionReasonRequest demolitionReasonRequest = new DemolitionReasonRequest();
@@ -2060,7 +2059,8 @@ public class PropertyServiceTest {
 		demolitionReasonRequest.setRequestInfo(requestInfo);
 
 		try {
-			DemolitionReasonResponse demolitionReasonResponse = masterService.createDemolitionReason(tenantId,demolitionReasonRequest);
+			DemolitionReasonResponse demolitionReasonResponse = masterService.createDemolitionReason(tenantId,
+					demolitionReasonRequest);
 			if (demolitionReasonResponse.getDemolitionReason().size() == 0)
 				assertTrue(false);
 
@@ -2072,11 +2072,12 @@ public class PropertyServiceTest {
 		}
 
 	}
+
 	@Test
 	public void updateDemolitionReason() {
 		RequestInfo requestInfo = getRequestInfoObject();
 		List<DemolitionReason> demolitionReasons = new ArrayList<>();
-        DemolitionReason demolitionReason = new DemolitionReason();
+		DemolitionReason demolitionReason = new DemolitionReason();
 		demolitionReason.setId(demolitionId);
 		demolitionReason.setTenantId("1234");
 		demolitionReason.setName("vishal  kumar");
@@ -2097,7 +2098,8 @@ public class PropertyServiceTest {
 		demolitionReasonRequest.setRequestInfo(requestInfo);
 
 		try {
-			DemolitionReasonResponse demolitionReasonResponse = masterService.updateDemolitionReason(demolitionReasonRequest);
+			DemolitionReasonResponse demolitionReasonResponse = masterService
+					.updateDemolitionReason(demolitionReasonRequest);
 
 			if (demolitionReasonResponse.getDemolitionReason().size() == 0)
 				assertTrue(false);
@@ -2115,13 +2117,14 @@ public class PropertyServiceTest {
 	public void searchDemolitionReason() {
 
 		DemolitionReasonSearchCriteria demolitionReasonSearchCriteria = new DemolitionReasonSearchCriteria();
-		  demolitionReasonSearchCriteria.setTenantId("1234");
+		demolitionReasonSearchCriteria.setTenantId("1234");
 		RequestInfo requestInfo = getRequestInfoObject();
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		try {
-			DemolitionReasonResponse demolitionReasonResponse = masterService.getDemolitionReason(requestInfo, demolitionReasonSearchCriteria);
+			DemolitionReasonResponse demolitionReasonResponse = masterService.getDemolitionReason(requestInfo,
+					demolitionReasonSearchCriteria);
 			if (demolitionReasonResponse.getDemolitionReason().size() == 0)
 				assertTrue(false);
 
@@ -2132,5 +2135,81 @@ public class PropertyServiceTest {
 			assertTrue(false);
 		}
 
+	}
+
+	@Test
+	public void creatTaxExemptionReasonTest() {
+
+		TaxExemptionReasonRequest taxExemptionReasonRequest = new TaxExemptionReasonRequest();
+		List<TaxExemptionReason> exemptionReasons = new ArrayList<>();
+		List<String> taxHeads = new ArrayList<>();
+		taxHeads.add("THU1");
+		TaxExemptionReason taxExemptionReason = new TaxExemptionReason();
+		taxExemptionReason.setTenantId("default");
+		taxExemptionReason.setCode("ZIPCODE1");
+		taxExemptionReason.setName("X-MAN1");
+		taxExemptionReason.setPercentageRate(45d);
+		taxExemptionReason.setDescription("Test Update Reason!");
+		taxExemptionReason.setActive(true);
+		taxExemptionReason.setTaxHeads(taxHeads);
+		exemptionReasons.add(taxExemptionReason);
+		taxExemptionReasonRequest.setRequestInfo(getRequestInfoObject());
+		taxExemptionReasonRequest.setTaxExemptionReasons(exemptionReasons);
+		TaxExemptionReasonResponse taxExemptionReasonResponse = null;
+		try {
+			taxExemptionReasonResponse = masterService.createTaxExemptionReason(taxExemptionReasonRequest);
+			if (taxExemptionReasonResponse.getTaxExemptionReasons().size() == 0)
+				assertTrue(false);
+			assertTrue(true);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+	}
+
+	@Test
+	public void updateTaxExemptionReasonTest() {
+
+		TaxExemptionReasonRequest taxExemptionReasonRequest = new TaxExemptionReasonRequest();
+		List<TaxExemptionReason> taxExemptionReasons = new ArrayList<>();
+		List<String> taxHeads = new ArrayList<>();
+		taxHeads.add("UTH1-U");
+		TaxExemptionReason taxExemptionReason = new TaxExemptionReason();
+		taxExemptionReason.setId(1l);
+		taxExemptionReason.setTenantId("default");
+		taxExemptionReason.setCode("UPDATE-CODE-U");
+		taxExemptionReason.setName("UPDATEX-MAN-U");
+		taxExemptionReason.setPercentageRate(50.0);
+		taxExemptionReason.setDescription("Update Test reason!");
+		taxExemptionReason.setActive(true);
+		taxExemptionReason.setTaxHeads(taxHeads);
+		taxExemptionReasons.add(taxExemptionReason);
+		taxExemptionReasonRequest.setRequestInfo(getRequestInfoObject());
+		taxExemptionReasonRequest.setTaxExemptionReasons(taxExemptionReasons);
+		TaxExemptionReasonResponse taxExemptionReasonResponse = null;
+		try {
+			taxExemptionReasonResponse = masterService.updateTaxExemptionReason(taxExemptionReasonRequest);
+			if (taxExemptionReasonResponse.getTaxExemptionReasons().size() == 0)
+				assertTrue(false);
+			assertTrue(true);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+	}
+
+	@Test
+	public void searchExemptionReasonTest() {
+
+		TaxExemptionReasonSearchCriteria exemptionReasonSearchCriteria = new TaxExemptionReasonSearchCriteria();
+		exemptionReasonSearchCriteria.setTenantId("default");
+		TaxExemptionReasonResponse exemptionReasonResponse = null;
+		try {
+			exemptionReasonResponse = masterService.getTaxExemptionReason(getRequestInfoObject(),
+					exemptionReasonSearchCriteria);
+			if (exemptionReasonResponse.getTaxExemptionReasons().size() == 0)
+				assertTrue(false);
+			assertTrue(true);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
 	}
 }

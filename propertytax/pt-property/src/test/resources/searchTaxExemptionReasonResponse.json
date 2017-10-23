@@ -1,0 +1,23 @@
+{
+    "responseInfo": {
+      
+    },
+   "taxExemptionReasons": [
+    {
+      "id":1,
+      "tenantId": "default",
+      "name": "UPDATE-MAN",
+      "code": "UPDATE-ZIPCODE",
+      "description": "Test Update Reason!",
+      "percentageRate":50.0,
+      "taxHeads":["Test 1 TAXHEAD1"],
+      "active":true,
+      "auditDetails": {
+        "createdBy": null,
+        "lastModifiedBy": null,
+        "createdTime": null,
+        "lastModifiedTime": null
+      }
+    }
+  ]
+}

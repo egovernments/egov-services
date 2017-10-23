@@ -21,6 +21,10 @@ import org.egov.models.TaxExemptionSearchResponse;
 import org.egov.models.TitleTransferRequest;
 import org.egov.models.TitleTransferResponse;
 import org.egov.models.TitleTransferSearchCriteria;
+import org.egov.models.VacancyRemissionRequest;
+import org.egov.models.VacancyRemissionResponse;
+import org.egov.models.VacancyRemissionSearchCriteria;
+import org.egov.models.VacancyRemissionSearchResponse;
 import org.egov.property.model.TitleTransferSearchResponse;
 
 public interface PropertyService {
@@ -198,4 +202,32 @@ public interface PropertyService {
 	public TaxExemptionSearchResponse searchTaxExemption(RequestInfoWrapper requestInfo,
 			TaxExemptionSearchCriteria taxExemptionSearchCriteria) throws Exception;
 
+	/**
+	 * Description : This will create Vacancy Remission
+	 * 
+	 * @param vacancyRemissionRequest
+	 * @return VacancyRemissionResponse
+	 * @throws Exception
+	 */
+	public VacancyRemissionResponse createVacancyRemission(VacancyRemissionRequest vacancyRemissionRequest) throws Exception;
+	
+	/**
+	 * Description : This will update Vacancy Remission
+	 * 
+	 * @param vacancyRemissionRequest
+	 * @return VacancyRemissionResponse
+	 * @throws Exception
+	 */
+	public VacancyRemissionResponse updateVacancyRemission(VacancyRemissionRequest vacancyRemissionRequest) throws Exception;
+	
+	/**
+	 * This API will search the vacancy remission based on the given parameters
+	 * 
+	 * @param requestInfo
+	 * @param vacancyRemissionSearchCriteria
+	 * @return VacancyRemissionSearchResponse
+	 * @throws Exception
+	 */
+	public VacancyRemissionSearchResponse searchVacancyRemission(RequestInfoWrapper requestInfo,
+			VacancyRemissionSearchCriteria vacancyRemissionSearchCriteria) throws Exception;
 }

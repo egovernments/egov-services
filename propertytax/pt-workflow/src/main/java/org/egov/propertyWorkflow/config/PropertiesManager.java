@@ -149,7 +149,7 @@ public class PropertiesManager {
 	private String propertyBasepath;
 
 	private String propertySearch;
-	
+
 	private String createValidatedDemolition;
 	
 	private String updateValidatedDemolition;
@@ -183,6 +183,28 @@ public class PropertiesManager {
 	private String rejectTaxExemption;
 
 	private String approveTaxExemption;
+
+	private String createValidatedVacancyRemission;
+
+	private String updateValidatedVacancyRemission;
+
+	private String vacancyRemissionCreateWorkflow;
+
+	private String vacancyRemissionUpdateWorkflow;
+
+	private String vacancyRemissionApproveWorkflow;
+	
+	private String vacancyRemissionBusinesskey;
+
+	private String vacancyRemissionType;
+
+	private String vacancyRemissionState;
+
+	private String vacancyRemissionComment;
+	
+	private String rejectVacancyRemission;
+	
+	private String approveVacancyRemission;
 
 	public String getWorkflowHostName() {
 		return environment.getProperty("egov.services.egov-common-workflows.hostname");
@@ -465,6 +487,21 @@ public class PropertiesManager {
 		return environment.getProperty("egov.propertytax.demolition.update.workflow.started");
 	}
 
+	public String getCreateValidatedVacancyRemission() {
+		return environment.getProperty("egov.propertytax.property.vacancyremission.create.validated");
+	}
+
+	public String getUpdateValidatedVacancyRemission() {
+		return environment.getProperty("egov.propertytax.property.vacancyremission.update.validated");
+	}
+
+	public String getVacancyRemissionCreateWorkflow() {
+		return environment.getProperty("egov.propertytax.property.create.vacancyremission.workflow.started");
+	}
+
+	public String getVacancyRemissionUpdateWorkflow() {
+		return environment.getProperty("egov.propertytax.property.update.vacancyremission.workflow.started");
+	}
 
 	public String getCreateValidatedTaxExemption() {
 		return environment.getProperty("egov.propertytax.property.taxexemption.create.validated");
@@ -510,4 +547,29 @@ public class PropertiesManager {
 		return environment.getProperty("taxexemption.approved");
 	}
 
+	public String getVacancyRemissionApproveWorkflow() {
+		return environment.getProperty("egov.propertytax.property.update.vacancyremission.workflow.approved");
+	}
+	
+	public String getVacancyRemissionBusinesskey() {
+		return environment.getProperty("vacancyremission.businesskey");
+	}
+
+	public String getVacancyRemissionType() {
+		return environment.getProperty("vacancyremission.type");
+	}
+
+	public String getVacancyRemissionState() {
+		return environment.getProperty("vacancyremission.state");
+	}
+
+	public String getVacancyRemissionComment() {
+		return environment.getProperty("vacancyremission.comment");
+	}	
+	public String getRejectVacancyRemission() {
+		return environment.getProperty("egov.propertytax.property.vacancyremission.workflow.rejected");
+	}
+	public String getApproveVacancyRemission() {
+		return environment.getProperty("vacancyremission.approved");
+	}
 }

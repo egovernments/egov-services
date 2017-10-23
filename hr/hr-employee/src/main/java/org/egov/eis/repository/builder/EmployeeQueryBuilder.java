@@ -113,6 +113,8 @@ public class EmployeeQueryBuilder {
         StringBuilder selectQuery = new StringBuilder(REPORT_QUERY);
 
         addWhereClauseForReportQuery(selectQuery, namedParameters, baseRegisterReportRequest);
+        addPagingClauseForReports(selectQuery, namedParameters, baseRegisterReportRequest.getPageSize(), baseRegisterReportRequest.getPageNumber());
+
 
         log.debug("Get Employee Report Query : " + selectQuery);
         return selectQuery.toString();
@@ -238,6 +240,23 @@ public class EmployeeQueryBuilder {
         int pageNumber = 0; // Default pageNo is zero meaning first page
         if (!isEmpty(employeeCriteria.getPageNumber()))
             pageNumber = employeeCriteria.getPageNumber() < 1 ? 0 : employeeCriteria.getPageNumber() - 1;
+        preparedStatementValues.put("pageNumber", pageNumber * pageSize); // Set offset to pageNo * pageSize
+    }
+
+    private void addPagingClauseForReports(StringBuilder selectQuery, Map<String, Object> preparedStatementValues,
+                                           Integer reportPageSize, Integer reportPageNumber) {
+        // handle limit(also called pageSize) here
+        selectQuery.append(" LIMIT :pageSize");
+        int pageSize = Integer.parseInt(applicationProperties.empSearchPageSizeDefault());
+        if (!isEmpty(reportPageSize))
+            pageSize = reportPageSize;
+        preparedStatementValues.put("pageSize", pageSize); // Set limit to pageSize
+
+        // handle offset here
+        selectQuery.append(" OFFSET :pageNumber");
+        int pageNumber = 0; // Default pageNo is zero meaning first page
+        if (!isEmpty(reportPageNumber))
+            pageNumber = reportPageNumber < 1 ? 0 : reportPageNumber - 1;
         preparedStatementValues.put("pageNumber", pageNumber * pageSize); // Set offset to pageNo * pageSize
     }
 }

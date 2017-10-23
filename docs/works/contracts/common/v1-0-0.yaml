@@ -26,7 +26,7 @@ definitions:
       - DURING
       - AFTER
 
-  Mode:
+  CollectionMode:
     type: string
     enum:
       - CASH

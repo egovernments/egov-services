@@ -2885,7 +2885,7 @@ definitions:
         maxLength: 128
         minLength: 4
       mode:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/Mode'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/CollectionMode'
       percentage:
         type: string
         description: Percentage for the given mode
@@ -3988,14 +3988,14 @@ definitions:
     
   QualityTesting:
     type: object
-    description: An Object holds the basic data for a QualityTesting
+    description: An Object holds the basic data for a Quality Testing
     properties:
       id:
         type: string
-        description: Unique Identifier of the QualityTesting
+        description: Unique Identifier of the Quality Testing
       tenantId:
         type: string
-        description: Tenant id of the QualityTesting
+        description: Tenant id of the Quality Testing
         maxLength: 128
         minLength: 4
       letterOfAcceptanceEstimate:
@@ -4008,6 +4008,7 @@ definitions:
           $ref: '#/definitions/QualityTestingDetail'
       remarks:
         type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
         description: Remarks for the Quality Testing
       testReports:
         type: array
@@ -4018,6 +4019,7 @@ definitions:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - tenantId
+      - remarks
     
   QualityTestingDetail:
     type: object
@@ -4036,8 +4038,14 @@ definitions:
       materialName:
         type: string
         description: Material name for the Quality Testing
+        pattern: '[a-zA-Z0-9-\\]'
+        maxLength: 100
+        minLength: 2
       testName:
         type: string
+        maxLength: 100
+        minLength: 2
+        pattern: '[a-zA-Z0-9-\\]'
         description: Test name for the Quality Testing
       resultUnit:
         type: string
@@ -4045,16 +4053,26 @@ definitions:
       minimumValue:
         type: number
         format: BigDecimal
+        maxLength: 20
+        minLength: 1
         description: Minimum Value for the Quality Testing
       maximumValue:
         type: number
         format: BigDecimal
+        maxLength: 20
+        minLength: 1
         description: Maximum value for the Quality Testing
       hodRemarks:
         type: string
+        maxLength: 1024
+        minLength: 2
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
         description: HOD remarksname for the Quality Testing
       coRemarks:
         type: string
+        maxLength: 1024
+        minLength: 2
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
         description: CO remarks for the Quality Testing
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"

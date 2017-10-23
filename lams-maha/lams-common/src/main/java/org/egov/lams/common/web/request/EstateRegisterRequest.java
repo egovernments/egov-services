@@ -5,8 +5,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.lams.common.web.contract.EstateRegister;
-import org.egov.lams.common.web.contract.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -26,7 +26,7 @@ public class EstateRegisterRequest {
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo = null;
 
-    @JsonProperty("landRegisters")
+    @JsonProperty("EstateRegisters")
     @Valid
     private List<EstateRegister> landRegisters = new ArrayList<EstateRegister>();
 }

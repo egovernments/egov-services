@@ -3,6 +3,10 @@ package org.egov.lams.services.web.controller;
 import javax.validation.Valid;
 
 import org.egov.lams.common.web.request.EstateRegisterRequest;
+import org.egov.lams.services.factory.ResponseFactory;
+import org.egov.lams.services.service.EstateRegisterService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,11 +22,20 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EstateRegisterController {
 
+	@Autowired
+	private EstateRegisterService estateRegisterService;
+	
+	@Autowired
+	private ResponseFactory responseFactory;
+	
 	@PostMapping("_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid final EstateRegisterRequest estateRegisterRequest,
 			final BindingResult bindingResult) {
 		
-		return null;//new ResponseEntity<>(null, HttpStatus.CREATED);
+		if (bindingResult.hasErrors()) 
+			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, estateRegisterRequest.getRequestInfo()), HttpStatus.BAD_REQUEST);
+
+		return new ResponseEntity<>(estateRegisterService.createAsync(estateRegisterRequest),HttpStatus.CREATED);
 	}
 }

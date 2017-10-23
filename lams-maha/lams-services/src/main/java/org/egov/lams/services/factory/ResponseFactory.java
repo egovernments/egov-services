@@ -1,4 +1,4 @@
-package org.egov.lams.common.web.contract.factory;
+package org.egov.lams.services.factory;
 
 import java.util.ArrayList;
 import java.util.List;

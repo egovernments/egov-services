@@ -30,6 +30,14 @@ UIInfo:
       - autoUi[0].mobileNo
       - autoUi[0].aadhar
       - autoUi[0].panNo
+  autoFills:
+  - onChangeField: autoUi[0].autoFill
+    affectedFields
+      autoUi[0].chaildAutoFill
+    affectJSONPath
+      test
+    url
+      /test/test
   dependents:
   - onChangeField: autoUi[0].parentDropDown
     affectedFields:

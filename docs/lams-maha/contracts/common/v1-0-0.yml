@@ -40,7 +40,6 @@ definitions:
         description: Unique Identifier of the RegisterName
       tenantId:
         type: string
-        readOnly: true
         description: tenant id of the RegisterName
         maxLength: 128
         minLength: 2
@@ -73,7 +72,6 @@ definitions:
         description: Unique Identifier of the SubRegisterName
       tenantId:
         type: string
-        readOnly: true
         description: tenant id of the SubRegisterName
         maxLength: 128
         minLength: 2
@@ -109,7 +107,6 @@ definitions:
         description: Unique Identifier of the Purpose
       tenantId:
         type: string
-        readOnly: true
         description: tenant id of the Purpose
         maxLength: 128
         minLength: 2
@@ -142,7 +139,6 @@ definitions:
         description: Unique Identifier of the ModeOfAcquisition
       tenantId:
         type: string
-        readOnly: true
         description: tenant id of the ModeOfAcquisition
         maxLength: 128
         minLength: 2
@@ -175,7 +171,6 @@ definitions:
         description: Unique Identifier of the HoldingType
       tenantId:
         type: string
-        readOnly: true
         description: tenant id of the HoldingType
         maxLength: 128
         minLength: 2
@@ -208,7 +203,6 @@ definitions:
         description: Unique Identifier of the CompensationMode
       tenantId:
         type: string
-        readOnly: true
         description: tenant id of the CompensationMode
         maxLength: 128
         minLength: 2
@@ -241,7 +235,6 @@ definitions:
         description: Unique Identifier of the RoadType
       tenantId:
         type: string
-        readOnly: true
         description: tenant id of the RoadType
         maxLength: 128
         minLength: 2
@@ -274,7 +267,6 @@ definitions:
         description: Unique Identifier of the PlanningType
       tenantId:
         type: string
-        readOnly: true
         description: tenant id of the PlanningType
         maxLength: 128
         minLength: 2
@@ -307,7 +299,6 @@ definitions:
         description: Unique Identifier of the UsageType
       tenantId:
         type: string
-        readOnly: true
         description: tenant id of the UsageType
         maxLength: 128
         minLength: 2
@@ -340,7 +331,6 @@ definitions:
         description: Unique Identifier of the SubUsageType
       tenantId:
         type: string
-        readOnly: true
         description: tenant id of the SubUsageType
         maxLength: 128
         minLength: 2
@@ -376,7 +366,6 @@ definitions:
         description: Unique Identifier of the RenewalScheduler
       tenantId:
         type: string
-        readOnly: true
         description: tenant id of the RenewalScheduler
         maxLength: 128
         minLength: 2
@@ -445,7 +434,6 @@ definitions:
         description: Unique Identifier of the PlanningType
       tenantId:
         type: string
-        readOnly: true
         description: tenant id of the PlanningType
         maxLength: 128
         minLength: 2
@@ -478,7 +466,6 @@ definitions:
         description: Unique Identifier of the ApplicantType
       tenantId:
         type: string
-        readOnly: true
         description: tenant id of the ApplicantType
         maxLength: 128
         minLength: 2
@@ -511,7 +498,6 @@ definitions:
         description: Unique Identifier of the AdvertisementType
       tenantId:
         type: string
-        readOnly: true
         description: tenant id of the AdvertisementType
         maxLength: 128
         minLength: 2
@@ -544,7 +530,6 @@ definitions:
         description: Unique Identifier of the AdvertisementSubType
       tenantId:
         type: string
-        readOnly: true
         description: tenant id of the AdvertisementSubType
         maxLength: 128
         minLength: 2
@@ -580,7 +565,6 @@ definitions:
         description: Unique Identifier of the bill frequency master
       tenantId:
         type: string
-        readOnly: true
         description: tenant id of the BillFrequencyMaster
         maxLength: 128
         minLength: 2

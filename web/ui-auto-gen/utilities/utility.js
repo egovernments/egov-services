@@ -29,7 +29,19 @@ function getType(type) {
         case 'boolean':
             return 'radio';
         case 'date':
-            'datePicker';
+            return 'datePicker';
+        case 'email':
+            return 'email';
+        case 'pan':
+            return 'pan';
+        case 'pinCode':
+            return 'pinCode';
+        case 'mobileNumber':
+            return 'mobileNumber';
+        case 'autoComplete':
+            return 'autoCompelete';
+        case 'aadhar':
+            return 'aadhar';
         default:
             return '';
     }

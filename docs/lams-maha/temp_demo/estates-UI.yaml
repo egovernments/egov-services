@@ -20,11 +20,11 @@ UIInfo:
   - fieldName: EstateRegisters[0].estateNumber
     url: "/lams-maha/v1/_get?&moduleName=lams-maha"
     keyPath: "$..id"
-    valuePath: "$..name"
+    valPath: "$..name"
   - fieldName: EstateRegisters[0].registerName
     url: "/lams-maha/v1/_get?&moduleName=lams-maha"
     keyPath: "$..id"
-    valuePath: "$..regNumber"
+    valPath: "$..regNumber"
   SearchResult:
     rowClickUrlUpdate: /update/estates/{registerName}
     rowClickUrlView: /view/estates/{registerName}

@@ -3840,34 +3840,6 @@ definitions:
         items:
           $ref: '#/definitions/TrackMilestone'
       
-
-  ModeOfAllotment:
-    type: object
-    properties:
-      id:
-        type: string
-        description: Unique Identifier of the Mode Of Allotment
-      tenantId:
-        type: string
-        description: Tenant id of the Mode Of Allotment
-        maxLength: 128
-        minLength: 4
-      name:
-        type: string
-        description: Unique name of the Mode Of Allotment
-        pattern: '[a-zA-Z0-9\s\.,]'
-        maxLength: 100
-        minLength: 1
-      code:
-        type: string
-        description: Unique code of the Mode Of Allotment
-        pattern: '[a-zA-Z0-9-\\]'
-        maxLength: 100
-        minLength: 1
-    required:
-      - tenantId
-      - name
-      - code
     
   QualityTesting:
     type: object

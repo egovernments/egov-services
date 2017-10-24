@@ -967,7 +967,7 @@ definitions:
         type: string
         description: State id of the workflow
 
-  parameters:
+parameters:
 ##########################################################
 #Parameter name must start with small case followed by camel case.
 ##########################################################
@@ -994,3 +994,4 @@ definitions:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
+

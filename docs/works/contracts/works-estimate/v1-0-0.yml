@@ -549,7 +549,7 @@ definitions:
         type: boolean
         description: Boolean value if the detailed estimate created or not. Required only if Abstract Estimate is Spill Over
       workFlowDetails:
-        $ref: '#/definitions/WorkFlowDetails'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
       stateId:
         type: string
         description: State id of the workflow
@@ -732,7 +732,7 @@ definitions:
         type: string
         description: Reference of the file store
       workProgress:
-        $ref: '#/definitions/WorkProgress'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkProgress'
       detailedEstimate:
         $ref: '#/definitions/DetailedEstimate'
       auditDetails:
@@ -842,7 +842,7 @@ definitions:
         type: boolean
         description: Boolean value to identify whether the Detailed Estimate is copied from another estimate      
       beneficiary:
-        $ref: '#/definitions/Beneficiary'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/Beneficiary'
       modeOfAllotment:
         $ref: '#/definitions/ModeOfAllotment'
       worksType:
@@ -866,7 +866,7 @@ definitions:
         format: double
         description: Longitude of the location
       workCategory:
-        $ref: '#/definitions/WorkCategory'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkCategory'
       locality:
         type: string
         description: Locality of the Detailed Estimate
@@ -929,7 +929,7 @@ definitions:
         items:
           $ref: '#/definitions/EstimatePhotographs'
       workFlowDetails:
-        $ref: '#/definitions/WorkFlowDetails'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
       stateId:
         type: string
         description: State id of the workflow
@@ -1289,10 +1289,39 @@ definitions:
         - tenantId
         - code
         - name
+      
+  ModeOfAllotment:
+    type: object
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Mode Of Allotment
+      tenantId:
+        type: string
+        description: Tenant id of the Mode Of Allotment
+        maxLength: 128
+        minLength: 4
+      name:
+        type: string
+        description: Unique name of the Mode Of Allotment
+        pattern: '[a-zA-Z0-9\s\.,]'
+        maxLength: 100
+        minLength: 1
+      code:
+        type: string
+        description: Unique code of the Mode Of Allotment
+        pattern: '[a-zA-Z0-9-\\]'
+        maxLength: 100
+        minLength: 1
+    required:
+      - tenantId
+      - name
+      - code
 
 tags:
   - name: Abstract Estimate
     description: APIs required for Abstract Estimate.
   - name: Detailed Estimate
     description: APIs required for Detailed Estimate. 
+
 

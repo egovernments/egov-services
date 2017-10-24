@@ -27,13 +27,13 @@ public class DisposalRowMapper implements RowMapper<Disposal> {
         disposal.setDisposalDate((Long) rs.getObject("disposaldate"));
         disposal.setPanCardNumber(rs.getString("pancardnumber"));
         disposal.setAadharCardNumber(rs.getString("aadharcardnumber"));
-
+        disposal.setRemarks(rs.getString("remarks"));
         //disposal.setAssetCurrentValue(rs.getBigDecimal("assetcurrentvalue"));
         disposal.setAssetCurrentValue(rs.getBigDecimal("assetcurrentvalue"));
         disposal.setSaleValue(rs.getBigDecimal("salevalue"));
         disposal.setTransactionType(TransactionType.fromValue(rs.getString("transactiontype")));
         disposal.setAssetSaleAccount(rs.getString("assetsaleaccount"));
-
+        disposal.setStatus(rs.getString("status"));
         final AuditDetails auditDetails = new AuditDetails();
         auditDetails.setCreatedBy(rs.getString("createdby"));
         auditDetails.setCreatedDate(rs.getLong("createddate"));

@@ -7,7 +7,7 @@ serviceMaps:
    fromTopic: save-asset-maha
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO asset_services_maha.egasset_asset (id, name, code, oldcode, departmentcode, assetcategory, modeofacquisition,status, grossvalue, accumulateddepreciation, description, dateofcreation,remarks, version, assetreference, enableyearwisedepreciation,assetattributes, depreciationrate, anticipatedlife, ordernumber,orderdate, wipreferenceno, acquiredfrom, warrantyavailable, warrantyexpirydate,defectliabilityyear, defectliabilitymonth, defectliabilityday,securitydepositretained, securitydepositrealized, acquisitiondate,originalvalue, assetaccount, accumulateddepreciationaccount,revaluationreserveaccount, depreciationexpenseaccount, titledocumentsavalable,usage, length, width, height, totalarea, plintharea, address,longitude, latitude, floors, landsurveyno, cubiccontents, quantity,tenantid, zone, revenueward, street, electionward, doorno, pincode,locality, block) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egasset_asset(id, name, code, oldcode, departmentcode, assetcategory, modeofacquisition,status, grossvalue, accumulateddepreciation, description, dateofcreation,remarks, version, assetreference, enableyearwisedepreciation,assetattributes, depreciationrate, anticipatedlife, ordernumber,orderdate, wipreferenceno, acquiredfrom, warrantyavailable, warrantyexpirydate,defectliabilityyear, defectliabilitymonth, defectliabilityday,securitydepositretained, securitydepositrealized, acquisitiondate,originalvalue, assetaccount, accumulateddepreciationaccount,revaluationreserveaccount, depreciationexpenseaccount, titledocumentsavalable,usage, length, width, height, totalarea, plintharea, address,longitude, latitude, floors, landsurveyno, cubiccontents, quantity,tenantid, zone, revenueward, street, electionward, doorno, pincode,locality, block, createdby, createddate, lastmodifiedby, lastmodifieddate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: Asset
       jsonMaps:
          
@@ -148,13 +148,21 @@ serviceMaps:
          
        - jsonPath: $.Asset.locationDetails.block
        
+       - jsonPath: $.Asset.auditDetails.createdBy
+       
+       - jsonPath: $.Asset.auditDetails.createdDate
+       
+       - jsonPath: $.Asset.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.Asset.auditDetails.lastModifiedDate       
+       
  - version: 1.0
    name: Asset
    description: Persists asset details in eg_asset table
    fromTopic: update-asset-maha
    isTransaction: true
    queryMaps:
-    - query: UPDATE public.egasset_asset SET id=?, name=?, code=?, oldcode=?, departmentcode=?, assetcategory=?,modeofacquisition=?, status=?, grossvalue=?, accumulateddepreciation=?,description=?, dateofcreation=?, remarks=?, version=?, assetreference=?,enableyearwisedepreciation=?, assetattributes=?, depreciationrate=?,anticipatedlife=?, ordernumber=?, orderdate=?, wipreferenceno=?,acquiredfrom=?, warrantyavailable=?, warrantyexpirydate=?, defectliabilityyear=?,defectliabilitymonth=?, defectliabilityday=?, securitydepositretained=?,securitydepositrealized=?, acquisitiondate=?, originalvalue=?,assetaccount=?, accumulateddepreciationaccount=?, revaluationreserveaccount=?,depreciationexpenseaccount=?, titledocumentsavalable=?, usage=?,length=?, width=?, height=?, totalarea=?, plintharea=?, address=?,longitude=?, latitude=?, floors=?, landsurveyno=?, cubiccontents=?,quantity=?, tenantid=?, zone=?, revenueward=?, street=?, electionward=?,doorno=?, pincode=?, locality=?, block=? WHERE id = ? AND tenantId = ?;
+    - query: UPDATE egasset_asset SET id=?, name=?, code=?, oldcode=?, departmentcode=?, assetcategory=?,modeofacquisition=?, status=?, grossvalue=?, accumulateddepreciation=?,description=?, dateofcreation=?, remarks=?, version=?, assetreference=?,enableyearwisedepreciation=?, assetattributes=?, depreciationrate=?,anticipatedlife=?, ordernumber=?, orderdate=?, wipreferenceno=?,acquiredfrom=?, warrantyavailable=?, warrantyexpirydate=?, defectliabilityyear=?,defectliabilitymonth=?, defectliabilityday=?, securitydepositretained=?,securitydepositrealized=?, acquisitiondate=?, originalvalue=?,assetaccount=?, accumulateddepreciationaccount=?, revaluationreserveaccount=?,depreciationexpenseaccount=?, titledocumentsavalable=?, usage=?,length=?, width=?, height=?, totalarea=?, plintharea=?, address=?,longitude=?, latitude=?, floors=?, landsurveyno=?, cubiccontents=?,quantity=?, tenantid=?, zone=?, revenueward=?, street=?, electionward=?,doorno=?, pincode=?, locality=?, block=? , createdby=?, createddate=?, lastmodifiedby=?, lastmodifieddate=? WHERE id = ? AND tenantId = ?;
       basePath: Asset
       jsonMaps:
          
@@ -295,6 +303,14 @@ serviceMaps:
          
        - jsonPath: $.Asset.locationDetails.block
        
+       - jsonPath: $.Asset.auditDetails.createdBy
+       
+       - jsonPath: $.Asset.auditDetails.createdDate
+       
+       - jsonPath: $.Asset.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.Asset.auditDetails.lastModifiedDate
+       
        - jsonPath: $.Asset.id
        
        - jsonPath: $.Asset.tenantId     
@@ -306,7 +322,7 @@ serviceMaps:
    fromTopic: save-revaluation-maha
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO public.egasset_revalution(id, tenantid, assetid, currentcapitalizedvalue, typeofchange,revaluationamount, valueafterrevaluation, revaluationdate, revaluatedby,reasonforrevaluation, fixedassetswrittenoffaccount, function,fund, scheme, subscheme, comments, status, remarks, ordernumber,orderdate, createdby, createddate, lastmodifiedby, lastmodifieddate, voucherreference) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);
+    - query: INSERT INTO egasset_revaluation(id, tenantid, assetid, currentcapitalizedvalue, typeofchange,revaluationamount, valueafterrevaluation, revaluationdate, revaluatedby,reasonforrevaluation, fixedassetswrittenoffaccount, function,fund, scheme, subscheme, comments, status, remarks, ordernumber,orderdate, createdby, createddate, lastmodifiedby, lastmodifieddate, voucherreference) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);
       basePath: Revaluation
       jsonMaps:
          
@@ -370,7 +386,7 @@ serviceMaps:
    fromTopic: update-Revaluation-maha
    isTransaction: true
    queryMaps:
-    - query: UPDATE public.egasset_revalution SET id=?, tenantid=?, assetid=?, currentcapitalizedvalue=?, typeofchange=?, revaluationamount=?, valueafterrevaluation=?, revaluationdate=?,revaluatedby=?, reasonforrevaluation=?, fixedassetswrittenoffaccount=?, function=?, fund=?, scheme=?, subscheme=?, comments=?, status=?, remarks=?, ordernumber=?, orderdate=?, createdby=?, createddate=?, lastmodifiedby=?, lastmodifieddate=?, voucherreference=? WHERE id=? AND tenantid = ?;
+    - query: UPDATE egasset_revaluation SET id=?, tenantid=?, assetid=?, currentcapitalizedvalue=?, typeofchange=?, revaluationamount=?, valueafterrevaluation=?, revaluationdate=?,revaluatedby=?, reasonforrevaluation=?, fixedassetswrittenoffaccount=?, function=?, fund=?, scheme=?, subscheme=?, comments=?, status=?, remarks=?, ordernumber=?, orderdate=?, createdby=?, createddate=?, lastmodifiedby=?, lastmodifieddate=?, voucherreference=? WHERE id=? AND tenantid = ?;
       basePath: Revaluation
       jsonMaps:
          
@@ -435,7 +451,7 @@ serviceMaps:
    fromTopic: save-disposal-maha
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO public.egasset_disposal(id, tenantid, assetid, ordernumber, orderdate, remarks, buyername, buyeraddress,disposalreason, disposaldate, pancardnumber, aadharcardnumber,assetcurrentvalue, salevalue, transactiontype, assetsaleaccount,createdby, createddate, lastmodifiedby, lastmodifieddate, profitlossvoucherreference) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egasset_disposal(id, tenantid, assetid, ordernumber, orderdate, remarks, buyername, buyeraddress,disposalreason, disposaldate, pancardnumber, aadharcardnumber,assetcurrentvalue, salevalue, transactiontype, assetsaleaccount,createdby, createddate, lastmodifiedby, lastmodifieddate, profitlossvoucherreference, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: Disposal
       jsonMaps:
          
@@ -481,7 +497,9 @@ serviceMaps:
        
        - jsonPath: $.Disposal.auditDetails.lastModifiedDate
        
-       - jsonPath: $.Disposal.profitLossVoucherReference       
+       - jsonPath: $.Disposal.profitLossVoucherReference 
+       
+       - jsonPath: $.Disposal.status       
        
  - version: 1.0
    name: Disposal
@@ -489,7 +507,7 @@ serviceMaps:
    fromTopic: update-disposal-maha
    isTransaction: true
    queryMaps:
-    - query: UPDATE public.egasset_disposal SET id=?, tenantid=?, assetid=?, ordernumber=?, orderdate=?, remarks=?, buyername=?, buyeraddress=?, disposalreason=?, disposaldate=?, pancardnumber=?, aadharcardnumber=?, assetcurrentvalue=?, salevalue=?, transactiontype=?, assetsaleaccount=?, createdby=?, createddate=?, lastmodifiedby=?, lastmodifieddate=?, profitlossvoucherreference=? WHERE id=? AND tenantId=?;
+    - query: UPDATE egasset_disposal SET id=?, tenantid=?, assetid=?, ordernumber=?, orderdate=?, remarks=?, buyername=?, buyeraddress=?, disposalreason=?, disposaldate=?, pancardnumber=?, aadharcardnumber=?, assetcurrentvalue=?, salevalue=?, transactiontype=?, assetsaleaccount=?, createdby=?, createddate=?, lastmodifiedby=?, lastmodifieddate=?, profitlossvoucherreference=?, status=?  WHERE id=? AND tenantId=?;
       basePath: Disposal
       jsonMaps:
          
@@ -531,8 +549,11 @@ serviceMaps:
        
        - jsonPath: $.Disposal.auditDetails.lastModifiedDate
        
-       - jsonPath: $.Disposal.profitLossVoucherReference       
+       - jsonPath: $.Disposal.profitLossVoucherReference 
+       
+       - jsonPath: $.Disposal.status       
 
        - jsonPath: $.Disposal.id
        
        - jsonPath: $.Disposal.tenantId
+

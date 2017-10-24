@@ -35,6 +35,7 @@ public class RevaluationRowMapper implements RowMapper<Revaluation> {
             revaluation.setSubScheme(rs.getString("subscheme"));
             revaluation.setComments(rs.getString("comments"));
             revaluation.setStatus(rs.getString("status"));
+            revaluation.setRemarks(rs.getString("remarks"));
 
             final AuditDetails auditDetails = new AuditDetails();
             auditDetails.setCreatedBy(rs.getString("createdby"));

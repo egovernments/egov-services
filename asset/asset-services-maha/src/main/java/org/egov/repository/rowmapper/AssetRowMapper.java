@@ -13,6 +13,7 @@ import java.util.Map;
 import org.egov.model.Asset;
 import org.egov.model.AssetCategory;
 import org.egov.model.Attributes;
+import org.egov.model.AuditDetails;
 import org.egov.model.DefectLiability;
 import org.egov.model.Location;
 import org.egov.model.enums.ModeOfAcquisitionEnum;
@@ -131,9 +132,14 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
 
                 final AssetCategory assetCategory = new AssetCategory();
                 assetCategory.setId((Long) rs.getObject("assetcategory"));
-             
-
                 asset.setAssetCategory(assetCategory);
+                
+                final AuditDetails auditDetails=new AuditDetails();
+                auditDetails.setCreatedBy(rs.getString("createdby"));
+                auditDetails.setCreatedDate(rs.getLong("createddate"));
+                auditDetails.setLastModifiedBy(rs.getString("lastmodifiedby"));
+                auditDetails.setLastModifiedDate(rs.getLong("lastmodifieddate"));
+                asset.setAuditDetails(auditDetails);
 
                 log.debug("AssetRowMapper asset:: " + asset);
                 map.put(assetId, asset);

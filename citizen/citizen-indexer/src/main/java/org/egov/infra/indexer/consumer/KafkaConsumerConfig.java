@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.egov.infra.indexer.IndexerApplicationRunnerImpl;
+import org.egov.IndexerApplicationRunnerImpl;
 import org.egov.infra.indexer.web.contract.Mapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

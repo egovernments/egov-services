@@ -1,7 +1,6 @@
 package org.egov.infra.indexer.testcontrollerproducer;
 
-import org.egov.infra.indexer.IndexerApplicationRunnerImpl;
-import org.egov.infra.indexer.IndexerInfraApplication;
+import org.egov.IndexerApplicationRunnerImpl;
 import org.egov.infra.indexer.consumer.KafkaConsumerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

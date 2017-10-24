@@ -2,7 +2,7 @@ package org.egov.infra.indexer.service;
 
 import java.util.Map;
 
-import org.egov.infra.indexer.IndexerApplicationRunnerImpl;
+import org.egov.IndexerApplicationRunnerImpl;
 import org.egov.infra.indexer.bulkindexer.BulkIndexer;
 import org.egov.infra.indexer.web.contract.CustomJsonMapping;
 import org.egov.infra.indexer.web.contract.FieldMapping;
@@ -38,10 +38,11 @@ public class IndexerService {
 	@Autowired
 	private RestTemplate restTemplate;
 	
+	
 	@Value("${egov.infra.indexer.host}")
 	private String esHostUrl;
-	
-	public void elasticIndexer(String topic, String kafkaJson){
+		
+	public void elasticIndexer(String topic, String kafkaJson) throws Exception{
 		Map<String, Mapping> mappingsMap = runner.getMappingMaps();
 		logger.info("MappingsMap: "+mappingsMap);
 		if(null != mappingsMap.get(topic)){
@@ -54,13 +55,15 @@ public class IndexerService {
 				}
 			}catch(Exception e){
 				logger.error("Exception while indexing, Uncaught at the indexer level: ", e);
+				throw e;
 			}
 		}else{
 			logger.error("No mappings found for the service to which the following topic belongs: "+topic);
+			
 		}
 	}
 	
-	public void indexProccessor(Index index, String kafkaJson, boolean isBulk) {
+	public void indexProccessor(Index index, String kafkaJson, boolean isBulk) throws Exception {
 		StringBuilder url = new StringBuilder();
 		url.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/")
 		   .append("_bulk");	
@@ -83,46 +86,43 @@ public class IndexerService {
 		}
 	}
 	
-	public String buildIndexJsonWithJsonpath(Index index, String kafkaJson, boolean isBulk){
+	public String buildIndexJsonWithJsonpath(Index index, String kafkaJson, boolean isBulk) throws Exception{
         StringBuilder jsonTobeIndexed = new StringBuilder();
         String result = null;
         JSONArray kafkaJsonArray = null;
-        ObjectMapper mapper = new ObjectMapper();
         final String format = "{ \"index\" : {\"_id\" : \"%s\" } }%n ";
         try {
         	kafkaJsonArray = validateAndConstructJsonArray(kafkaJson, index, isBulk);
         	logger.info("jsonArray to be indexed: "+kafkaJsonArray);
 			for(int i = 0; i < kafkaJsonArray.length() ; i++){
 				logger.info("Object - "+(i+1)+" : "+kafkaJsonArray.get(i));
-				Object indexJsonObj = null;
-				indexJsonObj = buildString(kafkaJsonArray.get(i));
-				String indexJson = mapper.writeValueAsString(indexJsonObj);
-				logger.info("Index json: "+indexJson);
 				String stringifiedObject = buildString(kafkaJsonArray.get(i));
 				if(null != index.getId()){
 					String id = buildIndexId(index, stringifiedObject);
 					logger.info("Inserting id to the json being indexed, id = " + id);
 		            final String actionMetaData = String.format(format, "" + id);
 		            jsonTobeIndexed.append(actionMetaData)
-     			                   .append(indexJson)
+     			                   .append(stringifiedObject)
 		            			   .append("\n");
 				}else{
 					logger.info("Index id not provided for the document, Allowing ES to generate the id.");
-					jsonTobeIndexed.append(indexJson);
+					jsonTobeIndexed.append(stringifiedObject);
 				}
 			}
 			result = jsonTobeIndexed.toString();
 	    }catch(JSONException e){
 	    	logger.error("Error while parsing the JSONArray", e);
+	    	throw e;
 	    }catch(Exception e){
 	    	logger.error("Error while building jsonstring for indexing", e);
+	    	throw e;
 	    }
 		logger.info("Json being indexed: "+result.toString());
 
 		return result;
   }
 	
-	public String buildIndexJsonWithoutJsonpath(Index index, String kafkaJson, boolean isBulk){
+	public String buildIndexJsonWithoutJsonpath(Index index, String kafkaJson, boolean isBulk) throws Exception{
         StringBuilder jsonTobeIndexed = new StringBuilder();
         String result = null;
         JSONArray kafkaJsonArray = null;
@@ -146,15 +146,18 @@ public class IndexerService {
 			result = jsonTobeIndexed.toString();
 	    }catch(JSONException e){
 	    	logger.error("Error while parsing the JSONArray", e);
+	    	throw e;
 	    }catch(Exception e){
 	    	logger.error("Error while building jsonstring for indexing", e);
+	    	throw e;
+
 	    }
 		logger.info("Json being indexed: "+result.toString());
 
 		return result;
   }
 	
-	public String buildCustomJsonForBulk(Index index, String kafkaJson, String urlForMap, boolean isBulk){
+	public String buildCustomJsonForBulk(Index index, String kafkaJson, String urlForMap, boolean isBulk) throws Exception{
         StringBuilder jsonTobeIndexed = new StringBuilder();
         String result = null;
         JSONArray kafkaJsonArray = null;
@@ -179,8 +182,10 @@ public class IndexerService {
 			result = jsonTobeIndexed.toString();
 	    }catch(JSONException e){
 	    	logger.error("Error while parsing the JSONArray", e);
+	    	throw e;
 	    }catch(Exception e){
 	    	logger.error("Error while building jsonstring for indexing", e);
+	    	throw e;
 	    }
 		logger.info("Json being indexed: "+result.toString());
 
@@ -340,11 +345,12 @@ public class IndexerService {
 			}
 		}catch(Exception e){
 			logger.error("No id found at the given jsonpath: ", e);
+			throw e;
 		}
 		return id.toString();
 	}
 	
-	public JSONArray validateAndConstructJsonArray(String kafkaJson, Index index, boolean isBulk){
+	public JSONArray validateAndConstructJsonArray(String kafkaJson, Index index, boolean isBulk) throws Exception{
         String jsonArray = null;
         JSONArray kafkaJsonArray = null;
         ObjectMapper mapper = new ObjectMapper();
@@ -363,7 +369,7 @@ public class IndexerService {
 		        }
 	        }else{
 	        	if(null != index.getJsonPath()){
-	        		kafkaJson = JsonPath.read(kafkaJson, index.getJsonPath());
+	        		kafkaJson = mapper.writeValueAsString(JsonPath.read(kafkaJson, index.getJsonPath()));
 		        	jsonArray = "[" + kafkaJson + "]";
 	        	}else{
 		        	jsonArray = "[" + kafkaJson + "]";
@@ -373,12 +379,13 @@ public class IndexerService {
 	        }
         }catch(Exception e){
         	logger.error("Exception while constructing json array for bulk index: ", e);
+        	throw e;
         }
     	
     	return kafkaJsonArray;
 	}
 	
-	public void validateAndIndex(String finalJson, String url, Index index){
+	public void validateAndIndex(String finalJson, String url, Index index) throws Exception{
 		if(null == finalJson){
 			logger.info("Indexing will not be done, please modify the data and retry.");
 		    logger.info("Advice: Looks like isBulk = true in the config yaml but the record sent on the queue is a json object and not an array of objects. In that case, change either of them.");
@@ -387,7 +394,7 @@ public class IndexerService {
 		}
 	}
 	
-	public void doIndexing(String finalJson, String url, Index index){
+	public void doIndexing(String finalJson, String url, Index index) throws Exception{
 		if(finalJson.startsWith("{ \"index\""))
 			bulkIndexer.indexJsonOntoES(url.toString(), finalJson);
 		else{
@@ -395,7 +402,7 @@ public class IndexerService {
 		}
 	}
 	
-	public void indexWithESId(Index index, String finalJson){
+	public void indexWithESId(Index index, String finalJson) throws Exception{
 		logger.info("Non bulk indexing...");
 		StringBuilder urlForNonBulk = new StringBuilder();
 		urlForNonBulk.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/").append("_index");

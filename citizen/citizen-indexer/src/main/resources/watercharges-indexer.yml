@@ -28,3 +28,4 @@ ServiceMaps:
             outJsonPath: $.ConnectionIndex.ConnectionDetailsEs.hscPipeSizeType
           - inJsonPath: $.Position[0].deptdesig.designation.name
             outJsonPath: $.ConnectionIndex.ConnectionDetailsEs.connectionType
+

@@ -26,7 +26,7 @@ public class BulkIndexer {
 	@Autowired
 	private IndexerUtils indexerUtils;
 			
-	public void indexJsonOntoES(String url, String indexJson){
+	public void indexJsonOntoES(String url, String indexJson) throws Exception{
 		ObjectMapper mapper = new ObjectMapper();
 		try{
 			final HttpHeaders headers = new HttpHeaders();
@@ -52,6 +52,7 @@ public class BulkIndexer {
 			indexerUtils.orchestrateListenerOnESHealth();
 		}catch(Exception e){
 			logger.error("Exception while trying to index to ES. Note: ES is not Down.",e);
+			throw e;
 		}
 	}
 	

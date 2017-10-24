@@ -712,7 +712,7 @@ definitions:
         readOnly: true
         description: Unique Identifier of the tenant 
         maxLength: 128
-        minLength: 4
+        minLength: 2
       landNumber:
         type: string
         description: Unique Land ref. no
@@ -827,7 +827,7 @@ definitions:
       documents:
         type: array
         items:
-          $ref: '#/definitions/Document'
+          $ref: '#/definitions/LandDocs'
       stateId:
         type: string
         description: Work flow ref id.
@@ -896,7 +896,7 @@ definitions:
         readOnly: true
         description: Unique Identifier of the tenant 
         maxLength: 128
-        minLength: 4
+        minLength: 2
       estateNumber:
         type: string
         description: Unique Estate ref. no
@@ -1106,7 +1106,7 @@ definitions:
     properties:
       requestInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-      EstateRegisters:
+      estateRegisters:
         description: Used for search result and create only
         type:  array
         minimum: 1
@@ -1120,7 +1120,7 @@ definitions:
     properties:
       responseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-      EstateRegisters:
+      estateRegisters:
         description: Used for search result and create only
         type:  array
         items:
@@ -1128,7 +1128,7 @@ definitions:
     
   Agreement:
     type: object
-    description: This is a 
+    description: A Object holds the data for agreement.
     properties:
       id:
         type: integer
@@ -1136,7 +1136,7 @@ definitions:
         description: unique id of the agreement.
       tenantId:
         type: string
-        description: Unique Identifier of which tenant this data is defined. For example, AP, AP.Kurnool etc.
+        description: Unique Identifier of which tenant this data is defined. Eg. mh.mumbai.
         maxLength: 128
       source:
         type: string
@@ -1157,6 +1157,7 @@ definitions:
           - WORKFLOW
       isActive:
         type: boolean
+        default: true
         description: Active flag for agreement
       parent:
         $ref: '#/definitions/Agreement'
@@ -1218,7 +1219,7 @@ definitions:
         type: number
         format: double
         description: rent to be paid per payment cycle.
-      bugdetHead:
+      budgetHead:
         type: string
         description: Bugdet Head for agreement.
         maxLength: 16
@@ -1235,9 +1236,9 @@ definitions:
         format: double
         description: Current Penalty.
       agreementFromDate:
-        type: string
-        format: date
-        description: date of agreement.
+        type: integer
+        format: int64
+        description: Agreement start date, time in epoch
       agreementToDate:
         type: integer
         format: int64
@@ -1259,33 +1260,49 @@ definitions:
       remarks:
         type: string
         description: Comments.
-        maxLength: 256
-      acknowledgementNumber:
+        maxLength: 512
+      applicationNo:
         type: string
         description: Acknowldgement number given to allottee on submitting the application. 
         maxLength: 64
       documents:
         type: array
         items:
-          $ref: '#/definitions/Document'
+          $ref: '#/definitions/AgreementDocs'
       demands:
         type: array
         items:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/billingservice/contracts/v1-0-0.yml#/definitions/Demand'
+      section:
+        type: string
+        description: section at the time of eviction.
+        maxLength: 64
+      actName:
+        type: string
+        description: Act Name at the time of eviction.
+        maxLength: 64
+      auctionDate:
+        type: integer
+        format: int64
+        description: Auction date for eviction, time in epoch
+      evictionReason:
+        type: string
+        description: Reason for Eviction.
+        maxLength: 64
       stateId:
         type: string
         description: Work flow ref id.
       workFlowDetails:
         $ref: '#/definitions/WorkFlowDetails'
-      renewal:
-        $ref: '#/definitions/Renewal'
-      cancellation:
-        $ref: '#/definitions/Cancellation'
     required:
       - id
       - tenantId
-      - agreementNumber
+      - leaseType
+      - source
+      - registrationNo
+      - registrationDate
       - landEstateNo
+      - depositAmount
       - agreementFromDate
       - agreementToDate
       - allottee
@@ -1293,60 +1310,74 @@ definitions:
       - rent
       - rentIncrement
       - paymentCycle
-      
-  Document:
+
+  DocumentType:
     type: object
-    description: This object holds list of documents attached during the transaciton
+    description: This object holds type of documents to be uploaded during the transaction for each application type.
     properties:
       id:
         type: integer
         format: int64
-        description: unique id of the Document.
-      documentType:
+        description: unique id of the DocumentType.
+      tenantId:
         type: string
-        description: unique document type code, should be validated with document type master
+        description: tenant id of the Property
+        maxLength: 128
+        minLength: 2
+      name:
+        type: string
+        description: name of the document
+      application:
+        type: string
+        description: Application type.
+        enum:
+          - AGREEMENT_CREATE
+          - AGREEMENT_RENEWAL
+          - AGREEMENT_EVICTION
+          - AGREEMENT_CANCEL
+          - LAND_CREATE
+          
+  AgreementDocs:
+    type: object
+    description: This object holds list of documents attached during the transacitons on agreement
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the AgreementDocs.
+      tenantId:
+        type: string
+        description: tenant id of the AgreementDocs
+        maxLength: 128
+        minLength: 2
+      agreement:
+        $ref: '#/definitions/Agreement'
+      documentType:
+        $ref: '#/definitions/DocumentType'
       fileStore:
         type: string
         description: File store reference key.
-
-  Renewal:
-    type: object
-    description: This object holds Agreement Renewal Details.
-    properties:
-      renewalOrderNo:
-        type: string
-        description: User should enter Renewal order number which provided by corporation/municipality
-      renewalOrderDate:
-        type: integer
-        format: int64
-        description: enter renewal order date. Time in epoch
-      reasonForRenewal:
-        type: string
-        format: date
-        description: User should able to enter reason for renewal.
         
-  Cancellation:
+  LandDocs:
     type: object
-    description: This object holds Agreements Cancellation details. percentage or flat rates for a given asset category.
+    description: This object holds list of documents attached during the transactions on Land
     properties:
-      reasonForCancellation:
-        type: string
-        enum:
-          - Termination
-          - Cancellation
-        description: Termination and cancellation options to be displayed in the drop down. Options may increase in future.
-      terminationDate:
-        type: string
-        format: date
-        description: Date should accept current and future date.
-      orderNo:
-        type: string
-        format: date
-        description: Order number for cancelling agreement issued by the competent authority.
-      orderDate:
+      id:
         type: integer
         format: int64
-        description: Date on which order was signed for cancelling agreement. Time in epoch
+        description: unique id of the LandDocs.
+      tenantId:
+        type: string
+        description: tenant id of the LandDocs
+        maxLength: 128
+        minLength: 2
+      agreement:
+        $ref: '#/definitions/LandRegister'
+      documentType:
+        $ref: '#/definitions/DocumentType'
+      fileStore:
+        type: string
+        description: File store reference key.
 
   WorkFlowDetails:
     type: object
@@ -1373,15 +1404,17 @@ definitions:
     properties:
       RequestInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-      Agreement:
-        $ref: '#/definitions/Agreement'
+      agreements:
+        type: array
+        items:
+          $ref: '#/definitions/Agreement'
     type: object
 
   AgreementResponse:
     properties:
       ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-      Agreements:
+      agreements:
         type: array
         items:
           $ref: '#/definitions/Agreement'

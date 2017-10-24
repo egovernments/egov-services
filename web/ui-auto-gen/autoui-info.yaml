@@ -53,7 +53,7 @@ UIInfo:
   - jsonPath: autoUi[0].radio
     trueLabel: isActive
     falseLabel: isNotActive
-  checkBoxes:
+  checkboxes:
   - autoUi[0].checkBox1
   - autoUi[0].checkBox2
   multiValueList:

@@ -25,7 +25,7 @@ schemes:
   - https
 basePath: '/lams-maha/v1'
 x-ui-info: 
-   $ref: home/hacker/eGovernmentsDailyObservation/OCt/23/UI-Configs/estates-UI.yaml
+   $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/temp_demo/estates-UI.yaml
 
 paths:
   /lands/_search:

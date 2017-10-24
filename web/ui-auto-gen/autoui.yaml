@@ -37,18 +37,22 @@ paths:
           - name: datePicker
             type: string
             in: query
+            format: date
             description: datePicker of the AutoUi
           - name: dropDown
             type: string
             in: query
+            format: singleValueList
             description: dropDown of the AutoUi
           - name: parentDropDown
             type: string
             in: query
+            format: singleValueList
             description: parentDropDown of the AutoUi
           - name: chaildDropDown
             type: string
             in: query
+            format: singleValueList
             description: chaildDropDown id of the AutoUi
           - name: double
             type: number
@@ -72,34 +76,42 @@ paths:
           - name: checkBox1
             type: boolean
             in: query
+            format: checkbox
             description: checkBox1 of the AutoUi
           - name: checkBox2
             type: boolean
             in: query
+            format: checkbox
             description: checkBox2 of the AutoUi
           - name: multiSelectDropDown
             type: string
             in: query
+            format: multiValueList
             description: multiSelectDropDown of the AutoUi
           - name: pinCode
             type: string
             in: query
+            format: pinCode
             description: pinCode of the AutoUi
           - name: email
             type: string
             in: query
+            format: email
             description: email of the AutoUi
           - name: mobielNo
             type: string
             in: query
+            format: mobileNumber
             description: mobielNo of the AutoUi
           - name: aadhar
             type: string
             in: query
+            format: aadhar
             description: aadhar of the AutoUi
           - name: panNo
             type: string
             in: query
+            format: pan
             description: panNo of the AutoUi
         responses:
           200:
@@ -179,16 +191,19 @@ definitions:
         dropDown:
           type: string
           description: dropDown of the AutoUi.
+          format: singleValueList
           maxLength: 256
           minLength: 1
         parentDropDown:
           type: string
           description: parentDropDown of the AutoUi.
+          format: singleValueList
           maxLength: 256
           minLength: 1
         chaildDropDown:
           type: string
           description: chaildDropDown of the AutoUi.
+          format: singleValueList
           maxLength: 256
           minLength: 1
         autoComplete:
@@ -225,12 +240,15 @@ definitions:
         checkBox1:
           type: boolean
           description: checkBox of the AutoUi.
+          format: checkbox
         checkBox2:
           type: boolean
           description: checkBox of the AutoUi.
+          format: checkbox
         multiSelectDropDown:
           type: string
           description: multiSelectDropDown of the AutoUi.
+          format: multiValueList
           maxLength: 256
           minLength: 1
         pinCode:

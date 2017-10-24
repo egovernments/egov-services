@@ -34,21 +34,21 @@ UIInfo:
   - onChangeField: autoUi[0].parentDropDown
     affectedFields:
       autoUi[0].chaildDropDown:
-        pattern: /egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vehicle&parent={autoUi[0].parentDropDown}|$..id|$..regNumber
+        pattern: /egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vehicle&filter=[?(@.vehicleType == {autoUi[0].parentDropDown})]|$..id|$..regNumber
         type: dropDown
   externalData:
   - fieldName: autoUi[0].dropDown
     url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType"
     keyPath: "$..id"
-    valuePath: "$..name"
+    valPath: "$..name"
   - fieldName: autoUi[0].parentDropDown
     url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType"
     keyPath: "$..id"
-    valuePath: "$..name"
+    valPath: "$..name"
   - fieldName: autoUi[0].multiSelectDropDown
     url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType"
     keyPath: "$..id"
-    valuePath: "$..name"
+    valPath: "$..name"
   radios:
   - jsonPath: autoUi[0].radio
     trueLabel: isActive

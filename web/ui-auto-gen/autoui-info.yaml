@@ -20,7 +20,8 @@ UIInfo:
       - autoUi[0].long
       - autoUi[0].int
       - autoUi[0].radio
-      - autoUi[0].checkBox
+      - autoUi[0].checkBox1
+      - autoUi[0].checkBox2
       - autoUi[0].multiSelectDropDown
     Group4:
       fields:
@@ -74,7 +75,8 @@ UIInfo:
     - long
     - int
     - redio
-    - checkBox
+    - checkBox1
+    - checkBox2
     - multiSelectDropDown
     - pinCode
     - email
@@ -95,7 +97,8 @@ UIInfo:
     - long
     - int
     - redio
-    - checkBox
+    - checkBox1
+    - checkBox2
     - multiSelectDropDown
     - pinCode
     - email

@@ -1,0 +1,56 @@
+UIInfo:
+- referencePath: "/estates"
+  groups:
+    VehicleDetails1:
+      fields:
+      - EstateRegisters[0].estateNumber
+    VehicleDetails2:
+      fields:
+      - EstateRegisters[0].EstateRegister.id
+      - EstateRegisters[0].EstateRegister.registerName
+    VehicleDetails3:
+      fields:
+      - EstateRegisters[0].EstateRegister.subRegisterName
+      - EstateRegisters[0].EstateRegister.regionalOffice
+      - EstateRegisters[0].EstateRegister.location
+      - EstateRegisters[0].EstateRegister.propertyName
+      - EstateRegisters[0].EstateRegister.landID
+      - EstateRegisters[0].EstateRegister.stateId		
+  ExternalData:
+  - fieldName: vehicleFuellingDetails[0].vehicleType.name
+    url: "/lams-maha/v1/_get?&moduleName=lams-maha&masterName=UsageType&tenantId=mh"
+    keyPath: "$..id"
+    valuePath: "$..name"
+  - fieldName: vehicleFuellingDetails[0].vehicleRegNo.regNumber
+    url: "/lams-maha/v1/_get?&moduleName=lams-maha&masterName=Purpose&tenantId=mh"
+    keyPath: "$..id"
+    valuePath: "$..regNumber"
+  SearchResult:
+    rowClickUrlUpdate: /update/estates/{registerName}
+    rowClickUrlView: /view/vehiclefuellingdetails/{registerName}
+    columns:
+    - registerName
+    - subRegisterName
+    - location
+    - propertyName
+    - propertyType
+    - surveyNo
+    - modeOfAcquisition
+    - carpetArea
+    - constructionStartDate
+    - constructionEndDate
+    - stateId
+    values:
+    - registerName
+    - subRegisterName
+    - location
+    - propertyName
+    - propertyType
+    - surveyNo
+    - modeOfAcquisition
+    - carpetArea
+    - constructionStartDate
+    - constructionEndDate
+    - stateId
+    resultObjectName: EstateRegister
+

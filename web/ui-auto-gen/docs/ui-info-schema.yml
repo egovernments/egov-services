@@ -1,0 +1,155 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Additional UI info
+  description: |
+    Additional UI info def for specs generation. 
+    
+    TODO - Add model cobining capability to solve use cases like UI will also have workflow card/part etc.
+  contact:
+    name: Abhishek Jain
+schemes:
+  - https
+basePath: '/uiinfo/v1'
+paths: {}
+
+definitions:
+
+  UIInfo:
+    type: object
+    properties:
+      referencePath:
+        description: base api path to be served by this object
+        type: string
+      searchUrl:
+        type: string
+      groups:
+        type: array
+        items:
+          $ref: '#/definitions/Group'
+      dependents:
+        type: array
+        items:
+          $ref: '#/definitions/Dependents'
+      autoFills:
+        type: array
+        items:
+          $ref: '#/definitions/AutoFills'
+      externalData:
+        type: array
+        items:
+          $ref: '#/definitions/ExternalData'
+      searchResult:
+          $ref: '#/definitions/SearchResult'
+      radios:
+          type: array
+          items:
+            $ref: '#/definitions/Radios'
+      checkboxes:
+          type: array
+          items: 
+            type: string
+      fileFields:
+        description: Aray of fully qualified JSOField names that need to be treated as files upload fields
+        type: array
+        items:
+          type: string
+    required:
+      - referencePath
+      - groups
+  
+  Group:
+    type: object
+    description: UI groups for the model
+    properties:
+      name:
+        type: string
+        description: optional group name for the group
+      fields:
+        type: array
+        items: 
+          type: string
+          
+  ExternalData:
+    type: object
+    description: field to URL map to fetch data from external service
+    properties:
+      fieldName:
+        description: Qualified name of the field from the model
+        type: string
+      url:
+        description: URL to fetch the data from
+        type: string
+      keyPath:
+        description: key for drop down
+        type: string
+      valPath:
+        description: value for drop down
+        type: string
+  SearchResult:
+    type: object
+    description: format for the search table
+    properties:
+      rowClickUrlUpdate: 
+        type: string
+        description: Navigate to this path on click of row in update
+      rowClickUrlView: 
+        type: string
+        description: Navigate to this path on click of row in update
+      resultObjectName: 
+        type: string
+        description: Response object name
+      values:
+        type: array
+        items:
+          type: string
+      columns:
+        type: array
+        items:
+          type: string
+  Dependents:
+    type: object
+    description: defines the data dependency between two multi value fields so that change in one can effect value change in another
+    properties:
+      onChangeField:
+        type: string
+        description: Qualified field name of field on change of which the action needs to be performed
+      affectedFields:
+        type: array
+        items:
+          type: string
+      affectFilters:
+        type: array
+        items:
+          type: string
+          
+  AutoFills:
+    type: object
+    description: defines the data dependency between a field and effected auto completes of other fields
+    properties:
+      onChangeField:
+        type: string
+        description: Qualified field name of field on change of which the action needs to be performed
+      url:
+        description: URL to fetch the data from
+        type: string
+      affectedFields:
+        type: array
+        items:
+          type: string
+      affectJSONPath:
+        type: array
+        items:
+          type: string
+  Radios:
+    type: object
+    description: list of jsonpaths which are of type radio buttons
+    properties:
+      jsonPath: 
+        type: string
+      trueLabel: 
+        type: string
+      falseLabel:
+        type: string
+  
+

@@ -32,15 +32,15 @@ UIInfo:
   - fieldName: autoUi[0].dropDown
     url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType"
     keyPath: "$..id"
-    valuePath: "$..name"
+    valPath: "$..name"
   - fieldName: autoUi[0].parentDropDown
     url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType"
     keyPath: "$..id"
-    valuePath: "$..name"
+    valPath: "$..name"
   - fieldName: autoUi[0].multiSelectDropDown
     url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType"
     keyPath: "$..id"
-    valuePath: "$..name"
+    valPath: "$..name"
   radios:
   - jsonPath: autoUi[0].radio
     trueLabel: isActive

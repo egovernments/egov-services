@@ -1,0 +1,468 @@
+swagger: '2.0'
+# eGSP YAML Template Version: 1.0 
+# This is a version number for the YAML template. This must not be changed.
+
+info:
+  version: 1.0.0
+  ######################################################
+  # All API's are POST. _create,_search,_update for post,get and put. RequestInfo will be part of body. For multiple records we can pass multiple value with comman seperated values*.
+  # All _search will be synchronous and all _create and _update will be asynchronous*.
+  # RequestInfo and ResponseInfo object should be reffered from Common*.
+  # In _search API, tenantId should be passed in query param. In _create/_update, tenantId should be passed in the model.
+  # Readonly means that even if these fields are passed in the request, it will be ignored in create/update and will not be added/updated in the entities. The readonly fields might be passed to the _search API's to make use of fields for the search Query API. while calling _search API's even mandatory fields might not be available, it is mandatory only in the _create API's*.
+  # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message.
+  # Definition must start with Upper case followed by camel case.
+  # Every model will have tenantId. Validate tenantId on create.
+  # Parameter name must start with small case followed by camel case.
+  # Path must be in small case.
+  ######################################################
+  
+  title: eGov Financial System.
+  description: |
+    APIs for Financial module. This modules handles creation of Voucher, Receipt etc,. also changes to existing Objects
+  contact:
+    name: eGovernments Foundation
+    email : contacts@egovernments.org
+schemes:
+  - https
+basePath: '/'
+x-api-id: 'org.egov.financials.services'
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
+paths:
+  /advance/_search:
+    post:
+      summary: Get the list of Advance Requisition(s) defined in the system.
+      description: |
+          Search and get Advance Requisition(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Advance Requisition(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of Advance Requisition as defined in AdvanceRequisitionResponse model.
+          
+          Search results will be sorted by the sortProperty Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortProperty"
+        - name: ids
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: Comma separated list of Ids of Advance Requistion to get the Advance Requistions
+        - name: advanceRequisitionNumbers
+          type: array
+          items:
+            type: string
+          in: query
+          description: Comma separated list of Advance Requistion Numbers of Advance Requistion to get the Advance Requistions
+          required: false
+        - name: advanceRequisitionFromDate
+          in: query
+          required: false
+          description: Epoch time from Advance Requisition Created Date
+          type: integer
+          format: int64
+        - name: advanceRequisitionToDate
+          in: query
+          description: Epoch time till the Advance Requisition Created Date
+          required: false
+          type: integer
+          format: int64
+        - name: status
+          in: query
+          description: Status of the Advance Requisition
+          required: false
+          type: string
+        - name: arfType
+          in: query
+          required: false
+          description: Type of Advance Requisition
+          type: string
+      
+      responses:
+        200:
+          description: Advance Requisition(s) Retrived Successfully
+          schema:
+            $ref: "#/definitions/AdvanceRequisitionResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Advance Requisition
+       
+  /advance/_create:
+    post:
+      summary: Create new Advance Requisition(s).
+      description: |
+          To create new Advance Requisition in the system. API supports bulk creation with max limit as defined in the Advance Requisition Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Advance Requisition, please pass array with one Advance Requisition object.
+          
+      parameters:
+        - name: AdvanceRequisitionRequest
+          in: body
+          description: Details for the new Advance Requisition(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/AdvanceRequisitionRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: ReponseInfo with Advance Requisition(s) created successfully
+          schema:
+            $ref: '#/definitions/AdvanceRequisitionResponse'
+        400:
+          description: Advance Requisition(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Advance Requisition
+        
+  /advance/_update:
+    post:
+      summary: update existing Advance Requisition(s).
+      description: |
+          To update existing Advance Requisition in the system. API supports bulk updation with max limit as defined in the Advance Requisition Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Advance Requisition, please pass array with one Advance Requisition object.
+          
+      parameters:
+        - name: AdvanceRequisitionRequest
+          in: body
+          description: Details of the Advance Requisition(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/AdvanceRequisitionRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: ReponseInfo with Advance Requisition(s) updated sudcessfully
+          schema:
+            $ref: '#/definitions/AdvanceRequisitionResponse'
+        400:
+          description: Advance Requisition(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Advance Requisition
+        
+
+
+definitions:
+########################################################
+#RequestInfo and ResponseInfo object should be reffered from Common.
+#Definition must start with Upper case followed by camel case.
+#Every model will have tenantId
+########################################################
+
+  AdvanceRequisitionRequest:
+      description: Contract class to send response. Array of AdvanceRequisition items are used in case of search results, whereas single AdvanceRequisition item is used for create and update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        advanceRequisitions:
+          description: Used for create and update only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/AdvanceRequisition'
+
+  AdvanceRequisitionResponse:
+      description: Contract class to send response. Array of AdvanceRequisition items are used in case of search results, whereas single AdvanceRequisition item is used for create and update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        advanceRequisitions:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/AdvanceRequisition'
+            
+  AdvanceRequisition:
+    type: object
+    description:  An Object holds the basic data for a Advance Requisition
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Advance Requisition
+      tenantId:
+        type: string
+        description: Tenant id of the Advance Requisition
+        maxLength: 128
+        minLength: 4
+      advanceRequisitionNumber:
+        type: string
+        pattern: '[a-zA-Z0-9-\\]'
+        description: Unique number for the Advance Requisition
+        maxLength: 20
+        minLength: 1
+      advanceRequisitionDate: 
+        type: integer
+        format: int64
+        description: Epoch time of when Advance Requisition Created
+      arfType:
+        $ref: '#/definitions/AdvanceRequisitionType'
+      amount:
+        type: number
+        format: BigDecimal
+        description: Advance Requisition amount
+      narration:
+        type: string
+        description: Descritpion for Advance Requisition.
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        maxLength: 1024
+      status:
+        $ref: '#/definitions/AdvanceRequisitionStatus'
+      field:
+        type: string
+        description: Field(boundary) of the Advance Requisition
+      subField:
+        type: string
+        description: Sub Field(boundary) of the Advance Requisition
+      department:
+        type: string
+        description: Department for which Advance Requisition belongs to
+      scheme:
+        type: string
+        description: Scheme of the Advance Requisition
+      subScheme:
+        type: string
+        description: Sub scheme of the Advance Requisition
+      fund:
+        type: string
+        description: Fund of the Advance Requisition
+      fundSource:
+        type: string
+        description: Fund Source of the Advance Requisition
+      functionary:
+        type: string
+        description: Functionary of the Advance Requisition
+      voucherHeader:
+        type: string
+        description: Voucher of the Advance Requisition
+      payTo:
+        type: string
+        description: Payee Name of the Advance Requisition
+      payByDate: 
+        type: integer
+        format: int64
+        description: Epoch time of Pay By Date 
+      referenceNumber:
+        type: string
+        description: Reference Number like Work Order Number, Purchase Order Number etc
+        maxLength: 100
+        minLength: 1
+      sourcePath:
+        type: string
+        description: Source Path to view the Advance requisition
+      partyBillNumber:
+        type: string
+        pattern: '[a-zA-Z0-9-\\]'
+        description: Party Bill Number of Advance Requisition
+        maxLength: 50
+        minLength: 3
+      partyBillDate:
+        type: integer
+        format: int64
+        description:  Epoch time of Party Bill
+      function:
+        type: string
+        description: Function of the Advance Requisition
+      advanceRequisitionDetails:
+        type: array
+        description: Array of Advance Requisition details
+        items:
+          $ref: '#/definitions/AdvanceRequisitionDetails'
+      workFlowDetails:
+        $ref: '#/definitions/WorkFlowDetails'
+      stateId:
+        type: string
+        description: State id of the workflow
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - advanceRequisitionNumber
+      - advanceRequisitionDate
+      - arfType
+      - amount
+      - status
+      - advanceRequisitionDetails
+      
+  AdvanceRequisitionStatus:
+    type: string
+    enum:
+    - CREATED
+    - REJECTED
+    - CANCELLED
+    - APPROVED
+    - RESUBMITTED
+    - CHECKED
+    
+  AdvanceRequisitionType:
+    type: string
+    enum:
+    - CONTRACTOR
+    - SUPPLIER
+    - SALARY
+    
+  AdvanceRequisitionDetails:
+    type: object
+    description:  An Object holds the Advance Requisition Details
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Advance Requisition Details
+      tenantId:
+        type: string
+        description: Tenant id of the Advance Requisition Details
+        maxLength: 128
+        minLength: 4
+      chartOfAccounts:
+          type: string
+          description: Chart Of Accounts of the Advance Requisition Details
+      function:
+        type: string
+        description: Function of the Advance Requisition
+      creditAmount:
+        type: number
+        format: BigDecimal
+        description: Advance Requisition credit amount
+      debitAmount:
+        type: number
+        format: BigDecimal
+        description: Advance Requisition debit amount
+      narration:
+        type: string
+        description: Descritpion for Advance Requisition.
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        maxLength: 1024
+        minLength: 3
+      advanceRequisitionPayeeDetails:
+        type: array
+        description: Array of Advance Requisition details
+        items:
+          $ref: '#/definitions/AdvanceRequisitionPayeeDetails'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - chartOfAccounts
+      
+  AdvanceRequisitionPayeeDetails:
+    type: object
+    description:  An Object holds the payee details of Advance Requisition
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Advance Requisition Payee Details
+      tenantId:
+        type: string
+        description: Tenant id of the Advance Requisition Payee Details
+        maxLength: 128
+        minLength: 4
+      accountDetailType:
+        type: string
+        description: Account Detail Type of the Advance Requisition
+      accountdetailKey:
+        type: string
+        description: Account Detail Key Unique Identifier
+      creditAmount:
+        type: number
+        format: BigDecimal
+        description: Advance Requisition Payee Details credit amount
+      debitAmount:
+        type: number
+        format: BigDecimal
+        description: Advance Requisition Payee Details debit amount
+      narration:
+        type: string
+        description: Descritpion for Advance Requisition Payee Details.
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        maxLength: 1024
+        minLength: 3
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - accountDetailType
+      - accountdetailKey
+            
+  WorkFlowDetails:
+    type: object
+    description: An Object to hold the Application workflow details for a given Line Estimate
+    properties:
+      type:
+        type: string
+        description: workflow type to be processed for an application the Line Estimate
+      businessKey:
+        type: string
+        description: businesskey of the workflow processing application
+      department:
+        type: string
+        description: department of the workflow processing authority
+      designation:
+        type: string
+        description: designation of the workflow processing authority
+      assignee:
+        type: integer
+        format: int64
+        description: assignee id
+      action:
+        type: string
+        description: action to be taken for processing workflow
+      status:
+        type: string
+        description: status of the application
+      comments:
+        type: string
+        description: comments given by the workflow processing person
+      senderName:
+        type: string
+        description: name of the workflow processing person
+      details:
+        type: string
+        description: details about the workflow process
+      stateId:
+        type: string
+        description: state id of the workflow
+        
+parameters:
+##########################################################
+#Parameter name must start with small case followed by camel case.
+##########################################################
+  pageSize:
+    name: pageSize
+    in: query
+    description: Number of records returned.
+    type: integer
+    minimum: 0
+    exclusiveMinimum: true
+    maximum: 100
+    exclusiveMaximum: false
+    multipleOf: 10
+    default: 20
+  pageNumber:
+    name: pageNumber
+    in: query
+    description: Page number
+    type: integer
+    default: 1
+  sortProperty:
+    name: sortBy
+    in: query
+    description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
+    type: string
+    default: id
+tags:
+  - name: Advance Requisition
+    description: APIs required for Advance Requisition.

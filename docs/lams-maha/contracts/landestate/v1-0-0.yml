@@ -809,6 +809,21 @@ definitions:
         description: Code Of Reservation for a land
         maxLength: 64
         minLength: 1
+      status:
+        type: string
+        description: enumeration of land register statuses.
+        enum:
+          - ACTIVE
+          - WORKFLOW
+          - INACTIVE
+      source:
+        type: string
+        description: source from which Land Register is being persisted.
+        enum:
+          - SYSTEM
+          - DATE_ENTRY
+          - MIGRATION
+          - CFC
       documents:
         type: array
         items:
@@ -969,6 +984,21 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/FloorDetail'
+      status:
+        type: string
+        description: enumeration of estate register statuses.
+        enum:
+          - ACTIVE
+          - WORKFLOW
+          - INACTIVE
+      source:
+        type: string
+        description: source from which estate Register is being persisted.
+        enum:
+          - SYSTEM
+          - DATE_ENTRY
+          - MIGRATION
+          - CFC
       stateId:
         type: string
         description: Work flow ref id.
@@ -1108,15 +1138,40 @@ definitions:
         type: string
         description: Unique Identifier of which tenant this data is defined. For example, AP, AP.Kurnool etc.
         maxLength: 128
+      source:
+        type: string
+        description: source from which agreement is being persisted.
+        enum:
+          - SYSTEM
+          - DATE_ENTRY
+          - MIGRATION
+          - CFC
+      status:
+        type: string
+        description: enumeration of agreement statuses.
+        enum:
+          - ACTIVE
+          - CANCELED
+          - EVICTED
+          - RENEWED
+          - WORKFLOW
+      isActive:
+        type: boolean
+        description: Active flag for agreement
+      parent:
+        $ref: '#/definitions/Agreement'
       action:
         type: string
         description: enumeration of action on agreement.
         enum:
           - Create
-          - Cancelation
-          - Eviction
           - Renewal
-          - Objection
+      leaseType:
+        type: string
+        description: The agreements done only on land or estate, this will give the agreement is happening on land or estate.
+        enum:
+          - LAND
+          - ESTATE
       agreementNumber:
         type: string
         description: unique agreement number.
@@ -1193,15 +1248,6 @@ definitions:
         type: string
         description: GB resolution number.
         maxLength: 64
-      status:
-        type: string
-        description: enumeration of agreement statuses.
-        enum:
-          - ACTIVE
-          - CANCELED
-          - EVICTED
-          - RENEWED
-          - WORKFLOW
       paymentCycle:
         type: string
         description: payment cycle on which the rent has to be paid against agreement.
@@ -1210,13 +1256,6 @@ definitions:
           - QUARTER
           - HALFYEAR
           - ANNUAL
-      Source:
-        type: string
-        description: source from which agreement is being persisted.
-        enum:
-          - SYSTEM
-          - DATE_ENTRY
-          - MIGRATION
       remarks:
         type: string
         description: Comments.

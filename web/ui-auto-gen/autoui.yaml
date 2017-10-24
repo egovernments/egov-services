@@ -1,0 +1,372 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: UI Samples
+  description: Auto UI sample yaml
+  contact:
+    name: Venkataramana B
+    email: venki@egovernments.org
+  
+basePath: "/egov-autoui"
+
+x-ui-info:
+  $ref: https://raw.githubusercontent.com/gwl-sourabh/yamltojson/master/swm-ui-info.yaml
+
+paths:
+
+    /_search:
+      post:
+        summary: Get the list of autoui
+        description: autoui
+        tags: 
+          - autoUis
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: textField
+            type: string
+            in: query
+            description: textField of the AutoUi
+            maxLength: 265
+          - name: textArea
+            type: string
+            in: query
+            maxLength: 300
+            description: textArea of the AutoUi
+          - name: datePicker
+            type: string
+            in: query
+            description: datePicker of the AutoUi
+          - name: dropDown
+            type: string
+            in: query
+            description: dropDown of the AutoUi
+          - name: parentDropDown
+            type: string
+            in: query
+            description: parentDropDown of the AutoUi
+          - name: chaildDropDown
+            type: string
+            in: query
+            description: chaildDropDown id of the AutoUi
+          - name: double
+            type: number
+            format: double
+            in: query
+            description: double of the AutoUi
+          - name: long
+            type: integer
+            format: int64
+            in: query
+            description: long of the AutoUi
+          - name: int
+            type: integer
+            format: int32
+            in: query
+            description: int of the AutoUi
+          - name: redio
+            type: boolean
+            in: query
+            description: redio of the AutoUi
+          - name: checkBox1
+            type: boolean
+            in: query
+            description: checkBox1 of the AutoUi
+          - name: checkBox2
+            type: boolean
+            in: query
+            description: checkBox2 of the AutoUi
+          - name: multiSelectDropDown
+            type: string
+            in: query
+            description: multiSelectDropDown of the AutoUi
+        responses:
+          200:
+            description: AutoUi(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/AutoUiResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /_create:
+      post:
+        summary: Create new autouis
+        description: Create new autouis
+        tags: 
+          - AutoUi
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: autouiRequest
+            in: body
+            description: AutoUi Request
+            schema:
+              $ref: '#/definitions/AutoUiRequest'
+        responses:
+          201:
+            description: AutoUi created Successfully
+            schema:
+              $ref: '#/definitions/AutoUiResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /_update:
+      post:
+        summary: Update any of the AutoUi
+        description: Update any of the AutoUi
+        tags: 
+          - AutoUi
+        parameters:
+          - name: autouiRequest
+            in: body
+            description: AutoUi Request
+            schema:
+              $ref: '#/definitions/AutoUiRequest'
+        responses:
+          200:
+            description: AutoUi updated Successfully
+            schema:
+              $ref: '#/definitions/AutoUiResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+
+definitions:
+
+    AutoUi:
+      type: object
+      properties:
+        textField:
+          type: string
+          description: textField of the AutoUi.
+          maxLength: 256
+          minLength: 1
+        textArea:
+          type: string
+          description: textArea of the AutoUi.
+          maxLength: 300
+          minLength: 1
+        datePicker:
+          type: string
+          format: date
+          description: datePicker of the AutoUi.
+        dropDown:
+          $ref: "#/definitions/VehicleType"
+        parentDropDown:
+          $ref: "#/definitions/VehicleType"
+        chaildDropDown:
+          $ref: "#/definitions/Vehicle"
+        autoComplete:
+          $ref: "#/definitions/VehicleType"
+        autoFill:
+          type: string
+          description: autoFill of the AutoUi.
+          maxLength: 256
+          minLength: 1
+        chaildAutoFill:
+          type: string
+          description: chaildAutoFill of the AutoUi.
+          maxLength: 256
+          minLength: 1
+        double:
+          type: number
+          format: double
+          description: double of AutoUi
+        long:
+          type: integer
+          format: int64
+          description: long of AutoUi
+        int:
+          type: integer
+          format: int32
+          description: int of AutoUi
+        redio:
+          type: boolean
+          description: redio of the AutoUi.
+        checkBox1:
+          type: boolean
+          description: checkBox of the AutoUi.
+        checkBox2:
+          type: boolean
+          description: checkBox of the AutoUi.
+        multiSelectDropDown:
+          $ref: "#/definitions/VehicleType"
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - textField
+      - textArea
+      - datePicker
+      - dropDown
+      - parentDropDown
+      - chaildDropDown
+      - autoComplete
+      - autoFill
+      - chaildAutoFill
+      - double
+      - long
+      - int
+      - redio
+      - checkBox1
+      - checkBox2
+      - multiSelectDropDown
+    
+    AutoUiRequest:
+      description: Contract class to receive request. Array of AutoUi items are used in case of create, whereas single AutoUi item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        vehicleFuellingDetails:
+          description: Used for search result and create only
+          type: array
+          items:
+            $ref: '#/definitions/AutoUi'
+            
+    AutoUiResponse:
+      description: Contract class to send response. Array of AutoUi items are used in case of search results or response for create, whereas single AutoUi item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        vehicleFuellingDetails:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/AutoUi'  
+
+    VehicleType:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the VehicleType
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the VehicleType
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the VehicleType
+          maxLength: 128
+          minLength: 4
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - name
+      
+    Vehicle:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Vehicle
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the Vehicle
+          maxLength: 128
+          minLength: 4
+        vehicleType:
+          $ref: "#/definitions/VehicleType"
+        regNumber:
+          type: string
+          description: registration Number of the Vehicle. Should be unique across the platform. Special characters not allowed. Space not allowed. 
+          maxLength: 12
+          minLength: 6
+        engineSrNumber:
+          type: string
+          description: engine serial number of the Vehicle. Should be unique across the platform. Space not allowed
+          maxLength: 256
+          minLength: 1
+        chassisSrNumber:
+          type: string
+          description: chassis serial number of the Vehicle. Should be unique across the platform. Space not allowed
+          maxLength: 256
+          minLength: 1
+        vehicleCapacity:
+          type: number
+          format: double
+          description: capacity of the Vehicle in Tonnes. CAN NOT be 0
+        numberOfPersonsReq:
+          type: integer
+          format: int64
+          description: number Of Persons Required to operate the Vehicle. CAN NOT be 0
+        model:
+          type: string
+          description: Make / Model / Manufaturer of the Vehicle. Only / special character is allowed.
+          maxLength: 256
+          minLength: 1
+        ulbOwnedVehicle:
+          type: boolean
+          description: Option should be selected if vehilce is owned by ULB. By default option should be in Selected state.
+        vendorName:
+          type: string
+          description: name of the vendor who supplied the Vehicle. Mandatory when ulbOwnedVehicle is in "Not Selected" state. Else, disable this field
+          maxLength: 256
+          minLength: 0
+        vehicleDriverName:
+          type: string
+          description: name of the driver who will drive the Vehicle. Driver name shall be fetched from HRMS. Assumption-> One driver shall be assigned to one vehicle only. # HRMS APIs are required.
+          maxLength: 256
+          minLength: 0
+        purchaseDate:
+          type: string
+          format: date
+          description: Purchase date of the vehicle. # We might have to intgrate with Asset management module to fetch vehicle related record.
+        yearOfPurchase:
+          type: string
+          description: Purchase year of the vehicle. # We might have to remove this field as that year is already captured in Date filed.
+          maxLength: 256
+          minLength: 0
+        price:
+          type: number 
+          format: double
+          description: purchase price of the Vehicle
+        sourceOfPurchase:
+          type: string
+          description: source of purchase of the Vehicle
+          maxLength: 256
+          minLength: 0
+        remarks:
+          type: string
+          description: ULB admin can enter a comment 
+          maxLength: 300
+          minLength: 15
+        insuranceNumber:
+          type: string
+          description: Insurance number of vehicle
+          maxLength: 256
+          minLength: 1
+        insuranceValidityDate:
+          type: string
+          format: date
+          description: Current or Futrure date at which insurance is going to expire
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - vehicleType
+      - regNumber
+      - engineSrNumber
+      - chassisSrNumber
+      - vehicleCapacity
+      - numberOfPersonsReq
+      - model
+      - insuranceNumber
+      - insuranceValidityDate
+      - purchaseDate
+      - yearOfPurchase
+      - price

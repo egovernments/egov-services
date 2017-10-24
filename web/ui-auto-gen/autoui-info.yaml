@@ -1,0 +1,88 @@
+UIInfo:
+- referencePath: "/autoui"
+  groups:
+    Group1:
+      fields:
+      - autoUi[0].textField
+      - autoUi[0].textArea
+      - autoUi[0].datePicker
+      - autoUi[0].dropDown
+    Group2:
+      fields:
+      - autoUi[0].parentDropDown
+      - autoUi[0].chaildDropDown
+      - autoUi[0].autoComplete
+      - autoUi[0].autoFill
+      - autoUi[0].chaildAutoFill
+    Group3:
+      fields:
+      - autoUi[0].double
+      - autoUi[0].long
+      - autoUi[0].int
+      - autoUi[0].radio
+      - autoUi[0].checkBox
+      - autoUi[0].multiSelectDropDown
+  dependents:
+  - onChangeField: autoUi[0].parentDropDown
+    affectedFields:
+      autoUi[0].chaildDropDown:
+        pattern: /egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vehicle&parent={autoUi[0].parentDropDown}|$..id|$..regNumber
+        type: dropDown
+  externalData:
+  - fieldName: autoUi[0].dropDown
+    url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType"
+    keyPath: "$..id"
+    valuePath: "$..name"
+  - fieldName: autoUi[0].parentDropDown
+    url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType"
+    keyPath: "$..id"
+    valuePath: "$..name"
+  - fieldName: autoUi[0].multiSelectDropDown
+    url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType"
+    keyPath: "$..id"
+    valuePath: "$..name"
+  radios:
+  - jsonPath: autoUi[0].radio
+    trueLabel: isActive
+    falseLabel: isNotActive
+  checkBoxes:
+  - autoUi[0].checkBox1
+  - autoUi[0].checkBox2
+  multiValueList:
+  - autoUi[0].multiSelectDropDown
+  searchResult:
+    rowClickUrlUpdate: "/update/autoui/{textField}"
+    rowClickUrlView: "/view/autoui/{textField}"
+    columns:
+    - textField
+    - textArea
+    - datePicker
+    - dropDown
+    - parentDropDown
+    - chaildDropDown
+    - autoComplete
+    - autoFill
+    - chaildAutoFill
+    - double
+    - long
+    - int
+    - redio
+    - checkBox
+    - multiSelectDropDown
+    values:
+    - textField
+    - textArea
+    - datePicker
+    - dropDown
+    - parentDropDown
+    - chaildDropDown
+    - autoComplete
+    - autoFill
+    - chaildAutoFill
+    - double
+    - long
+    - int
+    - redio
+    - checkBox
+    - multiSelectDropDown
+    resultObjectName: autoUi

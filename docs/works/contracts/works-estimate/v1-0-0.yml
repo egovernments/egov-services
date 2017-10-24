@@ -487,7 +487,7 @@ definitions:
         type: array
         description: Array of document details
         items:
-          $ref: '#/definitions/DocumentDetail'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DocumentDetail'
       status:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/AbstractEstimateStatus'
       beneficiary:
@@ -638,37 +638,6 @@ definitions:
       - estimateAmount
       - estimateNumber
       - tenantId
-    
-  DocumentDetail:
-    type: object
-    description: An Object that hold Document Details (Uploaded files/documents) for all the objects
-    properties:
-      id:
-        type: string
-        description: Unique Identifier of the Document Detail
-      objectId:
-        type: string
-        description: Object id of the Document for which documents are attached.
-      objectType:
-        type: string
-        description: Object type of the document for which documents are attached.
-        maxLength: 100
-        minLength: 1
-      fileStore:
-        type: string
-        description: Filestore reference of the document which is attached 
-        maxLength: 256
-        minLength: 1
-      tenantId:
-        type: string
-        description: Tenant Id of the Document detail
-        maxLength: 128
-        minLength: 4
-    required:
-      - fileStore
-      - tenantId
-      - objectId
-      - objectType
     
   EstimateAppropriation:
     type: object
@@ -912,7 +881,7 @@ definitions:
         type: array
         description: Array of document details
         items:
-          $ref: '#/definitions/DocumentDetail'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DocumentDetail'
       assetValues:
         type: array
         description: Asstet Values for Abstract Estimate

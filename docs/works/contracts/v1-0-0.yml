@@ -1396,37 +1396,6 @@ definitions:
 #Definition must start with Upper case followed by camel case.
 #Every model will have tenantId
 ########################################################
-
-  DocumentDetail:
-    type: object
-    description: An Object that hold Document Details (Uploaded files/documents) for all the objects
-    properties:
-      id:
-        type: string
-        description: Unique Identifier of the Document Detail
-      objectId:
-        type: string
-        description: Object id of the Document for which documents are attached.
-      objectType:
-        type: string
-        description: Object type of the document for which documents are attached.
-        maxLength: 100
-        minLength: 1
-      fileStore:
-        type: string
-        description: Filestore reference of the document which is attached 
-        maxLength: 256
-        minLength: 1
-      tenantId:
-        type: string
-        description: Tenant Id of the Document detail
-        maxLength: 128
-        minLength: 4
-    required:
-      - fileStore
-      - tenantId
-      - objectId
-      - objectType
     
   OfflineStatusRequest:
     description: Contract class to send response. Array of offlineStatuses items are used in case of search results, also multiple  offlineStatuses item is used for create and update
@@ -1593,7 +1562,7 @@ definitions:
         type: array
         description: Array of document details
         items:
-          $ref: '#/definitions/DocumentDetail'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DocumentDetail'
       status:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/LOAStatus'
       tenderFinalizedPercentage:
@@ -1875,7 +1844,7 @@ definitions:
         type: array
         description: Array of document details
         items:
-          $ref: '#/definitions/DocumentDetail'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DocumentDetail'
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -1983,6 +1952,12 @@ definitions:
         maxLength: 10
       letterOfAcceptanceEstimate:
         $ref: '#/definitions/LetterOfAcceptanceEstimate'
+      #mbCntractorBills:
+      #  type: array
+      #  description: Array of Contractor bills
+      #  minItems: 1
+      #  items:
+      #    $ref: '#/definitions/MBCntractorBills'
       # billregister:
       #   $ref: '#/definitions/BillRegister'
       status:
@@ -2011,7 +1986,7 @@ definitions:
         type: array
         description: Array of document details
         items:
-          $ref: '#/definitions/DocumentDetail'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DocumentDetail'
       workFlowDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
       stateId:
@@ -2037,6 +2012,25 @@ definitions:
       - mbAbstract
       - fromPageNo
       - mbAmount
+      
+  MBCntractorBills:
+    type: object
+    description: An Object holds the basic data for a Measurement book and contractor bill
+    properties:
+      tenantId:
+        type: string
+        description: Tenant id of the BillMB
+        maxLength: 128
+        minLength: 4
+      measurementBook:
+        $ref: '#/definitions/MeasurementBook'
+      contractorBill:
+        $ref: '#/definitions/ContractorBill'
+
+    required:
+      - tenantId
+      - measurementBook
+      - contractorBill
     
   MeasurementBookDetails:
     type: object
@@ -2581,7 +2575,7 @@ definitions:
         type: array
         description: Array of test reports in PDF format
         items:
-          $ref: '#/definitions/DocumentDetail'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DocumentDetail'
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -2751,4 +2745,3 @@ tags:
     description: APIs required for Contractor Advance Requisition.
   - name: Quality Testing
     description: APIs required for Quality Testing.
-

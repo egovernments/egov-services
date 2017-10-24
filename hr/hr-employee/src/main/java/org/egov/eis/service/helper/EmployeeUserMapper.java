@@ -44,10 +44,11 @@ import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.model.User;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class EmployeeUserMapper {
@@ -81,8 +82,12 @@ public class EmployeeUserMapper {
     }
 
     public List<EmployeeInfo> mapUsersWithEmployeesForReport(List<EmployeeInfo> employeeInfoList, List<User> userInfoList) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-DD");
+
+
         Map<Long, User> userInfoMap = new HashMap<Long, User>();
         List<EmployeeInfo> finalEmployeeList = new ArrayList<EmployeeInfo>();
+        Date dob = null;
         if (userInfoList != null)
             for (User userInfo : userInfoList) {
                 userInfoMap.put(userInfo.getId(), userInfo);
@@ -92,9 +97,21 @@ public class EmployeeUserMapper {
             for (EmployeeInfo employeeInfo : employeeInfoList) {
                 if (userInfoMap.containsKey(employeeInfo.getId())) {
                     User userInfo = userInfoMap.get(employeeInfo.getId());
-
+                    employeeInfo.setSalutation(userInfo.getSalutation());
                     employeeInfo.setName(userInfo.getName());
                     employeeInfo.setUserName(userInfo.getUserName());
+                    try {
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                        Date date = isEmpty(userInfo.getDob()) ? null : (Date) formatter.parse(userInfo.getDob());
+                        if (!isEmpty(date)) {
+                            String finalString = sdf.format(date);
+                            dob = sdf.parse(finalString);
+                        }
+
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    employeeInfo.setDob(dob);
                     employeeInfo.setGender(userInfo.getGender());
                     employeeInfo.setMobileNumber(userInfo.getMobileNumber());
                     employeeInfo.setAltContactNumber(userInfo.getAltContactNumber());

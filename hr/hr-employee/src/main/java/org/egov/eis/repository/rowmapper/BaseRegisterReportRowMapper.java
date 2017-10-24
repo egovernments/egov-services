@@ -113,6 +113,8 @@ public class BaseRegisterReportRowMapper implements ResultSetExtractor<List<Empl
                 empInfo.setMotherTongue(rs.getLong("e_motherTongueId"));
                 empInfo.setPassportNo(rs.getString("e_passportNo"));
                 empInfo.setGpfNo(rs.getString("e_gpfNo"));
+                empInfo.setRetirementAge(rs.getShort("e_retirementAge"));
+                empInfo.setGroup(rs.getLong("e_groupId"));
                 empInfo.setRecruitmentMode(rs.getLong("e_recruitmentModeId"));
                 empInfo.setRecruitmentType(rs.getLong("e_recruitmentTypeId"));
                 empInfo.setRecruitmentQuota(rs.getLong("e_recruitmentQuotaId"));

@@ -115,6 +115,7 @@ app.post('/yaml/create', function(req, res) {
     } else {
         parse(req.body.url, req.body.module, function(errors, fileNames) {
             if (errors) {
+                //console.log(errors);
                 res.status(400).json({
                     errors: errors
                 })

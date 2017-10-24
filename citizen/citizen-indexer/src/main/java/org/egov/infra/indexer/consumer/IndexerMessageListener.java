@@ -2,7 +2,7 @@ package org.egov.infra.indexer.consumer;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.infra.indexer.service.IndexerService;
-//import org.egov.tracer.KafkaConsumerErrorHandller;
+import org.egov.tracer.KafkaConsumerErrorHandller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +17,8 @@ public class IndexerMessageListener implements MessageListener<String, String> {
 	@Autowired
 	private IndexerService indexerService;
 	
-	/*@Autowired
-	private KafkaConsumerErrorHandller kafkaConsumerErrorHandller; */
+	@Autowired
+	private KafkaConsumerErrorHandller kafkaConsumerErrorHandller;
 	
 	@Override
 	public void onMessage(ConsumerRecord<String, String> data) {
@@ -27,7 +27,8 @@ public class IndexerMessageListener implements MessageListener<String, String> {
         try{
         	indexerService.elasticIndexer(data.topic(), data.value()); 
         }catch(Exception e){
-        	//kafkaConsumerErrorHandller.handle(e, data);
+        	logger.info("Forwarding error to the errohandler for posting on the ErrorQ....");
+        	kafkaConsumerErrorHandller.handle(e, data);
         }
 	}
 

@@ -44,6 +44,7 @@ public class IndexerService {
 		
 	public void elasticIndexer(String topic, String kafkaJson) throws Exception{
 		Map<String, Mapping> mappingsMap = runner.getMappingMaps();
+		mappingsMap = null;
 		logger.info("MappingsMap: "+mappingsMap);
 		if(null != mappingsMap.get(topic)){
 			Mapping mapping = mappingsMap.get(topic);

@@ -33,11 +33,10 @@ UIInfo:
   autoFills:
   - onChangeField: autoUi[0].autoFill
     affectedFields:
-      autoUi[0].chaildAutoFill
+      - autoUi[0].chaildAutoFill
     affectJSONPath:
-      test
-    url:
-      /test/test
+      - test
+    url: /test/test
   dependents:
   - onChangeField: autoUi[0].parentDropDown
     affectedFields:

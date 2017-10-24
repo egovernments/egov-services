@@ -49,15 +49,14 @@ UIInfo:
     url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType"
     keyPath: "$..id"
     valPath: "$..name"
+  - fieldName: autoUi[0].autoComplete
+    url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType"
+    keyPath: "$..id"
+    valPath: "$..name"
   radios:
   - jsonPath: autoUi[0].radio
     trueLabel: isActive
     falseLabel: isNotActive
-  checkboxes:
-  - autoUi[0].checkBox1
-  - autoUi[0].checkBox2
-  multiValueList:
-  - autoUi[0].multiSelectDropDown
   searchResult:
     rowClickUrlUpdate: "/update/autoui/{textField}"
     rowClickUrlView: "/view/autoui/{textField}"

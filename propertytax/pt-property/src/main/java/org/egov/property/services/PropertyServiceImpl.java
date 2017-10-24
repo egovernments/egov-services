@@ -99,6 +99,7 @@ import org.egov.property.repository.PropertyRepository;
 import org.egov.property.repository.TaxExemptionRepository;
 import org.egov.property.repository.TenantRepository;
 import org.egov.property.repository.UserRestRepository;
+import org.egov.property.repository.VacancyRemissionRepository;
 import org.egov.property.repository.WorkFlowRepository;
 import org.egov.property.utility.PropertyValidator;
 import org.egov.property.utility.TimeStampUtil;
@@ -180,6 +181,9 @@ public class PropertyServiceImpl implements PropertyService {
 
 	@Autowired
 	ValidatorUtil validatorUtil;
+	
+	@Autowired
+	VacancyRemissionRepository vacancyRemissionRepository;
 
 	@Override
 	public PropertyResponse createProperty(PropertyRequest propertyRequest) throws Exception {
@@ -1612,7 +1616,7 @@ public class PropertyServiceImpl implements PropertyService {
 	public VacancyRemissionSearchResponse searchVacancyRemission(RequestInfoWrapper requestInfo,
 			VacancyRemissionSearchCriteria vacancyRemissionSearchCriteria) throws Exception {
 
-		List<VacancyRemission> vacancyRemissions = propertyRepository.searchVacancyRemission(
+		List<VacancyRemission> vacancyRemissions = vacancyRemissionRepository.searchVacancyRemission(
 				requestInfo.getRequestInfo(), vacancyRemissionSearchCriteria.getTenantId(),
 				vacancyRemissionSearchCriteria.getPageSize(), vacancyRemissionSearchCriteria.getPageNumber(),
 				vacancyRemissionSearchCriteria.getUpicNumber(), vacancyRemissionSearchCriteria.getApplicationNo(),

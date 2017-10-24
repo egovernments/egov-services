@@ -19,4 +19,14 @@ public class TaxExemptionDocumentBuilder {
 
 		return documentUpdateSQL.toString();
 	}
+	
+	public static final String GETDOCUMENTIDQUERY = "SELECT id FROM "+ ConstantUtility.TAXEXEMPTION_DOCUMENT_TABLE_NAME
+			+ " WHERE taxexemption = ?";
+	
+	public static final String DELETEDOCUMENTQUERY = "DELETE FROM "+ ConstantUtility.TAXEXEMPTION_DOCUMENT_TABLE_NAME
+			+" WHERE id = ?";
+
+	public static final String AUDIT_DETAILS_QUERY = "select createdBy,lastModifiedBy,createdTime,"
+			+" lastModifiedTime from "+ConstantUtility.TAXEXEMPTION_DOCUMENT_TABLE_NAME
+			+" where id= ?";
 }

@@ -12,6 +12,7 @@ import org.egov.models.Document;
 import org.egov.models.PropertyDetail;
 import org.egov.models.RequestInfo;
 import org.egov.models.TaxExemption;
+import org.egov.models.TaxExemptionRequest;
 import org.egov.models.TaxExemptionSearchCriteria;
 import org.egov.property.config.PropertiesManager;
 import org.egov.property.repository.builder.TaxExemptionBuilder;
@@ -107,8 +108,9 @@ public class TaxExemptionRepository {
 		return taxExemptionDocumentId;
 	}
 
-	public void updateTaxExemption(TaxExemption taxExemption) throws Exception {
-
+	public void updateTaxExemption(TaxExemptionRequest taxExemptionRequest) throws Exception {
+		
+		TaxExemption taxExemption = taxExemptionRequest.getTaxExemption();
 		String taxExemptionUpdate = TaxExemptionBuilder.UPDATE_TAXEXEMPTION_QUERY;
 
 		Object[] taxExemptionArgs = { taxExemption.getTenantId(), taxExemption.getUpicNumber(),
@@ -118,7 +120,55 @@ public class TaxExemptionRepository {
 				taxExemption.getAuditDetails().getLastModifiedTime(), taxExemption.getId() };
 
 		jdbcTemplate.update(taxExemptionUpdate, taxExemptionArgs);
+		
+		updateTaxExemptionDocument(taxExemption, taxExemptionRequest.getRequestInfo());
 
+	}
+	
+	public void updateTaxExemptionDocument(TaxExemption taxExemption, RequestInfo requestInfo) throws Exception {
+
+		List<Long> documentIds = getDocumentIdsForTaxExemption(taxExemption.getId());
+		for (Document document : taxExemption.getDocuments()) {
+
+			if (document.getId() != null && documentIds.contains(document.getId())) {
+	
+				String documentUpdate = TaxExemptionDocumentBuilder.updateTaxExemptionDocumentQuery();
+				Object[] documentArgs = { 
+						document.getFileStore(), 
+						document.getAuditDetails().getLastModifiedBy(),
+						document.getAuditDetails().getLastModifiedTime(), 
+						taxExemption.getId(),
+						document.getDocumentType(),
+						document.getId() };
+
+				documentIds.remove(document.getId());
+				jdbcTemplate.update(documentUpdate, documentArgs);
+			} else if (document.getId() == null) {
+				
+				Long recordId = saveTaxExemptionDocument(document, taxExemption.getId());
+			}
+
+		}
+		documentIds.forEach(id -> {
+			deleteDocuments(id);
+		});
+	}
+	
+	public List<Long> getDocumentIdsForTaxExemption(Long id) {
+
+		List<Long> documentIds = new ArrayList<Long>();
+		String searchQuery = TaxExemptionDocumentBuilder.GETDOCUMENTIDQUERY;
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(searchQuery, new Object[] { id });
+		for (Map<String, Object> row : rows) {
+			documentIds.add(getLong(row.get("id")));
+		}
+		return documentIds;
+	}
+	
+	public void deleteDocuments(Long id) {
+		
+		String deleteQuery = TaxExemptionDocumentBuilder.DELETEDOCUMENTQUERY;
+		jdbcTemplate.update(deleteQuery, new Object[] { id });
 	}
 
 	public void updateTaxExemptionDocument(Document document, Long taxExemptionId) {

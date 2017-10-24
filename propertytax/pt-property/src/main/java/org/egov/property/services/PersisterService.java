@@ -33,6 +33,7 @@ import org.egov.property.repository.DemolitionRepository;
 import org.egov.property.repository.PropertyMasterRepository;
 import org.egov.property.repository.PropertyRepository;
 import org.egov.property.repository.TaxExemptionRepository;
+import org.egov.property.repository.VacancyRemissionRepository;
 import org.egov.property.utility.ConstantUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -68,6 +69,9 @@ public class PersisterService {
 
 	@Autowired
 	DemolitionRepository demolitionRepository;
+	
+	@Autowired
+	VacancyRemissionRepository vacancyRemissionRepository;
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
@@ -606,13 +610,13 @@ public class PersisterService {
 
 		AuditDetails auditDetails = getAuditDetail(vacancyRemissionRequest.getRequestInfo());
 		vacancyRemissionRequest.getVacancyRemission().setAuditDetails(auditDetails);
-		Long vacancyRemissionId = propertyRepository
+		Long vacancyRemissionId = vacancyRemissionRepository
 				.saveVacancyRemission(vacancyRemissionRequest.getVacancyRemission());
 
 		if (vacancyRemissionRequest.getVacancyRemission().getDocuments() != null) {
 			for (Document document : vacancyRemissionRequest.getVacancyRemission().getDocuments()) {
 				document.setAuditDetails(auditDetails);
-				propertyRepository.saveVacancyRemissionDocument(document, vacancyRemissionId);
+				vacancyRemissionRepository.saveVacancyRemissionDocument(document, vacancyRemissionId);
 			}
 		}
 	}
@@ -632,15 +636,13 @@ public class PersisterService {
 		AuditDetails auditDetails = getUpdatedAuditDetails(vacancyRemissionRequest.getRequestInfo(),
 				ConstantUtility.VACANCYREMISSION_TABLE_NAME, vacancyRemissionRequest.getVacancyRemission().getId());
 		vacancyRemissionRequest.getVacancyRemission().setAuditDetails(auditDetails);
-		propertyRepository.updateVacancyRemission(vacancyRemissionRequest.getVacancyRemission());
 
-		if (vacancyRemissionRequest.getVacancyRemission().getDocuments() != null) {
-			for (Document document : vacancyRemissionRequest.getVacancyRemission().getDocuments()) {
-				document.setAuditDetails(auditDetails);
-				propertyRepository.updateVacancyRemissionDocument(document,
-						vacancyRemissionRequest.getVacancyRemission().getId());
-			}
+		for (Document document : vacancyRemissionRequest.getVacancyRemission().getDocuments()) {
+			AuditDetails docAuditDetails = getUpdatedAuditDetails(vacancyRemissionRequest.getRequestInfo(),
+					"egpt_vacancyremission_document", document.getId());
+			document.setAuditDetails(docAuditDetails);
 		}
+		vacancyRemissionRepository.updateVacancyRemission(vacancyRemissionRequest);
 	}
 
 	private AuditDetails getAuditDetail(RequestInfo requestInfo) {
@@ -801,14 +803,13 @@ public class PersisterService {
 				ConstantUtility.TAXEXEMPTION_TABLE_NAME, taxExemptionRequest.getTaxExemption().getId());
 		taxExemptionRequest.getTaxExemption().setAuditDetails(auditDetails);
 
-		taxExemptionRepository.updateTaxExemption(taxExemptionRequest.getTaxExemption());
-
 		if (taxExemptionRequest.getTaxExemption().getDocuments() != null) {
 			for (Document document : taxExemptionRequest.getTaxExemption().getDocuments()) {
-				document.setAuditDetails(auditDetails);
-				taxExemptionRepository.updateTaxExemptionDocument(document,
-						taxExemptionRequest.getTaxExemption().getId());
+				AuditDetails docAuditDetails = getUpdatedAuditDetails(taxExemptionRequest.getRequestInfo(),
+						ConstantUtility.TAXEXEMPTION_DOCUMENT_TABLE_NAME, document.getId());
+				document.setAuditDetails(docAuditDetails);
 			}
+			taxExemptionRepository.updateTaxExemption(taxExemptionRequest);
 		}
 	}
 

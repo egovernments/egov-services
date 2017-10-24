@@ -4,12 +4,6 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import org.egov.lams.common.web.contract.AuditDetails;
-import org.egov.lams.common.web.contract.LandTransfer;
-import org.egov.lams.common.web.contract.PossessionOfLand;
-import org.egov.lams.common.web.contract.UsageType;
-import org.egov.lams.common.web.contract.WorkFlowDetails;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -52,7 +46,7 @@ public class LandAcquisition {
 	private String status;
 	private WorkFlowDetails workFlowDetails;
 	private AuditDetails auditDetails;
-	private List<PossessionOfLand> possessionOfLand;
+	private List<LandPossession> possessionOfLand;
 	private List<LandTransfer> landTransfer;
 	private ValuationDetails valuationDetails;
 	private ProposalDetails proposalDetails;

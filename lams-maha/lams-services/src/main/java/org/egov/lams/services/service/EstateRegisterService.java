@@ -7,7 +7,7 @@ import org.egov.lams.common.web.contract.EstateRegister;
 import org.egov.lams.common.web.contract.FloorDetail;
 import org.egov.lams.common.web.contract.UnitDetail;
 import org.egov.lams.common.web.request.EstateRegisterRequest;
-import org.egov.lams.common.web.request.EstateRegisterResponse;
+import org.egov.lams.common.web.response.EstateRegisterResponse;
 import org.egov.lams.services.config.PropertiesManager;
 import org.egov.lams.services.factory.ResponseFactory;
 import org.egov.lams.services.util.SequenceGenUtil;

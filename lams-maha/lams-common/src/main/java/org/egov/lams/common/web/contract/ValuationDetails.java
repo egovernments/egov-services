@@ -18,7 +18,7 @@ public class ValuationDetails {
 	@NotNull
 	private String tenantId;
 	@NotNull
-	private String valuationYear;
+	private Long valuationYear;
 	@NotNull
 	private Integer valuationRate;
 	@NotNull

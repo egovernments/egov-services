@@ -12,6 +12,7 @@ let searchTemplate = function (module, numCols, path, config, definition, uiInfo
 		numCols: numCols,
 		useTimestamp: true,
 		objectName: '',
+		url: path,
 		groups: [{
 			"name": "search",
 			"label": module + ".search.title",

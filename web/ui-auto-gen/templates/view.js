@@ -24,7 +24,7 @@ let getFieldsFromInnerObject = function(reference, fields, definition, module, j
                     "jsonPath": (isArray ? (jPath + "[0]") : jPath) + "." + key,
                     "label": module + ".create." + key,
                     "pattern": definition[reference].properties[key].pattern,
-                    "type": definition[reference].properties[key].enum ? "singleValueList" : definition[reference].properties[key].format == "date" ? 'date' :  getType(definition[reference].properties[key].type),
+                    "type": definition[reference].properties[key].enum ? "singleValueList" : definition[reference].properties[key].format == "date" ? 'datePicker' :  getType(definition[reference].properties[key].type),
                     "isRequired": (definition[reference].properties[key].required || (definition[reference].required && definition[reference].required.constructor == Array && definition[reference].required.indexOf(key) > -1) ? true : false),
                     "isDisabled": definition[reference].properties[key].readOnly ? true : false,
                     "defaultValue": definition[reference].properties[key].default,
@@ -41,7 +41,8 @@ let viewTemplate = function(module, numCols, path, config, definition, uiInfoDef
         numCols: numCols,
         useTimestamp: true,
         objectName: '',
-        groups: []
+        groups: [],
+        tenantIdRequired: true
     };
     let fields = {};
     let ind = 0;
@@ -98,7 +99,7 @@ let viewTemplate = function(module, numCols, path, config, definition, uiInfoDef
     		}
     	}
     }
-    
+
     for(var key in uiInfoDef.groups) {
         localeFields[module + ".create.group.title." + key] = getTitleCase(key);
     	let group = {

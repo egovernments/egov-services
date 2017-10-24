@@ -24,7 +24,7 @@ let getFieldsFromInnerObject = function(reference, fields, definition, module, j
                     "jsonPath": (isArray ? (jPath + "[0]") : jPath) + "." + key,
                     "label": module + ".create." + key,
                     "pattern": definition[reference].properties[key].pattern,
-                    "type": definition[reference].properties[key].enum ? "singleValueList" : definition[reference].properties[key].format == "date" ? 'date' :  getType(definition[reference].properties[key].type),
+                    "type": definition[reference].properties[key].enum ? "singleValueList" : definition[reference].properties[key].format == "date" ? 'datePicker' :  getType(definition[reference].properties[key].type),
                     "isRequired": (definition[reference].properties[key].required || (definition[reference].required && definition[reference].required.constructor == Array && definition[reference].required.indexOf(key) > -1) ? true : false),
                     "isDisabled": definition[reference].properties[key].readOnly ? true : false,
                     "defaultValue": definition[reference].properties[key].default,
@@ -42,7 +42,8 @@ let updateTemplate = function(module, numCols, path, config, definition, uiInfoD
         useTimestamp: true,
         objectName: '',
         groups: [],
-        url: path
+        url: path,
+        tenantIdRequired: true
     };
     let fields = {};
     let ind = 0;
@@ -97,6 +98,23 @@ let updateTemplate = function(module, numCols, path, config, definition, uiInfoD
                         "pattern": uiInfoDef.dependents[i].affectedFields[key].pattern
                     })
                 }
+            }
+        }
+    }
+    
+    if(uiInfoDef.autoFills && uiInfoDef.autoFills.length) {
+        for(var i=0; i< uiInfoDef.autoFills.length; i++) {
+            if(fields[uiInfoDef.autoFills[i].onChangeField]) {
+                fields[uiInfoDef.autoFills[i].onChangeField].autoCompleteDependancy = {
+                    autoCompleteUrl: uiInfoDef.autoFills[i].url,
+                    autoFillFields: {}
+                };
+
+                for(var j=0; j< uiInfoDef.autoFills[i].affectedFields.length; j++) {
+                    fields[uiInfoDef.autoFills[i].onChangeField].autoCompleteDependancy.autoFillFields[uiInfoDef.autoFills[i].affectedFields[j]] = uiInfoDef.autoFills[i].affectJSONPath[j];
+                }
+            } else {
+                errors[uiInfoDef.autoFills[i].onChangeField] = "Field exists in x-ui-info AutoFills section but not present in API specifications. REFERENCE PATH: " + uiInfoDef.referencePath;
             }
         }
     }

@@ -15,10 +15,23 @@ public class TopComplaintTypesResponse {
 
     private String complaintTypeName;
 
+    private String month;
+
+    private String code;
+
     public org.egov.pgrrest.read.web.contract.TopComplaintTypesResponse toContract(){
         return org.egov.pgrrest.read.web.contract.TopComplaintTypesResponse.builder()
                .count(count)
                .complaintTypeName(complaintTypeName)
                .build();
+    }
+
+    public org.egov.pgrrest.read.web.contract.TopComplaintTypesResponse toTopFiveComplaintTypesContract(){
+        return org.egov.pgrrest.read.web.contract.TopComplaintTypesResponse.builder()
+            .count(count)
+            .complaintTypeName(complaintTypeName)
+            .month(month)
+            .code(code)
+            .build();
     }
 }

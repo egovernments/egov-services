@@ -35,11 +35,12 @@ public class DashBoardController {
 
     @PostMapping("/complainttype")
     public List<org.egov.pgrrest.read.web.contract.TopComplaintTypesResponse> getTopComplaintTypesCount(@RequestParam(value = "tenantId", defaultValue = "default") String tenantId,
-                                                                                                        @RequestParam(value = "size", defaultValue = "5") Integer size){
+                                                                                                        @RequestParam(value = "size", defaultValue = "5") Integer size,
+                                                                                                        @RequestParam(value = "type", required = false, defaultValue = "") String type){
 
-        List<TopComplaintTypesResponse> responseList = dashboardService.getTopComplaintTypes(tenantId, size);
+        List<TopComplaintTypesResponse> responseList = dashboardService.getTopComplaintTypes(tenantId, size,type);
 
-        return getTopComplaintTypesList(responseList);
+        return getTopComplaintTypesList(responseList, type);
     }
 
     @PostMapping("/ageing")
@@ -63,10 +64,10 @@ public class DashBoardController {
     }
 
     private List<org.egov.pgrrest.read.web.contract.TopComplaintTypesResponse> getTopComplaintTypesList(
-        List<TopComplaintTypesResponse> responseList){
+        List<TopComplaintTypesResponse> responseList, String type){
 
         return responseList.stream()
-            .map(record -> record.toContract())
+            .map(record -> type.equalsIgnoreCase("topfive") ? record.toTopFiveComplaintTypesContract() : record.toContract())
             .collect(Collectors.toList());
     }
 
@@ -74,7 +75,7 @@ public class DashBoardController {
         List<org.egov.pgrrest.read.domain.model.AgeingResponse> responseList){
 
         return responseList.stream()
-            .map(record -> record.toContract())
+            .map(record ->  record.toContract())
             .collect(Collectors.toList());
     }
 

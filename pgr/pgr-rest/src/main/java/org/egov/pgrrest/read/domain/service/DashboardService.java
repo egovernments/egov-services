@@ -29,7 +29,10 @@ public class DashboardService {
         return response;
     }
 
-    public List<TopComplaintTypesResponse> getTopComplaintTypes(String tenantId, int size){
+    public List<TopComplaintTypesResponse> getTopComplaintTypes(String tenantId, int size, String type){
+        if(type.equalsIgnoreCase("topfive"))
+            return dashboardRepository.getTopFiveComplaintTypesMonthly(tenantId);
+
         return dashboardRepository.getTopComplaintTypeWithCount(tenantId, size);
     }
 

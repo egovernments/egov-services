@@ -3,10 +3,7 @@ package org.egov.pgrrest.read.persistence.repository;
 import org.egov.pgrrest.read.domain.model.AgeingResponse;
 import org.egov.pgrrest.read.domain.model.DashboardResponse;
 import org.egov.pgrrest.read.domain.model.TopComplaintTypesResponse;
-import org.egov.pgrrest.read.persistence.rowmapper.AgeingRowMapper;
-import org.egov.pgrrest.read.persistence.rowmapper.DailyCountRowMapper;
-import org.egov.pgrrest.read.persistence.rowmapper.DashboardRowMapper;
-import org.egov.pgrrest.read.persistence.rowmapper.TopComplaintsRowMapper;
+import org.egov.pgrrest.read.persistence.rowmapper.*;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -63,6 +60,28 @@ public class DashBoardRepository {
             new TopComplaintsRowMapper());
     }
 
+    public List<TopComplaintTypesResponse> getTopFiveComplaintTypesMonthly(String tenantId){
+
+        String query = "select count(*) as count, cs.servicecode as code, ctype.name as complainttypename, to_char(date_trunc('month',cs.createddate), 'MONTH') as month" +
+            " from submission cs, egpgr_complainttype ctype" +
+            " where cs.servicecode = ctype.code" +
+            " and servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId and keyword = 'complaint')" +
+            " and cs.createddate > current_date - interval '7' month" +
+            " and cs.tenantid = :tenantId and ctype.tenantid = :tenantId" +
+            " and servicecode in (select result.code from (select count(*) as count, ctype.name as complainttypename, cs.servicecode as code" +
+            " from submission cs, egpgr_complainttype ctype, servicetype_keyword sk" +
+            " where cs.servicecode = ctype.code and ctype.code = sk.servicecode and sk.keyword = 'complaint'" +
+            " and cs.createddate > current_date - interval '7' month" +
+            " and cs.tenantid = :tenantId and sk.tenantid = :tenantId and ctype.tenantid = :tenantId" +
+            " group by cs.servicecode, complainttypename" +
+            " order by count DESC LIMIT 5 ) as result)" +
+            " group by date_trunc('month',cs.createddate), cs.servicecode, ctype.name" +
+            " order by code, count";
+
+        return namedParameterJdbcTemplate.query(query,getSearchMap(tenantId), new TopComplaintTypesRowMapper());
+
+    }
+
     public List<AgeingResponse> getAgeingOfComplaints(String tenantId){
 
         String query = "select " +
@@ -83,6 +102,8 @@ public class DashBoardRepository {
         return namedParameterJdbcTemplate.query(query, getSearchMap(tenantId), new AgeingRowMapper());
 
     }
+
+
 
     private HashMap getSearchMap(String tenantId) {
         HashMap<String, Object> parametersMap = new HashMap<>();

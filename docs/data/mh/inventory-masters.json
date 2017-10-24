@@ -1,0 +1,153 @@
+{  
+   "tenantId":"mh",
+   "moduleName":"inventory",
+   "UomCategory":[  
+      {  
+         "id":1,
+         "tenantId":"mh",
+         "uomCategory":"WEIGHT",
+         "name":"Weight",
+         "code":"WEIGHT",
+         "description":"Weight",
+         "fromDate":1508740856,
+         "toDate":1893436200
+      },
+      {  
+         "id":2,
+         "tenantId":"mh",
+         "uomCategory":"LENGTH",
+         "name":"Length",
+         "code":"LENGTH",
+         "description":"Length",
+         "fromDate":1508740856,
+         "toDate":1893436200
+      },
+      {  
+         "id":3,
+         "tenantId":"mh",
+         "uomCategory":"AREA",
+         "name":"Area",
+         "code":"AREA",
+         "description":"Area",
+         "fromDate":1508740856,
+         "toDate":1893436200
+      }
+   ],
+   "Uom":[  
+      {  
+         "id":1,
+         "tenantId":"mh",
+         "code":"KGS",
+         "description":"Kilograms",
+         "uomCategory":"WEIGHT",
+         "baseUom":false,
+         "fromDate":1508740856,
+         "toDate":1893436200,
+         "conversionFactor":1000
+      },
+      {  
+         "id":2,
+         "tenantId":"mh",
+         "code":"GMS",
+         "description":"Grams",
+         "uomCategory":"WEIGHT",
+         "baseUom":false,
+         "fromDate":1508740856,
+         "toDate":1893436200,
+         "conversionFactor":1
+      },
+      {  
+         "id":3,
+         "tenantId":"mh",
+         "code":"TON",
+         "description":"Ton",
+         "uomCategory":"WEIGHT",
+         "baseUom":false,
+         "fromDate":1508740856,
+         "toDate":1893436200,
+         "conversionFactor":1
+      }
+   ],
+   "Store":[  
+      {  
+         "id":1,
+         "tenantId":"mh",
+         "code":"STORE1",
+         "name":"Fake Store Name 1",
+         "department":"DEPT1",
+         "description":"Fake Store Description 1",
+         "centralStore":false,
+         "billingAddress":"Fake Store Billing Address 1",
+         "deliveryAddress":"Fake Store Delivery Address 1",
+         "storeInChargeEmployeeCode":"EMP1",
+         "contactDetails":"Fake Store Contact Details 1",
+         "emailAddress":"fakeemail1@xyz.com"
+      },
+      {  
+         "id":2,
+         "tenantId":"mh",
+         "code":"STORE2",
+         "name":"Fake Store Name 2",
+         "department":"DEPT2",
+         "description":"Fake Store Description 2",
+         "centralStore":false,
+         "billingAddress":"Fake Store Billing Address 2",
+         "deliveryAddress":"Fake Store Delivery Address 2",
+         "storeInChargeEmployeeCode":"EMP2",
+         "contactDetails":"Fake Store Contact Details ",
+         "emailAddress":"fakeemail2@xyz.com"
+      },
+      {  
+         "id":3,
+         "tenantId":"mh",
+         "code":"STORE3",
+         "name":"Fake Store Name 3",
+         "department":"DEPT3",
+         "description":"Fake Store Description 3",
+         "centralStore":true,
+         "billingAddress":"Fake Store Billing Address 3",
+         "deliveryAddress":"Fake Store Delivery Address 3",
+         "storeInChargeEmployeeCode":"EMP3",
+         "contactDetails":"Fake Store Contact Details ",
+         "emailAddress":"fakeemail3@xyz.com"
+      }
+   ],
+   "MaterialType":[  
+      {  
+         "id":1,
+         "tenantId":"mh",
+         "code":"MT1",
+         "name":"Fake Material Type Name 1",
+         "description":"Fake Material Type Description 1",
+         "parentMaterialTypeCode":null,
+         "storeCode":"STORE1",
+         "department":"DEPT1",
+         "stockInHandCode":"SIH1",
+         "active":true
+      },
+      {  
+         "id":2,
+         "tenantId":"mh",
+         "code":"MT2",
+         "name":"Fake Material Type Name 2",
+         "description":"Fake Material Type Description 2",
+         "parentMaterialTypeCode":null,
+         "storeCode":"STORE2",
+         "department":"DEPT2",
+         "stockInHandCode":"SIH2",
+         "active":true
+      },
+      {  
+         "id":3,
+         "tenantId":"mh",
+         "code":"MT3",
+         "name":"Fake Material Type Name 3",
+         "description":"Fake Material Type Description 3",
+         "parentMaterialTypeCode":null,
+         "storeCode":"STORE3",
+         "department":"DEPT3",
+         "stockInHandCode":"SIH3",
+         "active":true
+      }
+   ]
+}

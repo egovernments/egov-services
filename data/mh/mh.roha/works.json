@@ -1,10 +1,10 @@
 {
   "tenantId": "mh.roha",
-  "moduleName": "WOM",
+  "moduleName": "works",
   "Contractor": [
     {
       "id": 1,
-      "tenantId": "mh",
+      "tenantId": "mh.roha",
       "name": "Ritesh - Fake",
       "correspondenceAddress": "Lecturrer colony Bhalki - Fake",
       "paymentAddress": "Lecturrer colony Bhalki - Fake",
@@ -25,7 +25,7 @@
     },
     {
       "id": 2,
-      "tenantId": "mh",
+      "tenantId": "mh.roha",
       "name": "Manoj - Fake",
       "correspondenceAddress": "JP nagar Bhalki - Fake",
       "paymentAddress": "JP nagar Bhalki - Fake",
@@ -46,7 +46,7 @@
     },
     {
       "id": 3,
-      "tenantId": "mh",
+      "tenantId": "mh.roha",
       "name": "Prashant - Fake",
       "correspondenceAddress": "BTM Bhalki - Fake",
       "paymentAddress": "BTM Bhalki - Fake",
@@ -69,7 +69,7 @@
   "ScheduleOfRate": [
     {
       "id": 1,
-      "tenantId": "mh",
+      "tenantId": "mh.roha",
       "categoryType": "EXV - FAKE",
       "SORCode": "EARTH WORK - FAKE",
       "SORDescription": "Earth work in surface excavation - FAKE",
@@ -77,14 +77,14 @@
       "sorRates": [
         {
           "id": 1,
-          "tenantId": "mh",
+          "tenantId": "mh.roha",
           "rate": 10.0,
           "fromDate": 1546541452157,
           "toDate": 1546541452157
         },
         {
           "id": 2,
-          "tenantId": "mh",
+          "tenantId": "mh.roha",
           "value": 20,
           "fromDate": 1546541452157,
           "toDate": 1546541452157
@@ -93,7 +93,7 @@
     },
     {
       "id": 2,
-      "tenantId": "mh",
+      "tenantId": "mh.roha",
       "categoryType": "CCR - FAKE",
       "SORCode": "Road - FAKE",
       "SORDescription": "Construction of Roads - FAKE",
@@ -101,14 +101,14 @@
       "sorRates": [
         {
           "id": 1,
-          "tenantId": "mh",
+          "tenantId": "mh.roha",
           "rate": 50.0,
           "fromDate": 1546541452157,
           "toDate": 1546541452157
         },
         {
           "id": 2,
-          "tenantId": "mh",
+          "tenantId": "mh.roha",
           "value": 20,
           "fromDate": 1546541452157,
           "toDate": 1546541452157
@@ -117,7 +117,7 @@
     },
     {
       "id": 3,
-      "tenantId": "mh",
+      "tenantId": "mh.roha",
       "categoryType": "BTR - FAKE",
       "SORCode": "BMCM - FAKE",
       "SORDescription": "Providing and laying bituminous macadam 50mm thick using 0.283 Cu.m of 25 10mm metal - FAKE",
@@ -125,14 +125,14 @@
       "sorRates": [
         {
           "id": 1,
-          "tenantId": "mh",
+          "tenantId": "mh.roha",
           "rate": 50.0,
           "fromDate": 1546541452157,
           "toDate": 1546541452157
         },
         {
           "id": 2,
-          "tenantId": "mh",
+          "tenantId": "mh.roha",
           "value": 20,
           "fromDate": 1546541452157,
           "toDate": 1546541452157

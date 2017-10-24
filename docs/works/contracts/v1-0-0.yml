@@ -2135,6 +2135,16 @@ definitions:
           $ref: '#/definitions/MeasurementBookDetails'
         loaMeasurementSheet:
           $ref: '#/definitions/LOAMeasurementSheet'
+        partRate:
+          type: integer
+          format: BigDecimal
+          maxLength: 20
+          description: Part Rate of the Measurement sheet
+        revisedRate:
+          type: integer
+          format: BigDecimal
+          maxLength: 20
+          description: Revised Rate of the Measurement sheet
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:

@@ -24,7 +24,7 @@ let getFieldsFromInnerObject = function(reference, fields, definition, module, j
                     "jsonPath": (isArray ? (jPath + "[0]") : jPath) + "." + key,
                     "label": module + ".create." + key,
                     "pattern": definition[reference].properties[key].pattern,
-                    "type": definition[reference].properties[key].enum ? "singleValueList" : definition[reference].properties[key].format ? getType(definition[reference].properties[key].format) :  getType(definition[reference].properties[key].type),
+                    "type": definition[reference].properties[key].enum ? "singleValueList" : definition[reference].properties[key].format && ["number", "integer", "double", "long", "float"].indexOf(definition[reference].properties[key].type) == -1 ? getType(definition[reference].properties[key].format) :  getType(definition[reference].properties[key].type),
                     "isRequired": (definition[reference].properties[key].required || (definition[reference].required && definition[reference].required.constructor == Array && definition[reference].required.indexOf(key) > -1) ? true : false),
                     "isDisabled": definition[reference].properties[key].readOnly ? true : false,
                     "defaultValue": definition[reference].properties[key].default,
@@ -33,7 +33,7 @@ let getFieldsFromInnerObject = function(reference, fields, definition, module, j
                     "patternErrorMsg": definition[reference].properties[key].pattern ? (module + ".create.field.message." + key) : ""
                 };
 
-                if(definition[reference].properties[key].maxLength && definition[reference].properties[key].maxLength >= 256)
+                if(fields[(isArray ? (jPath + "[0]") : jPath) + "." + key].type == "text" && definition[reference].properties[key].maxLength && definition[reference].properties[key].maxLength > 256)
                     fields[(isArray ? (jPath + "[0]") : jPath) + "." + key].type = "textArea";
             }
         }
@@ -84,7 +84,6 @@ let updateTemplate = function(module, numCols, path, config, definition, uiInfoD
         for(var i=0; i<uiInfoDef.externalData.length; i++) {
             if(fields[uiInfoDef.externalData[i].fieldName]) {
                 fields[uiInfoDef.externalData[i].fieldName].url = uiInfoDef.externalData[i].url + getQuery(uiInfoDef.externalData[i].url, uiInfoDef.externalData[i].keyPath, uiInfoDef.externalData[i].valPath);
-                fields[uiInfoDef.externalData[i].fieldName].type = 'singleValueList';
             } else {
                 errors[uiInfoDef.externalData[i].fieldName] = "Field exists in x-ui-info externalData section but not present in API specifications. REFERENCE PATH: " + uiInfoDef.referencePath;
             }
@@ -120,16 +119,6 @@ let updateTemplate = function(module, numCols, path, config, definition, uiInfoD
                 }
             } else {
                 errors[uiInfoDef.autoFills[i].onChangeField] = "Field exists in x-ui-info AutoFills section but not present in API specifications. REFERENCE PATH: " + uiInfoDef.referencePath;
-            }
-        }
-    }
-
-    if(uiInfoDef.multiValueList && uiInfoDef.multiValueList.length) {
-        for(var i=0; i<uiInfoDef.multiValueList.length; i++) {
-            if(fields[uiInfoDef.multiValueList[i]]) {
-                fields[uiInfoDef.multiValueList[i]].type = "multiValueList";
-            } else {
-                errors[uiInfoDef.multiValueList[i]] = "Field exists in x-ui-info multiValueList section but not present in API specifications. REFERENCE PATH: " + uiInfoDef.referencePath;   
             }
         }
     }

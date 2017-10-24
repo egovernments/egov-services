@@ -38,7 +38,7 @@ let searchTemplate = function (module, numCols, path, config, definition, uiInfo
 				"jsonPath": paramKey,
 				"label": module + ".create" + paramKey,
 				"pattern": definition[paramKey].pattern,
-				"type": definition[paramKey].enum ? "singleValueList" : definition[paramKey].format ? getType(definition[paramKey].format) : getType(definition[paramKey].type),
+				"type": definition[paramKey].enum ? "singleValueList" : definition[paramKey].format && ["number", "integer", "double", "long", "float"].indexOf(definition[paramKey].type) == -1 ? getType(definition[paramKey].format) : getType(definition[paramKey].type),
 				"isRequired": definition[paramKey].required,
 				"isDisabled": definition[paramKey].readOnly ? true : false,
 				"defaultValue": definition[paramKey].default,
@@ -46,6 +46,9 @@ let searchTemplate = function (module, numCols, path, config, definition, uiInfo
 				"minLength": definition[paramKey].minLength,
 				"patternErrorMsg": module + ".create.field.message." + paramKey
 			};
+
+			if(fields[paramKey].type == "text" && definition[paramKey].maxLength && definition[paramKey].maxLength > 256)
+				fields[paramKey].type = "textArea";
 		} else {
 			let paramKey = parameterConfig[i].name;
 			localeFields[module + ".create" + paramKey] = getTitleCase(paramKey);
@@ -54,7 +57,7 @@ let searchTemplate = function (module, numCols, path, config, definition, uiInfo
 				"jsonPath": paramKey,
 				"label": module + ".create" + paramKey,
 				"pattern": parameterConfig[i].pattern,
-				"type": parameterConfig[i].enum ? "singleValueList" : parameterConfig[i].format ? getType(parameterConfig[i].format) : getType(parameterConfig[i].type),
+				"type": parameterConfig[i].enum ? "singleValueList" : parameterConfig[i].format && ["number", "integer", "double", "long", "float"].indexOf(parameterConfig[i].type) == -1 ? getType(parameterConfig[i].format) : getType(parameterConfig[i].type),
 				"isRequired": parameterConfig[i].required,
 				"isDisabled": parameterConfig[i].readOnly ? true : false,
 				"defaultValue": parameterConfig[i].default,
@@ -79,19 +82,6 @@ let searchTemplate = function (module, numCols, path, config, definition, uiInfo
                         "pattern": uiInfoDef.dependents[i].affectedFields[key].pattern
                     })
                 }
-            }
-        }
-    }
-
-	if(uiInfoDef.multiValueList && uiInfoDef.multiValueList.length) {
-        for(var i=0; i<uiInfoDef.multiValueList.length; i++) {
-        	var splitArr = uiInfoDef.multiValueList[i].split(".");
-        	splitArr.shift();
-        	var paramKey = splitArr.join(".");
-            if(fields[paramKey]) {
-                fields[paramKey].type = "multiValueList";
-            } else {
-                errors[paramKey] = "Field exists in x-ui-info multiValueList section but not present in API specifications. REFERENCE PATH: " + uiInfoDef.referencePath;   
             }
         }
     }

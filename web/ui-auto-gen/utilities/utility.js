@@ -19,9 +19,13 @@ function setLabels(json, path) {
 function getType(type) {
     switch (type) {
         case 'integer':
+            return 'number';
         case 'float':
+            return 'number';
         case 'double':
+            return 'number';
         case 'long':
+            return 'number';
         case 'number':
             return 'number';
         case 'string':
@@ -42,6 +46,12 @@ function getType(type) {
             return 'autoCompelete';
         case 'aadhar':
             return 'aadhar';
+        case 'checkbox':
+            return 'checkbox';
+        case 'singleValueList':
+            return 'singleValueList';
+        case 'multiValueList':
+            return 'multiValueList';
         default:
             return '';
     }

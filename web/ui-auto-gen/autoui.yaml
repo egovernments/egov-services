@@ -65,10 +65,10 @@ paths:
             format: int32
             in: query
             description: int of the AutoUi
-          - name: redio
+          - name: radio
             type: boolean
             in: query
-            description: redio of the AutoUi
+            description: radio of the AutoUi
           - name: checkBox1
             type: boolean
             in: query
@@ -157,13 +157,25 @@ definitions:
           format: date
           description: datePicker of the AutoUi.
         dropDown:
-          $ref: "#/definitions/VehicleType"
+          type: string
+          description: dropDown of the AutoUi.
+          maxLength: 256
+          minLength: 1
         parentDropDown:
-          $ref: "#/definitions/VehicleType"
+          type: string
+          description: parentDropDown of the AutoUi.
+          maxLength: 256
+          minLength: 1
         chaildDropDown:
-          $ref: "#/definitions/Vehicle"
+          type: string
+          description: chaildDropDown of the AutoUi.
+          maxLength: 256
+          minLength: 1
         autoComplete:
-          $ref: "#/definitions/VehicleType"
+          type: string
+          description: autoComplete of the AutoUi.
+          maxLength: 256
+          minLength: 1
         autoFill:
           type: string
           description: autoFill of the AutoUi.
@@ -186,9 +198,9 @@ definitions:
           type: integer
           format: int32
           description: int of AutoUi
-        redio:
+        radio:
           type: boolean
-          description: redio of the AutoUi.
+          description: radio of the AutoUi.
         checkBox1:
           type: boolean
           description: checkBox of the AutoUi.
@@ -196,7 +208,10 @@ definitions:
           type: boolean
           description: checkBox of the AutoUi.
         multiSelectDropDown:
-          $ref: "#/definitions/VehicleType"
+          type: string
+          description: multiSelectDropDown of the AutoUi.
+          maxLength: 256
+          minLength: 1
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
@@ -212,7 +227,7 @@ definitions:
       - double
       - long
       - int
-      - redio
+      - radio
       - checkBox1
       - checkBox2
       - multiSelectDropDown

@@ -865,8 +865,8 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "ac.create.Asset.account.code"},{label: "ac.create.Asset.Name"},  {label: "ac.create.Department"}, {label: "Date of Creation"}],
-			"values": ["code","name", "departmentCode", "dateOfCreation"],
+			"header": [{label: "Asset Code"},{label: "ac.create.Asset.Name"},  {label: "ac.create.Mode.of.Acquisition"}, {label: "Date of Creation"}],
+			"values": ["code","name", "modeOfAcquisition", "dateOfCreation"],
 			"resultPath": "Assets",
 			// "rowClickUrlUpdate": "/update/asset/assetMovable/{id}",
 			 "rowClickUrlView": "/view/asset/assetImmovable/{id}"
@@ -874,11 +874,7 @@ var dat = {
 	},
 	"asset.view": {
 		"numCols": 12/2,
-<<<<<<< f13a53aa7f500b1f27d7ade4a75d3b4e5ef57dc9
-		"url": "asset-services-maha/assets/_search?ids={id}",
-=======
-		"url": "asset-services/assets/_search?id={id}",
->>>>>>> view screen updated for search
+		"url": "asset-services-maha/assets/_search?id={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "Assets",

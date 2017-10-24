@@ -6,28 +6,28 @@ UIInfo:
       - EstateRegisters[0].estateNumber
     VehicleDetails2:
       fields:
-      - EstateRegisters[0].EstateRegister.id
-      - EstateRegisters[0].EstateRegister.registerName
+      - EstateRegisters[0].id
+      - EstateRegisters[0].registerName
     VehicleDetails3:
       fields:
-      - EstateRegisters[0].EstateRegister.subRegisterName
-      - EstateRegisters[0].EstateRegister.regionalOffice
-      - EstateRegisters[0].EstateRegister.location
-      - EstateRegisters[0].EstateRegister.propertyName
-      - EstateRegisters[0].EstateRegister.landID
-      - EstateRegisters[0].EstateRegister.stateId		
+      - EstateRegisters[0].subRegisterName
+      - EstateRegisters[0].regionalOffice
+      - EstateRegisters[0].location
+      - EstateRegisters[0].propertyName
+      - EstateRegisters[0].landID
+      - EstateRegisters[0].stateId		
   ExternalData:
-  - fieldName: vehicleFuellingDetails[0].vehicleType.name
-    url: "/lams-maha/v1/_get?&moduleName=lams-maha&masterName=UsageType&tenantId=mh"
+  - fieldName: EstateRegisters[0].estateNumber
+    url: "/lams-maha/v1/_get?&moduleName=lams-maha"
     keyPath: "$..id"
     valuePath: "$..name"
-  - fieldName: vehicleFuellingDetails[0].vehicleRegNo.regNumber
-    url: "/lams-maha/v1/_get?&moduleName=lams-maha&masterName=Purpose&tenantId=mh"
+  - fieldName: EstateRegisters[0].registerName
+    url: "/lams-maha/v1/_get?&moduleName=lams-maha"
     keyPath: "$..id"
     valuePath: "$..regNumber"
   SearchResult:
     rowClickUrlUpdate: /update/estates/{registerName}
-    rowClickUrlView: /view/vehiclefuellingdetails/{registerName}
+    rowClickUrlView: /view/estates/{registerName}
     columns:
     - registerName
     - subRegisterName
@@ -52,5 +52,5 @@ UIInfo:
     - constructionStartDate
     - constructionEndDate
     - stateId
-    resultObjectName: EstateRegister
+    resultObjectName: EstateRegisters
 

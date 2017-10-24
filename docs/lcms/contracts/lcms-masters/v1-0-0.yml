@@ -1,0 +1,1322 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: eGov LegalCase Masters
+  description: >-
+    eGov LegalCase Masters manages all the masters belongs to Legal case
+    License.
+  contact:
+    name: eGovernments Foundation
+    email: contacts@egovernments.org
+schemes:
+  - https
+basePath: /
+x-common-path: >-
+  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml
+x-api-id: org.egov.lcms.masters
+paths:
+  /courtmaster/_search:
+    post:
+      summary: Get the list of courts
+      description: courtmaster
+      tags:
+        - CourtMaster
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - name: ids
+          type: array
+          items:
+            type: integer
+            format: int64
+          in: query
+          maxItems: 50
+          description: comma seperated list of Ids
+        - name: name
+          type: string
+          in: query
+          description: name of the Court
+          maxLength: 128
+        - name: code
+          type: string
+          in: query
+          description: code of the Court
+          maxLength: 64
+        - name: active
+          type: string
+          in: query
+          description: >-
+            True will be set in cases where only active Court are needed and
+            False will be set when inactive Court are needed and no value will
+            be set when all courts are needed.
+        - $ref: '#/parameters/pageSize'
+        - $ref: '#/parameters/offSet'
+      responses:
+        '200':
+          description: Courts(s) retrieved Successfully
+          schema:
+            $ref: '#/definitions/CourtMasterResponse'
+        '400':
+          description: Invalid Input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /sidemaster/_search:
+    post:
+      summary: Get the list of side
+      description: Side search Api
+      tags:
+        - SideMaster
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - name: ids
+          type: array
+          items:
+            type: integer
+            format: int64
+          in: query
+          maxItems: 50
+          description: comma seperated list of Ids
+        - name: name
+          type: string
+          in: query
+          description: name of the Side
+          maxLength: 128
+        - name: code
+          type: string
+          in: query
+          description: code of the Side
+          maxLength: 64
+        - name: active
+          type: boolean
+          in: query
+          description: >-
+            True will be set in cases where only active Status are needed and
+            False will be set when inactive Status are needed and no value will
+            be set when all courts are needed.
+        - $ref: '#/parameters/pageSize'
+        - $ref: '#/parameters/offSet'
+      responses:
+        '200':
+          description: side(s) retrieved Successfully
+          schema:
+            $ref: '#/definitions/SideMasterResponse'
+        '400':
+          description: Invalid Input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /casetypemaster/_search:
+    post:
+      summary: Get the list of case types
+      description: Case Type search Api
+      tags:
+        - CaseTypeMaster
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - name: ids
+          type: array
+          items:
+            type: integer
+            format: int64
+          in: query
+          maxItems: 50
+          description: comma seperated list of Ids
+        - name: name
+          type: string
+          in: query
+          description: name of the case type
+          maxLength: 128
+        - name: code
+          type: string
+          in: query
+          description: code of the case type
+          maxLength: 64
+        - name: active
+          type: boolean
+          in: query
+          description: >-
+            True will be set in cases where only active Status are needed and
+            False will be set when inactive Status are needed and no value will
+            be set when all courts are needed.
+        - $ref: '#/parameters/pageSize'
+        - $ref: '#/parameters/offSet'
+      responses:
+        '200':
+          description: Case types(s) retrieved Successfully
+          schema:
+            $ref: '#/definitions/CaseTypeMasterResponse'
+        '400':
+          description: Invalid Input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /casecategorymaster/_search:
+    post:
+      summary: Get the list of case categories
+      description: Case Category  search Api
+      tags:
+        - CaseCategoryMaster
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - name: ids
+          type: array
+          items:
+            type: integer
+            format: int64
+          in: query
+          maxItems: 50
+          description: comma seperated list of Ids
+        - name: name
+          type: string
+          in: query
+          description: name of the case category
+          maxLength: 128
+        - name: code
+          type: string
+          in: query
+          description: code of the case category
+          maxLength: 64
+        - name: active
+          type: boolean
+          in: query
+          description: >-
+            True will be set in cases where only active Status are needed and
+            False will be set when inactive Status are needed and no value will
+            be set when all courts are needed.
+        - $ref: '#/parameters/pageSize'
+        - $ref: '#/parameters/offSet'
+      responses:
+        '200':
+          description: case categories retrieved Successfully
+          schema:
+            $ref: '#/definitions/CaseCategoryMasterResponse'
+        '400':
+          description: Invalid Input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /benchmaster/_search:
+    post:
+      summary: Get the list of benchs
+      description: Bench  search Api
+      tags:
+        - BenchMaster
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - name: ids
+          type: array
+          items:
+            type: integer
+            format: int64
+          in: query
+          maxItems: 50
+          description: comma seperated list of Ids
+        - name: name
+          type: string
+          in: query
+          description: name of the bench
+          maxLength: 128
+        - name: code
+          type: string
+          in: query
+          description: code of the bench
+          maxLength: 64
+        - name: active
+          type: boolean
+          in: query
+          description: >-
+            True will be set in cases where only active Status are needed and
+            False will be set when inactive Status are needed and no value will
+            be set when all courts are needed.
+        - $ref: '#/parameters/pageSize'
+        - $ref: '#/parameters/offSet'
+      responses:
+        '200':
+          description: benchs retrieved Successfully
+          schema:
+            $ref: '#/definitions/BenchMasterResponse'
+        '400':
+          description: Invalid Input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /stampmaster/_search:
+    post:
+      summary: Get the list of stamps
+      description: Stamp  search Api
+      tags:
+        - StampMaster
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - name: ids
+          type: array
+          items:
+            type: integer
+            format: int64
+          in: query
+          maxItems: 50
+          description: comma seperated list of Ids
+        - name: name
+          type: string
+          in: query
+          description: name of the stamp
+          maxLength: 128
+        - name: code
+          type: string
+          in: query
+          description: code of the stamp
+          maxLength: 64
+        - name: active
+          type: boolean
+          in: query
+          description: >-
+            True will be set in cases where only active Status are needed and
+            False will be set when inactive Status are needed and no value will
+            be set when all courts are needed.
+        - $ref: '#/parameters/pageSize'
+        - $ref: '#/parameters/offSet'
+      responses:
+        '200':
+          description: stamps retrieved Successfully
+          schema:
+            $ref: '#/definitions/StampMasterResponse'
+        '400':
+          description: Invalid Input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /casestatusmaster/_search:
+    post:
+      summary: Get the list of case status
+      description: Case Status search Api
+      tags:
+        - CaseStatusMaster
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - name: ids
+          type: array
+          items:
+            type: integer
+            format: int64
+          in: query
+          maxItems: 50
+          description: comma seperated list of Ids
+        - name: name
+          type: string
+          in: query
+          description: name of the charge
+          maxLength: 128
+        - name: code
+          type: string
+          in: query
+          description: code of the charge
+          maxLength: 64
+        - name: active
+          type: boolean
+          in: query
+          description: >-
+            True will be set in cases where only active Status are needed and
+            False will be set when inactive Status are needed and no value will
+            be set when all courts are needed.
+        - $ref: '#/parameters/pageSize'
+        - $ref: '#/parameters/offSet'
+      responses:
+        '200':
+          description: case statuses  retrieved Successfully
+          schema:
+            $ref: '#/definitions/CaseStatusMasterResponse'
+        '400':
+          description: Invalid Input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /chargemaster/_search:
+    post:
+      summary: Get the list of charges
+      description: Charge search Api
+      tags:
+        - ChargeMaster
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - name: ids
+          type: array
+          items:
+            type: integer
+            format: int64
+          in: query
+          maxItems: 50
+          description: comma seperated list of Ids
+        - name: name
+          type: string
+          in: query
+          description: name of the charge
+          maxLength: 128
+        - name: code
+          type: string
+          in: query
+          description: code of the charge
+          maxLength: 64
+        - name: fromValue
+          type: number
+          in: query
+          description: from value of the charge
+          required: false
+        - name: toValue
+          type: number
+          in: query
+          description: to value of the charge
+          required: false
+        - name: courtType
+          type: string
+          in: query
+          description: court type of the charge
+          required: false
+        - name: caseType
+          type: string
+          in: query
+          description: case type of the charge
+          required: false
+        - name: validDate
+          type: integer
+          format: int64
+          in: query
+          description: >-
+            This date will be compared between the available from and to dates
+            for search results
+          required: false
+        - name: fromDate
+          in: query
+          description: >-
+            If fromDate is given then toDate also mandatory. All the periods
+            from where fromDate is fall in the period to till periods where
+            toDate is fall in the period.
+          required: false
+          type: integer
+          format: int64
+        - name: toDate
+          in: query
+          description: >-
+            If fromDate is given then toDate also mandatory. All the periods
+            from where fromDate is fall in the period to till periods where
+            toDate is fall in the period.
+          required: false
+          type: integer
+          format: int64
+        - name: active
+          type: boolean
+          in: query
+          description: >-
+            True will be set in cases where only active Status are needed and
+            False will be set when inactive Status are needed and no value will
+            be set when all courts are needed.
+        - $ref: '#/parameters/pageSize'
+        - $ref: '#/parameters/offSet'
+      responses:
+        '200':
+          description: charges  retrieved Successfully
+          schema:
+            $ref: '#/definitions/ChargeMasterResponse'
+        '400':
+          description: Invalid Input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /advocatemaster/v1/_search:
+    post:
+      summary: Get the list of advocateMaster(s)
+      description: Advocate Master
+      tags:
+        - AdvocateMaster
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - name: ids
+          type: array
+          items:
+            type: integer
+            format: int64
+          in: query
+          maxItems: 50
+          description: comma seperated list of Ids
+        - name: name
+          type: string
+          in: query
+          description: name of the Advocate Master
+          maxLength: 100
+        - name: code
+          type: string
+          in: query
+          description: code of the Advocate
+          maxLength: 100
+        - name: organizationName
+          type: string
+          in: query
+          description: organizationName of the Advocate
+          maxLength: 100
+        - name: adharNo
+          type: string
+          in: query
+          description: adharNo of the Advocate
+        - name: panNo
+          type: string
+          in: query
+          description: panNo of the Advocate
+        - name: emailId
+          type: string
+          in: query
+          description: emailId of the Advocate
+        - name: isIndividual
+          type: boolean
+          in: query
+          description: >-
+            True will be set for Active Status False will be set for InActive
+            Status.
+        - name: empanelmentFromDate
+          type: string
+          in: query
+          description: >-
+            This date will be compared to nearest effectiveFrom search results,
+            format is dd/MM/yyyy
+          format: date
+        - name: isActive
+          type: boolean
+          in: query
+          description: >-
+            True will be set for Active Status False will be set for InActive
+            Status.
+        - name: isTerminate
+          type: boolean
+          in: query
+          description: >-
+            True will be set for Active Status False will be set for InActive
+            Status.
+        - $ref: '#/parameters/pageSize'
+        - $ref: '#/parameters/offSet'
+      responses:
+        '200':
+          description: Courts(s) retrieved Successfully
+          schema:
+            $ref: '#/definitions/AdvocateMasterResponse'
+        '400':
+          description: Invalid Input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+definitions:
+  CourtMaster:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the court
+      name:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique Name of the court
+      code:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique code of the court
+      courtAddress1:
+        type: string
+        maxLength: 256
+        minLength: 1
+        description: courtAddress1 of the court
+      courtAddress2:
+        type: string
+        maxLength: 256
+        description: courtAddress2 of the court
+      courtAddress3:
+        type: string
+        maxLength: 256
+        description: courtAddress3 of the court
+      pincode:
+        type: string
+        maxLength: 6
+        minLength: 6
+        description: courtAddress3 of the court
+      active:
+        type: boolean
+        default: true
+        description: for active status will set as true,otherwise it should be false
+          Status
+      tenantId:
+        type: string
+        description: tenant id of the court
+        maxLength: 128
+        minLength: 4
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - name
+      - code
+      - courtAddress1
+      - pincode
+      - active
+      - tenantId
+  CourtMasterRequest:
+    description: >-
+      Contract class to receive request. Array of court master items are used in
+      case of create, whereas single court item is used for update
+    properties:
+      courtMasters:
+        description: Used for search result and create only
+        type: array
+        items:
+          $ref: '#/definitions/CourtMaster'
+      requestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+  CourtMasterResponse:
+    description: >-
+      Contract class to send response. Array of court items are used in case of
+      search results or response for create, whereas single court item is used
+      for update
+    properties:
+      responseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      courtMasters:
+        description: Used for search result and create only
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/CourtMaster'
+  SideMaster:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the side
+      name:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique Name of the side
+      code:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique code of the side
+      active:
+        type: boolean
+        default: true
+        description: >-
+          True will be set for Active Status False will be set for InActive
+          Status
+      tenantId:
+        type: string
+        description: tenant id of the side
+        maxLength: 128
+        minLength: 4
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - name
+      - code
+      - active
+      - tenantId
+  SideMasterRequest:
+    description: >-
+      Contract class to receive request. Array of side master items are used in
+      case of create, whereas single side item is used for update
+    properties:
+      sideMasters:
+        description: Used for search result and create only
+        type: array
+        items:
+          $ref: '#/definitions/SideMaster'
+      requestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+  SideMasterResponse:
+    description: >-
+      Contract class to send response. Array of side items are used in case of
+      search results or response for create, whereas single side item is used
+      for update
+    properties:
+      responseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      sideMasters:
+        description: Used for search result and create only
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/SideMaster'
+  CaseTypeMaster:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the case type
+      name:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique Name of the case type
+      code:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique code of the case type
+      sideCode:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique code of the Side Master
+      active:
+        type: boolean
+        default: true
+        description: >-
+          True will be set for Active Status False will be set for InActive
+          Status
+      tenantId:
+        type: string
+        description: tenant id of the case type
+        maxLength: 128
+        minLength: 4
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - name
+      - code
+      - sideCode
+      - tenantId
+  CaseTypeMasterRequest:
+    description: >-
+      Contract class to receive request. Array of type master items are used in
+      case of create, whereas single case type item is used for update
+    properties:
+      caseTypeMasters:
+        description: Used for search result and create only
+        type: array
+        items:
+          $ref: '#/definitions/CaseTypeMaster'
+      requestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+  CaseTypeMasterResponse:
+    description: >-
+      Contract class to send response. Array of case type items are used in case
+      of search results or response for create, whereas single case type item is
+      used for update
+    properties:
+      responseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      caseTypeMasters:
+        description: Used for search result and create only
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/CaseTypeMaster'
+  CaseCategoryMaster:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the case category
+      name:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique Name of the case category
+      code:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique code of the case category
+      active:
+        type: boolean
+        default: true
+        description: >-
+          True will be set for Active Status False will be set for InActive
+          Status
+      tenantId:
+        type: string
+        description: tenant id of the case category
+        maxLength: 128
+        minLength: 4
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - name
+      - code
+      - active
+      - tenantId
+  CaseCategoryMasterRequest:
+    description: >-
+      Contract class to receive request. Array of case category master items are
+      used in case of create, whereas single case category item is used for
+      update
+    properties:
+      caseCategoryMasters:
+        description: Used for search result and create only
+        type: array
+        items:
+          $ref: '#/definitions/CaseCategoryMaster'
+      requestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+  CaseCategoryMasterResponse:
+    description: >-
+      Contract class to send response. Array of case category items are used in
+      case of search results or response for create, whereas single case
+      category item is used for update
+    properties:
+      responseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      caseCategoryMasters:
+        description: Used for search result and create only
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/CaseCategoryMaster'
+  BenchMaster:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the bench
+      name:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique Name of the bench
+      code:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique code of the bench
+      active:
+        type: boolean
+        default: true
+        description: >-
+          True will be set for Active Status False will be set for InActive
+          Status
+      tenantId:
+        type: string
+        description: tenant id of the bench
+        maxLength: 128
+        minLength: 4
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - name
+      - code
+      - active
+      - tenantId
+  BenchMasterRequest:
+    description: >-
+      Contract class to receive request. Array of bench master items are used in
+      case of create, whereas single bench item is used for update
+    properties:
+      benchMasters:
+        description: Used for search result and create only
+        type: array
+        items:
+          $ref: '#/definitions/BenchMaster'
+      requestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+  BenchMasterResponse:
+    description: >-
+      Contract class to send response. Array of bench items are used in case of
+      search results or response for create, whereas single  bench item is used
+      for update
+    properties:
+      responseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      benchMasters:
+        description: Used for search result and create only
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/BenchMaster'
+  StampMaster:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the stamp/register
+      name:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique Name of the stamp/register
+      code:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique code of the stamp/register
+      active:
+        type: boolean
+        default: true
+        description: >-
+          True will be set for Active Status False will be set for InActive
+          Status
+      tenantId:
+        type: string
+        description: tenant id of the stamp/register
+        maxLength: 128
+        minLength: 4
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - name
+      - code
+      - active
+      - tenantId
+  StampMasterRequest:
+    description: >-
+      Contract class to receive request. Array of stamp/register master items
+      are used in case of create, whereas single stamp/ register  item is used
+      for update
+    properties:
+      stampMasters:
+        description: Used for search result and create only
+        type: array
+        items:
+          $ref: '#/definitions/StampMaster'
+      requestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+  StampMasterResponse:
+    description: >-
+      Contract class to send response. Array of stamp/register items are used in
+      case of search results or response for create, whereas single 
+      stamp/register item is used for update
+    properties:
+      responseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      stampMasters:
+        description: Used for search result and create only
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/StampMaster'
+  AdvocateMaster:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the advocate
+      name:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique Name of the advocate
+      code:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique code of the advocate
+      organizationName:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique Name of the Agency/organization name
+      isIndividual:
+        type: boolean
+        default: true
+        description: >-
+          True will be set for Active Status False will be set for InActive
+          Status
+      title:
+        type: string
+        description: title of the advocate
+      firstName:
+        type: string
+        description: First name of the advocate
+      secondName:
+        type: string
+        description: Second name of the advocate
+      lastName:
+        type: string
+        description: Last name of the advocate
+      address:
+        type: string
+        description: Adress of the advocate
+      contactNo:
+        type: string
+        description: Contact number of the advocate
+      dateOfEmpanelment:
+        type: integer
+        format: int64
+        description: date of the Empanelment
+      standingCommitteeDecisionDate:
+        type: integer
+        format: int64
+        description: date of the Standing Committee Decision
+      empanelmentFromDate:
+        type: integer
+        format: int64
+        description: from date of the Empanelment
+      adharNo:
+        type: string
+        description: Adhar number of the advocate
+      gender:
+        type: string
+        description: Gender of the advocate
+      age:
+        type: string
+        description: Age of the advocate
+      dob:
+        type: integer
+        format: int64
+        description: D.O.B of the advocate
+      mobileNo:
+        type: string
+        description: Mobile number of the advocate
+      emailId:
+        type: string
+        description: Email Id of the advocate
+      panNo:
+        type: string
+        description: PAN number of the advocate
+      vatTinNo:
+        type: string
+        description: VAT TIN Number of the advocate
+      newsPaperAdvertismentDate:
+        type: integer
+        format: int64
+        description: NewsPaper Advertisment Date of the advocate
+      empanelmentToDate:
+        type: integer
+        format: int64
+        description: Empanelmemt To Date of the advocate
+      bankName:
+        type: string
+        description: Bank Name of the advocate
+      bankBranch:
+        type: string
+        description: Bank branch of the advocate
+      bankAccountNo:
+        type: string
+        description: Bank account number of the advocate
+      isfcCode:
+        type: string
+        description: isfc code of the advocate
+      micr:
+        type: string
+        description: MICR code of the advocate
+      isActive:
+        type: string
+        default: 'True'
+        description: >-
+          True will be set for Active Status False will be set for InActive
+          Status
+      isTerminate:
+        type: string
+        default: 'False'
+        description: >-
+          True will be set for Active Status False will be set for InActive
+          Status
+      inActiveDate:
+        type: integer
+        format: int64
+        description: InActive Date of the advocate
+      terminationDate:
+        type: integer
+        format: int64
+        description: Termination Date of the advocate
+      reasonOfTermination:
+        type: string
+        description: Reason of Termination / Deactive  of the advocate
+      tenantId:
+        type: string
+        description: tenant id of the court
+        maxLength: 128
+        minLength: 4
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - name
+      - code
+      - tenantId
+      - organizationName
+      - title
+      - firstName
+      - secondName
+      - lastName
+      - address
+      - contactNo
+      - dateOfEmpanelment
+      - standingCommitteeDecisionDate
+      - empanelmentFromDate
+      - adharNo
+      - gender
+      - age
+      - dob
+      - mobileNo
+      - emailId
+      - panNo
+      - vatTinNo
+      - newsPaperAdvertismentDate
+      - empanelmentToDate
+      - bankName
+      - bankBranch
+      - bankAccountNo
+      - isfcCode
+      - micr
+      - isActive
+      - isTerminate
+  AdvocateMasterRequest:
+    description: >-
+      Contract class to receive request. Array of advocate master items are used
+      in case of create, whereas single advocate item is used for update
+    properties:
+      advocateMasters:
+        description: Used for search result and create only
+        type: array
+        items:
+          $ref: '#/definitions/AdvocateMaster'
+      requestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+  AdvocateMasterResponse:
+    description: >-
+      Contract class to send response. Array of advocate items are used in case
+      of search results or response for create, whereas single advocate item is
+      used for update
+    properties:
+      responseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      advocateMasters:
+        description: Used for search result and create only
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/AdvocateMaster'
+  CaseStatusMaster:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the case status
+      name:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique Name of the case status
+      code:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique code of the case status
+      active:
+        type: boolean
+        default: true
+        description: >-
+          True will be set for Active Status False will be set for InActive
+          Status
+      tenantId:
+        type: string
+        description: tenant id of the case status
+        maxLength: 128
+        minLength: 4
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - name
+      - code
+      - active
+      - tenantId
+  CaseStatusMasterRequest:
+    description: >-
+      Contract class to receive request. Array of case status master items are
+      used in case of create, whereas single case status item is used for update
+    properties:
+      caseStatusMasters:
+        description: Used for search result and create only
+        type: array
+        items:
+          $ref: '#/definitions/CaseStatusMaster'
+      requestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+  CaseStatusMasterResponse:
+    description: >-
+      Contract class to send response. Array of case status items are used in
+      case of search results or response for create, whereas single case status
+      item is used for update
+    properties:
+      responseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      caseStatusMasters:
+        description: Used for search result and create only
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/CaseStatusMaster'
+  ChargeMaster:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the charge
+      name:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique Name of the charge
+      code:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique code of the charge
+      description:
+        type: string
+        description: description of the charge
+      fromDate:
+        type: integer
+        format: int64
+        description: From date of the charge (epoch)
+      toDate:
+        type: integer
+        format: int64
+        description: To date of the charge (epoch)
+      fromValue:
+        type: number
+        format: double
+        description: From value of the charge
+      toValue:
+        type: number
+        format: double
+        description: To value of the charge
+      chargePercentage:
+        type: number
+        format: double
+        description: The charge percentage.
+      chargeAmount:
+        type: number
+        format: double
+        description: The charge amount
+      isFlat:
+        type: boolean
+        default: false
+        description: >-
+          True will be set for Active Status False will be set for InActive
+          Status
+      courtType:
+        type: string
+        description: description of the charge
+      caseType:
+        type: string
+        description: description of the charge
+      active:
+        type: boolean
+        default: true
+        description: >-
+          True will be set for Active Status False will be set for InActive
+          Status
+      tenantId:
+        type: string
+        description: tenant id of the case status
+        maxLength: 128
+        minLength: 4
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - name
+      - code
+      - active
+      - tenantId
+      - fromDate
+      - toDate
+      - fromValue
+      - toValue
+  ChargeMasterRequest:
+    description: >-
+      Contract class to receive request. Array of charge master items are used
+      in case of create, whereas single charge item is used for update
+    properties:
+      chargeMasters:
+        description: Used for search result and create only
+        type: array
+        items:
+          $ref: '#/definitions/ChargeMaster'
+      requestInfo:
+        $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+  ChargeMasterResponse:
+    description: >-
+      Contract class to send response. Array of charge items are used in case of
+      search results or response for create, whereas single charge item is used
+      for update
+    properties:
+      responseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      chargeMasters:
+        description: Used for search result and create only
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/ChargeMaster'
+parameters:
+  pageSize:
+    name: pageSize
+    type: integer
+    format: int32
+    in: query
+    description: >-
+      Number of records in a per page in  the Search Results, Default value is
+      20
+  offSet:
+    name: offSet
+    type: integer
+    format: int32
+    in: query
+    description: 'page number of the Search Results, Default value is 0'

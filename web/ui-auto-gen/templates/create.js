@@ -76,13 +76,13 @@ let createTemplate = function(module, numCols, path, config, definition, uiInfoD
 
     getFieldsFromInnerObject(reference, fields, definition, module, isArr ? (specifications.objectName + "[0]") : specifications.objectName);
     //=======================CUSTOM FILE LOGIC==========================>>
-    if (uiInfoDef.ExternalData && typeof uiInfoDef.ExternalData == "object" && uiInfoDef.ExternalData.length) {
-        for(var i=0; i<uiInfoDef.ExternalData.length; i++) {
-            if(uiInfoDef.ExternalData[i].fieldName) {
-                fields[uiInfoDef.ExternalData[i].fieldName].url = uiInfoDef.ExternalData[i].url + getQuery(uiInfoDef.ExternalData[i].url, uiInfoDef.ExternalData[i].keyPath, uiInfoDef.ExternalData[i].valPath);
-                fields[uiInfoDef.ExternalData[i].fieldName].type = 'singleValueList';
+    if (uiInfoDef.externalData && typeof uiInfoDef.externalData == "object" && uiInfoDef.externalData.length) {
+        for(var i=0; i<uiInfoDef.externalData.length; i++) {
+            if(uiInfoDef.externalData[i].fieldName) {
+                fields[uiInfoDef.externalData[i].fieldName].url = uiInfoDef.externalData[i].url + getQuery(uiInfoDef.externalData[i].url, uiInfoDef.externalData[i].keyPath, uiInfoDef.externalData[i].valPath);
+                fields[uiInfoDef.externalData[i].fieldName].type = 'singleValueList';
             } else {
-                errors[uiInfoDef.ExternalData[i].fieldName] = "Field exists in x-ui-info ExternalData section but not present in API specifications. REFERENCE PATH: " + uiInfoDef.referencePath;
+                errors[uiInfoDef.externalData[i].fieldName] = "Field exists in x-ui-info externalData section but not present in API specifications. REFERENCE PATH: " + uiInfoDef.referencePath;
             }
         }
     }
@@ -116,6 +116,43 @@ let createTemplate = function(module, numCols, path, config, definition, uiInfoD
                 }
             } else {
                 errors[uiInfoDef.autoFills[i].onChangeField] = "Field exists in x-ui-info AutoFills section but not present in API specifications. REFERENCE PATH: " + uiInfoDef.referencePath;
+            }
+        }
+    }
+
+    if(uiInfoDef.multiValueList && uiInfoDef.multiValueList.length) {
+        for(var i=0; i<uiInfoDef.multiValueList.length; i++) {
+            if(fields[uiInfoDef.multiValueList[i]]) {
+                fields[uiInfoDef.multiValueList[i]].type = "multiValueList";
+            } else {
+                errors[uiInfoDef.multiValueList[i]] = "Field exists in x-ui-info multiValueList section but not present in API specifications. REFERENCE PATH: " + uiInfoDef.referencePath;   
+            }
+        }
+    }
+
+    if(uiInfoDef.checkboxes && uiInfoDef.checkboxes.length) {
+        for(var i=0; i<uiInfoDef.checkboxes.length; i++) {
+            if(fields[uiInfoDef.checkboxes[i]]) {
+                fields[uiInfoDef.checkboxes[i]].type = "checkbox";
+            } else {
+                errors[uiInfoDef.checkboxes[i]] = "Field exists in x-ui-info checkboxes section but not present in API specifications. REFERENCE PATH: " + uiInfoDef.referencePath;   
+            }
+        }
+    }
+
+    if(uiInfoDef.radios && uiInfoDef.radios.length) {
+        for(var i=0; i<uiInfoDef.radios.length; i++) {
+            if(fields[uiInfoDef.radios[i].jsonPath]) {
+                fields[uiInfoDef.radios[i].jsonPath].type = "radio";
+                fields[uiInfoDef.radios[i].jsonPath].values = [{
+                    label: module + ".create." + uiInfoDef.radios[i].trueLabel,
+                    value: true
+                }, {
+                    label: module + ".create." + uiInfoDef.radios[i].falseLabel,
+                    value: false
+                }];
+            } else {
+                errors[uiInfoDef.radios[i].jsonPath] = "Field exists in x-ui-info radios section but not present in API specifications. REFERENCE PATH: " + uiInfoDef.referencePath;   
             }
         }
     }

@@ -1,7 +1,7 @@
 var dat = {
 	"asset.create": {
 		"numCols": 12/3,
-		"url": "asset-services/assets/_create",
+		"url": "asset-services-maha/assets/_create",
 		"tenantIdRequired": true,
 		"idJsonPath": "",
 		"objectName": "Asset",
@@ -781,7 +781,7 @@ var dat = {
 	},
 	"asset.search": {
 		"numCols": 12/3,
-		"url": "asset-services/assets/_search",
+		"url": "asset-services-maha/assets/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "Asset",
@@ -863,7 +863,7 @@ var dat = {
 	},
 	"asset.view": {
 		"numCols": 12/2,
-		"url": "asset-services/assets/_search?ids={id}",
+		"url": "asset-services-maha/assets/_search?ids={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "Assets",
@@ -1665,7 +1665,7 @@ var dat = {
   					},
             {
   						"name": "AssetCategoryType",
-  						"jsonPath": "Asset[0].",
+  						"jsonPath": "Asset[0].assetCategory.name",
   						"label": "ac.create.Asset.SubCategory.Name",
   						"pattern": "",
   						"type": "singleValueList",

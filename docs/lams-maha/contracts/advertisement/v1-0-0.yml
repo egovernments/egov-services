@@ -28,7 +28,7 @@ basePath: '/lams-maha/v1'
 x-api-id: 'org.egov.lcms-maha.advertisement.services'
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 paths:
-  /advertisementlicense/_search:
+  /license/_search:
     post:
       summary: Get the list of Advertisement Liceses defined in the system.
       description: |
@@ -39,8 +39,8 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
         - $ref: "#/parameters/pageSize"
         - $ref: "#/parameters/pageNumber"
-        - $ref: "#/parameters/sortAdvertisementLicense"
-        - name: advertisementLicenseId
+        - $ref: "#/parameters/sortLicense"
+        - name: licenseId
           in: query
           description: Primary key of license application object.
           required: false
@@ -93,29 +93,29 @@ paths:
           maxLength: 64
           exclusiveMaximum: false
       tags:
-       - AdvertisementLicense
+       - License
       responses:
         '200':
           description: Successful response
           schema:
-            $ref: "#/definitions/AdvertisementLicenseResponse"
+            $ref: "#/definitions/LicenseResponse"
         '400':
           description: Invalid input.
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       
-  /advertisementlicense/v1/_create:
+  /license/v1/_create:
     post:
       summary: Create new Advertisement Liceses detail
       description: |
           To create new Advertisement Liceses detail
       parameters:
-        - name: advertisementLicenseRequest
+        - name: licenseRequest
           in: body
           description: Details for the new Advertisement Liceses detail + RequestInfo meta data.
           required: true
           schema:
-            $ref: '#/definitions/AdvertisementLicenseRequest'
+            $ref: '#/definitions/LicenseRequest'
       responses:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
@@ -123,25 +123,25 @@ paths:
         201:
           description: ReponseInfo with Advertisement Liceses detail created successfully
           schema:
-            $ref: '#/definitions/AdvertisementLicenseResponse'
+            $ref: '#/definitions/LicenseResponse'
         400:
           description: Advertisement Liceses detail(s) creation failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
-        - AdvertisementLicense  
-  /advertisementlicense/v1/_update:
+        - License  
+  /license/v1/_update:
     post:
       summary: update existing Advertisement Liceses detail.
       description: |
           To update existing Advertisement Liceses details in the system. 
       parameters:
-        - name: advertisementLicenseRequest
+        - name: licenseRequest
           in: body
           description: Details for the new Advertisement Liceses detail + RequestInfo meta data.
           required: true
           schema:
-            $ref: '#/definitions/AdvertisementLicenseRequest'
+            $ref: '#/definitions/LicenseRequest'
       responses:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
@@ -149,14 +149,14 @@ paths:
         201:
           description: ReponseInfo with Advertisement Liceses details updated sudcessfully
           schema:
-            $ref: '#/definitions/AdvertisementLicenseResponse'
+            $ref: '#/definitions/LicenseResponse'
         400:
           description: Advertisement Liceses detail(s) updation failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
-        - AdvertisementLicense
-  /advertisementlicense/notice/_search:
+        - License
+  /license/notice/_search:
     post:
       summary: Get the list of notices generated for adverticesement license application.
       description: |
@@ -167,8 +167,8 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
         - $ref: "#/parameters/pageSize"
         - $ref: "#/parameters/pageNumber"
-        - $ref: "#/parameters/sortAdvertisementLicense"
-        - name: advertisementLicenseId
+        - $ref: "#/parameters/sortLicense"
+        - name: licenseId
           in: query
           description: Primary key of license application object.
           required: false
@@ -202,7 +202,7 @@ paths:
           exclusiveMaximum: false
         
       tags:
-       - Notice
+       - AdvertisementNotice
       responses:
         '200':
           description: Successful response
@@ -213,7 +213,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       
-  /advertisementlicense/acknowledgement/_create:
+  /license/acknowledgement/_create:
      post:
       description: Generates a acknowledgement for a advertisement license application .
       parameters:
@@ -224,7 +224,7 @@ paths:
           schema:
             $ref: '#/definitions/NoticeRequest'
       tags:
-        - AdvertisementLicense
+        - License
       responses:
         '200':
           description: returns a notice.
@@ -234,7 +234,7 @@ paths:
           description: tenantId was not provided or General service error
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-  /advertisementlicense/license/_create:
+  /license/license/_create:
     post:
       description: Generates a license for a advertisement license application.
       parameters:
@@ -245,7 +245,7 @@ paths:
           schema:
             $ref: '#/definitions/NoticeRequest'
       tags:
-        - AdvertisementLicense
+        - License
       responses:
         '200':
           description: returns a notice.
@@ -255,7 +255,7 @@ paths:
           description: tenantId was not provided or General service error
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-  /advertisementlicense/letterofintimation/_create:
+  /license/letterofintimation/_create:
     post:
       description: Generates a Letter of information for a advertisement license application.
       parameters:
@@ -266,7 +266,7 @@ paths:
           schema:
             $ref: '#/definitions/NoticeRequest'
       tags:
-        - AdvertisementLicense
+        - License
       responses:
         '200':
           description: returns a notice.
@@ -277,7 +277,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /advertisementlicense/rejectionletter/_create:
+  /license/rejectionletter/_create:
     post:
       description: Generates a rejection letter for a advertisement license application.
       parameters:
@@ -288,7 +288,7 @@ paths:
           schema:
             $ref: '#/definitions/NoticeRequest'
       tags:
-        - AdvertisementLicense
+        - License
       responses:
         '200':
           description: returns a notice.
@@ -297,8 +297,174 @@ paths:
         '400':
           description: tenantId was not provided or General service error
           schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'     
+  
+  /adtaxagreement/_search:
+    post:
+      summary: Agreement List
+      description: |
+        Returns a list of agreement for given different input params.
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - name: agreementId
+          in: query
+          description: Primary key of Agreement object.
+          required: false
+          type: string
+          format: varchar
+        - name: agreementNumber
+          in: query
+          description: Agreement number.
+          required: false
+          type: string
+          format: varchar
+        - name: licenseNumber
+          in: query
+          required: false
+          description: The license number
+          type: string
+          maxLength: 64
+          exclusiveMaximum: false  
+        - name: fromDate
+          in: query
+          description: Agreement date, here search will happen as agreement date is greater or equal to given fromDate.
+          required: false
+          type: string
+          format: varchar
+        - name: toDate
+          in: query
+          description: Agreement date, here search will happen as agreement date is lesser or equal to given toDate.
+          required: false
+          type: string
+          format: varchar
+        - name: status
+          in: query
+          description: Agreement status.
+          required: false
+          type: string
+          format: varchar
+        - name: applicantName
+          in: query
+          description: Name of applicant against whom the agreement made.
+          required: false
+          type: string
+          format: varchar
+        - name: mobileNumber
+          in: query
+          description: Contact number of applicant against whom the agreement made.
+          required: false
+          type: string
+          format: varchar
+        - name: size
+          in: query
+          description: No.of agreement to be returned by API
+          required: false
+          type: string
+          format: varchar
+      tags:
+        - Agreement
+      responses:
+        '200':
+          description: returns list of agreements.
+          schema:
+            $ref: '#/definitions/AgreementResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-         
+  /adtaxagreement/_create:
+    post:
+      description: Creates a new agreement to lease/rent hoarding againest licensenumber
+      parameters:
+        - name: agreement
+          in: body
+          description: Details for the new Agreement to lease a hoarding.
+          required: true
+          schema:
+            $ref: '#/definitions/AgreementRequest'
+      tags:
+        - Agreement
+      responses:
+        '201':
+          description: Agreement created
+          schema:
+            $ref: '#/definitions/AgreementResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+  
+  /adtaxagreement/_renew:
+    post:
+      description: “Renewal of Agreement” implies that the agreement is renewed before the expiry of the current agreement.
+      parameters:
+        - name: renewal
+          in: body
+          description: Details of the existing agreement which needs to be renew.
+          required: true
+          schema:
+            $ref: '#/definitions/AgreementRequest'
+      tags:
+        - Renewal
+      responses:
+        '201':
+          description: Agreement renewed successfully.
+          schema:
+            $ref: '#/definitions/AgreementResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+  /adtaxagreement/_cancel:
+    post:
+      description: Cancellation of Agreement is a process that is initiated either by the ULB or by the applicant due to various reasons. Agreement can be cancelled by either party at any given point of time, for the active hoarding agreement.
+      parameters:
+        - name: cancellation
+          in: body
+          description: Details of the existing agreement which needs to be cancel.
+          required: true
+          schema:
+            $ref: '#/definitions/AgreementRequest'
+      tags:
+        - Cancellation
+      responses:
+        '201':
+          description: Agreement canceled successfully.
+          schema:
+            $ref: '#/definitions/AgreementResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+  /adtaxagreement/_update:
+    post:
+      description: Updates a given agreement with newer details.
+      parameters:
+        - name: tenantId
+          in: query
+          description: Unique id for ulb.
+          required: true
+          type: string
+          format: varchar
+        - name: agreement
+          in: body
+          description: Request header for the agreement Request.
+          required: true
+          schema:
+            $ref: '#/definitions/AgreementRequest'
+      tags:
+        - Agreement
+      responses:
+        '200':
+          description: agreement updated
+          schema:
+            $ref: '#/definitions/AgreementResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+        
 definitions:
 ########################################################
 #RequestInfo and ResponseInfo object should be reffered from Common.
@@ -361,7 +527,7 @@ definitions:
         type: boolean
         default: false
         description: is additional owner. 
-  Notice:
+  AdvertisementNotice:
     type: object
     description: Generated documents for license application. Acknowledgement will be generated on save of license application.Rejection letter, if record rejected in approval cycle. Letter of intimation(LOI) in case of license approved. Finally license will be generated in system on payment of LOI fee.
     properties:
@@ -386,73 +552,14 @@ definitions:
           - REJECTION
           - LICENSE
           - LOI
-      advertisementLicense:
-        $ref: '#/definitions/AdvertisementLicense'
+      license:
+        $ref: '#/definitions/License'
     required:
       - id
       - noticeType   
       - number
       - tenantId
-  Inspection:
-    type: object
-    description: Advertisement licence application inspection details
-    properties:
-      id: 
-        type: integer
-        format: int64
-        description: Id of the inspection master.
-      tenantId:
-        type: string
-        description: tenant id 
-        maxLength: 128
-        minLength: 4
-      licenseHolderwitness:
-        type: string
-        description: License holder witness
-        maxLength: 128
-      ulbWitness:
-        type: string
-        description: ulb holder witness.Use employee master
-        maxLength: 128  
-      inspectedBy:
-        type: string
-        description: inspected user information.Use employee master
-        maxLength: 128  
-      advertisementLicense:
-        $ref: '#/definitions/AdvertisementLicense'
-      inspectionTime:
-        type: string
-        description: inspection time
-        minLength: 1
-        maxLength: 10
-      inspectionDate:
-        type: integer
-        format: int64
-        description: inspection date  in epoch  
-      inspectiondetail:
-        type: string
-        description: inspection details
-        maxLength: 256 
-      inspectionNumber:
-        type: string
-        description: inspection number unique in system.
-      remarks:
-        type: string
-        description: inspection remarks
-        maxLength: 512  
-      document:
-        type: string
-        description: filestoreId of the document attached
-    required:
-      - id
-      - inspectionTime   
-      - inspectionDate
-      - licenseHolderwitness
-      - ulbWitness
-      - inspectionNumber
-      - inspectedBy
-      
-  AdvertisementLicense:
+  License:
     type: object
     description: Advertisement licence application details
     properties:
@@ -471,6 +578,7 @@ definitions:
         type: string
         description: application status
         enum:
+          - CREATED 
           - ACTIVE
           - LOI GENERATED
           - IN WORKFLOW
@@ -478,7 +586,11 @@ definitions:
           - INSPECTION COMPLETED
           - INSPECTION PENDING
           - REJECTED
+          - SUSPENDED
           - APPROVED
+      stateId:
+        type: string
+        description: Work flow ref id.    
       workFlowDetails:
         $ref: '#/definitions/WorkFlowDetails'
       agency:
@@ -549,17 +661,11 @@ definitions:
         description: List of owners jointly applied for advertisement license application
         items:
           $ref: '#/definitions/OwnerDetail'      
-      inspections:    
+      inspections:
         type: array
-        description: List of inspections of advertisement license application
+        description: List of owners jointly applied for advertisement license application
         items:
-          $ref: '#/definitions/Inspection' 
-      notices:
-        type: array
-        description: List of notices generated for advertisement license application
-        items:
-          $ref: '#/definitions/Notice' 
-      
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/Inspection"
     required:
     - tenantId
     - applicationDate
@@ -582,8 +688,8 @@ definitions:
         description: tenant id of the land acquisiton
         maxLength: 128
         minLength: 4
-      advertisementLicense:
-        $ref: '#/definitions/AdvertisementLicense' 
+      license:
+        $ref: '#/definitions/License' 
       fileStoreId:
         type: string
         description: Unique Identifier of the FileStore
@@ -593,11 +699,11 @@ definitions:
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
-    - advertisementLicense
+    - license
     - tenantId
     - fileStoreId
   
-  AdvertisementLicenseRequest:
+  LicenseRequest:
       description:  Contract class to receive request. Array of advertisement license items are used in case of create, whereas single advertisement license item is used for update
       properties:
         responseInfo:
@@ -607,9 +713,9 @@ definitions:
           type: array
           maximum: 500
           items:
-            $ref: '#/definitions/AdvertisementLicense'
+            $ref: '#/definitions/License'
             
-  AdvertisementLicenseResponse:
+  LicenseResponse:
       description: Contract class to send response. Array of advertisement license detail items are used in case of search results or response for create, whereas single advertisement license detail item is used for update
       properties:
         responseInfo:
@@ -619,14 +725,14 @@ definitions:
           type: array
           maximum: 500
           items:
-            $ref: '#/definitions/AdvertisementLicense'
+            $ref: '#/definitions/License'
   NoticeRequest:
     type: object
     properties:
       RequestInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       notice:
-        $ref: '#/definitions/Notice'
+        $ref: '#/definitions/AdvertisementNotice'
         
   NoticeResponse:
     type: object
@@ -636,8 +742,196 @@ definitions:
       notices:
         type: array
         items:
-          $ref: '#/definitions/Notice'
-    
+          $ref: '#/definitions/AdvertisementNotice'
+  AgreementRequest:
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      agreements:
+        type: array
+        items:
+          $ref: '#/definitions/LicenseAgreement'
+    type: object
+  AgreementResponse:
+    properties:
+      ResponseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      agreements:
+        type: array
+        items:
+          $ref: '#/definitions/LicenseAgreement'
+    type: object
+  LicenseAgreement:
+    type: object
+    description: Agreement created againest advertisement licenses. 
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the agreement.
+      tenantId:
+        type: string
+        description: Unique Identifier of which tenant this data is defined. 
+        maxLength: 128
+      source:
+        type: string
+        description: source from which agreement is being persisted.
+        enum:
+          - SYSTEM
+          - DATE_ENTRY
+          - MIGRATION
+          - CFC
+      status:
+        type: string
+        description: enumeration of agreement statuses.
+        enum:
+          - ACTIVE
+          - CANCELED
+          - REJECTED
+          - EVICTED
+          - RENEWED
+          - WORKFLOW
+      isActive:
+        type: boolean
+        description: Active flag for agreement
+        default: true
+      parent:
+        $ref: '#/definitions/LicenseAgreement'
+      action:
+        type: string
+        description: enumeration of action on agreement.
+        enum:
+          - Create
+          - Renewal
+          - Cancellation
+      agreementNumber:
+        type: string
+        description: unique agreement number.
+        maxLength: 64
+      license:
+        $ref: '#/definitions/License'
+      depositAmount:
+        type: number
+        format: double
+        description: Deposit amount.
+      electricityBillAmount:
+        type: number
+        format: double
+        description: Electricity Bill Amount.
+      propertyOutstanding:
+        type: number
+        format: double
+        description: Property Outstanding.
+      propertyTax:
+        type: number
+        format: double
+        description: Property Tax.
+      penalty:
+        type: number
+        format: double
+        description: penalty.
+      rent:
+        type: number
+        format: double
+        description: rent to be paid per payment cycle.
+      budgetHead:
+        type: string
+        description: Bugdet Head for agreement.
+        maxLength: 16
+      currentElectricityBillAmount:
+        type: number
+        format: double
+        description: Current Electricity Bill Amount.
+      rentIncrement:
+        type: number
+        format: double
+        description: rent increment amount.
+      currentPenalty:
+        type: number
+        format: double
+        description: Current Penalty.
+      currentPropertyTax:
+        type: number
+        format: double
+        description: Current Property Tax.  
+      agreementFromDate:
+        type: string
+        format: date
+        description: date of agreement.
+      agreementToDate:
+        type: integer
+        format: int64
+        description: End date of agreement. Time in epoch
+      applicant:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
+      registrationNo:
+        type: string
+        description: Registration no for agreement.
+        maxLength: 64
+      registrationDate:
+        type: integer
+        format: int64
+        description: Registration date for agreement. Time in epoch
+      holdingType:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/HoldingType'
+      GBResolutionNo:
+        type: string
+        description: GB resolution number.
+        maxLength: 64
+      rentPaymentCycle:
+        type: string
+        description: payment cycle on which the rent has to be paid against agreement.
+        enum:
+          - MONTH
+          - ANNUAL
+      remarks:
+        type: string
+        description: Comments.
+        maxLength: 256
+      acknowledgementNumber:
+        type: string
+        description: Acknowldgement number given to allottee on submitting the application. 
+        maxLength: 64
+      document:
+        type: string
+        description: filestoreId of the document attached
+      demands:
+        type: array
+        items:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/billingservice/contracts/v1-0-0.yml#/definitions/Demand'
+      stateId:
+        type: string
+        description: Work flow ref id.
+      workFlowDetails:
+        $ref: '#/definitions/WorkFlowDetails'
+      cancellationReason:
+        type: string
+        description: Cancellation reason. 
+        maxLength: 64
+      cancellationNumber:
+        type: string
+        description: Cancellation Number. 
+        maxLength: 64
+      cancellationDate:
+        type: integer
+        format: int64
+        description: Cancellation date. Time in epoch 
+      cancellationDocument:
+        type: string
+        description: filestoreId of the document attached  
+    required:
+      - id
+      - tenantId
+      - agreementNumber
+      - license
+      - agreementFromDate
+      - agreementToDate
+      - applicant
+      - status
+      - rent
+      - rentIncrement
+      - rentPaymentCycle
+        
   WorkFlowDetails:
     type: object
     description: An Object to hold the Application workflow details for a given advertisement license, agreement and cancel and renewal agreement
@@ -691,7 +985,7 @@ parameters:
     exclusiveMaximum: false
     multipleOf: 10
     default: 20
-  sortAdvertisementLicense:
+  sortLicense:
     name: sort
     in: query
     description: Advertisement Liceses  results will be sorted by id ascending by default if this parameter is not provided.
@@ -714,7 +1008,10 @@ parameters:
   
   
 tags:
-  - name: AdvertisementLicense
+  - name: License
     description: APIs required for advertisement license
-  - name: Notice  
+  - name: AdvertisementNotice  
     description: APIs required to search notices generated for advertisement license application
+  - name: Agreement
+    description: APIs required to create/update agreements for advertisement license
+    

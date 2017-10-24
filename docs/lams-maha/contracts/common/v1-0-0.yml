@@ -355,7 +355,408 @@ definitions:
       - code
       - name
       - isActive
- 
+  LicenseSuspension:
+    type: object
+    description: Suspension details
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the license suspension
+      tenantId:
+        type: string
+        description: tenant id 
+        maxLength: 128
+        minLength: 4
+      suspensionNumber:
+        type: string
+        description: Suspension number
+        maxLength: 64  
+      suspensionDate:
+        type: integer
+        format: int64
+        description: suspension date of license. in epoch format.
+      suspensionStartDate:
+        type: integer
+        format: int64
+        description: suspension start date of license. in epoch format.
+      suspensionEndDate:
+        type: integer
+        format: int64
+        description: suspension end date of license. in epoch format.  
+      suspendedBy:
+        type: string
+        description: suspended by  user information.Use employee master
+        maxLength: 128  
+      reasonForSuspension:
+        type: string
+        description: reason for suspension
+        maxLength: 512
+      stateId:
+        type: string
+        description: Work flow ref id.
+      referenceType:
+        type: string
+        description: Object type
+        enum:
+          - ESTATE
+          - LAND
+          - ADVERTISEMENT
+      referenceNumber:
+        type: string
+        description: License or estate or land number
+        maxLength: 128    
+      showCauseNotice:
+        $ref: '#/definitions/ShowCauseNotice'
+      hearing:
+        $ref: '#/definitions/HearingDetails'
+      suspensionLetterDocId:
+        type: string
+        description: Unique Identifier of the FileStore  
+    required:
+      - id
+      - suspensionNumber   
+      - tenantId
+      - suspensionDate
+      - suspensionStartDate
+      - suspensionEndDate
+      - referenceType
+      - referenceNumber
+  HearingIntimation:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the Hearing intimation.
+      tenantId:
+        type: string
+        description: tenant id of the Hearing intimation.
+        maxLength: 128
+        minLength: 2
+      showCauseNotice:
+        $ref: '#/definitions/ShowCauseNotice'
+      referenceType:
+        type: string
+        description: Object type
+        enum:
+          - ESTATE
+          - LAND
+          - ADVERTISEMENT
+      referenceNumber:
+        type: string
+        description: License or estate or land number
+        maxLength: 128
+      intimationNumber:
+        type: string
+        description: Hearing intimation number
+        maxLength: 64      
+      intimationDate:
+        type: integer
+        format: int64
+        description: Hearing intimation Date, time in epoch  
+      hearingPlace:
+        type: string
+        description: Hearing place
+        maxLength: 128 
+      hearigAuthorityOfficer:
+        type: string
+        description: Hearing authority officer
+        maxLength: 128
+      hearingIntimationLetterDocId:
+        type: string
+        description: Unique Identifier of the FileStore
+    required:
+      - id
+      - intimationNumber  
+      - intimationDate
+      - tenantId    
+  HearingDetails:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the HearingDetails.
+      tenantId:
+        type: string
+        description: tenant id of the HearingDetails
+        maxLength: 128
+        minLength: 2
+      showCauseNotice:
+        $ref: '#/definitions/ShowCauseNotice'
+      hearingIntimation:
+        $ref: '#/definitions/HearingIntimation'
+      referenceType:
+        type: string
+        description: Object type
+        enum:
+          - ESTATE
+          - LAND
+          - ADVERTISEMENT
+      referenceNumber:
+        type: string
+        description: License or estate or land number
+        maxLength: 128    
+      hearingDate:
+        type: integer
+        format: int64
+        description: Hearing Date, time in epoch
+      hearingStatus:
+        type: string
+        description: Hearing Status.
+        enum:
+          - SUSPENDED
+          - NOTSUSPENDED
+          
+      hearingFinalDecission:
+        type: string
+        description: Final Decission.
+        maxLength: 64
+      attendees:
+        type: array
+        items:
+          $ref: '#/definitions/HearingAttendee'
+      judeges:
+        type: array
+        items:
+          $ref: '#/definitions/HearingJudge'
+      advocates:
+        type: array
+        items:
+          $ref: '#/definitions/HearingAdvocate'
+      hearingRemarks:
+        type: string
+        description: Remarks.
+        maxLength: 512
+    required:
+      - id
+      - tenantId
+      - showCauseNotice
+      - hearingDate
+      - hearingStatus
+      - hearingFinalDecission
+      - attendees
+      - judeges
+      - advocates
+  HearingAttendee:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the HearingDetails.
+      tenantId:
+        type: string
+        description: tenant id of the HearingDetails
+        maxLength: 128
+        minLength: 2
+      hearingDetail:
+        $ref: '#/definitions/HearingDetails'
+      name:
+        type: string
+        description: Name of attendee.
+        maxLength: 256
+      address:
+        type: string
+        description: Name of attendee.
+        maxLength: 512
+      mobileNo:
+        type: string
+        description: mobileNo of attendee.
+        maxLength: 10
+      emailId:
+        type: string
+        description: mobileNo of attendee.
+        maxLength: 128
+  HearingJudge:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the HearingJudge.
+      tenantId:
+        type: string
+        description: tenant id of the HearingJudge
+        maxLength: 128
+        minLength: 2
+      hearingDetail:
+        $ref: '#/definitions/HearingDetails'
+      name:
+        type: string
+        description: Name of Judge.
+        maxLength: 256
+      appointmentDate:
+        type: integer
+        format: int64
+        description: Appointment Date, time in epoch
+      mobileNo:
+        type: string
+        description: mobileNo of Judge.
+        maxLength: 10
+      emailId:
+        type: string
+        description: mobileNo of Judge.
+        maxLength: 128
+  HearingAdvocate:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the HearingAdvocate.
+      tenantId:
+        type: string
+        description: tenant id of the HearingAdvocate
+        maxLength: 128
+        minLength: 2
+      hearingDetail:
+        $ref: '#/definitions/HearingDetails'
+      name:
+        type: string
+        description: Name of Advocate.
+        maxLength: 256
+      appointmentDate:
+        type: integer
+        format: int64
+        description: Appointment Date, time in epoch
+      mobileNo:
+        type: string
+        description: mobileNo of Advocate.
+        maxLength: 10
+      emailId:
+        type: string
+        description: mobileNo of Advocate.
+        maxLength: 128
+  ShowCauseNotice:
+    type: object
+    description: Show cause notice details
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the show cause notice 
+      tenantId:
+        type: string
+        description: tenant id 
+        maxLength: 128
+        minLength: 4
+      showCauseNoticeNumber:
+        type: string
+        description: Showcause notice number 
+        maxLength: 64 
+      reasonForShowCauseNotice:
+        type: string
+        description: Showcause notice number 
+        maxLength: 512    
+      showCauseNoticeDate:
+        type: integer
+        format: int64
+        description: showcause notice date in epoch  
+      inspection:
+        $ref: '#/definitions/Inspection'
+      referenceType:
+        type: string
+        description: Object type
+        enum:
+          - ESTATE
+          - LAND
+          - ADVERTISEMENT
+      referenceNumber:
+        type: string
+        description: License or estate or land number
+        maxLength: 128
+      showcauseNoticeDocId:
+        type: string
+        description: Unique Identifier of the FileStore   
+    required:
+      - id    
+      - referenceNumber
+      - referenceType
+      - showCauseNoticeNumber
+      - showCauseNoticeDate
+      - reasonForShowCauseNotice
+  Inspection:
+    type: object
+    description: Advertisement licence application inspection details
+    properties:
+      id: 
+        type: integer
+        format: int64
+        description: Id of the inspection master.
+      tenantId:
+        type: string
+        description: tenant id 
+        maxLength: 128
+        minLength: 4
+      isRandomInspection:
+        type: boolean
+        default: true
+        description: This field used to decide normal inspection or random inspection.For normal inspection, pass vlue as false.
+      licenseHolderwitness:
+        type: string
+        description: License holder witness
+        maxLength: 128
+      ulbWitness:
+        type: string
+        description: ulb holder witness.Use employee master
+        maxLength: 128  
+      inspectedBy:
+        type: string
+        description: inspected user information.Use employee master
+        maxLength: 128  
+      referenceType:
+        type: string
+        description: Object type
+        enum:
+          - ESTATE
+          - LAND
+          - ADVERTISEMENT
+      referenceNumber:
+        type: string
+        description: License or estate or land number
+        maxLength: 128  
+      inspectionTime:
+        type: string
+        description: inspection time
+        minLength: 1
+        maxLength: 10
+      inspectionDate:
+        type: integer
+        format: int64
+        description: inspection date  in epoch  
+      inspectiondetail:
+        type: string
+        description: inspection details
+        maxLength: 256 
+      inspectionNumber:
+        type: string
+        description: inspection number unique in system.
+      remarks:
+        type: string
+        description: inspection remarks
+        maxLength: 512  
+      status:
+        type: string
+        description: Status of inspection
+        enum:
+          - APPROVED
+          - REJECTED
+      document:
+        type: string
+        description: filestoreId of the document attached
+    required:
+      - id
+      - inspectionTime   
+      - inspectionDate
+      - licenseHolderwitness
+      - ulbWitness
+      - inspectionNumber
+      - inspectedBy
+      - referenceType
+      - referenceNumber
+      
   RenewalScheduler:
     type: object
     description: An object which holds the  Renewal Schedule Type Master info

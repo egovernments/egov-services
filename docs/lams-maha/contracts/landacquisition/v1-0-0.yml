@@ -624,6 +624,9 @@ definitions:
           - WORKFLOW
       workFlowDetails:
         $ref: '#/definitions/WorkFlowDetails'
+      stateId:
+        type: string
+        description: state id of the workflow  
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       possessionOfLand:
@@ -738,6 +741,9 @@ definitions:
         description: Unique identifier (code) of the possession Status
       workFlowDetails:
         $ref: '#/definitions/WorkFlowDetails'
+      stateId:
+        type: string
+        description: state id of the workflow  
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -811,6 +817,9 @@ definitions:
         description: Unique identifier (code) of the transfer of land Status
       workFlowDetails:
         $ref: '#/definitions/WorkFlowDetails'
+      stateId:
+        type: string
+        description: state id of the workflow  
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"  
     required:
@@ -992,4 +1001,3 @@ tags:
     description: APIs required for Land Possession
   - name: LandTransfer
     description: APIs required for Land Transfer  
-

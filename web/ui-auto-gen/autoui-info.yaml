@@ -67,8 +67,6 @@ UIInfo:
     - double
     - long
     - int
-    - redio
-    - checkBox
     - multiSelectDropDown
     values:
     - textField
@@ -83,7 +81,5 @@ UIInfo:
     - double
     - long
     - int
-    - redio
-    - checkBox
     - multiSelectDropDown
     resultObjectName: autoUi

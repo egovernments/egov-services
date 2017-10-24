@@ -17,16 +17,16 @@ info:
   # Path must be in small case.
   ######################################################
   
-  title: eGov Financial System.
+  title: Advance Requisition Service.
   description: |
-    APIs for Financial module. This modules handles creation of Voucher, Receipt etc,. also changes to existing Objects
+    Advabce Requisition APIs - to create, update and search advance requisition
   contact:
     name: eGovernments Foundation
     email : contacts@egovernments.org
 schemes:
   - https
-basePath: '/'
-x-api-id: 'org.egov.financials.services'
+basePath: '/egf-arf/v1'
+x-api-id: 'org.egov.egf.arf'
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 paths:
   /advance/_search:

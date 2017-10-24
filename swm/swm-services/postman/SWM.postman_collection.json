@@ -24,7 +24,7 @@
 					"enabled": true
 				}
 			],
-			"url": "http://localhost:8899/swm-services/vehiclefuellingdetailses/_create",
+			"url": "http://localhost:8899/swm-services/vehiclefuellingdetails/_create",
 			"queryParams": [],
 			"preRequestScript": null,
 			"pathVariables": {},
@@ -37,7 +37,7 @@
 			"currentHelper": "normal",
 			"helperAttributes": {},
 			"time": 1508515285807,
-			"name": "VehicleFuellingDetailses Create",
+			"name": "vehiclefuellingdetails Create",
 			"description": "",
 			"collectionId": "f9d736be-3091-c2a6-6ba1-30ee33171698",
 			"responses": [],
@@ -54,7 +54,7 @@
 					"enabled": true
 				}
 			],
-			"url": "http://localhost:8899/swm-services/vehiclefuellingdetailses/_update",
+			"url": "http://localhost:8899/swm-services/vehiclefuellingdetails/_update",
 			"queryParams": [],
 			"preRequestScript": null,
 			"pathVariables": {},
@@ -84,7 +84,7 @@
 					"enabled": true
 				}
 			],
-			"url": "http://localhost:8899/swm-services/vehiclefuellingdetailses/_search?tenantId=default&ids=b8f46f2a89a54a20931f580192323d4d&transactionNo=transactionNo 1&transactionDate=1508323548&vehicleType.id=vehicle Type 1 U&vehicleRegNo.id=vehicle Registration 1 U&vehicleReadingDuringFuelling=100&refuellingStation.id=RefuellingStation 1 U&fuelFilled=fuelFilled 1 U&typeOfFuel=typeOfFuel 1 U&totalCostIncurred=100&receiptNo=receiptNo 1 U&receiptDate=1508323548",
+			"url": "http://localhost:8899/swm-services/vehiclefuellingdetails/_search?tenantId=default&ids=b8f46f2a89a54a20931f580192323d4d&transactionNo=transactionNo 1&transactionDate=1508323548&vehicleType.id=vehicle Type 1 U&vehicleRegNo.id=vehicle Registration 1 U&vehicleReadingDuringFuelling=100&refuellingStation.id=RefuellingStation 1 U&fuelFilled=fuelFilled 1 U&typeOfFuel=typeOfFuel 1 U&totalCostIncurred=100&receiptNo=receiptNo 1 U&receiptDate=1508323548",
 			"queryParams": [
 				{
 					"key": "tenantId",

@@ -6,7 +6,17 @@ import {ResponsiveContainer, PieChart, Pie, Sector, Cell, Tooltip,
         LineChart, Line, XAxis, YAxis, CartesianGrid, Legend,
         AreaChart, Area }  from 'recharts';
 import Api from '../../../../api/api';
+import RaisedButton from 'material-ui/RaisedButton';
 import styles from '../../../../styles/material-ui';
+var moment = require('moment');
+
+const style = {
+  position:'absolute',
+  zIndex:100,
+  right:20,
+  top:80,
+  margin:12
+};
 
 const COLORS = ['#0088FE', '#00C49F', '#008F7D', '#FFBB28', '#FF8042'];
 
@@ -60,11 +70,30 @@ class charts extends Component{
   }
 
   componentDidMount(){
-    let serviceName = [];
-    let obj={};
+
     let {setLoadingStatus, toggleDailogAndSetText} = this.props;
     var self = this;
     setLoadingStatus('loading');
+
+    //get last 7 days
+    let last7days=[], last7months=[];
+    let dateFrom = moment().subtract(7,'d').format('YYYY-MM-DD');
+    for(let i=1; i<=7; i++){
+      let obj={};
+      obj['REGISTERED']=0;
+      obj['RESOLVED']=0;
+      obj['name']=`${moment(dateFrom).add(i, 'days').format('dddd').toUpperCase()}-${moment(dateFrom).add(i, 'days').format('DD')}`;
+      last7days.push(obj);
+    }
+
+    //get last months
+    let monthFrom = moment().subtract(7,'month').format('YYYY-MM-DD');
+    for(let i=1; i<=7; i++){
+      let obj={};
+      obj['REGISTERED']=0;
+      obj['name']=`${moment(monthFrom).add(i, 'months').format('MMM').toUpperCase()}-${moment(monthFrom).add(i, 'months').format('YYYY')}`;
+      last7months.push(obj);
+    }
 
     Promise.all([
       Api.commonApiPost("/pgr/dashboard", {}),//last 7 months
@@ -74,29 +103,24 @@ class charts extends Component{
 
       try{
 
-        let last7days = [];
-
-        response[1].map((data, index)=>{
-          let keys = Object.keys(data);
+        response[0].map((data)=>{
           let values = Object.values(data)
-          let days = {};
-          let obj = last7days.find((days)=>{return days.name==values[2]});
-          if(!obj){
-            days[keys[0]]=values[0];
-            days[keys[1]]=values[1];
-            days[keys[2]]=values[2];
-            last7days.push(days);
-          }else {
-            if(values[0] != 0){//REGISTERED
-              last7days[last7days.length-1][keys[0]]=values[0];
-            }else {//RESOLVED
-              last7days[last7days.length-1][keys[1]]=values[1];
-            }
-          }
+          let index = last7months.map(function(o) { return o.name; }).indexOf(values[2]);
+          last7months[index]['REGISTERED']=values[0];
+          last7months[index]['RESOLVED']=values[1];
+          return last7months;
+        });
+
+        response[1].map((data)=>{
+          let values = Object.values(data)
+          let index = last7days.map(function(o) { return o.name; }).indexOf(values[2]);
+          last7days[index]['REGISTERED']=values[0];
+          last7days[index]['RESOLVED']=values[1];
+          return last7days;
         });
 
          self.setState({
-           last7months:response[0],
+           last7months:last7months,
            last7days:last7days,
            topComplaintType:response[2]
          });
@@ -123,17 +147,21 @@ class charts extends Component{
   render(){
     return(
       <Grid fluid={true}>
+        <RaisedButton
+          label="PGR Analytics"
+          primary={true}
+          onClick={(e)=>{this.props.setRoute('/pgr/analytics')}}
+          style={style} />
         <Row>
           <Col xs={12} sm={12} md={6} lg={6}>
             <Card style={styles.cardMargin}>
-              <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
-                No. of Complaints
-               < /div>}/>
+              <CardHeader style={styles.cardHeaderPadding}
+              title="No. of Complaints (Last 7 Days)"/>
                <CardText>
                  <ResponsiveContainer width='100%' aspect={4.0/2.0}>
                    <AreaChart data={this.state.last7days}>
                      <XAxis dataKey="name"/>
-                     <YAxis/>
+                     <YAxis allowDecimals={false}/>
                      <CartesianGrid strokeDasharray="3 3"/>
                      <Tooltip/>
                      <Legend verticalAlign="top" height={36}/>
@@ -146,14 +174,13 @@ class charts extends Component{
           </Col>
           <Col xs={12} sm={12} md={6} lg={6}>
             <Card style={styles.cardMargin}>
-              <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
-                No. of Complaints
-               < /div>}/>
+              <CardHeader style={styles.cardHeaderPadding}
+              title="No. of Complaints (Last 7 Months)"/>
                <CardText>
                  <ResponsiveContainer width='100%' aspect={4.0/2.0}>
                    <LineChart data={this.state.last7months}>
                     <XAxis dataKey="name"/>
-                    <YAxis/>
+                    <YAxis allowDecimals={false}/>
                     <CartesianGrid strokeDasharray="3 3"/>
                     <Tooltip/>
                     <Legend verticalAlign="top" height={36}/>
@@ -165,9 +192,7 @@ class charts extends Component{
           </Col>
           <Col xs={12} sm={12} md={12} lg={12}>
             <Card style={styles.cardMargin}>
-              <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
-                Complaint Type Share
-               < /div>}/>
+              <CardHeader style={styles.cardHeaderPadding} title="Complaint Type Share"/>
                <CardText>
                  <ResponsiveContainer width='100%' aspect={4.0/1.0}>
                    <PieChart margin={{bottom: 30}}>
@@ -201,7 +226,8 @@ const mapDispatchToProps = dispatch => ({
   },
   setLoadingStatus: (loadingStatus) => {
     dispatch({type: "SET_LOADING_STATUS", loadingStatus});
-  }
+  },
+  setRoute:(route)=>dispatch({type:'SET_ROUTE',route})
 })
 
 export default connect(mapStateToProps,mapDispatchToProps)(charts);

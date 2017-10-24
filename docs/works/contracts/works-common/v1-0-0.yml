@@ -6,14 +6,13 @@ info:
   version: 1.0.0
   title: eGov Works Management System.
   description: |
-    Definations for works master's
+    Definations for works masters and common objects
   contact:
     name: eGovernments Foundation
     email : contacts@egovernments.org
 schemes:
   - https
 basePath: '/'
-x-api-id: 'org.egov.works.services'
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 
 paths: {}
@@ -926,3 +925,72 @@ definitions:
       - name
       - code
       - expenditureType
+
+  WorkFlowDetails:
+    type: object
+    description: An Object to hold the Application workflow details for a given Abstract Estimate
+    properties:
+      type:
+        type: string
+        description: Workflow type to be processed for an application the Abstract Estimate
+      businessKey:
+        type: string
+        description: Businesskey of the workflow processing application
+      department:
+        type: string
+        description: Department of the workflow processing authority
+      designation:
+        type: string
+        description: Designation of the workflow processing authority
+        maxLength: 1024
+        minLength: 3
+      assignee:
+        type: integer
+        format: int64
+        description: Assignee id
+      action:
+        type: string
+        description: Action to be taken for processing workflow
+      status:
+        type: string
+        description: Status of the application
+      comments:
+        type: string
+        description: Comments given by the workflow processing person
+      senderName:
+        type: string
+        description: Name of the workflow processing person
+      details:
+        type: string
+        description: Details about the workflow process
+      stateId:
+        type: string
+        description: State id of the workflow
+
+  parameters:
+##########################################################
+#Parameter name must start with small case followed by camel case.
+##########################################################
+  pageSize:
+    name: pageSize
+    in: query
+    description: Number of records returned.
+    type: integer
+    minimum: 0
+    exclusiveMinimum: true
+    maximum: 100
+    exclusiveMaximum: false
+    multipleOf: 10
+    default: 20
+  pageNumber:
+    name: pageNumber
+    in: query
+    description: Page number
+    type: integer
+    default: 1
+  sortProperty:
+    name: sortBy
+    in: query
+    description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
+    type: string
+    default: id

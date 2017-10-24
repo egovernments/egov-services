@@ -1,0 +1,902 @@
+{
+	"info": {
+		"name": "eGov_WCMS_NonMetered_WithProperty",
+		"_postman_id": "36fe93a6-6efe-818d-cdb5-4a06f61819e3",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+							"",
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"",
+							"tests[\"Username matches\"] = jsonData.UserRequest.userName.has(request.data[\"username\"]);",
+							"",
+							"postman.setNextRequest(\"Get Connection Types\");"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"if(environment.url.has(\"http://egov-micro-dev.egovernments.org\") && environment.tenantId.has(\"default\")){",
+							"    pm.environment.set(\"username\", \"narasappa\");",
+							"    pm.environment.set(\"password\", \"demo\");",
+							"}",
+							"",
+							"if(environment.url.has(\"http://egov-micro-dev.egovernments.org\") && environment.tenantId.has(\"mh.rohatest\")){",
+							"    pm.environment.set(\"username\", \"shohra\");",
+							"    pm.environment.set(\"password\", \"12345678\");",
+							"}",
+							"",
+							"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"default\")){",
+							"    pm.environment.set(\"username\", \"narasappa\");",
+							"    pm.environment.set(\"password\", \"demo\");",
+							"}",
+							"",
+							"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"mh.rohatest\")){",
+							"    pm.environment.set(\"username\", \"94836\");",
+							"    pm.environment.set(\"password\", \"12345678\");",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"type": "text",
+							"value": "{{username}}"
+						},
+						{
+							"key": "password",
+							"type": "text",
+							"value": "{{password}}"
+						},
+						{
+							"key": "grant_type",
+							"type": "text",
+							"value": "password"
+						},
+						{
+							"key": "scope",
+							"type": "text",
+							"value": "read"
+						},
+						{
+							"key": "tenantId",
+							"type": "text",
+							"value": "{{tenantId}}"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/user/oauth/token",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user",
+						"oauth",
+						"token"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Connection Types",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"tests[\"Status is success\"] = jsonData.responseInfo.status.has(\"200\");",
+							"",
+							"var rand = 0;",
+							"",
+							"var max = jsonData.DataModelList.length - 1;",
+							"",
+							"if(max > 0){",
+							"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+							"}",
+							"",
+							"pm.environment.set(\"connectionType\", jsonData.DataModelList[rand].object);",
+							"",
+							"postman.setNextRequest(\"Get Source Types\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\":{\n      \"authToken\":\"{{access_token}}\",\n      \"ts\":\"12345678\",\n      \"ver\":\"1.0\",\n      \"requesterId\":\"rajesh\",\n      \"action\":\"create\",\n      \"msgId\":\"20170310130900\",\n      \"apiId\":\"emp\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\"\n   }\n}"
+				},
+				"url": {
+					"raw": "{{url}}/wcms-connection/connection/_getconnectiontypes?tenantId={{tenantId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"wcms-connection",
+						"connection",
+						"_getconnectiontypes"
+					],
+					"query": [
+						{
+							"equals": true,
+							"key": "tenantId",
+							"value": "{{tenantId}}"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Source Types",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"tests[\"Status is success\"] = jsonData.ResponseInfo.status.has(\"200\");",
+							"",
+							"var rand = 0;",
+							"",
+							"var max = jsonData.SourceTypes.length - 1;",
+							"",
+							"if(max > 0){",
+							"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+							"}",
+							"",
+							"pm.environment.set(\"sourceType\", jsonData.SourceTypes[rand].name);",
+							"",
+							"postman.setNextRequest(\"Get Storage Reservoirs\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\":{\n      \"authToken\":\"{{access_token}}\",\n      \"ts\":\"12345678\",\n      \"ver\":\"1.0\",\n      \"requesterId\":\"rajesh\",\n      \"action\":\"create\",\n      \"msgId\":\"20170310130900\",\n      \"apiId\":\"emp\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\"\n   }\n}"
+				},
+				"url": {
+					"raw": "{{url}}/wcms/masters/sourcetypes/_search?tenantId={{tenantId}}&pageSize=500",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"wcms",
+						"masters",
+						"sourcetypes",
+						"_search"
+					],
+					"query": [
+						{
+							"equals": true,
+							"key": "tenantId",
+							"value": "{{tenantId}}"
+						},
+						{
+							"equals": true,
+							"key": "pageSize",
+							"value": "500"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Storage Reservoirs",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"tests[\"Status is success\"] = jsonData.ResponseInfo.status.has(\"200\");",
+							"",
+							"var rand = 0;",
+							"",
+							"var max = jsonData.StorageReservoirs.length - 1;",
+							"",
+							"if(max > 0){",
+							"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+							"}",
+							"",
+							"pm.environment.set(\"storageReservoirs\", jsonData.StorageReservoirs[rand].name);",
+							"",
+							"postman.setNextRequest(\"Get Usage Types\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\":{\n      \"authToken\":\"{{access_token}}\",\n      \"ts\":\"12345678\",\n      \"ver\":\"1.0\",\n      \"requesterId\":\"rajesh\",\n      \"action\":\"create\",\n      \"msgId\":\"20170310130900\",\n      \"apiId\":\"emp\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\"\n   }\n}"
+				},
+				"url": {
+					"raw": "{{url}}/wcms/masters/storagereservoirs/_search?tenantId={{tenantId}}&pageSize=500",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"wcms",
+						"masters",
+						"storagereservoirs",
+						"_search"
+					],
+					"query": [
+						{
+							"equals": true,
+							"key": "tenantId",
+							"value": "{{tenantId}}"
+						},
+						{
+							"equals": true,
+							"key": "pageSize",
+							"value": "500"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Usage Types",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"tests[\"Status is success\"] = jsonData.ResponseInfo.status.has(\"200\");",
+							"",
+							"var rand = 0;",
+							"",
+							"var max = jsonData.UsageTypes.length - 1;",
+							"",
+							"if(max > 0){",
+							"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+							"}",
+							"",
+							"pm.environment.set(\"usageType\", jsonData.UsageTypes[rand].code);",
+							"",
+							"postman.setNextRequest(\"Get Sub Usage Types\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\":{\n      \"authToken\":\"{{access_token}}\",\n      \"ts\":\"12345678\",\n      \"ver\":\"1.0\",\n      \"requesterId\":\"rajesh\",\n      \"action\":\"create\",\n      \"msgId\":\"20170310130900\",\n      \"apiId\":\"emp\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\"\n   }\n}"
+				},
+				"url": {
+					"raw": "{{url}}/wcms/masters/usagetypes/_search?tenantId={{tenantId}}&pageSize=500",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"wcms",
+						"masters",
+						"usagetypes",
+						"_search"
+					],
+					"query": [
+						{
+							"equals": true,
+							"key": "tenantId",
+							"value": "{{tenantId}}"
+						},
+						{
+							"equals": true,
+							"key": "pageSize",
+							"value": "500"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Sub Usage Types",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"tests[\"Status is success\"] = jsonData.ResponseInfo.status.has(\"200\");",
+							"",
+							"var rand = 0;",
+							"",
+							"var max = jsonData.UsageTypes.length - 1;",
+							"",
+							"if(max > 0){",
+							"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+							"}",
+							"",
+							"pm.environment.set(\"subUsageType\", jsonData.UsageTypes[rand].code);",
+							"",
+							"postman.setNextRequest(\"Get Hsc PipeSizes\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\":{\n      \"authToken\":\"{{access_token}}\",\n      \"ts\":\"12345678\",\n      \"ver\":\"1.0\",\n      \"requesterId\":\"rajesh\",\n      \"action\":\"create\",\n      \"msgId\":\"20170310130900\",\n      \"apiId\":\"emp\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\"\n   }\n}"
+				},
+				"url": {
+					"raw": "{{url}}/wcms/masters/usagetypes/_search?tenantId={{tenantId}}&parent={{usageType}}&isSubUsageType=true",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"wcms",
+						"masters",
+						"usagetypes",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "{{tenantId}}",
+							"equals": true
+						},
+						{
+							"key": "parent",
+							"value": "{{usageType}}",
+							"equals": true
+						},
+						{
+							"key": "isSubUsageType",
+							"value": "true",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Hsc PipeSizes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"tests[\"Status is success\"] = jsonData.ResponseInfo.status.has(\"200\");",
+							"",
+							"var rand = 0;",
+							"",
+							"var max = jsonData.PipeSizes.length - 1;",
+							"",
+							"if(max > 0){",
+							"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+							"}",
+							"",
+							"pm.environment.set(\"hscPipeSize\", jsonData.PipeSizes[rand].sizeInMilimeter);",
+							"",
+							"postman.setNextRequest(\"Get Property Details\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\":{\n      \"authToken\":\"{{access_token}}\",\n      \"ts\":\"12345678\",\n      \"ver\":\"1.0\",\n      \"requesterId\":\"rajesh\",\n      \"action\":\"create\",\n      \"msgId\":\"20170310130900\",\n      \"apiId\":\"emp\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\"\n   }\n}"
+				},
+				"url": {
+					"raw": "{{url}}/wcms/masters/pipesizes/_search?tenantId={{tenantId}}&pageSize=500",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"wcms",
+						"masters",
+						"pipesizes",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "{{tenantId}}",
+							"equals": true
+						},
+						{
+							"key": "pageSize",
+							"value": "500",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Property Details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"tests[\"status is success\"] = jsonData.responseInfo.status.has(\"SUCCESSFUL\");",
+							"",
+							"for(var i=0;i<jsonData.properties.length;i++){",
+							"    if(jsonData.properties[i].upicNumber){",
+							"        pm.environment.set(\"upicNumber\", jsonData.properties[i].upicNumber);",
+							"        pm.environment.set(\"name\", jsonData.properties[i].owners[0].name);",
+							"        pm.environment.set(\"mobileNo\", jsonData.properties[i].owners[0].mobileNumber);",
+							"        pm.environment.set(\"emailId\", jsonData.properties[i].owners[0].emailId);",
+							"        pm.environment.set(\"aadharNumber\", jsonData.properties[i].owners[0].aadhaarNumber);",
+							"        pm.environment.set(\"doorNo\", jsonData.properties[i].address.addressNumber);",
+							"        pm.environment.set(\"propertyType\", jsonData.properties[i].propertyDetail.propertyType);",
+							"        pm.environment.set(\"noOfFloors\", jsonData.properties[i].propertyDetail.noOfFloors);",
+							"        pm.environment.set(\"localityId\", jsonData.properties[i].boundary.locationBoundary.code);",
+							"        pm.environment.set(\"revenueZoneId\", jsonData.properties[i].boundary.revenueBoundary.code);",
+							"        pm.environment.set(\"adminWardId\", jsonData.properties[i].boundary.adminBoundary.code);",
+							"    }",
+							"}",
+							"",
+							"postman.setNextRequest(\"Create Legacy Water Connection With Property for Non-Metered\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"10032017\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"rajesh\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
+				},
+				"url": {
+					"raw": "{{url}}/pt-property/properties/_search?tenantId={{tenantId}}&pagesize=500&upicNumber=roh000011089",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"pt-property",
+						"properties",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "{{tenantId}}",
+							"equals": true
+						},
+						{
+							"key": "pagesize",
+							"value": "500",
+							"equals": true
+						},
+						{
+							"equals": true,
+							"key": "mobileNumber",
+							"value": "{{mobileNo}}",
+							"disabled": true
+						},
+						{
+							"key": "upicNumber",
+							"value": "roh000011089",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Legacy Water Connection With Property for Non-Metered",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"tests[\"Status is Success\"] = jsonData.ResponseInfo.status.has(\"200\");",
+							"",
+							"tests[\"upicNumber matches\"] = jsonData.Connection[0].property.propertyIdentifier.has(environment.upicNumber);",
+							"",
+							"tests[\"billingType matches\"] = jsonData.Connection[0].billingType.has(\"NONMETERED\");",
+							"",
+							"tests[\"sourceType matches\"] = jsonData.Connection[0].sourceType.has(environment.sourceType);",
+							"",
+							"tests[\"StorageReservior matches\"] = jsonData.Connection[0].storageReservoir.has(environment.storageReservoirs);",
+							"",
+							"tests[\"ConnectionType matches\"] = jsonData.Connection[0].connectionType.has(environment.connectionType);",
+							"",
+							"tests[\"usageType matches\"] = jsonData.Connection[0].usageType.has(environment.usageType);",
+							"",
+							"tests[\"pipeSize matches\"] = jsonData.Connection[0].hscPipeSizeType.has(environment.hscPipeSize);",
+							"",
+							"tests[\"subUsageType matches\"] = jsonData.Connection[0].subUsageType.has(environment.subUsageType);",
+							"",
+							"tests[\"oldConsumer matches\"] = jsonData.Connection[0].legacyConsumerNumber.has(environment.oldConsumerNumber);",
+							"",
+							"tests[\"isLegacy\"] = jsonData.Connection[0].isLegacy;",
+							"",
+							"pm.environment.set(\"consumerNumber\", jsonData.Connection[0].consumerNumber);",
+							"",
+							"pm.environment.set(\"status\", \"consumerNumber\");",
+							"",
+							"postman.setNextRequest(\"Get Water Connection Details\");"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var a = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;",
+							"",
+							"pm.environment.set(\"oldConsumerNumber\", a);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"Connection\": {\n   \"applicationType\": \"NEWCONNECTION\",\n   \"withProperty\": true,\n   \"connectionOwners\": [\n     {\n       \"emailId\": \"abkcd@gmail.com\",\n       \"primaryOwner\": true\n     }\n   ],\n   \"property\": {\n     \"email\": \"{{emailId}}\",\n     \"propertyIdentifier\": \"{{upicNumber}}\",\n     \"mobileNumber\": \"{{mobileNo}}\",\n     \"nameOfApplicant\": \"{{name}}\",\n     \"aadhaarNumber\": \"{{aadharNumber}}\",\n     \"noOfFloors\": 1,\n     \"locality\": null,\n     \"zone\": null,\n     \"ward\": null,\n     \"address\": \"{{doorNo}}\",\n     \"property\": \"{{propertyType}}\"\n   },\n   \"supplyType\": \"Semi Bulk Type\",\n   \"outsideULB\": false,\n   \"meter\": [\n     {\n       \"meterReadings\": [\n         {\n           \"resetFlag\": false\n         },\n         {\n           \"resetFlag\": false\n         },\n         {\n           \"resetFlag\": false\n         }\n       ],\n       \"meterOwner\": \"\",\n       \"meterModel\": \"\",\n       \"meterMake\": \"\",\n       \"meterSlNo\": \"\",\n       \"meterCost\": \"\",\n       \"initialMeterReading\": \"\",\n       \"maximumMeterReading\": \"\"\n     }\n   ],\n   \"documents\": [\n     {\n       \"fileStoreId\": \"\",\n       \"displayName\": \"Aadhaar Card\",\n       \"name\": \"\",\n       \"document\": 15\n     }\n   ],\n   \"legacyConsumerNumber\": \"{{oldConsumerNumber}}\",\n   \"executionDate\": 1505068200000,\n   \"usageType\": \"{{usageType}}\",\n   \"subUsageType\": \"{{subUsageType}}\",\n   \"hscPipeSizeType\": {{hscPipeSize}},\n   \"billingType\": \"NONMETERED\",\n   \"fromDate\": \"\",\n   \"toDate\": \"\",\n   \"connectionType\": \"{{connectionType}}\",\n   \"sourceType\": \"{{sourceType}}\",\n   \"storageReservoir\": \"{{storageReservoirs}}\",\n   \"sumpCapacity\": \"250\",\n   \"billSequenceNumber\": \"1.25\",\n    \"address\": {\n     \"addressLine1\": \"ewfesfwefwefwefwe\",\n     \"city\": \"fewfwfwef\",\n     \"pinCode\": \"151564\"\n   },\n   \"connectionLocation\": {\n     \"revenueBoundary\": {\n       \"code\": \"{{revenueZoneId}}\"\n     },\n     \"adminBoundary\": {\n       \"code\": \"{{adminWardId}}\"\n     },\n     \"locationBoundary\": {\n       \"code\": \"{{localityId}}\"\n     },\n     \"billingAddress\": \"dwasdwa\"\n   },\n   \"numberOfPersons\": \"5\",\n   \"numberOfFamily\": 2,\n   \"tenantId\": \"{{tenantId}}\"\n }\n ,\n \"RequestInfo\": {\n   \"apiId\": \"org.egov.pt\",\n   \"ver\": \"1.0\",\n   \"ts\": 1507706065111,\n   \"action\": \"asd\",\n   \"did\": \"4354648646\",\n   \"key\": \"xyz\",\n   \"msgId\": \"654654\",\n   \"requesterId\": \"61\",\n   \"authToken\": \"{{access_token}}\"\n }\n}"
+				},
+				"url": {
+					"raw": "{{url}}/wcms-connection/connection/_create?tenantId={{tenantId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"wcms-connection",
+						"connection",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "{{tenantId}}",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Water Connection Details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"tests[\"Status is Success\"] = jsonData.ResponseInfo.status.has(\"200\");",
+							"",
+							"for(var i=0;i<jsonData.Connection.length;i++){",
+							"    if(jsonData.Connection[i].consumerNumber.has(environment.consumerNumber)){",
+							"tests[\"sourceType matches\"] = jsonData.Connection[i].sourceType.has(environment.sourceType);",
+							"tests[\"StorageReservior matches\"] = jsonData.Connection[i].storageReservoir.has(environment.storageReservoirs);",
+							"tests[\"ConnectionType matches\"] = jsonData.Connection[i].connectionType.has(environment.connectionType);",
+							"tests[\"usageType matches\"] = jsonData.Connection[i].usageType.has(environment.usageType);",
+							"tests[\"pipeSize matches\"] = jsonData.Connection[i].hscPipeSizeType.has(environment.hscPipeSize);",
+							"tests[\"subUsageType matches\"] = jsonData.Connection[i].subUsageType.has(environment.subUsageType);",
+							"tests[\"oldConsumer matches\"] = jsonData.Connection[i].legacyConsumerNumber.has(environment.oldConsumerNumber);",
+							"tests[\"isLegacy\"] = jsonData.Connection[i].isLegacy;",
+							"tests[\"ConsumerNumber matches\"] = jsonData.Connection[i].consumerNumber.has(environment.consumerNumber);",
+							"tests[\"name matches\"] = jsonData.Connection[i].property.propertyOwner[0].name.has(environment.name);",
+							"tests[\"mobileNo matches\"] = jsonData.Connection[i].property.propertyOwner[0].mobileNumber.has(environment.mobileNo);",
+							"tests[\"aadharNumber matches\"] = jsonData.Connection[i].property.propertyOwner[0].aadhaarNumber.has(environment.aadharNumber);",
+							"    }",
+							"}",
+							"switch(environment.status){",
+							"    ",
+							"    case \"consumerNumber\" :",
+							"        pm.environment.set(\"status\",\"mobileNumber\");",
+							"        postman.setNextRequest(\"Get Water Connection Details\");",
+							"        break;",
+							"        ",
+							"    case \"mobileNumber\" :",
+							"        pm.environment.set(\"status\",\"aadharNumber\");",
+							"        postman.setNextRequest(\"Get Water Connection Details\");",
+							"        break;",
+							"        ",
+							"    case \"aadharNumber\" :",
+							"        pm.environment.set(\"status\",\"ownerName\");",
+							"        postman.setNextRequest(\"Get Water Connection Details\");",
+							"        break;    ",
+							"    ",
+							"    case \"ownerName\" :",
+							"        pm.environment.set(\"status\",\"oldConsumerNumber\");",
+							"        postman.setNextRequest(\"Get Water Connection Details\");",
+							"        break;    ",
+							"        ",
+							"    case \"oldConsumerNumber\" :",
+							"        pm.environment.set(\"status\",\"done\");",
+							"        postman.setNextRequest(\"Logout\");",
+							"        break;        ",
+							"}"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"if(environment.status.has(\"consumerNumber\")){",
+							"    pm.environment.set(\"searchParameter\", \"consumerNumber\");",
+							"    pm.environment.set(\"searchValue\", environment.consumerNumber);",
+							"}",
+							"",
+							"if(environment.status.has(\"mobileNumber\")){",
+							"    pm.environment.set(\"searchParameter\", \"mobileNumber\");",
+							"    pm.environment.set(\"searchValue\", environment.mobileNo);",
+							"}",
+							"",
+							"if(environment.status.has(\"aadharNumber\")){",
+							"    pm.environment.set(\"searchParameter\", \"aadhaarNumber\");",
+							"    pm.environment.set(\"searchValue\", environment.aadharNumber);",
+							"}",
+							"",
+							"if(environment.status.has(\"ownerName\")){",
+							"    pm.environment.set(\"searchParameter\", \"name\");",
+							"    pm.environment.set(\"searchValue\", environment.name);",
+							"}",
+							"",
+							"if(environment.status.has(\"oldConsumerNumber\")){",
+							"    pm.environment.set(\"searchParameter\", \"legacyConsumerNumber\");",
+							"    pm.environment.set(\"searchValue\", environment.oldConsumerNumber);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\":{\n      \"authToken\":\"{{access_token}}\",\n      \"ts\":\"12345678\",\n      \"ver\":\"1.0\",\n      \"requesterId\":\"rajesh\",\n      \"action\":\"create\",\n      \"msgId\":\"20170310130900\",\n      \"apiId\":\"emp\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\"\n   }\n}"
+				},
+				"url": {
+					"raw": "{{url}}/wcms-connection/connection/_search?tenantId={{tenantId}}&{{searchParameter}}={{searchValue}}&pageSize=500",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"wcms-connection",
+						"connection",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "{{tenantId}}",
+							"equals": true
+						},
+						{
+							"key": "{{searchParameter}}",
+							"value": "{{searchValue}}",
+							"equals": true
+						},
+						{
+							"key": "pageSize",
+							"value": "500",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\"RequestInfo\":{\"apiId\":\"org.egov.pgr\",\"ver\":\"1.0\",\"ts\":\"13-04-2017 12:13:30\",\"action\":\"POST\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\": \"{{access_token}}\"\n }}"
+				},
+				"url": {
+					"raw": "{{url}}/user/_logout?access_token={{access_token}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user",
+						"_logout"
+					],
+					"query": [
+						{
+							"equals": true,
+							"key": "access_token",
+							"value": "{{access_token}}"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

@@ -8,7 +8,7 @@ UIInfo:
       fields:
       - vehicleFuellingDetails[0].vehicleType.name
       - vehicleFuellingDetails[0].vehicleRegNo.regNumber
-      - vehicleFuellingDetails[0].vehicleReadingDuringFuelling
+      - vehicleFuellingDetails[0].refuellingStation.name
     VehicleDetails3:
       fields:
       - vehicleFuellingDetails[0].refuellingStation.name

@@ -46,15 +46,34 @@ let searchTemplate = function (module, numCols, path, config, definition, uiInfo
 				"minLength": definition[paramKey].minLength,
 				"patternErrorMsg": module + ".create.field.message." + paramKey
 			};
-		}
+		} else {
+			let paramKey = parameterConfig[i].name;
+			localeFields[module + ".create" + paramKey] = getTitleCase(paramKey);
+			fields[paramKey] = {
+				"name": paramKey,
+				"jsonPath": paramKey,
+				"label": module + ".create" + paramKey,
+				"pattern": parameterConfig[i].pattern,
+				"type": parameterConfig[i].enum ? "singleValueList" : parameterConfig[i].format == "date" ? "datePicker" : getType(parameterConfig[i].type),
+				"isRequired": parameterConfig[i].required,
+				"isDisabled": parameterConfig[i].readOnly ? true : false,
+				"defaultValue": parameterConfig[i].default,
+				"maxLength": parameterConfig[i].maxLength,
+				"minLength": parameterConfig[i].minLength,
+				"patternErrorMsg": module + ".create.field.message." + paramKey
+			};
+		} 
 	}
 
 	if (uiInfoDef.dependents && uiInfoDef.dependents.length) {
         for (let i = 0; i < uiInfoDef.dependents.length; i++) {
-            if (fields[uiInfoDef.dependents[i].onChangeField]) {
-                fields[uiInfoDef.dependents[i].onChangeField].depedants = [];
+        	var splitArr = uiInfoDef.dependents[i].onChangeField.split(".");
+        	splitArr.shift();
+        	var paramKey = splitArr.join(".");
+            if (fields[paramKey]) {
+                fields[paramKey].depedants = [];
                 for (let key in uiInfoDef.dependents[i].affectedFields) {
-                    fields[uiInfoDef.dependents[i].onChangeField].depedants.push({
+                    fields[paramKey].depedants.push({
                         "jsonPath": key,
                         "type": uiInfoDef.dependents[i].affectedFields[key].type,
                         "pattern": uiInfoDef.dependents[i].affectedFields[key].pattern
@@ -66,31 +85,40 @@ let searchTemplate = function (module, numCols, path, config, definition, uiInfo
 
 	if(uiInfoDef.multiValueList && uiInfoDef.multiValueList.length) {
         for(var i=0; i<uiInfoDef.multiValueList.length; i++) {
-            if(fields[uiInfoDef.multiValueList[i]]) {
-                fields[uiInfoDef.multiValueList[i]].type = "multiValueList";
+        	var splitArr = uiInfoDef.multiValueList[i].split(".");
+        	splitArr.shift();
+        	var paramKey = splitArr.join(".");
+            if(fields[paramKey]) {
+                fields[paramKey].type = "multiValueList";
             } else {
-                errors[uiInfoDef.multiValueList[i]] = "Field exists in x-ui-info multiValueList section but not present in API specifications. REFERENCE PATH: " + uiInfoDef.referencePath;   
+                errors[paramKey] = "Field exists in x-ui-info multiValueList section but not present in API specifications. REFERENCE PATH: " + uiInfoDef.referencePath;   
             }
         }
     }
 
     if(uiInfoDef.checkboxes && uiInfoDef.checkboxes.length) {
         for(var i=0; i<uiInfoDef.checkboxes.length; i++) {
-            if(fields[uiInfoDef.checkboxes[i]]) {
-                fields[uiInfoDef.checkboxes[i]].type = "checkbox";
+        	var splitArr = uiInfoDef.checkboxes[i].split(".");
+        	splitArr.shift();
+        	var paramKey = splitArr.join(".");
+            if(fields[paramKey]) {
+                fields[paramKey].type = "checkbox";
             } else {
-                errors[uiInfoDef.checkboxes[i]] = "Field exists in x-ui-info checkboxes section but not present in API specifications. REFERENCE PATH: " + uiInfoDef.referencePath;   
+                errors[paramKey] = "Field exists in x-ui-info checkboxes section but not present in API specifications. REFERENCE PATH: " + uiInfoDef.referencePath;   
             }
         }
     }
 
     if(uiInfoDef.radios && uiInfoDef.radios.length) {
         for(var i=0; i<uiInfoDef.radios.length; i++) {
-            if(fields[uiInfoDef.radios[i].jsonPath]) {
+        	var splitArr = uiInfoDef.radios[i].jsonPath.split(".");
+        	splitArr.shift();
+        	var paramKey = splitArr.join(".");
+            if(fields[paramKey]) {
             	localeFields[module + ".create." + uiInfoDef.radios[i].trueLabel] = getTitleCase(uiInfoDef.radios[i].trueLabel);
                 localeFields[module + ".create." + uiInfoDef.radios[i].falseLabel] = getTitleCase(uiInfoDef.radios[i].falseLabel);
-                fields[uiInfoDef.radios[i].jsonPath].type = "radio";
-                fields[uiInfoDef.radios[i].jsonPath].values = [{
+                fields[paramKey].type = "radio";
+                fields[paramKey].values = [{
                     label: module + ".create." + uiInfoDef.radios[i].trueLabel,
                     value: true
                 }, {

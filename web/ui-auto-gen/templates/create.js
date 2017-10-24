@@ -12,7 +12,6 @@ let getFieldsFromInnerObject = function(reference, fields, definition, module, j
             if (["id", "tenantId", "auditDetails", "assigner"].indexOf(key) > -1) continue;
 
             if (definition[reference].properties[key].type == "array") {
-                console.log(definition[reference].properties[key]);
                 let refSplitArr = definition[reference].properties[key].items.$ref.split("/");
                 getFieldsFromInnerObject(refSplitArr[refSplitArr.length - 1], fields, definition, module, (isArray ? (jPath + "[0]") : jPath) + "." + key, true);
             } else if (definition[reference].properties[key].$ref) {

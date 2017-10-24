@@ -369,7 +369,138 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
-        - Detailed Estimate   
+        - Detailed Estimate
+        
+  /revisionestimates/_search:
+    post:
+      summary: Get the list of Revision Estimate(s) defined in the system.
+      description: |
+          Search and get Revision Estimate(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Revision Estimate(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of Revision Estimate as defined in RevisionEstimateResponse model.
+          
+          Search results will be sorted by the sortProperty Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageSize"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
+        - name: revisionEstimateNumbers
+          in: query
+          description: Comma separated list of Revision Estimate Numbers to get the Revision Estimates
+          required: false
+          type: array
+          items:
+            type: string
+          allowEmptyValue: true
+        - name: ids
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: Comma separated list of Ids of Revision Estimate to get the Revision Estimates
+        - name: fromDate
+          in: query
+          required: false
+          description: Epoch time from when the Revision Estimate created
+          type: integer
+          format: int64
+        - name: toDate
+          in: query
+          required: false
+          description: Epoch time till when the Revision Estimate created
+          type: integer
+          format: int64
+        - name: status
+          in: query
+          required: false
+          description: The Status of the Revision Estimate.
+          type: string
+        - name: createdBy
+          in: query
+          description: Unique user name of the User who created the Revision Estimate.
+          required: false
+          type: string
+        - name: currentOwner
+          in: query
+          description: Unique user name of the User who owns(work flow user) the Revision Estimate.
+          required: false
+          type: string
+      responses:
+        200:
+          description: Revision Estimate(s) Retrieved Successfully
+          schema:
+            $ref: "#/definitions/RevisionEstimateResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Revision Estimate
+       
+  /revisionestimates/_create:
+    post:
+      summary: Create new Revision Estimate(s).
+      description: |
+          To create new Revision Estimate in the system. API supports bulk creation with max limit as defined in the Revision Estimate Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Revision Estimate, please pass array with one Revision Estimate object. Revision Estimate will be created for Approved Letter of Acceptance. Revision Estimate extends Detailed Estimate.
+          
+      parameters:
+        - name: RevisionEstimateRequest
+          in: body
+          description: Details of the new Revision Estimate(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/RevisionEstimateRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Revision Estimate(s) created successfully
+          schema:
+            $ref: '#/definitions/RevisionEstimateResponse'
+        400:
+          description: Revision Estimate(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Revision Estimate 
+        
+  /revisionestimates/_update:
+    post:
+      summary: Update existing Revision Estimate(s).
+      description: |
+          To update existing Revision Estimate in the system. API supports bulk updation with max limit as defined in the Revision Estimate Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Revision Estimate, please pass array with one Revision Estimate object.
+          In update all the fields are disabled except the Work Flow Deatils and the fields which needs to be captured at different status are enabled.
+          
+      parameters:
+        - name: RevisionEstimateRequest
+          in: body
+          description: Details of Revision Estimate(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/RevisionEstimateRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Revision Estimate(s) updated successfully
+          schema:
+            $ref: '#/definitions/RevisionEstimateResponse'
+        400:
+          description: Revision Estimate(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Revision Estimate
        
 definitions:
 ########################################################
@@ -1286,11 +1417,55 @@ definitions:
       - tenantId
       - name
       - code
+      
+  RevisionEstimate:
+    type: object
+    description: An Object that hold Revision Estimate data
+    allOf:
+        - $ref: '#/definitions/DetailedEstimate'
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the RevisionEstimate
+      tenantId:
+        type: string
+        description: Tenant id of the Revision Estimate
+        maxLength: 128
+        minLength: 4
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      
+  RevisionEstimateRequest:
+      description: Contract class to send response. Array of Revision Estimate items are used in case of search results, also multiple  Revision Estimate item is used for create and update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        revisionEstimates:
+          description: Used for create and update only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: '#/definitions/RevisionEstimate'
+
+  RevisionEstimateResponse:
+      description: Contract class to send response. Array of Revision Estimate items are used in case of search results, also multiple  Revision Estimate item is used for create and update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        RevisiontEstimates:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/RevisionEstimate'
 
 tags:
   - name: Abstract Estimate
     description: APIs required for Abstract Estimate.
   - name: Detailed Estimate
-    description: APIs required for Detailed Estimate. 
-
-
+    description: APIs required for Detailed Estimate.
+  - name: Revision Estimate
+    description: APIs required for Revision Estimate.

@@ -34,6 +34,13 @@ definitions:
       - Fixed Deposit Receipt
       - Bank Guarantee
       
+  ExpenditureType:
+    type: string
+    enum:
+      - CAPITAL
+      - REVENUE
+      - OTHERS
+      
   AbstractEstimateStatus:
     type: string
     enum:
@@ -413,10 +420,13 @@ definitions:
         description: Mobile Number of the Contractor
         pattern: "[0-9]"
         maxLength: 10
+        exclusiveMaximum: true
       panNumber:
         type: string
         description: PAN Number of the Contractor
-        maxLength: 20
+        maxLength: 10
+        pattern: '[A-Z]{5}[0-9]{4}[A-Z]{1}'
+        exclusiveMaximum: true
       tinNumber:
         type: string
         description: TIN Number of the Contractor
@@ -424,11 +434,12 @@ definitions:
       bank:
         type: string
         description: Bank of the Contractor
-        maxLength: 12
+        maxLength: 100
       bankAccountNumber:
         type: number
         description: Bank Account Number of the Contractor
         maxLength: 20
+        pattern: "[0-9]"
       pwdApprovalCode:
         type: string
         description: PWD Approval Code of the Contractor
@@ -622,6 +633,7 @@ definitions:
       active:
         type: boolean
         description: Status of Sub Type Of Work
+        default: true
       parent:
         $ref: '#/definitions/TypeOfWork'
     required:
@@ -704,7 +716,7 @@ definitions:
         $ref: '#/definitions/NonSOR'
       unitRate:
         type: number
-        format: double
+        format: BigDecimal
         description: Unit Rate for Estimate Template Activitie
 
       auditDetails:
@@ -809,8 +821,7 @@ definitions:
         description: Epoch time of the end date of Overhead Rates
       lumpsumAmount:
         type: number
-        format: double
-        pattern: "[0-9]"
+        format: BigDecimal
         description: Lumpsum Amount to be applied for the given overhead, Either of the Lumpsum Amount or Percentage is mandatory
       percentage:
         type: number
@@ -839,7 +850,7 @@ definitions:
         minLength: 4
       typeOfDocument:
         type: string
-        description: Type Of Document of the Remarks MAster
+        description: Type Of Document of the Remarks Master
         maxLength: 100
         minLength: 1
       remarksType:
@@ -915,10 +926,7 @@ definitions:
         minLength: 1
       expenditureType:
         type: string
-        enum:
-          - CAPITAL
-          - REVENUE
-          - OTHERS
+        description: Expenditure type for the nature of work
 
     required:
       - tenantId

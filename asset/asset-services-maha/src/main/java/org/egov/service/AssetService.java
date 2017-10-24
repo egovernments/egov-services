@@ -46,6 +46,7 @@ public class AssetService {
 		asset.setId(assetCommonService.getNextId(Sequence.ASSETSEQUENCE));
 
 		log.debug("assetRequest createAsync::" + assetRequest);
+		asset.setAuditDetails(assetCommonService.getAuditDetails(assetRequest.getRequestInfo()));
 
 		logAwareKafkaTemplate.send(applicationProperties.getCreateAssetTopicNameTemp(), assetRequest);
 

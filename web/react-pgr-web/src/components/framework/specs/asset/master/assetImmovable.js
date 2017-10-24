@@ -177,7 +177,7 @@ var dat = {
   						"pattern": "",
   						"type": "singleValueList",
   						"url": "",
-  						"isRequired": false,
+  						"isRequired": true,
   						"isDisabled": false,
   						"requiredErrMsg": "",
   						"patternErrMsg": "",
@@ -287,7 +287,7 @@ var dat = {
             "type": "singleValueList",
             "url": "/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$..id|$..name",
 					//"url": "",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -514,7 +514,7 @@ var dat = {
             "pattern": "",
             "type": "singleValueList",
             "url": "",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
@@ -540,7 +540,7 @@ var dat = {
             "pattern": "",
             "type": "singleValueList",
             "url": "",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
@@ -566,7 +566,7 @@ var dat = {
             "pattern": "",
             "type": "singleValueList",
             "url": "",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
@@ -874,7 +874,11 @@ var dat = {
 	},
 	"asset.view": {
 		"numCols": 12/2,
+<<<<<<< f13a53aa7f500b1f27d7ade4a75d3b4e5ef57dc9
 		"url": "asset-services-maha/assets/_search?ids={id}",
+=======
+		"url": "asset-services/assets/_search?id={id}",
+>>>>>>> view screen updated for search
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "Assets",

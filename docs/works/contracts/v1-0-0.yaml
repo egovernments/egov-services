@@ -1467,7 +1467,143 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
        - Track Milestone
+  
+  /contractoradvance/_search:
+    post:
+      summary: Get the list of Advance Requisition(s) defined in the system.
+      description: |
+          Search and get Advance Requisition(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Advance Requisition(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of Advance Requisition as defined in AdvanceRequisitionResponse model.
+          
+          Search results will be sorted by the sortProperty Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortProperty"
+        - name: ids
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: Comma separated list of Ids of Contractor Advance Requistion to get the Contractor Advance Requistions
+        - name: advanceRequisitionNumbers
+          type: array
+          items:
+            type: string
+          in: query
+          description: Comma separated list of Contractor Advance Requistion Numbers of  Contractor Advance Requistion to get the Contractor Advance Requistions
+          required: false
+        - name: loaNumbers
+          type: array
+          items:
+            type: string
+          in: query
+          description: Comma separated list of Letter of Acceptance Numbers
+        - name: fromDate
+          in: query
+          required: false
+          description: Epoch time from Advance Requisition Created Date
+          type: integer
+          format: int64
+        - name: toDate
+          in: query
+          description: Epoch time till the Advance Requisition Created Date
+          required: false
+          type: integer
+          format: int64
+        - name: status
+          in: query
+          description: Status of the Advance Requisition
+          required: false
+          type: string
+        - name: contractorName
+          in: query
+          required: false
+          description: Name of the contractor 
+          type: string
+        - name: advanceBillNumber
+          in: query
+          required: false
+          description: Advance Requisition Bill Number
+          type: string
+      
+      responses:
+        200:
+          description: Advance Requisition(s) Retrived Successfully
+          schema:
+            $ref: "#/definitions/ContractorAdvanceRequisitionResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Contractor Advance Requisition
        
+  /contractoradvance/_create:
+    post:
+      summary: Create new Contractor Advance Requisition(s).
+      description: |
+          To create new Contractor Advance Requisition Form in the system. API supports bulk creation with max limit as defined in the Contractor Advance Requisition Form Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Contractor Advance Requisition Form, please pass array with one Contractor Advance Requisition Form object.
+          
+      parameters:
+        - name: ContractorAdvanceRequisitionRequest
+          in: body
+          description: Details for the new Contractor Advance Requisition Form(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/ContractorAdvanceRequisitionRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: ReponseInfo with Contractor Advance Requisition Form(s) created successfully
+          schema:
+            $ref: '#/definitions/ContractorAdvanceRequisitionResponse'
+        400:
+          description: Contractor Advance Requisition Form(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Contractor Advance Requisition
+        
+  /contractoradvance/_update:
+    post:
+      summary: update existing Contractor Advance Requisition(s).
+      description: |
+          To update existing Contractor Advance Requisition Form in the system. API supports bulk updation with max limit as defined in the Contractor Advance Requisition Form Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Contractor Advance Requisition Form, please pass array with one Contractor Advance Requisition Form object.
+          
+      parameters:
+        - name: ContractorAdvanceRequisitionRequest
+          in: body
+          description: Details of the Contractor Advance Requisition Form(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/ContractorAdvanceRequisitionRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: ReponseInfo with Contractor Advance Requisition Form(s) updated sudcessfully
+          schema:
+            $ref: '#/definitions/ContractorAdvanceRequisitionResponse'
+        400:
+          description: Contractor Advance Requisition Form(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Contractor Advance Requisition
+
   /qualitytestings/_create:
     post:
       summary: Create new Quality Testing(s).
@@ -3858,6 +3994,58 @@ definitions:
         maximum: 500
         items:
           $ref: '#/definitions/QualityTesting'
+  ContractorAdvanceRequisitionRequest:
+      description: Contract class to send response. Array of ContractorAdvanceRequisition items are used in case of search results, whereas single ContractorAdvanceRequisition item is used for create and update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        contractorAdvanceRequisitions:
+          description: Used for create and update only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/ContractorAdvanceRequisition'
+
+  ContractorAdvanceRequisitionResponse:
+      description: Contract class to send response. Array of ContractorAdvanceRequisition items are used in case of search results, whereas single ContractorAdvanceRequisition item is used for create and update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        contractorAdvanceRequisitions:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/ContractorAdvanceRequisition'
+    
+  ContractorAdvanceRequisition:
+    type: object
+    description: A Object holds the basic data for a ContractorAdvanceRequisition
+    allOf:
+    - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-advancerequisition/v1-0-0.yaml#/definitions/AdvanceRequisition'
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the Contractor Advance Requisition Form
+      tenantId:
+        type: string
+        description: tenant id of the Contractor Advance Requisition Form
+        maxLength: 128
+        minLength: 4
+      
+      letterOfAcceptanceEstimate:
+        $ref: '#/definitions/LetterOfAcceptanceEstimate'
+      workFlowDetails:
+        $ref: '#/definitions/WorkFlowDetails'
+      stateId:
+        type: string
+        description: State id of the workflow
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - letterOfAcceptanceEstimate
 
 parameters:
 ##########################################################
@@ -3907,5 +4095,7 @@ tags:
     description: APIs required for Milestone.
   - name: Track Milestone
     description: APIs required for Track Milestone.
+  - name: Contractor Advance Requisition
+    description: APIs required for Contractor Advance Requisition.
   - name: Quality Testing
     description: APIs required for Quality Testing.

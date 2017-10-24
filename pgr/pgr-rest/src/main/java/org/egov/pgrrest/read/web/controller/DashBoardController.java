@@ -2,6 +2,7 @@ package org.egov.pgrrest.read.web.controller;
 
 import org.egov.pgrrest.read.domain.model.TopComplaintTypesResponse;
 import org.egov.pgrrest.read.domain.service.DashboardService;
+import org.egov.pgrrest.read.web.contract.AgeingResponse;
 import org.egov.pgrrest.read.web.contract.DashboardResponse;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +42,14 @@ public class DashBoardController {
         return getTopComplaintTypesList(responseList);
     }
 
+    @PostMapping("/ageing")
+    public List<AgeingResponse> getAgeingData(@RequestParam(value = "tenantId", defaultValue = "default") String tenantId){
+
+        List<org.egov.pgrrest.read.domain.model.AgeingResponse> responseList = dashboardService.getComplaintsAgeingData(tenantId);
+
+        return getAgeingResponseList(responseList);
+    }
+
     private List<DashboardResponse> getResponseList(List<org.egov.pgrrest.read.domain.model.DashboardResponse> responseList){
         return responseList.stream()
             .map(record -> record.toContract(record))
@@ -55,6 +64,14 @@ public class DashBoardController {
 
     private List<org.egov.pgrrest.read.web.contract.TopComplaintTypesResponse> getTopComplaintTypesList(
         List<TopComplaintTypesResponse> responseList){
+
+        return responseList.stream()
+            .map(record -> record.toContract())
+            .collect(Collectors.toList());
+    }
+
+    private List<AgeingResponse> getAgeingResponseList(
+        List<org.egov.pgrrest.read.domain.model.AgeingResponse> responseList){
 
         return responseList.stream()
             .map(record -> record.toContract())

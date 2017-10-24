@@ -1,5 +1,6 @@
 package org.egov.pgrrest.read.domain.service;
 
+import org.egov.pgrrest.read.domain.model.AgeingResponse;
 import org.egov.pgrrest.read.domain.model.DashboardResponse;
 import org.egov.pgrrest.read.domain.model.TopComplaintTypesResponse;
 import org.egov.pgrrest.read.persistence.repository.DashBoardRepository;
@@ -30,5 +31,9 @@ public class DashboardService {
 
     public List<TopComplaintTypesResponse> getTopComplaintTypes(String tenantId, int size){
         return dashboardRepository.getTopComplaintTypeWithCount(tenantId, size);
+    }
+
+    public List<AgeingResponse> getComplaintsAgeingData(String tenantId){
+        return dashboardRepository.getAgeingOfComplaints(tenantId);
     }
 }

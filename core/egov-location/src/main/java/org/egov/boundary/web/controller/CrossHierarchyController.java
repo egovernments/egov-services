@@ -1,3 +1,43 @@
+/*
+ * eGov suite of products aim to improve the internal efficiency,transparency,
+ *    accountability and the service delivery of the government  organizations.
+ *
+ *     Copyright (C) <2015>  eGovernments Foundation
+ *
+ *     The updated version of eGov suite of products as by eGovernments Foundation
+ *     is available at http://www.egovernments.org
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program. If not, see http://www.gnu.org/licenses/ or
+ *     http://www.gnu.org/licenses/gpl.html .
+ *
+ *     In addition to the terms of the GPL license to be adhered to in using this
+ *     program, the following additional terms are to be complied with:
+ *
+ *         1) All versions of this program, verbatim or modified must carry this
+ *            Legal Notice.
+ *
+ *         2) Any misrepresentation of the origin of the material is prohibited. It
+ *            is required that all modified versions of this material be marked in
+ *            reasonable ways as different from the original version.
+ *
+ *         3) This license does not grant any rights to any user of the program
+ *            with regards to rights under trademark law for use of the trade names
+ *            or trademarks of eGovernments Foundation.
+ *
+ *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
+ */
+
 package org.egov.boundary.web.controller;
 
 import java.util.ArrayList;
@@ -39,18 +79,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class CrossHierarchyController {
 	@Autowired
 	private CrossHierarchyService crossHierarchyService;
-	
+
 	@Autowired
 	private BoundaryService boundaryService;
-	
+
 	@Autowired
 	private BoundaryTypeService boundaryTypeService;
-
 
 	@PostMapping
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid CrossHierarchyRequest crossHierarchyRequest,
-									BindingResult errors) {
+			BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
@@ -78,8 +117,8 @@ public class CrossHierarchyController {
 	@PutMapping(value = "/{code}")
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody @Valid CrossHierarchyRequest crossHierarchyRequest,
-									BindingResult errors, @PathVariable String code,
-									@RequestParam(value = "tenantId", required = true) String tenantId) {
+			BindingResult errors, @PathVariable String code,
+			@RequestParam(value = "tenantId", required = true) String tenantId) {
 		if (errors.hasErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
@@ -117,10 +156,11 @@ public class CrossHierarchyController {
 		}
 		return new ResponseEntity<CrossHierarchyResponse>(crossHierarchyResponse, HttpStatus.OK);
 	}
-	
+
 	@PostMapping(value = "/_search")
 	@ResponseBody
-	public ResponseEntity<?> searchCrossHierarch(@RequestBody @Valid CrossHierarchySearchRequest crossHierarchyRequest) {
+	public ResponseEntity<?> searchCrossHierarch(
+			@RequestBody @Valid CrossHierarchySearchRequest crossHierarchyRequest) {
 
 		CrossHierarchyResponse crossHierarchyResponse = new CrossHierarchyResponse();
 		if (crossHierarchyRequest.getCrossHierarchy() != null
@@ -170,10 +210,10 @@ public class CrossHierarchyController {
 	private List<ErrorField> getErrorFields(final CrossHierarchyRequest crossHierarchyRequest) {
 		final List<ErrorField> errorFields = new ArrayList<>();
 		addTenantIdValidationError(crossHierarchyRequest, errorFields);
-		addCrossHierarchyParentValidationError(crossHierarchyRequest,errorFields);
-		addCrossHierarchyChildValidationError(crossHierarchyRequest,errorFields);
-		addCrossHierarchyParentTypeValidationError(crossHierarchyRequest,errorFields);
-		addCrossHierarchyChildTypeValidationError(crossHierarchyRequest,errorFields);
+		addCrossHierarchyParentValidationError(crossHierarchyRequest, errorFields);
+		addCrossHierarchyChildValidationError(crossHierarchyRequest, errorFields);
+		addCrossHierarchyParentTypeValidationError(crossHierarchyRequest, errorFields);
+		addCrossHierarchyChildTypeValidationError(crossHierarchyRequest, errorFields);
 		return errorFields;
 	}
 
@@ -188,22 +228,28 @@ public class CrossHierarchyController {
 		}
 		return errorFields;
 	}
-	
+
 	private List<ErrorField> addCrossHierarchyParentValidationError(final CrossHierarchyRequest crossHierarchyRequest,
-			final List<ErrorField> errorFields){
-		if(crossHierarchyRequest.getCrossHierarchy().getParent() == null){
-			final ErrorField errorField = ErrorField.builder().code(BoundaryConstants.CROSSHIERARCHY_PARENT_MANDATORY_CODE)
+			final List<ErrorField> errorFields) {
+		if (crossHierarchyRequest.getCrossHierarchy().getParent() == null) {
+			final ErrorField errorField = ErrorField.builder()
+					.code(BoundaryConstants.CROSSHIERARCHY_PARENT_MANDATORY_CODE)
 					.message(BoundaryConstants.CROSSHIERARCHY_PARENT_MANADATORY_ERROR_MESSAGE)
 					.field(BoundaryConstants.CROSSHIERARCHY_PARENT_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
-		} else if (crossHierarchyRequest.getCrossHierarchy().getParent() != null && crossHierarchyRequest.getCrossHierarchy().getParent().getId()==null){
-			final ErrorField errorField = ErrorField.builder().code(BoundaryConstants.CROSSHIERARCHY_PARENTID_MANDATORY_CODE)
+		} else if (crossHierarchyRequest.getCrossHierarchy().getParent() != null
+				&& crossHierarchyRequest.getCrossHierarchy().getParent().getId() == null) {
+			final ErrorField errorField = ErrorField.builder()
+					.code(BoundaryConstants.CROSSHIERARCHY_PARENTID_MANDATORY_CODE)
 					.message(BoundaryConstants.CROSSHIERARCHY_PARENTID_MANADATORY_ERROR_MESSAGE)
 					.field(BoundaryConstants.CROSSHIERARCHY_PARENTID_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
-		} else if(crossHierarchyRequest.getCrossHierarchy().getParent() != null && crossHierarchyRequest.getCrossHierarchy().getParent().getId()!=null){
-			if (!(boundaryService.findByTenantIdAndId(crossHierarchyRequest.getCrossHierarchy().getParent().getId(), crossHierarchyRequest.getCrossHierarchy().getTenantId())!=null)){
-				final ErrorField errorField = ErrorField.builder().code(BoundaryConstants.CROSSHIERARCHY_PARENTID_INVALID_CODE)
+		} else if (crossHierarchyRequest.getCrossHierarchy().getParent() != null
+				&& crossHierarchyRequest.getCrossHierarchy().getParent().getId() != null) {
+			if (!(boundaryService.findByTenantIdAndId(crossHierarchyRequest.getCrossHierarchy().getParent().getId(),
+					crossHierarchyRequest.getCrossHierarchy().getTenantId()) != null)) {
+				final ErrorField errorField = ErrorField.builder()
+						.code(BoundaryConstants.CROSSHIERARCHY_PARENTID_INVALID_CODE)
 						.message(BoundaryConstants.CROSSHIERARCHY_PARENTID_INVALID_ERROR_MESSAGE)
 						.field(BoundaryConstants.CROSSHIERARCHY_PARENTID_INVALID_FIELD_NAME).build();
 				errorFields.add(errorField);
@@ -211,22 +257,28 @@ public class CrossHierarchyController {
 		}
 		return errorFields;
 	}
-	
+
 	private List<ErrorField> addCrossHierarchyChildValidationError(final CrossHierarchyRequest crossHierarchyRequest,
-			final List<ErrorField> errorFields){
-		if(crossHierarchyRequest.getCrossHierarchy().getChild() == null){
-			final ErrorField errorField = ErrorField.builder().code(BoundaryConstants.CROSSHIERARCHY_CHILD_MANDATORY_CODE)
+			final List<ErrorField> errorFields) {
+		if (crossHierarchyRequest.getCrossHierarchy().getChild() == null) {
+			final ErrorField errorField = ErrorField.builder()
+					.code(BoundaryConstants.CROSSHIERARCHY_CHILD_MANDATORY_CODE)
 					.message(BoundaryConstants.CROSSHIERARCHY_CHILD_MANADATORY_ERROR_MESSAGE)
 					.field(BoundaryConstants.CROSSHIERARCHY_CHILD_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
-		} else if (crossHierarchyRequest.getCrossHierarchy().getChild() != null && crossHierarchyRequest.getCrossHierarchy().getChild().getId()==null){
-			final ErrorField errorField = ErrorField.builder().code(BoundaryConstants.CROSSHIERARCHY_CHILDID_MANDATORY_CODE)
+		} else if (crossHierarchyRequest.getCrossHierarchy().getChild() != null
+				&& crossHierarchyRequest.getCrossHierarchy().getChild().getId() == null) {
+			final ErrorField errorField = ErrorField.builder()
+					.code(BoundaryConstants.CROSSHIERARCHY_CHILDID_MANDATORY_CODE)
 					.message(BoundaryConstants.CROSSHIERARCHY_CHILDID_MANADATORY_ERROR_MESSAGE)
 					.field(BoundaryConstants.CROSSHIERARCHY_CHILDID_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
-		} else if(crossHierarchyRequest.getCrossHierarchy().getChild() != null && crossHierarchyRequest.getCrossHierarchy().getChild().getId()!=null){
-			if (!(boundaryService.findByTenantIdAndId(crossHierarchyRequest.getCrossHierarchy().getChild().getId(), crossHierarchyRequest.getCrossHierarchy().getTenantId())!=null)){
-				final ErrorField errorField = ErrorField.builder().code(BoundaryConstants.CROSSHIERARCHY_CHILDID_INVALID_CODE)
+		} else if (crossHierarchyRequest.getCrossHierarchy().getChild() != null
+				&& crossHierarchyRequest.getCrossHierarchy().getChild().getId() != null) {
+			if (!(boundaryService.findByTenantIdAndId(crossHierarchyRequest.getCrossHierarchy().getChild().getId(),
+					crossHierarchyRequest.getCrossHierarchy().getTenantId()) != null)) {
+				final ErrorField errorField = ErrorField.builder()
+						.code(BoundaryConstants.CROSSHIERARCHY_CHILDID_INVALID_CODE)
 						.message(BoundaryConstants.CROSSHIERARCHY_CHILDID_INVALID_ERROR_MESSAGE)
 						.field(BoundaryConstants.CROSSHIERARCHY_CHILDID_INVALID_FIELD_NAME).build();
 				errorFields.add(errorField);
@@ -235,11 +287,15 @@ public class CrossHierarchyController {
 		return errorFields;
 	}
 
-	private List<ErrorField> addCrossHierarchyParentTypeValidationError(final CrossHierarchyRequest crossHierarchyRequest,
-			final List<ErrorField> errorFields){
-         if(crossHierarchyRequest.getCrossHierarchy().getParentType() != null && crossHierarchyRequest.getCrossHierarchy().getParentType().getId()!=null){
-			if (!(boundaryTypeService.findByIdAndTenantId(Long.valueOf(crossHierarchyRequest.getCrossHierarchy().getParentType().getId()), crossHierarchyRequest.getCrossHierarchy().getTenantId())!=null)){
-				final ErrorField errorField = ErrorField.builder().code(BoundaryConstants.CROSSHIERARCHY_PARENTTYPEID_INVALID_CODE)
+	private List<ErrorField> addCrossHierarchyParentTypeValidationError(
+			final CrossHierarchyRequest crossHierarchyRequest, final List<ErrorField> errorFields) {
+		if (crossHierarchyRequest.getCrossHierarchy().getParentType() != null
+				&& crossHierarchyRequest.getCrossHierarchy().getParentType().getId() != null) {
+			if (!(boundaryTypeService.findByIdAndTenantId(
+					Long.valueOf(crossHierarchyRequest.getCrossHierarchy().getParentType().getId()),
+					crossHierarchyRequest.getCrossHierarchy().getTenantId()) != null)) {
+				final ErrorField errorField = ErrorField.builder()
+						.code(BoundaryConstants.CROSSHIERARCHY_PARENTTYPEID_INVALID_CODE)
 						.message(BoundaryConstants.CROSSHIERARCHY_PARENTTYPEID_INVALID_ERROR_MESSAGE)
 						.field(BoundaryConstants.CROSSHIERARCHY_PARENTTYPEID_INVALID_FIELD_NAME).build();
 				errorFields.add(errorField);
@@ -247,12 +303,16 @@ public class CrossHierarchyController {
 		}
 		return errorFields;
 	}
-	
-	private List<ErrorField> addCrossHierarchyChildTypeValidationError(final CrossHierarchyRequest crossHierarchyRequest,
-			final List<ErrorField> errorFields){
-         if(crossHierarchyRequest.getCrossHierarchy().getChildType() != null && crossHierarchyRequest.getCrossHierarchy().getChildType().getId()!=null){
-			if (!(boundaryTypeService.findByIdAndTenantId(Long.valueOf(crossHierarchyRequest.getCrossHierarchy().getChildType().getId()), crossHierarchyRequest.getCrossHierarchy().getTenantId())!=null)){
-				final ErrorField errorField = ErrorField.builder().code(BoundaryConstants.CROSSHIERARCHY_CHILDTYPEID_INVALID_CODE)
+
+	private List<ErrorField> addCrossHierarchyChildTypeValidationError(
+			final CrossHierarchyRequest crossHierarchyRequest, final List<ErrorField> errorFields) {
+		if (crossHierarchyRequest.getCrossHierarchy().getChildType() != null
+				&& crossHierarchyRequest.getCrossHierarchy().getChildType().getId() != null) {
+			if (!(boundaryTypeService.findByIdAndTenantId(
+					Long.valueOf(crossHierarchyRequest.getCrossHierarchy().getChildType().getId()),
+					crossHierarchyRequest.getCrossHierarchy().getTenantId()) != null)) {
+				final ErrorField errorField = ErrorField.builder()
+						.code(BoundaryConstants.CROSSHIERARCHY_CHILDTYPEID_INVALID_CODE)
 						.message(BoundaryConstants.CROSSHIERARCHY_CHILDTYPEID_INVALID_ERROR_MESSAGE)
 						.field(BoundaryConstants.CROSSHIERARCHY_CHILDTYPEID_INVALID_FIELD_NAME).build();
 				errorFields.add(errorField);

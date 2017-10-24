@@ -65,7 +65,7 @@ public class CreateBoundaryTypeController {
 
 	@Autowired
 	public CreateBoundaryTypeController(BoundaryTypeService boundaryTypeService,
-										HierarchyTypeService hierarchyTypeService) {
+			HierarchyTypeService hierarchyTypeService) {
 		this.boundaryTypeService = boundaryTypeService;
 		this.hierarchyTypeService = hierarchyTypeService;
 	}
@@ -109,7 +109,7 @@ public class CreateBoundaryTypeController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public String create(@ModelAttribute BoundaryType boundaryType, final BindingResult errors,
-						 RedirectAttributes redirectAttrs) {
+			RedirectAttributes redirectAttrs) {
 
 		if (errors.hasErrors())
 			return "boundaryType-form";

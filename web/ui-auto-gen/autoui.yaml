@@ -15,7 +15,7 @@ x-ui-info:
 
 paths:
 
-    /_search:
+    /autoui/_search:
       post:
         summary: Get the list of autoui
         description: autoui
@@ -91,7 +91,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /_create:
+    /autoui/_create:
       post:
         summary: Create new autouis
         description: Create new autouis
@@ -114,7 +114,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /_update:
+    /autoui/_update:
       post:
         summary: Update any of the AutoUi
         description: Update any of the AutoUi

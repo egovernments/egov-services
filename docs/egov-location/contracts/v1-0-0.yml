@@ -10,30 +10,36 @@ schemes:
 basePath: '/v1/[API endpoint]'
 x-api-id: org.egov.boundary
 paths:
-  /hierarchyType:
+  /hierarchytypes:
     get:
       summary: 'List of Hierarchy Types Like "ADMIN","LOCATION", "REVENUE" etc.'
       description: |
         Provides a list of available Hierarchy Type and their associated
          codes. These request types can be unique to each tenant.
       parameters:
-        - name: request_info
-          in: body
-          description: Commmon Request info for the Services.
-          required: true
-          schema:
-            $ref: '#/definitions/RequestInfo'
-        - name: tenant_id
+        - name: HierarchyType.tenantId
           in: query
           description: Unique id for for a tenant.
           required: true
           type: string
           format: varchar
+        - name: HierarchyType.code
+          in: query
+          description: Unique code for for a HierarchyType.
+          required: false
+          type: string
+          format: varchar
+        - name: HierarchyType.id
+          in: query
+          description: Unique code for for a HierarchyType.
+          required: false
+          type: string
+          format: int   
       tags:
-        - Hierarchy List
+        - Hierarchy Type
       responses:
         '200':
-          description: HierarchyType
+          description: List of HierarchyTypes
           schema:
             $ref: '#/definitions/HierarchyTypeResponse'
         '400':
@@ -54,14 +60,8 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/HierarchyTypeRequest'
-        - name: tenant_id
-          in: query
-          description: Unique id for tenant.
-          required: true
-          type: string
-          format: varchar
       tags:
-        - Hierarchy
+        - Hierarchy Type
       responses:
         '201':
           description: Hierarchy Type created
@@ -75,12 +75,12 @@ paths:
           description: tenantid provided was not found
           schema:
             $ref: '#/definitions/ErrorRes'
-  '/hierarchyType/{code}':
+  '/hierarchytypes/{code}':
     put:
       summary: Update HierarchyType
       description: To update an existing HierarchyType.
       parameters:
-        - name: tenant_id
+        - name: tenantId
           in: query
           description: Unique id of tenant.
           required: true
@@ -92,51 +92,85 @@ paths:
           required: true
           type: string
           format: varchar
-        - name: service
+        - name: hierarchyType
           in: body
           description: Request header for the new Service Request.
           required: true
           schema:
             $ref: '#/definitions/HierarchyTypeRequest'
       tags:
-        - Hierarchy
+        - Hierarchy Type
       responses:
         '200':
-          description: service updated
+          description: hierarchyType updated
           schema:
             $ref: '#/definitions/HierarchyTypeResponse'
         '400':
-          description: jurisdiction_id was not provided or General service error
+          description: tenantId was not provided or General service error
           schema:
             $ref: '#/definitions/ErrorRes'
         '404':
-          description: jurisdiction_id provided was not found
+          description: tenantId provided was not found
           schema:
             $ref: '#/definitions/ErrorRes'
-  /boundaryType:
+            
+  '/hierarchyTypes/_search':
+    post:
+      summary: Get the list of hierarchyTypes Based on search parameters.
+      description: To update an existing HierarchyType.
+      parameters:
+        - name: hierarchyType
+          in: body
+          description: Details for the new Hierarchy Type .
+          required: true
+          schema:
+            $ref: '#/definitions/HierarchyTypeRequest'
+      tags:
+        - Hierarchy Type
+      responses:
+        '200':
+          description: List Of HierarchyTypes
+          schema:
+            $ref: '#/definitions/HierarchyTypeResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: tenantId provided was not found
+          schema:
+            $ref: '#/definitions/ErrorRes'          
+            
+  /boundarytypes:
     get:
       summary: 'List of boundary Types Like "City","Zone", "Ward" etc.'
       description: |
-        Provides a list of available boundary Type and their associated
-         codes. These request types can be unique to each tenant.
+        Provides a list of available boundary Types and their associated
+         codes. These are the request search parameters
       parameters:
-        - name: request_info
-          in: body
-          description: Commmon Request info for the Services.
-          required: true
-          schema:
-            $ref: '#/definitions/RequestInfo'
-        - name: tenant_id
+        - name: BoundaryType.tenantId
           in: query
-          description: Unique id for for a tenant.
+          description: Unique tenantId for BoundaryType.
           required: true
           type: string
           format: varchar
+        - name: BoundaryType.code
+          in: query
+          description: Unique code for BoundaryType.
+          required: true
+          type: string
+          format: varchar
+        - name: BoundaryType.id
+          in: query
+          description: Unique id for BoundaryType.
+          required: true
+          type: string
+          format: varchar   
       tags:
-        - boundary List
+        - Boundary Type
       responses:
         '200':
-          description: boundaryType
+          description: BoundaryTypes
           schema:
             $ref: '#/definitions/BoundaryTypeResponse'
         '400':
@@ -157,14 +191,8 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/BoundaryTypeRequest'
-        - name: tenant_id
-          in: query
-          description: Unique id for tenant.
-          required: true
-          type: string
-          format: varchar
       tags:
-        - boundary
+        - Boundary Type
       responses:
         '201':
           description: boundary Type created
@@ -178,44 +206,73 @@ paths:
           description: tenantid provided was not found
           schema:
             $ref: '#/definitions/ErrorRes'
-  '/boundaryType/{id}':
+  '/boundarytypes/{code}':
     put:
       summary: Update boundaryType
       description: To update an existing boundaryType.
       parameters:
-        - name: tenant_id
+        - name: tenantId
           in: query
           description: Unique id of tenant.
           required: true
           type: string
           format: varchar
-        - name: id
+        - name: code
           in: path
           description: Unique code for boundaryType to be updated .
           required: true
           type: string
           format: varchar
-        - name: service
+        - name: boundaryType
           in: body
           description: Request header for the new Service Request.
           required: true
           schema:
             $ref: '#/definitions/BoundaryTypeRequest'
       tags:
-        - boundary
+        - Boundary Type
       responses:
         '200':
-          description: service updated
+          description: boundaryType Request updated
           schema:
             $ref: '#/definitions/BoundaryTypeResponse'
         '400':
-          description: jurisdiction_id was not provided or General service error
+          description: tenantId was not provided or General service error
           schema:
             $ref: '#/definitions/ErrorRes'
         '404':
-          description: jurisdiction_id provided was not found
+          description: tenantId provided was not found
           schema:
             $ref: '#/definitions/ErrorRes'
+            
+  '/boundarytypes/_search':
+    post:
+      summary: Get List Of Boundary Types Based on criteria
+      description: Get List Of Boundary Types Based on criteria
+      parameters:
+        - name: boundaryType
+          in: body
+          description: Details for the new boundary Type .
+          required: true
+          schema:
+            $ref: '#/definitions/BoundaryTypeRequest'
+
+      tags:
+        - Boundary Type
+      responses:
+        '200':
+          description: List Of BoundaryTypes.
+          schema:
+            $ref: '#/definitions/BoundaryTypeResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: tenantId provided was not found
+          schema:
+            $ref: '#/definitions/ErrorRes'
+  
   /boundarys:
     get:
       summary: List of boundaries for the given query parameters.
@@ -528,28 +585,53 @@ definitions:
         description: unique id for the HierarchyType.
       code:
         type: string
-        description: Unique Code for HierarchyType.Type
+        description: Unique Code for HierarchyType.
       name:
         type: string
-        format: date
+        format: varchar
         description: HierarchyType Name.
       loalname:
         type: string
-        format: date
-        description: Local HierarchyType name .
+        format: varchar
+        description: Local HierarchyType name 
+      tenantId:
+        type: string
+        format: varchar
+        description: Unique TenantId for HierarchyType .
+    required:
+      - code
+      - name
+      - tenantId
+        
   BoundaryType:
     type: object
     properties:
       id:
         type: string
-        description: boundary number of the boundary.
+        description: Unique id of the Boundary Type.
+      tenantId:
+        type: string
+        description: tenantId of the BoundaryType.
+      hierarchy:
+        type: integer
+        description: hierarchy of the BoundaryType.
+      code:
+        type: string
+        description: unique Code of the BoundaryType.  
       name:
         type: string
-        format: date
+        format: varchar
       parent:
         $ref: '#/definitions/BoundaryType'
       hierarchyType:
         $ref: '#/definitions/HierarchyType'
+    required:
+      - code
+      - name
+      - tenantId  
+      - hierarchy
+      - hierarchyType
+        
   Boundary:
     type: object
     properties:

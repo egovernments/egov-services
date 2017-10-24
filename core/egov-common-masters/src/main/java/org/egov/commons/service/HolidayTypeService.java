@@ -38,55 +38,28 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.commons.web.contract;
+package org.egov.commons.service;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
+import org.egov.commons.model.HolidayType;
+import org.egov.commons.repository.HolidayTypeRepository;
+import org.egov.commons.web.contract.HolidayTypeGetRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.Date;
 import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-public class HolidayGetRequest {
+@Service
+public class HolidayTypeService {
+    public static final Logger LOGGER = LoggerFactory.getLogger(HolidayTypeService.class);
 
-    private List<Long> id;
+    @Autowired
+    private HolidayTypeRepository holidayTypeRepository;
 
-    private Integer year;
 
-    private Integer holidayType;
-
-    @Size(min = 3, max = 200)
-    private String name;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date applicableOn;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date fromDate;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date toDate;
-
-    @NotNull
-    private String tenantId;
-
-    private String sortBy;
-
-    private String sortOrder;
-
-    @Min(1)
-    @Max(500)
-    private Short pageSize;
-
-    private Short pageNumber;
+    public List<HolidayType> getHolidayTypes(HolidayTypeGetRequest holidayTypeGetRequest) {
+        return holidayTypeRepository.findForCriteria(holidayTypeGetRequest);
+    }
 
 }

@@ -40,57 +40,27 @@
 
 package org.egov.commons.repository.rowmapper;
 
-import org.egov.commons.model.CalendarYear;
-import org.egov.commons.model.Holiday;
 import org.egov.commons.model.HolidayType;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
-public class HolidayRowMapper implements RowMapper<Holiday> {
+public class HolidayTypeRowMapper implements RowMapper<HolidayType> {
 
     @Override
-    public Holiday mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public HolidayType mapRow(ResultSet rs, int rowNum) throws SQLException {
         final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-        Holiday holiday = new Holiday();
-        holiday.setId(rs.getLong("h_id"));
-        holiday.setName(rs.getString("h_name"));
-        holiday.setTenantId(rs.getString("h_tenantId"));
+        HolidayType holidayType = new HolidayType();
+        holidayType.setId(rs.getLong("id"));
+        holidayType.setName(rs.getString("name"));
+        holidayType.setTenantId(rs.getString("tenantId"));
 
-        CalendarYear calendarYear = new CalendarYear();
-        calendarYear.setId(rs.getLong("cy_id"));
-        calendarYear.setName((Integer) rs.getObject("cy_name"));
-        calendarYear.setActive((Boolean) rs.getObject("cy_active"));
-        calendarYear.setTenantId(rs.getString("cy_tenantId"));
 
-        /*HolidayType holidayType = new HolidayType();
-        holidayType.setId(rs.getLong("ht_id"));
-        holidayType.setName(rs.getString("ht_name"));
-        holidayType.setTenantId(rs.getString("ht_tenantId"));*/
-
-        try {
-            Date date = isEmpty(rs.getDate("cy_startDate")) ? null : sdf.parse(sdf.format(rs.getDate("cy_startDate")));
-            calendarYear.setStartDate(date);
-            date = isEmpty(rs.getDate("cy_endDate")) ? null : sdf.parse(sdf.format(rs.getDate("cy_endDate")));
-            calendarYear.setEndDate(date);
-            date = isEmpty(rs.getDate("h_applicableOn")) ? null : sdf.parse(sdf.format(rs.getDate("h_applicableOn")));
-            holiday.setApplicableOn(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            throw new SQLException("Parse exception while parsing date");
-        }
-
-        holiday.setCalendarYear(calendarYear);
-
-        return holiday;
+        return holidayType;
     }
 }

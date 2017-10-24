@@ -38,55 +38,29 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.commons.web.contract;
+package org.egov.commons.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Date;
-import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @EqualsAndHashCode
-public class HolidayGetRequest {
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class HolidayType {
 
-    private List<Long> id;
+    @NotNull
+    private Long id;
 
-    private Integer year;
-
-    private Integer holidayType;
-
+    @NotNull
     @Size(min = 3, max = 200)
     private String name;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date applicableOn;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date fromDate;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date toDate;
-
     @NotNull
     private String tenantId;
-
-    private String sortBy;
-
-    private String sortOrder;
-
-    @Min(1)
-    @Max(500)
-    private Short pageSize;
-
-    private Short pageNumber;
 
 }

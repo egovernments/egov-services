@@ -40,8 +40,6 @@
 
 package org.egov.commons.repository.builder;
 
-import java.util.List;
-
 import org.egov.commons.config.ApplicationProperties;
 import org.egov.commons.web.contract.HolidayGetRequest;
 import org.slf4j.Logger;
@@ -49,156 +47,164 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class HolidayQueryBuilder {
 
-	private static final Logger logger = LoggerFactory.getLogger(HolidayQueryBuilder.class);
+    private static final Logger logger = LoggerFactory.getLogger(HolidayQueryBuilder.class);
+    private static final String BASE_QUERY = "SELECT h.id as h_id, h.calendarYear as h_calendarYear,"
+            + " h.name as h_name, h.applicableOn as h_applicableOn, h.tenantId as h_tenantId,"
+            + " cy.id as cy_id, cy.name as cy_name, cy.startDate as cy_startDate, cy.endDate as cy_endDate,"
+            + " cy.active as cy_active, cy.tenantId as cy_tenantId"
+            + " FROM eg_holiday h JOIN eg_calendarYear cy ON h.calendarYear = cy.name ";
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
-	@Autowired
-	private ApplicationProperties applicationProperties;
+    public static String insertHolidayQuery() {
+        return "INSERT INTO eg_holiday values " + "(nextval('seq_eg_holiday'),?,?,?,?,?)";
+    }
 
-	private static final String BASE_QUERY = "SELECT h.id as h_id, h.calendarYear as h_calendarYear,"
-			+ " h.name as h_name, h.applicableOn as h_applicableOn, h.tenantId as h_tenantId,"
-			+ " cy.id as cy_id, cy.name as cy_name, cy.startDate as cy_startDate, cy.endDate as cy_endDate,"
-			+ " cy.active as cy_active, cy.tenantId as cy_tenantId"
-			+ " FROM eg_holiday h JOIN eg_calendarYear cy ON h.calendarYear = cy.name";
+    public static String updateHolidayQuery() {
+        return "UPDATE eg_holiday SET calendarYear = ?, name = ?, applicableon = ?, tenantid = ?,holidaytype = ? where id = ? ";
+    }
 
-	@SuppressWarnings("rawtypes")
-	public String getQuery(HolidayGetRequest holidayGetRequest, List preparedStatementValues) {
-		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+    public static String selectHolidayByApplicableOnQuery() {
+        return "SELECT id FROM eg_holiday where applicableon = ? and tenantId = ?";
+    }
 
-		addWhereClause(selectQuery, preparedStatementValues, holidayGetRequest);
-		addOrderByClause(selectQuery, holidayGetRequest);
-		addPagingClause(selectQuery, preparedStatementValues, holidayGetRequest);
+    public static String selectHolidayByApplicableOnAndIdNotInQuery() {
+        return "SELECT id FROM eg_holiday where applicableon = ? and tenantId = ? and id!= ?";
+    }
 
-		logger.debug("Query : " + selectQuery);
-		return selectQuery.toString();
-	}
+    private static String getIdQuery(List<Long> idList) {
+        StringBuilder query = new StringBuilder("(");
+        if (idList.size() >= 1) {
+            query.append(idList.get(0).toString());
+            for (int i = 1; i < idList.size(); i++) {
+                query.append(", " + idList.get(i));
+            }
+        }
+        return query.append(")").toString();
+    }
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
-			HolidayGetRequest holidayGetRequest) {
+    @SuppressWarnings("rawtypes")
+    public String getQuery(HolidayGetRequest holidayGetRequest, List preparedStatementValues) {
+        StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
-		if (holidayGetRequest.getId() == null && holidayGetRequest.getYear() == null
-				&& holidayGetRequest.getName() == null && holidayGetRequest.getApplicableOn() == null
-				&& holidayGetRequest.getFromDate() == null && holidayGetRequest.getToDate() == null
-				&& holidayGetRequest.getTenantId() == null)
-			return;
+        addWhereClause(selectQuery, preparedStatementValues, holidayGetRequest);
+        addOrderByClause(selectQuery, holidayGetRequest);
+        addPagingClause(selectQuery, preparedStatementValues, holidayGetRequest);
 
-		selectQuery.append(" WHERE");
-		boolean isAppendAndClause = false;
+        logger.debug("Query : " + selectQuery);
+        return selectQuery.toString();
+    }
 
-		if (holidayGetRequest.getTenantId() != null) {
-			isAppendAndClause = true;
-			selectQuery.append(" h.tenantId = ?");
-			preparedStatementValues.add(holidayGetRequest.getTenantId());
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" cy.tenantId = ?");
-			preparedStatementValues.add(holidayGetRequest.getTenantId());
-		}
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
+                                HolidayGetRequest holidayGetRequest) {
 
-		if (holidayGetRequest.getId() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" h.id IN " + getIdQuery(holidayGetRequest.getId()));
-		}
+        if (holidayGetRequest.getId() == null && holidayGetRequest.getYear() == null
+                && holidayGetRequest.getName() == null && holidayGetRequest.getApplicableOn() == null
+                && holidayGetRequest.getFromDate() == null && holidayGetRequest.getToDate() == null
+                && holidayGetRequest.getTenantId() == null)
+            return;
 
-		if (holidayGetRequest.getYear() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" h.calendarYear = ?");
-			preparedStatementValues.add(holidayGetRequest.getYear());
-		}
+        selectQuery.append(" WHERE");
+        boolean isAppendAndClause = false;
 
-		if (holidayGetRequest.getName() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" h.name = ?");
-			preparedStatementValues.add(holidayGetRequest.getName());
-		}
+        if (holidayGetRequest.getTenantId() != null) {
+            isAppendAndClause = true;
+            selectQuery.append(" h.tenantId = ?");
+            preparedStatementValues.add(holidayGetRequest.getTenantId());
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" cy.tenantId = ?");
+            preparedStatementValues.add(holidayGetRequest.getTenantId());
+           /* isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ht.tenantId = ?");
+            preparedStatementValues.add(holidayGetRequest.getTenantId());*/
+        }
 
-		if (holidayGetRequest.getApplicableOn() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" h.applicableOn = ?");
-			preparedStatementValues.add(holidayGetRequest.getApplicableOn());
-		}
+        if (holidayGetRequest.getId() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" h.id IN " + getIdQuery(holidayGetRequest.getId()));
+        }
 
-		if (holidayGetRequest.getFromDate() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" h.applicableOn >= ?");
-			System.err.println("fromDate = " + holidayGetRequest.getFromDate());
-			preparedStatementValues.add(holidayGetRequest.getFromDate());
-		}
+        if (holidayGetRequest.getYear() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" h.calendarYear = ?");
+            preparedStatementValues.add(holidayGetRequest.getYear());
+        }
 
-		if (holidayGetRequest.getToDate() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" h.applicableOn <= ?");
-			preparedStatementValues.add(holidayGetRequest.getToDate());
-		}
-	}
+        if (holidayGetRequest.getName() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" h.name = ?");
+            preparedStatementValues.add(holidayGetRequest.getName());
+        }
 
-	private void addOrderByClause(StringBuilder selectQuery, HolidayGetRequest holidayGetRequest) {
-		String sortBy = (holidayGetRequest.getSortBy() == null ? "h.calendarYear"
-				: "h." + holidayGetRequest.getSortBy());
-		String sortOrder = (holidayGetRequest.getSortOrder() == null ? "DESC" : holidayGetRequest.getSortOrder());
-		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
-	}
+        if (holidayGetRequest.getApplicableOn() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" h.applicableOn = ?");
+            preparedStatementValues.add(holidayGetRequest.getApplicableOn());
+        }
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues,
-			HolidayGetRequest holidayGetRequest) {
-		// handle limit(also called pageSize) here
-		selectQuery.append(" LIMIT ?");
-		long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());
-		if (holidayGetRequest.getPageSize() != null)
-			pageSize = holidayGetRequest.getPageSize();
-		preparedStatementValues.add(pageSize); // Set limit to pageSize
+        if (holidayGetRequest.getFromDate() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" h.applicableOn >= ?");
+            System.err.println("fromDate = " + holidayGetRequest.getFromDate());
+            preparedStatementValues.add(holidayGetRequest.getFromDate());
+        }
 
-		// handle offset here
-		selectQuery.append(" OFFSET ?");
-		int pageNumber = 0; // Default pageNo is zero meaning first page
-		if (holidayGetRequest.getPageNumber() != null)
-			pageNumber = holidayGetRequest.getPageNumber() - 1;
-		preparedStatementValues.add(pageNumber * pageSize); // Set offset to
-															// pageNo * pageSize
-	}
+        if (holidayGetRequest.getToDate() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" h.applicableOn <= ?");
+            preparedStatementValues.add(holidayGetRequest.getToDate());
+        }
+        /*if (holidayGetRequest.getHolidayType() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ht.id = ?");
+            preparedStatementValues.add(holidayGetRequest.getHolidayType());
+        }*/
+    }
 
-	/**
-	 * This method is always called at the beginning of the method so that and
-	 * is prepended before the field's predicate is handled.
-	 * 
-	 * @param appendAndClauseFlag
-	 * @param queryString
-	 * @return boolean indicates if the next predicate should append an "AND"
-	 */
-	private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
-		if (appendAndClauseFlag)
-			queryString.append(" AND");
+    private void addOrderByClause(StringBuilder selectQuery, HolidayGetRequest holidayGetRequest) {
+        String sortBy = (holidayGetRequest.getSortBy() == null ? "h.calendarYear"
+                : "h." + holidayGetRequest.getSortBy());
+        String sortOrder = (holidayGetRequest.getSortOrder() == null ? "DESC" : holidayGetRequest.getSortOrder());
+        selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
+    }
 
-		return true;
-	}
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues,
+                                 HolidayGetRequest holidayGetRequest) {
+        // handle limit(also called pageSize) here
+        selectQuery.append(" LIMIT ?");
+        long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());
+        if (holidayGetRequest.getPageSize() != null)
+            pageSize = holidayGetRequest.getPageSize();
+        preparedStatementValues.add(pageSize); // Set limit to pageSize
 
-	public static String insertHolidayQuery() {
-		return "INSERT INTO eg_holiday values " + "(nextval('seq_eg_holiday'),?,?,?,?)";
-	}
+        // handle offset here
+        selectQuery.append(" OFFSET ?");
+        int pageNumber = 0; // Default pageNo is zero meaning first page
+        if (holidayGetRequest.getPageNumber() != null)
+            pageNumber = holidayGetRequest.getPageNumber() - 1;
+        preparedStatementValues.add(pageNumber * pageSize); // Set offset to
+        // pageNo * pageSize
+    }
 
-	public static String updateHolidayQuery() {
-		return "UPDATE eg_holiday SET calendarYear = ?, name = ?, applicableon = ?, tenantid = ? where id = ? ";
-	}
+    /**
+     * This method is always called at the beginning of the method so that and
+     * is prepended before the field's predicate is handled.
+     *
+     * @param appendAndClauseFlag
+     * @param queryString
+     * @return boolean indicates if the next predicate should append an "AND"
+     */
+    private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
+        if (appendAndClauseFlag)
+            queryString.append(" AND");
 
-	public static String selectHolidayByApplicableOnQuery() {
-		return "SELECT id FROM eg_holiday where applicableon = ? and tenantId = ?";
-	}
-
-	public static String selectHolidayByApplicableOnAndIdNotInQuery() {
-		return "SELECT id FROM eg_holiday where applicableon = ? and tenantId = ? and id!= ?";
-	}
-
-	private static String getIdQuery(List<Long> idList) {
-		StringBuilder query = new StringBuilder("(");
-		if (idList.size() >= 1) {
-			query.append(idList.get(0).toString());
-			for (int i = 1; i < idList.size(); i++) {
-				query.append(", " + idList.get(i));
-			}
-		}
-		return query.append(")").toString();
-	}
+        return true;
+    }
 }

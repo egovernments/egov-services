@@ -40,14 +40,12 @@
 
 package org.egov.commons.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -56,25 +54,12 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class HolidayGetRequest {
+public class HolidayTypeGetRequest {
 
     private List<Long> id;
 
-    private Integer year;
-
-    private Integer holidayType;
-
     @Size(min = 3, max = 200)
     private String name;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date applicableOn;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date fromDate;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date toDate;
 
     @NotNull
     private String tenantId;

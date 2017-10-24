@@ -62,6 +62,8 @@ public class Holiday {
     @NotNull
     private CalendarYear calendarYear;
 
+    private HolidayType holidayType;
+
     @NotNull
     @Size(min = 3, max = 200)
     private String name;

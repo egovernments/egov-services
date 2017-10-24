@@ -40,53 +40,26 @@
 
 package org.egov.commons.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.commons.model.HolidayType;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @EqualsAndHashCode
-public class HolidayGetRequest {
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class HolidayTypeResponse {
 
-    private List<Long> id;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-    private Integer year;
-
-    private Integer holidayType;
-
-    @Size(min = 3, max = 200)
-    private String name;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date applicableOn;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date fromDate;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date toDate;
-
-    @NotNull
-    private String tenantId;
-
-    private String sortBy;
-
-    private String sortOrder;
-
-    @Min(1)
-    @Max(500)
-    private Short pageSize;
-
-    private Short pageNumber;
+    @JsonProperty("HolidayType")
+    private List<HolidayType> holidayType = new ArrayList<>();
 
 }

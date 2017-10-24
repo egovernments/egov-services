@@ -40,13 +40,9 @@
 
 package org.egov.commons.repository;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.egov.commons.model.CalendarYear;
 import org.egov.commons.model.Holiday;
+import org.egov.commons.model.HolidayType;
 import org.egov.commons.repository.builder.HolidayQueryBuilder;
 import org.egov.commons.repository.rowmapper.HolidayRowMapper;
 import org.egov.commons.web.contract.HolidayGetRequest;
@@ -57,78 +53,92 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 @Repository
 public class HolidayRepository {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(HolidayRepository.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(HolidayRepository.class);
 
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-	@Autowired
-	private HolidayRowMapper holidayRowMapper;
+    @Autowired
+    private HolidayRowMapper holidayRowMapper;
 
-	@Autowired
-	private HolidayQueryBuilder holidayQueryBuilder;
+    @Autowired
+    private HolidayQueryBuilder holidayQueryBuilder;
 
-	@Autowired
-	private CalendarYearRepository calendarYearRepository;
+    @Autowired
+    private CalendarYearRepository calendarYearRepository;
 
-	public List<Holiday> findForCriteria(HolidayGetRequest holidayGetRequest) {
-		List<Object> preparedStatementValues = new ArrayList<Object>();
-		String queryStr = holidayQueryBuilder.getQuery(holidayGetRequest, preparedStatementValues);
-		List<Holiday> holidays = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), holidayRowMapper);
-		return holidays;
-	}
+    @Autowired
+    private HolidayTypeRepository holidayTypeRepository;
 
-	@SuppressWarnings("static-access")
-	public HolidayRequest saveHoliday(final HolidayRequest holidayRequest) {
+    public List<Holiday> findForCriteria(HolidayGetRequest holidayGetRequest) {
+        List<Object> preparedStatementValues = new ArrayList<Object>();
+        String queryStr = holidayQueryBuilder.getQuery(holidayGetRequest, preparedStatementValues);
+        List<Holiday> holidays = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), holidayRowMapper);
+        return holidays;
+    }
 
-		LOGGER.info("HolidayRequest::" + holidayRequest);
-		final String holidayInsert = holidayQueryBuilder.insertHolidayQuery();
-		final Holiday holiday = holidayRequest.getHoliday();
+    @SuppressWarnings("static-access")
+    public HolidayRequest saveHoliday(final HolidayRequest holidayRequest) {
 
-		CalendarYear year = calendarYearRepository.findCalendarYearByName(holiday.getCalendarYear().getName(),
-				holiday.getTenantId());
+        LOGGER.info("HolidayRequest::" + holidayRequest);
+        final String holidayInsert = holidayQueryBuilder.insertHolidayQuery();
+        final Holiday holiday = holidayRequest.getHoliday();
+        HolidayType holidayType = null;
 
-		Object[] obj = new Object[] { year.getName(), holiday.getName(), new Date(holiday.getApplicableOn().getTime()),
-				holiday.getTenantId() };
+        CalendarYear year = calendarYearRepository.findCalendarYearByName(holiday.getCalendarYear().getName(),
+                holiday.getTenantId());
+        if (holiday.getHolidayType() != null)
+            holidayType = holidayTypeRepository.findHolidayTypeById(holiday.getHolidayType().getId(), holiday.getTenantId());
 
-		jdbcTemplate.update(holidayInsert, obj);
-		return holidayRequest;
-	}
+        Object[] obj = new Object[]{year.getName(), holiday.getName(), new Date(holiday.getApplicableOn().getTime()),
+                holiday.getTenantId(), holidayType != null ? holidayType.getId() : null};
 
-	@SuppressWarnings("static-access")
-	public HolidayRequest modifyHoliday(final HolidayRequest holidayRequest) {
+        jdbcTemplate.update(holidayInsert, obj);
+        return holidayRequest;
+    }
 
-		LOGGER.info("HolidayRequest::" + holidayRequest);
-		final String holidayUpdate = holidayQueryBuilder.updateHolidayQuery();
-		final Holiday holiday = holidayRequest.getHoliday();
-		CalendarYear year = calendarYearRepository.findCalendarYearByName(holiday.getCalendarYear().getName(),
-				holiday.getTenantId());
-		Object[] obj = new Object[] { year.getName(), holiday.getName(), new Date(holiday.getApplicableOn().getTime()),
-				holiday.getTenantId(), holiday.getId() };
-		jdbcTemplate.update(holidayUpdate, obj);
-		return holidayRequest;
+    @SuppressWarnings("static-access")
+    public HolidayRequest modifyHoliday(final HolidayRequest holidayRequest) {
 
-	}
+        LOGGER.info("HolidayRequest::" + holidayRequest);
+        final String holidayUpdate = holidayQueryBuilder.updateHolidayQuery();
+        final Holiday holiday = holidayRequest.getHoliday();
+        HolidayType holidayType = null;
+        CalendarYear year = calendarYearRepository.findCalendarYearByName(holiday.getCalendarYear().getName(),
+                holiday.getTenantId());
+        if (holiday.getHolidayType() != null)
+            holidayType = holidayTypeRepository.findHolidayTypeById(holiday.getHolidayType().getId(), holiday.getTenantId());
+        Object[] obj = new Object[]{year.getName(), holiday.getName(), new Date(holiday.getApplicableOn().getTime()),
+                holiday.getTenantId(), holidayType != null ? holidayType.getId() : null, holiday.getId()};
+        jdbcTemplate.update(holidayUpdate, obj);
+        return holidayRequest;
 
-	public boolean checkHolidayByApplicableOn(final Long id, final java.util.Date applicableOn, final String tenantId) {
-		final List<Object> preparedStatementValues = new ArrayList<Object>();
-		preparedStatementValues.add(applicableOn);
-		preparedStatementValues.add(tenantId);
-		final String query;
-		if (id == null)
-			query = HolidayQueryBuilder.selectHolidayByApplicableOnQuery();
-		else {
-			preparedStatementValues.add(id);
-			query = HolidayQueryBuilder.selectHolidayByApplicableOnAndIdNotInQuery();
-		}
-		final List<Map<String, Object>> holidayIds = jdbcTemplate.queryForList(query,
-				preparedStatementValues.toArray());
-		if (!holidayIds.isEmpty())
-			return true;
+    }
 
-		return false;
-	}
+    public boolean checkHolidayByApplicableOn(final Long id, final java.util.Date applicableOn, final String tenantId) {
+        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        preparedStatementValues.add(applicableOn);
+        preparedStatementValues.add(tenantId);
+        final String query;
+        if (id == null)
+            query = HolidayQueryBuilder.selectHolidayByApplicableOnQuery();
+        else {
+            preparedStatementValues.add(id);
+            query = HolidayQueryBuilder.selectHolidayByApplicableOnAndIdNotInQuery();
+        }
+        final List<Map<String, Object>> holidayIds = jdbcTemplate.queryForList(query,
+                preparedStatementValues.toArray());
+        if (!holidayIds.isEmpty())
+            return true;
+
+        return false;
+    }
 }

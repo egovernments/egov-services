@@ -20,9 +20,15 @@ UIInfo:
       - autoUi[0].long
       - autoUi[0].int
       - autoUi[0].radio
-      - autoUi[0].checkBox1
-      - autoUi[0].checkBox2
+      - autoUi[0].checkBox
       - autoUi[0].multiSelectDropDown
+    Group4:
+      fields:
+      - autoUi[0].pinCode
+      - autoUi[0].email
+      - autoUi[0].mobileNo
+      - autoUi[0].aadhar
+      - autoUi[0].panNo
   dependents:
   - onChangeField: autoUi[0].parentDropDown
     affectedFields:
@@ -33,15 +39,15 @@ UIInfo:
   - fieldName: autoUi[0].dropDown
     url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType"
     keyPath: "$..id"
-    valPath: "$..name"
+    valuePath: "$..name"
   - fieldName: autoUi[0].parentDropDown
     url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType"
     keyPath: "$..id"
-    valPath: "$..name"
+    valuePath: "$..name"
   - fieldName: autoUi[0].multiSelectDropDown
     url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType"
     keyPath: "$..id"
-    valPath: "$..name"
+    valuePath: "$..name"
   radios:
   - jsonPath: autoUi[0].radio
     trueLabel: isActive
@@ -67,7 +73,14 @@ UIInfo:
     - double
     - long
     - int
+    - redio
+    - checkBox
     - multiSelectDropDown
+    - pinCode
+    - email
+    - mobileNo
+    - aadhar
+    - panNo
     values:
     - textField
     - textArea
@@ -81,5 +94,12 @@ UIInfo:
     - double
     - long
     - int
+    - redio
+    - checkBox
     - multiSelectDropDown
+    - pinCode
+    - email
+    - mobileNo
+    - aadhar
+    - panNo
     resultObjectName: autoUi

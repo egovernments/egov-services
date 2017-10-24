@@ -81,6 +81,26 @@ paths:
             type: string
             in: query
             description: multiSelectDropDown of the AutoUi
+          - name: pinCode
+            type: string
+            in: query
+            description: pinCode of the AutoUi
+          - name: email
+            type: string
+            in: query
+            description: email of the AutoUi
+          - name: mobielNo
+            type: string
+            in: query
+            description: mobielNo of the AutoUi
+          - name: aadhar
+            type: string
+            in: query
+            description: aadhar of the AutoUi
+          - name: panNo
+            type: string
+            in: query
+            description: panNo of the AutoUi
         responses:
           200:
             description: AutoUi(s) retrieved Successfully
@@ -173,6 +193,7 @@ definitions:
           minLength: 1
         autoComplete:
           type: string
+          format: autoComplete
           description: autoComplete of the AutoUi.
           maxLength: 256
           minLength: 1
@@ -212,6 +233,36 @@ definitions:
           description: multiSelectDropDown of the AutoUi.
           maxLength: 256
           minLength: 1
+        pinCode:
+          type: string
+          format: pinCode
+          description: multiSelectDropDown of the AutoUi.
+          maxLength: 256
+          minLength: 1
+        email:
+          type: string
+          format: email
+          description: multiSelectDropDown of the AutoUi.
+          maxLength: 256
+          minLength: 1
+        mobileNo:
+          type: string
+          format: mobileNumber
+          description: multiSelectDropDown of the AutoUi.
+          maxLength: 10
+          minLength: 1
+        aadhar:
+          type: string
+          format: aadhar
+          description: multiSelectDropDown of the AutoUi.
+          maxLength: 256
+          minLength: 1
+        panNo:
+          type: string
+          format: pan
+          description: multiSelectDropDown of the AutoUi.
+          maxLength: 256
+          minLength: 1
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
@@ -231,7 +282,12 @@ definitions:
       - checkBox1
       - checkBox2
       - multiSelectDropDown
-    
+      - pinCode
+      - email
+      - mobileNo
+      - aadhar
+      - panNo
+      
     AutoUiRequest:
       description: Contract class to receive request. Array of AutoUi items are used in case of create, whereas single AutoUi item is used for update
       properties:

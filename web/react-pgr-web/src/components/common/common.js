@@ -1266,6 +1266,10 @@ var localization_EN_Data = {
     "employee.field.assignments": "Assignments Grade",
     "employee.Employee.fields.group": "Employee Group",
     "deshboard.title": "My Tasks",
+    "pgr.dashboard.analytics":"Analytics Dashboard",
+    "pgr.dashboard.7daystitle":"No. of Complaints (Last 7 Days)",
+    "pgr.dashboard.7monthstitle":"No. of Complaints (Last 7 Months)",
+    "pgr.dashboard.complaintshare":"Complaint Type Share",
     "pgr.0001": " latitude/longitude or cross hierarchy id is required",
     "pgr.0002": " latitude/longitude or cross hierarchy id is required",
     "pgr.0003": " latitude/longitude or cross hierarchy id is required",
@@ -1921,7 +1925,7 @@ var localization_EN_Data = {
   "vehiclefuellingdetails.create.group.title.VehicleDetails2": "Vehicle Details",
   "vehiclefuellingdetails.create.group.title.VehicleDetails3": "Vehicle Details",
   "vehiclefuellingdetails.create.group.title.VehicleDetails1": "Create Vehicle Fuelling Details",
-  
+
 
 
 

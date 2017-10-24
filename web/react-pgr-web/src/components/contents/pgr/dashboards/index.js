@@ -8,14 +8,25 @@ import {ResponsiveContainer, PieChart, Pie, Sector, Cell, Tooltip,
 import Api from '../../../../api/api';
 import RaisedButton from 'material-ui/RaisedButton';
 import styles from '../../../../styles/material-ui';
+import {translate} from '../../../common/common';
 var moment = require('moment');
+var self;
 
 const style = {
-  position:'absolute',
-  zIndex:100,
-  right:20,
-  top:80,
-  margin:12
+  positioned:{
+    transition: 'all 0.75s ease-in-out',
+    right:23,
+    margin:12
+  },
+  absolutePosition:{
+    position:'absolute',
+    top:80
+  },
+  fixedPosition:{
+    position:'fixed',
+    zIndex:1,
+    top:10
+  }
 };
 
 const COLORS = ['#0088FE', '#00C49F', '#008F7D', '#FFBB28', '#FF8042'];
@@ -71,8 +82,19 @@ class charts extends Component{
 
   componentDidMount(){
 
+    self = this;
+
+    window.addEventListener("scroll", function(event) {
+      if(this.scrollY >= 65){
+        // console.log('make it fixed');
+        self.setState({buttonFixed:true});
+      }else{
+        // console.log('make it absolute');
+        self.setState({buttonFixed:false});
+      }
+    }, false);
+
     let {setLoadingStatus, toggleDailogAndSetText} = this.props;
-    var self = this;
     setLoadingStatus('loading');
 
     //get last 7 days
@@ -145,25 +167,26 @@ class charts extends Component{
   }
 
   render(){
+    let {buttonFixed} = this.state;
     return(
       <Grid fluid={true}>
         <RaisedButton
-          label="PGR Analytics"
+          label={translate('pgr.dashboard.analytics')}
           primary={true}
           onClick={(e)=>{this.props.setRoute('/pgr/analytics')}}
-          style={style} />
+          style={Object.assign(style.positioned, buttonFixed ? style.fixedPosition : style.absolutePosition)} />
         <Row>
           <Col xs={12} sm={12} md={6} lg={6}>
             <Card style={styles.cardMargin}>
               <CardHeader style={styles.cardHeaderPadding}
-              title="No. of Complaints (Last 7 Days)"/>
+              title={translate('pgr.dashboard.7daystitle')}/>
                <CardText>
                  <ResponsiveContainer width='100%' aspect={4.0/2.0}>
                    <AreaChart data={this.state.last7days}>
                      <XAxis dataKey="name"/>
                      <YAxis allowDecimals={false}/>
                      <CartesianGrid strokeDasharray="3 3"/>
-                     <Tooltip/>
+                     <Tooltip wrapperStyle={{zIndex: 1000}}/>
                      <Legend verticalAlign="top" height={36}/>
                      <Area type='monotone' dataKey='REGISTERED' stroke='#8884d8' fill='#8884d8' />
                      <Area type='monotone' dataKey='RESOLVED' stroke='#82ca9d' fill='#82ca9d' />
@@ -175,14 +198,14 @@ class charts extends Component{
           <Col xs={12} sm={12} md={6} lg={6}>
             <Card style={styles.cardMargin}>
               <CardHeader style={styles.cardHeaderPadding}
-              title="No. of Complaints (Last 7 Months)"/>
+              title={translate('pgr.dashboard.7monthstitle')}/>
                <CardText>
                  <ResponsiveContainer width='100%' aspect={4.0/2.0}>
                    <LineChart data={this.state.last7months}>
                     <XAxis dataKey="name"/>
                     <YAxis allowDecimals={false}/>
                     <CartesianGrid strokeDasharray="3 3"/>
-                    <Tooltip/>
+                    <Tooltip wrapperStyle={{zIndex: 1000}}/>
                     <Legend verticalAlign="top" height={36}/>
                     <Line type="monotone" dataKey="REGISTERED" stroke="#8884d8" activeDot={{r: 8}}/>
                    </LineChart>
@@ -192,7 +215,7 @@ class charts extends Component{
           </Col>
           <Col xs={12} sm={12} md={12} lg={12}>
             <Card style={styles.cardMargin}>
-              <CardHeader style={styles.cardHeaderPadding} title="Complaint Type Share"/>
+              <CardHeader style={styles.cardHeaderPadding} title={translate('pgr.dashboard.complaintshare')}/>
                <CardText>
                  <ResponsiveContainer width='100%' aspect={4.0/1.0}>
                    <PieChart margin={{bottom: 30}}>

@@ -11,7 +11,7 @@ info:
 basePath: "/swm-services"
 
 x-ui-info:
-  $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/ui-info.yaml
+  $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/vfd-ui-info.yaml
 
 
 paths:

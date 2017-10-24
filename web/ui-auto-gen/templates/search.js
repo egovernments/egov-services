@@ -87,6 +87,8 @@ let searchTemplate = function (module, numCols, path, config, definition, uiInfo
     if(uiInfoDef.radios && uiInfoDef.radios.length) {
         for(var i=0; i<uiInfoDef.radios.length; i++) {
             if(fields[uiInfoDef.radios[i].jsonPath]) {
+            	localeFields[module + ".create." + uiInfoDef.radios[i].trueLabel] = getTitleCase(uiInfoDef.radios[i].trueLabel);
+                localeFields[module + ".create." + uiInfoDef.radios[i].falseLabel] = getTitleCase(uiInfoDef.radios[i].falseLabel);
                 fields[uiInfoDef.radios[i].jsonPath].type = "radio";
                 fields[uiInfoDef.radios[i].jsonPath].values = [{
                     label: module + ".create." + uiInfoDef.radios[i].trueLabel,

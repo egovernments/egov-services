@@ -12,6 +12,7 @@ let getFieldsFromInnerObject = function(reference, fields, definition, module, j
             if (["id", "tenantId", "auditDetails", "assigner"].indexOf(key) > -1) continue;
 
             if (definition[reference].properties[key].type == "array") {
+                console.log(definition[reference].properties[key]);
                 let refSplitArr = definition[reference].properties[key].items.$ref.split("/");
                 getFieldsFromInnerObject(refSplitArr[refSplitArr.length - 1], fields, definition, module, (isArray ? (jPath + "[0]") : jPath) + "." + key, true);
             } else if (definition[reference].properties[key].$ref) {
@@ -78,7 +79,7 @@ let createTemplate = function(module, numCols, path, config, definition, uiInfoD
     //=======================CUSTOM FILE LOGIC==========================>>
     if (uiInfoDef.externalData && typeof uiInfoDef.externalData == "object" && uiInfoDef.externalData.length) {
         for(var i=0; i<uiInfoDef.externalData.length; i++) {
-            if(uiInfoDef.externalData[i].fieldName) {
+            if(fields[uiInfoDef.externalData[i].fieldName]) {
                 fields[uiInfoDef.externalData[i].fieldName].url = uiInfoDef.externalData[i].url + getQuery(uiInfoDef.externalData[i].url, uiInfoDef.externalData[i].keyPath, uiInfoDef.externalData[i].valPath);
                 fields[uiInfoDef.externalData[i].fieldName].type = 'singleValueList';
             } else {
@@ -144,6 +145,8 @@ let createTemplate = function(module, numCols, path, config, definition, uiInfoD
         for(var i=0; i<uiInfoDef.radios.length; i++) {
             if(fields[uiInfoDef.radios[i].jsonPath]) {
                 fields[uiInfoDef.radios[i].jsonPath].type = "radio";
+                localeFields[module + ".create." + uiInfoDef.radios[i].trueLabel] = getTitleCase(uiInfoDef.radios[i].trueLabel);
+                localeFields[module + ".create." + uiInfoDef.radios[i].falseLabel] = getTitleCase(uiInfoDef.radios[i].falseLabel);
                 fields[uiInfoDef.radios[i].jsonPath].values = [{
                     label: module + ".create." + uiInfoDef.radios[i].trueLabel,
                     value: true

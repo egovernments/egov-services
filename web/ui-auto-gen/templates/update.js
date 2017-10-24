@@ -46,7 +46,8 @@ let updateTemplate = function(module, numCols, path, config, definition, uiInfoD
         objectName: '',
         groups: [],
         url: path,
-        tenantIdRequired: true
+        tenantIdRequired: true,
+        searchUrl: uiInfoDef.searchUrl
     };
     let fields = {};
     let ind = 0;
@@ -81,7 +82,7 @@ let updateTemplate = function(module, numCols, path, config, definition, uiInfoD
     //=======================CUSTOM FILE LOGIC==========================>>
     if (uiInfoDef.externalData && typeof uiInfoDef.externalData == "object" && uiInfoDef.externalData.length) {
         for(var i=0; i<uiInfoDef.externalData.length; i++) {
-            if(uiInfoDef.externalData[i].fieldName) {
+            if(fields[uiInfoDef.externalData[i].fieldName]) {
                 fields[uiInfoDef.externalData[i].fieldName].url = uiInfoDef.externalData[i].url + getQuery(uiInfoDef.externalData[i].url, uiInfoDef.externalData[i].keyPath, uiInfoDef.externalData[i].valPath);
                 fields[uiInfoDef.externalData[i].fieldName].type = 'singleValueList';
             } else {
@@ -147,6 +148,8 @@ let updateTemplate = function(module, numCols, path, config, definition, uiInfoD
         for(var i=0; i<uiInfoDef.radios.length; i++) {
             if(fields[uiInfoDef.radios[i].jsonPath]) {
                 fields[uiInfoDef.radios[i].jsonPath].type = "radio";
+                localeFields[module + ".create." + uiInfoDef.radios[i].trueLabel] = getTitleCase(uiInfoDef.radios[i].trueLabel);
+                localeFields[module + ".create." + uiInfoDef.radios[i].falseLabel] = getTitleCase(uiInfoDef.radios[i].falseLabel);
                 fields[uiInfoDef.radios[i].jsonPath].values = [{
                     label: module + ".create." + uiInfoDef.radios[i].trueLabel,
                     value: true

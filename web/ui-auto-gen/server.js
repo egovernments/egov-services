@@ -94,6 +94,7 @@ let parse = function(yamlPath, module, cb) {
 
         })
         .catch(function(err) {
+            console.log(err);
             cb(err);
         });
 }

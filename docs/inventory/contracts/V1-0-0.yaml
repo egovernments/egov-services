@@ -1,0 +1,1823 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: Inventory Service
+  description: Inventory services APIs - to create, update and search Inventory. 
+  contact:
+    name: Manikanta P T
+    email: info@egovernments.org
+  
+basePath: "/inventory-inventory/v110"
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/inventory-inventory/contracts/v1-0-0.yml'
+x-api-id: 'org.egov.inventory.inventory'
+paths:
+    /indents/_search:
+      post:
+        summary: Get the list of indents
+        description: indents
+        tags: 
+          - Inventory
+          - Indent
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: ids
+            type: array
+            items: 
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: issueStore
+            type: string
+            in: query
+            description: |
+              issue store of the Indent
+          - name: indentStore
+            type: string
+            in: query
+            description: |
+              indentStore   Applicable for Material Transfer Indent
+          - name: indentDate
+            type: integer
+            format: int64
+            in: query
+            description: |
+              indent date of the Indent
+          - name: indentNumber
+            type: string
+            in: query
+
+          - name: indentStatus
+            type: string
+            in: query
+            description: |
+              indent status of the Indent
+          - name: indentValue
+            type: number
+            format: double
+            in: query
+            description: |
+              indentValue   denormalized value from Indent Material
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/offset"
+          - name: sortBy
+            type: string
+            in: query
+            description: |
+              This takes any field from the Object seperated by comma and asc,desc keywords.  
+              example name asc,code desc or name,code or name,code desc 
+        responses:
+          200:
+            description: Indent retrieved Successfully
+            schema:
+              $ref: '#/definitions/IndentResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /indents/_create:
+      post:
+        summary: Create  new  indents
+        description: Create  new indents
+        tags: 
+          - Inventory
+          - Indent
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: indentRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/IndentRequest'
+        responses:
+          201:
+            description: Indent created Successfully
+            schema:
+              $ref: '#/definitions/IndentResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /indents/_update:
+      post:
+        summary: Update any of the indents
+        description: Update any of the indents
+        tags: 
+          - Inventory
+          - Indent
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: indentRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/IndentRequest'
+        responses:
+          200:
+            description: Indent updated Successfully
+            schema:
+              $ref: '#/definitions/IndentResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /materials/_search:
+      post:
+        summary: Get the list of materials
+        description: materials
+        tags: 
+          - Inventory
+          - Material
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: ids
+            type: array
+            items: 
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: code
+            type: string
+            in: query
+            description: |
+              code of the Material
+          - name: name
+            type: string
+            in: query
+            description: |
+              name of the Material
+          - name: description
+            type: string
+            in: query
+            description: |
+              description of the Material
+          - name: oldCode
+            type: string
+            in: query
+            description: |
+              old code of the Material
+          - name: materialType
+            type: integer
+            format: int64
+            in: query
+            description: |
+              material type of the Material
+          - name: inventoryType
+            type: string
+            in: query
+            description: |
+              inventory type of the Material
+          - name: status
+            type: string
+            in: query
+            description: |
+              status of the Material
+          - name: materialClass
+            type: string
+            in: query
+            description: |
+              material Usage class
+          - name: materialControlType
+            type: string
+            in: query
+            description: |
+              material control type of the Material
+          - name: model
+            type: string
+            in: query
+            description: |
+              model of the Material
+          - name: manufacturePartNo
+            type: string
+            in: query
+            description: |
+              manufacture part no of the Material
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/offset"
+          - name: sortBy
+            type: string
+            in: query
+            description: |
+              This takes any field from the Object seperated by comma and asc,desc keywords.  
+              example name asc,code desc or name,code or name,code desc 
+        responses:
+          200:
+            description: Material retrieved Successfully
+            schema:
+              $ref: '#/definitions/MaterialResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /materials/_create:
+      post:
+        summary: Create  new  materials
+        description: Create  new materials
+        tags: 
+          - Inventory
+          - Material
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: materialRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/MaterialRequest'
+        responses:
+          201:
+            description: Material created Successfully
+            schema:
+              $ref: '#/definitions/MaterialResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /materials/_update:
+      post:
+        summary: Update any of the materials
+        description: Update any of the materials
+        tags: 
+          - Inventory
+          - Material
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: materialRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/MaterialRequest'
+        responses:
+          200:
+            description: Material updated Successfully
+            schema:
+              $ref: '#/definitions/MaterialResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /materialissues/_search:
+      post:
+        summary: Get the list of materialissues
+        description: materialissues
+        tags: 
+          - Inventory
+          - MaterialIssue
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: ids
+            type: array
+            items: 
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: store
+            type: string
+            in: query
+            description: |
+              store of the MaterialIssue
+          - name: issueNoteNumber
+            type: string
+            in: query
+          - name: materialIssueStatus
+            type: string
+            in: query
+          - name: stateId
+            type: string
+            in: query
+            description: |
+              state id of the MaterialIssue
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/offset"
+          - name: sortBy
+            type: string
+            in: query
+            description: |
+              This takes any field from the Object seperated by comma and asc,desc keywords.  
+              example name asc,code desc or name,code or name,code desc 
+        responses:
+          200:
+            description: MaterialIssue retrieved Successfully
+            schema:
+              $ref: '#/definitions/MaterialIssueResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /materialissues/_create:
+      post:
+        summary: Create  new  materialissues
+        description: Create  new materialissues
+        tags: 
+          - Inventory
+          - MaterialIssue
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: materialIssueRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/MaterialIssueRequest'
+        responses:
+          201:
+            description: MaterialIssue created Successfully
+            schema:
+              $ref: '#/definitions/MaterialIssueResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /materialissues/_update:
+      post:
+        summary: Update any of the materialissues
+        description: Update any of the materialissues
+        tags: 
+          - Inventory
+          - MaterialIssue
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: materialIssueRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/MaterialIssueRequest'
+        responses:
+          200:
+            description: MaterialIssue updated Successfully
+            schema:
+              $ref: '#/definitions/MaterialIssueResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+
+    /purchasematerials/_search:
+      post:
+        summary: Get the list of purchasematerials
+        description: purchasematerials
+        tags: 
+          - Inventory
+          - PurchaseMaterial
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: ids
+            type: array
+            items: 
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: material
+            type: string
+            in: query
+            description: |
+              material of the PurchaseMaterial
+          - name: uom
+            type: integer
+            format: int64
+            in: query
+            description: |
+              uom of the PurchaseMaterial
+          - name: orderQuantity
+            type: integer
+            format: int32
+            in: query
+            description: |
+              order quantity of the PurchaseMaterial
+          - name: remarks
+            type: string
+            in: query
+            description: |
+              remarks of the PurchaseMaterial
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/offset"
+          - name: sortBy
+            type: string
+            in: query
+            description: |
+              This takes any field from the Object seperated by comma and asc,desc keywords.  
+              example name asc,code desc or name,code or name,code desc 
+        responses:
+          200:
+            description: PurchaseMaterial retrieved Successfully
+            schema:
+              $ref: '#/definitions/PurchaseMaterialResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /purchasematerials/_create:
+      post:
+        summary: Create  new  purchasematerials
+        description: Create  new purchasematerials
+        tags: 
+          - Inventory
+          - PurchaseMaterial
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: purchaseMaterialRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/PurchaseMaterialRequest'
+        responses:
+          201:
+            description: PurchaseMaterial created Successfully
+            schema:
+              $ref: '#/definitions/PurchaseMaterialResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /purchasematerials/_update:
+      post:
+        summary: Update any of the purchasematerials
+        description: Update any of the purchasematerials
+        tags: 
+          - Inventory
+          - PurchaseMaterial
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: purchaseMaterialRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/PurchaseMaterialRequest'
+        responses:
+          200:
+            description: PurchaseMaterial updated Successfully
+            schema:
+              $ref: '#/definitions/PurchaseMaterialResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /purchaseorders/_search:
+      post:
+        summary: Get the list of purchaseorders
+        description: purchaseorders
+        tags: 
+          - Inventory
+          - PurchaseOrder
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: ids
+            type: array
+            items: 
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: store
+            type: integer
+            format: int64
+            in: query
+            description: |
+              store of the PurchaseOrder
+          - name: supplierCode
+            type: string
+            in: query
+            description: |
+              supplier code of the PurchaseOrder
+          - name: expectedDeliveryDate
+            type: integer
+            format: int64
+            in: query
+            description: |
+              expected delivery date of the PurchaseOrder
+   
+          - name: status
+            type: string
+            in: query
+            description: |
+              status of the PurchaseOrder
+          - name: stateId
+            type: string
+            in: query
+            description: |
+              state id of the PurchaseOrder
+ 
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/offset"
+          - name: sortBy
+            type: string
+            in: query
+            description: |
+              This takes any field from the Object seperated by comma and asc,desc keywords.  
+              example name asc,code desc or name,code or name,code desc 
+        responses:
+          200:
+            description: PurchaseOrder retrieved Successfully
+            schema:
+              $ref: '#/definitions/PurchaseOrderResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /purchaseorders/_create:
+      post:
+        summary: Create  new  purchaseorders
+        description: Create  new purchaseorders
+        tags: 
+          - Inventory
+          - PurchaseOrder
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: purchaseOrderRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/PurchaseOrderRequest'
+        responses:
+          201:
+            description: PurchaseOrder created Successfully
+            schema:
+              $ref: '#/definitions/PurchaseOrderResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /purchaseorders/_update:
+      post:
+        summary: Update any of the purchaseorders
+        description: Update any of the purchaseorders
+        tags: 
+          - Inventory
+          - PurchaseOrder
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: purchaseOrderRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/PurchaseOrderRequest'
+        responses:
+          200:
+            description: PurchaseOrder updated Successfully
+            schema:
+              $ref: '#/definitions/PurchaseOrderResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /stores/_search:
+      post:
+        summary: Get the list of stores
+        description: stores
+        tags: 
+          - Inventory
+          - Store
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: ids
+            type: array
+            items: 
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: code
+            type: string
+            in: query
+            description: |
+              code of the Store
+          - name: name
+            type: string
+            in: query
+            description: |
+              name of the Store
+          - name: description
+            type: string
+            in: query
+            description: |
+              description of the Store
+          - name: department
+            type: string
+            in: query
+            description: |
+              department of the Store
+ 
+          - name: contactNo1
+            type: string
+            in: query
+            description: |
+              contact no1 of the Store
+  
+          - name: email
+            type: string
+            in: query
+            description: |
+              email of the Store
+          - name: storeInCharge
+            type: integer
+            format: int64
+            in: query
+            description: |
+              store in charge of the Store
+          - name: isCentralStore
+            type: boolean
+            in: query
+            description: |
+              is central store of the Store
+          - name: active
+            type: boolean
+            in: query
+            description: |
+              Whether Store is Active or not. If the value is TRUE, then Store is active,If the value is FALSE then Store is inactive,Default value is TRUE
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/offset"
+          - name: sortBy
+            type: string
+            in: query
+            description: |
+              This takes any field from the Object seperated by comma and asc,desc keywords.  
+              example name asc,code desc or name,code or name,code desc 
+        responses:
+          200:
+            description: Store retrieved Successfully
+            schema:
+              $ref: '#/definitions/StoreResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /stores/_create:
+      post:
+        summary: Create  new  stores
+        description: Create  new stores
+        tags: 
+          - Inventory
+          - Store
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: storeRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/StoreRequest'
+        responses:
+          201:
+            description: Store created Successfully
+            schema:
+              $ref: '#/definitions/StoreResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /stores/_update:
+      post:
+        summary: Update any of the stores
+        description: Update any of the stores
+        tags: 
+          - Inventory
+          - Store
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: storeRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/StoreRequest'
+        responses:
+          200:
+            description: Store updated Successfully
+            schema:
+              $ref: '#/definitions/StoreResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /receiptnotes/_search:
+      post:
+        summary: Get list of material receipt notes based on below search parameter(s).
+        description: >
+          Provides the list of material receipt note information based on the
+          search paramaters. Both purchase order receipts as well as miscallaneous
+          receipt are coveredf here.
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Request header for the service request details.
+            required: true
+            schema:
+              $ref: >-
+                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+          - $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+          - name: mrnNumber
+            in: query
+            description: >-
+              Pass List of unique mrn number(s) then the API will returns list of
+              receipts.
+            required: false
+            type: array
+            items:
+              type: string
+            maxItems: 100
+          - name: receiptType
+            in: query
+            description: Mention the type of the receipt.
+            required: false
+            type: array
+            items:
+              type: string
+            maxItems: 3
+          - name: mrnStatus
+            in: query
+            description: Unique status code of the receipt.
+            required: false
+            type: string
+          - name: receivingStore
+            in: query
+            description: The store code from which the receipt was received.
+            required: false
+            type: string
+          - name: supplierCode
+            in: query
+            description: Unique Supplier code from which the receipt was made.
+            required: false
+            type: string
+          - name: receiptDateFrom
+            in: query
+            description: From which receipt date onwards the data needs to be fetched.
+            required: false
+            type: integer
+            format: int64
+          - name: receiptDateT0
+            in: query
+            description: Till which receipt date the data needs to be fetched.
+            required: false
+            type: integer
+            format: int64
+        tags:
+          - MRN
+        responses:
+          '200':
+            description: 'Successful response, returns list of Material Receipt Note(s).'
+            schema:
+              $ref: '#/definitions/MaterialReceiptHeaderResponse'
+          '400':
+            description: Invalid input.
+            schema:
+              $ref: >-
+                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+    /receiptnotes/_create:
+      post:
+        summary: Create New Material Receipt Note.
+        description: >-
+          Create a new material receipt note. This will handle both purchase
+          receipt as well as miscellaneous material receipts.
+        parameters:
+          - name: materialReceipt
+            in: body
+            description: Details for the new material receipt.
+            required: true
+            schema:
+              $ref: '#/definitions/MaterialReceiptHeaderRequest'
+        tags:
+          - MRN
+        responses:
+          '201':
+            description: Material Receipt created
+            schema:
+              $ref: '#/definitions/MaterialReceiptHeaderResponse'
+          '400':
+            description: Invalid input.
+            schema:
+              $ref: >-
+                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+    /receiptnotes/_update:
+      post:
+        summary: Update existing Material Receipts.
+        description: Existing material receipt notes can be updated except the mrn number.
+        parameters:
+          - name: materialReceipt
+            in: body
+            description: Details for the new material receipts.
+            required: true
+            schema:
+              $ref: '#/definitions/MaterialReceiptHeaderRequest'
+        tags:
+          - MRN
+        responses:
+          '201':
+            description: Material Receipt(s) Updated Successfully.
+            schema:
+              $ref: '#/definitions/MaterialReceiptHeaderResponse'
+          '400':
+            description: Invalid input.
+            schema:
+              $ref: >-
+                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+definitions:
+    Indent:
+      type: object
+      description: |
+          
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the Indent
+        issueStore:
+          $ref: "#/definitions/Store"
+          description: |
+            issue store of the Indent
+        indentStore:
+          $ref: "#/definitions/Store"
+          description: |
+            indentStore   Applicable for Material Transfer Indent
+        indentDate:
+          type: integer
+          format: int64
+          description: |
+            indent date of the Indent
+        indentNumber:
+          type: string
+          maxLength: 100
+          description: |
+            indentNumber   Auto generated number, read only
+        indentPurpose:
+          type: string
+          enum:
+            - Consumption
+            - RepairsAndMaintenance
+            - Capital
+            - MaterialTransferNote
+          description: |
+            indent purpose of the Indent
+        inventoryType:
+          type: string
+          enum:
+            - Asset
+            - Consumable
+          description: |
+            inventory type of the Indent
+        expectedDeliveryDate:
+          type: integer
+          format: int64
+          description: |
+            expected delivery date of the Indent
+        description:
+          type: string
+          maxLength: 500
+          description: |
+            description of the Indent
+        indentStatus:
+          type: string
+          enum:
+            - CREATED
+            - APPROVED
+            - REJECTED
+            - CANCELED
+            - POCreated
+            - MaterialIssued
+          maxLength: 50
+          minLength: 5
+          description: |
+            indent status of the Indent
+        stateId:
+          type: string
+          description: |
+            state id of the Indent
+        indentMaterials:
+          type:  array
+          description:  |
+            indent materials of the Indent
+          items:
+            $ref: "#/definitions/IndentMaterial"
+        indentValue:
+          type: number
+          format: double
+          description: |
+            indentValue   denormalized value from Indent Material
+      required:
+      - issueStore
+      - indentDate
+      - indentPurpose
+      - inventoryType
+      - expectedDeliveryDate
+      - indentMaterials
+    IndentMaterial:
+      type: object
+      description: |
+          
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the IndentMaterial
+        material:
+          $ref: "#/definitions/Material"
+          description: |
+            material of the IndentMaterial
+        uom:
+          $ref: "#/definitions/Uom"
+          description: |
+            uom of the IndentMaterial
+        projectCode:
+          type: string
+          description: |
+            projectCode   If case the purpose is Capital
+        assetCode:
+          type: string
+          description: |
+            assetCode   If the purpose is Repair and Maintenance
+        indentQantity:
+          type: integer
+          format: int32
+          description: |
+            indent qantity of the IndentMaterial
+        issuedQantity:
+          type: integer
+          format: int32
+          description: |
+            issuedQantity   Applicable for Material Issue and Material Transfer Indent
+        receivedQuantity:
+          type: integer
+          format: int32
+          description: |
+            receivedQuantity   Applicable for Material Receipt Note and Material Transfer Inward Note
+        remarks:
+          type: string
+          maxLength: 500
+          description: |
+            remarks of the IndentMaterial
+      required:
+      - material
+      - uom
+    IndentRequest:
+      description: Contract class for web request. Array of Indent items  are used in case of create or update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        indents:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Indent'
+    IndentResponse:
+      description: Contract class for web response. Array of Indent items  are used in case of search ,create or update request. 
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        indents:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Indent'
+        page:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
+
+    Material:
+      type: object
+      description: |
+          
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the Material
+        code:
+          type: string
+          maxLength: 50
+          minLength: 5
+          description: |
+            code of the Material
+        name:
+          type: string
+          maxLength: 50
+          minLength: 5
+          description: |
+            name of the Material
+        description:
+          type: string
+          maxLength: 1024
+          description: |
+            description of the Material
+        oldCode:
+          type: string
+          maxLength: 50
+          description: |
+            old code of the Material
+        materialType:
+          $ref: "#/definitions/MaterialType"
+          description: |
+            material type of the Material
+        baseUom:
+          $ref: "#/definitions/Uom"
+          description: |
+            base uom of the Material
+        inventoryType:
+          type: string
+          enum:
+            - Asset
+            - Consumable
+          description: |
+            inventory type of the Material
+        status:
+          type: string
+          enum:
+            - Active
+            - Withdrawn
+            - Obsolete
+          description: |
+            status of the Material
+        purchaseUom:
+          $ref: "#/definitions/Uom"
+          description: |
+            purchase uom of the Material
+        expenseAccount:
+          $ref: "#/definitions/ChartofAccount"
+          description: |
+            expense account of the Material
+        minQuantity:
+          type: integer
+          format: int64
+          description: |
+            min quantity of the Material
+        maxQuantity:
+          type: integer
+          format: int64
+          description: |
+            max quantity of the Material
+        staockingUom:
+          $ref: "#/definitions/Uom"
+          description: |
+            staocking uom of the Material
+        materialClass:
+          type: string
+          enum:
+            - HighUsage
+            - MediumUsage
+            - LowUsage
+          description: |
+            material class of the Material
+        reorderLevel:
+          type: integer
+          format: int64
+          description: |
+            reorder level of the Material
+        reorderQuantity:
+          type: integer
+          format: int64
+          description: |
+            reorder quantity of the Material
+        materialControlType:
+          type: string
+          enum:
+            - LOTControl
+            - Shelf_life_Control
+          description: |
+            material control type of the Material
+        model:
+          type: string
+          description: |
+            model of the Material
+        manufacturePartNo:
+          type: string
+          description: |
+            manufacture part no of the Material
+        techincalSpecs:
+          type: string
+          description: |
+            techincal specs of the Material
+        termsOfDelivery:
+          type: string
+          description: |
+            terms of delivery of the Material
+        overrideMaterialControlType:
+          type: boolean
+          description: |
+            override material control type of the Material
+      required:
+      - name
+      - description
+      - materialType
+      - baseUom
+      - purchaseUom
+      - minQuantity
+      - maxQuantity
+      - staockingUom
+      - materialClass
+      - reorderLevel
+      - reorderQuantity
+      - materialControlType
+    MaterialType:
+      type: object
+      description: |
+          
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the MaterialType
+        name:
+          type: string
+          description: |
+            name of the MaterialType
+        code:
+          type: string
+          description: |
+            code of the MaterialType
+        parent:
+          type: string
+          description: |
+            code of the parent MaterialType
+    Uom:
+      type: object
+      description: |
+          
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the UOM
+        name:
+          type: string
+          description: |
+            name of the UOM
+        code:
+          type: string
+          description: |
+             code of the uom
+    ChartofAccount:
+      type: object
+      description: | 
+          Chart of account defined in financial System
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the ChartofAccount
+        name:
+          type: string
+          description: |
+            name of the ChartofAccount
+        glCode:
+          type: string
+          description: |
+            gl code of the ChartofAccount
+    MaterialRequest:
+      description: Contract class for web request. Array of Material items  are used in case of create or update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        materials:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Material'
+    MaterialResponse:
+      description: Contract class for web response. Array of Material items  are used in case of search ,create or update request. 
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        materials:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Material'
+        page:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
+
+    MaterialIssue:
+      type: object
+      description: |
+          
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the MaterialIssue
+        store:
+          $ref: "#/definitions/Store"
+          description: |
+            store of the MaterialIssue
+        issueNoteNumber:
+          type: string
+          maxLength: 100
+          description: |
+            issueNoteNumber   Auto generated number, read only
+        issueDate:
+          type: integer
+          format: int64
+          description: |
+            issue date of the MaterialIssue
+        issuedToEmployee:
+          type: string
+          description: |
+            issued to employee of the MaterialIssue
+        materialIssueStatus:
+          type: string
+          enum:
+            - CREATED
+            - APPROVED
+            - REJECTED
+            - CANCELED
+          maxLength: 50
+          minLength: 5
+          description: |
+            material issue status of the MaterialIssue
+        stateId:
+          type: integer
+          format: int64
+          description: |
+            state id of the MaterialIssue
+      required:
+      - store
+      - issueDate
+    MaterialIssueRequest:
+      description: Contract class for web request. Array of MaterialIssue items  are used in case of create or update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        materialIssues:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/MaterialIssue'
+    MaterialIssueResponse:
+      description: Contract class for web response. Array of MaterialIssue items  are used in case of search ,create or update request. 
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        materialIssues:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/MaterialIssue'
+        page:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
+
+    PurchaseIndent:
+      type: object
+      description: |
+          PurchaseIndent   Single purchase order can be mapped to multiple indent
+      properties:
+        purchaseOrder:
+          $ref: "#/definitions/PurchaseOrder"
+          description: |
+            purchase order of the PurchaseIndent
+        indent:
+          $ref: "#/definitions/Indent"
+          description: |
+            indent of the PurchaseIndent
+      required:
+      - purchaseOrder
+      - indent
+    PurchaseIndentRequest:
+      description: Contract class for web request. Array of PurchaseIndent items  are used in case of create or update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        purchaseIndents:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/PurchaseIndent'
+    PurchaseIndentResponse:
+      description: Contract class for web response. Array of PurchaseIndent items  are used in case of search ,create or update request. 
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        purchaseIndents:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/PurchaseIndent'
+        page:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
+
+    PurchaseMaterial:
+      type: object
+      description: |
+          
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the PurchaseMaterial
+        material:
+          $ref: "#/definitions/Material"
+          description: |
+            material of the PurchaseMaterial
+        uom:
+          $ref: "#/definitions/Uom"
+          description: |
+            uom of the PurchaseMaterial
+        orderQuantity:
+          type: integer
+          format: int32
+          description: |
+            order quantity of the PurchaseMaterial
+        remarks:
+          type: string
+          maxLength: 500
+          description: |
+            remarks of the PurchaseMaterial
+      required:
+      - material
+      - uom
+    PurchaseMaterialRequest:
+      description: Contract class for web request. Array of PurchaseMaterial items  are used in case of create or update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        purchaseMaterials:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/PurchaseMaterial'
+    PurchaseMaterialResponse:
+      description: Contract class for web response. Array of PurchaseMaterial items  are used in case of search ,create or update request. 
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        purchaseMaterials:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/PurchaseMaterial'
+        page:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
+
+    PurchaseOrder:
+      type: object
+      description: |
+          
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the PurchaseOrder
+        store:
+          $ref: "#/definitions/Store"
+          description: |
+            store of the PurchaseOrder
+        purchaseOrderNumber:
+          type: string
+          description: |
+            purchaseOrderNumber   Auto generated number, read only
+        purchaseOrderDate:
+          type: integer
+          format: int64
+          description: |
+            purchase order date of the PurchaseOrder
+        rateType:
+          type: string
+          enum:
+            - DIT
+            - DGSD
+            - Tender
+            - Quotation
+          description: |
+            rate type of the PurchaseOrder
+        supplierCode:
+          type: string
+          description: |
+            supplier code of the PurchaseOrder
+        advanceAmount:
+          type: number
+          format: double
+          description: |
+            advance amount of the PurchaseOrder
+        advancePercentage:
+          type: number
+          format: double
+          description: |
+            advance percentage of the PurchaseOrder
+        expectedDeliveryDate:
+          type: integer
+          format: int64
+          description: |
+            expected delivery date of the PurchaseOrder
+        deliveryTerms:
+          type: string
+          maxLength: 500
+          minLength: 1
+          description: |
+            delivery terms of the PurchaseOrder
+        paymentTerms:
+          type: string
+          maxLength: 500
+          description: |
+            payment terms of the PurchaseOrder
+        description:
+          type: string
+          maxLength: 500
+          description: |
+            description of the PurchaseOrder
+        status:
+          type: string
+          maxLength: 50
+          minLength: 5
+          description: |
+            status of the PurchaseOrder
+        stateId:
+          type: string
+          maxLength: 32
+          description: |
+            state id of the PurchaseOrder
+        fileStoreId:
+          type: string
+          maxLength: 32
+          description: |
+            fileStoreId   File Store id of the Purchase Order Generated
+      required:
+      - store
+      - purchaseOrderNumber
+      - purchaseOrderDate
+      - rateType
+      - supplierCode
+      - expectedDeliveryDate
+      - deliveryTerms
+    PurchaseOrderRequest:
+      description: Contract class for web request. Array of PurchaseOrder items  are used in case of create or update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        purchaseOrders:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/PurchaseOrder'
+    PurchaseOrderResponse:
+      description: Contract class for web response. Array of PurchaseOrder items  are used in case of search ,create or update request. 
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        purchaseOrders:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/PurchaseOrder'
+        page:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
+
+    Store:
+      type: object
+      description: |
+          
+      properties:
+        id:
+          type: string
+          maxLength: 32
+          description: |
+            Unique Identifier of the Store
+        code:
+          type: string
+          maxLength: 50
+          minLength: 5
+          description: |
+            code of the Store
+        name:
+          type: string
+          maxLength: 50
+          minLength: 5
+          description: |
+            name of the Store
+        description:
+          type: string
+          maxLength: 1000
+          description: |
+            description of the Store
+        department:
+          $ref: "#/definitions/Department"
+          description: |
+            department of the Store
+        billingAddress:
+          type: string
+          maxLength: 1000
+          description: |
+            billing address of the Store
+        deliveryAddress:
+          type: string
+          maxLength: 1000
+          description: |
+            delivery address of the Store
+        contactNo1:
+          type: string
+          maxLength: 10
+          description: |
+            contact no1 of the Store
+        contactNo2:
+          type: string
+          description: |
+            contact no2 of the Store
+        email:
+          type: string
+          maxLength: 100
+          description: |
+            email of the Store
+        storeInCharge:
+          $ref: "#/definitions/Employee"
+          description: |
+            store in charge of the Store
+        isCentralStore:
+          type: boolean
+          description: |
+            is central store of the Store
+        active:
+          type: boolean
+          description: |
+            Whether Store is Active or not. If the value is TRUE, then Store is active,If the value is FALSE then Store is inactive,Default value is TRUE
+      required:
+      - code
+      - name
+      - description
+      - department
+      - billingAddress
+      - deliveryAddress
+      - contactNo1
+      - email
+    Department:
+      type: object
+      description: |
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the Department
+        code:
+          type: string
+          description: |
+            code of the Department
+        name:
+          type: string
+          description: |
+            name of the Department
+        active:
+          type: boolean
+          description: |
+            Whether Department is Active or not. If the value is TRUE, then Department is active,If the value is FALSE then Department is inactive,Default value is TRUE
+            
+    Employee:
+      type: object
+      description: | 
+        Employee in the system. 
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the Employee
+        code:
+          type: string
+          description: |
+            code of the Employee
+        name:
+          type: string
+          description: |
+            name of the Employee
+    StoreRequest:
+      description: Contract class for web request. Array of Store items  are used in case of create or update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        stores:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Store'
+    StoreResponse:
+      description: Contract class for web response. Array of Store items  are used in case of search ,create or update request. 
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        stores:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Store'
+        page:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
+    MaterialReceiptHeader:
+      description: Hold the material receipt specific information.
+      type: object
+      properties:
+        mrnNumber:
+          type: string
+          description: Unique number generated internally on ceating a receipt.
+        receiptDate:
+          type: integer
+          description: The date on which the receipt was made.
+          format: int64
+        receiptType:
+          type: string
+          description: >-
+            Different receipt types enumeration. By default the value will be
+            "PURCHASE RECEIPT".
+          enum:
+            - PURCHASE RECEIPT
+            - RETURN OF MATERIALS
+            - SCRAP
+        receivingStore:
+          type: string
+          description: The unique code of the store that is receiving the materials.
+        supplierCode:
+          type: string
+          description: Code of the supplier from whom the receipt is made.
+          format: varchar
+        supplierBillNo:
+          type: string
+          description: The bill number what is mentioned in the bill given by the supplier.
+          format: varchar
+        supplierBillDate:
+          type: integer
+          description: >-
+            The date on which the supplier has raised the bill for the delivered
+            materials.
+          format: int64
+        challanNo:
+          type: boolean
+          description: The challan number associated with this receipt.
+          format: boolean
+        challanDate:
+          type: integer
+          format: int64
+          description: Date on which the challan was made.
+        remarks:
+          type: string
+          description: Any general remarks pertaining to the material receipt.
+          format: varchar
+        receivedBy:
+          type: string
+          description: The code of the employee who has received the materials in store.
+          format: varchar
+        designation:
+          type: string
+          description: Designation of the employee who has received the materials in store.
+          format: varchar
+        mrnStatus:
+          description: >-
+            Shows the current status of the receipt. By default the value will be
+            "CREATED".
+          enum:
+            - CREATED
+            - APPROVED
+            - CANCELED
+        inspectedBy:
+          type: string
+          description: >-
+            The unique code of the employee who has inspected the receipt of
+            materials.
+          format: boolean
+        inspectionDate:
+          type: integer
+          format: int64
+          description: Date on which the inspection was done.
+        inspectionRemarks:
+          type: string
+          description: Any remarks made by the inspection authority.
+          format: varchar
+        tenantId:
+          type: string
+          description: Unique id for ulb.
+          format: varchar
+        totalReceiptValue:
+          type: number
+          description: >-
+            The sum total of the receipt value. This will be the total value of
+            all the materials that are received as part of this receipt note.
+          format: double
+        receiptDetails:
+          type: array
+          description: >-
+            Material and Purchase order details that are associated with this
+            receipt.
+          items:
+            $ref: '#/definitions/MaterialReceiptDetail'
+      required:
+        - mrnNumber
+        - receiptDate
+        - receiptType
+        - receivingStore
+        - mrnStatus
+        - totalReceiptValue
+    MaterialReceiptDetail:
+      description: >-
+        Hold the material receipt note material level information. This will show
+        which material is received based on which purchase order.
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for the receipt details.
+        mrnNumber:
+          type: string
+          description: Unique number to identify the maretial receipt note.
+        poline:
+          $ref: "#/definitions/PurchaseOrder"
+          description: >-
+            The unique identifier of the purchase order detail. This refers to the
+            particular purchase order material that is being received.
+          format: int64
+        receivedQty:
+          type: number
+          description: >-
+            The quantity of the material received for this particular purchase
+            order. All the quantity needs to be saved in the database in the based
+            UOM.
+          format: double
+        acceptedQty:
+          type: number
+          description: >-
+            The quantity of the material accepted from the total quantity of
+            materials received. All the quantity needs to be saved in the database
+            in the based UOM. Accepted quantity cannot be greater than the
+            received quantity.
+          format: double
+        challanQty:
+          type: number
+          description: The quantity of the material as per the challan in the supplier bill.
+          format: double
+        challanRate:
+          type: number
+          description: Rate per unit as mentioned in the challan in the supplier bill.
+          format: double
+        unitRate:
+          type: number
+          description: Per unit rate of the material as per the Purchase Order.
+          format: double
+        rejectionRemark:
+          type: string
+          description: The reason why certain quantities of materials were rejected.
+          format: varchar
+        lotNo:
+          type: string
+          description: LOT number for the materials that are of LOT control.
+          format: varchar
+        serialNo:
+          type: string
+          description: Serial number of the materials that are received.
+          format: varchar
+        remark:
+          type: string
+          description: General remarks about the materials.
+          format: varchar
+        manufactureDate:
+          type: integer
+          description: The date on which the materials are manufactured.
+          format: int64
+        expiryDate:
+          type: integer
+          description: >-
+            The date of expiry of the materials. This is required in case of
+            materials that are of type shelf life control. Date must be greater
+            than the receipt date.
+          format: int64
+      required:
+        - mrnNumber
+        - id
+        - receivedQty
+        - manufactureDate
+    MaterialReceiptHeaderRequest:
+      type: object
+      description: Hold the Material Receipt Note request information.
+      properties:
+        ResposneInfo:
+          $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+        MaterialReceipt:
+          type: array
+          items:
+            $ref: '#/definitions/MaterialReceiptHeader'
+    MaterialReceiptHeaderResponse:
+      type: object
+      description: Hold the Material Receipt Note Response information
+      properties:
+        ResposneInfo:
+          $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+        MaterialReceipt:
+          type: array
+          items:
+            $ref: '#/definitions/MaterialReceiptHeader'          
+parameters:
+  pageSize:
+    name: pageSize
+    type: integer
+    format: int32
+    in: query
+    description: pageSize
+  offset:
+    name: offset
+    type: integer
+    format: int32
+    in: query
+    description: offset          
+          
+          

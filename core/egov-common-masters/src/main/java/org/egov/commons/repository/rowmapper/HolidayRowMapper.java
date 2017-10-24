@@ -72,10 +72,10 @@ public class HolidayRowMapper implements RowMapper<Holiday> {
         calendarYear.setActive((Boolean) rs.getObject("cy_active"));
         calendarYear.setTenantId(rs.getString("cy_tenantId"));
 
-        /*HolidayType holidayType = new HolidayType();
+        HolidayType holidayType = new HolidayType();
         holidayType.setId(rs.getLong("ht_id"));
         holidayType.setName(rs.getString("ht_name"));
-        holidayType.setTenantId(rs.getString("ht_tenantId"));*/
+        holidayType.setTenantId(rs.getString("ht_tenantId"));
 
         try {
             Date date = isEmpty(rs.getDate("cy_startDate")) ? null : sdf.parse(sdf.format(rs.getDate("cy_startDate")));
@@ -90,6 +90,7 @@ public class HolidayRowMapper implements RowMapper<Holiday> {
         }
 
         holiday.setCalendarYear(calendarYear);
+        holiday.setHolidayType(holidayType);
 
         return holiday;
     }

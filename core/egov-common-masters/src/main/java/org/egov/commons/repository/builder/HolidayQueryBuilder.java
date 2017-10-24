@@ -55,9 +55,11 @@ public class HolidayQueryBuilder {
     private static final Logger logger = LoggerFactory.getLogger(HolidayQueryBuilder.class);
     private static final String BASE_QUERY = "SELECT h.id as h_id, h.calendarYear as h_calendarYear,"
             + " h.name as h_name, h.applicableOn as h_applicableOn, h.tenantId as h_tenantId,"
-            + " cy.id as cy_id, cy.name as cy_name, cy.startDate as cy_startDate, cy.endDate as cy_endDate,"
+            + " ht.id AS ht_id , ht.name AS ht_name, ht.tenantId AS ht_tenantId, cy.id as cy_id, "
+            + " cy.name as cy_name, cy.startDate as cy_startDate, cy.endDate as cy_endDate,"
             + " cy.active as cy_active, cy.tenantId as cy_tenantId"
-            + " FROM eg_holiday h JOIN eg_calendarYear cy ON h.calendarYear = cy.name ";
+            + " FROM eg_holiday h JOIN eg_calendarYear cy ON h.calendarYear = cy.name"
+            + " LEFT JOIN  eg_holidaytype ht ON ht.id=h.holidaytype AND ht.tenantid = h.tenantid and ht.tenantid = h.tenantid";
     @Autowired
     private ApplicationProperties applicationProperties;
 
@@ -120,9 +122,7 @@ public class HolidayQueryBuilder {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" cy.tenantId = ?");
             preparedStatementValues.add(holidayGetRequest.getTenantId());
-           /* isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" ht.tenantId = ?");
-            preparedStatementValues.add(holidayGetRequest.getTenantId());*/
+
         }
 
         if (holidayGetRequest.getId() != null) {
@@ -160,11 +160,11 @@ public class HolidayQueryBuilder {
             selectQuery.append(" h.applicableOn <= ?");
             preparedStatementValues.add(holidayGetRequest.getToDate());
         }
-        /*if (holidayGetRequest.getHolidayType() != null) {
+        if (holidayGetRequest.getHolidayType() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" ht.id = ?");
             preparedStatementValues.add(holidayGetRequest.getHolidayType());
-        }*/
+        }
     }
 
     private void addOrderByClause(StringBuilder selectQuery, HolidayGetRequest holidayGetRequest) {

@@ -44,9 +44,9 @@ paths:
       parameters:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-        - $ref: "#/parameters/pageSize"
-        - $ref: "#/parameters/pageNumber"
-        - $ref: "#/parameters/sortProperty"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageSize"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
         - name: adminSanctionNumbers
           in: query
           description: Comma separated list of Admin Sanction Numbers of Abstract Estimates
@@ -215,9 +215,9 @@ paths:
       parameters:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-        - $ref: "#/parameters/pageSize"
-        - $ref: "#/parameters/pageNumber"
-        - $ref: "#/parameters/sortProperty"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageSize"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
         - name: detailedEstimateNumbers
           in: query
           description: Comma separated list of Detailed Estimate Numbers to get the Detailed Estimates
@@ -489,17 +489,17 @@ definitions:
         items:
           $ref: '#/definitions/DocumentDetail'
       status:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/AbstractEstimateStatus'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/AbstractEstimateStatus'
       beneficiary:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/Beneficiary'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/Beneficiary'
       modeOfAllotment:
         $ref: '#/definitions/ModeOfAllotment'
       typeOfWork:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/TypeOfWork'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/TypeOfWork'
       subTypeOfWork:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/TypeOfWork'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/TypeOfWork'
       natureOfWork: 
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/NatureOfWork'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/NatureOfWork'
       ward:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
       technicalSanctionNumber: 
@@ -518,7 +518,7 @@ definitions:
       locality: 
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
       workCategory:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/WorkCategory'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkCategory'
       councilResolutionNumber:
         type: string
         pattern: '[a-zA-Z0-9-\\]'
@@ -814,7 +814,7 @@ definitions:
         type: string
         description: user who admin sanctioned
       status:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/DetailedEstimateStatus'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DetailedEstimateStatus'
       workValue:
         type: number
         format: BigDecimal
@@ -846,11 +846,11 @@ definitions:
       modeOfAllotment:
         $ref: '#/definitions/ModeOfAllotment'
       worksType:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/TypeOfWork'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/TypeOfWork'
       worksSubtype:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/TypeOfWork'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/TypeOfWork'
       natureOfWork: 
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/NatureOfWork'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/NatureOfWork'
       ward:
         type: string
         description: Ward of the Detailed Estimate
@@ -978,7 +978,7 @@ definitions:
           maxLength: 128
           minLength: 4
         overhead:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/Overhead'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/Overhead'
         amount:
           type: integer
           format: BigDecimal
@@ -1034,9 +1034,9 @@ definitions:
           maxLength: 128
           minLength: 4
         schedule:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/ScheduleOfRate'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/ScheduleOfRate'
         nonSor:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/NonSOR'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/NonSOR'
         uom:
           type: string
           description: UOM for the Estimate Activity
@@ -1057,7 +1057,7 @@ definitions:
           format: double
           description: Service Tax Percentage of the Estimate Activity
         revisionType:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yaml#/definitions/RevisionType'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/RevisionType'
         parent:
           $ref: '#/definitions/EstimateActivity'
         detailedEstimate:
@@ -1273,7 +1273,7 @@ definitions:
           description: Name of the Project
           maxLength: 100
         status:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/common/v1-0-0.yml#/definitions/ProjectCodeStatus'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/ProjectCodeStatus'
         projectValue:
           type: integer
           format: BigDecimal
@@ -1295,3 +1295,4 @@ tags:
     description: APIs required for Abstract Estimate.
   - name: Detailed Estimate
     description: APIs required for Detailed Estimate. 
+

@@ -1,0 +1,220 @@
+{
+  "tenantId": "mh",
+  "moduleName": "WOM",
+  "ScheduleCategory": [
+    {
+      "id": 1,
+      "code": "EXV - FAKE",
+      "tenantId": "mh",
+      "name": "EXCAVATION - FAKE"
+    },
+    {
+      "id": 1,
+      "code": "CCR - FAKE",
+      "tenantId": "mh",
+      "name": "Concrete roads - FAKE"
+    },
+    {
+      "id": 1,
+      "code": "BTR - FAKE",
+      "tenantId": "mh",
+      "name": "Black top roads - FAKE"
+    }
+  ],
+  "ContractorClass": [
+    {
+      "id": 1,
+      "tenantId": "mh",
+      "class": "001 - Fake",
+      "description": "Class - 1 - Fake",
+      "minimumAmount": 10.0,
+      "maximumAmount": 1000.0
+    },
+    {
+      "id": 2,
+      "tenantId": "mh",
+      "class": "002 - Fake",
+      "description": "Class - 2 - Fake",
+      "minimumAmount": 1000.0,
+      "maximumAmount": 100000.0
+    },
+    {
+      "id": 3,
+      "tenantId": "mh",
+      "class": "003 - Fake",
+      "description": "Class - 3 - Fake",
+      "minimumAmount": 100000.0,
+      "maximumAmount": 10000000.0
+    }
+  ],
+  "TypeOfWork": [
+    {
+      "id": 1,
+      "tenantId": "mh",
+      "code": "Roads - Fake",
+      "name": "Roads - Fake",
+      "description": "Roads - Fake",
+      "active": true,
+      "parent": null
+    },
+    {
+      "id": 2,
+      "tenantId": "mh",
+      "code": "Buildings - Fake",
+      "name": "Buildings - Fake",
+      "description": "Buildings - Fake",
+      "active": true,
+      "parent": null
+    }
+  ],
+  "SubTypeOfWork": [
+    {
+      "id": 3,
+      "tenantId": "mh",
+      "code": "CC - Roads - Fake",
+      "name": "CC - Roads - Fake",
+      "description": "CC - Roads - Fake",
+      "active": true,
+      "parent": "Roads - Fake"
+    }
+  ],
+  "Overhead": [
+    {
+      "id": 1,
+      "tenantId": "mh",
+      "code": "TAX - Fake",
+      "name": "TAX - Fake",
+      "description": "TAX - Fake",
+      "accountCode": "41230041 - Bridges and flyover - Fake",
+      "overheadRates": [
+        {
+          "id": 1
+        }
+      ],
+      "lumpsumAmount": 0.0,
+      "percentage": 100.0,
+      "fromDate": 1546541452157,
+      "toDate": 1546541452157
+    },
+    {
+      "id": 2,
+      "tenantId": "mh",
+      "code": "TDS - Fake",
+      "name": "TDS - Fake",
+      "description": "TDS - Fake",
+      "accountCode": "41230041 - Bridges and flyover - Fake",
+      "overheadRates": [
+        {
+          "id": 1,
+          "tenantId": "mh",
+          "lumpsumAmount": 2548.0,
+          "percentage": 0.0,
+          "fromDate": 1546541452157,
+          "toDate": 1546541452157
+        }
+      ]
+    }
+  ],
+  "Remarks": [
+    {
+      "id": 1,
+      "tenantId": "mh",
+      "typeOfDocument": "Work Order - Fake",
+      "type": "Approval Work Order - Fake",
+      "remarksDetails": [
+        {
+          "id": 1
+        }
+      ],
+      "emarks": "Approve Work order",
+      "editable": true
+    },
+    {
+      "id": 2,
+      "tenantId": "mh",
+      "typeOfDocument": "LOA - Fake",
+      "type": "Approval LOA - Fake",
+      "remarkDetails": [
+        {
+          "id": 1,
+          "tenantId": "mh",
+          "remarks": "Approve LOA",
+          "editable": true
+        }
+      ]
+    }
+  ],
+  "MilestoneTemplate": [
+    {
+      "id": 1,
+      "tenantId": "mh",
+      "templateCode": "CRROAD7W - Fake",
+      "templateStaus": "MANRAYROAD - Fake",
+      "templateName": "TWO LANE ROAD WITHOUT DIVIDER - Fake",
+      "templateDescription": "Laying of road - fake",
+      "typeOfWork": "Roads - Fake",
+      "subTypeOfWork": "CC - Roads - Fake"
+    },
+    {
+      "id": 2,
+      "tenantId": "mh",
+      "templateCode": "NPNWS1 - Fake",
+      "templateStaus": "Active",
+      "templateName": "Water Supply Works for Nippani - Fake",
+      "templateDescription": "Laying of pipe - fake",
+      "typeOfWork": "Roads - Fake",
+      "subTypeOfWork": null,
+      "milestoneTemplateActivities": [
+        {
+          "id": 3,
+          "tenantId": "mh",
+          "stageOrderNumber": 1,
+          "percentage": 50.0,
+          "description": "Laying of road - fake"
+        },
+        {
+          "id": 4,
+          "tenantId": "mh",
+          "stageOrderNumber": 1,
+          "percentage": 50.0,
+          "description": "Laying of road - fake"
+        }
+      ]
+    }
+  ],
+  "EstimateTemplate": [
+    {
+      "id": 1,
+      "tenantId": "mh",
+      "code": "NPNWS1 - Fake",
+      "status": "Water Supply Works for Nippani - Fake",
+      "templateName": "Water Supply Works for Nippani - Fake",
+      "templateDescription": "Laying of pipe - fake",
+      "typeOfWork": "Roads - Fake",
+      "subTypeOfWork": null,
+      "estimateTemplateActivities": [
+        {
+          "id": 3,
+          "tenantId": "mh",
+          "scheduleOfRate": [
+            {
+              "id": 1
+            }
+          ],
+          "categoryType": "EXV - FAKE",
+          "SORCode": "EARTH WORK - FAKE",
+          "SORDescription": "Earth work in surface excavation - FAKE",
+          "uom": "CM - FAKE",
+          "sorRates": [
+            {
+              "id": 1
+            }
+          ],
+          "rate": 10.0,
+          "fromDate": 1546541452157,
+          "toDate": 1546541452157
+        }
+      ]
+    }
+  ]
+}

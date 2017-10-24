@@ -1,6 +1,6 @@
 {
   "tenantId": "mh",
-  "moduleName": "WOM",
+  "moduleName": "works",
   "ScheduleCategory": [
     {
       "id": 1,
@@ -88,13 +88,14 @@
       "accountCode": "41230041 - Bridges and flyover - Fake",
       "overheadRates": [
         {
-          "id": 1
+          "id": 1,
+          "tenantId": "mh",
+          "lumpsumAmount": 0.0,
+          "percentage": 100.0,
+          "fromDate": 1546541452157,
+          "toDate": 1546541452157
         }
-      ],
-      "lumpsumAmount": 0.0,
-      "percentage": 100.0,
-      "fromDate": 1546541452157,
-      "toDate": 1546541452157
+      ]
     },
     {
       "id": 2,
@@ -123,11 +124,12 @@
       "type": "Approval Work Order - Fake",
       "remarksDetails": [
         {
-          "id": 1
+          "id": 1,
+          "tenantId": "mh",
+          "remarks": "Approve Work order",
+          "editable": true
         }
-      ],
-      "emarks": "Approve Work order",
-      "editable": true
+      ]
     },
     {
       "id": 2,

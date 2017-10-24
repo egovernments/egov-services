@@ -180,7 +180,18 @@ var dat = {
   						"isRequired": false,
   						"isDisabled": false,
   						"requiredErrMsg": "",
-  						"patternErrMsg": ""
+  						"patternErrMsg": "",
+							"defaultValue": [  {
+	            "key": "ACQUIRED",
+	            "value": "ACQUIRED"
+	          },  {
+	            "key": "CONSTRUCTION",
+	            "value": "CONSTRUCTION"
+	          },  {
+	            "key": "PURCHASE",
+	            "value": "PURCHASE"
+	          }
+					]
   					},
             {
   						"name": "LandAssetID",

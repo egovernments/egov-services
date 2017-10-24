@@ -381,7 +381,7 @@ definitions:
   AbstractEstimateRequest:
       description: Contract class to send response. Array of AbstractEstimate items are used in case of search results, also multiple  AbstractEstimate item is used for create and update
       properties:
-        responseInfo:
+        requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         abstractEstimates:
           description: Used for create and update only
@@ -714,7 +714,7 @@ definitions:
   DetailedEstimateRequest:
       description: Contract class to send response. Array of Detailed Estimate items are used in case of search results, also multiple  Detailed Estimate item is used for create and update
       properties:
-        responseInfo:
+        requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         abstractEstimates:
           description: Used for create and update only

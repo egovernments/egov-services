@@ -1390,6 +1390,110 @@ paths:
       tags:
        - Quality Testing
        
+  /documentdetails/_create:
+    post:
+      summary: Create new Document Detail(s).
+      description: |
+          To create new Document Detail in the system. API supports bulk creation with max limit as defined in the Document Detail Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Document Detail, please pass array with one Document Detail object.
+          
+      parameters:
+        - name: DocumentDetailRequest
+          in: body
+          description: Details of new Document Detail(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/DocumentDetailRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Document Detail(s) created successfully
+          schema:
+            $ref: '#/definitions/DocumentDetailResponse'
+        400:
+          description: Document Detail(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Document Detail  
+        
+  /documentdetails/_update:
+    post:
+      summary: Update existing Document Detail(s).
+      description: |
+          To update existing Document Detail in the system. API supports bulk updation with max limit as defined in the Document Detail Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Document Detail, please pass array with one Document Detail object.
+          
+      parameters:
+        - name: DocumentDetailRequest
+          in: body
+          description: Details of Document Detail(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/DocumentDetailRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Document Detail(s) updated successfully
+          schema:
+            $ref: '#/definitions/DocumentDetailResponse'
+        400:
+          description: Document Detail(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Document Detail
+        
+  /documentdetails/_search:
+    post:
+      summary: Get the list of Document Detail(s) defined in the system.
+      description: |
+          Search and get Document Detail(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Document Detail(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of Quality Testing as defined in DocumentDetailResponse model.
+          
+          Search results will be sorted by the sortProperty Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageSize"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
+        - name: objectIds
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          allowEmptyValue: true
+          required: false
+          description: Comma separated list Object Ids.
+        - name: ids
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: Comma separated list of Ids of Document Detail(s)
+      responses:
+        200:
+          description: Document Detail(s) Retrieved Successfully
+          schema:
+            $ref: "#/definitions/DocumentDetailResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Document Detail
+       
 definitions:
 ########################################################
 #RequestInfo and ResponseInfo object should be reffered from Common.
@@ -1400,7 +1504,7 @@ definitions:
   OfflineStatusRequest:
     description: Contract class to send response. Array of offlineStatuses items are used in case of search results, also multiple  offlineStatuses item is used for create and update
     properties:
-      responseInfo:
+      requestInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       offlineStatuses:
         description: Used for create and update only
@@ -1704,7 +1808,7 @@ definitions:
   LetterOfAcceptanceRequest:
       description: Contract class to send response. Array of LetterOfAcceptance items are used in case of search results, also multiple  Letter Of Acceptance item is used for create and update
       properties:
-        responseInfo:
+        requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         letterOfAcceptances:
           description: Used for create and update only
@@ -1792,7 +1896,7 @@ definitions:
   WorkOrderRequest:
       description: Contract class to send response. Array of Wor kOrder items are used in case of search results, also multiple  Work Order item is used for create and update
       properties:
-        responseInfo:
+        requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         workOrders:
           description: Used for create and update only
@@ -1879,7 +1983,7 @@ definitions:
   NoticeRequest:
       description: Contract class to send response. Array of Notice items are used in case of search results, also multiple  Notice item is used for create and update
       properties:
-        responseInfo:
+        requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         notices:
           description: Used for create and update only
@@ -1952,12 +2056,12 @@ definitions:
         maxLength: 10
       letterOfAcceptanceEstimate:
         $ref: '#/definitions/LetterOfAcceptanceEstimate'
-      #mbCntractorBills:
+      #mbContractorBills:
       #  type: array
       #  description: Array of Contractor bills
       #  minItems: 1
       #  items:
-      #    $ref: '#/definitions/MBCntractorBills'
+      #    $ref: '#/definitions/MBContractorBills'
       # billregister:
       #   $ref: '#/definitions/BillRegister'
       status:
@@ -2013,7 +2117,7 @@ definitions:
       - fromPageNo
       - mbAmount
       
-  MBCntractorBills:
+  MBContractorBills:
     type: object
     description: An Object holds the basic data for a Measurement book and contractor bill
     properties:
@@ -2205,7 +2309,7 @@ definitions:
   MeasurementBookRequest:
       description: Contract class to send response. Array of Measurement Book items are used in case of search results, also multiple  Measurement Book item is used for create and update
       properties:
-        responseInfo:
+        requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         measurementBooks:
           description: Used for create and update only
@@ -2230,7 +2334,7 @@ definitions:
   ContractorBillRequest:
       description: Contract class to send response. Array of ContractorBill items are used in case of search results, whereas single ContractorBill item is used for create and update
       properties:
-        responseInfo:
+        requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         contractorBills:
           description: Used for create and update only
@@ -2431,7 +2535,7 @@ definitions:
   MilestoneRequest:
       description: Contract class to send response. Array of Milestone items are used in case of search results, also multiple  Milestone item is used for create and update
       properties:
-        responseInfo:
+        requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         milestones:
           description: Used for create and update only
@@ -2534,7 +2638,7 @@ definitions:
   TrackMilestoneRequest:
       description: Contract class to send response. Array of Track Milestone items are used in case of search results, also multiple  Track Milestone item is used for create and update
       properties:
-        responseInfo:
+        requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         trackMilestones:
           description: Used for create and update only
@@ -2661,7 +2765,7 @@ definitions:
   QualityTestingRequest:
       description: Contract class to send response. Array of Quality Testing items are used in case of search results, also multiple  Quality Testing item is used for create and update
       properties:
-        responseInfo:
+        requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         qualityTestings:
           description: Used for create and update only
@@ -2685,7 +2789,7 @@ definitions:
   ContractorAdvanceRequisitionRequest:
       description: Contract class to send response. Array of ContractorAdvanceRequisition items are used in case of search results, whereas single ContractorAdvanceRequisition item is used for create and update
       properties:
-        responseInfo:
+        requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         contractorAdvanceRequisitions:
           description: Used for create and update only
@@ -2734,6 +2838,32 @@ definitions:
     required:
       - tenantId
       - letterOfAcceptanceEstimate
+      
+  DocumentDetailRequest:
+    description: Contract class to send response. Array of Document Detail items are used in case of search results, also multiple  Document Detail item is used for create and update
+    properties:
+      requestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      documentDetails:
+        description: Used for create and update only
+        type: array
+        minimum: 1
+        maximum: 50
+        items:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DocumentDetail'
+
+  DocumentDetailResponse:
+    description: Contract class to send response. Array of Document Detail items are used in case of search results, also multiple  Document Detail item is used for create and update
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      documentDetails:
+        description: Used for search result and create only
+        type: array
+        maximum: 50
+        items:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DocumentDetail'
+          
 tags:
   - name: Letter Of Acceptance
     description: APIs required for Letter Of Acceptance.

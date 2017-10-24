@@ -20,7 +20,8 @@ UIInfo:
       - autoUi[0].long
       - autoUi[0].int
       - autoUi[0].radio
-      - autoUi[0].checkBox
+      - autoUi[0].checkBox1
+      - autoUi[0].checkBox2
       - autoUi[0].multiSelectDropDown
   dependents:
   - onChangeField: autoUi[0].parentDropDown

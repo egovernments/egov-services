@@ -11,7 +11,6 @@ UIInfo:
       - vehicleFuellingDetails[0].refuellingStation.name
     VehicleDetails3:
       fields:
-      - vehicleFuellingDetails[0].refuellingStation.name
       - vehicleFuellingDetails[0].fuelFilled
       - vehicleFuellingDetails[0].typeOfFuel
       - vehicleFuellingDetails[0].totalCostIncurred

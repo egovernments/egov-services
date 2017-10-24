@@ -222,7 +222,7 @@ definitions:
       properties:
         requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        vehicleFuellingDetails:
+        autoUi:
           description: Used for search result and create only
           type: array
           items:
@@ -233,7 +233,7 @@ definitions:
       properties:
         responseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        vehicleFuellingDetails:
+        autoUi:
           description: Used for search result and create only
           type: array
           maximum: 500

@@ -1,0 +1,60 @@
+UIInfo:
+- referencePath: "/vehiclefuellingdetails"
+  groups:
+    VehicleDetails1:
+      fields:
+      - vehicleFuellingDetails[0].transactionDate
+    VehicleDetails2:
+      fields:
+      - vehicleFuellingDetails[0].vehicleType.name
+      - vehicleFuellingDetails[0].vehicleRegNo.regNumber
+      - vehicleFuellingDetails[0].vehicleReadingDuringFuelling
+    VehicleDetails3:
+      fields:
+      - vehicleFuellingDetails[0].refuellingStation.name
+      - vehicleFuellingDetails[0].fuelFilled
+      - vehicleFuellingDetails[0].typeOfFuel
+      - vehicleFuellingDetails[0].totalCostIncurred
+      - vehicleFuellingDetails[0].receiptNo
+      - vehicleFuellingDetails[0].receiptDate
+  externalData:
+  - fieldName: vehicleFuellingDetails[0].vehicleType.name
+    url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType"
+    keyPath: "$..id"
+    valPath: "$..name"
+  - fieldName: vehicleFuellingDetails[0].vehicleRegNo.regNumber
+    url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vehicle"
+    keyPath: "$..id"
+    valPath: "$..regNumber"
+  - fieldName: vehicleFuellingDetails[0].refuellingStation.name
+    url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=RefillingPumpStation"
+    keyPath: "$..id"
+    valPath: "$..name"
+  searchResult:
+    rowClickUrlUpdate: /update/vehiclefuellingdetails/{transactionNo}
+    rowClickUrlView: /view/vehiclefuellingdetails/{transactionNo}
+    columns:
+    - transactionNo
+    - transactionDate
+    - vehicleType
+    - vehicleRegNo
+    - vehicleReadingDuringFuelling
+    - refuellingStation
+    - fuelFilled
+    - typeOfFuel
+    - totalCostIncurred
+    - receiptNo
+    - receiptDate
+    values:
+    - transactionNo
+    - transactionDate
+    - vehicleType.name
+    - vehicleRegNo.regNumber
+    - vehicleReadingDuringFuelling
+    - refuellingStation.name
+    - fuelFilled
+    - typeOfFuel
+    - totalCostIncurred
+    - receiptNo
+    - receiptDate
+    resultObjectName: vehicleFuellingDetails

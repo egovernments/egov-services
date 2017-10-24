@@ -32,6 +32,9 @@ let getFieldsFromInnerObject = function(reference, fields, definition, module, j
                     "minLength": definition[reference].properties[key].minLength,
                     "patternErrorMsg": definition[reference].properties[key].pattern ? (module + ".create.field.message." + key) : ""
                 };
+
+                if(definition[reference].properties[key].maxLength && definition[reference].properties[key].maxLength >= 256)
+                    fields[(isArray ? (jPath + "[0]") : jPath) + "." + key].type = "textArea";
             }
         }
 }
@@ -105,6 +108,7 @@ let updateTemplate = function(module, numCols, path, config, definition, uiInfoD
     if(uiInfoDef.autoFills && uiInfoDef.autoFills.length) {
         for(var i=0; i< uiInfoDef.autoFills.length; i++) {
             if(fields[uiInfoDef.autoFills[i].onChangeField]) {
+                fields[uiInfoDef.autoFills[i].onChangeField].type = "textSearch";
                 fields[uiInfoDef.autoFills[i].onChangeField].autoCompleteDependancy = {
                     autoCompleteUrl: uiInfoDef.autoFills[i].url,
                     autoFillFields: {}
@@ -118,7 +122,7 @@ let updateTemplate = function(module, numCols, path, config, definition, uiInfoD
             }
         }
     }
-    
+
     for(var key in uiInfoDef.groups) {
         localeFields[module + ".create.group.title." + key] = getTitleCase(key);
         let group = {

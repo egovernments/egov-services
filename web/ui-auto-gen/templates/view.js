@@ -32,6 +32,9 @@ let getFieldsFromInnerObject = function(reference, fields, definition, module, j
                     "minLength": definition[reference].properties[key].minLength,
                     "patternErrorMsg": definition[reference].properties[key].pattern ? (module + ".create.field.message." + key) : ""
                 };
+
+                if(definition[reference].properties[key].maxLength && definition[reference].properties[key].maxLength >= 256)
+                    fields[(isArray ? (jPath + "[0]") : jPath) + "." + key].type = "textArea";
             }
         }
 }

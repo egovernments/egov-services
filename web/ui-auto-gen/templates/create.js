@@ -105,6 +105,7 @@ let createTemplate = function(module, numCols, path, config, definition, uiInfoD
     if(uiInfoDef.autoFills && uiInfoDef.autoFills.length) {
         for(var i=0; i< uiInfoDef.autoFills.length; i++) {
             if(fields[uiInfoDef.autoFills[i].onChangeField]) {
+                fields[uiInfoDef.autoFills[i].onChangeField].type = "textSearch";
                 fields[uiInfoDef.autoFills[i].onChangeField].autoCompleteDependancy = {
                     autoCompleteUrl: uiInfoDef.autoFills[i].url,
                     autoFillFields: {}

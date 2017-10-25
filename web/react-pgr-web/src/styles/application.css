@@ -1074,6 +1074,16 @@ span.errorMsg{
   font-size: 25px;
 }
 
+.map-pie-chart{
+	position:absolute;
+	background: #fff;
+  border-radius: 2px;
+	border-bottom: 1px solid transparent;
+	box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
+	top:10px;
+	right:10px;
+}
+
 @media all {
 	.page-break	{ display: none; }
 }

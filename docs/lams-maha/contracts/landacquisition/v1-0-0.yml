@@ -467,6 +467,8 @@ definitions:
         pattern: "[0-9]"
         maxLength: 10
         exclusiveMaximum: true
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
     - tenantId
     - proposerName
@@ -503,7 +505,9 @@ definitions:
         maxLength: 512
         description: remarks about land acquisition 
       landAcquisition:
-        $ref: '#/definitions/LandAcquisition'  
+        $ref: '#/definitions/LandAcquisition'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
     - tenantId
     - valuationYear
@@ -650,7 +654,9 @@ definitions:
         type: array
         description: List of Support Documents for land acquisition
         items:
-          $ref: '#/definitions/SupportDocument'    
+          $ref: '#/definitions/SupportDocument'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"  
     required:
     - tenantId
     - advocateName
@@ -687,6 +693,7 @@ definitions:
     - landAcquisitonId
     - tenantId
     - fileStoreId
+
   LandPossession:
     type: object
     description: The Object Holds the possession details of land acquisition
@@ -750,6 +757,7 @@ definitions:
       - id
       - possessionDate
       - landAcquisition
+
   LandTransfer:
     type: object
     description: The Object holds the data of shits

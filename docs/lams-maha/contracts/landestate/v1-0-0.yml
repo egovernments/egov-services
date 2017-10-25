@@ -770,7 +770,6 @@ definitions:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - tenantId
-      - landNumber
       - acquisitionNo
       - acquisitionType
       - registerName

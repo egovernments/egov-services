@@ -1252,6 +1252,8 @@ definitions:
       documentAttached:
         type: string
         description: filestoreId of the document attached
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - id
       - inspectionTime   
@@ -1325,7 +1327,9 @@ definitions:
         maxLength: 128
       showcauseNoticeDocument:
         type: string
-        description: Unique Identifier of the FileStore   
+        description: Unique Identifier of the FileStore
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails" 
     required:
       - id    
       - referenceNumber
@@ -1401,6 +1405,8 @@ definitions:
       intimationLetterDocument:
         type: string
         description: Unique Identifier of the FileStore
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - id
       - intimationNumber  
@@ -1487,6 +1493,8 @@ definitions:
         type: string
         description: Remarks.
         maxLength: 512
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - id
       - tenantId
@@ -1528,6 +1536,8 @@ definitions:
         type: string
         description: mobileNo of attendee.
         maxLength: 128
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
 
   HearingJudge:
     type: object
@@ -1559,6 +1569,8 @@ definitions:
         type: string
         description: mobileNo of Judge.
         maxLength: 128
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
 
   HearingAdvocate:
     type: object
@@ -1590,6 +1602,8 @@ definitions:
         type: string
         description: mobileNo of Advocate.
         maxLength: 128
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
 
   HearingDetailsRequest:
     properties:
@@ -1670,7 +1684,9 @@ definitions:
         $ref: '#/definitions/HearingDetails'
       suspensionLetterDocId:
         type: string
-        description: Unique Identifier of the FileStore  
+        description: Unique Identifier of the FileStore
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - id
       - suspensionNumber   

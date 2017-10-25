@@ -35,16 +35,22 @@ public class LandAcquisitionRepository {
 		.build();
 		
     }
-	private HashMap<String, String> getDetailNamedQuery(LandAcquisitionSearchCriteria landAcquisitionSearchCriteria) {
-		HashMap<String, String> parametersMap = new HashMap<String, String>();
-
+	private HashMap<String, Object> getDetailNamedQuery(LandAcquisitionSearchCriteria landAcquisitionSearchCriteria) {
+		HashMap<String, Object> parametersMap = new HashMap<String, Object>();
 		parametersMap.put("tenantId", landAcquisitionSearchCriteria.getTenantId());
 		parametersMap.put("ctsNumber", landAcquisitionSearchCriteria.getCtsNumber());
+		parametersMap.put("landAcquisitionId", Long.valueOf(landAcquisitionSearchCriteria.getLandAcquisitionId()));
+		parametersMap.put("landAcquisitionNumber", landAcquisitionSearchCriteria.getLandAcquisitionNumber());
+		parametersMap.put("landOwnerName", landAcquisitionSearchCriteria.getLandOwnerName());
+		parametersMap.put("surveyNo", landAcquisitionSearchCriteria.getSurveyNo());
+		parametersMap.put("organizationName", landAcquisitionSearchCriteria.getOrganizationName());
+		parametersMap.put("advocateName", landAcquisitionSearchCriteria.getAdvocateName());
+		parametersMap.put("landType", landAcquisitionSearchCriteria.getLandType());
 
 		return parametersMap;
 	}
 	
-	private List<LandAcquisition> getLandAcquisitionList(String sql, HashMap<String, String> searchNamedQuery,
+	private List<LandAcquisition> getLandAcquisitionList(String sql, HashMap<String, Object> searchNamedQuery,
 			BeanPropertyRowMapper<LandAcquisition> rowMapper) {
 		return namedParameterJdbcTemplate.query(sql, searchNamedQuery, rowMapper);
 	}

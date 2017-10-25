@@ -68,7 +68,7 @@ public class LandAcquisitionController {
                 .landOwnerName(landOwnerName)
                 .landType(landType)
                 .organizationName(organizationName)
-                .landAquisitionNumber(landAquisitionNumber)
+                .landAcquisitionNumber(landAquisitionNumber)
                 .ctsNumber(ctsNumber)
                 .build();
 		

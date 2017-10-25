@@ -10,10 +10,10 @@ public class LandAcquisitionQueryBuilder {
 		StringBuilder query = new StringBuilder("SELECT * FROM eg_lams_landacquisition WHERE tenantId = :tenantId");
 		
 		if(!landAcquisitionSearchCriteria.isLandAcquisitionIdAbsent())
-            addWhereClauseWithAnd(query,"landAcquisitionId","landAcquisitionId");
+            addWhereClauseWithAnd(query,"id","landAcquisitionId");
 
         if(!landAcquisitionSearchCriteria.isLandAquisitionNumberAbsent())
-        	addWhereClauseWithAnd(query, "landAquisitionNumber", "landAquisitionNumber");
+        	addWhereClauseWithAnd(query, "landAcquisitionNumber", "landAcquisitionNumber");
 
         if(!landAcquisitionSearchCriteria.isLandOwnerNameAbsent())
         	addWhereClauseWithAnd(query, "landOwnerName", "landOwnerName");

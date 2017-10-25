@@ -2,6 +2,7 @@ package org.egov.lams.common.web.contract;
 
  import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,7 +23,7 @@ public class LandAcquisitionSearchCriteria {
 	@NotNull
 	private String tenantId;
 	private String landAcquisitionId;
-	private String landAquisitionNumber;
+	private String landAcquisitionNumber;
 	private String landOwnerName;
 	private String surveyNo;
 	private String ctsNumber ;
@@ -35,15 +36,15 @@ public class LandAcquisitionSearchCriteria {
     }
 	
 	public boolean isLandAquisitionNumberAbsent(){
-        return  landAquisitionNumber == "" ||landAquisitionNumber == null;
+        return   StringUtils.isBlank(landAcquisitionNumber);
     }
 	
 	public boolean isLandOwnerNameAbsent(){
-        return landOwnerName == null || landOwnerName == "";
+        return  StringUtils.isBlank(landOwnerName);
     }
 	
 	public boolean isSurveyNoAbsent(){
-        return  surveyNo == null || surveyNo == "";
+        return   StringUtils.isBlank(surveyNo) ;
     }
 	
 	public boolean isCtsNumberAbsent(){

@@ -74,19 +74,19 @@ public class VehicleFuellingDetailsJdbcRepository {
 			params.append("transactionDate =:transactionDate");
 			paramValues.put("transactionDate", searchRequest.getTransactionDate());
 		}
-		if (searchRequest.getVehicleType() != null && null != searchRequest.getVehicleType().getId()) {
+		if (searchRequest.getVehicleTypeName() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
 			params.append("vehicleType =:vehicleType");
-			paramValues.put("vehicleType", searchRequest.getVehicleType().getId());
+			paramValues.put("vehicleType", searchRequest.getVehicleTypeName());
 		}
-		if (searchRequest.getVehicleRegNo() != null && searchRequest.getVehicleRegNo().getId() != null) {
+		if (searchRequest.getRegNumber() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
 			params.append("vehicleRegNo =:vehicleRegNo");
-			paramValues.put("vehicleRegNo", searchRequest.getVehicleRegNo().getId());
+			paramValues.put("vehicleRegNo", searchRequest.getRegNumber());
 		}
 		if (searchRequest.getVehicleReadingDuringFuelling() != null) {
 			if (params.length() > 0) {
@@ -96,12 +96,12 @@ public class VehicleFuellingDetailsJdbcRepository {
 			paramValues.put("vehicleReadingDuringFuelling", searchRequest.getVehicleReadingDuringFuelling());
 		}
 
-		if (searchRequest.getRefuellingStation() != null && searchRequest.getRefuellingStation().getId() != null) {
+		if (searchRequest.getRefuellingStationName() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
 			params.append("refuellingStation =:refuellingStation");
-			paramValues.put("refuellingStation", searchRequest.getRefuellingStation().getId());
+			paramValues.put("refuellingStation", searchRequest.getRefuellingStationName());
 		}
 
 		if (searchRequest.getFuelFilled() != null) {

@@ -641,11 +641,14 @@ definitions:
         description: Unique Identifier of the tenant 
         maxLength: 128
         minLength: 2
+      oldLandNumber:
+        type: string
+        description: Old land ref no, this is mandatory when source is DATA_ENTRY or MIGRATION
+        maxLength: 64
       landNumber:
         type: string
         description: Unique Land ref. no
         maxLength: 64
-        minLength: 1
       acquisitionType:
         type: string
         description: Land acquisition type.
@@ -826,11 +829,14 @@ definitions:
         description: Unique Identifier of the tenant 
         maxLength: 128
         minLength: 2
+      oldEstateNumber:
+        type: string
+        description: Old estate ref no, this is mandatory when source is DATA_ENTRY or MIGRATION
+        maxLength: 64
       estateNumber:
         type: string
         description: Unique Estate ref. no
         maxLength: 64
-        minLength: 1
       registerName:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/RegisterName'
       subRegisterName:
@@ -1105,6 +1111,10 @@ definitions:
         enum:
           - LAND
           - ESTATE
+      oldAgreementNumber:
+        type: string
+        description: Old agreement ref no, this is mandatory when source is DATA_ENTRY or MIGRATION
+        maxLength: 64
       agreementNumber:
         type: string
         description: unique agreement number.

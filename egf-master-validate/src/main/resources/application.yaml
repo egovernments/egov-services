@@ -1,4 +1,0 @@
-config: 
-  masters:
-   - name: Fund
-     schema: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml

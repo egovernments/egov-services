@@ -759,9 +759,9 @@ definitions:
       projectCode:
         $ref: '#/definitions/ProjectCode'
       abstractEstimateAppropriations:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/v1-0-0.yml#/definitions/EstimateAppropriation'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-services/v1-0-0.yml#/definitions/EstimateAppropriation'
       estimatePhotographsList:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/v1-0-0.yml#/definitions/EstimatePhotographs'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-services/v1-0-0.yml#/definitions/EstimatePhotographs'
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -1396,3 +1396,4 @@ tags:
     description: APIs required for Detailed Estimate.
   - name: Revision Estimate
     description: APIs required for Revision Estimate.
+

@@ -44,5 +44,14 @@ public class InventoryUtilityService {
                 .build();
 
     }
+    
+    public AuditDetails mapAuditDetailsForUpdate(RequestInfo requestInfo, String tenantId) {
+
+        return AuditDetails.builder()
+                .lastModifiedBy(requestInfo.getUserInfo().getId().toString())
+                .lastModifiedTime(requestInfo.getTs())
+                .tenantId(tenantId)
+                .build();
+    }
 
 }

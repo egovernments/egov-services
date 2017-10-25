@@ -1,0 +1,480 @@
+{
+	"info": {
+		"name": "eGov_SWM",
+		"_postman_id": "3f277854-7b3d-9d90-c479-691bc2c50d22",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+							"",
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"",
+							"postman.setNextRequest(\"Get Master Data\");"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"if(environment.url.has(\"http://egov-micro-dev.egovernments.org\")){",
+							"    pm.environment.set(\"username\", \"narasappa\");",
+							"    pm.environment.set(\"password\", \"demo\");",
+							"}",
+							"",
+							"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"default\")){",
+							"    pm.environment.set(\"username\", \"narasappa\");",
+							"    pm.environment.set(\"password\", \"demo\");",
+							"}",
+							"",
+							"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"mh.rohatest\")){",
+							"    pm.environment.set(\"username\", \"94836\");",
+							"    pm.environment.set(\"password\", \"12345678\");",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "read",
+							"type": "text"
+						},
+						{
+							"key": "tenantId",
+							"value": "{{tenantId}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/user/oauth/token",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user",
+						"oauth",
+						"token"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Master Data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"if(jsonData.MdmsRes.SWM.length > 0){",
+							"    var flag = 0;",
+							"    var rand = 0;",
+							"    var vehicleType = null;",
+							"    for(var i=0;i<jsonData.MdmsRes.SWM.length;i++){",
+							"        if('VehicleType' in jsonData.MdmsRes.SWM[i]){",
+							"            flag = 1;",
+							"            var max = jsonData.MdmsRes.SWM[i].VehicleType.length - 1;",
+							"            if(max > 0){",
+							"                rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+							"                vehicleType = jsonData.MdmsRes.SWM[i].VehicleType[rand].name;",
+							"                pm.environment.set(\"vehicleType\",vehicleType);",
+							"                break;",
+							"            }",
+							"            else{",
+							"                tests[\"Vehicle Type Master is null\"] = false;",
+							"             }",
+							"        }",
+							"    }",
+							"    if(flag === 0){",
+							"            tests[\"No vehicle type master is availble\"] = false;",
+							"    }",
+							"    else{",
+							"        var flag1 = 0;",
+							"        for(var i=0;i<jsonData.MdmsRes.SWM.length;i++){",
+							"            if('Vehicle' in jsonData.MdmsRes.SWM[i]){",
+							"                flag1 = 1;",
+							"                var flag2 = 0;",
+							"                if(jsonData.MdmsRes.SWM[i].Vehicle.length < 1){",
+							"                    tests[\"Vehicle Master is null\"] = false;",
+							"                }",
+							"                else{",
+							"                for(var j=0;j<jsonData.MdmsRes.SWM[i].Vehicle.length;j++){",
+							"                    if(jsonData.MdmsRes.SWM[i].Vehicle[j].vehicleType.has(vehicleType)){",
+							"                        flag2 = 1;",
+							"                        pm.environment.set(\"vehicleRegNo\",jsonData.MdmsRes.SWM[i].Vehicle[j].regNumber);",
+							"                        break;",
+							"                    }",
+							"                }",
+							"                if(flag2 === 0){",
+							"                    tests[\"Vehicle Master is not present for Vehicle Type :\" + vehicleType] = false;",
+							"                }",
+							"              }",
+							"            }",
+							"        }",
+							"        if(flag1 === 0){",
+							"            tests[\"No vehicle master is availble\"] = false;",
+							"        }",
+							"    }",
+							"    var flag4 = 0;",
+							"    for(var i=0;i<jsonData.MdmsRes.SWM.length;i++){",
+							"    if('RefillingPumpStation' in jsonData.MdmsRes.SWM[i]){",
+							"        flag4 = 1;",
+							"        var max = jsonData.MdmsRes.SWM[i].RefillingPumpStation.length - 1;",
+							"        if(jsonData.MdmsRes.SWM[i].RefillingPumpStation.length > 0){",
+							"           rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+							"           pm.environment.set(\"refillingPumpStation\",jsonData.MdmsRes.SWM[i].RefillingPumpStation[rand].name);",
+							"           pm.environment.set(\"typeOfFuel\",jsonData.MdmsRes.SWM[i].RefillingPumpStation[rand].typeOfFuel);",
+							"           break;    ",
+							"        }",
+							"        else{",
+							"            tests[\"RefillingPumpStation is null\"] = false;",
+							"        }",
+							"      }",
+							"    }",
+							"    if(flag4 === 0){",
+							"        tests[\"RefillingPumpStation master is not availble\"] = false;",
+							"    }",
+							"}",
+							"else{",
+							"    tests[\"No Master data available for tenant : \"+environment.tenantId] = false;",
+							"}",
+							"",
+							"postman.setNextRequest(\"Create vehicleFuellingDetails\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \n   \"RequestInfo\":{  \n      \"apiId\":\"swm-services\",\n      \"ver\":null,\n      \"ts\":null,\n      \"action\":null,\n      \"did\":null,\n      \"key\":null,\n      \"msgId\":\"search with from and to values\",\n      \"authToken\":\"{{access_token}}\"\n   },\n   \"MdmsCriteria\":{  \n      \"tenantId\":\"{{tenantId}}\",\n      \"moduleDetails\":[  \n         {  \n            \"moduleName\":\"SWM\",\n            \"masterDetails\":[  \n               {  \n                  \"name\":\"CollectionPoint\"\n               },\n               {  \n                  \"name\":\"Route\"\n               },\n               {  \n                  \"name\":\"VehicleType\"\n               },\n               {  \n                  \"name\":\"Vehicle\"\n               },\n               {\n               \t  \"name\":\"RefillingPumpStation\"\n               }\n            ]\n         }\n      ]\n   }\n}"
+				},
+				"url": {
+					"raw": "{{url}}/egov-mdms-service/v1/_search",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"egov-mdms-service",
+						"v1",
+						"_search"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create vehicleFuellingDetails",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"tests[\"Vehicle Type matches\"] = jsonData.vehicleFuellingDetails[0].vehicleType.name.has(environment.vehicleType);",
+							"",
+							"tests[\"Vehicle Regno matches\"] = jsonData.vehicleFuellingDetails[0].vehicleRegNo.regNumber.has(environment.vehicleRegNo);",
+							"",
+							"tests[\"RefillingPumpStation matches\"] = jsonData.vehicleFuellingDetails[0].refuellingStation.name.has(environment.refillingPumpStation);",
+							"",
+							"tests[\"typeOfFuel matches\"] = jsonData.vehicleFuellingDetails[0].refuellingStation.typeOfFuel.has(environment.typeOfFuel);",
+							"",
+							"tests[\"vehicleReadingDuringFuelling matches\"] = (jsonData.vehicleFuellingDetails[0].vehicleReadingDuringFuelling.toString()).has(environment.randomInt);",
+							"",
+							"tests[\"fuelFilled matches\"] = jsonData.vehicleFuellingDetails[0].fuelFilled.has(environment.randomInt);",
+							"",
+							"tests[\"totalCostIncurred matches\"] = (jsonData.vehicleFuellingDetails[0].totalCostIncurred.toString()).has(environment.randomInt);",
+							"",
+							"tests[\"receiptNo matches\"] = jsonData.vehicleFuellingDetails[0].receiptNo.has(environment.randomInt);",
+							"",
+							"pm.environment.set(\"transactionNo\",jsonData.vehicleFuellingDetails[0].transactionNo);",
+							"",
+							"pm.environment.set(\"id\",jsonData.vehicleFuellingDetails[0].id);",
+							"",
+							"pm.environment.set(\"searchStatus\",\"transactionNo\");",
+							"",
+							"postman.setNextRequest(\"Search vehicleFuellingDetails\");"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var a = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;",
+							"",
+							"pm.environment.set(\"randomInt\",a);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null\n  },\n  \"vehicleFuellingDetails\":[\n      {\n\t\t\t\"tenantId\":\"{{tenantId}}\",\n            \"transactionNo\" : null,\n            \"transactionDate\" : \"{{randomInt}}\",\n            \"vehicleType\" :{\n            \t\"name\":\"{{vehicleType}}\"\n            },\n             \"vehicleRegNo\" :{\n            \t\"regNumber\":\"{{vehicleRegNo}}\"\n            },\n            \"refuellingStation\" :{\n            \t\"name\":\"{{refillingPumpStation}}\"\n            },\n            \"vehicleReadingDuringFuelling\" : \"{{randomInt}}\",\n            \"fuelFilled\" : {{randomInt}},\n            \"typeOfFuel\":\"{{typeOfFuel}}\",\n            \"totalCostIncurred\":{{randomInt}},\n            \"receiptNo\":\"{{randomInt}}\",\n            \"receiptDate\":\"{{randomInt}}\"\n      }\n   ]\n} "
+				},
+				"url": {
+					"raw": "{{url}}/swm-services/vehiclefuellingdetails/_create",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"swm-services",
+						"vehiclefuellingdetails",
+						"_create"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search vehicleFuellingDetails",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"var flag = 0;",
+							"",
+							"if(jsonData.vehicleFuellingDetails.length > 0){",
+							"    for(var i=0;i<jsonData.vehicleFuellingDetails.length;i++){",
+							"        if(jsonData.vehicleFuellingDetails[i].transactionNo.has(environment.transactionNo)){",
+							"        flag = 1;    ",
+							"        tests[\"transactionNo matches\"] = jsonData.vehicleFuellingDetails[i].transactionNo.has(environment.transactionNo);",
+							"        tests[\"id matches\"] = jsonData.vehicleFuellingDetails[i].id.has(environment.id);",
+							"        tests[\"Vehicle Type matches\"] = jsonData.vehicleFuellingDetails[i].vehicleType.name.has(environment.vehicleType);",
+							"        tests[\"Vehicle Regno matches\"] = jsonData.vehicleFuellingDetails[i].vehicleRegNo.regNumber.has(environment.vehicleRegNo);",
+							"        tests[\"RefillingPumpStation matches\"] = jsonData.vehicleFuellingDetails[i].refuellingStation.name.has(environment.refillingPumpStation);",
+							"        tests[\"typeOfFuel matches\"] = jsonData.vehicleFuellingDetails[i].typeOfFuel.has(environment.typeOfFuel);",
+							"        tests[\"vehicleReadingDuringFuelling matches\"] = (jsonData.vehicleFuellingDetails[i].vehicleReadingDuringFuelling.toString()).has(environment.randomInt);",
+							"        tests[\"fuelFilled matches\"] = jsonData.vehicleFuellingDetails[i].fuelFilled.has(environment.randomInt);",
+							"        tests[\"totalCostIncurred matches\"] = (jsonData.vehicleFuellingDetails[i].totalCostIncurred.toString()).has(environment.randomInt);",
+							"        tests[\"receiptNo matches\"] = jsonData.vehicleFuellingDetails[i].receiptNo.has(environment.randomInt);",
+							"        break;",
+							"      }",
+							"    }",
+							"    if(flag === 0){",
+							"        tests[\"Search Record doesn't exists\"] = false;",
+							"    }",
+							"}",
+							"else{",
+							"    tests[\"No record exists\"] = false;",
+							"}",
+							"",
+							"",
+							"switch(environment.searchStatus){",
+							"    ",
+							"    case \"transactionNo\" :",
+							"        pm.environment.set(\"searchStatus\",\"ids\");",
+							"        postman.setNextRequest(\"Search vehicleFuellingDetails\");",
+							"        break;",
+							"        ",
+							"    case \"ids\" :",
+							"        pm.environment.set(\"searchStatus\",\"transactionDate\");",
+							"        postman.setNextRequest(\"Search vehicleFuellingDetails\");",
+							"        break;",
+							"        ",
+							"    case \"transactionDate\" :",
+							"        pm.environment.set(\"searchStatus\",\"Done\");",
+							"        postman.setNextRequest(\"Logout\");",
+							"        break;",
+							"}"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"if(environment.searchStatus.has(\"transactionNo\")){",
+							"    pm.environment.set(\"searchParameter\", \"transactionNo\");",
+							"    pm.environment.set(\"searchValue\", environment.transactionNo);",
+							"}",
+							"",
+							"if(environment.searchStatus.has(\"ids\")){",
+							"    pm.environment.set(\"searchParameter\", \"ids\");",
+							"    pm.environment.set(\"searchValue\", environment.id);",
+							"}",
+							"",
+							"if(environment.searchStatus.has(\"transactionDate\")){",
+							"    pm.environment.set(\"searchParameter\", \"transactionDate\");",
+							"    pm.environment.set(\"searchValue\", environment.randomInt);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"{{access_token}}\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t}\n}"
+				},
+				"url": {
+					"raw": "{{url}}/swm-services/vehiclefuellingdetails/_search?tenantId=default&pageSize=500&{{searchParameter}}={{searchValue}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"swm-services",
+						"vehiclefuellingdetails",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true
+						},
+						{
+							"key": "pageSize",
+							"value": "500",
+							"equals": true
+						},
+						{
+							"key": "{{searchParameter}}",
+							"value": "{{searchValue}}",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\"RequestInfo\":{\"apiId\":\"org.egov.pgr\",\"ver\":\"1.0\",\"ts\":\"13-04-2017 12:13:30\",\"action\":\"POST\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\": \"{{access_token}}\"\n }}"
+				},
+				"url": {
+					"raw": "{{url}}/user/_logout?access_token={{access_token}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user",
+						"_logout"
+					],
+					"query": [
+						{
+							"key": "access_token",
+							"value": "{{access_token}}",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

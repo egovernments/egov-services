@@ -1,113 +1,90 @@
 import React, {Component} from 'react';
-import { withGoogleMap, GoogleMap, Polygon } from 'react-google-maps';
-import withScriptjs from 'react-google-maps/lib/async/withScriptjs';
+import {Grid} from 'react-bootstrap';
 import _ from "lodash";
+import {PieChart, Pie, Sector, Tooltip, Cell, Legend} from 'recharts';
 import Api from '../.././../../api/api';
-
-const removeZDepth = (latOrLonval) =>{
-  return latOrLonval && parseFloat(`${latOrLonval}`.replace(/\d+\s/, "")) || undefined;
-}
-
-const convertCoordinatesToPolygonPaths = (coordinatesStr) =>{
-   var coordinates = _.chunk(coordinatesStr.split(","), 2);
-   return  _.transform(coordinates, function(latLngArry, coordinate) {
-      if(coordinate[1] !== undefined && coordinate[0] !== undefined)
-          latLngArry.push({lat:removeZDepth(coordinate[1]), lng:removeZDepth(coordinate[0])});
-      return true;
-    }, []);
-}
-
-const AsyncGoogleMap = _.flowRight(
-  withScriptjs,
-  withGoogleMap,
-)(props => {
-
-  const renderPolygons = props.wardsPolygons && props.wardsPolygons.map((ward, idx)=>{
-      return ward.polygons.map((polygon)=>{
-         return <Polygon options={ward.style}
-          paths={polygon}></Polygon>;
-      });
-  });
-
-  return (
-    <GoogleMap
-      ref={props.onMapMounted}
-      defaultZoom={11}
-      center={props.center}>
-      {props.wardsPolygons && renderPolygons}
-    </GoogleMap>
-  )
-});
-
+import {getTenantId, CustomizedLegend, RenderActiveShape, extractManipulateCityAndWardsPath} from './ReportUtils';
+import GisMapView from './GisMapView';
+import CommonGisReportView from './CommonGisReportView';
 
 export default class TypeDistributionReport extends Component{
 
-    reteriveKMLFile = () => {
-      this.setState({isFetchingData:true});
-      var _this = this;
-      Api.commonApiGet("https://raw.githubusercontent.com/egovernments/egov-services/master/core/egov-location/src/main/resources/gis/default/wards.kml",
-        {}, {}).then(function(response) {
-        //console.log('response', response);
-        _this.extractManipulateWardsPath(response);
-      }, function(err) {
-        console.log('error', err);
-      });
-   }
-
-  extractManipulateWardsPath=(text)=>{
-
-    let parser = new DOMParser();
-    let xmlDoc = parser.parseFromString(text,"text/xml");
-    let placeMarks = xmlDoc.getElementsByTagName('Placemark');
-
-    let wardsPolygons = [];
-    
-    for(let i=0; i<placeMarks.length;i++){
-      let placeMark = placeMarks[i];
-      let ward = { name : placeMark.getElementsByTagName("name")[0].innerHTML,
-       style:{strokeColor: '#FF0000', strokeOpacity: 0.8, strokeWeight: 2, fillColor: '#FF0000', fillOpacity: 0.35},
-       polygons:[]};
-      let coordinatesStr = placeMark.getElementsByTagName("coordinates");
-      for(let j=0;j<coordinatesStr.length;j++){
-        let coordinateStr = coordinatesStr[j].innerHTML;
-        ward.polygons.push(convertCoordinatesToPolygonPaths(coordinateStr));
-      }
-      wardsPolygons.push(ward);
+  constructor(){
+    super()
+    this.state={
+      isFetchingData:true,
+      activeIndex:0
     }
-    this.setState({isFetchingData:false, wardsPolygons});
   }
 
-  constructor(){
-     super();
-     this.state={
-       isFetchingData : false
-     }
-   }
+  componentDidMount(){
 
-   componentDidMount(){
-     this.reteriveKMLFile();
-   }
+    let topTenComplaintData;
+    Promise.all([
+      Api.commonApiPost("pgr/dashboard/complainttype", {size : 10}, {tenantId:getTenantId()})
+    ]).then((responses)=>{
+       try{
+          topTenComplaintData = responses[0].map((obj)=>{
+            return {name : obj.ComplaintType, code:obj.code, value:obj.count}
+          });
+       }
+       catch(e)
+       {
+         console.log('error', e);
+       }
+       finally{
+         this.setState({isFetchingData:false, topTenComplaintData});
+       }
+    }, (err)=> {
+      console.log('error', err);
+      this.setState({isFetchingData:false});
+    });
+  }
 
-   render(){
+  onPieClick = (data, idx) => {
+    this.setState({activeIndex:idx});
+  }
 
-     return(
-       <AsyncGoogleMap
-         googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyDrxvgg2flbGdU9Fxn6thCbNf3VhLnxuFY"
-         wardsPolygons = {this.state.wardsPolygons}
-         loadingElement={
-           <div style={{ height: `100%` }}>
-           </div>
-         }
-         containerElement={
-           <div style={{ height: `100%` }} />
-         }
-         mapElement={
-           <div style={{ height: `100%` }} />
-         }
-         center={{ lat: 13.047374, lng: 79.9281215 }}
-         onMapMounted={()=>{}}
-       />
-     )
-   }
+  render(){
+
+    const COLORS = ['#0088FE', '#00C49F', '#008F7D', '#FFBB28', '#FF8042', '#607D8B', '#9E9E9E', '#9C28B1', '#795547', '#673BB7'];
+
+    const data = this.state.topTenComplaintData || [];
+    let {isVisible, styles} = this.props;
+    let TypeDistributionStyle = !isVisible ? {...styles.fullHeightGrid, visibility:'hidden'} : styles.fullHeightGrid;
+
+    let params, totalComplaints;
+    if(data && data.length> 0){
+      params = {type:"wardwise", servicecode:data[this.state.activeIndex].code};
+      totalComplaints = data[this.state.activeIndex].value;
+    }
+
+    return (
+      <Grid fluid={true} style={TypeDistributionStyle}>
+
+        {params && <CommonGisReportView totalComplaints={totalComplaints} params={params} color={COLORS[this.state.activeIndex]}></CommonGisReportView>}
+        <div className="map-pie-chart">
+          <PieChart width={300} height={480}>
+            <Pie
+              nameKey="name"
+              dataKey="value"
+              valueKey="value"
+              data={data}
+              cx={150}
+              cy={100}
+              activeIndex={this.state.activeIndex}
+              activeShape={<RenderActiveShape/>}
+              onClick={this.onPieClick}
+              outerRadius={80}
+              fill="#8884d8">
+               {data && data.map((slice, index)=> <Cell key={slice} fill={COLORS[index % COLORS.length]}/> )}
+              </Pie>
+            <Tooltip />
+            <Legend height={280} content={<CustomizedLegend external={data} />}/>
+         </PieChart>
+        </div>
+      </Grid>
+    )
+  }
 
 }

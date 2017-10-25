@@ -1,0 +1,28 @@
+{
+"funds":[
+			{
+			"name": "mp",
+			"code": "mp",
+			"active": true,
+			"level": 1,
+			"identifier": "m",
+			"tenantId": "mh.roha"
+			} ,
+			{
+			"name": "KP",
+			"code": "KP",
+			"active": true,
+			"level": 1,
+			"identifier": "K",
+			"tenantId": "mh.roha"
+			},
+			{
+			"name": "KP",
+			"code": "KP",
+			"active": true,
+			"level": 1,
+			"identifier": "K",
+			"tenantId": "mh.roha"
+			}
+		]
+}

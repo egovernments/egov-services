@@ -1,0 +1,11 @@
+configs: 
+  - jsonFile:
+      - name: financials.json
+        master:
+          - name: Fund
+            schema: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml
+            dataKey: funds
+            uniqueFields:
+              - name,tenantId
+              - code
+                

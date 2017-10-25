@@ -2,7 +2,10 @@ package org.egov.inv.domain.repository;
 
 import java.util.List;
 
+import org.egov.inv.domain.model.Pagination;
 import org.egov.inv.domain.model.Store;
+import org.egov.inv.persistence.repository.StoreJdbcRepository;
+import org.egov.inv.web.contract.StoreGetRequest;
 import org.egov.inv.web.contract.StoreRequest;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,9 @@ public class StoreRepository {
     private String updateTopic;
     
     @Autowired
+    private StoreJdbcRepository storeJdbcRepository;
+    
+    @Autowired
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     public List<Store> create(StoreRequest storeRequest) {
@@ -32,6 +38,11 @@ public class StoreRepository {
     public List<Store> update(StoreRequest storeRequest) {
         kafkaTemplate.send(updateTopic, storeRequest);
         return storeRequest.getStores();
+    }
+
+    public Pagination<Store> search(StoreGetRequest storeGetRequest) {
+         return storeJdbcRepository.search(storeGetRequest);
+        
     }
 
 }

@@ -5,9 +5,11 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.inv.domain.model.AuditDetails;
+import org.egov.inv.domain.model.Pagination;
 import org.egov.inv.domain.model.Store;
 import org.egov.inv.domain.repository.StoreRepository;
 import org.egov.inv.persistence.repository.StoreJdbcRepository;
+import org.egov.inv.web.contract.StoreGetRequest;
 import org.egov.inv.web.contract.StoreRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,9 +19,6 @@ import org.springframework.stereotype.Service;
 public class StoreService {
     @Autowired
     private StoreRepository storeRepository;
-
-    @Autowired
-    private StoreJdbcRepository storeJdbcRepository;
 
     @Autowired
     private InventoryUtilityService inventoryUtilityService;
@@ -44,6 +43,11 @@ public class StoreService {
             storeRequest.getStores().get(i).setAuditDetails(inventoryUtilityService.mapAuditDetailsForUpdate(storeRequest.getRequestInfo(), tenantId));
         }
         return storeRepository.update(storeRequest);
+    }
+
+    public Pagination<Store> search(StoreGetRequest storeGetRequest) {
+       return storeRepository.search(storeGetRequest);
+        
     }
 
    

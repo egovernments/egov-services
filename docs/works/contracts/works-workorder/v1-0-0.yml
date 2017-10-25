@@ -1073,6 +1073,8 @@ definitions:
         minLength: 4
       letterOfAcceptance:
         $ref: '#/definitions/LetterOfAcceptance'
+      loaActivity:
+        $ref: '#/definitions/LOAActivity'  
       workOrderDetails:
         type: array
         description: Array of Work Order Details
@@ -1499,6 +1501,103 @@ definitions:
     required:
       - tenantId
       - letterOfAcceptanceEstimate
+      
+  LOAActivity:
+    type: object
+    description: An Object holds the basic data for Letter Of Acceptance Activity
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Letter Of Acceptance Activity
+      tenantId:
+        type: string
+        description: Tenant id of the Letter Of Acceptance Activity
+        maxLength: 128
+        minLength: 4
+      estimateActivity:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/EstimateActivity'
+      #parent:
+      #  $ref: '#/definitions/LOAActivity'
+      parent:
+        type: string
+        description: Parent of the Letter Of Acceptance Activity
+      approvedRate:
+        type: number
+        format: BigDecimal
+        description: Approved Rate for the work order.
+        maxLength: 12
+        minLength: 1
+      approvedAmount:
+        type: number
+        format: BigDecimal
+        description: Approved Amount for the work order.       
+        maxLength: 12
+        minLength: 1
+      remarks:
+        type: string
+        description: Remarks for the work order.
+        maxLength: 1024
+      loaMeasurements:
+        type: array
+        description: Array of work order measurement sheet
+        items:
+          $ref: '#/definitions/LOAMeasurementSheet'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - estimateActivity
+      - approvedAmount
+      - approvedRate
+      
+  LOAMeasurementSheet:
+      type: object
+      description: An Object holds the basic data for a LOA Measurement Sheet
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Measurement Sheet
+        tenantId:
+          type: string
+          description: Tenant id of the Measurement Sheet
+          maxLength: 128
+          minLength: 4
+        no:
+          type: integer
+          format: BigDecimal
+          description: No. of the Measurement sheet
+          maxLength: 20
+        length:
+          type: integer
+          format: BigDecimal
+          description: Length of the Measurement sheet
+          maxLength: 20
+        width:
+          type: integer
+          format: BigDecimal
+          description: Width of the Measurement sheet
+        depthOrHeight:
+          type: integer
+          format: BigDecimal
+          description: Depth or Height of the Measurement sheet
+          maxLength: 20
+        quantity:
+          type: integer
+          format: BigDecimal
+          description: Quantity of the Measurement sheet
+          maxLength: 20
+          minLength: 1
+        loaActivity:
+          $ref: '#/definitions/LOAActivity'
+        #measurementSheet:
+          #$ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/MeasurementSheet'
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - tenantId
+        - quantity
+        #- measurementSheet
+        - loaActivity
           
 tags:
   - name: Letter Of Acceptance

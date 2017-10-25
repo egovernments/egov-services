@@ -336,12 +336,6 @@ paths:
           required: false
           type: string
           format: varchar
-        - name: tenderNumber
-          in: query
-          description: Tender number for which asset is auctioned.
-          required: false
-          type: string
-          format: varchar
         - name: fromDate
           in: query
           description: Agreement date, here search will happen as agreement date is greater or equal to given fromDate.
@@ -360,60 +354,6 @@ paths:
           required: false
           type: string
           format: varchar
-        - name: tinNumber
-          in: query
-          description: Tax Identification number.
-          required: false
-          type: string
-          format: varchar
-        - name: tradelicenseNumber
-          in: query
-          description: Trade License number of the trade going to continue in the asset.
-          required: false
-          type: string
-          format: varchar
-        - name: assetCategory
-          in: query
-          description: Asset category against which agreement made
-          required: false
-          type: string
-          format: varchar
-        - name: shoppingCommplexNo
-          in: query
-          description: Shopping complex number against which agreement made
-          required: false
-          type: string
-          format: varchar
-        - name: assetCode
-          in: query
-          description: Asset code against which agreement made
-          required: false
-          type: string
-          format: varchar
-        - name: locality
-          in: query
-          description: Locality boundary where the asset is located against which the agreement made.
-          required: false
-          type: string
-          format: varchar
-        - name: revenueWard
-          in: query
-          description: Revenue ward boundary where the asset is located against which the agreement made.
-          required: false
-          type: string
-          format: varchar
-        - name: electionWard
-          in: query
-          description: Election ward boundary where the asset is located against which the agreement made.
-          required: false
-          type: string
-          format: varchar
-        - name: doorno
-          in: query
-          description: Door no of a asset against which agreement made
-          required: false
-          type: string
-          format: varchar
         - name: allotteeName
           in: query
           description: Name of allottee against whom the agreement made.
@@ -426,7 +366,7 @@ paths:
           required: false
           type: string
           format: varchar
-        - name: acknowledgementNumber
+        - name: applicationNo
           in: query
           description: Acknowldgement number given to allottee on submitting the application.
           required: false
@@ -544,22 +484,10 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /agreements/_update/{agreementId}:
+  /agreements/_update:
     post:
       description: Updates a given `Agreement` with newer details.
       parameters:
-        - name: tenantId
-          in: query
-          description: Unique id for ulb.
-          required: true
-          type: string
-          format: varchar
-        - name: agreementId
-          in: path
-          description: Unique service code for service to be updated .
-          required: true
-          type: string
-          format: varchar
         - name: agreement
           in: body
           description: Request header for the agreement Request.
@@ -570,11 +498,11 @@ paths:
         - Agreement
       responses:
         '200':
-          description: agreement updated
+          description: Update Agreement(s) successful
           schema:
             $ref: '#/definitions/AgreementResponse'
         '400':
-          description: tenantId was not provided or General service error
+          description: Update Agreement(s) failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
@@ -838,6 +766,8 @@ definitions:
         description: description or comments for a land
         maxLength: 1024
         minLength: 1
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - tenantId
       - landNumber
@@ -1008,6 +938,8 @@ definitions:
         type: string
         description: description or comments for a land
         maxLength: 1024
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - registerName
       - subRegisterName
@@ -1154,6 +1086,7 @@ definitions:
           - CANCELED
           - EVICTED
           - RENEWED
+          - SUSPENDED
           - WORKFLOW
       isActive:
         type: boolean
@@ -1273,6 +1206,18 @@ definitions:
         type: array
         items:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/billingservice/contracts/v1-0-0.yml#/definitions/Demand'
+      cancelAgreementNumber:
+        type: string
+        description: agreement number generated at the time of cancelation.
+        maxLength: 64
+      evictionAgreementNumber:
+        type: string
+        description: agreement number generated at the time of eviction.
+        maxLength: 64
+      renewalAgreementNumber:
+        type: string
+        description: agreement number generated at the time of renewal.
+        maxLength: 64
       section:
         type: string
         description: section at the time of eviction.
@@ -1294,6 +1239,8 @@ definitions:
         description: Work flow ref id.
       workFlowDetails:
         $ref: '#/definitions/WorkFlowDetails'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - id
       - tenantId
@@ -1336,6 +1283,8 @@ definitions:
           - AGREEMENT_EVICTION
           - AGREEMENT_CANCEL
           - LAND_CREATE
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
           
   AgreementDocs:
     type: object
@@ -1433,7 +1382,7 @@ definitions:
       noticeNo:
         type: string
         description: notice number
-      notice  Date:
+      noticeDate:
         type: integer
         format: int64
         description: Date of Commencement of Agreement. Time in epoch

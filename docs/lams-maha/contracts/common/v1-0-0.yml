@@ -26,8 +26,633 @@ schemes:
   - https
 basePath: '/lams-maha/v1/definitions'
 
-paths: {}
+paths: 
+  /lams/inspections/_search:
+    post:
+      summary: Get the list of Inspections defined in the system.
+      description: |
+        Get the Inspections list based on the input parameters.
+      # This is array of GET operation parameters:
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortInspection"
+        - name: referenceType
+          in: query
+          description: This is type of reference (The valid values given in enum) against which the inspection happened
+          required: true
+          type: string
+          format: varchar
+          enum:
+            - ESTATE
+            - LAND
+            - ADVERTISEMENT
+        - name: inspectionId
+          in: query
+          description: Primary key of Inspection object.
+          required: false
+          type: string
+          format: varchar
+        - name: inspectionNumber
+          in: query
+          required: false
+          description: Inspection Number
+          type: string
+          minLength: 1
+          maxLength: 64
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: inspectionStatus
+          in: query
+          required: false
+          description: The status for a Inspection.
+          type: string
+          minLength: 1
+          maxLength: 64
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: ulbWitness
+          in: query
+          required: false
+          description: ulb holder witness. Use employee master
+          type: string
+          minLength: 1
+          maxLength: 64
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: inspectedBy
+          in: query
+          required: false
+          description: inspected user
+          type: string
+          minLength: 1
+          maxLength: 64
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: fromDate
+          in: query
+          description: Inspection date, here search will happen as Inspection date is greater or equal to given fromDate.
+          required: false
+          type: string
+          format: varchar
+        - name: toDate
+          in: query
+          description: Inspection date, here search will happen as Inspection date is lesser or equal to given toDate.
+          required: false
+          type: string
+          format: varchar
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/InspectionResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Inspection
+       
+  /lams/inspections/_create:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  ######################################################
+    post:
+      summary: Create new Inspections.
+      description: API to create new Inspections.
+      parameters:
+        - name: inspection
+          in: body
+          description: Details for the new inspection + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/InspectionRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Inspection(s) created sucessfully
+          schema:
+            $ref: '#/definitions/InspectionResponse'
+        400:
+          description: Inspection(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Inspection  
+        
+  /lams/inspections/_update:
+    post:
+      description: Updates a given `Inspection` with newer details.
+      parameters:
+        - name: inspection
+          in: body
+          description: Request header for the inspection Request.
+          required: true
+          schema:
+            $ref: '#/definitions/InspectionRequest'
+      tags:
+        - Inspection
+      responses:
+        '200':
+          description: Update Inspection(s) successful
+          schema:
+            $ref: '#/definitions/InspectionResponse'
+        '400':
+          description: Update Inspection(s) failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
+  /lams/showcausenotices/_search:
+    post:
+      summary: Get the list of ShowCauseNotices defined in the system.
+      description: |
+        Get the ShowCauseNotices list based on the input parameters.
+      # This is array of GET operation parameters:
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortShowCauseNotice"
+        - name: referenceType
+          in: query
+          description: This is type of reference (The valid values given in enum) against which the ShowCauseNotice issued
+          required: true
+          type: string
+          format: varchar
+          enum:
+            - ESTATE
+            - LAND
+            - ADVERTISEMENT
+        - name: referenceNumber
+          in: query
+          description: License or estate or land number against which the ShowCauseNotice issued
+          required: false
+          type: string
+          format: varchar
+        - name: showCauseNoticeId
+          in: query
+          description: Primary key of ShowCauseNotice object.
+          required: false
+          type: string
+          format: varchar
+        - name: noticeNumber
+          in: query
+          required: false
+          description: ShowCauseNotice Number
+          type: string
+          minLength: 1
+          maxLength: 64
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: fromDate
+          in: query
+          description: ShowCauseNotice date, here search will happen as ShowCauseNotice date is greater or equal to given fromDate.
+          required: false
+          type: string
+          format: varchar
+        - name: toDate
+          in: query
+          description: ShowCauseNotice date, here search will happen as ShowCauseNotice date is lesser or equal to given toDate.
+          required: false
+          type: string
+          format: varchar
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/ShowCauseNoticeResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - ShowCauseNotice
+       
+  /lams/showcausenotices/_create:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  ######################################################
+    post:
+      summary: Create new ShowCauseNotices.
+      description: API to create new ShowCauseNotices.
+      parameters:
+        - name: showCauseNotice
+          in: body
+          description: Details for the new showCauseNotice + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/ShowCauseNoticeRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: ShowCauseNotice(s) created sucessfully
+          schema:
+            $ref: '#/definitions/ShowCauseNoticeResponse'
+        400:
+          description: ShowCauseNotice(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - ShowCauseNotice  
+        
+  /lams/showcausenotices/_update:
+    post:
+      description: Updates a given `ShowCauseNotice` with newer details.
+      parameters:
+        - name: showCauseNotice
+          in: body
+          description: Request header for the showCauseNotice Request.
+          required: true
+          schema:
+            $ref: '#/definitions/ShowCauseNoticeRequest'
+      tags:
+        - ShowCauseNotice
+      responses:
+        '200':
+          description: Update ShowCauseNotice(s) successful
+          schema:
+            $ref: '#/definitions/ShowCauseNoticeResponse'
+        '400':
+          description: Update ShowCauseNotice(s) failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /lams/hearingintimations/_search:
+    post:
+      summary: Get the list of HearingIntimations defined in the system.
+      description: |
+        Get the HearingIntimations list based on the input parameters.
+      # This is array of GET operation parameters:
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortHearingIntimation"
+        - name: referenceType
+          in: query
+          description: This is type of reference (The valid values given in enum) against which the HearingIntimation issued
+          required: true
+          type: string
+          format: varchar
+          enum:
+            - ESTATE
+            - LAND
+            - ADVERTISEMENT
+        - name: referenceNumber
+          in: query
+          description: License or estate or land number against which the HearingIntimation issued
+          required: false
+          type: string
+          format: varchar
+        - name: hearingIntimationId
+          in: query
+          description: Primary key of HearingIntimation object.
+          required: false
+          type: string
+          format: varchar
+        - name: intimationNumber
+          in: query
+          required: false
+          description: HearingIntimation Number
+          type: string
+          minLength: 1
+          maxLength: 64
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: fromDate
+          in: query
+          description: HearingIntimation date, here search will happen as HearingIntimation date is greater or equal to given fromDate.
+          required: false
+          type: string
+          format: varchar
+        - name: toDate
+          in: query
+          description: HearingIntimation date, here search will happen as HearingIntimation date is lesser or equal to given toDate.
+          required: false
+          type: string
+          format: varchar
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/HearingIntimationResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - HearingIntimation
+       
+  /lams/hearingintimations/_create:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  ######################################################
+    post:
+      summary: Create new HearingIntimations.
+      description: API to create new HearingIntimations.
+      parameters:
+        - name: hearingIntimation
+          in: body
+          description: Details for the new hearingIntimation + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/HearingIntimationRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: HearingIntimation(s) created sucessfully
+          schema:
+            $ref: '#/definitions/HearingIntimationResponse'
+        400:
+          description: HearingIntimation(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - HearingIntimation  
+        
+  /lams/hearingintimations/_update:
+    post:
+      description: Updates a given `HearingIntimation` with newer details.
+      parameters:
+        - name: hearingIntimation
+          in: body
+          description: Request header for the hearingIntimation Request.
+          required: true
+          schema:
+            $ref: '#/definitions/HearingIntimationRequest'
+      tags:
+        - HearingIntimation
+      responses:
+        '200':
+          description: Update HearingIntimation(s) successful
+          schema:
+            $ref: '#/definitions/HearingIntimationResponse'
+        '400':
+          description: Update HearingIntimation(s) failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+  /lams/hearingdetails/_search:
+    post:
+      summary: Get the list of HearingDetails defined in the system.
+      description: |
+        Get the HearingDetails list based on the input parameters.
+      # This is array of GET operation parameters:
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortHearingDetails"
+        - name: referenceType
+          in: query
+          description: This is type of reference (The valid values given in enum) against which the HearingDetails issued
+          required: true
+          type: string
+          format: varchar
+          enum:
+            - ESTATE
+            - LAND
+            - ADVERTISEMENT
+        - name: referenceNumber
+          in: query
+          description: License or estate or land number against which the HearingDetails issued
+          required: false
+          type: string
+          format: varchar
+        - name: hearingDetailsId
+          in: query
+          description: Primary key of HearingDetails object.
+          required: false
+          type: string
+          format: varchar
+        - name: showCauseNoticeNo
+          in: query
+          required: false
+          description: Show Cause Notice No
+          type: string
+          minLength: 1
+          maxLength: 64
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: fromDate
+          in: query
+          description: Hearing date, here search will happen as HearingDetails date is greater or equal to given fromDate.
+          required: false
+          type: string
+          format: varchar
+        - name: toDate
+          in: query
+          description: Hearing date, here search will happen as HearingDetails date is lesser or equal to given toDate.
+          required: false
+          type: string
+          format: varchar
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/HearingDetailsResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - HearingDetails
+       
+  /lams/hearingdetails/_create:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  ######################################################
+    post:
+      summary: Create new HearingDetails.
+      description: API to create new HearingDetails.
+      parameters:
+        - name: hearingDetails
+          in: body
+          description: Details for the new hearingDetails + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/HearingDetailsRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: HearingDetails(s) created sucessfully
+          schema:
+            $ref: '#/definitions/HearingDetailsResponse'
+        400:
+          description: HearingDetails(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - HearingDetails  
+        
+  /lams/hearingdetails/_update:
+    post:
+      description: Updates a given `HearingDetails` with newer details.
+      parameters:
+        - name: hearingDetails
+          in: body
+          description: Request header for the hearingDetails Request.
+          required: true
+          schema:
+            $ref: '#/definitions/HearingDetailsRequest'
+      tags:
+        - HearingDetails
+      responses:
+        '200':
+          description: Update HearingDetails(s) successful
+          schema:
+            $ref: '#/definitions/HearingDetailsResponse'
+        '400':
+          description: Update HearingDetails(s) failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+  /lams/licensesuspension/_search:
+    post:
+      summary: Get the list of LicenseSuspension defined in the system.
+      description: |
+        Get the LicenseSuspension list based on the input parameters.
+      # This is array of GET operation parameters:
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortLicenseSuspension"
+        - name: referenceType
+          in: query
+          description: This is type of reference (The valid values given in enum) against which the LicenseSuspension issued
+          required: true
+          type: string
+          format: varchar
+          enum:
+            - ESTATE
+            - LAND
+            - ADVERTISEMENT
+        - name: referenceNumber
+          in: query
+          description: License or estate or land number against which the LicenseSuspension issued
+          required: false
+          type: string
+          format: varchar
+        - name: licenseSuspensionId
+          in: query
+          description: Primary key of LicenseSuspension object.
+          required: false
+          type: string
+          format: varchar
+        - name: suspensionNumber
+          in: query
+          required: false
+          description: suspensionNumber
+          type: string
+          minLength: 1
+          maxLength: 64
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: fromDate
+          in: query
+          description: suspensionDate, here search will happen as LicenseSuspension date is greater or equal to given fromDate.
+          required: false
+          type: string
+          format: varchar
+        - name: toDate
+          in: query
+          description: suspensionDate, here search will happen as LicenseSuspension date is lesser or equal to given toDate.
+          required: false
+          type: string
+          format: varchar
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/LicenseSuspensionResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - LicenseSuspension
+       
+  /lams/licensesuspension/_create:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  ######################################################
+    post:
+      summary: Create new LicenseSuspension.
+      description: API to create new LicenseSuspension.
+      parameters:
+        - name: licenseSuspension
+          in: body
+          description: Details for the new licenseSuspension + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/LicenseSuspensionRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: LicenseSuspension(s) created sucessfully
+          schema:
+            $ref: '#/definitions/LicenseSuspensionResponse'
+        400:
+          description: LicenseSuspension(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - LicenseSuspension  
+        
+  /lams/licensesuspension/_update:
+    post:
+      description: Updates a given `LicenseSuspension` with newer details.
+      parameters:
+        - name: licenseSuspension
+          in: body
+          description: Request header for the licenseSuspension Request.
+          required: true
+          schema:
+            $ref: '#/definitions/LicenseSuspensionRequest'
+      tags:
+        - LicenseSuspension
+      responses:
+        '200':
+          description: Update LicenseSuspension(s) successful
+          schema:
+            $ref: '#/definitions/LicenseSuspensionResponse'
+        '400':
+          description: Update LicenseSuspension(s) failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
 definitions:
 
   RegisterName:
@@ -355,408 +980,7 @@ definitions:
       - code
       - name
       - isActive
-  LicenseSuspension:
-    type: object
-    description: Suspension details
-    properties:
-      id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the license suspension
-      tenantId:
-        type: string
-        description: tenant id 
-        maxLength: 128
-        minLength: 4
-      suspensionNumber:
-        type: string
-        description: Suspension number
-        maxLength: 64  
-      suspensionDate:
-        type: integer
-        format: int64
-        description: suspension date of license. in epoch format.
-      suspensionStartDate:
-        type: integer
-        format: int64
-        description: suspension start date of license. in epoch format.
-      suspensionEndDate:
-        type: integer
-        format: int64
-        description: suspension end date of license. in epoch format.  
-      suspendedBy:
-        type: string
-        description: suspended by  user information.Use employee master
-        maxLength: 128  
-      reasonForSuspension:
-        type: string
-        description: reason for suspension
-        maxLength: 512
-      stateId:
-        type: string
-        description: Work flow ref id.
-      referenceType:
-        type: string
-        description: Object type
-        enum:
-          - ESTATE
-          - LAND
-          - ADVERTISEMENT
-      referenceNumber:
-        type: string
-        description: License or estate or land number
-        maxLength: 128    
-      showCauseNotice:
-        $ref: '#/definitions/ShowCauseNotice'
-      hearing:
-        $ref: '#/definitions/HearingDetails'
-      suspensionLetterDocId:
-        type: string
-        description: Unique Identifier of the FileStore  
-    required:
-      - id
-      - suspensionNumber   
-      - tenantId
-      - suspensionDate
-      - suspensionStartDate
-      - suspensionEndDate
-      - referenceType
-      - referenceNumber
-  HearingIntimation:
-    type: object
-    properties:
-      id:
-        type: integer
-        format: int64
-        description: unique id of the Hearing intimation.
-      tenantId:
-        type: string
-        description: tenant id of the Hearing intimation.
-        maxLength: 128
-        minLength: 2
-      showCauseNotice:
-        $ref: '#/definitions/ShowCauseNotice'
-      referenceType:
-        type: string
-        description: Object type
-        enum:
-          - ESTATE
-          - LAND
-          - ADVERTISEMENT
-      referenceNumber:
-        type: string
-        description: License or estate or land number
-        maxLength: 128
-      intimationNumber:
-        type: string
-        description: Hearing intimation number
-        maxLength: 64      
-      intimationDate:
-        type: integer
-        format: int64
-        description: Hearing intimation Date, time in epoch  
-      hearingPlace:
-        type: string
-        description: Hearing place
-        maxLength: 128 
-      hearigAuthorityOfficer:
-        type: string
-        description: Hearing authority officer
-        maxLength: 128
-      hearingIntimationLetterDocId:
-        type: string
-        description: Unique Identifier of the FileStore
-    required:
-      - id
-      - intimationNumber  
-      - intimationDate
-      - tenantId    
-  HearingDetails:
-    type: object
-    properties:
-      id:
-        type: integer
-        format: int64
-        description: unique id of the HearingDetails.
-      tenantId:
-        type: string
-        description: tenant id of the HearingDetails
-        maxLength: 128
-        minLength: 2
-      showCauseNotice:
-        $ref: '#/definitions/ShowCauseNotice'
-      hearingIntimation:
-        $ref: '#/definitions/HearingIntimation'
-      referenceType:
-        type: string
-        description: Object type
-        enum:
-          - ESTATE
-          - LAND
-          - ADVERTISEMENT
-      referenceNumber:
-        type: string
-        description: License or estate or land number
-        maxLength: 128    
-      hearingDate:
-        type: integer
-        format: int64
-        description: Hearing Date, time in epoch
-      hearingStatus:
-        type: string
-        description: Hearing Status.
-        enum:
-          - SUSPENDED
-          - NOTSUSPENDED
-          
-      hearingFinalDecission:
-        type: string
-        description: Final Decission.
-        maxLength: 64
-      attendees:
-        type: array
-        items:
-          $ref: '#/definitions/HearingAttendee'
-      judeges:
-        type: array
-        items:
-          $ref: '#/definitions/HearingJudge'
-      advocates:
-        type: array
-        items:
-          $ref: '#/definitions/HearingAdvocate'
-      hearingRemarks:
-        type: string
-        description: Remarks.
-        maxLength: 512
-    required:
-      - id
-      - tenantId
-      - showCauseNotice
-      - hearingDate
-      - hearingStatus
-      - hearingFinalDecission
-      - attendees
-      - judeges
-      - advocates
-  HearingAttendee:
-    type: object
-    properties:
-      id:
-        type: integer
-        format: int64
-        description: unique id of the HearingDetails.
-      tenantId:
-        type: string
-        description: tenant id of the HearingDetails
-        maxLength: 128
-        minLength: 2
-      hearingDetail:
-        $ref: '#/definitions/HearingDetails'
-      name:
-        type: string
-        description: Name of attendee.
-        maxLength: 256
-      address:
-        type: string
-        description: Name of attendee.
-        maxLength: 512
-      mobileNo:
-        type: string
-        description: mobileNo of attendee.
-        maxLength: 10
-      emailId:
-        type: string
-        description: mobileNo of attendee.
-        maxLength: 128
-  HearingJudge:
-    type: object
-    properties:
-      id:
-        type: integer
-        format: int64
-        description: unique id of the HearingJudge.
-      tenantId:
-        type: string
-        description: tenant id of the HearingJudge
-        maxLength: 128
-        minLength: 2
-      hearingDetail:
-        $ref: '#/definitions/HearingDetails'
-      name:
-        type: string
-        description: Name of Judge.
-        maxLength: 256
-      appointmentDate:
-        type: integer
-        format: int64
-        description: Appointment Date, time in epoch
-      mobileNo:
-        type: string
-        description: mobileNo of Judge.
-        maxLength: 10
-      emailId:
-        type: string
-        description: mobileNo of Judge.
-        maxLength: 128
-  HearingAdvocate:
-    type: object
-    properties:
-      id:
-        type: integer
-        format: int64
-        description: unique id of the HearingAdvocate.
-      tenantId:
-        type: string
-        description: tenant id of the HearingAdvocate
-        maxLength: 128
-        minLength: 2
-      hearingDetail:
-        $ref: '#/definitions/HearingDetails'
-      name:
-        type: string
-        description: Name of Advocate.
-        maxLength: 256
-      appointmentDate:
-        type: integer
-        format: int64
-        description: Appointment Date, time in epoch
-      mobileNo:
-        type: string
-        description: mobileNo of Advocate.
-        maxLength: 10
-      emailId:
-        type: string
-        description: mobileNo of Advocate.
-        maxLength: 128
-  ShowCauseNotice:
-    type: object
-    description: Show cause notice details
-    properties:
-      id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the show cause notice 
-      tenantId:
-        type: string
-        description: tenant id 
-        maxLength: 128
-        minLength: 4
-      showCauseNoticeNumber:
-        type: string
-        description: Showcause notice number 
-        maxLength: 64 
-      reasonForShowCauseNotice:
-        type: string
-        description: Showcause notice number 
-        maxLength: 512    
-      showCauseNoticeDate:
-        type: integer
-        format: int64
-        description: showcause notice date in epoch  
-      inspection:
-        $ref: '#/definitions/Inspection'
-      referenceType:
-        type: string
-        description: Object type
-        enum:
-          - ESTATE
-          - LAND
-          - ADVERTISEMENT
-      referenceNumber:
-        type: string
-        description: License or estate or land number
-        maxLength: 128
-      showcauseNoticeDocId:
-        type: string
-        description: Unique Identifier of the FileStore   
-    required:
-      - id    
-      - referenceNumber
-      - referenceType
-      - showCauseNoticeNumber
-      - showCauseNoticeDate
-      - reasonForShowCauseNotice
-  Inspection:
-    type: object
-    description: Advertisement licence application inspection details
-    properties:
-      id: 
-        type: integer
-        format: int64
-        description: Id of the inspection master.
-      tenantId:
-        type: string
-        description: tenant id 
-        maxLength: 128
-        minLength: 4
-      isRandomInspection:
-        type: boolean
-        default: true
-        description: This field used to decide normal inspection or random inspection.For normal inspection, pass vlue as false.
-      licenseHolderwitness:
-        type: string
-        description: License holder witness
-        maxLength: 128
-      ulbWitness:
-        type: string
-        description: ulb holder witness.Use employee master
-        maxLength: 128  
-      inspectedBy:
-        type: string
-        description: inspected user information.Use employee master
-        maxLength: 128  
-      referenceType:
-        type: string
-        description: Object type
-        enum:
-          - ESTATE
-          - LAND
-          - ADVERTISEMENT
-      referenceNumber:
-        type: string
-        description: License or estate or land number
-        maxLength: 128  
-      inspectionTime:
-        type: string
-        description: inspection time
-        minLength: 1
-        maxLength: 10
-      inspectionDate:
-        type: integer
-        format: int64
-        description: inspection date  in epoch  
-      inspectiondetail:
-        type: string
-        description: inspection details
-        maxLength: 256 
-      inspectionNumber:
-        type: string
-        description: inspection number unique in system.
-      remarks:
-        type: string
-        description: inspection remarks
-        maxLength: 512  
-      status:
-        type: string
-        description: Status of inspection
-        enum:
-          - APPROVED
-          - REJECTED
-      document:
-        type: string
-        description: filestoreId of the document attached
-    required:
-      - id
-      - inspectionTime   
-      - inspectionDate
-      - licenseHolderwitness
-      - ulbWitness
-      - inspectionNumber
-      - inspectedBy
-      - referenceType
-      - referenceNumber
-      
+
   RenewalScheduler:
     type: object
     description: An object which holds the  Renewal Schedule Type Master info
@@ -956,6 +1180,529 @@ definitions:
       - name
       - isActive
 
+  Inspection:
+    type: object
+    description: This object holds a inpsection details for land or estate or advertisement
+    properties:
+      id: 
+        type: integer
+        format: int64
+        description: unique Id of the inspection.
+      tenantId:
+        type: string
+        description: tenant id of the Inspection
+        maxLength: 128
+        minLength: 4
+      isRandomInspection:
+        type: boolean
+        default: true
+        description: This field used to decide normal inspection or random inspection. For normal inspection, pass vlue as false.
+      licenseHolderwitness:
+        type: string
+        description: License holder witness
+        maxLength: 128
+      ulbWitness:
+        type: string
+        description: ulb holder witness.Use employee master
+        maxLength: 128  
+      inspectedBy:
+        type: string
+        description: inspected user information.Use employee master
+        maxLength: 128  
+      referenceType:
+        type: string
+        description: This is type of reference (The valid values given in enum) against which the inspection happened
+        enum:
+          - ESTATE
+          - LAND
+          - ADVERTISEMENT
+      referenceNumber:
+        type: string
+        description: License or estate or land number against which the inspection happened
+        maxLength: 128  
+      inspectionTime:
+        type: number
+        format: double
+        description: inspection time
+      inspectionDate:
+        type: integer
+        format: int64
+        description: inspection date  in epoch  
+      inspectiondetail:
+        type: string
+        description: inspection details
+        maxLength: 256 
+      inspectionNumber:
+        type: string
+        description: inspection number unique in system.
+      remarks:
+        type: string
+        description: inspection remarks
+        maxLength: 512  
+      status:
+        type: string
+        description: Status of inspection
+        enum:
+          - APPROVED
+          - REJECTED
+      imageAttached:
+        type: string
+        description: filestoreId of the image attached
+        maxLength: 64
+      documentAttached:
+        type: string
+        description: filestoreId of the document attached
+    required:
+      - id
+      - inspectionTime   
+      - inspectionDate
+      - licenseHolderwitness
+      - ulbWitness
+      - inspectionNumber
+      - inspectedBy
+      - referenceType
+      - referenceNumber
+
+  InspectionRequest:
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      inspections:
+        type: array
+        minimum: 1
+        maximum: 100
+        items:
+          $ref: '#/definitions/Inspection'
+    type: object
+
+  InspectionResponse:
+    properties:
+      ResponseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      inspections:
+        type: array
+        items:
+          $ref: '#/definitions/Inspection'
+    type: object
+
+  ShowCauseNotice:
+    type: object
+    description: This object holds a Show Cause Notice details for land or estate or advertisement
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the show cause notice 
+      tenantId:
+        type: string
+        description: tenant id 
+        maxLength: 128
+        minLength: 4
+      noticeNumber:
+        type: string
+        description: Showcause notice number 
+        maxLength: 64 
+      reason:
+        type: string
+        description: Showcause notice number 
+        maxLength: 512    
+      noticeDate:
+        type: integer
+        format: int64
+        description: showcause notice date in epoch  
+      inspection:
+        $ref: '#/definitions/Inspection'
+      referenceType:
+        type: string
+        description: This is type of reference (The valid values given in enum) against which the inspection happened
+        enum:
+          - ESTATE
+          - LAND
+          - ADVERTISEMENT
+      referenceNumber:
+        type: string
+        description: License or estate or land number against which the ShowCauseNotice to be issued
+        maxLength: 128
+      showcauseNoticeDocument:
+        type: string
+        description: Unique Identifier of the FileStore   
+    required:
+      - id    
+      - referenceNumber
+      - referenceType
+      - noticeNumber
+      - noticeDate
+      - reason
+
+  ShowCauseNoticeRequest:
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      showCauseNotices:
+        type: array
+        minimum: 1
+        maximum: 100
+        items:
+          $ref: '#/definitions/ShowCauseNotice'
+    type: object
+
+  ShowCauseNoticeResponse:
+    properties:
+      ResponseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      showCauseNotices:
+        type: array
+        items:
+          $ref: '#/definitions/ShowCauseNotice'
+    type: object
+
+  HearingIntimation:
+    type: object
+    description: This object holds a Hearing Intimation details for land or estate or advertisement
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the Hearing intimation.
+      tenantId:
+        type: string
+        description: tenant id of the Hearing intimation.
+        maxLength: 128
+        minLength: 2
+      showCauseNotice:
+        $ref: '#/definitions/ShowCauseNotice'
+      referenceType:
+        type: string
+        description: This is type of reference (The valid values given in enum) against which the inspection happened
+        enum:
+          - ESTATE
+          - LAND
+          - ADVERTISEMENT
+      referenceNumber:
+        type: string
+        description: License or estate or land number against which the HearingIntimation to be issued
+        maxLength: 128
+      intimationNumber:
+        type: string
+        description: Hearing intimation number
+        maxLength: 64      
+      intimationDate:
+        type: integer
+        format: int64
+        description: Hearing intimation Date, time in epoch  
+      hearingPlace:
+        type: string
+        description: Hearing place
+        maxLength: 128 
+      hearigAuthorityOfficer:
+        type: string
+        description: Hearing authority officer
+        maxLength: 128
+      intimationLetterDocument:
+        type: string
+        description: Unique Identifier of the FileStore
+    required:
+      - id
+      - intimationNumber  
+      - intimationDate
+      - tenantId
+
+  HearingIntimationRequest:
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      hearingIntimations:
+        type: array
+        minimum: 1
+        maximum: 100
+        items:
+          $ref: '#/definitions/HearingIntimation'
+    type: object
+
+  HearingIntimationResponse:
+    properties:
+      ResponseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      hearingIntimations:
+        type: array
+        items:
+          $ref: '#/definitions/HearingIntimation'
+    type: object
+
+  HearingDetails:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the HearingDetails.
+      tenantId:
+        type: string
+        description: tenant id of the HearingDetails
+        maxLength: 128
+        minLength: 2
+      showCauseNotice:
+        $ref: '#/definitions/ShowCauseNotice'
+      hearingIntimation:
+        $ref: '#/definitions/HearingIntimation'
+      referenceType:
+        type: string
+        description: This is type of reference (The valid values given in enum) against which the inspection happened
+        enum:
+          - ESTATE
+          - LAND
+          - ADVERTISEMENT
+      referenceNumber:
+        type: string
+        description: License or estate or land number against which the Hearing happened.
+        maxLength: 128    
+      hearingDate:
+        type: integer
+        format: int64
+        description: Hearing Date, time in epoch
+      status:
+        type: string
+        description: Hearing Status.
+        enum:
+          - SUSPENDED
+          - NOTSUSPENDED
+          
+      finalDecission:
+        type: string
+        description: Final Decission.
+        maxLength: 64
+      attendees:
+        type: array
+        items:
+          $ref: '#/definitions/HearingAttendee'
+      judeges:
+        type: array
+        items:
+          $ref: '#/definitions/HearingJudge'
+      advocates:
+        type: array
+        items:
+          $ref: '#/definitions/HearingAdvocate'
+      remarks:
+        type: string
+        description: Remarks.
+        maxLength: 512
+    required:
+      - id
+      - tenantId
+      - showCauseNotice
+      - hearingDate
+      - status
+      - finalDecission
+      - attendees
+      - judeges
+      - advocates
+
+  HearingAttendee:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the HearingDetails.
+      tenantId:
+        type: string
+        description: tenant id of the HearingDetails
+        maxLength: 128
+        minLength: 2
+      hearingDetail:
+        $ref: '#/definitions/HearingDetails'
+      name:
+        type: string
+        description: Name of attendee.
+        maxLength: 256
+      address:
+        type: string
+        description: Name of attendee.
+        maxLength: 512
+      mobileNo:
+        type: string
+        description: mobileNo of attendee.
+        maxLength: 10
+      emailId:
+        type: string
+        description: mobileNo of attendee.
+        maxLength: 128
+
+  HearingJudge:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the HearingJudge.
+      tenantId:
+        type: string
+        description: tenant id of the HearingJudge
+        maxLength: 128
+        minLength: 2
+      hearingDetail:
+        $ref: '#/definitions/HearingDetails'
+      name:
+        type: string
+        description: Name of Judge.
+        maxLength: 256
+      appointmentDate:
+        type: integer
+        format: int64
+        description: Appointment Date, time in epoch
+      mobileNo:
+        type: string
+        description: mobileNo of Judge.
+        maxLength: 10
+      emailId:
+        type: string
+        description: mobileNo of Judge.
+        maxLength: 128
+
+  HearingAdvocate:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the HearingAdvocate.
+      tenantId:
+        type: string
+        description: tenant id of the HearingAdvocate
+        maxLength: 128
+        minLength: 2
+      hearingDetail:
+        $ref: '#/definitions/HearingDetails'
+      name:
+        type: string
+        description: Name of Advocate.
+        maxLength: 256
+      appointmentDate:
+        type: integer
+        format: int64
+        description: Appointment Date, time in epoch
+      mobileNo:
+        type: string
+        description: mobileNo of Advocate.
+        maxLength: 10
+      emailId:
+        type: string
+        description: mobileNo of Advocate.
+        maxLength: 128
+
+  HearingDetailsRequest:
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      hearingDetails:
+        type: array
+        minimum: 1
+        maximum: 100
+        items:
+          $ref: '#/definitions/HearingDetails'
+    type: object
+
+  HearingDetailsResponse:
+    properties:
+      ResponseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      hearingDetails:
+        type: array
+        items:
+          $ref: '#/definitions/HearingDetails'
+    type: object
+
+  LicenseSuspension:
+    type: object
+    description: Suspension details
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the license suspension
+      tenantId:
+        type: string
+        description: tenant id 
+        maxLength: 128
+        minLength: 4
+      suspensionNumber:
+        type: string
+        description: Suspension number
+        maxLength: 64  
+      suspensionDate:
+        type: integer
+        format: int64
+        description: suspension date of license. in epoch format.
+      suspensionStartDate:
+        type: integer
+        format: int64
+        description: suspension start date of license. in epoch format.
+      suspensionEndDate:
+        type: integer
+        format: int64
+        description: suspension end date of license. in epoch format.  
+      suspendedBy:
+        type: string
+        description: suspended by  user information.Use employee master
+        maxLength: 128  
+      reasonForSuspension:
+        type: string
+        description: reason for suspension
+        maxLength: 512
+      stateId:
+        type: string
+        description: Work flow ref id.
+      referenceType:
+        type: string
+        description: This is type of reference (The valid values given in enum) against which the suspension happened
+        enum:
+          - ESTATE
+          - LAND
+          - ADVERTISEMENT
+      referenceNumber:
+        type: string
+        description: License or estate or land number against which the suspension happened.
+        maxLength: 128    
+      showCauseNotice:
+        $ref: '#/definitions/ShowCauseNotice'
+      hearing:
+        $ref: '#/definitions/HearingDetails'
+      suspensionLetterDocId:
+        type: string
+        description: Unique Identifier of the FileStore  
+    required:
+      - id
+      - suspensionNumber   
+      - tenantId
+      - suspensionDate
+      - suspensionStartDate
+      - suspensionEndDate
+      - referenceType
+      - referenceNumber
+
+  LicenseSuspensionRequest:
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      licenseSuspensions:
+        type: array
+        minimum: 1
+        maximum: 100
+        items:
+          $ref: '#/definitions/LicenseSuspension'
+    type: object
+
+  LicenseSuspensionResponse:
+    properties:
+      ResponseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      licenseSuspensions:
+        type: array
+        items:
+          $ref: '#/definitions/LicenseSuspension'
+    type: object
+    
   BillFrequency:
     type: object
     description: An object which holds the bill frequency Master info
@@ -998,3 +1745,101 @@ definitions:
       - fromDate
       - toDate
       - licenseNumber
+      
+parameters:
+##########################################################
+#Parameter name must start with small case followed by camel case.
+##########################################################
+  pageSize:
+    name: pageSize
+    in: query
+    description: Number of records returned.
+    type: integer
+    minimum: 0
+    exclusiveMinimum: true
+    maximum: 100
+    exclusiveMaximum: false
+    multipleOf: 10
+    default: 20
+    
+  pageNumber:
+    name: pageNumber
+    in: query
+    description: Page number
+    type: integer
+    default: 1
+    
+  sortInspection:
+    name: sort
+    in: query
+    description: Inspection results will be sorted by id ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 3
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](inspectionDate)'
+    default:
+      - +inspectionDate
+      
+  sortShowCauseNotice:
+    name: sort
+    in: query
+    description: ShowCauseNotice results will be sorted by id ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 3
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](showCauseNoticeDate)'
+    default:
+      - +showCauseNoticeDate
+      
+  sortHearingIntimation:
+    name: sort
+    in: query
+    description: HearingIntimation results will be sorted by id ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 3
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](intimationDate)'
+    default:
+      - +intimationDate
+      
+  sortHearingDetails:
+    name: sort
+    in: query
+    description: HearingDetails results will be sorted by id ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 3
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](hearingDate)'
+    default:
+      - +hearingDate
+      
+  sortLicenseSuspension:
+    name: sort
+    in: query
+    description: LicenseSuspension results will be sorted by id ascending by default if this parameter is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 3
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](suspensionDate)'
+    default:
+      - +suspensionDate

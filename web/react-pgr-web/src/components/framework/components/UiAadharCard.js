@@ -11,7 +11,8 @@ export default class UiAadharCard extends Component {
 			case 'google':
 				return (
 					<TextField
-						id={item.jsonPath.split(".").join("-")}		
+						id={item.jsonPath.split(".").join("-")}
+						className="cutustom-form-controll-for-textfield"
 						floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
 						inputStyle={{"color": "#5F5C57"}}
 						floatingLabelFixed={true}
@@ -34,9 +35,7 @@ export default class UiAadharCard extends Component {
 
 	render () {
 		return (
-	      <div>
-	        {this.renderAadharCard(this.props.item)}
-	      </div>
+	      this.renderAadharCard(this.props.item)
 	    );
 	}
 }

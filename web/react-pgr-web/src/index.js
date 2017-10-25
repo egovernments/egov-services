@@ -41,7 +41,7 @@ let themeObject={
     canvasColor: '#eee',
   },
   raisedButton: {
-    primaryColor: "#f58720"
+    primaryColor: "#607D8B"
   },
   floatingActionButton: {
     color: "#f58720"

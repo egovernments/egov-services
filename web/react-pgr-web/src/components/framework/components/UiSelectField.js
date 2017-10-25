@@ -23,7 +23,7 @@ class UiSelectField extends Component {
 			let splitArray=item.url.split("?");
 			let context="";
 			let id={};
-			
+
 			for (var j = 0; j < splitArray[0].split("/").length; j++) {
 				if(j==(splitArray[0].split("/").length-1)){
 						context+=splitArray[0].split("/")[j];
@@ -91,6 +91,7 @@ class UiSelectField extends Component {
 			case 'google':
 				return (
 						<SelectField
+							className="cutustom-form-controll-for-select"
 							id={item.jsonPath.split(".").join("-")}
 							floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
 							labelStyle={{"color": "#5F5C57"}}
@@ -119,15 +120,13 @@ class UiSelectField extends Component {
 
 	render () {
 		return (
-	      <div>
-	        {this.renderSelect(this.props.item)}
-	      </div>
+	      this.renderSelect(this.props.item)
 	    );
 	}
 }
 
 const mapStateToProps = state => ({
-	dropDownData: state.framework.dropDownData, 
+	dropDownData: state.framework.dropDownData,
 	formData: state.frameworkForm.form
 });
 

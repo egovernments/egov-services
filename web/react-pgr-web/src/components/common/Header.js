@@ -145,9 +145,7 @@ const RightIcon = (props) => {
     );
   } else if(window.location.hash === "#/") {
     return(
-      <div>
       {/*<img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>*/}
-      </div>
     )
   } else {
     return(

@@ -12,7 +12,8 @@ export default class UiTextSearch extends Component {
 				return (
 					<div style={{position: 'relative', display: 'inline'}}>
 						<TextField
-							id={item.jsonPath.split(".").join("-")}	
+							className="cutustom-form-controll-for-textfield"
+							id={item.jsonPath.split(".").join("-")}
 							floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px"}}
 							inputStyle={{"color": "#5F5C57"}}
 							floatingLabelFixed={true}

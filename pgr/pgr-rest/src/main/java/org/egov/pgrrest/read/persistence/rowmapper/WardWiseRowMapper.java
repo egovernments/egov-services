@@ -8,14 +8,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Component
-public class TopComplaintsRowMapper implements RowMapper<TopComplaintTypesResponse> {
-
+public class WardWiseRowMapper implements RowMapper<TopComplaintTypesResponse> {
     @Override
     public TopComplaintTypesResponse mapRow(ResultSet resultSet, int i) throws SQLException {
+
         return TopComplaintTypesResponse.builder()
             .count(resultSet.getInt("count"))
-            .complaintTypeName(resultSet.getString("complainttypename"))
-            .code(resultSet.getString("code"))
+            .boundary(resultSet.getInt("boundary"))
             .build();
     }
 }

@@ -20,4 +20,6 @@ public class TopComplaintTypesResponse {
     private String month;
 
     private String code;
+
+    private Integer boundary;
 }

@@ -50,7 +50,7 @@ public class DashBoardRepository {
 
     public List<TopComplaintTypesResponse> getTopComplaintTypeWithCount(String tenantId, int size){
 
-        String query = "select count(*) as count, ctype.name as complainttypename" +
+        String query = "select count(*) as count, ctype.name as complainttypename, cs.servicecode as code" +
             " from submission cs, egpgr_complainttype ctype, servicetype_keyword sk" +
             " where cs.servicecode = ctype.code and ctype.code = sk.servicecode and sk.keyword = 'complaint'" +
             " and cs.tenantid = :tenantId and sk.tenantid = :tenantId and ctype.tenantid = :tenantId " +
@@ -62,7 +62,7 @@ public class DashBoardRepository {
 
     public List<TopComplaintTypesResponse> getTopFiveComplaintTypesMonthly(String tenantId){
 
-        String query = "select count(*) as count, cs.servicecode as code, ctype.name as complainttypename, to_char(date_trunc('month',cs.createddate), 'MONTH') as month" +
+        String query = "select count(*) as count, cs.servicecode as code, ctype.name as complainttypename, extract(month from date_trunc('month',cs.createddate)) as month" +
             " from submission cs, egpgr_complainttype ctype" +
             " where cs.servicecode = ctype.code" +
             " and servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId and keyword = 'complaint')" +
@@ -76,9 +76,23 @@ public class DashBoardRepository {
             " group by cs.servicecode, complainttypename" +
             " order by count DESC LIMIT 5 ) as result)" +
             " group by date_trunc('month',cs.createddate), cs.servicecode, ctype.name" +
-            " order by code, count";
+            " order by month";
 
         return namedParameterJdbcTemplate.query(query,getSearchMap(tenantId), new TopComplaintTypesRowMapper());
+
+    }
+
+    public List<TopComplaintTypesResponse> getWardWiseCountForComplainttype(String tenantId, String serviceCode){
+
+        String query = "select (select boundarynum from eg_boundary where id = csa.code::bigint and tenantid = :tenantId) as boundary , count(*) as count" +
+            " from submission cs, submission_attribute csa, servicetype_keyword sk" +
+            " where cs.crn = csa.crn and csa.key = 'systemLocationId' and cs.servicecode = :servicecode" +
+            " and cs.servicecode = sk.servicecode and sk.keyword = 'complaint'" +
+            " and cs.tenantid = :tenantId and csa.tenantid = :tenantId and sk.tenantid = :tenantId" +
+            " group by csa.code, csa.key";
+
+        return namedParameterJdbcTemplate.query(query, getWardWiseSearchMap(tenantId, serviceCode),
+            new WardWiseRowMapper());
 
     }
 
@@ -118,6 +132,15 @@ public class DashBoardRepository {
 
         parametersMap.put("tenantId", tenantId);
         parametersMap.put("size", size);
+
+        return parametersMap;
+    }
+
+    private HashMap getWardWiseSearchMap(String tenantId, String serviceCode){
+        HashMap<String, Object> parametersMap = new HashMap<>();
+
+        parametersMap.put("tenantId", tenantId);
+        parametersMap.put("servicecode", serviceCode);
 
         return parametersMap;
     }

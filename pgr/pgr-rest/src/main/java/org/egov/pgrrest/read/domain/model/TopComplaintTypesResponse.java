@@ -19,10 +19,13 @@ public class TopComplaintTypesResponse {
 
     private String code;
 
+    private Integer boundary;
+
     public org.egov.pgrrest.read.web.contract.TopComplaintTypesResponse toContract(){
         return org.egov.pgrrest.read.web.contract.TopComplaintTypesResponse.builder()
                .count(count)
                .complaintTypeName(complaintTypeName)
+               .code(code)
                .build();
     }
 
@@ -32,6 +35,13 @@ public class TopComplaintTypesResponse {
             .complaintTypeName(complaintTypeName)
             .month(month)
             .code(code)
+            .build();
+    }
+
+    public org.egov.pgrrest.read.web.contract.TopComplaintTypesResponse toWardWiseContract(){
+        return org.egov.pgrrest.read.web.contract.TopComplaintTypesResponse.builder()
+            .count(count)
+            .boundary(boundary)
             .build();
     }
 }

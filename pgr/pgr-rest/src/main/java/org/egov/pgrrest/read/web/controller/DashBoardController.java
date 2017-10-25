@@ -24,7 +24,8 @@ public class DashBoardController {
 
     @PostMapping
     public List<DashboardResponse> getDashboardResponse(@RequestParam(value = "tenantId", defaultValue = "default") String tenantId,
-                                                        @RequestParam(value = "type", defaultValue = "Monthly") String type){
+                                                        @RequestParam(value = "type", defaultValue = "Monthly") String type
+                                                        ){
         List<org.egov.pgrrest.read.domain.model.DashboardResponse> response = dashboardService.getComplaintTypeWiseCount(tenantId,type);
 
         if(type.equalsIgnoreCase("weekly"))
@@ -36,9 +37,15 @@ public class DashBoardController {
     @PostMapping("/complainttype")
     public List<org.egov.pgrrest.read.web.contract.TopComplaintTypesResponse> getTopComplaintTypesCount(@RequestParam(value = "tenantId", defaultValue = "default") String tenantId,
                                                                                                         @RequestParam(value = "size", defaultValue = "5") Integer size,
-                                                                                                        @RequestParam(value = "type", required = false, defaultValue = "") String type){
+                                                                                                        @RequestParam(value = "type", required = false, defaultValue = "") String type,
+                                                                                                        @RequestParam(value = "servicecode", defaultValue = "") String serviceCode){
 
-        List<TopComplaintTypesResponse> responseList = dashboardService.getTopComplaintTypes(tenantId, size,type);
+        List<TopComplaintTypesResponse> responseList;
+
+        if(type.equalsIgnoreCase("wardwise"))
+            responseList = dashboardService.getWardWiseCount(tenantId,serviceCode);
+        else
+            responseList = dashboardService.getTopComplaintTypes(tenantId, size,type);
 
         return getTopComplaintTypesList(responseList, type);
     }
@@ -65,6 +72,11 @@ public class DashBoardController {
 
     private List<org.egov.pgrrest.read.web.contract.TopComplaintTypesResponse> getTopComplaintTypesList(
         List<TopComplaintTypesResponse> responseList, String type){
+
+        if(type.equalsIgnoreCase("wardwise"))
+            return responseList.stream()
+            .map(record -> record.toWardWiseContract())
+            .collect(Collectors.toList());
 
         return responseList.stream()
             .map(record -> type.equalsIgnoreCase("topfive") ? record.toTopFiveComplaintTypesContract() : record.toContract())

@@ -6,7 +6,7 @@ const getQuery = utilities.getQuery;
 
 let localeFields = {};
 let errors = {};
-let searchTemplate = function (module, numCols, path, config, definition, uiInfoDef) {
+let searchTemplate = function (module, numCols, path, config, definition, basePath, uiInfoDef) {
 	localeFields[module + ".search.title"] = getTitleCase("search");
 	let specifications = {
 		numCols: numCols,

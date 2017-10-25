@@ -39,7 +39,7 @@ let getFieldsFromInnerObject = function(reference, fields, definition, module, j
         }
 }
 
-let createTemplate = function(module, numCols, path, config, definition, uiInfoDef) {
+let createTemplate = function(module, numCols, path, config, definition, basePath, uiInfoDef) {
     let specifications = {
         numCols: numCols,
         useTimestamp: true,

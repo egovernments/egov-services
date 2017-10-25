@@ -39,14 +39,14 @@ let getFieldsFromInnerObject = function(reference, fields, definition, module, j
         }
 }
 
-let viewTemplate = function(module, numCols, path, config, definition, uiInfoDef) {
+let viewTemplate = function(module, numCols, path, config, definition, basePath, uiInfoDef) {
     let specifications = {
         numCols: numCols,
         useTimestamp: true,
         objectName: '',
         groups: [],
         tenantIdRequired: true,
-        url: uiInfoDef.searchUrl
+        url: basePath + uiInfoDef.searchUrl
     };
     let fields = {};
     let ind = 0;

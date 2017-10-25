@@ -39,7 +39,7 @@ let getFieldsFromInnerObject = function(reference, fields, definition, module, j
         }
 }
 
-let updateTemplate = function(module, numCols, path, config, definition, uiInfoDef) {
+let updateTemplate = function(module, numCols, path, config, definition, basePath, uiInfoDef) {
     let specifications = {
         numCols: numCols,
         useTimestamp: true,
@@ -47,7 +47,7 @@ let updateTemplate = function(module, numCols, path, config, definition, uiInfoD
         groups: [],
         url: path,
         tenantIdRequired: true,
-        searchUrl: uiInfoDef.searchUrl
+        searchUrl: basePath + uiInfoDef.searchUrl
     };
     let fields = {};
     let ind = 0;

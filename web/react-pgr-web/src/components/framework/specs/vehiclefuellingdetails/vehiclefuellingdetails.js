@@ -116,7 +116,8 @@ var dat = {
           "label": "vehiclefuellingdetails.search.result.transactionNo"
         },
         {
-          "label": "vehiclefuellingdetails.search.result.transactionDate"
+          "label": "vehiclefuellingdetails.search.result.transactionDate",
+	  "isDate": true
         },
         {
           "label": "vehiclefuellingdetails.search.result.vehicleType"
@@ -143,7 +144,8 @@ var dat = {
           "label": "vehiclefuellingdetails.search.result.receiptNo"
         },
         {
-          "label": "vehiclefuellingdetails.search.result.receiptDate"
+          "label": "vehiclefuellingdetails.search.result.receiptDate",
+	  "isDate": true
         }
       ],
       "values": [

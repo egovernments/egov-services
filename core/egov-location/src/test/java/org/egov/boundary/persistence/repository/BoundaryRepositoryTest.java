@@ -97,7 +97,7 @@ public class BoundaryRepositoryTest {
 		
 		List<Long> list = new ArrayList<Long>();
 		list.add(1l);
-		List<Boundary> boundarys = boundaryRepository.getAllBoundaryByTenantAndNumAndTypeAndTypeIds("default",list,list,list);
+		//List<Boundary> boundarys = boundaryRepository.getAllBoundaryByTenantAndNumAndTypeAndTypeIds("default",list,list,list);
 		
 		/*assertTrue(boundarys.size() == 1);
 		assertTrue(boundarys!=null);

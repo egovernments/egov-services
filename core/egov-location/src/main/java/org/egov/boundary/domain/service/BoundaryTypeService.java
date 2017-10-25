@@ -90,11 +90,6 @@ public class BoundaryTypeService {
 		return boundaryTypeRepository.update(boundaryType);
 	}
 
-	public List<BoundaryType> getAllBoundarTypesByHierarchyTypeIdAndTenantId(final Long hierarchyTypeId,
-			final String tenantId) {
-		return boundaryTypeRepository.findByHierarchyTypeIdAndTenantId(hierarchyTypeId, tenantId);
-	}
-
 	public List<BoundaryType> getAllBoundarTypesByHierarchyTypeIdAndTenantName(final String hierarchyTypeName,
 			final String tenantId) {
 		return boundaryTypeRepository.getAllBoundarTypesByHierarchyTypeIdAndTenantName(hierarchyTypeName, tenantId);

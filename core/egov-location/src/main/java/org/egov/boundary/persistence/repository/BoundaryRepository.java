@@ -40,7 +40,6 @@
 
 package org.egov.boundary.persistence.repository;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +61,7 @@ public class BoundaryRepository {
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	private JdbcTemplate jdbcTemplate;
-	
+
 	@Autowired
 	public BoundaryRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate) {
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
@@ -88,8 +87,8 @@ public class BoundaryRepository {
 		}
 		parametersMap.put("name", boundary.getName());
 		parametersMap.put("code", boundary.getCode());
-		
-		parametersMap.put("boundarytype",Long.valueOf(boundary.getBoundaryType().getId()));
+
+		parametersMap.put("boundarytype", Long.valueOf(boundary.getBoundaryType().getId()));
 		parametersMap.put("localname", boundary.getLocalName());
 		parametersMap.put("fromdate", boundary.getFromDate());
 		parametersMap.put("todate", boundary.getToDate());
@@ -106,9 +105,9 @@ public class BoundaryRepository {
 		namedParameterJdbcTemplate.update(BoundaryQueryBuilder.getBoundaryInsertquery(), parametersMap);
 		return findByTenantIdAndId(boundary.getTenantId(), boundary.getId());
 	}
-	
-	public Boundary update(Boundary boundary){
-	
+
+	public Boundary update(Boundary boundary) {
+
 		Map<String, Object> parametersMap = new HashMap<String, Object>();
 		parametersMap.put("boundarynum", boundary.getBoundaryNum());
 		if (boundary.getParent() != null && boundary.getParent().getId() != null) {
@@ -117,7 +116,7 @@ public class BoundaryRepository {
 			parametersMap.put("parent", boundary.getParent());
 		}
 		parametersMap.put("name", boundary.getName());
-		parametersMap.put("boundarytype",Long.valueOf(boundary.getBoundaryType().getId()));
+		parametersMap.put("boundarytype", Long.valueOf(boundary.getBoundaryType().getId()));
 		parametersMap.put("localname", boundary.getLocalName());
 		parametersMap.put("fromdate", boundary.getFromDate());
 		parametersMap.put("todate", boundary.getToDate());
@@ -142,11 +141,7 @@ public class BoundaryRepository {
 		List<Boundary> boundaryList = namedParameterJdbcTemplate.query(BoundaryQueryBuilder.getBoundaryByIdAndTenant(),
 				parametersMap, new BoundaryRowMapper());
 		boundaryList = setBoundariesWithParents(boundaryList);
-		for (int i = 0; i < boundaryList.size(); i++) {
-			if (boundaryList.get(i).getId().equals(id)) {
-				boundary = boundaryList.get(i);
-			}
-		}
+		boundary = boundaryList.parallelStream().filter(i -> i.getId().equals(id)).findAny().get();
 		return boundary;
 	}
 
@@ -157,11 +152,7 @@ public class BoundaryRepository {
 		List<Boundary> boundaryList = namedParameterJdbcTemplate
 				.query(BoundaryQueryBuilder.getBoundaryByCodesAndTenant(), parametersMap, new BoundaryRowMapper());
 		boundaryList = setBoundariesWithParents(boundaryList);
-		for (int i = 0; i < boundaryList.size(); i++) {
-			if (!codes.contains(boundaryList.get(i).getCode())) {
-				boundaryList.remove(i);
-			}
-		}
+		boundaryList = boundaryList.stream().filter(i -> codes.contains(i.getCode())).collect(Collectors.toList());
 		return boundaryList;
 	}
 
@@ -173,11 +164,7 @@ public class BoundaryRepository {
 		List<Boundary> boundaryList = namedParameterJdbcTemplate
 				.query(BoundaryQueryBuilder.getBoundaryByCodeAndTenant(), parametersMap, new BoundaryRowMapper());
 		boundaryList = setBoundariesWithParents(boundaryList);
-		for (int i = 0; i < boundaryList.size(); i++) {
-			if (boundaryList.get(i).getCode().equals(code)) {
-				boundary = boundaryList.get(i);
-			}
-		}
+		boundary = boundaryList.parallelStream().filter(i -> i.getCode().equals(code)).findAny().get();
 		return boundary;
 	}
 
@@ -211,7 +198,8 @@ public class BoundaryRepository {
 				new BoundaryRowMapper());
 		boundaryList = setBoundariesWithParents(boundaryList);
 		if (boundaryList != null && !boundaryList.isEmpty()) {
-			boundaryList = boundaryList.stream().filter(p -> p.getBoundaryType().getId().equals(boundaryTypeId.toString()))
+			boundaryList = boundaryList.stream()
+					.filter(p -> p.getBoundaryType().getId().equals(boundaryTypeId.toString()))
 					.collect(Collectors.toList());
 		}
 		return boundaryList;
@@ -246,12 +234,9 @@ public class BoundaryRepository {
 		List<Boundary> boundaryList = namedParameterJdbcTemplate.query(
 				BoundaryQueryBuilder.getAllBoundaryByTenantIdAndTypeIds(), parametersMap, new BoundaryRowMapper());
 		boundaryList = setBoundariesWithParents(boundaryList);
-		for (int i = 0; i < boundaryList.size(); i++) {
-			if (boundaryList.get(i).getParent() == null
-					&& !boundaryTypeIds.contains(Long.valueOf(boundaryList.get(i).getBoundaryType().getId()))) {
-				boundaryList.remove(i);
-			}
-		}
+		boundaryList = boundaryList.stream()
+				.filter(i -> boundaryTypeIds.contains(Long.valueOf(i.getBoundaryType().getId())))
+				.collect(Collectors.toList());
 		return boundaryList;
 	}
 
@@ -262,11 +247,7 @@ public class BoundaryRepository {
 		List<Boundary> boundaryList = namedParameterJdbcTemplate
 				.query(BoundaryQueryBuilder.findAllBoundariesByIdsAndTenant(), parametersMap, new BoundaryRowMapper());
 		boundaryList = setBoundariesWithParents(boundaryList);
-		for (int i = 0; i < boundaryList.size(); i++) {
-			if (boundaryList.get(i).getParent() == null && !boundaryIds.contains(boundaryList.get(i).getId())) {
-				boundaryList.remove(i);
-			}
-		}
+		boundaryList = boundaryList.stream().filter(i -> boundaryIds.contains(i.getId())).collect(Collectors.toList());
 		return boundaryList;
 	}
 
@@ -282,44 +263,28 @@ public class BoundaryRepository {
 			boundaryList = boundaryList.stream().filter(p -> boundarySearchRequest.getBoundaryIds().contains(p.getId()))
 					.collect(Collectors.toList());
 		}
-		
+
 		if (boundarySearchRequest.getCodes() != null && !boundarySearchRequest.getCodes().isEmpty()) {
 			boundaryList = boundaryList.stream().filter(p -> boundarySearchRequest.getCodes().contains(p.getCode()))
 					.collect(Collectors.toList());
 		}
-		
-		if (boundarySearchRequest.getBoundaryNumbers() != null && !boundarySearchRequest.getBoundaryNumbers().isEmpty()) {
-			boundaryList = boundaryList.stream().filter(p -> boundarySearchRequest.getBoundaryNumbers().contains(p.getBoundaryNum()))
-					.collect(Collectors.toList());
-		}
-		if (boundarySearchRequest.getBoundaryTypeIds() != null && !boundarySearchRequest.getBoundaryTypeIds().isEmpty()) {
-			boundaryList = boundaryList.stream().filter(p -> boundarySearchRequest.getBoundaryTypeIds().contains(Long.valueOf(p.getBoundaryType().getId())))
-					.collect(Collectors.toList());
-		}
-		if (boundarySearchRequest.getHierarchyTypeIds() != null && !boundarySearchRequest.getHierarchyTypeIds().isEmpty()) {
-			boundaryList = boundaryList.stream().filter(p -> boundarySearchRequest.getHierarchyTypeIds().contains(p.getBoundaryType().getHierarchyType().getId()))
-					.collect(Collectors.toList());
-		}
-		return boundaryList;
-	}
 
-	public List<Boundary> getAllBoundaryByTenantAndNumAndTypeAndTypeIds(String tenantId, List<Long> boundaryNumbers,
-			List<Long> boundaryIds, List<Long> boundaryTypeIds) {
-		Map<String, Object> parametersMap = new HashMap<String, Object>();
-		parametersMap.put("tenantId", tenantId);
-		parametersMap.put("boundaryNumbers", boundaryNumbers);
-		parametersMap.put("boundaryIds", boundaryIds);
-		parametersMap.put("boundaryTypeIds", boundaryTypeIds);
-		List<Boundary> boundaryList = namedParameterJdbcTemplate.query(
-				BoundaryQueryBuilder.getAllBoundaryByTenantAndNumAndTypeAndTypeIds(), parametersMap,
-				new BoundaryRowMapper());
-		boundaryList = setBoundariesWithParents(boundaryList);
-		for (int i = 0; i < boundaryList.size(); i++) {
-			if ((!boundaryIds.contains(boundaryList.get(i).getId())
-					|| !boundaryNumbers.contains(boundaryList.get(i).getBoundaryNum())
-					|| !boundaryTypeIds.contains(Long.valueOf(boundaryList.get(i).getBoundaryType().getId())))) {
-				boundaryList.remove(i);
-			}
+		if (boundarySearchRequest.getBoundaryNumbers() != null
+				&& !boundarySearchRequest.getBoundaryNumbers().isEmpty()) {
+			boundaryList = boundaryList.stream()
+					.filter(p -> boundarySearchRequest.getBoundaryNumbers().contains(p.getBoundaryNum()))
+					.collect(Collectors.toList());
+		}
+		if (boundarySearchRequest.getBoundaryTypeIds() != null
+				&& !boundarySearchRequest.getBoundaryTypeIds().isEmpty()) {
+			boundaryList = boundaryList.stream().filter(
+					p -> boundarySearchRequest.getBoundaryTypeIds().contains(Long.valueOf(p.getBoundaryType().getId())))
+					.collect(Collectors.toList());
+		}
+		if (boundarySearchRequest.getHierarchyTypeIds() != null
+				&& !boundarySearchRequest.getHierarchyTypeIds().isEmpty()) {
+			boundaryList = boundaryList.stream().filter(p -> boundarySearchRequest.getHierarchyTypeIds()
+					.contains(p.getBoundaryType().getHierarchyType().getId())).collect(Collectors.toList());
 		}
 		return boundaryList;
 	}

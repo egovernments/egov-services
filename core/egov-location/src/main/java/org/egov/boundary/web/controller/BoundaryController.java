@@ -412,13 +412,11 @@ public class BoundaryController {
 	}
 
 	private List<Long> getBoundaryTypeList(String tenantId, String boundaryType) {
-		List<Long> list = new ArrayList<Long>();
 		List<BoundaryType> boundaryTypeList = boundaryTypeService.getAllBoundarytypesByNameAndTenant(boundaryType,
 				tenantId);
-		for (BoundaryType bndryType : boundaryTypeList) {
-			list.add(Long.valueOf(bndryType.getId()));
-		}
-		return list;
+		List<String> list = boundaryTypeList.stream().map(BoundaryType::getId).collect(Collectors.toList());
+		List<Long> boundaryTypesList = list.stream().map(Long::parseLong).collect(Collectors.toList());
+		return boundaryTypesList;
 	}
 
 	private List<Long> getHierarchyTypeList(String tenantId, String hierarchyType) {

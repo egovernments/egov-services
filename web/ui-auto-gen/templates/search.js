@@ -68,6 +68,22 @@ let searchTemplate = function (module, numCols, path, config, definition, basePa
 		} 
 	}
 
+	if (uiInfoDef.externalData && typeof uiInfoDef.externalData == "object" && uiInfoDef.externalData.length) {
+        for(var i=0; i<uiInfoDef.externalData.length; i++) {
+        	var splitArr = uiInfoDef.externalData[i].fieldName.split(".");
+        	splitArr.shift();
+        	var paramKey = splitArr.join(".");
+            if(fields[paramKey]) {
+                if(fields[paramKey].type == "autoCompelete")
+                    fields[paramKey].autoCompleteUrl = uiInfoDef.externalData[i].url + getQuery(uiInfoDef.externalData[i].url, uiInfoDef.externalData[i].keyPath, uiInfoDef.externalData[i].valPath);
+                else
+                    fields[paramKey].url = uiInfoDef.externalData[i].url + getQuery(uiInfoDef.externalData[i].url, uiInfoDef.externalData[i].keyPath, uiInfoDef.externalData[i].valPath);
+            } else {
+                //errors[paramKey] = "Field exists in x-ui-info externalData section but not present in API specifications. REFERENCE PATH: " + uiInfoDef.referencePath;
+            }
+        }
+    }
+
 	if (uiInfoDef.dependents && uiInfoDef.dependents.length) {
         for (let i = 0; i < uiInfoDef.dependents.length; i++) {
         	var splitArr = uiInfoDef.dependents[i].onChangeField.split(".");

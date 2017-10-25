@@ -81,7 +81,10 @@ let viewTemplate = function(module, numCols, path, config, definition, basePath,
     if (uiInfoDef.externalData && typeof uiInfoDef.externalData == "object" && uiInfoDef.externalData.length) {
         for(var i=0; i<uiInfoDef.externalData.length; i++) {
             if(fields[uiInfoDef.externalData[i].fieldName]) {
-                fields[uiInfoDef.externalData[i].fieldName].url = uiInfoDef.externalData[i].url + getQuery(uiInfoDef.externalData[i].url, uiInfoDef.externalData[i].keyPath, uiInfoDef.externalData[i].valPath);
+                if(fields[uiInfoDef.externalData[i].fieldName].type == "autoCompelete")
+                    fields[uiInfoDef.externalData[i].fieldName].autoCompleteUrl = uiInfoDef.externalData[i].url + getQuery(uiInfoDef.externalData[i].url, uiInfoDef.externalData[i].keyPath, uiInfoDef.externalData[i].valPath);
+                else
+                    fields[uiInfoDef.externalData[i].fieldName].url = uiInfoDef.externalData[i].url + getQuery(uiInfoDef.externalData[i].url, uiInfoDef.externalData[i].keyPath, uiInfoDef.externalData[i].valPath);
             } else {
                 errors[uiInfoDef.externalData[i].fieldName] = "Field exists in x-ui-info externalData section but not present in API specifications. REFERENCE PATH: " + uiInfoDef.referencePath;
             }

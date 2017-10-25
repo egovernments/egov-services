@@ -27,8 +27,8 @@ var dat = {
             "patternErrorMsg": "vehiclefuellingdetails.create.field.message.transactionDate"
           },
           {
-            "name": "vehicleType.name",
-            "jsonPath": "vehicleType.name",
+            "name": "vehicleTypeName",
+            "jsonPath": "vehicleTypeName",
             "label": "vehiclefuellingdetails.create.vehicleType",
             "type": "singleValueList",
             "isDisabled": false,
@@ -37,8 +37,8 @@ var dat = {
             "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..name|$..name"
           },
           {
-            "name": "vehicleRegNo.regNumber",
-            "jsonPath": "vehicleRegNo.regNumber",
+            "name": "regNumber",
+            "jsonPath": "regNumber",
             "label": "vehiclefuellingdetails.create.regNumber",
             "type": "singleValueList",
             "isDisabled": false,
@@ -55,8 +55,8 @@ var dat = {
             "patternErrorMsg": "vehiclefuellingdetails.create.field.message.vehicleReadingDuringFuelling"
           },
           {
-            "name": "refuellingStation.name",
-            "jsonPath": "refuellingStation.name",
+            "name": "refuellingStationName",
+            "jsonPath": "refuellingStationName",
             "label": "vehiclefuellingdetails.create.refuellingStation",
             "type": "singleValueList",
             "isDisabled": false,

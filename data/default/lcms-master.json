@@ -1,4 +1,6 @@
 {
+  "tenantId": "default",
+  "moduleName": "lcms",
 	"court": [{
 			"name": "Co-operative court",
 			"code": "COC",

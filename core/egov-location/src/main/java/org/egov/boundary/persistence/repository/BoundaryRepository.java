@@ -141,7 +141,8 @@ public class BoundaryRepository {
 		List<Boundary> boundaryList = namedParameterJdbcTemplate.query(BoundaryQueryBuilder.getBoundaryByIdAndTenant(),
 				parametersMap, new BoundaryRowMapper());
 		boundaryList = setBoundariesWithParents(boundaryList);
-		boundary = boundaryList.parallelStream().filter(i -> i.getId().equals(id)).findAny().get();
+		if (boundaryList != null && !boundaryList.isEmpty())
+			boundary = boundaryList.parallelStream().filter(i -> i.getId().equals(id)).findAny().get();
 		return boundary;
 	}
 
@@ -152,7 +153,8 @@ public class BoundaryRepository {
 		List<Boundary> boundaryList = namedParameterJdbcTemplate
 				.query(BoundaryQueryBuilder.getBoundaryByCodesAndTenant(), parametersMap, new BoundaryRowMapper());
 		boundaryList = setBoundariesWithParents(boundaryList);
-		boundaryList = boundaryList.stream().filter(i -> codes.contains(i.getCode())).collect(Collectors.toList());
+		if (boundaryList != null && !boundaryList.isEmpty())
+			boundaryList = boundaryList.stream().filter(i -> codes.contains(i.getCode())).collect(Collectors.toList());
 		return boundaryList;
 	}
 
@@ -164,7 +166,8 @@ public class BoundaryRepository {
 		List<Boundary> boundaryList = namedParameterJdbcTemplate
 				.query(BoundaryQueryBuilder.getBoundaryByCodeAndTenant(), parametersMap, new BoundaryRowMapper());
 		boundaryList = setBoundariesWithParents(boundaryList);
-		boundary = boundaryList.parallelStream().filter(i -> i.getCode().equals(code)).findAny().get();
+		if (boundaryList != null && !boundaryList.isEmpty())
+			boundary = boundaryList.parallelStream().filter(i -> i.getCode().equals(code)).findAny().get();
 		return boundary;
 	}
 
@@ -234,9 +237,11 @@ public class BoundaryRepository {
 		List<Boundary> boundaryList = namedParameterJdbcTemplate.query(
 				BoundaryQueryBuilder.getAllBoundaryByTenantIdAndTypeIds(), parametersMap, new BoundaryRowMapper());
 		boundaryList = setBoundariesWithParents(boundaryList);
-		boundaryList = boundaryList.stream()
-				.filter(i -> boundaryTypeIds.contains(Long.valueOf(i.getBoundaryType().getId())))
-				.collect(Collectors.toList());
+		if (boundaryList != null && !boundaryList.isEmpty()) {
+			boundaryList = boundaryList.stream()
+					.filter(i -> boundaryTypeIds.contains(Long.valueOf(i.getBoundaryType().getId())))
+					.collect(Collectors.toList());
+		}
 		return boundaryList;
 	}
 
@@ -247,6 +252,7 @@ public class BoundaryRepository {
 		List<Boundary> boundaryList = namedParameterJdbcTemplate
 				.query(BoundaryQueryBuilder.findAllBoundariesByIdsAndTenant(), parametersMap, new BoundaryRowMapper());
 		boundaryList = setBoundariesWithParents(boundaryList);
+		if(boundaryList!=null && !boundaryList.isEmpty())
 		boundaryList = boundaryList.stream().filter(i -> boundaryIds.contains(i.getId())).collect(Collectors.toList());
 		return boundaryList;
 	}

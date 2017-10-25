@@ -123,6 +123,7 @@ public class BoundaryTypeRepository {
 		List<BoundaryType> boundaryTypeList = namedParameterJdbcTemplate.query(
 				BoundaryTypeQueryBuilder.getBoundaryTypeByIdAndTenant(), parametersMap, new BoundaryTypeRowMapper());
 		boundaryTypeList = setBoundaryTypesWithParents(boundaryTypeList);
+		if(boundaryTypeList!=null && !boundaryTypeList.isEmpty())
 		boundaryType = boundaryTypeList.stream().filter(i -> Long.valueOf(i.getId()).equals(id)).findAny().get();
 		return boundaryType;
 	}
@@ -143,8 +144,10 @@ public class BoundaryTypeRepository {
 		List<BoundaryType> boundaryTypeList = namedParameterJdbcTemplate.query(
 				BoundaryTypeQueryBuilder.getAllByTByTenantIdAndName(), parametersMap, new BoundaryTypeRowMapper());
 		boundaryTypeList = setBoundaryTypesWithParents(boundaryTypeList);
+		if(boundaryTypeList!=null && !boundaryTypeList.isEmpty()){
 		boundaryTypeList = boundaryTypeList.parallelStream().filter(i -> i.getName().equals(name))
 				.collect(Collectors.toList());
+		}
 		return boundaryTypeList;
 	}
 
@@ -156,8 +159,10 @@ public class BoundaryTypeRepository {
 		List<BoundaryType> boundaryTypeList = namedParameterJdbcTemplate.query(
 				BoundaryTypeQueryBuilder.getAllByTByTenantIdAndCode(), parametersMap, new BoundaryTypeRowMapper());
 		boundaryTypeList = setBoundaryTypesWithParents(boundaryTypeList);
+		if(boundaryTypeList!=null && !boundaryTypeList.isEmpty()){
 		boundaryType = boundaryTypeList.parallelStream()
 				.filter(i -> i.getCode().equals(code) && i.getTenantId().equals(tenantId)).findAny().get();
+		}
 		return boundaryType;
 	}
 
@@ -172,11 +177,12 @@ public class BoundaryTypeRepository {
 				BoundaryTypeQueryBuilder.getAllByTByNameAndHierarchyTypeName(), parametersMap,
 				new BoundaryTypeRowMapper());
 		boundaryTypeList = setBoundaryTypesWithParents(boundaryTypeList);
+		if(boundaryTypeList!=null && !boundaryTypeList.isEmpty()){
 		boundaryType = boundaryTypeList.parallelStream()
 				.filter(i -> i.getName().equals(boundaryTypename)
 						&& i.getHierarchyType().getName().equals(hierarchyTypeName) && i.getTenantId().equals(tenantId))
 				.findAny().get();
-
+		}
 		return boundaryType;
 	}
 

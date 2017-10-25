@@ -166,22 +166,24 @@ public class BoundaryController {
 			@ModelAttribute BoundaryRequest boundaryRequest, BindingResult errors) {
 		BoundaryResponse boundaryResponse = new BoundaryResponse();
 		ResponseInfo responseInfo = new ResponseInfo();
-		
+
 		if (errors.hasErrors()) {
-			log.info("BoundaryRequest binding error: "+boundaryRequest);
+			log.info("BoundaryRequest binding error: " + boundaryRequest);
 		}
-		
-		log.info("BoundaryRequest: "+boundaryRequest);
-		log.info("boundary inside if: "+boundary);
-		log.info("tenant inside if: "+tenantId);
-		
-		if(tenantId != null && boundary != null){
-			org.egov.boundary.domain.model.Boundary boundaryObj = org.egov.boundary.domain.model.Boundary.builder().build();
+
+		log.info("BoundaryRequest: " + boundaryRequest);
+		log.info("boundary inside if: " + boundary);
+		log.info("tenant inside if: " + tenantId);
+
+		if (tenantId != null && boundary != null) {
+			org.egov.boundary.domain.model.Boundary boundaryObj = org.egov.boundary.domain.model.Boundary.builder()
+					.build();
 			boundaryObj.setTenantId(tenantId);
 			boundaryObj.setId(boundary);
 			boundaryRequest.setBoundary(boundaryObj);
-		}else if(tenantId != null){
-			org.egov.boundary.domain.model.Boundary boundaryObj = org.egov.boundary.domain.model.Boundary.builder().build();
+		} else if (tenantId != null) {
+			org.egov.boundary.domain.model.Boundary boundaryObj = org.egov.boundary.domain.model.Boundary.builder()
+					.build();
 			boundaryObj.setTenantId(tenantId);
 			boundaryRequest.setBoundary(boundaryObj);
 		}
@@ -439,8 +441,13 @@ public class BoundaryController {
 	private List<Long> getBoundaryTypeList(String tenantId, String boundaryType) {
 		List<BoundaryType> boundaryTypeList = boundaryTypeService.getAllBoundarytypesByNameAndTenant(boundaryType,
 				tenantId);
-		List<String> list = boundaryTypeList.stream().map(BoundaryType::getId).collect(Collectors.toList());
-		List<Long> boundaryTypesList = list.stream().map(Long::parseLong).collect(Collectors.toList());
+		List<String> list = null;
+		List<Long> boundaryTypesList = null;
+		if (boundaryTypeList != null && !boundaryTypeList.isEmpty())
+			list = boundaryTypeList.stream().map(BoundaryType::getId).collect(Collectors.toList());
+		if (list != null && !list.isEmpty())
+			boundaryTypesList = list.stream().map(Long::parseLong).collect(Collectors.toList());
+
 		return boundaryTypesList;
 	}
 

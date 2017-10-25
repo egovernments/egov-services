@@ -128,7 +128,6 @@ public class VehicleFuellingDetailsService {
 				if (response == null || response.getMdmsRes() == null
 						|| !response.getMdmsRes().containsKey(Constants.MODULE_CODE)
 						|| response.getMdmsRes().get(Constants.MODULE_CODE) == null
-						|| response.getMdmsRes().get(Constants.MODULE_CODE).get(0) == null
 						|| !response.getMdmsRes().get(Constants.MODULE_CODE)
 								.containsKey(Constants.VEHICLETYPE_MASTER_NAME)
 						|| response.getMdmsRes().get(Constants.MODULE_CODE)
@@ -170,7 +169,6 @@ public class VehicleFuellingDetailsService {
 				if (response == null || response.getMdmsRes() == null
 						|| !response.getMdmsRes().containsKey(Constants.MODULE_CODE)
 						|| response.getMdmsRes().get(Constants.MODULE_CODE) == null
-						|| response.getMdmsRes().get(Constants.MODULE_CODE).get(0) == null
 						|| !response.getMdmsRes().get(Constants.MODULE_CODE).containsKey(Constants.VEHICLE_MASTER_NAME)
 						|| response.getMdmsRes().get(Constants.MODULE_CODE)
 								.get(Constants.VEHICLE_MASTER_NAME) == null) {
@@ -212,7 +210,6 @@ public class VehicleFuellingDetailsService {
 				if (response == null || response.getMdmsRes() == null
 						|| !response.getMdmsRes().containsKey(Constants.MODULE_CODE)
 						|| response.getMdmsRes().get(Constants.MODULE_CODE) == null
-						|| response.getMdmsRes().get(Constants.MODULE_CODE).get(0) == null
 						|| !response.getMdmsRes().get(Constants.MODULE_CODE)
 								.containsKey(Constants.REFILLINGPUMPSTATION_MASTER_NAME)
 						|| response.getMdmsRes().get(Constants.MODULE_CODE)

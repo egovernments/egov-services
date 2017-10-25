@@ -1,21 +1,33 @@
 package org.egov.lams.common.web.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.lams.common.web.contract.LandRegister;
-
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by ramki on 23/10/17.
- */
-public class LandRegisterRequest {
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo = null;
+import javax.validation.Valid;
 
-    @JsonProperty("landRegisters")
-    @Valid
-    private List<LandRegister> landRegisters = new ArrayList<LandRegister>();
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.lams.common.web.contract.LandRegister;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@Builder
+public class LandRegisterRequest {
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
+
+	@JsonProperty("landRegisters")
+	@Valid
+	private List<LandRegister> landRegisters;
 }

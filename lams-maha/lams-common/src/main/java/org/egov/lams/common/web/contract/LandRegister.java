@@ -31,7 +31,7 @@ import java.util.List;
 @Getter
 public class LandRegister {
   @NotNull
-  private Long id = null;
+  private String id = null;
 
   @NotNull
   @Size(min = 2, max = 128)

@@ -1909,25 +1909,38 @@ var localization_EN_Data = {
 
 
 
-//auto gen swm
-"vehiclefuellingdetails.create.transactionId": "Transaction No",
-  "vehiclefuellingdetails.create.transactionDate": "Transaction Date",
-  "vehiclefuellingdetails.create.name": "Vehicle Type",
-  "vehiclefuellingdetails.create.regNumber": "Vehicle Reg. No",
-  "vehiclefuellingdetails.create.vehicleReadingDuringFuelling": "Vehicle Reading during fuelling",
-  "vehiclefuellingdetails.create.refuellingStation": "Refuelling Pump Station",
-  "vehiclefuellingdetails.create.typeOfFuel": "Type of fuel",
-  "vehiclefuellingdetails.create.fuelFilled": "Fuel filled (Liters)",
-  "vehiclefuellingdetails.create.totalCostIncurred": "Total cost incurred",
-  "vehiclefuellingdetails.create.receiptNo": "Receipt No",
-  "vehiclefuellingdetails.create.receiptDate": "Receipt date",
-  "vehiclefuellingdetails.create.group.title.VehicleDetails1": "",
-  "vehiclefuellingdetails.create.group.title.VehicleDetails2": "Vehicle Details",
-  "vehiclefuellingdetails.create.group.title.VehicleDetails3": "Vehicle Details",
-  "vehiclefuellingdetails.create.group.title.VehicleDetails1": "Create Vehicle Fuelling Details",
+//SWM
+
+"vehiclefuellingdetails.search.title": "Search",
+"vehiclefuellingdetails.createoffSet": "Offset",
+"vehiclefuellingdetails.create.transactionNo": "Transaction Number",
+"vehiclefuellingdetails.create.transactionDate": "Transaction Date",
+"vehiclefuellingdetails.create.refuellingStation": "Refuelling Pump Station",
+"vehiclefuellingdetails.create.vehicleType": "Vehicle Type",
+"vehiclefuellingdetails.create.regNumber": "Vehicle Reg.No",
+"vehiclefuellingdetails.create.vehicleReadingDuringFuelling": "Vehicle reading during fuelling",
+"vehiclefuellingdetails.create.typeOfFuel": "Type of fuel",
+"vehiclefuellingdetails.create.fuelFilled": "Fuel filled (Liters)",
+"vehiclefuellingdetails.create.totalCostIncurred": "Total cost incurred",
+"vehiclefuellingdetails.create.receiptNo": "Receipt No",
+"vehiclefuellingdetails.create.receiptDate": "Receipt Ddate",
+"vehiclefuellingdetails.create.group.title.VehicleDetails1": " ",
+"vehiclefuellingdetails.create.group.title.VehicleDetails2": "Vehicle Details",
+"vehiclefuellingdetails.create.group.title.VehicleDetails3": "Vehicle Details",
+"vehiclefuellingdetails.search.result.transactionNo": "Transaction Number",
+"vehiclefuellingdetails.search.result.transactionDate": "Transaction Date",
+"vehiclefuellingdetails.search.result.vehicleType": "Vehicle Type",
+"vehiclefuellingdetails.search.result.vehicleRegNo": "Vehicle Reg.No",
+"vehiclefuellingdetails.search.result.vehicleReadingDuringFuelling": "Vehicle reading during fuelling",
+"vehiclefuellingdetails.search.result.refuellingStation": "Re fuelling station",
+"vehiclefuellingdetails.search.result.fuelFilled": "Fuel filled",
+"vehiclefuellingdetails.search.result.typeOfFuel": "Type of fuel",
+"vehiclefuellingdetails.search.result.totalCostIncurred": "Total cost incurred",
+"vehiclefuellingdetails.search.result.receiptNo": "Receipt No",
+"vehiclefuellingdetails.search.result.receiptDate": "Receipt Date"
 
 
-
+   
 
 
 
@@ -3426,7 +3439,35 @@ var localization_MR_Data = {
 "error.license.documentendpoint": " document end point error-Marathi",
 "error.license.locationendpoint": " location end point error-Marathi",
 "error.license.propertyendpoint ": " proeprty endpoint error-Marathi",
-"error.license.feeDetailYearNotFound ": "Financial Does not exists for Current/Future Year-Marathi"
+"error.license.feeDetailYearNotFound ": "Financial Does not exists for Current/Future Year-Marathi",
+//SWM
+"vehiclefuellingdetails.search.title": "Search-Marathi",
+"vehiclefuellingdetails.createoffSet": "Offset-Marathi",
+"vehiclefuellingdetails.create.transactionNo": "Transaction Number-Marathi",
+"vehiclefuellingdetails.create.transactionDate": "Transaction Date-Marathi",
+"vehiclefuellingdetails.create.refuellingStation": "Refuelling Pump Station-Marathi",
+"vehiclefuellingdetails.create.vehicleType": "Vehicle Type-Marathi",
+"vehiclefuellingdetails.create.regNumber": "Vehicle Reg.No-Marathi",
+"vehiclefuellingdetails.create.vehicleReadingDuringFuelling": "Vehicle reading during fuelling-Marathi",
+"vehiclefuellingdetails.create.typeOfFuel": "Type of fuel-Marathi",
+"vehiclefuellingdetails.create.fuelFilled": "Fuel filled (Liters)-Marathi",
+"vehiclefuellingdetails.create.totalCostIncurred": "Total cost incurred-Marathi",
+"vehiclefuellingdetails.create.receiptNo": "Receipt No-Marathi",
+"vehiclefuellingdetails.create.receiptDate": "Receipt Ddate-Marathi",
+"vehiclefuellingdetails.create.group.title.VehicleDetails1": " -Marathi",
+"vehiclefuellingdetails.create.group.title.VehicleDetails2": "Vehicle Details-Marathi",
+"vehiclefuellingdetails.create.group.title.VehicleDetails3": "Vehicle Details-Marathi",
+"vehiclefuellingdetails.search.result.transactionNo": "Transaction Number-Marathi",
+"vehiclefuellingdetails.search.result.transactionDate": "Transaction Date-Marathi",
+"vehiclefuellingdetails.search.result.vehicleType": "Vehicle Type-Marathi",
+"vehiclefuellingdetails.search.result.vehicleRegNo": "Vehicle Reg.No-Marathi",
+"vehiclefuellingdetails.search.result.vehicleReadingDuringFuelling": "Vehicle reading during fuelling-Marathi",
+"vehiclefuellingdetails.search.result.refuellingStation": "Re fuelling station-Marathi",
+"vehiclefuellingdetails.search.result.fuelFilled": "Fuel filled-Marathi",
+"vehiclefuellingdetails.search.result.typeOfFuel": "Type of fuel-Marathi",
+"vehiclefuellingdetails.search.result.totalCostIncurred": "Total cost incurred-Marathi",
+"vehiclefuellingdetails.search.result.receiptNo": "Receipt No-Marathi",
+"vehiclefuellingdetails.search.result.receiptDate": "Receipt Date-Marathi"
 
 }
 

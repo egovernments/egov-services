@@ -759,9 +759,15 @@ definitions:
       projectCode:
         $ref: '#/definitions/ProjectCode'
       abstractEstimateAppropriations:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-services/v1-0-0.yml#/definitions/EstimateAppropriation'
+        type: array
+        description: Array of Abstract Estimate Appropriation
+        items:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-services/v1-0-0.yml#/definitions/EstimateAppropriation'
       estimatePhotographsList:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DocumentDetail'
+        type: array
+        description: Array of Abstract Estimate Photograph
+        items:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DocumentDetail'
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:

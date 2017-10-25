@@ -1031,7 +1031,6 @@ definitions:
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
-      - workProgress
       - fileStore
       - tenantId
       - objectId

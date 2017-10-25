@@ -19,7 +19,7 @@ info:
   
   title: eGov Works Management System - Services.
   description: |
-    APIs for Works Management module. This module handles creation of Offline Status, Estimate Photograph, Estimate Appropriation and Document Detail.
+    APIs for Works Management module. This module handles creation of Offline Status, Estimate Appropriation and Document Detail.
   contact:
     name: eGovernments Foundation
     email : contacts@egovernments.org
@@ -544,8 +544,6 @@ definitions:
 tags:
   - name: Offline Status
     description: APIs required for Offline Status.
-  - name: Estimate Photograph
-    description: APIs required for Estimate Photograph.
   - name: Estimate Appropriation
     description: APIs required for Estimate Appropriation.
   - name: Document Detail

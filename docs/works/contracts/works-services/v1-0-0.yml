@@ -1,0 +1,732 @@
+swagger: '2.0'
+# eGSP YAML Template Version: 1.0 
+# This is a version number for the YAML template. This must not be changed.
+
+info:
+  version: 1.0.0
+  ######################################################
+  # All API's are POST. _create,_search,_update for post,get and put. RequestInfo will be part of body. For multiple records we can pass multiple value with comman seperated values*.
+  # All _search will be synchronous and all _create and _update will be asynchronous*.
+  # RequestInfo and ResponseInfo object should be reffered from Common*.
+  # In _search API, tenantId should be passed in query param. In _create/_update, tenantId should be passed in the model.
+  # Readonly means that even if these fields are passed in the request, it will be ignored in create/update and will not be added/updated in the entities. The readonly fields might be passed to the _search API's to make use of fields for the search Query API. while calling _search API's even mandatory fields might not be available, it is mandatory only in the _create API's*.
+  # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message.
+  # Definition must start with Upper case followed by camel case.
+  # Every model will have tenantId. Validate tenantId on create.
+  # Parameter name must start with small case followed by camel case.
+  # Path must be in small case.
+  ######################################################
+  
+  title: eGov Works Management System - Services.
+  description: |
+    APIs for Works Management module. This module handles creation of Offline Status, Estimate Photograph, Estimate Appropriation and Document Detail.
+  contact:
+    name: eGovernments Foundation
+    email : contacts@egovernments.org
+schemes:
+  - https
+basePath: '/works-services/v1'
+x-api-id: 'org.egov.works.services'
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
+paths:
+  /offlinestatuses/_search:
+    post:
+      summary: Get the list of Offline Status(s) defined in the system.
+      description: |
+          Search and get Offline Status(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          Search results will be sorted by the sort Property Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageSize"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
+        - name: workOrderNumbers
+          in: query
+          pattern: '[a-zA-Z0-9-\\]'
+          description: Comma separated list of Work Order Numbers
+          required: false
+          type: array
+          items:
+            type: string
+          allowEmptyValue: true
+        - name: loaNumbers
+          pattern: '[a-zA-Z0-9-\\]'
+          in: query
+          description: Comma Seaprated List of LOA Number
+          required: false
+          type: array
+          items:
+            type: string
+          allowEmptyValue: true
+        - name: detailedEstimateNumber
+          in: query
+          required: false
+          description: Comma separated list of Detailed Estimate Numbers
+          type: array
+          items:
+            type: string
+        - name: status
+          in: query
+          required: false
+          description: The different status for the object
+          type: string
+        - name: workIdentificationNumbers
+          in: query
+          required: false
+          description: Comma separated list of Work Identification Numbers
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: Offline Status(s) Retrieved Successfully
+          schema:
+            $ref: "#/definitions/OfflineStatusResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Offline Status
+       
+  /offlinestatuses/_create:
+    post:
+      summary: Create new offline status(s).
+      description: |
+          To create new offline status in the system. API supports bulk creation with max limit as defined in the offline status Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one offline status, please pass array with one offline status object.
+          List of offline status to be used to set Detailed Estimate
+                  - NOTICEINVITINGTENDERRELEASED
+                  - TENDER_DOCUMENT_RELEASED
+                  - TENDER_OPENED
+                  - TECHNICAL_EVALUATION_DONE
+                  - COMMERCIAL_EVALUATION_DONE
+                  - L1_TENDER_FINALIZED
+          List of offline status to be used to set LOA
+                  - ACCEPTANCE_LETTER_ISSUED
+                  - ACCEPTANCE_LETTER_ACKNOWLEDGED
+                  - AGREEMENT_ORDER_SIGNED
+          List of offline status to be used to set Work Order
+                  - WORK_ORDER_ACKNOWLEDGED
+                  - SITE_HANDED_OVER
+                  - WORK_COMMENCED
+          
+      parameters:
+        - name: OfflineStatusRequest
+          in: body
+          description: Details of new offline status(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/OfflineStatusRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Offline Status(s) created successfully.
+          schema:
+            $ref: '#/definitions/OfflineStatusResponse'
+        400:
+          description: Offline status(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Offline Status 
+        
+  /offlinestatuses/_update:
+    post:
+      summary: Update existing Offline Status(s).
+      description: |
+          To update existing Offline Status in the system. API supports bulk updation with max limit as defined in the Offline Status Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Offline Status, please pass array with one Offline Status object.
+          List of offline status to be used to set Detailed Estimate
+                  - NOTICEINVITINGTENDERRELEASED
+                  - TENDER_DOCUMENT_RELEASED
+                  - TENDER_OPENED
+                  - TECHNICAL_EVALUATION_DONE
+                  - COMMERCIAL_EVALUATION_DONE
+                  - L1_TENDER_FINALIZED
+          List of offline status to be used to set LOA
+                  - ACCEPTANCE_LETTER_ISSUED
+                  - ACCEPTANCE_LETTER_ACKNOWLEDGED
+                  - AGREEMENT_ORDER_SIGNED
+          List of offline status to be used to set Work Order
+                  - WORK_ORDER_ACKNOWLEDGED
+                  - SITE_HANDED_OVER
+                  - WORK_COMMENCED
+          For a particular object type if any offline status is already setted then that field will be disabled in update mode.
+          
+      parameters:
+        - name: OfflineStatusRequest
+          in: body
+          description: Details of Offline Status(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/OfflineStatusRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Offline Status(s) updated successfully
+          schema:
+            $ref: '#/definitions/OfflineStatusResponse'
+        400:
+          description: Offline Status(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Offline Status
+        
+  /documentdetails/_create:
+    post:
+      summary: Create new Document Detail(s).
+      description: |
+          To create new Document Detail in the system. API supports bulk creation with max limit as defined in the Document Detail Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Document Detail, please pass array with one Document Detail object.
+          
+      parameters:
+        - name: DocumentDetailRequest
+          in: body
+          description: Details of new Document Detail(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/DocumentDetailRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Document Detail(s) created successfully
+          schema:
+            $ref: '#/definitions/DocumentDetailResponse'
+        400:
+          description: Document Detail(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Document Detail  
+        
+  /documentdetails/_update:
+    post:
+      summary: Update existing Document Detail(s).
+      description: |
+          To update existing Document Detail in the system. API supports bulk updation with max limit as defined in the Document Detail Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Document Detail, please pass array with one Document Detail object.
+          
+      parameters:
+        - name: DocumentDetailRequest
+          in: body
+          description: Details of Document Detail(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/DocumentDetailRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Document Detail(s) updated successfully
+          schema:
+            $ref: '#/definitions/DocumentDetailResponse'
+        400:
+          description: Document Detail(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Document Detail
+        
+  /documentdetails/_search:
+    post:
+      summary: Get the list of Document Detail(s) defined in the system.
+      description: |
+          Search and get Document Detail(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Document Detail(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of Quality Testing as defined in DocumentDetailResponse model.
+          
+          Search results will be sorted by the sortProperty Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageSize"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
+        - name: objectIds
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          allowEmptyValue: true
+          required: false
+          description: Comma separated list Object Ids.
+        - name: ids
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: Comma separated list of Ids of Document Detail(s)
+      responses:
+        200:
+          description: Document Detail(s) Retrieved Successfully
+          schema:
+            $ref: "#/definitions/DocumentDetailResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Document Detail
+       
+  /estimateappropriations/_search:
+    post:
+      summary: Get the list of Estimate Appropriation(s) defined in the system.
+      description: |
+          Search and get Estimate Appropriation(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Estimate Appropriation(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of Revision Estimate as defined in EstimateAppropriationResponse model.
+          
+          Search results will be sorted by the sortProperty Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageSize"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
+        - name: ids
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: Comma separated list of Ids of Estimate Appropriation to get the Estimate Appropriations
+          
+        - name: detailedEstimates
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: Comma separated list of Detailed Estimates of Estimate Appropriation to get the Estimate Appropriations
+          
+        - name: abstractEstimateDetails
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: Comma separated list of Abstract Estimate Details of Estimate Appropriation to get the Estimate Appropriations
+      responses:
+        200:
+          description: Estimate Appropriation(s) Retrieved Successfully
+          schema:
+            $ref: "#/definitions/EstimateAppropriationResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Estimate Appropriation
+       
+  /estimateappropriations/_create:
+    post:
+      summary: Create new Estimate Appropriation(s).
+      description: |
+          To create new Estimate Appropriation in the system. API supports bulk creation with max limit as defined in the Estimate Appropriation Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Estimate Appropriation, please pass array with one Estimate Appropriation object.
+          
+      parameters:
+        - name: EstimateAppropriationRequest
+          in: body
+          description: Details of the new Estimate Appropriation(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/EstimateAppropriationRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Estimate Appropriation(s) created successfully
+          schema:
+            $ref: '#/definitions/EstimateAppropriationResponse'
+        400:
+          description: Estimate Appropriation(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Estimate Appropriation
+        
+  /estimateappropriations/_update:
+    post:
+      summary: Update existing Estimate Appropriation(s).
+      description: |
+          To update existing Estimate Appropriation in the system. API supports bulk updation with max limit as defined in the Estimate Appropriation Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Estimate Appropriation, please pass array with one Estimate Appropriation object.
+          
+      parameters:
+        - name: EstimateAppropriationRequest
+          in: body
+          description: Details of Estimate Appropriation(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/EstimateAppropriationRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Estimate Appropriation(s) updated successfully
+          schema:
+            $ref: '#/definitions/EstimateAppropriationResponse'
+        400:
+          description: Estimate Appropriation(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Estimate Appropriation
+        
+  /estimatephotographs/_search:
+    post:
+      summary: Get the list of Estimate Photograph(s) defined in the system.
+      description: |
+          Search and get Estimate Photograph(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Estimate Photograph(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of Revision Estimate as defined in EstimatePhotographResponse model.
+          
+          Search results will be sorted by the sortProperty Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageSize"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
+        - name: ids
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: Comma separated list of Ids of Estimate Photograph to get the Estimate Photographs
+          
+        - name: detailedEstimates
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: Comma separated list of Detailed Estimates of Estimate Photograph to get the Estimate Photographs
+          
+        - name: abstractEstimateDetails
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: Comma separated list of Abstract Estimate Details of Estimate Photograph to get the Estimate Photographs
+      responses:
+        200:
+          description: Estimate Photograph(s) Retrieved Successfully
+          schema:
+            $ref: "#/definitions/EstimatePhotographResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Estimate Photograph
+       
+  /estimatephotographs/_create:
+    post:
+      summary: Create new Estimate Photograph(s).
+      description: |
+          To create new Estimate Photograph in the system. API supports bulk creation with max limit as defined in the Estimate Photograph Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Estimate Photograph, please pass array with one Estimate Photograph object.
+          
+      parameters:
+        - name: EstimatePhotographRequest
+          in: body
+          description: Details of the new Estimate Photograph(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/EstimatePhotographRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Estimate Photograph(s) created successfully
+          schema:
+            $ref: '#/definitions/EstimatePhotographResponse'
+        400:
+          description: Estimate Photograph(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Estimate Photograph
+        
+  /estimatephotographs/_update:
+    post:
+      summary: Update existing Estimate Photograph(s).
+      description: |
+          To update existing Estimate Photograph in the system. API supports bulk updation with max limit as defined in the Estimate Photograph Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Estimate Photograph, please pass array with one Estimate Photograph object.
+          
+      parameters:
+        - name: EstimatePhotographRequest
+          in: body
+          description: Details of Estimate Photograph(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/EstimatePhotographRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Estimate Photograph(s) updated successfully
+          schema:
+            $ref: '#/definitions/EstimatePhotographResponse'
+        400:
+          description: Estimate Photograph(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Estimate Photograph
+       
+definitions:
+########################################################
+#RequestInfo and ResponseInfo object should be reffered from Common.
+#Definition must start with Upper case followed by camel case.
+#Every model will have tenantId
+########################################################
+    
+  OfflineStatusRequest:
+    description: Contract class to send response. Array of offlineStatuses items are used in case of search results, also multiple  offlineStatuses item is used for create and update
+    properties:
+      requestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      offlineStatuses:
+        description: Used for create and update only
+        type: array
+        minimum: 1
+        maximum: 100
+        items:
+          $ref: '#/definitions/OfflineStatus'
+          
+  OfflineStatusResponse:
+    description: Contract class to send response. Array of offlineStatuses items are used in case of search results, also multiple  offlineStatuses item is used for create and update
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      offlineStatuses:
+        description: Used for search result and create only
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/OfflineStatus'
+
+  OfflineStatus:
+    type: object
+    description: An Object holds the basic data for a Offline Status
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Offline Status
+      tenantId:
+        type: string
+        description: tenant id of the Offline Status
+        maxLength: 128
+        minLength: 4
+      objectType:
+        type: string
+        description: Object type for the offline status
+      status:
+        type: string
+        description: Offline status for the object type.
+      statusDate:
+        type: integer
+        format: int64
+        description: Epoch time of Offline Status Date
+      objectId:
+        type: string
+        description: Unique Identifier for the specified obect type.
+
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - objectType
+      - status
+      - statusDate
+      - objectId
+    
+  DocumentDetailRequest:
+    description: Contract class to send response. Array of Document Detail items are used in case of search results, also multiple  Document Detail item is used for create and update
+    properties:
+      requestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      documentDetails:
+        description: Used for create and update only
+        type: array
+        minimum: 1
+        maximum: 50
+        items:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DocumentDetail'
+
+  DocumentDetailResponse:
+    description: Contract class to send response. Array of Document Detail items are used in case of search results, also multiple  Document Detail item is used for create and update
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      documentDetails:
+        description: Used for search result and create only
+        type: array
+        maximum: 50
+        items:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DocumentDetail'
+          
+  EstimateAppropriation:
+    type: object
+    description: An Object that hold Estimate Appropriation for a given Abstract Estimate Details
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Estimate Appropriation
+      tenantId:
+        type: string
+        description: Tenant id for which this object belongs to
+        maxLength: 128
+        minLength: 4
+      abstractEstimateDetails:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/AbstractEstimateDetails'
+      detailedEstimate:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/DetailedEstimate'
+      budgetUsage:
+        type: string
+        description: Refrernce of Budget Usage of the Estimate Appropriation
+        maxLength: 100
+        minLength: 3
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - budgetUsage
+      - tenantId
+      
+  EstimateAppropriationRequest:
+      description: Contract class to send response. Array of Estimate Appropriation items are used in case of search results, also multiple  Estimate Appropriation item is used for create and update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        estimateAppropriations:
+          description: Used for create and update only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: '#/definitions/EstimateAppropriation'
+
+  EstimateAppropriationResponse:
+      description: Contract class to send response. Array of Estimate Appropriation items are used in case of search results, also multiple  Estimate Appropriation item is used for create and update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        estimateAppropriations:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/EstimateAppropriation'
+    
+  EstimatePhotographs:
+    type: object
+    description: An Object that hold Photographs attached to Estimate
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Estimate Photograph
+      tenantId:
+        type: string
+        description: Tenant id of the Abstract Estimate Details
+        maxLength: 128
+        minLength: 4
+      abstractEstimateDetails:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/AbstractEstimateDetails'
+      latitude:
+        type: integer
+        format: double
+        description: Latitude of the photograph taken
+      longitude:
+        type: integer
+        format: double
+        description: Longitude of the photograph taken
+      description:
+        type: string
+        description: Description of the photograph
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        maxLength: 1024
+      dateOfCapture:
+        type: integer
+        format: int64
+        description: Epoch time of when photo has captured
+      fileStoreMapper:
+        type: string
+        description: Reference of the file store
+      workProgress:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkProgress'
+      detailedEstimate:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/DetailedEstimate'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - workProgress
+      - tenantId
+      - fileStoreMapper
+      
+  EstimatePhotographRequest:
+      description: Contract class to send response. Array of Estimate Photograph items are used in case of search results, also multiple  Estimate Photograph item is used for create and update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        estimatePhotographs:
+          description: Used for create and update only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: '#/definitions/EstimatePhotographs'
+
+  EstimatePhotographResponse:
+      description: Contract class to send response. Array of Estimate Photograph items are used in case of search results, also multiple  Estimate Photograph item is used for create and update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        estimatePhotographs:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/EstimatePhotographs'
+          
+tags:
+  - name: Offline Status
+    description: APIs required for Offline Status.
+  - name: Estimate Photograph
+    description: APIs required for Estimate Photograph.
+  - name: Estimate Appropriation
+    description: APIs required for Estimate Appropriation.
+  - name: Document Detail
+    description: APIs required for Document Detail

@@ -70,40 +70,6 @@ CREATE TABLE egw_abstractestimate_details
   CONSTRAINT tenantid_estimatenumber_unique UNIQUE (tenantId, estimatenumber)
 );
 
-
-CREATE TABLE egw_abstractestimate_appropriation
-(
-  id character varying(256),
-  tenantId character varying(250) NOT NULL,
-  abstractEstimateDetails character varying(50),
-  detailedEstimate character varying(50),
-  budgetusage character varying(50),
-  createdby bigint NOT NULL,
-  createddate bigint NOT NULL,
-  lastmodifiedby bigint,
-  lastmodifieddate bigint,
-  CONSTRAINT tenantid_detailedEstimate_unique UNIQUE (tenantId, detailedEstimate)
-);
-
-CREATE TABLE egw_abstractestimate_photographs
-(
-  id character varying(256),
-  tenantId character varying(250) NOT NULL,
-  abstractEstimateDetails character varying(50),
-  latitude double precision, 
-  longitude double precision, 
-  description character varying(1024),
-  dateOfCapture bigint,
-  fileStoreMapper character varying(50) NOT NULL,
-  workProgress character varying(50) NOT NULL,
-  detailedEstimate character varying(50),
-  createdby bigint NOT NULL,
-  createddate bigint NOT NULL,
-  lastmodifiedby bigint,
-  lastmodifieddate bigint,
-  CONSTRAINT tenantid_estimatedetails_unique UNIQUE (tenantId, abstractEstimateDetails)
-);
-
 CREATE TABLE egw_projectcode
 (
   id character varying(256),

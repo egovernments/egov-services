@@ -83,8 +83,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
 @RequestMapping("/boundarys")
+@Slf4j
 public class BoundaryController {
 
 	@Autowired
@@ -158,9 +161,31 @@ public class BoundaryController {
 
 	@GetMapping
 	@ResponseBody
-	public ResponseEntity<?> search(@ModelAttribute BoundaryRequest boundaryRequest) {
+	public ResponseEntity<?> search(@Valid @RequestParam(value = "boundary", required = false) Long boundary,
+			@RequestParam(value = "tenantId", required = false) String tenantId,
+			@ModelAttribute BoundaryRequest boundaryRequest, BindingResult errors) {
 		BoundaryResponse boundaryResponse = new BoundaryResponse();
 		ResponseInfo responseInfo = new ResponseInfo();
+		
+		if (errors.hasErrors()) {
+			log.info("BoundaryRequest binding error: "+boundaryRequest);
+		}
+		
+		log.info("BoundaryRequest: "+boundaryRequest);
+		log.info("boundary inside if: "+boundary);
+		log.info("tenant inside if: "+tenantId);
+		
+		if(tenantId != null && boundary != null){
+			org.egov.boundary.domain.model.Boundary boundaryObj = org.egov.boundary.domain.model.Boundary.builder().build();
+			boundaryObj.setTenantId(tenantId);
+			boundaryObj.setId(boundary);
+			boundaryRequest.setBoundary(boundaryObj);
+		}else if(tenantId != null){
+			org.egov.boundary.domain.model.Boundary boundaryObj = org.egov.boundary.domain.model.Boundary.builder().build();
+			boundaryObj.setTenantId(tenantId);
+			boundaryRequest.setBoundary(boundaryObj);
+		}
+
 		if (boundaryRequest.getBoundary() != null && boundaryRequest.getBoundary().getTenantId() != null
 				&& !boundaryRequest.getBoundary().getTenantId().isEmpty()) {
 			List<org.egov.boundary.domain.model.Boundary> boundaryList = boundaryService

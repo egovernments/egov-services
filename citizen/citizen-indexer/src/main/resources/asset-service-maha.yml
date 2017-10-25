@@ -6,6 +6,6 @@ ServiceMaps:
     indexes:
     - name: assetmaha
       type: assetdetails
-      id: $.id
+      id: $.id,tenantId
       isBulk: false
       jsonPath: $.Asset

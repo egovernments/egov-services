@@ -32,7 +32,7 @@ let searchTemplate = function (module, numCols, path, config, definition, uiInfo
 		if(parameterConfig[i].$ref && !/requestInfo|tenantId|pageSize|pageNumber|sortResult/.test(parameterConfig[i].$ref)) {
 			let splitArr = parameterConfig[i].$ref.split("/");
 			let paramKey = splitArr[splitArr.length-1];
-			localeFields[module + ".create" + paramKey] = getTitleCase(paramKey);
+			localeFields[module + ".create." + paramKey] = getTitleCase(paramKey);
 			fields[paramKey] = {
 				"name": paramKey,
 				"jsonPath": paramKey,
@@ -51,7 +51,7 @@ let searchTemplate = function (module, numCols, path, config, definition, uiInfo
 				fields[paramKey].type = "textArea";
 		} else {
 			let paramKey = parameterConfig[i].name;
-			localeFields[module + ".create" + paramKey] = getTitleCase(paramKey);
+			localeFields[module + ".create." + paramKey] = getTitleCase(paramKey);
 			fields[paramKey] = {
 				"name": paramKey,
 				"jsonPath": paramKey,

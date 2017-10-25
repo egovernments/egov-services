@@ -63,7 +63,7 @@ serviceMaps:
 
        - jsonPath: $.vehicleFuellingDetails.*.vehicleType.name
          
-       - jsonPath: $.vehicleFuellingDetails.*.vehicleRegNo.name
+       - jsonPath: $.vehicleFuellingDetails.*.vehicleRegNo.regNumber
        
        - jsonPath: $.vehicleFuellingDetails.*.vehicleReadingDuringFuelling
 

@@ -1,10 +1,8 @@
 package org.egov.mdms.model;
 
-import java.util.List;
 import java.util.Map;
 
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.mdms.model.MasterDetail.MasterDetailBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -28,5 +26,5 @@ public class MdmsResponse {
 	private ResponseInfo responseInfo;
 	
 	@JsonProperty("MdmsRes")
-	private Map<String, List<Map<String, JSONArray>>> mdmsRes;
+	private Map<String, Map<String, JSONArray>> mdmsRes;
 }

@@ -19,13 +19,13 @@ serviceMaps:
        - jsonPath: $.vehicleFuellingDetails.*.transactionDate
          dbType: LONG
 
-       - jsonPath: $.vehicleFuellingDetails.*.vehicleType.id
+       - jsonPath: $.vehicleFuellingDetails.*.vehicleType.name
          
-       - jsonPath: $.vehicleFuellingDetails.*.vehicleRegNo.id
+       - jsonPath: $.vehicleFuellingDetails.*.vehicleRegNo.regNumber
        
        - jsonPath: $.vehicleFuellingDetails.*.vehicleReadingDuringFuelling
 
-       - jsonPath: $.vehicleFuellingDetails.*.refuellingStation.id
+       - jsonPath: $.vehicleFuellingDetails.*.refuellingStation.name
 
        - jsonPath: $.vehicleFuellingDetails.*.fuelFilled
 
@@ -61,13 +61,13 @@ serviceMaps:
        - jsonPath: $.vehicleFuellingDetails.*.transactionDate
          dbType: LONG
 
-       - jsonPath: $.vehicleFuellingDetails.*.vehicleType.id
+       - jsonPath: $.vehicleFuellingDetails.*.vehicleType.name
          
-       - jsonPath: $.vehicleFuellingDetails.*.vehicleRegNo.id
+       - jsonPath: $.vehicleFuellingDetails.*.vehicleRegNo.name
        
        - jsonPath: $.vehicleFuellingDetails.*.vehicleReadingDuringFuelling
 
-       - jsonPath: $.vehicleFuellingDetails.*.refuellingStation.id
+       - jsonPath: $.vehicleFuellingDetails.*.refuellingStation.name
 
        - jsonPath: $.vehicleFuellingDetails.*.fuelFilled
 

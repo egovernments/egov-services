@@ -1000,7 +1000,29 @@ definitions:
         description: Tenant Id of the Document detail
         maxLength: 128
         minLength: 4
+      latitude:
+        type: integer
+        format: double
+        description: Latitude of the photograph taken
+      longitude:
+        type: integer
+        format: double
+        description: Longitude of the photograph taken
+      description:
+        type: string
+        description: Description of the photograph
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        maxLength: 1024
+      dateOfCapture:
+        type: integer
+        format: int64
+        description: Epoch time of when photo has captured
+      workProgress:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkProgress'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
+      - workProgress
       - fileStore
       - tenantId
       - objectId

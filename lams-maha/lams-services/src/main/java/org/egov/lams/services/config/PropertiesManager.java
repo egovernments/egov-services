@@ -23,14 +23,19 @@ public class PropertiesManager {
 
 	@Autowired
 	Environment environment;
-	
+
 	@Value("${kafka.topic.save.estate}")
 	public String createEstateKafkaTopic;
-	
+
 	@Value("${kafka.topic.save.landAcquisition}")
 	public String createLandAcquisitionKafkaTopic;
-	
+
 	@Value("${kafka.topic.update.landAcquisition}")
 	public String updateLandAcquisitionKafkaTopic;
-	
+
+	@Value("${kafka.topic.save.land}")
+	public String createLandRegisterKafkaTopic;
+
+	@Value("${kafka.topic.update.land}")
+	public String updateLandRegisterKafkaTopic;
 }

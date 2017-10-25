@@ -909,8 +909,11 @@ definitions:
         type: integer
         format: int64
         description: Epoch time of File Date of the Letter Of Acceptance.
+      #parent:
+      #  $ref: '#/definitions/LetterOfAcceptance'
       parent:
-        $ref: '#/definitions/LetterOfAcceptance'
+        type: string
+        description: Parent of Letter Of Acceptance.  
       workFlowDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
       stateId:

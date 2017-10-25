@@ -866,8 +866,11 @@ definitions:
       parent:
         type: string
         description: Parent of the Detailed Estimate 
+      #copiedFrom:
+       # $ref: '#/definitions/DetailedEstimate'
       copiedFrom:
-        $ref: '#/definitions/DetailedEstimate'
+        type: string
+        description: Refers to the Detailed Estimate   
       approvedDate:
         type: integer
         format: int64

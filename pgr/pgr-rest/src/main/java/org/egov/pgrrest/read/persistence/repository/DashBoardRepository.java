@@ -84,24 +84,24 @@ public class DashBoardRepository {
 
     public List<TopComplaintTypesResponse> getWardWiseCountForComplainttype(String tenantId, String serviceCode, String type){
 
-        String query = "select (select boundarynum from eg_boundary where id = csa.code::bigint and tenantid = :tenantId) as boundary , count(*) as count" +
+        StringBuilder query = new StringBuilder("select (select boundarynum from eg_boundary where id = csa.code::bigint and tenantid = :tenantId) as boundary , count(*) as count" +
             " from submission cs, submission_attribute csa, servicetype_keyword sk" +
             " where cs.crn = csa.crn and csa.key = 'systemLocationId'" +
             " and cs.servicecode = sk.servicecode and sk.keyword = 'complaint'" +
-            " and cs.tenantid = :tenantId and csa.tenantid = :tenantId and sk.tenantid = :tenantId";
+            " and cs.tenantid = :tenantId and csa.tenantid = :tenantId and sk.tenantid = :tenantId");
 
         if(type.trim().equalsIgnoreCase("wardwise"))
-            query.concat(" and cs.servicecode = :servicecode");
+            query.append(" and cs.servicecode = :servicecode");
 
         if(type.trim().equalsIgnoreCase("wardwiseregistered"))
-            query.concat("and cs.status in ('REGISTERED', 'FORWARDED', 'PROCESSING', 'REOPENED', 'ONHOLD')");
+            query.append(" and cs.status in ('REGISTERED', 'FORWARDED', 'PROCESSING', 'REOPENED', 'ONHOLD')");
 
         if(type.trim().equalsIgnoreCase("wardwiseresolved"))
-            query.concat("and cs.status not in ('REGISTERED', 'FORWARDED', 'PROCESSING', 'REOPENED', 'ONHOLD')");
+            query.append(" and cs.status not in ('REGISTERED', 'FORWARDED', 'PROCESSING', 'REOPENED', 'ONHOLD')");
 
         String groupByQuery = " group by csa.code, csa.key";
 
-        return namedParameterJdbcTemplate.query(query.concat(groupByQuery), getWardWiseSearchMap(tenantId, serviceCode),
+        return namedParameterJdbcTemplate.query(query.append(groupByQuery).toString(), getWardWiseSearchMap(tenantId, serviceCode),
             new WardWiseRowMapper());
 
     }

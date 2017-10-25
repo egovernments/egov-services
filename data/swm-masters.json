@@ -117,13 +117,13 @@
       "ulbOwnedVehicle": true,
       "vendorName": "Fake vendor Name 1",
       "vehicleDriverName": "Fake vehicle Driver Name 1",
-      "purchaseDate": "2017-03-31 20:00:00 -0400",
+      "purchaseDate": "1508896131",
       "yearOfPurchase": 2017,
       "price": 100000,
       "sourceOfPurchase": "Fake source Of Purchase 1",
       "remarks": "Fake remarks 1",
       "insuranceNumber": "Fake insurance Number 1",
-      "insuranceValidityDate": "2017-03-31 20:00:00 -0400"
+      "insuranceValidityDate": "1508896131"
     },
     {
       "id": 2,
@@ -138,13 +138,13 @@
       "ulbOwnedVehicle": true,
       "vendorName": "Fake vendor Name 2",
       "vehicleDriverName": "Fake vehicle Driver Name 2",
-      "purchaseDate": "2027-04-01 20:00:00 -0400",
+      "purchaseDate": "1508896131",
       "yearOfPurchase": 2027,
       "price": 200000,
       "sourceOfPurchase": "Fake source Of Purchase 2",
       "remarks": "Fake remarks 2",
       "insuranceNumber": "Fake insurance Number 2",
-      "insuranceValidityDate": "2027-04-01 20:00:00 -0400"
+      "insuranceValidityDate": "1508896131"
     },
     {
       "id": 3,
@@ -159,13 +159,13 @@
       "ulbOwnedVehicle": true,
       "vendorName": "Fake vendor Name 3",
       "vehicleDriverName": "Fake vehicle Driver Name 3",
-      "purchaseDate": "3037-04-02 20:00:00 -0400",
+      "purchaseDate": "1508896131",
       "yearOfPurchase": 3037,
       "price": 300000,
       "sourceOfPurchase": "Fake source Of Purchase 3",
       "remarks": "Fake remarks 3",
       "insuranceNumber": "Fake insurance Number 3",
-      "insuranceValidityDate": "3037-04-02 20:00:00 -0400"
+      "insuranceValidityDate": "1508896131"
     }
   ],
   "WasteType": [

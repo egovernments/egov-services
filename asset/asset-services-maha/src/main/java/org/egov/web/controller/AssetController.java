@@ -1,8 +1,11 @@
 package org.egov.web.controller;
 
+import java.util.Set;
+
 import javax.validation.Valid;
 
-import org.egov.common.contract.response.ErrorResponse;
+import org.egov.contract.AssetCurrentValueRequest;
+import org.egov.contract.AssetCurrentValueResponse;
 import org.egov.contract.AssetRequest;
 import org.egov.contract.AssetResponse;
 import org.egov.contract.DisposalRequest;
@@ -14,6 +17,7 @@ import org.egov.model.criteria.AssetCriteria;
 import org.egov.model.criteria.DisposalCriteria;
 import org.egov.model.criteria.RevaluationCriteria;
 import org.egov.service.AssetService;
+import org.egov.service.CurrentValueService;
 import org.egov.service.DisposalService;
 import org.egov.service.RevaluationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +30,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,6 +49,9 @@ public class AssetController {
 	
 	@Autowired
 	private DisposalService  disposalService;
+	
+	@Autowired
+	private CurrentValueService currentValueService;
 
 	@PostMapping("_search")
 	@ResponseBody
@@ -111,6 +119,32 @@ public class AssetController {
 				requestInfoWrapper.getRequestInfo());
 
 		return new ResponseEntity<>(disposalResponse, HttpStatus.OK);
+	}
+	
+	@PostMapping("currentvalue/_search")
+	@ResponseBody
+	public ResponseEntity<?> getAssetCurrentValue(
+			@RequestParam(name = "assetIds", required = true) final Set<Long> assetIds,
+			@RequestParam(name = "tenantId", required = true) final String tenantId,
+			@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper) {
+
+		log.debug("getAssetCurrentValue assetId:" + assetIds + ",tenantId:" + tenantId);
+		final AssetCurrentValueResponse assetCurrentValueResponse = currentValueService.getCurrentValues(assetIds,
+				tenantId, requestInfoWrapper.getRequestInfo());
+
+		log.debug("getAssetCurrentValue assetCurrentValueResponse:" + assetCurrentValueResponse);
+		return new ResponseEntity<>(assetCurrentValueResponse, HttpStatus.OK);
+	}
+
+	@PostMapping("currentvalue/_create")
+	@ResponseBody
+	public ResponseEntity<?> saveCurrentValue(
+			@RequestBody @Valid final AssetCurrentValueRequest assetCurrentValueRequest) {
+		log.debug("create assetcurrentvalue :" + assetCurrentValueRequest);
+		
+		final AssetCurrentValueResponse assetCurrentValueResponse = currentValueService
+				.createCurrentValueAsync(assetCurrentValueRequest);
+		return new ResponseEntity<>(assetCurrentValueResponse, HttpStatus.CREATED);
 	}
 
 }

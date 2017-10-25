@@ -34,7 +34,7 @@ public class ApplicationProperties {
     public String getBootstrapServer() {
         return environment.getProperty("spring.kafka.bootstrap.servers");
     }
-
+   
     @Value("${kafka.topics.save.asset}")
     private String createAssetTopicName;
     
@@ -48,6 +48,9 @@ public class ApplicationProperties {
     
     @Value("${kafka.topics.save.disposal}")
     private String disposalSaveTopicName;
+    
+    @Value("${kafka.topics.save.currentvalue}")
+    private String saveCurrentvalueTopic;
     
     @Autowired
     private Environment environment;

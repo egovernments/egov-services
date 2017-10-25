@@ -125,14 +125,14 @@ serviceMaps:
 
        - jsonPath: $.materials.*.auditDetails.tenantId
 
-       - jsonPath: $.vehicleFuellingDetails.*.auditDetails.createdBy
+       - jsonPath: $.materials.*.auditDetails.createdBy
 
-       - jsonPath: $.vehicleFuellingDetails.*.auditDetails.lastModifiedBy
+       - jsonPath: $.materials.*.auditDetails.lastModifiedBy
 
-       - jsonPath: $.vehicleFuellingDetails.*.auditDetails.createdTime
+       - jsonPath: $.materials.*.auditDetails.createdTime
          dbType: LONG
 
-       - jsonPath: $.vehicleFuellingDetails.*.auditDetails.lastModifiedTime
+       - jsonPath: $.materials.*.auditDetails.lastModifiedTime
          dbType: LONG
 
  - version: 1.0

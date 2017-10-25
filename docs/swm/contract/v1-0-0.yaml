@@ -40,15 +40,18 @@ paths:
             maxLength: 265
           - name: transactionDate
             type: string
+            format: date
             in: query
             description: transactionDate of the VehicleFuellingDetails
-          - name: vehicleType.id
+          - name: vehicleType.name
             type: string
+            format: singleValueList
             in: query
             description: vehicleType id of the VehicleFuellingDetails
             maxLength: 265
-          - name: vehicleRegNo.id
+          - name: vehicleRegNo.regNumber
             type: string
+            format: singleValueList
             in: query
             description: vehicleRegNo id of the VehicleFuellingDetails
             maxLength: 265
@@ -56,8 +59,9 @@ paths:
             type: string
             in: query
             description: vehicleReadingDuringFuelling of the VehicleFuellingDetails
-          - name: refuellingStation.id
+          - name: refuellingStation.name
             type: string
+            format: singleValueList
             in: query
             description: refuellingStation id of the VehicleFuellingDetails
             maxLength: 265
@@ -82,6 +86,7 @@ paths:
             maxLength: 265
           - name: receiptDate
             type: string
+            format: date
             in: query
             description: receiptDate of the VehicleFuellingDetails
           - $ref: '#/parameters/pageSize'
@@ -570,6 +575,7 @@ definitions:
           minLength: 4
         name:
           type: string
+          format: singleValueList
           description: name of the VehicleType
           maxLength: 128
           minLength: 4
@@ -597,6 +603,7 @@ definitions:
           $ref: "#/definitions/VehicleType"
         regNumber:
           type: string
+          format: singleValueList
           description: registration Number of the Vehicle. Should be unique across the platform. Special characters not allowed. Space not allowed. 
           maxLength: 12
           minLength: 6
@@ -1250,6 +1257,7 @@ definitions:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
         name:
           type: string
+          format: singleValueList
           description: name of the RefillingPumpStation
           maxLength: 256
           minLength: 1
@@ -1890,7 +1898,7 @@ definitions:
       
     Documents:
       type: object
-      description: An Object to hold the support document detail for a given Trade License
+      description: An Object to hold the support document detail for a given Vendor Payment Details
       properties:
         id: 
           type: integer
@@ -1898,13 +1906,14 @@ definitions:
           description: Unique Identifier of the Support Document
         tenantId:
           type: string
-          description: tenant id of the Trade License
+          description: tenant id of the Vendor Payment Details
           maxLength: 128
           minLength: 4
-        licenseId:
-          type: integer
-          format: int64
-          description: Unique Identifier of the Trade License
+        vendorPaymentDetailsId:
+          type: string
+          maxLength: 256
+          minLength: 1
+          description: Unique Identifier of the Vendor Payment Details
         documentTypeId:
           type: integer
           format: int64
@@ -1918,7 +1927,7 @@ definitions:
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
-      - licenseId
+      - vendorPaymentDetailsId
       - tenantId
       - documentTypeId
       - fileStoreId
@@ -1959,5 +1968,3 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
-
-

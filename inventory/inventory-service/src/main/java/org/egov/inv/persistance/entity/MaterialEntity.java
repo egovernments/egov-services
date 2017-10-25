@@ -76,14 +76,14 @@ public class MaterialEntity {
                 .description(description)
                 .oldCode(oldCode)
                 .materialType(mapMaterialType(materialType))
-                .baseUom(buildUom(baseUom))
+                .baseUom(mapUom(baseUom))
                 .inventoryType(InventoryType.valueOf(inventoryType.toUpperCase()))
                 .status(Status.valueOf(status.toUpperCase()))
-                .purchaseUom(buildUom(purchaseUom))
-                .expenseAccount(buildCoa(expenseAccount))
+                .purchaseUom(mapUom(purchaseUom))
+                .expenseAccount(mapChartOfAccounts(expenseAccount))
                 .minQuality(minQuality)
                 .minQuality(maxQuality)
-                .stockingUom(buildUom(stockingUom))
+                .stockingUom(mapUom(stockingUom))
                 .materialClass(MaterialClass.valueOf(materialClass.toUpperCase()))
                 .reorderLevel(reorderLevel)
                 .reorderQuantity(reorderQuantity)
@@ -93,17 +93,17 @@ public class MaterialEntity {
                 .technicalSpecs(technicalSpecs)
                 .termsOfDelivery(termsOfDelivery)
                 .overrideMaterialControlType(overrideMaterialControlType)
-                .auditDetails(buildAuditDetails(tenantId, createdBy, createdTime, lastModifiedBy, lastModifiedTime))
+                .auditDetails(mapAuditDetails(tenantId, createdBy, createdTime, lastModifiedBy, lastModifiedTime))
                 .build();
     }
 
-    private Uom buildUom(String code) {
+    private Uom mapUom(String code) {
         return Uom.builder()
                 .code(code)
                 .build();
     }
 
-    private ChartOfAccount buildCoa(String glCode) {
+    private ChartOfAccount mapChartOfAccounts(String glCode) {
         return ChartOfAccount.builder()
                 .glCode(glCode)
                 .build();
@@ -115,7 +115,7 @@ public class MaterialEntity {
                 .build();
     }
 
-    private AuditDetails buildAuditDetails(String tenantId, String createdBy, Long createdTime, String lastModifiedBy, Long lastModifiedTime) {
+    private AuditDetails mapAuditDetails(String tenantId, String createdBy, Long createdTime, String lastModifiedBy, Long lastModifiedTime) {
         return AuditDetails.builder()
                 .tenantId(tenantId)
                 .createdBy(createdBy)

@@ -36,7 +36,7 @@ let searchTemplate = function (module, numCols, path, config, definition, basePa
 			fields[paramKey] = {
 				"name": paramKey,
 				"jsonPath": paramKey,
-				"label": module + ".create" + paramKey,
+				"label": module + ".create." + paramKey,
 				"pattern": definition[paramKey].pattern,
 				"type": definition[paramKey].enum ? "singleValueList" : definition[paramKey].format && ["number", "integer", "double", "long", "float"].indexOf(definition[paramKey].type) == -1 ? getType(definition[paramKey].format) : getType(definition[paramKey].type),
 				"isRequired": definition[paramKey].required,
@@ -55,7 +55,7 @@ let searchTemplate = function (module, numCols, path, config, definition, basePa
 			fields[paramKey] = {
 				"name": paramKey,
 				"jsonPath": paramKey,
-				"label": module + ".create" + paramKey,
+				"label": module + ".create." + paramKey,
 				"pattern": parameterConfig[i].pattern,
 				"type": parameterConfig[i].enum ? "singleValueList" : parameterConfig[i].format && ["number", "integer", "double", "long", "float"].indexOf(parameterConfig[i].type) == -1 ? getType(parameterConfig[i].format) : getType(parameterConfig[i].type),
 				"isRequired": parameterConfig[i].required,

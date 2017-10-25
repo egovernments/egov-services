@@ -1,5 +1,5 @@
 {
-	"courtMasters": [{
+	"court": [{
 			"name": "Co-operative court",
 			"code": "COC",
 			"courtAddress1": "18-13-6/27/E",
@@ -175,7 +175,7 @@
 			"tenantId": "default"
 		}
 	],
-	"sideMasters": [{
+	"side": [{
 
 			"name": "civil",
 			"code": "CVL",
@@ -197,7 +197,7 @@
 			"tenantId": "default"
 		}
 	],
-	"caseTypeMasters": [{
+	"caseType": [{
 
 			"name": "Appeal from Order",
 			"code": "AFO",
@@ -382,7 +382,7 @@
 			"tenantId": "default"
 		}
 	],
-	"caseCategoryMasters": [{
+	"caseCategory": [{
 
 			"name": "Minor case",
 			"code": "MINOR_CASE",
@@ -397,7 +397,7 @@
 			"tenantId": "default"
 		}
 	],
-	"benchMasters": [{
+	"bench": [{
 
 			"name": "Bombay",
 			"code": "BOMBAY",
@@ -419,7 +419,7 @@
 			"tenantId": "default"
 		}
 	],
-	"stampMasters": [{
+	"stamp": [{
 
 			"name": "Register",
 			"code": "REGISTER",
@@ -434,7 +434,7 @@
 			"tenantId": "default"
 		}
 	],
-	"chargeMasters": [{
+	"charge": [{
 
 			"name": "Legal Fee",
 			"code": "LF",
@@ -486,7 +486,7 @@
 			"tenantId": "default"
 		}
 	],
-	"caseStatusMasters": [{
+	"caseStatus": [{
 
 			"name": "Running",
 			"code": "RUNNING",
@@ -592,7 +592,7 @@
 			"tenantId": "default"
 		}
 	],
-	"advocateMasters": [{
+	"advocate": [{
 
 			"name": "L. N. Shah & Co.",
 			"code": "1",

@@ -1,0 +1,1077 @@
+{
+	"courtMasters": [{
+			"name": "Co-operative court",
+			"code": "COC",
+			"courtAddress1": "18-13-6/27/E",
+			"courtAddress2": "JNTU",
+			"courtAddress3": "Hyderabad",
+			"pincode": "500005",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "District Court",
+			"code": "DC",
+			"courtAddress1": "18-13-6/27/E",
+			"courtAddress2": "JNTU",
+			"courtAddress3": "Hyderabad",
+			"pincode": "500005",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Motor Accident Claim Tribunal",
+			"code": "MACT",
+			"courtAddress1": "18-13-6/27/E",
+			"courtAddress2": "JNTU",
+			"courtAddress3": "Hyderabad",
+			"pincode": "500005",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Supreme Court",
+			"code": "SC",
+			"courtAddress1": "18-13-6/27/E",
+			"courtAddress2": "JNTU",
+			"courtAddress3": "Hyderabad",
+			"pincode": "500005",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "High Court",
+			"code": "HC",
+			"courtAddress1": "18-13-6/27/E",
+			"courtAddress2": "JNTU",
+			"courtAddress3": "Hyderabad",
+			"pincode": "500005",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "State Human Rights Commission Court",
+			"code": "SHRCC",
+			"courtAddress1": "18-13-6/27/E",
+			"courtAddress2": "JNTU",
+			"courtAddress3": "Hyderabad",
+			"pincode": "500005",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "District Consumer Court",
+			"code": "DCC",
+			"courtAddress1": "18-13-6/27/E",
+			"courtAddress2": "JNTU",
+			"courtAddress3": "Hyderabad",
+			"pincode": "500005",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Industrial Court",
+			"code": "IC",
+			"courtAddress1": "18-13-6/27/E",
+			"courtAddress2": "JNTU",
+			"courtAddress3": "Hyderabad",
+			"pincode": "500005",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Labour Court",
+			"code": "LC",
+			"courtAddress1": "18-13-6/27/E",
+			"courtAddress2": "JNTU",
+			"courtAddress3": "Hyderabad",
+			"pincode": "500005",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Criminal Court",
+			"code": "CRC",
+			"courtAddress1": "18-13-6/27/E",
+			"courtAddress2": "JNTU",
+			"courtAddress3": "Hyderabad",
+			"pincode": "500005",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Civil Court",
+			"code": "CVC",
+			"courtAddress1": "18-13-6/27/E",
+			"courtAddress2": "JNTU",
+			"courtAddress3": "Hyderabad",
+			"pincode": "500005",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Session Court",
+			"code": "SS",
+			"courtAddress1": "18-13-6/27/E",
+			"courtAddress2": "JNTU",
+			"courtAddress3": "Hyderabad",
+			"pincode": "500005",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "308 Court",
+			"code": "308_Court",
+			"courtAddress1": "18-13-6/27/E",
+			"courtAddress2": "JNTU",
+			"courtAddress3": "Hyderabad",
+			"pincode": "500005",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Judicial Magistrate of First Class Court",
+			"code": "JMOFCC",
+			"courtAddress1": "18-13-6/27/E",
+			"courtAddress2": "JNTU",
+			"courtAddress3": "Hyderabad",
+			"pincode": "500005",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "National Green Tribunal Court",
+			"code": "NGTC",
+			"courtAddress1": "18-13-6/27/E",
+			"courtAddress2": "JNTU",
+			"courtAddress3": "Hyderabad",
+			"pincode": "500005",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "National Human Rights Commission",
+			"code": "NHRC",
+			"courtAddress1": "18-13-6/27/E",
+			"courtAddress2": "JNTU",
+			"courtAddress3": "Hyderabad",
+			"pincode": "500005",
+			"active": true,
+			"tenantId": "default"
+		}
+	],
+	"sideMasters": [{
+
+			"name": "civil",
+			"code": "CVL",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Criminal",
+			"code": "CRMNL",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Original",
+			"code": "ORGNL",
+			"active": true,
+			"tenantId": "default"
+		}
+	],
+	"caseTypeMasters": [{
+
+			"name": "Appeal from Order",
+			"code": "AFO",
+			"active": true,
+			"side": {
+
+				"name": "civil",
+				"code": "CVL",
+				"active": true,
+				"tenantId": "default"
+
+			},
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Arbitration Appeal",
+			"code": "AA",
+			"active": true,
+			"side": {
+
+				"name": "civil",
+				"code": "CVL",
+				"active": true,
+				"tenantId": "default"
+
+			},
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Arbitration Petition",
+			"code": "AP",
+			"active": true,
+			"side": {
+
+				"name": "civil",
+				"code": "CVL",
+				"active": true,
+				"tenantId": "default"
+
+			},
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Civil Application in FA",
+			"code": "AP",
+			"active": true,
+			"side": {
+
+				"name": "civil",
+				"code": "CVL",
+				"active": true,
+				"tenantId": "default"
+
+			},
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Civil Application",
+			"code": "CA",
+			"active": true,
+			"side": {
+
+				"name": "civil",
+				"code": "CVL",
+				"active": true,
+				"tenantId": "default"
+
+			},
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Civil Application in Revision",
+			"code": "CAR",
+			"active": true,
+			"side": "CRMNL",
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Application in Writ Petition",
+			"code": "AIWP",
+			"active": true,
+			"side": {
+
+				"name": "Criminal",
+				"code": "CRMNL",
+				"active": true,
+				"tenantId": "default"
+			},
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Criminal Confirmation Case",
+			"code": "CA",
+			"active": true,
+			"side": {
+
+				"name": "Criminal",
+				"code": "CRMNL",
+				"active": true,
+				"tenantId": "default"
+			},
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Criminal Appeal",
+			"code": "CRMLA",
+			"active": true,
+			"side": {
+
+				"name": "Criminal",
+				"code": "CRMNL",
+				"active": true,
+				"tenantId": "default"
+			},
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Admiralty suits",
+			"code": "AS",
+			"active": true,
+			"side": "ORGNL",
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Agricultural income tax reference",
+			"code": "AITR",
+			"active": true,
+			"side": "ORGNL",
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Application in election petition",
+			"code": "AIEP",
+			"active": true,
+			"side": {
+
+				"name": "Original",
+				"code": "ORGNL",
+				"active": true,
+				"tenantId": "default"
+			},
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Central excise appeal",
+			"code": "CEA",
+			"active": true,
+			"side": {
+
+				"name": "Original",
+				"code": "ORGNL",
+				"active": true,
+				"tenantId": "default"
+			},
+			"tenantId": "default"
+		},
+
+		{
+
+			"name": "Chamber order lodging",
+			"code": "COL",
+			"active": true,
+			"side": {
+
+				"name": "Original",
+				"code": "ORGNL",
+				"active": true,
+				"tenantId": "default"
+			},
+			"tenantId": "default"
+		}
+	],
+	"caseCategoryMasters": [{
+
+			"name": "Minor case",
+			"code": "MINOR_CASE",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Major case",
+			"code": "MAJOR_CASE",
+			"active": true,
+			"tenantId": "default"
+		}
+	],
+	"benchMasters": [{
+
+			"name": "Bombay",
+			"code": "BOMBAY",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Aurangabad",
+			"code": "AURANGABAD",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Nagpur",
+			"code": "NAGPUR",
+			"active": true,
+			"tenantId": "default"
+		}
+	],
+	"stampMasters": [{
+
+			"name": "Register",
+			"code": "REGISTER",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "stamp",
+			"code": "STAMP",
+			"active": true,
+			"tenantId": "default"
+		}
+	],
+	"chargeMasters": [{
+
+			"name": "Legal Fee",
+			"code": "LF",
+			"description": "Legal Fee description",
+			"fromDate": "12/12/2017",
+			"toDate": "12/12/2018",
+			"fromValue": 5000,
+			"toValue": 50000,
+			"chargePercentage": 12,
+			"chargeAmount": 400,
+			"isFlat": false,
+			"courtType": "courtType1",
+			"caseType": "caseType1",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Retainer Fee",
+			"code": "RF",
+			"description": "Retainer Fee description",
+			"fromDate": "12/12/2017",
+			"toDate": "12/12/2018",
+			"fromValue": 1000,
+			"toValue": 10000,
+			"chargePercentage": 13,
+			"chargeAmount": 300,
+			"isFlat": false,
+			"courtType": "courtType2",
+			"caseType": "caseType2",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Advocate Fee",
+			"code": "AF",
+			"description": "Advocate Fee description",
+			"fromDate": "12/12/2017",
+			"toDate": "12/12/2018",
+			"fromValue": 1500,
+			"toValue": 5000,
+			"chargePercentage": 13,
+			"chargeAmount": 300,
+			"isFlat": false,
+			"courtType": "courtType3",
+			"caseType": "caseType4",
+			"active": true,
+			"tenantId": "default"
+		}
+	],
+	"caseStatusMasters": [{
+
+			"name": "Running",
+			"code": "RUNNING",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Final Order",
+			"code": "FO",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "For Order/Judgement",
+			"code": "FO/J",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Disposed",
+			"code": "DISPOSED",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Dismissed",
+			"code": "DISMISSED",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Dismissed For Default",
+			"code": "DFD",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Allowed",
+			"code": "ALLOWED",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Decreed",
+			"code": "DECREED",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Partly Allowed",
+			"code": "PA",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "9A –Allowed suit is dismissed",
+			"code": "9AASID",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Withdrawn",
+			"code": "WITHDRAWN",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Rejected",
+			"code": "REJECT",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Withdrawn & settled by mediation",
+			"code": "WSM",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Stay Order",
+			"code": "STAY_ORDER",
+			"active": true,
+			"tenantId": "default"
+		},
+		{
+
+			"name": "DND",
+			"code": "DND",
+			"active": true,
+			"tenantId": "default"
+		}
+	],
+	"advocateMasters": [{
+
+			"name": "L. N. Shah & Co.",
+			"code": "1",
+			"organizationName": "Org1",
+			"isIndividual": true,
+			"title": "Mr.",
+			"firstName": "Shah",
+			"secondName": "Narsing",
+			"lastName": "Lal",
+			"address": "D/22 Shrikrishnadham C.H.S. L. B.S. Road Veena Nagar Mulund(West) 400080",
+			"contactNo": "022-25683631",
+			"dateOfEmpanelment": "5/11/1991",
+			"standingCommitteeDecisionDate": "5/11/1991",
+			"empanelmentFromDate": "5/11/1991",
+			"adharNo": "123456789122",
+			"gender": "Male",
+			"age": "26",
+			"dob": "15/11/1991",
+			"mobileNo": "9030932564",
+			"emailId": "udaylegal@gmail.com",
+			"panNo": "1234567890",
+			"vatTinNo": "string",
+			"newsPaperAdvertismentDate": "5/11/1991",
+			"empanelmentToDate": "5/11/1991",
+			"bankName": "HDFC",
+			"bankBranch": "Kukatpally",
+			"bankAccountNo": "123445678908",
+			"isfcCode": "1234",
+			"micr": "4",
+			"isActive": true,
+			"isTerminate": false,
+			"inActiveDate": "12/12/2014",
+			"terminationDate": "12/12/2016",
+			"reasonOfTermination": "Test reason of Termination",
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Himanshu W. Kane",
+			"code": "2",
+			"organizationName": "Org1",
+			"isIndividual": true,
+			"title": "Mr.",
+			"firstName": "Himanshu ",
+			"secondName": "W.",
+			"lastName": "Kane",
+			"address": "6th Floor Merchant Chambers 41, SirVithaldas Thackersey Road Opp.Patkar Hall, Churchgate Mumbai 400020",
+			"contactNo": "022-66141414",
+			"dateOfEmpanelment": "12/12/2017",
+			"standingCommitteeDecisionDate": "12/12/2017",
+			"empanelmentFromDate": "12/12/2017",
+			"adharNo": "121212121212",
+			"gender": "Male",
+			"age": "23",
+			"dob": "12/12/1991",
+			"mobileNo": "2535343615",
+			"emailId": "hwk@wskaneandco.com",
+			"panNo": "12524256325",
+			"vatTinNo": "1234",
+			"newsPaperAdvertismentDate": 0,
+			"empanelmentToDate": 0,
+			"bankName": "HDFC",
+			"bankBranch": "attapur",
+			"bankAccountNo": "012030120235",
+			"isfcCode": "12345678",
+			"micr": "string",
+			"isActive": true,
+			"isTerminate": false,
+			"inActiveDate": 0,
+			"terminationDate": 0,
+			"reasonOfTermination": "none",
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Ramchandra Yadav",
+			"code": "3",
+			"organizationName": "Org12",
+			"isIndividual": true,
+			"title": "Mr.",
+			"firstName": "Ram",
+			"secondName": "Yadav",
+			"lastName": "Yadav",
+			"address": " Raja Cottage Sahar Road (S. N.Marg) Koldongri, Opp. ICICI BankAndheri (East) 400069",
+			"contactNo": "022-26837579",
+			"dateOfEmpanelment": 0,
+			"standingCommitteeDecisionDate": 0,
+			"empanelmentFromDate": 0,
+			"adharNo": "123456789122",
+			"gender": "Male",
+			"age": "26",
+			"dob": "15/11/1991",
+			"mobileNo": "9030932564",
+			"emailId": "Ramchandra@gmail.com",
+			"panNo": "1234567890",
+			"vatTinNo": "string",
+			"newsPaperAdvertismentDate": 0,
+			"empanelmentToDate": 0,
+			"bankName": "HDFC",
+			"bankBranch": "kukatpally",
+			"bankAccountNo": "154623457891",
+			"isfcCode": "12345678",
+			"micr": "string",
+			"isActive": true,
+			"isTerminate": false,
+			"inActiveDate": 0,
+			"terminationDate": 0,
+			"reasonOfTermination": "none",
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Mr. Pravin D. Kadam ",
+			"code": "4",
+			"organizationName": "Org15",
+			"isIndividual": true,
+			"title": "Mr.",
+			"firstName": "Pravin",
+			"secondName": "Dadar",
+			"lastName": "Kadam",
+			"address": "51-A, 5th Floor Mittal ChambersNariman Point Mumbai MUMBAI 400021",
+			"contactNo": "022-26837579",
+			"dateOfEmpanelment": 0,
+			"standingCommitteeDecisionDate": 0,
+			"empanelmentFromDate": 0,
+			"adharNo": "123456789122",
+			"gender": "Male",
+			"age": "26",
+			"dob": "15/11/1991",
+			"mobileNo": "9030932564",
+			"emailId": "Pravin@gmail.com",
+			"panNo": "1234567890",
+			"vatTinNo": "string",
+			"newsPaperAdvertismentDate": 0,
+			"empanelmentToDate": 0,
+			"bankName": "HDFC",
+			"bankBranch": "Haythnager",
+			"bankAccountNo": "040256781546",
+			"isfcCode": "101301263",
+			"micr": "",
+			"isActive": true,
+			"isTerminate": false,
+			"inActiveDate": 0,
+			"terminationDate": 0,
+			"reasonOfTermination": "none",
+			"tenantId": "default"
+		},
+		{
+
+			"name": "MAHERNOSH J.HUMRANWALA",
+			"code": "5",
+			"organizationName": "Org15",
+			"isIndividual": true,
+			"title": "Mr.",
+			"firstName": "Pravin",
+			"secondName": "Dadar",
+			"lastName": "Kadam",
+			"address": "C/O. DUA ASSOCIATES, 7TH FLOOR WORLD TRADE CENTRE 1 CUFFE PARADE MUMBAI 400005",
+			"contactNo": "022-66369966",
+			"dateOfEmpanelment": 0,
+			"standingCommitteeDecisionDate": 0,
+			"empanelmentFromDate": 0,
+			"adharNo": "123456789122",
+			"gender": "Male",
+			"age": "26",
+			"dob": "15/11/1991",
+			"mobileNo": "9030932564",
+			"emailId": "mahernosh@duaassociates.com",
+			"panNo": "1234567890",
+			"vatTinNo": "string",
+			"newsPaperAdvertismentDate": 0,
+			"empanelmentToDate": 0,
+			"bankName": "BOB",
+			"bankBranch": "Ameerpet",
+			"bankAccountNo": "040256781546",
+			"isfcCode": "101301263",
+			"micr": "",
+			"isActive": true,
+			"isTerminate": false,
+			"inActiveDate": 0,
+			"terminationDate": 0,
+			"reasonOfTermination": "none",
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Jyoti Narendra Shah",
+			"code": "6",
+			"organizationName": "Org16",
+			"isIndividual": true,
+			"title": "Mr.",
+			"firstName": "Jyoti",
+			"secondName": "Narendra",
+			"lastName": "Shah",
+			"address": "1st Floor R.N.A. House 50, Veer Nariman Road Fort Mumbai 400023",
+			"contactNo": "022-22046698",
+			"dateOfEmpanelment": 0,
+			"standingCommitteeDecisionDate": 0,
+			"empanelmentFromDate": 0,
+			"adharNo": "123456789122",
+			"gender": "Male",
+			"age": "26",
+			"dob": "15/11/1991",
+			"mobileNo": "9030932564",
+			"emailId": "Shahfam@vsnl.com",
+			"panNo": "1234567890",
+			"vatTinNo": "string",
+			"newsPaperAdvertismentDate": 0,
+			"empanelmentToDate": 0,
+			"bankName": "SBH",
+			"bankBranch": "Ameerpet",
+			"bankAccountNo": "040256781546",
+			"isfcCode": "101301263",
+			"micr": "",
+			"isActive": true,
+			"isTerminate": false,
+			"inActiveDate": 0,
+			"terminationDate": 0,
+			"reasonOfTermination": "none",
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Daru Shah & Co",
+			"code": "7",
+			"organizationName": "Org17",
+			"isIndividual": true,
+			"title": "Mr.",
+			"firstName": "Jyoti",
+			"secondName": "Narendra",
+			"lastName": "Shah",
+			"address": "1st Floor 2 Alli Chambers Tamarind Lane Fort Mumbai 400023",
+			"contactNo": "022-22653178",
+			"dateOfEmpanelment": 0,
+			"standingCommitteeDecisionDate": 0,
+			"empanelmentFromDate": 0,
+			"adharNo": "123456789122",
+			"gender": "Male",
+			"age": "26",
+			"dob": "15/11/1991",
+			"mobileNo": "9030932564",
+			"emailId": "dscolegal@vsnl.net",
+			"panNo": "1234567890",
+			"vatTinNo": "string",
+			"newsPaperAdvertismentDate": 0,
+			"empanelmentToDate": 0,
+			"bankName": "SBH",
+			"bankBranch": "Ameerpet",
+			"bankAccountNo": "040256781546",
+			"isfcCode": "101301263",
+			"micr": "",
+			"isActive": true,
+			"isTerminate": false,
+			"inActiveDate": 0,
+			"terminationDate": 0,
+			"reasonOfTermination": "none",
+			"tenantId": "default"
+		},
+		{
+
+			"name": "R. G. Sheth & Co., Advocates & Solicitors",
+			"code": "8",
+			"organizationName": "Org17",
+			"isIndividual": true,
+			"title": "Mr.",
+			"firstName": "Jyoti",
+			"secondName": "Narendra",
+			"lastName": "Shah",
+			"address": "1st Floor 2 Sheth Chambers Tamarind Lane Fort Mumbai 400023",
+			"contactNo": "022-22653179",
+			"dateOfEmpanelment": 0,
+			"standingCommitteeDecisionDate": 0,
+			"empanelmentFromDate": 0,
+			"adharNo": "123456789123",
+			"gender": "Male",
+			"age": "26",
+			"dob": "15/11/1991",
+			"mobileNo": "9030932565",
+			"emailId": "Sheth@vsnl.net",
+			"panNo": "1234567891",
+			"vatTinNo": "string",
+			"newsPaperAdvertismentDate": 0,
+			"empanelmentToDate": 0,
+			"bankName": "SBH",
+			"bankBranch": "Ameerpet",
+			"bankAccountNo": "040256781546",
+			"isfcCode": "101301263",
+			"micr": "",
+			"isActive": true,
+			"isTerminate": false,
+			"inActiveDate": 0,
+			"terminationDate": 0,
+			"reasonOfTermination": "none",
+			"tenantId": "default"
+		},
+		{
+
+			"name": "ASHWIN ANKHAD & ASSOCIATES",
+			"code": "9",
+			"organizationName": "Org16",
+			"isIndividual": true,
+			"title": "Mr.",
+			"firstName": "ASHWIN",
+			"secondName": "ANKHAD",
+			"lastName": "bogle",
+			"address": "101 PODAR CHAMBERS S. A.BRELVI ROAD FORT MUMBAI 400001",
+			"contactNo": "22671110",
+			"dateOfEmpanelment": 0,
+			"standingCommitteeDecisionDate": 0,
+			"empanelmentFromDate": 0,
+			"adharNo": "123456789122",
+			"gender": "Male",
+			"age": "26",
+			"dob": "15/11/1991",
+			"mobileNo": "9030932565",
+			"emailId": "ashwin@gmail.com",
+			"panNo": "1234567890",
+			"vatTinNo": "string",
+			"newsPaperAdvertismentDate": 0,
+			"empanelmentToDate": 0,
+			"bankName": "HDFC",
+			"bankBranch": "Haythnager",
+			"bankAccountNo": "040256781546",
+			"isfcCode": "101301263",
+			"micr": "",
+			"isActive": true,
+			"isTerminate": false,
+			"inActiveDate": 0,
+			"terminationDate": 0,
+			"reasonOfTermination": "none",
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Prasad & ASSOCIATES",
+			"code": "10",
+			"organizationName": "Org17",
+			"isIndividual": true,
+			"title": "Mr.",
+			"firstName": "ASHWIN",
+			"secondName": "ANKHAD",
+			"lastName": "bogle",
+			"address": "101 New CHAMBERS S. A.BRELVI ROAD FORT MUMBAI 400001",
+			"contactNo": "22671110",
+			"dateOfEmpanelment": 0,
+			"standingCommitteeDecisionDate": 0,
+			"empanelmentFromDate": 0,
+			"adharNo": "123456789123",
+			"gender": "Male",
+			"age": "26",
+			"dob": "15/11/1991",
+			"mobileNo": "9030932567",
+			"emailId": "ashwin@gmail.com",
+			"panNo": "1234567891",
+			"vatTinNo": "1234",
+			"newsPaperAdvertismentDate": 0,
+			"empanelmentToDate": 0,
+			"bankName": "HDFC",
+			"bankBranch": "Mumabi",
+			"bankAccountNo": "040256781547",
+			"isfcCode": "101301264",
+			"micr": "",
+			"isActive": true,
+			"isTerminate": false,
+			"inActiveDate": 0,
+			"terminationDate": 0,
+			"reasonOfTermination": "none",
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Venkatesh & ASSOCIATES",
+			"code": "11",
+			"organizationName": "Org18",
+			"isIndividual": true,
+			"title": "Mr.",
+			"firstName": "Venkatesh",
+			"secondName": "Maggry",
+			"lastName": "Bhosle",
+			"address": "101 Bhosle CHAMBERS S. A.BRELVI ROAD FORT MUMBAI 400001",
+			"contactNo": "22671110",
+			"dateOfEmpanelment": 0,
+			"standingCommitteeDecisionDate": 0,
+			"empanelmentFromDate": 0,
+			"adharNo": "123456789124",
+			"gender": "Male",
+			"age": "26",
+			"dob": "15/11/1991",
+			"mobileNo": "9030932568",
+			"emailId": "ashwin@gmail.com",
+			"panNo": "1234567892",
+			"vatTinNo": "1234",
+			"newsPaperAdvertismentDate": 0,
+			"empanelmentToDate": 0,
+			"bankName": "HDFC",
+			"bankBranch": "Mumabi",
+			"bankAccountNo": "040256781548",
+			"isfcCode": "101301265",
+			"micr": "",
+			"isActive": true,
+			"isTerminate": false,
+			"inActiveDate": 0,
+			"terminationDate": 0,
+			"reasonOfTermination": "none",
+			"tenantId": "default"
+		},
+		{
+
+			"name": "Krishna & ASSOCIATES",
+			"code": "12",
+			"organizationName": "Org19",
+			"isIndividual": true,
+			"title": "Mr.",
+			"firstName": "Krishna",
+			"secondName": "murari",
+			"lastName": "waghmare",
+			"address": "101 waghmare CHAMBERS S. A.BRELVI ROAD FORT MUMBAI 400001",
+			"contactNo": "22671111",
+			"dateOfEmpanelment": 0,
+			"standingCommitteeDecisionDate": 0,
+			"empanelmentFromDate": 0,
+			"adharNo": "123456789125",
+			"gender": "Male",
+			"age": "26",
+			"dob": "15/11/1991",
+			"mobileNo": "9030932569",
+			"emailId": "ashwin@gmail.com",
+			"panNo": "1234567893",
+			"vatTinNo": "1234",
+			"newsPaperAdvertismentDate": 0,
+			"empanelmentToDate": 0,
+			"bankName": "HDFC",
+			"bankBranch": "Mumabi",
+			"bankAccountNo": "040256781549",
+			"isfcCode": "101301266",
+			"micr": "",
+			"isActive": true,
+			"isTerminate": false,
+			"inActiveDate": 0,
+			"terminationDate": 0,
+			"reasonOfTermination": "none",
+			"tenantId": "default"
+		},
+		{
+
+			"name": "ganesh & ASSOCIATES",
+			"code": "13",
+			"organizationName": "Org20",
+			"isIndividual": true,
+			"title": "Mr.",
+			"firstName": "ganesh",
+			"secondName": "mukunda",
+			"lastName": "kalmare",
+			"address": "101 kalmare CHAMBERS S. A.BRELVI ROAD FORT MUMBAI 400001",
+			"contactNo": "22671112",
+			"dateOfEmpanelment": 0,
+			"standingCommitteeDecisionDate": 0,
+			"empanelmentFromDate": 0,
+			"adharNo": "123456789126",
+			"gender": "Male",
+			"age": "26",
+			"dob": "15/11/1991",
+			"mobileNo": "9030932570",
+			"emailId": "ashwin@gmail.com",
+			"panNo": "1234567894",
+			"vatTinNo": "1234",
+			"newsPaperAdvertismentDate": 0,
+			"empanelmentToDate": 0,
+			"bankName": "HDFC",
+			"bankBranch": "Mumabi",
+			"bankAccountNo": "040256781550",
+			"isfcCode": "101301267",
+			"micr": "",
+			"isActive": true,
+			"isTerminate": false,
+			"inActiveDate": 0,
+			"terminationDate": 0,
+			"reasonOfTermination": "none",
+			"tenantId": "default"
+		}
+	]
+}

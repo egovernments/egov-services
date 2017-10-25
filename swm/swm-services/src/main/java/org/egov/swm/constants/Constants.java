@@ -11,4 +11,9 @@ public class Constants {
 	public static final String ACTION_VIEW = "view";
 	public static final String ACTION_EDIT = "edit";
 	public static final String ACTION_SEARCH = "search";
+	public static final String MODULE_CODE = "SWM";
+	public static final String VEHICLETYPE_MASTER_NAME = "VehicleType";
+	public static final String VEHICLE_MASTER_NAME = "Vehicle";
+	public static final String REFILLINGPUMPSTATION_MASTER_NAME = "RefillingPumpStation";
+
 }

@@ -1,7 +1,5 @@
 package org.egov.swm.domain.model;
 
-import java.time.LocalDate;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -73,7 +71,7 @@ public class Vehicle {
 
 	@Valid
 	@JsonProperty("purchaseDate")
-	private LocalDate purchaseDate = null;
+	private Long purchaseDate = null;
 
 	@Size(min = 0, max = 256)
 	@JsonProperty("yearOfPurchase")
@@ -98,7 +96,7 @@ public class Vehicle {
 	@NotNull
 	@Valid
 	@JsonProperty("insuranceValidityDate")
-	private LocalDate insuranceValidityDate = null;
+	private Long insuranceValidityDate = null;
 
 	@Valid
 	@JsonProperty("auditDetails")

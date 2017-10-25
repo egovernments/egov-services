@@ -24,6 +24,9 @@ public class Boundary {
 
 	@JsonProperty("name")
 	private String name = null;
+	
+	@JsonProperty("code")
+	private String code = null;
 
 	@Valid
 	@JsonProperty("parent")

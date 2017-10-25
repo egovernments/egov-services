@@ -60,10 +60,10 @@ public class VehicleFuellingDetailsEntity {
 		vehicleFuellingDetails.setTenantId(tenantId);
 		vehicleFuellingDetails.setTransactionNo(transactionNo);
 		vehicleFuellingDetails.setTransactionDate(transactionDate);
-		vehicleFuellingDetails.setVehicleType(VehicleType.builder().id(vehicleType).build());
-		vehicleFuellingDetails.setVehicleRegNo(Vehicle.builder().id(vehicleRegNo).build());
+		vehicleFuellingDetails.setVehicleType(VehicleType.builder().name(vehicleType).build());
+		vehicleFuellingDetails.setVehicleRegNo(Vehicle.builder().regNumber(vehicleRegNo).build());
 		vehicleFuellingDetails.setVehicleReadingDuringFuelling(vehicleReadingDuringFuelling);
-		vehicleFuellingDetails.setRefuellingStation(RefillingPumpStation.builder().id(refuellingStation).build());
+		vehicleFuellingDetails.setRefuellingStation(RefillingPumpStation.builder().name(refuellingStation).build());
 		vehicleFuellingDetails.setFuelFilled(fuelFilled);
 		vehicleFuellingDetails.setTypeOfFuel(typeOfFuel);
 		vehicleFuellingDetails.setTotalCostIncurred(totalCostIncurred);
@@ -74,7 +74,7 @@ public class VehicleFuellingDetailsEntity {
 		vehicleFuellingDetails.getAuditDetails().setCreatedTime(createdTime);
 		vehicleFuellingDetails.getAuditDetails().setLastModifiedBy(lastModifiedBy);
 		vehicleFuellingDetails.getAuditDetails().setLastModifiedTime(lastModifiedTime);
-		
+
 		return vehicleFuellingDetails;
 
 	}

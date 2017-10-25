@@ -855,8 +855,11 @@ definitions:
         maxLength: 20
       projectCode:
         $ref: '#/definitions/ProjectCode'
+      #parent:
+       # $ref: '#/definitions/DetailedEstimate'
       parent:
-        $ref: '#/definitions/DetailedEstimate'
+        type: string
+        description: Parent of the Detailed Estimate 
       copiedFrom:
         $ref: '#/definitions/DetailedEstimate'
       approvedDate:
@@ -951,11 +954,11 @@ definitions:
         description: Array of Overhead Values
         items:
           $ref: '#/definitions/OverheadValue'
-      #estimatePhotographsList:
-      #  type: array
-      #  description: Array of Estimate Photographs List
-      #  items:
-      #    $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/v1-0-0.yml#/definitions/EstimatePhotographs'
+      estimatePhotographsList:
+        type: array
+        description: Array of Estimate Photographs List
+        items:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-services/v1-0-0.yml#/definitions/EstimatePhotographs'
       workFlowDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
       stateId:
@@ -1085,8 +1088,11 @@ definitions:
           description: Service Tax Percentage of the Estimate Activity
         revisionType:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/RevisionType'
+        #parent:
+        #  $ref: '#/definitions/EstimateActivity'
         parent:
-          $ref: '#/definitions/EstimateActivity'
+          type: string
+          description: Parent of the Estimate Activity
         detailedEstimate:
           $ref: '#/definitions/DetailedEstimate'
         measurementSheetList:
@@ -1162,8 +1168,11 @@ definitions:
           maxLength: 10
         estimateActivity:
           $ref: '#/definitions/EstimateActivity'
+        #parent:
+        #  $ref: '#/definitions/MeasurementSheet'
         parent:
-          $ref: '#/definitions/MeasurementSheet'
+          type: string
+          description: Parent of the Measurement sheet
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:

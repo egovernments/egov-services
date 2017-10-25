@@ -150,51 +150,34 @@ export default class ShowFields extends Component {
   	switch(item.type) {
   		case 'text':
   			 return <UiTextField tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item}  fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
-  			break;
-
-      case 'singleValueListMultiple':
+  		case 'singleValueListMultiple':
   			return <UiSelectFieldMultiple tabIndex={index} ui={this.props.ui} useTimestamp={this.props.useTimestamp} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
-  			break;
-
   		case 'singleValueList':
   			return <UiSelectField tabIndex={index} ui={this.props.ui} useTimestamp={this.props.useTimestamp} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
-  			break;
   		case 'multiValueList':
-      return <UiSingleFileUpload tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
-  			break;
+      return <UiMultiSelectField tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
       case 'autoCompelete':
         return <UiAutoComplete tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} autoComHandler={this.props.autoComHandler || ""}/>
-    			break;
-  		case 'number':
+    	case 'number':
   			return <UiNumberField tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
-  			break;
   		case 'textarea':
   			return <UiTextArea tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
-  			break;
   		case 'mobileNumber':
   			return <UiMobileNumber tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
-  			break;
   		case 'checkbox':
   			return <UiCheckBox tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
-  			break;
   		case 'email':
   			return <UiEmailField tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
-  			break;
   		case 'button':
   			return <UiButton tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
-  			break;
   		case 'datePicker':
   			return <UiDatePicker tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
-        break;
-    case 'date':
+      case 'date':
     			return <UiDate tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
-          break;
       case 'singleFileUpload':
   			return <UiSingleFileUpload tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
-        break;
-
       case 'multiFileUpload':
-    		return <UiMultiSelectField tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+    		return <UiMultiFileUpload tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   	  case 'pan':
         return <UiPanCard tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
       case 'aadhar':

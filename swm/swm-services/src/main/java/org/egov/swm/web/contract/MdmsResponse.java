@@ -1,6 +1,5 @@
 package org.egov.swm.web.contract;
 
-import java.util.List;
 import java.util.Map;
 
 import org.egov.common.contract.response.ResponseInfo;
@@ -27,5 +26,5 @@ public class MdmsResponse {
 	private ResponseInfo responseInfo;
 
 	@JsonProperty("MdmsRes")
-	private Map<String, List<Map<String, JSONArray>>> mdmsRes;
+	private Map<String, Map<String, JSONArray>> mdmsRes;
 }

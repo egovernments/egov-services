@@ -183,6 +183,12 @@ definitions:
       - ADDITIONAL_QUANTITY
       - REDUCED_QUANTITY
 
+  DocumentType:
+    type: string
+    enum:
+      - ESTIMATE_PHOTOGRAPHS
+      - DOCUMENTS
+      - NOTICE
         
 ##### MASTERS #######
       
@@ -959,6 +965,8 @@ definitions:
         description: Filestore reference of the document which is attached 
         maxLength: 256
         minLength: 1
+      documentType:
+        $ref: '#/definitions/DocumentType'  
       tenantId:
         type: string
         description: Tenant Id of the Document detail

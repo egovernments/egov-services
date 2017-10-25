@@ -224,6 +224,10 @@ const menuConvention={
 "Asset Management.Asset Transactions.Asset Revaluation.AssetRevaluationSearchToView":"",
 "Asset Management.Asset Transactions.Asset Sale And Disposal.AssetSaleAndDisposalSearchToCreate":"/transactionTransfer/asset/translateAsset",
 "Asset Management.Asset Transactions.Asset Sale And Disposal.AssetSaleAndDisposalSearchToView":"",
+//SWM
+"Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Create": "/create/vehiclefuellingdetails",
+"Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Search": "/search/vehiclefuellingdetails/view",
+"Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Update": "/search/vehiclefuellingdetails/update"
 }
 
 const style = {

@@ -40,6 +40,7 @@
 
 package org.egov.boundary.web.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +69,8 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -315,6 +318,17 @@ public class BoundaryController {
 		} catch (final Exception e) {
 			return new ResponseEntity<String>("error in request", HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	@GetMapping("/getshapefile")
+	@ResponseBody
+	public ResponseEntity<Resource> fetchShapeFileForTenant(@RequestParam(value = "tenantid", required = true, defaultValue = "default") final String tenantId) throws IOException {
+
+		Resource resource = boundaryService.fetchShapeFile(tenantId);
+
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+				.header(HttpHeaders.CONTENT_TYPE, "text/plain").body(resource);
 	}
 
 	@PostMapping(value = "/_search")

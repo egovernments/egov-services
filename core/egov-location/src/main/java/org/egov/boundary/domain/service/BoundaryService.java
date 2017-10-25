@@ -40,6 +40,7 @@
 
 package org.egov.boundary.domain.service;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,6 +64,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -286,6 +288,16 @@ public class BoundaryService {
 			return true;
 		}
 		return false;
+	}
+
+	public Resource fetchShapeFile(String tenantId) throws IOException {
+		String path = tenantId.replace(".", "/");
+		Resource resource = new ClassPathResource("/gis/" + path + "/wards.kml");
+
+		if(resource.exists())
+			return resource;
+
+		return null;
 	}
 
 	public List<Boundary> getAllBoundariesByIdsAndTypeAndNumberAndCodeAndTenant(

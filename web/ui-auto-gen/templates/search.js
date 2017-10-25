@@ -48,7 +48,7 @@ let searchTemplate = function (module, numCols, path, config, definition, basePa
 			};
 
 			if(fields[paramKey].type == "text" && definition[paramKey].maxLength && definition[paramKey].maxLength > 256)
-				fields[paramKey].type = "textArea";
+				fields[paramKey].type = "textarea";
 		} else {
 			let paramKey = parameterConfig[i].name;
 			localeFields[module + ".create." + paramKey] = getTitleCase(paramKey);

@@ -34,7 +34,7 @@ let getFieldsFromInnerObject = function(reference, fields, definition, module, j
                 };
 
                 if(definition[reference].properties[key].maxLength && definition[reference].properties[key].maxLength > 256)
-                    fields[(isArray ? (jPath + "[0]") : jPath) + "." + key].type = "textArea";
+                    fields[(isArray ? (jPath + "[0]") : jPath) + "." + key].type = "textarea";
             }
         }
 }

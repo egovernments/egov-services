@@ -31,6 +31,16 @@
          "description":"Area",
          "fromDate":1508740856,
          "toDate":1893436200
+      },
+      {  
+         "id":4,
+         "tenantId":"mh",
+         "uomCategory":"Quantity",
+         "name":"Quantity",
+         "code":"QUANTITY",
+         "description":"Quantity",
+         "fromDate":1508740856,
+         "toDate":1893436200
       }
    ],
    "Uom":[  
@@ -62,6 +72,17 @@
          "code":"TON",
          "description":"Ton",
          "uomCategory":"WEIGHT",
+         "baseUom":false,
+         "fromDate":1508740856,
+         "toDate":1893436200,
+         "conversionFactor":1
+      },
+      {  
+         "id":4,
+         "tenantId":"mh",
+         "code":"NOS",
+         "description":"Numbers",
+         "uomCategory":"QUANTITY",
          "baseUom":false,
          "fromDate":1508740856,
          "toDate":1893436200,

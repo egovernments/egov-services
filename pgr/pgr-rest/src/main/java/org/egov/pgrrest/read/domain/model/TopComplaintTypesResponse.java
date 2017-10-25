@@ -21,6 +21,8 @@ public class TopComplaintTypesResponse {
 
     private Integer boundary;
 
+    private String boundaryName;
+
     public org.egov.pgrrest.read.web.contract.TopComplaintTypesResponse toContract(){
         return org.egov.pgrrest.read.web.contract.TopComplaintTypesResponse.builder()
                .count(count)
@@ -42,6 +44,7 @@ public class TopComplaintTypesResponse {
         return org.egov.pgrrest.read.web.contract.TopComplaintTypesResponse.builder()
             .count(count)
             .boundary(boundary)
+            .boundaryName(boundaryName)
             .build();
     }
 }

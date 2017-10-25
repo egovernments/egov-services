@@ -15,6 +15,7 @@ public class WardWiseRowMapper implements RowMapper<TopComplaintTypesResponse> {
         return TopComplaintTypesResponse.builder()
             .count(resultSet.getInt("count"))
             .boundary(resultSet.getInt("boundary"))
+            .boundaryName(resultSet.getString("boundaryname"))
             .build();
     }
 }

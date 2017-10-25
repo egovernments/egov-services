@@ -84,7 +84,9 @@ public class DashBoardRepository {
 
     public List<TopComplaintTypesResponse> getWardWiseCountForComplainttype(String tenantId, String serviceCode, String type){
 
-        StringBuilder query = new StringBuilder("select (select boundarynum from eg_boundary where id = csa.code::bigint and tenantid = :tenantId) as boundary , count(*) as count" +
+        StringBuilder query = new StringBuilder("select (select boundarynum from eg_boundary where id = csa.code::bigint and tenantid = :tenantId) as boundary ," +
+            "(select name from eg_boundary where id = csa.code::bigint and tenantid = 'default') as boundaryname," +
+            " count(*) as count" +
             " from submission cs, submission_attribute csa, servicetype_keyword sk" +
             " where cs.crn = csa.crn and csa.key = 'systemLocationId'" +
             " and cs.servicecode = sk.servicecode and sk.keyword = 'complaint'" +

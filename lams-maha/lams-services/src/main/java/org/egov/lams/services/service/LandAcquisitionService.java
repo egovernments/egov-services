@@ -1,13 +1,16 @@
 package org.egov.lams.services.service;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.lams.common.web.contract.LandAcquisition;
+import org.egov.lams.common.web.contract.LandAcquisitionSearchCriteria;
 import org.egov.lams.common.web.request.LandAcquisitionRequest;
 import org.egov.lams.common.web.response.LandAcquisitionResponse;
 import org.egov.lams.services.config.PropertiesManager;
 import org.egov.lams.services.factory.ResponseFactory;
+import org.egov.lams.services.service.persistence.repository.LandAcquisitionRepository;
 import org.egov.lams.services.util.SequenceGenUtil;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,9 @@ public class LandAcquisitionService {
 	
 	@Autowired
 	private SequenceGenUtil sequenceGenService;
+	
+	@Autowired
+	private LandAcquisitionRepository landAcquisitionRepository;
 	
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
@@ -51,6 +57,9 @@ public class LandAcquisitionService {
 			});
 			
 		});
+		landAcquisitionRequest.getLandAcquisition().stream().forEach(landAcquisition -> {
+			landAcquisition.setLandAcquisitionNumber(sequenceGen());
+		});
 		
 		kafkaTemplate.send(propertiesManager.getCreateLandAcquisitionKafkaTopic(), landAcquisitionRequest);
 		return getLandAcquisitionResponse(landAcquisitionRequest.getLandAcquisition(),
@@ -63,6 +72,15 @@ public class LandAcquisitionService {
 				landAcquisitionRequest.getRequestInfo());	
 		}
 	
+	
+	public LandAcquisitionResponse search(LandAcquisitionSearchCriteria landAcquisitionRequest) {
+
+		LandAcquisitionResponse landAcquisitionList = landAcquisitionRepository.search(landAcquisitionRequest);
+
+		return landAcquisitionList;
+	}
+	
+	
 	private LandAcquisitionResponse getLandAcquisitionResponse(List<LandAcquisition> landAcquisition,
 			RequestInfo requestInfo) {
 		LandAcquisitionResponse landAcquisitionResponse = new LandAcquisitionResponse();
@@ -70,4 +88,17 @@ public class LandAcquisitionService {
 		landAcquisitionResponse.setResponseInfo(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK));
 		return landAcquisitionResponse;
 	}
+	
+	private String sequenceGen()
+	{  
+	    Calendar cal = Calendar.getInstance();
+		String code= "LACQ-";
+		long id = sequenceGenService.getIds(1, "seq_eg_lams_landacquisition").get(0);
+		int year= cal.get(Calendar.YEAR);
+		String idgen =String.format("%05d", id);
+
+		String seqId =code + year + "-" +idgen;
+		return seqId;
+	}
+	
 }

@@ -12,11 +12,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/**
- * Hello world!
- *
- */
-
 @SpringBootApplication
 @Import({ TracerConfiguration.class })
 public class App 

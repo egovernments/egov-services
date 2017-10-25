@@ -144,9 +144,13 @@ let searchTemplate = function (module, numCols, path, config, definition, basePa
 		for (var i=0; i< uiInfoDef.searchResult.columns.length; i++) {
 			specifications.result.values.push(uiInfoDef.searchResult.values[i]);
 			localeFields[module + ".search.result." + uiInfoDef.searchResult.columns[i]] = getTitleCase(uiInfoDef.searchResult.columns[i]);
-			specifications.result.header.push({
-				label: module + ".search.result." + uiInfoDef.searchResult.columns[i]
-			});
+			var tmp = {
+				label: module + ".search.result." + uiInfoDef.searchResult.columns[i],
+			};
+
+			if(fields[uiInfoDef.searchResult.columns[i]] && fields[uiInfoDef.searchResult.columns[i]].type == "datePicker")
+				tmp.isDate = true;
+			specifications.result.header.push(tmp);
 		}
 	} else {
 		errors["search-results"] = "SearchResult not present in x-ui-info. REFERENCE PATH: " + uiInfoDef.referencePath

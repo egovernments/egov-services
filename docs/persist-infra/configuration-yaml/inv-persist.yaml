@@ -1,0 +1,65 @@
+serviceMaps:
+  serviceName: Inventory Service
+  mappings:
+    - version: 1
+      name: Stores create
+      description: create stores in ulb
+      fromTopic: inv-store-save-topic
+      queryMaps:
+        - query: >-
+            INSERT INTO stores(id, code, name, description, departmentcode,
+            storeinchargecode,billingaddress, deliveryaddress,
+            contactnumber1,contactnumber2, emailid, iscentralstore, active,
+            tenantId, createdby, lastmodifiedby,createddate,lastmodifieddate)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);
+          basePath: $.stores.*
+          jsonMaps:
+            - jsonPath: $.stores.*.id
+            - jsonPath: $.stores.*.code
+            - jsonPath: $.stores.*.name
+            - jsonPath: $.stores.*.description
+            - jsonPath: $.stores.*.department.code
+            - jsonPath: $.stores.*.storeInCharge.code
+            - jsonPath: $.stores.*.billingAddress
+            - jsonPath: $.stores.*.deliveryAddress
+            - jsonPath: $.stores.*.contactNo1
+            - jsonPath: $.stores.*.contactNo2
+            - jsonPath: $.stores.*.email
+            - jsonPath: $.stores.*.isCentralStore
+            - jsonPath: $.stores.*.active
+            - jsonPath: $.stores.*.auditDetails.tenantId
+            - jsonPath: $.stores.*.auditDetails.createdBy
+              dbType: LONG
+            - jsonPath: $.stores.*.auditDetails.lastModifiedBy
+              dbType: LONG
+            - jsonPath: $.stores.*.auditDetails.createdTime
+              dbType: LONG
+            - jsonPath: $.stores.*.auditDetails.lastModifiedTime
+              dbType: LONG
+    - version: 1
+      name: Stores update
+      description: update stores in ulb
+      fromTopic: inv-store-update-topic
+      queryMaps:
+        - query: >-
+            UPDATE stores SET
+            name=?,description=?,departmentcode=?,storeinchargecode=?,
+            billingaddress=?,deliveryaddress=?,contactnumber1=?,contactnumber2=?,emailid=?,iscentralstore=?,active=?,lastmodifiedby=?,lastmodifieddate=?
+            WHERE code=? AND tenantid=?;
+          basePath: $.stores.*
+          jsonMaps:
+            - jsonPath: $.stores.*.name
+            - jsonPath: $.stores.*.description
+            - jsonPath: $.stores.*.department.code
+            - jsonPath: $.stores.*.storeInCharge.code
+            - jsonPath: $.stores.*.billingAddress
+            - jsonPath: $.stores.*.deliveryAddress
+            - jsonPath: $.stores.*.contactNo1
+            - jsonPath: $.stores.*.contactNo2
+            - jsonPath: $.stores.*.email
+            - jsonPath: $.stores.*.isCentralStore
+            - jsonPath: $.stores.*.active
+            - jsonPath: $.stores.*.auditDetails.lastModifiedBy
+            - jsonPath: $.stores.*.auditDetails.lastModifiedTime
+            - jsonPath: $.stores.*.code
+            - jsonPath: $.stores.*.auditDetails.tenantId

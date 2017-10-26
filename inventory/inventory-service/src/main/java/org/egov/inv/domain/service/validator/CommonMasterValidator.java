@@ -14,25 +14,21 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public class CommonMasterValidator {
 
     private static final String CODE_LENGTH_CODE = "inv.004";
-    private static final String CODE_LENGTH_FIELD_NAME = "Code";
 
     private static final String NAME_MANDATORY_CODE = "inv.005";
-    private static final String NAME_MANDATORY_FIELD_NAME = "Name";
-    private static final String NAME_MANDATORY_MESSAGE = "Name is required";
 
     private static final String PATTERN_CODE = "inv.005";
-    private static final String PATTERN_FIELD_NAME = "Code";
 
 
-    public void addNameValidationErrors(String name, List<ErrorField> errorFields) {
+    public void addNotNullValidationErrors(String fieldName, String fieldValue, List<ErrorField> errorFields) {
 
-        if (!isEmpty(name)) {
+        if (!isEmpty(fieldValue)) {
             return;
         }
         final ErrorField errorField = ErrorField.builder()
                 .code(NAME_MANDATORY_CODE)
-                .message(NAME_MANDATORY_MESSAGE)
-                .field(NAME_MANDATORY_FIELD_NAME)
+                .message(fieldName + " is not resent")
+                .field(fieldName)
                 .build();
 
         errorFields.add(errorField);
@@ -43,9 +39,9 @@ public class CommonMasterValidator {
             return;
         }
         final ErrorField errorField = ErrorField.builder()
-                .code(PATTERN_CODE)
+                .code(CODE_LENGTH_CODE)
                 .message(fieldName + " must be between " + maximum + " and " + maximum + " characters")
-                .field(PATTERN_FIELD_NAME)
+                .field(fieldName)
                 .build();
 
 
@@ -59,7 +55,7 @@ public class CommonMasterValidator {
             final ErrorField errorField = ErrorField.builder()
                     .code(PATTERN_CODE)
                     .message(fieldName + " pattern is invalid")
-                    .field(PATTERN_FIELD_NAME)
+                    .field(fieldName)
                     .build();
             errorFields.add(errorField);
         }

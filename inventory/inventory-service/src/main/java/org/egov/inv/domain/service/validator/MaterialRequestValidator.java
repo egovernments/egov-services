@@ -35,7 +35,7 @@ public class MaterialRequestValidator {
 
     private void validation(Material material, List<ErrorField> errorFields) {
         commonMasterValidator.addLengthValidationError("Material code", material.getCode(), 5, 50, errorFields);
-        commonMasterValidator.addNameValidationErrors(material.getName(), errorFields);
+        commonMasterValidator.addNotNullValidationErrors("Material Name", material.getName(), errorFields);
         commonMasterValidator.validatePattern("Material code", material.getCode(), "^[A-Za-z0-9]+$", errorFields);
     }
 

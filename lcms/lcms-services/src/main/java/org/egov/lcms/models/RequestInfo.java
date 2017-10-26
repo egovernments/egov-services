@@ -1,17 +1,19 @@
 package org.egov.lcms.models;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * RequestInfo should be used to carry meta information about the requests to
- * the server as described in the fields below. All eGov APIs will use
- * requestinfo as a part of the request body to carry this meta information.
- * Some of this information will be returned back from the server as part of the
- * ResponseInfo in the response body to ensure correlation.
- */
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class RequestInfo {
 	@JsonProperty("apiId")
 	@NotNull
@@ -53,6 +55,4 @@ public class RequestInfo {
 
 	@JsonProperty("correlationId")
 	private String correlationId = null;
-
-	
 }

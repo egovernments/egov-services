@@ -21,30 +21,6 @@
       "isDepreciationApplicable": null,
       "assetFieldsDefination": [
         {
-          "name": "Floor",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Floor Wise Area",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
           "name": "Construction Class",
           "type": null,
           "isActive": true,
@@ -170,30 +146,6 @@
       "isDepreciationApplicable": true,
       "assetFieldsDefination": [
         {
-          "name": "Floor",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Floor Wise Area",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
           "name": "Construction Class",
           "type": null,
           "isActive": true,
@@ -261,30 +213,6 @@
       "depreciationRate": 6.66,
       "isDepreciationApplicable": true,
       "assetFieldsDefination": [
-        {
-          "name": "Floor",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Floor Wise Area",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
         {
           "name": "Construction Class",
           "type": null,
@@ -354,30 +282,6 @@
       "isDepreciationApplicable": true,
       "assetFieldsDefination": [
         {
-          "name": "Floor",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Floor Wise Area",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
           "name": "Construction Class",
           "type": null,
           "isActive": true,
@@ -445,30 +349,6 @@
       "depreciationRate": 6.66,
       "isDepreciationApplicable": true,
       "assetFieldsDefination": [
-        {
-          "name": "Floor",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Floor Wise Area",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
         {
           "name": "Construction Class",
           "type": null,
@@ -538,30 +418,6 @@
       "isDepreciationApplicable": true,
       "assetFieldsDefination": [
         {
-          "name": "Floor",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Floor Wise Area",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
           "name": "Construction Class",
           "type": null,
           "isActive": true,
@@ -630,30 +486,6 @@
       "isDepreciationApplicable": true,
       "assetFieldsDefination": [
         {
-          "name": "Floor",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Floor Wise Area",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
           "name": "Construction Class",
           "type": null,
           "isActive": true,
@@ -721,30 +553,6 @@
       "depreciationRate": 6.66,
       "isDepreciationApplicable": true,
       "assetFieldsDefination": [
-        {
-          "name": "Floor",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Floor Wise Area",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
         {
           "name": "Construction Class",
           "type": null,
@@ -838,18 +646,6 @@
           "columns": []
         },
         {
-          "name": "Area",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
           "name": "Road Type",
           "type": "Text",
           "isActive": true,
@@ -929,30 +725,6 @@
           "assetFieldsDefination": [
             {
               "name": "Capacity",
-              "type": "Number",
-              "isActive": true,
-              "isMandatory": false,
-              "values": null,
-              "localText": null,
-              "regExFormate": null,
-              "url": null,
-              "order": null,
-              "columns": []
-            },
-            {
-              "name": "Area",
-              "type": "Number",
-              "isActive": true,
-              "isMandatory": false,
-              "values": null,
-              "localText": null,
-              "regExFormate": null,
-              "url": null,
-              "order": null,
-              "columns": []
-            },
-            {
-              "name": "Area",
               "type": "Number",
               "isActive": true,
               "isMandatory": false,
@@ -1080,18 +852,6 @@
               "columns": []
             },
             {
-              "name": "length",
-              "type": "Number",
-              "isActive": true,
-              "isMandatory": false,
-              "values": null,
-              "localText": null,
-              "regExFormate": null,
-              "url": null,
-              "order": null,
-              "columns": []
-            },
-            {
               "name": "Material Type",
               "type": "Text",
               "isActive": true,
@@ -1146,18 +906,6 @@
               "url": null,
               "order": null,
               "columns": []
-            },
-            {
-              "name": "area",
-              "type": "Number",
-              "isActive": true,
-              "isMandatory": false,
-              "values": null,
-              "localText": null,
-              "regExFormate": null,
-              "url": null,
-              "order": null,
-              "columns": []
             }
           ]
         },
@@ -1200,7 +948,7 @@
           "assetFieldsDefination": null
         },
         {
-         "tenantId": "mh",
+          "tenantId": "mh",
           "id": 18,
           "name": "Commercial Vehicles",
           "code": "018",
@@ -1219,7 +967,7 @@
           "assetFieldsDefination": null
         },
         {
-         "tenantId": "mh",
+          "tenantId": "mh",
           "id": 19,
           "name": "Other Vehicles",
           "code": "019",
@@ -1238,7 +986,7 @@
           "assetFieldsDefination": null
         },
         {
-         "tenantId": "mh",
+          "tenantId": "mh",
           "id": 20,
           "name": "Office Equipment’s, computers and peripherals",
           "code": "020",
@@ -1257,7 +1005,7 @@
           "assetFieldsDefination": null
         },
         {
-         "tenantId": "mh",
+          "tenantId": "mh",
           "id": 21,
           "name": "Furniture and Fixtures",
           "code": "021",
@@ -1276,7 +1024,7 @@
           "assetFieldsDefination": null
         },
         {
-         "tenantId": "mh",
+          "tenantId": "mh",
           "id": 22,
           "name": "Intangible Assets",
           "code": "022",
@@ -1295,7 +1043,7 @@
           "assetFieldsDefination": null
         },
         {
-         "tenantId": "mh",
+          "tenantId": "mh",
           "id": 23,
           "name": "Buses",
           "code": "023",
@@ -1314,7 +1062,7 @@
           "assetFieldsDefination": null
         },
         {
-         "tenantId": "mh",
+          "tenantId": "mh",
           "id": 24,
           "name": "Dumpers etc.",
           "code": "024",
@@ -1333,7 +1081,7 @@
           "assetFieldsDefination": null
         },
         {
-         "tenantId": "mh",
+          "tenantId": "mh",
           "id": 25,
           "name": "Tipper",
           "code": "025",
@@ -1352,7 +1100,7 @@
           "assetFieldsDefination": null
         },
         {
-         "tenantId": "mh",
+          "tenantId": "mh",
           "id": 26,
           "name": "Fire Brigade",
           "code": "026",
@@ -1371,7 +1119,7 @@
           "assetFieldsDefination": null
         },
         {
-         "tenantId": "mh",
+          "tenantId": "mh",
           "id": 27,
           "name": "Tractor",
           "code": "027",
@@ -1390,7 +1138,7 @@
           "assetFieldsDefination": null
         },
         {
-         "tenantId": "mh",
+          "tenantId": "mh",
           "id": 28,
           "name": "Car",
           "code": "028",
@@ -1409,7 +1157,7 @@
           "assetFieldsDefination": null
         },
         {
-         "tenantId": "mh",
+          "tenantId": "mh",
           "id": 29,
           "name": "Boat",
           "code": "029",
@@ -1428,7 +1176,7 @@
           "assetFieldsDefination": null
         },
         {
-         "tenantId": "mh",
+          "tenantId": "mh",
           "id": 30,
           "name": "Air Conditioner",
           "code": "030",
@@ -1447,7 +1195,7 @@
           "assetFieldsDefination": null
         },
         {
-         "tenantId": "mh",
+          "tenantId": "mh",
           "id": 31,
           "name": "Inverters",
           "code": "031",
@@ -1466,7 +1214,7 @@
           "assetFieldsDefination": null
         },
         {
-         "tenantId": "mh",
+          "tenantId": "mh",
           "id": 32,
           "name": "UPS",
           "code": "032",
@@ -1485,7 +1233,7 @@
           "assetFieldsDefination": null
         },
         {
-         "tenantId": "mh",
+          "tenantId": "mh",
           "id": 33,
           "name": "Plotters",
           "code": "033",
@@ -1504,7 +1252,7 @@
           "assetFieldsDefination": null
         },
         {
-         "tenantId": "mh",
+          "tenantId": "mh",
           "id": 34,
           "name": "Printers",
           "code": "034",
@@ -1523,7 +1271,7 @@
           "assetFieldsDefination": null
         },
         {
-         "tenantId": "mh",
+          "tenantId": "mh",
           "id": 35,
           "name": "computers and peripherals",
           "code": "035",
@@ -1542,7 +1290,7 @@
           "assetFieldsDefination": null
         },
         {
-         "tenantId": "mh",
+          "tenantId": "mh",
           "id": 36,
           "name": "Furniture",
           "code": "036",
@@ -1561,7 +1309,7 @@
           "assetFieldsDefination": null
         },
         {
-         "tenantId": "mh",
+          "tenantId": "mh",
           "id": 37,
           "name": "Fittings ",
           "code": "037",
@@ -1580,7 +1328,7 @@
           "assetFieldsDefination": null
         },
         {
-         "tenantId": "mh",
+          "tenantId": "mh",
           "id": 38,
           "name": "electrical appliances",
           "code": "038",
@@ -1599,7 +1347,7 @@
           "assetFieldsDefination": null
         },
         {
-         "tenantId": "mh",
+          "tenantId": "mh",
           "id": 39,
           "name": "Fixtures",
           "code": "039",
@@ -1618,7 +1366,7 @@
           "assetFieldsDefination": null
         },
         {
-         "tenantId": "mh",
+          "tenantId": "mh",
           "id": 40,
           "name": "Computer software Licences",
           "code": "040",
@@ -1637,7 +1385,7 @@
           "assetFieldsDefination": null
         },
         {
-         "tenantId": "mh",
+          "tenantId": "mh",
           "id": 41,
           "name": "NOC",
           "code": "041",
@@ -1654,6 +1402,630 @@
           "depreciationRate": 20,
           "isDepreciationApplicable": true,
           "assetFieldsDefination": null
+        },
+        {
+          "tenantId": "mh",
+          "id": 42,
+          "name": "Land",
+          "code": "042",
+          "assetCategoryType": "LAND",
+          "parent": null,
+          "depreciationMethod": null,
+          "isAssetAllow": false,
+          "assetAccount": null,
+          "accumulatedDepreciationAccount": null,
+          "revaluationReserveAccount": null,
+          "depreciationExpenseAccount": null,
+          "unitOfMeasurement": "NOS",
+          "version": "1.0",
+          "depreciationRate": null,
+          "isDepreciationApplicable": false,
+          "assetFieldsDefination": [
+            {
+              "name": "CTS No./Gatt No.",
+              "type": "Number",
+              "isActive": true,
+              "isMandatory": false,
+              "values": null,
+              "localText": null,
+              "regExFormate": null,
+              "url": null,
+              "order": null,
+              "columns": []
+            },
+            {
+              "name": "Description",
+              "type": "Text",
+              "isActive": true,
+              "isMandatory": false,
+              "values": null,
+              "localText": null,
+              "regExFormate": null,
+              "url": null,
+              "order": null,
+              "columns": []
+            },
+            {
+              "name": "Purpose",
+              "type": "Text",
+              "isActive": true,
+              "isMandatory": false,
+              "values": null,
+              "localText": null,
+              "regExFormate": null,
+              "url": null,
+              "order": null,
+              "columns": []
+            },
+            {
+              "name": "Possession Date",
+              "type": "Date",
+              "isActive": true,
+              "isMandatory": false,
+              "values": null,
+              "localText": null,
+              "regExFormate": null,
+              "url": null,
+              "order": null,
+              "columns": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tenantId": "mh",
+      "id": 43,
+      "name": "Open Land",
+      "code": "043",
+      "assetCategoryType": "LAND",
+      "parent": 42,
+      "depreciationMethod": null,
+      "isAssetAllow": true,
+      "assetAccount": null,
+      "accumulatedDepreciationAccount": null,
+      "revaluationReserveAccount": null,
+      "depreciationExpenseAccount": null,
+      "unitOfMeasurement": "NOS",
+      "version": "1.0",
+      "depreciationRate": null,
+      "isDepreciationApplicable": false,
+      "assetFieldsDefination": [
+        {
+          "name": "CTS No./Gatt No.",
+          "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Description",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Purpose",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Width",
+          "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Possession Date",
+          "type": "Date",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        }
+      ]
+    },
+    {
+      "tenantId": "mh",
+      "id": 44,
+      "name": "Play ground",
+      "code": "044",
+      "assetCategoryType": "LAND",
+      "parent": 42,
+      "depreciationMethod": null,
+      "isAssetAllow": true,
+      "assetAccount": null,
+      "accumulatedDepreciationAccount": null,
+      "revaluationReserveAccount": null,
+      "depreciationExpenseAccount": null,
+      "unitOfMeasurement": "NOS",
+      "version": "1.0",
+      "depreciationRate": null,
+      "isDepreciationApplicable": false,
+      "assetFieldsDefination": [
+        {
+          "name": "CTS No./Gatt No.",
+          "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Description",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Purpose",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Possession Date",
+          "type": "Date",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        }
+      ]
+    },
+    {
+      "tenantId": "mh",
+      "id": 45,
+      "name": "Open Market",
+      "code": "045",
+      "assetCategoryType": "LAND",
+      "parent": 42,
+      "depreciationMethod": null,
+      "isAssetAllow": true,
+      "assetAccount": null,
+      "accumulatedDepreciationAccount": null,
+      "revaluationReserveAccount": null,
+      "depreciationExpenseAccount": null,
+      "unitOfMeasurement": "NOS",
+      "version": "1.0",
+      "depreciationRate": null,
+      "isDepreciationApplicable": false,
+      "assetFieldsDefination": [
+        {
+          "name": "CTS No./Gatt No.",
+          "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Description",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Purpose",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Possession Date",
+          "type": "Date",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        }
+      ]
+    },
+    {
+      "tenantId": "mh",
+      "id": 46,
+      "name": "Dumping Ground",
+      "code": "046",
+      "assetCategoryType": "LAND",
+      "parent": 42,
+      "depreciationMethod": null,
+      "isAssetAllow": true,
+      "assetAccount": null,
+      "accumulatedDepreciationAccount": null,
+      "revaluationReserveAccount": null,
+      "depreciationExpenseAccount": null,
+      "unitOfMeasurement": "NOS",
+      "version": "1.0",
+      "depreciationRate": null,
+      "isDepreciationApplicable": false,
+      "assetFieldsDefination": [
+        {
+          "name": "CTS No./Gatt No.",
+          "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Description",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Purpose",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Possession Date",
+          "type": "Date",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        }
+      ]
+    },
+    {
+      "tenantId": "mh",
+      "id": 47,
+      "name": "Lakes and ponds",
+      "code": "047",
+      "assetCategoryType": "LAND",
+      "parent": 42,
+      "depreciationMethod": null,
+      "isAssetAllow": true,
+      "assetAccount": null,
+      "accumulatedDepreciationAccount": null,
+      "revaluationReserveAccount": null,
+      "depreciationExpenseAccount": null,
+      "unitOfMeasurement": "NOS",
+      "version": "1.0",
+      "depreciationRate": null,
+      "isDepreciationApplicable": false,
+      "assetFieldsDefination": [
+        {
+          "name": "CTS No./Gatt No.",
+          "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Description",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Purpose",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Possession Date",
+          "type": "Date",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        }
+      ]
+    },
+    {
+      "tenantId": "mh",
+      "id": 48,
+      "name": "Open Space",
+      "code": "048",
+      "assetCategoryType": "LAND",
+      "parent": 42,
+      "depreciationMethod": null,
+      "isAssetAllow": true,
+      "assetAccount": null,
+      "accumulatedDepreciationAccount": null,
+      "revaluationReserveAccount": null,
+      "depreciationExpenseAccount": null,
+      "unitOfMeasurement": "NOS",
+      "version": "1.0",
+      "depreciationRate": null,
+      "isDepreciationApplicable": false,
+      "assetFieldsDefination": [
+        {
+          "name": "CTS No./Gatt No.",
+          "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Description",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Purpose",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Possession Date",
+          "type": "Date",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        }
+      ]
+    },
+    {
+      "tenantId": "mh",
+      "id": 49,
+      "name": "Land with Encroachments",
+      "code": "049",
+      "assetCategoryType": "LAND",
+      "parent": 42,
+      "depreciationMethod": null,
+      "isAssetAllow": true,
+      "assetAccount": null,
+      "accumulatedDepreciationAccount": null,
+      "revaluationReserveAccount": null,
+      "depreciationExpenseAccount": null,
+      "unitOfMeasurement": "NOS",
+      "version": "1.0",
+      "depreciationRate": null,
+      "isDepreciationApplicable": false,
+      "assetFieldsDefination": [
+        {
+          "name": "CTS No./Gatt No.",
+          "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Description",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Purpose",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Possession Date",
+          "type": "Date",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        }
+      ]
+    },
+    {
+      "tenantId": "mh",
+      "id": 50,
+      "name": "Open Theatre",
+      "code": "050",
+      "assetCategoryType": "LAND",
+      "parent": 42,
+      "depreciationMethod": null,
+      "isAssetAllow": true,
+      "assetAccount": null,
+      "accumulatedDepreciationAccount": null,
+      "revaluationReserveAccount": null,
+      "depreciationExpenseAccount": null,
+      "unitOfMeasurement": "NOS",
+      "version": "1.0",
+      "depreciationRate": null,
+      "isDepreciationApplicable": false,
+      "assetFieldsDefination": [
+        {
+          "name": "CTS No./Gatt No.",
+          "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Description",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Purpose",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Possession Date",
+          "type": "Date",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
         }
       ]
     }

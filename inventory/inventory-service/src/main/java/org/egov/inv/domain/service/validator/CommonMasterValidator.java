@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Service
 public class CommonMasterValidator {
@@ -20,14 +20,28 @@ public class CommonMasterValidator {
     private static final String PATTERN_CODE = "inv.005";
 
 
-    public void addNotNullValidationErrors(String fieldName, String fieldValue, List<ErrorField> errorFields) {
+    public void addNotNullForObjectValidationErrors(String fieldName, Object fieldValue, List<ErrorField> errorFields) {
 
-        if (!isEmpty(fieldValue)) {
+        if (null != fieldValue) {
             return;
         }
         final ErrorField errorField = ErrorField.builder()
                 .code(NAME_MANDATORY_CODE)
-                .message(fieldName + " is not resent")
+                .message(fieldName + " is required")
+                .field(fieldName)
+                .build();
+
+        errorFields.add(errorField);
+    }
+
+    public void addNotNullForStringValidationErrors(String fieldName, String fieldValue, List<ErrorField> errorFields) {
+
+        if (isNotBlank(fieldValue)) {
+            return;
+        }
+        final ErrorField errorField = ErrorField.builder()
+                .code(NAME_MANDATORY_CODE)
+                .message(fieldName + " is required")
                 .field(fieldName)
                 .build();
 

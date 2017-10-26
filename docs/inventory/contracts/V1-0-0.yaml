@@ -1842,19 +1842,19 @@ definitions:
           description: |
             assetCode  If the purpose is Repair and Maintenance
         indentQantity:
-          type: integer
-          format: int32
+          type: number
+          format: BigDecimal
           description: |
             indent qantity of the IndentDetail
         issuedQantity:
-          type: integer
-          format: int32
+          type: number
+          format: BigDecimal
           description: |
             issuedQantity  Applicable for Material Issue and Material Transfer
             Indent
         receivedQuantity:
-          type: integer
-          format: int32
+          type: number
+          format: BigDecimal
           description: |
             receivedQuantity  Applicable for Material Receipt Note and Material
             Transfer Inward Note
@@ -1949,8 +1949,8 @@ definitions:
           description: |
             indent detail of the IndentIssueDetail
         quantityIssued:
-          type: integer
-          format: int32
+          type: number
+          format: BigDecimal
           description: |
             quantity issued of the IndentIssueDetail
         description:
@@ -2024,7 +2024,7 @@ definitions:
           type: string
           maxLength: 50
           description: |
-            old code of the Material
+            unique old code of the Material
         materialType:
           $ref: "#/definitions/MaterialType"
           description: |
@@ -2057,13 +2057,13 @@ definitions:
           description: |
             expense account of the Material
         minQuantity:
-          type: integer
-          format: int64
+          type: number
+          format: BigDecimal
           description: |
             min quantity of the Material
         maxQuantity:
-          type: integer
-          format: int64
+          type: number
+          format: BigDecimal
           description: |
             max quantity of the Material
         staockingUom:
@@ -2079,13 +2079,13 @@ definitions:
           description: |
             material class of the Material
         reorderLevel:
-          type: integer
-          format: int64
+          type: number
+          format: BigDecimal
           description: |
             reorder level of the Material
         reorderQuantity:
-          type: integer
-          format: int64
+          type: number
+          format: BigDecimal
           description: |
             reorder quantity of the Material
         materialControlType:
@@ -2389,8 +2389,8 @@ definitions:
           description: |
             uom of the PurchaseMaterial
         orderQuantity:
-          type: integer
-          format: int32
+          type: number
+          format: BigDecimal
           description: |
             order quantity of the PurchaseMaterial
         remarks:
@@ -2783,8 +2783,8 @@ definitions:
           description: |
             scrap reason of the ScrapDetails
         scrapQuantity:
-          type: integer
-          format: int32
+          type: number
+          format: BigDecimal
           description: |
             scrap quantity of the ScrapDetails
         auditDetails:
@@ -3200,10 +3200,10 @@ definitions:
           format: varchar
         totalReceiptValue:
           type: number
+          format: BigDecimal
           description: >-
             The sum total of the receipt value. This will be the total value of
             all the materials that are received as part of this receipt note.
-          format: BigDecimal
         receiptDetails:
           type: array
           description: >-
@@ -3246,23 +3246,23 @@ definitions:
           format: int64
         receivedQty:
           type: number
+          format: BigDecimal
           description: >-
             The quantity of the material received for this particular purchase
             order. All the quantity needs to be saved in the database in the based
             UOM.
-          format: BigDecimal
         acceptedQty:
           type: number
+          format: BigDecimal
           description: >-
             The quantity of the material accepted from the total quantity of
             materials received. All the quantity needs to be saved in the database
             in the based UOM. Accepted quantity cannot be greater than the
             received quantity.
-          format: BigDecimal
         challanQty:
           type: number
+          format: BigDecimal         
           description: The quantity of the material as per the challan in the supplier bill.
-          format: BigDecimal
         challanRate:
           type: number
           description: Rate per unit as mentioned in the challan in the supplier bill.

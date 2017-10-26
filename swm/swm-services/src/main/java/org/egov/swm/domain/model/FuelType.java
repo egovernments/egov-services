@@ -18,7 +18,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class VehicleType {
+public class FuelType {
 
 	@NotNull
 	@Length(min = 1, max = 256)
@@ -34,7 +34,7 @@ public class VehicleType {
 	@Length(min = 1, max = 128)
 	@JsonProperty("name")
 	private String name = null;
-	
+
 	@NotNull
 	@Length(min = 1, max = 128)
 	@JsonProperty("code")

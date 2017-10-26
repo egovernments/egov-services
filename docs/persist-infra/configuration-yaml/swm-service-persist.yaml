@@ -94,7 +94,7 @@ serviceMaps:
    description: create vehicle in egswm_vehicle
    fromTopic: swm-vehicle-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_vehicle(id, tenantid, vehicletype, regnumber, enginesrnumber, chassissrnumber, vehiclecapacity, numberofpersonsreq, model, ulbownedvehicle, vendor, vehicledrivername, purchasedate, yearofpurchase, price, sourceofpurchase, remarks, insurancenumber, insurancevaliditydate, createdby, lastmodifiedby, createdtime, lastmodifiedtime, insurancedocuments) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,  ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_vehicle(id, tenantid, vehicletype, fueltype, regnumber, enginesrnumber, chassissrnumber, vehiclecapacity, numberofpersonsreq, model, ulbownedvehicle, vendor, vehicledrivername, purchasedate, yearofpurchase, price, sourceofpurchase, remarks, insurancenumber, insurancevaliditydate, insurancedocuments, isUnderWarranty, kilometers, endOfWarranty, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,  ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vehicles.*
       jsonMaps:
        
@@ -102,7 +102,9 @@ serviceMaps:
 
        - jsonPath: $.vehicles.*.tenantId
          
-       - jsonPath: $.vehicles.*.vehicleType.name
+       - jsonPath: $.vehicles.*.vehicleType.code
+
+       - jsonPath: $.vehicles.*.fuelType.code
          
        - jsonPath: $.vehicles.*.regNumber
 
@@ -126,7 +128,7 @@ serviceMaps:
        - jsonPath: $.vehicles.*.purchaseDate
          dbType: LONG
 
-       - jsonPath: $.vehicles.*.yearOfPurchase.finYearRange
+       - jsonPath: $.vehicles.*.yearOfPurchase
 
        - jsonPath: $.vehicles.*.price
 
@@ -137,6 +139,17 @@ serviceMaps:
        - jsonPath: $.vehicles.*.insuranceNumber
 
        - jsonPath: $.vehicles.*.insuranceValidityDate
+         dbType: LONG
+
+       - jsonPath: $.vehicles.*.insuranceDocuments.id
+
+       - jsonPath: $.vehicles.*.isUnderWarranty
+         dbType: BOOLEAN
+
+       - jsonPath: $.vehicles.*.kilometers
+         dbType: LONG
+
+       - jsonPath: $.vehicles.*.endOfWarranty
          dbType: LONG
 
        - jsonPath: $.vehicles.*.auditDetails.createdBy
@@ -149,7 +162,7 @@ serviceMaps:
        - jsonPath: $.vehicles.*.auditDetails.lastModifiedTime
          dbType: LONG
 
-       - jsonPath: $.vehicles.*.insuranceDocuments.id
+       
 
  - version: 1.0
    name: vehicle update
@@ -157,11 +170,13 @@ serviceMaps:
    fromTopic: swm-vehicle-update-topic
    queryMaps: 
 
-    - query: UPDATE egswm_vehicle SET vehicletype=?, regnumber=?, enginesrnumber=?, chassissrnumber=?, vehiclecapacity=?, numberofpersonsreq=?, model=?, ulbownedvehicle=?, vendor=?, vehicledrivername=?, purchasedate=?, yearofpurchase=?, price=?, sourceofpurchase=?, remarks=?, insurancenumber=?, insurancevaliditydate=?, lastmodifiedby=?, lastmodifiedtime=?, insurancedocuments=? WHERE id=? AND tenantid=?;
+    - query: UPDATE egswm_vehicle SET vehicletype=?, fueltype=?, regnumber=?, enginesrnumber=?, chassissrnumber=?, vehiclecapacity=?, numberofpersonsreq=?, model=?, ulbownedvehicle=?, vendor=?, vehicledrivername=?, purchasedate=?, yearofpurchase=?, price=?, sourceofpurchase=?, remarks=?, insurancenumber=?, insurancevaliditydate=?, insurancedocuments=?,isUnderWarranty=?, kilometers=?, endOfWarranty=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
       basePath: $.vehicles.*
       jsonMaps:
 
-       - jsonPath: $.vehicles.*.vehicleType.name
+       - jsonPath: $.vehicles.*.vehicleType.code
+
+       - jsonPath: $.vehicles.*.fuelType.code
          
        - jsonPath: $.vehicles.*.regNumber
 
@@ -185,7 +200,7 @@ serviceMaps:
        - jsonPath: $.vehicles.*.purchaseDate
          dbType: LONG
 
-       - jsonPath: $.vehicles.*.yearOfPurchase.finYearRange
+       - jsonPath: $.vehicles.*.yearOfPurchase
 
        - jsonPath: $.vehicles.*.price
 
@@ -198,12 +213,21 @@ serviceMaps:
        - jsonPath: $.vehicles.*.insuranceValidityDate
          dbType: LONG
 
+       - jsonPath: $.vehicles.*.insuranceDocuments.id
+
+       - jsonPath: $.vehicles.*.isUnderWarranty
+         dbType: BOOLEAN
+
+       - jsonPath: $.vehicles.*.kilometers
+         dbType: LONG
+
+       - jsonPath: $.vehicles.*.endOfWarranty
+         dbType: LONG
+
        - jsonPath: $.vehicles.*.auditDetails.lastModifiedBy
 
        - jsonPath: $.vehicles.*.auditDetails.lastModifiedTime
          dbType: LONG
-
-       - jsonPath: $.vehicles.*.insuranceDocuments.id
          
        - jsonPath: $.vehicles.*.id
 

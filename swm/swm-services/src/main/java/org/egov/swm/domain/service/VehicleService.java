@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.Documents;
+import org.egov.swm.domain.model.FuelType;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleSearch;
@@ -48,6 +49,11 @@ public class VehicleService {
 		for (Vehicle v : vehicleRequest.getVehicles()) {
 
 			Long userId = 1l;
+
+			if (v.getPurchaseDate() != null) {
+				Date purchaseDate = new Date(v.getPurchaseDate());
+				v.setYearOfPurchase(purchaseDate != null ? String.valueOf(purchaseDate.getYear()) : null);
+			}
 
 			if (vehicleRequest.getRequestInfo() != null && vehicleRequest.getRequestInfo().getUserInfo() != null
 					&& null != vehicleRequest.getRequestInfo().getUserInfo().getId()) {
@@ -94,6 +100,7 @@ public class VehicleService {
 		MdmsResponse response;
 		ArrayList<VehicleType> vtResponseList;
 		ArrayList<Vendor> vResponseList;
+		ArrayList<FuelType> ftResponseList;
 		ObjectMapper mapper = new ObjectMapper();
 
 		for (Vehicle details : vehicleRequest.getVehicles()) {
@@ -102,7 +109,7 @@ public class VehicleService {
 			if (details.getVehicleType() != null) {
 				masterDetailsArray = new MasterDetails[1];
 				masterDetailsArray[0] = MasterDetails.builder().name(Constants.VEHICLETYPE_MASTER_NAME)
-						.filter("[?(@.name == '" + details.getVehicleType().getName() + "')]").build();
+						.filter("[?(@.code == '" + details.getVehicleType().getCode() + "')]").build();
 				moduleDetailsArray = new ModuleDetails[1];
 				moduleDetailsArray[0] = ModuleDetails.builder().moduleName(Constants.MODULE_CODE)
 						.masterDetails(masterDetailsArray).build();
@@ -120,7 +127,7 @@ public class VehicleService {
 						|| response.getMdmsRes().get(Constants.MODULE_CODE)
 								.get(Constants.VEHICLETYPE_MASTER_NAME) == null) {
 					throw new CustomException("VehicleType",
-							"Given VehicleType is invalid: " + details.getVehicleType().getId());
+							"Given VehicleType is invalid: " + details.getVehicleType().getCode());
 				} else {
 					vtResponseList = new ArrayList<VehicleType>();
 
@@ -133,7 +140,7 @@ public class VehicleService {
 
 					if (vtResponseList.isEmpty())
 						throw new CustomException("VehicleType",
-								"Given VehicleType is invalid: " + details.getVehicleType().getId());
+								"Given VehicleType is invalid: " + details.getVehicleType().getCode());
 					else
 						details.setVehicleType(vtResponseList.get(0));
 				}
@@ -174,6 +181,46 @@ public class VehicleService {
 								"Given vender is invalid: " + details.getVendor().getName());
 					else
 						details.setVendor(vResponseList.get(0));
+				}
+			}
+
+			// Validate FuelType
+			if (details.getFuelType() != null) {
+				masterDetailsArray = new MasterDetails[1];
+				masterDetailsArray[0] = MasterDetails.builder().name(Constants.FUELTYPE_MASTER_NAME)
+						.filter("[?(@.code == '" + details.getFuelType().getCode() + "')]").build();
+				moduleDetailsArray = new ModuleDetails[1];
+				moduleDetailsArray[0] = ModuleDetails.builder().moduleName(Constants.MODULE_CODE)
+						.masterDetails(masterDetailsArray).build();
+
+				request = MdmsRequest.builder()
+						.mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetailsArray)
+								.tenantId(details.getTenantId()).build())
+						.requestInfo(vehicleRequest.getRequestInfo()).build();
+				response = mdmsRepository.getByCriteria(request);
+				if (response == null || response.getMdmsRes() == null
+						|| !response.getMdmsRes().containsKey(Constants.MODULE_CODE)
+						|| response.getMdmsRes().get(Constants.MODULE_CODE) == null
+						|| !response.getMdmsRes().get(Constants.MODULE_CODE).containsKey(Constants.FUELTYPE_MASTER_NAME)
+						|| response.getMdmsRes().get(Constants.MODULE_CODE)
+								.get(Constants.FUELTYPE_MASTER_NAME) == null) {
+					throw new CustomException("FuelType",
+							"Given FuelType is invalid: " + details.getFuelType().getCode());
+				} else {
+					ftResponseList = new ArrayList<FuelType>();
+
+					responseJSONArray = response.getMdmsRes().get(Constants.MODULE_CODE)
+							.get(Constants.FUELTYPE_MASTER_NAME);
+
+					for (int i = 0; i < responseJSONArray.size(); i++) {
+						ftResponseList.add(mapper.convertValue(responseJSONArray.get(i), FuelType.class));
+					}
+
+					if (ftResponseList.isEmpty())
+						throw new CustomException("FuelType",
+								"Given FuelType is invalid: " + details.getFuelType().getCode());
+					else
+						details.setFuelType(ftResponseList.get(0));
 				}
 			}
 

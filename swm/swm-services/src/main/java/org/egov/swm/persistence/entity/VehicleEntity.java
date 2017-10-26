@@ -2,7 +2,6 @@ package org.egov.swm.persistence.entity;
 
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.Documents;
-import org.egov.swm.domain.model.FinancialYear;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleType;
 import org.egov.swm.domain.model.Vendor;
@@ -84,7 +83,7 @@ public class VehicleEntity {
 		vehicle.setVendor(Vendor.builder().name(vendor).build());
 		vehicle.setVehicleDriverName(vehicleDriverName);
 		vehicle.setPurchaseDate(purchaseDate);
-		vehicle.setYearOfPurchase(FinancialYear.builder().finYearRange(yearOfPurchase).build());
+		vehicle.setYearOfPurchase(yearOfPurchase);
 		vehicle.setPrice(price);
 		vehicle.setSourceOfPurchase(sourceOfPurchase);
 		vehicle.setRemarks(remarks);

@@ -120,12 +120,20 @@ public class VehicleJdbcRepository {
 			paramValues.put("purchaseDate", searchRequest.getPurchaseDate());
 		}
 
-		if (searchRequest.getVehicleTypeName() != null) {
+		if (searchRequest.getVehicleTypeCode() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
 			params.append("vehicleType =:vehicleType");
-			paramValues.put("vehicleType", searchRequest.getVehicleTypeName());
+			paramValues.put("vehicleType", searchRequest.getVehicleTypeCode());
+		}
+
+		if (searchRequest.getFuelTypeCode() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("fuelType =:fuelType");
+			paramValues.put("fuelType", searchRequest.getFuelTypeCode());
 		}
 
 		if (searchRequest.getPurchaseYear() != null) {
@@ -142,6 +150,14 @@ public class VehicleJdbcRepository {
 			}
 			params.append("vendor =:vendor");
 			paramValues.put("vendor", searchRequest.getVendorName());
+		}
+
+		if (searchRequest.getIsUnderWarranty() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("isUnderWarranty =:isUnderWarranty");
+			paramValues.put("isUnderWarranty", searchRequest.getIsUnderWarranty());
 		}
 
 		Pagination<Vehicle> page = new Pagination<>();

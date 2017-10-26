@@ -59,6 +59,10 @@ public class Vehicle {
 	@JsonProperty("model")
 	private String model = null;
 
+	@NotNull
+	@JsonProperty("fuelType")
+	private FuelType fuelType = null;
+
 	@JsonProperty("ulbOwnedVehicle")
 	private Boolean ulbOwnedVehicle = null;
 
@@ -74,7 +78,7 @@ public class Vehicle {
 	private Long purchaseDate = null;
 
 	@JsonProperty("yearOfPurchase")
-	private FinancialYear yearOfPurchase = null;
+	private String yearOfPurchase = null;
 
 	@JsonProperty("price")
 	private Double price = null;
@@ -99,6 +103,15 @@ public class Vehicle {
 
 	@JsonProperty("insuranceDocuments")
 	private Documents insuranceDocuments = null;
+
+	@JsonProperty("isUnderWarranty")
+	private Boolean isUnderWarranty = null;
+
+	@JsonProperty("kilometers")
+	private Long kilometers = null;
+
+	@JsonProperty("endOfWarranty")
+	private Long endOfWarranty = null;
 
 	@Valid
 	@JsonProperty("auditDetails")

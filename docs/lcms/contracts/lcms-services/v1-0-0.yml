@@ -1212,8 +1212,7 @@ definitions:
         maxLength: 4
         description: year vallue will be the case  year
       caseType:
-        type: string
-        description: case type value will be the code of casetype master
+        $ref:  '#/definitions/CaseType'
       plantiffName:
         type: string
         description: This field holds information about the plantiff name
@@ -1539,9 +1538,6 @@ definitions:
         description: tenant id of the Case
         maxLength: 128
         minLength: 4
-      isGenerateBill:
-        type: boolean
-        description: This field holds information about either bill has to generate or not
       workFlowDetails:
         $ref: '#/definitions/WorkFlowDetails'
       auditDetails:
@@ -1570,7 +1566,10 @@ definitions:
       instrumentDate:
         type: integer
         format: int64
-        description: This filed holds information about the instrument date  
+        description: This filed holds information about the instrument date
+      stateId:
+        type: string
+        description: This field holds information about the workflow stateId  
     required:
     - demandDate
     - caseType

@@ -5,6 +5,7 @@ import org.egov.eis.config.PropertiesManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -26,10 +27,14 @@ public class AttendanceSearchURLHelper {
             searchURL.append("tenantId=" + tenantId);
 
         if (!employeeIds.isEmpty() && null != employeeIds)
-            searchURL.append("&emloyeeIds=" + employeeIds);
+            searchURL.append("&employeeIds = " + employeeIds);
 
-        if (validfromDate != null && !validfromDate.equals(""))
-            searchURL.append("&fromDate=" + validfromDate);
+        if (validfromDate != null && !validfromDate.equals("")) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            String fromDate = simpleDateFormat.format(validfromDate);
+            searchURL.append("&fromDate=" + fromDate);
+        }
+
 
         searchURL.append("&pageSize=" + applicationProperties.hrLeaveSearchPageSizeMax());
 

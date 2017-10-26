@@ -40,8 +40,8 @@
 
 package org.egov.eis.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -71,7 +71,7 @@ public class AttendanceGetRequest {
 
     private Long designationId;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date fromDate;
 
     private String sortBy;

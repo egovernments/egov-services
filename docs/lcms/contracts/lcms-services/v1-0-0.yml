@@ -146,7 +146,7 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - Summon  
-  /_assignadvocate:
+  /summon/_assignadvocate:
     post:
       summary: Assign advocate to summon .
       description: |
@@ -176,7 +176,7 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - Case 
-  /_registration:
+  /case/_registration:
     post:
       summary: Create case in system .
       description: |
@@ -206,39 +206,9 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - Case  
-        
-  /_Vakalatnamageneration:
-    post:
-      summary: Create vakalatnama in system .
-      description: |
-          To create vakalatnama in the system. API supports bulk creation with max limit as defined in the case request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create, please pass array with one case. 
-            
-           
-          
-      parameters:
-        - name: caseRequest
-          in: body
-          description: Details for the new vakalatnama(s) + RequestInfo meta data.
-          required: true
-          schema:
-            $ref: '#/definitions/CaseRequest'
-      
-      responses:
-      ####################################################
-      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
-      ###################################################
-        201:
-          description: ReponseInfo with case(s) created successfully
-          schema:
-            $ref: '#/definitions/CaseResponse'
-        400:
-          description: Case(s) creation failed
-          schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-      tags:
-        - Case  
+
               
-  /_vakalatnamageneration:
+  /case/_vakalatnamageneration:
     post:
       summary: Create vakalatnama in system .
       description: |
@@ -667,10 +637,7 @@ definitions:
         maxLength: 128
         minLength: 4
     required:
-      - name
       - code
-      - address
-      - active
       - tenantId
  
   Side:
@@ -698,9 +665,7 @@ definitions:
         maxLength: 128
         minLength: 4
     required:
-      - name
       - code
-      - active
       - tenantId
   CaseType:
     type: object
@@ -729,9 +694,7 @@ definitions:
         maxLength: 128
         minLength: 4
     required:
-      - name
       - code
-      - side
       - tenantId
   Bench:
     type: object
@@ -758,9 +721,7 @@ definitions:
         maxLength: 128
         minLength: 4
     required:
-      - name
       - code
-      - active
       - tenantId
   Stamp:
     type: object
@@ -787,9 +748,7 @@ definitions:
         maxLength: 128
         minLength: 4
     required:
-      - name
       - code
-      - active
       - tenantId
   Advocate:
     type: object
@@ -1368,6 +1327,9 @@ definitions:
     type: object
     description: This object holds information about the advocate details while adding advocate to case
     properties:
+      code:
+       type: string
+       description: System will generate composite key based on tenant id and sequence no
       advocate:
         $ref: '#/definitions/Advocate'
       assignedDate:
@@ -1432,7 +1394,7 @@ definitions:
     type: object
     description: This object holds information about the summon request
     properties:
-      requestInfo:
+      RequestInfo:
         $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
       summons:
         type: array
@@ -1443,7 +1405,7 @@ definitions:
     type: object
     description: This object holds information about the summon response
     properties:
-      responseInfo:
+      ResponseInfo:
         $ref: >-
           https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
       summons:
@@ -1455,7 +1417,7 @@ definitions:
     type: object
     description: This object holds information about the legal case request
     properties:
-      requestInfo:
+      RequestInfo:
         $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
       cases:
         type: array
@@ -1466,7 +1428,7 @@ definitions:
     type: object
     description: This object holds information about the legal case response
     properties:
-      responseInfo:
+      ResponseInfo:
         $ref: >-
           https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
       cases:
@@ -1583,7 +1545,7 @@ definitions:
     type: object
     description: This object holds information about the advocate payment request
     properties:
-      requestInfo:
+      RequestInfo:
         $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
       advocatepayments:
         type: array
@@ -1594,7 +1556,7 @@ definitions:
     type: object
     description: This object holds information about the advocate payment response
     properties:
-      responseInfo:
+      ResponseInfo:
         $ref: >-
           https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
       advocatepayments:
@@ -1624,12 +1586,9 @@ definitions:
         items:
           type: string
           description: This filed holds information about the file store id of document
-      opinionDescriptions:
-        type: array
-        description: This field holds information about the opinion descriptions
-        items:
-          type: string
-          description: This field holds information about the opinion description
+      opinionDescription:
+        type: string
+        description: This field holds information about the opinion descriptions.
       opinionsBy:
         $ref: '#/definitions/Advocate'
       additionalAdvocate:
@@ -1662,7 +1621,7 @@ definitions:
     type: object
     description: This object holds information about the opinion request
     properties:
-      requestInfo:
+      RequestInfo:
         $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
       opinions:
         type: array
@@ -1673,7 +1632,7 @@ definitions:
     type: object
     description: This object holds information about the opinion response
     properties:
-      responseInfo:
+      ResponseInfo:
         $ref: >-
           https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
       opinions:

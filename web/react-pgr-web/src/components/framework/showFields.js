@@ -26,6 +26,7 @@ import UiAutoComplete from './components/UiAutoComplete'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import UiDate from './components/UiDate';
 import UiPinCode from './components/UiPinCode';
+import UiArrayField from './components/UiArrayField';
 
 let styles={
   reducePadding: {
@@ -192,6 +193,9 @@ export default class ShowFields extends Component {
         return <UiTextSearch tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} autoComHandler={this.props.autoComHandler}/>
       case 'documentList':
         return <UiDocumentList tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} readonly={screen === "view" ? "true" : ""}/>
+      case 'arrayText':
+      case 'arrayNumber':
+        return <UiArrayField tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
       case 'customComponent':
         // console.log(item.path);
         // {

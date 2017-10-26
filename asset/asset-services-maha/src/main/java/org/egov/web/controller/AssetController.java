@@ -121,7 +121,7 @@ public class AssetController {
 		return new ResponseEntity<>(disposalResponse, HttpStatus.OK);
 	}
 	
-	@PostMapping("currentvalue/_search")
+	@PostMapping("currentvalues/_search")
 	@ResponseBody
 	public ResponseEntity<?> getAssetCurrentValue(
 			@RequestParam(name = "assetIds", required = true) final Set<Long> assetIds,
@@ -136,7 +136,7 @@ public class AssetController {
 		return new ResponseEntity<>(assetCurrentValueResponse, HttpStatus.OK);
 	}
 
-	@PostMapping("currentvalue/_create")
+	@PostMapping("currentvalues/_create")
 	@ResponseBody
 	public ResponseEntity<?> saveCurrentValue(
 			@RequestBody @Valid final AssetCurrentValueRequest assetCurrentValueRequest) {

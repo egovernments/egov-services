@@ -97,6 +97,7 @@ class UiAutoComplete extends Component {
 				return (
           <div >
           <AutoComplete
+						 className="custom-form-control-for-textfield"
 						 id={item.jsonPath.split(".").join("-")}
 						 listStyle={{ maxHeight: 100, overflow: 'auto' }}
 						 filter={(searchText, key)=> {

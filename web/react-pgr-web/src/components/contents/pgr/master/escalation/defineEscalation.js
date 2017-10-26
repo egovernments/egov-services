@@ -1,15 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Grid, Row, Col, DropdownButton, Table, ListGroupItem} from 'react-bootstrap';
+import {Grid, Row, Col, Table} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
-import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import AutoComplete from 'material-ui/AutoComplete';
-import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
 import DataTable from '../../../../common/Table';
 import Api from '../../../../../api/api';
 import styles from '../../../../../styles/material-ui';
@@ -438,7 +435,7 @@ componentWillUpdate() {
               <CardText>
                   <Row>
                     <Col xs={12} sm={4} md={3} lg={3}>
-                        <TextField
+                        <TextField className="custom-form-control-for-textfield"
                             fullWidth={true}
                             floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                             floatingLabelText={translate('pgr.lbl.fromposition')+" *"}
@@ -448,7 +445,7 @@ componentWillUpdate() {
                         />
                     </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
-                        <SelectField
+                        <SelectField className="custom-form-control-for-select" hintText="Select"
                            floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                            floatingLabelText={translate('pgr.lbl.grievance.type')+ " *"}
                            fullWidth={true}
@@ -472,7 +469,7 @@ componentWillUpdate() {
                         </SelectField>
                     </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
-                        <SelectField
+                        <SelectField className="custom-form-control-for-select" hintText="Select"
                            floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                            floatingLabelText={translate('core.lbl.department') + ' *'}
                            fullWidth={true}
@@ -497,7 +494,7 @@ componentWillUpdate() {
                         </SelectField>
                     </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
-                        <SelectField
+                        <SelectField className="custom-form-control-for-select" hintText="Select"
                            floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                            floatingLabelText={translate('pgr.lbl.designation')+" *"}
                            fullWidth={true}
@@ -521,7 +518,7 @@ componentWillUpdate() {
                         </SelectField>
                     </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
-                        <SelectField
+                        <SelectField className="custom-form-control-for-select" hintText="Select"
                            floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                            floatingLabelText={translate('core.position.to')+" *"}
                            fullWidth={true}
@@ -585,7 +582,7 @@ componentWillUpdate() {
                   <Grid>
                       <Row>
                           <Col xs={12} sm={4} md={3} lg={3}>
-                                <AutoComplete
+                                <AutoComplete className="custom-form-control-for-textfield"
                                   floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                   floatingLabelText={translate('pgr.lbl.position')+" *"}
                                   fullWidth={true}

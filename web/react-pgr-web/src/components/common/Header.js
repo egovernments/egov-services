@@ -100,7 +100,7 @@ const Logo = (props) => {
    lineHeight: "21px"}}>
       <span style={{color:"orange"}}>Government of Maharastra</span><br/>
       <span style={{color:"black"}}>Maharastra Shasan</span><br/>
-      <span style={{color:"green"}}>Integrated citizenservice portal</span>
+      <span style={{color:"green"}}>Integrated Citizen Services Portal</span>
   </div>)
 
 }

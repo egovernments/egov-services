@@ -1,12 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Grid, Row, Col, DropdownButton, Table ,ListGroup, ListGroupItem} from 'react-bootstrap';
+import {Grid, Row, Col, Table} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-import TextField from 'material-ui/TextField';
 import AutoComplete from 'material-ui/AutoComplete';
-import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
 import DataTable from '../../../../common/Table';
 import Api from '../../../../../api/api';
 import styles from '../../../../../styles/material-ui';
@@ -231,7 +228,7 @@ class ViewEscalation extends Component {
                           <Grid>
                               <Row>
                                   <Col xs={12} md={6}>
-                                        <AutoComplete
+                                        <AutoComplete className="custom-form-control-for-textfield"
                                           hintText={translate('pgr.lbl.grievance.type')}
                                           fullWidth={true}
                                           filter={function filter(searchText, key) {
@@ -252,7 +249,7 @@ class ViewEscalation extends Component {
                                         />
                                   </Col>
                                   <Col xs={12} md={6}>
-                                        <AutoComplete
+                                        <AutoComplete className="custom-form-control-for-textfield"
                                           hintText={translate('pgr.lbl.position')}
                                           fullWidth={true}
                                           filter={function filter(searchText, key) {

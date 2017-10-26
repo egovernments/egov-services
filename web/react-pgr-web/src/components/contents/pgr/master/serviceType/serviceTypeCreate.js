@@ -235,6 +235,7 @@ class ServiceTypeCreate extends Component {
                   <Row>
                     <Col xs={12} sm={4} md={3} lg={3}>
                         <TextField
+                            className="custom-form-control-for-textfield"
                             fullWidth={true}
                             floatingLabelText="Key"
                             value={createServiceType.dataType ? createServiceType.dataType.attributesKey : ""}
@@ -245,6 +246,7 @@ class ServiceTypeCreate extends Component {
                     </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
                         <TextField
+                            className="custom-form-control-for-textfield"
                             fullWidth={true}
                             floatingLabelText={translate('core.lbl.add.name')}
                             value={createServiceType.dataType ? createServiceType.dataType.attributesName : ""}
@@ -389,6 +391,7 @@ class ServiceTypeCreate extends Component {
                 <div>
                   <Col xs={12} sm={4} md={3} lg={3}>
                       <TextField
+                          className="custom-form-control-for-textfield"
                           fullWidth={true}
                           floatingLabelText={translate('core.lbl.code')}
                           value={createServiceType.attribute ? createServiceType.attribute.code : ""}
@@ -399,6 +402,7 @@ class ServiceTypeCreate extends Component {
                   </Col>
                   <Col xs={12} sm={4} md={3} lg={3}>
                       <TextField
+                          className="custom-form-control-for-textfield"
                           fullWidth={true}
                           floatingLabelText="Group Code"
                           value={createServiceType.attribute ? createServiceType.attribute.groupCode : ""}
@@ -409,6 +413,7 @@ class ServiceTypeCreate extends Component {
                   </Col>
                   <Col xs={12} sm={4} md={3} lg={3}>
                       <TextField
+                          className="custom-form-control-for-textfield"
                           fullWidth={true}
                           floatingLabelText="Datatype Description"
                           value={createServiceType.attribute ? createServiceType.attribute.datatypeDescription : ""}
@@ -419,6 +424,7 @@ class ServiceTypeCreate extends Component {
                   </Col>
                   <Col xs={12} sm={4} md={3} lg={3}>
                       <TextField
+                          className="custom-form-control-for-textfield"
                           fullWidth={true}
                           floatingLabelText={translate('core.lbl.description')}
                           value={createServiceType.attribute ? createServiceType.attribute.description : ""}
@@ -430,6 +436,7 @@ class ServiceTypeCreate extends Component {
 
                   <Col xs={12} sm={4} md={3} lg={3}>
                         <SelectField
+                           className="custom-form-control-for-select" hintText="Select"
                            floatingLabelText={translate('core.error.required')}
                            fullWidth={true}
                            value={createServiceType.attribute ? createServiceType.attribute.required : ""}
@@ -452,6 +459,7 @@ class ServiceTypeCreate extends Component {
 
                   <Col xs={12} sm={4} md={3} lg={3}>
                         <SelectField
+                           className="custom-form-control-for-select" hintText="Select"
                            floatingLabelText="Variable"
                            fullWidth={true}
                            value={createServiceType.attribute ? createServiceType.attribute.variable : ""}
@@ -473,6 +481,7 @@ class ServiceTypeCreate extends Component {
                   </Col>
                   <Col xs={12} sm={4} md={3} lg={3}>
                         <SelectField
+                           className="custom-form-control-for-select" hintText="Select"
                            floatingLabelText="Data Type"
                            fullWidth={true}
                            value={createServiceType.attribute ? createServiceType.attribute.dataType : ""}
@@ -550,6 +559,7 @@ class ServiceTypeCreate extends Component {
                           <Row>
                               <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
+                                      className="custom-form-control-for-textfield"
                                       fullWidth={true}
                                       floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                       floatingLabelText={translate("core.lbl.add.name")+" *"}
@@ -563,6 +573,7 @@ class ServiceTypeCreate extends Component {
                               </Col>
                               <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
+                                      className="custom-form-control-for-textfield"
                                       fullWidth={true}
                                       floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                       floatingLabelText={translate('core.lbl.code') +" *"}
@@ -576,6 +587,7 @@ class ServiceTypeCreate extends Component {
                               </Col>
                               <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
+                                      className="custom-form-control-for-textarea"
                                       fullWidth={true}
                                       floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                       floatingLabelText={translate("core.lbl.description")}
@@ -589,6 +601,7 @@ class ServiceTypeCreate extends Component {
                               </Col>
                               <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
+                                      className="custom-form-control-for-textfield"
                                       fullWidth={true}
                                       floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                       floatingLabelText={translate('pgr.lbl.slahour')+" *"}
@@ -596,12 +609,12 @@ class ServiceTypeCreate extends Component {
                                       errorText={fieldErrors.slaHours ? fieldErrors.slaHours : ""}
                                       maxLength="4"
                                       onChange={(e, value) => handleChange(value, "slaHours", true, /^\d{0,4}$/g, 'Please use only numbers')}
-                                      multiLine={true}
                                       id="slaHours"
                                   />
                               </Col>
                               <Col xs={12} sm={4} md={3} lg={3}>
                                     <SelectField
+                                       className="custom-form-control-for-select" hintText="Select"
                                        maxHeight={200}
                                        floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                        floatingLabelText={translate("core.category")+" *"}

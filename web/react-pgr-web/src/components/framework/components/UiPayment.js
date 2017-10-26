@@ -18,8 +18,9 @@ const CashOrMops = ()=>{
         <div>
           <Col xs={12} md={12}>
                         <TextField
+                            className="custom-form-control-for-textfield"
                             floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
-                            floatingLabelFixed={true} 
+                            floatingLabelFixed={true}
                             floatingLabelText="Amount:"
                             /><br />
                             <TextField
@@ -37,37 +38,40 @@ const ChequeOrDD = () => {
             <Col xs={12} md={12}>
                 <Col xs={12} md={6}>
                             <TextField
+                                className="custom-form-control-for-textfield"
                                 floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
-                                floatingLabelFixed={true} 
+                                floatingLabelFixed={true}
                                 floatingLabelText="DD/Cheque Number:"
                                 />
                 </Col>
                 <Col xs={12} md={6}>
-                                <DatePicker floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelText="DD/Cheque Date" container="inline" />
+                                <DatePicker className="custom-form-control-for-textfield" floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelText="DD/Cheque Date" container="inline" />
                 </Col>
             </Col>
 
             <Col xs={12} md={12}>
                 <Col xs={12} md={6}>
                             <TextField
+                                className="custom-form-control-for-textfield"
                                 floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
-                                floatingLabelFixed={true} 
+                                floatingLabelFixed={true}
                                 floatingLabelText="Bank Name:"
                                 />
                 </Col>
                 <Col xs={12} md={6}>
                        <TextField
+                                className="custom-form-control-for-textfield"
                                 floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
-                                floatingLabelFixed={true} 
+                                floatingLabelFixed={true}
                                 floatingLabelText="Branch Name:"
                                 />
                 </Col>
             </Col>
 
             <Col xs={12} md={12}>
-                        <TextField
+                        <TextField className="custom-form-control-for-textfield"
                             floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
-                            floatingLabelFixed={true} 
+                            floatingLabelFixed={true}
                             floatingLabelText="Amount:"
                             /><br />
                             <TextField
@@ -87,35 +91,36 @@ const CreditOrDebitCard = () => {
           <Col xs={12} md={12}>
                 <Col xs={12} md={4}>
                             <TextField
+                                className="custom-form-control-for-textfield"
                                 floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
-                                floatingLabelFixed={true} 
+                                floatingLabelFixed={true}
                                 floatingLabelText="Last four digits of card:"
                                 />
                 </Col>
                 <Col xs={12} md={4}>
-                                <TextField
+                                <TextField className="custom-form-control-for-textfield"
                                 floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
-                                floatingLabelFixed={true} 
+                                floatingLabelFixed={true}
                                 floatingLabelText="Transacttion Number:"
                                 />
                 </Col>
                 <Col xs={12} md={4}>
-                                <TextField
+                                <TextField className="custom-form-control-for-textfield"
                                 floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
-                                floatingLabelFixed={true} 
+                                floatingLabelFixed={true}
                                 floatingLabelText="Re-enter Transacttion Number:"
                                 />
                 </Col>
             </Col>
             <Col xs={12} md={12}>
-                        <TextField
+                        <TextField className="custom-form-control-for-textfield"
                             floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
-                            floatingLabelFixed={true} 
+                            floatingLabelFixed={true}
                             floatingLabelText="Amount:"
                             /><br />
-                            <TextField
+                            <TextField className="custom-form-control-for-textfield"
                             floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
-                            floatingLabelFixed={true} 
+                            floatingLabelFixed={true}
                             floatingLabelText="Paid By:"
                             />
                         </Col>
@@ -129,22 +134,22 @@ const DirectBank = (props) => {
         <div>
           <Col xs={12} md={12}>
             <Col xs={12} md={6}>
-                        <TextField
+                        <TextField className="custom-form-control-for-textfield"
                             floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
-                            floatingLabelFixed={true} 
+                            floatingLabelFixed={true}
                             floatingLabelText="Challan/Reference No"
                             />
             </Col>
             <Col xs={12} md={6}>
-                            <DatePicker floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelText="Challan/Transaction Date" container="inline" />
+                            <DatePicker className="custom-form-control-for-textfield" floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelText="Challan/Transaction Date" container="inline" />
             </Col>
                         </Col>
 
             <Col xs={12} md={12}>
                 <Col xs={12} md={6}>
-                        <SelectField
+                        <SelectField className="custom-form-control-for-select"
                             floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
-                            floatingLabelFixed={true} 
+                            floatingLabelFixed={true}
                             floatingLabelText="Bank Name"
                              value={props.value.valueBankName}
                              onChange={props.handleChange}
@@ -159,9 +164,9 @@ const DirectBank = (props) => {
                         </SelectField>
                 </Col>
                 <Col xs={12} md={6}>
-                        <SelectField
+                        <SelectField className="custom-form-control-for-select"
                             floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
-                            floatingLabelFixed={true} 
+                            floatingLabelFixed={true}
                             floatingLabelText="Account Number"
                             value={props.value.valueActNum}
                             onChange={(e,index,value) => {
@@ -184,9 +189,9 @@ const DirectBank = (props) => {
                 </Col>
             </Col>
             <Col xs={12} md={12}>
-                        <TextField
+                        <TextField className="custom-form-control-for-textfield"
                             floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
-                            floatingLabelFixed={true} 
+                            floatingLabelFixed={true}
                             floatingLabelText="Amount:"
                             /><br />
                             <TextField
@@ -233,7 +238,7 @@ class CollectionsNew extends Component{
 
                     <Col xs={12} md={12}>
                         <SelectField
-                            floatingLabelFixed={true} 
+                            floatingLabelFixed={true}
                             floatingLabelText="How would you like to pay?"
                             value={modeOfPayment?modeOfPayment:null}
                             onChange={(e,index,value) => {

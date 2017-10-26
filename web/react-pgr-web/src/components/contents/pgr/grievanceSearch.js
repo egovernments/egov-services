@@ -348,16 +348,18 @@ class grievanceSearch extends Component {
   			return (
   				<Row>
             	<Col xs={12} sm={4} md={3} lg={3}>
-        				<TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("core.lbl.fullname")} value={grievanceSearchSet.name} onChange={(e, value) => {handleChange(value, "name", false, "")}}/>
+        				<TextField className="custom-form-control-for-textfield" fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("core.lbl.fullname")} value={grievanceSearchSet.name} onChange={(e, value) => {handleChange(value, "name", false, "")}}/>
         			</Col>
         			<Col xs={12} sm={4} md={3} lg={3}>
-        				<TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("core.lbl.mobilenumber")} errorText={fieldErrors.mobileNumber} value={grievanceSearchSet.mobileNumber} onChange={(e,value) => {handleChange(value, "mobileNumber", false, /^\d{10}$/g)}}/>
+        				<TextField className="custom-form-control-for-textfield" fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("core.lbl.mobilenumber")} errorText={fieldErrors.mobileNumber} value={grievanceSearchSet.mobileNumber} onChange={(e,value) => {handleChange(value, "mobileNumber", false, /^\d{10}$/g)}}/>
         			</Col>
         			<Col xs={12} sm={4} md={3} lg={3}>
-        				<TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("core.lbl.email.compulsory")} errorText={fieldErrors.emailId} value={grievanceSearchSet.emailId} onChange={(e,value) => {handleChange(value, "emailId", false, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)}}/>
+        				<TextField className="custom-form-control-for-textfield" fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("core.lbl.email.compulsory")} errorText={fieldErrors.emailId} value={grievanceSearchSet.emailId} onChange={(e,value) => {handleChange(value, "emailId", false, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)}}/>
         			</Col>
         			<Col xs={12} sm={4} md={3} lg={3}>
-        				<SelectField maxHeight={200} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} fullWidth={true} floatingLabelText={translate("pgr.lbl.complainttype")} value={grievanceSearchSet.serviceCode} onChange={(e, i, value) => {
+        				<SelectField
+                  className="custom-form-control-for-select" hintText="Select"
+                  maxHeight={200} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} fullWidth={true} floatingLabelText={translate("pgr.lbl.complainttype")} value={grievanceSearchSet.serviceCode} onChange={(e, i, value) => {
         					handleChange(value, "serviceCode", false, "")}}>
                     <MenuItem value="" primaryText="Select" />
                 			{complaintTypeList.map((com, index) => (
@@ -367,6 +369,7 @@ class grievanceSearch extends Component {
         			</Col>
         			<Col xs={12} sm={4} md={3} lg={3}>
 	                	<SelectField
+                        className="custom-form-control-for-select" hintText="Select"
                         multiple={true}
                         fullWidth={true}
                         floatingLabelStyle={styles.floatingLabelStyle}
@@ -388,7 +391,9 @@ class grievanceSearch extends Component {
                     	</SelectField>
                 	</Col>
                 	<Col xs={12} sm={4} md={3} lg={3}>
-                    	<SelectField maxHeight={200} fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("pgr.lbl.receivingmode")} value={grievanceSearchSet.receivingMode} onChange={(e, i, value) => {
+                    	<SelectField
+                        className="custom-form-control-for-select" hintText="Select"
+                        maxHeight={200} fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("pgr.lbl.receivingmode")} value={grievanceSearchSet.receivingMode} onChange={(e, i, value) => {
                     		handleChange(value, "receivingMode", false, "")}}>
                         <MenuItem value="" primaryText="Select" />
                     		{receiveingModeList.map((mod, index) => (
@@ -410,19 +415,23 @@ class grievanceSearch extends Component {
 	              		<Grid>
 	                		<Row>
 	                			<Col xs={12} sm={4} md={3} lg={3}>
-	                				<TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("pgr.lbl.crnformat")} value={grievanceSearchSet.serviceRequestId || ""} onChange={(e, value) => {handleChange(value, "serviceRequestId", false, "")}}/>
+	                				<TextField className="custom-form-control-for-textfield" fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("pgr.lbl.crnformat")} value={grievanceSearchSet.serviceRequestId || ""} onChange={(e, value) => {handleChange(value, "serviceRequestId", false, "")}}/>
                         </Col>
 	                			<Col xs={12} sm={4} md={3} lg={3}>
-	                				<SelectField maxHeight={200} fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("core.lbl.location")} value={grievanceSearchSet.locationId} onChange={(e, i, value) => {
+	                				<SelectField
+                            className="custom-form-control-for-select" hintText="Select"
+                            maxHeight={200} fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("core.lbl.location")} value={grievanceSearchSet.locationId} onChange={(e, i, value) => {
 	                					handleChange(value, "locationId", false, "")}}>
                             <MenuItem value="" primaryText="Select" />
                             			{locationList.map((loc, index) => (
 			                                <MenuItem value={loc.id} key={index} primaryText={loc.name} />
 			                            ))}
-                            		</SelectField>
+                      		</SelectField>
 	                			</Col>
 	                			<Col xs={12} sm={4} md={3} lg={3}>
-	                				<DatePicker fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("core.lbl.date.fromdate")} container="inline" value={grievanceSearchSet.startDate}
+	                				<DatePicker
+                          className="custom-form-control-for-textfield"
+                          fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("core.lbl.date.fromdate")} container="inline" value={grievanceSearchSet.startDate}
                           formatDate={(date)=>{
                             let dateObj = new Date(date);
                             let year = dateObj.getFullYear();
@@ -439,7 +448,7 @@ class grievanceSearch extends Component {
                           />
 	                			</Col>
 	                			<Col xs={12} sm={4} md={3} lg={3}>
-	                				<DatePicker fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("core.lbl.date.todate")} container="inline" value={grievanceSearchSet.endDate}
+	                				<DatePicker className="custom-form-control-for-textfield" fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("core.lbl.date.todate")} container="inline" value={grievanceSearchSet.endDate}
                           formatDate={(date)=>{
                             let dateObj = new Date(date);
                             let year = dateObj.getFullYear();

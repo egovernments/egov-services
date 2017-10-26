@@ -1,15 +1,11 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Grid, Row, Col, DropdownButton, Table ,ListGroup, ListGroupItem} from 'react-bootstrap';
+import {Grid, Row, Col, Table} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-import TextField from 'material-ui/TextField';
-import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import AutoComplete from 'material-ui/AutoComplete';
-import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
 import DataTable from '../../../../common/Table';
 import Api from '../../../../../api/api';
 import styles from '../../../../../styles/material-ui';
@@ -293,6 +289,7 @@ class BulkEscalationGeneration extends Component {
                       <Row>
                           <Col xs={12} sm={4} md={3} lg={3}>
                                 <AutoComplete
+                                  className="custom-form-control-for-textfield"
                                   floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                   floatingLabelText={translate('pgr.lbl.fromposition')+" *"}
                                   fullWidth={true}
@@ -319,7 +316,7 @@ class BulkEscalationGeneration extends Component {
                                 />
                           </Col>
                           <Col xs={12} sm={4} md={3} lg={3}>
-                                <SelectField
+                                <SelectField className="custom-form-control-for-select" hintText="Select"
                                    multiple={true}
                                    floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                    floatingLabelText={translate('pgr.lbl.grievance.type')+" *"}
@@ -349,6 +346,7 @@ class BulkEscalationGeneration extends Component {
                           </Col>
                           <Col xs={12} sm={4} md={3} lg={3}>
                               <AutoComplete
+                                  className="custom-form-control-for-textfield"
                                   floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                   floatingLabelText={translate('core.position.to')+" *"}
                                   fullWidth={true}

@@ -72,7 +72,7 @@ class UiSelectField extends Component {
 											obj["value"]+= values[l][k];
 											}	else{
 									obj["value"]= values[l][k];
-							
+
 								}
                  }
 						//	console.log(obj["value"]);
@@ -109,6 +109,7 @@ class UiSelectField extends Component {
 				return (
 
 						<SelectField
+							className="custom-form-control-for-select"
 							floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
 							labelStyle={{"color": "#5F5C57"}}
 							floatingLabelFixed={true}

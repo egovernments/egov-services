@@ -556,7 +556,7 @@ class CustomMenu extends Component {
       return (
       <div className="custom-menu" style={style}  ref={this.setWrapperRef}>
           <Logo tenantInfo={this.props.tenantInfo}/>
-          <h4>Quick Actions</h4>
+          <h4 style={{padding:'0 15px'}}>Quick Actions</h4>
           {
             <TextField
                hintText = "&nbsp;&nbsp;Search"
@@ -566,11 +566,6 @@ class CustomMenu extends Component {
                style={{color:"white"}}
              />
           }
-
-
-
-
-
 
         <Menu desktop={true}>
 

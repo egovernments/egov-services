@@ -1,15 +1,11 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
+import {Grid, Row, Col, Table} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-import TextField from 'material-ui/TextField';
-import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import AutoComplete from 'material-ui/AutoComplete';
 import MenuItem from 'material-ui/MenuItem';
-import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
 import styles from '../../../../../styles/material-ui';
 import Api from '../../../../../api/api';
 import DataTable from '../../../../common/Table';
@@ -252,6 +248,7 @@ class searchRouter extends Component {
                    <Row>
                    <Col xs={12} sm={6} md={6} lg={6}>
                     <AutoComplete
+                        className="custom-form-control-for-textfield"
                         hintText=""
                         floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                         floatingLabelText={translate("pgr.lbl.grievance.type")}
@@ -279,7 +276,7 @@ class searchRouter extends Component {
                         />
                    </Col>
                    <Col xs={12} sm={6} md={6} lg={6}>
-                    <SelectField maxHeight={200} fullWidth={true}
+                    <SelectField maxHeight={200} fullWidth={true} className="custom-form-control-for-select" hintText="Select"
                       floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                       floatingLabelText={translate("pgr.lbl.boundarytype")} value={routerSearchSet.boundaryTypeId} onChange={(e, i, val) => {
                             var e = {target: {value: val}};
@@ -292,6 +289,7 @@ class searchRouter extends Component {
                    </Col>
                    <Col xs={12} sm={6} md={6} lg={6}>
                     <AutoComplete
+                        className="custom-form-control-for-textfield"
                         hintText=""
                         floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                         floatingLabelText={translate("pgr.lbl.boundary")}

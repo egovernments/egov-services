@@ -91,7 +91,7 @@ class UiSelectField extends Component {
 			case 'google':
 				return (
 						<SelectField
-							className="cutustom-form-controll-for-select"
+							className="custom-form-control-for-select"
 							id={item.jsonPath.split(".").join("-")}
 							floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
 							labelStyle={{"color": "#5F5C57"}}

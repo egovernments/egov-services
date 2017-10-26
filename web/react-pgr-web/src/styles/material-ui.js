@@ -30,7 +30,7 @@ const styles = {
     whiteSpace: "nowrap"
   },
   setTopMargin: { // checkbox top margin - to get aligned properly
-    marginTop: 34
+    marginTop: 46
   },
   customColumnStyle : { //column data to overflow instead of ellipsis
     overflow: 'inherit',

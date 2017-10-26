@@ -28,7 +28,7 @@ export default class UiTextField extends Component {
 				if (item.hasOwnProperty("isLabel") && !item.isLabel) {
 					return (
 						<TextField
-              className="cutustom-form-controll-for-textfield"
+              className="custom-form-control-for-textfield"
               id={item.jsonPath.split(".").join("-")}
 							inputStyle={{"color": "#5F5C57","textAlign":item.hasOwnProperty("textAlign")?item.textAlign:"left"}}
 							style={{"display": (item.hide ? 'none' : 'inline-block')}}
@@ -51,7 +51,7 @@ export default class UiTextField extends Component {
 				else {
 					return (
 						<TextField
-              className="cutustom-form-controll-for-textfield"
+              className="custom-form-control-for-textfield"
               id={item.jsonPath.split(".").join("-")}
 							floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
 							inputStyle={{"color": "#5F5C57"}}

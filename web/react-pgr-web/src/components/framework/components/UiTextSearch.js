@@ -12,7 +12,7 @@ export default class UiTextSearch extends Component {
 				return (
 					<div style={{position: 'relative', display: 'inline'}}>
 						<TextField
-							className="cutustom-form-controll-for-textfield"
+							className="custom-form-control-for-textfield"
 							id={item.jsonPath.split(".").join("-")}
 							floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px"}}
 							inputStyle={{"color": "#5F5C57"}}

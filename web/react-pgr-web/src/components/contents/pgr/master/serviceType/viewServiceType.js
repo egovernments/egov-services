@@ -1,17 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Grid, Row, Col, DropdownButton, ListGroup, ListGroupItem} from 'react-bootstrap';
+import {Grid, Row, Col} from 'react-bootstrap';
 import {List, ListItem} from 'material-ui/List';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-import TextField from 'material-ui/TextField';
-import Checkbox from 'material-ui/Checkbox';
-import DatePicker from 'material-ui/DatePicker';
-import SelectField from 'material-ui/SelectField';
-import AutoComplete from 'material-ui/AutoComplete';
-import MenuItem from 'material-ui/MenuItem';
-import Dialog from 'material-ui/Dialog';
-import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
 import styles from '../../../../../styles/material-ui';
 import {translate} from '../../../../common/common';

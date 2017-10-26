@@ -59,19 +59,19 @@ export default class ShowField extends Component
       case "string":
         return (
           <Col xs={12} sm={4} md={3} lg={3}>
-            <TextField id={obj.label.split(".").join("-")} fullWidth={true} floatingLabelFixed={true} floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>} onChange={(e) => this.props.handler(e, obj.name, obj.isMandatory ? true : false, '')} />
+            <TextField className="custom-form-control-for-textfield" id={obj.label.split(".").join("-")} fullWidth={true} floatingLabelFixed={true} floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>} onChange={(e) => this.props.handler(e, obj.name, obj.isMandatory ? true : false, '')} />
           </Col>
         );
       case "number":
         return(
           <Col xs={12} sm={4} md={3} lg={3}>
-            <TextField id={obj.label.split(".").join("-")} fullWidth={true} floatingLabelFixed={true} floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>} onChange={(e) => this.props.handler(e, obj.name, obj.isMandatory ? true : false, /^[+-]?\d+(\.\d+)?$/)}   />
+            <TextField className="custom-form-control-for-textfield" id={obj.label.split(".").join("-")} fullWidth={true} floatingLabelFixed={true} floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>} onChange={(e) => this.props.handler(e, obj.name, obj.isMandatory ? true : false, /^[+-]?\d+(\.\d+)?$/)}   />
           </Col>
         );
       case "date" :
         return(
           <Col xs={12} sm={4} md={3} lg={3}>
-            <DatePicker id={obj.label.split(".").join("-")} fullWidth={true} floatingLabelFixed={true}  floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>} value={typeof(obj.value)=="object"?obj.value:{}} onChange={(first, object)=>{
+            <DatePicker className="custom-form-control-for-textfield" id={obj.label.split(".").join("-")} fullWidth={true} floatingLabelFixed={true}  floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>} value={typeof(obj.value)=="object"?obj.value:{}} onChange={(first, object)=>{
 
               let e={
                 target:{
@@ -89,7 +89,7 @@ export default class ShowField extends Component
             <Col xs={12} sm={4} md={3} lg={3}>
 
 
-              <DatePicker id={obj.label.split(".").join("-")} autoOk={true} fullWidth={true} floatingLabelFixed={true} floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>}
+              <DatePicker className="custom-form-control-for-textfield" id={obj.label.split(".").join("-")} autoOk={true} fullWidth={true} floatingLabelFixed={true} floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>}
               value={obj.value ? obj.value: ''}
               errorText={this.props.dateField ? obj.name === this.props.dateField ? this.props.dateError : '' : ''}
               formatDate={(date)=>{
@@ -115,7 +115,7 @@ export default class ShowField extends Component
       case "singlevaluelist":
         return(
           <Col xs={12} sm={4} md={3} lg={3}>
-            <SelectField id={obj.label.split(".").join("-")} fullWidth={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelFixed={true} floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>} value={typeof(obj.value)=="undefined"?"":obj.value} onChange={(event, key, value) => {
+            <SelectField className="custom-form-control-for-select" hintText="Select" id={obj.label.split(".").join("-")} fullWidth={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelFixed={true} floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>} value={typeof(obj.value)=="undefined"?"":obj.value} onChange={(event, key, value) => {
               // this.setState({
               //   value
               // })
@@ -137,7 +137,7 @@ export default class ShowField extends Component
         case "url":
           return(
             <Col xs={12} sm={4} md={3} lg={3}>
-              <SelectField id={obj.label.split(".").join("-")} fullWidth={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelFixed={true} floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>} value={typeof(obj.value)=="undefined"?"":obj.value} onChange={(event, key, value) => {
+              <SelectField className="custom-form-control-for-select" hintText="Select" id={obj.label.split(".").join("-")} fullWidth={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelFixed={true} floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>} value={typeof(obj.value)=="undefined"?"":obj.value} onChange={(event, key, value) => {
                 // this.setState({
                 //   value
                 // })
@@ -160,7 +160,7 @@ export default class ShowField extends Component
       case "multivaluelist":
         return(
           <Col xs={12} sm={4} md={3} lg={3}>
-          <SelectField id={obj.label.split(".").join("-")} fullWidth={true} multiple={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelFixed={true} floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>} value={typeof(obj.value)=="undefined"?"":obj.value} onChange={(event, key, value) => {
+          <SelectField className="custom-form-control-for-select" hintText="Select" id={obj.label.split(".").join("-")} fullWidth={true} multiple={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelFixed={true} floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>} value={typeof(obj.value)=="undefined"?"":obj.value} onChange={(event, key, value) => {
          // this.setState({
          //   value
          // })

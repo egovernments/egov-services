@@ -1,12 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Grid, Row, Col, DropdownButton, Table ,ListGroup, ListGroupItem} from 'react-bootstrap';
+import {Grid, Row, Col, Table} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-import TextField from 'material-ui/TextField';
 import AutoComplete from 'material-ui/AutoComplete';
-import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
 import DataTable from '../../../../common/Table';
 import Api from '../../../../../api/api';
 import styles from '../../../../../styles/material-ui';
@@ -266,7 +263,8 @@ class SearchEscalation extends Component {
                   <Grid>
                       <Row>
                           <Col xs={12} sm={6} md={6} lg={6}>
-                                <AutoComplete
+                                <AutoComplete className="custom-form-control-for-textfield"
+                                  listStyle={{ maxHeight: 200, overflow: 'auto' }}
                                   floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                   floatingLabelText={translate("pgr.lbl.grievance.type")}
                                   fullWidth={true}
@@ -293,7 +291,8 @@ class SearchEscalation extends Component {
                                 />
                           </Col>
                           <Col xs={12} sm={6} md={6} lg={6}>
-                                <AutoComplete
+                                <AutoComplete className="custom-form-control-for-textfield"
+                                  listStyle={{ maxHeight: 200, overflow: 'auto' }}
                                   floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                   floatingLabelText={translate("pgr.lbl.designation")}
                                   fullWidth={true}

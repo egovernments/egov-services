@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
+import {Grid, Row, Col, Table} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-import TextField from 'material-ui/TextField';
-import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import AutoComplete from 'material-ui/AutoComplete';
 import MenuItem from 'material-ui/MenuItem';
@@ -344,7 +342,7 @@ class routerGeneration extends Component {
                  <Grid>
                    <Row>
                    <Col xs={12} sm={4} md={3} lg={3}>
-                     <SelectField fullWidth={true}
+                     <SelectField fullWidth={true} className="custom-form-control-for-select" hintText="Select"
                        floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                        floatingLabelText={translate("pgr.lbl.grievance.category") + " *"} errorText={fieldErrors.complaintTypeCategory} value={routerCreateSet.complaintTypeCategory} onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
@@ -357,7 +355,7 @@ class routerGeneration extends Component {
                      </SelectField>
                    </Col>
                    <Col xs={12} sm={4} md={3} lg={3}>
-                    <SelectField
+                    <SelectField className="custom-form-control-for-select" hintText="Select"
                       fullWidth={true}
                       floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                       floatingLabelText={translate("pgr.lbl.grievance.type") + " *"}
@@ -379,7 +377,7 @@ class routerGeneration extends Component {
                     </SelectField>
                    </Col>
                    <Col xs={12} sm={4} md={3} lg={3}>
-                     <SelectField fullWidth={true}
+                     <SelectField fullWidth={true} className="custom-form-control-for-select" hintText="Select"
                        floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                        floatingLabelText={translate("pgr.lbl.boundarytype") + " *"} errorText={fieldErrors.boundaryTypeId || ""} value={routerCreateSet.boundaryTypeId} onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
@@ -392,7 +390,7 @@ class routerGeneration extends Component {
                      </SelectField>
                    </Col>
                    <Col xs={12} sm={4} md={3} lg={3}>
-                    <SelectField
+                    <SelectField className="custom-form-control-for-select" hintText="Select"
                       fullWidth={true}
                       floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                       floatingLabelText={translate("pgr.lbl.boundary") + " *"}
@@ -417,6 +415,7 @@ class routerGeneration extends Component {
                    <Row>
                    <Col xs={12} sm={4} md={3} lg={3}>
                     	<AutoComplete
+                        className="custom-form-control-for-textfield"
                         hintText=""
                         floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                         floatingLabelText={translate("pgr.lbl.position") + " *"}

@@ -1,12 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
+import {Grid, Row, Col} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
-import DatePicker from 'material-ui/DatePicker';
-import AutoComplete from 'material-ui/AutoComplete';
-import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
@@ -131,7 +128,7 @@ class CreateReceivingCenter extends Component {
                       <Grid>
                           <Row>
                               <Col xs={12} sm={4} md={3} lg={3}>
-                                  <TextField
+                                  <TextField className="custom-form-control-for-textfield"
                                       fullWidth={true}
                                       floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                       floatingLabelText={translate("core.lbl.add.name")+"*"}
@@ -143,7 +140,7 @@ class CreateReceivingCenter extends Component {
                                   />
                               </Col>
                               <Col xs={12} sm={4} md={3} lg={3}>
-                                  <TextField
+                                  <TextField className="custom-form-control-for-textfield"
                                       fullWidth={true}
                                       floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                       floatingLabelText={translate("core.lbl.code")+"*"}
@@ -156,7 +153,7 @@ class CreateReceivingCenter extends Component {
                                   />
                               </Col>
                               <Col xs={12} sm={4} md={3} lg={3}>
-                                  <TextField
+                                  <TextField className="custom-form-control-for-textarea"
                                       fullWidth={true}
                                       floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                       floatingLabelText={translate("core.lbl.description")}
@@ -169,7 +166,7 @@ class CreateReceivingCenter extends Component {
                                   />
                               </Col>
                               <Col xs={12} sm={4} md={3} lg={3}>
-                                  <TextField
+                                  <TextField className="custom-form-control-for-textfield"
                                       fullWidth={true}
                                       floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                       floatingLabelText={translate("pgr.lbl.order.no")+"*"}

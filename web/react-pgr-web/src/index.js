@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom';
 import {HashRouter} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store';
-// import {blue500} from 'material-ui/styles/colors';
+import {grey300} from 'material-ui/styles/colors';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 // import './index.css';
@@ -33,12 +33,13 @@ document.title="eGov";
 let themeObject={
   fontFamily:"Lato, sans",
   textColor:"rgba(0, 0, 0, 0.68)",
-  fontSize:"15px",
+  backgroundcolor:'#F7F7F7',
   palette: {
     primary1Color: "#009688",
     primary2Color: "#f58720",
     textColor:"#5f5c62",
-    canvasColor: '#eee',
+    canvasColor: '#F7F7F7',
+    borderColor: grey300,
   },
   raisedButton: {
     primaryColor: "#607D8B"

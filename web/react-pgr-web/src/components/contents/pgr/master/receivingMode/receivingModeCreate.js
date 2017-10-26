@@ -1,12 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
+import {Grid, Row, Col} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
-import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
-import AutoComplete from 'material-ui/AutoComplete';
 import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -145,6 +143,7 @@ class receivingModeCreate extends Component {
                    <Row>
                     <Col xs={12} sm={4} md={3} lg={3}>
                      <TextField
+                        className="custom-form-control-for-textfield"
                         fullWidth={true}
                         floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                         floatingLabelText={translate("core.lbl.add.name")+"*"}
@@ -156,6 +155,7 @@ class receivingModeCreate extends Component {
                     </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
                      <TextField
+                        className="custom-form-control-for-textfield"
                         fullWidth={true}
                         floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                         floatingLabelText={translate("core.lbl.code")+"*"}
@@ -168,6 +168,7 @@ class receivingModeCreate extends Component {
                     </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
                      <TextField
+                        className="custom-form-control-for-textarea"
                         fullWidth={true}
                         floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                         floatingLabelText={translate("core.lbl.description")}
@@ -180,6 +181,7 @@ class receivingModeCreate extends Component {
                     </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
                      <SelectField
+                          className="custom-form-control-for-select" hintText="Select"
                           multiple="true"
                           errorText={fieldErrors.channels ? fieldErrors.channels : ""}
                           value={receivingmodeSet.channels ? receivingmodeSet.channels : ""}

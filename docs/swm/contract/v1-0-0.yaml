@@ -11,7 +11,7 @@ info:
 basePath: "/swm-services"
 
 x-ui-info:
-  $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/vfd-ui-info.yaml
+  $ref: /home/venkat/egov-services/docs/swm/contract/vehicle-ui-info.yaml
 
 
 paths:
@@ -33,12 +33,18 @@ paths:
             in: query
             maxItems: 50
             description: comma seperated list of Ids
-          - name: vehicleTypeName
+          - name: vehicleTypeCode
             type: string
             format: singleValueList
             in: query
-            description: vehicleType name of the Vehicle
+            description: vehicleType code of the Vehicle
             maxLength: 256
+          - name: fuelTypeCode
+            type: string
+            format: singleValueList
+            in: query
+            description: fuelTypeCode code of the Vehicle
+            maxLength: 256  
           - name: regNumber
             type: string
             in: query
@@ -89,7 +95,12 @@ paths:
             type: string
             format: date
             in: query
-            description: insuranceValidityDate of the Vehicle
+            description: insuranceValidityDate of the Vehicle 
+          - name: isUnderWarranty
+            type: boolean
+            format: checkbox
+            in: query
+            description: isUnderWarranty of the Vehicle
           - $ref: '#/parameters/pageSize'
           - $ref: '#/parameters/offSet'
           - name: sortBy
@@ -697,6 +708,39 @@ definitions:
       - endingPoint
       - stopsSelection
       
+    FuelType:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the FuelType
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the FuelType
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          format: singleValueList
+          description: name of the FuelType
+          maxLength: 128
+          minLength: 1
+        code:
+          type: string
+          format: singleValueList
+          description: code of the FuelType
+          maxLength: 128
+          minLength: 1
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - name
+      - code
+      
     VehicleType:
       type: object
       properties:
@@ -715,13 +759,20 @@ definitions:
           format: singleValueList
           description: name of the VehicleType
           maxLength: 128
-          minLength: 4
+          minLength: 1
+        code:
+          type: string
+          format: singleValueList
+          description: code of the VehicleType
+          maxLength: 128
+          minLength: 1
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - id
       - tenantId
       - name
+      - code
       
     Vehicle:
       type: object
@@ -738,6 +789,8 @@ definitions:
           minLength: 4
         vehicleType:
           $ref: "#/definitions/VehicleType"
+        fuelType:
+          $ref: "#/definitions/FuelType"
         regNumber:
           type: string
           format: singleValueList
@@ -811,12 +864,27 @@ definitions:
           description: Current or Futrure date at which insurance is going to expire
         insuranceDocuments:
           $ref: '#/definitions/Documents'
+        isUnderWarranty:
+          type: boolean
+          format: checkbox
+          description: captures whether vehicle is under warranty or not. Option should be selected if vehicle is under warranty.
+        kilometers:
+          type: integer
+          format: int64
+          maximum: 75000
+          minimum: 1
+          description: If isUnderWarranty is selected, this field is mandatory.
+        endOfWarranty:
+          type: string
+          format: date
+          description:  If isUnderWarranty is selected, this field is mandatory. Should be a future date
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - id
       - tenantId
       - vehicleType
+      - fuelType
       - regNumber
       - engineSrNumber
       - chassisSrNumber
@@ -834,7 +902,7 @@ definitions:
       properties:
         requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        vehicle:
+        vehicles:
           description: Used for search result and create only
           type: array
           items:
@@ -845,7 +913,7 @@ definitions:
       properties:
         responseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        vehicle:
+        vehicles:
           description: Used for search result and create only
           type: array
           maximum: 500
@@ -869,13 +937,19 @@ definitions:
           type: string
           description: name of the WasteType. e.g. Dry, wet or medicinal waste etc. Special chararcter not allowed. Space allowed
           maxLength: 128
-          minLength: 4
+          minLength: 1
+        code:
+          type: string
+          description: code of the WasteType. e.g. Dry, wet or medicinal waste etc. Special chararcter not allowed. Space allowed
+          maxLength: 128
+          minLength: 1
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - id
       - tenantId
       - name
+      - code
       
     WasteSubType:
       type: object
@@ -895,6 +969,11 @@ definitions:
           description: name of the WasteSubType. e.g. Household or market waste. Waste Subtype is a subset of waste type. Special chararcter not allowed. Space allowed
           maxLength: 128
           minLength: 1
+        code:
+          type: string
+          description: code of the WasteSubType. e.g. Household or market waste. Waste Subtype is a subset of waste type. Special chararcter not allowed. Space allowed
+          maxLength: 128
+          minLength: 1
         wasteType:
           $ref: "#/definitions/WasteType"
         auditDetails:
@@ -903,6 +982,7 @@ definitions:
       - id
       - tenantId
       - name
+      - code
       - wasteType
       
     DumpingGround:
@@ -1167,13 +1247,19 @@ definitions:
           type: string
           description: name of the ShiftType
           maxLength: 128
-          minLength: 4
+          minLength: 1
+        code:
+          type: string
+          description: code of the ShiftType
+          maxLength: 128
+          minLength: 1
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - id
       - tenantId
       - name
+      - code
       
     Shift:
       type: object
@@ -1259,13 +1345,19 @@ definitions:
           type: string
           description: name of the CollectionType. e.g. Door to Door, community bin
           maxLength: 128
-          minLength: 4
+          minLength: 1
+        code:
+          type: string
+          description: code of the CollectionType. e.g. Door to Door, community bin
+          maxLength: 128
+          minLength: 1
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - id
       - tenantId
       - name
+      - code
       
     CollectionPointDetails:
       type: object
@@ -2125,4 +2217,5 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 

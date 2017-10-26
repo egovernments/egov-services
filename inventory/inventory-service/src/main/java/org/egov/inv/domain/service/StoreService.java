@@ -14,6 +14,7 @@ import org.egov.inv.web.contract.StoreRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 @Service
 public class StoreService {
@@ -24,7 +25,7 @@ public class StoreService {
     private InventoryUtilityService inventoryUtilityService;
 
     public List<Store> create(StoreRequest storeRequest, String tenantId) {
-
+      
         List<Store> storesList = storeRequest.getStores();
 
         List<Long> storesIdList = inventoryUtilityService.getIdList(storeRequest.getStores().size(), "seq_stores");

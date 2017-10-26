@@ -1758,8 +1758,6 @@ definitions:
           minLength: 4
         issueStore:
           $ref: "#/definitions/Store"
-          description: |
-            issue store of the Indent
         indentDate:
           type: integer
           format: int64
@@ -1828,12 +1826,8 @@ definitions:
           minLength: 4
         material:
           $ref: "#/definitions/Material"
-          description: |
-            material of the IndentDetail
         uom:
           $ref: "#/definitions/Uom"
-          description: |
-            uom of the IndentDetail
         projectCode:
           type: string
           description: |
@@ -1909,8 +1903,6 @@ definitions:
           minLength: 4    
         materialIssue:
           $ref: "#/definitions/MaterialIssue"
-          description: |
-            material issue of the IndentIssue
         issuedToEmployee:
           type:  string
           description: |
@@ -1943,12 +1935,8 @@ definitions:
           minLength: 4
         indentIssue:
           $ref: "#/definitions/IndentIssue"
-          description: |
-            indent issue of the IndentIssueDetail
         indentDetail:
           $ref: "#/definitions/IndentDetail"
-          description: |
-            indent detail of the IndentIssueDetail
         quantityIssued:
           type: number
           format: BigDecimal
@@ -2028,12 +2016,8 @@ definitions:
             unique old code of the Material
         materialType:
           $ref: "#/definitions/MaterialType"
-          description: |
-            material type of the Material
         baseUom:
           $ref: "#/definitions/Uom"
-          description: |
-            base uom of the Material
         inventoryType:
           type: string
           enum:
@@ -2051,12 +2035,8 @@ definitions:
             status of the Material
         purchaseUom:
           $ref: "#/definitions/Uom"
-          description: |
-            purchase uom of the Material
         expenseAccount:
           $ref: "#/definitions/ChartofAccount"
-          description: |
-            expense account of the Material
         minQuantity:
           type: number
           format: BigDecimal
@@ -2069,8 +2049,6 @@ definitions:
             max quantity of the Material
         staockingUom:
           $ref: "#/definitions/Uom"
-          description: |
-            staocking uom of the Material
         materialClass:
           type: string
           enum:
@@ -2252,8 +2230,6 @@ definitions:
           minLength: 4    
         store:
           $ref: "#/definitions/Store"
-          description: |
-            store of the MaterialIssue
         issueNoteNumber:
           type: string
           maxLength: 100
@@ -2332,12 +2308,8 @@ definitions:
           minLength: 4
         purchaseOrder:
           $ref: "#/definitions/PurchaseOrder"
-          description: |
-            purchase order of the PurchaseIndent
         indent:
           $ref: "#/definitions/Indent"
-          description: |
-            indent of the PurchaseIndent
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
@@ -2384,12 +2356,8 @@ definitions:
           minLength: 4    
         material:
           $ref: "#/definitions/Material"
-          description: |
-            material of the PurchaseMaterial
         uom:
           $ref: "#/definitions/Uom"
-          description: |
-            uom of the PurchaseMaterial
         orderQuantity:
           type: number
           format: BigDecimal
@@ -2405,6 +2373,7 @@ definitions:
       required:
       - material
       - uom
+      - orderQuantity
       
     PurchaseMaterialRequest:
       description: Contract class for web request. Array of PurchaseMaterial items  are used in case of create or update
@@ -2446,8 +2415,6 @@ definitions:
           minLength: 4
         store:
           $ref: "#/definitions/Store"
-          description: |
-            store of the PurchaseOrder
         purchaseOrderNumber:
           type: string
           readOnly: true
@@ -2590,8 +2557,6 @@ definitions:
             description of the Store
         department:
           $ref: "#/definitions/Department"
-          description: |
-            department of the Store
         billingAddress:
           type: string
           maxLength: 1000
@@ -2618,8 +2583,6 @@ definitions:
             email of the Store
         storeInCharge:
           $ref: "#/definitions/Employee"
-          description: |
-            store in charge of the Store
         isCentralStore:
           type: boolean
           description: |
@@ -2709,8 +2672,6 @@ definitions:
           minLength: 4
         store:
           $ref: "#/definitions/Store"
-          description: |
-            store of the Scrap
         scrapNumber:
           type: string
           readOnly: true
@@ -2769,8 +2730,6 @@ definitions:
           minLength: 4    
         material:
           $ref: "#/definitions/Material"
-          description: |
-            material of the ScrapDetails
         lotNumber:
           type: string
           description: |
@@ -2843,8 +2802,6 @@ definitions:
             receipt date of the TransferInward
         transferOutWard:
           $ref: "#/definitions/TransferOutward"
-          description: |
-            transfer out ward of the TransferInward
         description:
           type: string
           maxLength: 1000
@@ -2917,12 +2874,8 @@ definitions:
           minLength: 4    
         indent:
           $ref: "#/definitions/Indent"
-          description: |
-            indent of the TransferIndentNote
         indentStore:
           $ref: "#/definitions/Store"
-          description: |
-            indent store of the TransferIndentNote
         stateId:
           type: integer
           format: int64
@@ -2974,8 +2927,6 @@ definitions:
           minLength: 4    
         store:
           $ref: "#/definitions/Store"
-          description: |
-            store of the TransferOutward
         issueDate:
           type: integer
           format: int64
@@ -3009,8 +2960,6 @@ definitions:
             outward note status of the TransferOutward
         indent:
           $ref: "#/definitions/Indent"
-          description: |
-            indent of the TransferOutward
         stateId:
           type: integer
           format: int64
@@ -3248,10 +3197,6 @@ definitions:
           description: Unique number to identify the maretial receipt note.
         poline:
           $ref: "#/definitions/PurchaseOrder"
-          description: >-
-            The unique identifier of the purchase order detail. This refers to the
-            particular purchase order material that is being received.
-          format: int64
         receivedQty:
           type: number
           format: BigDecimal

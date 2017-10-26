@@ -4,6 +4,7 @@ import org.egov.inv.domain.model.Material;
 import org.egov.inv.domain.model.MaterialSearchRequest;
 import org.egov.inv.domain.model.Pagination;
 import org.egov.inv.persistance.entity.MaterialEntity;
+import org.egov.inv.persistance.repository.buider.MaterialQueryBuilder;
 import org.egov.tracer.model.CustomException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -13,15 +14,18 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 @Service
 public class MaterialJdbcRepository {
 
-    public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public MaterialJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    private MaterialQueryBuilder materialQueryBuilder;
+
+    public MaterialJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+                                  MaterialQueryBuilder materialQueryBuilder) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.materialQueryBuilder = materialQueryBuilder;
     }
 
     public Pagination<Material> search(MaterialSearchRequest materialSearchRequest) {
@@ -166,7 +170,7 @@ public class MaterialJdbcRepository {
 
         BeanPropertyRowMapper row = new BeanPropertyRowMapper(MaterialEntity.class);
 
-            List<MaterialEntity> materialEntities = namedParameterJdbcTemplate
+        List<MaterialEntity> materialEntities = namedParameterJdbcTemplate
                 .query(searchQuery.toString(), paramValues, row);
 
 
@@ -178,6 +182,14 @@ public class MaterialJdbcRepository {
         page.setPagedData(materialList);
 
         return page;
+    }
+
+
+    public String getLatestMaterialCode() {
+        HashMap<String, Object> parametersMap = new HashMap<>();
+
+        List<String> stringList = namedParameterJdbcTemplate.queryForList(materialQueryBuilder.getSerialNo(), parametersMap, String.class);
+        return stringList.size() > 0 ? stringList.get(0) : null;
     }
 
     public Pagination<?> getPagination(String searchQuery, Pagination<?> page, Map<String, Object> paramValues) {

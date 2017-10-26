@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class MaterialRepository {
 
@@ -49,4 +47,9 @@ public class MaterialRepository {
     public Pagination<Material> search(MaterialSearchRequest materialSearchRequest) {
         return materialJdbcRepository.search(materialSearchRequest);
     }
+
+    public String getLatestMaterialCode() {
+        return materialJdbcRepository.getLatestMaterialCode();
+    }
+
 }

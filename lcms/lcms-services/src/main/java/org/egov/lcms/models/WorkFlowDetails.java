@@ -1,19 +1,16 @@
 package org.egov.lcms.models;
 
-
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-/**
- * An Object to hold the Application workflow details for a given legal case
- */
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class WorkFlowDetails {
 	@JsonProperty("type")
 	private String type = null;
@@ -48,5 +45,4 @@ public class WorkFlowDetails {
 	@JsonProperty("stateId")
 	private String stateId = null;
 
-	
 }

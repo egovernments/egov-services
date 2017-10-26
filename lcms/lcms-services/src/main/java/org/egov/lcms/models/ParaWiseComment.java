@@ -10,19 +10,21 @@ import org.hibernate.validator.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * This object holds information about parawise comments about the case
  */
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ParaWiseComment {
 
 	private Long id;
-	
+
 	@JsonProperty("parawiseCommentsAskedDate")
 	@NotNull
 	@NotEmpty

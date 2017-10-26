@@ -23,7 +23,7 @@ public class EstimateAppropriationService {
     
 	public Boolean validateEstimateAppropriation(final EstimateAppropriation estimateAppropriation) {
 
-		//Check Budget control type also if its not none then check for budget available
+		// TODO : need to Check Budget control type and 
 		Boolean flag = Boolean.FALSE;
 		String url = "";
 
@@ -31,7 +31,7 @@ public class EstimateAppropriationService {
 
 		RequestInfo requestInfo = new RequestInfo();
 
-		restTemplate.postForObject(url, requestInfo, Object.class);
+		 restTemplate.postForObject(url, requestInfo, Object.class);
 
 		return flag;
 
@@ -42,11 +42,26 @@ public class EstimateAppropriationService {
 		AuditDetails auditDetails = new AuditDetails();
 		for(EstimateAppropriation estimateAppropriation: estimateAppropriationRequest.getEstimateAppropriations()) {
             auditDetails.setCreatedBy(requestInfo.getUserInfo().getUsername());
+//            auditDetails.setCreatedTime(new Date().getTime());
             estimateAppropriation.setAuditDetails(auditDetails);
 		}
         kafkaTemplate.send(propertiesManager.getEstimateAppropriationsCreateTopic(), estimateAppropriationRequest);
         return estimateAppropriationRequest.getEstimateAppropriations();
 
+		
+	}
+	
+	public List<EstimateAppropriation> update(final EstimateAppropriationRequest estimateAppropriationRequest) {
+		RequestInfo requestInfo = estimateAppropriationRequest.getRequestInfo();
+		AuditDetails auditDetails = new AuditDetails();
+		
+		for(EstimateAppropriation estimateAppropriation: estimateAppropriationRequest.getEstimateAppropriations()) {
+            auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getUsername());
+//            auditDetails.setLastModifiedTime(new Date().getTime());
+            estimateAppropriation.setAuditDetails(auditDetails);
+		}
+        kafkaTemplate.send(propertiesManager.getEstimateAppropriationsUpdateTopic(), estimateAppropriationRequest);
+        return estimateAppropriationRequest.getEstimateAppropriations();
 		
 	}
 

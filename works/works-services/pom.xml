@@ -9,12 +9,12 @@
 	<packaging>jar</packaging>
 
 	<name>works-services</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Spring Boot project for works-services</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.8.RELEASE</version>
+		<version>1.5.4.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -100,6 +100,18 @@
             <version>${joda-time-version}</version>
         </dependency>
 
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-to-slf4j</artifactId>
+			<version>2.8.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.0</version>
+		</dependency>
+		
         <dependency>
             <groupId>org.egov.services</groupId>
             <artifactId>tracer</artifactId>

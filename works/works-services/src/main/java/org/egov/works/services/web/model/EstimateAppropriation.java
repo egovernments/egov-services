@@ -1,19 +1,22 @@
 package org.egov.works.services.web.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * An Object that hold Estimate Appropriation for a given Abstract Estimate Details
  */
 @ApiModel(description = "An Object that hold Estimate Appropriation for a given Abstract Estimate Details")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-25T07:37:26.972Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-26T05:59:44.187Z")
 
 public class EstimateAppropriation   {
   @JsonProperty("id")
@@ -22,11 +25,11 @@ public class EstimateAppropriation   {
   @JsonProperty("tenantId")
   private String tenantId = null;
 
-  @JsonProperty("abstractEstimateDetails")
-  private AbstractEstimateDetails abstractEstimateDetails = null;
+  @JsonProperty("objectNumber")
+  private String objectNumber = null;
 
-  @JsonProperty("detailedEstimate")
-  private DetailedEstimate detailedEstimate = null;
+  @JsonProperty("objectType")
+  private String objectType = null;
 
   @JsonProperty("budgetUsage")
   private String budgetUsage = null;
@@ -75,46 +78,46 @@ public class EstimateAppropriation   {
     this.tenantId = tenantId;
   }
 
-  public EstimateAppropriation abstractEstimateDetails(AbstractEstimateDetails abstractEstimateDetails) {
-    this.abstractEstimateDetails = abstractEstimateDetails;
+  public EstimateAppropriation objectNumber(String objectNumber) {
+    this.objectNumber = objectNumber;
     return this;
   }
 
    /**
-   * Get abstractEstimateDetails
-   * @return abstractEstimateDetails
+   * Unique object number to defined for the object type
+   * @return objectNumber
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "Unique object number to defined for the object type")
+  @NotNull
 
-  @Valid
-
-  public AbstractEstimateDetails getAbstractEstimateDetails() {
-    return abstractEstimateDetails;
+ @Pattern(regexp="[a-zA-Z0-9-\\\\]") @Size(max=100)
+  public String getObjectNumber() {
+    return objectNumber;
   }
 
-  public void setAbstractEstimateDetails(AbstractEstimateDetails abstractEstimateDetails) {
-    this.abstractEstimateDetails = abstractEstimateDetails;
+  public void setObjectNumber(String objectNumber) {
+    this.objectNumber = objectNumber;
   }
 
-  public EstimateAppropriation detailedEstimate(DetailedEstimate detailedEstimate) {
-    this.detailedEstimate = detailedEstimate;
+  public EstimateAppropriation objectType(String objectType) {
+    this.objectType = objectType;
     return this;
   }
 
    /**
-   * Get detailedEstimate
-   * @return detailedEstimate
+   * Object type for the Estimate Appropriation.
+   * @return objectType
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "Object type for the Estimate Appropriation.")
+  @NotNull
 
-  @Valid
-
-  public DetailedEstimate getDetailedEstimate() {
-    return detailedEstimate;
+ @Pattern(regexp="[a-zA-Z0-9-\\\\]") @Size(max=100)
+  public String getObjectType() {
+    return objectType;
   }
 
-  public void setDetailedEstimate(DetailedEstimate detailedEstimate) {
-    this.detailedEstimate = detailedEstimate;
+  public void setObjectType(String objectType) {
+    this.objectType = objectType;
   }
 
   public EstimateAppropriation budgetUsage(String budgetUsage) {
@@ -161,7 +164,7 @@ public class EstimateAppropriation   {
 
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(java.lang.Object o) {
     if (this == o) {
       return true;
     }
@@ -171,15 +174,15 @@ public class EstimateAppropriation   {
     EstimateAppropriation estimateAppropriation = (EstimateAppropriation) o;
     return Objects.equals(this.id, estimateAppropriation.id) &&
         Objects.equals(this.tenantId, estimateAppropriation.tenantId) &&
-        Objects.equals(this.abstractEstimateDetails, estimateAppropriation.abstractEstimateDetails) &&
-        Objects.equals(this.detailedEstimate, estimateAppropriation.detailedEstimate) &&
+        Objects.equals(this.objectNumber, estimateAppropriation.objectNumber) &&
+        Objects.equals(this.objectType, estimateAppropriation.objectType) &&
         Objects.equals(this.budgetUsage, estimateAppropriation.budgetUsage) &&
         Objects.equals(this.auditDetails, estimateAppropriation.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, abstractEstimateDetails, detailedEstimate, budgetUsage, auditDetails);
+    return Objects.hash(id, tenantId, objectNumber, objectType, budgetUsage, auditDetails);
   }
 
   @Override
@@ -189,8 +192,8 @@ public class EstimateAppropriation   {
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
-    sb.append("    abstractEstimateDetails: ").append(toIndentedString(abstractEstimateDetails)).append("\n");
-    sb.append("    detailedEstimate: ").append(toIndentedString(detailedEstimate)).append("\n");
+    sb.append("    objectNumber: ").append(toIndentedString(objectNumber)).append("\n");
+    sb.append("    objectType: ").append(toIndentedString(objectType)).append("\n");
     sb.append("    budgetUsage: ").append(toIndentedString(budgetUsage)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
@@ -201,7 +204,7 @@ public class EstimateAppropriation   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(Object o) {
+  private String toIndentedString(java.lang.Object o) {
     if (o == null) {
       return "null";
     }

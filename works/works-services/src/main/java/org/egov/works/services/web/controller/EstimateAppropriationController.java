@@ -13,10 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("estimateappropriations")
 public class EstimateAppropriationController {
 
 	@Autowired
@@ -30,9 +32,7 @@ public class EstimateAppropriationController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors, requestInfo);
 		}
-
 		EstimateAppropriationResponse estimateAppropriationResponse = new EstimateAppropriationResponse();
-
 		AuditDetails auditDetails = new AuditDetails();
 		// auditDetails.setCreatedTime(new Date().getTime());
 		auditDetails.setCreatedBy(estimateAppropriationRequest.getRequestInfo().getUserInfo().getUsername());
@@ -40,9 +40,26 @@ public class EstimateAppropriationController {
 			estimateAppropriation.setAuditDetails(auditDetails);
 			estimateAppropriationService.validateEstimateAppropriation(estimateAppropriation);
 		}
-
 		List<EstimateAppropriation> estimateAppropriations = estimateAppropriationService
 				.save(estimateAppropriationRequest);
+		estimateAppropriationResponse.setEstimateAppropriations(estimateAppropriations);
+		return estimateAppropriationResponse;
+	}
+	
+	@PostMapping("/_update")
+	public EstimateAppropriationResponse update(@RequestBody EstimateAppropriationRequest estimateAppropriationRequest,
+			BindingResult errors, @RequestParam String tenantId) {
+
+		final RequestInfo requestInfo = estimateAppropriationRequest.getRequestInfo();
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors, requestInfo);
+		}
+		EstimateAppropriationResponse estimateAppropriationResponse = new EstimateAppropriationResponse();
+		for (EstimateAppropriation estimateAppropriation : estimateAppropriationRequest.getEstimateAppropriations()) {
+			estimateAppropriationService.validateEstimateAppropriation(estimateAppropriation);
+		}
+		List<EstimateAppropriation> estimateAppropriations = estimateAppropriationService
+				.update(estimateAppropriationRequest);
 		estimateAppropriationResponse.setEstimateAppropriations(estimateAppropriations);
 		return estimateAppropriationResponse;
 	}

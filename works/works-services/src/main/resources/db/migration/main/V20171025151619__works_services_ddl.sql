@@ -1,15 +1,15 @@
-CREATE TABLE egw_abstractestimate_appropriation
+CREATE TABLE egw_estimate_appropriation
 (
   id character varying(256),
   tenantId character varying(250) NOT NULL,
-  abstractEstimateDetails character varying(50),
-  detailedEstimate character varying(50),
+  objecttype character varying(50),
+  objectnumber character varying(100),
   budgetusage character varying(50),
   createdby bigint NOT NULL,
   createddate bigint NOT NULL,
   lastmodifiedby bigint,
   lastmodifieddate bigint,
-  CONSTRAINT tenantid_detailedEstimate_unique UNIQUE (tenantId, detailedEstimate)
+  CONSTRAINT tenantid_detailedEstimate_unique UNIQUE (tenantId, objectnumber)
 );
 
 CREATE TABLE egw_documentdetail

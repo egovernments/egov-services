@@ -17,11 +17,11 @@ Feature: Creating a Grievance Category
 
     ### On Grievance Screen ###
     And user on Grievance screen verifies text has visible value Grievance Category
-    And user on Grievance screen types on categoryName value --"Category ", 5 random characters
+    And user on Grievance screen types on categoryName value "Category ", 5 random characters
     And user on Grievance screen copies the categoryName to categoryName
-    And user on Grievance screen types on categoryCode value --5 random numbers
-    And user on Grievance screen clicks on createButton
-    And user on Grievance screen clicks on close
+    And user on Grievance screen types on categoryCode value "", 4 random upper case characters
+    And user on Grievance screen clicks on text value Create
+#    And user on Grievance screen clicks on text
 
     ### On Homepage Screen ###
     And user on Home screen will see the menu

@@ -5,8 +5,8 @@ Feature: Registering a Complaint
 
     ### On Login Screen ###
     Given user on Login screen verifies signInText has visible value Sign In
-    And user on Login screen types on username value ramana
-    And user on Login screen types on password value demo
+    And user on Login screen types on username value 1212
+    And user on Login screen types on password value 12345678
     And user on Login screen clicks on signIn
 
     ### On Homepage Screen ###
@@ -20,9 +20,9 @@ Feature: Registering a Complaint
     And user on Grienvance screen will wait until the page loads
     And user on Grievance screen verifies contactInfo has visible value Contact Information
     And user on Grievance screen selects on receivingMode value Call
-    And user on Grievance screen types on name value --"User ", 4 random characters
-    And user on Grievance screen types on mobileNumber value --"1",9 Digit Number
-    And user on Grievance screen types on email value --email
+    And user on Grievance screen types on name value Akhila
+    And user on Grievance screen types on mobileNumber value 2222222222
+#    And user on Grievance screen types on email value email
 
     ### On Create Complaint Grievance Screen Entering Grievance Information ###
     And user on Grievance screen selects on grievanceCategory value Revenue
@@ -46,7 +46,7 @@ Feature: Registering a Complaint
     ### Login ###
     And DataIntent:LoginIntent
       | user |
-      | demo |
+      | 12345678 |
 
     ### On HomePage Screen ###
     And user on Home screen types on dashBoardSearch with above applicationNumber
@@ -68,11 +68,11 @@ Feature: Registering a Complaint
     And user on Home screen types on menuSearch value Search Grievance
     And user on Home screen clicks on firstMenuItem
 
-    ### On SearchGrievance Screen ###
-    And user on SearchGrievance screen will wait until the page loads
-    And user on SearchGrievance screen types on crnComplaintNumber with above applicationNumber
-    And user on SearchGrievance screen clicks on crnSearchButton
-    And user on SearchGrievance screen verifies crnStatus has visible value <status>
+#    ### On SearchGrievance Screen ###
+#    And user on SearchGrievance screen will wait until the page loads
+#    And user on SearchGrievance screen types on crnComplaintNumber with above applicationNumber
+#    And user on SearchGrievance screen clicks on crnSearchButton
+#    And user on SearchGrievance screen verifies crnStatus has visible value <status>
 
     ### Logout ###
     And Intent:LogoutIntentTest
@@ -101,9 +101,9 @@ Feature: Registering a Complaint
     ### On Create Complaint Grievance Screen Entering Contact Information ###
     And user on Grievance screen verifies contactInfo has visible value Contact Information
     And user on Grievance screen selects on receivingMode value Call
-    And user on Grievance screen types on name value --"User ", 4 random characters
-    And user on Grievance screen types on mobileNumber value --"1",9 Digit Number
-    And user on Grievance screen types on email value --email
+    And user on Grievance screen types on name value Akhila
+    And user on Grievance screen types on mobileNumber value 2222222222
+#    And user on Grievance screen types on email value --email
 
     ### On Create Complaint Grievance Screen Entering Grievance Information ###
     And user on Grievance screen selects on grievanceCategory value Revenue
@@ -127,7 +127,7 @@ Feature: Registering a Complaint
     ### Login ###
     And DataIntent:LoginIntent
       | user |
-      | demo |
+      | 12345678 |
 
     ### On HomePage Screen ###
     And user on Home screen types on dashBoardSearch with above applicationNumber
@@ -153,8 +153,8 @@ Feature: Registering a Complaint
 
     ### Login ###
     And DataIntent:LoginIntent
-      | ramana |
-      | demo   |
+      | 2020 |
+      | 12345678  |
 
     And user on Home screen types on dashBoardSearch with above applicationNumber
     And user on Home screen verifies applicationBox has visible value applicationNumber
@@ -164,6 +164,6 @@ Feature: Registering a Complaint
 
     Examples:
       | status    | department | designation      | position |
-      | FORWARDED | ACCOUNTS   | Accounts Officer | Ramana   |
+      | FORWARDED | ADMINISTRATION   | Commissioner | Jayashree   |
 
 

@@ -113,6 +113,8 @@ public class GenericSteps extends BaseSteps {
 
     @And("^(\\w+)\\s+on (\\w+) screen types on (\\w+) suggestion box with value (.*)$")
     public void selectsSuggestionBoxWithValue(String consumer, String screen, String element, String value) throws Throwable {
+        if (copyValues.containsKey(value))
+            value = copyValues.get(value);
         WebElement webElement = pageStore.get(ConstructElement.class).buildElement(screen, element, "");
         pageStore.get(GenericPage.class).actionOnSuggestionBox(webElement, value);
     }

@@ -15,9 +15,9 @@ Feature: PGR Full Flow
     And citizen on CitizenGrievance screen verifies createGrievancePage has visible value Grievance Information
 
     ### On Create Complaint Grievance Screen Entering Grievance Information ###
-    And citizen on CitizenGrievance screen selects grievanceCategory with value as Town Planning
+    And citizen on CitizenGrievance screen selects on grievanceCategory value Town Planning
     And citizen on CitizenGrievance screen will see the grievanceType
-    And citizen on CitizenGrievance screen selects grievanceType with value as Obstruction of Trees
+    And citizen on CitizenGrievance screen selects on grievanceType value Obstruction of Trees
 
     ### On Create Complaint Grievance Screen Entering More Details ###
     And citizen on CitizenGrievance screen types on grievanceDetails value TestingTheGrievance

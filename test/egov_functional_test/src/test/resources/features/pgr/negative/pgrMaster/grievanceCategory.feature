@@ -1,6 +1,7 @@
 Feature: Category Master
 
 Scenario: Create Grievance Category with already existing Name
+
 Given grievanceAdmin on Login screen types on username value narasappa
 And grievanceAdmin on Login screen types on password value demo
 And grievanceAdmin on Login screen clicks on signIn
@@ -8,11 +9,11 @@ And grievanceAdmin on home screen clicks on menu
 And grievanceAdmin on home screen types on applicationSearchBox value Create Category
 And grievanceAdmin on home screen clicks on applicationLink
 
-And grievanceAdmin on createGrievanceCategory screen types on categoryName value Bangalore City Problems
-And grievanceAdmin on createGrievanceCategory screen types on categoryCode value BCPS
-And grievanceAdmin on createGrievanceCategory screen types on categoryDescription value Bangalore City Problems
-And grievanceAdmin on createGrievanceCategory screen clicks on create
-And grievanceAdmin on createGrievanceCategory screen verifies validationMSG has visible value Grievance Category name already exists
+And grievanceAdmin on Grievance screen types on categoryName value Bangalore City Problems
+And grievanceAdmin on Grievance screen types on categoryCode value BCPS
+And grievanceAdmin on Grievance screen types on categoryDescription value Bangalore City Problems
+And grievanceAdmin on Grievance screen clicks on create
+And grievanceAdmin on Grievance screen verifies validationMSG has visible value Grievance Category name already exists
 And Intent:LogoutIntentTest
 
 

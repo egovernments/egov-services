@@ -153,7 +153,7 @@ public class AttendanceQueryBuilder {
 
             params.append(" and ");
 
-            params.append("att.employee IN :empIds");
+            params.append("att.employee IN (:empIds)");
             paramValues.put("empIds", attendanceGetRequest.getEmployeeIds());
         }
 

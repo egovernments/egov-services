@@ -18,6 +18,18 @@ public class AttendanceSearchURLHelper {
     @Autowired
     private PropertiesManager propertiesManager;
 
+    private static String getCommaSeperatedIds(List<Long> idList) {
+        if (idList.isEmpty())
+            return "";
+
+        StringBuilder query = new StringBuilder(idList.get(0).toString());
+        for (int i = 1; i < idList.size(); i++) {
+            query.append("," + idList.get(i));
+        }
+
+        return query.toString();
+    }
+
     public String searchURL(final String tenantId, final Date validfromDate, List<Long> employeeIds, final String url) {
         final StringBuilder searchURL = new StringBuilder(url + "?");
 
@@ -27,7 +39,7 @@ public class AttendanceSearchURLHelper {
             searchURL.append("tenantId=" + tenantId);
 
         if (!employeeIds.isEmpty() && null != employeeIds)
-            searchURL.append("&employeeIds = " + employeeIds);
+            searchURL.append("&employeeIds=" + getCommaSeperatedIds(employeeIds));
 
         if (validfromDate != null && !validfromDate.equals("")) {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");

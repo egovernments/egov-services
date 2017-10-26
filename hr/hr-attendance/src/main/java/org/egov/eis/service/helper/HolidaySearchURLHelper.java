@@ -5,12 +5,8 @@ import org.egov.eis.config.PropertiesManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class HolidaySearchURLHelper {
@@ -41,15 +37,16 @@ public class HolidaySearchURLHelper {
         String url = searchURL(tenantId);
         final StringBuilder searchURL = new StringBuilder(url);
 
-
-
-        searchURL.append("&fromDate=" + validFromdate);
-        searchURL.append("&toDate=" + getToDate());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String fromDate = simpleDateFormat.format(validFromdate);
+        searchURL.append("&fromDate=" + fromDate);
+        String toDate = simpleDateFormat.format(new Date());
+        searchURL.append("&toDate=" + toDate);
 
         return searchURL.toString();
     }
 
-    private Date getToDate() {
+   /* private Date getToDate() {
         DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
         Date toDate = null;
@@ -60,7 +57,7 @@ public class HolidaySearchURLHelper {
             e.printStackTrace();
         }
         return toDate;
-    }
+    }*/
 
 
 }

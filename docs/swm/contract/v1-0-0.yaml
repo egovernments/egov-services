@@ -16,6 +16,142 @@ x-ui-info:
 
 paths:
 
+    /vehicle/_search:
+      post:
+        summary: Get the list of vehicle
+        description: vehicle
+        tags: 
+          - Vehicle
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+              format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids
+          - name: transactionNo
+            type: string
+            in: query
+            description: transactionNo of the Vehicle
+            maxLength: 265
+          - name: transactionDate
+            type: string
+            format: date
+            in: query
+            description: transactionDate of the Vehicle
+          - name: vehicleType.name
+            type: string
+            format: singleValueList
+            in: query
+            description: vehicleType id of the Vehicle
+            maxLength: 265
+          - name: vehicleRegNo.regNumber
+            type: string
+            format: singleValueList
+            in: query
+            description: vehicleRegNo id of the Vehicle
+            maxLength: 265
+          - name: vehicleReadingDuringFuelling
+            type: string
+            in: query
+            description: vehicleReadingDuringFuelling of the Vehicle
+          - name: refuellingStation.name
+            type: string
+            format: singleValueList
+            in: query
+            description: refuellingStation id of the Vehicle
+            maxLength: 265
+          - name: fuelFilled
+            type: string
+            in: query
+            description: fuelFilled of the Vehicle
+            maxLength: 265
+          - name: typeOfFuel
+            type: string
+            in: query
+            description: typeOfFuel of the Vehicle
+            maxLength: 265
+          - name: totalCostIncurred
+            type: string
+            in: query
+            description: totalCostIncurred of the Vehicle
+          - name: receiptNo
+            type: string
+            in: query
+            description: receiptNo of the Vehicle
+            maxLength: 265
+          - name: receiptDate
+            type: string
+            format: date
+            in: query
+            description: receiptDate of the Vehicle
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+          - name: sortBy
+            type: string
+            in: query
+            description: |
+              This takes any field from the Object seperated by comma and asc,desc keywords.  
+              example name asc,code desc or name,code or name,code desc 
+        responses:
+          200:
+            description: Vehicle(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/VehicleResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /vehicle/_create:
+      post:
+        summary: Create new vehicle(s)
+        description: Create new vehicle(s)
+        tags: 
+          - Vehicle
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: vehicleRequest
+            in: body
+            description: Vehicle Request
+            schema:
+              $ref: '#/definitions/VehicleRequest'
+        responses:
+          201:
+            description: Vehicle(s) created Successfully
+            schema:
+              $ref: '#/definitions/VehicleResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /vehicle/_update:
+      post:
+        summary: Update any of the vehicle
+        description: Update any of the vehicle
+        tags: 
+          - Vehicle
+        parameters:
+          - name: vehicleRequest
+            in: body
+            description: Vehicle Request
+            schema:
+              $ref: '#/definitions/VehicleRequest'
+        responses:
+          200:
+            description: Vehicle updated Successfully
+            schema:
+              $ref: '#/definitions/VehicleResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
     /vehiclefuellingdetails/_search:
       post:
         summary: Get the list of vehiclefuellingdetails
@@ -618,8 +754,8 @@ definitions:
           maxLength: 256
           minLength: 1
         vehicleCapacity:
-          type: number
-          format: double
+          type: integer
+          format: int64
           description: capacity of the Vehicle in Tonnes. CAN NOT be 0
         numberOfPersonsReq:
           type: integer
@@ -634,10 +770,8 @@ definitions:
           type: boolean
           description: Option should be selected if vehilce is owned by ULB. By default option should be in Selected state.
         vendorName:
-          type: string
+          $ref: "#/definitions/Vendor"
           description: name of the vendor who supplied the Vehicle. Mandatory when ulbOwnedVehicle is in "Not Selected" state. Else, disable this field
-          maxLength: 256
-          minLength: 0
         vehicleDriverName:
           type: string
           description: name of the driver who will drive the Vehicle. Driver name shall be fetched from HRMS. Assumption-> One driver shall be assigned to one vehicle only. # HRMS APIs are required.
@@ -648,10 +782,8 @@ definitions:
           format: date
           description: Purchase date of the vehicle. # We might have to intgrate with Asset management module to fetch vehicle related record.
         yearOfPurchase:
-          type: string
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/FinancialYear'
           description: Purchase year of the vehicle. # We might have to remove this field as that year is already captured in Date filed.
-          maxLength: 256
-          minLength: 0
         price:
           type: number 
           format: double
@@ -675,6 +807,8 @@ definitions:
           type: string
           format: date
           description: Current or Futrure date at which insurance is going to expire
+        insuranceDocuments:
+          $ref: '#/definitions/Documents'
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
@@ -692,6 +826,29 @@ definitions:
       - purchaseDate
       - yearOfPurchase
       - price
+ 
+    VehicleRequest:
+      description: Contract class to receive request. Array of Vehicle items are used in case of create, whereas single Vehicle item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        vehicle:
+          description: Used for search result and create only
+          type: array
+          items:
+            $ref: '#/definitions/Vehicle'
+            
+    VehicleResponse:
+      description: Contract class to send response. Array of Vehicle items are used in case of search results or response for create, whereas single Vehicle item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        vehicle:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/Vehicle'
       
     WasteType:
       type: object
@@ -849,6 +1006,7 @@ definitions:
           minLength: 4
         name:
           type: string
+          format: singleValueList
           description: name of the Vendor
           maxLength: 128
           minLength: 4
@@ -1909,11 +2067,11 @@ definitions:
           description: tenant id of the Vendor Payment Details
           maxLength: 128
           minLength: 4
-        vendorPaymentDetailsId:
+        refId:
           type: string
           maxLength: 256
           minLength: 1
-          description: Unique Identifier of the Vendor Payment Details
+          description: Unique Identifier of the reference id
         documentTypeId:
           type: integer
           format: int64
@@ -1927,7 +2085,7 @@ definitions:
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
-      - vendorPaymentDetailsId
+      - refId
       - tenantId
       - documentTypeId
       - fileStoreId

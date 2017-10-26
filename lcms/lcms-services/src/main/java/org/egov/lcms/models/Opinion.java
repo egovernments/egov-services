@@ -24,8 +24,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Opinion {
-	@JsonProperty("id")
-	private Long id = null;
+	@JsonProperty("code")
+	private String code = null;
 
 	@JsonProperty("opinionRequestDate")
 	@NotNull

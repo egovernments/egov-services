@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap'
+import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import TextField from 'material-ui/TextField';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Dialog from 'material-ui/Dialog';
@@ -16,39 +16,63 @@ export default class UiArrayField extends Component {
        };
    	}
 
+   	renderField = (item) => {
+   		if(this.props.readonly === "true") {
+   			let val = this.props.getVal(item.jsonPath);
+   			return (
+   				<div>
+	   				<Col xs={12}>
+	   					<label>
+	   						<span style={{"fontWeight":500, "fontSize": "13px"}}>
+	   							{translate(item.label)}
+	   						</span>
+	   					</label>
+	   				</Col>
+	   				<Col xs={12}>
+	   					{val && val.constructor == Array ? val.join(", ") : ""}
+	   				</Col>
+   				</div>
+   			);
+   		} else {
+   			return (
+   				<Row>
+					<Col xs={12} md={6}>
+						<TextField
+				            className = "cutustom-form-controll-for-textfield"
+				            id = {item.jsonPath.split(".").join("-")}
+							floatingLabelStyle = {{"color": "#A9A9A9", "fontSize": "20px", "white-space": "nowrap"}}
+							inputStyle = {{"color": "#5F5C57"}}
+							floatingLabelFixed = {true}
+							maxLength = {item.maxLength || ""}
+							style = {{"display": (item.hide ? 'none' : 'inline-block')}}
+							errorStyle = {{"float":"left"}}
+							fullWidth = {true}
+							floatingLabelText = {<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
+							value = {this.state.valueList.join(", ")}
+							disabled = {true}
+						/>
+					</Col>
+					<Col xs={12} md={6}>
+						<FloatingActionButton 
+							style={{marginTop: 39}} 
+							mini={true}
+							onClick={()=>{
+								this.handleOpen()
+							}}>
+							<i className="material-icons">add</i>
+						</FloatingActionButton>
+					</Col>
+				</Row>
+   			);
+   		}
+   	}
+
    	renderArrayField = (item) => {
 		switch (this.props.ui) {
 			case 'google':
 				return (
 						<div>
-							<Row>
-								<Col xs={12} md={6}>
-									<TextField
-							            className = "cutustom-form-controll-for-textfield"
-							            id = {item.jsonPath.split(".").join("-")}
-										floatingLabelStyle = {{"color": "#A9A9A9", "fontSize": "20px", "white-space": "nowrap"}}
-										inputStyle = {{"color": "#5F5C57"}}
-										floatingLabelFixed = {true}
-										maxLength = {item.maxLength || ""}
-										style = {{"display": (item.hide ? 'none' : 'inline-block')}}
-										errorStyle = {{"float":"left"}}
-										fullWidth = {true}
-										floatingLabelText = {<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
-										value = {this.state.valueList.join(", ")}
-										disabled = {true}
-									/>
-								</Col>
-								<Col xs={12} md={6}>
-									<FloatingActionButton 
-										style={{marginTop: 39}} 
-										mini={true}
-										onClick={()=>{
-											this.handleOpen()
-										}}>
-										<i className="material-icons">add</i>
-									</FloatingActionButton>
-								</Col>
-							</Row>
+							{this.renderField(item)}
 							<Dialog
 					          title={this.props.item.label}
 					          actions={

@@ -79,10 +79,9 @@ export default class UiDocumentList extends Component {
 											<td>
 												<TextField
 													fullWidth={true}
-													isDisabled={self.props.readonly}
+													disabled={self.props.readonly}
 													type="text"
 													value={self.props.getVal(item.jsonPath + "[" + i + "].name")}
-													disabled={item.isDisabled}
 													errorText={self.props.fieldErrors[item.jsonPath]}
 													onChange={(e) => self.props.handler(e, (item.jsonPath + "[" + i + "].name"), true, '', '', '')} />
 											</td>

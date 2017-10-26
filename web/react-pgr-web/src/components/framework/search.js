@@ -123,7 +123,7 @@ class Search extends Component {
     self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
     for(var key in formData) {
-      if(formData[key] !== "" && typeof formData[key] == "undefined")
+      if(formData[key] == "" || typeof formData[key] == "undefined")
         delete formData[key];
     }
 

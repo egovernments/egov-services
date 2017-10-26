@@ -27,6 +27,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton'
 import UiDate from './components/UiDate';
 import UiPinCode from './components/UiPinCode';
 import UiArrayField from './components/UiArrayField';
+import UiFileTable from './components/UiFileTable';
 
 let styles={
   reducePadding: {
@@ -60,7 +61,7 @@ export default class ShowFields extends Component {
               {group.fields.map((field, fieldIndex)=>{
                   if(!field.isHidden) {
                     return (
-                      <Col key={fieldIndex} xs={12} sm={field.type === "documentList" ? 12 : noCols} md={field.type === "documentList" ? 12 : noCols}>
+                      <Col key={fieldIndex} xs={12} sm={field.type === "documentList" || field.type === "fileTable" ? 12 : noCols} md={field.type === "documentList" || field.type === "fileTable" ? 12 : noCols}>
                           {renderField(field, self.props.screen,fieldIndex)}
                       </Col>
                     )
@@ -141,10 +142,10 @@ export default class ShowFields extends Component {
   }
 
 
-  renderField=(item, screen,index)=> {
-    if(screen == "view" && item.type != "documentList") {
+  renderField=(item, screen, index)=> {
+    if(screen == "view" && ["documentList", "fileTable", "arrayText", "arrayNumber"].indexOf(item.type) > -1 ) {
       if (item.type == "datePicker") {
-        item.isDate=true;
+        item.isDate = true;
       }
       item.type = "label";
     }
@@ -195,7 +196,9 @@ export default class ShowFields extends Component {
         return <UiDocumentList tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} readonly={screen === "view" ? "true" : ""}/>
       case 'arrayText':
       case 'arrayNumber':
-        return <UiArrayField tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+        return <UiArrayField tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} readonly={screen === "view" ? "true" : ""}/>
+      case 'fileTable':
+        return <UiFileTable tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} readonly={screen === "view" ? "true" : ""}/>
       case 'customComponent':
         // console.log(item.path);
         // {

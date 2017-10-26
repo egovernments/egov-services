@@ -3,7 +3,7 @@ package org.egov.works.services.web.controller;
 import java.util.List;
 
 import org.egov.works.services.domain.service.EstimateAppropriationService;
-import org.egov.works.services.exception.CustomBindException;
+import org.egov.works.services.domain.exception.CustomBindException;
 import org.egov.works.services.web.contract.EstimateAppropriationRequest;
 import org.egov.works.services.web.contract.EstimateAppropriationResponse;
 import org.egov.works.services.web.contract.RequestInfo;
@@ -30,7 +30,7 @@ public class EstimateAppropriationController {
 
 		final RequestInfo requestInfo = estimateAppropriationRequest.getRequestInfo();
 		if (errors.hasErrors()) {
-			throw new CustomBindException(errors, requestInfo);
+			throw new CustomBindException(errors);
 		}
 		EstimateAppropriationResponse estimateAppropriationResponse = new EstimateAppropriationResponse();
 		AuditDetails auditDetails = new AuditDetails();
@@ -52,7 +52,7 @@ public class EstimateAppropriationController {
 
 		final RequestInfo requestInfo = estimateAppropriationRequest.getRequestInfo();
 		if (errors.hasErrors()) {
-			throw new CustomBindException(errors, requestInfo);
+			throw new CustomBindException(errors);
 		}
 		EstimateAppropriationResponse estimateAppropriationResponse = new EstimateAppropriationResponse();
 		for (EstimateAppropriation estimateAppropriation : estimateAppropriationRequest.getEstimateAppropriations()) {

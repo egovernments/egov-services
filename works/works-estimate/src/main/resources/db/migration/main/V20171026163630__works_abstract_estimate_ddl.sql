@@ -49,6 +49,7 @@ CREATE TABLE egw_abstractestimate
   createddate bigint NOT NULL,
   lastmodifiedby bigint,
   lastmodifieddate bigint,
+  CONSTRAINT estimate_pkey PRIMARY  KEY(id,tenantId),
   CONSTRAINT tenantid_abstractestimatenumber_unique UNIQUE (tenantId, abstractestimatenumber)
   );
 
@@ -67,6 +68,7 @@ CREATE TABLE egw_abstractestimate_details
   lastmodifieddate bigint,
   grossAmountBilled double precision,
   projectCode character varying(50),
+  CONSTRAINT estimate_details_pkey PRIMARY KEY(id,tenantId),
   CONSTRAINT tenantid_estimatenumber_unique UNIQUE (tenantId, estimatenumber)
 );
 
@@ -85,5 +87,6 @@ CREATE TABLE egw_projectcode
   createddate bigint NOT NULL,
   lastmodifiedby bigint,
   lastmodifieddate bigint,
+  CONSTRAINT projectcode_pkey PRIMARY KEY(id,tenantId),
   CONSTRAINT tenantid_code_unique UNIQUE (tenantId, code)
 );

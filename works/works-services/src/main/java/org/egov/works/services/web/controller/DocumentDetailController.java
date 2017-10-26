@@ -1,7 +1,8 @@
 package org.egov.works.services.web.controller;
 
+import org.egov.works.commons.web.contract.factory.ResponseInfoFactory;
 import org.egov.works.services.domain.service.DocumentDetailsService;
-import org.egov.works.services.exception.CustomBindException;
+import org.egov.works.services.domain.exception.CustomBindException;
 import org.egov.works.services.web.contract.*;
 import org.egov.works.services.web.model.DocumentDetail;
 import org.egov.works.services.web.model.DocumentDetailSearchCriteria;
@@ -21,7 +22,6 @@ public class DocumentDetailController {
     @Autowired
     private DocumentDetailsService documentDetailsService;
 
-
     @PostMapping
     @RequestMapping("/_create")
     public ResponseEntity<?> createDocuments(@Valid @RequestBody DocumentDetailRequest documentDetailRequest,
@@ -30,7 +30,7 @@ public class DocumentDetailController {
         RequestInfo requestInfo = documentDetailRequest.getRequestInfo();
 
         if (errors.hasErrors()) {
-            throw new CustomBindException(errors, requestInfo);
+            throw new CustomBindException(errors);
         }
 
         final List<DocumentDetail> documents = documentDetailsService.createDocuments(documentDetailRequest);
@@ -50,7 +50,7 @@ public class DocumentDetailController {
         RequestInfo requestInfo = documentDetailRequest.getRequestInfo();
 
         if (errors.hasErrors()) {
-            throw new CustomBindException(errors, requestInfo);
+            throw new CustomBindException(errors);
         }
 
         final List<DocumentDetail> documents = documentDetailsService.updateDocuments(documentDetailRequest);
@@ -67,7 +67,7 @@ public class DocumentDetailController {
 
 
         if (errors.hasErrors()) {
-            throw new CustomBindException(errors, requestInfo);
+            throw new CustomBindException(errors);
         }
         List<DocumentDetail> documents = documentDetailsService.searchDocuments(new DocumentDetailSearchCriteria().toDomain(documentDetailSearchRequest));
         DocumentDetailResponse documentDetailResponse = new DocumentDetailResponse();

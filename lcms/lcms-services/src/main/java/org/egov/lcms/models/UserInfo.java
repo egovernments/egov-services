@@ -4,29 +4,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-/**
- * This is acting ID token of the authenticated user on the server. Any value
- * provided by the clients will be ignored and actual user based on authtoken
- * will be used on the server.
- */
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserInfo {
-	@JsonProperty("tenantId")
 	@NotNull
+	@NotEmpty
+	@Size(min = 1, max = 128)
+	@JsonProperty("tenantId")
 	private String tenantId = null;
 
 	@JsonProperty("id")
 	private Integer id = null;
 
+	@NotNull
+	@NotEmpty
 	@JsonProperty("username")
 	private String username = null;
 
@@ -41,5 +45,4 @@ public class UserInfo {
 
 	@JsonProperty("additionalroles")
 	private List<TenantRole> additionalroles = null;
-
 }

@@ -501,10 +501,16 @@ definitions:
         description: Tenant id for which this object belongs to
         maxLength: 128
         minLength: 4
-      abstractEstimateDetails:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/AbstractEstimateDetails'
-      detailedEstimate:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/DetailedEstimate'
+      objectNumber:
+        type: string
+        description: Unique object number to defined for the object type
+        pattern: '[a-zA-Z0-9-\\]'
+        maxLength: 100
+      objectType:
+        type: string
+        description: Object type for the Estimate Appropriation.
+        pattern: '[a-zA-Z0-9-\\]'
+        maxLength: 100
       budgetUsage:
         type: string
         description: Refrernce of Budget Usage of the Estimate Appropriation
@@ -515,6 +521,8 @@ definitions:
     required:
       - budgetUsage
       - tenantId
+      - objectNumber
+      - objectType
       
   EstimateAppropriationRequest:
       description: Contract class to send response. Array of Estimate Appropriation items are used in case of search results, also multiple  Estimate Appropriation item is used for create and update

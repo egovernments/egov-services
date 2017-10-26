@@ -23,7 +23,7 @@ public class EstimateAppropriationService {
     
 	public Boolean validateEstimateAppropriation(final EstimateAppropriation estimateAppropriation) {
 
-		// TODO : need to Check Budget control type and 
+		// TODO : need to Check Budget control type and check budget available for given combination
 		Boolean flag = Boolean.FALSE;
 		String url = "";
 

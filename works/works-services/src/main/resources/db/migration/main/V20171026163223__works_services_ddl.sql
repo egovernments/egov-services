@@ -9,6 +9,7 @@ CREATE TABLE egw_estimate_appropriation
   createddate bigint NOT NULL,
   lastmodifiedby bigint,
   lastmodifieddate bigint,
+  CONSTRAINT estimate_appropriation_pkey PRIMARY  KEY (id,tenantId),
   CONSTRAINT tenantid_detailedEstimate_unique UNIQUE (tenantId, objectnumber)
 );
 
@@ -29,5 +30,6 @@ CREATE TABLE egw_documentdetail
   createddate bigint NOT NULL,
   lastmodifiedby bigint,
   lastmodifieddate bigint,
-  CONSTRAINT tenantid_document_unique UNIQUE (tenantId, objectid)
+  CONSTRAINT documentdetail_pkey PRIMARY KEY(id,tenantId),
+  CONSTRAINT tenantid_document_objectid_unique UNIQUE (tenantId, objectid)
 );

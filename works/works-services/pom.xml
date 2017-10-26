@@ -123,6 +123,12 @@
             <artifactId>spring-aspects</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.egov.works</groupId>
+            <artifactId>works-commons</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
 	</dependencies>
 
     <distributionManagement>

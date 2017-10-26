@@ -30,7 +30,16 @@ public class UniqueCodeGeneration {
 	
 	
 	
-	public String  getUniqueCode(String tenantId,RequestInfo requestInfo) throws Exception{
+	/**
+	 * This will generate the unique code based on the given parameters
+	 * @param tenantId
+	 * @param requestInfo
+	 * @param ulbFormat
+	 * @param ulbName
+	 * @return {@link String} Unique code sequence
+	 * @throws Exception
+	 */
+	public String  getUniqueCode(String tenantId,RequestInfo requestInfo,String ulbFormat,String ulbName) throws Exception{
 		String response = tenantRepository.getTenantRepository(tenantId, requestInfo);
 		String SequenceNo ="";
 		
@@ -46,8 +55,8 @@ public class UniqueCodeGeneration {
 		if ( ulbCode!=null && !ulbCode.isEmpty()){
 			IdGenerationResponse idResponse;
 			
-			idResponse = idGenerationRepository.getIdGeneration(tenantId, requestInfo, propertiesManager.getUlbFormat(),
-					propertiesManager.getUlbName());
+			idResponse = idGenerationRepository.getIdGeneration(tenantId, requestInfo,ulbFormat,
+					ulbName);
 			if ( idResponse!=null && idResponse.getIdResponses()!=null && idResponse.getIdResponses().size()>0) {
 				idResponse.getIdResponses().get(0).getId();
 				SequenceNo=idResponse.getIdResponses().get(0).getId();

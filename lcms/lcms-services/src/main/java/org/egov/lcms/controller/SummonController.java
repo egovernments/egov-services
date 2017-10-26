@@ -33,8 +33,6 @@ public class SummonController {
 	
 	@RequestMapping(path="summmon/_create",method=RequestMethod.POST)
 	public ResponseEntity<?> createSummon(@RequestBody @Valid SummonRequest summonRequest,BindingResult bindingResult) throws Exception{
-		
-		UniqueCodeGeneration.getUniqueCode(summonRequest.getSummons().get(0).getTenantId(), summonRequest.getRequestInfo());
 		RequestInfo requestInfo = summonRequest.getRequestInfo();
 		if (bindingResult.hasErrors()) {
 			return new ResponseEntity<>(responseInfoFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);

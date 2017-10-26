@@ -5,10 +5,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
 
-/**
- * Hello world!
- *
- */
 @SpringBootApplication
 @Import({ TracerConfiguration.class })
 public class LamsMahaWorkflowApp 

@@ -84,11 +84,11 @@ public class AdvocatePayment {
 	@JsonProperty("panNo")
 	@NotEmpty
 	@NotNull
-	@Size(min=12,max=12)
+	@Size(min = 12, max = 12)
 	private String panNo = null;
 
 	@JsonProperty("invoiceDoucment")
-	private Document invoiceDoucment = null;
+	private String invoiceDoucment = null;
 
 	@JsonProperty("tenantId")
 	private String tenantId = null;
@@ -110,7 +110,7 @@ public class AdvocatePayment {
 
 	@JsonProperty("resolutionRemarks")
 	private String resolutionRemarks = null;
-	
+
 	private String stateId;
 
 }

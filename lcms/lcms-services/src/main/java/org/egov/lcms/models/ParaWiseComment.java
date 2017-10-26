@@ -57,11 +57,11 @@ public class ParaWiseComment {
 	private AuditDetails auditDetails = null;
 
 	@JsonProperty("documents")
-	private List<Document> documents = null;
-	
+	private List<String> documents = null;
+
 	@NotNull
 	@NotEmpty
-	@Size(min=4,max=128)
+	@Size(min = 4, max = 128)
 	private String tenantId;
 
 }

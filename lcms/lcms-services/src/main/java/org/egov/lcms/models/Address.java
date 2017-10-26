@@ -1,4 +1,4 @@
-package io.swagger.model;
+package org.egov.lcms.models;
 
 import javax.validation.constraints.Size;
 

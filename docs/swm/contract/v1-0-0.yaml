@@ -10,6 +10,9 @@ info:
   
 basePath: "/swm-services"
 
+x-ui-info:
+  $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/vfd-ui-info.yaml
+
 paths:
 
     /vehicles/_search:
@@ -593,6 +596,7 @@ paths:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
 definitions:
+
     CollectionPoint:
       type: object
       properties:
@@ -612,21 +616,13 @@ definitions:
           maxLength: 128
           minLength: 4
         ward:
-          type: array
-          items: 
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        zone:
-          type: array
-          items: 
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        zoneCode:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
         street:
-          type: array
-          items: 
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
         colony:
-          type: array
-          items: 
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
         binIdDetails:
           type: array
           items:
@@ -638,7 +634,7 @@ definitions:
       - tenantId
       - name
       - ward
-      - zone
+      - zoneCode
       - street
 
     BinIdDetails:
@@ -646,14 +642,19 @@ definitions:
       properties:
         id:
           type: string
-          description: Unique Identifier of the Route
+          description: Unique Identifier of the BinIdDetails
           maxLength: 256
           minLength: 1
         tenantId:
           type: string
-          description: tenant id of the Route
+          description: tenant id of the BinIdDetails
           maxLength: 128
           minLength: 4
+        collectionPointId:
+          type: string
+          description: Unique Identifier of the collectionPointId
+          maxLength: 256
+          minLength: 1
         assetOrBinId:
           type: string
           description: asset or BIN Id of the Collection Point. If defined, shall be unique within ULB
@@ -683,6 +684,7 @@ definitions:
       required:
       - id
       - tenantId
+      - collectionPointId
       
     Route:
       type: object
@@ -702,14 +704,6 @@ definitions:
           description: name of the Route. Shall be unique within a ward
           maxLength: 128
           minLength: 4
-        ward:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        zone:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        street:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        colony:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
         collectionType:
           $ref: "#/definitions/CollectionType"
         startingPoint:
@@ -727,10 +721,6 @@ definitions:
       - id
       - tenantId
       - name
-      - ward
-      - zone
-      - street
-      - colony
       - collectionType
       - startingPoint
       - endingPoint
@@ -2260,5 +2250,6 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 

@@ -48,7 +48,7 @@ public class Vehicle {
 
 	@NotNull
 	@JsonProperty("vehicleCapacity")
-	private Long vehicleCapacity = null;
+	private Double vehicleCapacity = null;
 
 	@NotNull
 	@JsonProperty("numberOfPersonsReq")

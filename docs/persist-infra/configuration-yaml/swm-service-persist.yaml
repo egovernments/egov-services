@@ -113,6 +113,7 @@ serviceMaps:
        - jsonPath: $.vehicles.*.chassisSrNumber
        
        - jsonPath: $.vehicles.*.vehicleCapacity
+         dbType: DOUBLE
 
        - jsonPath: $.vehicles.*.numberOfPersonsReq
 
@@ -162,8 +163,6 @@ serviceMaps:
        - jsonPath: $.vehicles.*.auditDetails.lastModifiedTime
          dbType: LONG
 
-       
-
  - version: 1.0
    name: vehicle update
    description: update vehicle in egswm_vehicle
@@ -185,6 +184,7 @@ serviceMaps:
        - jsonPath: $.vehicles.*.chassisSrNumber
        
        - jsonPath: $.vehicles.*.vehicleCapacity
+         dbType: DOUBLE
 
        - jsonPath: $.vehicles.*.numberOfPersonsReq
 
@@ -232,3 +232,93 @@ serviceMaps:
        - jsonPath: $.vehicles.*.id
 
        - jsonPath: $.vehicles.*.tenantId
+
+ - version: 1.0
+   name: collectionpoint create
+   description: create collectionpoint in egswm_collectionpoint
+   fromTopic: swm-collectionpoint-save-topic
+   queryMaps: 
+    - query: INSERT INTO egswm_collectionpoint(id, tenantid, name, ward, zonecode, street, colony, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.collectionPoints.*
+      jsonMaps:
+       
+       - jsonPath: $.collectionPoints.*.id
+
+       - jsonPath: $.collectionPoints.*.tenantId
+         
+       - jsonPath: $.collectionPoints.*.name
+
+       - jsonPath: $.collectionPoints.*.ward.code
+         
+       - jsonPath: $.collectionPoints.*.zoneCode.code
+
+       - jsonPath: $.collectionPoints.*.street.code
+         
+       - jsonPath: $.collectionPoints.*.colony.code
+       
+       - jsonPath: $.collectionPoints.*.auditDetails.createdBy
+
+       - jsonPath: $.collectionPoints.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.collectionPoints.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.collectionPoints.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+ - version: 1.0
+   name: collectionpoint update
+   description: update collectionpoint in egswm_vehicle
+   fromTopic: swm-collectionpoint-update-topic
+   queryMaps: 
+
+    - query: UPDATE egswm_collectionpoint SET name=?, ward=?, zonecode=?, street=?, colony=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+      basePath: $.collectionPoints.*
+      jsonMaps:
+
+       - jsonPath: $.collectionPoints.*.name
+
+       - jsonPath: $.collectionPoints.*.ward.code
+         
+       - jsonPath: $.collectionPoints.*.zoneCode.code
+
+       - jsonPath: $.collectionPoints.*.street.code
+         
+       - jsonPath: $.collectionPoints.*.colony.code
+
+       - jsonPath: $.collectionPoints.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.collectionPoints.*.auditDetails.lastModifiedTime
+         dbType: LONG
+         
+       - jsonPath: $.collectionPoints.*.id
+
+       - jsonPath: $.collectionPoints.*.tenantId
+
+ - version: 1.0
+   name: biniddetails create
+   description: create biniddetails in egswm_biniddetails
+   fromTopic: swm-biniddetails-create-topic
+   queryMaps: 
+    - query: INSERT INTO egswm_biniddetails(id, tenantid, collectionpointid, assetorbinid, rfidassigned, rfid, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.binIdDetails.*
+      jsonMaps:
+       
+       - jsonPath: $.binIdDetails.*.id
+
+       - jsonPath: $.binIdDetails.*.tenantId
+         
+       - jsonPath: $.binIdDetails.*.collectionPointId
+
+       - jsonPath: $.binIdDetails.*.assetOrBinId
+         
+       - jsonPath: $.binIdDetails.*.rfidAssigned
+         dbType: BOOLEAN
+
+       - jsonPath: $.binIdDetails.*.rfid
+         
+       - jsonPath: $.binIdDetails.*.latitude
+         dbType: DOUBLE
+
+       - jsonPath: $.binIdDetails.*.longitude
+         dbType: DOUBLE

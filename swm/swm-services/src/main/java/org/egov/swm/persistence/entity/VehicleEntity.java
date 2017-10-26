@@ -31,7 +31,7 @@ public class VehicleEntity {
 
 	private String chassisSrNumber = null;
 
-	private Long vehicleCapacity = null;
+	private Double vehicleCapacity = null;
 
 	private Long numberOfPersonsReq = null;
 

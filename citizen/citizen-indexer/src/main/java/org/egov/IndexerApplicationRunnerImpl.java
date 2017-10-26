@@ -89,20 +89,6 @@ public class IndexerApplicationRunnerImpl implements ApplicationRunner {
 								mappingsMap.put(mapping.getTopic(), mapping);
 							}
 					}
-					else{
-						
-						File file = new File("/home/wtc082/Documents/egov-servicessep11/citizen/citizen-indexer/src/main/resources/legal-case-indexer.yml");
-						try{
-							service = mapper.readValue(file, Services.class);
-						 } catch(Exception e) {
-								logger.error("Exception while fetching service map for: "+yamlLocation);
-								continue;
-						}
-						logger.info("Parsed to object: "+service);
-						for(Mapping mapping: (service.getServiceMaps().getMappings())){
-							mappingsMap.put(mapping.getTopic(), mapping);
-						}
-					}
 				}
 			}catch(Exception e){
 				logger.error("Exception while loading yaml files: ",e);

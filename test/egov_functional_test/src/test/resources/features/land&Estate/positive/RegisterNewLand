@@ -1,0 +1,59 @@
+Feature: In this feature we are going to test Create New Property
+
+  Scenario : Create New Property With Workflow
+
+    ### On Login Screen ###
+    Given user on Login screen verifies signInText has visible value Sign In
+    And user on Login screen types on username value 40004
+    And user on Login screen types on password value 12345678
+    And user on Login screen clicks on signIn
+
+    ### On Homepage Screen ###
+    And user on Home screen will wait until the page loads
+    And user on Home screen verifies myTasks has visible value My Tasks
+    And user on Home screen clicks on menu
+    And user on Home screen types on menuSearch value Register New Land
+    And user on Home screen clicks on firstMenuItem
+
+    ### Register New Land ###
+
+    And user on RegisterNewLand screen will see the registerNewLandText
+    And user on RegisterNewLand screen clicks on NewAcquiredLand
+    And user on RegisterNewLand screen selects on registerName value <Register Name>
+    And user on RegisterNewLand screen selects on subRegisterName value <Sub Register Name>
+    And user on RegisterNewLand screen selects on regionalOfficeWard value <Regional Office Ward>
+    And user on RegisterNewLand screen dropdown on location value <Location>
+    And user on RegisterNewLand screen types on surveyNumber value <SurveyNumber>
+
+    And user on RegisterNewLand screen types on ctsNumber value <CTCNumber>
+    And user on RegisterNewLand screen types on description value <Description>
+    And user on RegisterNewLand screen types on oldOwnerName value <OldOwnerName>
+    And user on RegisterNewLand screen dropdown on purpose value <Purpose>
+    And user on RegisterNewLand screen types on width value <Width>
+    And user on RegisterNewLand screen selects on typeOfRoad value <TypeOfRoad>
+    And user on RegisterNewLand screen selects on typeOfLand value <TypeOfLand>
+    And user on RegisterNewLand screen types on reservationArea value <ReservationArea>
+    And user on RegisterNewLand screen types on areaOfLand value <AreaOfLand>
+    And user on RegisterNewLand screen types on areaAsPerRegister value <AreaAsPerRegister>
+    And user on RegisterNewLand screen types on possessionDate value <PossessionDate>
+    And user on RegisterNewLand screen selects on modeOfAcquisition value <modeOfAcquisition>
+    And user on RegisterNewLand screen selects on typeOfHolding value <TypeOfHolding>
+    And user on RegisterNewLand screen selects on modeOfCompensation value <ModeOfCompensation>
+    And user on RegisterNewLand screen types on costOfAcquisition value <CostOfAcquisition>
+    And user on RegisterNewLand screen types on dateOfPayment value <DateOfPayment>
+    And user on RegisterNewLand screen types on buildingReference value <BuildingReference>
+    And user on RegisterNewLand screen selects on typeOfPlanning value <TypeOfPlanning>
+    And user on RegisterNewLand screen types on codeOfReservation value <CodeOfReservation>
+    And user on RegisterNewLand screen uploads on document value land.png
+    And user on RegisterNewLand screen clicks on Submit
+    And user on RegisterNewLand screen verifies text has visible value Data saved successfully
+
+    #Register New Estate#
+
+    And user on RegisterNewEstate screen selects on registerName value <Register Name>
+    And user on RegisterNewEstate screen selects on subRegisterName value <Sub Register Name>
+    And user on RegisterNewEstate screen selects on regionalOfficeWard value <Regional Office Ward>
+    And user on RegisterNewEstate screen dropdown on location value <Location>
+    And user on RegisterNewEstate screen types on propertyName value <PropertyName>
+    
+

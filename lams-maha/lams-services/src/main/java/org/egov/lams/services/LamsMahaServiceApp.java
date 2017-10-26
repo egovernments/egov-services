@@ -12,9 +12,14 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Hello world!
+ *
+ */
+
 @SpringBootApplication
 @Import({ TracerConfiguration.class })
-public class App 
+public class LamsMahaServiceApp 
 {
 	@Bean
 	@Primary
@@ -36,6 +41,6 @@ public class App
 	}
 	
 	public static void main(String[] args) {
-		SpringApplication.run(App.class, args);
+		SpringApplication.run(LamsMahaServiceApp.class, args);
 	}
 }

@@ -38,4 +38,22 @@ public class PropertiesManager {
 
 	@Value("${kafka.topic.update.land}")
 	public String updateLandRegisterKafkaTopic;
+	
+	@Value("${kafka.topic.update.estate}")
+	public String updateEstateKafkaTopic;
+	
+	@Value("${kafka.topic.start.workflow.estate}")
+	public String startEstateWorkflowTopic;
+	
+	@Value("${kafka.topic.update.workflow.estate}")
+	public String updateEstateWorkflowTopic;
+	
+	@Value("${lams-estate-regn-seq}")
+	public String createEstateSequence;
+	
+	@Value("${lams-estate-floor-seq}")
+	public String createEstateFloorsSequence;
+	
+	@Value("${lams-estate-units-seq}")
+	public String createEstateUnitsSequence;
 }

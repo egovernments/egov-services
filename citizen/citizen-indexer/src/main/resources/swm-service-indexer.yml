@@ -8,4 +8,3 @@ ServiceMaps:
       type: vehiclefuellingdetails
       id: $.id
       isBulk: true
-      jsonPath: $.vehicleFuellingDetails.*

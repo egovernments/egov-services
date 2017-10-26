@@ -1270,6 +1270,8 @@ var localization_EN_Data = {
     "pgr.dashboard.7daystitle":"No. of Complaints (Last 7 Days)",
     "pgr.dashboard.7monthstitle":"No. of Complaints (Last 7 Months)",
     "pgr.dashboard.complaintshare":"Complaint Type Share",
+    "pgr.dashboard.gis.registered.title":"REGISTERED",
+    "pgr.dashboard.gis.redressed.title":"REDRESSED",
     "pgr.0001": " latitude/longitude or cross hierarchy id is required",
     "pgr.0002": " latitude/longitude or cross hierarchy id is required",
     "pgr.0003": " latitude/longitude or cross hierarchy id is required",
@@ -1940,7 +1942,7 @@ var localization_EN_Data = {
 "vehiclefuellingdetails.search.result.receiptDate": "Receipt Date"
 
 
-   
+
 
 
 

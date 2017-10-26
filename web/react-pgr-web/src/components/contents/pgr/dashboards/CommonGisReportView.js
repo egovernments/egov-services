@@ -25,7 +25,7 @@ export default class CommonGisReportView extends Component{
         Api.commonApiPost("pgr/dashboard/complainttype", params, {tenantId:getTenantId()})
       ];
 
-      if(!this.state.kml){
+      if(!this.state.kml && !this.props.kml){
         requestes=[
           ...requestes,
           Api.commonApiGet("egov-location/boundarys/getshapefile",{tenantId:getTenantId()}, {}),
@@ -40,10 +40,11 @@ export default class CommonGisReportView extends Component{
            let {color, totalComplaints} = _this.props;
 
            color = color || "#ffffff";
-           totalComplaints = totalComplaints || 0;
+           totalComplaints = totalComplaints || _.sumBy(responses[0], 'count');
 
            if(responses.length === 1){
-             stateData = extractManipulateCityAndWardsPath(responses[0], this.state.kml, this.state.cityLatLng, color, totalComplaints);
+             stateData = extractManipulateCityAndWardsPath(responses[0], this.state.kml || this.props.kml,
+              this.state.cityLatLng || this.props.cityLatLng, color, totalComplaints);
            }
            else{
              let city = responses[2].tenant[0].city;

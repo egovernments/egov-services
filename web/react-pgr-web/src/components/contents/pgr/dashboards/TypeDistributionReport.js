@@ -77,10 +77,9 @@ export default class TypeDistributionReport extends Component{
               onClick={this.onPieClick}
               outerRadius={80}
               fill="#8884d8">
-               {data && data.map((slice, index)=> <Cell key={slice} fill={COLORS[index % COLORS.length]}/> )}
+               {data && data.map((slice, index)=> <Cell style={{cursor:'pointer'}} key={slice} fill={COLORS[index % COLORS.length]}/> )}
               </Pie>
-            <Tooltip />
-            <Legend height={280} content={<CustomizedLegend external={data} />}/>
+            <Legend height={280} content={<CustomizedLegend external={data} activeIndex={this.state.activeIndex} onClickActivePie={this.onPieClick} />}/>
          </PieChart>
         </div>
       </Grid>

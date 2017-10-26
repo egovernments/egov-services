@@ -1,5 +1,5 @@
 import React from 'react';
-import LinearProgress from 'material-ui/LinearProgress';
+import RefreshIndicator from 'material-ui/RefreshIndicator';
 import _ from "lodash";
 import {Sector} from 'recharts';
 
@@ -18,8 +18,16 @@ const styles = {
 }
 
 
-const HorizontalPageLoader = () => (
-  <LinearProgress mode="indeterminate" />
+const PageLoadingIndicator = () => (
+  <div style={{textAlign:"center", paddingTop:10}}>
+    <RefreshIndicator
+      size={40}
+      left={0}
+      top={0}
+      status="loading"
+      style={{display: 'inline-block', position: 'relative'}}
+    />
+  </div>
 );
 
 const CustomizedAxisTick = (props) =>{
@@ -47,12 +55,16 @@ const CustomizedLegend = (props) =>{
 
   const {payload} = props;
 
+
   const legends = payload.map((data, idx)=>{
-    return (<li key={idx} className={`recharts-legend-item legend-item-${idx}`} style={{display: 'block', marginRight:10}}>
+
+    const activeStyle = props.activeIndex == idx ? {fontWeight:'bold'} : {};
+
+    return (<li key={idx} onClick={(e) => {props.onClickActivePie &&  props.onClickActivePie(data, idx)}} className={`recharts-legend-item legend-item-${idx}`} style={{display: 'block', marginRight:10, cursor:'pointer'}}>
       <svg className="recharts-surface" width="14" height="14" viewBox="0 0 32 32" version="1.1" style={{display: 'inline-block', verticalAlign: 'middle', marginRight:4}}>
         <path stroke="none" fill={data.color} d="M0,4h32v24h-32z" className="recharts-legend-icon"></path>
       </svg>
-      <span className="recharts-legend-item-text" style={{fontSize:12}}>{`${data.value} - ${data.payload.value} (${(data.payload.percent * 100).toFixed(2)}%)`}</span>
+      <span className="recharts-legend-item-text" style={{fontSize:12, ...activeStyle}}>{`${data.value} - ${data.payload.value} (${(data.payload.percent * 100).toFixed(2)}%)`}</span>
     </li>)
   });
 
@@ -167,10 +179,19 @@ const extractManipulateCityAndWardsPath = (wardResponse, kmlText, cityLatLng, co
         wardName = wardObj.boundaryName;
         noOfComplaints = wardObj.count;
 
-        let opacityVal = (wardObj.count / totalComplaints * .70);
+        let opacityVal = (wardObj.count / totalComplaints * .90);
 
-        if(opacityVal < 0.25){
-          opacityVal = 0.25;
+        if(opacityVal < 0.15){
+          opacityVal = 0.20;
+        }
+        else if(opacityVal < 0.30){
+          opacityVal = 0.40;
+        }
+        else if(opacityVal<0.45){
+          opacityVal = 0.60;
+        }
+        else{
+          opacityVal = 0.80;
         }
 
         fillColorStyle = {fillColor:color, fillOpacity: opacityVal.toFixed(2)}
@@ -193,7 +214,7 @@ const extractManipulateCityAndWardsPath = (wardResponse, kmlText, cityLatLng, co
     return {kml:kmlText, wardsPolygons, cityLatLng, openBoundaryInfoWindow:undefined};
 }
 
-export {HorizontalPageLoader as HorizontalPageLoader,
+export {PageLoadingIndicator as PageLoadingIndicator,
   CustomizedAxisTick as CustomizedAxisTick,
   CustomizedYAxisLabel as CustomizedYAxisLabel, getTenantId as getTenantId,
   CustomTooltip as CustomTooltip, CustomizedLegend as CustomizedLegend,

@@ -3,7 +3,7 @@ import {Grid, Row, Col} from 'react-bootstrap';
 import {Card, CardHeader} from 'material-ui/Card';
 import {LineChart, Line, AreaChart, Area, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
 import {translate} from '../../../common/common';
-import {HorizontalPageLoader, CustomizedAxisTick, CustomizedYAxisLabel, CustomTooltip, getTenantId} from './ReportUtils';
+import {PageLoadingIndicator, CustomizedAxisTick, CustomizedYAxisLabel, CustomTooltip, getTenantId} from './ReportUtils';
 import Api from '../../../../api/api';
 import _ from "lodash";
 
@@ -56,7 +56,7 @@ export default class Top5ComplaintTypes extends Component {
 
     return (
       <div>
-      {this.state.isFetchingData && <HorizontalPageLoader></HorizontalPageLoader>}
+      {this.state.isFetchingData && <PageLoadingIndicator></PageLoadingIndicator>}
       <Grid fluid={true}>
         <br/>
         <Card>
@@ -64,17 +64,17 @@ export default class Top5ComplaintTypes extends Component {
             title={translate("pgr.dashboard.top5.complaint.types")}/>
              <div style={{ width: '100%', height: 400}}>
                 <ResponsiveContainer>
-                  <LineChart data={data} margin={{top: 10, right: 30, left: 0, bottom: 0}}>
+                  <AreaChart data={data} margin={{top: 10, right: 30, left: 0, bottom: 0}}>
                    <XAxis tick={<CustomizedAxisTick isMonthNumber={true}></CustomizedAxisTick>} dataKey="name"/>
                    <YAxis name="Number of complaints" label={<CustomizedYAxisLabel title="Number of complaints" />}/>
                    <CartesianGrid strokeDasharray="3 3"/>
                    <Tooltip content={<CustomTooltip/>}/>
-                   <Line connectNulls={true} type='monotone' name="data[0].name" dataKey='data[0].count' stroke='#64B5F6' fill='#64B5F6' />
-                   <Line connectNulls={true} type='monotone' name="data[1].name" dataKey='data[1].count' stroke='#BA68C8' fill='#BA68C8' />
-                   <Line connectNulls={true} type='monotone' name="data[2].name" dataKey='data[2].count' stroke='#99CC00' fill='#99CC00' />
-                   <Line connectNulls={true} type='monotone' name="data[3].name" dataKey='data[3].count' stroke='#FFBB33' fill='#FFBB33' />
-                   <Line connectNulls={true} type='monotone' name="data[4].name" dataKey='data[4].count' stroke='#EF6C00' fill='#EF6C00' />
-                 </LineChart>
+                   <Area connectNulls={true} type='monotone' name="data[0].name" dataKey='data[0].count' stroke='#64B5F6' fill='#64B5F6' />
+                   <Area connectNulls={true} type='monotone' name="data[1].name" dataKey='data[1].count' stroke='#BA68C8' fill='#BA68C8' />
+                   <Area connectNulls={true} type='monotone' name="data[2].name" dataKey='data[2].count' stroke='#99CC00' fill='#99CC00' />
+                   <Area connectNulls={true} type='monotone' name="data[3].name" dataKey='data[3].count' stroke='#FFBB33' fill='#FFBB33' />
+                   <Area connectNulls={true} type='monotone' name="data[4].name" dataKey='data[4].count' stroke='#EF6C00' fill='#EF6C00' />
+                 </AreaChart>
                 </ResponsiveContainer>
               </div>
               <br/>

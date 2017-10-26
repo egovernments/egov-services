@@ -3,7 +3,7 @@ import {Grid, Row, Col} from 'react-bootstrap';
 import {Card, CardHeader} from 'material-ui/Card';
 import {BarChart, Bar, ResponsiveContainer, XAxis, YAxis, Tooltip} from 'recharts';
 import {translate} from '../../../common/common';
-import {HorizontalPageLoader, CustomizedAxisTick, CustomizedYAxisLabel, getTenantId} from './ReportUtils';
+import {PageLoadingIndicator, CustomizedAxisTick, CustomizedYAxisLabel, getTenantId} from './ReportUtils';
 import Api from '../../../../api/api';
 
 export default class PendencyReport extends Component {
@@ -55,7 +55,7 @@ export default class PendencyReport extends Component {
 
     return (
       <div>
-      {this.state.isFetchingData && <HorizontalPageLoader></HorizontalPageLoader>}
+      {this.state.isFetchingData && <PageLoadingIndicator></PageLoadingIndicator>}
       <Grid fluid={true}>
         <Row>
           <Col md={6} lg={6} sm={6} xs={12} style={styles.pendencyChart}>

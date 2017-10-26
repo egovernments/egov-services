@@ -7,6 +7,7 @@ import org.egov.works.services.domain.exception.ErrorCode;
 import org.egov.works.services.domain.exception.InvalidDataException;
 import org.egov.works.services.domain.repository.DocumentDetailRepository;
 import org.egov.works.services.web.contract.DocumentDetailRequest;
+import org.egov.works.services.web.contract.DocumentDetailSearchRequest;
 import org.egov.works.services.web.contract.ErrorRes;
 import org.egov.works.services.web.contract.RequestInfo;
 import org.egov.works.services.web.model.AuditDetails;
@@ -83,6 +84,14 @@ public class DocumentDetailsService {
                 throw new InvalidDataException("objectType", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), null);
             }
         }
+    }
+
+    public void validateSearchDocuments(final DocumentDetailSearchRequest documentDetailSearchRequest) {
+
+            if(StringUtils.isBlank(documentDetailSearchRequest.getTenantId())) {
+                throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), null);
+            }
+
     }
 
 

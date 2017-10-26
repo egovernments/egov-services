@@ -1,8 +1,7 @@
 package org.egov.works.services.web.controller;
 
-import org.egov.works.commons.web.contract.factory.ResponseInfoFactory;
-import org.egov.works.services.domain.service.DocumentDetailsService;
 import org.egov.works.services.domain.exception.CustomBindException;
+import org.egov.works.services.domain.service.DocumentDetailsService;
 import org.egov.works.services.web.contract.*;
 import org.egov.works.services.web.model.DocumentDetail;
 import org.egov.works.services.web.model.DocumentDetailSearchCriteria;
@@ -33,6 +32,7 @@ public class DocumentDetailController {
             throw new CustomBindException(errors);
         }
 
+        documentDetailsService.validateDocuments(documentDetailRequest);
         final List<DocumentDetail> documents = documentDetailsService.createDocuments(documentDetailRequest);
         DocumentDetailResponse documentDetailResponse = new DocumentDetailResponse();
         //prepare response info
@@ -53,6 +53,7 @@ public class DocumentDetailController {
             throw new CustomBindException(errors);
         }
 
+        documentDetailsService.validateDocuments(documentDetailRequest);
         final List<DocumentDetail> documents = documentDetailsService.updateDocuments(documentDetailRequest);
         DocumentDetailResponse documentDetailResponse = new DocumentDetailResponse();
         //prepare response info
@@ -62,6 +63,8 @@ public class DocumentDetailController {
 
     }
 
+    @PostMapping
+    @RequestMapping("/_search")
     public ResponseEntity<?> searchDocuments(@ModelAttribute DocumentDetailSearchRequest documentDetailSearchRequest,
                                              @RequestBody RequestInfo requestInfo, BindingResult errors) {
 
@@ -69,6 +72,8 @@ public class DocumentDetailController {
         if (errors.hasErrors()) {
             throw new CustomBindException(errors);
         }
+
+        documentDetailsService.validateSearchDocuments(documentDetailSearchRequest);
         List<DocumentDetail> documents = documentDetailsService.searchDocuments(new DocumentDetailSearchCriteria().toDomain(documentDetailSearchRequest));
         DocumentDetailResponse documentDetailResponse = new DocumentDetailResponse();
         //prepare response info

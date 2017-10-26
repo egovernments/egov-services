@@ -29,10 +29,7 @@ public class IndexerApplicationRunnerImpl implements ApplicationRunner {
 
 	@Autowired
 	public static ResourceLoader resourceLoader;
-	    
-    @Value("${egov.indexer.file.path}")
-    private String yamllistfile;
-    
+	        
     @Value("${egov.indexer.yml.repo.path}")
     private String yamllist;
 	

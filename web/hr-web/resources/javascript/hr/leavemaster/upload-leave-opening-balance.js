@@ -74,7 +74,7 @@ class UploadLeaveType extends React.Component{
             var employee = d[key[0]];
             employee = employee.trim();
             var leaveType = d[key[3]];
-            leaveType = leaveType.trim();
+            leaveType = leaveType.trim().toUpperCase();
             var calendarYear = d[key[4]];
             calendarYear = calendarYear.trim();
             var noOfDays = d[key[5]];
@@ -134,12 +134,12 @@ addOrUpdate(e,mode)
 {
 
         e.preventDefault();
+        var _this = this;
         var serverObject = [],errorObject=[],finalValidatedServerObject=[],finalSuccessObject=[];
         var tempInfo=Object.assign([],this.state.temp);
         var duplicateInfo = Object.assign([],this.state.duplicate);
         var errorLeaveOpening=[];
         var exists = false;
-        var _this = this;
 
         duplicateInfo.forEach(function(d){
           errorObject.push(d);
@@ -147,11 +147,11 @@ addOrUpdate(e,mode)
         var leaveArray =[],calendarYearArray=[],employeeArray=[];
         var checkLeave = [],checkCalenderYear= [],checkEmployee=[];
         _this.state._leaveTypes.forEach(function(d) {
-          checkLeave.push(d.name);
+          checkLeave.push(d.name.trim().toUpperCase());
         });
 
         _this.state._leaveTypes.forEach(function(d) {
-          leaveArray.push({"name":d.name,
+          leaveArray.push({"name":d.name.trim().toUpperCase(),
                             "id":d.id});
         });
 
@@ -188,7 +188,7 @@ addOrUpdate(e,mode)
         for(var k=0;k<tempInfo.length;k++){
 
           var d = tempInfo[k];
-
+          console.log(d);
           noOfDays = parseInt(d.noOfDays)
           leaveName = d.leaveType.id;
           employeeName = d.employee;
@@ -196,6 +196,11 @@ addOrUpdate(e,mode)
           var leaveValidate = checkLeave.indexOf(d.leaveType.id);
           var employeeValidate = checkEmployee.indexOf(d.employee);
           var calenderValidate = checkCalenderYear.indexOf(d.calendarYear);
+
+          console.log("leaveValidate", leaveValidate);
+          console.log("employeeValidate", employeeValidate);
+          console.log("calenderValidate", calenderValidate);
+
           d.errorMsg = "";
           if(noOfDays<0){
             d.errorMsg = "Number of days is negative "+noOfDays;

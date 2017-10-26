@@ -383,6 +383,20 @@ function getDropdown(name, cb, params) {
                 cb(JSON.parse(localStorage.getItem("bank")));
             }
             break;
+        case 'bankbranches':
+            if (!localStorage.getItem("bankbranches") || localStorage.getItem("bankbranches") == "undefined") {
+                getCommonMaster("egf-masters", "bankbranches", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("bankbranches", JSON.stringify(res["bankBranches"]));
+                        cb(res["bankBranches"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("bankbranches")));
+            }
+            break;
         case 'recruitmentMode':
             if (!localStorage.getItem("recruitmentMode") || localStorage.getItem("recruitmentMode") == "undefined") {
                 getCommonMaster("hr-masters", "recruitmentmodes", function(err, res) {
@@ -554,6 +568,21 @@ function getDropdown(name, cb, params) {
                 cb(JSON.parse(localStorage.getItem("years")));
             }
             break;
+
+      case 'futureyears':
+          if (!localStorage.getItem("futureyears") || localStorage.getItem("futureyears") == "undefined") {
+              commonApiPost("egov-common-masters", "calendaryears", "_searchfutureyears", {tenantId:tenantId} , function(err, res) {
+                  if (res) {
+                      localStorage.setItem("futureyears", JSON.stringify(res["CalendarYear"]));
+                      cb(res["Futureyears"]);
+                  } else {
+                      cb([]);
+                  }
+              })
+          } else {
+              cb(JSON.parse(localStorage.getItem("futureyears")));
+          }
+          break;
         case 'leaveTypes':
             if (!localStorage.getItem("leaveTypes") || localStorage.getItem("leaveTypes") == "undefined") {
                 getCommonMaster("hr-leave", "leavetypes", function(err, res) {
@@ -596,6 +625,76 @@ function getDropdown(name, cb, params) {
                 cb(JSON.parse(localStorage.getItem("relation")));
             }
             break;
+        case 'transferType':
+              if (!localStorage.getItem('transferType') || localStorage.getItem('transferType') == 'undefined') {
+                commonApiPost('hr-employee-movement', 'transfertypes', '_search',{tenantId:tenantId , pageSize:"500", typeOfMovement:"TRANSFER"} ,function (err, res) {
+                  if (res) {
+                    localStorage.setItem('transferType', JSON.stringify(res['TransferType']));
+                    cb(res['TransferType']);
+                  } else {
+                    cb([]);
+                  }
+                })
+              } else {
+                cb(JSON.parse(localStorage.getItem('transferType')));
+              }
+              break;
+        case 'transferReason':
+              if (!localStorage.getItem('transferReason') || localStorage.getItem('transferReason') == 'undefined') {
+                getCommonMaster('hr-employee-movement', 'transferreason', function (err, res) {
+                  if (res) {
+                    localStorage.setItem('transferReason', JSON.stringify(res['TransferReason']));
+                    cb(res['TransferReason']);
+                  } else {
+                    cb([]);
+                  }
+                })
+              } else {
+                cb(JSON.parse(localStorage.getItem('transferReason')));
+              }
+              break;
+        case 'promotionBasis':
+              if (!localStorage.getItem('promotionBasis') || localStorage.getItem('promotionBasis') == 'undefined') {
+                getCommonMaster('hr-employee-movement', 'promotionbasis', function (err, res) {
+                  if (res) {
+                    localStorage.setItem('promotionBasis', JSON.stringify(res['PromotionBasis']));
+                    cb(res['promotionBasis']);
+                  } else {
+                    cb([]);
+                  }
+                })
+              } else {
+                cb(JSON.parse(localStorage.getItem('promotionBasis')));
+              }
+              break;
+        case 'districtList':
+              if (!localStorage.getItem('districtList') || localStorage.getItem('districtList') == 'undefined') {
+                getCommonMaster('tenant', 'v1/tenant', function (err, res) {
+                  if (res) {
+                    localStorage.setItem('districtList', JSON.stringify(res['tenant']));
+                    cb(res['districtList']);
+                  } else {
+                    cb([]);
+                  }
+                })
+              } else {
+                cb(JSON.parse(localStorage.getItem('districtList')));
+              }
+              break;
+        case 'holidayTypes':
+              if (!localStorage.getItem('holidayTypes') || localStorage.getItem('holidayTypes') == 'undefined') {
+                getCommonMaster('egov-common-masters', 'holidaytypes', function (err, res) {
+                  if (res) {
+                    localStorage.setItem('holidayTypes', JSON.stringify(res['HolidayType']));
+                    cb(res['districtList']);
+                  } else {
+                    cb([]);
+                  }
+                })
+              } else {
+                cb(JSON.parse(localStorage.getItem('holidayTypes')));
+              }
+              break;
     }
 }
 function getTimestamp() {

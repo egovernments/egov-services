@@ -10,10 +10,6 @@ info:
   
 basePath: "/swm-services"
 
-x-ui-info:
-  $ref: /home/venkat/egov-services/docs/swm/contract/vehicle-ui-info.yaml
-
-
 paths:
 
     /vehicles/_search:
@@ -597,7 +593,6 @@ paths:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
 definitions:
-
     CollectionPoint:
       type: object
       properties:
@@ -617,34 +612,25 @@ definitions:
           maxLength: 128
           minLength: 4
         ward:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+          type: array
+          items: 
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
         zone:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+          type: array
+          items: 
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
         street:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+          type: array
+          items: 
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
         colony:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        assetOrBinId:
-          type: string
-          description: asset or BIN Id of the Collection Point. If defined, shall be uniques within ULB
-          maxLength: 256
-          minLength: 0
-        rfidAssigned:
-          type: boolean
-          description: Option should be selected if RFID is assigned
-        rfid:
-          type: string
-          description: rfid of the Collection Point. If rfidAssigned is TRUE, this field is mandatory
-          maxLength: 256
-          minLength: 0
-        latitude:
-          type: number 
-          format: double
-          description: latitude of the Collection Point
-        longitude:
-          type: number 
-          format: double
-          description: longitude of the Collection Point
+          type: array
+          items: 
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        binIdDetails:
+          type: array
+          items:
+            $ref: "#/definitions/BinIdDetails"
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
@@ -654,7 +640,49 @@ definitions:
       - ward
       - zone
       - street
-      - colony
+
+    BinIdDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Route
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the Route
+          maxLength: 128
+          minLength: 4
+        assetOrBinId:
+          type: string
+          description: asset or BIN Id of the Collection Point. If defined, shall be unique within ULB
+          maxLength: 256
+          minLength: 5
+        rfidAssigned:
+          type: boolean
+          format: checkbox
+          description: Option should be selected if RFID is assigned
+        rfid:
+          type: string
+          description: rfid of the Collection Point. If rfidAssigned is TRUE, this field is mandatory
+          maxLength: 256
+          minLength: 1
+        latitude:
+          type: number # negative number is allowed
+          format: double
+          description: latitude of the Collection Point. e.g. 12.9716. Latitudes range from -90 to 90. Positive latitude is above the equator (N), and negative latitude is below the equator (S).
+          example: 38.544907
+        longitude:
+          type: number # negative number is allowed
+          format: double
+          description: longitude of the Collection Point. e.g. 77.5946. Longitudes range from -180 to 180. Positive longitude is east of the prime meridian, while negative longitude is west of the prime meridian
+          example: -121.740517
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
       
     Route:
       type: object
@@ -710,6 +738,7 @@ definitions:
       
     FuelType:
       type: object
+      description: Defines the type of vehicle. e.g.  Diesel, Petrol etc
       properties:
         id:
           type: string
@@ -724,13 +753,13 @@ definitions:
         name:
           type: string
           format: singleValueList
-          description: name of the FuelType
+          description: name of the FuelType. e.g  Diesel, Petrol etc
           maxLength: 128
           minLength: 1
         code:
           type: string
           format: singleValueList
-          description: code of the FuelType
+          description: code of the FuelType. Unique code assigned to the FuelType. Shall be of at least 2 digits. fuelCode will be system generated
           maxLength: 128
           minLength: 1
         auditDetails:
@@ -776,6 +805,7 @@ definitions:
       
     Vehicle:
       type: object
+      description: In order to identify each and every vehicle, this master defines attributes of individual vehicle. e.g License plate number, Chassis number etc
       properties:
         id:
           type: string
@@ -794,39 +824,48 @@ definitions:
         regNumber:
           type: string
           format: singleValueList
-          description: registration Number of the Vehicle. Should be unique across the platform. Special characters not allowed. Space not allowed. 
+          description: registration Number of the Vehicle. Should be unique across the platform. Special characters are not allowed. Space not allowed. 
           maxLength: 12
           minLength: 6
+          example: KA519876
         engineSrNumber:
           type: string
-          description: engine serial number of the Vehicle. Should be unique across the platform. Space not allowed
+          description: engine serial number of the Vehicle. Should be unique across the platform. Special characters are allowed. Space not allowed
           maxLength: 256
           minLength: 1
+          example: 1234/abvd-56e5353
         chassisSrNumber:
           type: string
-          description: chassis serial number of the Vehicle. Should be unique across the platform. Space not allowed
+          description: chassis serial number of the Vehicle. Should be unique across the platform. Special characters are allowed. Space not allowed
           maxLength: 256
           minLength: 1
+          example: 1234/abvd-56e5353
         vehicleCapacity:
-          type: integer
-          format: int64
-          description: capacity of the Vehicle in Tonnes. CAN NOT be 0
+          type: number
+          format: double
+          description: capacity of the Vehicle in Tonnes. Shall be > 0
+          minimum: 0
+          exclusiveMinimum: true
+          example: 0.24
         numberOfPersonsReq:
           type: integer
           format: int64
-          description: number Of Persons Required to operate the Vehicle. CAN NOT be 0
+          description: number Of Persons Required to operate the Vehicle. Shall be > 0
+          minimum: 1
+          example: 3
         model:
           type: string
-          description: Make / Model / Manufaturer of the Vehicle. Only / special character is allowed.
+          description: Make / Model / Manufaturer of the Vehicle. / special character is allowed. Space is not allowed
           maxLength: 256
           minLength: 1
+          example: Dzire/LDi/Maruti
         ulbOwnedVehicle:
           type: boolean
           format: checkbox
-          description: Option should be selected if vehilce is owned by ULB. By default option should be in Selected state.
+          description: "Option should be selected if vehilce is owned by ULB. By default option should be in Selected state."
         vendor:
           $ref: "#/definitions/Vendor"
-          description: name of the vendor who supplied the Vehicle. Mandatory when ulbOwnedVehicle is in "Not Selected" state. Else, disable this field
+          description: name of the vendor who supplied the Vehicle. Mandatory when ulbOwnedVehicle is in "Not Selected" state. Else, disable this field"
         vehicleDriverName:
           type: string
           description: name of the driver who will drive the Vehicle. Driver name shall be fetched from HRMS. Assumption-> One driver shall be assigned to one vehicle only. # HRMS APIs are required.
@@ -843,6 +882,7 @@ definitions:
           type: number 
           format: double
           description: purchase price of the Vehicle
+          example: 367000.00
         sourceOfPurchase:
           type: string
           description: source of purchase of the Vehicle
@@ -861,6 +901,7 @@ definitions:
         insuranceValidityDate:
           type: string
           format: date
+          x-displayformat: 26/05/2018
           description: Current or Futrure date at which insurance is going to expire
         insuranceDocuments:
           $ref: '#/definitions/Documents'
@@ -874,10 +915,12 @@ definitions:
           maximum: 75000
           minimum: 1
           description: If isUnderWarranty is selected, this field is mandatory.
+          example: 24502
         endOfWarranty:
           type: string
           format: date
           description:  If isUnderWarranty is selected, this field is mandatory. Should be a future date
+          x-displayformat: 26/10/2017
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:

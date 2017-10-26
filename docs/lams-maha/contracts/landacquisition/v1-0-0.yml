@@ -18,17 +18,21 @@ info:
   
   title: eGov Land Management 
   description: |
-    APIs for Land management module. This modules handles Proposal for Land Acquisition (create,update,search of required land acquisition), land possession,transfer of land to manage the land acquisition within the ulb jurisdiction.
+    APIs for Land management module. This modules allows user to enter Proposal for Land Acquisition (create,update,search of required land acquisition), land possession,transfer of land to manage the land acquisitions within the ulb jurisdiction.
   contact:
     name: eGovernments Foundation
-    email : contacts@egovernments.org
+    email : pradeep@egovernments.org
+externalDocs:
+    description: Complete documentation describing the functionality of these APIs.
+    url: >-
+      https://github.com/egovernments/egov-docs/blob/master/Maharashtra/SignedoffSRS/SRS_Land_Estate_1.0.docx
 schemes:
   - https
 basePath: '/lams-maha/v1'
 x-api-id: 'org.egov.lcms-maha.land.services'
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 paths:
-  /landacquisition/_search:
+  /landacquisitions/_search:
     post:
       summary: Get the list of land acquisitions defined in the system.
       description: |
@@ -40,25 +44,27 @@ paths:
         - $ref: "#/parameters/pageSize"
         - $ref: "#/parameters/pageNumber"
         - $ref: "#/parameters/sortLandAquisition"
-        - name: landAcquisitionId
+        - name: ids
+          type: array
+          items: 
+            type: integer
+            format: int64
           in: query
-          description: Primary key of land acquisition object.
-          required: false
-          type: string
-          format: varchar
+          maxItems: 50
+          description: comma seperated list of Ids
         - name: landAquisitionNumber
           in: query
           required: false
-          description: The number of land acquisition.
+          description: The number of land acquisition.Land Acquisition Number will be a combination of "LACQ" short code, Current Year and sequentially generated Serial Number. Eg:LACQ201700001
           type: string
-          maxLength: 64
+          maxLength: 32
           exclusiveMaximum: false
         - name: landOwnerName
           in: query
           required: false
           description: The land owner name
           type: string
-          maxLength: 64
+          maxLength: 128
           exclusiveMaximum: false
         - name: surveyNo
           in: query
@@ -79,8 +85,8 @@ paths:
           required: false
           description: advocate handled land acquisition
           type: string
-          maxLength: 64
-        - name: landType
+          maxLength: 128
+        - name: landTypeCode
           in: query
           required: false
           description: Land Type of the land
@@ -92,7 +98,7 @@ paths:
           required: false
           description: The organization name involved in land aquisition
           type: string
-          maxLength: 64
+          maxLength: 128
       responses:
         200:
           description: Successful response
@@ -105,7 +111,7 @@ paths:
       tags:
        - LandAcquisition
        
-  /landacquisition/v1/_create:
+  /landacquisitions/v1/_create:
     post:
       summary: Create new land acquisition detail
       description: |
@@ -123,7 +129,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: ReponseInfo with Land acquisition detail created successfully
           schema:
             $ref: '#/definitions/LandAcquisitionResponse'
@@ -133,7 +139,7 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - LandAcquisition  
-  /landacquisition/v1/_update:
+  /landacquisitions/v1/_update:
     post:
       summary: update existing land acquisition detail.
       description: |
@@ -150,7 +156,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: ReponseInfo with Land acquisition details updated sudcessfully
           schema:
             $ref: '#/definitions/LandAcquisitionResponse'
@@ -161,7 +167,7 @@ paths:
       tags:
         - LandAcquisition
         
-  /landpossession/_search:
+  /landpossessions/_search:
     post:
       summary: Get the list of land possession defined in the system.
       description: |
@@ -173,12 +179,14 @@ paths:
         - $ref: "#/parameters/pageSize"
         - $ref: "#/parameters/pageNumber"
         - $ref: "#/parameters/sortLandPossession"
-        - name: landPossessionId
+        - name: ids
+          type: array
+          items: 
+            type: integer
+            format: int64
           in: query
-          description: Primary key of land posession object.
-          required: false
-          type: string
-          format: varchar
+          maxItems: 50
+          description: comma seperated list of Ids
         - name: possessionNumber
           in: query
           required: false
@@ -200,7 +208,7 @@ paths:
           type: string
           maxLength: 64
           exclusiveMaximum: false
-        - name: landType
+        - name: landTypeCode
           in: query
           required: false
           description: Land Type of the land
@@ -213,6 +221,7 @@ paths:
           description: possession date
           type: integer
           format: int64
+          x-displayformat: 'dd/MM/yyyy'
       responses:
         200:
           description: Successful response
@@ -224,7 +233,7 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
        - LandPossession
-  /landpossession/v1/_create:
+  /landpossessions/v1/_create:
     post:
       summary: Create new land possession detail
       description: |
@@ -242,7 +251,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: ReponseInfo with Land Possession detail created successfully
           schema:
             $ref: '#/definitions/LandPossessionResponse'
@@ -252,7 +261,7 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - LandPossession  
-  /landpossession/v1/_update:
+  /landpossessions/v1/_update:
     post:
       summary: update existing land Possession detail.
       description: |
@@ -269,7 +278,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: ReponseInfo with Land acquisition details updated sudcessfully
           schema:
             $ref: '#/definitions/LandPossessionResponse'
@@ -279,7 +288,7 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - LandPossession
-  /landtransfer/_search:
+  /landtransfers/_search:
     post:
       summary: Get the list of land transfered defined in the system.
       description: |
@@ -291,12 +300,14 @@ paths:
         - $ref: "#/parameters/pageSize"
         - $ref: "#/parameters/pageNumber"
         - $ref: "#/parameters/sortLandTransfer"
-        - name: landTransferId
+        - name: ids
+          type: array
+          items: 
+            type: integer
+            format: int64
           in: query
-          description: Primary key of land transfered object.
-          required: false
-          type: string
-          format: varchar
+          maxItems: 50
+          description: comma seperated list of Ids
         - name: transferNumber
           in: query
           required: false
@@ -323,7 +334,7 @@ paths:
           required: false
           description: Land transferred from
           type: string
-          maxLength: 64
+          maxLength: 128
           exclusiveMaximum: false
         - name: transferedToDate
           in: query
@@ -331,6 +342,8 @@ paths:
           description: transfer end date in epoc format
           type: integer
           format: int64
+          x-displayformat: 'dd/MM/yyyy'
+
       responses:
         200:
           description: Successful response
@@ -342,7 +355,7 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
        - LandTransfer
-  /landtransfer/v1/_create:
+  /landtransfers/v1/_create:
     post:
       summary: Create new land transfer detail
       description: |
@@ -360,7 +373,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: ReponseInfo with Land Transfer detail created successfully
           schema:
             $ref: '#/definitions/LandTransferResponse'
@@ -370,7 +383,7 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - LandTransfer
-  /landtransfer/v1/_update:
+  /landtransfers/v1/_update:
     post:
       summary: update existing land Transfer detail.
       description: |
@@ -387,7 +400,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: ReponseInfo with Land Transfer details updated sudcessfully
           schema:
             $ref: '#/definitions/LandTransferResponse'
@@ -409,8 +422,7 @@ definitions:
     description: Land acquisition proposal details
     properties:
       id:
-        type: integer
-        format: int64
+        type: string
         description: Unique Identifier of the Proposal Details
       tenantId:
         type: string
@@ -422,19 +434,21 @@ definitions:
         description : Adhaar Number of proposer
         pattern: "[0-9]"
         maxLength: 12
+        format: aadhar
         exclusiveMaximum: true
       proposalDate:
         type: integer
         format: int64
         description: proposal date  in epoch
+        x-displayformat: 'dd/MM/yyyy'
       proposerName:
         type: string
         description: Proposer Name detail   
         maxLength: 128
       proposerDepartment:
-        type: string
-        description: Proposer department.Dropdown list refer department
-        maxLength: 64
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/Department'
+        description: Proposer department.Dropdown list refer department. Use department code.
+        format: singleValueList
       landOwnerName:
         type: string
         description: Name of the land owner name. Mandatory field.
@@ -458,11 +472,12 @@ definitions:
         type: string
         format: email
         description: EmailID of the owner
-        pattern: '/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/'
         minLength: 6
         maxLength: 50
+        pattern: '/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/'
       mobileNumber:
         type: string
+        format: mobileNumber
         description: Mobile Number of the proposer.
         pattern: "[0-9]"
         maxLength: 10
@@ -481,17 +496,18 @@ definitions:
     description: Valuation details of land acquisition
     properties:
       id:
-        type: integer
-        format: int64
+        type: string
         description: Unique Identifier of the land valuation
+        maxLength: 64
       tenantId:
         type: string
         description: tenant id of the Land Acquisition
         maxLength: 128
         minLength: 4 
       valuationYear: 
-        type: string
-        description: Valuation year. Dropdown master.
+        type: number
+        format: int32
+        description: Valuation year. 
       valuationRate:
         type: number
         format: double
@@ -504,8 +520,10 @@ definitions:
         type: string
         maxLength: 512
         description: remarks about land acquisition 
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
       landAcquisition:
         $ref: '#/definitions/LandAcquisition'
+        description: refer id of landacquisition
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -514,14 +532,13 @@ definitions:
     - valuationRate
     - valuationAmount
     - landAcquisition
-     
   LandAcquisition:
     type: object
     description: A Object holds the basic data for a Land Aquisition
     properties:
       id:
-        type: integer
-        format: int64
+        type: string
+        maxLength: 64
         description: Unique Identifier of the Land Acquisition
       tenantId:
         type: string
@@ -530,66 +547,64 @@ definitions:
         minLength: 4
       landAcquisitionNumber:
         type: string
-        description: Unique Number of the Land Acquisition. This is  unique in system for a tenant. This is mandatory but always be generated on the creation.
+        description: Unique Number of the Land Acquisition. This is  unique in system for a tenant. This is mandatory but always be generated on the creation. Hide this field if source is DATAENTRY
         maxLength: 20
       landType:
-        type: string
-        description: Land type.  Drop down field. Refer master.
-        minLength: 1
-        maxLength: 100
-      usageType:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/UsageType"
-      subUsageType:
-        type: string
-        description: Sub Usage type of land . dropdown field. Refer master
+        format: singleValueList
+        description: Land type. Refering asset category of type LAND. Get category code and use as land type code.
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/AssetCategory"
+      usage:
+        format: singleValueList
+        description: Usage code will be used in land acquisition 
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/Usage"
+      subUsage:
+        format: singleValueList
+        description: Sub Usage code will be used in land acquisition 
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/SubUsage"
       ctsNumber:
         description: Cts number or gatt number of land
         type: string
         maxLength: 25
-        minLength: 3
       surveyNumber:
         description: survey number of land
         type: string
         maxLength: 25
-        minLength: 3
       plotNumber:
         description: Plot number of land
         type: string
         maxLength: 25
-        minLength: 3
       plotArea:
-        description: plot area of land
+        description: plot area of land. Unit of measure not selected as seperate field. User can enter area with description of unit in the same field
         type: string
-        maxLength: 25
-        minLength: 3  
+        maxLength: 64
       plotAddress:
         description: Address of land
         type: string
-        maxLength: 25
-        minLength: 3    
+        maxLength: 256
       location:
-        type: string
-        description: refer boundary details
-        minLength: 3
-        maxLength: 100
+        description: The boundary location where the land is located. Refer code of boundary.
+        format: singleValueList
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
       pinCode:
         type: string
+        format : pinCode
         description: pin code of the land location
         minLength: 6
         maxLength: 6  
       reservationCode:
         type: string
         description: Reservation code
-        minLength: 3
-        maxLength: 30
+        maxLength: 32
+        pattern: '[a-zA-Z0-9-\\]'
       resolutionNumber:
         type: string
         description: Resolution number of council
-        minLength: 3
-        maxLength : 50
+        maxLength: 32
+        pattern: '[a-zA-Z0-9-\\]'
       resolutionDate:
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description:  Resolution date as epoch  
       latitude:
         type: number
@@ -602,22 +617,25 @@ definitions:
       landAcquisitionOfficerName:
         type: string
         description: Special land aquisition officer name
-        maxLength: 124
+        maxLength: 128
       landAcquisitionOfficerRemark:
         type: string
         description: Special land aquisition officer remarks
-        maxLength: 256  
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        maxLength: 512  
       paperNoticeNumber: 
         type: string
         description: Published paper notice number
-        maxLength: 50
+        maxLength: 64
+        pattern: '[a-zA-Z0-9-\\]'
       advocateName: 
         type: string
         description: Advocate Name
-        maxLength: 124
+        maxLength: 128
       panelAppointmentDate:
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description:  Panal appointment date  
       status:
         type: string
@@ -650,37 +668,35 @@ definitions:
           $ref: '#/definitions/ValuationDetail' 
       proposalDetails:
         $ref: '#/definitions/ProposalDetails'
-      supportDocuments:
+        description : refer id of proposal details for reference.
+      documents:
         type: array
         description: List of Support Documents for land acquisition
         items:
-          $ref: '#/definitions/SupportDocument'
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"  
+          $ref: '#/definitions/LandAcquisitionDocuments'
     required:
     - tenantId
     - advocateName
     - paperNoticeNumber
     - valuationDetails
     - proposalDetails
-    
-  SupportDocument:
+    - landAcquisitionOfficerName
+  LandAcquisitionDocuments:
     type: object
     description: An Object to hold the support document detail for a given land acquisiton
     properties:
       id: 
-        type: integer
-        format: int64
+        type: string
+        maxLength: 64
         description: Unique Identifier of the Support Document
       tenantId:
         type: string
         description: tenant id of the land acquisiton
         maxLength: 128
         minLength: 4
-      landAcquisitonId:
-        type: integer
-        format: int64
-        description: Unique Identifier of the land acquisiton
+      landAcquisition:
+        $ref: '#/definitions/LandAcquisition'
+        description: Use  land acquisition id.Unique Identifier of the land acquisiton
       fileStoreId:
         type: string
         description: Unique Identifier of the FileStore
@@ -690,7 +706,7 @@ definitions:
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
-    - landAcquisitonId
+    - landAcquisition
     - tenantId
     - fileStoreId
 
@@ -699,53 +715,60 @@ definitions:
     description: The Object Holds the possession details of land acquisition
     properties:
       id:
-        type: integer
-        format: int64
+        type: string
+        maxLength: 64
+        description: unique primary key identifier with tenantid.
       possessionNumber:
         type: string
         description : Unique Possession number generated in the system
-        maxLength: 50
+        maxLength: 64
       tenantId:
         type: string
         description: tenant id of the land possession
         maxLength: 128
         minLength: 4  
       landType:
-        type: string
-        description: Land type.  Drop down field. Refer master.
-        minLength: 1
-        maxLength: 100
-      usageType:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/UsageType"
-      subUsageType:
-        type: string
-        description: Sub Usage type of land . dropdown field. Refer master
+        format: singleValueList
+        description: Land type. Refering asset category of type LAND. Get category code and use as land type code.
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/AssetCategory"
+      usage:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/Usage"
+        format: singleValueList
+        description: Use Code for usage reference.
+      subUsage:
+        format: singleValueList
+        description: Sub Usage code will be used in land posession 
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/SubUsage"
       ctsNumber:
         description: Cts number or gatt number of land
         type: string
         maxLength: 25
-        minLength: 3
       surveyNumber:
         description: survey number of land
         type: string
         maxLength: 25
-        minLength: 3
       remarks:
         description: Remarks of pocession
         type: string
         maxLength: 1024
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
       possessionDate:
         type: integer
         format: int64
-        description: possession Date in epoch format
+        description: possession Date in epoch forma
+        x-displayformat: 'dd/MM/yyyy'
       tdrCertificate:
         type: string
         description: filestoreId of the TDR Certificate
       landAcquisition:
         $ref: '#/definitions/LandAcquisition'  
+        description: refer land acquisition id.
       status:
         type: string
         description: Unique identifier (code) of the possession Status
+        enum:
+          - APPROVED
+          - REJECTED
       workFlowDetails:
         $ref: '#/definitions/WorkFlowDetails'
       stateId:
@@ -757,82 +780,99 @@ definitions:
       - id
       - possessionDate
       - landAcquisition
-
   LandTransfer:
     type: object
     description: The Object holds the data of shits
     properties:
       id: 
-        type: integer
-        format: int64
+        type: string
+        maxLength: 64
         description: Id of the Transfer of Land
       tenantId:
         type: string
         description: tenant id of the land transfer
         maxLength: 128
         minLength: 4  
-      landTransferNumber:
-        type: string
-        description : Unique Land transfer number generated in system
-        maxLength: 50
       landAcquisition:
         $ref: '#/definitions/LandAcquisition'
+        description: use id of land acquisition for reference
       resolutionNumber:
         type: string
         description: council resolution number.
         minLength: 1
-        maxLength: 50
+        maxLength: 64
+        pattern: '[a-zA-Z0-9-\\]'
       resolutionDate:
         type: integer
         format: int64
         description: resolution Date in epoch format
+        x-displayformat: 'dd/MM/yyyy'
       propertyId:
         type: string
-        description: property or land details . 
+        description: property or land details . Refer external property system.
       department:
-        type: string
-        description: Department details. dropdown field. Refer master
-        maxLength: 64
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/Department'
+        description: Proposer department.Dropdown list refer department. Use department code.
+        format: singleValueList
       transferType:
-        description: Transfer type of land. Refer master. Dropdown field.
+        description: Transfer type of land. Refer master. 
         type: string
+        enum:
+          - TRANSFERTYPE1
+          - TRANSFERTYPE2
       transferPurpose:
         description: Transfer purpose of land. 
         type: string 
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        maxLength : 128
       transferFrom:
         description: Transfered from details.
         type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        maxLength: 128
       transferTo:
         description: Transfer to details.
         type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        maxLength: 128
       transferNumber:
         type: string
         description : transfer number. Unique number generated
-        maxLength: 50
+        maxLength: 64
       transferedFromDate:
         type: integer
         format: int64
-        description: Transfer date -Start date
+        description: Transfer date -Start date in epoc format
+        x-displayformat: 'dd/MM/yyyy'
       transferedToDate:
         type: integer
         format: int64
-        description: Transfer date - end date
+        description: Transfer date - end date in epoc format
+        x-displayformat: 'dd/MM/yyyy'
       remarks:
         type: string
         description: Remarks if any
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        maxLength: 512
       status:
         type: string
         description: Unique identifier (code) of the transfer of land Status
+        enum:
+          - APPROVED
+          - REJECTED
       workFlowDetails:
         $ref: '#/definitions/WorkFlowDetails'
       stateId:
         type: string
-        description: state id of the workflow  
+        description: state id of the workflow 
+        maxLength: 20
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"  
     required:
       - id
       - resolutionNumber
+      - landAcquisition
+      - transferNumber
   LandTransferRequest:
       description:  Contract class to receive request. Array of Land transfer items are used in case of create, whereas single Land transfer item is used for update
       properties:
@@ -841,7 +881,6 @@ definitions:
         landTransfer:
           description: Used for search result and create only
           type: array
-          maximum: 500
           items:
             $ref: '#/definitions/LandTransfer'
   LandTransferResponse:
@@ -863,8 +902,6 @@ definitions:
         landPossession:
           description: Used for search result and create only
           type: array
-          minimum: 1
-          maximum: 100
           items:
             $ref: '#/definitions/LandPossession'
   LandPossessionResponse:
@@ -886,8 +923,6 @@ definitions:
         landAcquisition:
           description: Used for search result and create only
           type: array
-          minimum: 1
-          maximum: 100
           items:
             $ref: '#/definitions/LandAcquisition'
   LandAcquisitionResponse:

@@ -164,4 +164,9 @@ public class PropertyDetail {
 	@JsonProperty("subUsage")
 	@Size(min = 1, max = 128)
 	private String subUsage = null;
+	
+	private Double rv = null;
+	
+	private Double arv = null;
+			
 }

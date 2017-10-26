@@ -1,6 +1,8 @@
 package org.egov.lcms.models;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**

@@ -390,15 +390,16 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 		taxCalculation.setFromDate(formatedEffectivedate);
 		CommonTaxDetails commonTaxDetails = new CommonTaxDetails();
 		Double calculatedARV = 0.0;
+		Double calculatedRV = 0.0;
 		Double manualARV = 0.0;
 		Double depreciation = 0.0;
 		Double totalTax = 0.0;
 		List<HeadWiseTax> headWiseTaxesList = new ArrayList<HeadWiseTax>();
 
 		for (UnitTax unitTax : unitTaxList) {
-			calculatedARV += unitTax.getUnitTaxes().getCalculatedARV();
-			if (unitTax.getUnitTaxes().getManualARV() != null)
-				manualARV += unitTax.getUnitTaxes().getManualARV();
+			calculatedRV+=unitTax.getUnitTaxes().getCalculatedRV();
+			if (unitTax.getUnitTaxes().getManualRV() != null)
+				manualARV += unitTax.getUnitTaxes().getManualRV();
 			depreciation += unitTax.getUnitTaxes().getDepreciation();
 
 			for (HeadWiseTax headWise : unitTax.getUnitTaxes().getHeadWiseTaxes()) {
@@ -435,11 +436,12 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 		totalTax = headWiseTaxesList.stream().filter(HeadWiseTax -> HeadWiseTax.getTaxValue() >= 0.0)
 				.mapToDouble(HeadWiseTax -> HeadWiseTax.getTaxValue()).sum();
 		commonTaxDetails.setCalculatedARV(Math.ceil(calculatedARV));
+		commonTaxDetails.setCalculatedRV(Math.ceil(calculatedARV-(10/100.00)));
 		commonTaxDetails.setDepreciation(Math.ceil(depreciation));
 		commonTaxDetails.setEffectiveDate(getFormatedDate(taxPeriod.getFromDate()));
 		commonTaxDetails.setTotalTax(Math.ceil(totalTax));
 		commonTaxDetails.setOccupancyDate(minimumDate);
-		commonTaxDetails.setManualARV(Math.ceil(manualARV));
+		commonTaxDetails.setManualRV(Math.ceil(manualARV));
 		commonTaxDetails.setHeadWiseTaxes(headWiseTaxesList);
 		taxCalculation.setPropertyTaxes(commonTaxDetails);
 		return taxCalculation;
@@ -469,6 +471,8 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 		Double finalARV = grossARV - (grossPercentage * grossARV);
 		finalARV = Math.round(finalARV * 100.0) / 100.0;
 		Double calculatedARV = finalARV;
+		Double calculatedRV = (calculatedARV-(10/100.00));
+		
 		if (unitWrapper.getUnit().getManualArv() != null) {
 			if (unitWrapper.getUnit().getManualArv() != 0.0) {
 				finalARV = unitWrapper.getUnit().getManualArv();
@@ -501,6 +505,8 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 		List<HeadWiseTax> dependentHeadWiseTaxes = getTaxHead(depenentTaxesMap, finalARV, headWiseTaxes, taxPeriod);
 		headWiseTaxes.addAll(dependentHeadWiseTaxes);
 		UnitTax unitTax = getUnitTax(unitWrapper, calculatedARV, depreciation, headWiseTaxes, taxPeriod);
+		unitTax.getUnitTaxes().setCalculatedARV(calculatedRV);
+		unitTax.getUnitTaxes().setCalculatedMRV(finalMRV);
 		return unitTax;
 	}
 
@@ -537,7 +543,7 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 		commonTaxDetails.setEffectiveDate(getFormatedDate(taxPeriod.getFromDate()));
 
 		if (unitWrapper.getUnit().getManualArv() != null)
-			commonTaxDetails.setManualARV(unitWrapper.getUnit().getManualArv());
+			commonTaxDetails.setManualRV(unitWrapper.getUnit().getManualArv());
 		commonTaxDetails.setHeadWiseTaxes(headWiseTaxes);
 		commonTaxDetails.setOccupancyDate(unitWrapper.getUnit().getOccupancyDate());
 		Double totalTax = headWiseTaxes.stream().filter(HeadWiseTax -> HeadWiseTax.getTaxValue() >= 0.0)
@@ -823,7 +829,7 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 		CommonTaxDetails commonTaxDetails = new CommonTaxDetails();
 		commonTaxDetails.setCalculatedARV(annaualRentalValue);
 		commonTaxDetails.setEffectiveDate(getFormatedDate(taxPeriodWrapper.getTaxPeriod().getFromDate()));
-		commonTaxDetails.setManualARV(property.getVacantLand().getCapitalValue());
+		commonTaxDetails.setManualRV(property.getVacantLand().getCapitalValue());
 		commonTaxDetails.setHeadWiseTaxes(headWiseTaxes);
 		commonTaxDetails.setOccupancyDate(property.getOccupancyDate());
 		Double totalTax = headWiseTaxes.stream().filter(HeadWiseTax -> HeadWiseTax.getTaxValue() >= 0.0)

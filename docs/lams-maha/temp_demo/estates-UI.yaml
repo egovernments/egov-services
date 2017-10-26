@@ -1,14 +1,16 @@
 UIInfo:
 - referencePath: "/estates"
+  searchUrl: "/estates/_search?estateNumber={estateNumber}"
+
   groups:
-    VehicleDetails1:
+    EstateDetails1:
       fields:
       - EstateRegisters[0].estateNumber
-    VehicleDetails2:
+    EstateDetails2:
       fields:
       - EstateRegisters[0].id
       - EstateRegisters[0].registerName
-    VehicleDetails3:
+    EstateDetails3:
       fields:
       - EstateRegisters[0].subRegisterName
       - EstateRegisters[0].regionalOffice
@@ -16,18 +18,18 @@ UIInfo:
       - EstateRegisters[0].propertyName
       - EstateRegisters[0].landID
       - EstateRegisters[0].stateId		
-  ExternalData:
+  externalData:
   - fieldName: EstateRegisters[0].estateNumber
-    url: "/lams-maha/v1/_get?&moduleName=lams-maha"
-    keyPath: "$..id"
-    valPath: "$..name"
+    url: "/lams-maha/v1/_get?&moduleName=lams-maha&masterName=Purpose"
+    keyPath: "$..estateNumber"
+    valPath: "$..estateNumber"
   - fieldName: EstateRegisters[0].registerName
-    url: "/lams-maha/v1/_get?&moduleName=lams-maha"
-    keyPath: "$..id"
-    valPath: "$..regNumber"
-  SearchResult:
-    rowClickUrlUpdate: /update/estates/{registerName}
-    rowClickUrlView: /view/estates/{registerName}
+    url: "/lams-maha/v1/_get?&moduleName=lams-maha&masterName=PropertyType"
+    keyPath: "$..registerName"
+    valPath: "$..registerName"
+  searchResult:
+    rowClickUrlUpdate: /update/estates/{estateNumber}
+    rowClickUrlView: /view/estates/{estateNumber}
     columns:
     - registerName
     - subRegisterName
@@ -53,4 +55,3 @@ UIInfo:
     - constructionEndDate
     - stateId
     resultObjectName: EstateRegisters
-

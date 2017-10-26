@@ -60,6 +60,6 @@ public class PropertiesManager {
 	@Value("${kafka.topic.save.landPossession}")
 	public String createLandPossessionKafkaTopic;
 
-	/*@Value("${kafka.topic.update.landPossession}")
-	public String updateLandPossessionKafkaTopic;*/
+	@Value("${kafka.topic.update.landPossession}")
+	public String updateLandPossessionKafkaTopic;
 }

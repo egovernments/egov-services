@@ -3,6 +3,7 @@ package org.egov.lams.services.web.controller;
 import javax.validation.Valid;
 
 import org.egov.lams.common.web.contract.LandPossessionRequest;
+import org.egov.lams.common.web.request.LandAcquisitionRequest;
 import org.egov.lams.services.factory.ResponseFactory;
 import org.egov.lams.services.service.LandPossessionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,18 @@ public class LandPossessionController {
 			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, landPossessionRequest.getRequestInfo()),HttpStatus.BAD_REQUEST);
 		
 		return new ResponseEntity<>(landPossessionService.create(landPossessionRequest),HttpStatus.CREATED);
+	}
+	
+	@PostMapping("_update")
+	public ResponseEntity<?> update(@RequestBody @Valid final LandPossessionRequest landPossessionRequest,
+			final BindingResult bindingResult) {
+
+		if (bindingResult.hasErrors())
+			return new ResponseEntity<>(
+					responseFactory.getErrorResponse(bindingResult, landPossessionRequest.getRequestInfo()),
+					HttpStatus.BAD_REQUEST);
+
+		return new ResponseEntity<>(landPossessionService.update(landPossessionRequest), HttpStatus.OK);
 	}
 	
 }

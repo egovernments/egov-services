@@ -10,33 +10,42 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
-public class VehicleType {
+public class Documents {
 
-	@NotNull
 	@Length(min = 1, max = 256)
 	@JsonProperty("id")
 	private String id = null;
 
 	@NotNull
-	@Length(min = 4, max = 128)
+	@Length(min = 1, max = 128)
 	@JsonProperty("tenantId")
 	private String tenantId = null;
 
 	@NotNull
-	@Length(min = 4, max = 128)
-	@JsonProperty("name")
-	private String name = null;
+	@Length(min = 1, max = 256)
+	@JsonProperty("refId")
+	private String refId = null;
 
-	@Valid
+	@NotNull
+	@JsonProperty("documentTypeId")
+	private Long documentTypeId = null;
+
+	@NotNull
+	@JsonProperty("fileStoreId")
+	private String fileStoreId = null;
+
+	@Length(max = 1024)
+	@JsonProperty("comments")
+	private String comments = null;
+
 	@JsonProperty("auditDetails")
+	@Valid
 	private AuditDetails auditDetails = null;
 
 }

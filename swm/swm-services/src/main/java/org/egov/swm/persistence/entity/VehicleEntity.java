@@ -1,8 +1,11 @@
 package org.egov.swm.persistence.entity;
 
 import org.egov.swm.domain.model.AuditDetails;
+import org.egov.swm.domain.model.Documents;
+import org.egov.swm.domain.model.FinancialYear;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleType;
+import org.egov.swm.domain.model.Vendor;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,7 +40,7 @@ public class VehicleEntity {
 
 	private Boolean ulbOwnedVehicle = null;
 
-	private String vendorName = null;
+	private String vendor = null;
 
 	private String vehicleDriverName = null;
 
@@ -54,6 +57,8 @@ public class VehicleEntity {
 	private String insuranceNumber = null;
 
 	private Long insuranceValidityDate = null;
+
+	private String insuranceDocuments = null;
 
 	private String createdBy = null;
 
@@ -76,15 +81,16 @@ public class VehicleEntity {
 		vehicle.setNumberOfPersonsReq(numberOfPersonsReq);
 		vehicle.setModel(model);
 		vehicle.setUlbOwnedVehicle(ulbOwnedVehicle);
-		vehicle.setVendorName(vendorName);
+		vehicle.setVendor(Vendor.builder().name(vendor).build());
 		vehicle.setVehicleDriverName(vehicleDriverName);
 		vehicle.setPurchaseDate(purchaseDate);
-		vehicle.setYearOfPurchase(yearOfPurchase);
+		vehicle.setYearOfPurchase(FinancialYear.builder().finYearRange(yearOfPurchase).build());
 		vehicle.setPrice(price);
 		vehicle.setSourceOfPurchase(sourceOfPurchase);
 		vehicle.setRemarks(remarks);
 		vehicle.setInsuranceNumber(insuranceNumber);
 		vehicle.setInsuranceValidityDate(insuranceValidityDate);
+		vehicle.setInsuranceDocuments(Documents.builder().id(insuranceDocuments).build());
 		vehicle.setAuditDetails(new AuditDetails());
 		vehicle.getAuditDetails().setCreatedBy(createdBy);
 		vehicle.getAuditDetails().setCreatedTime(createdTime);

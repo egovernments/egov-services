@@ -16,7 +16,7 @@ x-ui-info:
 
 paths:
 
-    /vehicle/_search:
+    /vehicles/_search:
       post:
         summary: Get the list of vehicle
         description: vehicle
@@ -33,62 +33,63 @@ paths:
             in: query
             maxItems: 50
             description: comma seperated list of Ids
-          - name: transactionNo
+          - name: vehicleTypeName
+            type: string
+            format: singleValueList
+            in: query
+            description: vehicleType name of the Vehicle
+            maxLength: 256
+          - name: regNumber
             type: string
             in: query
-            description: transactionNo of the Vehicle
+            description: regNumber of the Vehicle
+            maxLength: 12
+          - name: engineSrNumber
+            type: string
+            in: query
+            description: engineSrNumber of the Vehicle
+            maxLength: 256
+          - name: chassisSrNumber
+            type: string
+            in: query
+            description: chassisSrNumber of the Vehicle
+            maxLength: 256
+          - name: model
+            type: string
+            in: query
+            description: model of the Vehicle
+            maxLength: 256
+          - name: ulbOwnedVehicle
+            type: boolean
+            format: checkbox
+            in: query
+            description: ulbOwnedVehicle of the Vehicle
+          - name: vendorName
+            type: string
+            format: singleValueList
+            in: query
+            description: vendor Name of the Vehicle
             maxLength: 265
-          - name: transactionDate
+          - name: purchaseDate
             type: string
             format: date
             in: query
-            description: transactionDate of the Vehicle
-          - name: vehicleType.name
+            description: purchaseDate of the Vehicle
+          - name: purchaseYear
             type: string
             format: singleValueList
             in: query
-            description: vehicleType id of the Vehicle
+            description: year Of Purchase of the Vehicle
             maxLength: 265
-          - name: vehicleRegNo.regNumber
-            type: string
-            format: singleValueList
-            in: query
-            description: vehicleRegNo id of the Vehicle
-            maxLength: 265
-          - name: vehicleReadingDuringFuelling
+          - name: insuranceNumber
             type: string
             in: query
-            description: vehicleReadingDuringFuelling of the Vehicle
-          - name: refuellingStation.name
-            type: string
-            format: singleValueList
-            in: query
-            description: refuellingStation id of the Vehicle
-            maxLength: 265
-          - name: fuelFilled
-            type: string
-            in: query
-            description: fuelFilled of the Vehicle
-            maxLength: 265
-          - name: typeOfFuel
-            type: string
-            in: query
-            description: typeOfFuel of the Vehicle
-            maxLength: 265
-          - name: totalCostIncurred
-            type: string
-            in: query
-            description: totalCostIncurred of the Vehicle
-          - name: receiptNo
-            type: string
-            in: query
-            description: receiptNo of the Vehicle
-            maxLength: 265
-          - name: receiptDate
+            description: insuranceNumber of the Vehicle
+          - name: insuranceValidityDate
             type: string
             format: date
             in: query
-            description: receiptDate of the Vehicle
+            description: insuranceValidityDate of the Vehicle
           - $ref: '#/parameters/pageSize'
           - $ref: '#/parameters/offSet'
           - name: sortBy
@@ -107,7 +108,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /vehicle/_create:
+    /vehicles/_create:
       post:
         summary: Create new vehicle(s)
         description: Create new vehicle(s)
@@ -130,7 +131,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /vehicle/_update:
+    /vehicles/_update:
       post:
         summary: Update any of the vehicle
         description: Update any of the vehicle
@@ -183,13 +184,13 @@ paths:
             type: string
             format: singleValueList
             in: query
-            description: vehicleType id of the VehicleFuellingDetails
+            description: vehicleType name of the VehicleFuellingDetails
             maxLength: 265
           - name: vehicleRegNo.regNumber
             type: string
             format: singleValueList
             in: query
-            description: vehicleRegNo id of the VehicleFuellingDetails
+            description: vehicleRegNo  of the VehicleFuellingDetails
             maxLength: 265
           - name: vehicleReadingDuringFuelling
             type: string
@@ -199,7 +200,7 @@ paths:
             type: string
             format: singleValueList
             in: query
-            description: refuellingStation id of the VehicleFuellingDetails
+            description: refuellingStation name of the VehicleFuellingDetails
             maxLength: 265
           - name: fuelFilled
             type: string
@@ -768,8 +769,9 @@ definitions:
           minLength: 1
         ulbOwnedVehicle:
           type: boolean
+          format: checkbox
           description: Option should be selected if vehilce is owned by ULB. By default option should be in Selected state.
-        vendorName:
+        vendor:
           $ref: "#/definitions/Vendor"
           description: name of the vendor who supplied the Vehicle. Mandatory when ulbOwnedVehicle is in "Not Selected" state. Else, disable this field
         vehicleDriverName:
@@ -1008,8 +1010,8 @@ definitions:
           type: string
           format: singleValueList
           description: name of the Vendor
-          maxLength: 128
-          minLength: 4
+          maxLength: 256
+          minLength: 1
         ward:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
         zone:
@@ -1039,20 +1041,17 @@ definitions:
           maxLength: 256
           minLength: 1
         phoneNo:
-          type: integer
-          format: int64
+          type: string
           description: phone number of the vendor. Phone number without +91. One phone number shall be assigned to one vendor name only
           maxLength: 10
           minLength: 10
         contactNo:
-          type: integer
-          format: int64
+          type: string
           description: contact number of the vendor. Phone number without +91. One phone number shall be assigned to one vendor name only
           maxLength: 10
           minLength: 10
         faxNumber:
-          type: integer
-          format: int64
+          type: string
           description: FAX number of the vendor
           maxLength: 10
           minLength: 10
@@ -2126,3 +2125,4 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+

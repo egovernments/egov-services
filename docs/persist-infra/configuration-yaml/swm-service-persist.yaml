@@ -89,7 +89,7 @@ serviceMaps:
 
        - jsonPath: $.vehicleFuellingDetails.*.tenantId
 
-  - version: 1.0
+ - version: 1.0
    name: vehicle create
    description: create vehicle in egswm_vehicle
    fromTopic: swm-vehicle-save-topic
@@ -157,7 +157,7 @@ serviceMaps:
    fromTopic: swm-vehicle-update-topic
    queryMaps: 
 
-    - query: UPDATE egswm_vehiclefuellingdetails SET vehicletype=?, regnumber=?, enginesrnumber=?, chassissrnumber=?, vehiclecapacity=?, numberofpersonsreq=?, model=?, ulbownedvehicle=?, vendor=?, vehicledrivername=?, purchasedate=?, yearofpurchase=?, price=?, sourceofpurchase=?, remarks=?, insurancenumber=?, insurancevaliditydate=?, lastmodifiedby=?, lastmodifiedtime=?, insurancedocuments=? WHERE id=? AND tenantid=?;
+    - query: UPDATE egswm_vehicle SET vehicletype=?, regnumber=?, enginesrnumber=?, chassissrnumber=?, vehiclecapacity=?, numberofpersonsreq=?, model=?, ulbownedvehicle=?, vendor=?, vehicledrivername=?, purchasedate=?, yearofpurchase=?, price=?, sourceofpurchase=?, remarks=?, insurancenumber=?, insurancevaliditydate=?, lastmodifiedby=?, lastmodifiedtime=?, insurancedocuments=? WHERE id=? AND tenantid=?;
       basePath: $.vehicles.*
       jsonMaps:
 

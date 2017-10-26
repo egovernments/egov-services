@@ -7,8 +7,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 
 @Configuration
-@PropertySource(value = { "classpath:messages/messages.properties",
-        "classpath:messages/errors.properties" }, ignoreResourceNotFound = true)
+@PropertySource(value = {"classpath:messages/messages.properties",
+        "classpath:messages/errors.properties"}, ignoreResourceNotFound = true)
 @Order(0)
 public class InvConstants {
 
@@ -16,6 +16,10 @@ public class InvConstants {
     private Environment environment;
 
     public static final String INVALID_STORES_REQUEST_MESSAGE = "Store Request is invalid";
+    public static final String PATTERN_CHARACTER = "^[A-Za-z]+$";
+    public static final String PATTERN_ALPHANUMERIC = "^[A-Za-z0-9]+$";
+    public static final String PATTERN_ALPHANUMERIC_SPACE = "^[A-Za-z0-9 ]+$";
+
 
     public static final String TENANTID_MANDATORY_CODE = "inv.0001";
     public static final String TENANTID_MANADATORY_FIELD_NAME = "tenantId";

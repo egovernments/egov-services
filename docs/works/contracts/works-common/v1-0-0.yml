@@ -190,10 +190,18 @@ definitions:
       - DOCUMENTS
       - NOTICE
         
+  ContractorExemption:
+    type: string
+    enum:
+      - INCOME_TAX,
+      - EARNEST_MONEY_DEPOSIT
+      - VAT
+      
 ##### MASTERS #######
       
   ScheduleCategory:
     type: object
+    description: An Object which holds Schedule Category Master Data 
     properties:
       id:
         type: string
@@ -222,6 +230,7 @@ definitions:
     
   ScheduleOfRate:
     type: object
+    description: An Object which holds Schedule Of Rate Master Data. The combination of SOR code and Schedule Category is unique for given tenant.
     properties:
       id:
         type: string
@@ -234,28 +243,36 @@ definitions:
       code:
         type: string
         description: Unique code of the Schedule Of Rate
+        pattern: '[a-zA-Z0-9-\\]'
         maxLength: 100
         minLength: 1
       description:
         type: string
         description: Description of the Schedule Of Rate
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
         maxLength: 4000
         minLength: 1
       scheduleCategory:
+        format: singleValueList
         $ref: '#/definitions/ScheduleCategory'
+        description: Schedule Category of the SOR
       uom:
-        type: string
-        description: UOM for the SOR
+        format: singleValueList
+        description: Unit Of Measurement of the SOR
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/UOM"
       sorRates:
         type: array
-        description: Array of Rate Details, Either of the rate details or marketRateDetails is mandatory for creating Schedule of rate.
+        description: Array of Rate Details.
         items:
           $ref: '#/definitions/SORRate'
+        minimum: 1
+        maximum: 50
       marketRates:
         type: array
-        description: Array of Market Rate Details, , Either of the rate details or marketRateDetails is mandatory for creating Schedule of rate.
+        description: Array of Market Rate Details..
         items:
           $ref: '#/definitions/MarketRate'
+        maximum: 50
     required:
       - tenantId
       - code
@@ -266,7 +283,7 @@ definitions:
 
   SORRate:
     type: object
-    description: An Object that hold Rate Details for the given Schedule Of Rate.
+    description: An Object that holds SOR Rate Details for the given Schedule Of Rate. No Overlapping of rates expected for the same period.
     properties:
       id:
         type: string
@@ -281,15 +298,17 @@ definitions:
       fromDate:
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of From Date for the SOR Rate Detail.
       toDate:
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of To date for the SOR Rate Details.
       rate:
         type: integer
         format: BigDecimal
-        description: Rate to be applied for the given range of days
+        description: SOR Rate which is applicable for given date range
 
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
@@ -316,15 +335,17 @@ definitions:
       fromDate:
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of From Date for the Market Rate Detail.
       toDate:
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of To date for the Market Rate Details.
       rate:
         type: integer
         format: BigDecimal
-        description: Rate to be applied for the given range of days
+        description: Market Rate which is applicable for given date range
 
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
@@ -332,9 +353,11 @@ definitions:
       - tenantId
       - fromDate
       - rate
+      - scheduleOfRate
 
   ContractorClass:
     type: object
+    description: An Object that holds Contractor Class details
     properties:
       id:
         type: string
@@ -346,12 +369,13 @@ definitions:
         minLength: 4
       class:
         type: string
-        description: Class of the Contractor.
+        description: Class of the Contractor
+        #pattern: '[0-9a-zA-Z\s\.-()]'
         maxLength: 100
         minLength: 1
       description:
         type: string
-        description: Description of the Contractor Class.
+        description: Description of the Contractor Class
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
         maxLength: 1024
         minLength: 1
@@ -376,6 +400,7 @@ definitions:
     
   Contractor:
     type: object
+    description: An Object that holds Contractor Information
     properties:
       id:
         type: string
@@ -414,21 +439,25 @@ definitions:
         maxLength: 100
       email:
         type: string
+        format: email
         description: Email of the Contractor.
         pattern: '/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/'
         maxLength: 100
       narration:
         type: string
         description: Narration of the Contractor.
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
         maxLength: 1024
       mobileNumber:
         type: number
+        format: mobileNumber
         description: Mobile Number of the Contractor
         pattern: "[0-9]"
         maxLength: 10
         exclusiveMaximum: true
       panNumber:
         type: string
+        format: pan
         description: PAN Number of the Contractor
         maxLength: 10
         pattern: '[A-Z]{5}[0-9]{4}[A-Z]{1}'
@@ -440,6 +469,7 @@ definitions:
       bank:
         type: string
         description: Bank of the Contractor
+        format: singleValueList
         maxLength: 100
       bankAccountNumber:
         type: number
@@ -448,12 +478,13 @@ definitions:
         pattern: "[0-9]"
       pwdApprovalCode:
         type: string
+        pattern: '[a-zA-Z0-9-\\]'
         description: PWD Approval Code of the Contractor
         maxLength: 20
       exemptedFrom:
-        type: string
-        description: Exempted From of the Contractor
-        maxLength: 100
+        $ref: '#/definitions/ContractorExemption'
+        description: Excemption allowed for of the Contractor
+        format: singleValueList
       pwdApprovalValidTill:
         type: string
         description: PWD Approval Valid Till
@@ -464,14 +495,17 @@ definitions:
         maxLength: 50
       accountCode:
         type: number
-        description: Account Code of the Contractor
+        description: Chart of Account Code for the Contractor
         maxLength: 100
       ifscCode:
         type: number
-        description: IFSC Code of the Contractor
+        description: IFSC Code of the Bank Account for the Contractor
+        pattern: '[a-zA-Z0-9]'
         maxLength: 20
       contractorClass:
         $ref: '#/definitions/ContractorClass'
+        description: Contractor Class for which Contractor belongs to
+        format: singleValueList
     required:
       - tenantId
       - name
@@ -484,6 +518,7 @@ definitions:
       
   MilestoneTemplate:
     type: object
+    description: An Object that holds Templates defined for Milestone based on Type of Works and Sub Type of work
     properties:
       id:
         type: string
@@ -505,11 +540,9 @@ definitions:
         pattern: '[a-zA-Z0-9-\\]'
         maxLength: 100
         minLength: 1
-      status:
-        type: string
-        description: Status of the Milestone Template
-        maxLength: 20
-        minLength: 1
+      active:
+        type: boolean
+        description: If status of Type Of Work is TRUE then the Milestone Template is active else it is in-active. The default is active.
       description:
         type: string
         description: Description of the Milestone Template
@@ -517,8 +550,12 @@ definitions:
         maxLength: 1024
       typeOfWork:
         $ref: '#/definitions/TypeOfWork'
+        description: Type of work for which this Milestone template is belongs to
+        format: singleValueList
       subTypeOfWork:
         $ref: '#/definitions/TypeOfWork'
+        description: Sub Type of work for which this Milestone template is belongs to
+        format: singleValueList
       milestoneTemplateActivities:
         type: array
         description: Array of Milestone Template Activities
@@ -530,7 +567,7 @@ definitions:
       - tenantId
       - templateName
       - templateCode
-      - status
+      - active
       - typeOfWork
       - milestoneTemplateActivities
     
@@ -557,14 +594,13 @@ definitions:
         description: Description for the Milestone Template Activitie
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
         maxLength: 1024
+        minLength: 1
       percentage:
         type: number
         format: double
         pattern: "[0-9.]"
         description: Percentage to be applied for the given Milestone Template Activitie
 
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - stageOrderNumber
       - stageDescription
@@ -574,6 +610,7 @@ definitions:
     
   TypeOfWork:
     type: object
+    description: An Object that holds Type of Work and Sub Type of work master data. The sub type of work will have parent type of work reference.
     properties:
       id:
         type: string
@@ -585,6 +622,7 @@ definitions:
         minLength: 4
       name:
         type: string
+        pattern: '[a-zA-Z0-9\s\.,]'
         description: Name of the Type Of Work
         maxLength: 100
         minLength: 1
@@ -601,19 +639,21 @@ definitions:
         maxLength: 1024
       active:
         type: boolean
-        description: If status of Type Of Work is TRUE then the type of work is active else it is in-active
+        description: If status of Type Of Work is TRUE then the type of work is active else it is in-active. The default is active.
      # parent:
      #   $ref: '#/definitions/TypeOfWork'
       parent:
         type: string
-        description: Parent of the Type Of Work
+        description: Parent Type Of Work of the Sub type of work.
     required:
       - tenantId
       - name
       - code
+      - active
 
   EstimateTemplate:
     type: object
+    description: An Object that holds Templates defined for Estimate based on Type of Works and Sub Type of work
     properties:
       id:
         type: string
@@ -626,6 +666,7 @@ definitions:
       name:
         type: string
         description: Name of the Estimate Template
+        pattern: '[a-zA-Z0-9\s\.,]'
         maxLength: 100
         minLength: 1
       code:
@@ -634,11 +675,9 @@ definitions:
         pattern: '[a-zA-Z0-9-\\]'
         maxLength: 100
         minLength: 1
-      status:
-        type: string
-        description: Status of the Estimate Template
-        maxLength: 20
-        minLength: 1
+      active:
+        type: boolean
+        description: If status of Estimate Template is TRUE then the Estimate Template is active else it is in-active. The default is active.
       description:
         type: string
         description: Description of the Estimate Template
@@ -647,8 +686,12 @@ definitions:
         minLength: 1
       typeOfWork:
         $ref: '#/definitions/TypeOfWork'
+        description: Type of work for which this Estimate template is belongs to
+        format: singleValueList
       subTypeOfWork:
         $ref: '#/definitions/TypeOfWork'
+        description: Sub Type of work for which this Estimate template is belongs to
+        format: singleValueList
       estimateTemplateActivities:
         type: array
         description: Array of Estimate Template Activities
@@ -659,13 +702,13 @@ definitions:
       - tenantId
       - name
       - code
-      - status
+      - active
       - typeOfWork
       - estimateTemplateActivities
     
   EstimateTemplateActivities:
     type: object
-    description: An Object that holds Activities for a given Estimate template
+    description: An Object that holds Activities for a given Estimate template. Either SOR or NON SOR is mandatory.
     properties:
       id:
         type: string
@@ -677,13 +720,17 @@ definitions:
         minLength: 4
       estimateTemplate:
         $ref: '#/definitions/EstimateTemplate'
+        description: The estimate template of the Template activity
       scheduleOfRate:
         $ref: '#/definitions/ScheduleOfRate'
+        description: The Schedue of Rate of the Template activity
       uom:
-        type: string
-        description: UOM for the Estimate Template
+        description: UOM for the Estimate Template Activity
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/UOM"
+        format: singleValueList
       nonSOR:
         $ref: '#/definitions/NonSOR'
+        description: The Non SOR of the Template activity
       unitRate:
         type: number
         format: BigDecimal
@@ -698,6 +745,7 @@ definitions:
     
   NonSOR:
     type: object
+    description: An Object that holds NON SOR details for a given Estimate template. 
     properties:
       id:
         type: string
@@ -714,8 +762,9 @@ definitions:
         maxLength: 1024
         minLength: 1
       uom:
-        type: string
         description: UOM for the NonSOR
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/UOM"
+        format: singleValueList
     required:
       - tenantId
       - description
@@ -723,6 +772,7 @@ definitions:
     
   Overhead:
     type: object
+    description: An Object that holds Overhead master data. 
     properties:
       id:
         type: string
@@ -735,6 +785,7 @@ definitions:
       name:
         type: string
         description: Name of the Overhead
+        pattern: '[a-zA-Z0-9\s\.,]'
         maxLength: 100
         minLength: 1
       code:
@@ -745,18 +796,17 @@ definitions:
         minLength: 1
       accountCode:
         type: string
-        description: Account code list should be fetch from deduction master of Finance Management
+        description: Account code list should be fetch from Chart of accounts master of Finance Module
         maxLength: 100
-        minLength: 1
+        format: singleValueList
       description:
         type: string
         description: Description of the Overhead
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
         maxLength: 1024
-        minLength: 1
       overheadRate:
         type: array
-        description: Array of Overhead Details
+        description: Array of Overhead Rate Details
         items:
           $ref: '#/definitions/OverheadRate'
 
@@ -784,22 +834,22 @@ definitions:
       startDate:
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of the Start date of Overhead Rates
       endDate:
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of the end date of Overhead Rates
       lumpsumAmount:
         type: number
         format: BigDecimal
-        description: Lumpsum Amount to be applied for the given overhead, Either of the Lumpsum Amount or Percentage is mandatory
+        description: Lumpsum Amount to be applied for the given overhead. Either of the Lumpsum Amount or Percentage is mandatory
       percentage:
         type: number
         format: double
         pattern: "[0-9]"
-        description: Percentage to be applied for the given overhead, Either of the Lumpsum Amount or Percentage is mandatory
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+        description: Percentage to be applied for the given overhead. Either of the Lumpsum Amount or Percentage is mandatory
     required:
       - overhead
       - startDate
@@ -874,6 +924,7 @@ definitions:
     
   NatureOfWork:
     type: object
+    description: An Object that holds Nature of work master details
     properties:
       id:
         type: string
@@ -886,6 +937,7 @@ definitions:
       name:
         type: string
         description: Name of the Nature Of Work
+        pattern: '[a-zA-Z0-9\s\.,]'
         maxLength: 100
         minLength: 1
       code:
@@ -895,8 +947,8 @@ definitions:
         maxLength: 100
         minLength: 1
       expenditureType:
-        type: string
-        description: Expenditure type for the nature of work
+        $ref: '#/definitions/ExpenditureType'
+        description: Expenditure type Enum for the nature of work
 
     required:
       - tenantId
@@ -957,6 +1009,7 @@ definitions:
         description: Object id of the Document for which documents are attached.
       objectType:
         type: string
+        pattern: '[a-zA-Z0-9\s\.,]'
         description: Object type of the document for which documents are attached.
         maxLength: 100
         minLength: 1
@@ -966,7 +1019,8 @@ definitions:
         maxLength: 256
         minLength: 1
       documentType:
-        $ref: '#/definitions/DocumentType'  
+        $ref: '#/definitions/DocumentType' 
+        description: DocumentType Enum for the Document details
       tenantId:
         type: string
         description: Tenant Id of the Document detail
@@ -991,6 +1045,7 @@ definitions:
         description: Epoch time of when photo has captured
       workProgress:
         $ref: '#/definitions/WorkProgress'
+        description: WorkProgress Enum for Photos captured
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -1026,4 +1081,5 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
+
 

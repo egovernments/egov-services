@@ -49,6 +49,26 @@ public class InvConstants {
     public static final String STORE_EMAIL_MANADATORY_FIELD_NAME = "email";
     public static final String STORE_EMAIL_MANADATORY_ERROR_MESSAGE = "Store emailid is required";
 
+    public static final String STORE_DEPARTMENT_MANDATORY_CODE = "inv.0009";
+    public static final String STORE_DEPARTMENT_MANADATORY_FIELD_NAME = "department";
+    public static final String STORE_DEPARTMENT_MANADATORY_ERROR_MESSAGE = "Department is required";
+
+    public static final String STORE_DEPARTMENT_DETAILS_MANDATORY_CODE = "inv.0010";
+    public static final String STORE_DEPARTMENT_DETAILS_MANADATORY_FIELD_NAME = "code";
+    public static final String STORE_DEPARTMENT_DETAILS_MANADATORY_ERROR_MESSAGE = "Department details are required";
+
+    public static final String STORE_CODE_UNIQUE_CODE = "inv.0011";
+    public static final String STORE_CODE_UNIQUE_FIELD_NAME = "code";
+    public static final String STORE_CODE_UNIQUE_ERROR_MESSAGE = "Store Code already exists";
+
+    public static final String STORE_STOREINCHARGE_MANDATORY_CODE = "inv.0012";
+    public static final String STORE_STOREINCHARGE_MANADATORY_FIELD_NAME = "storeIncharge";
+    public static final String STORE_STOREINCHARGE_MANADATORY_ERROR_MESSAGE = "Store In-Charge is required";
+
+    public static final String STORE_STOREINCHARGE_DETAILS_MANDATORY_CODE = "inv.0013";
+    public static final String STORE_STOREINCHARGE_DETAILS_MANADATORY_FIELD_NAME = "code";
+    public static final String STORE_STOREINCHARGE_DETAILS_MANADATORY_ERROR_MESSAGE = "Store In-Charge details are required";
+
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);
     }

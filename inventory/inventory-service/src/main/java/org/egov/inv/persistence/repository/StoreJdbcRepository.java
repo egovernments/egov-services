@@ -187,4 +187,8 @@ public class StoreJdbcRepository {
 
     }
 
+    public String checkCodeExistsQuery() {
+       return "select id from stores where code = :code and tenantid = :tenantid";        
+    }
+
 }

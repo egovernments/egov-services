@@ -51,6 +51,11 @@ public class StoreService {
         
     }
 
+    public boolean checkStoreCodeExists(String code, String tenantId) {
+        return  storeRepository.checkStoreCodeExists(code,tenantId);
+        
+    }
+
    
 
    

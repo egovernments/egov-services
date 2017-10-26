@@ -503,7 +503,7 @@ definitions:
         minLength: 4
       objectNumber:
         type: string
-        description: Unique object number to defined for the object type
+        description: Unique object number to be defined for the object type
         pattern: '[a-zA-Z0-9-\\]'
         maxLength: 100
       objectType:

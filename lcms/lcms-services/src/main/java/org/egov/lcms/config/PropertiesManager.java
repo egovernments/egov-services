@@ -33,5 +33,8 @@ public class PropertiesManager {
 	
 	@Value("${ulb.format}")
 	private String ulbFormat;
+	
+	@Value("${egov.lcms.create.summon.validated}")
+	private String createSummonvalidated;
 
 }

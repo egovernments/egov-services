@@ -264,7 +264,7 @@ public class LeaveApplicationQueryBuilder {
 
         searchQuery = searchQuery.replace(":selectfields", " * ");
 
-        if (employeeId != null && employeeId.equals("")) {
+        if (employeeId != null && !employeeId.equals("")) {
             if (params.length() > 0) {
                 params.append(" and ");
             }

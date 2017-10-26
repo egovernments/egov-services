@@ -84,7 +84,6 @@ public class HolidayService {
 
         final RequestInfoWrapper wrapper = new RequestInfoWrapper();
         wrapper.setRequestInfo(requestInfo);
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
 

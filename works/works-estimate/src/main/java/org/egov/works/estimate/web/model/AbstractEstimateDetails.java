@@ -1,6 +1,8 @@
 package org.egov.works.estimate.web.model;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -9,6 +11,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.egov.works.commons.domain.model.AuditDetails;
+import org.egov.works.commons.domain.model.DocumentDetail;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -19,7 +22,7 @@ import io.swagger.annotations.ApiModelProperty;
  * An Object that hold Abstract Estimate Detail for a given Abstract Estimate
  */
 @ApiModel(description = "An Object that hold Abstract Estimate Detail for a given Abstract Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-24T10:20:21.690Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-25T07:55:36.455Z")
 
 public class AbstractEstimateDetails {
 	@JsonProperty("id")
@@ -47,10 +50,10 @@ public class AbstractEstimateDetails {
 	private ProjectCode projectCode = null;
 
 	@JsonProperty("abstractEstimateAppropriations")
-	private EstimateAppropriation abstractEstimateAppropriations = null;
+	private List<EstimateAppropriation> abstractEstimateAppropriations = null;
 
 	@JsonProperty("estimatePhotographsList")
-	private EstimatePhotographs estimatePhotographsList = null;
+	private List<DocumentDetail> estimatePhotographsList = null;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
@@ -61,11 +64,11 @@ public class AbstractEstimateDetails {
 	}
 
 	/**
-	 * Unique Identifier of the AbstractEstimateDetail
+	 * Unique Identifier of the Abstract Estimate Detail
 	 * 
 	 * @return id
 	 **/
-	@ApiModelProperty(value = "Unique Identifier of the AbstractEstimateDetail")
+	@ApiModelProperty(value = "Unique Identifier of the Abstract Estimate Detail")
 
 	public String getId() {
 		return id;
@@ -230,47 +233,64 @@ public class AbstractEstimateDetails {
 	}
 
 	public AbstractEstimateDetails abstractEstimateAppropriations(
-			EstimateAppropriation abstractEstimateAppropriations) {
+			List<EstimateAppropriation> abstractEstimateAppropriations) {
 		this.abstractEstimateAppropriations = abstractEstimateAppropriations;
 		return this;
 	}
 
+	public AbstractEstimateDetails addAbstractEstimateAppropriationsItem(
+			EstimateAppropriation abstractEstimateAppropriationsItem) {
+		if (this.abstractEstimateAppropriations == null) {
+			this.abstractEstimateAppropriations = new ArrayList<EstimateAppropriation>();
+		}
+		this.abstractEstimateAppropriations.add(abstractEstimateAppropriationsItem);
+		return this;
+	}
+
 	/**
-	 * Get abstractEstimateAppropriations
+	 * Array of Abstract Estimate Appropriation
 	 * 
 	 * @return abstractEstimateAppropriations
 	 **/
-	@ApiModelProperty(value = "")
+	@ApiModelProperty(value = "Array of Abstract Estimate Appropriation")
 
 	@Valid
 
-	public EstimateAppropriation getAbstractEstimateAppropriations() {
+	public List<EstimateAppropriation> getAbstractEstimateAppropriations() {
 		return abstractEstimateAppropriations;
 	}
 
-	public void setAbstractEstimateAppropriations(EstimateAppropriation abstractEstimateAppropriations) {
+	public void setAbstractEstimateAppropriations(List<EstimateAppropriation> abstractEstimateAppropriations) {
 		this.abstractEstimateAppropriations = abstractEstimateAppropriations;
 	}
 
-	public AbstractEstimateDetails estimatePhotographsList(EstimatePhotographs estimatePhotographsList) {
+	public AbstractEstimateDetails estimatePhotographsList(List<DocumentDetail> estimatePhotographsList) {
 		this.estimatePhotographsList = estimatePhotographsList;
 		return this;
 	}
 
+	public AbstractEstimateDetails addEstimatePhotographsListItem(DocumentDetail estimatePhotographsListItem) {
+		if (this.estimatePhotographsList == null) {
+			this.estimatePhotographsList = new ArrayList<DocumentDetail>();
+		}
+		this.estimatePhotographsList.add(estimatePhotographsListItem);
+		return this;
+	}
+
 	/**
-	 * Get estimatePhotographsList
+	 * Array of Abstract Estimate Photograph
 	 * 
 	 * @return estimatePhotographsList
 	 **/
-	@ApiModelProperty(value = "")
+	@ApiModelProperty(value = "Array of Abstract Estimate Photograph")
 
 	@Valid
 
-	public EstimatePhotographs getEstimatePhotographsList() {
+	public List<DocumentDetail> getEstimatePhotographsList() {
 		return estimatePhotographsList;
 	}
 
-	public void setEstimatePhotographsList(EstimatePhotographs estimatePhotographsList) {
+	public void setEstimatePhotographsList(List<DocumentDetail> estimatePhotographsList) {
 		this.estimatePhotographsList = estimatePhotographsList;
 	}
 

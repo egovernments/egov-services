@@ -44,6 +44,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.egov.boundary.persistence.repository.querybuilder.BoundaryTypeQueryBuilder;
 import org.egov.boundary.persistence.repository.rowmapper.BoundaryTypeNameRowMapper;
 import org.egov.boundary.persistence.repository.rowmapper.BoundaryTypeRowMapper;
@@ -93,8 +95,8 @@ public class BoundaryTypeRepository {
 		namedParameterJdbcTemplate.update(BoundaryTypeQueryBuilder.getBoundaryTypeInsertquery(), parametersMap);
 		return findByIdAndTenantId(Long.valueOf(boundaryType.getId()), boundaryType.getTenantId());
 	}
-	
-	public BoundaryType update(BoundaryType boundaryType){
+
+	public BoundaryType update(BoundaryType boundaryType) {
 		Map<String, Object> parametersMap = new HashMap<String, Object>();
 		if (boundaryType.getParent() != null && boundaryType.getParent().getId() != null) {
 			parametersMap.put("parent", Long.valueOf(boundaryType.getParent().getId()));
@@ -110,7 +112,7 @@ public class BoundaryTypeRepository {
 		parametersMap.put("code", boundaryType.getCode());
 		parametersMap.put("tenantid", boundaryType.getTenantId());
 		namedParameterJdbcTemplate.update(BoundaryTypeQueryBuilder.getBoundaryTypeUpdatequery(), parametersMap);
-		return findByTenantIdAndCode(boundaryType.getTenantId(),boundaryType.getCode());
+		return findByTenantIdAndCode(boundaryType.getTenantId(), boundaryType.getCode());
 	}
 
 	public BoundaryType findByIdAndTenantId(Long id, String tenantId) {
@@ -121,17 +123,9 @@ public class BoundaryTypeRepository {
 		List<BoundaryType> boundaryTypeList = namedParameterJdbcTemplate.query(
 				BoundaryTypeQueryBuilder.getBoundaryTypeByIdAndTenant(), parametersMap, new BoundaryTypeRowMapper());
 		boundaryTypeList = setBoundaryTypesWithParents(boundaryTypeList);
-		for (int i = 0; i < boundaryTypeList.size(); i++) {
-			if (Long.valueOf(boundaryTypeList.get(i).getId()).equals(id)) {
-				boundaryType = boundaryTypeList.get(i);
-			}
-		}
+		if(boundaryTypeList!=null && !boundaryTypeList.isEmpty())
+		boundaryType = boundaryTypeList.stream().filter(i -> Long.valueOf(i.getId()).equals(id)).findAny().get();
 		return boundaryType;
-	}
-
-	public List<BoundaryType> findByHierarchyTypeIdAndTenantId(Long id, String tenantId) {
-
-		return null;
 	}
 
 	public List<BoundaryType> findAllByTenantId(String tenantId) {
@@ -150,10 +144,9 @@ public class BoundaryTypeRepository {
 		List<BoundaryType> boundaryTypeList = namedParameterJdbcTemplate.query(
 				BoundaryTypeQueryBuilder.getAllByTByTenantIdAndName(), parametersMap, new BoundaryTypeRowMapper());
 		boundaryTypeList = setBoundaryTypesWithParents(boundaryTypeList);
-		for (int i = 0; i < boundaryTypeList.size(); i++) {
-			if (!boundaryTypeList.get(i).getName().equals(name)) {
-				boundaryTypeList.remove(i);
-			}
+		if(boundaryTypeList!=null && !boundaryTypeList.isEmpty()){
+		boundaryTypeList = boundaryTypeList.parallelStream().filter(i -> i.getName().equals(name))
+				.collect(Collectors.toList());
 		}
 		return boundaryTypeList;
 	}
@@ -166,11 +159,9 @@ public class BoundaryTypeRepository {
 		List<BoundaryType> boundaryTypeList = namedParameterJdbcTemplate.query(
 				BoundaryTypeQueryBuilder.getAllByTByTenantIdAndCode(), parametersMap, new BoundaryTypeRowMapper());
 		boundaryTypeList = setBoundaryTypesWithParents(boundaryTypeList);
-		for (int i = 0; i < boundaryTypeList.size(); i++) {
-			if (boundaryTypeList.get(i).getCode().equals(code)
-					&& boundaryTypeList.get(i).getTenantId().equals(tenantId)) {
-				boundaryType = boundaryTypeList.get(i);
-			}
+		if(boundaryTypeList!=null && !boundaryTypeList.isEmpty()){
+		boundaryType = boundaryTypeList.parallelStream()
+				.filter(i -> i.getCode().equals(code) && i.getTenantId().equals(tenantId)).findAny().get();
 		}
 		return boundaryType;
 	}
@@ -186,12 +177,11 @@ public class BoundaryTypeRepository {
 				BoundaryTypeQueryBuilder.getAllByTByNameAndHierarchyTypeName(), parametersMap,
 				new BoundaryTypeRowMapper());
 		boundaryTypeList = setBoundaryTypesWithParents(boundaryTypeList);
-		for (int i = 0; i < boundaryTypeList.size(); i++) {
-			if (boundaryTypeList.get(i).getName().equals(boundaryTypename)
-					&& boundaryTypeList.get(i).getHierarchyType().getName().equals(hierarchyTypeName)
-					&& boundaryTypeList.get(i).getTenantId().equals(tenantId)) {
-				boundaryType = boundaryTypeList.get(i);
-			}
+		if(boundaryTypeList!=null && !boundaryTypeList.isEmpty()){
+		boundaryType = boundaryTypeList.parallelStream()
+				.filter(i -> i.getName().equals(boundaryTypename)
+						&& i.getHierarchyType().getName().equals(hierarchyTypeName) && i.getTenantId().equals(tenantId))
+				.findAny().get();
 		}
 		return boundaryType;
 	}

@@ -84,11 +84,16 @@ import java.util.ArrayList;
 
 import java.util.List;
 
+import org.egov.boundary.exception.CustomException;
 import org.egov.boundary.persistence.repository.HierarchyTypeRepository;
+import org.egov.boundary.util.BoundaryConstants;
 import org.egov.boundary.web.contract.HierarchyType;
 import org.egov.boundary.web.contract.HierarchyTypeRequest;
 import org.egov.boundary.web.contract.HierarchyTypeSearchRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -99,6 +104,8 @@ import org.springframework.util.StringUtils;
  */
 @Service
 public class HierarchyTypeService {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(HierarchyTypeService.class);
 
 	private HierarchyTypeRepository hierarchyTypeRepository;
 
@@ -108,11 +115,33 @@ public class HierarchyTypeService {
 	}
 
 	public HierarchyType createHierarchyType(HierarchyType hierarchyType) {
-		return hierarchyTypeRepository.create(hierarchyType);
+		HierarchyType hierarcType = null;
+		try{
+			hierarcType = hierarchyTypeRepository.create(hierarchyType);
+		}catch(Exception e){
+			LOG.error("Exception while creating HierarchyType: ", e);
+			throw new CustomException(
+					Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR
+							.toString()),
+					BoundaryConstants.HIERARCHYTYPE_CREATE_EXCEPTION_MSG,
+					BoundaryConstants.HIERARCHYTYPE_CREATE_EXCEPTION_DESC);	
+		}
+		return hierarcType;
 	}
 
 	public HierarchyType updateHierarchyType(HierarchyType hierarchyType) {
-		return hierarchyTypeRepository.update(hierarchyType);
+		HierarchyType hierarcType = null;
+		try{
+			hierarcType = hierarchyTypeRepository.update(hierarchyType);
+		}catch(Exception e){
+			LOG.error("Exception while updating HierarchyType: ", e);
+			throw new CustomException(
+					Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR
+							.toString()),
+					BoundaryConstants.HIERARCHYTYPE_UPDATE_EXCEPTION_MSG,
+					BoundaryConstants.HIERARCHYTYPE_UPDATE_EXCEPTION_DESC);	
+		}
+		return hierarcType;
 	}
 
 	public HierarchyType findByCodeAndTenantId(String code, String tenantId) {

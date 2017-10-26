@@ -42,8 +42,9 @@ public class DashBoardController {
 
         List<TopComplaintTypesResponse> responseList;
 
-        if(type.equalsIgnoreCase("wardwise"))
-            responseList = dashboardService.getWardWiseCount(tenantId,serviceCode);
+        if(type.equalsIgnoreCase("wardwise") || type.equalsIgnoreCase("wardwiseregistered") ||
+            type.equalsIgnoreCase("wardwiseresolved") )
+            responseList = dashboardService.getWardWiseCount(tenantId,serviceCode,type);
         else
             responseList = dashboardService.getTopComplaintTypes(tenantId, size,type);
 
@@ -73,7 +74,8 @@ public class DashBoardController {
     private List<org.egov.pgrrest.read.web.contract.TopComplaintTypesResponse> getTopComplaintTypesList(
         List<TopComplaintTypesResponse> responseList, String type){
 
-        if(type.equalsIgnoreCase("wardwise"))
+        if(type.equalsIgnoreCase("wardwise") || type.equalsIgnoreCase("wardwiseregistered") ||
+            type.equalsIgnoreCase("wardwiseresolved"))
             return responseList.stream()
             .map(record -> record.toWardWiseContract())
             .collect(Collectors.toList());

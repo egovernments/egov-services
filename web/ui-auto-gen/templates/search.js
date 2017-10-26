@@ -6,7 +6,7 @@ const getQuery = utilities.getQuery;
 
 let localeFields = {};
 let errors = {};
-let searchTemplate = function (module, numCols, path, config, definition, uiInfoDef) {
+let searchTemplate = function (module, numCols, path, config, definition, basePath, uiInfoDef) {
 	localeFields[module + ".search.title"] = getTitleCase("search");
 	let specifications = {
 		numCols: numCols,
@@ -32,11 +32,11 @@ let searchTemplate = function (module, numCols, path, config, definition, uiInfo
 		if(parameterConfig[i].$ref && !/requestInfo|tenantId|pageSize|pageNumber|sortResult/.test(parameterConfig[i].$ref)) {
 			let splitArr = parameterConfig[i].$ref.split("/");
 			let paramKey = splitArr[splitArr.length-1];
-			localeFields[module + ".create" + paramKey] = getTitleCase(paramKey);
+			localeFields[module + ".create." + paramKey] = getTitleCase(paramKey);
 			fields[paramKey] = {
 				"name": paramKey,
 				"jsonPath": paramKey,
-				"label": module + ".create" + paramKey,
+				"label": module + ".create." + paramKey,
 				"pattern": definition[paramKey].pattern,
 				"type": definition[paramKey].enum ? "singleValueList" : definition[paramKey].format && ["number", "integer", "double", "long", "float"].indexOf(definition[paramKey].type) == -1 ? getType(definition[paramKey].format) : getType(definition[paramKey].type),
 				"isRequired": definition[paramKey].required,
@@ -48,14 +48,14 @@ let searchTemplate = function (module, numCols, path, config, definition, uiInfo
 			};
 
 			if(fields[paramKey].type == "text" && definition[paramKey].maxLength && definition[paramKey].maxLength > 256)
-				fields[paramKey].type = "textArea";
+				fields[paramKey].type = "textarea";
 		} else {
 			let paramKey = parameterConfig[i].name;
-			localeFields[module + ".create" + paramKey] = getTitleCase(paramKey);
+			localeFields[module + ".create." + paramKey] = getTitleCase(paramKey);
 			fields[paramKey] = {
 				"name": paramKey,
 				"jsonPath": paramKey,
-				"label": module + ".create" + paramKey,
+				"label": module + ".create." + paramKey,
 				"pattern": parameterConfig[i].pattern,
 				"type": parameterConfig[i].enum ? "singleValueList" : parameterConfig[i].format && ["number", "integer", "double", "long", "float"].indexOf(parameterConfig[i].type) == -1 ? getType(parameterConfig[i].format) : getType(parameterConfig[i].type),
 				"isRequired": parameterConfig[i].required,
@@ -67,6 +67,22 @@ let searchTemplate = function (module, numCols, path, config, definition, uiInfo
 			};
 		} 
 	}
+
+	if (uiInfoDef.externalData && typeof uiInfoDef.externalData == "object" && uiInfoDef.externalData.length) {
+        for(var i=0; i<uiInfoDef.externalData.length; i++) {
+        	var splitArr = uiInfoDef.externalData[i].fieldName.split(".");
+        	splitArr.shift();
+        	var paramKey = splitArr.join(".");
+            if(fields[paramKey]) {
+                if(fields[paramKey].type == "autoCompelete")
+                    fields[paramKey].autoCompleteUrl = uiInfoDef.externalData[i].url + getQuery(uiInfoDef.externalData[i].url, uiInfoDef.externalData[i].keyPath, uiInfoDef.externalData[i].valPath);
+                else
+                    fields[paramKey].url = uiInfoDef.externalData[i].url + getQuery(uiInfoDef.externalData[i].url, uiInfoDef.externalData[i].keyPath, uiInfoDef.externalData[i].valPath);
+            } else {
+                //errors[paramKey] = "Field exists in x-ui-info externalData section but not present in API specifications. REFERENCE PATH: " + uiInfoDef.referencePath;
+            }
+        }
+    }
 
 	if (uiInfoDef.dependents && uiInfoDef.dependents.length) {
         for (let i = 0; i < uiInfoDef.dependents.length; i++) {
@@ -128,9 +144,13 @@ let searchTemplate = function (module, numCols, path, config, definition, uiInfo
 		for (var i=0; i< uiInfoDef.searchResult.columns.length; i++) {
 			specifications.result.values.push(uiInfoDef.searchResult.values[i]);
 			localeFields[module + ".search.result." + uiInfoDef.searchResult.columns[i]] = getTitleCase(uiInfoDef.searchResult.columns[i]);
-			specifications.result.header.push({
-				label: module + ".search.result." + uiInfoDef.searchResult.columns[i]
-			});
+			var tmp = {
+				label: module + ".search.result." + uiInfoDef.searchResult.columns[i],
+			};
+
+			if(fields[uiInfoDef.searchResult.columns[i]] && fields[uiInfoDef.searchResult.columns[i]].type == "datePicker")
+				tmp.isDate = true;
+			specifications.result.header.push(tmp);
 		}
 	} else {
 		errors["search-results"] = "SearchResult not present in x-ui-info. REFERENCE PATH: " + uiInfoDef.referencePath

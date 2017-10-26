@@ -288,11 +288,11 @@ definitions:
         type: string
         description: username (preferred) or userid of the user that last modified the object
       createdTime:
-        type: number
-        format: long
+        type: integer
+        format: int64
         description: epoch of the time object is created
       lastModifiedTime:
-        type: number
-        format: long
+        type: integer
+        format: int64
         description: epoch of the time object is last modified
         

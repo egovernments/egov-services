@@ -90,17 +90,40 @@
     {
       "id": 1,
       "tenantId": "mh.roha",
-      "name": "Fake Vehicle Type 1"
+      "name": "Fake Vehicle Type Name 1",
+      "code": "Fake Vehicle Type Code 1"
     },
     {
       "id": 2,
       "tenantId": "mh.roha",
-      "name": "Fake Vehicle Type 2"
+      "name": "Fake Vehicle Type Name 2",
+      "code": "Fake Vehicle Type Code 2"
     },
     {
       "id": 3,
       "tenantId": "mh.roha",
-      "name": "Fake Vehicle Type 3"
+      "name": "Fake Vehicle Type Name 3",
+      "code": "Fake Vehicle Type Code 3"
+    }
+  ],
+"FuelType": [
+    {
+      "id": 1,
+      "tenantId": "mh.roha",
+      "name": "Fake Fuel Type Name 1",
+      "code": "Fake Fuel Type Code 1"
+    },
+    {
+      "id": 2,
+      "tenantId": "mh.roha",
+      "name": "Fake Fuel Type Name 2",
+      "code": "Fake Fuel Type Code 2"
+    },
+    {
+      "id": 3,
+      "tenantId": "mh.roha",
+      "name": "Fake Fuel Type Name 3",
+      "code": "Fake Fuel Type Code 3"
     }
   ],
   "Vehicle": [
@@ -172,36 +195,45 @@
     {
       "id": 1,
       "tenantId": "mh.roha",
-      "name": "Fake Waste Type 1"
+      "name": "Fake Waste Type Name 1",
+      "code": "Fake Waste Type Code 1"
+
     },
     {
       "id": 2,
       "tenantId": "mh.roha",
-      "name": "Fake Waste Type 2"
+      "name": "Fake Waste Type Name 2",
+      "code": "Fake Waste Type Code 2"
+
     },
     {
       "id": 3,
       "tenantId": "mh.roha",
-      "name": "Fake Waste Type 3"
+      "name": "Fake Waste Type Name 3",
+      "code": "Fake Waste Type Code 3"
+
     }
   ],
   "WasteSubType": [
     {
       "id": 1,
       "tenantId": "mh.roha",
-      "name": "Fake Waste  Sub Type 1",
+      "name": "Fake Waste  Sub Type Name 1",
+      "code": "Fake Waste  Sub Type Name 1",
       "wasteType": "Fake Waste Type 1"
     },
     {
       "id": 2,
       "tenantId": "mh.roha",
-      "name": "Fake Waste  Sub Type 2",
+      "name": "Fake Waste  Sub Type Name 2",
+      "code": "Fake Waste  Sub Type Name 2",
       "wasteType": "Fake Waste Type 2"
     },
     {
       "id": 3,
       "tenantId": "mh.roha",
-      "name": "Fake Waste  Sub Type 3",
+      "name": "Fake Waste  Sub Type Name 3",
+      "code": "Fake Waste  Sub Type Name 3",
       "wasteType": "Fake Waste Type 3"
     }
   ],
@@ -368,17 +400,20 @@
     {
       "id": 1,
       "tenantId": "mh.roha",
-      "name": "Fake Shift Type 1"
+      "name": "Fake Shift Type Name 1",
+      "code": "Fake Shift Type Code 1"
     },
     {
       "id": 2,
       "tenantId": "mh.roha",
-      "name": "Fake Shift Type 2"
+      "name": "Fake Shift Type Name 2",
+      "code": "Fake Shift Type Code 2"
     },
     {
       "id": 3,
       "tenantId": "mh.roha",
-      "name": "Fake Shift Type 3"
+      "name": "Fake Shift Type Name 3",
+      "code": "Fake Shift Type Code 3"
     }
   ],
   "Shift": [
@@ -429,17 +464,20 @@
     {
       "id": 1,
       "tenantId": "mh.roha",
-      "name": "Fake Collection Type 1"
+      "name": "Fake Collection Type Name 1",
+      "code": "Fake Collection Type Code 1"
     },
     {
       "id": 2,
       "tenantId": "mh.roha",
-      "name": "Fake Collection Type 2"
+      "name": "Fake Collection Type Name 2",
+      "code": "Fake Collection Type Code 2"
     },
     {
       "id": 3,
       "tenantId": "mh.roha",
-      "name": "Fake Collection Type 3"
+      "name": "Fake Collection Type Name 3",
+      "code": "Fake Collection Type Code 3"
     }
   ],
   "CollectionPointDetails": [

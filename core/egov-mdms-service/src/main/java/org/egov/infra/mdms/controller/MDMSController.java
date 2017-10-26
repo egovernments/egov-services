@@ -42,7 +42,7 @@ public class MDMSController {
 		 * if(bindingResult.hasErrors()) { throw new
 		 * CustomBindingResultExceprion(bindingResult); }
 		 */
-		Map<String, List<Map<String, JSONArray>>> response = mdmsService.getMaster(mdmsCriteriaReq);
+		Map<String, Map<String, JSONArray>> response = mdmsService.getMaster(mdmsCriteriaReq);
 		MdmsResponse mdmsResponse = new MdmsResponse();
 		mdmsResponse.setMdmsRes(response);
 		return new ResponseEntity<>(mdmsResponse, HttpStatus.OK);
@@ -85,7 +85,7 @@ public class MDMSController {
 		criteria.setModuleDetails(moduleList);
 		mdmsCriteriaReq.setMdmsCriteria(criteria);
 
-		Map<String, List<Map<String, JSONArray>>> response = mdmsService.getMaster(mdmsCriteriaReq);
+		Map<String, Map<String, JSONArray>> response = mdmsService.getMaster(mdmsCriteriaReq);
 		MdmsResponse mdmsResponse = new MdmsResponse();
 		mdmsResponse.setMdmsRes(response);
 		return new ResponseEntity<>(mdmsResponse ,HttpStatus.OK);

@@ -25,11 +25,10 @@ info:
     email : contacts@egovernments.org
 schemes:
   - https
-basePath: '/'
+basePath: '/legalcase'
 x-api-id: 'org.egov.lcms.services'
-x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 paths:
-  /legalcase/_search:
+  /case/_search:
     post:
       summary: Get the list of legal cases defined in the system.
       description: |
@@ -42,31 +41,30 @@ paths:
           
           Each LegalCase in the Reponse will contain SupportDocuments. 
           
-          Search results will be sorted by the sortProperty Provided in the parameters
+          Search results will be sorted by the sortCase Provided in the parameters
       parameters:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
         - $ref: "#/parameters/pageSize"
         - $ref: "#/parameters/pageNumber"
-        - $ref: "#/parameters/sortProperty"
-        - name: ids
+        - $ref: "#/parameters/sortCase"
+        - name: codes
           type: array
           items:
-            type: integer
-            format: int64
+            type: string
           in: query
           maxItems: 50
           description: comma seperated list of Ids of LegalCase 
-        - name: referenceNo
+        - name: summonReferenceNo
           in: query
           required: false
-          description: The unique reference number for a legal case 
+          description: The unique reference number of a summon
           type: string
         
-        - name: referenceCaseNo
+        - name: caseRefernceNo
           in: query
           required: false
-          description: The unique  refernce caseno for a legal case.
+          description: The unique  reference number of a case
           type: string
         - name: caseStatus
           in: query
@@ -110,132 +108,178 @@ paths:
         200:
           description: Legal Case(s) Retrived Successfully
           schema:
-            $ref: "#/definitions/LegalCaseResponse"
+            $ref: "#/definitions/CaseResponse"
         '400':
           description: Invalid input.
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
-       - LegalCase
+       - Case
        
-  /legalcase/_create:
+  /summmon/_create:
     post:
-      summary: Create new legal case .
+      summary: Create new summon .
       description: |
-          To create new legal case in the system. API supports bulk creation with max limit as defined in the Legal case Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Legal case, please pass array with one Legal case object. 
+          To create new summon in the system. API supports bulk creation with max limit as defined in the summon Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one summon, please pass array with one summon object. 
             
            
           
       parameters:
-        - name: LegalCaseRequest
+        - name: summonRequest
           in: body
-          description: Details for the new LegalCase(s) + RequestInfo meta data.
+          description: Details for the new summon(s) + RequestInfo meta data.
           required: true
           schema:
-            $ref: '#/definitions/LegalCaseRequest'
+            $ref: '#/definitions/SummonRequest'
       
       responses:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
         201:
-          description: ReponseInfo with Trade License(s) created successfully
+          description: ReponseInfo with sumon(s) created successfully
           schema:
-            $ref: '#/definitions/LegalCaseResponse'
+            $ref: '#/definitions/SummonResponse'
         400:
-          description: LegalCaseResponse(s) creation failed
+          description: Summon(s) creation failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
-        - LegalCase  
-  /legalcase/_update:
+        - Summon  
+  /_assignadvocate:
     post:
-      summary: update existing legalcase.
+      summary: Assign advocate to summon .
       description: |
-          To update existing legal case in the system. API supports bulk updation with max limit as defined in the Legal case Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one legal case, please pass array with one Legal  Case object.
+          To assign advocates for summon in the system. API supports bulk creation with max limit as defined in the case request. Please note that either whole batch succeeds or fails, there's no partial batch success. To assign, please pass array with one advocate. 
+            
+           
           
       parameters:
-        - name: legalCaseRequest
+        - name: caseRequest
           in: body
-          description: Details for the new legalcase(s) + RequestInfo meta data.
+          description: Details for the new advocate(s) + RequestInfo meta data.
           required: true
           schema:
-            $ref: '#/definitions/LegalCaseRequest'
+            $ref: '#/definitions/CaseRequest'
       
       responses:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
         201:
-          description: ReponseInfo with Legal Case(s) updated sudcessfully
+          description: ReponseInfo with advocate(s) assigned successfully
           schema:
-            $ref: '#/definitions/LegalCaseResponse'
+            $ref: '#/definitions/CaseResponse'
         400:
-          description: LegalCase(s) updation failed
+          description: Advocate(s) assigned failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
-        - LegalCase
-  
-  /parawisecomment/_search:
+        - Case 
+  /_registration:
     post:
-      summary: Get the list of parawise comments defined in the system.
+      summary: Create case in system .
       description: |
-          Search and get parawise comment(s)  based on defined search criteria.
-          Currently search parameters are only allowed as HTTP query params.
+          To create case in the system. API supports bulk creation with max limit as defined in the case request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create, please pass array with one case. 
+            
+           
           
-          In case multiple parameters are passed parawise comment(s) will be searched as an AND combination of all the parameters.
-          
-          Maximum result size is restricted based on the maxlength of LegalCase as defined in LegalcaseResponse model.
-          
-          Search results will be sorted by the sortProperty Provided in the parameters
       parameters:
-        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-        - $ref: "#/parameters/pageSize"
-        - $ref: "#/parameters/pageNumber"
-        - $ref: "#/parameters/sortProperty"
-        - name: ids
-          type: array
-          items:
-            type: integer
-            format: int64
-          in: query
-          maxItems: 50
-          description: comma seperated list of Ids of parawise comments
-        - name: referenceNo
-          in: query
-          required: false
-          description: The unique reference number for a parawise comments 
-          type: string
+        - name: caseRequest
+          in: body
+          description: Details for the new case(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/CaseRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: ReponseInfo with case(s) created successfully
+          schema:
+            $ref: '#/definitions/CaseResponse'
+        400:
+          description: Case(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Case  
         
-      responses:
-        200:
-          description: Parawise Comment(s) Retrived Successfully
+  /_Vakalatnamageneration:
+    post:
+      summary: Create vakalatnama in system .
+      description: |
+          To create vakalatnama in the system. API supports bulk creation with max limit as defined in the case request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create, please pass array with one case. 
+            
+           
+          
+      parameters:
+        - name: caseRequest
+          in: body
+          description: Details for the new vakalatnama(s) + RequestInfo meta data.
+          required: true
           schema:
-            $ref: "#/definitions/ParaWiseCommentResponse"
-        '400':
-          description: Invalid input.
+            $ref: '#/definitions/CaseRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: ReponseInfo with case(s) created successfully
+          schema:
+            $ref: '#/definitions/CaseResponse'
+        400:
+          description: Case(s) creation failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
-       - ParaWiseComment
-       
+        - Case  
+              
+  /_vakalatnamageneration:
+    post:
+      summary: Create vakalatnama in system .
+      description: |
+          To create vakalatnama in the system. API supports bulk creation with max limit as defined in the case request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create, please pass array with one case. 
+            
+           
+          
+      parameters:
+        - name: caseRequest
+          in: body
+          description: Details for the new vakalatnama(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/CaseRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: ReponseInfo with case(s) created successfully
+          schema:
+            $ref: '#/definitions/CaseResponse'
+        400:
+          description: Case(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Case
   /parawisecomment/_create:
     post:
       summary: Create new para wise comment .
       description: |
           To create new para wise comment in the system. API supports bulk creation with max limit as defined in the parawise comment Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one para wise comment, please pass array with one ParawiseComment object. 
-            
-           
-          
       parameters:
-        - name: paraWiseCommentRequest
+        - name: caseRequest
           in: body
           description: Details for the new Parawisecomment(s) + RequestInfo meta data.
           required: true
           schema:
-            $ref: '#/definitions/ParaWiseCommentRequest'
+            $ref: '#/definitions/CaseRequest'
       
       responses:
       ####################################################
@@ -244,13 +288,13 @@ paths:
         201:
           description: ReponseInfo with ParawiseComment(s) created successfully
           schema:
-            $ref: '#/definitions/ParaWiseCommentResponse'
+            $ref: '#/definitions/CaseResponse'
         400:
           description: ParawiseCommentResponse(s) creation failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
-        - ParaWiseComment  
+        - Case  
   /parawisecomment/_update:
     post:
       summary: update existing para wise comment.
@@ -258,12 +302,12 @@ paths:
           To update existing para wise comment in the system(workflow). API supports bulk updation with max limit as defined in the para wise comment request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one para wise comment, please pass array with one para wise comment object.
           
       parameters:
-        - name: parawiseCommentRequest
+        - name: caseRequest
           in: body
           description: Details for the new parawise comment(s) + RequestInfo meta data.
           required: true
           schema:
-            $ref: '#/definitions/ParaWiseCommentRequest'
+            $ref: '#/definitions/CaseRequest'
       
       responses:
       ####################################################
@@ -272,73 +316,25 @@ paths:
         201:
           description: ReponseInfo with ParaWiseComment(s) updated sudcessfully
           schema:
-            $ref: '#/definitions/ParaWiseCommentResponse'
+            $ref: '#/definitions/CaseResponse'
         400:
           description: ParaWiseComment(s) updation failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
-        - ParaWiseComment
-        
-  /hearingdetails/_search:
-    post:
-      summary: Get the list of hearing details defined in the system.
-      description: |
-          Search and get hearing details(s)  based on defined search criteria.
-          Currently search parameters are only allowed as HTTP query params.
-          
-          In case multiple parameters are passed hearing detail(s) will be searched as an AND combination of all the parameters.
-          
-          Maximum result size is restricted based on the maxlength of LegalHearingDetails as defined in HearingDetailsResponse model.
-          
-          Search results will be sorted by the sortProperty Provided in the parameters
-      parameters:
-        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-        - $ref: "#/parameters/pageSize"
-        - $ref: "#/parameters/pageNumber"
-        - $ref: "#/parameters/sortProperty"
-        - name: ids
-          type: array
-          items:
-            type: integer
-            format: int64
-          in: query
-          maxItems: 50
-          description: comma seperated list of Ids of hearing details 
-        - name: referenceNo
-          in: query
-          required: false
-          description: The unique reference number for a summon 
-          type: string
-        
-      responses:
-        200:
-          description: Hearing detail(s) Retrived Successfully
-          schema:
-            $ref: "#/definitions/HearingDetailsResponse"
-        '400':
-          description: Invalid input.
-          schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-      tags:
-       - HearingDetails
-       
+        - Case       
   /hearingdetails/_create:
     post:
       summary: Create new hearing details .
       description: |
           To create new hearing details in the system. API supports bulk creation with max limit as defined in the hearing details  request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one hearingdetails, please pass array with one hearing details object. 
-            
-           
-          
       parameters:
-        - name: hearingDetailsRequest
+        - name: caseRequest
           in: body
           description: Details for the new legal case hearing(s) + RequestInfo meta data.
           required: true
           schema:
-            $ref: '#/definitions/HearingDetailsRequest'
+            $ref: '#/definitions/CaseRequest'
       
       responses:
       ####################################################
@@ -347,13 +343,13 @@ paths:
         201:
           description: ReponseInfo with HearingDetails(s) created successfully
           schema:
-            $ref: '#/definitions/HearingDetailsResponse'
+            $ref: '#/definitions/CaseResponse'
         400:
           description: HearingDetailsResponse(s) creation failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
-        - HearingDetails  
+        - Case  
   /hearingdetails/_update:
     post:
       summary: update existing hearing details.
@@ -361,27 +357,56 @@ paths:
           To update existing hearing details in the system. API supports bulk updation with max limit as defined in the hearing details request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one hearing details, please pass array with one hearing details object.
           
       parameters:
-        - name: hearingDetailsRequest
+        - name: caseRequest
           in: body
           description: Details for the new hearing details comment(s) + RequestInfo meta data.
           required: true
           schema:
-            $ref: '#/definitions/HearingDetailsRequest'
+            $ref: '#/definitions/CaseRequest'
       
       responses:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
         201:
-          description: ReponseInfo with LegalCaseHearingDetails(s) updated sudcessfully
+          description: ReponseInfo with hearingDetails(s) updated sudcessfully
           schema:
-            $ref: '#/definitions/HearingDetailsResponse'
+            $ref: '#/definitions/CaseResponse'
         400:
           description: HearingDetails(s) updation failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
-        - HearingDetails      
+        - Case            
+        
+  /_update:
+    post:
+      summary: update existing case.
+      description: |
+          To update existing legal case in the system. API supports bulk updation with max limit as defined in the Legal case Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one legal case, please pass array with one Legal  Case object.
+          
+      parameters:
+        - name: caseRequest
+          in: body
+          description: Details for the new case(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/CaseRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: ReponseInfo with Legal Case(s) updated sudcessfully
+          schema:
+            $ref: '#/definitions/CaseResponse'
+        400:
+          description: LegalCase(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Case
   /advocatepayment/_search:
     post:
       summary: Get the list of advocate payments defined in the system.
@@ -393,13 +418,13 @@ paths:
           
           Maximum result size is restricted based on the maxlength of advocate payment as defined in AdvocatePaymentResponse model.
           
-          Search results will be sorted by the sortProperty Provided in the parameters
+          Search results will be sorted by the sortCase Provided in the parameters
       parameters:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
         - $ref: "#/parameters/pageSize"
         - $ref: "#/parameters/pageNumber"
-        - $ref: "#/parameters/sortProperty"
+        - $ref: "#/parameters/sortCase"
         - name: ids
           type: array
           items:
@@ -507,13 +532,13 @@ paths:
           
           Maximum result size is restricted based on the maxlength of opinion as defined in OpinionResponse model.
           
-          Search results will be sorted by the sortProperty Provided in the parameters
+          Search results will be sorted by the sortCase Provided in the parameters
       parameters:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
         - $ref: "#/parameters/pageSize"
         - $ref: "#/parameters/pageNumber"
-        - $ref: "#/parameters/sortProperty"
+        - $ref: "#/parameters/sortCase"
         - name: ids
           type: array
           items:
@@ -616,6 +641,450 @@ definitions:
 #Definition must start with Upper case followed by camel case.
 #Every model will have tenantId
 ########################################################
+  Court:
+    type: object
+    properties:
+      name:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique Name of the court
+      code:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique code of the court
+      address:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Address'
+      active:
+        type: boolean
+        default: true
+        description: for active status will set as true,otherwise it should be false
+          Status
+      tenantId:
+        type: string
+        description: tenant id of the court
+        maxLength: 128
+        minLength: 4
+    required:
+      - name
+      - code
+      - address
+      - active
+      - tenantId
+ 
+  Side:
+    type: object
+    properties:
+      name:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique Name of the side
+      code:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique code of the side
+      active:
+        type: boolean
+        default: true
+        description: >-
+          True will be set for Active Status False will be set for InActive
+          Status
+      tenantId:
+        type: string
+        description: tenant id of the side
+        maxLength: 128
+        minLength: 4
+    required:
+      - name
+      - code
+      - active
+      - tenantId
+  CaseType:
+    type: object
+    properties:
+      name:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique Name of the case type
+      code:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique code of the case type
+      side:
+        $ref: '#/definitions/Side'
+      active:
+        type: boolean
+        default: true
+        description: >-
+          True will be set for Active Status False will be set for InActive
+          Status
+      tenantId:
+        type: string
+        description: tenant id of the case type
+        maxLength: 128
+        minLength: 4
+    required:
+      - name
+      - code
+      - side
+      - tenantId
+  Bench:
+    type: object
+    properties:
+      name:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique Name of the bench
+      code:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique code of the bench
+      active:
+        type: boolean
+        default: true
+        description: >-
+          True will be set for Active Status False will be set for InActive
+          Status
+      tenantId:
+        type: string
+        description: tenant id of the bench
+        maxLength: 128
+        minLength: 4
+    required:
+      - name
+      - code
+      - active
+      - tenantId
+  Stamp:
+    type: object
+    properties:
+      name:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique Name of the stamp/register
+      code:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique code of the stamp/register
+      active:
+        type: boolean
+        default: true
+        description: >-
+          True will be set for Active Status False will be set for InActive
+          Status
+      tenantId:
+        type: string
+        description: tenant id of the stamp/register
+        maxLength: 128
+        minLength: 4
+    required:
+      - name
+      - code
+      - active
+      - tenantId
+  Advocate:
+    type: object
+    properties:
+      name:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique Name of the advocate
+      code:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique code of the advocate
+      organizationName:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique Name of the Agency/organization name
+      isIndividual:
+        type: boolean
+        default: true
+        description: >-
+          True will be set for Active Status False will be set for InActive
+          Status
+      title:
+        type: string
+        description: title of the advocate
+      firstName:
+        type: string
+        description: First name of the advocate
+      secondName:
+        type: string
+        description: Second name of the advocate
+      lastName:
+        type: string
+        description: Last name of the advocate
+      address:
+        type: string
+        description: Adress of the advocate
+      contactNo:
+        type: string
+        description: Contact number of the advocate
+      dateOfEmpanelment:
+        type: integer
+        format: int64
+        description: date of the Empanelment
+      standingCommitteeDecisionDate:
+        type: integer
+        format: int64
+        description: date of the Standing Committee Decision
+      empanelmentFromDate:
+        type: integer
+        format: int64
+        description: from date of the Empanelment
+      aadhar:
+        type: string
+        description: Aadhar number of the advocate
+      gender:
+        type: string
+        description: Gender of the advocate
+      age:
+        type: string
+        description: Age of the advocate
+      dob:
+        type: integer
+        format: int64
+        description: D.O.B of the advocate
+      mobileNumber:
+        type: string
+        description: Mobile number of the advocate
+      emailId:
+        type: string
+        description: Email Id of the advocate
+      pan:
+        type: string
+        description: PAN number of the advocate
+      vatTinNo:
+        type: string
+        description: VAT TIN Number of the advocate
+      newsPaperAdvertismentDate:
+        type: integer
+        format: int64
+        description: NewsPaper Advertisment Date of the advocate
+      empanelmentToDate:
+        type: integer
+        format: int64
+        description: Empanelmemt To Date of the advocate
+      bankName:
+        type: string
+        description: Bank Name of the advocate
+      bankBranch:
+        type: string
+        description: Bank branch of the advocate
+      bankAccountNo:
+        type: string
+        description: Bank account number of the advocate
+      isfcCode:
+        type: string
+        description: isfc code of the advocate
+      micr:
+        type: string
+        description: MICR code of the advocate
+      isActive:
+        type: boolean
+        default: true
+        description: >-
+          True will be set for Active Status False will be set for InActive
+          Status
+      isTerminate:
+        type: string
+        default: 'False'
+        description: >-
+          True will be set for Active Status False will be set for InActive
+          Status
+      inActiveDate:
+        type: integer
+        format: int64
+        description: InActive Date of the advocate
+      terminationDate:
+        type: integer
+        format: int64
+        description: Termination Date of the advocate
+      reasonOfTermination:
+        type: string
+        description: Reason of Termination / Deactive  of the advocate
+      tenantId:
+        type: string
+        description: tenant id of the court
+        maxLength: 128
+        minLength: 4
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - name
+      - code
+      - tenantId
+      - organizationName
+      - title
+      - firstName
+      - secondName
+      - lastName
+      - address
+      - contactNo
+      - dateOfEmpanelment
+      - standingCommitteeDecisionDate
+      - empanelmentFromDate
+      - aadhar
+      - gender
+      - age
+      - dob
+      - mobileNumber
+      - emailId
+      - pan
+      - vatTinNo
+      - newsPaperAdvertismentDate
+      - empanelmentToDate
+      - bankName
+      - bankBranch
+      - bankAccountNo
+      - isfcCode
+      - micr
+      - isActive
+      - isTerminate
+  CaseStatus:
+    type: object
+    properties:
+      name:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique Name of the case status
+      code:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique code of the case status
+      active:
+        type: boolean
+        default: true
+        description: >-
+          True will be set for Active Status False will be set for InActive
+          Status
+      tenantId:
+        type: string
+        description: tenant id of the case status
+        maxLength: 128
+        minLength: 4
+    required:
+      - name
+      - code
+      - active
+      - tenantId
+  CaseCategory:
+    type: object
+    properties:
+      name:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique Name of the case category
+      code:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique code of the case category
+      active:
+        type: boolean
+        default: true
+        description: >-
+          True will be set for Active Status False will be set for InActive
+          Status
+      tenantId:
+        type: string
+        description: tenant id of the case category
+        maxLength: 128
+        minLength: 4
+    required:
+      - name
+      - code
+      - active
+      - tenantId    
+  Charge:
+    type: object
+    properties:
+      name:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique Name of the charge
+      code:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique code of the charge
+      description:
+        type: string
+        description: description of the charge
+      fromDate:
+        type: integer
+        format: int64
+        description: From date of the charge (epoch)
+        x-displayformat: 'dd/MM/yyyy'
+      toDate:
+        type: integer
+        format: int64
+        description: To date of the charge (epoch)
+        x-displayformat: 'dd/MM/yyyy'
+      fromValue:
+        type: number
+        format: double
+        description: From value of the charge
+      toValue:
+        type: number
+        format: double
+        description: To value of the charge
+      chargePercentage:
+        type: number
+        format: double
+        description: The charge percentage.
+      chargeAmount:
+        type: number
+        format: double
+        description: The charge amount
+      isFlat:
+        type: boolean
+        default: false
+        description: >-
+          True will be set for Active Status False will be set for InActive
+          Status
+      court:
+        $ref: '#/definitions/Court'
+      caseType:
+        $ref: '#/definitions/CaseType'
+      active:
+        type: boolean
+        default: true
+        description: >-
+          True will be set for Active Status False will be set for InActive
+          Status
+      tenantId:
+        type: string
+        description: tenant id of the case status
+        maxLength: 128
+        minLength: 4
+    required:
+      - name
+      - code
+      - active
+      - tenantId
+      - fromDate
+      - toDate
+      - fromValue
+      - toValue
   WorkFlowDetails:
     type: object
     description: An Object to hold the Application workflow details for a given legal case
@@ -654,124 +1123,40 @@ definitions:
       stateId:
         type: string
         description: state id of the workflow
-  
-  
-  
-  Document:
-    type: object
-    description: This object holds list of documents attached during the transaciton for a property
-    properties:
-      id:
-        type: integer
-        format: int64
-        description: unique id of the Document.
-      documentName:
-        type: string
-        description: This field holds information about the document name
-      fileStore:
-        type: string
-        description: File store reference key.
-      tenantId:
-        type: string
-        description: tenant id of the Property
-        maxLength: 128
-        minLength: 4 
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
-  
-  LegalCaseAdvocate:
-    type: object
-    description: This object holds information about the advocate assigned to particular summon/warrant refernce no
-    properties:
-      id:
-       type: integer
-       format: int64
-       description: System will generate unique id for each entry
-      refernceNo:
-       type: string
-       description: This field holds information about the refernceNo of summon/warrant
-      advocateName:
-        type: string
-        description: This field holds information about the assigned advocateName
-      assignedDate:
-        type: integer
-        format: int64
-        description: This field holds information about the advocate assigned date
-      status:
-        type: string
-        description: This field holds information about the status of advocate
-      tenantId:
-        type: string
-        description: tenant id of the Property
-        maxLength: 128
-        minLength: 4  
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"  
+ 
         
-  LeagleCaseAttenderDetails:
+  Attender:
     type: object
     description: This object holds information about the legale case hearing attendees details
     properties:
-      id:
-       type: integer
-       format: int64
-       description: System will generate unique id for each entry
-      attenderName:
+      code:
+       type: string
+       description: System will generate composite key with tenantId and sequence number 
+      name:
         type: string
-        description: This field  holds information about the attender name
+        description: This field  holds information about the attender/judge name
       mobileNumber:
         type: string
-        description: This field  holds information about the attender mobileNumber
+        description: This field  holds information about the attender/judge mobileNumber
       gender:
         type: string
-        description: This field holds information about the gender of attender
+        description: This field holds information about the gender of attender/judge
       address:
-         type: string
-         description: This field holds information about attender address
+        $ref:  'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Address'
       tenantId:
         type: string
-        description: tenant id of the Property
+        description: tenant id of the Case
         maxLength: 128
         minLength: 4   
       auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
-  LeagleCaseJudgeDetails:
-    type: object
-    description: This object holds information about the legale case hearing judge details
-    properties:
-      id:
-       type: integer
-       format: int64
-       description: System will generate unique id for each entry
-      judgeName:
-        type: string
-        description: This field  holds information about the judge name
-      mobileNumber:
-        type: string
-        description: This field  holds information about the judge mobileNumber
-      gender:
-        type: string
-        description: This field holds information about the gender of judge
-      address:
-         type: string
-         description: This field holds information about the judge  address
-      tenantId:
-        type: string
-        description: tenant id of the Property
-        maxLength: 128
-        minLength: 4    
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
-    
-  
-  LeagleCaseHearingDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+  HearingDetails:
     type: object
     description: This object holds information about the leagle case hearing details
     properties:
-      id:
-       type: integer
-       format: int64
-       description: System will generate unique id for each entry
+      code:
+       type: string
+       description: System will generate unique code with tenantId and sequenceNo.
       caseJudgeMent:
         type: string
         description: This field holds information about the caseJudgement
@@ -779,43 +1164,39 @@ definitions:
         type: string
         description: This field holds information about the case final decision
       caseStatus:
-        type: string
-        description: This field holds information about the case status master code/Name
+        $ref: '#/definitions/CaseStatus'
       nextHearingDate:
         type: integer
         format: int64
         description: This field holds information about the case next hearing date and time(Epoch)
-      refernceNo:
-       type: string
-       description: This field holds information about the refernceNo of summon/warrant  
+        x-displayformat: 'dd/MM/yyyy'
       attendees:
         type: array
         items:
-          $ref: '#/definitions/LeagleCaseAttenderDetails'
+          $ref: '#/definitions/Attender'
       judges:
         type: array
         items:
-          $ref: '#/definitions/LeagleCaseJudgeDetails'
+          $ref: '#/definitions/Attender'
       tenantId:
         type: string
-        description: tenant id of the Property
+        description: tenant id of the Case
         maxLength: 128
         minLength: 4 
       auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"  
-          
-  LegalCase:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'  
+
+  Summon:
     type: object
     description: An object hold the information about summon/warrent information
     properties:
-      id:
-       type: integer
-       format: int64
-       description: System will generate unique id for each entry
+      code:
+       type: string
+       description: System will generate unique composite code based on tenantId and  sequence no using id generation service
       isSummon:
         type: boolean
         description: isSummon will be true if entry is summon else it will be false
-      referenceNo:
+      summonReferenceNo:
         type: string
         description: reference no will be generated by system.Summon/warrant Reference number will  be 201700001 Where 2017 is current year, and 00001 is sequence Number
       caseNo:
@@ -825,13 +1206,13 @@ definitions:
         type: integer
         format: int64
         description: summon/warrent entry date.this should be epoch value
+        x-displayformat: 'dd/MM/yyyy'
       year:
         type: string
         maxLength: 4
         description: year vallue will be the case  year
       caseType:
-        type: string
-        description: case type value will be the code of casetype master
+        $ref:  '#/definitions/CaseType'
       plantiffName:
         type: string
         description: This field holds information about the plantiff name
@@ -839,11 +1220,9 @@ definitions:
         type: string
         description: This field holds information about the depenendent name
       caseCategory:
-        type: string
-        description: This field holds information about the case category
+        $ref: '#/definitions/CaseCategory'
       courtName:
-        type: string
-        description: This field holds information about the court name/code
+        $ref: '#/definitions/Court'
       departmentName:
         type: string
         description: This field holds information about the department name/code
@@ -854,90 +1233,44 @@ definitions:
         type: integer
         format: int64
         description: This field holds information about the hearing date along with time(Epoch)
+        x-displayformat: 'dd/MM/yyyy'
+      hearingTime:
+        type: integer
+        format: int64
+        description: This field holds information about the hearing date along with time(Epoch)
+        x-displayformat: 'HH:mm:ss'    
       ward:
         type: string
-        description: This field holds information about the ward master name/code
+        description: This field holds information about the ward master name/code.TODO-need clarification on ward refernce object
       bench:
-        type: string
-        description: This field holds information about the bench master name/code
+        $ref: '#/definitions/Bench'
       side:
-        type: string
-        description: This field holds information about the side master name/code
+        $ref: '#/definitions/Side'
       stamp:
-        type: string 
-        description: This field holds information about the stamp master name/code
+        $ref: '#/definitions/Stamp'
       caseDetails:
         type: string
         description: This field hold information about the case details
       plantiffAddress:
-        type: string
-        description: This field holds information about the plantiff address 
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Address'
       workFlowDetails:
         $ref: '#/definitions/WorkFlowDetails'
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       tenantId:
         type: string
-        description: tenant id of the Property
+        description: tenant id of the Case
         maxLength: 128
         minLength: 4
-      suitNo:
+      stateId:
         type: string
-        description: This feild holds information about the suitNo
-      judgeDetails:
-        type: string
-        description: This field holds information about the judge details
-      refernceCaseNo:
-        type: string
-        description: This field value will generated by system.The proposed Case No. will be a combination of Case type short code, Current Year and sequentially generated Serial Number
-      departmentPerson:
-        type: string
-        description: This field holds the concerned department person name for summon/warrant
-      caseRegistrationDate:
-        type: integer
-        format: int64
-        description: case registration date(Epoch)
-      vakalatnamaGenerationDate:
-        type: integer
-        format: int64
-        description: This filed holds information about the vakalatnama generation date(Epoch)
-      isVakalatnamaGenerated:
-        type: boolean
-        description: This filed holds information about the vakalatnama generated or not
-      witness:
+        description: This field holds information about the workflow stateId  
+      documents:
+        description: The documents attached at the time of summon creation
         type: array
         items:
           type: string
-        description: array of the witness  names
-      coName:
-        type: string
-        description: This filed holds information about the co name
-      age:
-        type: string
-        description: This filed holds information about the co age
-      days:
-        type: integer
-        format: int32
-        description: This filed holds information about the co age  
-      address:
-        type: string
-        description: This filed holds information about the co address
-      hearingDetails:
-        type: array
-        items:
-          $ref: '#/definitions/LeagleCaseHearingDetails'
-      advocates:
-        description: This object holds list of advocates assigned to summon/warrant
-        type: array
-        items:
-          $ref: '#/definitions/LegalCaseAdvocate' 
-      documents:
-        description: The documents attached during assessment, modification or any transaction happened on the property.
-        type: array
-        items:
-          $ref: '#/definitions/Document'
-      
-         
+          description: This field holds information about file store id of document
     required:
      - isSummon
      - caseNo
@@ -957,57 +1290,122 @@ definitions:
      - caseDetails
      - year
      - workFlowDetails
-  HearingDetailsRequest:
+  
+          
+  Case:
     type: object
-    description: This object holds information about the legal case hearing details
+    description: An object hold the information about case information
     properties:
-      requestInfo:
-        $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      code:
+       type: string
+       description: System will generate composite key based on tenant id and sequence no
+      summon:
+        $ref: '#/definitions/Summon'
+      oldCaseNo:
+        type: string
+        description: This field holds information about the old case number in case of legacy cases
+      suitNo:
+        type: string
+        description: This feild holds information about the suitNo
+      judgeDetails:
+        type: string
+        description: This field holds information about the judge details
+      caseRefernceNo:
+        type: string
+        description: This field value will generated by system.The proposed Case No. will be a combination of Case type short code, Current Year and sequentially generated Serial Number
+      departmentPerson:
+        type: string
+        description: This field holds the concerned department person name for summon/warrant
+      caseRegistrationDate:
+        type: integer
+        format: int64
+        description: case registration date(Epoch)
+        x-displayformat: 'dd/MM/yyyy'
+      vakalatnamaGenerationDate:
+        type: integer
+        format: int64
+        description: This filed holds information about the vakalatnama generation date(Epoch)
+        x-displayformat: 'dd/MM/yyyy'  
+      isVakalatnamaGenerated:
+        type: boolean
+        description: This filed holds information about the vakalatnama generated or not
+      witness:
+        type: array
+        items:
+          type: string
+        description: array of the witness  names
+      coName:
+        type: string
+        description: This filed holds information about the co name.TODO-need clarification about this filed.
+      age:
+        type: string
+        description: This filed holds information about the co age.TODO-need clarification about this filed.
+      days:
+        type: integer
+        format: int32
+        description: This filed holds information about the co age.TODO-need clarification about this filed.  
+      address:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Address'
       hearingDetails:
         type: array
         items:
-          $ref: '#/definitions/LeagleCaseHearingDetails'
-      
-  HearingDetailsResponse:
-    type: object
-    description: This object holds information about the legal case hearingDetails response
-    properties:
-      responseInfo:
-        $ref: >-
-          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
-      hearingDetails:
+          $ref: '#/definitions/HearingDetails'
+      advocateDetails:
+        description: This object holds list of advocates assigned to summon/warrant.TODO-need clarification about how advocate will select as primary/secondary
         type: array
         items:
-          $ref: '#/definitions/LeagleCaseHearingDetails'
+          $ref: '#/definitions/AdvocateDetails' 
+      parawiseComments:
+          type: array
+          description: parawise comments of case.TODO-need clarification either parawise comments can update or not and either it's should be single parawise comment or multiple parawise comments
+          items:
+            $ref: '#/definitions/ParaWiseComment'
+    required:
+     - summon
+     - caseRegistrationDate
+  
+  AdvocateDetails:
+    type: object
+    description: This object holds information about the advocate details while adding advocate to case
+    properties:
+      advocate:
+        $ref: '#/definitions/Advocate'
+      assignedDate:
+        type: integer
+        format: int64
+        description: This field holds information about the advocate assigned date
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
   ParaWiseComment:
     type: object
     description: This object holds information about parawise comments about the case
     properties:
-      id:
-        type: integer
-        description: This field value will generate by system (Unique primary key)
+      code:
+        type: string
+        description: System will generate based on tenantId and sequenceNo
       parawiseCommentsAskedDate:
         type: integer
         format: int64
         description: this field holds parawise comments asked date(Epoch)
+        x-displayformat: 'dd/MM/yyyy'
       parawiseCommentsReceivedDate:
          type: integer
          format: int64
          description: this field holds parawise comments department received date(Epoch)
+         x-displayformat: 'dd/MM/yyyy'
       hodProvidedDate:
          type: integer
          format: int64
          description: this field holds parawise comments department received date(Epoch)
+         x-displayformat: 'dd/MM/yyyy'
       resolutionDate:
         type: integer
         format: int64
         description: this field holds information of resolution date(Epoch)
+        x-displayformat: 'dd/MM/yyyy'
       paraWiseComments:
         type: string
         description: this field holds information of para wise comments
-      referenceNo:
-        type: string
-        description: this field holds information about the refernceNo of summon/warranty
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       tenantId:
@@ -1016,10 +1414,11 @@ definitions:
         minLength: 4
         description: this field holds information about the tenantId
       documents:
-        description: The documents attached during assessment, modification or any transaction happened on the property.
+        description: The documents attached during creation of parawise comments
         type: array
         items:
-          $ref: '#/definitions/Document'
+          type: string
+          description: this field holds information about the file store id of document
     
     required:
     - parawiseCommentsAskedDate 
@@ -1027,80 +1426,95 @@ definitions:
     - hodProvidedDate
     - resolutionDate
     - paraWiseComments
-    - referenceNo
     - tenantId
-  ParaWiseCommentRequest:
+  
+  SummonRequest:
     type: object
-    description: This object holds information about the para wise comments
+    description: This object holds information about the summon request
     properties:
       requestInfo:
         $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
-      parawiseComments:
+      summons:
         type: array
         items:
-          $ref: '#/definitions/ParaWiseComment'
-  ParaWiseCommentResponse:
+          $ref: '#/definitions/Summon'
+      
+  SummonResponse:
     type: object
-    description: This object holds information about the parawise comments response
+    description: This object holds information about the summon response
     properties:
       responseInfo:
         $ref: >-
           https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
-      parawiseComments:
+      summons:
         type: array
         items:
-          $ref: '#/definitions/ParaWiseComment'        
-          
-  LegalCaseRequest:
+          $ref: '#/definitions/Summon' 
+        
+  CaseRequest:
     type: object
     description: This object holds information about the legal case request
     properties:
       requestInfo:
         $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
-      legleCases:
+      cases:
         type: array
         items:
-          $ref: '#/definitions/LegalCase'
+          $ref: '#/definitions/Case'
       
-  LegalCaseResponse:
+  CaseResponse:
     type: object
     description: This object holds information about the legal case response
     properties:
       responseInfo:
         $ref: >-
           https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
-      legleCases:
+      cases:
         type: array
         items:
-          $ref: '#/definitions/LegalCase' 
+          $ref: '#/definitions/Case' 
+  
+  AdvocateCharge:
+    type: object
+    description: This field holds information about the advocate charge against case
+    properties:
+      charge:
+        type: string
+        description: This field holds information about charge details.TODO-need clarification on this field
+      caseNo:
+        type: string
+        description: This field holds information about the case no
+      amount:
+        type: number
+        format: double
+        description: This field holds information about the amount of case
+        
+          
   AdvocatePayment:
     type : object
     description: This object holds information about the advocate payment
     properties:
-      id:
-        type: integer
-        format: int64
-        description: This field holds information system generated unique key 
-      advocateName:
+      code:
         type: string
-        description: This field holds information about the advocate name
+        description: System will genearte based on tenantId and sequenceNo
+      advocate:
+        $ref: '#/definitions/Advocate' 
       demandDate:
         type: integer
         format: int64
         description: This field holds information about the demand date(Epoch format)
+        x-displayformat: 'dd/MM/yyyy'
       year:
         type: string
         maxLength: 4
         description: year vallue will be the case  year 
-      caseType:
-        type: string
-        description: case type value will be the code of casetype master    
+      caseType: 
+        $ref: '#/definitions/CaseType'     
       caseNo:
         type: string
         description: This field holds information about the cae no.
       caseStatus:
-        type: string
-        description: This field holds information about the case status master code/Name
+        $ref: '#/definitions/CaseStatus'
       amountClaimed:
         type: number
         format: double
@@ -1116,28 +1530,14 @@ definitions:
       isPartialPayment:
         type: boolean
         description: This field holds information about the partial payment or full payment
-      bankName:
-        type: string
-        description: bank Name of the advocate
-      bankBranch:
-        type: string
-        description: bank branch of the advocate
-      bankAccountNo:
-        type: string
-        description: bank account number of the advocate
-      panNo:
-        type: string
-        description: PAN number of the advocate
       invoiceDoucment:
-        $ref:  '#/definitions/Document'
+        type: string
+        description: this field holds information about the file store id of invoice document
       tenantId:
         type: string
-        description: tenant id of the Property
+        description: tenant id of the Case
         maxLength: 128
         minLength: 4
-      isGenerateBill:
-        type: boolean
-        description: This field holds information about either bill has to generate or not
       workFlowDetails:
         $ref: '#/definitions/WorkFlowDetails'
       auditDetails:
@@ -1152,6 +1552,24 @@ definitions:
       resolutionRemarks:
         type: string
         description: This filed holds information about reslovution remarks
+      advocateCharges:
+        type: array
+        description: This object holds advocate charge details
+        items:
+          $ref: '#/definitions/AdvocateCharge'
+      modeOfPayment:
+        type: string
+        description: This field holds information about the mode of payment(Cheque/DD/RTGS)
+      instrumentNumber:
+        type: string
+        description: This filed holds information about the instrument number
+      instrumentDate:
+        type: integer
+        format: int64
+        description: This filed holds information about the instrument date
+      stateId:
+        type: string
+        description: This field holds information about the workflow stateId  
     required:
     - demandDate
     - caseType
@@ -1160,6 +1578,7 @@ definitions:
     - isPartialPayment
     - invoiceDoucment
     - workFlowDetails
+    - advocate
   AdvocatePaymentRequest:
     type: object
     description: This object holds information about the advocate payment request
@@ -1186,10 +1605,9 @@ definitions:
     type: object
     description: This object holds information about the opninion
     properties:
-      id:
-        type: integer
-        format: int64
-        description: This filed value will be generated by system(Unique primary key)
+      code:
+        type: string
+        description: System will generate compposite key based on tenantId and sequence number
       opinionRequestDate:
         type: integer
         format: int64
@@ -1201,10 +1619,11 @@ definitions:
         type: string
         description: This field holds information about the opinionOn
       documents:
-        description: The documents attached during assessment, modification or any transaction happened on the property.
+        description: The documents attached during opinion creation.
         type: array
         items:
-          $ref: '#/definitions/Document'
+          type: string
+          description: This filed holds information about the file store id of document
       opinionDescriptions:
         type: array
         description: This field holds information about the opinion descriptions
@@ -1212,22 +1631,23 @@ definitions:
           type: string
           description: This field holds information about the opinion description
       opinionsBy:
-        type: array
-        description: This field holds information about the advocate names
-        items:
-          type: string
-          description: This field holds information about the advocate name  
+        $ref: '#/definitions/Advocate'
+      additionalAdvocate:
+        type: string
+        description: This filed holds information about the additional advocate details
       inWardDate:
         type: integer
         format: int64
         description: This field holds information about the inward date(Epoch)
+        x-displayformat: 'dd/MM/yyyy'
       tenantId:
         type: string
-        description: tenant id of the Property
+        description: tenant id of the Case
         maxLength: 128
         minLength: 4
       stateId:
-        type: integer
+        type: string
+        description: This field holds information about the workflow stateId
       workFlowDetails:
         $ref: '#/definitions/WorkFlowDetails'
       auditDetails:
@@ -1260,7 +1680,7 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Opinion'
-        
+  
 parameters:
 ##########################################################
 #Parameter name must start with small case followed by camel case.
@@ -1282,7 +1702,7 @@ parameters:
     description: Page number
     type: integer
     default: 1
-  sortProperty:
+  sortCase:
     name: sort
     in: query
     description: Legalcase results will be sorted by id ascending by default if this parameter is not provided.
@@ -1290,13 +1710,12 @@ parameters:
    
     
 tags:
-  - name: LegalCase
-    description: APIs required for Legal Case Management flow.
+  - name: Summon
+    description: APIs required for summon creation.
   - name: AdvocatePayment
     description: APIs required for advocate payment flow.
   - name: Opinion
     description: APIs required for opinion flow. 
-  - name: ParaWiseComment
-    description: APIs required for parawise comment flow.  
-  - name: HearingDetails
-    description: APIs required for hearing details flow.  
+  - name: Case
+    description: APIs required for  case Management flow.  
+    

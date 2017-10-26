@@ -1,0 +1,5 @@
+insert into eg_action(id, name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate)values(nextval('SEQ_EG_ACTION'),'FutureCalendarYearSearch','/egov-common-masters/calendaryears/_searchfutureyears','Calendar',null,(select id from service where name='EGOV Common Masters' and tenantid='default'),1,'FutureCalendarYearSearch',false,1,now(),1,now());
+
+insert into eg_roleaction(roleCode,actionid,tenantid)values('EMPLOYEE ADMIN', (select id from eg_action where name = 'FutureCalendarYearSearch'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'FutureCalendarYearSearch'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('EMPLOYEE', (select id from eg_action where name = 'FutureCalendarYearSearch'),'default');

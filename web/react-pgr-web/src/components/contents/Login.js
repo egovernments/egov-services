@@ -532,10 +532,12 @@ class Login extends Component {
    }
 
    openAnonymousComplaint = () => {
-     /*let {setRoute, setHome} = this.props;
+     let {setRoute, setHome} = this.props;
      setRoute('/pgr/createGrievance');
-     setHome(true);*/
+     setHome(true);
+   }
 
+   openServices = () => {
      this.props.toggleSnackbarAndSetText(true, "Feature Coming Soon. . .");
    }
 
@@ -753,13 +755,22 @@ class Login extends Component {
                         </div>
                       </Col>
 
-                      <Col xs={12} md={12} style={styles.buttonTopMargin} onClick={this.openAnonymousComplaint}>
+                      <Col xs={12} md={12} style={styles.buttonTopMargin} onClick={this.openServices}>
                         <IconButton  style={styles.floatingIconButton} >
                             <i className="material-icons">mode_edit</i>
                         </IconButton>
                         <div style={{"float": "left", "cursor": "pointer"}}>
                           <h4>{translate("pgr.lbl.apply.service")}</h4>
                           <p>{translate('pgr.lbl.apply.servicetag')}</p>
+                        </div>
+                      </Col>
+                      <Col xs={12} md={12} style={styles.buttonTopMargin} onClick={this.openAnonymousComplaint}>
+                        <IconButton  style={styles.floatingIconButton} >
+                            <i className="material-icons">mode_edit</i>
+                        </IconButton>
+                        <div style={{"float": "left", "cursor": "pointer"}}>
+                          <h4>{translate("pgr.lbl.register.grievance")}</h4>
+                          <p>{translate('pgr.lbl.register.grievance')}</p>
                         </div>
                       </Col>
                       <Col xs={12} md={12} style={styles.buttonTopMargin}>

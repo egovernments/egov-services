@@ -81,7 +81,7 @@ public class VehicleFuellingDetailsService {
 	public VehicleFuellingDetailsRequest update(VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
 
 		validate(vehicleFuellingDetailsRequest);
-		
+
 		for (VehicleFuellingDetails v : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
 
 			setAuditDetails(v, vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo().getId());
@@ -128,17 +128,16 @@ public class VehicleFuellingDetailsService {
 				if (response == null || response.getMdmsRes() == null
 						|| !response.getMdmsRes().containsKey(Constants.MODULE_CODE)
 						|| response.getMdmsRes().get(Constants.MODULE_CODE) == null
-						|| response.getMdmsRes().get(Constants.MODULE_CODE).get(0) == null
-						|| !response.getMdmsRes().get(Constants.MODULE_CODE).get(0)
+						|| !response.getMdmsRes().get(Constants.MODULE_CODE)
 								.containsKey(Constants.VEHICLETYPE_MASTER_NAME)
-						|| response.getMdmsRes().get(Constants.MODULE_CODE).get(0)
+						|| response.getMdmsRes().get(Constants.MODULE_CODE)
 								.get(Constants.VEHICLETYPE_MASTER_NAME) == null) {
 					throw new CustomException("VehicleType",
 							"Given VehicleType is invalid: " + details.getVehicleType().getId());
 				} else {
 					vtResponseList = new ArrayList<VehicleType>();
 
-					responseJSONArray = response.getMdmsRes().get(Constants.MODULE_CODE).get(0)
+					responseJSONArray = response.getMdmsRes().get(Constants.MODULE_CODE)
 							.get(Constants.VEHICLETYPE_MASTER_NAME);
 
 					for (int i = 0; i < responseJSONArray.size(); i++) {
@@ -170,17 +169,15 @@ public class VehicleFuellingDetailsService {
 				if (response == null || response.getMdmsRes() == null
 						|| !response.getMdmsRes().containsKey(Constants.MODULE_CODE)
 						|| response.getMdmsRes().get(Constants.MODULE_CODE) == null
-						|| response.getMdmsRes().get(Constants.MODULE_CODE).get(0) == null
-						|| !response.getMdmsRes().get(Constants.MODULE_CODE).get(0)
-								.containsKey(Constants.VEHICLE_MASTER_NAME)
-						|| response.getMdmsRes().get(Constants.MODULE_CODE).get(0)
+						|| !response.getMdmsRes().get(Constants.MODULE_CODE).containsKey(Constants.VEHICLE_MASTER_NAME)
+						|| response.getMdmsRes().get(Constants.MODULE_CODE)
 								.get(Constants.VEHICLE_MASTER_NAME) == null) {
 					throw new CustomException("VehicleRegNo",
 							"Given VehicleReg .No is invalid: " + details.getVehicleRegNo().getId());
 				} else {
 					vResponseList = new ArrayList<Vehicle>();
 
-					responseJSONArray = response.getMdmsRes().get(Constants.MODULE_CODE).get(0)
+					responseJSONArray = response.getMdmsRes().get(Constants.MODULE_CODE)
 							.get(Constants.VEHICLE_MASTER_NAME);
 
 					for (int i = 0; i < responseJSONArray.size(); i++) {
@@ -213,17 +210,16 @@ public class VehicleFuellingDetailsService {
 				if (response == null || response.getMdmsRes() == null
 						|| !response.getMdmsRes().containsKey(Constants.MODULE_CODE)
 						|| response.getMdmsRes().get(Constants.MODULE_CODE) == null
-						|| response.getMdmsRes().get(Constants.MODULE_CODE).get(0) == null
-						|| !response.getMdmsRes().get(Constants.MODULE_CODE).get(0)
+						|| !response.getMdmsRes().get(Constants.MODULE_CODE)
 								.containsKey(Constants.REFILLINGPUMPSTATION_MASTER_NAME)
-						|| response.getMdmsRes().get(Constants.MODULE_CODE).get(0)
+						|| response.getMdmsRes().get(Constants.MODULE_CODE)
 								.get(Constants.REFILLINGPUMPSTATION_MASTER_NAME) == null) {
 					throw new CustomException("RefuellingPumpStation",
 							"Given RefuellingPumpStation is invalid: " + details.getRefuellingStation().getId());
 				} else {
 					rpsResponseList = new ArrayList<RefillingPumpStation>();
 
-					responseJSONArray = response.getMdmsRes().get(Constants.MODULE_CODE).get(0)
+					responseJSONArray = response.getMdmsRes().get(Constants.MODULE_CODE)
 							.get(Constants.REFILLINGPUMPSTATION_MASTER_NAME);
 
 					for (int i = 0; i < responseJSONArray.size(); i++) {

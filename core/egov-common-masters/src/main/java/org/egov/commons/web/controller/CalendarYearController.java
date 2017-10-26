@@ -110,6 +110,36 @@ public class CalendarYearController {
 		return getSuccessResponse(calendarYearsList, requestInfo);
 	}
 
+
+	@PostMapping("_searchfutureyears")
+	@ResponseBody
+	public ResponseEntity<?> searchFutureYears(@ModelAttribute @Valid CalendarYearGetRequest calendarYearGetRequest,
+									BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+									BindingResult requestBodyBindingResult) {
+		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+
+		// validate input params
+		if (modelAttributeBindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
+		}
+
+		// validate input params
+		if (requestBodyBindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
+		}
+
+		// Call service
+		List<CalendarYear> calendarYearsList = null;
+		try {
+			calendarYearsList = calendarYearService.getFutureYears(calendarYearGetRequest);
+		} catch (Exception exception) {
+			logger.error("Error while processing request " + calendarYearGetRequest, exception);
+			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+		}
+
+		return getSuccessResponse(calendarYearsList, requestInfo);
+	}
+
 	/**
 	 * Populate Response object and returns calendarYears List
 	 * 

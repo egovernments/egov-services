@@ -15,11 +15,15 @@ info:
   # Parameter name must start with small case followed by camel case.
   # Path must be in small case.
   ######################################################
-  title: Master and Object Definitions
-  description: Definitions of Master and Object used across LandEstate, Acquisition and Advertisement Tax.
+  title: Common Master and end point Definitions
+  description: Definitions of Master and end points used across LandEstate, Acquisition and Advertisement Tax.
   contact:
     name:  eGov
     email: info@egovernments.org
+externalDocs:
+  description: Complete documentation describing the functionality of these APIs.
+  url: >-
+    https://github.com/egovernments/egov-docs/blob/master/Maharashtra/SignedoffSRS/SRS_Land_Estate_1.0.docx
 host: phoenix-qa.egovernments.org
 
 schemes:
@@ -136,7 +140,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: Inspection(s) created sucessfully
           schema:
             $ref: '#/definitions/InspectionResponse'
@@ -257,7 +261,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: ShowCauseNotice(s) created sucessfully
           schema:
             $ref: '#/definitions/ShowCauseNoticeResponse'
@@ -378,7 +382,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: HearingIntimation(s) created sucessfully
           schema:
             $ref: '#/definitions/HearingIntimationResponse'
@@ -499,7 +503,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: HearingDetails(s) created sucessfully
           schema:
             $ref: '#/definitions/HearingDetailsResponse'
@@ -620,7 +624,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: LicenseSuspension(s) created sucessfully
           schema:
             $ref: '#/definitions/LicenseSuspensionResponse'
@@ -655,14 +659,36 @@ paths:
             
 definitions:
 
-  RegisterName:
+  WorkFlowDetails:
+    type: object
+    description: This object holds info about the assignee and other workflow related info
+    properties:
+      department:
+        type: string
+        description: Selected department.
+      designation:
+        type: string
+        description: Selected designation.
+      assignee:
+        type: integer
+        format: int64
+        description: Selected assignee.
+      action:
+        type: string
+        description: chosen action.
+      status:
+        type: string
+        description: current status.
+        
+  Register:
     type: object
     description: An object which holds the Register Name Master info
     properties:
       id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the RegisterName
+        type: string
+        description: Unique Identifier of the Register.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: tenant id of the RegisterName
@@ -687,14 +713,15 @@ definitions:
       - name
       - isActive
 
-  SubRegisterName:
+  SubRegister:
     type: object
     description: An object which holds the Register Name Master info
     properties:
       id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the SubRegisterName
+        type: string
+        description: Unique Identifier of the SubRegisterName.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: tenant id of the SubRegisterName
@@ -706,7 +733,7 @@ definitions:
         maxLength: 64
         minLength: 1
       register:
-        $ref: '#/definitions/RegisterName'
+        $ref: '#/definitions/Register'
       name:
         type: string
         description: name of sub register
@@ -727,9 +754,10 @@ definitions:
     description: An object which holds the Register Name Master info
     properties:
       id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the Purpose
+        type: string
+        description: Unique Identifier of the Purpose.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: tenant id of the Purpose
@@ -759,9 +787,10 @@ definitions:
     description: An object which holds the Mode Of Acquisition Master info
     properties:
       id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the ModeOfAcquisition
+        type: string
+        description: Unique Identifier of the ModeOfAcquisition.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: tenant id of the ModeOfAcquisition
@@ -791,9 +820,10 @@ definitions:
     description: An object which holds the Holding Type Master info
     properties:
       id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the HoldingType
+        type: string
+        description: Unique Identifier of the HoldingType.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: tenant id of the HoldingType
@@ -823,9 +853,10 @@ definitions:
     description: An object which holds the  Compensation Mode Master info
     properties:
       id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the CompensationMode
+        type: string
+        description: Unique Identifier of the CompensationMode.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: tenant id of the CompensationMode
@@ -855,9 +886,10 @@ definitions:
     description: An object which holds the  Road Type Master info
     properties:
       id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the RoadType
+        type: string
+        description: Unique Identifier of the RoadType.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: tenant id of the RoadType
@@ -887,9 +919,10 @@ definitions:
     description: An object which holds the  planning Type Master info
     properties:
       id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the PlanningType
+        type: string
+        description: Unique Identifier of the PlanningType.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: tenant id of the PlanningType
@@ -914,66 +947,68 @@ definitions:
       - name
       - isActive
 
-  UsageType:
+  Usage:
     type: object
     description: An object which holds the  usage Type Master info
     properties:
       id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the UsageType
+        type: string
+        description: Unique Identifier of the Usage.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
-        description: tenant id of the UsageType
+        description: tenant id of the Usage
         maxLength: 128
         minLength: 2
       code:
         type: string
-        description: code of the UsageType
+        description: code of the Usage
         maxLength: 64
         minLength: 1
       name:
         type: string
-        description: name of usage Type
+        description: name of Usage
         maxLength: 128
         minLength: 1
       isActive:
         type: boolean
-        description: is usageType active.
+        description: is Usage active.
     required:
       - tenantId
       - code
       - name
       - isActive
 
-  SubUsageType:
+  SubUsage:
     type: object
     description: An object which holds the  sub usage Type Master info
     properties:
       id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the SubUsageType
+        type: string
+        description: Unique Identifier of the SubUsage.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
-        description: tenant id of the SubUsageType
+        description: tenant id of the SubUsage
         maxLength: 128
         minLength: 2
       usage:
-        $ref: "#/definitions/UsageType"
+        $ref: "#/definitions/Usage"
       code:
         type: string
-        description: code of the SubUsageType
+        description: code of the SubUsage
         maxLength: 64
         minLength: 1
       name:
         type: string
-        description: name of SubUsageType
+        description: name of SubUsage
         maxLength: 128
         minLength: 1
       isActive:
         type: boolean
-        description: is SubUsageType active.
+        description: is SubUsage active.
     required:
       - tenantId
       - usage
@@ -986,9 +1021,10 @@ definitions:
     description: An object which holds the  Renewal Schedule Type Master info
     properties:
       id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the RenewalScheduler
+        type: string
+        description: Unique Identifier of the RenewalScheduler.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: tenant id of the RenewalScheduler
@@ -1003,30 +1039,34 @@ definitions:
       fromDate:
         type: integer
         format: int64
-        description: Time in epoch, From date. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
+        description: From date. Date is inclduing timestamp, Date in epoch
+        x-displayformat: 'dd/MM/yyyy'
       toDate:
         type: integer
         format: int64
-        description: Time in epoch, To date. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
+        description: To date. Date is inclduing timestamp, Date in epoch
+        x-displayformat: 'dd/MM/yyyy'
       licensePeriod:
         type: string
         description: period of license
       startDate:
         type: integer
         format: int64
-        description: Time in epoch. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
+        description: startDate, Date is inclduing timestamp, Date in epoch
+        x-displayformat: 'dd/MM/yyyy'
       startMonth:
         type: integer
         format: int64
-        description: Time in epoch. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
+        description: Starting month
       endDate:
         type: integer
         format: int64
-        description: Time in epoch, . Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
+        description: End date. Date is inclduing timestamp, Date in epoch
+        x-displayformat: 'dd/MM/yyyy'
       endMonth:
         type: integer
         format: int64
-        description: Time in epoch,  Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
+        description: ending month
       period:
         type: integer
         format: int64
@@ -1054,9 +1094,10 @@ definitions:
     description: An object which holds the  planning Type Master info
     properties:
       id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the PlanningType
+        type: string
+        description: Unique Identifier of the PlanningType.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: tenant id of the PlanningType
@@ -1086,9 +1127,10 @@ definitions:
     description: An object which holds the  Applicant Type Master info
     properties:
       id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the ApplicantType
+        type: string
+        description: Unique Identifier of the ApplicantType.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: tenant id of the ApplicantType
@@ -1118,9 +1160,10 @@ definitions:
     description: An object which holds the  Advertisement Type Master info
     properties:
       id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the AdvertisementType
+        type: string
+        description: Unique Identifier of the AdvertisementType.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: tenant id of the AdvertisementType
@@ -1150,9 +1193,10 @@ definitions:
     description: An object which holds the  Advertisement Sub Type Master info
     properties:
       id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the AdvertisementSubType
+        type: string
+        description: Unique Identifier of the AdvertisementSubType.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: tenant id of the AdvertisementSubType
@@ -1185,9 +1229,10 @@ definitions:
     description: This object holds a inpsection details for land or estate or advertisement
     properties:
       id: 
-        type: integer
-        format: int64
-        description: unique Id of the inspection.
+        type: string
+        description: Unique Identifier of the inspection.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: tenant id of the Inspection
@@ -1204,11 +1249,11 @@ definitions:
       ulbWitness:
         type: string
         description: ulb holder witness.Use employee master
-        maxLength: 128  
+        maxLength: 128
       inspectedBy:
         type: string
         description: inspected user information.Use employee master
-        maxLength: 128  
+        maxLength: 128
       referenceType:
         type: string
         description: This is type of reference (The valid values given in enum) against which the inspection happened
@@ -1227,7 +1272,8 @@ definitions:
       inspectionDate:
         type: integer
         format: int64
-        description: inspection date  in epoch  
+        description: Inspection. Date is inclduing timestamp, Date in epoch.
+        x-displayformat: 'dd/MM/yyyy'
       inspectiondetail:
         type: string
         description: inspection details
@@ -1292,9 +1338,10 @@ definitions:
     description: This object holds a Show Cause Notice details for land or estate or advertisement
     properties:
       id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the show cause notice 
+        type: string
+        description: Unique Identifier of the show cause notice .
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: tenant id 
@@ -1311,7 +1358,8 @@ definitions:
       noticeDate:
         type: integer
         format: int64
-        description: showcause notice date in epoch  
+        description: showcause notice date. Date is inclduing timestamp, Date in epoch.
+        x-displayformat: 'dd/MM/yyyy'
       inspection:
         $ref: '#/definitions/Inspection'
       referenceType:
@@ -1365,9 +1413,10 @@ definitions:
     description: This object holds a Hearing Intimation details for land or estate or advertisement
     properties:
       id:
-        type: integer
-        format: int64
-        description: unique id of the Hearing intimation.
+        type: string
+        description: Unique Identifier of the Hearing intimation.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: tenant id of the Hearing intimation.
@@ -1393,7 +1442,8 @@ definitions:
       intimationDate:
         type: integer
         format: int64
-        description: Hearing intimation Date, time in epoch  
+        description: Hearing intimation Date, time in epoch
+        x-displayformat: 'dd/MM/yyyy'
       hearingPlace:
         type: string
         description: Hearing place
@@ -1409,7 +1459,7 @@ definitions:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - id
-      - intimationNumber  
+      - intimationNumber
       - intimationDate
       - tenantId
 
@@ -1439,9 +1489,10 @@ definitions:
     type: object
     properties:
       id:
-        type: integer
-        format: int64
-        description: unique id of the HearingDetails.
+        type: string
+        description: Unique Identifier of the HearingDetails.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: tenant id of the HearingDetails
@@ -1466,6 +1517,7 @@ definitions:
         type: integer
         format: int64
         description: Hearing Date, time in epoch
+        x-displayformat: 'dd/MM/yyyy'
       status:
         type: string
         description: Hearing Status.
@@ -1510,12 +1562,13 @@ definitions:
     type: object
     properties:
       id:
-        type: integer
-        format: int64
-        description: unique id of the HearingDetails.
+        type: string
+        description: Unique Identifier of the HearingAttendee.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
-        description: tenant id of the HearingDetails
+        description: tenant id of the HearingAttendee
         maxLength: 128
         minLength: 2
       hearingDetail:
@@ -1543,9 +1596,10 @@ definitions:
     type: object
     properties:
       id:
-        type: integer
-        format: int64
-        description: unique id of the HearingJudge.
+        type: string
+        description: Unique Identifier of the HearingJudge.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: tenant id of the HearingJudge
@@ -1561,6 +1615,7 @@ definitions:
         type: integer
         format: int64
         description: Appointment Date, time in epoch
+        x-displayformat: 'dd/MM/yyyy'
       mobileNo:
         type: string
         description: mobileNo of Judge.
@@ -1576,9 +1631,10 @@ definitions:
     type: object
     properties:
       id:
-        type: integer
-        format: int64
-        description: unique id of the HearingAdvocate.
+        type: string
+        description: Unique Identifier of the HearingAdvocate.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: tenant id of the HearingAdvocate
@@ -1594,6 +1650,7 @@ definitions:
         type: integer
         format: int64
         description: Appointment Date, time in epoch
+        x-displayformat: 'dd/MM/yyyy'
       mobileNo:
         type: string
         description: mobileNo of Advocate.
@@ -1632,9 +1689,10 @@ definitions:
     description: Suspension details
     properties:
       id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the license suspension
+        type: string
+        description: Unique Identifier of the license suspension.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: tenant id 
@@ -1647,15 +1705,18 @@ definitions:
       suspensionDate:
         type: integer
         format: int64
-        description: suspension date of license. in epoch format.
+        description: suspension date. Date is inclduing timestamp, Date in epoch.
+        x-displayformat: 'dd/MM/yyyy'
       suspensionStartDate:
         type: integer
         format: int64
-        description: suspension start date of license. in epoch format.
+        description: suspension start date. Date is inclduing timestamp, Date in epoch.
+        x-displayformat: 'dd/MM/yyyy'
       suspensionEndDate:
         type: integer
         format: int64
-        description: suspension end date of license. in epoch format.  
+        description: suspension end date. Date is inclduing timestamp, Date in epoch.
+        x-displayformat: 'dd/MM/yyyy'
       suspendedBy:
         type: string
         description: suspended by  user information.Use employee master
@@ -1724,9 +1785,10 @@ definitions:
     description: An object which holds the bill frequency Master info
     properties:
       id:
-        type: integer
-        format: int64
-        description: Unique Identifier of the bill frequency master
+        type: string
+        description: Unique Identifier of the bill frequency master.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: tenant id of the BillFrequencyMaster
@@ -1746,10 +1808,12 @@ definitions:
         type: integer
         format: int64
         description: Time in epoch, From date. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
+        x-displayformat: 'dd/MM/yyyy'
       toDate:
         type: integer
         format: int64
         description: Time in epoch, To date. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
+        x-displayformat: 'dd/MM/yyyy'
       licenseNumber:
         type: integer
         format: int64
@@ -1859,3 +1923,4 @@ parameters:
       pattern: '[-+](suspensionDate)'
     default:
       - +suspensionDate
+

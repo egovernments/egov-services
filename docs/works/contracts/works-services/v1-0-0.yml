@@ -19,7 +19,7 @@ info:
   
   title: eGov Works Management System - Services.
   description: |
-    APIs for Works Management module. This module handles creation of Offline Status, Estimate Photograph, Estimate Appropriation and Document Detail.
+    APIs for Works Management module. This module handles creation of Offline Status, Estimate Appropriation and Document Detail.
   contact:
     name: eGovernments Foundation
     email : contacts@egovernments.org
@@ -501,10 +501,16 @@ definitions:
         description: Tenant id for which this object belongs to
         maxLength: 128
         minLength: 4
-      abstractEstimateDetails:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/AbstractEstimateDetails'
-      detailedEstimate:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/DetailedEstimate'
+      objectNumber:
+        type: string
+        description: Unique object number to be defined for the object type
+        pattern: '[a-zA-Z0-9-\\]'
+        maxLength: 100
+      objectType:
+        type: string
+        description: Object type for the Estimate Appropriation.
+        pattern: '[a-zA-Z0-9-\\]'
+        maxLength: 100
       budgetUsage:
         type: string
         description: Refrernce of Budget Usage of the Estimate Appropriation
@@ -515,6 +521,8 @@ definitions:
     required:
       - budgetUsage
       - tenantId
+      - objectNumber
+      - objectType
       
   EstimateAppropriationRequest:
       description: Contract class to send response. Array of Estimate Appropriation items are used in case of search results, also multiple  Estimate Appropriation item is used for create and update
@@ -544,8 +552,6 @@ definitions:
 tags:
   - name: Offline Status
     description: APIs required for Offline Status.
-  - name: Estimate Photograph
-    description: APIs required for Estimate Photograph.
   - name: Estimate Appropriation
     description: APIs required for Estimate Appropriation.
   - name: Document Detail

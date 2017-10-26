@@ -3052,6 +3052,7 @@ definitions:
           description: Unique Identifier of the FinancialYear
         finYearRange:
           type: string
+          format: singleValueList
           description: fin year range of the FinancialYear
           maxLength: 25
           minLength: 1

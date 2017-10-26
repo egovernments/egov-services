@@ -1,5 +1,7 @@
 package org.egov.lams.common.web.contract;
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -28,7 +30,7 @@ public class LandPossession {
 	private Long possessionDate;
 	private String tdrCertificate;
 	@NotNull
-	private String landAcquisition;
+	private LandAcquisition landAcquisition;
 	private String status;
 	private WorkFlowDetails workFlowDetails;
 	private AuditDetails auditDetails;

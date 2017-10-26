@@ -350,7 +350,20 @@ addOrUpdate(e, mode) {
             else{
               return  (showError("HOD does not exists for given date range Please assign the HOD."))
             }
-            var hodname = employee.name;
+            var assignments_designation=[];
+            getDropdown("assignments_designation", function(res) {
+              assignments_designation = res;
+            });
+            var designation;
+            employee.assignments.forEach(function(item) {
+                                if(item.isPrimary)
+                                {
+                                  designation = item.designation;
+                                }
+                            });
+            console.log(designation);
+            var hodDesignation = getNameById(assignments_designation,designation);
+            var hodDetails = employee.name + " - " + employee.code + " - " + hodDesignation;
             tempInfo.workflowDetails.assignee = employee.assignments && employee.assignments[0] ? employee.assignments[0].position : "";
             var body={
               "RequestInfo":requestInfo,
@@ -368,7 +381,7 @@ addOrUpdate(e, mode) {
                       },
                       success: function(res) {
                         var leaveNumber = res.LeaveApplication[0].applicationNumber;
-                        window.location.href=`app/hr/leavemaster/ack-page.html?type=Apply&applicationNumber=${leaveNumber}&owner=${hodname}`;
+                        window.location.href=`app/hr/leavemaster/ack-page.html?type=Apply&applicationNumber=${leaveNumber}&owner=${hodDetails}`;
                       },
                       error: function(err) {
                         if (err.responseJSON && err.responseJSON.LeaveApplication && err.responseJSON.LeaveApplication[0] && err.responseJSON.LeaveApplication[0].errorMsg) {

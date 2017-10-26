@@ -43,6 +43,7 @@ export default class UiEmailField extends Component {
 				return (
 					<TextField
 						id={item.jsonPath.split(".").join("-")}
+						className="cutustom-form-controll-for-textfield"
 						style={{"display": (item.hide ? 'none' : 'inline-block')}}
 						floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
 						inputStyle={{"color": "#5F5C57"}}
@@ -92,9 +93,7 @@ export default class UiEmailField extends Component {
 
 	render () {
 		return (
-	      <div>
-	        {this.renderDatePicker(this.props.item)}
-	      </div>
+	      this.renderDatePicker(this.props.item)
 	    );
 	}
 }

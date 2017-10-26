@@ -40,10 +40,10 @@ public class DashBoardRepository {
 
     public List<DashboardResponse> getWeeklyRegisteredAndClosedComplaintsCount(String tenantId){
         String query = "select count(*) as count, status, to_char(date_trunc('day',createddate), 'DAY') as day, to_char(date_trunc('day',createddate), 'dd') as date from submission " +
-            "where servicecode in (select servicecode from servicetype_keyword where tenantid = 'default' and keyword = 'complaint')" +
-            "and status in ('REGISTERED', 'COMPLETED') and createddate > current_date - interval '7' day and tenantid = 'default'" +
-            "group by date_trunc('day',createddate), status " +
-            "order by date_trunc('day',createddate), status";
+            "where servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId and keyword = 'complaint')" +
+            "and status in ('REGISTERED', 'COMPLETED') and createddate > current_date - interval '6' day and tenantid = :tenantId" +
+            " group by date_trunc('day',createddate), status " +
+            " order by date_trunc('day',createddate), status";
 
         return namedParameterJdbcTemplate.query(query,getSearchMap(tenantId),dailyCountRowMapper);
     }
@@ -82,16 +82,28 @@ public class DashBoardRepository {
 
     }
 
-    public List<TopComplaintTypesResponse> getWardWiseCountForComplainttype(String tenantId, String serviceCode){
+    public List<TopComplaintTypesResponse> getWardWiseCountForComplainttype(String tenantId, String serviceCode, String type){
 
-        String query = "select (select boundarynum from eg_boundary where id = csa.code::bigint and tenantid = :tenantId) as boundary , count(*) as count" +
+        StringBuilder query = new StringBuilder("select (select boundarynum from eg_boundary where id = csa.code::bigint and tenantid = :tenantId) as boundary ," +
+            "(select name from eg_boundary where id = csa.code::bigint and tenantid = :tenantId) as boundaryname," +
+            " count(*) as count" +
             " from submission cs, submission_attribute csa, servicetype_keyword sk" +
-            " where cs.crn = csa.crn and csa.key = 'systemLocationId' and cs.servicecode = :servicecode" +
+            " where cs.crn = csa.crn and csa.key = 'systemLocationId'" +
             " and cs.servicecode = sk.servicecode and sk.keyword = 'complaint'" +
-            " and cs.tenantid = :tenantId and csa.tenantid = :tenantId and sk.tenantid = :tenantId" +
-            " group by csa.code, csa.key";
+            " and cs.tenantid = :tenantId and csa.tenantid = :tenantId and sk.tenantid = :tenantId");
 
-        return namedParameterJdbcTemplate.query(query, getWardWiseSearchMap(tenantId, serviceCode),
+        if(type.trim().equalsIgnoreCase("wardwise"))
+            query.append(" and cs.servicecode = :servicecode");
+
+        if(type.trim().equalsIgnoreCase("wardwiseregistered"))
+            query.append(" and cs.status in ('REGISTERED', 'FORWARDED', 'PROCESSING', 'REOPENED', 'ONHOLD')");
+
+        if(type.trim().equalsIgnoreCase("wardwiseresolved"))
+            query.append(" and cs.status not in ('REGISTERED', 'FORWARDED', 'PROCESSING', 'REOPENED', 'ONHOLD')");
+
+        String groupByQuery = " group by csa.code, csa.key";
+
+        return namedParameterJdbcTemplate.query(query.append(groupByQuery).toString(), getWardWiseSearchMap(tenantId, serviceCode),
             new WardWiseRowMapper());
 
     }

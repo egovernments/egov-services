@@ -40,6 +40,7 @@
 
 package org.egov.boundary.web.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,7 @@ import org.egov.boundary.domain.service.BoundaryService;
 import org.egov.boundary.domain.service.BoundaryTypeService;
 import org.egov.boundary.domain.service.CrossHierarchyService;
 import org.egov.boundary.domain.service.HierarchyTypeService;
+import org.egov.boundary.exception.CustomException;
 import org.egov.boundary.util.BoundaryConstants;
 import org.egov.boundary.web.contract.Boundary;
 import org.egov.boundary.web.contract.BoundaryRequest;
@@ -67,7 +69,11 @@ import org.egov.boundary.web.errorhandlers.ErrorResponse;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -83,9 +89,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
 @RequestMapping("/boundarys")
+@Slf4j
 public class BoundaryController {
+
+	public static final Logger LOGGER = LoggerFactory.getLogger(BoundaryController.class);
 
 	@Autowired
 	private BoundaryService boundaryService;
@@ -115,7 +126,22 @@ public class BoundaryController {
 		final ErrorResponse errorResponses = validateBoundaryRequest(boundaryRequest, taskAction[0]);
 		if (errorResponses.getError() != null && errorResponses.getError().getErrorFields().size() > 0)
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-		Boundary boundary = mapToContractBoundary(boundaryService.createBoundary(boundaryRequest.getBoundary()));
+		Boundary boundary = null;
+		try {
+			boundary = mapToContractBoundary(boundaryService.createBoundary(boundaryRequest.getBoundary()));
+		} catch (CustomException e) {
+			LOGGER.error("Exception Message: " + e);
+			Error error = new Error();
+			final ResponseInfo responseInfo = responseInfoFactory
+					.createResponseInfoFromRequestInfo(boundaryRequest.getRequestInfo(), false);
+			error.setCode(Integer.valueOf(e.getCode().toString()));
+			error.setMessage(e.getCustomMessage());
+			error.setDescription(e.getDescription());
+			ErrorResponse errorResponse = new ErrorResponse();
+			errorResponse.setError(error);
+			errorResponse.setResponseInfo(responseInfo);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
 		BoundaryResponse boundaryResponse = new BoundaryResponse();
 		if (boundaryRequest.getBoundary() != null && boundaryRequest.getBoundary().getTenantId() != null
 				&& !boundaryRequest.getBoundary().getTenantId().isEmpty()) {
@@ -145,8 +171,22 @@ public class BoundaryController {
 		BoundaryResponse boundaryResponse = new BoundaryResponse();
 		if (tenantId != null && !tenantId.isEmpty()) {
 			RequestInfo requestInfo = boundaryRequest.getRequestInfo();
-			Boundary contractBoundary = mapToContractBoundary(
-					boundaryService.updateBoundary(boundaryRequest.getBoundary()));
+			Boundary contractBoundary = null;
+			try {
+				contractBoundary = mapToContractBoundary(boundaryService.updateBoundary(boundaryRequest.getBoundary()));
+			} catch (CustomException e) {
+				LOGGER.error("Exception Message: " + e);
+				Error error = new Error();
+				final ResponseInfo responseInfo = responseInfoFactory
+						.createResponseInfoFromRequestInfo(boundaryRequest.getRequestInfo(), false);
+				error.setCode(Integer.valueOf(e.getCode().toString()));
+				error.setMessage(e.getCustomMessage());
+				error.setDescription(e.getDescription());
+				ErrorResponse errorResponse = new ErrorResponse();
+				errorResponse.setError(error);
+				errorResponse.setResponseInfo(responseInfo);
+				return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+			}
 			boundaryResponse.getBoundarys().add(contractBoundary);
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setStatus(HttpStatus.OK.toString());
@@ -158,9 +198,31 @@ public class BoundaryController {
 
 	@GetMapping
 	@ResponseBody
-	public ResponseEntity<?> search(@ModelAttribute BoundaryRequest boundaryRequest) {
+	public ResponseEntity<?> search(@Valid @RequestParam(value = "boundary", required = false) Long boundary,
+			@RequestParam(value = "tenantId", required = false) String tenantId,
+			@ModelAttribute BoundaryRequest boundaryRequest, BindingResult errors) {
 		BoundaryResponse boundaryResponse = new BoundaryResponse();
 		ResponseInfo responseInfo = new ResponseInfo();
+
+		if (errors.hasErrors()) {
+			log.info("BoundaryRequest binding error: " + boundaryRequest);
+		}
+
+		log.info("BoundaryRequest: " + boundaryRequest);
+
+		if (tenantId != null && boundary != null) {
+			org.egov.boundary.domain.model.Boundary boundaryObj = org.egov.boundary.domain.model.Boundary.builder()
+					.build();
+			boundaryObj.setTenantId(tenantId);
+			boundaryObj.setId(boundary);
+			boundaryRequest.setBoundary(boundaryObj);
+		} else if (tenantId != null) {
+			org.egov.boundary.domain.model.Boundary boundaryObj = org.egov.boundary.domain.model.Boundary.builder()
+					.build();
+			boundaryObj.setTenantId(tenantId);
+			boundaryRequest.setBoundary(boundaryObj);
+		}
+
 		if (boundaryRequest.getBoundary() != null && boundaryRequest.getBoundary().getTenantId() != null
 				&& !boundaryRequest.getBoundary().getTenantId().isEmpty()) {
 			List<org.egov.boundary.domain.model.Boundary> boundaryList = boundaryService
@@ -290,6 +352,17 @@ public class BoundaryController {
 		}
 	}
 
+	@GetMapping("/getshapefile")
+	@ResponseBody
+	public ResponseEntity<Resource> fetchShapeFileForTenant(@RequestParam(value = "tenantid", required = true, defaultValue = "default") final String tenantId) throws IOException {
+
+		Resource resource = boundaryService.fetchShapeFile(tenantId);
+
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+				.header(HttpHeaders.CONTENT_TYPE, "text/plain").body(resource);
+	}
+
 	@PostMapping(value = "/_search")
 	@ResponseBody
 	public ResponseEntity<?> boundarySearch(@RequestParam(value = "tenantId", required = true) String tenantId,
@@ -412,13 +485,16 @@ public class BoundaryController {
 	}
 
 	private List<Long> getBoundaryTypeList(String tenantId, String boundaryType) {
-		List<Long> list = new ArrayList<Long>();
 		List<BoundaryType> boundaryTypeList = boundaryTypeService.getAllBoundarytypesByNameAndTenant(boundaryType,
 				tenantId);
-		for (BoundaryType bndryType : boundaryTypeList) {
-			list.add(Long.valueOf(bndryType.getId()));
-		}
-		return list;
+		List<String> list = null;
+		List<Long> boundaryTypesList = null;
+		if (boundaryTypeList != null && !boundaryTypeList.isEmpty())
+			list = boundaryTypeList.stream().map(BoundaryType::getId).collect(Collectors.toList());
+		if (list != null && !list.isEmpty())
+			boundaryTypesList = list.stream().map(Long::parseLong).collect(Collectors.toList());
+
+		return boundaryTypesList;
 	}
 
 	private List<Long> getHierarchyTypeList(String tenantId, String hierarchyType) {

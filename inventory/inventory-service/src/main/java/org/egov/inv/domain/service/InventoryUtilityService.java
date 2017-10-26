@@ -1,5 +1,7 @@
 package org.egov.inv.domain.service;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.inv.domain.model.AuditDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -18,21 +20,6 @@ public class InventoryUtilityService {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public Long getNextId(final String sequence) {
-
-        Map<String, Object> paramValues = new HashMap<>();
-
-        final String query = "SELECT NEXTVAL('" + sequence + "')";
-        Integer result;
-        try {
-            result = namedParameterJdbcTemplate.queryForObject(query, paramValues, Integer.class);
-            return result.longValue();
-        } catch (final Exception ex) {
-            throw new RuntimeException("Next id is not generated.");
-        }
-    }
-
-
     public List<Long> getIdList(int size, String sequenceName) {
         Map<String, Object> paramValues = new HashMap<>();
         paramValues.put("size", size);
@@ -44,6 +31,27 @@ public class InventoryUtilityService {
             throw new RuntimeException("Next id is not generated.");
         }
         return idList;
+    }
+
+    public AuditDetails mapAuditDetails(RequestInfo requestInfo, String tenantId) {
+
+        return AuditDetails.builder()
+                .createdBy(requestInfo.getUserInfo().getId().toString())
+                .lastModifiedBy(requestInfo.getUserInfo().getId().toString())
+                .createdTime(requestInfo.getTs())
+                .lastModifiedTime(requestInfo.getTs())
+                .tenantId(tenantId)
+                .build();
+
+    }
+    
+    public AuditDetails mapAuditDetailsForUpdate(RequestInfo requestInfo, String tenantId) {
+
+        return AuditDetails.builder()
+                .lastModifiedBy(requestInfo.getUserInfo().getId().toString())
+                .lastModifiedTime(requestInfo.getTs())
+                .tenantId(tenantId)
+                .build();
     }
 
 }

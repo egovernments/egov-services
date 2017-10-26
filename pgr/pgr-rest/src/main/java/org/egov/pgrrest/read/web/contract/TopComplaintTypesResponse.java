@@ -22,4 +22,6 @@ public class TopComplaintTypesResponse {
     private String code;
 
     private Integer boundary;
+
+    private String boundaryName;
 }

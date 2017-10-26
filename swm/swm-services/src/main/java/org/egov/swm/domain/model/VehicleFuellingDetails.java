@@ -1,7 +1,8 @@
 package org.egov.swm.domain.model;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -18,16 +19,16 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VehicleFuellingDetails {
 
-	@Size(min = 1, max = 256)
+	@Length(min = 1, max = 256)
 	@JsonProperty("id")
 	private String id = null;
 
 	@NotNull
-	@Size(min = 1, max = 128)
+	@Length(min = 1, max = 128)
 	@JsonProperty("tenantId")
 	private String tenantId = null;
 
-	@Size(min = 1, max = 256)
+	@Length(min = 1, max = 256)
 	@JsonProperty("transactionNo")
 	private String transactionNo = null;
 
@@ -52,12 +53,12 @@ public class VehicleFuellingDetails {
 	private RefillingPumpStation refuellingStation = null;
 
 	@NotNull
-	@Size(min = 1, max = 256)
+	@Length(min = 1, max = 256)
 	@JsonProperty("fuelFilled")
 	private String fuelFilled = null;
 
 	@NotNull
-	@Size(min = 1, max = 256)
+	@Length(min = 1, max = 256)
 	@JsonProperty("typeOfFuel")
 	private String typeOfFuel = null;
 
@@ -66,7 +67,7 @@ public class VehicleFuellingDetails {
 	private Double totalCostIncurred = null;
 
 	@NotNull
-	@Size(min = 1, max = 256)
+	@Length(min = 1, max = 256)
 	@JsonProperty("receiptNo")
 	private String receiptNo = null;
 

@@ -29,9 +29,9 @@ public class DashboardService {
         return response;
     }
 
-    public List<TopComplaintTypesResponse> getWardWiseCount(String tenantId, String serviceCode){
+    public List<TopComplaintTypesResponse> getWardWiseCount(String tenantId, String serviceCode, String type){
 
-        return dashboardRepository.getWardWiseCountForComplainttype(tenantId, serviceCode);
+        return dashboardRepository.getWardWiseCountForComplainttype(tenantId, serviceCode, type);
     }
 
     public List<TopComplaintTypesResponse> getTopComplaintTypes(String tenantId, int size, String type){

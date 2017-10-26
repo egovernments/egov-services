@@ -30,6 +30,8 @@ import io.swagger.annotations.ApiModelProperty;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-24T10:20:21.690Z")
 
 public class AbstractEstimate {
+	public static final String TABLE_NAME = "egw_abstractestimate";
+    public static final String SEQUENCE_NAME = "seq_egw_abstractestimate";
 	@JsonProperty("id")
 	private String id = null;
 

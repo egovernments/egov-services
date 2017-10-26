@@ -36,4 +36,7 @@ public class WorkFlowDetails {
 
   @JsonProperty("comments")
   private String comments = null;
+  
+  @JsonProperty("InitiatorPosition")
+  private Long initiatorPosition;
 }

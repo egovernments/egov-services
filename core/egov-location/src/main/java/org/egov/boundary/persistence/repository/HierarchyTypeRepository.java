@@ -62,10 +62,10 @@ public class HierarchyTypeRepository {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
-	public HierarchyTypeRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate,JdbcTemplate jdbcTemplate){
+
+	public HierarchyTypeRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate) {
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-		this.jdbcTemplate =jdbcTemplate; 
+		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	private Long getNextSequence() {
@@ -80,10 +80,10 @@ public class HierarchyTypeRepository {
 		List<HierarchyType> hierarchyTypeList = namedParameterJdbcTemplate.query(
 				HierarchyTypeQueryBuilder.getHierarchyTypeByNameAndTenantId(), parametersMap,
 				new HierarchyTypeRowMapper());
-		if(hierarchyTypeList!=null && !hierarchyTypeList.isEmpty()){
+		if (hierarchyTypeList != null && !hierarchyTypeList.isEmpty()) {
 			hierarchyType = hierarchyTypeList.get(0);
 		}
-		return hierarchyType; 
+		return hierarchyType;
 	}
 
 	public List<HierarchyType> findByNameContainingIgnoreCase(String name) {
@@ -103,7 +103,7 @@ public class HierarchyTypeRepository {
 		List<HierarchyType> hierarchyTypeList = namedParameterJdbcTemplate.query(
 				HierarchyTypeQueryBuilder.getHierarchyTypeByCodeAndTenantId(), parametersMap,
 				new HierarchyTypeRowMapper());
-		if(hierarchyTypeList!=null && !hierarchyTypeList.isEmpty()){
+		if (hierarchyTypeList != null && !hierarchyTypeList.isEmpty()) {
 			hierarchyType = hierarchyTypeList.get(0);
 		}
 		return hierarchyType;
@@ -117,7 +117,7 @@ public class HierarchyTypeRepository {
 		List<HierarchyType> hierarchyTypeList = namedParameterJdbcTemplate.query(
 				HierarchyTypeQueryBuilder.getHierarchyTypeByIdAndTenantId(), parametersMap,
 				new HierarchyTypeRowMapper());
-		if(hierarchyTypeList!=null && !hierarchyTypeList.isEmpty()){
+		if (hierarchyTypeList != null && !hierarchyTypeList.isEmpty()) {
 			hierarchyType = hierarchyTypeList.get(0);
 		}
 		return hierarchyType;

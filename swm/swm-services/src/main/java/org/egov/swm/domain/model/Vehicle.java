@@ -2,7 +2,8 @@ package org.egov.swm.domain.model;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -19,13 +20,12 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Vehicle {
 
-	@NotNull
-	@Size(min = 1, max = 256)
+	@Length(min = 1, max = 256)
 	@JsonProperty("id")
 	private String id = null;
 
 	@NotNull
-	@Size(min = 4, max = 128)
+	@Length(min = 1, max = 128)
 	@JsonProperty("tenantId")
 	private String tenantId = null;
 
@@ -33,15 +33,16 @@ public class Vehicle {
 	private VehicleType vehicleType = null;
 
 	@NotNull
-	@Size(min = 0, max = 256)
+	@Length(min = 6, max = 22)
 	@JsonProperty("regNumber")
 	private String regNumber = null;
 
+	@Length(min = 1, max = 256)
 	@JsonProperty("engineSrNumber")
 	private String engineSrNumber = null;
 
 	@NotNull
-	@Size(min = 0, max = 256)
+	@Length(min = 1, max = 256)
 	@JsonProperty("chassisSrNumber")
 	private String chassisSrNumber = null;
 
@@ -54,18 +55,21 @@ public class Vehicle {
 	private Long numberOfPersonsReq = null;
 
 	@NotNull
-	@Size(min = 0, max = 256)
+	@Length(min = 0, max = 256)
 	@JsonProperty("model")
 	private String model = null;
+
+	@NotNull
+	@JsonProperty("fuelType")
+	private FuelType fuelType = null;
 
 	@JsonProperty("ulbOwnedVehicle")
 	private Boolean ulbOwnedVehicle = null;
 
-	@Size(min = 0, max = 256)
-	@JsonProperty("vendorName")
-	private String vendorName = null;
+	@JsonProperty("vendor")
+	private Vendor vendor = null;
 
-	@Size(min = 0, max = 256)
+	@Length(min = 0, max = 256)
 	@JsonProperty("vehicleDriverName")
 	private String vehicleDriverName = null;
 
@@ -73,23 +77,22 @@ public class Vehicle {
 	@JsonProperty("purchaseDate")
 	private Long purchaseDate = null;
 
-	@Size(min = 0, max = 256)
 	@JsonProperty("yearOfPurchase")
 	private String yearOfPurchase = null;
 
 	@JsonProperty("price")
 	private Double price = null;
 
-	@Size(min = 0, max = 256)
+	@Length(min = 0, max = 256)
 	@JsonProperty("sourceOfPurchase")
 	private String sourceOfPurchase = null;
 
-	@Size(min = 0, max = 300)
+	@Length(min = 0, max = 300)
 	@JsonProperty("remarks")
 	private String remarks = null;
 
 	@NotNull
-	@Size(min = 1, max = 256)
+	@Length(min = 1, max = 256)
 	@JsonProperty("insuranceNumber")
 	private String insuranceNumber = null;
 
@@ -97,6 +100,18 @@ public class Vehicle {
 	@Valid
 	@JsonProperty("insuranceValidityDate")
 	private Long insuranceValidityDate = null;
+
+	@JsonProperty("insuranceDocuments")
+	private Documents insuranceDocuments = null;
+
+	@JsonProperty("isUnderWarranty")
+	private Boolean isUnderWarranty = null;
+
+	@JsonProperty("kilometers")
+	private Long kilometers = null;
+
+	@JsonProperty("endOfWarranty")
+	private Long endOfWarranty = null;
 
 	@Valid
 	@JsonProperty("auditDetails")

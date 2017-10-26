@@ -2,11 +2,17 @@ var flag = 0;
 class ShowCalenderHoliday extends React.Component {
   constructor(props) {
     super(props);
-    this.state={list:[],holidaySet:
-        {calendarYear:"",
-        name:"",
-        applicableOn:""
-      },isSearchClicked:false,year:[]
+    this.state={list:[],holidaySet: {
+              "calendarYear": {
+                  "name": ""
+              },
+              "name": "",
+              "holidayType":{
+                "id":""
+              },
+              "applicableOn": "",
+              "tenantId": tenantId
+          },isSearchClicked:false,year:[]
   }
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
@@ -39,11 +45,20 @@ class ShowCalenderHoliday extends React.Component {
     $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Holiday");
 
     var _this = this;
-    getDropdown("years", function(res) {
-      _this.setState({
-        year: res
+
+    if(getUrlVars()["type"]&& getUrlVars()["type"]==="view"){
+        getDropdown("years", function(res) {
+          _this.setState({
+            year: res
+          })
+        })
+    }else {
+      getDropdown("futureyears", function(res) {
+        _this.setState({
+          year: res
+        })
       })
-    })
+    }
   }
 
 
@@ -129,6 +144,7 @@ const showTable=function()
                       <th>Sl NO.</th>
                         <th>Holiday Date</th>
                         <th>Holiday Name</th>
+                        <th>Holiday Type</th>
                         <th>Action</th>
 
                     </tr>
@@ -152,6 +168,7 @@ const showTable=function()
                     <td>{index+1}</td>
                     <td data-label="applicableOn">{item.applicableOn}</td>
                     <td data-label="name">{item.name}</td>
+                    <td data-label="name">{item.holidayType.name}</td>
                     <td data-label="action">
                     {renderAction(getUrlVars()["type"],item.id)}
                     </td>

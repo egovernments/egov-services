@@ -1,34 +1,36 @@
 package org.egov.inv.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.egov.common.contract.request.RequestInfo;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Material {
 
     private String id;
 
     @Size(min = 5, max = 50)
+    @Pattern(regexp="^[A-Za-z0-9]+$")
     private String code;
 
     @NotNull
     @Size(min = 5, max = 50)
+    @Pattern(regexp="^[A-Za-z0-9]+$")
     private String name;
 
     @NotNull
     @Size(max = 1024)
+    @Pattern(regexp="^[A-Za-z0-9]+$")
     private String description;
 
     @Size(max = 50)
+    @Pattern(regexp="^[A-Za-z0-9]+$")
     private String oldCode;
 
     @NotNull
@@ -67,12 +69,16 @@ public class Material {
     @NotNull
     private MaterialControlType materialControlType;
 
+    @Pattern(regexp="^[A-Za-z0-9]+$")
     private String model;
 
+    @Pattern(regexp="^[A-Za-z0-9]+$")
     private String manufacturePartNo;
 
+    @Pattern(regexp="^[A-Za-z0-9]+$")
     private String technicalSpecs;
 
+    @Pattern(regexp="^[A-Za-z0-9]+$")
     private String termsOfDelivery;
 
     private boolean overrideMaterialControlType;

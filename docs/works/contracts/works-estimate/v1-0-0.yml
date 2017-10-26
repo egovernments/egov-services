@@ -49,9 +49,11 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
         - name: adminSanctionNumbers
           in: query
+          type: array
+          items:
+            type: string
           description: Comma separated list of Admin Sanction Numbers of Abstract Estimates
           required: false
-          type: string
           allowEmptyValue: true
         - name: ids
           type: array
@@ -63,8 +65,10 @@ paths:
         - name: estimateNumbers
           in: query
           required: false
+          type: array
+          items:
+            type: string
           description: Comma separated list of estimate numbers of Abstract Estimate
-          type: string
         - name: departmentCode
           in: query
           required: false
@@ -199,6 +203,113 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - Abstract Estimate
+        
+  /projectcodes/_search:
+    post:
+      summary: Get the list of Project Code(s) defined in the system.
+      description: |
+          Search and get Project Code(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Project Code(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of Project Code as defined in ProjectCodeResponse model.
+          
+          Search results will be sorted by the sortProperty Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageSize"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
+        - name: ids
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: Comma separated list of Ids of Abstract Estimate to get the Project Code
+        - name: estimateNumbers
+          in: query
+          required: false
+          description: Comma separated list of estimate numbers of Abstract Estimate
+          type: string
+        - name: workIdentificationNumbers
+          in: query
+          description: Comma separated list of Work Identification Numbers.
+          required: false
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: Project Code(s) Retrieved Successfully
+          schema:
+            $ref: "#/definitions/ProjectCodeResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Project Code
+       
+  /projectcodes/_create:
+    post:
+      summary: Create new Project Code(s).
+      description: |
+          To create new Project Code in the system. API supports bulk creation with max limit as defined in the Project Code Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Project Code, please pass array with one Project Code object.
+          
+      parameters:
+        - name: ProjectCodeRequest
+          in: body
+          description: Details of new Project Code(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/ProjectCodeRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Project Code(s) created successfully
+          schema:
+            $ref: '#/definitions/ProjectCodeResponse'
+        400:
+          description: Project Code(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Project Code
+        
+  /projectcodes/_update:
+    post:
+      summary: Update existing Project Code(s).
+      description: |
+          To update existing Project Code in the system. API supports bulk updation with max limit as defined in the Project Code Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Project Code, please pass array with one Project Code object.
+          
+      parameters:
+        - name: ProjectCodeRequest
+          in: body
+          description: Details of Project Code(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/ProjectCodeRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: Project Code(s) updated successfully
+          schema:
+            $ref: '#/definitions/ProjectCodeResponse'
+        400:
+          description: Project Code(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Project Code
         
   /detailedestimates/_search:
     post:
@@ -760,8 +871,8 @@ definitions:
         $ref: '#/definitions/ProjectCode'
       abstractEstimateAppropriations:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-services/v1-0-0.yml#/definitions/EstimateAppropriation'
-      estimatePhotographsList:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-services/v1-0-0.yml#/definitions/EstimatePhotographs'
+      documentDetails:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DocumentDetail'
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -857,8 +968,14 @@ definitions:
         $ref: '#/definitions/ProjectCode'
       parent:
         $ref: '#/definitions/DetailedEstimate'
+      #parent:
+      #  type: string
+      #  description: Parent of the Detailed Estimate 
       copiedFrom:
         $ref: '#/definitions/DetailedEstimate'
+      #copiedFrom:
+      #  type: string
+      #  description: Refers to the Detailed Estimate   
       approvedDate:
         type: integer
         format: int64
@@ -931,11 +1048,28 @@ definitions:
         type: integer
         format: BigDecimal
         description: Total Estimate Amount including Revision Estimates
-      abstractEstimateDetails:
+      abstractEstimateDetail:
+        $ref: '#/definitions/AbstractEstimateDetails'
+      #estimateActivities:
+       # type: array
+       # description: Array of Estimate Activities
+      #  items:
+       #   $ref: '#/definitions/EstimateActivity' 
+      multiYearEstimates:
         type: array
-        description: Array of Abstract Estimate Details
+        description: Multiyear Estimate list for the Abstract Estimate
         items:
-          $ref: '#/definitions/AbstractEstimateDetails'
+          $ref: '#/definitions/MultiYearEstimate'
+      #estimateTechnicalSanctions:
+        #type: array
+        #description: Technical Sanction list for the Abstract Estimate
+        #items:
+          #$ref: '#/definitions/EstimateTechnicalSanction'
+      detailedEstimateDeductions:
+        type: array
+        description: Detailed Estimate Deduction list for the Abstract Estimate
+        items:
+          $ref: '#/definitions/DetailedEstimateDeduction'
       documentDetails:
         type: array
         description: Array of document details
@@ -951,11 +1085,6 @@ definitions:
         description: Array of Overhead Values
         items:
           $ref: '#/definitions/OverheadValue'
-      #estimatePhotographsList:
-      #  type: array
-      #  description: Array of Estimate Photographs List
-      #  items:
-      #    $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/v1-0-0.yml#/definitions/EstimatePhotographs'
       workFlowDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
       stateId:
@@ -1087,6 +1216,9 @@ definitions:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/RevisionType'
         parent:
           $ref: '#/definitions/EstimateActivity'
+        #parent:
+        #  type: string
+        #  description: Parent of the Estimate Activity
         detailedEstimate:
           $ref: '#/definitions/DetailedEstimate'
         measurementSheetList:
@@ -1164,6 +1296,9 @@ definitions:
           $ref: '#/definitions/EstimateActivity'
         parent:
           $ref: '#/definitions/MeasurementSheet'
+        #parent:
+        #  type: string
+        #  description: Parent of the Measurement sheet
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1316,6 +1451,31 @@ definitions:
         - tenantId
         - code
         - name
+        
+  ProjectCodeRequest:
+      description: Contract class to send response. Array of Project Code items are used in case of search results, also multiple Project Code item is used for create and update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        projectCodes:
+          description: Used for create and update only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: '#/definitions/ProjectCode'
+
+  ProjectCodeResponse:
+      description: Contract class to send response. Array of Project Code items are used in case of search results, also multiple Project Code item is used for create and update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        projectCodes:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/ProjectCode'
       
   ModeOfAllotment:
     type: object
@@ -1396,4 +1556,5 @@ tags:
     description: APIs required for Detailed Estimate.
   - name: Revision Estimate
     description: APIs required for Revision Estimate.
-
+  - name: Project Code
+    description: APIs required for Project Code.

@@ -40,10 +40,6 @@
 
 package org.egov.commons.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.egov.commons.model.CalendarYear;
 import org.egov.commons.repository.builder.CalendarYearQueryBuilder;
 import org.egov.commons.repository.rowmapper.CalendarYearRowMapper;
@@ -51,6 +47,10 @@ import org.egov.commons.web.contract.CalendarYearGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class CalendarYearRepository {
@@ -67,6 +67,14 @@ public class CalendarYearRepository {
 	public List<CalendarYear> findForCriteria(CalendarYearGetRequest calendarYearGetRequest) {
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 		String queryStr = calendarYearQueryBuilder.getQuery(calendarYearGetRequest, preparedStatementValues);
+		List<CalendarYear> calendarYears = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+				calendarYearRowMapper);
+		return calendarYears;
+	}
+
+	public List<CalendarYear> findFutureYear(CalendarYearGetRequest calendarYearGetRequest, int year) {
+		List<Object> preparedStatementValues = new ArrayList<Object>();
+		String queryStr = calendarYearQueryBuilder.getFutureYear(calendarYearGetRequest, year, preparedStatementValues);
 		List<CalendarYear> calendarYears = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
 				calendarYearRowMapper);
 		return calendarYears;

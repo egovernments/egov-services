@@ -604,14 +604,13 @@
                                                         <div class="col-sm-6">
                                                             <div class="row">
                                                                 <div class="col-sm-6 label-text">
-                                                                    <label for="bank">Branch </label>
+                                                                    <label for="bankBranch">Branch </label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <div class="styled-select">
-                                                                        <select id="bankBranch" name="bankBranch">
+                                                                        <select id="bankBranch" name="bankBranch" class="selectStyle">
                                                                             <option value="">Select</option>
                                                                         </select>
-                                                                    </div>
+                                                                    
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -630,10 +629,10 @@
                                                         <div class="col-sm-6">
                                                             <div class="row">
                                                                 <div class="col-sm-6 label-text">
-                                                                    <label for="user.altContactNumber">Phone number (Emergency/Res) </label>
+                                                                    <label for="ifscCode">IFSC Code </label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="user.altContactNumber" name="user.altContactNumber" type="text" maxlength="10" class="onlyNumber">
+                                                                    <input id="ifscCode" name="ifscCode" type="text" maxlength="20">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -710,21 +709,16 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <!-- <div class="col-sm-6">
+                                                        <div class="col-sm-6">
                                                             <div class="row">
-                                                                <div class="col-sm-6 label-text">
-                                                                    <label for="user.locale">Local Language Qualified</label>
-                                                                </div>
-                                                                <div class="col-sm-6">
-                                                                    <div class="styled-select">
-                                                                        <select id="user.locale" name="user.locale">
-                                                                    <option value="">Select</option>
-                                                                  </select>
-                                                                    </div>
-
-                                                                </div>
+                                                              <div class="col-sm-6 label-text">
+                                                                  <label for="user.altContactNumber">Phone number (Emergency/Res) </label>
+                                                              </div>
+                                                              <div class="col-sm-6">
+                                                                  <input id="user.altContactNumber" name="user.altContactNumber" type="text" maxlength="10" class="onlyNumber">
+                                                              </div>
                                                             </div>
-                                                        </div> -->
+                                                        </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-sm-6">
@@ -935,7 +929,7 @@
                                                                 <th>Grade</th>
                                                                 <!-- <th>Is HOD</th> -->
                                                                 <th>HOD Department</th>
-                                                                <th>Govt Order No</th>
+                                                                <th>Govt Order / Transfer Proceedings</th>
                                                                 <th>Documents</th>
                                                                 <th>Action</th>
                                                             </tr>
@@ -1126,7 +1120,7 @@
                                                                     <div class="col-sm-6">
                                                                         <div class="row">
                                                                             <div class="col-sm-6 label-text">
-                                                                                <label for="assignments.govtOrderNumber">Govt Order No</label>
+                                                                                <label for="assignments.govtOrderNumber">Govt Order / Transfer Proceedings</label>
                                                                             </div>
                                                                             <div class="col-sm-6">
                                                                                 <input id="assignments.govtOrderNumber" name="assignments.govtOrderNumber" type="text" maxlength="50"/>

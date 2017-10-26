@@ -40,7 +40,9 @@
 
 package org.egov.commons.service;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.egov.commons.model.CalendarYear;
@@ -57,6 +59,14 @@ public class CalendarYearService {
 
 	public List<CalendarYear> getCalendarYears(CalendarYearGetRequest calendarYearGetRequest) {
 		return calendarYearRepository.findForCriteria(calendarYearGetRequest);
+	}
+
+	public List<CalendarYear> getFutureYears(CalendarYearGetRequest calendarYearGetRequest) {
+		Date date = new Date();
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(date);
+		int year = calendar.get(Calendar.YEAR);
+		return calendarYearRepository.findFutureYear(calendarYearGetRequest,year);
 	}
 
 	public boolean getYearByNameAndDate(final int name, final Date givenDate, final String tenantId) {

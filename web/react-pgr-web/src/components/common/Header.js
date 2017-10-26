@@ -145,9 +145,7 @@ const RightIcon = (props) => {
     );
   } else if(window.location.hash === "#/") {
     return(
-      <div>
       {/*<img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>*/}
-      </div>
     )
   } else {
     return(
@@ -225,9 +223,9 @@ class Header extends Component {
                 iconElementLeft={this.props.token && this.props.currentUser.type !== "CITIZEN" ? <IconButton ><i className="material-icons icon-left-style">menu</i></IconButton> : <div></div>}
                 className="app-bar-bg"
                 title={<div><Logo tenantInfo={this.props.tenantInfo} tenantContext={tenantContext}/> </div>}
-                iconElementRight={< RightIcon showHome={this.props.showHome} signOut={this.signOut} token={this.props.token} logout={this.props.logout} setRoute={this.props.setRoute}/>} />
+                iconElementRight={< RightIcon showHome={this.props.showHome} signOut={this.signOut} token={this.props.token} logout={this.props.logout} setRoute={this.props.setRoute} handleToggle={this.props.handleToggle}/>} />
 
-        <Drawer containerClassName="drawer-backGround" open={showMenu}>
+        <Drawer containerClassName="drawer-backGround" open={showMenu} onRequestChange={(open) => menuDontToggle(open)}>
           {actionList && actionList.length>0 && <CustomMenu menuItems={[]} actionList={actionList} />}
         </Drawer>
       </div>

@@ -1,35 +1,24 @@
 package org.egov.boundary.web.contract;
 
-import javax.validation.Valid;
-
 import org.egov.boundary.domain.model.Boundary;
 import org.egov.common.contract.request.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
 public class BoundaryRequest {
 
-	@Valid
 	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo = null;
-	@Valid
+	private RequestInfo requestInfo;
+	
 	@JsonProperty("Boundary")
-	private Boundary  boundary  = null;
-
-	public RequestInfo getRequestInfo() {
-		return requestInfo;
-	}
-
-	public void setRequestInfo(RequestInfo requestInfo) {
-		this.requestInfo = requestInfo;
-	}
-
-	public Boundary getBoundary() {
-		return boundary;
-	}
-
-	public void setBoundary(Boundary boundary) {
-		this.boundary = boundary;
-	}
+	private Boundary Boundary;
+		
 
 }

@@ -47,16 +47,20 @@ import javax.validation.Valid;
 
 import org.egov.boundary.domain.service.BoundaryTypeService;
 import org.egov.boundary.domain.service.HierarchyTypeService;
+import org.egov.boundary.exception.CustomException;
 import org.egov.boundary.util.BoundaryConstants;
 import org.egov.boundary.web.contract.BoundaryType;
 import org.egov.boundary.web.contract.BoundaryTypeRequest;
 import org.egov.boundary.web.contract.BoundaryTypeResponse;
 import org.egov.boundary.web.contract.BoundaryTypeSearchRequest;
+import org.egov.boundary.web.contract.factory.ResponseInfoFactory;
 import org.egov.boundary.web.errorhandlers.Error;
 import org.egov.boundary.web.errorhandlers.ErrorResponse;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,11 +80,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/boundarytypes")
 public class BoundaryTypeController {
+	
+	public static final Logger LOGGER = LoggerFactory.getLogger(BoundaryController.class);
+	
 	@Autowired
 	private BoundaryTypeService boundaryTypeService;
 
 	@Autowired
 	private HierarchyTypeService hierarchyTypeService;
+	
+	@Autowired
+	private ResponseInfoFactory responseInfoFactory;
 
 	private static final String[] taskAction = { "create", "update" };
 
@@ -99,8 +109,23 @@ public class BoundaryTypeController {
 		if (boundaryTypeRequest.getBoundaryType() != null && boundaryTypeRequest.getBoundaryType().getTenantId() != null
 				&& !boundaryTypeRequest.getBoundaryType().getTenantId().isEmpty()) {
 			RequestInfo requestInfo = boundaryTypeRequest.getRequestInfo();
-			BoundaryType contractBoundaryType = boundaryTypeService
-					.createBoundaryType(boundaryTypeRequest.getBoundaryType());
+			BoundaryType contractBoundaryType = null;
+			try {
+				contractBoundaryType = boundaryTypeService
+						.createBoundaryType(boundaryTypeRequest.getBoundaryType());
+			} catch (CustomException e) {
+				LOGGER.error("Exception Message: " + e);
+				Error error = new Error();
+				final ResponseInfo responseInfo = responseInfoFactory
+						.createResponseInfoFromRequestInfo(boundaryTypeRequest.getRequestInfo(), false);
+				error.setCode(Integer.valueOf(e.getCode().toString()));
+				error.setMessage(e.getCustomMessage());
+				error.setDescription(e.getDescription());
+				ErrorResponse errorResponse = new ErrorResponse();
+				errorResponse.setError(error);
+				errorResponse.setResponseInfo(responseInfo);
+				return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+			}
 			boundaryTypeResponse.getBoundaryTypes().add(contractBoundaryType);
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setStatus(HttpStatus.CREATED.toString());
@@ -128,8 +153,23 @@ public class BoundaryTypeController {
 		BoundaryTypeResponse boundaryTypeResponse = new BoundaryTypeResponse();
 		if (tenantId != null && !tenantId.isEmpty()) {
 			RequestInfo requestInfo = boundaryTypeRequest.getRequestInfo();
-			BoundaryType contractBoundaryType = boundaryTypeService
-					.updateBoundaryType(boundaryTypeRequest.getBoundaryType());
+			BoundaryType contractBoundaryType =null;
+			try {
+				contractBoundaryType = boundaryTypeService
+						.updateBoundaryType(boundaryTypeRequest.getBoundaryType());
+			} catch (CustomException e) {
+				LOGGER.error("Exception Message: " + e);
+				Error error = new Error();
+				final ResponseInfo responseInfo = responseInfoFactory
+						.createResponseInfoFromRequestInfo(boundaryTypeRequest.getRequestInfo(), false);
+				error.setCode(Integer.valueOf(e.getCode().toString()));
+				error.setMessage(e.getCustomMessage());
+				error.setDescription(e.getDescription());
+				ErrorResponse errorResponse = new ErrorResponse();
+				errorResponse.setError(error);
+				errorResponse.setResponseInfo(responseInfo);
+				return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+			}
 			boundaryTypeResponse.getBoundaryTypes().add(contractBoundaryType);
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setStatus(HttpStatus.OK.toString());

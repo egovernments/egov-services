@@ -4,15 +4,19 @@ constructor(props){
   this.state = {
       list: [],
       Holiday: {
-          "calendarYear": {
-              "name": ""
-          },
-          "name": "",
-          "applicableOn": "",
-          "tenantId": tenantId
+          calendarYear: {
+                            name: ""
+                          },
+          name: "",
+          holidayType: {
+                          id:""
+                        },
+          applicableOn: "",
+          tenantId: tenantId
       },
       year: [],
       holidays: [],
+      types: [],
       dataType: []
   }
 
@@ -27,12 +31,26 @@ setInitialState(initState) {
 }
 
 handleChange(e,name){
+  if(name==="holidayType")
+  {
+    this.setState({
+      Holiday:{
+        ...this.state.Holiday,
+        holidayType:{
+          id : e.target.value
+        }
+      }
+    })
+
+  }else {
     this.setState({
       Holiday:{
         ...this.state.Holiday,
         [name]:e.target.value
       }
     })
+  }
+
 }
 
 componentDidMount() {
@@ -46,7 +64,7 @@ componentDidMount() {
 
   if(getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Holiday");
 
-  var count = 1, _this = this, _state = {};
+  var count = 2, _this = this, _state = {};
   var checkCountNCall = function(key, res) {
   count--;
   _state[key] = res;
@@ -54,8 +72,12 @@ componentDidMount() {
     _this.setInitialState(_state);
   }
 
-  getDropdown("years", function(res) {
+  getDropdown("futureyears", function(res) {
     checkCountNCall("year", res);
+  });
+
+  getDropdown("holidayTypes", function(res) {
+    checkCountNCall("types", res);
   });
 
   var type = getUrlVars()["type"];
@@ -150,6 +172,9 @@ addOrUpdate(e,mode) {
                             "name": ""
                           },
                           "name": "",
+                          "holidayType": {
+                            "id":""
+                          },
                           "applicableOn": "",
                           "tenantId": tenantId
 
@@ -206,8 +231,8 @@ handleChangeThreeLevel(e,pName,name) {
 
 render(){
   let {handleChange,addOrUpdate,handleChangeThreeLevel}=this;
-  let {name,calendarYear,applicableOn}=this.state.Holiday;
-  let holidays=this.state.holidays;
+  let {name,calendarYear,applicableOn,holidayType}=this.state.Holiday;
+  let {year,types,dataType,holidays,Holiday}=this.state;
   let mode=getUrlVars()["type"];
 
   const renderOption=function(list)
@@ -217,6 +242,19 @@ render(){
           return list.map((item)=>
           {
               return (<option key={item.name} value={item.name}>
+                      {item.name}
+                </option>)
+          })
+      }
+  }
+
+  const renderOptionForTypes=function(list)
+  {
+      if(list)
+      {
+          return list.map((item,ind)=>
+          {
+              return (<option key={ind} value={item.id}>
                       {item.name}
                 </option>)
           })
@@ -279,6 +317,22 @@ render(){
                     <input type="text" name="name" value={name} id="name" onChange={(e)=>{
                         handleChange(e,"name")}} required/>
 
+                    </div>
+                </div>
+            </div>
+            <div className="col-sm-6">
+                <div className="row">
+                    <div className="col-sm-6 label-text">
+                        <label for="">Holiday Type </label>
+                    </div>
+                    <div className="col-sm-6">
+                      <div className="styled-select">
+                      <select id="holidayType" name="holidayType"  value= {holidayType.id}
+                        onChange={(e)=>{handleChange(e,"holidayType")}} >
+                      <option value="">Select Type</option>
+                      {renderOptionForTypes(this.state.types)}
+                     </select>
+                      </div>
                     </div>
                 </div>
             </div>

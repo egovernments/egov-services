@@ -49,6 +49,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @Component
 public class CalendarYearQueryBuilder {
 
@@ -70,6 +72,41 @@ public class CalendarYearQueryBuilder {
 
 		logger.debug("Query : " + selectQuery);
 		return selectQuery.toString();
+	}
+
+	public String getFutureYear(CalendarYearGetRequest calendarYearGetRequest,int year, List preparedStatementValues) {
+		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+
+		addYearClause(selectQuery, preparedStatementValues, calendarYearGetRequest, year);
+		addOrderByClause(selectQuery, calendarYearGetRequest);
+		addPagingClause(selectQuery, preparedStatementValues, calendarYearGetRequest);
+
+		logger.debug("Query : " + selectQuery);
+		return selectQuery.toString();
+	}
+
+	private void addYearClause(StringBuilder selectQuery, List preparedStatementValues,
+								CalendarYearGetRequest calendarYearGetRequest, int year) {
+
+		if (calendarYearGetRequest.getId() == null && calendarYearGetRequest.getName() == null
+				&& calendarYearGetRequest.getActive() == null && calendarYearGetRequest.getTenantId() == null)
+			return;
+
+		selectQuery.append(" WHERE");
+		boolean isAppendAndClause = false;
+
+		if (calendarYearGetRequest.getTenantId() != null) {
+			isAppendAndClause = true;
+			selectQuery.append(" tenantId = ?");
+			preparedStatementValues.add(calendarYearGetRequest.getTenantId());
+		}
+
+		if (!isEmpty(year)) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" name >= ?");
+			preparedStatementValues.add(year);
+		}
+
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

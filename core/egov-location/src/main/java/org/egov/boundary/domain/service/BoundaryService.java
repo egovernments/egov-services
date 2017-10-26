@@ -40,6 +40,7 @@
 
 package org.egov.boundary.domain.service;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,7 +51,9 @@ import java.util.Optional;
 
 import org.egov.boundary.domain.model.Boundary;
 import org.egov.boundary.domain.model.BoundarySearchRequest;
+import org.egov.boundary.exception.CustomException;
 import org.egov.boundary.persistence.repository.BoundaryRepository;
+import org.egov.boundary.util.BoundaryConstants;
 import org.egov.boundary.web.contract.BoundaryRequest;
 import org.egov.boundary.web.contract.BoundaryType;
 import org.geotools.data.DataStore;
@@ -63,6 +66,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -90,35 +95,58 @@ public class BoundaryService {
 	public Boundary findByTenantIdAndId(Long id, String tenantId) {
 		return boundaryRepository.findByTenantIdAndId(tenantId, id);
 	}
-	
-	public Boundary findByTenantIdAndCode(String tenantId,String code) {
+
+	public Boundary findByTenantIdAndCode(String tenantId, String code) {
 		return boundaryRepository.findByTenantIdAndCode(tenantId, code);
 	}
-	
-	public List<Boundary> findByTenantIdAndCodes(String tenantId,List<String> codes) {
+
+	public List<Boundary> findByTenantIdAndCodes(String tenantId, List<String> codes) {
 		return boundaryRepository.findByTenantIdAndCodes(tenantId, codes);
 	}
 
 	public Boundary createBoundary(final Boundary boundary) {
 		boundary.setHistory(false);
 		boundary.setMaterializedPath(getMaterializedPath(null, boundary.getParent()));
-		if(boundary.getBoundaryType()!=null && boundary.getBoundaryType().getCode()!=null)
-		boundary.setBoundaryType(boundaryTypeService.findByTenantIdAndCode(boundary.getTenantId(), boundary.getBoundaryType().getCode()));
-		if(boundary.getParent()!=null && boundary.getParent().getCode()!=null)
+		if (boundary.getBoundaryType() != null && boundary.getBoundaryType().getCode() != null)
+			boundary.setBoundaryType(boundaryTypeService.findByTenantIdAndCode(boundary.getTenantId(),
+					boundary.getBoundaryType().getCode()));
+		if (boundary.getParent() != null && boundary.getParent().getCode() != null)
 			boundary.setParent(findByTenantIdAndCode(boundary.getTenantId(), boundary.getParent().getCode()));
-
-		return boundaryRepository.save(boundary);
+         Boundary bndry = null;
+		try{
+			bndry = boundaryRepository.save(boundary);
+		}catch(Exception e){
+			
+			LOG.error("Exception while creating Boundary: ", e);
+			throw new CustomException(
+					Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR
+							.toString()),
+					BoundaryConstants.BOUNDARY_CREATE_EXCEPTION_MSG,
+					BoundaryConstants.BOUNDARY_CREATE_EXCEPTION_DESC);
+		}
+		return bndry;
 	}
 
 	public Boundary updateBoundary(final Boundary boundary) {
 		boundary.setHistory(false);
 		boundary.setMaterializedPath(getMaterializedPath(boundary, boundary.getParent()));
-		if(boundary.getBoundaryType()!=null && boundary.getBoundaryType().getCode()!=null)
-			boundary.setBoundaryType(boundaryTypeService.findByTenantIdAndCode(boundary.getTenantId(), boundary.getBoundaryType().getCode()));
-			if(boundary.getParent()!=null && boundary.getParent().getCode()!=null)
-				boundary.setParent(findByTenantIdAndCode(boundary.getTenantId(), boundary.getParent().getCode()));
-		
-		return boundaryRepository.update(boundary);
+		if (boundary.getBoundaryType() != null && boundary.getBoundaryType().getCode() != null)
+			boundary.setBoundaryType(boundaryTypeService.findByTenantIdAndCode(boundary.getTenantId(),
+					boundary.getBoundaryType().getCode()));
+		if (boundary.getParent() != null && boundary.getParent().getCode() != null)
+			boundary.setParent(findByTenantIdAndCode(boundary.getTenantId(), boundary.getParent().getCode()));
+		Boundary bndry = null;
+		try{
+			bndry = boundaryRepository.update(boundary);
+		}catch(Exception e){
+			LOG.error("Exception while updating Boundary: ", e);
+			throw new CustomException(
+					Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR
+							.toString()),
+					BoundaryConstants.BOUNDARY_UPDATE_EXCEPTION_MSG,
+					BoundaryConstants.BOUNDARY_UPDATE_EXCEPTION_DESC);
+		}
+		return bndry;
 	}
 
 	public boolean checkBoundaryExistByTypeAndNumber(Long boundaryNumber, Long boundaryTypeId) {
@@ -224,12 +252,14 @@ public class BoundaryService {
 		if (boundaryNum != null && !StringUtils.isEmpty(boundaryTypeName)) {
 			final BoundaryType boundaryType = boundaryTypeService
 					.getBoundaryTypeByNameAndHierarchyTypeName(boundaryTypeName, "ADMINISTRATION", tenantId);
-			final Boundary boundary = this.getBoundaryByTypeAndNo(Long.valueOf(boundaryType.getId()), boundaryNum, tenantId);
+			final Boundary boundary = this.getBoundaryByTypeAndNo(Long.valueOf(boundaryType.getId()), boundaryNum,
+					tenantId);
 			if (boundary == null) {
 				final BoundaryType cityBoundaryType = boundaryTypeService
 						.getBoundaryTypeByNameAndHierarchyTypeName("City", "ADMINISTRATION", tenantId);
-				return Optional.ofNullable(
-						this.getAllBoundariesByBoundaryTypeIdAndTenantId(Long.valueOf(cityBoundaryType.getId()), tenantId).get(0));
+				return Optional.ofNullable(this
+						.getAllBoundariesByBoundaryTypeIdAndTenantId(Long.valueOf(cityBoundaryType.getId()), tenantId)
+						.get(0));
 			}
 			return Optional.of(boundary);
 		}
@@ -247,9 +277,10 @@ public class BoundaryService {
 			if (boundaryRequest.getBoundary().getId() != null) {
 				boundaries.add(getBoundariesByIdAndTenantId(boundaryRequest.getBoundary().getId(),
 						boundaryRequest.getBoundary().getTenantId()));
-			} else if(boundaryRequest.getBoundary().getCode()!=null){
-				boundaries.add(findByTenantIdAndCode(boundaryRequest.getBoundary().getTenantId(), boundaryRequest.getBoundary().getCode()));
-			}else {
+			} else if (boundaryRequest.getBoundary().getCode() != null) {
+				boundaries.add(findByTenantIdAndCode(boundaryRequest.getBoundary().getTenantId(),
+						boundaryRequest.getBoundary().getCode()));
+			} else {
 				if (!StringUtils.isEmpty(boundaryRequest.getBoundary().getLatitude())
 						&& !StringUtils.isEmpty(boundaryRequest.getBoundary().getLongitude())) {
 					Optional<Boundary> boundary = getBoundary(boundaryRequest.getBoundary().getLatitude().doubleValue(),
@@ -267,7 +298,7 @@ public class BoundaryService {
 		}
 		return boundaries;
 	}
-	
+
 	// TODO: The internal logic of this API returns whether the shape file
 	// exists or not will be based on the resource exists in a directory
 	// structure <clientId>/<tenant>/wards.shp.
@@ -283,8 +314,19 @@ public class BoundaryService {
 		return false;
 	}
 
-	public List<Boundary> getAllBoundariesByIdsAndTypeAndNumberAndCodeAndTenant(BoundarySearchRequest boundarySearchRequest){
-		
-	return boundaryRepository.getAllBoundariesByIdsAndTypeAndNumberAndCodeAndTenant(boundarySearchRequest);
+	public Resource fetchShapeFile(String tenantId) throws IOException {
+		String path = tenantId.replace(".", "/");
+		Resource resource = new ClassPathResource("/gis/" + path + "/wards.kml");
+
+		if(resource.exists())
+			return resource;
+
+		return null;
+	}
+
+	public List<Boundary> getAllBoundariesByIdsAndTypeAndNumberAndCodeAndTenant(
+			BoundarySearchRequest boundarySearchRequest) {
+
+		return boundaryRepository.getAllBoundariesByIdsAndTypeAndNumberAndCodeAndTenant(boundarySearchRequest);
 	}
 }

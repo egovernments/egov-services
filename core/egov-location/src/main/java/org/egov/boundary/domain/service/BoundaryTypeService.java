@@ -43,16 +43,23 @@ package org.egov.boundary.domain.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.boundary.exception.CustomException;
 import org.egov.boundary.persistence.repository.BoundaryTypeRepository;
 import org.egov.boundary.persistence.repository.HierarchyTypeRepository;
+import org.egov.boundary.util.BoundaryConstants;
 import org.egov.boundary.web.contract.BoundaryType;
 import org.egov.boundary.web.contract.BoundaryTypeRequest;
 import org.egov.boundary.web.contract.BoundaryTypeSearchRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
 public class BoundaryTypeService {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(BoundaryTypeService.class);
 
 	@Autowired
 	private BoundaryTypeRepository boundaryTypeRepository;
@@ -70,7 +77,18 @@ public class BoundaryTypeService {
 				&& !boundaryType.getParent().getCode().isEmpty())
 			boundaryType.setParent(boundaryTypeRepository.findByTenantIdAndCode(boundaryType.getTenantId(),
 					boundaryType.getParent().getCode()));
-		return boundaryTypeRepository.save(boundaryType);
+		BoundaryType bndryType = null;
+		try{
+			bndryType = boundaryTypeRepository.save(boundaryType);
+		}catch(Exception e){
+			LOG.error("Exception while creating BoundaryType: ", e);
+			throw new CustomException(
+					Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR
+							.toString()),
+					BoundaryConstants.BOUNDARYTYPE_CREATE_EXCEPTION_MSG,
+					BoundaryConstants.BOUNDARYTYPE_CREATE_EXCEPTION_DESC);	
+		}
+		return bndryType;
 	}
 
 	public BoundaryType findByIdAndTenantId(Long id, String tenantId) {
@@ -87,12 +105,19 @@ public class BoundaryTypeService {
 				&& !boundaryType.getParent().getCode().isEmpty())
 			boundaryType.setParent(boundaryTypeRepository.findByTenantIdAndCode(boundaryType.getTenantId(),
 					boundaryType.getParent().getCode()));
-		return boundaryTypeRepository.update(boundaryType);
-	}
 
-	public List<BoundaryType> getAllBoundarTypesByHierarchyTypeIdAndTenantId(final Long hierarchyTypeId,
-			final String tenantId) {
-		return boundaryTypeRepository.findByHierarchyTypeIdAndTenantId(hierarchyTypeId, tenantId);
+		BoundaryType bndryType = null;
+		try{
+			bndryType = boundaryTypeRepository.update(boundaryType);
+		}catch(Exception e){
+			LOG.error("Exception while updating BoundaryType: ", e);
+			throw new CustomException(
+					Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR
+							.toString()),
+					BoundaryConstants.BOUNDARYTYPE_UPDATE_EXCEPTION_MSG,
+					BoundaryConstants.BOUNDARYTYPE_UPDATE_EXCEPTION_DESC);	
+		}
+		return bndryType;
 	}
 
 	public List<BoundaryType> getAllBoundarTypesByHierarchyTypeIdAndTenantName(final String hierarchyTypeName,

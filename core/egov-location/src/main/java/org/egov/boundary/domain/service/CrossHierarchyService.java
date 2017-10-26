@@ -46,15 +46,22 @@ import java.util.List;
 import java.util.Set;
 
 import org.egov.boundary.domain.model.Boundary;
+import org.egov.boundary.exception.CustomException;
 import org.egov.boundary.persistence.repository.BoundaryRepository;
 import org.egov.boundary.persistence.repository.CrossHierarchyRepository;
+import org.egov.boundary.util.BoundaryConstants;
 import org.egov.boundary.web.contract.CrossHierarchy;
 import org.egov.boundary.web.contract.CrossHierarchySearchRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CrossHierarchyService {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(BoundaryTypeService.class);
 
 	private static final String CROSSHIERARCHY_BOUNDARYTYPES = "CrosshierarchyBoundaryTypes";
 	private static final String ADMINISTRATION = "Administration";
@@ -69,11 +76,33 @@ public class CrossHierarchyService {
 	}
 
 	public CrossHierarchy create(final CrossHierarchy crossHierarchy) {
-		return crossHierarchyRepository.save(crossHierarchy);
+		CrossHierarchy crossHierchy=null;
+		try{
+			crossHierchy = crossHierarchyRepository.save(crossHierarchy);
+		}catch(Exception e){
+			LOG.error("Exception while creating CrossHierarchy: ", e);
+			throw new CustomException(
+					Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR
+							.toString()),
+					BoundaryConstants.CROSSHIERARCHY_CREATE_EXCEPTION_MSG,
+					BoundaryConstants.CROSSHIERARCHY_CREATE_EXCEPTION_DESC);	
+		}
+		return crossHierchy;
 	}
 
 	public CrossHierarchy update(final CrossHierarchy crossHierarchy) {
-		return crossHierarchyRepository.update(crossHierarchy);
+		CrossHierarchy crossHierchy=null;
+		try{
+			crossHierchy = crossHierarchyRepository.update(crossHierarchy);
+		}catch(Exception e){
+			LOG.error("Exception while updating CrossHierarchy: ", e);
+			throw new CustomException(
+					Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR
+							.toString()),
+					BoundaryConstants.CROSSHIERARCHY_UPDATE_EXCEPTION_MSG,
+					BoundaryConstants.CROSSHIERARCHY_UPDATE_EXCEPTION_DESC);	
+		}
+		return crossHierchy;
 	}
 
 	public List<CrossHierarchy> getChildBoundaryNameAndBndryTypeAndHierarchyTypeAndTenantId(

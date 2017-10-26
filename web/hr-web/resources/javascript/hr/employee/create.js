@@ -38,6 +38,7 @@ var employee = {
     bank: "",
     bankBranch: "",
     bankAccount: "",
+    ifscCode:"",
     group: "",
     placeOfBirth: "",
     documents: [],
@@ -228,11 +229,14 @@ var commom_fields_rules = {
         required: false
     },
     bankBranch: {
-        required: false
+        required: true
     },
     bankAccount: {
-        required: false,
+        required: true,
         alphanumericWSplChar: true
+    },
+    ifscCode:{
+        required: true
     },
     group: {
         required: false
@@ -2073,6 +2077,27 @@ function loadUI() {
                     }
                 });
 
+                $('#dateOfAppointment, #assignments\\.fromDate').datepicker({
+                    format: 'dd/mm/yyyy',
+                    autoclose: true
+                });
+
+                $('#dateOfAppointment, #assignments\\.fromDate').on("change", function(e) {
+                    var _from = $('#dateOfAppointment').val();
+                    var _to = $('#assignments\\.fromDate').val();
+                    if (_from && _to) {
+                        var dateParts1 = _from.split("/");
+                        var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
+                        var date1 = new Date(newDateStr);
+                        var dateParts2 = _to.split("/");
+                        var newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
+                        var date2 = new Date(newDateStr);
+                        if (date1 > date2) {
+                            showError("Appointment Date must be before Assignment Date.");
+                            $('#assignments\\.fromDate').val("");
+                        }
+                    }
+                });
 
                 $('#dateOfJoining, #dateOfAppointment').datepicker({
                     format: 'dd/mm/yyyy',
@@ -2096,6 +2121,35 @@ function loadUI() {
                         }
                     }
                 });
+
+
+
+
+                $('#user\\.dob, #dateOfAppointment').datepicker({
+                    format: 'dd/mm/yyyy',
+                    autoclose: true
+                });
+
+                $('#user\\.dob, #dateOfAppointment').on("change", function(e) {
+                    var _from = $('#user\\.dob').val();
+                    var _to = $('#dateOfAppointment').val();
+                    var _triggerId = e.target.id;
+                    if (_from && _to) {
+                        var dateParts1 = _from.split("/");
+                        var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
+                        var date1 = new Date(newDateStr);
+                        var dateParts2 = _to.split("/");
+                        var newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
+                        var date2 = new Date(newDateStr);
+                        if (date1 > date2) {
+                            showError("Appointment Date must be After Date of Birth.");
+                            $('#' + _triggerId).val("");
+                        }
+                    }
+                });
+
+
+
 
 
                 $('#dateOfJoining, #dateOfRetirement').datepicker({

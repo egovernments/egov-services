@@ -35,15 +35,15 @@ let parse = function(yamlPath, module, cb) {
                 let xPath = arr.join("/");
                 if (!allUiInfo[xPath]) continue;
                 if (/_search/.test(key)) {
-                    specifications[xPath + ".search"] = searchTemplate((module || "specs"), 4, basePath + key, yamlJSON.paths[key], yamlJSON.parameters, allUiInfo[xPath]);
+                    specifications[xPath + ".search"] = searchTemplate((module || "specs"), 4, basePath + key, yamlJSON.paths[key], yamlJSON.parameters, basePath, allUiInfo[xPath]);
                     if (specifications[xPath + ".search"].errors) {
                         errors = Object.assign({}, errors, specifications[xPath + ".search"].errors);
                     } else {
                         specifications[xPath + ".search"] = specifications[xPath + ".search"].specifications;
                     }
                 } else if (/_create/.test(key)) {
-                    specifications[xPath + ".create"] = createTemplate((module || "specs"), 4, basePath + key, yamlJSON.paths[key], yamlJSON.definitions, allUiInfo[xPath]);
-                    specifications[xPath + ".view"] = viewTemplate((module || "specs"), 4, basePath + key, yamlJSON.paths[key], yamlJSON.definitions, allUiInfo[xPath]);
+                    specifications[xPath + ".create"] = createTemplate((module || "specs"), 4, basePath + key, yamlJSON.paths[key], yamlJSON.definitions, basePath, allUiInfo[xPath]);
+                    specifications[xPath + ".view"] = viewTemplate((module || "specs"), 4, basePath + key, yamlJSON.paths[key], yamlJSON.definitions, basePath, allUiInfo[xPath]);
                     if (specifications[xPath + ".create"].errors) {
                         errors = Object.assign({}, errors, specifications[xPath + ".create"].errors);
                     } else {
@@ -55,7 +55,7 @@ let parse = function(yamlPath, module, cb) {
                         specifications[xPath + ".view"] = specifications[xPath + ".view"].specifications;
                     }
                 } else if (/_update/.test(key)) {
-                    specifications[xPath + ".update"] = updateTemplate((module || "specs"), 4, basePath + key, yamlJSON.paths[key], yamlJSON.definitions, allUiInfo[xPath]);
+                    specifications[xPath + ".update"] = updateTemplate((module || "specs"), 4, basePath + key, yamlJSON.paths[key], yamlJSON.definitions, basePath, allUiInfo[xPath]);
                     if (specifications[xPath + ".update"].errors) {
                         errors = Object.assign({}, errors, specifications[xPath + ".update"].errors);
                     } else {

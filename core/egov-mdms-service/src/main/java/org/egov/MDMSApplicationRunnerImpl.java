@@ -42,8 +42,8 @@ public class MDMSApplicationRunnerImpl {
 	public void run() {
 		try {
 			log.info("Reading yaml files from: "+mdmsFileDirectory);
-			//readDirectory(mdmsFileDirectory);
-			readUrl(mdmsFileDirectory);
+			readDirectory(mdmsFileDirectory);
+			//readUrl(mdmsFileDirectory);
 			log.info("tenantMap:" + tenantMap);
 		} catch (Exception e) {
 			log.error("Exception while loading yaml files: ", e);

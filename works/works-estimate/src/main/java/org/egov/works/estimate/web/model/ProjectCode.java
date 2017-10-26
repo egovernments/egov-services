@@ -22,6 +22,9 @@ import io.swagger.annotations.ApiModelProperty;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-24T10:20:21.690Z")
 
 public class ProjectCode {
+	
+	public static final String TABLE_NAME = "egw_projectcode";
+
 	@JsonProperty("id")
 	private String id = null;
 

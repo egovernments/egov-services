@@ -318,202 +318,6 @@ definitions:
 #Every model will have tenantId
 ########################################################
 
-  LetterOfAcceptance:
-    type: object
-    description: An Object holds the basic data for a Letter Of Acceptance
-    properties:
-      id:
-        type: string
-        description: Unique Identifier of the Letter Of Acceptance
-      tenantId:
-        type: string
-        description: Tenant id of the Letter Of Acceptance
-        maxLength: 128
-        minLength: 4
-      contractor:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/Contractor'
-      loaDate:
-        type: integer
-        format: int64
-        description: Epoch time of LOA Date
-      loaNumber:
-        type: string
-        pattern: '[a-zA-Z0-9-\\]'
-        description: LOA Number of the Letter Of Acceptance
-      contractPeriod:
-        type: number
-        pattern: "[0-9]"
-        description: Contract Period (In days) for the Letter Of Acceptance
-        maxLength: 10
-        minLength: 1
-      emdAmountDeposited:
-        type: number
-        format: BigDecimal
-        description: EMD Amount Deposited for the Letter Of Acceptance
-        maxLength: 50
-        minLength: 1
-      securityDeposit:
-        type: array
-        description: Array to hold the Security Deposit details
-        minItems: 1
-        items:
-          $ref: '#/definitions/SecurityDeposit'
-      engineerIncharge:
-        type: string
-        description: Employee Code for the Letter Of Acceptance.
-      defectLiabilityPeriod:
-        type: number
-        format: double
-        description: Defect Liability Period (In Years) for the Letter Of Acceptance
-      loaAmount:
-        type: number
-        format: BigDecimal
-        description: LOA Amount for the Letter Of Acceptance
-        maxLength: 12
-        minLength: 1
-      documentDetails:
-        type: array
-        description: Array of document details
-        items:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DocumentDetail'
-      status:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/LOAStatus'
-      tenderFinalizedPercentage:
-        type: string
-        description: Tender Finalized Percentage for the Letter Of Acceptance
-      approvedDate:
-        type: integer
-        format: int64
-        description: Epoch time of Date on which Letter Of Acceptance approved.
-      fileNumber:
-        type: string
-        description: File Number of Letter Of Acceptance.
-      fileDate:
-        type: integer
-        format: int64
-        description: Epoch time of File Date of the Letter Of Acceptance.
-      parent:
-        $ref: '#/definitions/LetterOfAcceptance'
-      workFlowDetails:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
-      stateId:
-        type: string
-        description: State id of the workflow
-      cancellationReason:
-        type: string
-        description: Reason for cancellation of the LOA, Required only while cancelling LOA
-        maxLength: 1024
-        minLength: 1
-      cancellationRemarks:
-        type: string
-        description: remarks for cancellation of the LOA, Required only while cancelling LOA
-        maxLength: 1024
-        minLength: 1
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-    required:
-      - tenantId
-      - contractor
-      - contractPeriod
-      - engineerIncharge
-      - loaAmount
-      - status
-      - tenderFinalizedPercentage
-      - loaNumber
-      
-  AssetsForLOA:
-      type: object
-      description: An Object holds the basic data of Assets for LOA
-      properties:
-        id:
-          type: string
-          description: Unique Identifier of the Assets for LOA
-        tenantId:
-          type: string
-          description: Tenant id of the Assets for LOA
-          maxLength: 128
-          minLength: 4
-        assetCode:
-          type: string
-          description: Code of the Asset
-          minLength: 1
-          maxLength: 100
-        letterOfAcceptanceEstimate:
-          $ref: '#/definitions/LetterOfAcceptanceEstimate'
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      required:
-        - tenantId
-        - assetCode
-        - letterOfAcceptanceEstimate
-    
-  LetterOfAcceptanceEstimate:
-    type: object
-    description: A Object holds the basic data for a Letter Of Acceptance
-    properties:
-      id:
-        type: string
-        description: Unique Identifier of the Letter Of Acceptance Estimate.
-      tenantId:
-        type: string
-        description: Tenant id of the Letter Of Acceptance Estimate
-        maxLength: 128
-        minLength: 4
-      letterOfAcceptance:
-        $ref: '#/definitions/LetterOfAcceptance'
-      #detailedEstimate:
-        #$ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/DetailedEstimate'
-      workCompletionDate:
-        type: string
-        description: Work Completion Date of Letter Of Acceptance Estimate
-      estimateLOAAmount:
-        type: integer
-        format: BigDecimal
-        pattern: "[0-9]"
-        description: Estimate wise LOA amount of the Letter Of Acceptance
-      assetForLOA:
-        $ref: '#/definitions/AssetsForLOA'
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-    required:
-      - tenantId
-     # - detailedEstimate
-      - letterOfAcceptance
-      
-  SecurityDeposit:
-    type: object
-    description: An Object that hold Rate Details for the given LOA. At least one data should be given to create an LOA
-    properties:
-      letterOfAcceptance:
-        $ref: '#/definitions/LetterOfAcceptance'
-      tenantId:
-        type: string
-        description: Tenant id of the Security Deposit
-        maxLength: 128
-        minLength: 4
-      mode:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/CollectionMode'
-      percentage:
-        type: string
-        description: Percentage for the given mode
-        pattern: "[0-9]"
-        maxLength: 10
-        minLength: 1
-      amount:
-        type: number
-        format: BigDecimal
-        description: Amount of Security Deposit should be calculated as per percentage
-        pattern: "[0-9]"
-        maxLength: 50
-        minLength: 1
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-    required:
-      - tenantId
-      - mode
-      - percentage
-      - amount
-    
   MeasurementBook:
     type: object
     description: A Object holds the basic data for a Measurement Book data
@@ -527,7 +331,7 @@ definitions:
         maxLength: 128
         minLength: 4
       letterOfAcceptance:
-        $ref: '#/definitions/LetterOfAcceptance'
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LetterOfAcceptance"
       mbRefNo:
         type: string
         pattern: "[0-9]"
@@ -564,15 +368,15 @@ definitions:
         description: To page number for the measurement book
         maxLength: 10
       letterOfAcceptanceEstimate:
-        $ref: '#/definitions/LetterOfAcceptanceEstimate'
-      #mbContractorBills:
-      #  type: array
-      #  description: Array of Contractor bills
-      #  minItems: 1
-      #  items:
-      #    $ref: '#/definitions/MBContractorBills'
-      # billregister:
-      #   $ref: '#/definitions/BillRegister'
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LetterOfAcceptanceEstimate"
+      mbContractorBills:
+        type: array
+        description: Array of Contractor bills
+        minItems: 1
+        items:
+         $ref: '#/definitions/MBContractorBills'
+      #billregister:
+        # $ref: '#/definitions/BillRegister'
       status:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/MeasurementBookStatus'
       measurementBookDetails:
@@ -659,8 +463,8 @@ definitions:
         minLength: 4
       measurementBook:
         $ref: '#/definitions/MeasurementBook'
-      loaActivity:
-        $ref: '#/definitions/LOAActivity'        
+     # loaActivity:
+      #  $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LOAActivity"        
       quantity:
         type: number
         pattern: "[0-9]"
@@ -709,7 +513,7 @@ definitions:
       - rate
       - quantity
       - amount
-      - loaActivity
+     # - loaActivity
       - measurementBook
         
   MBMeasurementSheet:
@@ -756,64 +560,15 @@ definitions:
           maxLength: 20
         measurementBookDetails:
           $ref: '#/definitions/MeasurementBookDetails'
-        loaMeasurementSheet:
-          $ref: '#/definitions/LOAMeasurementSheet'
+        #loaMeasurementSheet:
+         # $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LOAMeasurementSheet"
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
         - tenantId
         - quantity
         - measurementBookDetails
-        - loaMeasurementSheet
-        
-  LOAMeasurementSheet:
-      type: object
-      description: An Object holds the basic data for a LOA Measurement Sheet
-      properties:
-        id:
-          type: string
-          description: Unique Identifier of the Measurement Sheet
-        tenantId:
-          type: string
-          description: Tenant id of the Measurement Sheet
-          maxLength: 128
-          minLength: 4
-        no:
-          type: integer
-          format: BigDecimal
-          description: No. of the Measurement sheet
-          maxLength: 20
-        length:
-          type: integer
-          format: BigDecimal
-          description: Length of the Measurement sheet
-          maxLength: 20
-        width:
-          type: integer
-          format: BigDecimal
-          description: Width of the Measurement sheet
-        depthOrHeight:
-          type: integer
-          format: BigDecimal
-          description: Depth or Height of the Measurement sheet
-          maxLength: 20
-        quantity:
-          type: integer
-          format: BigDecimal
-          description: Quantity of the Measurement sheet
-          maxLength: 20
-          minLength: 1
-        loaActivity:
-          $ref: '#/definitions/LOAActivity'
-        #measurementSheet:
-          #$ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/MeasurementSheet'
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      required:
-        - tenantId
-        - quantity
-        #- measurementSheet
-        - loaActivity
+        #- loaMeasurementSheet
         
   MeasurementBookRequest:
       description: Contract class to send response. Array of Measurement Book items are used in case of search results, also multiple  Measurement Book item is used for create and update
@@ -907,7 +662,7 @@ definitions:
           $ref: '#/definitions/AssetForBill'
       letterOfAcceptanceEstimate:
         description: LOA and Estimate reference for the Bill
-        $ref: '#/definitions/LetterOfAcceptanceEstimate'
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LetterOfAcceptanceEstimate"
       workFlowDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
       stateId:
@@ -956,51 +711,6 @@ definitions:
       - assetCode
       - contractorBill
       
-  LOAActivity:
-    type: object
-    description: An Object holds the basic data for Letter Of Acceptance Activity
-    properties:
-      id:
-        type: string
-        description: Unique Identifier of the Letter Of Acceptance Activity
-      tenantId:
-        type: string
-        description: Tenant id of the Letter Of Acceptance Activity
-        maxLength: 128
-        minLength: 4
-      #estimateActivity:
-        #$ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/EstimateActivity'
-      parent:
-        $ref: '#/definitions/LOAActivity'
-      approvedRate:
-        type: number
-        format: BigDecimal
-        description: Approved Rate for the work order.
-        maxLength: 12
-        minLength: 1
-      approvedAmount:
-        type: number
-        format: BigDecimal
-        description: Approved Amount for the work order.       
-        maxLength: 12
-        minLength: 1
-      remarks:
-        type: string
-        description: Remarks for the work order.
-        maxLength: 1024
-      loaMeasurements:
-        type: array
-        description: Array of work order measurement sheet
-        items:
-          $ref: '#/definitions/LOAMeasurementSheet'
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-    required:
-      - tenantId
-      #- estimateActivity
-      - approvedAmount
-      - approvedRate
-
 tags:
   - name: Measurement Book
     description: APIs required for Measurement Book.

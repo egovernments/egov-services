@@ -2,6 +2,8 @@ package org.egov.works.estimate.web.contract;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,9 +17,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AbstractEstimateSearchContract {
+	
+	@NotNull
+	private String tenantId;
+	
 	private List<String> ids;
 
-	private String adminSanctionNumbers;
+	private List<String> adminSanctionNumbers;
 
 	private Integer pageSize;
 
@@ -25,7 +31,7 @@ public class AbstractEstimateSearchContract {
 
 	private String sortBy;
 
-	private String estimateNumbers;
+	private List<String> estimateNumbers;
 
 	private String departmentCode;
 
@@ -34,6 +40,8 @@ public class AbstractEstimateSearchContract {
 	private String functionCode;
 
 	private String budgetHeadCode;
+	
+	private Long adminSanctionFromDate;
 
 	private Long adminSanctionToDate;
 

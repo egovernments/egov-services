@@ -132,15 +132,6 @@ public class BoundaryTypeControllerTest {
 				.andExpect(content().json(getFileContents("boundaryTypeCreateResponseWithoutNameAndCode.json")));
 	}
 
-	@Test
-	public void testShouldReturnBadRequestWhenHierarchyTypeidAndTenmantIdIsEmpty() throws Exception {
-		when(boundaryTypeService.getAllBoundarTypesByHierarchyTypeIdAndTenantId(any(Long.class), any(String.class)))
-				.thenReturn(null);
-		mockMvc.perform(post("/boundarytypes/getByHierarchyType").param("hierarchyTypeId", "").param("tenantId", "")
-				.header("X-CORRELATION-ID", "someId").contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().isBadRequest());
-	}
-
 	private BoundaryType getBoundaryType(){
     	BoundaryType boundaryType = BoundaryType.builder().id("120").name("Test1234").code("BNDRYTYPE").hierarchy(12l).tenantId("default").createdBy(1l).lastModifiedBy(1l).createdDate(1508284800000l).lastModifiedDate(1508284800000l).build();
     	HierarchyType hierarchyType = new HierarchyType();

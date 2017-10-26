@@ -11,6 +11,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 /**
  * ResponseInfo should be used to carry metadata information about the response
@@ -19,7 +22,9 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "ResponseInfo should be used to carry metadata information about the response from the server. apiId, ver and msgId in ResponseInfo should always correspond to the same values in respective request's RequestInfo.")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-24T10:20:21.690Z")
-
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ResponseInfo {
 	@JsonProperty("apiId")
 	private String apiId = null;

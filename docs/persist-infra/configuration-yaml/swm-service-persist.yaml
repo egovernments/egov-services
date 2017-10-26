@@ -3,7 +3,7 @@ serviceMaps:
  mappings:
  - version: 1.0
    name: vehicleFuellingDetails create
-   description: create vehicleFuellingDetails in egbs_bill
+   description: create vehicleFuellingDetails in egswm_vehiclefuellingdetails
    fromTopic: swm-vehiclefuellingdetails-save-topic
    queryMaps: 
     - query: INSERT INTO egswm_vehiclefuellingdetails(id, tenantid, transactionno, transactiondate, vehicletype, vehicleregno, vehiclereadingduringfuelling, refuellingstation, fuelfilled, typeoffuel, totalcostincurred, receiptno, receiptdate, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
@@ -50,11 +50,11 @@ serviceMaps:
 
  - version: 1.0
    name: vehicleFuellingDetails update
-   description: update vehicleFuellingDetails in egbs_bill
+   description: update vehicleFuellingDetails in egswm_vehiclefuellingdetails
    fromTopic: swm-vehiclefuellingdetails-update-topic
    queryMaps: 
 
-    - query: UPDATE public.egswm_vehiclefuellingdetails SET transactiondate=?,vehicletype=?,vehicleregno=?,vehiclereadingduringfuelling=?, refuellingstation=?,fuelfilled=?,typeoffuel=?,totalcostincurred=?,receiptno=?,receiptdate=?,lastmodifiedby=?,lastmodifiedtime=? WHERE id=? AND tenantid=?;
+    - query: UPDATE egswm_vehiclefuellingdetails SET transactiondate=?,vehicletype=?,vehicleregno=?,vehiclereadingduringfuelling=?, refuellingstation=?,fuelfilled=?,typeoffuel=?,totalcostincurred=?,receiptno=?,receiptdate=?,lastmodifiedby=?,lastmodifiedtime=? WHERE id=? AND tenantid=?;
       basePath: $.vehicleFuellingDetails.*
       jsonMaps:
 
@@ -88,3 +88,123 @@ serviceMaps:
        - jsonPath: $.vehicleFuellingDetails.*.id
 
        - jsonPath: $.vehicleFuellingDetails.*.tenantId
+
+  - version: 1.0
+   name: vehicle create
+   description: create vehicle in egswm_vehicle
+   fromTopic: swm-vehicle-save-topic
+   queryMaps: 
+    - query: INSERT INTO egswm_vehicle(id, tenantid, vehicletype, regnumber, enginesrnumber, chassissrnumber, vehiclecapacity, numberofpersonsreq, model, ulbownedvehicle, vendor, vehicledrivername, purchasedate, yearofpurchase, price, sourceofpurchase, remarks, insurancenumber, insurancevaliditydate, createdby, lastmodifiedby, createdtime, lastmodifiedtime, insurancedocuments) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,  ?, ?, ?, ?, ?);
+      basePath: $.vehicles.*
+      jsonMaps:
+       
+       - jsonPath: $.vehicles.*.id
+
+       - jsonPath: $.vehicles.*.tenantId
+         
+       - jsonPath: $.vehicles.*.vehicleType.name
+         
+       - jsonPath: $.vehicles.*.regNumber
+
+       - jsonPath: $.vehicles.*.engineSrNumber
+         
+       - jsonPath: $.vehicles.*.chassisSrNumber
+       
+       - jsonPath: $.vehicles.*.vehicleCapacity
+
+       - jsonPath: $.vehicles.*.numberOfPersonsReq
+
+       - jsonPath: $.vehicles.*.model
+
+       - jsonPath: $.vehicles.*.ulbOwnedVehicle
+         dbType: BOOLEAN
+
+       - jsonPath: $.vehicles.*.vendor.name
+
+       - jsonPath: $.vehicles.*.vehicleDriverName
+
+       - jsonPath: $.vehicles.*.purchaseDate
+         dbType: LONG
+
+       - jsonPath: $.vehicles.*.yearOfPurchase.finYearRange
+
+       - jsonPath: $.vehicles.*.price
+
+       - jsonPath: $.vehicles.*.sourceOfPurchase
+
+       - jsonPath: $.vehicles.*.remarks
+
+       - jsonPath: $.vehicles.*.insuranceNumber
+
+       - jsonPath: $.vehicles.*.insuranceValidityDate
+         dbType: LONG
+
+       - jsonPath: $.vehicles.*.auditDetails.createdBy
+
+       - jsonPath: $.vehicles.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.vehicles.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.vehicles.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+       - jsonPath: $.vehicles.*.insuranceDocuments.id
+
+ - version: 1.0
+   name: vehicle update
+   description: update vehicle in egswm_vehicle
+   fromTopic: swm-vehicle-update-topic
+   queryMaps: 
+
+    - query: UPDATE egswm_vehiclefuellingdetails SET vehicletype=?, regnumber=?, enginesrnumber=?, chassissrnumber=?, vehiclecapacity=?, numberofpersonsreq=?, model=?, ulbownedvehicle=?, vendor=?, vehicledrivername=?, purchasedate=?, yearofpurchase=?, price=?, sourceofpurchase=?, remarks=?, insurancenumber=?, insurancevaliditydate=?, lastmodifiedby=?, lastmodifiedtime=?, insurancedocuments=? WHERE id=? AND tenantid=?;
+      basePath: $.vehicles.*
+      jsonMaps:
+
+       - jsonPath: $.vehicles.*.vehicleType.name
+         
+       - jsonPath: $.vehicles.*.regNumber
+
+       - jsonPath: $.vehicles.*.engineSrNumber
+         
+       - jsonPath: $.vehicles.*.chassisSrNumber
+       
+       - jsonPath: $.vehicles.*.vehicleCapacity
+
+       - jsonPath: $.vehicles.*.numberOfPersonsReq
+
+       - jsonPath: $.vehicles.*.model
+
+       - jsonPath: $.vehicles.*.ulbOwnedVehicle
+         dbType: BOOLEAN
+
+       - jsonPath: $.vehicles.*.vendor.name
+
+       - jsonPath: $.vehicles.*.vehicleDriverName
+
+       - jsonPath: $.vehicles.*.purchaseDate
+         dbType: LONG
+
+       - jsonPath: $.vehicles.*.yearOfPurchase.finYearRange
+
+       - jsonPath: $.vehicles.*.price
+
+       - jsonPath: $.vehicles.*.sourceOfPurchase
+
+       - jsonPath: $.vehicles.*.remarks
+
+       - jsonPath: $.vehicles.*.insuranceNumber
+
+       - jsonPath: $.vehicles.*.insuranceValidityDate
+         dbType: LONG
+
+       - jsonPath: $.vehicles.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.vehicles.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+       - jsonPath: $.vehicles.*.insuranceDocuments.id
+         
+       - jsonPath: $.vehicles.*.id
+
+       - jsonPath: $.vehicles.*.tenantId

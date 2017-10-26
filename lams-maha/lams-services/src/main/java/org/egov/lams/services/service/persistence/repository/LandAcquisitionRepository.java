@@ -7,7 +7,9 @@ import org.egov.lams.common.web.contract.LandAcquisition;
 import org.egov.lams.common.web.contract.LandAcquisitionSearchCriteria;
 import org.egov.lams.common.web.response.LandAcquisitionResponse;
 import org.egov.lams.services.service.persistence.queryBuilder.LandAcquisitionQueryBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 @Repository
@@ -16,19 +18,22 @@ public class LandAcquisitionRepository {
 
     private LandAcquisitionQueryBuilder landAcquisitionQueryBuilder;
     
+    @Autowired
+	private JdbcTemplate jdbcTemplate;
+    
     public LandAcquisitionRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate ,
 			LandAcquisitionQueryBuilder landAcquisitionQueryBuilder
             ) {
 	this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	this.landAcquisitionQueryBuilder = landAcquisitionQueryBuilder;
 }
-	
+    
 	public LandAcquisitionResponse search(LandAcquisitionSearchCriteria landAcquisitionSearchCriteria) {
 		
 		List<LandAcquisition> landAcquisitionList = getLandAcquisitionList(
-				landAcquisitionQueryBuilder.buildSearchQuery(landAcquisitionSearchCriteria),
+				landAcquisitionQueryBuilder.getQuery(landAcquisitionSearchCriteria),
 				getDetailNamedQuery(landAcquisitionSearchCriteria), new BeanPropertyRowMapper<>(LandAcquisition.class));
-		System.out.println(landAcquisitionQueryBuilder.buildSearchQuery(landAcquisitionSearchCriteria));
+		System.out.println(landAcquisitionQueryBuilder.getQuery(landAcquisitionSearchCriteria));
 
 		return LandAcquisitionResponse.builder()
 		.landAcquisitions(landAcquisitionList)
@@ -39,13 +44,18 @@ public class LandAcquisitionRepository {
 		HashMap<String, Object> parametersMap = new HashMap<String, Object>();
 		parametersMap.put("tenantId", landAcquisitionSearchCriteria.getTenantId());
 		parametersMap.put("ctsNumber", landAcquisitionSearchCriteria.getCtsNumber());
+		if(landAcquisitionSearchCriteria.getLandAcquisitionId() != null)
+      {
 		parametersMap.put("landAcquisitionId", Long.valueOf(landAcquisitionSearchCriteria.getLandAcquisitionId()));
+      }
 		parametersMap.put("landAcquisitionNumber", landAcquisitionSearchCriteria.getLandAcquisitionNumber());
 		parametersMap.put("landOwnerName", landAcquisitionSearchCriteria.getLandOwnerName());
 		parametersMap.put("surveyNo", landAcquisitionSearchCriteria.getSurveyNo());
 		parametersMap.put("organizationName", landAcquisitionSearchCriteria.getOrganizationName());
 		parametersMap.put("advocateName", landAcquisitionSearchCriteria.getAdvocateName());
 		parametersMap.put("landType", landAcquisitionSearchCriteria.getLandType());
+		parametersMap.put("pageSize", landAcquisitionSearchCriteria.getPageSize());
+		parametersMap.put("pageNumber", landAcquisitionSearchCriteria.getPageNumber());
 
 		return parametersMap;
 	}

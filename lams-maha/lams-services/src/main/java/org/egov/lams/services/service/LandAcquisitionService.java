@@ -73,9 +73,9 @@ public class LandAcquisitionService {
 		}
 	
 	
-	public LandAcquisitionResponse search(LandAcquisitionSearchCriteria landAcquisitionRequest) {
+	public LandAcquisitionResponse search(LandAcquisitionSearchCriteria landAcquisitionSearchCriteria, RequestInfo requestInfo) {
 
-		LandAcquisitionResponse landAcquisitionList = landAcquisitionRepository.search(landAcquisitionRequest);
+		LandAcquisitionResponse landAcquisitionList = landAcquisitionRepository.search(landAcquisitionSearchCriteria);
 
 		return landAcquisitionList;
 	}

@@ -1,6 +1,10 @@
 package org.egov.lams.common.web.contract;
 
- import javax.validation.constraints.NotNull;
+ import java.util.Set;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
@@ -30,6 +34,14 @@ public class LandAcquisitionSearchCriteria {
 	private String advocateName;
 	private String landType;
 	private String organizationName;
+	private Set<String> sort;
+
+
+	@Min(1)
+	@Max(500)
+	private Integer pageSize;
+
+	private Short pageNumber;
 	
 	public boolean isLandAcquisitionIdAbsent(){
         return   landAcquisitionId == null || landAcquisitionId == "";

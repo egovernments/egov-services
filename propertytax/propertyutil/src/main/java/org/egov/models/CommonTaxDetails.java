@@ -28,20 +28,15 @@ public class CommonTaxDetails {
 	@NotNull
 	private Double calculatedARV;
 
-	private Double manualRV;
+	private Double manualARV;
 
-	private Double residentialRV;
+	private Double residentialARV;
 
-	private Double nonResidentialRV;
+	private Double nonResidentialARV;
 
 	@NotNull
 	private Double totalTax;
 
 	private List<HeadWiseTax> headWiseTaxes;
-	
-	private Double calculatedRV;
-	
-	private Double calculatedMRV;
-	
 
 }

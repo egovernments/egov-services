@@ -40,6 +40,9 @@ public class KafkaConsumerConfig implements ApplicationRunner {
 	
 	@Value("${spring.kafka.bootstrap.servers}")
     private String brokerAddress;
+	
+	@Value("${spring.kafka.consumer.group}")
+    private String consumerGroup;
         
     @Autowired
     private StoppingErrorHandler stoppingErrorHandler;
@@ -81,7 +84,7 @@ public class KafkaConsumerConfig implements ApplicationRunner {
     public ConsumerFactory<String, String> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, this.brokerAddress);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "egov-infra-indexer-consumer-grp");
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroup);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
         props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "100");

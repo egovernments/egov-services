@@ -66,8 +66,8 @@ public class ServiceReqRepository {
 	            maps = jdbcTemplate.queryForList(queryStr, preparedStatementValues.toArray());
 	        	LOGGER.info("comment search queryStr::" + detailsQueryStr + " preparedStatementValuesForDetailsSearch::" + preparedStatementValuesForDetailsSearch.toString());    
 	            List<CommentResponse> commentRes = jdbcTemplate.query(detailsQueryStr, preparedStatementValuesForDetailsSearch.toArray(), new CommentsAndDocsRowMapper());
-	            LOGGER.info("maps::" + maps);
-	            LOGGER.info("comments::" + commentRes);
+	            LOGGER.info("service request applications ::" + maps);
+	            LOGGER.info("comments and documents ::" + commentRes);
 	            List<Comment> comments = new ArrayList<>();
 	            List<Document> documents = new ArrayList<>();
 	            for(CommentResponse commentResponse: commentRes){

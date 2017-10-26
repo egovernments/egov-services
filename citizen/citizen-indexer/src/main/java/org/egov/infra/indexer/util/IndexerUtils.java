@@ -166,10 +166,12 @@ public class IndexerUtils {
         try{
 	    	if(isBulk){
 	    		//Validating if the request is a valid json array.
-				jsonArray = pullArrayOutOfString(kafkaJson);    
-	    		if(JsonPath.read(kafkaJson, index.getJsonPath()) instanceof net.minidev.json.JSONArray){
-	    			String inputArray = mapper.writeValueAsString(JsonPath.read(kafkaJson, index.getJsonPath()));
-	    			kafkaJsonArray = new JSONArray(inputArray);
+				jsonArray = pullArrayOutOfString(kafkaJson);   
+				if(null != index.getJsonPath()){
+		    		if(JsonPath.read(kafkaJson, index.getJsonPath()) instanceof net.minidev.json.JSONArray){
+		    			String inputArray = mapper.writeValueAsString(JsonPath.read(kafkaJson, index.getJsonPath()));
+		    			kafkaJsonArray = new JSONArray(inputArray);
+		    		}
 	    		}else if((jsonArray.startsWith("[") && jsonArray.endsWith("]"))){
 	    			kafkaJsonArray = new JSONArray(jsonArray);
 		        }else{

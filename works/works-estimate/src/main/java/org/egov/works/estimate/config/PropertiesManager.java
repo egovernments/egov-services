@@ -28,4 +28,8 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.works.abstract.estimate.update.topic}")
 	private String worksAbstractEstimateUpdateTopic;
+	
+	@Value("${egov.services.works.projectcode.create.topic}")
+	private String worksProjectCodeCreateTopic;
+	
 }

@@ -3,7 +3,6 @@ package org.egov.lcms.models;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.apache.tomcat.jni.Address;
 import org.hibernate.validator.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -42,7 +41,7 @@ public class Summon {
 	@NotNull
 	@NotEmpty
 	@JsonProperty("caseType")
-	private String caseType = null;
+	private String caseType = null; //TODO Need to change to model
 
 	@NotNull
 	@NotEmpty

@@ -1,23 +1,37 @@
 package org.egov.lcms.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
+import lombok.Getter;
 
+/**
+ * 
+ * @author Prasad
+ *
+ */
 @Configuration
+@Getter
 public class PropertiesManager {
-	@Autowired
-	Environment environment;
 	
-	public String createLegalCase;
+	@Value("${egov.services.tenant.hostname}")
+	private String tenantHostName;
 	
-	public String updateLegalCase;
+	@Value("${egov.services.tenant.basepath}")
+	private String tenantBasePath;
 
-	public String getCreateLegalCase() {
-		return environment.getProperty("egov.lcms.creare.legal.case");
-	}
+	@Value("${egov.services.tenant.searchpath}")
+	private String tenantSearchPath;
+	
+	@Value("${egov.services.egov_idgen.hostname}")
+	private String idHostName;
+	
+	@Value("${egov.services.egov_idgen.createpath}")
+	private String idCreatepath;
+	
+	@Value("${ulb.name}")
+	private String ulbName;
+	
+	@Value("${ulb.format}")
+	private String ulbFormat;
 
-	public String getUpdateLegalCase() {
-		return environment.getProperty("egov.lcms.update.legal.case");
-	}
 }

@@ -52,6 +52,12 @@ public class ApplicationProperties {
     @Value("${kafka.topics.save.currentvalue}")
     private String saveCurrentvalueTopic;
     
+    @Value("${mdms.master.assetcategory}")
+    private String mdMsMasterAssetCategory;
+    
+    @Value("${mdms.modulename}")
+    private String mdMsModuleName;
+    
     @Autowired
     private Environment environment;
 

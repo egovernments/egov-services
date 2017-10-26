@@ -15,8 +15,6 @@ public class Material {
 
     private String id;
 
-    @Size(min = 5, max = 50)
-    @Pattern(regexp="^[A-Za-z0-9]+$")
     private String code;
 
     @NotNull
@@ -69,16 +67,12 @@ public class Material {
     @NotNull
     private MaterialControlType materialControlType;
 
-    @Pattern(regexp="^[A-Za-z0-9]+$")
     private String model;
 
-    @Pattern(regexp="^[A-Za-z0-9]+$")
     private String manufacturePartNo;
 
-    @Pattern(regexp="^[A-Za-z0-9]+$")
     private String technicalSpecs;
 
-    @Pattern(regexp="^[A-Za-z0-9]+$")
     private String termsOfDelivery;
 
     private boolean overrideMaterialControlType;

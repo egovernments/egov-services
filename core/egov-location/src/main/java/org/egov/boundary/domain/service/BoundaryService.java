@@ -51,7 +51,9 @@ import java.util.Optional;
 
 import org.egov.boundary.domain.model.Boundary;
 import org.egov.boundary.domain.model.BoundarySearchRequest;
+import org.egov.boundary.exception.CustomException;
 import org.egov.boundary.persistence.repository.BoundaryRepository;
+import org.egov.boundary.util.BoundaryConstants;
 import org.egov.boundary.web.contract.BoundaryRequest;
 import org.egov.boundary.web.contract.BoundaryType;
 import org.geotools.data.DataStore;
@@ -65,6 +67,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -109,8 +112,19 @@ public class BoundaryService {
 					boundary.getBoundaryType().getCode()));
 		if (boundary.getParent() != null && boundary.getParent().getCode() != null)
 			boundary.setParent(findByTenantIdAndCode(boundary.getTenantId(), boundary.getParent().getCode()));
-
-		return boundaryRepository.save(boundary);
+         Boundary bndry = null;
+		try{
+			bndry = boundaryRepository.save(boundary);
+		}catch(Exception e){
+			
+			LOG.error("Exception while creating Boundary: ", e);
+			throw new CustomException(
+					Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR
+							.toString()),
+					BoundaryConstants.BOUNDARY_CREATE_EXCEPTION_MSG,
+					BoundaryConstants.BOUNDARY_CREATE_EXCEPTION_DESC);
+		}
+		return bndry;
 	}
 
 	public Boundary updateBoundary(final Boundary boundary) {
@@ -121,8 +135,18 @@ public class BoundaryService {
 					boundary.getBoundaryType().getCode()));
 		if (boundary.getParent() != null && boundary.getParent().getCode() != null)
 			boundary.setParent(findByTenantIdAndCode(boundary.getTenantId(), boundary.getParent().getCode()));
-
-		return boundaryRepository.update(boundary);
+		Boundary bndry = null;
+		try{
+			bndry = boundaryRepository.update(boundary);
+		}catch(Exception e){
+			LOG.error("Exception while updating Boundary: ", e);
+			throw new CustomException(
+					Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR
+							.toString()),
+					BoundaryConstants.BOUNDARY_UPDATE_EXCEPTION_MSG,
+					BoundaryConstants.BOUNDARY_UPDATE_EXCEPTION_DESC);
+		}
+		return bndry;
 	}
 
 	public boolean checkBoundaryExistByTypeAndNumber(Long boundaryNumber, Long boundaryTypeId) {

@@ -48,16 +48,20 @@ import javax.validation.Valid;
 import org.egov.boundary.domain.service.BoundaryService;
 import org.egov.boundary.domain.service.BoundaryTypeService;
 import org.egov.boundary.domain.service.CrossHierarchyService;
+import org.egov.boundary.exception.CustomException;
 import org.egov.boundary.util.BoundaryConstants;
 import org.egov.boundary.web.contract.CrossHierarchy;
 import org.egov.boundary.web.contract.CrossHierarchyRequest;
 import org.egov.boundary.web.contract.CrossHierarchyResponse;
 import org.egov.boundary.web.contract.CrossHierarchySearchRequest;
+import org.egov.boundary.web.contract.factory.ResponseInfoFactory;
 import org.egov.boundary.web.errorhandlers.Error;
 import org.egov.boundary.web.errorhandlers.ErrorResponse;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -77,6 +81,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/crosshierarchys")
 public class CrossHierarchyController {
+	
+	public static final Logger LOGGER = LoggerFactory.getLogger(CrossHierarchyController.class);
+	
 	@Autowired
 	private CrossHierarchyService crossHierarchyService;
 
@@ -85,6 +92,9 @@ public class CrossHierarchyController {
 
 	@Autowired
 	private BoundaryTypeService boundaryTypeService;
+	
+	@Autowired
+	private ResponseInfoFactory responseInfoFactory;
 
 	@PostMapping
 	@ResponseBody
@@ -104,7 +114,22 @@ public class CrossHierarchyController {
 				&& crossHierarchyRequest.getCrossHierarchy().getTenantId() != null
 				&& !crossHierarchyRequest.getCrossHierarchy().getTenantId().isEmpty()) {
 			RequestInfo requestInfo = crossHierarchyRequest.getRequestInfo();
-			CrossHierarchy crossHierarchy = crossHierarchyService.create(crossHierarchyRequest.getCrossHierarchy());
+			CrossHierarchy crossHierarchy =null;
+			try {
+				crossHierarchy = crossHierarchyService.create(crossHierarchyRequest.getCrossHierarchy());
+			} catch (CustomException e) {
+				LOGGER.error("Exception Message: " + e);
+				Error error = new Error();
+				final ResponseInfo responseInfo = responseInfoFactory
+						.createResponseInfoFromRequestInfo(crossHierarchyRequest.getRequestInfo(), false);
+				error.setCode(Integer.valueOf(e.getCode().toString()));
+				error.setMessage(e.getCustomMessage());
+				error.setDescription(e.getDescription());
+				ErrorResponse errorResponse = new ErrorResponse();
+				errorResponse.setError(error);
+				errorResponse.setResponseInfo(responseInfo);
+				return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+			}
 			crossHierarchyResponse.getCrossHierarchys().add(crossHierarchy);
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setStatus(HttpStatus.CREATED.toString());
@@ -128,7 +153,22 @@ public class CrossHierarchyController {
 			RequestInfo requestInfo = crossHierarchyRequest.getRequestInfo();
 			crossHierarchyRequest.getCrossHierarchy().setCode(code);
 			crossHierarchyRequest.getCrossHierarchy().setTenantId(tenantId);
-			CrossHierarchy crossHierarchy = crossHierarchyService.update(crossHierarchyRequest.getCrossHierarchy());
+			CrossHierarchy crossHierarchy =null;
+			try {
+				crossHierarchy = crossHierarchyService.update(crossHierarchyRequest.getCrossHierarchy());
+			} catch (CustomException e) {
+				LOGGER.error("Exception Message: " + e);
+				Error error = new Error();
+				final ResponseInfo responseInfo = responseInfoFactory
+						.createResponseInfoFromRequestInfo(crossHierarchyRequest.getRequestInfo(), false);
+				error.setCode(Integer.valueOf(e.getCode().toString()));
+				error.setMessage(e.getCustomMessage());
+				error.setDescription(e.getDescription());
+				ErrorResponse errorResponse = new ErrorResponse();
+				errorResponse.setError(error);
+				errorResponse.setResponseInfo(responseInfo);
+				return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+			}
 			crossHierarchyResponse.getCrossHierarchys().add(crossHierarchy);
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setStatus(HttpStatus.OK.toString());

@@ -133,4 +133,30 @@ public class BoundaryConstants {
 	public static final String BOUNDARYTYPE_CODE_MANDATORY_CODE = "boundary.0028";
 	public static final String BOUNDARYTYPE_CODE_MANADATORY_FIELD_NAME = "code";
 	public static final String BOUNDARYTYPE_CODE_MANADATORY_ERROR_MESSAGE = "Boundary Type Code is required";
+	
+	
+	public static final String BOUNDARY_CREATE_EXCEPTION_MSG = "Boundary couldn't be created";
+	public static final String BOUNDARY_CREATE_EXCEPTION_DESC = "creation of Boundary failed!";
+	
+	public static final String BOUNDARY_UPDATE_EXCEPTION_MSG = "Boundary couldn't be update";
+	public static final String BOUNDARY_UPDATE_EXCEPTION_DESC = "update of Boundary failed!";
+	
+	public static final String BOUNDARYTYPE_CREATE_EXCEPTION_MSG = "BoundaryType couldn't be created";
+	public static final String BOUNDARYTYPE_CREATE_EXCEPTION_DESC = "creation of BoundaryType failed!";
+	
+	public static final String BOUNDARYTYPE_UPDATE_EXCEPTION_MSG = "BoundaryType couldn't be created";
+	public static final String BOUNDARYTYPE_UPDATE_EXCEPTION_DESC = "creation of BoundaryType failed!";
+	
+	public static final String HIERARCHYTYPE_CREATE_EXCEPTION_MSG = "HierarchyType couldn't be created";
+	public static final String HIERARCHYTYPE_CREATE_EXCEPTION_DESC = "creation of HierarchyType failed!";
+	
+	public static final String HIERARCHYTYPE_UPDATE_EXCEPTION_MSG = "HierarchyType couldn't be created";
+	public static final String HIERARCHYTYPE_UPDATE_EXCEPTION_DESC = "creation of HierarchyTypee failed!";
+	
+	public static final String CROSSHIERARCHY_CREATE_EXCEPTION_MSG = "CrossHierarchy couldn't be created";
+	public static final String CROSSHIERARCHY_CREATE_EXCEPTION_DESC = "creation of CrossHierarchy failed!";
+	
+	public static final String CROSSHIERARCHY_UPDATE_EXCEPTION_MSG = "CrossHierarchy couldn't be created";
+	public static final String CROSSHIERARCHY_UPDATE_EXCEPTION_DESC = "creation of CrossHierarchy failed!";
+
 }

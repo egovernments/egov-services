@@ -53,6 +53,7 @@ import org.egov.boundary.domain.service.BoundaryService;
 import org.egov.boundary.domain.service.BoundaryTypeService;
 import org.egov.boundary.domain.service.CrossHierarchyService;
 import org.egov.boundary.domain.service.HierarchyTypeService;
+import org.egov.boundary.exception.CustomException;
 import org.egov.boundary.util.BoundaryConstants;
 import org.egov.boundary.web.contract.Boundary;
 import org.egov.boundary.web.contract.BoundaryRequest;
@@ -68,6 +69,8 @@ import org.egov.boundary.web.errorhandlers.ErrorResponse;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -92,6 +95,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/boundarys")
 @Slf4j
 public class BoundaryController {
+
+	public static final Logger LOGGER = LoggerFactory.getLogger(BoundaryController.class);
 
 	@Autowired
 	private BoundaryService boundaryService;
@@ -121,7 +126,22 @@ public class BoundaryController {
 		final ErrorResponse errorResponses = validateBoundaryRequest(boundaryRequest, taskAction[0]);
 		if (errorResponses.getError() != null && errorResponses.getError().getErrorFields().size() > 0)
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-		Boundary boundary = mapToContractBoundary(boundaryService.createBoundary(boundaryRequest.getBoundary()));
+		Boundary boundary = null;
+		try {
+			boundary = mapToContractBoundary(boundaryService.createBoundary(boundaryRequest.getBoundary()));
+		} catch (CustomException e) {
+			LOGGER.error("Exception Message: " + e);
+			Error error = new Error();
+			final ResponseInfo responseInfo = responseInfoFactory
+					.createResponseInfoFromRequestInfo(boundaryRequest.getRequestInfo(), false);
+			error.setCode(Integer.valueOf(e.getCode().toString()));
+			error.setMessage(e.getCustomMessage());
+			error.setDescription(e.getDescription());
+			ErrorResponse errorResponse = new ErrorResponse();
+			errorResponse.setError(error);
+			errorResponse.setResponseInfo(responseInfo);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
 		BoundaryResponse boundaryResponse = new BoundaryResponse();
 		if (boundaryRequest.getBoundary() != null && boundaryRequest.getBoundary().getTenantId() != null
 				&& !boundaryRequest.getBoundary().getTenantId().isEmpty()) {
@@ -151,8 +171,22 @@ public class BoundaryController {
 		BoundaryResponse boundaryResponse = new BoundaryResponse();
 		if (tenantId != null && !tenantId.isEmpty()) {
 			RequestInfo requestInfo = boundaryRequest.getRequestInfo();
-			Boundary contractBoundary = mapToContractBoundary(
-					boundaryService.updateBoundary(boundaryRequest.getBoundary()));
+			Boundary contractBoundary = null;
+			try {
+				contractBoundary = mapToContractBoundary(boundaryService.updateBoundary(boundaryRequest.getBoundary()));
+			} catch (CustomException e) {
+				LOGGER.error("Exception Message: " + e);
+				Error error = new Error();
+				final ResponseInfo responseInfo = responseInfoFactory
+						.createResponseInfoFromRequestInfo(boundaryRequest.getRequestInfo(), false);
+				error.setCode(Integer.valueOf(e.getCode().toString()));
+				error.setMessage(e.getCustomMessage());
+				error.setDescription(e.getDescription());
+				ErrorResponse errorResponse = new ErrorResponse();
+				errorResponse.setError(error);
+				errorResponse.setResponseInfo(responseInfo);
+				return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+			}
 			boundaryResponse.getBoundarys().add(contractBoundary);
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setStatus(HttpStatus.OK.toString());
@@ -175,8 +209,6 @@ public class BoundaryController {
 		}
 
 		log.info("BoundaryRequest: " + boundaryRequest);
-		log.info("boundary inside if: " + boundary);
-		log.info("tenant inside if: " + tenantId);
 
 		if (tenantId != null && boundary != null) {
 			org.egov.boundary.domain.model.Boundary boundaryObj = org.egov.boundary.domain.model.Boundary.builder()

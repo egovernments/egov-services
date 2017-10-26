@@ -41,7 +41,7 @@ public class DashBoardRepository {
     public List<DashboardResponse> getWeeklyRegisteredAndClosedComplaintsCount(String tenantId){
         String query = "select count(*) as count, status, to_char(date_trunc('day',createddate), 'DAY') as day, to_char(date_trunc('day',createddate), 'dd') as date from submission " +
             "where servicecode in (select servicecode from servicetype_keyword where tenantid = 'default' and keyword = 'complaint')" +
-            "and status in ('REGISTERED', 'COMPLETED') and createddate > current_date - interval '7' day and tenantid = 'default'" +
+            "and status in ('REGISTERED', 'COMPLETED') and createddate > current_date - interval '6' day and tenantid = 'default'" +
             "group by date_trunc('day',createddate), status " +
             "order by date_trunc('day',createddate), status";
 

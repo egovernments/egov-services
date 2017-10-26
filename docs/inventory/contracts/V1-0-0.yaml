@@ -1768,6 +1768,7 @@ definitions:
         indentNumber:
           type: string
           maxLength: 100
+          readOnly: true
           description: |
             indentNumber  Auto generated number, read only <ULB short code><Store
             Code><fin. Year><serial No.>
@@ -1782,7 +1783,7 @@ definitions:
             indent purpose of the Indent
         description:
           type: string
-          maxLength: 500
+          maxLength: 1000
           description: |
             description of the Indent
         indentStatus:
@@ -1858,9 +1859,9 @@ definitions:
           description: |
             receivedQuantity  Applicable for Material Receipt Note and Material
             Transfer Inward Note
-        remarks:
+        description:
           type: string
-          maxLength: 500
+          maxLength: 1000
           description: |
             remarks of the IndentDetail
         auditDetails:
@@ -1955,7 +1956,7 @@ definitions:
             quantity issued of the IndentIssueDetail
         description:
           type: string
-          maxLength: 500
+          maxLength: 1000
           description: |
             description of the IndentIssueDetail
         auditDetails:
@@ -2017,7 +2018,7 @@ definitions:
             name of the Material
         description:
           type: string
-          maxLength: 1024
+          maxLength: 1000
           description: |
             description of the Material
         oldCode:
@@ -2256,6 +2257,7 @@ definitions:
         issueNoteNumber:
           type: string
           maxLength: 100
+          readOnly: true
           description: |
             issueNoteNumber  Auto generated number, read only
         issueDate:
@@ -2276,7 +2278,7 @@ definitions:
             material issue status of the MaterialIssue
         description:
           type: string
-          maxLength: 500
+          maxLength: 1000
           description: |
             description of the MaterialIssue
         totalIssueValue:
@@ -2393,9 +2395,9 @@ definitions:
           format: BigDecimal
           description: |
             order quantity of the PurchaseMaterial
-        remarks:
+        description:
           type: string
-          maxLength: 500
+          maxLength: 1000
           description: |
             remarks of the PurchaseMaterial
         auditDetails:
@@ -2441,13 +2443,14 @@ definitions:
           type: string
           description: Tenant id of the Purchase Order
           maxLength: 128
-          minLength: 4    
+          minLength: 4
         store:
           $ref: "#/definitions/Store"
           description: |
             store of the PurchaseOrder
         purchaseOrderNumber:
           type: string
+          readOnly: true
           description: |
             purchaseOrderNumber  Auto generated number, read only
         purchaseOrderDate:
@@ -2496,7 +2499,7 @@ definitions:
             payment terms of the PurchaseOrder
         description:
           type: string
-          maxLength: 500
+          maxLength: 1000
           description: |
             description of the PurchaseOrder
         status:
@@ -2710,6 +2713,7 @@ definitions:
             store of the Scrap
         scrapNumber:
           type: string
+          readOnly: true
           description: |
             scrapNumber  Auto generated number, read only
         scrapDate:
@@ -2843,14 +2847,15 @@ definitions:
             transfer out ward of the TransferInward
         description:
           type: string
-          maxLength: 500
+          maxLength: 1000
           description: |
             description of the TransferInward
         inwardNoteNumber:
           type: string
           maxLength: 100
+          readOnly: true
           description: |
-            inward note number of the TransferInward
+            Auto generated number, read only
         inwardNoteStatus:
           type: string
           enum:
@@ -2982,14 +2987,15 @@ definitions:
             issued to employee of the TransferOutward
         description:
           type: string
-          maxLength: 500
+          maxLength: 1000
           description: |
             description of the TransferOutward
         outwardNoteNumber:
           type: string
           maxLength: 100
+          readOnly: true
           description: |
-            outward note number of the TransferOutward
+            Auto generated number, read only
         outwardNoteStatus:
           type: string
           enum:
@@ -3125,7 +3131,8 @@ definitions:
           minLength: 4
         mrnNumber:
           type: string
-          description: Unique number generated internally on ceating a receipt.
+          readOnly: true
+          description: Unique number generated internally on creating a receipt.
         receiptDate:
           type: integer
           description: The date on which the receipt was made.
@@ -3164,9 +3171,10 @@ definitions:
           type: integer
           format: int64
           description: Date on which the challan was made.
-        remarks:
+        description:
           type: string
-          description: Any general remarks pertaining to the material receipt.
+          maxLength: 1000
+          description: Any general description pertaining to the material receipt.
           format: varchar
         receivedBy:
           type: string
@@ -3283,9 +3291,10 @@ definitions:
           type: string
           description: Serial number of the materials that are received.
           format: varchar
-        remark:
+        description:
           type: string
-          description: General remarks about the materials.
+          maxLength: 1000
+          description: General description about the materials.
           format: varchar
         manufactureDate:
           type: integer

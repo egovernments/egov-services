@@ -1,0 +1,11 @@
+ServiceMaps:
+ serviceName: swdm
+ version: 1.0.0
+ mappings:
+  - topic: swm-vehiclefuellingdetails-indexer-topic
+    indexes:
+    - name: vehiclefuellingdetails
+      type: vehiclefuellingdetails
+      id: $.id
+      isBulk: true
+      jsonPath: $.vehicleFuellingDetails.*

@@ -56,4 +56,10 @@ public class PropertiesManager {
 	
 	@Value("${lams-estate-units-seq}")
 	public String createEstateUnitsSequence;
+	
+	@Value("${kafka.topic.save.landPossession}")
+	public String createLandPossessionKafkaTopic;
+
+	/*@Value("${kafka.topic.update.landPossession}")
+	public String updateLandPossessionKafkaTopic;*/
 }

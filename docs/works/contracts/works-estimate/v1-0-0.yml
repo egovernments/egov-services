@@ -705,21 +705,6 @@ definitions:
       pmcName:
         type: string
         description: Name of the PMC Panel/New Appointment.
-      multiYearEstimates:
-        type: array
-        description: Multiyear Estimate list for the Abstract Estimate
-        items:
-          $ref: '#/definitions/MultiYearEstimate'
-      estimateTechnicalSanctions:
-        type: array
-        description: Technical Sanction list for the Abstract Estimate
-        items:
-          $ref: '#/definitions/EstimateTechnicalSanction'
-      detailedEstimateDeductions:
-        type: array
-        description: Detailed Estimate Deduction list for the Abstract Estimate
-        items:
-          $ref: '#/definitions/DetailedEstimateDeduction'
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -775,8 +760,8 @@ definitions:
         $ref: '#/definitions/ProjectCode'
       abstractEstimateAppropriations:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-services/v1-0-0.yml#/definitions/EstimateAppropriation'
-      estimatePhotographsList:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-services/v1-0-0.yml#/definitions/EstimatePhotographs'
+      documentDetails:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DocumentDetail'
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -952,16 +937,28 @@ definitions:
         type: integer
         format: BigDecimal
         description: Total Estimate Amount including Revision Estimates
-      abstractEstimateDetails:
-        type: array
-        description: Array of Abstract Estimate Details
-        items:
-          $ref: '#/definitions/AbstractEstimateDetails'
+      abstractEstimateDetail:
+        $ref: '#/definitions/AbstractEstimateDetails'
       #estimateActivities:
        # type: array
        # description: Array of Estimate Activities
       #  items:
-       #   $ref: '#/definitions/EstimateActivity'   
+       #   $ref: '#/definitions/EstimateActivity' 
+      multiYearEstimates:
+        type: array
+        description: Multiyear Estimate list for the Abstract Estimate
+        items:
+          $ref: '#/definitions/MultiYearEstimate'
+      #estimateTechnicalSanctions:
+        #type: array
+        #description: Technical Sanction list for the Abstract Estimate
+        #items:
+          #$ref: '#/definitions/EstimateTechnicalSanction'
+      detailedEstimateDeductions:
+        type: array
+        description: Detailed Estimate Deduction list for the Abstract Estimate
+        items:
+          $ref: '#/definitions/DetailedEstimateDeduction'
       documentDetails:
         type: array
         description: Array of document details
@@ -977,11 +974,6 @@ definitions:
         description: Array of Overhead Values
         items:
           $ref: '#/definitions/OverheadValue'
-      estimatePhotographsList:
-        type: array
-        description: Array of Estimate Photographs List
-        items:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-services/v1-0-0.yml#/definitions/EstimatePhotographs'
       workFlowDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
       stateId:
@@ -1428,4 +1420,5 @@ tags:
     description: APIs required for Detailed Estimate.
   - name: Revision Estimate
     description: APIs required for Revision Estimate.
+
 

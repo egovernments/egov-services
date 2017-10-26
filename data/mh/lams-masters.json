@@ -1,37 +1,37 @@
 {
   "tenantId": "mh",
   "moduleName": "lams-maha",
-  "RegisterName": [
+  "Register": [
     {
       "id": 1,
       "tenantId": "mh",
-      "code": "REGNAME_REGISTERNAME1",
+      "code": "REGNAME_REGISTER1",
       "registerName": "Fake Register Name1",
       "isActive": true
     },
     {
       "id": 2,
       "tenantId": "mh",
-      "code": "REGNAME_REGISTERNAME2",
+      "code": "REGNAME_REGISTER2",
       "registerName": "Fake Register Name2",
       "isActive": true
     }
   ],
-  "SubRegisterName": [
+  "SubRegister": [
     {
       "id": 1,
       "tenantId": "mh",
-      "code": "SUBREGNAME_SUBREGISTERNAME1",
+      "code": "SUBREGNAME_SUBREGISTER1",
       "registerName": 1,
-      "subRegisterName": "Fake Sub Register Name1",
+      "subRegister": "Fake Sub Register Name1",
       "isactive": true
     },
     {
       "id": 1,
       "tenantId": "mh",
-      "code": "SUBREGNAME_SUBREGISTERNAME2",
+      "code": "SUBREGNAME_SUBREGISTER2",
       "registerName": 2,
-      "subRegisterName": "Fake Sub Register Name2",
+      "subRegister": "Fake Sub Register Name2",
       "isactive": true
     }
   ],
@@ -240,7 +240,7 @@
     {
       "id": 1,
       "tenantId": "mh",
-      "code": "COMPANY",
+      "code": "APPLTYPE_COMPANY",
       "name": "Company",
       "isActive": true
     },
@@ -361,6 +361,29 @@
 	  "advertisement":"ADDTYPE_OTHERS",
       "code": "ADDSUBTYPE_POSTERS",
       "name": "Auction Sites",
+      "isActive": true
+    }
+  ],
+  "ApplicationSource": [
+    {
+      "id": 1,
+      "tenantId": "mh",
+      "code": "APPLSOURCE_SYSTEM",
+      "name": "System",
+      "isActive": true
+    },
+    {
+      "id": 1,
+      "tenantId": "mh",
+      "code": "APPLSOURCE_DATE_ENTRY",
+      "name": "Data Entry",
+      "isActive": true
+    },
+    {
+      "id": 1,
+      "tenantId": "mh",
+      "code": "APPLSOURCE_MIGRATION",
+      "name": "Migration",
       "isActive": true
     }
   ]

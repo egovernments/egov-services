@@ -25,7 +25,7 @@ info:
     email : contacts@egovernments.org
 schemes:
   - https
-basePath: '/legalcasse'
+basePath: '/legalcase'
 x-api-id: 'org.egov.lcms.services'
 paths:
   /case/_search:
@@ -146,7 +146,240 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - Summon  
-  /case/_update:
+  /_assignadvocate:
+    post:
+      summary: Assign advocate to summon .
+      description: |
+          To assign advocates for summon in the system. API supports bulk creation with max limit as defined in the case request. Please note that either whole batch succeeds or fails, there's no partial batch success. To assign, please pass array with one advocate. 
+            
+           
+          
+      parameters:
+        - name: caseRequest
+          in: body
+          description: Details for the new advocate(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/CaseRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: ReponseInfo with advocate(s) assigned successfully
+          schema:
+            $ref: '#/definitions/CaseResponse'
+        400:
+          description: Advocate(s) assigned failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Case 
+  /_registration:
+    post:
+      summary: Create case in system .
+      description: |
+          To create case in the system. API supports bulk creation with max limit as defined in the case request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create, please pass array with one case. 
+            
+           
+          
+      parameters:
+        - name: caseRequest
+          in: body
+          description: Details for the new case(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/CaseRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: ReponseInfo with case(s) created successfully
+          schema:
+            $ref: '#/definitions/CaseResponse'
+        400:
+          description: Case(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Case  
+        
+  /_Vakalatnamageneration:
+    post:
+      summary: Create vakalatnama in system .
+      description: |
+          To create vakalatnama in the system. API supports bulk creation with max limit as defined in the case request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create, please pass array with one case. 
+            
+           
+          
+      parameters:
+        - name: caseRequest
+          in: body
+          description: Details for the new vakalatnama(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/CaseRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: ReponseInfo with case(s) created successfully
+          schema:
+            $ref: '#/definitions/CaseResponse'
+        400:
+          description: Case(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Case  
+              
+  /_vakalatnamageneration:
+    post:
+      summary: Create vakalatnama in system .
+      description: |
+          To create vakalatnama in the system. API supports bulk creation with max limit as defined in the case request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create, please pass array with one case. 
+            
+           
+          
+      parameters:
+        - name: caseRequest
+          in: body
+          description: Details for the new vakalatnama(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/CaseRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: ReponseInfo with case(s) created successfully
+          schema:
+            $ref: '#/definitions/CaseResponse'
+        400:
+          description: Case(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Case
+  /parawisecomment/_create:
+    post:
+      summary: Create new para wise comment .
+      description: |
+          To create new para wise comment in the system. API supports bulk creation with max limit as defined in the parawise comment Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one para wise comment, please pass array with one ParawiseComment object. 
+      parameters:
+        - name: caseRequest
+          in: body
+          description: Details for the new Parawisecomment(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/CaseRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: ReponseInfo with ParawiseComment(s) created successfully
+          schema:
+            $ref: '#/definitions/CaseResponse'
+        400:
+          description: ParawiseCommentResponse(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Case  
+  /parawisecomment/_update:
+    post:
+      summary: update existing para wise comment.
+      description: |
+          To update existing para wise comment in the system(workflow). API supports bulk updation with max limit as defined in the para wise comment request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one para wise comment, please pass array with one para wise comment object.
+          
+      parameters:
+        - name: caseRequest
+          in: body
+          description: Details for the new parawise comment(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/CaseRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: ReponseInfo with ParaWiseComment(s) updated sudcessfully
+          schema:
+            $ref: '#/definitions/CaseResponse'
+        400:
+          description: ParaWiseComment(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Case       
+  /hearingdetails/_create:
+    post:
+      summary: Create new hearing details .
+      description: |
+          To create new hearing details in the system. API supports bulk creation with max limit as defined in the hearing details  request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one hearingdetails, please pass array with one hearing details object. 
+      parameters:
+        - name: caseRequest
+          in: body
+          description: Details for the new legal case hearing(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/CaseRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: ReponseInfo with HearingDetails(s) created successfully
+          schema:
+            $ref: '#/definitions/CaseResponse'
+        400:
+          description: HearingDetailsResponse(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Case  
+  /hearingdetails/_update:
+    post:
+      summary: update existing hearing details.
+      description: |
+          To update existing hearing details in the system. API supports bulk updation with max limit as defined in the hearing details request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one hearing details, please pass array with one hearing details object.
+          
+      parameters:
+        - name: caseRequest
+          in: body
+          description: Details for the new hearing details comment(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/CaseRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: ReponseInfo with hearingDetails(s) updated sudcessfully
+          schema:
+            $ref: '#/definitions/CaseResponse'
+        400:
+          description: HearingDetails(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Case            
+        
+  /_update:
     post:
       summary: update existing case.
       description: |
@@ -1001,7 +1234,12 @@ definitions:
         type: integer
         format: int64
         description: This field holds information about the hearing date along with time(Epoch)
-        x-displayformat: 'dd/MM/yyyy HH:mm:ss'
+        x-displayformat: 'dd/MM/yyyy'
+      hearingTime:
+        type: integer
+        format: int64
+        description: This field holds information about the hearing date along with time(Epoch)
+        x-displayformat: 'HH:mm:ss'    
       ward:
         type: string
         description: This field holds information about the ward master name/code.TODO-need clarification on ward refernce object
@@ -1025,6 +1263,9 @@ definitions:
         description: tenant id of the Case
         maxLength: 128
         minLength: 4
+      stateId:
+        type: string
+        description: This field holds information about the workflow stateId  
       documents:
         description: The documents attached at the time of summon creation
         type: array
@@ -1110,19 +1351,11 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/HearingDetails'
-      advocates:
+      advocateDetails:
         description: This object holds list of advocates assigned to summon/warrant.TODO-need clarification about how advocate will select as primary/secondary
         type: array
         items:
-          $ref: '#/definitions/Advocate' 
-      assignedDates:
-        type: array
-        items:
-          type: integer
-          format: int64
-          description: this field holds information about the advocate assigned dates(Epoch formate)
-          x-displayformat: 'dd/MM/yyyy'
-          
+          $ref: '#/definitions/AdvocateDetails' 
       parawiseComments:
           type: array
           description: parawise comments of case.TODO-need clarification either parawise comments can update or not and either it's should be single parawise comment or multiple parawise comments
@@ -1131,6 +1364,19 @@ definitions:
     required:
      - summon
      - caseRegistrationDate
+  
+  AdvocateDetails:
+    type: object
+    description: This object holds information about the advocate details while adding advocate to case
+    properties:
+      advocate:
+        $ref: '#/definitions/Advocate'
+      assignedDate:
+        type: integer
+        format: int64
+        description: This field holds information about the advocate assigned date
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
   ParaWiseComment:
     type: object
     description: This object holds information about parawise comments about the case
@@ -1228,6 +1474,23 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Case' 
+  
+  AdvocateCharge:
+    type: object
+    description: This field holds information about the advocate charge against case
+    properties:
+      charge:
+        type: string
+        description: This field holds information about charge details.TODO-need clarification on this field
+      caseNo:
+        type: string
+        description: This field holds information about the case no
+      amount:
+        type: number
+        format: double
+        description: This field holds information about the amount of case
+        
+          
   AdvocatePayment:
     type : object
     description: This object holds information about the advocate payment
@@ -1293,6 +1556,21 @@ definitions:
       resolutionRemarks:
         type: string
         description: This filed holds information about reslovution remarks
+      advocateCharges:
+        type: array
+        description: This object holds advocate charge details
+        items:
+          $ref: '#/definitions/AdvocateCharge'
+      modeOfPayment:
+        type: string
+        description: This field holds information about the mode of payment(Cheque/DD/RTGS)
+      instrumentNumber:
+        type: string
+        description: This filed holds information about the instrument number
+      instrumentDate:
+        type: integer
+        format: int64
+        description: This filed holds information about the instrument date  
     required:
     - demandDate
     - caseType
@@ -1354,10 +1632,10 @@ definitions:
           type: string
           description: This field holds information about the opinion description
       opinionsBy:
-        type: array
-        description: This field holds information about the advocate detatils
-        items:
-          $ref: '#/definitions/Advocate'  
+        $ref: '#/definitions/Advocate'
+      additionalAdvocate:
+        type: string
+        description: This filed holds information about the additional advocate details
       inWardDate:
         type: integer
         format: int64
@@ -1369,7 +1647,8 @@ definitions:
         maxLength: 128
         minLength: 4
       stateId:
-        type: integer
+        type: string
+        description: This field holds information about the workflow stateId
       workFlowDetails:
         $ref: '#/definitions/WorkFlowDetails'
       auditDetails:

@@ -21,6 +21,10 @@ info:
   contact:
     name:  eGov
     email: info@egovernments.org
+externalDocs:
+  description: Complete documentation describing the functionality of these APIs.
+  url: >-
+    https://github.com/egovernments/egov-docs/blob/master/Maharashtra/SignedoffSRS/SRS_Land_Estate_1.0.docx
 schemes:
   - https
 basePath: '/lams-maha/v1'
@@ -45,7 +49,7 @@ paths:
           required: false
           type: string
           format: varchar
-        - name: registerName
+        - name: register
           in: query
           required: false
           description: The Register Name for a LandRegister.
@@ -54,7 +58,7 @@ paths:
           maxLength: 64
           exclusiveMinimum: true
           exclusiveMaximum: false
-        - name: subRegisterName
+        - name: subRegister
           in: query
           required: false
           description: The Sub Register Name for a LandRegister.
@@ -142,7 +146,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: LandRegister(s) created sucessfully
           schema:
             $ref: '#/definitions/LandRegisterResponse'
@@ -193,7 +197,7 @@ paths:
           required: false
           type: string
           format: varchar
-        - name: registerName
+        - name: register
           in: query
           required: false
           description: The Register Name for a EstateRegister.
@@ -202,7 +206,7 @@ paths:
           maxLength: 64
           exclusiveMinimum: true
           exclusiveMaximum: false
-        - name: subRegisterName
+        - name: subRegister
           in: query
           required: false
           description: The Sub Register Name for a EstateRegister.
@@ -283,7 +287,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: EstateRegister(s) created sucessfully
           schema:
             $ref: '#/definitions/EstateRegisterResponse'
@@ -365,7 +369,8 @@ paths:
           description: Contact number of allottee against whom the agreement made.
           required: false
           type: string
-          format: varchar
+          format: mobileNumber
+          pattern: "[0-9]"
         - name: applicationNo
           in: query
           description: Acknowldgement number given to allottee on submitting the application.
@@ -632,13 +637,14 @@ definitions:
     description: A Object holds the data for a Land
     properties:
       id:
-        type: integer
-        format: int64
-        description: unique id of the LandRegister.
+        type: string
+        description: Unique Identifier of the LandRegister.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         readOnly: true
-        description: Unique Identifier of the tenant 
+        description: Unique Identifier of the tenant
         maxLength: 128
         minLength: 2
       oldLandNumber:
@@ -660,16 +666,22 @@ definitions:
         description: Land acquisition no.
         maxLength: 64
         minLength: 1
-      registerName:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/RegisterName'
-      subRegisterName:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/SubRegisterName'
+      register:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/Register'
+        format: singleValueList
+        description: code of the master stored here as a ref.
+      subRegister:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/SubRegister'
+        format: singleValueList
+        description: code of the master stored here as a ref.
       regionalOffice:
-        description: The boundary ward where the land is located.
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        format: singleValueList
+        description: code of the master stored here as a ref.
       location:
-        description: The boundary location where the land is located.
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        format: singleValueList
+        description: code of the master stored here as a ref.
       surveyNo:
         type: string
         description: Land Survey no
@@ -687,17 +699,20 @@ definitions:
         minLength: 1
       purpose:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/Purpose'
+        format: singleValueList
+        description: code of the master stored here as a ref.
       width:
         type: number
         format: double
         description: width of the land
       roadType:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/RoadType'
+        format: singleValueList
+        description: code of the master stored here as a ref.
       landType:
-        type: string
-        description: Land Type of the land
-        maxLength: 64
-        minLength: 1
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/AssetCategory'
+        format: singleValueList
+        description: code of the master stored here as a ref.
       reservationArea:
         type: number
         format: double
@@ -713,21 +728,29 @@ definitions:
       possessionDate:
         type: integer
         format: int64
-        description: possession date of a land, time in epoch
+        description: possession date of a land, Date is inclduing timestamp, date in epoch
+        x-displayformat: 'dd/MM/yyyy'
       modeOfAcquisition:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/ModeOfAcquisition'
+        format: singleValueList
+        description: code of the master stored here as a ref.
       typeOfHolding:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/HoldingType'
+        format: singleValueList
+        description: code of the master stored here as a ref.
       modeOfCompensation:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/CompensationMode'
+        format: singleValueList
+        description: code of the master stored here as a ref.
       costOfAcquisition:
         type: number
         format: double
         description: cost of acquisition for a land
       dateOfPayment:
-        type: string
-        format: date
-        description: payment date of a land
+        type: integer
+        format: int64
+        description: payment date of a land, Date is inclduing timestamp, date in epoch
+        x-displayformat: 'dd/MM/yyyy'
       buildingReference:
         type: string
         description: Building Reference for a land
@@ -735,6 +758,7 @@ definitions:
         minLength: 1
       typeOfPlanning:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/PlaningType'
+        format: singleValueList
       codeOfReservation:
         type: string
         description: Code Of Reservation for a land
@@ -775,7 +799,7 @@ definitions:
       - tenantId
       - acquisitionNo
       - acquisitionType
-      - registerName
+      - register
       - regionalOffice
       - location
       - surveyNo
@@ -820,9 +844,10 @@ definitions:
     description: A Object holds the data for a Estate
     properties:
       id:
-        type: integer
-        format: int64
-        description: unique id of the EstateRegister.
+        type: string
+        description: Unique Identifier of the EstateRegister.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         readOnly: true
@@ -837,20 +862,29 @@ definitions:
         type: string
         description: Unique Estate ref. no
         maxLength: 64
-      registerName:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/RegisterName'
-      subRegisterName:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/SubRegisterName'
+      register:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/Register'
+        format: singleValueList
+        description: code of the master stored here as a ref.
+      subRegister:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/SubRegister'
+        format: singleValueList
       regionalOffice:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        format: singleValueList
+        description: code of the master stored here as a ref.
       location:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        format: singleValueList
+        description: code of the master stored here as a ref.
       propertyName:
         type: string
         description: Name of the property
         maxLength: 256
       propertyType:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/PropertyType'
+        format: singleValueList
+        description: code of the master stored here as a ref.
       propertyAddress:
         type: string
         description: Address of the property
@@ -894,11 +928,13 @@ definitions:
       constructionStartDate:
         type: integer
         format: int64
-        description: construction start date of a Estate, time in epoch
+        description: construction start date of a Estate, Date is inclduing timestamp, date in epoch
+        x-displayformat: 'dd/MM/yyyy'
       constructionEndDate:
         type: integer
         format: int64
-        description: construction end date of a Estate, time in epoch
+        description: construction end date of a Estate, Date is inclduing timestamp, date in epoch
+        x-displayformat: 'dd/MM/yyyy'
       proposedBuildingBudget:
         type: number
         format: double
@@ -946,8 +982,8 @@ definitions:
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
-      - registerName
-      - subRegisterName
+      - register
+      - subRegister
       - regionalOffice
       - location
       - propertyType
@@ -966,9 +1002,18 @@ definitions:
     description: A Object holds the data for a floor details of Estate
     properties:
       id:
-        type: integer
-        format: int64
-        description: unique id of the FloorDetail.
+        type: string
+        description: Unique Identifier of the FloorDetail.
+        maxLength: 256
+        minLength: 1
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant 
+        maxLength: 128
+        minLength: 2
+      estateRegister:
+        $ref: "#/definitions/EstateRegister"
       floorNo:
         type: string
         description: Floor no
@@ -997,13 +1042,19 @@ definitions:
     description: A Object holds the data for a unit details of floor
     properties:
       id:
-        type: integer
-        format: int64
-        description: unique id of the UnitDetail.
-      floor:
         type: string
+        description: Unique Identifier of the UnitDetail.
+        maxLength: 256
+        minLength: 1
+      tenantId:
+        type: string
+        readOnly: true
+        description: Unique Identifier of the tenant 
+        maxLength: 128
+        minLength: 2
+      floor:
         $ref: "#/definitions/FloorDetail"
-      usageType:
+      usage:
         type: string
         description: Usage type of a unit
         maxLength: 64
@@ -1034,7 +1085,7 @@ definitions:
         minLength: 1
     required:
       - floor
-      - usageType
+      - usage
       - builtUpArea
       - holdingType
       
@@ -1068,9 +1119,10 @@ definitions:
     description: A Object holds the data for agreement.
     properties:
       id:
-        type: integer
-        format: int64
-        description: unique id of the agreement.
+        type: string
+        description: Unique Identifier of the agreement.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: Unique Identifier of which tenant this data is defined. Eg. mh.mumbai.
@@ -1132,7 +1184,8 @@ definitions:
       registrationDate:
         type: integer
         format: int64
-        description: Registration date for agreement. Time in epoch
+        description: Registration date for agreement. Date is inclduing timestamp, date in epoch
+        x-displayformat: 'dd/MM/yyyy'
       registerPageNo:
         type: string
         description: Registar page no for agreement.
@@ -1180,13 +1233,17 @@ definitions:
       agreementFromDate:
         type: integer
         format: int64
-        description: Agreement start date, time in epoch
+        description: Agreement start date. Date is inclduing timestamp, Date in epoch
+        x-displayformat: 'dd/MM/yyyy'
       agreementToDate:
         type: integer
         format: int64
-        description: End date of agreement. Time in epoch
+        description: End date of agreement. Date is inclduing timestamp, date in epoch
+        x-displayformat: 'dd/MM/yyyy'
       holdingType:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lams-maha/contracts/common/v1-0-0.yml#/definitions/HoldingType'
+        format: singleValueList
+        description: code of the master stored here as a ref.
       GBResolutionNo:
         type: string
         description: GB resolution number.
@@ -1238,7 +1295,8 @@ definitions:
       auctionDate:
         type: integer
         format: int64
-        description: Auction date for eviction, time in epoch
+        description: Auction date for eviction, Date is inclduing timestamp,  date in epoch
+        x-displayformat: 'dd/MM/yyyy'
       evictionReason:
         type: string
         description: Reason for Eviction.
@@ -1272,9 +1330,10 @@ definitions:
     description: This object holds type of documents to be uploaded during the transaction for each application type.
     properties:
       id:
-        type: integer
-        format: int64
-        description: unique id of the DocumentType.
+        type: string
+        description: Unique Identifier of the DocumentType.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: tenant id of the Property
@@ -1300,9 +1359,10 @@ definitions:
     description: This object holds list of documents attached during the transacitons on agreement
     properties:
       id:
-        type: integer
-        format: int64
-        description: unique id of the AgreementDocs.
+        type: string
+        description: Unique Identifier of the AgreementDocs.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: tenant id of the AgreementDocs
@@ -1321,9 +1381,10 @@ definitions:
     description: This object holds list of documents attached during the transactions on Land
     properties:
       id:
-        type: integer
-        format: int64
-        description: unique id of the LandDocs.
+        type: string
+        description: Unique Identifier of the LandDocs.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: tenant id of the LandDocs
@@ -1382,9 +1443,10 @@ definitions:
     type: object
     properties:
       id:
-        type: integer
-        format: int64
-        description: unique id of the Notice.
+        type: string
+        description: Unique Identifier of the Notice.
+        maxLength: 256
+        minLength: 1
       tenantId:
         type: string
         description: unique id for a ULB
@@ -1394,7 +1456,8 @@ definitions:
       noticeDate:
         type: integer
         format: int64
-        description: Date of Commencement of Agreement. Time in epoch
+        description: Date of Commencement of Agreement. Date is inclduing timestamp, date in epoch
+        x-displayformat: 'dd/MM/yyyy'
       agreementNumber:
         type: string
         description: unique agreement number.
@@ -1428,16 +1491,18 @@ definitions:
         type: number
         description: The validity of agreement period,value will be in no.of months.
       commencementDate:
-        type: string
-        format: date
-        description: Date of Commencement of Agreement.
+        type: integer
+        format: int64
+        description: Date of Commencement of Agreement. Date is inclduing timestamp, Date in epoch
+        x-displayformat: 'dd/MM/yyyy'
       templateVersion:
         type: string
         description: Notice template version.
       expiryDate:
         type: integer
         format: int64
-        description: Date of expiry for Agreement. Time in epoch
+        description: Date of expiry for Agreement. Date is inclduing timestamp, date in epoch
+        x-displayformat: 'dd/MM/yyyy'
       rent:
         type: number
         format: double

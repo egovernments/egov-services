@@ -11,10 +11,10 @@ import org.junit.Test;
  * @author senthilkumar
  *
  */
-public class ReportRepositoryTest {
+public class SearchRepositoryTest {
 
 	/**
-	 * Test method for {@link org.egov.report.repository.ReportRepository#getData(org.egov.swagger.model.ReportRequest, org.egov.swagger.model.ReportDefinition)}.
+	 * Test method for {@link org.egov.report.repository.SearchRepository#getData(org.egov.swagger.model.ReportRequest, org.egov.swagger.model.ReportDefinition)}.
 	 */
 	@Test
 	public void testGetData() {

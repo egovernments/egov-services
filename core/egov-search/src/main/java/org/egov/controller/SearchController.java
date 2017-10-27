@@ -7,7 +7,7 @@ import org.egov.SearchApp;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.domain.model.MetaDataRequest;
 import org.egov.domain.model.ReportDefinitions;
-import org.egov.report.service.ReportService;
+import org.egov.report.service.SearchService;
 import org.egov.swagger.model.MetadataResponse;
 import org.egov.swagger.model.ReportDataResponse;
 import org.egov.swagger.model.ReportRequest;
@@ -37,7 +37,7 @@ public class SearchController {
 	}
 	
 	@Autowired
-	private ReportService reportService;
+	private SearchService reportService;
 	
 	@Autowired
     public static ResourceLoader resourceLoader;

@@ -15,12 +15,12 @@ import org.egov.domain.model.ReportDefinitions;
 import org.egov.domain.model.Response;
 import org.egov.swagger.model.CustomJsonMapping;
 import org.egov.swagger.model.FieldMapping;
-import org.egov.report.repository.ReportRepository;
+import org.egov.report.repository.SearchRepository;
 import org.egov.swagger.model.ColumnDetail;
 import org.egov.swagger.model.ColumnDetail.TypeEnum;
 import org.egov.swagger.model.MetadataResponse;
 import org.egov.swagger.model.ReportDataResponse;
-import org.egov.swagger.model.ReportDefinition;
+import org.egov.swagger.model.SearchDefinition;
 import org.egov.swagger.model.ReportMetadata;
 import org.egov.swagger.model.ReportRequest;
 import org.egov.swagger.model.ReportResponse;
@@ -41,10 +41,10 @@ import com.jayway.jsonpath.JsonPath;
 import net.minidev.json.JSONObject;
 
 @Service
-public class ReportService {
+public class SearchService {
 
 	@Autowired
-	private ReportRepository reportRepository;
+	private SearchRepository reportRepository;
 
 	@Autowired
 	private Response responseInfoFactory;
@@ -54,12 +54,12 @@ public class ReportService {
 	
 	
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(ReportService.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(SearchService.class);
 
 	public MetadataResponse getMetaData(MetaDataRequest metaDataRequest, String moduleName) {
 		MetadataResponse metadataResponse = new MetadataResponse();
 		ReportDefinitions rds = SearchApp.getReportDefs();
-		ReportDefinition reportDefinition = new ReportDefinition();
+		SearchDefinition reportDefinition = new SearchDefinition();
 		//LOGGER.info("updated repot defs " + ReportApp.getReportDefs() + "\n\n\n");
 		reportDefinition = rds.getReportDefinition(moduleName+" "+metaDataRequest.getReportName());
 		ReportMetadata rmt = new ReportMetadata();
@@ -69,19 +69,7 @@ public class ReportService {
         rmt.setSorting(reportDefinition.isSorting());
 		List<ColumnDetail> reportHeaders = new ArrayList<>();
 		List<ColumnDetail> searchParams = new ArrayList<>();
-		for (SourceColumn cd : reportDefinition.getSourceColumns()) {
-			ColumnDetail reportheader = new ColumnDetail();
-			reportheader.setLabel(cd.getLabel());
-			reportheader.setName(cd.getName());
-			
-			TypeEnum te = TypeEnum.valueOf(cd.getType().toString().toUpperCase());
-			
-			reportheader.setType(te);
-			reportheader.setRowTotal(cd.getRowTotal());
-			reportheader.setColumnTotal(cd.getColumnTotal());
-			reportHeaders.add(reportheader);
-            
-		}
+		
 		for (SearchColumn cd : reportDefinition.getSearchParams()) {
 			
 			ColumnDetail sc = new ColumnDetail();
@@ -204,7 +192,7 @@ public class ReportService {
 		
 	
 		ReportDefinitions rds = SearchApp.getReportDefs();
-		ReportDefinition reportDefinition = rds.getReportDefinition(moduleName+ " "+reportName);
+		SearchDefinition reportDefinition = rds.getReportDefinition(moduleName+ " "+reportName);
 		
 		List<Object> convertedMaps = new ArrayList<>();
 		
@@ -247,8 +235,7 @@ public class ReportService {
 	    { 
 			LOGGER.info("maps printing from service : "+test.toString());
 	    }
-		List<SourceColumn> columns = reportDefinition.getSourceColumns();
-		
+			
 
 		ReportResponse reportResponse = new ReportResponse();
 		//populateData(columns, maps, reportResponse);
@@ -277,33 +264,12 @@ public class ReportService {
 		
 		reportResponse.setReportData(lists);
 	}
-	private void populateReportHeader(ReportDefinition reportDefinition, ReportResponse reportResponse) {
+	private void populateReportHeader(SearchDefinition reportDefinition, ReportResponse reportResponse) {
 		
 		//Let's check whether there's a linked report, we will set the default value in header columns according to that
 				
 				String pattern = null;
 				String defaultValue = null;
-				
-				
-				List<SourceColumn> columns = reportDefinition.getSourceColumns();
-				for(SourceColumn sc : columns) {
-					pattern = "";
-					defaultValue="";
-					if (sc.getLinkedReport() != null)
-					{
-						LOGGER.info("Linked Report Pattern is: "+sc.getLinkedReport());
-						pattern = sc.getLinkedReport().getLinkedColumn();
-						defaultValue = pattern.replace("{reportName}", sc.getLinkedReport().getReportName());
-						sc.setDefaultValue(defaultValue.replace("{currentColumnName}", sc.getName()));
-					}
-				}
-				List<ColumnDetail> columnDetails = columns.stream()
-
-						.map(p -> new ColumnDetail(p.getShowColumn(),p.getLabel(), p.getType(),p.getDefaultValue(),p.getTotal(),p.getName(),p.getIsMandatory(),p.getRowTotal(),p.getColumnTotal()))
-						.collect(Collectors.toList());
-				
-
-				
-		reportResponse.setReportHeader(columnDetails);
+		
 	}
 }

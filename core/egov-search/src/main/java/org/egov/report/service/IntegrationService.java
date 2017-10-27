@@ -13,7 +13,7 @@ import org.egov.swagger.model.ColumnDetail.TypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.egov.swagger.model.MetadataResponse;
-import org.egov.swagger.model.ReportDefinition;
+import org.egov.swagger.model.SearchDefinition;
 import org.egov.swagger.model.SearchColumn;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class IntegrationService {
 	
 	public static final Logger LOGGER = LoggerFactory.getLogger(IntegrationService.class);
 	
-	public MetadataResponse getData(ReportDefinition reportDefinition, MetadataResponse metadataResponse, RequestInfo requestInfo,String moduleName){
+	public MetadataResponse getData(SearchDefinition reportDefinition, MetadataResponse metadataResponse, RequestInfo requestInfo,String moduleName){
 		
 		
 		List<SearchColumn>  searchColumns = reportDefinition.getSearchParams();

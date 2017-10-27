@@ -12,7 +12,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.egov.domain.model.ReportDefinitions;
-import org.egov.swagger.model.ReportDefinition;
+import org.egov.swagger.model.SearchDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +79,7 @@ public class SearchApp implements EnvironmentAware {
 	public static ReportDefinitions loadYaml(String moduleName) throws Exception {
     
 	ObjectMapper mapper = getMapperConfig();
-	List<ReportDefinition> localrd = new ArrayList<ReportDefinition>();
+	List<SearchDefinition> localrd = new ArrayList<SearchDefinition>();
 	ReportDefinitions rd = new ReportDefinitions();
 	ReportDefinitions localReportDefinitions = new ReportDefinitions();
 
@@ -99,7 +99,7 @@ public class SearchApp implements EnvironmentAware {
 
 	}
 
-	private static void loadReportDefinitions(String moduleName, ObjectMapper mapper, List<ReportDefinition> localrd,
+	private static void loadReportDefinitions(String moduleName, ObjectMapper mapper, List<SearchDefinition> localrd,
 			ReportDefinitions rd) throws Exception {
 		BufferedReader br;
 		FileReader fr;
@@ -107,7 +107,7 @@ public class SearchApp implements EnvironmentAware {
 		try {
 		//Local Testing
 
-		Resource resource = resourceLoader.getResource("search.yml");
+		Resource resource = resourceLoader.getResource("file:/ws/reportFileLocations.txt");
 		File file = resource.getFile();
 		fr = new FileReader(file);
 		br = new BufferedReader(fr);

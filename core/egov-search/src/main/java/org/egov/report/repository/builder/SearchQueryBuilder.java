@@ -4,8 +4,8 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.report.repository.ReportRepository;
-import org.egov.swagger.model.ReportDefinition;
+import org.egov.report.repository.SearchRepository;
+import org.egov.swagger.model.SearchDefinition;
 import org.egov.swagger.model.SearchColumn;
 import org.egov.swagger.model.SearchParam;
 import org.slf4j.Logger;
@@ -14,11 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ReportQueryBuilder {
+public class SearchQueryBuilder {
 		 
-	public static final Logger LOGGER = LoggerFactory.getLogger(ReportQueryBuilder.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(SearchQueryBuilder.class);
 	   
-	public String buildQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition){
+	public String buildQuery(List<SearchParam> searchParams, String tenantId, SearchDefinition reportDefinition){
 		
 		String baseQuery;
 		
@@ -73,7 +73,7 @@ public class ReportQueryBuilder {
 		LOGGER.info("baseQuery :"+baseQuery);
 		return baseQuery;
 	}
-public String generateQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition){
+public String generateQuery(List<SearchParam> searchParams, String tenantId, SearchDefinition reportDefinition){
 		
 		LOGGER.info("searchParams:" + searchParams);
 		
@@ -112,7 +112,7 @@ public String generateQuery(List<SearchParam> searchParams, String tenantId, Rep
     return baseQuery.toString();
 }
 
-public String generateUnionQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition){
+public String generateUnionQuery(List<SearchParam> searchParams, String tenantId, SearchDefinition reportDefinition){
 	
 	LOGGER.info("searchParams:" + searchParams);
 	
@@ -193,7 +193,7 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
       LOGGER.info("generate baseUnionQuery with union all:"+finalQuery);
 return finalUnionQuery.toString();
 }
-public String generateJoinQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition){
+public String generateJoinQuery(List<SearchParam> searchParams, String tenantId, SearchDefinition reportDefinition){
 	
 	LOGGER.info("searchParams:" + searchParams);
 	

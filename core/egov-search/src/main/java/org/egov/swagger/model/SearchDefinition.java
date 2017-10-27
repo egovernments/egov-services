@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConfigurationProperties 
-@EnableConfigurationProperties(ReportDefinition.class)
-public class ReportDefinition   {
+@EnableConfigurationProperties(SearchDefinition.class)
+public class SearchDefinition   {
 	
 	@JsonProperty("searchFilter")
 	private boolean searchFilter = false;
@@ -70,7 +70,7 @@ public class ReportDefinition   {
 	}
 
   @JsonProperty("reportName")
-  private String reportName = null;
+  private String searchName = null;
 
   @JsonProperty("summary")
   private String summary = null;
@@ -125,15 +125,12 @@ public LinkedReport getLinkedReport() {
 public void setLinkedReport(LinkedReport linkedReport) {
 	this.linkedReport = linkedReport;
 }
-
-@JsonProperty("sourceColumns")
-  private List<SourceColumn> sourceColumns = new ArrayList<SourceColumn>();
  
   @JsonProperty("searchParams")
   private List<SearchColumn> searchParams = new ArrayList<SearchColumn>();
 
-  public ReportDefinition reportName(String reportName) {
-    this.reportName = reportName;
+  public SearchDefinition reportName(String reportName) {
+    this.searchName = reportName;
     return this;
   }
 
@@ -143,14 +140,14 @@ public void setLinkedReport(LinkedReport linkedReport) {
   **/
   
   public String getReportName() {
-    return reportName;
+    return searchName;
   }
 
   public void setReportName(String reportName) {
-    this.reportName = reportName;
+    this.searchName = reportName;
   }
 
-  public ReportDefinition summary(String summary) {
+  public SearchDefinition summary(String summary) {
     this.summary = summary;
     return this;
   }
@@ -168,7 +165,7 @@ public void setLinkedReport(LinkedReport linkedReport) {
     this.summary = summary;
   }
 
-  public ReportDefinition version(String version) {
+  public SearchDefinition version(String version) {
     this.version = version;
     return this;
   }
@@ -186,7 +183,7 @@ public void setLinkedReport(LinkedReport linkedReport) {
     this.version = version;
   }
 
-  public ReportDefinition query(String query) {
+  public SearchDefinition query(String query) {
     this.query = query;
     return this;
   }
@@ -204,35 +201,14 @@ public void setLinkedReport(LinkedReport linkedReport) {
     this.query = query;
   }
 
-  public ReportDefinition sourceColumns(List<SourceColumn> sourceColumns) {
-    this.sourceColumns = sourceColumns;
-    return this;
-  }
+ 
 
-  public ReportDefinition addSourceColumnsItem(SourceColumn sourceColumnsItem) {
-    this.sourceColumns.add(sourceColumnsItem);
-    return this;
-  }
-
-   /**
-   * list of columns to to select from the source tables. This should then correspond to the list of report columns that are send back to the caller in report metadata. Please note that all columns must have one one of the sources from above list as their source or the report definition will not be loaded. 
-   * @return sourceColumns
-  **/
-  
-  public List<SourceColumn> getSourceColumns() {
-    return sourceColumns;
-  }
-
-  public void setSourceColumns(List<SourceColumn> sourceColumns) {
-    this.sourceColumns = sourceColumns;
-  }
-
-  public ReportDefinition searchParams(List<SearchColumn> searchParams) {
+  public SearchDefinition searchParams(List<SearchColumn> searchParams) {
     this.searchParams = searchParams;
     return this;
   }
 
-  public ReportDefinition addSearchParamsItem(SearchColumn searchParamsItem) {
+  public SearchDefinition addSearchParamsItem(SearchColumn searchParamsItem) {
     this.searchParams.add(searchParamsItem);
     return this;
   }
@@ -259,20 +235,19 @@ public void setLinkedReport(LinkedReport linkedReport) {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ReportDefinition reportDefinition = (ReportDefinition) o;
+    SearchDefinition reportDefinition = (SearchDefinition) o;
     return Objects.equals(this.moduleName, reportDefinition.moduleName) &&
-    	Objects.equals(this.reportName, reportDefinition.reportName) &&
+    	Objects.equals(this.searchName, reportDefinition.searchName) &&
         Objects.equals(this.summary, reportDefinition.summary) &&
         Objects.equals(this.version, reportDefinition.version) &&
         Objects.equals(this.query, reportDefinition.query) &&
         Objects.equals(this.linkedReport, reportDefinition.linkedReport) &&
-        Objects.equals(this.sourceColumns, reportDefinition.sourceColumns) &&
         Objects.equals(this.searchParams, reportDefinition.searchParams);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash( moduleName,reportName, summary, version, query,linkedReport, sourceColumns, searchParams);
+    return Objects.hash( moduleName,searchName, summary, version, query,linkedReport,searchParams);
   }
 
   @Override
@@ -280,12 +255,11 @@ public void setLinkedReport(LinkedReport linkedReport) {
     StringBuilder sb = new StringBuilder();
     sb.append("class ReportDefinition {\n");
     sb.append("    moduleName: ").append(toIndentedString(moduleName)).append("\n");
-    sb.append("    reportName: ").append(toIndentedString(reportName)).append("\n");
+    sb.append("    reportName: ").append(toIndentedString(searchName)).append("\n");
     sb.append("    summary: ").append(toIndentedString(summary)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("    query: ").append(toIndentedString(query)).append("\n");
     sb.append("    linkedReport: ").append(toIndentedString(linkedReport)).append("\n");
-    sb.append("    sourceColumns: ").append(toIndentedString(sourceColumns)).append("\n");
     sb.append("    searchParams: ").append(toIndentedString(searchParams)).append("\n");
     sb.append("}");
     return sb.toString();

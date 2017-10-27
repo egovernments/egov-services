@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.egov.swagger.model.ReportDefinition;
+import org.egov.swagger.model.SearchDefinition;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -20,12 +20,12 @@ public class ReportDefinitions {
 	
 	
 	@JsonProperty("ReportDefinitions")
-    public List<ReportDefinition> reportDefinitions = new ArrayList<>();
+    public List<SearchDefinition> reportDefinitions = new ArrayList<>();
 	
 	@JsonProperty("moduleKey")
 	private String moduleKey;
 
-	private HashMap<String, ReportDefinition> definitionMap = new HashMap<>();
+	private HashMap<String, SearchDefinition> definitionMap = new HashMap<>();
 	
 
 	
@@ -37,25 +37,25 @@ public class ReportDefinitions {
 	}
 
 
-	private HashMap<String, ReportDefinition> duplicateReportKeys = new HashMap<>();
+	private HashMap<String, SearchDefinition> duplicateReportKeys = new HashMap<>();
 	
 	
-	public ReportDefinition getReportDefinition(String name){
+	public SearchDefinition getReportDefinition(String name){
 		return definitionMap.get(name);
 	}
-	public List<ReportDefinition> getDuplicateReportDefinition(){
-		List<ReportDefinition> localreportDefinitions = new ArrayList<>(duplicateReportKeys.values());
+	public List<SearchDefinition> getDuplicateReportDefinition(){
+		List<SearchDefinition> localreportDefinitions = new ArrayList<>(duplicateReportKeys.values());
 		return localreportDefinitions;
 	}
 	
-	public List<ReportDefinition> getReportDefinitions() {
+	public List<SearchDefinition> getReportDefinitions() {
 		return reportDefinitions;
 	}
 
-	public void setReportDefinitions(List<ReportDefinition> reportDefinitions) {
+	public void setReportDefinitions(List<SearchDefinition> reportDefinitions) {
 		this.reportDefinitions = reportDefinitions;
 		System.out.println("Coming in to the set report definition method");
-		for(ReportDefinition rd : reportDefinitions){
+		for(SearchDefinition rd : reportDefinitions){
 			String reportKey = "";
 			if(rd.getModuleName() != null){
 				reportKey = rd.getModuleName()+" " +rd.getReportName();

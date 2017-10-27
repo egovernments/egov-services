@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.egov.swagger.model.ReportDefinition;
+import org.egov.swagger.model.SearchDefinition;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -13,11 +13,11 @@ public class ReportDefinitionCollection {
 	public String moduleName;
 	
 	@JsonProperty("ReportDefinitions")
-    public List<ReportDefinition> reportDefinitions = new ArrayList<>();
+    public List<SearchDefinition> reportDefinitions = new ArrayList<>();
 
-	private HashMap<String, ReportDefinition> definitionMap = new HashMap<>();
+	private HashMap<String, SearchDefinition> definitionMap = new HashMap<>();
 	
-	private HashMap<String, ReportDefinition> duplicateReportKeys = new HashMap<>();
+	private HashMap<String, SearchDefinition> duplicateReportKeys = new HashMap<>();
 	
 	
 	
@@ -27,21 +27,21 @@ public class ReportDefinitionCollection {
 	public void setModuleName(String moduleName) {
 		this.moduleName = moduleName;
 	}
-	public ReportDefinition getReportDefinition(String name){
+	public SearchDefinition getReportDefinition(String name){
 		return definitionMap.get(name);
 	}
-	public List<ReportDefinition> getDuplicateReportDefinition(){
-		List<ReportDefinition> localreportDefinitions = new ArrayList<>(duplicateReportKeys.values());
+	public List<SearchDefinition> getDuplicateReportDefinition(){
+		List<SearchDefinition> localreportDefinitions = new ArrayList<>(duplicateReportKeys.values());
 		return localreportDefinitions;
 	}
 	
-	public List<ReportDefinition> getReportDefinitions() {
+	public List<SearchDefinition> getReportDefinitions() {
 		return reportDefinitions;
 	}
 
-	public void setReportDefinitions(List<ReportDefinition> reportDefinitions) {
+	public void setReportDefinitions(List<SearchDefinition> reportDefinitions) {
 		this.reportDefinitions = reportDefinitions;
-		for(ReportDefinition rd : reportDefinitions){
+		for(SearchDefinition rd : reportDefinitions){
 			String reportKey = rd.getReportName();
 					
 			if(definitionMap.get(rd.getReportName()) == null) 

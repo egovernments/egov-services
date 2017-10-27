@@ -7,7 +7,7 @@ serviceMaps:
    fromTopic: works.documentdetails.create
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO egw_documentDetails(
+    - query: INSERT INTO egw_documentdetail(
         id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createddate, lastmodifiedby, lastmodifieddate) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.documentDetails.*
       jsonMaps:

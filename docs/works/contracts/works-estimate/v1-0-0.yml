@@ -52,84 +52,99 @@ paths:
           type: array
           items:
             type: string
-          description: Comma separated list of Admin Sanction Numbers of Abstract Estimates
+          maxItems: 50
           required: false
           allowEmptyValue: true
+          description: Comma separated list of Admin Sanction Numbers of Abstract Estimates
         - name: ids
+          in: query
           type: array
           items:
             type: string
-          in: query
           maxItems: 50
+          required: false
+          allowEmptyValue: true
           description: Comma separated list of Ids of Abstract Estimate to get the Abstract Estimates
         - name: estimateNumbers
           in: query
-          required: false
           type: array
           items:
             type: string
-          description: Comma separated list of estimate numbers of Abstract Estimate
-        - name: departmentCode
-          in: query
+          maxItems: 50
           required: false
-          description: The Department code for which Abstract Estimate belongs to.
-          type: string
-        - name: fundCode
+          allowEmptyValue: true
+          description: Comma separated list of estimate numbers of Abstract Estimate
+        - name: department
           in: query
+          type: string
+          required: false
+          description: The Department code for which Abstract Estimate belongs to
+        - name: fund
+          in: query
+          type: string
           required: false
           description: The Fund code for which Abstract Estimate belongs to.
+        - name: function
+          in: query
           type: string
-        - name: functionCode
+          required: false
+          description: The Function code for which Abstract Estimate belongs to
+        - name: budgetHead
+          type: string
           in: query
           required: false
-          description: The Function code for which Abstract Estimate belongs to.
-          type: string
-        - name: budgetHeadCode
-          in: query
-          required: false
-          description: The Budget Head Code for which Abstract Estimate belongs to.
-          type: string
+          description: The Budget Head for which Abstract Estimate belongs to
         - name: adminSanctionFromDate
           in: query
+          type: integer
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
           required: false
           description: Epoch time from when the Abstract Estimate is Admin Sanctioned
-          type: integer
-          format: int64
         - name: adminSanctionToDate
           in: query
-          description: Epoch time till the Abstract Estimate is Admin Sanctioned
-          required: false
           type: integer
           format: int64
+          x-displayformat: 'dd/MM/yyyy'
+          required: false
+          description: Epoch time till the Abstract Estimate is Admin Sanctioned
         - name: spillOverFlag
           in: query
-          description: Boolean value to identify whether the Abstract Estimate is Spill over or not.
-          required: false
           type: boolean
+          required: false
+          description: Boolean value to identify whether the Abstract Estimate is Spill over or not 
         - name: createdBy
           in: query
-          description: Unique user name of the User who created the Abstract Estimate.
-          required: false
           type: string
+          required: false
+          description: The User who created the Abstract Estimate
         - name: abstractEstimateNumbers
           in: query
-          required: false
-          description: Comma separated list of abstract estimate numbers of the Abstract Estimate.
           type: array
           items:
             type: string
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of abstract estimate numbers of the Abstract Estimate 
         - name: workIdentificationNumbers
           in: query
-          description: Comma separated list of Work Identification Numbers assigned to Abstract Estimate.
-          required: false
           type: array
           items:
             type: string
-        - name: status
-          in: query
-          description: Status of the Abstract Estimate.
+          maxItems: 50
           required: false
-          type: string
+          allowEmptyValue: true
+          description: Comma separated list of Work Identification Numbers assigned to Abstract Estimate
+        - name: statuses
+          in: query
+          type: array
+          items:
+            type: string
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of the Abstract Estimate Status
       responses:
         200:
           description: Abstract Estimate(s) Retrieved Successfully
@@ -147,8 +162,16 @@ paths:
       summary: Create new Abstract Estimate(s).
       description: |
           To create new Abstract Estimate in the system. API supports bulk creation with max limit as defined in the Abstract Estimate Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Abstract Estimate, please pass array with one Abstract Estimate object.
-          Reference type will be allowed to edit in case of on going abstract estimate and disabled for spillover abstract estimate.
-          All the flags like spillover, detiled estimate and bills created flag will be allowed to select only in case Spillover abstract estimate.
+          
+          This API is used for creating Spillover (Ongoing works) and as well as new Abstract Estimates. All the flags like spillover, detailed estimate created, work order created and bills created flags will be allowed to select only in case of Spillover abstract estimate.
+          
+          The estimate number and work identification numbers will be user entered in case of spillover work and auto generated in case of new work.
+          
+          Workflow will not be there for spillover work and new works will have workflow. So the spillover work will be created on approved status with budget check.   Financial sanction and Administrative Sanction will be part of the workflow. 
+          
+          Asset details will not be shown on the screen. Instead hyperlink will be provided to the Asset code which will redirect to the view screen from Asset module.
+          
+          The final approver who does Administrative sanction will enter the Administrative sanction no./date and Council sanction no./date.
           
       parameters:
         - name: AbstractEstimateRequest
@@ -178,8 +201,8 @@ paths:
       summary: Update existing Abstract Estimate(s).
       description: |
           To update existing Abstract Estimate in the system. API supports bulk updation with max limit as defined in the Abstract Estimate Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Abstract Estimate, please pass array with one Abstract Estimate object.
-          In update all the fields are disabled except the Work Flow Deatils and the fields which needs to be captured at different status are enabled.
-          At the last level of workflow gross amount billed amount will be editable.
+          
+          Only the creator can edit all the fields when the Abstract Estimate in creator inbox(in Rejected status) or in drafts. Update during workflow will have all the fields readonly except few fields which are allowed to modify during each stage of workflow including Workflow Deatils.
           
       parameters:
         - name: AbstractEstimateRequest
@@ -1558,3 +1581,4 @@ tags:
     description: APIs required for Revision Estimate.
   - name: Project Code
     description: APIs required for Project Code.
+

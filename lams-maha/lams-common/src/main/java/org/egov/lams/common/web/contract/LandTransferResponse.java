@@ -21,9 +21,15 @@ import com.google.gson.annotations.SerializedName;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @ApiModel(description = "Contract class to send response. Array of Land transfer detail items are used in case of search results or response for create, whereas single land transfer detail item is used for update")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-10-26T05:34:54.775Z")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class LandTransferResponse {
 
 	@SerializedName("responseInfo")

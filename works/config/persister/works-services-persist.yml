@@ -47,7 +47,7 @@ serviceMaps:
  - version: 1.0
    name: Works Documents Update
    description: Update works document data in egw_documentdetail table 
-   fromTopic: works.documentdetails.create
+   fromTopic: works.documentdetails.update
    isTransaction: true
    queryMaps:   
     - query: UPDATE egw_documentdetail SET id=?, objectid= ?,objectType = ?, objectType=?, documentType=?, fileStore=?, latitude=?, longitude=?, description=?, dateOfCapture=?, workProgress=?, lastModifiedBy=?, lastModifiedTime=?  WHERE id = ? AND tenantId = ?;

@@ -11,15 +11,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 @SpringBootApplication
 @Import({ TracerConfiguration.class })
@@ -38,27 +35,19 @@ public class WorksEstimateApplication {
 	}
 
 	@Bean
-	public MappingJackson2HttpMessageConverter jacksonConverter() {
-		// DateFormat std=DateFormat.getInstance().f
-		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-		mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
-		converter.setObjectMapper(mapper);
-		return converter;
+	public ObjectMapper getObjectMapper() {
+		final ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+		objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+		return objectMapper;
 	}
 
 	@Bean
-	public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {
-		return new WebMvcConfigurerAdapter() {
-
-			@Override
-			public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-				configurer.defaultContentType(MediaType.APPLICATION_JSON_UTF8);
-			}
-
-		};
+	public MappingJackson2HttpMessageConverter jacksonConverter(ObjectMapper objectMapper) {
+		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+		converter.setObjectMapper(objectMapper);
+		return converter;
 	}
 
 	@Bean

@@ -129,7 +129,7 @@ public class AbstractEstimate {
 	private String councilResolutionNumber = null;
 
 	@JsonProperty("councilResolutionDate")
-	private String councilResolutionDate = null;
+	private Long councilResolutionDate = null;
 
 	@JsonProperty("workOrderCreated")
 	private Boolean workOrderCreated = null;
@@ -881,7 +881,7 @@ public class AbstractEstimate {
 		this.councilResolutionNumber = councilResolutionNumber;
 	}
 
-	public AbstractEstimate councilResolutionDate(String councilResolutionDate) {
+	public AbstractEstimate councilResolutionDate(Long councilResolutionDate) {
 		this.councilResolutionDate = councilResolutionDate;
 		return this;
 	}
@@ -893,11 +893,11 @@ public class AbstractEstimate {
 	 **/
 	@ApiModelProperty(value = "Epoch time of the council resolution date")
 
-	public String getCouncilResolutionDate() {
+	public Long getCouncilResolutionDate() {
 		return councilResolutionDate;
 	}
 
-	public void setCouncilResolutionDate(String councilResolutionDate) {
+	public void setCouncilResolutionDate(Long councilResolutionDate) {
 		this.councilResolutionDate = councilResolutionDate;
 	}
 

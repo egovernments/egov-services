@@ -20,6 +20,9 @@ public class Boundary {
 
 	@JsonProperty("name")
 	private String name = null;
+	
+	@JsonProperty("code")
+	private String code = null;
 
 	@JsonProperty("parent")
 	private Boundary parent = null;

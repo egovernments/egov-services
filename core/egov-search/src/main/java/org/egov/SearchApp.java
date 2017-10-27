@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -17,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.EnvironmentAware;
@@ -103,29 +105,18 @@ public class SearchApp implements EnvironmentAware {
 			ReportDefinitions rd) throws Exception {
 		BufferedReader br;
 		FileReader fr;
-		String yamlLocation;
+		String yamllist = env.getProperty("search.yaml.path");
 		try {
-		//Local Testing
-
-		Resource resource = resourceLoader.getResource("file:/ws/reportFileLocations.txt");
-		File file = resource.getFile();
-		fr = new FileReader(file);
-		br = new BufferedReader(fr);
-		
-		//Dev Testing
-		/* URL url = new URL("https://raw.githubusercontent.com/egovernments/egov-services/master/docs/reportinfra/report/reportFileLocationsv1.txt");
-		 URLConnection urlConnection = url.openConnection();
-		 br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-		 */
-		 
-		 
-			while ((yamlLocation = br.readLine()) != null) {
-				String[] moduleYaml = yamlLocation.split("=");  
+		List<String> ymlUrlS = Arrays.asList(yamllist.split(","));
+		if(0 == ymlUrlS.size()){
+			ymlUrlS.add(yamllist);
+		}
+		       for(String yamlLocation : ymlUrlS){ 
 
 				if(moduleName.equals("common")){
-				if(moduleYaml[1].startsWith("https")) {
+				if(yamlLocation.startsWith("https")) {
 					LOGGER.info("The Yaml Location is : "+yamlLocation);
-					URL oracle = new URL(moduleYaml[1]);
+					URL oracle = new URL(yamlLocation);
 					try{
 					rd = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);
 					} catch(Exception e) {
@@ -136,9 +127,9 @@ public class SearchApp implements EnvironmentAware {
 					}
 					localrd.addAll(rd.getReportDefinitions());
 					
-					} else if(moduleYaml[1].startsWith("file://")){
+					} else if(yamlLocation.startsWith("file://")){
 						LOGGER.info("The Yaml Location is : "+yamlLocation);
-						 Resource yamlResource = resourceLoader.getResource(moduleYaml[1].toString());
+						 Resource yamlResource = resourceLoader.getResource(yamlLocation.toString());
 						 File yamlFile = yamlResource.getFile();
 						try{
 						rd = mapper.readValue(yamlFile, ReportDefinitions.class);
@@ -150,32 +141,7 @@ public class SearchApp implements EnvironmentAware {
 						
 					} 
 				
-			} else {
-				  if(moduleYaml[0].equals(moduleName) && moduleYaml[1].startsWith("https")) {
-					LOGGER.info("The Yaml Location is : "+moduleYaml[1]);
-					URL oracle = new URL(moduleYaml[1]);
-					try{
-					rd = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);
-					} catch(Exception e) {
-						LOGGER.info("Skipping the report definition "+yamlLocation);
-						throw new Exception(e.getMessage());
-					}
-					localrd.addAll(rd.getReportDefinitions());
-					
-					} else if(moduleYaml[0].equals(moduleName) && moduleYaml[1].startsWith("file://")){
-						LOGGER.info("The Yaml Location is : "+moduleYaml[1]);
-						 Resource yamlResource = resourceLoader.getResource(moduleYaml[1].toString());
-						 File yamlFile = yamlResource.getFile();
-						try{
-						rd = mapper.readValue(yamlFile, ReportDefinitions.class);
-						 } catch(Exception e) {
-							LOGGER.info("Skipping the report definition "+moduleYaml[1]);
-							throw new Exception(e.getMessage());
-						}
-						localrd.addAll(rd.getReportDefinitions());
-						
-					} 
-				}
+			} 
 			}
 
 		} catch (IOException e) {

@@ -19,12 +19,18 @@ import com.google.gson.annotations.SerializedName;
 import io.swagger.annotations.ApiModel;
 import org.egov.common.contract.response.ResponseInfo;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 /**
  * Contract class to send response. Array of Land Possession detail items are used in case of search results or response for create, whereas single land possession detail item is used for update
  */
 @ApiModel(description = "Contract class to send response. Array of Land Possession detail items are used in case of search results or response for create, whereas single land possession detail item is used for update")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-10-26T05:34:54.775Z")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class LandPossessionResponse {
   @SerializedName("responseInfo")
   private ResponseInfo responseInfo = null;

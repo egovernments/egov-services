@@ -7,9 +7,7 @@ import org.egov.lams.common.web.contract.LandAcquisition;
 import org.egov.lams.common.web.contract.LandAcquisitionSearchCriteria;
 import org.egov.lams.common.web.response.LandAcquisitionResponse;
 import org.egov.lams.services.service.persistence.queryBuilder.LandAcquisitionQueryBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 @Repository
@@ -17,9 +15,6 @@ public class LandAcquisitionRepository {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private LandAcquisitionQueryBuilder landAcquisitionQueryBuilder;
-    
-    @Autowired
-	private JdbcTemplate jdbcTemplate;
     
     public LandAcquisitionRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate ,
 			LandAcquisitionQueryBuilder landAcquisitionQueryBuilder

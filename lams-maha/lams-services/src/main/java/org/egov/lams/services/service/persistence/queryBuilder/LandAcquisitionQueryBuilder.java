@@ -2,7 +2,6 @@ package org.egov.lams.services.service.persistence.queryBuilder;
 
 import java.util.Set;
 
-import org.egov.lams.common.web.contract.EstateSearchCriteria;
 import org.egov.lams.common.web.contract.LandAcquisitionSearchCriteria;
 import org.springframework.stereotype.Component;
 @Component

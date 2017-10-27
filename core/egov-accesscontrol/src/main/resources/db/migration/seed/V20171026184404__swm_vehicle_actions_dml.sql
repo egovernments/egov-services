@@ -1,4 +1,4 @@
-insert into service (id, code, name, enabled, displayname, ordernumber, parentmodule, tenantId) values (nextval('SEQ_SERVICE'), 'SWM Masters', 'Masters', true, 'Masters', 1, (select id from service where code = 'SWM' and tenantId='default'), 'default');
+insert into service (id, code, name, enabled, displayname, ordernumber, parentmodule, tenantId) values (nextval('SEQ_SERVICE'), 'SWM Masters', 'SWM Masters', true, 'Masters', 1, (select id from service where code = 'SWM' and tenantId='default'), 'default');
 
 
 insert into eg_action(id, name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,createddate,lastmodifiedby,lastmodifieddate)

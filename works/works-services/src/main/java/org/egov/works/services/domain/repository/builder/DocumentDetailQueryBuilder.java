@@ -18,7 +18,7 @@ public class DocumentDetailQueryBuilder {
     public String searchDocumentsQuery(final DocumentDetailSearchCriteria documentDetailSearchCriteria,
                                        final MapSqlParameterSource preparedStatementValues) {
         StringBuilder queryString = new StringBuilder();
-        queryString.append("select * from egw_documentdetail where id not null");
+        queryString.append("select * from egw_documentdetail where id is not null");
         addWhereClause(queryString,documentDetailSearchCriteria,preparedStatementValues);
         addOrderByClause(queryString,documentDetailSearchCriteria,preparedStatementValues);
         addPagingClause(queryString, documentDetailSearchCriteria, preparedStatementValues);

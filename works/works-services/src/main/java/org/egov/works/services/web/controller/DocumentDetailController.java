@@ -78,7 +78,6 @@ public class DocumentDetailController {
         documentDetailsService.validateSearchDocuments(documentDetailSearchRequest);
         List<DocumentDetail> documents = documentDetailsService.searchDocuments(new DocumentDetailSearchCriteria().toDomain(documentDetailSearchRequest));
         DocumentDetailResponse documentDetailResponse = new DocumentDetailResponse();
-        //prepare response info
         documentDetailResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo,true));
         documentDetailResponse.setDocumentDetails(documents);
         return new ResponseEntity<>(documentDetailResponse, HttpStatus.OK);

@@ -32,4 +32,7 @@ public class PropertiesManager {
 	@Value("${egov.services.works.projectcode.create.topic}")
 	private String worksProjectCodeCreateTopic;
 	
+	@Value("${egov.services.works.projectcode.update.topic}")
+	private String worksProjectCodeUpdateTopic;
+	
 }

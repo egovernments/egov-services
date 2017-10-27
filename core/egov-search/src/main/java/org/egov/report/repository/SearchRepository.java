@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import org.egov.report.repository.builder.SearchQueryBuilder;
 import org.egov.swagger.model.SearchDefinition;
-import org.egov.swagger.model.ReportRequest;
+import org.egov.swagger.model.SearchRequest;
 import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ public class SearchRepository {
 	
 	public static final Logger LOGGER = LoggerFactory.getLogger(SearchRepository.class);
 	
-	public List<String> getData(ReportRequest reportRequest, SearchDefinition reportDefinition) {
+	public List<String> getData(SearchRequest reportRequest, SearchDefinition reportDefinition) {
 		ObjectMapper mapper = new ObjectMapper();
 		String query = reportQueryBuilder.buildQuery(reportRequest.getSearchParams(),reportRequest.getTenantId(),reportDefinition);
 		Long startTime = new Date().getTime();

@@ -20,7 +20,7 @@ public class SearchDefinitions {
 	
 	
 	@JsonProperty("SearchDefinition")
-    public List<SearchDefinition> reportDefinitions = new ArrayList<>();
+    public List<SearchDefinition> searchDefinition = new ArrayList<>();
 	
 	@JsonProperty("moduleKey")
 	private String moduleKey;
@@ -40,20 +40,20 @@ public class SearchDefinitions {
 	private HashMap<String, SearchDefinition> duplicateReportKeys = new HashMap<>();
 	
 	
-	public SearchDefinition getReportDefinition(String name){
+	public SearchDefinition getSearchDefinition(String name){
 		return definitionMap.get(name);
 	}
-	public List<SearchDefinition> getDuplicateReportDefinition(){
+	public List<SearchDefinition> getDuplicateSearchDefinition(){
 		List<SearchDefinition> localreportDefinitions = new ArrayList<>(duplicateReportKeys.values());
 		return localreportDefinitions;
 	}
 	
 	public List<SearchDefinition> getReportDefinitions() {
-		return reportDefinitions;
+		return searchDefinition;
 	}
 
 	public void setReportDefinitions(List<SearchDefinition> reportDefinitions) {
-		this.reportDefinitions = reportDefinitions;
+		this.searchDefinition = reportDefinitions;
 		System.out.println("Coming in to the set report definition method");
 		for(SearchDefinition rd : reportDefinitions){
 			String reportKey = "";
@@ -81,7 +81,7 @@ public class SearchDefinitions {
 
 	@Override
 	public String toString() {
-		return "ReportDefinitions [moduleKey="+moduleKey+" reportDefinitions=" + reportDefinitions + "]";
+		return "ReportDefinitions [moduleKey="+moduleKey+" reportDefinitions=" + searchDefinition + "]";
 	}
 	
 }

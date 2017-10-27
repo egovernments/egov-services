@@ -18,7 +18,7 @@ Feature: Transaction for solid waste management
 
     ### Create Vehicle fuelling transaction ###
     And user on SWMTransaction screen types on transactionDate value current date
-    And user on SWMTransaction screen selects on vehicleType value Fake Vehicle Type 1
+    And user on SWMTransaction screen selects on vehicleType value Fake Vehicle Type Name 1
     And user on SWMTransaction screen selects on vehicleRegNo value Fake registration Number 1
     And user on SWMTransaction screen copies the vehicleRegNo to vehicleRegNo
     And user on SWMTransaction screen types on vehicleReadingDuringFueling value 2000

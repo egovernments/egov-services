@@ -43,3 +43,34 @@ serviceMaps:
          dbType: LONG
        
        - jsonPath: $.documentDetails.*.auditDetails.lastModifiedTime
+
+ - version: 1.0
+   name: Estimate Appropriation
+   description: Persists Estimate Appropriation in egw_estimate_appropriation table
+   fromTopic: works.estimateappropriation.create
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO egw_estimate_appropriation(
+            id, tenantid, objecttype, objectnumber, budgetusage, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?);
+      basePath: $.estimateAppropriations.*
+      jsonMaps:
+         
+       - jsonPath: $.estimateAppropriations.*.id
+       
+       - jsonPath: $.estimateAppropriations.*.tenantId
+         
+       - jsonPath: $.estimateAppropriations.*.objectType
+         
+       - jsonPath: $.estimateAppropriations.*.objectNumber
+       
+       - jsonPath: $.estimateAppropriations.*.budgetUsage
+       
+       - jsonPath: $.estimateAppropriations.*.auditDetails.createdBy
+         dbType: LONG
+       
+       - jsonPath: $.estimateAppropriations.*.auditDetails.createdTime
+
+       - jsonPath: $.estimateAppropriations.*.auditDetails.lastModifiedBy
+         dbType: LONG
+       
+       - jsonPath: $.estimateAppropriations.*.auditDetails.lastModifiedTime

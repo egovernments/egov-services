@@ -42,6 +42,12 @@ public LandTransferResponse  create(LandTransferRequest landTransferRequest) {
 				landTransferRequest.getRequestInfo());	
 		}
 
+		public LandTransferResponse  update(LandTransferRequest landTransferRequest) {
+	kafkaTemplate.send(propertiesManager.getUpdateLandTransferKafkaTopic(), landTransferRequest);
+	return getLandTransferResponse(landTransferRequest.getLandTransfer(),
+			landTransferRequest.getRequestInfo());	
+	}
+
 		private LandTransferResponse getLandTransferResponse(List<LandTransfer> landTransfer,
 				RequestInfo requestInfo) {
 			LandTransferResponse landTransferResponse = new LandTransferResponse();

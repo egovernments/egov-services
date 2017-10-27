@@ -67,4 +67,7 @@ public class PropertiesManager {
 	public String createLandTransferKafkaTopic;
 	
 	
+	@Value("${kafka.topic.update.landTransfer}")
+	public String updateLandTransferKafkaTopic;
+	
 }

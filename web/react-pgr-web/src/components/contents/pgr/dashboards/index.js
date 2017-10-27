@@ -9,7 +9,7 @@ import Api from '../../../../api/api';
 import RaisedButton from 'material-ui/RaisedButton';
 import styles from '../../../../styles/material-ui';
 import {translate} from '../../../common/common';
-var moment = require('moment');
+import moment from 'moment';
 var self;
 
 const style = {
@@ -26,10 +26,21 @@ const style = {
     position:'fixed',
     zIndex:1,
     top:10
+  },
+  chartContainerStyle : {
+    width:'100%',
+    height:230
   }
 };
 
 const COLORS = ['#0088FE', '#00C49F', '#008F7D', '#FFBB28', '#FF8042'];
+
+const CustomizedAxisTick = (props) =>{
+    const {x, y, stroke, payload} = props;
+   	return (
+        <text style={{fontSize:12}} x={x} y={y+15} textAnchor="middle" fill="#666">{payload.value}</text>
+    );
+};
 
 const renderActiveShape = (props) => {
   const RADIAN = Math.PI / 180;
@@ -133,12 +144,15 @@ class charts extends Component{
           return last7months;
         });
 
-        response[1].map((data)=>{
-          let values = Object.values(data)
-          let index = last7days.map(function(o) { return o.name; }).indexOf(values[2]);
-          last7days[index]['REGISTERED']=values[0];
-          last7days[index]['RESOLVED']=values[1];
-          return last7days;
+        let weeklyReportResponse = response[1];
+
+        last7days = last7days.map((day)=>{
+           let resolvedObj = weeklyReportResponse.find((d)=> day.name === d.name && d.RESOLVED > 0);
+           let registeredObj = weeklyReportResponse.find((d)=> day.name === d.name && d.REGISTERED > 0);
+           let RESOLVED = resolvedObj && resolvedObj.RESOLVED || 0;
+           let REGISTERED = registeredObj && registeredObj.REGISTERED || 0;
+           console.log(day.name, {name:day.name, RESOLVED, REGISTERED});
+           return {name:day.name, RESOLVED, REGISTERED};
         });
 
          self.setState({
@@ -166,8 +180,18 @@ class charts extends Component{
     });
   }
 
+  trimDayName = (data) => {
+    return data.map((day)=>{
+      let name = day.name.split("-");
+      let modifiedObj = {...day, name:name[0].substr(0,3)+"-"+name[1]};
+      return modifiedObj;
+    });
+  }
+
   render(){
     let {buttonFixed} = this.state;
+    let last7Days = this.trimDayName(this.state.last7days || []);
+
     return(
       <Grid fluid={true}>
         <RaisedButton
@@ -178,39 +202,38 @@ class charts extends Component{
         <Row>
           <Col xs={12} sm={12} md={6} lg={6}>
             <Card style={styles.cardMargin}>
-              <CardHeader style={styles.cardHeaderPadding}
+              <CardHeader
               title={translate('pgr.dashboard.7daystitle')}/>
-               <CardText>
                  <ResponsiveContainer width='100%' aspect={4.0/2.0}>
-                   <AreaChart data={this.state.last7days}>
-                     <XAxis dataKey="name"/>
-                     <YAxis allowDecimals={false}/>
-                     <CartesianGrid strokeDasharray="3 3"/>
-                     <Tooltip wrapperStyle={{zIndex: 1000}}/>
-                     <Legend verticalAlign="top" height={36}/>
-                     <Area type='monotone' dataKey='REGISTERED' stroke='#8884d8' fill='#8884d8' />
-                     <Area type='monotone' dataKey='RESOLVED' stroke='#82ca9d' fill='#82ca9d' />
-                   </AreaChart>
+                    <AreaChart margin={{top: 10, right: 30, left: 30, bottom: 0}} data={last7Days}
+                          margin={{top: 10, right: 30, left: 0, bottom: 0}}>
+                      <XAxis tick={<CustomizedAxisTick></CustomizedAxisTick>} dataKey="name"/>
+                      <YAxis/>
+                      <CartesianGrid strokeDasharray="3 3"/>
+                      <Tooltip/>
+                      <Legend verticalAlign="top" height={36}/>
+                      <Area type='monotone' dataKey='REGISTERED' stroke='#8884d8' fill='#8884d8' />
+                      <Area type='monotone' dataKey='RESOLVED' stroke='#82ca9d' fill='#82ca9d' />
+                    </AreaChart>
                  </ResponsiveContainer>
-               </CardText>
+               <br/>
             </Card>
           </Col>
           <Col xs={12} sm={12} md={6} lg={6}>
             <Card style={styles.cardMargin}>
-              <CardHeader style={styles.cardHeaderPadding}
-              title={translate('pgr.dashboard.7monthstitle')}/>
-               <CardText>
+              <CardHeader
+              title={translate('pgr.dashboard.7monthstitle')}/>7
                  <ResponsiveContainer width='100%' aspect={4.0/2.0}>
-                   <LineChart data={this.state.last7months}>
-                    <XAxis dataKey="name"/>
+                   <LineChart margin={{top: 10, right: 30, left: 5, bottom: 0}} data={this.state.last7months}>
+                    <XAxis tick={<CustomizedAxisTick></CustomizedAxisTick>} dataKey="name"/>
                     <YAxis allowDecimals={false}/>
                     <CartesianGrid strokeDasharray="3 3"/>
-                    <Tooltip wrapperStyle={{zIndex: 1000}}/>
+                    <Tooltip />
                     <Legend verticalAlign="top" height={36}/>
                     <Line type="monotone" dataKey="REGISTERED" stroke="#8884d8" activeDot={{r: 8}}/>
                    </LineChart>
                  </ResponsiveContainer>
-               </CardText>
+                 <br/>
             </Card>
           </Col>
           <Col xs={12} sm={12} md={12} lg={12}>

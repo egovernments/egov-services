@@ -37,9 +37,9 @@ serviceMaps:
        - jsonPath: $.documentDetails.*.auditDetails.createdBy
          dbType: LONG
        
-       - jsonPath: $.documentDetails.*.auditDetails.createdDate
+       - jsonPath: $.documentDetails.*.auditDetails.createdTime
        
        - jsonPath: $.documentDetails.*.auditDetails.lastModifiedBy
          dbType: LONG
        
-       - jsonPath: $.documentDetails.*.auditDetails.lastModifiedDate
+       - jsonPath: $.documentDetails.*.auditDetails.lastModifiedTime

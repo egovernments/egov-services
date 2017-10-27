@@ -7,10 +7,10 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.lams.common.web.contract.LandPossession;
 import org.egov.lams.common.web.contract.LandPossessionRequest;
 import org.egov.lams.common.web.contract.LandPossessionResponse;
-import org.egov.lams.common.web.request.LandAcquisitionRequest;
-import org.egov.lams.common.web.response.LandAcquisitionResponse;
+import org.egov.lams.common.web.contract.LandPossessionSearchCriteria;
 import org.egov.lams.services.config.PropertiesManager;
 import org.egov.lams.services.factory.ResponseFactory;
+import org.egov.lams.services.service.persistence.repository.LandPossessionRepository;
 import org.egov.lams.services.util.SequenceGenUtil;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +27,9 @@ public class LandPossessionService {
 	@Autowired
 	private SequenceGenUtil sequenceGenService;
 	
-/*	@Autowired
+	@Autowired
 	private LandPossessionRepository landPossessionRepository;
-	*/
+	
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 	
@@ -53,6 +53,13 @@ public class LandPossessionService {
 				landPossessionRequest.getRequestInfo());	
 		}
 	
+	public LandPossessionResponse search(LandPossessionSearchCriteria landPossessionSearchCriteria, RequestInfo requestInfo) {
+
+		LandPossessionResponse landPossessionList = landPossessionRepository.search(landPossessionSearchCriteria);
+
+		return landPossessionList;
+	}
+	
 	
 	private LandPossessionResponse getLandPossessionResponse(List<LandPossession> landPossession,
 			RequestInfo requestInfo) {
@@ -71,4 +78,6 @@ public class LandPossessionService {
 		String seqId =year +idgen;
 		return seqId;
 	}
+	
+	
 }

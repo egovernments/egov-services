@@ -94,7 +94,7 @@ serviceMaps:
    description: create vehicle in egswm_vehicle
    fromTopic: swm-vehicle-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_vehicle(id, tenantid, vehicletype, fueltype, regnumber, enginesrnumber, chassissrnumber, vehiclecapacity, numberofpersonsreq, model, ulbownedvehicle, vendor, vehicledrivername, purchasedate, yearofpurchase, price, sourceofpurchase, remarks, insurancenumber, insurancevaliditydate, insurancedocuments, isUnderWarranty, kilometers, endOfWarranty, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,  ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_vehicle(id, tenantid, vehicletype, fueltype, regnumber, enginesrnumber, chassissrnumber, vehiclecapacity, numberofpersonsreq, model, ulbownedvehicle, vendor, vehicledrivername, purchasedate, yearofpurchase, price, sourceofpurchase, remarks, insurancenumber, insurancevaliditydate, isUnderWarranty, kilometers, endOfWarranty, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vehicles.*
       jsonMaps:
        
@@ -141,8 +141,6 @@ serviceMaps:
 
        - jsonPath: $.vehicles.*.insuranceValidityDate
          dbType: LONG
-
-       - jsonPath: $.vehicles.*.insuranceDocuments.id
 
        - jsonPath: $.vehicles.*.isUnderWarranty
          dbType: BOOLEAN
@@ -169,7 +167,7 @@ serviceMaps:
    fromTopic: swm-vehicle-update-topic
    queryMaps: 
 
-    - query: UPDATE egswm_vehicle SET vehicletype=?, fueltype=?, regnumber=?, enginesrnumber=?, chassissrnumber=?, vehiclecapacity=?, numberofpersonsreq=?, model=?, ulbownedvehicle=?, vendor=?, vehicledrivername=?, purchasedate=?, yearofpurchase=?, price=?, sourceofpurchase=?, remarks=?, insurancenumber=?, insurancevaliditydate=?, insurancedocuments=?,isUnderWarranty=?, kilometers=?, endOfWarranty=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+    - query: UPDATE egswm_vehicle SET vehicletype=?, fueltype=?, regnumber=?, enginesrnumber=?, chassissrnumber=?, vehiclecapacity=?, numberofpersonsreq=?, model=?, ulbownedvehicle=?, vendor=?, vehicledrivername=?, purchasedate=?, yearofpurchase=?, price=?, sourceofpurchase=?, remarks=?, insurancenumber=?, insurancevaliditydate=?, isUnderWarranty=?, kilometers=?, endOfWarranty=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
       basePath: $.vehicles.*
       jsonMaps:
 
@@ -213,8 +211,6 @@ serviceMaps:
        - jsonPath: $.vehicles.*.insuranceValidityDate
          dbType: LONG
 
-       - jsonPath: $.vehicles.*.insuranceDocuments.id
-
        - jsonPath: $.vehicles.*.isUnderWarranty
          dbType: BOOLEAN
 
@@ -232,6 +228,33 @@ serviceMaps:
        - jsonPath: $.vehicles.*.id
 
        - jsonPath: $.vehicles.*.tenantId
+
+ - version: 1.0
+   name: vehicle insurance document create
+   description: create insurance document vehicle in egswm_document
+   fromTopic: swm-vehicle-document-save-topic
+   queryMaps: 
+    - query: INSERT INTO egswm_document(id, tenantid, regNumber, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.insuranceDocument
+      jsonMaps:
+       
+       - jsonPath: $.insuranceDocument.id
+
+       - jsonPath: $.insuranceDocument.tenantId
+         
+       - jsonPath: $.insuranceDocument.regNumber
+
+       - jsonPath: $.insuranceDocument.fileStoreId
+
+       - jsonPath: $.insuranceDocument.auditDetails.createdBy
+
+       - jsonPath: $.insuranceDocument.auditDetails.lastModifiedBy
+
+       - jsonPath: $.insuranceDocument.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.insuranceDocument.auditDetails.lastModifiedTime
+         dbType: LONG
 
  - version: 1.0
    name: collectionpoint create

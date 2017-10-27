@@ -369,7 +369,7 @@ var dat = {
           },
           {
             "name": "refId",
-            "jsonPath": "vehicles[0].insuranceDocuments.refId",
+            "jsonPath": "vehicles[0].insuranceDocument.fileStoreId",
             "label": "vehicles.create.insurance.details",
             "type": "text",
             "isRequired": true,
@@ -607,17 +607,6 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "patternErrorMsg": ""
-          },
-          {
-            "name": "refId",
-            "jsonPath": "vehicles[0].insuranceDocuments.refId",
-            "label": "vehicles.create.insurance.details",
-            "type": "text",
-            "isRequired": true,
-            "isDisabled": false,
-            "maxLength": 256,
-            "minLength": 1,
-            "patternErrorMsg": ""
           }
         ]
       },
@@ -854,7 +843,7 @@ var dat = {
           },
           {
             "name": "refId",
-            "jsonPath": "vehicles[0].insuranceDocuments.refId",
+            "jsonPath": "vehicles[0].insuranceDocument.fileStoreId",
             "label": "vehicles.create.insurance.details",
             "type": "text",
             "isRequired": true,

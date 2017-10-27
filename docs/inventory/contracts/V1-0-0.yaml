@@ -1,5 +1,16 @@
 swagger: '2.0'
-
+  ######################################################
+  # All API's are POST. _create,_search,_update for post,get and put. RequestInfo will be part of body. For multiple records we can pass multiple value with comman seperated values*.
+  # All _search will be synchronous and all _create and _update will be asynchronous*.
+  # RequestInfo and ResponseInfo object should be reffered from Common*.
+  # In _search API, tenantId should be passed in query param. In _create/_update, tenantId should be passed in the model.
+  # Readonly means that even if these fields are passed in the request, it will be ignored in create/update and will not be added/updated in the entities. The readonly fields might be passed to the _search API's to make use of fields for the search Query API. while calling _search API's even mandatory fields might not be available, it is mandatory only in the _create API's*.
+  # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message.
+  # Definition must start with Upper case followed by camel case.
+  # Every model will have tenantId. Validate tenantId on create.
+  # Parameter name must start with small case followed by camel case.
+  # Path must be in small case.
+  ######################################################
 info:
   version: "1.0.0"
   title: Inventory Service
@@ -1930,6 +1941,10 @@ definitions:
           type: string
           description: |
             fileStoreId  File Store id of the Indent Note/Transfer Indent Generated
+        designation:
+          type: string
+          description: Designation of the employee at the time of Indent Note/Transfer Indent creation
+          format: varchar
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
@@ -2392,6 +2407,14 @@ definitions:
           format: BigDecimal
           description: |
             total issue value of the MaterialIssue
+        fileStoreId:
+          type: string
+          description: |
+            fileStoreId  File Store id of the Indent Issue.    
+        designation:
+          type: string
+          description: Designation of the of the created by user at the time of Indent Issue/Non Indent Issue created.
+          format: varchar    
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
@@ -2618,6 +2641,10 @@ definitions:
           type: string
           description: |
             fileStoreId  File Store id of the Purchase Order Generated
+        designation:
+          type: string
+          description: Designation of the of the created by user at the time of Purchase Order creation.
+          format: varchar
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
@@ -2761,7 +2788,7 @@ definitions:
             Whether Department is Active or not. If the value is TRUE, then Department is active,If the value is FALSE then Department is inactive,Default value is TRUE
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-              
+    
     StoreRequest:
       description: Contract class for web request. Array of Store items  are used in case of create or update
       properties:
@@ -2964,7 +2991,11 @@ definitions:
         fileStoreId:
           type: string
           description: |
-            fileStoreId  File Store id of the Transfer Inward Note    
+            fileStoreId  File Store id of the Transfer Inward Note
+        designation:
+          type: string
+          description: Designation of the of the created by user at the time of Purchase Order creation.
+          format: varchar
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"   
       required:
@@ -3167,6 +3198,10 @@ definitions:
           type: string
           description: |
             fileStoreId  File Store id of the Transfer Outward Note
+        designation:
+          type: string
+          description: Designation of the of the created by user at the time of Purchase Order creation.
+          format: varchar    
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:

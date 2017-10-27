@@ -17,8 +17,8 @@ serviceMaps:
         councilresolutiondate, workordercreated, billscreated, spilloverflag, 
         cancellationreason, cancellationremarks, detailedestimatecreated, 
         stateid, Asset, implementationperiod, fundavailable, fundsanctioningauthority, 
-        pmcrequired, pmctype, pmcname, createdby, createddate, lastmodifiedby, 
-        lastmodifieddate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
+        pmcrequired, pmctype, pmcname, createdby, createdtime, lastmodifiedby, 
+        lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
         ?, ?, ?, ?, ?, 
         ?, ?, ?, ?, ?, 
         ?, ?, ?, ?, 
@@ -131,16 +131,16 @@ serviceMaps:
        - jsonPath: $.abstractEstimates.*.pmcName
        
        - jsonPath: $.abstractEstimates.*.auditDetails.createdBy
-       
-       - jsonPath: $.abstractEstimates.*.auditDetails.createdDate
+ 
+       - jsonPath: $.AbstractEstimate.*.auditDetails.createdTime
        
        - jsonPath: $.abstractEstimates.*.auditDetails.lastModifiedBy
-       
-       - jsonPath: $.abstractEstimates.*.auditDetails.lastModifiedDate 
+  
+       - jsonPath: $.AbstractEstimate.*.auditDetails.lastModifiedTime 
        
     - query: INSERT INTO egw_abstractestimate_details(
             id, tenantid, abstractestimate, nameofwork, estimateamount, estimatenumber, 
-            createdby, createddate, lastmodifiedby, lastmodifieddate, grossamountbilled, 
+            createdby, createdtime, lastmodifiedby, lastmodifiedtime, grossamountbilled, 
             projectcode) VALUES 
             (?, ?, ?, ?, ?, ?, 
             ?, ?, ?, ?, ?, 
@@ -162,12 +162,12 @@ serviceMaps:
        
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.auditDetails.createdBy
        
-       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.auditDetails.createdDate
-       
+       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.auditDetails.createdTime
+
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.auditDetails.lastModifiedBy
        
-       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.auditDetails.lastModifiedDate
-       
+       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.auditDetails.lastModifiedTime
+
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.grossAmountBilled
        
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectcode
@@ -175,8 +175,8 @@ serviceMaps:
        
     - query: INSERT INTO egw_projectcode(
             id, tenantid, code, detailedestimate, description, name, status, 
-            completiondate, projectvalue, createdby, createddate, lastmodifiedby, 
-            lastmodifieddate) VALUES 
+            completiondate, projectvalue, createdby, createdtime, lastmodifiedby, 
+            lastmodifiedtime) VALUES 
             (?, ?, ?, ?, ?, ?, ?, 
             ?, ?, ?, ?, ?, 
             ?);
@@ -202,9 +202,10 @@ serviceMaps:
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.projectValue
        
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.auditDetails.createdBy
-       
-       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.auditDetails.createdDate
+ 
+       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.projectCode.*.auditDetails.createdTime
        
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.auditDetails.lastModifiedBy
-       
-       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.auditDetails.lastModifiedDate
+
+       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.projectCode.*.auditDetails.lastModifiedTime
+

@@ -8,7 +8,6 @@ import org.egov.works.services.domain.exception.InvalidDataException;
 import org.egov.works.services.domain.repository.DocumentDetailRepository;
 import org.egov.works.services.web.contract.DocumentDetailRequest;
 import org.egov.works.services.web.contract.DocumentDetailSearchRequest;
-import org.egov.works.services.web.contract.ErrorRes;
 import org.egov.works.services.web.contract.RequestInfo;
 import org.egov.works.services.web.model.AuditDetails;
 import org.egov.works.services.web.model.DocumentDetail;
@@ -18,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class DocumentDetailsService {
@@ -33,6 +33,7 @@ public class DocumentDetailsService {
 
     public List<DocumentDetail> createDocuments(final DocumentDetailRequest documentDetailRequest) {
         for (DocumentDetail document : documentDetailRequest.getDocumentDetails()) {
+            document.setId(UUID.randomUUID().toString().replace("-", ""));
             AuditDetails auditDetails = new AuditDetails();
             auditDetails.setCreatedTime(new Date().getTime());
             auditDetails.setLastModifiedTime(new Date().getTime());

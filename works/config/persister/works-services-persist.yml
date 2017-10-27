@@ -76,7 +76,11 @@ serviceMaps:
        
        - jsonPath: $.documentDetails.*.auditDetails.lastModifiedBy
        
-       - jsonPath: $.documentDetails.*.auditDetails.lastModifiedTime  
+       - jsonPath: $.documentDetails.*.auditDetails.lastModifiedTime 
+
+       - jsonPath: $.documentDetails.*.id
+
+       - jsonPath: $.documentDetails.*.tenantId 
 
  - version: 1.0
    name: Estimate Appropriation

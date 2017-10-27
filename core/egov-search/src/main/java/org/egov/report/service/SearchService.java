@@ -191,8 +191,8 @@ public class SearchService {
 	public List<String> getReportData(ReportRequest reportRequest,String moduleName,String reportName) {
 		
 	
-		ReportDefinitions rds = SearchApp.getReportDefs();
-		SearchDefinition reportDefinition = rds.getReportDefinition(moduleName+ " "+reportName);
+		ReportDefinitions reportDefinitions = SearchApp.getReportDefs();
+		SearchDefinition reportDefinition = reportDefinitions.getReportDefinition(moduleName+ " "+reportName);
 		
 		List<Object> convertedMaps = new ArrayList<>();
 		
@@ -231,12 +231,6 @@ public class SearchService {
 	    	}
 	    }
 		*/
-		for(Object test:maps) 
-	    { 
-			LOGGER.info("maps printing from service : "+test.toString());
-	    }
-			
-
 		ReportResponse reportResponse = new ReportResponse();
 		//populateData(columns, maps, reportResponse);
 		populateReportHeader(reportDefinition, reportResponse);

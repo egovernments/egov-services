@@ -4,10 +4,6 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import javax.validation.constraints.*;
-/**
- * Request object to fetch the report data
- */
-
 
 public class MetadataRequest   {
   @JsonProperty("requestInfo")

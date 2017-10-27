@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import net.minidev.json.JSONObject;
 
 @Repository
@@ -32,6 +34,7 @@ public class SearchRepository {
 	public static final Logger LOGGER = LoggerFactory.getLogger(SearchRepository.class);
 	
 	public List<String> getData(ReportRequest reportRequest, SearchDefinition reportDefinition) {
+		ObjectMapper mapper = new ObjectMapper();
 		String query = reportQueryBuilder.buildQuery(reportRequest.getSearchParams(),reportRequest.getTenantId(),reportDefinition);
 		Long startTime = new Date().getTime();
 		LOGGER.info("final query:"+query);
@@ -40,16 +43,19 @@ public class SearchRepository {
 		Long totalExecutionTime = endTime-startTime;
 		LOGGER.info("total query execution time taken in millisecount:"+totalExecutionTime);
 		if(endTime-startTime>maxExecutionTime)
-			LOGGER.error("Sql query is taking time query:"+query);
-	
+			LOGGER.error("Sql query is taking unusually more time, query: "+query);
 		List<String> queryJson = new ArrayList<>();
 		for(PGobject obj: maps){
 			LOGGER.info("obj:::"+obj);
-			queryJson.add(obj.getValue().replaceAll("\\\\",""));
-						
-			/*LOGGER.info("maps after converting to object : "+obj.toString());	*/
+
+			try{
+				queryJson.add(obj.getValue());
+			}catch(Exception e){
+				LOGGER.error("Exception while parsing", e);
+			}
+
 		}
-		
+		 LOGGER.info("queryJson: "+queryJson);
 		
 		return queryJson;
 	}

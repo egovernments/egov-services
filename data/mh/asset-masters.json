@@ -704,7 +704,9 @@
           "url": null,
           "order": null,
           "columns": []
-        },
+        }
+        ]
+    },
         {
           "tenantId": "mh",
           "id": 13,

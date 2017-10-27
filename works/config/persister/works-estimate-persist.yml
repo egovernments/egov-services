@@ -17,8 +17,8 @@ serviceMaps:
         councilresolutiondate, workordercreated, billscreated, spilloverflag, 
         cancellationreason, cancellationremarks, detailedestimatecreated, 
         stateid, Asset, implementationperiod, fundavailable, fundsanctioningauthority, 
-        pmcrequired, pmctype, pmcname, createdby, createddate, lastmodifiedby, 
-        lastmodifieddate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
+        pmcrequired, pmctype, pmcname, createdby, createdtime, lastmodifiedby, 
+        lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
         ?, ?, ?, ?, ?, 
         ?, ?, ?, ?, ?, 
         ?, ?, ?, ?, 
@@ -27,184 +27,185 @@ serviceMaps:
         ?, ?, ?, ?, ?, 
         ?, ?, ?, ?, ?, ?, 
         ?);
-      basePath: $.AbstractEstimate.*
+      basePath: $.abstractEstimates.*
       jsonMaps:
          
-       - jsonPath: $.AbstractEstimate.*.id
+       - jsonPath: $.abstractEstimates.*.id
        
-       - jsonPath: $.AbstractEstimate.*.tenantId
+       - jsonPath: $.abstractEstimates.*.tenantId
          
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateNumber
+       - jsonPath: $.abstractEstimates.*.abstractEstimateNumber
          
-       - jsonPath: $.AbstractEstimate.*.subject
+       - jsonPath: $.abstractEstimates.*.subject
        
-       - jsonPath: $.AbstractEstimate.*.fund
+       - jsonPath: $.abstractEstimates.*.fund
        
-       - jsonPath: $.AbstractEstimate.*.referenceType
+       - jsonPath: $.abstractEstimates.*.referenceType
        
-       - jsonPath: $.AbstractEstimate.*.referenceNumber
+       - jsonPath: $.abstractEstimates.*.referenceNumber
        
-       - jsonPath: $.AbstractEstimate.*.function
+       - jsonPath: $.abstractEstimates.*.function
        
-       - jsonPath: $.AbstractEstimate.*.description
+       - jsonPath: $.abstractEstimates.*.description
        
-       - jsonPath: $.AbstractEstimate.*.budgetHead
+       - jsonPath: $.abstractEstimates.*.budgetHead
        
-       - jsonPath: $.AbstractEstimate.*.scheme
+       - jsonPath: $.abstractEstimates.*.scheme
                  
-       - jsonPath: $.AbstractEstimate.*.subScheme
+       - jsonPath: $.abstractEstimates.*.subScheme
                  
-       - jsonPath: $.AbstractEstimate.*.dateOfProposal
+       - jsonPath: $.abstractEstimates.*.dateOfProposal
          dbType: LONG
          
-       - jsonPath: $.AbstractEstimate.*.department
+       - jsonPath: $.abstractEstimates.*.department
                   
-       - jsonPath: $.AbstractEstimate.*.adminSanctionNumber
+       - jsonPath: $.abstractEstimates.*.adminSanctionNumber
        
-       - jsonPath: $.AbstractEstimate.*.adminSanctionDate
+       - jsonPath: $.abstractEstimates.*.adminSanctionDate
          dbType: LONG
        
-       - jsonPath: $.AbstractEstimate.*.adminSanctionBy
+       - jsonPath: $.abstractEstimates.*.adminSanctionBy
        
-       - jsonPath: $.AbstractEstimate.*.status
+       - jsonPath: $.abstractEstimates.*.status
        
-       - jsonPath: $.AbstractEstimate.*.beneficiary
+       - jsonPath: $.abstractEstimates.*.beneficiary
                   
-       - jsonPath: $.AbstractEstimate.*.modeOfAllotment
+       - jsonPath: $.abstractEstimates.*.modeOfAllotment.code
          
-       - jsonPath: $.AbstractEstimate.*.typeOfWork
+       - jsonPath: $.abstractEstimates.*.typeOfWork.code
        
-       - jsonPath: $.AbstractEstimate.*.natureOfWork
+       - jsonPath: $.abstractEstimates.*.natureOfWork.code
        
-       - jsonPath: $.AbstractEstimate.*.subTypeOfWork
+       - jsonPath: $.abstractEstimates.*.subTypeOfWork.code
        
-       - jsonPath: $.AbstractEstimate.*.ward
+       - jsonPath: $.abstractEstimates.*.ward.code
        
-       - jsonPath: $.AbstractEstimate.*.technicalSanctionNumber
+       - jsonPath: $.abstractEstimates.*.technicalSanctionNumber
                
-       - jsonPath: $.AbstractEstimate.*.technicalSanctionDate
+       - jsonPath: $.abstractEstimates.*.technicalSanctionDate
          dbType: LONG
        
-       - jsonPath: $.AbstractEstimate.*.technicalSanctionBy
+       - jsonPath: $.abstractEstimates.*.technicalSanctionBy
        
-       - jsonPath: $.AbstractEstimate.*.locality
+       - jsonPath: $.abstractEstimates.*.locality.code
        
-       - jsonPath: $.AbstractEstimate.*.workCategory
+       - jsonPath: $.abstractEstimates.*.workCategory
        
-       - jsonPath: $.AbstractEstimate.*.councilResolutionNumber
+       - jsonPath: $.abstractEstimates.*.councilResolutionNumber
                 
-       - jsonPath: $.AbstractEstimate.*.councilResolutionDate
+       - jsonPath: $.abstractEstimates.*.councilResolutionDate
                 
-       - jsonPath: $.AbstractEstimate.*.workOrderCreated
+       - jsonPath: $.abstractEstimates.*.workOrderCreated
          type: BOOLEAN
        
-       - jsonPath: $.AbstractEstimate.*.billsCreated
+       - jsonPath: $.abstractEstimates.*.billsCreated
          type: BOOLEAN
                   
-       - jsonPath: $.AbstractEstimate.*.spillOverFlag
+       - jsonPath: $.abstractEstimates.*.spillOverFlag
          type: BOOLEAN
        
-       - jsonPath: $.AbstractEstimate.*.cancellationReason
+       - jsonPath: $.abstractEstimates.*.cancellationReason
        
-       - jsonPath: $.AbstractEstimate.*.cancellationRemarks
+       - jsonPath: $.abstractEstimates.*.cancellationRemarks
        
-       - jsonPath: $.AbstractEstimate.*.detailedEstimateCreated
+       - jsonPath: $.abstractEstimates.*.detailedEstimateCreated
          type: BOOLEAN
        
-       - jsonPath: $.AbstractEstimate.*.stateId
+       - jsonPath: $.abstractEstimates.*.stateId
        
-       - jsonPath: $.AbstractEstimate.*.asset
+       - jsonPath: $.abstractEstimates.*.asset
        
-       - jsonPath: $.AbstractEstimate.*.implementationPeriod
+       - jsonPath: $.abstractEstimates.*.implementationPeriod
          dbType: LONG
                 
-       - jsonPath: $.AbstractEstimate.*.fundAvailable
+       - jsonPath: $.abstractEstimates.*.fundAvailable
          type: BOOLEAN
                   
-       - jsonPath: $.AbstractEstimate.*.fundSanctioningAuthority
+       - jsonPath: $.abstractEstimates.*.fundSanctioningAuthority
                   
-       - jsonPath: $.AbstractEstimate.*.pmcRequired
+       - jsonPath: $.abstractEstimates.*.pmcRequired
          type: BOOLEAN
                 
-       - jsonPath: $.AbstractEstimate.*.pmcType
+       - jsonPath: $.abstractEstimates.*.pmcType
                
-       - jsonPath: $.AbstractEstimate.*.pmcName
+       - jsonPath: $.abstractEstimates.*.pmcName
        
-       - jsonPath: $.AbstractEstimate.*.auditDetails.createdBy
+       - jsonPath: $.abstractEstimates.*.auditDetails.createdBy
+ 
+       - jsonPath: $.AbstractEstimate.*.auditDetails.createdTime
        
-       - jsonPath: $.AbstractEstimate.*.auditDetails.createdDate
-       
-       - jsonPath: $.AbstractEstimate.*.auditDetails.lastModifiedBy
-       
-       - jsonPath: $.AbstractEstimate.*.auditDetails.lastModifiedDate 
+       - jsonPath: $.abstractEstimates.*.auditDetails.lastModifiedBy
+  
+       - jsonPath: $.AbstractEstimate.*.auditDetails.lastModifiedTime 
        
     - query: INSERT INTO egw_abstractestimate_details(
             id, tenantid, abstractestimate, nameofwork, estimateamount, estimatenumber, 
-            createdby, createddate, lastmodifiedby, lastmodifieddate, grossamountbilled, 
+            createdby, createdtime, lastmodifiedby, lastmodifiedtime, grossamountbilled, 
             projectcode) VALUES 
             (?, ?, ?, ?, ?, ?, 
             ?, ?, ?, ?, ?, 
             ?);
-      basePath: $.AbstractEstimate.*.abstractEstimateDetails.*
+      basePath: $.abstractEstimates.*.abstractEstimateDetails.*
       jsonMaps:
          
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.id
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.id
          
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.tenantId
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.tenantId
          
-       - jsonPath: $.AbstractEstimate[?({id} in @.abstractEstimateDetails[*].id)].id
+       - jsonPath: $.abstractEstimates[?({id} in @.abstractEstimateDetails[*].id)].id
        
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.nameOfWork
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.nameOfWork
        
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.estimateAmount
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.estimateAmount
        
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.estimateNumber
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.estimateNumber
        
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.auditDetails.createdBy
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.auditDetails.createdBy
        
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.auditDetails.createdDate
+       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.auditDetails.createdTime
+
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.auditDetails.lastModifiedBy
        
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.auditDetails.lastModifiedBy
+       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.auditDetails.lastModifiedTime
+
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.grossAmountBilled
        
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.auditDetails.lastModifiedDate
-       
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.grossAmountBilled
-       
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.projectcode
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectcode
        
        
     - query: INSERT INTO egw_projectcode(
             id, tenantid, code, detailedestimate, description, name, status, 
-            completiondate, projectvalue, createdby, createddate, lastmodifiedby, 
-            lastmodifieddate) VALUES 
+            completiondate, projectvalue, createdby, createdtime, lastmodifiedby, 
+            lastmodifiedtime) VALUES 
             (?, ?, ?, ?, ?, ?, ?, 
             ?, ?, ?, ?, ?, 
             ?);
-      basePath: $.AbstractEstimate.*.abstractEstimateDetails.*.projectCode.*
+      basePath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*
       jsonMaps:
          
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.projectCode.*.id
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.id
          
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.projectCode.*.tenantId
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.tenantId
          
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.projectCode.*.code
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.code
        
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.projectCode.*.detailedEstimate
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.detailedEstimate
        
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.projectCode.*.description
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.description
        
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.projectCode.*.name
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.name
        
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.projectCode.*.status
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.status
        
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.projectCode.*.completionDate
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.completionDate
         
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.projectCode.*.projectValue
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.projectValue
        
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.projectCode.*.auditDetails.createdBy
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.auditDetails.createdBy
+ 
+       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.projectCode.*.auditDetails.createdTime
        
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.projectCode.*.auditDetails.createdDate
-       
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.projectCode.*.auditDetails.lastModifiedBy
-       
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.projectCode.*.auditDetails.lastModifiedDate
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.projectCode.*.auditDetails.lastModifiedTime
+

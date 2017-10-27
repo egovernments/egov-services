@@ -290,7 +290,8 @@ paths:
             description: |
               issued to employee of the IndentIssue
           - name: stateId
-            type: string
+            type: integer
+            format: int64
             in: query
             description: |
               state id of the IndentIssue
@@ -360,6 +361,109 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
+    /nonindentissues/_search:
+      post:
+        summary: Get the list of nonindentissues
+        description: non indent issues
+        tags: 
+          - Inventory
+          - NonIndentIssue
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: ids
+            type: array
+            items: 
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: materialIssue
+            type: integer
+            format: int64
+            in: query
+            description: |
+              material issue of the Non Indent Issue
+          - name: issuePurpose
+            type: string
+            in: query
+            description: |
+              issue purpose of the Non Indent Issue
+            enum:
+              - WriteOffORScrap
+              - ReturnToSupplier
+          - name: stateId
+            type: integer
+            format: int64
+            in: query
+            description: |
+              state id of the Non Indent Issue
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/offset"
+          - name: sortBy
+            type: string
+            in: query
+            description: |
+              This takes any field from the Object seperated by comma and asc,desc keywords.  
+              example name asc,code desc or name,code or name,code desc 
+        responses:
+          200:
+            description: NonIndentIssue retrieved Successfully
+            schema:
+              $ref: '#/definitions/NonIndentIssueResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    
+    /nonindentissues/_create:
+      post:
+        summary: Create  new  nonindentissues
+        description: Create  new nonindentissues
+        tags: 
+          - Inventory
+          - NonIndentIssue
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: nonIndentIssueRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/NonIndentIssueRequest'
+        responses:
+          201:
+            description: NonIndentIssue created Successfully
+            schema:
+              $ref: '#/definitions/NonIndentIssueResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    
+    /nonindentissues/_update:
+      post:
+        summary: Update any of the nonindentissues
+        description: Update any of the nonindentissues
+        tags: 
+          - Inventory
+          - NonIndentIssue
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: nonIndentIssueRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/NonIndentIssueRequest'
+        responses:
+          200:
+            description: NonIndentIssue updated Successfully
+            schema:
+              $ref: '#/definitions/NonIndentIssueResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /materials/_search:
       post:
         summary: Get the list of materials
@@ -2122,6 +2226,88 @@ definitions:
             $ref: '#/definitions/IndentIssue'
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
+          
+    NonIndentIssue:
+      type: object
+      description: |
+          
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the Non Indent Issue
+        materialIssue:
+          $ref: "#/definitions/MaterialIssue"
+        issuePurpose:
+          type: string
+          enum:
+            - WriteOffORScrap
+            - ReturnToSupplier
+          description: |
+            issue purpose of the Non Indent Issue
+        stateId:
+          type: integer
+          format: int64
+          description: |
+            state id of the Non Indent Issue
+        nonIndentIssueDetails:
+          type:  array
+          description:  |
+            non indent issue details of the NonIndentIssue
+          items:
+            $ref: "#/definitions/NonIndentIssueDetails"
+      required:
+      - issuePurpose
+      
+    NonIndentIssueDetails:
+      type: object
+      description: |
+          
+      properties:
+        nonIndentIssue:
+          $ref: "#/definitions/NonIndentIssue"
+        materialReceiptHeader:
+          $ref: "#/definitions/MaterialReceiptHeader"
+        material:
+          $ref: "#/definitions/Material"
+        quantityIssued:
+          type: integer
+          format: int32
+          description: |
+            quantity issued of the NonIndentIssueDetails
+        description:
+          type: string
+          maxLength: 500
+          description: |
+            description of the NonIndentIssueDetails
+      required:
+      - nonIndentIssue
+      - material
+      - quantityIssued
+      
+    NonIndentIssueRequest:
+      description: Contract class for web request. Array of NonIndentIssue items  are used in case of create or update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        nonIndentIssues:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/NonIndentIssue'
+            
+    NonIndentIssueResponse:
+      description: Contract class for web response. Array of NonIndentIssue items  are used in case of search ,create or update request. 
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        nonIndentIssues:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/NonIndentIssue'
+        page:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'      
 
     Material:
       type: object

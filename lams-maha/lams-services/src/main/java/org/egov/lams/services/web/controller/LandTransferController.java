@@ -37,5 +37,17 @@ public class LandTransferController {
 		
 		return new ResponseEntity<>(landTransferService.create(landTransferRequest),HttpStatus.CREATED);
 	}
+	
+	@PostMapping("_update")
+	public ResponseEntity<?> update(@RequestBody @Valid final LandTransferRequest landTransferRequest,
+			final BindingResult bindingResult) {
+
+		if (bindingResult.hasErrors())
+			return new ResponseEntity<>(
+					responseFactory.getErrorResponse(bindingResult, landTransferRequest.getRequestInfo()),
+					HttpStatus.BAD_REQUEST);
+
+		return new ResponseEntity<>(landTransferService.update(landTransferRequest), HttpStatus.OK);
+	}
 
 }

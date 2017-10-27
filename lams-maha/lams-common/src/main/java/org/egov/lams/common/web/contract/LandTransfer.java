@@ -36,3 +36,4 @@ public class LandTransfer {
 	private WorkFlowDetails workFlowDetails;
 	private AuditDetails auditDetails;
 }
+

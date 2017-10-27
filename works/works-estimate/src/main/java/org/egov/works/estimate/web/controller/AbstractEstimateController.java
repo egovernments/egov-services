@@ -65,7 +65,6 @@ public class AbstractEstimateController {
 	public AbstractEstimateResponse search(
 			@ModelAttribute @Valid AbstractEstimateSearchContract abstractEstimateSearchContract,
 			@RequestBody RequestInfo requestInfo, BindingResult errors, @RequestParam String tenantId) {
-		// do some logic here
 		if (errors.hasErrors())
 			throw new CustomBindException(errors);
 		final List<AbstractEstimate> abstractEstimates = abstractEstimateService.search(abstractEstimateSearchContract);

@@ -11,34 +11,6 @@ ReportDefinitions:
       outJsonPath: $.ConnectionIndex.ConnectionDetailsEs.supplyType
     - inJsonPath: $.receiptdate
       outJsonPath: $.ConnectionIndex.ConnectionDetailsEs.hscPipeSizeType
-  sourceColumns:
-  - name: receiptNo
-    label: reports.citizen.receiptno
-    type: string
-    source: citizen
-  - name: receiptDate
-    label: reports.citizen.receiptdate
-    type: number
-    source: citizen
-  - name: totalAmount
-    label: reports.citizen.totalamount
-    type: number
-    source: citizen
-  - name: payeeName
-    label: reports.citizen.payeename
-    type: number
-    source: citizen
-  - name: consumerAddress
-    label: reports.citizen.consumeraddress
-    type: number
-    source: citizen
-  - name: print
-    label: reports.citizen.print
-    type: number
-    source: citizen
-    linkedReport:
-      reportName: ReceiptDetail
-      linkedColumn: _url?/pgr/viewGrievance/:srn
     
   searchParams:
   - name: srn

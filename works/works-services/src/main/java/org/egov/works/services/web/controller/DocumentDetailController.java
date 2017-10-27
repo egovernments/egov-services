@@ -22,6 +22,7 @@ public class DocumentDetailController {
     @Autowired
     private DocumentDetailsService documentDetailsService;
 
+    @Autowired
     private ResponseInfoFactory responseInfoFactory;
 
     @PostMapping

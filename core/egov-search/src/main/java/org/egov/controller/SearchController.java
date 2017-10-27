@@ -1,5 +1,8 @@
 package org.egov.controller;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -7,12 +10,16 @@ import org.egov.SearchApp;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.domain.model.MetaDataRequest;
 import org.egov.domain.model.ReportDefinitions;
+import org.egov.domain.model.Response;
+import org.egov.domain.model.SearchResponse;
 import org.egov.report.service.SearchService;
 import org.egov.swagger.model.MetadataResponse;
 import org.egov.swagger.model.ReportDataResponse;
 import org.egov.swagger.model.ReportRequest;
 import org.egov.swagger.model.ReportResponse;
 import org.postgresql.util.PGobject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
@@ -23,6 +30,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import net.minidev.json.JSONObject;
 
@@ -40,7 +51,12 @@ public class SearchController {
 	private SearchService reportService;
 	
 	@Autowired
+	private Response responseInfoFactory;
+	
+	@Autowired
     public static ResourceLoader resourceLoader;
+	
+	public static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);
 
 	@PostMapping("/{moduleName}/metadata/_get")
 	@ResponseBody
@@ -59,9 +75,16 @@ public class SearchController {
 	@ResponseBody
 	public ResponseEntity<?> getReportData(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final ReportRequest reportRequest,
 			final BindingResult errors) {
+		SearchResponse searchResponse = new SearchResponse();
 		try {
-			List<String> jsonObject = reportService.getReportData(reportRequest,moduleName,reportRequest.getReportName());
-			return new ResponseEntity<>(jsonObject, HttpStatus.OK);
+			List<String> reportData = reportService.getReportData(reportRequest,moduleName,reportRequest.getReportName());
+		    Type type = new TypeToken<ArrayList<Map<String, Object>>>() {}.getType();
+			Gson gson = new Gson();
+			List<Map<String, Object>> data = gson.fromJson(reportData.toString(), type);
+			LOGGER.info("service response: "+data);
+			searchResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(reportRequest.getRequestInfo(), true));
+			searchResponse.setData(data);
+			return new ResponseEntity<>(searchResponse, HttpStatus.OK);
 		} catch(NullPointerException e){
 			e.printStackTrace();
 			return reportService.getFailureResponse(reportRequest.getRequestInfo(),reportRequest.getTenantId());

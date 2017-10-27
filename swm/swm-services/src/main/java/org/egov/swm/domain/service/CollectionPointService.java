@@ -24,9 +24,9 @@ public class CollectionPointService {
 	@Transactional
 	public CollectionPointRequest create(CollectionPointRequest collectionPointRequest) {
 
-		for (CollectionPoint cp : collectionPointRequest.getCollectionPoints()) {
+		Long userId = null;
 
-			Long userId = 1l;
+		for (CollectionPoint cp : collectionPointRequest.getCollectionPoints()) {
 
 			if (collectionPointRequest.getRequestInfo() != null
 					&& collectionPointRequest.getRequestInfo().getUserInfo() != null
@@ -47,9 +47,17 @@ public class CollectionPointService {
 	@Transactional
 	public CollectionPointRequest update(CollectionPointRequest collectionPointRequest) {
 
+		Long userId = null;
+
 		for (CollectionPoint cp : collectionPointRequest.getCollectionPoints()) {
 
-			setAuditDetails(cp, collectionPointRequest.getRequestInfo().getUserInfo().getId());
+			if (collectionPointRequest.getRequestInfo() != null
+					&& collectionPointRequest.getRequestInfo().getUserInfo() != null
+					&& null != collectionPointRequest.getRequestInfo().getUserInfo().getId()) {
+				userId = collectionPointRequest.getRequestInfo().getUserInfo().getId();
+			}
+
+			setAuditDetails(cp, userId);
 			populateBinIdDetailsIds(cp);
 		}
 

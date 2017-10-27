@@ -1,0 +1,94 @@
+UIInfo:
+- referencePath: "/vehicles"
+  searchUrl: "/vehicles/_search?regNumber={regNumber}"
+  
+  groups:
+    VehicleDetails1:
+      fields:
+      - vehicles[0].vehicleType.code
+      - vehicles[0].regNumber
+      - vehicles[0].vehicleCapacity
+      - vehicles[0].engineSrNumber
+      - vehicles[0].numberOfPersonsReq
+      - vehicles[0].chassisSrNumber
+      - vehicles[0].model
+      - vehicles[0].fuelType.code
+    VehicleDetails2:
+      fields:
+      - vehicles[0].ulbOwnedVehicle
+      - vehicles[0].vendor.name
+    InsuranceDetails:
+      fields:
+      - vehicles[0].insuranceNumber
+      - vehicles[0].insuranceValidityDate
+      - vehicles[0].insuranceDocuments.refId
+    PurchaseDetails:
+      fields:
+      - vehicles[0].purchaseDate
+      - vehicles[0].price
+      - vehicles[0].sourceOfPurchase
+    WarrantyDetails:
+      fields:
+      - vehicles[0].isUnderWarranty
+      - vehicles[0].kilometers
+      - vehicles[0].endOfWarranty
+      - vehicles[0].remarks
+  externalData:
+  - fieldName: vehicles[0].vehicleType.code
+    url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType"
+    keyPath: "$..code"
+    valPath: "$..code"
+  - fieldName: vehicles[0].fuelType.code
+    url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=FuelType"
+    keyPath: "$..code"
+    valPath: "$..code"
+  - fieldName: vehicles[0].vendor.name
+    url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vendor"
+    keyPath: "$..name"
+    valPath: "$..name"
+  searchResult:
+    rowClickUrlUpdate: /update/vehicles/{regNumber}
+    rowClickUrlView: /view/vehicles/{regNumber}
+    columns:
+    - vehicleType
+    - regNumber
+    - vehicleCapacity
+    - engineSrNumber
+    - numberOfPersonsReq
+    - chassisSrNumber
+    - model
+    - fuelType
+    - ulbOwnedVehicle
+    - vendor
+    - insuranceNumber
+    - insuranceValidityDate
+    - purchaseDate
+    - yearOfPurchase
+    - price
+    - sourceOfPurchase
+    - isUnderWarranty
+    - kilometers
+    - endOfWarranty
+    - remarks
+    values:
+    - vehicleType.code
+    - regNumber
+    - vehicleCapacity
+    - engineSrNumber
+    - numberOfPersonsReq
+    - chassisSrNumber
+    - model
+    - fuelType.code
+    - ulbOwnedVehicle
+    - vendor.name
+    - insuranceNumber
+    - insuranceValidityDate
+    - purchaseDate
+    - yearOfPurchase
+    - price
+    - sourceOfPurchase
+    - isUnderWarranty
+    - kilometers
+    - endOfWarranty
+    - remarks
+    resultObjectName: vehicles

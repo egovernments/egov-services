@@ -45,13 +45,12 @@ public class VehicleService {
 	public VehicleRequest create(VehicleRequest vehicleRequest) {
 
 		validate(vehicleRequest);
-
+		Long userId = null;
+		Date purchaseDate;
 		for (Vehicle v : vehicleRequest.getVehicles()) {
 
-			Long userId = 1l;
-
 			if (v.getPurchaseDate() != null) {
-				Date purchaseDate = new Date(v.getPurchaseDate());
+				purchaseDate = new Date(v.getPurchaseDate());
 				v.setYearOfPurchase(purchaseDate != null ? String.valueOf(purchaseDate.getYear()) : null);
 			}
 
@@ -75,10 +74,15 @@ public class VehicleService {
 	public VehicleRequest update(VehicleRequest vehicleRequest) {
 
 		validate(vehicleRequest);
-
+		Long userId = null;
 		for (Vehicle v : vehicleRequest.getVehicles()) {
 
-			setAuditDetails(v, vehicleRequest.getRequestInfo().getUserInfo().getId());
+			if (vehicleRequest.getRequestInfo() != null && vehicleRequest.getRequestInfo().getUserInfo() != null
+					&& null != vehicleRequest.getRequestInfo().getUserInfo().getId()) {
+				userId = vehicleRequest.getRequestInfo().getUserInfo().getId();
+			}
+
+			setAuditDetails(v, userId);
 
 		}
 

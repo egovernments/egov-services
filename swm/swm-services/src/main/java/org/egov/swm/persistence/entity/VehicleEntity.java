@@ -2,6 +2,7 @@ package org.egov.swm.persistence.entity;
 
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.Documents;
+import org.egov.swm.domain.model.FuelType;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleType;
 import org.egov.swm.domain.model.Vendor;
@@ -24,6 +25,8 @@ public class VehicleEntity {
 	private String tenantId = null;
 
 	private String vehicleType = null;
+
+	private String fuelType = null;
 
 	private String regNumber = null;
 
@@ -59,6 +62,12 @@ public class VehicleEntity {
 
 	private String insuranceDocuments = null;
 
+	private Boolean isUnderWarranty = null;
+
+	private Long kilometers = null;
+
+	private Long endOfWarranty = null;
+
 	private String createdBy = null;
 
 	private String lastModifiedBy = null;
@@ -72,7 +81,8 @@ public class VehicleEntity {
 		Vehicle vehicle = new Vehicle();
 		vehicle.setId(id);
 		vehicle.setTenantId(tenantId);
-		vehicle.setVehicleType(VehicleType.builder().name(vehicleType).build());
+		vehicle.setVehicleType(VehicleType.builder().code(vehicleType).build());
+		vehicle.setFuelType(FuelType.builder().code(fuelType).build());
 		vehicle.setRegNumber(regNumber);
 		vehicle.setEngineSrNumber(engineSrNumber);
 		vehicle.setChassisSrNumber(chassisSrNumber);
@@ -90,6 +100,9 @@ public class VehicleEntity {
 		vehicle.setInsuranceNumber(insuranceNumber);
 		vehicle.setInsuranceValidityDate(insuranceValidityDate);
 		vehicle.setInsuranceDocuments(Documents.builder().id(insuranceDocuments).build());
+		vehicle.setIsUnderWarranty(isUnderWarranty);
+		vehicle.setKilometers(kilometers);
+		vehicle.setEndOfWarranty(endOfWarranty);
 		vehicle.setAuditDetails(new AuditDetails());
 		vehicle.getAuditDetails().setCreatedBy(createdBy);
 		vehicle.getAuditDetails().setCreatedTime(createdTime);

@@ -2032,8 +2032,8 @@ definitions:
             indent status of the Indent
         indentMaterials:
           type:  array
-          minimum: 1
-          maximum: 50
+          minItems: 1
+          maxItems: 50
           items:
             $ref: "#/definitions/IndentDetail"
         totalIndentValue:
@@ -2150,22 +2150,25 @@ definitions:
           minLength: 4    
         materialIssue:
           $ref: "#/definitions/MaterialIssue"
-        issuedToEmployee:
-          type:  string
-          description: |
-            issued to employee of the IndentIssue
         stateId:
           type: string
           description: |
             state id of the IndentIssue
         indentIssueDetails:
           type:  array
-          minimum: 1
-          maximum: 50
+          minItems: 1
+          maxItems: 50
           description:  |
             indent issue details of the IndentIssue
           items:
             $ref: "#/definitions/IndentIssueDetail"
+        issuedToEmployee:
+          type:  string
+          description: |
+            Indent Issued To Employee    
+        issuedToDesignation:
+          type: string
+          description: Designation of the employee to whom the indent is issued.    
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
 
@@ -2559,7 +2562,7 @@ definitions:
           description: Tenant id of the Material Issue
           maxLength: 128
           minLength: 4    
-        store:
+        issuingStore:
           $ref: "#/definitions/Store"
         issueNoteNumber:
           type: string
@@ -2599,12 +2602,12 @@ definitions:
             fileStoreId  File Store id of the Indent Issue.    
         designation:
           type: string
-          description: Designation of the of the created by user at the time of Indent Issue/Non Indent Issue created.
+          description: Designation of the created by user at the time of Indent Issue/Non Indent Issue created.
           format: varchar    
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
-      - store
+      - issuingStore
       - issueDate
       
     MaterialIssueRequest:
@@ -2829,7 +2832,7 @@ definitions:
             fileStoreId  File Store id of the Purchase Order Generated
         designation:
           type: string
-          description: Designation of the of the created by user at the time of Purchase Order creation.
+          description: Designation of the created by user at the time of Purchase Order creation.
           format: varchar
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
@@ -3032,8 +3035,8 @@ definitions:
             description of the Scrap
         scrapDetails:
           type:  array
-          minimum: 1
-          maximum: 50
+          minItems: 1
+          maxItems: 50
           description:  |
             scrap details of the Scrap
           items:
@@ -3052,12 +3055,17 @@ definitions:
           format: int64
           description: |
             state id of the Scrap
+        designation:
+          type: string
+          description: Designation of the created by user at the time of Scrap Note creation.
+          format: varchar    
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"   
       required:
       - store
       - scrapNumber
       - scrapDate
+      - scrapDetails
       
     ScrapDetails:
       type: object
@@ -3101,6 +3109,7 @@ definitions:
       - material
       - lotNumber
       - scrapReason
+      - scrapQuantity
       
     ScrapRequest:
       description: Contract class for web request. Array of Scrap items  are used in case of create or update
@@ -3180,12 +3189,13 @@ definitions:
             fileStoreId  File Store id of the Transfer Inward Note
         designation:
           type: string
-          description: Designation of the of the created by user at the time of Purchase Order creation.
+          description: Designation of the created by user at the time of Transfer Inward creation.
           format: varchar
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"   
       required:
       - receiptDate
+      - transferOutWard
       
     TransferInwardRequest:
       description: Contract class for web request. Array of TransferInward items  are used in case of create or update
@@ -3340,7 +3350,7 @@ definitions:
           description: Tenant id of the Transfer Indent Note
           maxLength: 128
           minLength: 4    
-        store:
+        issuingStore:
           $ref: "#/definitions/Store"
         issueDate:
           type: integer
@@ -3351,6 +3361,10 @@ definitions:
           type: string
           description: |
             issued to employee of the TransferOutward
+        issuedToDesignation:
+          type: string
+          description: Designation of the issuedToEmployee user.
+          format: varchar    
         description:
           type: string
           maxLength: 1000
@@ -3386,12 +3400,12 @@ definitions:
             fileStoreId  File Store id of the Transfer Outward Note
         designation:
           type: string
-          description: Designation of the of the created by user at the time of Purchase Order creation.
-          format: varchar    
+          description: Designation of the created by user at the time of Purchase Order creation.
+          format: varchar
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
-      - store
+      - issuingStore
       - issueDate
       
     TransferOutwardRequest:

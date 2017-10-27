@@ -6,6 +6,9 @@ import {translate} from '../../../common/common';
 import {PageLoadingIndicator, CustomizedAxisTick, CustomizedYAxisLabel, CustomTooltip, getTenantId} from './ReportUtils';
 import Api from '../../../../api/api';
 import _ from "lodash";
+import moment from 'moment';
+
+const TOP5_REPORT_MONTH_LIMIT = 6; //Last month count including current month
 
 export default class Top5ComplaintTypes extends Component {
 
@@ -16,6 +19,14 @@ export default class Top5ComplaintTypes extends Component {
     }
   }
 
+  getLastMonthNumbers = (lastMonthLimit) => {
+    var lastMonthsNo = [];
+    for(let i=1;i<=lastMonthLimit;i++){
+      lastMonthsNo.push(parseInt(moment().add(i-lastMonthLimit,'months').format('MM')));
+    }
+    return lastMonthsNo;
+  }
+
   componentDidMount(){
 
     let topFiveComplaintsData;
@@ -23,16 +34,19 @@ export default class Top5ComplaintTypes extends Component {
       Api.commonApiPost("pgr/dashboard/complainttype",{type : "topfive"}, {tenantId:getTenantId()})
     ]).then((responses)=>{
        try{
+
           let monthWiseData = _.groupBy(responses[0], 'month');
 
-          topFiveComplaintsData = Object.keys(monthWiseData).map((month)=>{
-              let dataArry = monthWiseData[month].map((complaintTypeData) =>{
+          let lastMonths = this.getLastMonthNumbers(TOP5_REPORT_MONTH_LIMIT);
+
+          topFiveComplaintsData = lastMonths.map((month)=>{
+              let dataArry = monthWiseData[`${month}.0`] && monthWiseData[`${month}.0`].map((complaintTypeData) =>{
                  return {
                    name : complaintTypeData.ComplaintType,
                    count : complaintTypeData.count
                  }
               });
-              return {name:month, data:dataArry};
+              return {name:month, data:dataArry || []};
           });
 
        }
@@ -52,11 +66,14 @@ export default class Top5ComplaintTypes extends Component {
 
   render(){
 
+    if(this.state.isFetchingData){
+      return <PageLoadingIndicator></PageLoadingIndicator>;
+    }
+
     const data = this.state.topFiveComplaintsData || [];
 
     return (
       <div>
-      {this.state.isFetchingData && <PageLoadingIndicator></PageLoadingIndicator>}
       <Grid fluid={true}>
         <br/>
         <Card>

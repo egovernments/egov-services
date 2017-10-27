@@ -64,7 +64,7 @@ export default class PendencyReport extends Component {
                 title={translate("pgr.dashboar.chart.agewise")}/>
                <div style={{ width: '100%', height: 230}}>
                 <ResponsiveContainer>
-                  <BarChart data={data} margin={{top: 5, right: 30, left: 5, bottom: 15}}>
+                  <BarChart data={data} margin={{top: 5, right: 30, left: 15, bottom: 15}}>
                     <XAxis tick={<CustomizedAxisTick></CustomizedAxisTick>} dataKey="name" />
                     <YAxis name="Number of complaints" label={<CustomizedYAxisLabel title="Number of complaints" />}/>
                     <Tooltip/>

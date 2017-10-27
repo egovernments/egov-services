@@ -1,19 +1,21 @@
 package org.egov.inv.web.contract;
 
-import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.inv.domain.model.Store;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
-import lombok.Data;
-
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Builder
 public class StoreResponse {
     @JsonProperty("responseInfo")
     private ResponseInfo responseInfo;
-    
+
     @JsonProperty("stores")
     private List<Store> stores;
 

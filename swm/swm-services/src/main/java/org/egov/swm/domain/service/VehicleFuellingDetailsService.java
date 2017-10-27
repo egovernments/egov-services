@@ -56,12 +56,12 @@ public class VehicleFuellingDetailsService {
 
 		validate(vehicleFuellingDetailsRequest);
 
+		Long userId = null;
+
 		for (VehicleFuellingDetails v : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
 
 			v.setTransactionNo(
 					generateTransactionNumber(v.getTenantId(), vehicleFuellingDetailsRequest.getRequestInfo()));
-
-			Long userId = 1l;
 
 			if (vehicleFuellingDetailsRequest.getRequestInfo() != null
 					&& vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo() != null
@@ -82,9 +82,17 @@ public class VehicleFuellingDetailsService {
 
 		validate(vehicleFuellingDetailsRequest);
 
+		Long userId = null;
+
 		for (VehicleFuellingDetails v : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
 
-			setAuditDetails(v, vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo().getId());
+			if (vehicleFuellingDetailsRequest.getRequestInfo() != null
+					&& vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo() != null
+					&& null != vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo().getId()) {
+				userId = vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo().getId();
+			}
+
+			setAuditDetails(v, userId);
 
 		}
 

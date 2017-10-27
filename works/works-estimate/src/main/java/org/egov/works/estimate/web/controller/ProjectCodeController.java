@@ -2,6 +2,8 @@ package org.egov.works.estimate.web.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.egov.works.commons.web.contract.RequestInfo;
 import org.egov.works.estimate.domain.exception.CustomBindException;
 import org.egov.works.estimate.domain.service.ProjectCodeService;
@@ -26,7 +28,7 @@ public class ProjectCodeController {
 	private ProjectCodeService projectCodeService;
 
 	@PostMapping("/_create")
-	public ProjectCodeResponse create(@RequestBody ProjectCodeRequest projectCodeRequest, BindingResult errors,
+	public ProjectCodeResponse create(@Valid @RequestBody ProjectCodeRequest projectCodeRequest, BindingResult errors,
 			@RequestParam String tenantId) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
@@ -37,6 +39,20 @@ public class ProjectCodeController {
 		projectCodeResponse.setProjectCodes(projectCodes);
 		return projectCodeResponse;
 	}
+	
+	@PostMapping("/_update")
+	public ProjectCodeResponse update(@Valid @RequestBody ProjectCodeRequest projectCodeRequest, BindingResult errors,
+			@RequestParam String tenantId) {
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+		List<ProjectCode> projectCodes = projectCodeService.update(projectCodeRequest);
+
+		ProjectCodeResponse projectCodeResponse = new ProjectCodeResponse();
+		projectCodeResponse.setProjectCodes(projectCodes);
+		return projectCodeResponse;
+	}
+	
 
 	@PostMapping("/_search")
 	public ProjectCodeResponse search(@ModelAttribute ProjectCodeSearchContract projectCodeSearchContract,

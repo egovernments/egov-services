@@ -1,11 +1,5 @@
 package org.egov.inv.persistence.repository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.egov.inv.domain.model.Pagination;
 import org.egov.inv.domain.model.Store;
 import org.egov.inv.persistence.entity.StoresEntity;
@@ -15,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 @Service
 public class StoreJdbcRepository {
@@ -121,7 +117,7 @@ public class StoreJdbcRepository {
         List<Store> storesList = new ArrayList<>();
 
         List<StoresEntity> storesEntities = namedParameterJdbcTemplate
-                        .query(searchQuery.toString(), paramValues, row);
+                .query(searchQuery.toString(), paramValues, row);
 
         for (StoresEntity storesEntity : storesEntities) {
 
@@ -188,7 +184,7 @@ public class StoreJdbcRepository {
     }
 
     public String checkCodeExistsQuery() {
-       return "select id from stores where code = :code and tenantid = :tenantid";        
+        return "select id from stores where code = :code and tenantid = :tenantid";
     }
 
 }

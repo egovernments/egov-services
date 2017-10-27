@@ -4,7 +4,6 @@ import lombok.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.inv.domain.model.Material;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @AllArgsConstructor

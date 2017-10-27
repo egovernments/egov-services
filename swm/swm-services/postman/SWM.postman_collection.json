@@ -8,7 +8,10 @@
 		"56b47e38-8a78-f967-445d-0cd1b3c0885f",
 		"d184c086-60ac-aca1-506c-688c900e4976",
 		"d7b074c2-7781-e01c-de0a-3e1d3e8ae737",
-		"620ee43b-3197-e3bb-98e6-8922ed140c9a"
+		"620ee43b-3197-e3bb-98e6-8922ed140c9a",
+		"f2f0bd30-6fa0-b94d-2247-843f4c712d4f",
+		"e60aa1b8-163a-02f2-9a58-c70d70d9ff95",
+		"56d63836-020a-3ea6-48a9-0d84dc0e909a"
 	],
 	"folders": [],
 	"folders_order": [],
@@ -198,6 +201,45 @@
 			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"3d585dec-bd33-4cf2-88fb-36c48fcf3d78\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
 		},
 		{
+			"id": "56d63836-020a-3ea6-48a9-0d84dc0e909a",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8899/swm-services/collectionpoints/_search?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "f9d736be-3091-c2a6-6ba1-30ee33171698",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Collection Point Search",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1509082133318,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"3d585dec-bd33-4cf2-88fb-36c48fcf3d78\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+		},
+		{
 			"id": "620ee43b-3197-e3bb-98e6-8922ed140c9a",
 			"headers": "Content-Type: application/json\nfi: \n",
 			"headerData": [
@@ -303,6 +345,68 @@
 			"currentHelper": "normal",
 			"helperAttributes": {},
 			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"3d585dec-bd33-4cf2-88fb-36c48fcf3d78\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+		},
+		{
+			"id": "e60aa1b8-163a-02f2-9a58-c70d70d9ff95",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8899/swm-services/collectionpoints/_update",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "f9d736be-3091-c2a6-6ba1-30ee33171698",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Collection point Update",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1509082111486,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24cc2960-0d9f-45b3-8c9b-c69ab7019abb\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"collectionPoints\":[\n      {\n      \t\t\"id\":\"e132a19a98b84e25bbc9c8e121b84436\",\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"name\":\"name\",\n            \"ward\" :{\n            \t\"code\":\"Ward Code 2\"\n            },\n            \"zoneCode\" :{\n            \t\"code\":\"zone Code 2\"\n            },\n            \"street\" :{\n            \t\"code\":\"Street Code 2\"\n            },\n            \"colony\" :{\n            \t\"code\":\"Colony Code 2\"\n            },\n            \"binIdDetails\":[\n\t            {\n\t            \t\"assetOrBinId\": \"assetOrBinId 1\",\n\t            \t\"rfidAssigned\": true,\n\t            \t\"rfid\": \"rfid 1\",\n\t            \t\"latitude\": 111.111,\n\t            \t\"longitude\": 222.222\n\t            },\n\t            {\n\t            \t\n            \t\"assetOrBinId\": \"assetOrBinId 2\",\n            \t\"rfidAssigned\": true,\n            \t\"rfid\": \"rfid 2\",\n            \t\"latitude\": 111.111,\n            \t\"longitude\": 222.222\n            \t}\n            \t\n            ]\n            \n      }\n   ]\n } "
+		},
+		{
+			"id": "f2f0bd30-6fa0-b94d-2247-843f4c712d4f",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8899/swm-services/collectionpoints/_create",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "f9d736be-3091-c2a6-6ba1-30ee33171698",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Collection point Create",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1509082093903,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24cc2960-0d9f-45b3-8c9b-c69ab7019abb\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"collectionPoints\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"name\":\"name\",\n            \"ward\" :{\n            \t\"code\":\"Ward Code 1\"\n            },\n            \"zoneCode\" :{\n            \t\"code\":\"zone Code 1\"\n            },\n            \"street\" :{\n            \t\"code\":\"Street Code 1\"\n            },\n            \"colony\" :{\n            \t\"code\":\"Colony Code 1\"\n            },\n            \"binIdDetails\":[\n\t            {\n\t            \t\"assetOrBinId\": \"assetOrBinId 1\",\n\t            \t\"rfidAssigned\": true,\n\t            \t\"rfid\": \"rfid 1\",\n\t            \t\"latitude\": 111.111,\n\t            \t\"longitude\": 222.222\n\t            },\n\t            {\n\t            \t\n            \t\"assetOrBinId\": \"assetOrBinId 2\",\n            \t\"rfidAssigned\": true,\n            \t\"rfid\": \"rfid 2\",\n            \t\"latitude\": 111.111,\n            \t\"longitude\": 222.222\n            \t}\n            \t\n            ]\n            \n      }\n   ]\n } "
 		}
 	]
 }

@@ -116,6 +116,9 @@ const CustomTooltip = (props)=>{
 
        const sortByDataValue = (payload) => {
          //let sortedPayload = [];
+         if(!payload || payload.length === 0)
+           return [];
+
          let sortedDatas = _.orderBy(payload[0].payload.data, ['count'], ['desc']);
          return sortedDatas.map((data)=>{
             for(let i=0;i<payload.length;i++){
@@ -124,6 +127,7 @@ const CustomTooltip = (props)=>{
                 return payload[i];
             }
          });
+
        }
 
        const { payload, label } = props;

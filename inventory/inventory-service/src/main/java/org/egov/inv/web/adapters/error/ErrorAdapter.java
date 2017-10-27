@@ -8,5 +8,5 @@ import org.egov.common.contract.response.ErrorResponse;
  * @param <T>
  */
 public interface ErrorAdapter<T> {
-    ErrorResponse adapt(T model);
+    ErrorResponse adapt(T model, String s);
 }

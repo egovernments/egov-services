@@ -1,5 +1,16 @@
 swagger: '2.0'
-
+  ######################################################
+  # All API's are POST. _create,_search,_update for post,get and put. RequestInfo will be part of body. For multiple records we can pass multiple value with comman seperated values*.
+  # All _search will be synchronous and all _create and _update will be asynchronous*.
+  # RequestInfo and ResponseInfo object should be reffered from Common*.
+  # In _search API, tenantId should be passed in query param. In _create/_update, tenantId should be passed in the model.
+  # Readonly means that even if these fields are passed in the request, it will be ignored in create/update and will not be added/updated in the entities. The readonly fields might be passed to the _search API's to make use of fields for the search Query API. while calling _search API's even mandatory fields might not be available, it is mandatory only in the _create API's*.
+  # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message.
+  # Definition must start with Upper case followed by camel case.
+  # Every model will have tenantId. Validate tenantId on create.
+  # Parameter name must start with small case followed by camel case.
+  # Path must be in small case.
+  ######################################################
 info:
   version: "1.0.0"
   title: Inventory Service
@@ -95,6 +106,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /indents/_create:
       post:
         summary: Create  new  indents
@@ -106,7 +118,7 @@ paths:
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - name: indentRequest
             in: body
-            description: Create  new 
+            description: Create  new Indent
             schema:
               $ref: '#/definitions/IndentRequest'
         responses:
@@ -118,6 +130,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /indents/_update:
       post:
         summary: Update any of the indents
@@ -142,6 +155,112 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
+    /indentnotes/_search:
+      post:
+        summary: Get the list of Indent Notes 
+        description: This API is used to search the indent notes raised in the system. There are 2 types of indents i.e., Indent Note (that is )raised by individual to request material(s) from store) and Transfer Indent(raised by store to request material(s) from other store)
+        tags: 
+          - Inventory
+          - IndentNote
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: ids
+            type: array
+            items: 
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: indent
+            type: integer
+            format: int64
+            in: query
+            description: |
+              indent of the Indent Note
+          - name: indentStore
+            type: integer
+            format: int64
+            in: query
+            description: |
+              indent store of the Indent Note
+          - name: inventoryType
+            type: string
+            in: query
+            description: |
+              inventory Type of the Indent Note 
+          - name: stateId
+            type: integer
+            format: int64
+            in: query
+            description: |
+              state id of the Indent Note
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/offset"
+          - name: sortBy
+            type: string
+            in: query
+            description: |
+              This takes any field from the Object seperated by comma and asc,desc keywords.  
+              example name asc,code desc or name,code or name,code desc 
+        responses:
+          200:
+            description: Indent Note retrieved Successfully
+            schema:
+              $ref: '#/definitions/IndentNoteResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /indentnotes/_create:
+      post:
+        summary: Create new Indent Note
+        description: Create new Indent Note
+        tags: 
+          - Inventory
+          - IndentNote
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: indentNoteRequest
+            in: body
+            description: Create new Indent Notes
+            schema:
+              $ref: '#/definitions/IndentNoteRequest'
+        responses:
+          201:
+            description: Indent Note created Successfully
+            schema:
+              $ref: '#/definitions/IndentNoteResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /indentnotes/_update:
+      post:
+        summary: Update Indent Notes
+        description: Update Indent Notes
+        tags: 
+          - Inventory
+          - IndentNote
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: indentNoteRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/IndentNoteRequest'
+        responses:
+          200:
+            description: Indent Note updated Successfully
+            schema:
+              $ref: '#/definitions/IndentNoteResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    
     /indentissues/_search:
       post:
         summary: Get the list of indentissues
@@ -192,6 +311,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /indentissues/_create:
       post:
         summary: Create  new  indentissues
@@ -215,6 +335,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /indentissues/_update:
       post:
         summary: Update any of the indentissues
@@ -406,6 +527,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /materials/_create:
       post:
         summary: Create  new  materials
@@ -429,6 +551,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /materials/_update:
       post:
         summary: Update any of the materials
@@ -525,6 +648,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /materialissues/_create:
       post:
         summary: Create  new  materialissues
@@ -548,6 +672,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /materialissues/_update:
       post:
         summary: Update any of the materialissues
@@ -611,6 +736,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /purchaseindents/_create:
       post:
         summary: Create  new  purchaseindents
@@ -634,6 +760,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /purchaseindents/_update:
       post:
         summary: Update any of the purchaseindents
@@ -715,6 +842,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /purchasematerials/_create:
       post:
         summary: Create  new  purchasematerials
@@ -738,6 +866,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /purchasematerials/_update:
       post:
         summary: Update any of the purchasematerials
@@ -854,11 +983,6 @@ paths:
             in: query
             description: |
               state id of the PurchaseOrder
-          - name: fileStoreId
-            type: string
-            in: query
-            description: |
-              fileStoreId  File Store id of the Purchase Order Generated
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/offset"
           - name: sortBy
@@ -1356,6 +1480,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /transferindentnotes/_create:
       post:
         summary: Create  new  transferindentnotes
@@ -1379,6 +1504,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /transferindentnotes/_update:
       post:
         summary: Update any of the transferindentnotes
@@ -1486,6 +1612,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /transferoutwards/_create:
       post:
         summary: Create  new  transferoutwards
@@ -1509,6 +1636,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /transferoutwards/_update:
       post:
         summary: Update any of the transferoutwards
@@ -1572,6 +1700,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /suppliers/_create:
       post:
         summary: Create  new  suppliers
@@ -1595,6 +1724,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /suppliers/_update:
       post:
         summary: Update any of the suppliers
@@ -1618,6 +1748,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /receiptnotes/_search:
       post:
         summary: Get list of material receipt notes based on below search parameter(s).
@@ -1692,6 +1823,7 @@ paths:
             schema:
               $ref: >-
                 https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+                
     /receiptnotes/_create:
       post:
         summary: Create New Material Receipt Note.
@@ -1717,6 +1849,7 @@ paths:
             schema:
               $ref: >-
                 https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+                
     /receiptnotes/_update:
       post:
         summary: Update existing Material Receipts.
@@ -1804,6 +1937,14 @@ definitions:
           format: BigDecimal
           description: |
             totalIndentValue  denormalized value from Indent Material
+        fileStoreId:
+          type: string
+          description: |
+            fileStoreId  File Store id of the Indent Note/Transfer Indent Generated
+        designation:
+          type: string
+          description: Designation of the employee at the time of Indent Note/Transfer Indent creation
+          format: varchar
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
@@ -2266,6 +2407,14 @@ definitions:
           format: BigDecimal
           description: |
             total issue value of the MaterialIssue
+        fileStoreId:
+          type: string
+          description: |
+            fileStoreId  File Store id of the Indent Issue.    
+        designation:
+          type: string
+          description: Designation of the of the created by user at the time of Indent Issue/Non Indent Issue created.
+          format: varchar    
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
@@ -2492,6 +2641,10 @@ definitions:
           type: string
           description: |
             fileStoreId  File Store id of the Purchase Order Generated
+        designation:
+          type: string
+          description: Designation of the of the created by user at the time of Purchase Order creation.
+          format: varchar
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
@@ -2635,7 +2788,7 @@ definitions:
             Whether Department is Active or not. If the value is TRUE, then Department is active,If the value is FALSE then Department is inactive,Default value is TRUE
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-              
+    
     StoreRequest:
       description: Contract class for web request. Array of Store items  are used in case of create or update
       properties:
@@ -2835,6 +2988,14 @@ definitions:
           format: int64
           description: |
             state id of the TransferInward
+        fileStoreId:
+          type: string
+          description: |
+            fileStoreId  File Store id of the Transfer Inward Note
+        designation:
+          type: string
+          description: Designation of the of the created by user at the time of Purchase Order creation.
+          format: varchar
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"   
       required:
@@ -2863,7 +3024,69 @@ definitions:
             $ref: '#/definitions/TransferInward'
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
-
+    
+    IndentNote:
+      type: object
+      description: |
+          
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the Indent Note
+        tenantId:
+          type: string
+          description: Tenant id of the Indent Note
+          maxLength: 128
+          minLength: 4    
+        indent:
+          $ref: "#/definitions/Indent"
+        inventoryType:
+          type: string
+          enum:
+            - Asset
+            - Consumable
+        expectedDeliveryDate:
+          type: integer
+          format: int64
+          description: |
+            expected delivery date for Indent Note
+        stateId:
+          type: integer
+          format: int64
+          description: |
+            state id of the Indent Note
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
+      required:
+      - indent
+      - inventoryType
+      - expectedDeliveryDate
+      
+    IndentNoteRequest:
+      description: Contract class for web request. Array of Indent Note items are used in case of create or update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        indentNotes:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/IndentNote'
+            
+    IndentNoteResponse:
+      description: Contract class for web response. Array of Indent Note items  are used in case of search ,create or update request. 
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        indentNotes:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/IndentNote'
+        page:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
+          
     TransferIndentNote:
       type: object
       description: |
@@ -2971,6 +3194,14 @@ definitions:
           format: int64
           description: |
             state id of the TransferOutward
+        fileStoreId:
+          type: string
+          description: |
+            fileStoreId  File Store id of the Transfer Outward Note
+        designation:
+          type: string
+          description: Designation of the of the created by user at the time of Purchase Order creation.
+          format: varchar    
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
@@ -3174,6 +3405,10 @@ definitions:
             receipt.
           items:
             $ref: '#/definitions/MaterialReceiptDetail'
+        fileStoreId:
+          type: string
+          description: |
+            fileStoreId  File Store id of the Material Receipt    
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
@@ -3289,7 +3524,6 @@ definitions:
           type: array
           items:
             $ref: '#/definitions/MaterialReceiptHeader'
-            
                          
 parameters:
   pageSize:

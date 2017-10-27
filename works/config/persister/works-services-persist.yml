@@ -1,0 +1,45 @@
+serviceMaps:
+ serviceName: Works Services
+ mappings:
+ - version: 1.0
+   name: Works Documents Create
+   description: Persists works documents in egw_documentdetails table
+   fromTopic: works.documentdetails.create
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO egw_documentdetail(
+        id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.documentDetails.*
+      jsonMaps:
+         
+       - jsonPath: $.documentDetails.*.id
+       
+       - jsonPath: $.documentDetails.*.tenantId
+         
+       - jsonPath: $.documentDetails.*.objectId
+         
+       - jsonPath: $.documentDetails.*.objectType
+       
+       - jsonPath: $.documentDetails.*.documentType
+       
+       - jsonPath: $.documentDetails.*.fileStore
+       
+       - jsonPath: $.documentDetails.*.latitude
+       
+       - jsonPath: $.documentDetails.*.longitude
+       
+       - jsonPath: $.documentDetails.*.description
+       
+       - jsonPath: $.documentDetails.*.dateOfCapture
+       
+       - jsonPath: $.documentDetails.*.workProgress
+       
+       - jsonPath: $.documentDetails.*.auditDetails.createdBy
+         dbType: LONG
+       
+       - jsonPath: $.documentDetails.*.auditDetails.createdTime
+       
+       - jsonPath: $.documentDetails.*.auditDetails.lastModifiedBy
+         dbType: LONG
+       
+       - jsonPath: $.documentDetails.*.auditDetails.lastModifiedTime

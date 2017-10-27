@@ -6,62 +6,39 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.egov.inv.domain.model.*;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class MaterialEntity {
 
-    private String id;
-
-    private String code;
-
-    private String name;
-
-    private String description;
-
-    private String oldCode;
-
-    private String materialType;
-
-    private String baseUom;
-
-    private String inventoryType;
-
-    private String status;
-
-    private String purchaseUom;
-
-    private String expenseAccount;
-
-    private Long minQuality;
-
-    private Long maxQuality;
-
-    private String stockingUom;
-
-    private String materialClass;
-
-    private Long reorderLevel;
-
-    private Long reorderQuantity;
-
-    private String materialControlType;
-
-    private String model;
-
-    private String manufacturePartNo;
-
-    private String technicalSpecs;
-
-    private String termsOfDelivery;
-
-    private boolean overrideMaterialControlType;
-
-    private String tenantId;
-
     protected String createdBy;
-
+    private String id;
+    private String code;
+    private String name;
+    private String description;
+    private String oldCode;
+    private String materialType;
+    private String baseUom;
+    private String inventoryType;
+    private String status;
+    private String purchaseUom;
+    private String expenseAccount;
+    private Long minQuantity;
+    private Long maxQuality;
+    private String stockingUom;
+    private String materialClass;
+    private Long reorderLevel;
+    private Long reorderQuantity;
+    private String materialControlType;
+    private String model;
+    private String manufacturePartNo;
+    private String technicalSpecs;
+    private String termsOfDelivery;
+    private boolean overrideMaterialControlType;
+    private String tenantId;
     private String lastModifiedBy;
 
     private Long createdTime;
@@ -77,20 +54,20 @@ public class MaterialEntity {
                 .oldCode(oldCode)
                 .materialType(mapMaterialType(materialType))
                 .baseUom(mapUom(baseUom))
-                .inventoryType(InventoryType.valueOf(inventoryType.toUpperCase()))
-                .status(Status.valueOf(status.toUpperCase()))
+                .inventoryType(Material.InventoryTypeEnum.valueOf(inventoryType.toUpperCase()))
+                .status(Material.StatusEnum.valueOf(status.toUpperCase()))
                 .purchaseUom(mapUom(purchaseUom))
                 .expenseAccount(mapChartOfAccounts(expenseAccount))
-                .minQuality(minQuality)
-                .minQuality(maxQuality)
-                .stockingUom(mapUom(stockingUom))
-                .materialClass(MaterialClass.valueOf(materialClass.toUpperCase()))
-                .reorderLevel(reorderLevel)
-                .reorderQuantity(reorderQuantity)
-                .materialControlType(MaterialControlType.valueOf(materialControlType.toUpperCase()))
+                .minQuantity(BigDecimal.valueOf(minQuantity))
+                .maxQuantity(BigDecimal.valueOf(maxQuality))
+                .staockingUom(mapUom(stockingUom))
+                .materialClass(Material.MaterialClassEnum.valueOf((materialClass.toUpperCase())))
+                .reorderLevel(BigDecimal.valueOf(reorderLevel))
+                .reorderQuantity(BigDecimal.valueOf(reorderQuantity))
+                .materialControlType(Material.MaterialControlTypeEnum.valueOf((materialControlType.toUpperCase())))
                 .model(model)
                 .manufacturePartNo(manufacturePartNo)
-                .technicalSpecs(technicalSpecs)
+                .techincalSpecs(technicalSpecs)
                 .termsOfDelivery(termsOfDelivery)
                 .overrideMaterialControlType(overrideMaterialControlType)
                 .auditDetails(mapAuditDetails(tenantId, createdBy, createdTime, lastModifiedBy, lastModifiedTime))
@@ -103,8 +80,8 @@ public class MaterialEntity {
                 .build();
     }
 
-    private ChartOfAccount mapChartOfAccounts(String glCode) {
-        return ChartOfAccount.builder()
+    private ChartofAccount mapChartOfAccounts(String glCode) {
+        return ChartofAccount.builder()
                 .glCode(glCode)
                 .build();
     }

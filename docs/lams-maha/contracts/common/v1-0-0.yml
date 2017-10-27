@@ -53,11 +53,14 @@ paths:
             - ESTATE
             - LAND
             - ADVERTISEMENT
-        - name: inspectionId
+        - name: inspectionIds
           in: query
-          description: Primary key of Inspection object.
+          description: List of Primary key of Inspection object.
           required: false
-          type: string
+          type: array
+          maxItems: 50
+          items:
+            type: string
           format: varchar
         - name: inspectionNumber
           in: query
@@ -201,11 +204,14 @@ paths:
           required: false
           type: string
           format: varchar
-        - name: showCauseNoticeId
+        - name: showCauseNoticeIds
           in: query
-          description: Primary key of ShowCauseNotice object.
+          description: List of Primary key of ShowCauseNotice object.
           required: false
-          type: string
+          type: array
+          maxItems: 50
+          items:
+            type: string
           format: varchar
         - name: noticeNumber
           in: query
@@ -322,11 +328,14 @@ paths:
           required: false
           type: string
           format: varchar
-        - name: hearingIntimationId
+        - name: hearingIntimationIds
           in: query
-          description: Primary key of HearingIntimation object.
+          description: List of Primary key of HearingIntimation object.
           required: false
-          type: string
+          type: array
+          maxItems: 50
+          items:
+            type: string
           format: varchar
         - name: intimationNumber
           in: query
@@ -443,11 +452,14 @@ paths:
           required: false
           type: string
           format: varchar
-        - name: hearingDetailsId
+        - name: hearingDetailsIds
           in: query
-          description: Primary key of HearingDetails object.
+          description: List of Primary key of HearingDetails object.
           required: false
-          type: string
+          type: array
+          maxItems: 50
+          items:
+            type: string
           format: varchar
         - name: showCauseNoticeNo
           in: query
@@ -564,11 +576,14 @@ paths:
           required: false
           type: string
           format: varchar
-        - name: licenseSuspensionId
+        - name: licenseSuspensionIds
           in: query
           description: Primary key of LicenseSuspension object.
           required: false
-          type: string
+          type: array
+          maxItems: 50
+          items:
+            type: string
           format: varchar
         - name: suspensionNumber
           in: query

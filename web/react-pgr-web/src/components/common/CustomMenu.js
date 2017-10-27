@@ -227,7 +227,13 @@ const menuConvention={
 //SWM
 "Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Create": "/create/vehiclefuellingdetails",
 "Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Search": "/search/vehiclefuellingdetails/view",
-"Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Update": "/search/vehiclefuellingdetails/update"
+"Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Update": "/search/vehiclefuellingdetails/update",
+"Solid Waste Management.SWM Masters.Vehicle.Vehicle Create": "/create/vehicles",
+"Solid Waste Management.SWM Masters.Vehicle.Vehicle Search": "/search/vehicles/view",
+"Solid Waste Management.SWM Masters.Vehicle.Vehicle Update": "/search/vehicles/update",
+"Solid Waste Management.SWM Masters.Collection Point.CollectionPoint Create": "/create/collectionpoints",
+"Solid Waste Management.SWM Masters.Collection Point.CollectionPoint Search": "/search/collectionpoints/view",
+"Solid Waste Management.SWM Masters.Collection Point.CollectionPoint Update": "/search/collectionpoints/update"
 }
 
 const style = {

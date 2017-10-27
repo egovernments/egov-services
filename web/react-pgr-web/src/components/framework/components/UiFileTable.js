@@ -8,16 +8,48 @@ export default class UiFileTable extends Component {
        super(props);
    	}
 
-   	renderFileObject = (item, val, i) => {
+   	renderFileObject = (item, i) => {
    		if(this.props.readonly) {
    			return (
-				<a href={window.location.origin + "/filestore/v1/files/id?tenantId=" + localStorage.tenantId + "&fileStoreId=" + this.props.getVal(item.jsonPath + "[" + i + "]." + val.id)} target="_blank">{translate("wc.craete.file.Download")}</a>
+				<a href={window.location.origin + "/filestore/v1/files/id?tenantId=" + localStorage.tenantId + "&fileStoreId=" + this.props.getVal(item.jsonPath + "[" + i + "]." + item.fileList.id)} target="_blank">{translate("wc.craete.file.Download")}</a>
 			);
    		} else {
-   			<input type="file" onChange= {(e) => {
-				this.props.handler({target:{value: e.target.files[0]}}, (item.jsonPath + "[" + i + "]." + val.id), item.isRequired, '', item.requiredErrMsg, item.patternErrMsg)
-			}}/>
+   			return (<input type="file" onChange= {(e) => {
+				this.props.handler({target:{value: e.target.files[0]}}, (item.jsonPath + "[" + i + "]." + item.fileList.id), item.isRequired, '', item.requiredErrMsg, item.patternErrMsg)
+			}}/>);
    		}
+   	}
+
+   	renderRowList = (item) => {
+   		let arr = [...Array(item.fileCount).keys()];
+   		return (
+   			<tbody>
+   				{	
+   					arr && arr.length && arr.map((v, i) => {
+								return (<tr key={i}>
+											<td>{i+1}</td>
+											<td>
+												<TextField
+						              				className="cutustom-form-controll-for-textfield"
+						              				id={item.jsonPath.split(".").join("-")}
+													inputStyle={{"color": "#5F5C57"}}
+													errorStyle={{"float":"left"}}
+													fullWidth={true}
+													disabled={this.props.readonly}
+													value={this.props.getVal(item.jsonPath + "[" + i + "]." + item.fileList.name)}
+													onChange={(e) => {
+														this.props.handler(e, (item.jsonPath + "[" + i + "]." + item.fileList.name), item.isRequired, '', item.requiredErrMsg, item.patternErrMsg)
+													}} />
+											</td>
+											<td>
+												{this.renderFileObject(item, i)}
+											</td>
+										</tr>)
+
+							})
+   				}
+   			</tbody>
+   		)
    	}
 
    	renderFileTable = (item) => {
@@ -32,29 +64,7 @@ export default class UiFileTable extends Component {
 								<th>{translate("wc.create.groups.fileDetails.title")}</th>
 							</tr>
 						</thead>
-						<tbody>
-							{item.fileList && item.fileList.length && item.fileList.map((v, i) => {
-								<tr key={i}>
-									<td>{i+1}</td>
-									<td>
-										<TextField
-				              				className="cutustom-form-controll-for-textfield"
-				              				id={item.jsonPath.split(".").join("-")}
-											inputStyle={{"color": "#5F5C57"}}
-											errorStyle={{"float":"left"}}
-											fullWidth={true}
-											disabled={this.props.readonly}
-											value={this.props.getVal(item.jsonPath + "[" + i + "]." + v.name)}
-											onChange={(e) => {
-												this.props.handler(e, (item.jsonPath + "[" + i + "]." + v.name), item.isRequired, '', item.requiredErrMsg, item.patternErrMsg)
-											}} />
-									</td>
-									<td>
-										{this.renderFileObject(item, v, i)}
-									</td>
-								</tr>
-							})}
-						</tbody>
+						{this.renderRowList(item)}
 					</Table>
 				)
 		}

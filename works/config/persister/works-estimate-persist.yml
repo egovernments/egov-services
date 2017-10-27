@@ -132,11 +132,11 @@ serviceMaps:
        
        - jsonPath: $.abstractEstimates.*.auditDetails.createdBy
  
-       - jsonPath: $.AbstractEstimate.*.auditDetails.createdTime
+       - jsonPath: $.abstractEstimates.*.auditDetails.createdTime
        
        - jsonPath: $.abstractEstimates.*.auditDetails.lastModifiedBy
   
-       - jsonPath: $.AbstractEstimate.*.auditDetails.lastModifiedTime 
+       - jsonPath: $.abstractEstimates.*.auditDetails.lastModifiedTime 
        
     - query: INSERT INTO egw_abstractestimate_details(
             id, tenantid, abstractestimate, nameofwork, estimateamount, estimatenumber, 
@@ -162,11 +162,11 @@ serviceMaps:
        
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.auditDetails.createdBy
        
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.auditDetails.createdTime
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.auditDetails.createdTime
 
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.auditDetails.lastModifiedBy
        
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.auditDetails.lastModifiedTime
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.auditDetails.lastModifiedTime
 
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.grossAmountBilled
        
@@ -203,9 +203,9 @@ serviceMaps:
        
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.auditDetails.createdBy
  
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.projectCode.*.auditDetails.createdTime
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.auditDetails.createdTime
        
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.auditDetails.lastModifiedBy
 
-       - jsonPath: $.AbstractEstimate.*.abstractEstimateDetails.*.projectCode.*.auditDetails.lastModifiedTime
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.auditDetails.lastModifiedTime
 

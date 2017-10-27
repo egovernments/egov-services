@@ -40,11 +40,14 @@ paths:
         - $ref: "#/parameters/pageSize"
         - $ref: "#/parameters/pageNumber"
         - $ref: "#/parameters/sortLicense"
-        - name: licenseId
+        - name: licenseIds
           in: query
-          description: Primary key of license application object.
+          description: List of Primary key of license application object.
           required: false
-          type: string
+          type: array
+          maxItems: 50
+          items:
+            type: string
           format: varchar
         - name: licenseNumber
           in: query
@@ -168,11 +171,14 @@ paths:
         - $ref: "#/parameters/pageSize"
         - $ref: "#/parameters/pageNumber"
         - $ref: "#/parameters/sortLicense"
-        - name: licenseId
+        - name: licenseIds
           in: query
-          description: Primary key of license application object.
+          description: Lis of Primary key of license application object.
           required: false
-          type: string
+          type: array
+          maxItems: 50
+          items:
+            type: string
           format: varchar
         - name: licenseNumber
           in: query
@@ -307,11 +313,14 @@ paths:
       parameters:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-        - name: agreementId
+        - name: agreementIds
           in: query
-          description: Primary key of Agreement object.
+          description: List of Primary key of Agreement object.
           required: false
-          type: string
+          type: array
+          maxItems: 50
+          items:
+            type: string
           format: varchar
         - name: agreementNumber
           in: query

@@ -3,6 +3,7 @@ package org.egov.works.services.web.controller;
 import org.egov.works.services.domain.exception.CustomBindException;
 import org.egov.works.services.domain.service.DocumentDetailsService;
 import org.egov.works.services.web.contract.*;
+import org.egov.works.services.web.contract.factory.ResponseInfoFactory;
 import org.egov.works.services.web.model.DocumentDetail;
 import org.egov.works.services.web.model.DocumentDetailSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class DocumentDetailController {
     @Autowired
     private DocumentDetailsService documentDetailsService;
 
+    private ResponseInfoFactory responseInfoFactory;
+
     @PostMapping
     @RequestMapping("/_create")
     public ResponseEntity<?> createDocuments(@Valid @RequestBody DocumentDetailRequest documentDetailRequest,
@@ -35,8 +38,7 @@ public class DocumentDetailController {
         documentDetailsService.validateDocuments(documentDetailRequest);
         final List<DocumentDetail> documents = documentDetailsService.createDocuments(documentDetailRequest);
         DocumentDetailResponse documentDetailResponse = new DocumentDetailResponse();
-        //prepare response info
-        documentDetailResponse.setResponseInfo(new ResponseInfo());
+        documentDetailResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo,true));
         documentDetailResponse.setDocumentDetails(documents);
         return new ResponseEntity<>(documentDetailResponse, HttpStatus.OK);
 
@@ -56,8 +58,7 @@ public class DocumentDetailController {
         documentDetailsService.validateDocuments(documentDetailRequest);
         final List<DocumentDetail> documents = documentDetailsService.updateDocuments(documentDetailRequest);
         DocumentDetailResponse documentDetailResponse = new DocumentDetailResponse();
-        //prepare response info
-        documentDetailResponse.setResponseInfo(new ResponseInfo());
+        documentDetailResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo,true));
         documentDetailResponse.setDocumentDetails(documents);
         return new ResponseEntity<>(documentDetailResponse, HttpStatus.OK);
 
@@ -77,7 +78,7 @@ public class DocumentDetailController {
         List<DocumentDetail> documents = documentDetailsService.searchDocuments(new DocumentDetailSearchCriteria().toDomain(documentDetailSearchRequest));
         DocumentDetailResponse documentDetailResponse = new DocumentDetailResponse();
         //prepare response info
-        documentDetailResponse.setResponseInfo(new ResponseInfo());
+        documentDetailResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo,true));
         documentDetailResponse.setDocumentDetails(documents);
         return new ResponseEntity<>(documentDetailResponse, HttpStatus.OK);
     }

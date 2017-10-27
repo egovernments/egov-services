@@ -42,7 +42,7 @@ public class SearchController {
 	@Autowired
     public static ResourceLoader resourceLoader;
 
-	@PostMapping("/search/{moduleName}/metadata/_get")
+	@PostMapping("/{moduleName}/metadata/_get")
 	@ResponseBody
 	public ResponseEntity<?> create(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final MetaDataRequest metaDataRequest,
 			final BindingResult errors) {
@@ -55,7 +55,7 @@ public class SearchController {
 		}
 	}
 	
-	@PostMapping("/search/{moduleName}/_get")
+	@PostMapping("/{moduleName}/_get")
 	@ResponseBody
 	public ResponseEntity<?> getReportData(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final ReportRequest reportRequest,
 			final BindingResult errors) {
@@ -69,14 +69,12 @@ public class SearchController {
 	}
 	
 
-	@PostMapping("/search/_reload")
+	@PostMapping("/_reload")
 	@ResponseBody
 	public ResponseEntity<?> reloadYamlData(@RequestBody @Valid final MetaDataRequest reportRequest,
 			final BindingResult errors) {
 		try {
-        
 		SearchApp.loadYaml("common");
-        
 		} catch(Exception e){
 			return reportService.getFailureResponse(reportRequest.getRequestInfo(),reportRequest.getTenantId(),e);
 		}

@@ -45,7 +45,7 @@ public class SearchRepository {
 		List<String> queryJson = new ArrayList<>();
 		for(PGobject obj: maps){
 			LOGGER.info("obj:::"+obj);
-			queryJson.add(obj.getValue());
+			queryJson.add(obj.getValue().replaceAll("\\\\",""));
 						
 			/*LOGGER.info("maps after converting to object : "+obj.toString());	*/
 		}

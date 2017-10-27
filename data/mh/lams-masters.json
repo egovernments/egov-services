@@ -55,15 +55,22 @@
     {
       "id": 1,
       "tenantId": "mh",
-      "code": "ACQMODE_MODEOFACQUISITION1",
-      "name": "Fake ModeOfAquisition1",
+      "code": "ACQMODE_ACQUIRED",
+      "name": "Acquired",
       "isActive": true
     },
     {
       "id": 2,
       "tenantId": "mh",
-      "code": "ACQMODE_MODEOFACQUISITION2",
-      "name": "Fake ModeOfAquisition1",
+      "code": "ACQMODE_SELF_CONSTRUCTED",
+      "name": "Self-constructed",
+      "isActive": true
+    },
+    {
+      "id": 3,
+      "tenantId": "mh",
+      "code": "ACQMODE_PURCHASED",
+      "name": "Purchased",
       "isActive": true
     }
   ],

@@ -48,7 +48,7 @@ paths:
         - $ref: "#/parameters/pageSize"
         - $ref: "#/parameters/pageNumber"
         - $ref: "#/parameters/sortCase"
-        - name: codes
+        - name: code
           type: array
           items:
             type: string
@@ -349,7 +349,7 @@ paths:
       tags:
         - Case            
         
-  /_update:
+  /case/_update:
     post:
       summary: update existing case.
       description: |
@@ -395,14 +395,13 @@ paths:
         - $ref: "#/parameters/pageSize"
         - $ref: "#/parameters/pageNumber"
         - $ref: "#/parameters/sortCase"
-        - name: ids
+        - name: code
           type: array
           items:
-            type: integer
-            format: int64
+            type: string
           in: query
           maxItems: 50
-          description: comma seperated list of Ids of advocate payments
+          description: comma seperated list of codes of advocate payments
         - name: advocateName
           in: query
           required: false
@@ -603,7 +602,120 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - Opinion      
-    
+  /advocate/_create:
+    post:
+      summary: Create new advocate .
+      description: |
+          To create new advocate in the system. API supports bulk creation with max limit as defined in the advocate Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one para wise comment, please pass array with one advocate object. 
+      parameters:
+        - name: advocateRequest
+          in: body
+          description: Details for the new Advocate(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/AdvocateRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: ReponseInfo with Advocate(s) created successfully
+          schema:
+            $ref: '#/definitions/AdvocateResponse'
+        400:
+          description: Advocate(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Advocate  
+  /advocate/_update:
+    post:
+      summary: update existing advocate.
+      description: |
+          To update existing advocate in the system(workflow). API supports bulk updation with max limit as defined in the advocate request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one advocate, please pass array with one advocate.
+          
+      parameters:
+        - name: advocateRequest
+          in: body
+          description: Details for the new advocate(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/AdvocateRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: ReponseInfo with ParaWiseComment(s) updated sudcessfully
+          schema:
+            $ref: '#/definitions/CaseResponse'
+        400:
+          description: ParaWiseComment(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Advocate
+  /advocate/_search:
+    post:
+      summary: Get the list of advocates defined in the system.
+      description: |
+          Search and get advocate(s)  based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed advocate(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of advocate as defined in AdvocateResponse model.
+          
+          Search results will be sorted by the sortCase Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortCase"
+        - name: code
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: comma seperated list of Ids of advocate 
+        - name: isIndividual
+          in: query
+          required: false
+          description: either advocate is individual or not
+          type: boolean
+        
+        - name: advocateName
+          in: query
+          required: false
+          description: name of advocate
+          type: string
+        - name: organizationName
+          in: query
+          required: false
+          description: organization name of advocate
+          type: string
+        - name: isActive
+          in: query
+          required: false
+          description: either advocate is active or not
+          type: boolean
+   
+        
+      responses:
+        200:
+          description: Advocate(s) Retrived Successfully
+          schema:
+            $ref: "#/definitions/AdvocateResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Advocate      
 
 definitions:
 ########################################################
@@ -1639,7 +1751,28 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Opinion'
-  
+  AdvocateRequest:
+    type: object
+    description: This object holds information about the advocate request
+    properties:
+      RequestInfo:
+        $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      advocates:
+        type: array
+        items:
+          $ref: '#/definitions/Advocate'
+      
+  AdvocateResponse:
+    type: object
+    description: This object holds information about the advocate response
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      advocates:
+        type: array
+        items:
+          $ref: '#/definitions/Advocate'
 parameters:
 ##########################################################
 #Parameter name must start with small case followed by camel case.
@@ -1676,5 +1809,7 @@ tags:
   - name: Opinion
     description: APIs required for opinion flow. 
   - name: Case
-    description: APIs required for  case Management flow.  
+    description: APIs required for  case Management flow.
+  - name: Advocate
+    description: APIs required for  advocate.  
     

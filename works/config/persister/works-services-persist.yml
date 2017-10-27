@@ -4,7 +4,7 @@ serviceMaps:
  - version: 1.0
    name: Works Documents Create
    description: Persists works documents in egw_documentDetails table
-   fromTopic: works.documentDetailss.create
+   fromTopic: works.documentDetails.create
    isTransaction: true
    queryMaps:
     - query: INSERT INTO egw_documentDetails(

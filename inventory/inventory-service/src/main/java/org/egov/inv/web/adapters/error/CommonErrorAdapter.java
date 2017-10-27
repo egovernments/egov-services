@@ -7,20 +7,20 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
-public class MaterialErrorAdapter implements ErrorAdapter<List<ErrorField>> {
+public class CommonErrorAdapter implements ErrorAdapter<List<ErrorField>> {
 
-    private static final String INVALID_MATERIAL_REQUEST = "Material Request is invalid";
+   
 
     @Override
-    public ErrorResponse adapt(List<ErrorField> errorFields) {
-        final Error error = getError(errorFields);
+    public ErrorResponse adapt(List<ErrorField> errorFields,String requestErrorMsg) {
+        final Error error = getError(errorFields, requestErrorMsg);
         return new ErrorResponse(null, error);
     }
 
-    private Error getError(List<ErrorField> errorFields) {
+    private Error getError(List<ErrorField> errorFields,String requestErrorMsg) {
         return Error.builder()
                 .code(HttpStatus.BAD_REQUEST.value())
-                .message(INVALID_MATERIAL_REQUEST)
+                .message(requestErrorMsg)
                 .fields(errorFields)
                 .build();
     }

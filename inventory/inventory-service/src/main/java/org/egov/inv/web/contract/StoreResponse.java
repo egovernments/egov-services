@@ -7,9 +7,17 @@ import org.egov.inv.domain.model.Store;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Builder
 public class StoreResponse {
     @JsonProperty("responseInfo")
     private ResponseInfo responseInfo;

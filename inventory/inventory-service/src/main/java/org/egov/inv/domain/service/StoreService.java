@@ -8,6 +8,7 @@ import org.egov.inv.domain.model.AuditDetails;
 import org.egov.inv.domain.model.Pagination;
 import org.egov.inv.domain.model.Store;
 import org.egov.inv.domain.repository.StoreRepository;
+import org.egov.inv.domain.service.validator.StoreRequestValidator;
 import org.egov.inv.persistence.repository.StoreJdbcRepository;
 import org.egov.inv.web.contract.StoreGetRequest;
 import org.egov.inv.web.contract.StoreRequest;
@@ -23,8 +24,14 @@ public class StoreService {
 
     @Autowired
     private InventoryUtilityService inventoryUtilityService;
+    
+    @Autowired
+    private StoreRequestValidator storeRequestValidator;
 
     public List<Store> create(StoreRequest storeRequest, String tenantId) {
+        storeRequest.stores.forEach(store -> {
+            storeRequestValidator.validate(store, tenantId);
+        });
       
         List<Store> storesList = storeRequest.getStores();
 
@@ -39,6 +46,10 @@ public class StoreService {
     }
 
     public List<Store> update(StoreRequest storeRequest, String tenantId) {
+        
+        storeRequest.stores.forEach(store -> {
+            storeRequestValidator.validate(store, tenantId);
+        });
         List<Store> storesList = storeRequest.getStores();
         for (int i = 0; i <= storesList.size() - 1; i++) {
             storeRequest.getStores().get(i).setAuditDetails(inventoryUtilityService.mapAuditDetailsForUpdate(storeRequest.getRequestInfo(), tenantId));

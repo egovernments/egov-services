@@ -56,31 +56,31 @@ public class MaterialRequestValidator {
 
     private void validation(Material material, List<ErrorField> errorFields) {
         commonMasterValidator.addLengthValidationError(MATERIAL_CODE, material.getCode(), 5, 50, errorFields);
-        commonMasterValidator.validatePattern(MATERIAL_CODE, material.getCode(), PATTERN_ALPHANUMERIC, errorFields);
-        commonMasterValidator.addNotNullForStringValidationErrors(MATERIAL_NAME, material.getName(), errorFields);
-        commonMasterValidator.validatePattern(MATERIAL_NAME, material.getName(), PATTERN_CHARACTER, errorFields);
-        commonMasterValidator.addNotNullForStringValidationErrors(MATERIAL_DESCRIPTION, material.getDescription(), errorFields);
+        commonMasterValidator.validatePattern(MATERIAL_CODE, material.getCode(), PATTERN_ALPHANUMERIC, errorFields,null);
+        commonMasterValidator.addNotNullForStringValidationErrors(MATERIAL_NAME, material.getName(), errorFields,null);
+        commonMasterValidator.validatePattern(MATERIAL_NAME, material.getName(), PATTERN_CHARACTER, errorFields,null);
+        commonMasterValidator.addNotNullForStringValidationErrors(MATERIAL_DESCRIPTION, material.getDescription(), errorFields,null);
         commonMasterValidator.addLengthValidationError(MATERIAL_DESCRIPTION, material.getDescription(), 0, 1024, errorFields);
-        commonMasterValidator.validatePattern(MATERIAL_DESCRIPTION, material.getDescription(), PATTERN_ALPHANUMERIC_SPACE, errorFields);
+        commonMasterValidator.validatePattern(MATERIAL_DESCRIPTION, material.getDescription(), PATTERN_ALPHANUMERIC_SPACE, errorFields,null);
         commonMasterValidator.addLengthValidationError(OLD_CODE, material.getOldCode(), 0, 50, errorFields);
-        commonMasterValidator.validatePattern(OLD_CODE, material.getOldCode(), PATTERN_ALPHANUMERIC, errorFields);
-        commonMasterValidator.addNotNullForObjectValidationErrors(MATERIAL_TYPE, material.getMaterialType(), errorFields);
-        commonMasterValidator.validatePattern(MATERIAL_TYPE, material.getMaterialType().getName(), PATTERN_ALPHANUMERIC, errorFields);
-        commonMasterValidator.addNotNullForObjectValidationErrors(BASE_UOM, material.getBaseUom(), errorFields);
-        commonMasterValidator.validatePattern(BASE_UOM, material.getBaseUom().getName(), PATTERN_CHARACTER, errorFields);
-        commonMasterValidator.validatePattern(BASE_UOM, material.getBaseUom().getName(), PATTERN_ALPHANUMERIC, errorFields);
-        commonMasterValidator.validatePattern(INVENTORY_TYPE, material.getInventoryType().toString(), PATTERN_CHARACTER, errorFields);
-        commonMasterValidator.addNotNullForObjectValidationErrors(MINIMUM_QUANTITY, material.getMinQuality(), errorFields);
-        commonMasterValidator.addNotNullForObjectValidationErrors(MAXIMUM_QUANTITY, material.getMaxQuality(), errorFields);
-        commonMasterValidator.addNotNullForObjectValidationErrors(STOCK_UOM, material.getStockingUom(), errorFields);
-        commonMasterValidator.addNotNullForObjectValidationErrors(MATERIAL_CLASS, material.getMaterialClass(), errorFields);
-        commonMasterValidator.addNotNullForObjectValidationErrors(REORDER_LEVEL, material.getReorderLevel(), errorFields);
-        commonMasterValidator.addNotNullForObjectValidationErrors(REORDER_QUANTITY, material.getReorderQuantity(), errorFields);
-        commonMasterValidator.addNotNullForObjectValidationErrors(MATERIAL_CONTROL_TYPE, material.getMaterialControlType(), errorFields);
-        commonMasterValidator.validatePattern(MODEL, material.getModel(), PATTERN_ALPHANUMERIC, errorFields);
-        commonMasterValidator.validatePattern(MANUFACTURE_PART_NO, material.getManufacturePartNo(), PATTERN_ALPHANUMERIC, errorFields);
-        commonMasterValidator.validatePattern(TECHNICAL_SPECS, material.getTechnicalSpecs(), PATTERN_ALPHANUMERIC, errorFields);
-        commonMasterValidator.validatePattern(TERMS_OF_DELIVERY, material.getTermsOfDelivery(), PATTERN_ALPHANUMERIC, errorFields);
+        commonMasterValidator.validatePattern(OLD_CODE, material.getOldCode(), PATTERN_ALPHANUMERIC, errorFields,null);
+        commonMasterValidator.addNotNullForObjectValidationErrors(MATERIAL_TYPE, material.getMaterialType(), errorFields,null);
+        commonMasterValidator.validatePattern(MATERIAL_TYPE, material.getMaterialType().getName(), PATTERN_ALPHANUMERIC, errorFields,null);
+        commonMasterValidator.addNotNullForObjectValidationErrors(BASE_UOM, material.getBaseUom(), errorFields,null);
+        commonMasterValidator.validatePattern(BASE_UOM, material.getBaseUom().getName(), PATTERN_CHARACTER, errorFields,null);
+        commonMasterValidator.validatePattern(BASE_UOM, material.getBaseUom().getName(), PATTERN_ALPHANUMERIC, errorFields,null);
+        commonMasterValidator.validatePattern(INVENTORY_TYPE, material.getInventoryType().toString(), PATTERN_CHARACTER, errorFields,null);
+        commonMasterValidator.addNotNullForObjectValidationErrors(MINIMUM_QUANTITY, material.getMinQuality(), errorFields,null);
+        commonMasterValidator.addNotNullForObjectValidationErrors(MAXIMUM_QUANTITY, material.getMaxQuality(), errorFields,null);
+        commonMasterValidator.addNotNullForObjectValidationErrors(STOCK_UOM, material.getStockingUom(), errorFields,null);
+        commonMasterValidator.addNotNullForObjectValidationErrors(MATERIAL_CLASS, material.getMaterialClass(), errorFields,null);
+        commonMasterValidator.addNotNullForObjectValidationErrors(REORDER_LEVEL, material.getReorderLevel(), errorFields,null);
+        commonMasterValidator.addNotNullForObjectValidationErrors(REORDER_QUANTITY, material.getReorderQuantity(), errorFields,null);
+        commonMasterValidator.addNotNullForObjectValidationErrors(MATERIAL_CONTROL_TYPE, material.getMaterialControlType(), errorFields,null);
+        commonMasterValidator.validatePattern(MODEL, material.getModel(), PATTERN_ALPHANUMERIC, errorFields,null);
+        commonMasterValidator.validatePattern(MANUFACTURE_PART_NO, material.getManufacturePartNo(), PATTERN_ALPHANUMERIC, errorFields,null);
+        commonMasterValidator.validatePattern(TECHNICAL_SPECS, material.getTechnicalSpecs(), PATTERN_ALPHANUMERIC, errorFields,null);
+        commonMasterValidator.validatePattern(TERMS_OF_DELIVERY, material.getTermsOfDelivery(), PATTERN_ALPHANUMERIC, errorFields,null);
     }
 
 }

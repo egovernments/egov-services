@@ -208,6 +208,13 @@ class ShowField extends Component {
     )
   }
 
+  openTemplate = (item) => {
+    if(this.props.metaData.reportDetails.viewPath) {
+      localStorage.reportData = JSON.stringify(item);
+      this.props.setRoute("/print/report/" + this.props.metaData.reportDetails.viewPath);
+    }
+  }
+
   renderBody = () => {
     sumColumn = [];
     let { reportResult } = this.props;
@@ -219,7 +226,9 @@ class ShowField extends Component {
           //array of array
           let reportHeaderObj = reportResult.reportHeader;
           return(
-            <tr key={dataIndex}>
+            <tr key={dataIndex} onClick={() => {
+              this.openTemplate(dataItem);
+            }}>
               {dataItem.map((item,itemIndex)=>{
                 var columnObj = {};
                 //array for particular row

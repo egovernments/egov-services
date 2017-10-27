@@ -644,7 +644,7 @@ class grievanceCreate extends Component {
             </Card> : ''
           }
           <Card style={styles.marginStyle}>
-              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('pgr.lbl.grievence.information')} < /div>}/>
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('pgr.lbl.grievance.category')} < /div>}/>
               <CardText style={{paddingTop:0}}>
                 <Grid>
                   <Row>
@@ -700,7 +700,7 @@ class grievanceCreate extends Component {
               </CardText>
           </Card>
           <Card style={styles.marginStyle}>
-              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('core.lbl.moredetails')} < /div>}/>
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('pgr.lbl.grievancedetails')} < /div>}/>
               <CardText style={{paddingTop:0}}>
                 <Grid>
                   {this.state.attributes ? this.loadSD() : ''}
@@ -738,7 +738,7 @@ class grievanceCreate extends Component {
                   </Row>
                   <Row>
                     <Col xs={12} sm={4} md={3} lg={3}>
-                      <RaisedButton label={translate('core.lbl.select.photo')} containerElement="label" style={{ marginTop: '20px', marginBottom:'20px'}}>
+                      <RaisedButton label={translate('pgr.lbl.uploadphoto')} containerElement="label" style={{ marginTop: '20px', marginBottom:'20px'}}>
                           <input type="file" accept="image/*" style={{display:'none'}} onChange={(e)=>handleUploadValidation(e, ['jpg', 'jpeg', 'png'], 3)}/>
                       </RaisedButton>
                     </Col>

@@ -1,0 +1,78 @@
+serviceMaps:
+ serviceName: Works Services
+ mappings:
+ - version: 1.0
+   name: Works Documents Create
+   description: Persists works documents in egw_documentdetail table
+   fromTopic: works.documentdetails.create
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO egw_documentdetail(
+        id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createddate, lastmodifiedby, lastmodifieddate) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.DocumentDetail.*
+      jsonMaps:
+         
+       - jsonPath: $.DocumentDetail.*.id
+       
+       - jsonPath: $.DocumentDetail.*.tenantId
+         
+       - jsonPath: $.DocumentDetail.*.objectId
+         
+       - jsonPath: $.DocumentDetail.*.objectType
+       
+       - jsonPath: $.DocumentDetail.*.documentType
+       
+       - jsonPath: $.DocumentDetail.*.fileStore
+       
+       - jsonPath: $.DocumentDetail.*.latitude
+       
+       - jsonPath: $.DocumentDetail.*.longitude
+       
+       - jsonPath: $.DocumentDetail.*.description
+       
+       - jsonPath: $.DocumentDetail.*.dateOfCapture
+       
+       - jsonPath: $.DocumentDetail.*.workProgress
+       
+       - jsonPath: $.DocumentDetail.*.auditDetails.createdBy
+       
+       - jsonPath: $.DocumentDetail.*.auditDetails.createdDate
+       
+       - jsonPath: $.DocumentDetail.*.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.DocumentDetail.*.auditDetails.lastModifiedDate 
+
+     - version: 1.0
+       name: Asset
+       description: Update works document data in egw_documentdetail table 
+       fromTopic: works.documentdetails.create
+       isTransaction: true
+       queryMaps:   
+     - query: UPDATE egw_documentdetail SET id=?, objectid= ?,objectType = ?, objectType=?, documentType=?, fileStore=?, latitude=?, longitude=?, description=?, dateOfCapture=?, workProgress=?, lastModifiedBy=?, lastModifiedDate=?  WHERE id = ? AND tenantId = ?;;
+      basePath: $.DocumentDetail.*
+      jsonMaps:
+         
+      - jsonPath: $.DocumentDetail.*.id
+         
+       - jsonPath: $.DocumentDetail.*.objectId
+         
+       - jsonPath: $.DocumentDetail.*.objectType
+       
+       - jsonPath: $.DocumentDetail.*.documentType
+       
+       - jsonPath: $.DocumentDetail.*.fileStore
+       
+       - jsonPath: $.DocumentDetail.*.latitude
+       
+       - jsonPath: $.DocumentDetail.*.longitude
+       
+       - jsonPath: $.DocumentDetail.*.description
+       
+       - jsonPath: $.DocumentDetail.*.dateOfCapture
+       
+       - jsonPath: $.DocumentDetail.*.workProgress
+       
+       - jsonPath: $.DocumentDetail.*.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.DocumentDetail.*.auditDetails.lastModifiedDate 
+       

@@ -16,13 +16,10 @@ import static org.springframework.util.StringUtils.isEmpty;
 @Service
 public class MaterialService {
 
-    private MaterialRepository materialRepository;
-
-    private InventoryUtilityService inventoryUtilityService;
-
-    private MaterialRequestValidator materialRequestValidator;
-
     public static final String SEQ_MATERIAL = "seq_material";
+    private MaterialRepository materialRepository;
+    private InventoryUtilityService inventoryUtilityService;
+    private MaterialRequestValidator materialRequestValidator;
 
 
     @Autowired

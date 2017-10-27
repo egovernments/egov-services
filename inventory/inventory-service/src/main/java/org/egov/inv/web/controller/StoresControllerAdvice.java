@@ -16,6 +16,6 @@ public class StoresControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(StoreException.class)
     public ErrorResponse handleInvalidComplaintException(StoreException ex) {
-        return new CommonErrorAdapter().adapt(ex.getErrorFields(),"Store Request is invalid");
+        return new CommonErrorAdapter().adapt(ex.getErrorFields(), "Store Request is invalid");
     }
 }

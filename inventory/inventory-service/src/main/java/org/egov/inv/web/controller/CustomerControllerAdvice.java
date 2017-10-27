@@ -17,7 +17,7 @@ public class CustomerControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MaterialException.class)
     public ErrorResponse handleInvalidComplaintException(MaterialException ex) {
-        return new CommonErrorAdapter().adapt(ex.getErrorFields(),"Material Request is invalid");
+        return new CommonErrorAdapter().adapt(ex.getErrorFields(), "Material Request is invalid");
     }
 
 

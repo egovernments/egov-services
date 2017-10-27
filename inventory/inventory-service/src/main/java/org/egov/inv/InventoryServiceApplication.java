@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Import;
 @Import({TracerConfiguration.class})
 public class InventoryServiceApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(InventoryServiceApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(InventoryServiceApplication.class, args);
+    }
 }

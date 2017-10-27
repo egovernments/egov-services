@@ -1,6 +1,7 @@
 package org.egov.inv.domain.service;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.inv.domain.model.AuditDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -44,7 +45,7 @@ public class InventoryUtilityService {
                 .build();
 
     }
-    
+
     public AuditDetails mapAuditDetailsForUpdate(RequestInfo requestInfo, String tenantId) {
 
         return AuditDetails.builder()
@@ -54,4 +55,13 @@ public class InventoryUtilityService {
                 .build();
     }
 
+    public ResponseInfo getResponseInfo(RequestInfo requestInfo) {
+        return ResponseInfo.builder()
+                .apiId(requestInfo.getApiId())
+                .ver(requestInfo.getVer())
+                .resMsgId(requestInfo.getMsgId())
+                .resMsgId("placeholder")
+                .status("placeholder")
+                .build();
+    }
 }

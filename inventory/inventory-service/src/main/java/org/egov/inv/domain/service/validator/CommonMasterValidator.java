@@ -3,6 +3,7 @@ package org.egov.inv.domain.service.validator;
 
 import org.egov.common.contract.response.ErrorField;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,8 +12,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Service
 public class CommonMasterValidator {
-    
-   
+
 
     private static final String CODE_LENGTH_CODE = "inv.004";
 
@@ -63,7 +63,7 @@ public class CommonMasterValidator {
         errorFields.add(errorField);
     }
 
-    public void validatePattern(String fieldName, String fieldValue, String patternValue, List<ErrorField> errorFields,String patternCode) {
+    public void validatePattern(String fieldName, String fieldValue, String patternValue, List<ErrorField> errorFields, String patternCode) {
         Pattern pattern = Pattern.compile(patternValue);
         Matcher matcher = pattern.matcher(fieldValue);
         if (!matcher.matches()) {
@@ -75,10 +75,6 @@ public class CommonMasterValidator {
             errorFields.add(errorField);
         }
     }
-
- 
-        
-    
 
 
 }

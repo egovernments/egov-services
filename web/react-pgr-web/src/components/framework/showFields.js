@@ -28,6 +28,7 @@ import UiDate from './components/UiDate';
 import UiPinCode from './components/UiPinCode';
 import UiArrayField from './components/UiArrayField';
 import UiFileTable from './components/UiFileTable';
+import UiMultiFieldTable from './components/UiMultiFieldTable';
 
 let styles={
   reducePadding: {
@@ -61,7 +62,7 @@ export default class ShowFields extends Component {
               {group.fields.map((field, fieldIndex)=>{
                   if(!field.isHidden) {
                     return (
-                      <Col key={fieldIndex} xs={12} sm={field.type === "documentList" || field.type === "fileTable" ? 12 : noCols} md={field.type === "documentList" || field.type === "fileTable" ? 12 : noCols}>
+                      <Col key={fieldIndex} xs={12} sm={field.type === "documentList" || field.type === "fileTable" || field.type === "tableList" ? 12 : noCols} md={field.type === "documentList" || field.type === "fileTable" || field.type === "tableList" ? 12 : noCols}>
                           {renderField(field, self.props.screen,fieldIndex)}
                       </Col>
                     )
@@ -143,7 +144,7 @@ export default class ShowFields extends Component {
 
 
   renderField=(item, screen, index)=> {
-    if(screen == "view" && ["documentList", "fileTable", "arrayText", "arrayNumber"].indexOf(item.type) > -1 ) {
+    if(screen == "view" && ["documentList", "fileTable", "arrayText", "arrayNumber", "tableList"].indexOf(item.type) > -1 ) {
       if (item.type == "datePicker") {
         item.isDate = true;
       }
@@ -199,6 +200,8 @@ export default class ShowFields extends Component {
         return <UiArrayField tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} readonly={screen === "view" ? "true" : ""}/>
       case 'fileTable':
         return <UiFileTable tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} readonly={screen === "view" ? "true" : ""}/>
+      case 'tableList':
+        return <UiMultiFieldTable tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} screen={screen}/>
       case 'customComponent':
         // console.log(item.path);
         // {

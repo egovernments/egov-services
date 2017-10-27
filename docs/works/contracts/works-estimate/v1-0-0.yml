@@ -246,24 +246,54 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
         - name: ids
+          in: query
           type: array
           items:
             type: string
-          in: query
           maxItems: 50
+          required: false
+          allowEmptyValue: true
           description: Comma separated list of Ids of Abstract Estimate to get the Project Code
+        - name: projectCodes
+          in: query
+          type: array
+          items:
+            type: string
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Project Codes
         - name: estimateNumbers
           in: query
-          required: false
-          description: Comma separated list of estimate numbers of Abstract Estimate
-          type: string
-        - name: workIdentificationNumbers
-          in: query
-          description: Comma separated list of Work Identification Numbers.
-          required: false
           type: array
           items:
             type: string
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Estimate Numbers
+        - name: workIdentificationNumbers
+          in: query
+          type: array
+          items:
+            type: string
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Work Identification Numbers
+        - name: statuses
+          in: query
+          type: array
+          items:
+            type: string
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of the Project Code Status
+        - name: active
+          in: query
+          type: boolean
+          description: If the value is True then get only active project codes. If boolean value is false then get inactive project codes.
       responses:
         200:
           description: Project Code(s) Retrieved Successfully
@@ -281,6 +311,8 @@ paths:
       summary: Create new Project Code(s).
       description: |
           To create new Project Code in the system. API supports bulk creation with max limit as defined in the Project Code Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Project Code, please pass array with one Project Code object.
+          
+          There is no screen to create Project codes. The Project code is sometime called Work Identification number. The project code will be created either during Admin sanction of Abstract Estimate or Detailed Estimate. 
           
       parameters:
         - name: ProjectCodeRequest
@@ -1444,29 +1476,34 @@ definitions:
           type: string
           description: Code of the Project 
           pattern: '[a-zA-Z0-9-\\]'
-          minLength: 1
           maxLength: 100
-        detailedEstimate:
-          $ref: '#/definitions/DetailedEstimate'
+          minLength: 1
+        name:
+          type: string
+          pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+          description: Name of the Project
+          maxLength: 1024
+          minLength: 1
         description:
           type: string
           pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
           description: Description of the Project
           maxLength: 1024
-        name:
-          type: string
-          description: Name of the Project
-          maxLength: 100
         status:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/ProjectCodeStatus'
+          description: Enum representing the list of possible values for Project code status
+        active:
+          type: boolean
+          description: The active/inactive status of the project which refresents the boolean value True/False. By default the boolean value will be True.
         projectValue:
           type: integer
           format: BigDecimal
           pattern: "[0-9.]"
-          description: Value for the Project
+          description: The cost of the Project. This value will be updated on Project closure which will include the complete expenditure on the project.
         completionDate:
           type: integer
           format: int64
+          x-displayformat: 'dd/MM/yyyy'
           description: Epoch time for the project completion date
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
@@ -1474,6 +1511,7 @@ definitions:
         - tenantId
         - code
         - name
+        - status
         
   ProjectCodeRequest:
       description: Contract class to send response. Array of Project Code items are used in case of search results, also multiple Project Code item is used for create and update
@@ -1581,4 +1619,5 @@ tags:
     description: APIs required for Revision Estimate.
   - name: Project Code
     description: APIs required for Project Code.
+
 

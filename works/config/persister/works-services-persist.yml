@@ -3,43 +3,43 @@ serviceMaps:
  mappings:
  - version: 1.0
    name: Works Documents Create
-   description: Persists works documents in egw_documentdetail table
-   fromTopic: works.documentdetails.create
+   description: Persists works documents in egw_documentDetails table
+   fromTopic: works.documentDetailss.create
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO egw_documentdetail(
+    - query: INSERT INTO egw_documentDetails(
         id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createddate, lastmodifiedby, lastmodifieddate) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-      basePath: $.DocumentDetail.*
+      basePath: $.documentDetails.*
       jsonMaps:
          
-       - jsonPath: $.DocumentDetail.*.id
+       - jsonPath: $.documentDetails.*.id
        
-       - jsonPath: $.DocumentDetail.*.tenantId
+       - jsonPath: $.documentDetails.*.tenantId
          
-       - jsonPath: $.DocumentDetail.*.objectId
+       - jsonPath: $.documentDetails.*.objectId
          
-       - jsonPath: $.DocumentDetail.*.objectType
+       - jsonPath: $.documentDetails.*.objectType
        
-       - jsonPath: $.DocumentDetail.*.documentType
+       - jsonPath: $.documentDetails.*.documentType
        
-       - jsonPath: $.DocumentDetail.*.fileStore
+       - jsonPath: $.documentDetails.*.fileStore
        
-       - jsonPath: $.DocumentDetail.*.latitude
+       - jsonPath: $.documentDetails.*.latitude
        
-       - jsonPath: $.DocumentDetail.*.longitude
+       - jsonPath: $.documentDetails.*.longitude
        
-       - jsonPath: $.DocumentDetail.*.description
+       - jsonPath: $.documentDetails.*.description
        
-       - jsonPath: $.DocumentDetail.*.dateOfCapture
+       - jsonPath: $.documentDetails.*.dateOfCapture
        
-       - jsonPath: $.DocumentDetail.*.workProgress
+       - jsonPath: $.documentDetails.*.workProgress
        
-       - jsonPath: $.DocumentDetail.*.auditDetails.createdBy
+       - jsonPath: $.documentDetails.*.auditDetails.createdBy
        
-       - jsonPath: $.DocumentDetail.*.auditDetails.createdDate
+       - jsonPath: $.documentDetails.*.auditDetails.createdDate
        
-       - jsonPath: $.DocumentDetail.*.auditDetails.lastModifiedBy
+       - jsonPath: $.documentDetails.*.auditDetails.lastModifiedBy
        
-       - jsonPath: $.DocumentDetail.*.auditDetails.lastModifiedDate 
+       - jsonPath: $.documentDetails.*.auditDetails.lastModifiedDate 
 
        

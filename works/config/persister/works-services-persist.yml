@@ -42,37 +42,4 @@ serviceMaps:
        
        - jsonPath: $.DocumentDetail.*.auditDetails.lastModifiedDate 
 
-     - version: 1.0
-       name: Asset
-       description: Update works document data in egw_documentdetail table 
-       fromTopic: works.documentdetails.create
-       isTransaction: true
-       queryMaps:   
-     - query: UPDATE egw_documentdetail SET id=?, objectid= ?,objectType = ?, objectType=?, documentType=?, fileStore=?, latitude=?, longitude=?, description=?, dateOfCapture=?, workProgress=?, lastModifiedBy=?, lastModifiedDate=?  WHERE id = ? AND tenantId = ?;;
-      basePath: $.DocumentDetail.*
-      jsonMaps:
-         
-      - jsonPath: $.DocumentDetail.*.id
-         
-       - jsonPath: $.DocumentDetail.*.objectId
-         
-       - jsonPath: $.DocumentDetail.*.objectType
-       
-       - jsonPath: $.DocumentDetail.*.documentType
-       
-       - jsonPath: $.DocumentDetail.*.fileStore
-       
-       - jsonPath: $.DocumentDetail.*.latitude
-       
-       - jsonPath: $.DocumentDetail.*.longitude
-       
-       - jsonPath: $.DocumentDetail.*.description
-       
-       - jsonPath: $.DocumentDetail.*.dateOfCapture
-       
-       - jsonPath: $.DocumentDetail.*.workProgress
-       
-       - jsonPath: $.DocumentDetail.*.auditDetails.lastModifiedBy
-       
-       - jsonPath: $.DocumentDetail.*.auditDetails.lastModifiedDate 
        

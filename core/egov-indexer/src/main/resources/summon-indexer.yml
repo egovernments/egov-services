@@ -1,5 +1,5 @@
 ServiceMaps:
- serviceName: Property Tax
+ serviceName: legal Case Management
  version: 1.0.0
  mappings:
   - topic: lcms-create-case

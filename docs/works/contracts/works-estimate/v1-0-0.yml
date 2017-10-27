@@ -563,7 +563,7 @@ paths:
           
           Workflow will not be there for spillover Detailed Estimate and new Detailed Estimates will have workflow. So the spillover Detailed Estimate will be created on approved status with or without budget check based on configuration. Technical Sanction and Administrative Sanction will be part of the workflow. Whether Financial Sanction required for Detailed Estimate is based on configuration. Save as drafts required for Detailed Estimate. 
           
-          Atleast one item is Schedule A(SOR or NON SOR) is mandatory before submitting the Detailed Estimate.
+          Atleast one item is Schedule A(SOR or NON SOR) is mandatory before submitting the Detailed Estimate. Detailed Measurements needs to be captured for Detailed Estimate at each activity(SOR/Non SOR) level. It is not mandatory to capture Detailed measurements for each activity. If Detailed Measurements are captured then the Quantity at activity level will be defaulted from the computed value from measurements and not allowed to edit.
           
           Capturing of Location along with Latitude and Longitude from GIS Map needs to be mandated based on the configuration value.  
           
@@ -647,46 +647,67 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
         - name: revisionEstimateNumbers
           in: query
-          description: Comma separated list of Revision Estimate Numbers to get the Revision Estimates
-          required: false
           type: array
           items:
             type: string
-          allowEmptyValue: true
-        - name: ids
-          type: array
-          items:
-            type: string
-          in: query
+          format: autoComplete
           maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Revision Estimate Numbers to get the Revision Estimates
+        - name: ids
+          in: query
+          type: array
+          items:
+            type: string
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
           description: Comma separated list of Ids of Revision Estimate to get the Revision Estimates
+        - name: detailedEstimateNumbers
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Detailed Estimate Numbers to get the Revision Estimates
         - name: fromDate
           in: query
+          type: integer
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
           required: false
           description: Epoch time from when the Revision Estimate created
-          type: integer
-          format: int64
         - name: toDate
           in: query
-          required: false
-          description: Epoch time till when the Revision Estimate created
           type: integer
           format: int64
-        - name: status
-          in: query
+          x-displayformat: 'dd/MM/yyyy'
           required: false
-          description: The Status of the Revision Estimate.
-          type: string
+          description: Epoch time till when the Revision Estimate created
+        - name: statuses
+          in: query
+          type: array
+          items:
+            type: string
+          format: multiValueList
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Status of the Revision Estimate
         - name: createdBy
           in: query
-          description: Unique user name of the User who created the Revision Estimate.
+          type: array
+          items:
+            type: string
+          format: singleValueList
+          maxItems: 50
           required: false
-          type: string
-        - name: currentOwner
-          in: query
-          description: Unique user name of the User who owns(work flow user) the Revision Estimate.
-          required: false
-          type: string
+          allowEmptyValue: true
+          description: Unique user name of the User who created the Revision Estimate
       responses:
         200:
           description: Revision Estimate(s) Retrieved Successfully
@@ -703,7 +724,15 @@ paths:
     post:
       summary: Create new Revision Estimate(s).
       description: |
-          To create new Revision Estimate in the system. API supports bulk creation with max limit as defined in the Revision Estimate Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Revision Estimate, please pass array with one Revision Estimate object. Revision Estimate will be created for Approved Letter of Acceptance. Revision Estimate extends Detailed Estimate.
+          To create new Revision Estimate in the system. API supports bulk creation with max limit as defined in the Revision Estimate Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Revision Estimate, please pass array with one Revision Estimate object. 
+          
+          Revision Estimate will be created for Detailed Estimate for which there exists a approved Letter of Acceptance/Work Order and Final Bill is not yet created for the same. Revision Estimate extends Detailed Estimate i.e., Revesion estimate is a sub set for Detailed Estimate. There can be multiple Revision Estimates for single Detailed Estimate. 
+          
+          Revision Estimate can either have Non Tendered Items(SOR Items which are not part of Original Estimate) or Lumpsum Items(NON SOR Items) or Change in Quantity of existing items(Additional or Reduced Quantity) or any of these combinations. Any of activity is mandatory to Submit Revision Estimate.
+          
+          Workflow might be there for Revision Estimate or it can be created in approved status based on configuration. Budget Appropriation for Revision Estimate should be mandated based on the configuration.
+          
+          Detailed Measurements needs to be captured for Revision Estimate which is similar to Detaield Estimate.
           
       parameters:
         - name: RevisionEstimateRequest
@@ -733,7 +762,8 @@ paths:
       summary: Update existing Revision Estimate(s).
       description: |
           To update existing Revision Estimate in the system. API supports bulk updation with max limit as defined in the Revision Estimate Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Revision Estimate, please pass array with one Revision Estimate object.
-          In update all the fields are disabled except the Work Flow Deatils and the fields which needs to be captured at different status are enabled.
+          
+          Only the creator can edit all the fields when the Revision Estimate is in creator inbox(in Rejected status) or in drafts. Update during workflow will have all the fields readonly except few fields which are allowed to modify during each stage of workflow including Workflow Details. The status and workflow state will be updated during each stage of workflow approval.
           
       parameters:
         - name: RevisionEstimateRequest
@@ -862,7 +892,7 @@ definitions:
         pattern: '[a-zA-Z0-9-\\]'
         description: Unique number after admin sanction for the Abstract Estimate
         maxLength: 50
-        minLength: 3
+        minLength: 1
       adminSanctionDate:
         type: integer
         format: int64
@@ -936,8 +966,8 @@ definitions:
       councilResolutionDate:
         type: integer
         format: int64
-        description: Epoch time of the council resolution date
         x-displayformat: 'dd/MM/yyyy'
+        description: Epoch time of the council resolution date
       spillOverFlag:  
         type: boolean
         description: Boolean value if spill over or not. Required only if Abstract Estimate is Spill Over. Default value is false.
@@ -954,7 +984,7 @@ definitions:
         type: string
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
         description: Reason for cancellation of the Abstract Estimate, Required only while cancelling Abstract Estimate
-        maxLength: 512
+        maxLength: 100
       cancellationRemarks:
         type: string
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
@@ -971,6 +1001,7 @@ definitions:
       implementationPeriod:
         type: integer
         description: Approximate period of implementation of the work.
+        maxLength: 5
       fundAvailable:
         type: boolean
         description: Boolean vlaue to capture whether the fund available to execute this work.
@@ -1020,32 +1051,36 @@ definitions:
         minLength: 4
       abstractEstimate:
         $ref: '#/definitions/AbstractEstimate'
+        description: Reference to Abstract Estimate Object 
       nameOfWork:
         type: string
-        pattern: '[a-zA-Z0-9\s\.,]'
-        description: Name Of Work of the Abstract Estimate Details
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        description: Name Of Work of the Abstract Estimate
         maxLength: 1024
         minLength: 1
       estimateAmount:
         type: number
         format: BigDecimal
-        description: Estimate amount for the Abstract Estimate Details
+        description: Estimate amount for the Abstract Estimate
       estimateNumber:
         type: string
         pattern: '[a-zA-Z0-9-\\]'
-        description: Estimate number of the Abstract Estimate Details.
+        description: Estimate number of the Abstract Estimate
         maxLength: 50
         minLength: 1
       grossAmountBilled:
         type: number
         format: double
-        description: Gross Billed amount of the Abstract Estimate Details
+        description: Gross Billed amount of the Abstract Estimate Details. This attribute is required only if billsCreated flag is true for Abstract Estimate.
       projectCode:
         $ref: '#/definitions/ProjectCode'
+        description: Project code object refernce for the Abstract Estimate
       abstractEstimateAppropriations:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-services/v1-0-0.yml#/definitions/EstimateAppropriation'
+        description: This object holds Budget Appropriation details for the Abstract Estimate
       documentDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DocumentDetail'
+        description: This object holds Budget any documents attached while creating Abstract Estimate or any documents generated from the system or any photographs captured for the Abstract Estimate.
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -1100,81 +1135,105 @@ definitions:
       estimateDate:
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of the Detailed Estimate Created
       nameOfWork:
         type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
         description: name of the work of Detailed Estimate Details
         maxLength: 1024
         minLength: 1
       description:
         type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
         description : description for the Detailed Estimate
         maxLength: 1024
         minLength: 1
       department:
         type: string
+        format: singleValueList
         description: Department for which Detailed Estimate belongs to
       adminSanctionNumber:
         type: string
         pattern: '[a-zA-Z0-9-\\]'
+        maxLength: 50
         description: Unique number after admin sanction for the Detailed Estimate
       adminSanctionDate:
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description:  Epoch time of when the admin santion is done
       adminSanctionBy:
         type: string
-        description: user who admin sanctioned
+        description: User who admin sanctioned Detailed Estimate
       status:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DetailedEstimateStatus'
+        description: Status of the Detailed Estimate
       workValue:
         type: number
         format: BigDecimal
-        description: Work value of the Detailed Estimate
+        description: Work value(Sum of SOR and NON SOR) of the Detailed Estimate
         maxLength: 20
       estimateValue:
         type: number
         format: BigDecimal
-        description: Estimate value of the Detailed Estimate
+        description: Estimate value (Sum of Schedule A and Schedule B) of the Detailed Estimate
         maxLength: 20
       projectCode:
         $ref: '#/definitions/ProjectCode'
+        description: Project Code of the Detailed Estimate
       parent:
         $ref: '#/definitions/DetailedEstimate'
+        description: Parent Detailed Estimate Reference. This represents the Parent Estimate reference for the Revision Estimate 
       #parent:
       #  type: string
       #  description: Parent of the Detailed Estimate 
       copiedFrom:
         $ref: '#/definitions/DetailedEstimate'
+        description: Reference of the Detailed Estimate for teh Copy Estimate 
       #copiedFrom:
       #  type: string
       #  description: Refers to the Detailed Estimate   
       approvedDate:
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of when Detailed Estimate created
       approvedBy:
         type: string
-        description: Unique username of the user who approved Detailed Estimate
+        description: User who approved the Detailed Estimate
       copiedEstimate:
         type: boolean
-        description: Boolean value to identify whether the Detailed Estimate is copied from another estimate      
+        description: Boolean value to identify whether the Detailed Estimate is copied from another estimate. Default value is false.    
       beneficiary:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/Beneficiary'
+        format: singleValueList
+        description: The Beneficiary of this work
       modeOfAllotment:
         $ref: '#/definitions/ModeOfAllotment'
+        format: singleValueList
+        description: The Recommended Mode of Allotment of the work
       worksType:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/TypeOfWork'
+        format: singleValueList
+        description: The Type of work for which this Detailed Estimate belongs to
       worksSubtype:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/TypeOfWork'
+        format: singleValueList
+        description: The Sub Type of work for which this Detailed Estimate belongs to
       natureOfWork: 
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/NatureOfWork'
+        format: singleValueList
+        description: The Nature of work for which this Detailed Estimate belongs to
       ward:
-        type: string
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        format: singleValueList
         description: Ward of the Detailed Estimate
       location:
         type: string
-        description: Location of the Detailed Estimate
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        maxLength: 512
+        description: Location of the Detailed Estimate where the work is executed
       latitude:
         type: integer
         format: double
@@ -1185,38 +1244,45 @@ definitions:
         description: Longitude of the location
       workCategory:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkCategory'
+        description: The Work Category of the Detailed Estimate
+        format: singleValueList
       locality:
-        type: string
-        description: Locality of the Detailed Estimate
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        description: The Locality in which the Detailed Estimate belongs to
+        format: singleValueList
       councilResolutionNumber:
         type: string
-        description: council resolution number of the Detailed Estimate
+        pattern: '[a-zA-Z0-9-\\]'
+        description: Council resolution number of the Detailed Estimate
         maxLength: 50
-        minLength: 3
       councilResolutionDate:
-        type: string
+        type: integer
+        format: int64
         description: Epoch time of the council resolution date
+        x-displayformat: 'dd/MM/yyyy'
       workOrderCreated:
         type: boolean
-        description: Boolean value to identify whether the work order created or not for spillover data 
+        description: Boolean value to identify whether the work order created or not for spillover data. Default value is false.
       billsCreated: 
         type: boolean
-        description: Boolean value to identify whether the bills created or not for spillover data 
+        description: Boolean value to identify whether the bills created or not for spillover data. Default value is false.
       spillOverFlag:  
         type: boolean
-        description: Boolean value to identify whether the spill over or not
+        description: Boolean value to identify whether the spill over or not. Default value is false.
       grossAmountBilled:  
         type: integer
         format: BigDecimal
         description: Gross Amount Billed if billsCreated flag is true 
       cancellationReason:
         type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        maxLength: 100
         description: Reason for cancellation of the Detailed Estimate, Required only while cancelling Detailed Estimate
       cancellationRemarks:
         type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
         description: Remarks for cancellation of the Detailed Estimate, Required only while cancelling Detailed Estimate
         maxLength: 512
-        minLength: 3
       totalIncludingRE:
         type: integer
         format: BigDecimal
@@ -1250,7 +1316,7 @@ definitions:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DocumentDetail'
       assetValues:
         type: array
-        description: Asstet Values for Detailed Estimate
+        description: Asset Values for Detailed Estimate
         items:
           $ref: '#/definitions/AssetsForEstimate'
       overheadValues:
@@ -1737,6 +1803,5 @@ tags:
     description: APIs required for Revision Estimate.
   - name: Project Code
     description: APIs required for Project Code.
-
 
 

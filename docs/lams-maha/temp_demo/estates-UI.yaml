@@ -3,16 +3,15 @@ UIInfo:
   groups:
     EstateDetails2:
       fields:
-      - EstateRegisters[0].id
-      - EstateRegisters[0].registerName		
+      - EstateRegisters[0].estateRegisterId
   externalData:
-  - fieldName: EstateRegisters[0].estateNumber
-    url: "/egov-mdms-service/v1/_get?&moduleName=lams-maha&masterName=Purpose"
-    keyPath: "$..estateNumber"
-    valPath: "$..estateNumber"
+  - fieldName: EstateRegisters[0].propertyType.name
+    url: "/egov-mdms-service/v1/_get?&moduleName=lams-maha&masterName=PropertyType"
+    keyPath: "$..name"
+    valPath: "$..name"
   searchResult:
-    rowClickUrlUpdate: /update/estates/{estateNumber}
-    rowClickUrlView: /view/estates/{estateNumber}
+    rowClickUrlUpdate: /update/estates/{estateRegisterId}
+    rowClickUrlView: /view/estates/{estateRegisterId}
     columns:
     - registerName
     values:

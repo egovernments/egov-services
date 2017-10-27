@@ -8,7 +8,7 @@ serviceMaps:
    isTransaction: true
    queryMaps:
     - query: INSERT INTO egw_documentdetail(
-        id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createddate, lastmodifiedby, lastmodifieddate) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.documentDetails.*
       jsonMaps:
          

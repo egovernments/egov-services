@@ -184,7 +184,7 @@ serviceMaps:
             lastmodifiedtime) VALUES 
             (?, ?, ?, ?, ?, ?, ?, 
             ?, ?, ?, ?, ?, 
-            ?,?,?);
+            ?);
       basePath: $.projectCodes.*
       jsonMaps:
          

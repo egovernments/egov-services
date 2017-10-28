@@ -32,13 +32,14 @@ public class OpinionRowMapper implements RowMapper<Opinion> {
 
 		Opinion opinion = new Opinion();
 		opinion.setCode(rs.getString("code"));
-		opinion.setOpinionRequestDate(rs.getLong("opinionrequestdate"));
-		opinion.setDepartmentName(rs.getString("departmentname"));
-		opinion.setOpinionOn(rs.getString("opinionon"));
-		opinion.setOpinionDescription(rs.getString("opinionDescription"));
-		opinion.setInWardDate(rs.getLong("inwarddate"));
-		opinion.setTenantId(rs.getString("tenantid"));
-		opinion.setStateId(rs.getString("stateid"));
+		opinion.setOpinionRequestDate(getLong(rs.getLong("opinionrequestdate")));
+
+		opinion.setDepartmentName(getString(rs.getString("departmentname")));
+		opinion.setOpinionOn(getString(rs.getString("opinionon")));
+		opinion.setOpinionDescription(getString(rs.getString("opinionDescription")));
+		opinion.setInWardDate(getLong(rs.getLong("inwarddate")));
+		opinion.setTenantId(getString(rs.getString("tenantid")));
+		opinion.setStateId(getString(rs.getString("stateid")));
 
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(rs.getString("createdby"));
@@ -65,5 +66,13 @@ public class OpinionRowMapper implements RowMapper<Opinion> {
 		opinion.setDocuments(documents);
 		opinion.setOpinionsBy(opinionBy);
 		return opinion;
+	}
+
+	private String getString(Object object) {
+		return object == null ? null : object.toString();
+	}
+
+	private Long getLong(Object object) {
+		return object == null ? null : Long.parseLong(object.toString());
 	}
 }

@@ -18,7 +18,7 @@ public class Constants {
 	public static final String VENDOR_MASTER_NAME = "Vendor";
 	public static final String FUELTYPE_MASTER_NAME = "FuelType";
 	public static final String COLLECTIONTYPE_MASTER_NAME = "CollectionType";
-	
+	public static final String DUMPINGGROUND_MASTER_NAME = "DumpingGround";
 	
 }
 

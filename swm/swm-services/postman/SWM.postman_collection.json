@@ -14,7 +14,10 @@
 		"27f4bf24-9d34-5892-605d-608b49464574",
 		"a5b679ea-8683-3ced-2f86-a89aba36d328",
 		"2278460e-f53f-1e71-c059-945b435d518c",
-		"03ff0be2-ef3d-7dd2-1a67-8aa40b1a84b2"
+		"03ff0be2-ef3d-7dd2-1a67-8aa40b1a84b2",
+		"4413f02e-d4c8-85d9-404c-96376836a135",
+		"da3b1c24-d957-6737-872f-852d6bc776db",
+		"f352eafc-6f1f-6112-b1a1-753bc0b1a3e2"
 	],
 	"folders": [],
 	"folders_order": [],
@@ -164,7 +167,7 @@
 			"collectionId": "b07539a7-1d04-ee6c-a2d8-513349bccaa3",
 			"data": [],
 			"dataMode": "raw",
-			"name": "Update Collection Point Details ",
+			"name": "Collection Point Details Update",
 			"description": "",
 			"descriptionFormat": "html",
 			"time": 1509178147703,
@@ -195,7 +198,7 @@
 			"collectionId": "b07539a7-1d04-ee6c-a2d8-513349bccaa3",
 			"data": [],
 			"dataMode": "raw",
-			"name": "Create Collection Point Details ",
+			"name": "Collection Point Details Create",
 			"description": "",
 			"descriptionFormat": "html",
 			"time": 1509178135526,
@@ -245,6 +248,45 @@
 			"helperAttributes": {},
 			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"3d585dec-bd33-4cf2-88fb-36c48fcf3d78\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}",
 			"collection_id": "b07539a7-1d04-ee6c-a2d8-513349bccaa3"
+		},
+		{
+			"id": "4413f02e-d4c8-85d9-404c-96376836a135",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8899/swm-services/routes/_search?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "b07539a7-1d04-ee6c-a2d8-513349bccaa3",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Route Search",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1509193620831,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"3d585dec-bd33-4cf2-88fb-36c48fcf3d78\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
 		},
 		{
 			"id": "4bb50165-5194-6352-43ff-ef02dad9a24b",
@@ -385,6 +427,37 @@
 			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"3d585dec-bd33-4cf2-88fb-36c48fcf3d78\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
 		},
 		{
+			"id": "da3b1c24-d957-6737-872f-852d6bc776db",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8899/swm-services/routes/_update",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "b07539a7-1d04-ee6c-a2d8-513349bccaa3",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Route Update",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1509193632463,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24cc2960-0d9f-45b3-8c9b-c69ab7019abb\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"routes\":[\n      {\n      \t\t\"id\":\"17e112419ff34db7be3c45bb25e92615\",\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"name\":\"Route Name U\",\n            \"collectionType\" :{\n            \t\"code\":\"Fake Collection Type Code 2\"\n            },\n            \"isEndingPointDumpingGround\":false,\n            \"startingCollectionPoint\" :{\n            \t\"name\":\"CollectionPointName 2\"\n            },\n            \"endingCollectionPoint\" :{\n            \t\"name\":\"CollectionPointName 1\"\n            },\n            \"endingDumpingGroundPoint\" :{\n            \t\"name\":\"Fake Dumping Ground name 1\"\n            },\n            \"distance\":200,\n            \"garbageEstimate\" :2000,\n            \"collectionPoints\":[\n            \t{\n            \t\t\"collectionPoint\" :\"CollectionPointName 2\"\n            \t},\n            \t\t{\n            \t\t\"collectionPoint\" :\"CollectionPointName 1\"\n            \t}\n            ]\n      }\n   ]\n } "
+		},
+		{
 			"id": "eedacb9d-f085-21c7-9bc4-2a86ccc685e1",
 			"headers": "Content-Type: application/json\n",
 			"headerData": [
@@ -446,6 +519,37 @@
 			"helperAttributes": {},
 			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24cc2960-0d9f-45b3-8c9b-c69ab7019abb\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"collectionPoints\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"name\":\"name\",\n            \"ward\" :{\n            \t\"code\":\"Ward Code 1\"\n            },\n            \"zoneCode\" :{\n            \t\"code\":\"zone Code 1\"\n            },\n            \"street\" :{\n            \t\"code\":\"Street Code 1\"\n            },\n            \"colony\" :{\n            \t\"code\":\"Colony Code 1\"\n            },\n            \"binIdDetails\":[\n\t            {\n\t            \t\"assetOrBinId\": \"assetOrBinId 1\",\n\t            \t\"rfidAssigned\": true,\n\t            \t\"rfid\": \"rfid 1\",\n\t            \t\"latitude\": 111.111,\n\t            \t\"longitude\": 222.222\n\t            },\n\t            {\n\t            \t\n            \t\"assetOrBinId\": \"assetOrBinId 2\",\n            \t\"rfidAssigned\": true,\n            \t\"rfid\": \"rfid 2\",\n            \t\"latitude\": 111.111,\n            \t\"longitude\": 222.222\n            \t}\n            \t\n            ]\n            \n      }\n   ]\n } ",
 			"collection_id": "b07539a7-1d04-ee6c-a2d8-513349bccaa3"
+		},
+		{
+			"id": "f352eafc-6f1f-6112-b1a1-753bc0b1a3e2",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8899/swm-services/routes/_create",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "b07539a7-1d04-ee6c-a2d8-513349bccaa3",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Route Create ",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1509193646295,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24cc2960-0d9f-45b3-8c9b-c69ab7019abb\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"routes\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"name\":\"Route Name\",\n            \"collectionType\" :{\n            \t\"code\":\"Fake Collection Type Code 1\"\n            },\n            \"isEndingPointDumpingGround\":false,\n            \"startingCollectionPoint\" :{\n            \t\"name\":\"CollectionPointName 1\"\n            },\n            \"endingCollectionPoint\" :{\n            \t\"name\":\"CollectionPointName 2\"\n            },\n            \"endingDumpingGroundPoint\" :{\n            \t\"name\":\"Fake Dumping Ground name 1\"\n            },\n            \"distance\":100,\n            \"garbageEstimate\" :1000,\n            \"collectionPoints\":[\n            \t{\n            \t\t\"collectionPoint\" :\"CollectionPointName 1\"\n            \t},\n            \t\t{\n            \t\t\"collectionPoint\" :\"CollectionPointName 2\"\n            \t}\n            ]\n      }\n   ]\n } "
 		},
 		{
 			"id": "fa8d81cf-3920-47b1-b8b9-340935691354",

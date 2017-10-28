@@ -146,7 +146,7 @@ public class CollectionPointDetailsService {
 				}
 			}
 
-			// Validate CollectionType
+			// Validate Collection Point
 
 			if (details.getCollectionPoint() != null && details.getCollectionPoint().getName() != null) {
 

@@ -36,7 +36,7 @@ public class CollectionPoint {
 	@Size(min = 1, max = 128)
 	@JsonProperty("name")
 	private String name = null;
-
+	
 	@NotNull
 	@JsonProperty("ward")
 	private Boundary ward = null;

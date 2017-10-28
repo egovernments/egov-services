@@ -380,7 +380,7 @@ serviceMaps:
 
  - version: 1.0
    name: collectionpointdetails update
-   description: update collectionpointdetails in egswm_vehicle
+   description: update collectionpointdetails in egswm_collectionpointdetails
    fromTopic: swm-collectionpointdetails-update-topic
    queryMaps: 
 
@@ -405,3 +405,108 @@ serviceMaps:
        - jsonPath: $.collectionPointDetails.*.id
 
        - jsonPath: $.collectionPointDetails.*.tenantId
+
+ - version: 1.0
+   name: route create
+   description: create route in egswm_route
+   fromTopic: swm-route-save-topic
+   queryMaps: 
+    - query: INSERT INTO egswm_route(id, tenantid, name,collectionType, startingCollectionPoint, isEndingPointDumpingGround, endingCollectionPoint, endingDumpingGroundPoint, distance, garbageEstimate, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.routes.*
+      jsonMaps:
+       
+       - jsonPath: $.routes.*.id
+
+       - jsonPath: $.routes.*.tenantId
+
+       - jsonPath: $.routes.*.name
+         
+       - jsonPath: $.routes.*.collectionType.code
+
+       - jsonPath: $.routes.*.startingCollectionPoint.name
+
+       - jsonPath: $.routes.*.isEndingPointDumpingGround
+
+       - jsonPath: $.routes.*.endingCollectionPoint.name
+
+       - jsonPath: $.routes.*.endingDumpingGroundPoint.name
+
+       - jsonPath: $.routes.*.distance
+         dbType: DOUBLE
+         
+       - jsonPath: $.routes.*.garbageEstimate
+         dbType: DOUBLE
+
+       - jsonPath: $.routes.*.auditDetails.createdBy
+
+       - jsonPath: $.routes.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.routes.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.routes.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+ - version: 1.0
+   name: route update
+   description: update route in egswm_route
+   fromTopic: swm-route-update-topic
+   queryMaps: 
+
+    - query: UPDATE egswm_route SET name=?, collectionType=?, startingCollectionPoint=?, isEndingPointDumpingGround=?, endingCollectionPoint=?, endingDumpingGroundPoint=?, distance=?, garbageEstimate=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+      basePath: $.routes.*
+      jsonMaps:
+
+       - jsonPath: $.routes.*.name
+
+       - jsonPath: $.routes.*.collectionType.code
+
+       - jsonPath: $.routes.*.startingCollectionPoint.name
+
+       - jsonPath: $.routes.*.isEndingPointDumpingGround
+
+       - jsonPath: $.routes.*.endingCollectionPoint.name
+
+       - jsonPath: $.routes.*.endingDumpingGroundPoint.name
+
+       - jsonPath: $.routes.*.distance
+         dbType: DOUBLE
+         
+       - jsonPath: $.routes.*.garbageEstimate
+         dbType: DOUBLE
+         
+       - jsonPath: $.routes.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.routes.*.auditDetails.lastModifiedTime
+         dbType: LONG
+         
+       - jsonPath: $.routes.*.id
+
+       - jsonPath: $.routes.*.tenantId
+
+ - version: 1.0
+   name: route collection point map create
+   description: create route collection point map  in egswm_routecollectionpointmap 
+   fromTopic: swm-route-collectionpoint-map-save-topic
+   queryMaps: 
+    - query: INSERT INTO egswm_routecollectionpointmap(id, tenantid, route, collectionPoint, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.collectionPoints.*
+      jsonMaps:
+       
+       - jsonPath: $.collectionPoints.*.id
+
+       - jsonPath: $.collectionPoints.*.tenantId
+         
+       - jsonPath: $.collectionPoints.*.route
+
+       - jsonPath: $.collectionPoints.*.collectionPoint
+
+       - jsonPath: $.collectionPoints.*.auditDetails.createdBy
+
+       - jsonPath: $.collectionPoints.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.collectionPoints.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.collectionPoints.*.auditDetails.lastModifiedTime
+         dbType: LONG

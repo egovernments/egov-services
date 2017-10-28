@@ -6,10 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.swm.domain.model.CollectionPointDetails;
-import org.egov.swm.domain.model.CollectionPointDetailsSearch;
 import org.egov.swm.domain.model.Pagination;
-import org.egov.swm.persistence.entity.CollectionPointDetailsEntity;
+import org.egov.swm.domain.model.Route;
+import org.egov.swm.domain.model.RouteCollectionPointMap;
+import org.egov.swm.domain.model.RouteSearch;
+import org.egov.swm.persistence.entity.RouteEntity;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -18,7 +19,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CollectionPointDetailsJdbcRepository {
+public class RouteJdbcRepository {
+
+	@Autowired
+	public RouteCollectionPointMapJdbcRepository routeCollectionPointMapJdbcRepository;
 
 	@Autowired
 	public JdbcTemplate jdbcTemplate;
@@ -26,19 +30,19 @@ public class CollectionPointDetailsJdbcRepository {
 	@Autowired
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	public Pagination<CollectionPointDetails> search(CollectionPointDetailsSearch searchRequest) {
+	public Pagination<Route> search(RouteSearch searchRequest) {
 
-		String searchQuery = "select * from egswm_collectionpointdetails :condition  :orderby ";
+		String searchQuery = "select * from egswm_route :condition  :orderby ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
 
 		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
 			validateSortByOrder(searchRequest.getSortBy());
-			validateEntityFieldName(searchRequest.getSortBy(), CollectionPointDetailsSearch.class);
+			validateEntityFieldName(searchRequest.getSortBy(), RouteSearch.class);
 		}
 
-		String orderBy = "order by collectionPoint";
+		String orderBy = "order by name";
 		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
 			orderBy = "order by " + searchRequest.getSortBy();
 		}
@@ -66,12 +70,12 @@ public class CollectionPointDetailsJdbcRepository {
 			paramValues.put("id", searchRequest.getId());
 		}
 
-		if (searchRequest.getCollectionPointName() != null) {
+		if (searchRequest.getName() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("collectionPoint =:collectionPoint");
-			paramValues.put("collectionPoint", searchRequest.getCollectionPointName());
+			params.append("name =:name");
+			paramValues.put("name", searchRequest.getName());
 		}
 
 		if (searchRequest.getCollectionTypeCode() != null) {
@@ -82,15 +86,47 @@ public class CollectionPointDetailsJdbcRepository {
 			paramValues.put("collectionType", searchRequest.getCollectionTypeCode());
 		}
 
+		if (searchRequest.getEndingCollectionPointName() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("endingCollectionPoint =:endingCollectionPoint");
+			paramValues.put("endingCollectionPoint", searchRequest.getEndingCollectionPointName());
+		}
+
+		if (searchRequest.getEndingDumpingGroundPointName() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("endingDumpingGroundPoint =:endingDumpingGroundPoint");
+			paramValues.put("endingDumpingGroundPoint", searchRequest.getEndingDumpingGroundPointName());
+		}
+
+		if (searchRequest.getIsEndingPointDumpingGround() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("isEndingPointDumpingGround =:isEndingPointDumpingGround");
+			paramValues.put("isEndingPointDumpingGround", searchRequest.getIsEndingPointDumpingGround());
+		}
+
+		if (searchRequest.getDistance() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("distance =:distance");
+			paramValues.put("distance", searchRequest.getDistance());
+		}
+
 		if (searchRequest.getGarbageEstimate() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("garbageEstimate =:garbageEstimate");
+			params.append("gabageEstimate =:garbageEstimate");
 			paramValues.put("garbageEstimate", searchRequest.getGarbageEstimate());
 		}
 
-		Pagination<CollectionPointDetails> page = new Pagination<>();
+		Pagination<Route> page = new Pagination<>();
 		if (searchRequest.getOffset() != null) {
 			page.setOffset(searchRequest.getOffset());
 		}
@@ -108,26 +144,30 @@ public class CollectionPointDetailsJdbcRepository {
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
-		page = (Pagination<CollectionPointDetails>) getPagination(searchQuery, page, paramValues);
+		page = (Pagination<Route>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination",
 				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(CollectionPointDetailsEntity.class);
+		BeanPropertyRowMapper row = new BeanPropertyRowMapper(RouteEntity.class);
 
-		List<CollectionPointDetails> collectionPointDetailsList = new ArrayList<>();
+		List<Route> routeList = new ArrayList<>();
 
-		List<CollectionPointDetailsEntity> collectionPointDetailsEntities = namedParameterJdbcTemplate
-				.query(searchQuery.toString(), paramValues, row);
+		List<RouteEntity> routeEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
 
-		for (CollectionPointDetailsEntity collectionPointDetailsEntity : collectionPointDetailsEntities) {
-			collectionPointDetailsList.add(collectionPointDetailsEntity.toDomain());
+		for (RouteEntity routeEntity : routeEntities) {
+
+			RouteCollectionPointMap sr = RouteCollectionPointMap.builder().route(routeEntity.getName()).build();
+			List<RouteCollectionPointMap> collectionPoints = routeCollectionPointMapJdbcRepository.search(sr);
+			Route route = routeEntity.toDomain();
+			route.setCollectionPoints(collectionPoints);
+			routeList.add(route);
 		}
 
-		page.setTotalResults(collectionPointDetailsList.size());
+		page.setTotalResults(routeList.size());
 
-		page.setPagedData(collectionPointDetailsList);
+		page.setPagedData(routeList);
 
 		return page;
 	}

@@ -1,5 +1,7 @@
 package org.egov.swm.domain.model;
 
+import java.util.List;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -18,7 +20,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CollectionPointDetails {
+public class Route {
 
 	@Length(min = 1, max = 256)
 	@JsonProperty("id")
@@ -30,21 +32,36 @@ public class CollectionPointDetails {
 	private String tenantId = null;
 
 	@NotNull
+	@Length(min = 1, max = 128)
+	@JsonProperty("name")
+	private String name = null;
+	
 	@JsonProperty("collectionType")
 	private CollectionType collectionType = null;
 
-	@NotNull
-	@JsonProperty("collectionPoint")
-	private CollectionPoint collectionPoint = null;
+	@JsonProperty("isEndingPointDumpingGround")
+	private Boolean isEndingPointDumpingGround = null;
+	
+	@JsonProperty("startingCollectionPoint")
+	private CollectionPoint startingCollectionPoint = null;
 
+	@JsonProperty("endingCollectionPoint")
+	private CollectionPoint endingCollectionPoint = null;
+	
+	@JsonProperty("endingDumpingGroundPoint")
+	private DumpingGround endingDumpingGroundPoint = null;
+
+	@JsonProperty("collectionPoints")
+	private List<RouteCollectionPointMap> collectionPoints = null;
+
+	@NotNull
+	@JsonProperty("distance")
+	private Double distance = null;
+	
 	@NotNull
 	@JsonProperty("garbageEstimate")
 	private Double garbageEstimate = null;
-
-	@Length(min = 0, max = 300)
-	@JsonProperty("description")
-	private String description = null;
-
+	
 	@Valid
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;

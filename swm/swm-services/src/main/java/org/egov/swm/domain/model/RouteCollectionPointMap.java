@@ -18,7 +18,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CollectionPointDetails {
+public class RouteCollectionPointMap {
 
 	@Length(min = 1, max = 256)
 	@JsonProperty("id")
@@ -30,20 +30,11 @@ public class CollectionPointDetails {
 	private String tenantId = null;
 
 	@NotNull
-	@JsonProperty("collectionType")
-	private CollectionType collectionType = null;
+	private String route = null;
 
 	@NotNull
 	@JsonProperty("collectionPoint")
-	private CollectionPoint collectionPoint = null;
-
-	@NotNull
-	@JsonProperty("garbageEstimate")
-	private Double garbageEstimate = null;
-
-	@Length(min = 0, max = 300)
-	@JsonProperty("description")
-	private String description = null;
+	private String collectionPoint = null;
 
 	@Valid
 	@JsonProperty("auditDetails")

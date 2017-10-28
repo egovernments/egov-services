@@ -39,7 +39,7 @@ public class UniqueCodeGeneration {
 	 * @return {@link String} Unique code sequence
 	 * @throws Exception
 	 */
-	public String  getUniqueCode(String tenantId,RequestInfo requestInfo,String ulbFormat,String ulbName) throws Exception{
+	public String  getUniqueCode(String tenantId,RequestInfo requestInfo,String ulbFormat,String ulbName,Boolean isCaseRef,String caseCode) throws Exception{
 		String response = tenantRepository.getTenantRepository(tenantId, requestInfo);
 		String SequenceNo ="";
 		
@@ -64,7 +64,12 @@ public class UniqueCodeGeneration {
 			
 		}
 		
+		if ( isCaseRef ){
 		return ulbCode+SequenceNo;
+		}
+		else{
+			return ulbCode+caseCode+SequenceNo; 
+		}
 		
 	}
 	

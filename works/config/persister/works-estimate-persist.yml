@@ -209,12 +209,12 @@ serviceMaps:
        - jsonPath: $.projectCodes.*.auditDetails.createdBy
          dbType: LONG
  
-       - jsonPath: $.projectCodes.auditDetails.createdTime
+       - jsonPath: $.projectCodes.*.auditDetails.createdTime
        
        - jsonPath: $.projectCodes.*.auditDetails.lastModifiedBy
          dbType: LONG
 
-       - jsonPath: $.projectCodes.auditDetails.lastModifiedTime
+       - jsonPath: $.projectCodes.*.auditDetails.lastModifiedTime
 
  - version: 1.0
    name: Works Project Code Update

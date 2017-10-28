@@ -345,3 +345,63 @@ serviceMaps:
 
        - jsonPath: $.binIdDetails.*.longitude
          dbType: DOUBLE
+
+ - version: 1.0
+   name: collectionpointdetails create
+   description: create collectionpointdetails in egswm_collectionpointdetails
+   fromTopic: swm-collectionpointdetails-save-topic
+   queryMaps: 
+    - query: INSERT INTO egswm_collectionpointdetails(id, tenantid, collectionType, collectionPoint, garbageEstimate, description, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.collectionPointDetails.*
+      jsonMaps:
+       
+       - jsonPath: $.collectionPointDetails.*.id
+
+       - jsonPath: $.collectionPointDetails.*.tenantId
+         
+       - jsonPath: $.collectionPointDetails.*.collectionType.code
+
+       - jsonPath: $.collectionPointDetails.*.collectionPoint.name
+         
+       - jsonPath: $.collectionPointDetails.*.garbageEstimate
+         dbType: DOUBLE
+
+       - jsonPath: $.collectionPointDetails.*.description
+         
+       - jsonPath: $.collectionPointDetails.*.auditDetails.createdBy
+
+       - jsonPath: $.collectionPointDetails.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.collectionPointDetails.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.collectionPointDetails.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+ - version: 1.0
+   name: collectionpointdetails update
+   description: update collectionpointdetails in egswm_vehicle
+   fromTopic: swm-collectionpointdetails-update-topic
+   queryMaps: 
+
+    - query: UPDATE egswm_collectionpointdetails SET collectionType=?, collectionPoint=?, garbageEstimate=?, description=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+      basePath: $.collectionPointDetails.*
+      jsonMaps:
+
+       - jsonPath: $.collectionPointDetails.*.collectionType.code
+
+       - jsonPath: $.collectionPointDetails.*.collectionPoint.name
+         
+       - jsonPath: $.collectionPointDetails.*.garbageEstimate
+         dbType: DOUBLE
+
+       - jsonPath: $.collectionPointDetails.*.description
+         
+       - jsonPath: $.collectionPointDetails.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.collectionPointDetails.*.auditDetails.lastModifiedTime
+         dbType: LONG
+         
+       - jsonPath: $.collectionPointDetails.*.id
+
+       - jsonPath: $.collectionPointDetails.*.tenantId

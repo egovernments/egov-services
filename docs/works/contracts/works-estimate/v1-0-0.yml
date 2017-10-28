@@ -843,12 +843,9 @@ definitions:
         description: Subject of Abstract Estimate
         maxLength: 256
         minLength: 1
-      fund:
-        type: string
-        description: Fund of the Abstract Estimate
-        format: singleValueList
       referenceType:
         type: string
+        #$ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/ReferenceType'
         description: Reference Type of the Abstract Estimate
         format: singleValueList
       referenceNumber:
@@ -856,26 +853,30 @@ definitions:
         description: Letter Reference Number of the Abstract Estimate
         maxLength: 100
         minLength: 1
-      function:
-        type: string
-        description: Function of the Abstract Estimate
-        format: singleValueList
       description:
         type: string
         description : description for the Abstract Estimate
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
         maxLength: 1024
         minLength: 1
-      budgetHead:
-        type: string
+      fund:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Fund'
+        description: Fund of the Abstract Estimate
+        format: singleValueList
+      function:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Function'
+        description: Function of the Abstract Estimate
+        format: singleValueList
+      budgetGroup:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/BudgetGroup'
         description: Budget head of the Abstract Estimate
         format: singleValueList
       scheme:
-        type: string
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Scheme'
         description: Scheme of the Abstract Estimate
         format: singleValueList
       subScheme:
-        type: string
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/SubScheme'
         description: Sub scheme of the Abstract Estimate
         format: singleValueList
       dateOfProposal:
@@ -884,7 +885,7 @@ definitions:
         x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of the Date of Proposal
       department:
-        type: string
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/Department'
         description: Department for which Abstract Estimate belongs to
         format: singleValueList
       adminSanctionNumber:
@@ -898,7 +899,7 @@ definitions:
         format: int64
         description:  Epoch time of when the admin santion done
       adminSanctionBy:
-        type: string
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
         description: User who admin sanctioned
       abstractEstimateDetails:
         type: array
@@ -949,7 +950,7 @@ definitions:
         x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of when technical sanctioned
       technicalSanctionBy:
-        type: string
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
         description: The user who technical sanctioned the Abstract Estimate
       locality: 
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
@@ -996,8 +997,9 @@ definitions:
         type: string
         description: State id of the workflow
       asset:
-        type: string
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/Asset'
         description: Asset for which this Abstract Estimate is created
+        format: singleValueList
       implementationPeriod:
         type: integer
         description: Approximate period of implementation of the work.
@@ -1008,17 +1010,19 @@ definitions:
       fundSanctioningAuthority:
         type: string
         pattern: '[a-zA-Z0-9\s\.,]'
-        description: The sanctioning Authority for fund to carry out the work.
+        description: The sanctioning Authority for fund to carry out the work
       pmcRequired:
         type: boolean
         description: Boolean vlaue to capture whether the PMC need to appoint or not.
       pmcType:
         type: string
         description: If PMC required is yes then to capture PMC is from Panel or New Appointment.
+        format: singleValueList
       pmcName:
         type: string
         pattern: '[a-zA-Z0-9\s\.,]'
         description: Name of the PMC Panel/New Appointment.
+        format: singleValueList
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -1150,7 +1154,7 @@ definitions:
         maxLength: 1024
         minLength: 1
       department:
-        type: string
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/Department'
         format: singleValueList
         description: Department for which Detailed Estimate belongs to
       adminSanctionNumber:
@@ -1164,7 +1168,7 @@ definitions:
         x-displayformat: 'dd/MM/yyyy'
         description:  Epoch time of when the admin santion is done
       adminSanctionBy:
-        type: string
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
         description: User who admin sanctioned Detailed Estimate
       status:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DetailedEstimateStatus'
@@ -1200,7 +1204,7 @@ definitions:
         x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of when Detailed Estimate created
       approvedBy:
-        type: string
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
         description: User who approved the Detailed Estimate
       copiedEstimate:
         type: boolean
@@ -1330,27 +1334,27 @@ definitions:
         type: string
         description: State id of the workflow
       fund:
-        type: string
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Fund'
         format: singleValueList
         description: Fund of the Detailed Estimate
       function:
-        type: string
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Function'
         format: singleValueList
         description: Function of the Detailed Estimate
       functionary:
-        type: string
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Functionary'
         format: singleValueList
         description: Functionary of the Detailed Estimate
       scheme:
-        type: string
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Scheme'
         format: singleValueList
         description: Scheme of the Detailed Estimate
       subScheme:
-        type: string
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/SubScheme'
         format: singleValueList
         description: Sub Scheme of the Detailed Estimate
       budgetGroup:
-        type: string
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/BudgetGroup'
         format: singleValueList
         description: Budget Group of the Detailed Estimate
       auditDetails:
@@ -1410,11 +1414,9 @@ definitions:
           maxLength: 128
           minLength: 4
         asset:
-          type: string
-          description: Code of the Asset
-          pattern: '[a-zA-Z0-9-\\]'
-          minLength: 1
-          maxLength: 100
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/Asset'
+          description: Asset Referenvce from Asset module
+          format: singleValueList
         detailedEstimate:
           $ref: '#/definitions/DetailedEstimate'
           description: Reference of the Detailed Estimate for Estimate and Assets linking
@@ -1575,7 +1577,7 @@ definitions:
           maxLength: 128
           minLength: 4
         financialYear:
-          type: string
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/FinancialYear'
           description: Financial Year of the Multi Year Estimate
           format: singleValueList
         detailedEstimate:
@@ -1645,7 +1647,7 @@ definitions:
           maxLength: 128
           minLength: 4
         chartOfAccounts:
-          type: string
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/ChartOfAccount'
           description: Chart Of Accounts of the Detailed Estimate Deduction from Financials
           format: autoComplete
         detailedEstimate:
@@ -1828,5 +1830,4 @@ tags:
     description: APIs required for Revision Estimate.
   - name: Project Code
     description: APIs required for Project Code.
-
 

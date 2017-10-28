@@ -132,19 +132,22 @@ public class DashBoardRepository {
 
     }
 
-    public List<AgeingResponse> getAgeingOfComplaints(String tenantId){
+    public List<AgeingResponse> getAgeingOfComplaints(String tenantId, List<Integer> range){
 
         String query = "select " +
-            " count(CASE WHEN (date_part('epoch'::text, now() - (cs.createddate + (interval '1 hour' * ctype.slahours)))/ 86400::double precision) < 15::double precision THEN 1 ELSE" +
-            " NULL::integer END) AS less15," +
-            " count(CASE WHEN (date_part('epoch'::text, now() - (cs.createddate + (interval '1 hour' * ctype.slahours)))/ 86400::double precision) >= 15::double precision" +
-            " AND (date_part('epoch'::text, now() - (cs.createddate + (interval '1 hour' * ctype.slahours)))/ 86400::double precision) <= 45::double" +
-            " precision THEN 1 ELSE NULL::integer END) AS btw15to45," +
-            " count(CASE WHEN (date_part('epoch'::text, now() - (cs.createddate + (interval '1 hour' * ctype.slahours)))/ 86400::double precision) >= 45::double precision" +
-            " AND (date_part('epoch'::text, now() - (cs.createddate + (interval '1 hour' * ctype.slahours)))/ 86400::double precision) <= 90::double" +
-            " precision THEN 1 ELSE NULL::integer END) AS btw45to90," +
-            " count(CASE WHEN (date_part('epoch'::text, now() - (cs.createddate + (interval '1 hour' * ctype.slahours)))/ 86400::double precision) > 90::double precision THEN 1 ELSE" +
-            " NULL::integer END) AS greaterthan90" +
+            " count(CASE WHEN (date_part('epoch'::text, now() - (cs.createddate + (interval '1 hour' * ctype.slahours)))/ 86400::double precision) < "+range.get(0)+"::double precision THEN 1 ELSE" +
+            " NULL::integer END) AS interval1," +
+            " count(CASE WHEN (date_part('epoch'::text, now() - (cs.createddate + (interval '1 hour' * ctype.slahours)))/ 86400::double precision) >= "+range.get(0)+"::double precision" +
+            " AND (date_part('epoch'::text, now() - (cs.createddate + (interval '1 hour' * ctype.slahours)))/ 86400::double precision) <= "+range.get(1)+"::double" +
+            " precision THEN 1 ELSE NULL::integer END) AS interval2," +
+            " count(CASE WHEN (date_part('epoch'::text, now() - (cs.createddate + (interval '1 hour' * ctype.slahours)))/ 86400::double precision) >= "+range.get(1)+"::double precision" +
+            " AND (date_part('epoch'::text, now() - (cs.createddate + (interval '1 hour' * ctype.slahours)))/ 86400::double precision) <= "+range.get(2)+"::double" +
+            " precision THEN 1 ELSE NULL::integer END) AS interval3," +
+            " count(CASE WHEN (date_part('epoch'::text, now() - (cs.createddate + (interval '1 hour' * ctype.slahours)))/ 86400::double precision) >= "+range.get(2)+"::double precision" +
+            " AND (date_part('epoch'::text, now() - (cs.createddate + (interval '1 hour' * ctype.slahours)))/ 86400::double precision) <= "+range.get(3)+"::double" +
+            " precision THEN 1 ELSE NULL::integer END) AS interval4," +
+            " count(CASE WHEN (date_part('epoch'::text, now() - (cs.createddate + (interval '1 hour' * ctype.slahours)))/ 86400::double precision) > "+range.get(3)+"::double precision THEN 1 ELSE" +
+            " NULL::integer END) AS interval5" +
             " FROM egpgr_complainttype ctype, submission cs, servicetype_keyword sk" +
             " WHERE cs.servicecode = ctype.code and cs.createddate <= now() and cs.status IN ('REGISTERED', 'FORWARDED', 'PROCESSING', 'REOPENED', 'ONHOLD')" +
             " and ctype.code = sk.servicecode and sk.keyword = 'complaint' and cs.tenantid = :tenantId and sk.tenantid = :tenantId and ctype.tenantid = :tenantId";

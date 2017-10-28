@@ -15,7 +15,7 @@ public class TopComplaintTypesResponse {
 
     private String complaintTypeName;
 
-    private String month;
+    private Integer month;
 
     private String code;
 

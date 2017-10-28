@@ -13,10 +13,11 @@ public class AgeingRowMapper implements RowMapper<AgeingResponse> {
     public AgeingResponse mapRow(ResultSet resultSet, int i) throws SQLException {
 
         return AgeingResponse.builder()
-            .lessThan15(resultSet.getString("less15"))
-            .lessThan45(resultSet.getString("btw15to45"))
-            .lessThan90(resultSet.getString("btw45to90"))
-            .greaterThan90(resultSet.getString("greaterthan90"))
+            .interval1(resultSet.getString("interval1"))
+            .interval2(resultSet.getString("interval2"))
+            .interval3(resultSet.getString("interval3"))
+            .interval4(resultSet.getString("interval4"))
+            .interval5(resultSet.getString("interval5"))
             .build();
     }
 }

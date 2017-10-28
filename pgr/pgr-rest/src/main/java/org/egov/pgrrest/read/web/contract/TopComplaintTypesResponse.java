@@ -17,7 +17,7 @@ public class TopComplaintTypesResponse {
     @JsonProperty("ComplaintType")
     private String complaintTypeName;
 
-    private String month;
+    private Integer month;
 
     private String code;
 

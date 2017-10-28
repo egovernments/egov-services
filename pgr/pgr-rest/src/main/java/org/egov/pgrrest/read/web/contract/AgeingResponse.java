@@ -11,11 +11,13 @@ import lombok.NoArgsConstructor;
 @Getter
 public class AgeingResponse {
 
-    private String lessThan15;
+    private String interval1;
 
-    private String lessThan45;
+    private String interval2;
 
-    private String lessThan90;
+    private String interval3;
 
-    private String greaterThan90;
+    private String interval4;
+
+    private String interval5;
 }

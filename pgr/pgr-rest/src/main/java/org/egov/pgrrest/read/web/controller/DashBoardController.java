@@ -62,9 +62,10 @@ public class DashBoardController {
     }
 
     @PostMapping("/ageing")
-    public List<AgeingResponse> getAgeingData(@RequestParam(value = "tenantId", defaultValue = "default") String tenantId){
+    public List<AgeingResponse> getAgeingData(@RequestParam(value = "tenantId", defaultValue = "default") String tenantId,
+                                              @RequestParam(value = "range") List<Integer> range){
 
-        List<org.egov.pgrrest.read.domain.model.AgeingResponse> responseList = dashboardService.getComplaintsAgeingData(tenantId);
+        List<org.egov.pgrrest.read.domain.model.AgeingResponse> responseList = dashboardService.getComplaintsAgeingData(tenantId, range);
 
         return getAgeingResponseList(responseList);
     }

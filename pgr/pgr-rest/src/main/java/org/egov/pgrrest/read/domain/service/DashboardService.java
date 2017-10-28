@@ -51,7 +51,7 @@ public class DashboardService {
             .build();
     }
 
-    public List<AgeingResponse> getComplaintsAgeingData(String tenantId){
-        return dashboardRepository.getAgeingOfComplaints(tenantId);
+    public List<AgeingResponse> getComplaintsAgeingData(String tenantId, List<Integer> range){
+        return dashboardRepository.getAgeingOfComplaints(tenantId, range);
     }
 }

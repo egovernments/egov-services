@@ -11,20 +11,23 @@ import lombok.NoArgsConstructor;
 @Getter
 public class AgeingResponse {
 
-    private String lessThan15;
+    private String interval1;
 
-    private String lessThan45;
+    private String interval2;
 
-    private String lessThan90;
+    private String interval3;
 
-    private String greaterThan90;
+    private String interval4;
+
+    private String interval5;
 
     public org.egov.pgrrest.read.web.contract.AgeingResponse toContract(){
         return org.egov.pgrrest.read.web.contract.AgeingResponse.builder()
-            .lessThan15(lessThan15)
-            .lessThan45(lessThan45)
-            .lessThan90(lessThan90)
-            .greaterThan90(greaterThan90)
+            .interval1(interval1)
+            .interval2(interval2)
+            .interval3(interval3)
+            .interval4(interval4)
+            .interval5(interval5)
             .build();
     }
 }

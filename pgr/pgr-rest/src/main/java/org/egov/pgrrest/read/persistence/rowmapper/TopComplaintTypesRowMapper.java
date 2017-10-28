@@ -16,7 +16,7 @@ public class TopComplaintTypesRowMapper implements RowMapper<TopComplaintTypesRe
         return TopComplaintTypesResponse.builder()
             .count(resultSet.getInt("count"))
             .complaintTypeName(resultSet.getString("complainttypename"))
-            .month(resultSet.getString("month").trim())
+            .month(resultSet.getInt("month"))
             .code(resultSet.getString("code"))
             .build();
     }

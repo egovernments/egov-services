@@ -88,18 +88,19 @@ public class OpinionQueryBuilder {
 
 	private void addPagingClause(final StringBuilder selectQuery, final List<Object> preparedStatementValues,
 			final OpinionSearchCriteria opinionSearchCriteria) {
-		selectQuery.append(" LIMIT ?");
-		if (opinionSearchCriteria.getPageSize() != null) {
-			preparedStatementValues.add(opinionSearchCriteria.getPageSize());
-		} else {
-			preparedStatementValues.add(500);
-		}
 
-		selectQuery.append(" OFFSET ?");
-		if (opinionSearchCriteria.getPageNumber() != null) {
-			preparedStatementValues.add(opinionSearchCriteria.getPageNumber());
-		} else {
-			preparedStatementValues.add(0);
+		if (opinionSearchCriteria.getPageNumber() != null && opinionSearchCriteria.getPageSize() != null) {
+			int offset = 0;
+			int limit = opinionSearchCriteria.getPageNumber() * opinionSearchCriteria.getPageSize();
+
+			if (opinionSearchCriteria.getPageNumber() <= 1)
+				offset = (limit - opinionSearchCriteria.getPageSize());
+			else
+				offset = (limit - opinionSearchCriteria.getPageSize()) + 1;
+
+			selectQuery.append(" offset ?  limit ?");
+			preparedStatementValues.add(offset);
+			preparedStatementValues.add(limit);
 		}
 	}
 }

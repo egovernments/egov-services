@@ -13,33 +13,13 @@ import ShowField from './showField';
 import {translate} from '../../common/common';
 import jp from "jsonpath";
 import _ from 'lodash';
-
-const styles = {
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
-  }
-};
+import styles from '../../../styles/material-ui';
 
 class ShowForm extends Component {
   constructor(props) {
        super(props);
        this.state = {
-         searchBtnText : 'Search'
+         searchBtnText : 'Generate Report'
        }
        this.search=this.search.bind(this);
    }
@@ -168,7 +148,9 @@ class ShowForm extends Component {
   }
 
   componentWillReceiveProps(nextProps){
+    let {changeButtonText} = this.props;
     if(nextProps.metaData.reportDetails && (nextProps.metaData.reportDetails !== this.props.metaData.reportDetails)){
+      changeButtonText("Generate Report");
       this.setState({reportName : nextProps.metaData.reportDetails.reportName});
       this.setState({moduleName : this.props.match.params.moduleName});
       let {initForm,setForm} = this.props;
@@ -185,7 +167,8 @@ class ShowForm extends Component {
 
   componentDidMount()
   {
-    let {initForm,metaData,setForm} = this.props;
+    let {initForm,metaData,setForm, changeButtonText} = this.props;
+    changeButtonText("Generate Report");
     let {searchParams}=!_.isEmpty(metaData)?metaData.reportDetails:{searchParams:[]};
     let required=[];
     this.setState({reportName : this.props.match.params.reportName});
@@ -274,7 +257,7 @@ class ShowForm extends Component {
 
       });
 
-      changeButtonText("Search Again");
+      changeButtonText("Generate Report");
       // this.setState({searchBtnText:'Search Again'})
 
       //call api
@@ -328,7 +311,7 @@ class ShowForm extends Component {
 }
 
 const mapStateToProps = state => {
-  // console.log(state.form.form, state.form.isFormValid);
+  // console.log(state.form.buttonText);
   return ({searchForm: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText,metaData:state.report.metaData});
 }
 

@@ -42,14 +42,21 @@ class ShowField extends Component {
   }
 
   componentDidMount(){
-    this.setState({reportName : this.props.match.params.reportName});
+    // console.log(this.props);
+    this.setState({
+      reportName : this.props.match.params.reportName
+    });
   }
 
   componentWillReceiveProps(nextprops){
-    if((this.props.match.params.moduleName !== nextprops.match.params.moduleName) || (this.props.match.params.reportName !== nextprops.match.params.reportName))
-    this.setState({reportName : nextprops.match.params.reportName});
-  }
+    if((this.props.match.params.moduleName !== nextprops.match.params.moduleName) || (this.props.match.params.reportName !== nextprops.match.params.reportName)){
+      // console.log(nextprops);
+      this.setState({
+        reportName : nextprops.match.params.reportName
+      });
+    }
 
+  }
 
   componentDidUpdate() {
     // console.log('did update');
@@ -58,19 +65,14 @@ class ShowField extends Component {
       order: [],
       buttons: [
          'copy', 'csv', 'excel',
-         { extend: 'pdf', text: 'Pdf', footer : true,  orientation: 'landscape', pageSize: 'TABLOID',
-          customize: function ( doc ) {
-              content: [ {
-                  alignment: 'justify',
-                  columns: [
-                          { width: 'auto' },
-                          { width: '*' },
-                          { width: '*' }
-                  ],
-                  table: { widths: [ 'auto', '*', '*' ] }
-              } ]
-          }
-        }, 'print'
+         {
+            extend: 'pdf',
+            filename : this.state.reportName,
+            title : this.state.reportName,
+            orientation: 'landscape',
+            pageSize: 'TABLOID',
+            footer : true
+          }, 'print'
        ],
       //  ordering: false,
        bDestroy: true,
@@ -296,7 +298,7 @@ class ShowField extends Component {
       return (
         <div>
         <Card>
-          <CardHeader title={< strong > Result < /strong>}/>
+          <CardHeader title={< strong > {this.state.reportName} < /strong>}/>
           <CardText>
           <Table id="reportTable" style={{color:"black",fontWeight: "normal",padding:"0 !important"}} bordered responsive>
             {this.renderHeader()}
@@ -400,7 +402,11 @@ class ShowField extends Component {
   }
 }
 
-const mapStateToProps = state => ({isTableShow:state.form.showTable,metaData:state.report.metaData,reportResult:state.report.reportResult,flag:state.report.flag,searchForm:state.form.form,searchParams:state.report.searchParams});
+const mapStateToProps = state => {
+  // console.log(state.form.form);
+  // console.log(state.form.searchParams);
+  return ({isTableShow:state.form.showTable,metaData:state.report.metaData,reportResult:state.report.reportResult,flag:state.report.flag,searchForm:state.form.form,searchParams:state.report.searchParams});
+}
 
 const mapDispatchToProps = dispatch => ({
   setReportResult:(reportResult)=>{

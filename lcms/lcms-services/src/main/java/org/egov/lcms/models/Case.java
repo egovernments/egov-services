@@ -20,8 +20,10 @@ import lombok.Setter;
 public class Case {
 	@JsonProperty("code")
 	private String code = null;
+	
+	@JsonProperty("tenantId")
+	private String tenantId = null;
 
-	@NotEmpty
 	@NotNull
 	@JsonProperty("summon")
 	private Summon summon = null;
@@ -68,8 +70,8 @@ public class Case {
 	@JsonProperty("hearingDetails")
 	private List<HearingDetails> hearingDetails = null;
 
-	@JsonProperty("advocates")
-	private List<Advocate> advocates = null;
+	@JsonProperty("advocatesDetails")
+	private List<AdvocateDetails> advocatesDetails = null;
 
 	@JsonProperty("assignedDates")
 	private List<Long> assignedDates = null;

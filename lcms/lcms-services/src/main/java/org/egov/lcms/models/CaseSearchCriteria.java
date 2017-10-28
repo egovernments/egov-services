@@ -31,7 +31,7 @@ public class CaseSearchCriteria {
 	
 	private String sort;
 	
-	private String[] codes;
+	private String[] code;
 	
 	private String summonReferenceNo;
 	

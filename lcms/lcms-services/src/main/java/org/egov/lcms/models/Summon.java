@@ -1,9 +1,9 @@
 package org.egov.lcms.models;
 
 import java.util.List;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.hibernate.validator.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,7 +26,6 @@ public class Summon {
 	private String summonReferenceNo = null;
 
 	@NotNull
-	@NotEmpty
 	@JsonProperty("caseNo")
 	private String caseNo = null;
 
@@ -34,24 +33,20 @@ public class Summon {
 	private Long summonDate = null;
 
 	@NotNull
-	@NotEmpty
 	@JsonProperty("year")
 	private String year = null;
 
 	@NotNull
-	@NotEmpty
 	@JsonProperty("caseType")
-	private String caseType = null; //TODO Need to change to model
+	private CaseType caseType = null; // TODO Need to change to model
 
 	@NotNull
-	@NotEmpty
 	@JsonProperty("plantiffName")
 	private String plantiffName = null;
 
 	@NotNull
-	@NotEmpty
-	@JsonProperty("dependentName")
-	private String dependentName = null;
+	@JsonProperty("defendent")
+	private String defendent = null;
 
 	@JsonProperty("caseCategory")
 	private CaseCategory caseCategory = null;
@@ -60,7 +55,7 @@ public class Summon {
 	private Court courtName = null;
 
 	@NotNull
-	@NotEmpty
+
 	@JsonProperty("departmentName")
 	private String departmentName = null;
 
@@ -75,7 +70,6 @@ public class Summon {
 	private Long hearingTime = null;
 
 	@NotNull
-	@NotEmpty
 	@JsonProperty("ward")
 	private String ward = null;
 
@@ -89,7 +83,6 @@ public class Summon {
 	private Stamp stamp = null;
 
 	@NotNull
-	@NotEmpty
 	@JsonProperty("caseDetails")
 	private String caseDetails = null;
 
@@ -103,7 +96,6 @@ public class Summon {
 	private AuditDetails auditDetails = null;
 
 	@NotNull
-	@NotEmpty
 	@Size(min = 1, max = 128)
 	@JsonProperty("tenantId")
 	private String tenantId = null;

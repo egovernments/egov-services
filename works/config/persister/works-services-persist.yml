@@ -120,7 +120,7 @@ serviceMaps:
    isTransaction: true
    queryMaps:   
     - query: UPDATE egw_estimate_appropriation SET budgetusage= ?, objectnumber=?, lastModifiedBy=?, lastModifiedTime=?  WHERE id = ? AND tenantId = ?;
-      basePath: $.documentDetails.*
+      basePath: $.estimateAppropriations.*
       jsonMaps:
          
        - jsonPath: $.estimateAppropriations.*.id

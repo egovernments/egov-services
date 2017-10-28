@@ -6,7 +6,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.egov.models.AuditDetails;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -45,8 +44,8 @@ public class Opinion {
 	@JsonProperty("documents")
 	private List<String> documents = null;
 
-	@JsonProperty("opinionDescriptions")
-	private String opinionDescriptions = null;
+	@JsonProperty("opinionDescription")
+	private String opinionDescription = null;
 
 	@JsonProperty("opinionsBy")
 	private Advocate opinionsBy = null;

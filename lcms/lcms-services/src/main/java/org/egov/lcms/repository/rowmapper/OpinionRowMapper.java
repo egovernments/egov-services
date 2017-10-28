@@ -35,7 +35,7 @@ public class OpinionRowMapper implements RowMapper<Opinion> {
 		opinion.setOpinionRequestDate(rs.getLong("opinionrequestdate"));
 		opinion.setDepartmentName(rs.getString("departmentname"));
 		opinion.setOpinionOn(rs.getString("opinionon"));
-		opinion.setOpinionDescriptions(rs.getString("opinionDescriptions"));
+		opinion.setOpinionDescription(rs.getString("opinionDescription"));
 		opinion.setInWardDate(rs.getLong("inwarddate"));
 		opinion.setTenantId(rs.getString("tenantid"));
 		opinion.setStateId(rs.getString("stateid"));

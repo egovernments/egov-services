@@ -40,8 +40,8 @@ public class Opinion {
 	@JsonProperty("documents")
 	private List<String> documents = null;
 
-	@JsonProperty("opinionDescriptions")
-	private String opinionDescriptions = null;
+	@JsonProperty("opinionDescription")
+	private String opinionDescription = null;
 
 	@JsonProperty("opinionsBy")
 	private Advocate opinionsBy = null;

@@ -214,13 +214,13 @@ definitions:
       name:
         type: string
         description: Unique name of the Schedule Category
-        pattern: '[a-zA-Z0-9\s\.,]'
+        pattern: '[a-zA-Z0-9\s\.,]+'
         maxLength: 100
         minLength: 1
       code:
         type: string
         description: Unique code of the Schedule Category
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         maxLength: 100
         minLength: 1
     required:
@@ -243,13 +243,13 @@ definitions:
       code:
         type: string
         description: Unique code of the Schedule Of Rate
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         maxLength: 100
         minLength: 1
       description:
         type: string
         description: Description of the Schedule Of Rate
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 4000
         minLength: 1
       scheduleCategory:
@@ -376,7 +376,7 @@ definitions:
       description:
         type: string
         description: Description of the Contractor Class
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
         minLength: 1
       minAmount:
@@ -413,25 +413,25 @@ definitions:
       name:
         type: string
         description: Name of the Contractor.
-        pattern: '[a-zA-Z0-9\s\.,]'
+        pattern: '[a-zA-Z0-9\s\.,]+'
         maxLength: 100
         minLength: 1
       code:
         type: string
         description: Name of the Contractor.
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         maxLength: 100
         minLength: 1
       correspondenceAddress:
         type: string
         description: Correspondence Address of the Contractor.
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 512
         minLength: 1
       paymentAddress:
         type: string
         description: Payment Address of the Contractor.
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 512
       contactPerson:
         type: string
@@ -446,7 +446,7 @@ definitions:
       narration:
         type: string
         description: Narration of the Contractor.
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
       mobileNumber:
         type: number
@@ -478,7 +478,7 @@ definitions:
         pattern: "[0-9]"
       pwdApprovalCode:
         type: string
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         description: PWD Approval Code of the Contractor
         maxLength: 20
       exemptedFrom:
@@ -491,7 +491,7 @@ definitions:
       epfRegistrationNumber:
         type: string
         description: EPF Registration Number of the Contractor,Only Number value with decimal should be accepted
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         maxLength: 50
       accountCode:
         type: number
@@ -500,7 +500,7 @@ definitions:
       ifscCode:
         type: number
         description: IFSC Code of the Bank Account for the Contractor
-        pattern: '[a-zA-Z0-9]'
+        pattern: '[a-zA-Z0-9]+'
         maxLength: 20
       contractorClass:
         $ref: '#/definitions/ContractorClass'
@@ -531,13 +531,13 @@ definitions:
       templateName:
         type: string
         description: Name of the Milestone Template
-        pattern: '[a-zA-Z0-9\s\.,]'
+        pattern: '[a-zA-Z0-9\s\.,]+'
         maxLength: 100
         minLength: 1
       templateCode:
         type: string
         description: Code of the Milestone Template
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         maxLength: 100
         minLength: 1
       active:
@@ -546,7 +546,7 @@ definitions:
       description:
         type: string
         description: Description of the Milestone Template
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
       typeOfWork:
         $ref: '#/definitions/TypeOfWork'
@@ -592,7 +592,7 @@ definitions:
       stageDescription:
         type: string
         description: Description for the Milestone Template Activitie
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
         minLength: 1
       percentage:
@@ -622,20 +622,20 @@ definitions:
         minLength: 4
       name:
         type: string
-        pattern: '[a-zA-Z0-9\s\.,]'
+        pattern: '[a-zA-Z0-9\s\.,]+'
         description: Name of the Type Of Work
         maxLength: 100
         minLength: 1
       code:
         type: string
         description: Unique code of the Type Of Work
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         maxLength: 100
         minLength: 1
       description:
         type: string
         description: Description of the Type Of Work
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
       active:
         type: boolean
@@ -666,13 +666,13 @@ definitions:
       name:
         type: string
         description: Name of the Estimate Template
-        pattern: '[a-zA-Z0-9\s\.,]'
+        pattern: '[a-zA-Z0-9\s\.,]+'
         maxLength: 100
         minLength: 1
       code:
         type: string
         description: Code of the Estimate Template
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         maxLength: 100
         minLength: 1
       active:
@@ -681,7 +681,7 @@ definitions:
       description:
         type: string
         description: Description of the Estimate Template
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
         minLength: 1
       typeOfWork:
@@ -758,7 +758,7 @@ definitions:
       description:
         type: string
         description: Description of the Non SOR
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
         minLength: 1
       uom:
@@ -785,13 +785,13 @@ definitions:
       name:
         type: string
         description: Name of the Overhead
-        pattern: '[a-zA-Z0-9\s\.,]'
+        pattern: '[a-zA-Z0-9\s\.,]+'
         maxLength: 100
         minLength: 1
       code:
         type: string
         description: Name of the Overhead
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         maxLength: 100
         minLength: 1
       accountCode:
@@ -802,7 +802,7 @@ definitions:
       description:
         type: string
         description: Description of the Overhead
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
       overheadRate:
         type: array
@@ -907,7 +907,7 @@ definitions:
         $ref: '#/definitions/Remarks'
       remarksDescription:
         type: string
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Detailed description for given remarks master
         maxLength: 1024
       editable:
@@ -922,7 +922,7 @@ definitions:
       - tenantId
       - editable
     
-  NatureOfWork:
+  NatureOfWork+:
     type: object
     description: An Object that holds Nature of work master details
     properties:
@@ -937,13 +937,13 @@ definitions:
       name:
         type: string
         description: Name of the Nature Of Work
-        pattern: '[a-zA-Z0-9\s\.,]'
+        pattern: '[a-zA-Z0-9\s\.,]+'
         maxLength: 100
         minLength: 1
       code:
         type: string
         description: Code of the Nature Of Work
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         maxLength: 100
         minLength: 1
       expenditureType:
@@ -955,6 +955,36 @@ definitions:
       - name
       - code
       - expenditureType
+      
+  ReferenceType:
+    type: object
+    description: An Object that holds for Reference Type
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Reference Type
+      tenantId:
+        type: string
+        description: Tenant id of the Reference Type
+        maxLength: 128
+        minLength: 4
+      name:
+        type: string
+        description: Name of the Reference Type
+        pattern: '[a-zA-Z0-9\s\.,]+'
+        maxLength: 100
+        minLength: 1
+      code:
+        type: string
+        description: Code of the Reference Type
+        pattern: '[a-zA-Z0-9-\\]+'
+        maxLength: 100
+        minLength: 1
+
+    required:
+      - tenantId
+      - name
+      - code
 
   WorkFlowDetails:
     type: object
@@ -1009,7 +1039,7 @@ definitions:
         description: Object id of the Document for which documents are attached.
       objectType:
         type: string
-        pattern: '[a-zA-Z0-9\s\.,]'
+        pattern: '[a-zA-Z0-9\s\.,]+'
         description: Object type of the document for which documents are attached.
         maxLength: 100
         minLength: 1
@@ -1037,7 +1067,7 @@ definitions:
       description:
         type: string
         description: Description of the photograph
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
       dateOfCapture:
         type: integer

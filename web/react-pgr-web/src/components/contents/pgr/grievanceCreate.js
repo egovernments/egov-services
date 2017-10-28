@@ -40,6 +40,7 @@ class grievanceCreate extends Component {
           value: 'id',
         },
         open: false,
+        openPreview:false,
         openOTP : false,
         toastOpen: false
        }
@@ -60,6 +61,16 @@ class grievanceCreate extends Component {
   handleOTPClose = () => {
     this.setState({openOTP: false});
   };
+
+  handlePreviewOpen = () => {
+    this.setState({openPreview: true});
+  };
+
+  handlePreviewClose = () => {
+    this.setState({openPreview: false});
+  };
+
+
 
   handleView = () => {
     let {initForm, setRoute} = this.props;
@@ -561,8 +572,15 @@ class grievanceCreate extends Component {
 
   renderImagePreview = (files) => {
     return files.map((file, index) => {
-      return <ImagePreview file={file} idx={index} key={index} handler={this.props.handleFileRemoval}/>
+      return <ImagePreview file={file} idx={index} key={index} preview={this.preview} handler={this.props.handleFileRemoval}/>
     });
+  }
+
+  preview = (dataSrc) => {
+    this.props.setLoadingStatus('loading');
+    this.handlePreviewOpen();
+    this.setState({iframe_src:dataSrc});
+    this.props.setLoadingStatus('hide');
   }
 
   render() {
@@ -772,6 +790,13 @@ class grievanceCreate extends Component {
           </div>
         </form>
         <div>
+        <Dialog
+          title={this.state.srn}
+          open={this.state.openPreview}
+          onRequestClose={this.handlePreviewClose}
+        >
+        <img src={this.state.iframe_src} style={{width:'100%'}} alt=""/>
+        </Dialog>
         <Dialog
           title={this.state.srn}
           actions={actions}

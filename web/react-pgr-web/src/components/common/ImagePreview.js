@@ -31,7 +31,7 @@ const renderImage = (props) => {
         icon={<FileRemove />}
         onTouchTap={event => {removeFile(props.file)}}
       />
-      <img src="#" id={'image'+props.idx} width="100%" height="100%" />
+      <img src="#" id={'image'+props.idx} width="100%" height="100px" style={{objectFit:'cover',cursor:'pointer',marginBottom:'20px'}} onClick={(e)=>{props.preview(document.getElementById('image'+props.idx).src)}}/>
       {readURL(this, props.idx)}
     </Col>
   );

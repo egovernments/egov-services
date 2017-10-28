@@ -40,10 +40,10 @@ public class PropertiesManager {
 	@Value("${opinion.ulb.format}")
 	private String opinionUlbFormat;
 	
-	@Value("${lcms.opinion.create}")
+	@Value("${egov.lcms.opinion.create}")
 	private String opinionCreateValidated;
 
-	@Value("${lcms.opinion.update}")
+	@Value("${egov.lcms.opinion.update}")
 	private String opinionUpdateValidated;
 	
 	@Value("${egov.lcms.create.summon.validated}")
@@ -63,4 +63,10 @@ public class PropertiesManager {
 	
 	@Value("${egov.lcms.tenant.service.error}")
 	private String tenantServiceErrorMsg;
+	
+	@Value("${egov.lcms.parawisecomment.create}")
+	private String paraWiseCreateValidated;
+	
+	@Value("${egov.lcms.parawisecomment.update}")
+	private String paraWiseUpdateValidated;
 }

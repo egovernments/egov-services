@@ -22,7 +22,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OpinionRequest {
-	@JsonProperty("requestInfo")
+	@JsonProperty("RequestInfo")
 	@Valid
 	private RequestInfo requestInfo = null;
 

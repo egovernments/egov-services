@@ -3,6 +3,7 @@ package org.egov.works.estimate.domain.service;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.commons.domain.model.AuditDetails;
@@ -36,10 +37,10 @@ public class AbstractEstimateService {
 	@Transactional
 	public List<AbstractEstimate> create(AbstractEstimateRequest abstractEstimateRequest) {
 		for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
-			estimate.setId(abstractEstimateRepository.getNextSequence(AbstractEstimate.SEQUENCE_NAME));
+			estimate.setId(UUID.randomUUID().toString().replace("-", ""));
 			estimate.setAuditDetails(setAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUsername(), false));
 			for (final AbstractEstimateDetails details : estimate.getAbstractEstimateDetails()) {
-				details.setId(abstractEstimateRepository.getNextSequence(AbstractEstimateDetails.SEQUENCE_NAME));
+				details.setId(UUID.randomUUID().toString().replace("-", ""));
 				details.setAuditDetails(setAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUsername(), false));
 			}
 		}
@@ -74,12 +75,12 @@ public class AbstractEstimateService {
 		AuditDetails auditDetails = new AuditDetails();
 		if (isUpdate) {
 			auditDetails.setLastModifiedBy(userName);
-			auditDetails.setLastModifiedTime(BigDecimal.valueOf(new Date().getTime()));
+			auditDetails.setLastModifiedTime(new Date().getTime());
 		} else {
 			auditDetails.setCreatedBy(userName);
-			auditDetails.setCreatedTime(BigDecimal.valueOf(new Date().getTime()));
-			auditDetails.setLastModifiedBy("");
-			auditDetails.setLastModifiedTime(BigDecimal.valueOf(new Date().getTime()));
+			auditDetails.setCreatedTime(new Date().getTime());
+			auditDetails.setLastModifiedBy(userName);
+			auditDetails.setLastModifiedTime(new Date().getTime());
 		}
 		
 		return auditDetails;

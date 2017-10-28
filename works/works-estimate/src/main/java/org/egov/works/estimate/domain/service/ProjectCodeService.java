@@ -53,7 +53,7 @@ public class ProjectCodeService {
 		for(ProjectCode projectCode:projectCodeRequest.getProjectCodes()) {
 			projectCode.setId(UUID.randomUUID().toString().replace("-", ""));
 			auditDetails.setCreatedBy(requestInfo.getUserInfo().getUsername());
-			auditDetails.setCreatedTime(BigDecimal.valueOf(new Date().getTime()));
+			auditDetails.setCreatedTime(new Date().getTime());
 			projectCode.setAuditDetails(auditDetails);
 
 		}
@@ -85,7 +85,7 @@ public class ProjectCodeService {
 
 		for(ProjectCode projectCode:projectCodeRequest.getProjectCodes()) {
 			auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getUsername());
-			auditDetails.setLastModifiedTime(BigDecimal.valueOf(new Date().getTime()));
+			auditDetails.setLastModifiedTime(new Date().getTime());
 			projectCode.setAuditDetails(auditDetails);
 		}
 		kafkaTemplate.send(propertiesManager.getWorksProjectCodeUpdateTopic(), projectCodeRequest);

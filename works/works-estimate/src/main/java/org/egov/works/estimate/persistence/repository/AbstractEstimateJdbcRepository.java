@@ -12,11 +12,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AbstractEstimateJdbcRepository extends JdbcRepository {
-	
-	public String getSequence(String sequenceName) {
-        String seqQuery = "select nextval('" + sequenceName + "')";
-        return String.valueOf(jdbcTemplate.queryForObject(seqQuery, Long.class) + 1);
-    }
 
 	public List<AbstractEstimate> search(AbstractEstimateSearchContract abstractEstimateSearchContract) {
 		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";

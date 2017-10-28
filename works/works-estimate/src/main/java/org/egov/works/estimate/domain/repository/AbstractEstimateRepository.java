@@ -13,10 +13,6 @@ public class AbstractEstimateRepository {
 	@Autowired
 	private AbstractEstimateJdbcRepository abstractEstimateJdbcRepository;
 	
-	public String getNextSequence(final String sequenceName) {
-		return abstractEstimateJdbcRepository.getSequence(sequenceName);
-	}
-	
 	public List<AbstractEstimate> search(AbstractEstimateSearchContract abstractEstimateSearchContract) {
 		return abstractEstimateJdbcRepository.search(abstractEstimateSearchContract);
 	}

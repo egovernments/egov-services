@@ -1,7 +1,6 @@
 package org.egov.lcms.controller;
 
 import javax.validation.Valid;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.lcms.factory.ResponseFactory;
 import org.egov.lcms.models.CaseRequest;
@@ -21,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;;
 
 @RestController
-@RequestMapping("/test/")
+@RequestMapping("/legalcase/")
 public class SummonController {
 
 	@Autowired
@@ -39,31 +38,9 @@ public class SummonController {
 		return new ResponseEntity<>(summonResponse, HttpStatus.CREATED);
 	}
 
-	@RequestMapping(path = "/_registration", method = RequestMethod.POST)
-	public ResponseEntity<?> updateSummon(@RequestBody @Valid CaseRequest caseRequest) throws Exception {
-		CaseResponse summonResponse = summonService.createCase(caseRequest);
-		return new ResponseEntity<>(summonResponse, HttpStatus.CREATED);
-
-	}
-
-	@RequestMapping(path = "/_assignadvocate", method = RequestMethod.POST)
+	@RequestMapping(path = "/summon/_assignadvocate", method = RequestMethod.POST)
 	public ResponseEntity<?> assignAdvocate(@RequestBody @Valid CaseRequest caseRequest) throws Exception {
 		CaseResponse caseResponse = summonService.assignAdvocate(caseRequest);
-		return new ResponseEntity<>(caseResponse, HttpStatus.CREATED);
-
-	}
-
-	@RequestMapping(path = "/case/_search", method = RequestMethod.POST)
-	public ResponseEntity<?> assignAdvocate(@ModelAttribute @Valid CaseSearchCriteria caseSearchCriteria,
-			@RequestBody RequestInfo requestInfo) throws Exception {
-		CaseResponse caseResponse = summonService.caseSearch(caseSearchCriteria, requestInfo);
-		return new ResponseEntity<>(caseResponse, HttpStatus.CREATED);
-
-	}
-
-	@RequestMapping(path = "/_Vakalatnamageneration", method = RequestMethod.POST)
-	public ResponseEntity<?> createVakalatnama(@RequestBody @Valid CaseRequest caseRequest) throws Exception {
-		CaseResponse caseResponse = summonService.createVakalatnama(caseRequest);
 		return new ResponseEntity<>(caseResponse, HttpStatus.CREATED);
 
 	}

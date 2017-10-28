@@ -123,17 +123,18 @@ serviceMaps:
       basePath: $.estimateAppropriations.*
       jsonMaps:
          
-       - jsonPath: $.estimateAppropriations.*.id
-       
-       - jsonPath: $.estimateAppropriations.*.tenantId
-         
-       - jsonPath: $.estimateAppropriations.*.objectNumber
-       
        - jsonPath: $.estimateAppropriations.*.budgetUsage
-       
+
+       - jsonPath: $.estimateAppropriations.*.objectNumber
+
        - jsonPath: $.estimateAppropriations.*.auditDetails.lastModifiedBy
          dbType: LONG
        
        - jsonPath: $.estimateAppropriations.*.auditDetails.lastModifiedTime
+
+       - jsonPath: $.estimateAppropriations.*.id
+       
+       - jsonPath: $.estimateAppropriations.*.tenantId
+       
        
  

@@ -9,3 +9,11 @@ ServiceMaps:
       id: $.id
       isBulk: true
       jsonPath: $.materials.*
+  - topic: inv-store-save-topic
+    indexes:
+    - name: stores
+      type: stores
+      id: $.id
+      isBulk: true
+      jsonPath: $.stores.*
+      

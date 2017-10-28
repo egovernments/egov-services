@@ -27,7 +27,6 @@ Feature: Creating a Grievance Type
     ### On Homepage Screen ###
     And user on Home screen will wait until the page loads
     And user on Home screen will see the menu
-    And user on Home screen clicks on menu
     And user on Home screen types on menuSearch value Search Category
     And user on Home screen clicks on firstMenuItem
 
@@ -39,7 +38,6 @@ Feature: Creating a Grievance Type
     ### On Homepage Screen ###
     And user on Home screen will wait until the page loads
     And user on Home screen will see the menu
-    And user on Home screen clicks on menu
     And user on Home screen types on menuSearch value Create Grievance Type
     And user on Home screen clicks on firstMenuItem
 
@@ -56,7 +54,6 @@ Feature: Creating a Grievance Type
     ### On Homepage Screen ###
     And user on Home screen will wait until the page loads
     And user on Home screen will see the menu
-    And user on Home screen clicks on menu
     And user on Home screen types on menuSearch value View Grievance
     And user on Home screen clicks on firstMenuItem
 
@@ -68,7 +65,6 @@ Feature: Creating a Grievance Type
     ### On Homepage Screen ###
     And user on Home screen will wait until the page loads
     And user on Home screen will see the menu
-    And user on Home screen clicks on menu
     And user on Home screen types on menuSearch value Create Router
     And user on Home screen clicks on firstMenuItem
 
@@ -77,7 +73,7 @@ Feature: Creating a Grievance Type
     And user on Grievance screen types on grievanceType suggestion box with value grievanceTypeName
     And user on Grievance screen selects on boundaryType value Ward
     And user on Grievance screen types on routerBoundary suggestion box with value Election Ward No 31
-    And user on Grievance screen types on routerPosition suggestion box with value PHS_JASST_009
+    And user on Grievance screen types on routerPosition suggestion box with value 	REV_RO_3
     And user on Grievance screen scroll to the create
     And user on Grievance screen clicks on create
     And user on Grievance screen clicks on close
@@ -86,7 +82,6 @@ Feature: Creating a Grievance Type
     ### On Homepage Screen ###
     And user on Home screen will wait until the page loads
     And user on Home screen will see the menu
-    And user on Home screen clicks on menu
     And user on Home screen types on menuSearch value Officials Register Grievance
     And user on Home screen clicks on firstMenuItem
 
@@ -119,7 +114,7 @@ Feature: Creating a Grievance Type
     ### Login ###
     And DataIntent:LoginIntent
       | user     |
-      | 12345678 |
+      | demo |
 
     ### On HomePage Screen ###
     And user on Home screen types on dashBoardSearch with above applicationNumber
@@ -134,19 +129,18 @@ Feature: Creating a Grievance Type
     And user on Home screen will wait until the page loads
     And user on Grievance screen clicks on homeButton
 
-#    ### On HomePage Screen ###
-#    And user on Home screen will wait until the page loads
-#    And user on Home screen will see the myTasks
-#    And user on Home screen clicks on menu
-#    And user on Home screen types on menuSearch value Search Grievance
-#    And user on Home screen clicks on firstMenuItem
-#
-#    ### On SearchGrievance Screen ###
-#    And user on SearchGrievance screen types on crnComplaintNumber with above applicationNumber
-#    And user on SearchGrievance screen clicks on crnSearchButton
-#    And user on SearchGrievance screen verifies crnStatus has visible value <status>
+    ### On HomePage Screen ###
+    And user on Home screen will wait until the page loads
+    And user on Home screen will see the myTasks
+    And user on Home screen types on menuSearch value Search Grievance
+    And user on Home screen clicks on firstMenuItem
 
-    ### Logout ###
+    ### On SearchGrievance Screen ###
+    And user on SearchGrievance screen types on crnComplaintNumber with above applicationNumber
+    And user on SearchGrievance screen clicks on crnSearchButton
+    And user on SearchGrievance screen verifies crnStatus has visible value <status>
+
+    ## Logout ###
     And Intent:LogoutIntentTest
 
     Examples:

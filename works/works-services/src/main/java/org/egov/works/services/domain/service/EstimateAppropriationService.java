@@ -1,6 +1,8 @@
 package org.egov.works.services.domain.service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.services.common.config.PropertiesManager;
@@ -42,7 +44,8 @@ public class EstimateAppropriationService {
 		AuditDetails auditDetails = new AuditDetails();
 		for(EstimateAppropriation estimateAppropriation: estimateAppropriationRequest.getEstimateAppropriations()) {
             auditDetails.setCreatedBy(requestInfo.getUserInfo().getUsername());
-//            auditDetails.setCreatedTime(new Date().getTime());
+            auditDetails.setCreatedTime(new Date().getTime());
+			estimateAppropriation.setId(UUID.randomUUID().toString().replace("-", ""));
             estimateAppropriation.setAuditDetails(auditDetails);
 		}
         kafkaTemplate.send(propertiesManager.getEstimateAppropriationsCreateTopic(), estimateAppropriationRequest);
@@ -57,7 +60,7 @@ public class EstimateAppropriationService {
 		
 		for(EstimateAppropriation estimateAppropriation: estimateAppropriationRequest.getEstimateAppropriations()) {
             auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getUsername());
-//            auditDetails.setLastModifiedTime(new Date().getTime());
+            auditDetails.setLastModifiedTime(new Date().getTime());
             estimateAppropriation.setAuditDetails(auditDetails);
 		}
         kafkaTemplate.send(propertiesManager.getEstimateAppropriationsUpdateTopic(), estimateAppropriationRequest);

@@ -36,10 +36,10 @@ public class EstimateAppropriationController {
 		AuditDetails auditDetails = new AuditDetails();
 		// auditDetails.setCreatedTime(new Date().getTime());
 		auditDetails.setCreatedBy(estimateAppropriationRequest.getRequestInfo().getUserInfo().getUsername());
-		for (EstimateAppropriation estimateAppropriation : estimateAppropriationRequest.getEstimateAppropriations()) {
+		/*for (EstimateAppropriation estimateAppropriation : estimateAppropriationRequest.getEstimateAppropriations()) {
 			estimateAppropriation.setAuditDetails(auditDetails);
 			estimateAppropriationService.validateEstimateAppropriation(estimateAppropriation);
-		}
+		}*/
 		List<EstimateAppropriation> estimateAppropriations = estimateAppropriationService
 				.save(estimateAppropriationRequest);
 		estimateAppropriationResponse.setEstimateAppropriations(estimateAppropriations);
@@ -55,9 +55,9 @@ public class EstimateAppropriationController {
 			throw new CustomBindException(errors);
 		}
 		EstimateAppropriationResponse estimateAppropriationResponse = new EstimateAppropriationResponse();
-		for (EstimateAppropriation estimateAppropriation : estimateAppropriationRequest.getEstimateAppropriations()) {
-			estimateAppropriationService.validateEstimateAppropriation(estimateAppropriation);
-		}
+//		for (EstimateAppropriation estimateAppropriation : estimateAppropriationRequest.getEstimateAppropriations()) {
+//			estimateAppropriationService.validateEstimateAppropriation(estimateAppropriation);
+//		}
 		List<EstimateAppropriation> estimateAppropriations = estimateAppropriationService
 				.update(estimateAppropriationRequest);
 		estimateAppropriationResponse.setEstimateAppropriations(estimateAppropriations);

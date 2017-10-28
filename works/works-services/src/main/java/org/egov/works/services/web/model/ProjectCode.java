@@ -3,6 +3,7 @@ package org.egov.works.services.web.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.egov.works.commons.domain.model.AuditDetails;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -14,9 +15,10 @@ import java.util.Objects;
  * An Object holds the basic data for a Project Code
  */
 @ApiModel(description = "An Object holds the basic data for a Project Code")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-25T07:37:26.972Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-28T05:57:39.980Z")
 
-public class ProjectCode   {
+public class ProjectCode {
+
   @JsonProperty("id")
   private String id = null;
 
@@ -26,17 +28,17 @@ public class ProjectCode   {
   @JsonProperty("code")
   private String code = null;
 
-  @JsonProperty("detailedEstimate")
-  private DetailedEstimate detailedEstimate = null;
+  @JsonProperty("name")
+  private String name = null;
 
   @JsonProperty("description")
   private String description = null;
 
-  @JsonProperty("name")
-  private String name = null;
-
   @JsonProperty("status")
   private ProjectCodeStatus status = null;
+
+  @JsonProperty("active")
+  private Boolean active = null;
 
   @JsonProperty("projectValue")
   private Integer projectValue = null;
@@ -109,25 +111,25 @@ public class ProjectCode   {
     this.code = code;
   }
 
-  public ProjectCode detailedEstimate(DetailedEstimate detailedEstimate) {
-    this.detailedEstimate = detailedEstimate;
+  public ProjectCode name(String name) {
+    this.name = name;
     return this;
   }
 
    /**
-   * Get detailedEstimate
-   * @return detailedEstimate
+   * Name of the Project
+   * @return name
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "Name of the Project")
+  @NotNull
 
-  @Valid
-
-  public DetailedEstimate getDetailedEstimate() {
-    return detailedEstimate;
+ @Pattern(regexp="[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]") @Size(min=1,max=1024)
+  public String getName() {
+    return name;
   }
 
-  public void setDetailedEstimate(DetailedEstimate detailedEstimate) {
-    this.detailedEstimate = detailedEstimate;
+  public void setName(String name) {
+    this.name = name;
   }
 
   public ProjectCode description(String description) {
@@ -150,37 +152,17 @@ public class ProjectCode   {
     this.description = description;
   }
 
-  public ProjectCode name(String name) {
-    this.name = name;
-    return this;
-  }
-
-   /**
-   * Name of the Project
-   * @return name
-  **/
-  @ApiModelProperty(required = true, value = "Name of the Project")
-  @NotNull
-
- @Size(max=100)
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
   public ProjectCode status(ProjectCodeStatus status) {
     this.status = status;
     return this;
   }
 
    /**
-   * Get status
+   * Enum representing the list of possible values for Project code status
    * @return status
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "Enum representing the list of possible values for Project code status")
+  @NotNull
 
   @Valid
 
@@ -192,16 +174,36 @@ public class ProjectCode   {
     this.status = status;
   }
 
+  public ProjectCode active(Boolean active) {
+    this.active = active;
+    return this;
+  }
+
+   /**
+   * The active/inactive status of the project which refresents the boolean value True/False. By default the boolean value will be True.
+   * @return active
+  **/
+  @ApiModelProperty(value = "The active/inactive status of the project which refresents the boolean value True/False. By default the boolean value will be True.")
+
+
+  public Boolean getActive() {
+    return active;
+  }
+
+  public void setActive(Boolean active) {
+    this.active = active;
+  }
+
   public ProjectCode projectValue(Integer projectValue) {
     this.projectValue = projectValue;
     return this;
   }
 
    /**
-   * Value for the Project
+   * The cost of the Project. This value will be updated on Project closure which will include the complete expenditure on the project.
    * @return projectValue
   **/
-  @ApiModelProperty(value = "Value for the Project")
+  @ApiModelProperty(value = "The cost of the Project. This value will be updated on Project closure which will include the complete expenditure on the project.")
 
 
   public Integer getProjectValue() {
@@ -266,10 +268,10 @@ public class ProjectCode   {
     return Objects.equals(this.id, projectCode.id) &&
         Objects.equals(this.tenantId, projectCode.tenantId) &&
         Objects.equals(this.code, projectCode.code) &&
-        Objects.equals(this.detailedEstimate, projectCode.detailedEstimate) &&
-        Objects.equals(this.description, projectCode.description) &&
         Objects.equals(this.name, projectCode.name) &&
+        Objects.equals(this.description, projectCode.description) &&
         Objects.equals(this.status, projectCode.status) &&
+        Objects.equals(this.active, projectCode.active) &&
         Objects.equals(this.projectValue, projectCode.projectValue) &&
         Objects.equals(this.completionDate, projectCode.completionDate) &&
         Objects.equals(this.auditDetails, projectCode.auditDetails);
@@ -277,7 +279,7 @@ public class ProjectCode   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, code, detailedEstimate, description, name, status, projectValue, completionDate, auditDetails);
+    return Objects.hash(id, tenantId, code, name, description, status, active, projectValue, completionDate, auditDetails);
   }
 
   @Override
@@ -288,10 +290,10 @@ public class ProjectCode   {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    code: ").append(toIndentedString(code)).append("\n");
-    sb.append("    detailedEstimate: ").append(toIndentedString(detailedEstimate)).append("\n");
-    sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
+    sb.append("    active: ").append(toIndentedString(active)).append("\n");
     sb.append("    projectValue: ").append(toIndentedString(projectValue)).append("\n");
     sb.append("    completionDate: ").append(toIndentedString(completionDate)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");

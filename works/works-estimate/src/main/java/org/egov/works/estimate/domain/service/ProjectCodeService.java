@@ -1,9 +1,14 @@
 package org.egov.works.estimate.domain.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.works.commons.domain.model.AuditDetails;
+import org.egov.works.commons.web.contract.RequestInfo;
 import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.domain.exception.ErrorCode;
 import org.egov.works.estimate.domain.exception.InvalidDataException;
@@ -30,16 +35,27 @@ public class ProjectCodeService {
 	
 	public List<ProjectCode> create(ProjectCodeRequest projectCodeRequest) {
 
-		ProjectCode projectCode = projectCodeRequest.getProjectCodes().get(0);
-		ProjectCodeSearchContract projectCodeSearchContract = new ProjectCodeSearchContract();
-		List<String> workIdentificationNumbers = new ArrayList<>() ;
-		workIdentificationNumbers.add(projectCode.getCode());
-		projectCodeSearchContract.setWorkIdentificationNumbers(workIdentificationNumbers);
-		
-		List<ProjectCode> projectCodes = search(projectCodeSearchContract);
-		if(!projectCodes.isEmpty()) {
-			throw new InvalidDataException("code", ErrorCode.NON_UNIQUE_VALUE.getCode(),
-					projectCode.getCode());
+//		ProjectCode projectCode = projectCodeRequest.getProjectCodes().get(0);
+//		ProjectCodeSearchContract projectCodeSearchContract = new ProjectCodeSearchContract();
+//		List<String> workIdentificationNumbers = new ArrayList<>() ;
+//		workIdentificationNumbers.add(projectCode.getCode());
+//		projectCodeSearchContract.setWorkIdentificationNumbers(workIdentificationNumbers);
+//
+//		List<ProjectCode> projectCodes = search(projectCodeSearchContract);
+//		if(!projectCodes.isEmpty()) {
+//			throw new InvalidDataException("code", ErrorCode.NON_UNIQUE_VALUE.getCode(),
+//					projectCode.getCode());
+//		}
+
+		RequestInfo requestInfo = projectCodeRequest.getRequestInfo();
+		AuditDetails auditDetails = new AuditDetails();
+
+		for(ProjectCode projectCode:projectCodeRequest.getProjectCodes()) {
+			projectCode.setId(UUID.randomUUID().toString().replace("-", ""));
+			auditDetails.setCreatedBy(requestInfo.getUserInfo().getUsername());
+			auditDetails.setCreatedTime(BigDecimal.valueOf(new Date().getTime()));
+			projectCode.setAuditDetails(auditDetails);
+
 		}
 		
 		kafkaTemplate.send(propertiesManager.getWorksProjectCodeCreateTopic(), projectCodeRequest);
@@ -52,16 +68,25 @@ public class ProjectCodeService {
 	
 	public List<ProjectCode> update(ProjectCodeRequest projectCodeRequest) {
 
-		ProjectCode projectCode = projectCodeRequest.getProjectCodes().get(0);
-		ProjectCodeSearchContract projectCodeSearchContract = new ProjectCodeSearchContract();
-		List<String> workIdentificationNumbers = new ArrayList<>() ;
-		workIdentificationNumbers.add(projectCode.getCode());
-		projectCodeSearchContract.setWorkIdentificationNumbers(workIdentificationNumbers);
-		
-		List<ProjectCode> projectCodes = search(projectCodeSearchContract);
-		if(projectCodes.isEmpty()) {
-			throw new InvalidDataException("code", ErrorCode.INVALID_REF_VALUE.getCode(),
-					projectCode.getCode());
+//		ProjectCode projectCode = projectCodeRequest.getProjectCodes().get(0);
+//		ProjectCodeSearchContract projectCodeSearchContract = new ProjectCodeSearchContract();
+//		List<String> workIdentificationNumbers = new ArrayList<>() ;
+//		workIdentificationNumbers.add(projectCode.getCode());
+//		projectCodeSearchContract.setWorkIdentificationNumbers(workIdentificationNumbers);
+//
+//		List<ProjectCode> projectCodes = search(projectCodeSearchContract);
+//		if(projectCodes.isEmpty()) {
+//			throw new InvalidDataException("code", ErrorCode.INVALID_REF_VALUE.getCode(),
+//					projectCode.getCode());
+//		}
+
+		RequestInfo requestInfo = projectCodeRequest.getRequestInfo();
+		AuditDetails auditDetails = new AuditDetails();
+
+		for(ProjectCode projectCode:projectCodeRequest.getProjectCodes()) {
+			auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getUsername());
+			auditDetails.setLastModifiedTime(BigDecimal.valueOf(new Date().getTime()));
+			projectCode.setAuditDetails(auditDetails);
 		}
 		kafkaTemplate.send(propertiesManager.getWorksProjectCodeUpdateTopic(), projectCodeRequest);
 		return projectCodeRequest.getProjectCodes();

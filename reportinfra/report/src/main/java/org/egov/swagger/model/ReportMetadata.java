@@ -36,6 +36,16 @@ public void setSorting(boolean sorting) {
 public void setSearchFilter(Boolean searchFilter) {
 	this.searchFilter = searchFilter;
 }
+  @JsonProperty("viewPath")
+  private String viewPath = null;
+
+  public String getViewPath() {
+	return viewPath;
+}
+
+public void setViewPath(String viewPath) {
+	this.viewPath = viewPath;
+}
 
 @JsonProperty("summary")
   private String summary = null;

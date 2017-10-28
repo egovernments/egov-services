@@ -57,7 +57,16 @@ public class ReportDefinition   {
 	public void setSubReportNames(List<String> subReportNames) {
 		this.subReportNames = subReportNames;
 	}
+	@JsonProperty("viewPath")
+	private String viewPath = null;
 	
+	public String getViewPath() {
+		return viewPath;
+	}
+	public void setViewPath(String viewPath) {
+		this.viewPath = viewPath;
+	}
+
 	@JsonProperty("moduleName")
 	private String moduleName = null;
 	

@@ -1,8 +1,10 @@
 package org.egov.pgrrest.read.web.controller;
 
 import org.egov.pgrrest.read.domain.model.TopComplaintTypesResponse;
+import org.egov.pgrrest.read.domain.model.TopFiveComplaintTypesResponse;
 import org.egov.pgrrest.read.domain.service.DashboardService;
 import org.egov.pgrrest.read.web.contract.AgeingResponse;
+import org.egov.pgrrest.read.web.contract.ComplaintTypeLegend;
 import org.egov.pgrrest.read.web.contract.DashboardResponse;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,12 +53,37 @@ public class DashBoardController {
         return getTopComplaintTypesList(responseList, type);
     }
 
+    @PostMapping("/complainttype/topfive")
+    public org.egov.pgrrest.read.web.contract.TopFiveComplaintTypesResponse getTopFiveComplaintTypes(@RequestParam(value = "tenantId", defaultValue = "default") String tenantId){
+
+        TopFiveComplaintTypesResponse topFiveComplaintTypesList = dashboardService.getTopFiveComplaintTypes(tenantId);
+
+        return getTopFiveComplaintTypesList(topFiveComplaintTypesList);
+    }
+
     @PostMapping("/ageing")
     public List<AgeingResponse> getAgeingData(@RequestParam(value = "tenantId", defaultValue = "default") String tenantId){
 
         List<org.egov.pgrrest.read.domain.model.AgeingResponse> responseList = dashboardService.getComplaintsAgeingData(tenantId);
 
         return getAgeingResponseList(responseList);
+    }
+
+    private org.egov.pgrrest.read.web.contract.TopFiveComplaintTypesResponse getTopFiveComplaintTypesList(TopFiveComplaintTypesResponse responseList){
+
+        List<ComplaintTypeLegend> legendsList = responseList.getLegends().stream()
+            .map(org.egov.pgrrest.read.domain.model.ComplaintTypeLegend::toContract)
+            .collect(Collectors.toList());
+
+        List<org.egov.pgrrest.read.web.contract.TopComplaintTypesResponse> topComplaintsList = responseList
+            .getComplaintTypes().stream()
+            .map(TopComplaintTypesResponse::toTopFiveComplaintTypesContract)
+            .collect(Collectors.toList());
+
+        return org.egov.pgrrest.read.web.contract.TopFiveComplaintTypesResponse.builder()
+            .legends(legendsList)
+            .complaintTypes(topComplaintsList)
+            .build();
     }
 
     private List<DashboardResponse> getResponseList(List<org.egov.pgrrest.read.domain.model.DashboardResponse> responseList){
@@ -77,7 +104,7 @@ public class DashBoardController {
         if(type.equalsIgnoreCase("wardwise") || type.equalsIgnoreCase("wardwiseregistered") ||
             type.equalsIgnoreCase("wardwiseresolved"))
             return responseList.stream()
-            .map(record -> record.toWardWiseContract())
+            .map(TopComplaintTypesResponse::toWardWiseContract)
             .collect(Collectors.toList());
 
         return responseList.stream()
@@ -89,7 +116,7 @@ public class DashBoardController {
         List<org.egov.pgrrest.read.domain.model.AgeingResponse> responseList){
 
         return responseList.stream()
-            .map(record ->  record.toContract())
+            .map(org.egov.pgrrest.read.domain.model.AgeingResponse::toContract)
             .collect(Collectors.toList());
     }
 

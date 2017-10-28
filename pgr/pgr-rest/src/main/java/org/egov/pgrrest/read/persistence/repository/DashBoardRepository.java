@@ -1,6 +1,7 @@
 package org.egov.pgrrest.read.persistence.repository;
 
 import org.egov.pgrrest.read.domain.model.AgeingResponse;
+import org.egov.pgrrest.read.domain.model.ComplaintTypeLegend;
 import org.egov.pgrrest.read.domain.model.DashboardResponse;
 import org.egov.pgrrest.read.domain.model.TopComplaintTypesResponse;
 import org.egov.pgrrest.read.persistence.rowmapper.*;
@@ -58,6 +59,29 @@ public class DashBoardRepository {
 
         return namedParameterJdbcTemplate.query(query, getSearchMapForTopComplaints(tenantId, size),
             new TopComplaintsRowMapper());
+    }
+
+    public List<ComplaintTypeLegend> getTopFiveComplaintTypesLegendData(String tenantId){
+
+        String query = "select count(*) as count, ctype.name as complainttypename, cs.servicecode as code" +
+            " from submission cs, egpgr_complainttype ctype, servicetype_keyword sk" +
+            " where cs.servicecode = ctype.code and ctype.code = sk.servicecode and sk.keyword = 'complaint'" +
+            " and cs.createddate > current_date - interval '7' month" +
+            " and cs.tenantid = :tenantId and sk.tenantid = :tenantId and ctype.tenantid = :tenantId" +
+            " group by cs.servicecode, complainttypename" +
+            " order by count DESC LIMIT 5";
+
+        List<ComplaintTypeLegend> complaintTypeLegendList = namedParameterJdbcTemplate.query(query, getSearchMap(tenantId), new TopComplaintTypesLegendRowMapper());
+        return updateRank(complaintTypeLegendList);
+    }
+
+    private List<ComplaintTypeLegend> updateRank(List<ComplaintTypeLegend> complaintTypeLegendList){
+
+        for(int i=0 ; i<complaintTypeLegendList.size() ;i++){
+            complaintTypeLegendList.get(i).setRank(i+1);
+        }
+
+        return complaintTypeLegendList;
     }
 
     public List<TopComplaintTypesResponse> getTopFiveComplaintTypesMonthly(String tenantId){

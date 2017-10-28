@@ -1,8 +1,6 @@
 package org.egov.pgrrest.read.domain.service;
 
-import org.egov.pgrrest.read.domain.model.AgeingResponse;
-import org.egov.pgrrest.read.domain.model.DashboardResponse;
-import org.egov.pgrrest.read.domain.model.TopComplaintTypesResponse;
+import org.egov.pgrrest.read.domain.model.*;
 import org.egov.pgrrest.read.persistence.repository.DashBoardRepository;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +37,18 @@ public class DashboardService {
             return dashboardRepository.getTopFiveComplaintTypesMonthly(tenantId);
 
         return dashboardRepository.getTopComplaintTypeWithCount(tenantId, size);
+    }
+
+    public TopFiveComplaintTypesResponse getTopFiveComplaintTypes(String tenantId){
+
+        List<ComplaintTypeLegend> legends = dashboardRepository.getTopFiveComplaintTypesLegendData(tenantId);
+
+        List<TopComplaintTypesResponse> complaintTypes = dashboardRepository.getTopFiveComplaintTypesMonthly(tenantId);
+
+        return TopFiveComplaintTypesResponse.builder()
+            .legends(legends)
+            .complaintTypes(complaintTypes)
+            .build();
     }
 
     public List<AgeingResponse> getComplaintsAgeingData(String tenantId){

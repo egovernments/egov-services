@@ -4,7 +4,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -22,166 +21,140 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Advocate {
 
-	@NotNull
-	@NotEmpty
 	@Size(min = 1, max = 100)
 	@JsonProperty("name")
-	private String name = null;
+	private String name ;
 
 	@JsonProperty("code")
-	private String code = null;
+	private String code ;
 
-	@NotNull
-	@NotEmpty
 	@Size(min = 1, max = 100)
 	@JsonProperty("organizationName")
-	private String organizationName = null;
+	private String organizationName ;
 
 	@JsonProperty("isIndividual")
 	private Boolean isIndividual = true;
 
-	@NotNull
-	@NotEmpty
+	@NotNull	
 	@JsonProperty("title")
-	private String title = null;
+	private String title ;
 
-	@NotNull
-	@NotEmpty
+	@NotNull	
 	@JsonProperty("firstName")
-	private String firstName = null;
+	private String firstName ;
 
-	@NotNull
-	@NotEmpty
+	@NotNull	
 	@JsonProperty("secondName")
-	private String secondName = null;
+	private String secondName ;
 
-	@NotNull
-	@NotEmpty
+	@NotNull	
 	@JsonProperty("lastName")
-	private String lastName = null;
+	private String lastName ;
 
-	@NotNull
-	@NotEmpty
+	@NotNull	
 	@JsonProperty("address")
-	private String address = null;
+	private String address ;
 
-	@NotNull
-	@NotEmpty
+	@NotNull	
 	@JsonProperty("contactNo")
-	private String contactNo = null;
+	private String contactNo ;
 
 	@NotNull
 	@JsonProperty("dateOfEmpanelment")
-	private Long dateOfEmpanelment = null;
+	private Long dateOfEmpanelment ;
 
 	@NotNull
 	@JsonProperty("standingCommitteeDecisionDate")
-	private Long standingCommitteeDecisionDate = null;
+	private Long standingCommitteeDecisionDate ;
 
 	@NotNull
 	@JsonProperty("empanelmentFromDate")
-	private Long empanelmentFromDate = null;
+	private Long empanelmentFromDate ;
 
-	@NotNull
-	@NotEmpty
+	@NotNull	
 	@Size(min = 12, max = 12)
 	@JsonProperty("aadhar")
-	private String aadhar = null;
+	private String aadhar ;
 
-	@NotNull
-	@NotEmpty
+	@NotNull	
 	@JsonProperty("gender")
-	private String gender = null;
+	private String gender ;
 
-	@NotNull
-	@NotEmpty
+	@NotNull	
 	@JsonProperty("age")
-	private String age = null;
+	private String age ;
 
 	@NotNull
 	@JsonProperty("dob")
-	private Long dob = null;
+	private Long dob ;
 
-	@NotNull
-	@NotEmpty
+	@NotNull	
 	@Size(min = 10, max = 10)
 	@JsonProperty("mobileNumber")
-	private String mobileNumber = null;
+	private String mobileNumber ;
 
-	@NotNull
-	@NotEmpty
+	@NotNull	
 	@Email
 	@JsonProperty("emailId")
-	private String emailId = null;
+	private String emailId ;
 
-	@NotNull
-	@NotEmpty
-	@Size(min = 12, max = 12)
+	@NotNull	
+	@Size(min = 10, max = 10)
 	@JsonProperty("pan")
-	private String pan = null;
+	private String pan ;
 
-	@NotNull
-	@NotEmpty
+	@NotNull	
 	@JsonProperty("vatTinNo")
-	private String vatTinNo = null;
+	private String vatTinNo ;
 
 	@NotNull
 	@JsonProperty("newsPaperAdvertismentDate")
-	private Long newsPaperAdvertismentDate = null;
+	private Long newsPaperAdvertismentDate ;
 
 	@NotNull
 	@JsonProperty("empanelmentToDate")
-	private Long empanelmentToDate = null;
+	private Long empanelmentToDate ;
 
-	@NotNull
-	@NotEmpty
+	@NotNull	
 	@JsonProperty("bankName")
-	private String bankName = null;
+	private String bankName ;
 
-	@NotNull
-	@NotEmpty
+	@NotNull	
 	@JsonProperty("bankBranch")
-	private String bankBranch = null;
+	private String bankBranch ;
 
-	@NotNull
-	@NotEmpty
+	@NotNull	
 	@JsonProperty("bankAccountNo")
-	private String bankAccountNo = null;
+	private String bankAccountNo ;
 
-	@NotNull
-	@NotEmpty
+	@NotNull	
 	@JsonProperty("isfcCode")
-	private String isfcCode = null;
+	private String isfcCode ;
 
 	@NotNull
-	@NotEmpty
 	@JsonProperty("micr")
-	private String micr = null;
+	private String micr ;
 
-	@NotNull
 	@JsonProperty("isActive")
 	private Boolean isActive = true;
-
-	@NotNull
-	@NotEmpty
+	
 	@JsonProperty("isTerminate")
-	private String isTerminate = "False";
+	private Boolean isTerminate = false;
 
 	@JsonProperty("inActiveDate")
-	private Long inActiveDate = null;
+	private Long inActiveDate ;
 
 	@JsonProperty("terminationDate")
-	private Long terminationDate = null;
+	private Long terminationDate ;
 
 	@JsonProperty("reasonOfTermination")
-	private String reasonOfTermination = null;
+	private String reasonOfTermination ;
 
 	@NotNull
-	@NotEmpty
 	@Size(min = 4, max = 128)
 	@JsonProperty("tenantId")
-	private String tenantId = null;
+	private String tenantId ;
 
 	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+	private AuditDetails auditDetails ;
 }

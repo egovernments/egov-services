@@ -217,7 +217,7 @@ const menuConvention={
 "Asset Management.Asset Masters.Asset Category.CreateAssetCategory":"/create/asset/createAssetCategroy",
 "Asset Management.Asset Masters.Asset Category.ViewAssetCategory":"/search/asset/createAssetCategroy/view",
 "Asset Management.Asset Masters.Asset Category.ModifyAssetCategory":"/search/asset/createAssetCategroy/update",
-"Asset Management.Asset Masters.Asset.CreateAsset":"/create/asset/assetImmovable",
+"Asset Management.Asset Masters.Asset.CreateAsset":"/non-framework/asset/master/assetImmovableCreate",
 "Asset Management.Asset Masters.Asset.ViewAsset":"/search/asset/assetImmovable/view",
 "Asset Management.Asset Masters.Asset.ModifyAsset":"/search/asset/assetImmovable/update",
 "Asset Management.Asset Transactions.Asset Revaluation.AssetRevaluationSearchToCreate":"/transactionRevaluation/asset/revaluationAsset",

@@ -158,6 +158,10 @@ import transactionGeneral from './components/non-framework/asset/transactionGene
 
 //Template parser
 import TemplateParser from './components/framework/templates/templateParser/templateParser';
+
+//Assets
+import assetImmovableCreate from './components/non-framework/asset/master/assetImmovableCreate';
+
 const base = "";
 
 const Main = () => {
@@ -330,6 +334,10 @@ const Main = () => {
       <Route exact path= {base + '/transactionTransfer/asset/translateAsset'} component={transactionTransfer}/>
       <Route exact path= {base + '/transactionTransfer/asset/generalAsset'} component={transactionGeneral}/>
       <Route exact path= {base + '/print/report/:templatePath'} component={TemplateParser}/>
+
+      //Assets
+      <Route exact path= {base + '/non-framework/asset/master/assetImmovableCreate'} component={assetImmovableCreate}/>
+
     </Switch>
   </main>
 )}

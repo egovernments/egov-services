@@ -29,6 +29,8 @@ import UiPinCode from './components/UiPinCode';
 import UiArrayField from './components/UiArrayField';
 import UiFileTable from './components/UiFileTable';
 import UiMultiFieldTable from './components/UiMultiFieldTable';
+import UiDialogBox from './components/UiDialogBox'
+import UigoogleMaps from './components/UigoogleMaps'
 
 let styles={
   reducePadding: {
@@ -219,6 +221,11 @@ export default class ShowFields extends Component {
 
           var CustomComonent=require(item.path+".js").default;
           return <CustomComonent/>
+          case 'dialogBox':
+      			return <UiDialogBox tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+
+          case 'googleMaps':
+        		return <UigoogleMaps tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
           // return <div></div>
     }
   }

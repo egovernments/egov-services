@@ -98,22 +98,23 @@ var dat = {
   						"label": "ac.create.Asset.SubCategory.Name",
   						"pattern": "",
   						"type": "singleValueList",
-  						"url": "",
-  						"isRequired": true,
+  						//"url": "/egov-mdms-service/v1/_get?&masterName=AssetCategory&moduleName=ASSET|$..id|$..name",
+							"url": "",
+							"isRequired": true,
   						"isDisabled": false,
   						"requiredErrMsg": "",
-  						"patternErrMsg": "",
-							"defaultValue": [	{
-									"key": "1",
-									"value": "BUILDING"
-								},  {
-	            "key": "2",
-	            "value": "SCHOOL"
-	          },  {
-	            "key": "3",
-	            "value": "FIRE STATION"
-	          }
-					],
+  						"patternErrMsg": ""
+					// 		"defaultValue": [	{
+					// 				"key": "1",
+					// 				"value": "BUILDING"
+					// 			},  {
+	        //     "key": "2",
+	        //     "value": "SCHOOL"
+	        //   },  {
+	        //     "key": "3",
+	        //     "value": "FIRE STATION"
+	        //   }
+					// ],
   					},
 
             {
@@ -177,7 +178,7 @@ var dat = {
   						"pattern": "",
   						"type": "singleValueList",
   						"url": "",
-  						"isRequired": true,
+  						"isRequired": false,
   						"isDisabled": false,
   						"requiredErrMsg": "",
   						"patternErrMsg": "",
@@ -192,45 +193,104 @@ var dat = {
 	            "value": "PURCHASE"
 	          }
 					]
-  					},
-            {
-  						"name": "LandAssetID",
-  						"jsonPath": "Asset.",
-  						"label": "ac.create.Land.Asset.ID",
-  						"pattern": "",
-  						"type": "autoCompelete",
-  						"url": "",
-  						"isRequired": false,
-  						"isDisabled": false,
-  						"requiredErrMsg": "",
-  						"patternErrMsg": "",
-              "autoCompleteDependancy": {
-								"autoCompleteUrl": "/egf-masters/chartofaccounts/_search?id={value}",
-								"autoFillFields": {
-									"BusinessDetails[0].accountDetails[0].chartOfAccounts": "chartOfAccounts[0].glcode"
-								 }
-							 }
-  					},
-            {
-  						"name": "SurveyNoOfLandOnWhichStructureIsLocated ",
-  						"jsonPath": "Asset.landSurveyNo",
-  						"label": "ac.create.Survey.no.of.land",
-  						"pattern": "",
-  						"type": "number",
-  						"url": "",
-  						"isRequired": false,
-  						"isDisabled": true,
-  						"requiredErrMsg": "",
-  						"patternErrMsg": ""
-  					},
+  					}
+
 				]
 			},
+
+			{
+				"label": "ac.create.Land.Details",
+				"name": "landDetails",
+				"jsonPath": "Asset",
+				"multiple":true,
+				"fields": [
+					{
+						"name": "SurveyNoOfLandOnWhichStructureIsLocated ",
+						"jsonPath": "Asset.landSurveyNo",
+						"label": "ac.create.Survey.no.of.land",
+						"pattern": "",
+						"type": "number",
+						"url": "",
+						"isRequired": false,
+						"isDisabled": true,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "LandAssetID",
+						"jsonPath": "Asset.",
+						"label": "ac.create.Land.Asset.ID",
+						"pattern": "",
+						"type": "autoCompelete",
+						"url": "",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"autoCompleteDependancy": {
+							"autoCompleteUrl": "/egf-masters/chartofaccounts/_search?id={value}",
+							"autoFillFields": {
+								"BusinessDetails[0].accountDetails[0].chartOfAccounts": "chartOfAccounts[0].glcode"
+							 }
+						 }
+					},
+					{
+            "name": "AreaofLandonwhichconstructed",
+            "jsonPath": "Asset.totalArea",
+            "label": "Area of Land on which constructed",
+            "pattern": "",
+            "type": "text",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          }
+					]
+				},
+
       {
 				"label": "ac.create.Location.Details",
 				"name": "LocationField",
         "multiple":false,
         "jsonPath":"Asset",
 				"fields": [
+					// {
+          //   "name": "searchLocation",
+          //   "jsonPath": "Asset.captLocationDetails",
+          //   "label": "search Location",
+          //   "pattern": "",
+          //   "type": "googleMaps",
+          //   "url": "",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": "",
+					// 	"depedants":[
+					// 		{
+					// 				"jsonPath":"Asset.latitude",
+					// 				"type":"textField",
+					// 				"pattern":"`${getVal('Asset.captLocationDetails.lat')}`",
+					// 				"rg":"",
+					// 				"isRequired": false,
+					// 				"isDisabled": true,
+					// 				"requiredErrMsg": "",
+					// 				"patternErrMsg": ""
+					// 			},
+					// 		{
+					// 			"jsonPath":"Asset.longitude",
+					// 			"type":"textField",
+					// 			"pattern":"`${getVal('Asset.captLocationDetails.lng')}`",
+					// 			"rg":"",
+					// 			"isRequired": false,
+					// 			"isDisabled": true,
+					// 			"requiredErrMsg": "",
+					// 			"patternErrMsg": "",
+					// 			"defaultValue": localStorage.getItem("longitude")
+					// 		}
+					//
+					// 	]
+          // },
           // {
           //   "name": "Location",
           //   "jsonPath": "Asset.locationDetails",
@@ -246,6 +306,7 @@ var dat = {
           // {
           //   "name": "Longitude",
           //   "jsonPath": "Asset.longitude",
+					// 	//"jsonPathLng": "Asset.longitude",
           //   "label": "ac.create.Longitude",
           //   "pattern": "",
           //   "type": "text",
@@ -253,7 +314,8 @@ var dat = {
           //   "isRequired": false,
           //   "isDisabled": true,
           //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
+          //   "patternErrMsg": "",
+					// 	"defaultValue": localStorage.getItem("longitude")
           // },
           // {
           //   "name": "Latitude",
@@ -265,7 +327,8 @@ var dat = {
           //   "isRequired": false,
           //   "isDisabled": true,
           //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
+          //   "patternErrMsg": "",
+					// "defaultValue": ""
           // },
           {
             "name": "Address",
@@ -277,7 +340,8 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+						"defaultValue": localStorage.getItem("address")
           },
           {
             "name": "ElectionWard",
@@ -287,7 +351,7 @@ var dat = {
             "type": "singleValueList",
             "url": "/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$..id|$..name",
 					//"url": "",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -340,6 +404,18 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
+					{
+            "name": "floorWise",
+            "jsonPath": "Asset.floorWise",
+            "label": "Floor Wise Usage & Construction Class",
+            "pattern": "",
+            "type": "dialogBox",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
           {
             "name": "DimensionOfStructure(L,B,H)",
             "jsonPath": "Asset.length",
@@ -375,20 +451,7 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          },
-					{
-            "name": "AreaofLandonwhichconstructed",
-            "jsonPath": "Asset.totalArea",
-            "label": "Area of Land on which constructed",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": true,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-
+          }
 				]
 			},
       {
@@ -487,23 +550,23 @@ var dat = {
             "name": "SecurityDepositRetained",
             "jsonPath": "Asset.securityDepositRetained",
             "label": "ac.create.Security.deposit.retained",
-            "pattern": "",
-            "type": "text",
+            "pattern": "[0-9]{1,10}(\\.[0-9]{0,2})?",
+            "type": "number",
             "url": "",
             "isRequired": false,
-            "isDisabled": true,
+            "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "Please enter number only"
           },
           {
             "name": "SecurityDepositRealized",
             "jsonPath": "Asset.securityDepositRealized",
             "label": "ac.create.Security.deposit.realized",
             "pattern": "",
-            "type": "text",
+            "type": "number",
             "url": "",
             "isRequired": false,
-            "isDisabled": true,
+            "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -593,7 +656,7 @@ var dat = {
             "pattern": "",
             "type": "text",
             "url": "",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -617,7 +680,7 @@ var dat = {
             "label": "ac.create.Accumulated.Depreciation.Account",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Accumulated Depreciation|$..name|$..name",
+            "url": "/egf-master/accountcodepurposes/_search?tenantId=default&name=Accumulated Depreciation|$..name|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -629,7 +692,7 @@ var dat = {
             "label": "ac.create.Revaluation.Reserve.Account",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Revaluation Reserve Account|$..name|$..name",
+            "url": "/egf-master/accountcodepurposes/_search?tenantId=default&name=Revaluation Reserve Account|$..name|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -641,7 +704,7 @@ var dat = {
             "label": "ac.create.Depreciation.Expenses.Account",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Depreciation Expense Account|$..name|$..name",
+            "url": "/egf-master/accountcodepurposes/_search?tenantId=default&name=Depreciation Expense Account|$..name|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",

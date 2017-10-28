@@ -1915,6 +1915,7 @@ var localization_EN_Data = {
     "ac.transaction.RA.title": "Valuation of Asset",
     "ac.view.asset.title": "Asset View",
     "ac.update.Header.Details": "Asset Modify",
+    "ac.create.Land.Details": "Land Details",
 
 
 

@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class CaseBuilder {
-	
+
 	@Autowired
 	AdvocateSearchRepository advocateSearchRepository;
 
@@ -73,20 +73,22 @@ public class CaseBuilder {
 			preparedStatementValues.add(caseSearchCriteria.getCaseRefernceNo());
 		}
 
-		if (caseSearchCriteria.getCaseType()!= null && !caseSearchCriteria.getCaseType().isEmpty()) {
+		if (caseSearchCriteria.getCaseType() != null && !caseSearchCriteria.getCaseType().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" casetype ->>'name'=?");
 			preparedStatementValues.add(caseSearchCriteria.getCaseType());
 
 		}
-		
-		if (caseSearchCriteria.getCaseStatus()!= null && !caseSearchCriteria.getCaseStatus().isEmpty()) {
-			/*isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" casetype ->>'name'=?");
-			preparedStatementValues.add(caseSearchCriteria.getCaseType());*/ // TODO need to add after hearing api integration
+
+		if (caseSearchCriteria.getCaseStatus() != null && !caseSearchCriteria.getCaseStatus().isEmpty()) {
+			/*
+			 * isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
+			 * selectQuery); selectQuery.append(" casetype ->>'name'=?");
+			 * preparedStatementValues.add(caseSearchCriteria.getCaseType());
+			 */
+			// TODO need to add after hearing api integration
 
 		}
-	
 
 		if (caseSearchCriteria.getDepartmentName() != null && !caseSearchCriteria.getDepartmentName().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
@@ -96,11 +98,12 @@ public class CaseBuilder {
 		}
 
 		if (caseSearchCriteria.getAdvocateName() != null && !caseSearchCriteria.getAdvocateName().isEmpty()) {
-			List<String> caseCodes = advocateSearchRepository.getcaseCodeByAdvocateName(caseSearchCriteria.getAdvocateName());
+			List<String> caseCodes = advocateSearchRepository
+					.getcaseCodeByAdvocateName(caseSearchCriteria.getAdvocateName());
 			int count = 1;
 
 			String caseCodeIds = "";
-			for ( String caseObj : caseCodes ){
+			for (String caseObj : caseCodes) {
 				if (count < caseSearchCriteria.getCode().length)
 					caseCodeIds = caseCodeIds + "'" + caseObj + "',";
 				else
@@ -109,7 +112,7 @@ public class CaseBuilder {
 				count++;
 			}
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" code IN("+caseCodeIds+")");
+			selectQuery.append(" code IN(" + caseCodeIds + ")");
 
 		}
 
@@ -117,19 +120,17 @@ public class CaseBuilder {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			preparedStatementValues.add(caseSearchCriteria.getCaseType());
 		}
-		
-		if (caseSearchCriteria.getFromDate()!=null &&caseSearchCriteria.getToDate()!=null){
+
+		if (caseSearchCriteria.getFromDate() != null && caseSearchCriteria.getToDate() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" caseRegistrationDate>=? AND caseRegistrationDate <=?");
 			preparedStatementValues.add(caseSearchCriteria.getFromDate());
 			preparedStatementValues.add(caseSearchCriteria.getToDate());
-			
-		}
-		else if ( caseSearchCriteria.getFromDate()!=null){
+
+		} else if (caseSearchCriteria.getFromDate() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			preparedStatementValues.add(caseSearchCriteria.getFromDate());
-		}
-		else if (caseSearchCriteria.getToDate()!=null){
+		} else if (caseSearchCriteria.getToDate() != null) {
 			preparedStatementValues.add(caseSearchCriteria.getToDate());
 		}
 
@@ -152,21 +153,18 @@ public class CaseBuilder {
 	private void addPagingClause(final StringBuilder selectQuery, final List<Object> preparedStatementValues,
 			final CaseSearchCriteria caseSearchCriteria) {
 
-		
-		selectQuery.append(" LIMIT ?");
-		if (caseSearchCriteria.getPageSize() != null) {
-			preparedStatementValues.add(caseSearchCriteria.getPageSize());
-		} else {
-			preparedStatementValues.add(500); // Set limit to pageSize
-		}
+		if (caseSearchCriteria.getPageNumber() != null && caseSearchCriteria.getPageSize() != null) {
+			int offset = 0;
+			int limit = caseSearchCriteria.getPageNumber() * caseSearchCriteria.getPageSize();
 
-		selectQuery.append(" OFFSET ?");
-		if (caseSearchCriteria.getPageNumber() != null) {
-			preparedStatementValues.add(caseSearchCriteria.getPageNumber());
-		}
+			if (caseSearchCriteria.getPageNumber() <= 1)
+				offset = (limit - caseSearchCriteria.getPageSize());
+			else
+				offset = (limit - caseSearchCriteria.getPageSize()) + 1;
 
-		else {// Default pageNo is zero meaning first page
-			preparedStatementValues.add(0);
+			selectQuery.append(" offset ?  limit ?");
+			preparedStatementValues.add(offset);
+			preparedStatementValues.add(limit);
 		}
 	}
 

@@ -254,8 +254,8 @@
       "mpcbAuthorisation": true,
       "bankGuarantee": true,
       "bankName": "Fake Dumping Ground bank name 1",
-      "bankValidityFrom": "2017-03-31 20:00:00 -0400",
-      "bankValidityTo": "2020-03-31 20:00:00 -0400"
+      "bankValidityFrom": "1509190483",
+      "bankValidityTo": "1509190483"
     },
     {
       "id": 2,
@@ -273,8 +273,8 @@
       "mpcbAuthorisation": true,
       "bankGuarantee": true,
       "bankName": "Fake Dumping Ground bank name 2",
-      "bankValidityFrom": "2027-04-01 20:00:00 -0400",
-      "bankValidityTo": "2020-04-01 20:00:00 -0400"
+      "bankValidityFrom": "1509190483",
+      "bankValidityTo": "1509190483"
     },
     {
       "id": 3,
@@ -292,8 +292,8 @@
       "mpcbAuthorisation": true,
       "bankGuarantee": true,
       "bankName": "Fake Dumping Ground bank name 3",
-      "bankValidityFrom": "3037-04-02 20:00:00 -0400",
-      "bankValidityTo": "3030-04-02 20:00:00 -0400"
+      "bankValidityFrom": "1509190483",
+      "bankValidityTo": "1509190483"
     }
   ],
   "Vendor": [

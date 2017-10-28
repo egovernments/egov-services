@@ -1,0 +1,11 @@
+ServiceMaps:
+ serviceName: inventory
+ version: 1.0.0
+ mappings:
+  - topic: inv-materials-save-topic
+    indexes:
+    - name: materials
+      type: materials
+      id: $.id
+      isBulk: true
+      jsonPath: $.materials.*

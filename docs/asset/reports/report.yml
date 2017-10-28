@@ -129,23 +129,23 @@ ReportDefinitions:
     source: asset
   searchParams:
   - name: fromDate
-    label: reports.asset.adminward
+    label: reports.asset.fromDate
     type: date
     source: asset
     isMandatory: true
   - name: toDate
-    label: reports.asset.licenseno
+    label: reports.asset.toDate
     type: date
     source: asset
     isMandatory: true
   - name: assetCategory
-    label: reports.asset.tradetype
+    label: reports.asset.assetCategory
     type: number
     isMandatory: false
     source: asset
     searchClause : AND asset.assetCategory=$assetCategory
   - name: assetid
-    label: reports.asset.tradetype
+    label: reports.asset.id
     type: number
     isMandatory: false
     source: asset

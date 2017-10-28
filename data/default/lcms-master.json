@@ -165,7 +165,7 @@
 	],
 	"side": [
 		{
-			"name": "civil",
+			"name": "Civil",
 			"code": "CVL",
 			"active": true,
 			"tenantId": "default"
@@ -189,7 +189,7 @@
 			"code": "AFO",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -201,7 +201,7 @@
 			"code": "AA",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -213,7 +213,7 @@
 			"code": "AP",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -225,7 +225,7 @@
 			"code": "CAFA",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -237,7 +237,7 @@
 			"code": "CA",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -249,7 +249,7 @@
 			"code": "CAARP",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -261,7 +261,7 @@
 			"code": "CAAO",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -273,7 +273,7 @@
 			"code": "CAREF",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -285,7 +285,7 @@
 			"code": "CACAPL",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -297,7 +297,7 @@
 			"code": "CACP",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -309,7 +309,7 @@
 			"code": "CAFCA",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -321,7 +321,7 @@
 			"code": "CAFERA",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -333,7 +333,7 @@
 			"code": "CALPA",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -345,7 +345,7 @@
 			"code": "CAPIL",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -357,7 +357,7 @@
 			"code": "CASA",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -369,7 +369,7 @@
 			"code": "CAWP",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -381,7 +381,7 @@
 			"code": "CAARA",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -393,7 +393,7 @@
 			"code": "CAARP",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -417,7 +417,7 @@
 			"code": "CWP",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -429,7 +429,7 @@
 			"code": "CP",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -441,7 +441,7 @@
 			"code": "CAL",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -453,7 +453,7 @@
 			"code": "COS",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -465,7 +465,7 @@
 			"code": "FCA",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -477,7 +477,7 @@
 			"code": "FP",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -489,7 +489,7 @@
 			"code": "LPA",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -501,7 +501,7 @@
 			"code": "MP",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -513,7 +513,7 @@
 			"code": "MCA",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -525,7 +525,7 @@
 			"code": "PIL",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -537,7 +537,7 @@
 			"code": "RC",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -549,7 +549,7 @@
 			"code": "RPFA",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -561,7 +561,7 @@
 			"code": "RPARA",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -573,7 +573,7 @@
 			"code": "RPMCA",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -585,7 +585,7 @@
 			"code": "RPPIL",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -597,7 +597,7 @@
 			"code": "RPAO",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -609,7 +609,7 @@
 			"code": "RPARP",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -621,7 +621,7 @@
 			"code": "RPCAPL",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -633,7 +633,7 @@
 			"code": "RPCP",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -645,7 +645,7 @@
 			"code": "RPCRA",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -657,7 +657,7 @@
 			"code": "RPFCA",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -669,7 +669,7 @@
 			"code": "RPSA",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -681,7 +681,7 @@
 			"code": "RPWP",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -693,7 +693,7 @@
 			"code": "SMP",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -705,7 +705,7 @@
 			"code": "SMWP",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -717,7 +717,7 @@
 			"code": "TA",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -729,7 +729,7 @@
 			"code": "TC",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -741,7 +741,7 @@
 			"code": "CAO",
 			"active": true,
 			"side": {
-				"name": "civil",
+				"name": "Civil",
 				"code": "CVL",
 				"active": true,
 				"tenantId": "default"
@@ -3617,7 +3617,7 @@
 			"tenantId": "default"
 		},
 		{
-			"name": "Suomotu civil contempt reference",
+			"name": "Suomotu Civil contempt reference",
 			"code": "SCCREF",
 			"active": true,
 			"side": {

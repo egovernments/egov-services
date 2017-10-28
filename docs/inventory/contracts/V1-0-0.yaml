@@ -30,8 +30,8 @@ x-api-id: 'org.egov.inventory.inventory'
 paths:
     /indents/_search:
       post:
-        summary: Get the list of indents
-        description: indents
+        summary: Get the list of common indent information
+        description: Indent is parent object that holds the common information for both Indent Note and Transfer Indent
         tags: 
           - Indent Note
           - Transfer Indent
@@ -110,8 +110,8 @@ paths:
               
     /indents/_create:
       post:
-        summary: Create  new  indents
-        description: Create  new indents
+        summary: Create new indent
+        description: Whenever an Indent Note OR Transfer Indent is created, this API will hold the common set of information. This API will be invoked intenrally during Indent Note OR Transfer Indent creation.
         tags: 
           - Indent Note
           - Transfer Indent
@@ -135,7 +135,7 @@ paths:
     /indents/_update:
       post:
         summary: Update any of the indents
-        description: Update any of the indents
+        description: The common set of information shared by Indent Note/Transfer Indent will be updated upon invoking this API.
         tags: 
           - Indent Note
           - Transfer Indent
@@ -158,8 +158,8 @@ paths:
 
     /indentnotes/_search:
       post:
-        summary: Get the list of Indent Notes 
-        description: This API is used to search the indent notes raised in the system. There are 2 types of indents i.e., Indent Note (that is )raised by individual to request material(s) from store) and Transfer Indent(raised by store to request material(s) from other store)
+        summary: Get the list of Indent Notes.
+        description: This API is used to search the indent notes raised in the system. There are 2 types of indents i.e., Indent Note (that is )raised by individual to request material(s) from store) and Transfer Indent(raised by store to request material(s) from other store).
         tags: 
           - Indent Note
         parameters:
@@ -171,24 +171,23 @@ paths:
              type: string
             in: query
             maxItems: 50
-            description: comma seperated list of Ids 
-          - name: indent
-            type: integer
-            format: int64
+            description: comma seperated list of Ids.
+          - name: indentNumber
+            type: string
             in: query
             description: |
-              indent of the Indent Note
+              indent number of the Indent Note.
           - name: indentStore
             type: integer
             format: int64
             in: query
             description: |
-              indent store of the Indent Note
+              indent store of the Indent Note.
           - name: inventoryType
             type: string
             in: query
             description: |
-              inventory Type of the Indent Note 
+              inventory Type of the Indent Note.
           - name: stateId
             type: integer
             format: int64
@@ -211,8 +210,8 @@ paths:
               
     /indentnotes/_create:
       post:
-        summary: Create new Indent Note
-        description: Create new Indent Note
+        summary: Create new Indent Note.
+        description: This API is invoked when a Indent Note is raised by an individual.
         tags: 
           - Indent Note
         parameters:
@@ -234,8 +233,8 @@ paths:
               
     /indentnotes/_update:
       post:
-        summary: Update Indent Notes
-        description: Update Indent Notes
+        summary: Update Indent Notes.
+        description: This API is invoked during workflow approval/rejection and modify the indent note details.
         tags: 
           - Indent Note
         parameters:
@@ -247,7 +246,7 @@ paths:
               $ref: '#/definitions/IndentNoteRequest'
         responses:
           200:
-            description: Indent Note updated Successfully
+            description: Indent Note updated Successfully.
             schema:
               $ref: '#/definitions/IndentNoteResponse'
           400:
@@ -257,8 +256,8 @@ paths:
     
     /transferindentnotes/_search:
       post:
-        summary: Get the list of transferindentnotes
-        description: transferindentnotes
+        summary: Get the list of transfer indent notes.
+        description: This API is used to search the transfer indent notes raised by indent store for the issuing store.
         tags: 
            - Transfer Indent
         parameters:
@@ -271,18 +270,17 @@ paths:
             in: query
             maxItems: 50
             description: comma seperated list of Ids 
-          - name: indent
-            type: integer
-            format: int64
+          - name: indentNumber
+            type: string
             in: query
             description: |
-              indent of the TransferIndentNote
+              indent number of the Transfer Indent Note
           - name: indentStore
             type: integer
             format: int64
             in: query
             description: |
-              indent store of the TransferIndentNote
+              indent store of the Transfer Indent Note
           - name: stateId
             type: integer
             format: int64
@@ -305,8 +303,8 @@ paths:
               
     /transferindentnotes/_create:
       post:
-        summary: Create  new  transferindentnotes
-        description: Create  new transferindentnotes
+        summary: Create  new  transfer indent notes.
+        description: Transfer Indent Note is created when a store need materails available in other store. Indent store raised a Material Indent Note specifying list of materails required from issuing store.
         tags: 
           - Transfer Indent
         parameters:
@@ -328,8 +326,8 @@ paths:
               
     /transferindentnotes/_update:
       post:
-        summary: Update any of the transferindentnotes
-        description: Update any of the transferindentnotes
+        summary: Update any of the transfer indent notes
+        description: This API is invoked to update transfer indent note information and also during workflow.
         tags: 
           - Transfer Indent
         parameters:
@@ -457,7 +455,7 @@ paths:
     /purchaseorders/_create:
       post:
         summary: Create  new  purchaseorders
-        description: Create  new purchaseorders
+        description: Purchase order is created to purchase the materials required, including Indent and Non Indent. This API created a purchase order in the system and initiates the workflow.
         tags: 
           - Purchase Order
         parameters:
@@ -479,8 +477,8 @@ paths:
               
     /purchaseorders/_update:
       post:
-        summary: Update any of the purchaseorders
-        description: Update any of the purchaseorders
+        summary: Update any of the purchase orders.
+        description: This API is used to update the existing purchase order information in the system. This API is invoked during the workflow as well.
         tags: 
           - Purchase Order
         parameters:
@@ -502,8 +500,8 @@ paths:
     
     /purchaseindents/_search:
       post:
-        summary: Get the list of indents associated with purchase order(if any)
-        description: This API hold the purchase order and associated indents(if any)
+        summary: Get the list of indents associated with purchase order(if any).
+        description: This API hold the purchase order and associated indents(if any).
         tags: 
           - Purchase Order
         parameters:
@@ -537,8 +535,8 @@ paths:
               
     /purchaseindents/_create:
       post:
-        summary: Create  new  purchase indents
-        description: If the purchase order is created for Indent, then this API holds the information regarding the indents associated with the purchase order
+        summary: Create  new  purchase indents.
+        description: If the purchase order is created for Indent, then this API holds the information regarding the indents associated with the purchase order.
         tags: 
           - Purchase Order
         parameters:
@@ -560,8 +558,8 @@ paths:
               
     /purchaseindents/_update:
       post:
-        summary: Update any of the purchaseindents
-        description: Update any of the purchaseindents
+        summary: Update any of the purchase indents.
+        description: This API is used to update the indent(s) associated with purchase order.
         tags: 
           - Purchase Order
         parameters:
@@ -573,7 +571,7 @@ paths:
               $ref: '#/definitions/PurchaseIndentRequest'
         responses:
           200:
-            description: PurchaseIndent updated Successfully
+            description: Purchase Indent updated Successfully
             schema:
               $ref: '#/definitions/PurchaseIndentResponse'
           400:
@@ -636,8 +634,8 @@ paths:
               
     /purchasematerials/_create:
       post:
-        summary: Create  new  purchasematerials
-        description: Create  new purchasematerials
+        summary: Create new purchase materials.
+        description: This API holds the list of materails specified in the purchase order.
         tags: 
           - Purchase Order
         parameters:
@@ -659,8 +657,8 @@ paths:
               
     /purchasematerials/_update:
       post:
-        summary: Update any of the purchasematerials
-        description: Update any of the purchasematerials
+        summary: Update any of the purchase materials
+        description: This API is invoked to update the purchase material information.
         tags: 
           - Purchase Order
         parameters:
@@ -807,11 +805,125 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-                
+    
+    /materialissues/_search:
+      post:
+        summary: Get the list of material issues
+        description: This API holds the common information required by both Indent Issue and Non Indent Issue. This API will be invoked internally during search of Indent Issue and Non Indent Issue.
+        tags:
+          - Material Issue
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: ids
+            type: array
+            items: 
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: store
+            type: integer
+            format: int64
+            in: query
+            description: |
+              store of the MaterialIssue
+          - name: issueNoteNumber
+            type: string
+            in: query
+            description: |
+              issueNoteNumber  Auto generated number, read only
+          - name: issueDate
+            type: integer
+            format: int64
+            in: query
+            description: |
+              issue date of the MaterialIssue
+          - name: materialIssueStatus
+            type: string
+            in: query
+            description: |
+              material issue status of the MaterialIssue
+            enum:
+              - CREATED
+              - APPROVED
+              - REJECTED
+              - CANCELED
+          - name: description
+            type: string
+            in: query
+            description: |
+              description of the MaterialIssue
+          - name: totalIssueValue
+            type: number
+            format: BigDecimal
+            in: query
+            description: |
+              total issue value of the MaterialIssue
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/offset"
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
+        responses:
+          200:
+            description: MaterialIssue retrieved Successfully
+            schema:
+              $ref: '#/definitions/MaterialIssueResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /materialissues/_create:
+      post:
+        summary: Create  new  materialissues
+        description: This API holds the common information of both Indent Issue and Non Indent Issue. Whenver and Indent Issue or Non Indent Isseu is created in the system, this API will be invoked internally and the common information will be hold by this API.
+        tags:
+          - Material Issue
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: materialIssueRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/MaterialIssueRequest'
+        responses:
+          200:
+            description: MaterialIssue created Successfully
+            schema:
+              $ref: '#/definitions/MaterialIssueResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /materialissues/_update:
+      post:
+        summary: Update any of the material issues.
+        description: This API is inoked to update the material issue information.
+        tags:
+          - Material Issue
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: materialIssueRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/MaterialIssueRequest'
+        responses:
+          200:
+            description: MaterialIssue updated Successfully
+            schema:
+              $ref: '#/definitions/MaterialIssueResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /indentissues/_search:
       post:
-        summary: Get the list of indentissues
-        description: indentissues
+        summary: Get the list of indent issues.
+        description: This API is used to search the issues incurred for the indents raised in the system.
         tags: 
           - Indent Issue
         parameters:
@@ -857,8 +969,8 @@ paths:
               
     /indentissues/_create:
       post:
-        summary: Create  new  indentissues
-        description: Create  new indentissues
+        summary: Create new indent issues.
+        description: This API is invoked when the issuing store issues materials against the indent raised in the system.
         tags: 
           - Indent Issue
         parameters:
@@ -880,8 +992,8 @@ paths:
               
     /indentissues/_update:
       post:
-        summary: Update any of the indentissues
-        description: Update any of the indentissues
+        summary: Update any of the indent issues.
+        description: This API is invoked to update the indent material issue information and during the workflow as well.
         tags: 
           - Indent Issue
         parameters:
@@ -903,8 +1015,8 @@ paths:
 
     /nonindentissues/_search:
       post:
-        summary: Get the list of nonindentissues
-        description: non indent issues
+        summary: Get the list of non indent issues.
+        description: Issue of material can take place even without indent as well. This API is invoked to search the non indent issue incured in the system.
         tags: 
           - Non Indent Issue
         parameters:
@@ -953,8 +1065,8 @@ paths:
     
     /nonindentissues/_create:
       post:
-        summary: Create  new  nonindentissues
-        description: Create  new nonindentissues
+        summary: Create  new  non indent issues
+        description: Issue of material can take place even without indent as well. This API is invoked to records the non indent issue takes place in the system.
         tags: 
           - Non Indent Issue
         parameters:
@@ -976,8 +1088,8 @@ paths:
     
     /nonindentissues/_update:
       post:
-        summary: Update any of the nonindentissues
-        description: Update any of the nonindentissues
+        summary: Update any of the non indent issues
+        description: This API is invoked to update the non indent issue information and during the workflow.
         tags: 
           - Non Indent Issue
         parameters:
@@ -1206,120 +1318,6 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /materialissues/_search:
-      post:
-        summary: Get the list of materialissues
-        description: materialissues
-        tags:
-          - Material Issue
-        parameters:
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: ids
-            type: array
-            items: 
-             type: string
-            in: query
-            maxItems: 50
-            description: comma seperated list of Ids 
-          - name: store
-            type: integer
-            format: int64
-            in: query
-            description: |
-              store of the MaterialIssue
-          - name: issueNoteNumber
-            type: string
-            in: query
-            description: |
-              issueNoteNumber  Auto generated number, read only
-          - name: issueDate
-            type: integer
-            format: int64
-            in: query
-            description: |
-              issue date of the MaterialIssue
-          - name: materialIssueStatus
-            type: string
-            in: query
-            description: |
-              material issue status of the MaterialIssue
-            enum:
-              - CREATED
-              - APPROVED
-              - REJECTED
-              - CANCELED
-          - name: description
-            type: string
-            in: query
-            description: |
-              description of the MaterialIssue
-          - name: totalIssueValue
-            type: number
-            format: BigDecimal
-            in: query
-            description: |
-              total issue value of the MaterialIssue
-          - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/offset"
-          - $ref: "#/parameters/pageNumber"
-          - $ref: "#/parameters/sortProperty"
-        responses:
-          200:
-            description: MaterialIssue retrieved Successfully
-            schema:
-              $ref: '#/definitions/MaterialIssueResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /materialissues/_create:
-      post:
-        summary: Create  new  materialissues
-        description: Create  new materialissues
-        tags:
-          - Material Issue
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: materialIssueRequest
-            in: body
-            description: Create  new 
-            schema:
-              $ref: '#/definitions/MaterialIssueRequest'
-        responses:
-          200:
-            description: MaterialIssue created Successfully
-            schema:
-              $ref: '#/definitions/MaterialIssueResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /materialissues/_update:
-      post:
-        summary: Update any of the materialissues
-        description: Update any of the materialissues
-        tags:
-          - Material Issue
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: materialIssueRequest
-            in: body
-            description: common Request info
-            schema:
-              $ref: '#/definitions/MaterialIssueRequest'
-        responses:
-          200:
-            description: MaterialIssue updated Successfully
-            schema:
-              $ref: '#/definitions/MaterialIssueResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
     /stores/_search:
       post:
         summary: Get the list of stores
@@ -1458,6 +1456,245 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
+    /transferoutwards/_search:
+      post:
+        summary: Get the list of transfer outwards.
+        description: Once the approved transfer indent is received by the issuing store, the issuing store initiated the transfer outward process to issue the material required by the indent store. This API is used to search Transfer Outward notes raised in the system.
+        tags:
+          - TransferOutward
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: ids
+            type: array
+            items: 
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: store
+            type: integer
+            format: int64
+            in: query
+            description: |
+              store of the TransferOutward
+          - name: issueDate
+            type: integer
+            format: int64
+            in: query
+            description: |
+              issue date of the TransferOutward
+          - name: issuedToEmployee
+            type: string
+            in: query
+            description: |
+              issued to employee of the TransferOutward
+          - name: description
+            type: string
+            in: query
+            description: |
+              description of the TransferOutward
+          - name: outwardNoteNumber
+            type: string
+            in: query
+            description: |
+              outward note number of the TransferOutward
+          - name: outwardNoteStatus
+            type: string
+            in: query
+            description: |
+              outward note status of the TransferOutward
+            enum:
+              - CREATED
+              - APPROVED
+              - REJECTED
+              - CANCELED
+          - name: indent
+            type: integer
+            format: int64
+            in: query
+            description: |
+              indent of the TransferOutward
+          - name: stateId
+            type: integer
+            format: int64
+            in: query
+            description: |
+              state id of the TransferOutward
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/offset"
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
+        responses:
+          200:
+            description: TransferOutward retrieved Successfully
+            schema:
+              $ref: '#/definitions/TransferOutwardResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /transferoutwards/_create:
+      post:
+        summary: Create new transfer outward note.
+        description: Once the approved transfer indent is received by the issuing store, the issuing store initiated the transfer outward process to issue the material required by the indent store. This API is invoked to record the Transfer Outward note raised by the issuing store. Once the transfer outward note is approved, inventory information of materials for issuing store will be reduced accordingly.
+        tags:
+          - TransferOutward
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: transferOutwardRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/TransferOutwardRequest'
+        responses:
+          200:
+            description: TransferOutward created Successfully
+            schema:
+              $ref: '#/definitions/TransferOutwardResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /transferoutwards/_update:
+      post:
+        summary: Update any of the transfer outwards
+        description: This API is invoked to update the transfer outward note information and during the workflow.
+        tags: 
+          - TransferOutward
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: transferOutwardRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/TransferOutwardRequest'
+        responses:
+          200:
+            description: TransferOutward updated Successfully
+            schema:
+              $ref: '#/definitions/TransferOutwardResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'          
+
+    /transferinwards/_search:
+      post:
+        summary: Get the list of transfer inwards
+        description: Once the approved transfer outward note is received by the indenting store, the indenting store then raises transfer inward note to records material issued by the issuing store. This API isused to search the transfer inwards this raised in the system.
+        tags: 
+          - TransferInward
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: ids
+            type: array
+            items: 
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: receiptDate
+            type: integer
+            format: int64
+            in: query
+            description: |
+              receipt date of the TransferInward
+          - name: transferOutWard
+            type: integer
+            format: int64
+            in: query
+            description: |
+              transfer out ward of the TransferInward
+          - name: description
+            type: string
+            in: query
+            description: |
+              description of the TransferInward
+          - name: inwardNoteNumber
+            type: string
+            in: query
+            description: |
+              inward note number of the TransferInward
+          - name: inwardNoteStatus
+            type: string
+            in: query
+            description: |
+              inward note status of the TransferInward
+            enum:
+              - CREATED
+              - APPROVED
+              - REJECTED
+              - CANCELED
+          - name: stateId
+            type: integer
+            format: int64
+            in: query
+            description: |
+              state id of the TransferInward
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/offset"
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
+        responses:
+          200:
+            description: TransferInward retrieved Successfully
+            schema:
+              $ref: '#/definitions/TransferInwardResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /transferinwards/_create:
+      post:
+        summary: Create  new  transfer inward
+        description: Once the approved transfer outward note is received by the indenting store, the indenting store then raises transfer inward note to records material issued by the issuing store. This transfer inward note is linked with the transfer outward note. Once the transfer inward note is approved, the stock information of the indenting store will be increased accordingly. This API is used to record transfer inward in the system.
+        tags: 
+          - TransferInward
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: transferInwardRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/TransferInwardRequest'
+        responses:
+          200:
+            description: TransferInward created Successfully
+            schema:
+              $ref: '#/definitions/TransferInwardResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /transferinwards/_update:
+      post:
+        summary: Update any of the transfer inward
+        description: This API is used to update transfer inward information and during the workflow.
+        tags:
+          - TransferInward
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: transferInwardRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/TransferInwardRequest'
+        responses:
+          200:
+            description: TransferInward updated Successfully
+            schema:
+              $ref: '#/definitions/TransferInwardResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /scraps/_search:
       post:
         summary: Get the list of scraps
@@ -1570,246 +1807,7 @@ paths:
           400:
             description: Invalid Input
             schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /transferoutwards/_search:
-      post:
-        summary: Get the list of transferoutwards
-        description: transferoutwards
-        tags:
-          - TransferOutward
-        parameters:
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: ids
-            type: array
-            items: 
-             type: string
-            in: query
-            maxItems: 50
-            description: comma seperated list of Ids 
-          - name: store
-            type: integer
-            format: int64
-            in: query
-            description: |
-              store of the TransferOutward
-          - name: issueDate
-            type: integer
-            format: int64
-            in: query
-            description: |
-              issue date of the TransferOutward
-          - name: issuedToEmployee
-            type: string
-            in: query
-            description: |
-              issued to employee of the TransferOutward
-          - name: description
-            type: string
-            in: query
-            description: |
-              description of the TransferOutward
-          - name: outwardNoteNumber
-            type: string
-            in: query
-            description: |
-              outward note number of the TransferOutward
-          - name: outwardNoteStatus
-            type: string
-            in: query
-            description: |
-              outward note status of the TransferOutward
-            enum:
-              - CREATED
-              - APPROVED
-              - REJECTED
-              - CANCELED
-          - name: indent
-            type: integer
-            format: int64
-            in: query
-            description: |
-              indent of the TransferOutward
-          - name: stateId
-            type: integer
-            format: int64
-            in: query
-            description: |
-              state id of the TransferOutward
-          - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/offset"
-          - $ref: "#/parameters/pageNumber"
-          - $ref: "#/parameters/sortProperty"
-        responses:
-          200:
-            description: TransferOutward retrieved Successfully
-            schema:
-              $ref: '#/definitions/TransferOutwardResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /transferoutwards/_create:
-      post:
-        summary: Create  new  transferoutwards
-        description: Create  new transferoutwards
-        tags:
-          - TransferOutward
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: transferOutwardRequest
-            in: body
-            description: Create  new 
-            schema:
-              $ref: '#/definitions/TransferOutwardRequest'
-        responses:
-          200:
-            description: TransferOutward created Successfully
-            schema:
-              $ref: '#/definitions/TransferOutwardResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /transferoutwards/_update:
-      post:
-        summary: Update any of the transferoutwards
-        description: Update any of the transferoutwards
-        tags: 
-          - TransferOutward
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: transferOutwardRequest
-            in: body
-            description: common Request info
-            schema:
-              $ref: '#/definitions/TransferOutwardRequest'
-        responses:
-          200:
-            description: TransferOutward updated Successfully
-            schema:
-              $ref: '#/definitions/TransferOutwardResponse'
-          400:
-            description: Invalid Input
-            schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'          
-
-    /transferinwards/_search:
-      post:
-        summary: Get the list of transferinwards
-        description: transferinwards
-        tags: 
-          - TransferInward
-        parameters:
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: ids
-            type: array
-            items: 
-             type: string
-            in: query
-            maxItems: 50
-            description: comma seperated list of Ids 
-          - name: receiptDate
-            type: integer
-            format: int64
-            in: query
-            description: |
-              receipt date of the TransferInward
-          - name: transferOutWard
-            type: integer
-            format: int64
-            in: query
-            description: |
-              transfer out ward of the TransferInward
-          - name: description
-            type: string
-            in: query
-            description: |
-              description of the TransferInward
-          - name: inwardNoteNumber
-            type: string
-            in: query
-            description: |
-              inward note number of the TransferInward
-          - name: inwardNoteStatus
-            type: string
-            in: query
-            description: |
-              inward note status of the TransferInward
-            enum:
-              - CREATED
-              - APPROVED
-              - REJECTED
-              - CANCELED
-          - name: stateId
-            type: integer
-            format: int64
-            in: query
-            description: |
-              state id of the TransferInward
-          - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/offset"
-          - $ref: "#/parameters/pageNumber"
-          - $ref: "#/parameters/sortProperty"
-        responses:
-          200:
-            description: TransferInward retrieved Successfully
-            schema:
-              $ref: '#/definitions/TransferInwardResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /transferinwards/_create:
-      post:
-        summary: Create  new  transferinwards
-        description: Create  new transferinwards
-        tags: 
-          - TransferInward
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: transferInwardRequest
-            in: body
-            description: Create  new 
-            schema:
-              $ref: '#/definitions/TransferInwardRequest'
-        responses:
-          200:
-            description: TransferInward created Successfully
-            schema:
-              $ref: '#/definitions/TransferInwardResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /transferinwards/_update:
-      post:
-        summary: Update any of the transferinwards
-        description: Update any of the transferinwards
-        tags:
-          - TransferInward
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: transferInwardRequest
-            in: body
-            description: common Request info
-            schema:
-              $ref: '#/definitions/TransferInwardRequest'
-        responses:
-          200:
-            description: TransferInward updated Successfully
-            schema:
-              $ref: '#/definitions/TransferInwardResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
     /suppliers/_search:
       post:

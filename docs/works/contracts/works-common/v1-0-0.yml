@@ -922,7 +922,7 @@ definitions:
       - tenantId
       - editable
     
-  NatureOfWork+:
+  NatureOfWork:
     type: object
     description: An Object that holds Nature of work master details
     properties:

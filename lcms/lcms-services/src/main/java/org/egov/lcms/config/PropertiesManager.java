@@ -152,6 +152,5 @@ public class PropertiesManager {
 	
 	@Value("${case.mandatory.department.person.message}")
 	private String isVakalatNamaRequiredMessage;
->>>>>>> Stashed changes
 
 }

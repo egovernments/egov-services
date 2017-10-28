@@ -91,12 +91,8 @@ paths:
               totalIndentValue  denormalized value from Indent Material
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/offset"
-          - name: sortBy
-            type: string
-            in: query
-            description: |
-              This takes any field from the Object seperated by comma and asc,desc keywords.  
-              example name asc,code desc or name,code or name,code desc 
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
         responses:
           200:
             description: Indent retrieved Successfully
@@ -197,12 +193,8 @@ paths:
               state id of the Indent Note
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/offset"
-          - name: sortBy
-            type: string
-            in: query
-            description: |
-              This takes any field from the Object seperated by comma and asc,desc keywords.  
-              example name asc,code desc or name,code or name,code desc 
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
         responses:
           200:
             description: Indent Note retrieved Successfully
@@ -297,12 +289,8 @@ paths:
               state id of the IndentIssue
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/offset"
-          - name: sortBy
-            type: string
-            in: query
-            description: |
-              This takes any field from the Object seperated by comma and asc,desc keywords.  
-              example name asc,code desc or name,code or name,code desc 
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
         responses:
           200:
             description: IndentIssue retrieved Successfully
@@ -400,12 +388,8 @@ paths:
               state id of the Non Indent Issue
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/offset"
-          - name: sortBy
-            type: string
-            in: query
-            description: |
-              This takes any field from the Object seperated by comma and asc,desc keywords.  
-              example name asc,code desc or name,code or name,code desc 
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty" 
         responses:
           200:
             description: NonIndentIssue retrieved Successfully
@@ -616,12 +600,8 @@ paths:
               override material control type of the Material
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/offset"
-          - name: sortBy
-            type: string
-            in: query
-            description: |
-              This takes any field from the Object seperated by comma and asc,desc keywords.  
-              example name asc,code desc or name,code or name,code desc 
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
         responses:
           200:
             description: Material retrieved Successfully
@@ -737,12 +717,8 @@ paths:
               total issue value of the MaterialIssue
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/offset"
-          - name: sortBy
-            type: string
-            in: query
-            description: |
-              This takes any field from the Object seperated by comma and asc,desc keywords.  
-              example name asc,code desc or name,code or name,code desc 
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
         responses:
           200:
             description: MaterialIssue retrieved Successfully
@@ -825,12 +801,8 @@ paths:
               indent of the PurchaseIndent
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/offset"
-          - name: sortBy
-            type: string
-            in: query
-            description: |
-              This takes any field from the Object seperated by comma and asc,desc keywords.  
-              example name asc,code desc or name,code or name,code desc 
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
         responses:
           200:
             description: PurchaseIndent retrieved Successfully
@@ -931,12 +903,8 @@ paths:
               remarks of the PurchaseMaterial
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/offset"
-          - name: sortBy
-            type: string
-            in: query
-            description: |
-              This takes any field from the Object seperated by comma and asc,desc keywords.  
-              example name asc,code desc or name,code or name,code desc 
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
         responses:
           200:
             description: PurchaseMaterial retrieved Successfully
@@ -1089,12 +1057,8 @@ paths:
               state id of the PurchaseOrder
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/offset"
-          - name: sortBy
-            type: string
-            in: query
-            description: |
-              This takes any field from the Object seperated by comma and asc,desc keywords.  
-              example name asc,code desc or name,code or name,code desc 
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
         responses:
           200:
             description: PurchaseOrder retrieved Successfully
@@ -1104,6 +1068,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /purchaseorders/_create:
       post:
         summary: Create  new  purchaseorders
@@ -1127,6 +1092,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /purchaseorders/_update:
       post:
         summary: Update any of the purchaseorders
@@ -1232,12 +1198,8 @@ paths:
               Whether Store is Active or not. If the value is TRUE, then Store is active,If the value is FALSE then Store is inactive,Default value is TRUE
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/offset"
-          - name: sortBy
-            type: string
-            in: query
-            description: |
-              This takes any field from the Object seperated by comma and asc,desc keywords.  
-              example name asc,code desc or name,code or name,code desc 
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
         responses:
           200:
             description: Store retrieved Successfully
@@ -1247,6 +1209,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /stores/_create:
       post:
         summary: Create  new  stores
@@ -1270,6 +1233,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /stores/_update:
       post:
         summary: Update any of the stores
@@ -1351,12 +1315,8 @@ paths:
               state id of the Scrap
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/offset"
-          - name: sortBy
-            type: string
-            in: query
-            description: |
-              This takes any field from the Object seperated by comma and asc,desc keywords.  
-              example name asc,code desc or name,code or name,code desc 
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
         responses:
           200:
             description: Scrap retrieved Successfully
@@ -1366,6 +1326,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /scraps/_create:
       post:
         summary: Create  new  scraps
@@ -1389,6 +1350,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /scraps/_update:
       post:
         summary: Update any of the scraps
@@ -1470,12 +1432,8 @@ paths:
               state id of the TransferInward
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/offset"
-          - name: sortBy
-            type: string
-            in: query
-            description: |
-              This takes any field from the Object seperated by comma and asc,desc keywords.  
-              example name asc,code desc or name,code or name,code desc 
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
         responses:
           200:
             description: TransferInward retrieved Successfully
@@ -1485,6 +1443,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /transferinwards/_create:
       post:
         summary: Create  new  transferinwards
@@ -1508,6 +1467,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /transferinwards/_update:
       post:
         summary: Update any of the transferinwards
@@ -1569,12 +1529,8 @@ paths:
               state id of the TransferIndentNote
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/offset"
-          - name: sortBy
-            type: string
-            in: query
-            description: |
-              This takes any field from the Object seperated by comma and asc,desc keywords.  
-              example name asc,code desc or name,code or name,code desc 
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
         responses:
           200:
             description: TransferIndentNote retrieved Successfully
@@ -1701,12 +1657,8 @@ paths:
               state id of the TransferOutward
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/offset"
-          - name: sortBy
-            type: string
-            in: query
-            description: |
-              This takes any field from the Object seperated by comma and asc,desc keywords.  
-              example name asc,code desc or name,code or name,code desc 
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
         responses:
           200:
             description: TransferOutward retrieved Successfully
@@ -1789,12 +1741,8 @@ paths:
               code of the Supplier
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/offset"
-          - name: sortBy
-            type: string
-            in: query
-            description: |
-              This takes any field from the Object seperated by comma and asc,desc keywords.  
-              example name asc,code desc or name,code or name,code desc 
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
         responses:
           200:
             description: Supplier retrieved Successfully
@@ -1915,6 +1863,10 @@ paths:
             required: false
             type: integer
             format: int64
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/offset"
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"  
         tags:
           - MRN
         responses:
@@ -3726,15 +3678,32 @@ definitions:
             $ref: '#/definitions/MaterialReceiptHeader'
                          
 parameters:
-  pageSize:
-    name: pageSize
-    type: integer
-    format: int32
-    in: query
-    description: pageSize
   offset:
     name: offset
     type: integer
     format: int32
     in: query
     description: offset
+  pageSize:
+    name: pageSize
+    in: query
+    description: Number of records returned.
+    type: integer
+    minimum: 0
+    exclusiveMinimum: true
+    maximum: 100
+    exclusiveMaximum: false
+    multipleOf: 10
+    default: 20
+  pageNumber:
+    name: pageNumber
+    in: query
+    description: Page number
+    type: integer
+    default: 1
+  sortProperty:
+    name: sortBy
+    in: query
+    description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
+    type: string
+    default: id

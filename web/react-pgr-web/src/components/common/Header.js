@@ -113,7 +113,6 @@ const getTitle = (tenantInfo, tenantContext) => {
 }
 
 const RightIcon = (props) => {
-  //console.log(props);
   if (props.token) {
     return (
       <div>
@@ -133,25 +132,32 @@ const RightIcon = (props) => {
                 props.signOut();
             }} leftIcon={<i style={{color:"#555"}} className="material-icons">lock</i>}></MenuItem>
      </IconMenu>
-     <i onClick={()=>{
-       if(localStorage.getItem("token"))
+     <i onClick={(e)=>{
+       if(localStorage.getItem("token")){
          props.setRoute("/prd/dashboard");
-       else
-         props.setRoute("/" + (localStorage.tenantId || "default"));
+       }
+       else{
+         props.setRoute("/" + (localStorage.getItem('tenantId') || "default"));
+       }
      }} className="material-icons" style={{"color":"#555", "cursor": "pointer"}}>home</i>
 
 
       </div>
     );
   } else if(window.location.hash === "#/") {
-    return(
-      {/*<img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>*/}
-    )
+    return('');
+    //   {/*<img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>*/}
+    // )
   } else {
     return(
       <div>
         {props.showHome && <i onClick={()=>{
-          props.setRoute("/");
+          if(localStorage.getItem("token")){
+            props.setRoute("/prd/dashboard");
+          }
+          else{
+            props.setRoute("/" + (localStorage.getItem('tenantId') || "default"));
+          }
         }} className="material-icons"
            style={{"color":"#555", "cursor": "pointer"}}>home</i>}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         {/*<img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>*/}

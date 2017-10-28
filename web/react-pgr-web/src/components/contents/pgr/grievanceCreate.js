@@ -73,7 +73,6 @@ class grievanceCreate extends Component {
     if(!this.state.otpValue){
       return false;
     }
-    this.handleOTPClose();
     this.props.setLoadingStatus('loading');
     let mob = this.props.grievanceCreate.phone;
     let tenant =  localStorage.getItem('tenantId') ? localStorage.getItem('tenantId') : 'default';
@@ -84,6 +83,7 @@ class grievanceCreate extends Component {
     };
     Api.commonApiPost("otp/v1/_validate", {}, {otp: rqst}).then(function(response) {
         //create SRN
+        _this.handleOTPClose();
         let finobj = {
             key: 'otpReference',
             name:response.otp.UUID
@@ -271,9 +271,8 @@ class grievanceCreate extends Component {
     }
   }
 
-  search(e)
-  {
-      e.preventDefault();
+  search = () => {
+      // e.preventDefault();
       if(!((this.props.grievanceCreate.lat && this.props.grievanceCreate.lat) || this.props.grievanceCreate.addressId)){
         this.handleError('Grievance location is mandatory!');
         return false;
@@ -327,7 +326,7 @@ class grievanceCreate extends Component {
     }
   }
 
-  processCreate(userName='',userMobile='',userEmail=''){
+  processCreate = (userName='',userMobile='',userEmail='') => {
 
     request = {};
     var data={};
@@ -403,30 +402,38 @@ class grievanceCreate extends Component {
     request['serviceRequest'] = data;
 
     //console.log(JSON.stringify(request));
-    var currentThis = this;
-
     if(localStorage.getItem('type') === null && this.state.otpEnabled){
-
-      let mob = this.props.grievanceCreate.phone;
-      let tenant =  localStorage.getItem('tenantId') ? localStorage.getItem('tenantId') : 'default';
-      //send OTP and validate it
-      Api.commonApiPost("/pgr/v1/otp/_send",{},{mobileNumber:mob, tenantId:tenant}).then(function(response)
-      {
-        //validate OTP
-        currentThis.props.setLoadingStatus('hide');
-        if(response.isSuccessful){
-          {currentThis.handleOTPOpen()}
-        }else {
-          currentThis.handleError(translate('core.error.opt.generation'));
-        }
-      },function(err) {
-        currentThis.props.setLoadingStatus('hide');
-        currentThis.handleError(err.message);
-      });
+      this.otpCreate('create');
     }else{
       this.createGrievance(request);
     }
 
+  }
+
+  otpCreate = (status) => {
+    let currentThis = this;
+    let mob = this.props.grievanceCreate.phone;
+    let tenant =  localStorage.getItem('tenantId') || 'default';
+    //send OTP and validate it
+    if(!mob){
+      return false;
+    }
+    Api.commonApiPost("/pgr/v1/otp/_send",{},{mobileNumber:mob, tenantId:tenant}).then(function(response)
+    {
+      //validate OTP
+      currentThis.props.setLoadingStatus('hide');
+      if(response.isSuccessful){
+        {
+          currentThis.handleOTPOpen();
+          status === 'resend' ? currentThis.setState({'otpResend':true, 'otpValue' : ''}) : '';
+        }
+      }else {
+        currentThis.handleError(translate('core.error.opt.generation'));
+      }
+    },function(err) {
+      currentThis.props.setLoadingStatus('hide');
+      currentThis.handleError(err.message);
+    });
   }
 
   createGrievance = (request) => {
@@ -571,10 +578,15 @@ class grievanceCreate extends Component {
     ];
     const otpActions = [
       <FlatButton
+        label={translate('pgr.lbl.resend.otp')}
+        primary={true}
+        onClick={(e)=>this.otpCreate('resend')}
+      />,
+      <FlatButton
         label={translate('core.lbl.ok')}
         primary={true}
         onTouchTap={this.validateOTP}
-      />,
+      />
     ];
    _this = this;
     let {
@@ -756,7 +768,7 @@ class grievanceCreate extends Component {
               </CardText>
           </Card>
           <div style={{textAlign: 'center'}}>
-            <RaisedButton style={{margin:'15px 5px'}} onTouchTap={(e) => search(e)} disabled={!isFormValid} label="Create" primary={true}/>
+            <RaisedButton style={{margin:'15px 5px'}} onClick={(e) => {search()}} disabled={!isFormValid} label="Create" primary={true}/>
           </div>
         </form>
         <div>
@@ -769,12 +781,12 @@ class grievanceCreate extends Component {
         {this.state.acknowledgement}
         </Dialog>
         <Dialog
-          title={translate('core.lbl.otp')}
+          title={translate('core.msg.enter.otp')}
           actions={otpActions}
           modal={true}
           open={this.state.openOTP}
         >
-          <TextField className="custom-form-control-for-textfield" fullWidth={true} hintText={translate('core.msg.enter.otp')} errorText="" onChange={(event, newString) => this.setState({otpValue : newString})} />
+          <TextField className="custom-form-control-for-textfield" value={this.state.otpValue || ''} fullWidth={true} errorText={this.state.otpResend ? translate('pgr.lbl.otp.success') : ''} onChange={(event, newString) => this.setState({otpValue : newString})} />
         </Dialog>
         </div>
       </div>

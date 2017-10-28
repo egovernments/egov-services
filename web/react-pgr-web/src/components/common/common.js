@@ -1412,6 +1412,8 @@ var localization_EN_Data = {
     "pgr.lbl.frwddesgn": " Forward to Designation",
     "pgr.lbl.frwdpos": " Forward to Position",
     "pgr.lbl.generate.otp": " Generate OTP",
+    "pgr.lbl.resend.otp": " Resend OTP",
+    "pgr.lbl.otp.success": "OTP sent successfully",
     "pgr.lbl.grievance.category": " Grievance Category",
     "pgr.lbl.grievancecell": " Register via grievance cell",
     "pgr.lbl.grievance.citizen": " My Grievances",

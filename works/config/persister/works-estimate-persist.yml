@@ -179,7 +179,7 @@ serviceMaps:
    isTransaction: true
    queryMaps:
     - query: INSERT INTO egw_projectcode(
-            id, tenantid, code, status, active, description, name, status, 
+            id, tenantid, code, active, description, name, status , 
             completiondate, projectvalue, createdby, createdtime, lastmodifiedby, 
             lastmodifiedtime) VALUES 
             (?, ?, ?, ?, ?, ?, ?, 

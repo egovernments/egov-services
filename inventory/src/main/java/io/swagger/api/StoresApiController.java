@@ -1,12 +1,14 @@
 package io.swagger.api;
 
 import io.swagger.model.ErrorRes;
-import io.swagger.model.RequestInfo;
+import io.swagger.model.Store;
 import io.swagger.model.StoreRequest;
 import io.swagger.model.StoreResponse;
 
 import io.swagger.annotations.*;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.inv.domain.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,13 +43,14 @@ public class StoresApiController implements StoresApi {
     public ResponseEntity<StoreResponse> storesCreatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
         @ApiParam(value = "Create  new"  )  @Valid @RequestBody StoreRequest storeRequest,
         @RequestHeader(value = "Accept", required = false) String accept) throws Exception {
-    	storesService.create(storeRequest , tenantId);
+    	List<Store> stores = storesService.create(storeRequest , tenantId);
+    	StoreResponse storeResponse = buildStoreResponse(stores, storeRequest.getRequestInfo());
 
         if (accept != null && accept.contains("application/json")) {
             return new ResponseEntity<StoreResponse>(objectMapper.readValue("{  \"stores\" : [ {    \"code\" : \"code\",    \"isCentralStore\" : true,    \"contactNo1\" : \"contactNo1\",    \"contactNo2\" : \"contactNo2\",    \"description\" : \"description\",    \"active\" : true,    \"storeInCharge\" : {      \"code\" : \"code\",      \"auditDetails\" : {        \"lastModifiedTime\" : 1,        \"createdBy\" : \"createdBy\",        \"lastModifiedBy\" : \"lastModifiedBy\",        \"createdTime\" : 6      },      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"id\" : \"id\"    },    \"deliveryAddress\" : \"deliveryAddress\",    \"auditDetails\" : {      \"lastModifiedTime\" : 1,      \"createdBy\" : \"createdBy\",      \"lastModifiedBy\" : \"lastModifiedBy\",      \"createdTime\" : 6    },    \"tenantId\" : \"tenantId\",    \"name\" : \"name\",    \"id\" : \"id\",    \"billingAddress\" : \"billingAddress\",    \"department\" : {      \"code\" : \"code\",      \"auditDetails\" : {        \"lastModifiedTime\" : 1,        \"createdBy\" : \"createdBy\",        \"lastModifiedBy\" : \"lastModifiedBy\",        \"createdTime\" : 6      },      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"active\" : true,      \"id\" : \"id\"    },    \"email\" : \"email\"  }, {    \"code\" : \"code\",    \"isCentralStore\" : true,    \"contactNo1\" : \"contactNo1\",    \"contactNo2\" : \"contactNo2\",    \"description\" : \"description\",    \"active\" : true,    \"storeInCharge\" : {      \"code\" : \"code\",      \"auditDetails\" : {        \"lastModifiedTime\" : 1,        \"createdBy\" : \"createdBy\",        \"lastModifiedBy\" : \"lastModifiedBy\",        \"createdTime\" : 6      },      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"id\" : \"id\"    },    \"deliveryAddress\" : \"deliveryAddress\",    \"auditDetails\" : {      \"lastModifiedTime\" : 1,      \"createdBy\" : \"createdBy\",      \"lastModifiedBy\" : \"lastModifiedBy\",      \"createdTime\" : 6    },    \"tenantId\" : \"tenantId\",    \"name\" : \"name\",    \"id\" : \"id\",    \"billingAddress\" : \"billingAddress\",    \"department\" : {      \"code\" : \"code\",      \"auditDetails\" : {        \"lastModifiedTime\" : 1,        \"createdBy\" : \"createdBy\",        \"lastModifiedBy\" : \"lastModifiedBy\",        \"createdTime\" : 6      },      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"active\" : true,      \"id\" : \"id\"    },    \"email\" : \"email\"  } ],  \"page\" : {    \"totalResults\" : 1,    \"offSet\" : 1,    \"totalPages\" : 1,    \"pageSize\" : 6,    \"currentPage\" : 7  },  \"responseInfo\" : {    \"ver\" : \"ver\",    \"resMsgId\" : \"resMsgId\",    \"msgId\" : \"msgId\",    \"apiId\" : \"apiId\",    \"ts\" : 0,    \"status\" : \"SUCCESSFUL\"  }}", StoreResponse.class), HttpStatus.OK);
         }
 
-        return new ResponseEntity<StoreResponse>(HttpStatus.OK);
+        return new ResponseEntity(storeResponse,HttpStatus.OK);
     }
 
     public ResponseEntity<StoreResponse> storesSearchPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
@@ -89,5 +92,32 @@ public class StoresApiController implements StoresApi {
 
         return new ResponseEntity<StoreResponse>(HttpStatus.OK);
     }
+    
+    private StoreResponse buildStoreResponse(List<Store> stores, RequestInfo requestInfo) {
+        return StoreResponse.builder()
+                .responseInfo(getResponseInfo(requestInfo))
+                .stores(stores)
+                .build();
+    }
+        private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
+            return ResponseInfo.builder()
+                    .apiId(requestInfo.getApiId())
+                    .ver(requestInfo.getVer())
+                    .resMsgId(requestInfo.getMsgId())
+                    .resMsgId("placeholder")
+                    .status("placeholder")
+                    .build();
+        }
 
-}
+		@Override
+		public ResponseEntity<StoreResponse> storesSearchPost(String tenantId, io.swagger.model.RequestInfo requestInfo,
+				List<String> ids, String code, String name, String description, Long department, String billingAddress,
+				String deliveryAddress, String contactNo1, String contactNo2, String email, Long storeInCharge,
+				Boolean isCentralStore, Boolean active, Integer pageSize, Integer offset, String sortBy, String accept)
+				throws Exception {
+			// TODO Auto-generated method stub
+			return null;
+		}
+    }
+
+

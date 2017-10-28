@@ -6,8 +6,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.model.Page;
-import io.swagger.model.ResponseInfo;
+
 import io.swagger.model.Store;
+import lombok.Builder;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.validation.annotation.Validated;
@@ -20,10 +22,10 @@ import javax.validation.constraints.*;
 @ApiModel(description = "Contract class for web response. Array of Store items  are used in case of search ,create or update request.")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-28T13:21:55.964+05:30")
-
+@Builder
 public class StoreResponse   {
   @JsonProperty("responseInfo")
-  private ResponseInfo responseInfo = null;
+  private org.egov.common.contract.response.ResponseInfo responseInfo = null;
 
   @JsonProperty("stores")
   @Valid
@@ -32,7 +34,7 @@ public class StoreResponse   {
   @JsonProperty("page")
   private Page page = null;
 
-  public StoreResponse responseInfo(ResponseInfo responseInfo) {
+  public StoreResponse responseInfo(org.egov.common.contract.response.ResponseInfo responseInfo) {
     this.responseInfo = responseInfo;
     return this;
   }
@@ -45,11 +47,11 @@ public class StoreResponse   {
 
   @Valid
 
-  public ResponseInfo getResponseInfo() {
+  public org.egov.common.contract.response.ResponseInfo getResponseInfo() {
     return responseInfo;
   }
 
-  public void setResponseInfo(ResponseInfo responseInfo) {
+  public void setResponseInfo(org.egov.common.contract.response.ResponseInfo responseInfo) {
     this.responseInfo = responseInfo;
   }
 

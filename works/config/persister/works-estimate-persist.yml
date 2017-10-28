@@ -200,7 +200,7 @@ serviceMaps:
        
        - jsonPath: $.projectCodes.*.name
        
-       - jsonPath: $.projectCodes.*.status.value
+       - jsonPath: $.projectCodes.*.status
        
        - jsonPath: $.projectCodes.*.completionDate
         
@@ -226,7 +226,7 @@ serviceMaps:
       basePath: $.projectCodes.*
       jsonMaps:
          
-       - jsonPath: $.projectCodes.*.status.value
+       - jsonPath: $.projectCodes.*.status
 
        - jsonPath: $.projectCodes.*.active
 

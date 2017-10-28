@@ -485,6 +485,10 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
         if (!approvalcomments.isEmpty()) {
             return;
         }
+
+        if(model.getAuthenticatedUser().isCitizen())
+            return;
+
         final ErrorField errorField = ErrorField.builder()
             .code(APPROVAL_COMMENTS_MANDATORY_CODE)
             .message(APPROVAL_COMMENTS_MANDATORY_MESSAGE)
@@ -501,6 +505,16 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
         if (!(statusPresent && systemRating.isEmpty())) {
             return;
         }
+
+        List<AttributeEntry> approvalcomments = model.getAttributeValueByKey(SYSTEM_APPROVAL_COMMENTS);
+        if(model.getAuthenticatedUser().isCitizen() && approvalcomments.isEmpty() &&
+            !(statusPresent && systemRating.isEmpty()))
+            return;
+
+        if(model.getAuthenticatedUser().isCitizen() && !approvalcomments.isEmpty() &&
+            statusPresent && systemRating.isEmpty())
+            return;
+
         final ErrorField errorField = ErrorField.builder()
             .code(RATING_MANDATORY_CODE)
             .message(RATING_MANDATORY_MESSAGE)

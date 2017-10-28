@@ -16,7 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CaseResponse {
-	@JsonProperty("responseInfo")
+	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo = null;
 
 	@JsonProperty("cases")

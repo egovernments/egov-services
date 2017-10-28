@@ -28,9 +28,10 @@ public class PropertiesManager {
 	@Value("${egov.services.egov_idgen.createpath}")
 	private String idCreatepath;
 	
-	@Value("${ulb.name}")
-	private String ulbName;
+	@Value("${summon.code.name}")
+	private String summonName;
 	
+
 	@Value("${ulb.format}")
 	private String ulbFormat;
 
@@ -45,10 +46,15 @@ public class PropertiesManager {
 
 	@Value("${egov.lcms.opinion.update}")
 	private String opinionUpdateValidated;
+
+	@Value("${summom.code.format}")
+	private String summonCodeFormat;
+
 	
 	@Value("${egov.lcms.create.summon.validated}")
 	private String createSummonvalidated;
 	
+
 	@Value("${egov.lcms.search.opinion.error.code}")
 	private String opinionSearchErrorCode;
 	
@@ -69,6 +75,7 @@ public class PropertiesManager {
 	
 	@Value("${egov.lcms.tenant.service.error}")
 	private String tenantServiceErrorMsg;
+
 	
 	@Value("${egov.lcms.parawisecomment.create}")
 	private String paraWiseCreateValidated;
@@ -91,5 +98,60 @@ public class PropertiesManager {
     
     @Value("${advocate.payment.ulb.name}")
     private String AdvocatePaymentUlbName;
+
+	@Value("${egov.lcms.update.summon}")
+	private String updateSummonValidate;
+	
+	@Value("${egov.lcms.create.vakalatnama}")
+	private String createVakalatnama;
+	
+	@Value("${summon.ref.name}")
+	private String summonReferenceGenName;
+	
+	@Value("${summon.ref.format}")
+	private String summonRefrenceFormat;
+	
+	@Value("${egov.lcms.assign.advocate}")
+	private String assignAdvocate;
+	
+	@Value("${case.ref.name}")
+	private String caseReferenceGenName;
+	
+	@Value("${case.ref.format}")
+	private String  caseReferenceFormat;
+	
+	@Value("${case.ref.name}")
+	private String caseCodeName;
+	
+	@Value("${case.ref.format}")
+	private String caseCodeFormat;
+	
+	@Value("${egov.lcms.object.parse.exception}")
+	private String parsingError;
+	
+	@Value("${hearing.code.name}")
+	private String hearingCodeName;
+	
+	@Value("${hearinng.code.format}")
+	private String hearingCodeFormat;
+	
+	@Value("${case.mandatory.reg.date.message}")
+	private String requiedCaseGenerationDateMessage;
+	
+	@Value("${case.mandatory.reg.date.code}")
+	private String requiredCaseGenerationCode;
+	
+	@Value("${case.mandatory.department.person.code}")
+	private String requiredDepartmentPersonCode;
+	
+	@Value("${case.mandatory.department.person.message}")
+	private String requiredDepartmentPersonMessage;
+	
+	@Value("${case.mandatory.department.person.message}")
+	private String isVakalatNamaRequiredCode;
+	
+	@Value("${case.mandatory.department.person.message}")
+	private String isVakalatNamaRequiredMessage;
+>>>>>>> Stashed changes
 
 }

@@ -207,7 +207,7 @@ var dat = {
 					{
 						"name": "SurveyNoOfLandOnWhichStructureIsLocated ",
 						"jsonPath": "Asset.landSurveyNo",
-						"label": "ac.create.Survey.no.of.land",
+						"label": "ac.create.Survey.no.of.land", 
 						"pattern": "",
 						"type": "number",
 						"url": "",

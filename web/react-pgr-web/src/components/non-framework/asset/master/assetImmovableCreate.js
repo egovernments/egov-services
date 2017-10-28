@@ -334,7 +334,7 @@ class assetImmovableCreate extends Component {
 
 
 
-
+ 
 
       },function(err) {
             console.log(err);

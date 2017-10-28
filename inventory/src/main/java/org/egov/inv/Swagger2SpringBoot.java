@@ -1,18 +1,20 @@
 package org.egov.inv;
 
+import org.egov.tracer.config.TracerConfiguration;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
 @EnableWebMvc
 @SpringBootApplication
 @EnableSwagger2
-@ComponentScan(basePackages = { "org.egov.inv", "io.swagger.api" })
+@ComponentScan(basePackages = {"org.egov.inv", "io.swagger.api"})
+@Import({TracerConfiguration.class})
 public class Swagger2SpringBoot implements CommandLineRunner {
 
     @Override
@@ -35,6 +37,6 @@ public class Swagger2SpringBoot implements CommandLineRunner {
         }
 
     }
-    
-    
+
+
 }

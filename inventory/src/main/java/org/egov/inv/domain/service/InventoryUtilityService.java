@@ -1,11 +1,11 @@
 package org.egov.inv.domain.service;
 
+import io.swagger.model.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
-
-import io.swagger.model.AuditDetails;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +45,7 @@ public class InventoryUtilityService {
                 .build();
 
     }
-    
+
     public AuditDetails mapAuditDetailsForUpdate(RequestInfo requestInfo, String tenantId) {
 
         return AuditDetails.builder()
@@ -55,4 +55,13 @@ public class InventoryUtilityService {
                 .build();
     }
 
+    public ResponseInfo getResponseInfo(RequestInfo requestInfo) {
+        return ResponseInfo.builder()
+                .apiId(requestInfo.getApiId())
+                .ver(requestInfo.getVer())
+                .resMsgId(requestInfo.getMsgId())
+                .resMsgId("placeholder")
+                .status("placeholder")
+                .build();
+    }
 }

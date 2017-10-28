@@ -17,6 +17,24 @@ const styles = {
   }
 }
 
+function increaseColorBrightness(hex, lum) {
+  // Validate hex string
+  hex = String(hex).replace(/[^0-9a-f]/gi, "");
+  if (hex.length < 6) {
+    hex = hex.replace(/(.)/g, '$1$1');
+  }
+  lum = lum || 0;
+  // Convert to decimal and change luminosity
+  var rgb = "#",
+    c;
+  for (var i = 0; i < 3; ++i) {
+    c = parseInt(hex.substr(i * 2, 2), 16);
+    c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+    rgb += ("00" + c).substr(c.length);
+  }
+  return rgb;
+}
+
 
 const PageLoadingIndicator = () => (
   <div style={{textAlign:"center", paddingTop:10}}>
@@ -43,10 +61,11 @@ const CustomizedAxisTick = (props) =>{
 };
 
 const CustomizedYAxisLabel = (props) =>{
-    const {viewBox, title} = props;
+    const {viewBox, title, posY} = props;
+    let yVal = posY || 15;
    	return (
       <g transform={`translate(${viewBox.x},${viewBox.y})`}>
-        <text x={-(viewBox.height/2)} y={viewBox.y+13} textAnchor="middle" fill="#666" transform="rotate(-90)">{title}</text>
+        <text x={-(viewBox.height/2)} y={viewBox.y+yVal} textAnchor="middle" fill="#666" transform="rotate(-90)">{title}</text>
       </g>
     );
 };
@@ -71,6 +90,27 @@ const CustomizedLegend = (props) =>{
   return (
     <ul style={{padding:5}}>
       {legends}
+    </ul>
+  );
+
+}
+
+const CustomizedLineChartLegend = (props) =>{
+
+  const {colors, legends, legendNameKey} = props;
+
+  const legendsList = legends.map((legend, idx)=>{
+    return <li key={idx} className={`recharts-legend-item legend-item-${0}`} style={{display: 'inline-block', marginRight:10}}>
+      <svg className="recharts-surface" width="14" height="14" viewBox="0 0 32 32" version="1.1" style={{display: 'inline-block', verticalAlign: 'middle', marginRight:4}}>
+        <path stroke="none" fill={colors[idx]} d="M0,4h32v24h-32z" className="recharts-legend-icon"></path>
+      </svg>
+      <span className="recharts-legend-item-text">{legend[legendNameKey]}</span>
+    </li>
+  });
+
+  return (
+    <ul style={{padding:5, marginLeft:60}}>
+      {legendsList}
     </ul>
   );
 
@@ -183,22 +223,28 @@ const extractManipulateCityAndWardsPath = (wardResponse, kmlText, cityLatLng, co
         wardName = wardObj.boundaryName;
         noOfComplaints = wardObj.count;
 
-        let opacityVal = (wardObj.count / totalComplaints * .90);
+        let percentage = parseInt((wardObj.count/totalComplaints)*100);
+        let fillColor = color;
+        let opacityVal = 0.75;
 
-        if(opacityVal < 0.15){
-          opacityVal = 0.20;
+        if(percentage < 10){
+          fillColor = increaseColorBrightness(color, (40 * 0.01));
+          opacityVal = 0.25;
         }
-        else if(opacityVal < 0.30){
+        else if(percentage < 30){
+          fillColor = increaseColorBrightness(color, (30 * 0.01));
           opacityVal = 0.40;
         }
-        else if(opacityVal<0.45){
-          opacityVal = 0.60;
+        else if(percentage < 50){
+          fillColor = increaseColorBrightness(color, (20 * 0.01));
+          opacityVal = 0.50;
         }
-        else{
-          opacityVal = 0.80;
+        else if(percentage < 80){
+          fillColor = increaseColorBrightness(color, (10 * 0.01));
+          opacityVal = 0.65;
         }
 
-        fillColorStyle = {fillColor:color, fillOpacity: opacityVal.toFixed(2)}
+        fillColorStyle = {fillColor:fillColor, fillOpacity:opacityVal}
       }
 
       let ward = { name : wardName, boundaryCode : boundaryCode, noOfComplaints:noOfComplaints || 0,
@@ -223,4 +269,5 @@ export {PageLoadingIndicator as PageLoadingIndicator,
   CustomizedYAxisLabel as CustomizedYAxisLabel, getTenantId as getTenantId,
   CustomTooltip as CustomTooltip, CustomizedLegend as CustomizedLegend,
   RenderActiveShape as RenderActiveShape,
-  extractManipulateCityAndWardsPath as extractManipulateCityAndWardsPath}
+  extractManipulateCityAndWardsPath as extractManipulateCityAndWardsPath,
+  CustomizedLineChartLegend as CustomizedLineChartLegend}

@@ -17,13 +17,13 @@ export default class PendencyReport extends Component {
 
   componentDidMount(){
 
-    const mappingKeys =[ {"greaterThan90":"> 90 days"}, {"lessThan90":"90 - 45 days"},
-      {"lessThan45":"44 - 15 days"}, {"lessThan15":"< 15 days"}];
+    const mappingKeys =[ {"interval1":"< 2 days"}, {"interval2":"2 - 5 days"},
+    {"interval3":"5 - 10 days"}, {"interval4":"10 - 30 days"}, {"interval5":"> 30 days"}];
 
     let ageWiseData;
 
     Promise.all([
-      Api.commonApiPost("pgr/dashboard/ageing",{}, {tenantId:getTenantId()})
+      Api.commonApiPost("pgr/dashboard/ageing",{range:"2,5,10,30"}, {tenantId:getTenantId()})
     ]).then((responses)=>{
        try{
           let responseData = responses[0][0];
@@ -58,40 +58,19 @@ export default class PendencyReport extends Component {
       {this.state.isFetchingData && <PageLoadingIndicator></PageLoadingIndicator>}
       <Grid fluid={true}>
         <Row>
-          <Col md={6} lg={6} sm={6} xs={12} style={styles.pendencyChart}>
+          <Col md={12} lg={12} sm={12} xs={12}>
+            <br/>
             <Card style={styles.cardStyle}>
               <CardHeader
                 title={translate("pgr.dashboar.chart.agewise")}/>
-               <div style={{ width: '100%', height: 230}}>
-                <ResponsiveContainer>
+                <ResponsiveContainer width='100%' aspect={4.0/1.0}>
                   <BarChart data={data} margin={{top: 5, right: 30, left: 15, bottom: 15}}>
                     <XAxis tick={<CustomizedAxisTick></CustomizedAxisTick>} dataKey="name" />
                     <YAxis name="Number of complaints" label={<CustomizedYAxisLabel title="Number of complaints" />}/>
-                    <Tooltip/>
+                    <Tooltip cursor={{fillOpacity: 0}}/>
                     <Bar name="Number of complaints" dataKey="noOfComplaints" fill="#8884d8" />
                   </BarChart>
                 </ResponsiveContainer>
-               </div>
-            </Card>
-          </Col>
-          <Col md={6} lg={6} sm={6} xs={12} style={styles.pendencyChart}>
-            <Card style={styles.cardStyle}>
-              <CardHeader/>
-            </Card>
-          </Col>
-          <Col md={6} lg={6} sm={6} xs={12} style={styles.pendencyChart}>
-            <Card style={styles.cardStyle}>
-              <CardHeader />
-            </Card>
-          </Col>
-          <Col md={6} lg={6} sm={6} xs={12} style={styles.pendencyChart}>
-            <Card style={styles.cardStyle}>
-              <CardHeader/>
-            </Card>
-          </Col>
-          <Col md={12} lg={12} sm={12} xs={12} style={styles.pendencyChart}>
-            <Card style={styles.cardStyle}>
-              <CardHeader/>
             </Card>
           </Col>
         </Row>

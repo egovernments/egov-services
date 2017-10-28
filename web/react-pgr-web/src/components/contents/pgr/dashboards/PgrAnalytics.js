@@ -7,7 +7,6 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 import ActionFlightTakeoff from 'material-ui/svg-icons/action/flight-takeoff';
 import {translate} from '../../../common/common';
 import {BarChart, AreaChart, Area, ResponsiveContainer, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
-import TypeDistributionReport from './TypeDistributionReport';
 import PendencyReport from './PendencyReport';
 import Top5ComplaintTypes from './Top5ComplaintTypes';
 import GisAnalysisReport from './GisAnalysisReport';
@@ -65,11 +64,11 @@ export default class PgrAnalytics extends Component {
         <Tab label={translate('pgr.dashboard.pendency')}>
           <PendencyReport styles={styles}></PendencyReport>
         </Tab>
-        <Tab label={translate('pgr.dashboard.type.distribution')} onActive={()=>{
+        {/* <Tab label={translate('pgr.dashboard.type.distribution')} onActive={()=>{
           this.setState({isTypeReportVisible:true});
         }}>
           <TypeDistributionReport styles={styles} isVisible={this.state.isTypeReportVisible}></TypeDistributionReport>
-        </Tab>
+        </Tab> */}
         <Tab label={translate('pgr.dashboard.top5.complaint.types')}>
           <Top5ComplaintTypes styles={styles}></Top5ComplaintTypes>
         </Tab>

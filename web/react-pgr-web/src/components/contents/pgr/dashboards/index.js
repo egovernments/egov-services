@@ -131,7 +131,7 @@ class charts extends Component{
     Promise.all([
       Api.commonApiPost("/pgr/dashboard", {}),//last 7 months
       Api.commonApiPost("/pgr/dashboard", {type:'weekly'}),//last 7 days
-      Api.commonApiPost("/pgr/dashboard/complainttype", {size:10})//top complainttype
+      Api.commonApiPost("/pgr/dashboard/complainttype", {size:5})//top complainttype
     ]).then(response => {
 
       try{

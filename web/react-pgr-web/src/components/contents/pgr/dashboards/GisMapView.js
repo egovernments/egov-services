@@ -54,14 +54,14 @@ const GisMapView = _.flowRight(
       });
   });
 
-  let zoomLevel = markerWithInfoWindow ? 15 : 12;
-  let center = markerWithInfoWindow ? props.boundaryInfoWindowOpened.latLng : props.center;
+  // let zoomLevel = markerWithInfoWindow ? 15 : 12;
+  // let center = markerWithInfoWindow ? props.boundaryInfoWindowOpened.latLng : props.center;
+
   return (
     <GoogleMap
       ref={props.onMapMounted}
       defaultZoom={12}
-      zoom = {zoomLevel}
-      center={center || null}>
+      center={props.center || null}>
       {props.wardsPolygons && renderPolygons}
       {markerWithInfoWindow}
     </GoogleMap>

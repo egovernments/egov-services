@@ -7,6 +7,8 @@ import CommonGisReportView from './CommonGisReportView';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import {translate} from '../../../common/common';
 
+const TOP_COMPLAINTS_REPORT_LENGTH  = 6;
+
 export default class GisAnalysisReport extends Component {
 
   constructor(){
@@ -19,7 +21,7 @@ export default class GisAnalysisReport extends Component {
   componentDidMount(){
 
     Promise.all([
-        Api.commonApiPost("pgr/dashboard/complainttype", {size:3}, {tenantId:getTenantId()}),
+        Api.commonApiPost("pgr/dashboard/complainttype", {size:TOP_COMPLAINTS_REPORT_LENGTH}, {tenantId:getTenantId()}),
         Api.commonApiGet("egov-location/boundarys/getshapefile",{tenantId:getTenantId()}, {}),
         Api.commonApiPost("tenant/v1/tenant/_search",{code:getTenantId()}, {tenantId:getTenantId()})
     ]).then((responses)=>{
@@ -48,7 +50,7 @@ export default class GisAnalysisReport extends Component {
       if(!kml)
         return <PageLoadingIndicator></PageLoadingIndicator>;
 
-      const TOP3_COLORS = ["#3F51B5", "#009688", "#607D8B"];
+      const TOP3_COLORS = ["#3F51B5", "#009688", "#607D8B", "#aa00ff", "#1976d2", "#5d4037"];
 
       const city = this.state.cityDetails && this.state.cityDetails.tenant[0].city;
       const cityLatLng = city && {lat: city.latitude, lng:city.longitude};
@@ -58,7 +60,7 @@ export default class GisAnalysisReport extends Component {
           let params = {type:"wardwise", servicecode:complaintTypeObj.code};
           return (
             <Col key={idx} sm={4} md={4} lg={4} xs={12}>
-              <Card>
+              <Card style={{marginBottom:15}}>
                 <CardHeader
                   title={`Top ${idx+1} - ${complaintTypeObj.ComplaintType}`}/>
                  <div style={{ width: '100%', height: 400}}>

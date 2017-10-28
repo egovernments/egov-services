@@ -112,5 +112,28 @@ serviceMaps:
          dbType: LONG
        
        - jsonPath: $.estimateAppropriations.*.auditDetails.lastModifiedTime
+
+ - version: 1.0
+   name: Works Estimate Appropriation Update
+   description: Update Estimate Appropriation in egw_estimate_appropriation table
+   fromTopic: works.estimateappropriation.update
+   isTransaction: true
+   queryMaps:   
+    - query: UPDATE egw_estimate_appropriation SET budgetusage= ?, objectnumber=?, lastModifiedBy=?, lastModifiedTime=?  WHERE id = ? AND tenantId = ?;
+      basePath: $.documentDetails.*
+      jsonMaps:
+         
+       - jsonPath: $.estimateAppropriations.*.id
+       
+       - jsonPath: $.estimateAppropriations.*.tenantId
+         
+       - jsonPath: $.estimateAppropriations.*.objectNumber
+       
+       - jsonPath: $.estimateAppropriations.*.budgetUsage
+       
+       - jsonPath: $.estimateAppropriations.*.auditDetails.lastModifiedBy
+         dbType: LONG
+       
+       - jsonPath: $.estimateAppropriations.*.auditDetails.lastModifiedTime
        
  

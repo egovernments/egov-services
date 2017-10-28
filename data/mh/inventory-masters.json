@@ -82,5 +82,73 @@
          "stockInHandCode":"SIH3",
          "active":true
       }
+   ],
+   "MaterialControlType":[  
+      {  
+         "id":1,
+         "tenantId":"mh",
+         "code":"LOTCONTROL",
+         "name":"LOT Control"
+      },
+      {  
+         "id":2,
+         "tenantId":"mh",
+         "code":"Shelf_life_Control",
+         "name":"SHELF_LIFE_CONTROL"
+      }
+   ],
+   "MaterialClass":[  
+      {  
+         "id":1,
+         "tenantId":"mh",
+         "code":"HIGHUSAGE",
+         "name":"HighUsage"
+      },
+      {  
+         "id":2,
+         "tenantId":"mh",
+         "code":"MEDIUMUSAGE",
+         "name":"MediumUsage"
+      },
+      {  
+         "id":3,
+         "tenantId":"mh",
+         "code":"LOWUSAGE",
+         "name":"LowUsage"
+      }
+   ],
+   "Status":[  
+      {  
+         "id":1,
+         "tenantId":"mh",
+         "code":"ACTIVE",
+         "name":"Active"
+      },
+      {  
+         "id":2,
+         "tenantId":"mh",
+         "code":"WITHDRAWN",
+         "name":"Withdrawn"
+      },
+      {  
+         "id":3,
+         "tenantId":"mh",
+         "code":"OBSOLETE",
+         "name":"Obsolete"
+      }
+   ],
+   "InvetoryType":[  
+      {  
+         "id":1,
+         "tenantId":"mh",
+         "code":"ASSET",
+         "name":"Asset"
+      },
+      {  
+         "id":2,
+         "tenantId":"mh",
+         "code":"CONSUMABLE",
+         "name":"consumable"
+      }
    ]
 }

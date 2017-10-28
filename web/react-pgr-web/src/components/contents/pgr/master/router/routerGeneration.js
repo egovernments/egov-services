@@ -222,19 +222,16 @@ class routerGeneration extends Component {
   	 	};
 
   	 	for(var i=0; i<self.props.routerCreateSet.serviceId.length; i++) {
-  	 		routerType.services.push({
-  	 			id: self.props.routerCreateSet.serviceId[i]
-  	 		});
+  	 		routerType.services.push(self.props.routerCreateSet.serviceId[i]);
   	 	}
 
-  	 	for(var i=0; i<self.props.routerCreateSet.boundaries.length; i++) {
-  	 		routerType.boundaries.push({
-  	 			boundarytype: self.props.routerCreateSet.boundaries[i]
-  	 		});
+      console.log(self.props.routerCreateSet);
+  	 	for(var i=0; i<self.props.routerCreateSet.boundaryId.length; i++) {
+  	 		routerType.boundaries.push(self.props.routerCreateSet.boundaryId[i]);
   	 	}
 
       self.props.setLoadingStatus("loading");
-  	 	Api.commonApiPost("/workflow/router/v1/_create", {}, {routertype: routerType}).then(function(response) {
+  	 	Api.commonApiPost("/workflow/router/v1/_create", {}, {router: routerType}).then(function(response) {
 	  		self.props.initForm();
         searchTextPos = "";
 	  		self.setState({

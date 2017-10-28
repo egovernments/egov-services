@@ -583,7 +583,7 @@ class grievanceCreate extends Component {
         onClick={(e)=>this.otpCreate('resend')}
       />,
       <FlatButton
-        label={translate('core.lbl.ok')}
+        label={translate('pgr.lbl.proceed')}
         primary={true}
         onTouchTap={this.validateOTP}
       />

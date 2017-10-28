@@ -1290,10 +1290,10 @@ definitions:
       abstractEstimateDetail:
         $ref: '#/definitions/AbstractEstimateDetails'
       #estimateActivities:
-       # type: array
-       # description: Array of Estimate Activities
-      #  items:
-       #   $ref: '#/definitions/EstimateActivity' 
+        #type: array
+        #description: Array of Estimate Activities
+        #items:
+          #$ref: '#/definitions/EstimateActivity' 
       multiYearEstimates:
         type: array
         description: Multiyear Estimate list for the Abstract Estimate
@@ -1303,7 +1303,7 @@ definitions:
         #type: array
         #description: Technical Sanction list for the Abstract Estimate
         #items:
-          #$ref: '#/definitions/EstimateTechnicalSanction'
+         # $ref: '#/definitions/EstimateTechnicalSanction'
       detailedEstimateDeductions:
         type: array
         description: Detailed Estimate Deduction list for the Abstract Estimate
@@ -1314,16 +1314,16 @@ definitions:
         description: Array of document details
         items:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DocumentDetail'
-      assetValues:
+      assets:
         type: array
-        description: Asset Values for Detailed Estimate
+        description: Asset Referencs for the Detailed Estimate
         items:
           $ref: '#/definitions/AssetsForEstimate'
-      overheadValues:
+      estimateOverheads:
         type: array
-        description: Array of Overhead Values
+        description: Array of Detaields Estimate Overhead Values
         items:
-          $ref: '#/definitions/OverheadValue'
+          $ref: '#/definitions/EstimateOverhead'
       workFlowDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
       stateId:
@@ -1331,21 +1331,27 @@ definitions:
         description: State id of the workflow
       fund:
         type: string
+        format: singleValueList
         description: Fund of the Detailed Estimate
       function:
         type: string
+        format: singleValueList
         description: Function of the Detailed Estimate
       functionary:
         type: string
+        format: singleValueList
         description: Functionary of the Detailed Estimate
       scheme:
         type: string
+        format: singleValueList
         description: Scheme of the Detailed Estimate
       subScheme:
         type: string
+        format: singleValueList
         description: Sub Scheme of the Detailed Estimate
       budgetGroup:
         type: string
+        format: singleValueList
         description: Budget Group of the Detailed Estimate
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
@@ -1361,16 +1367,16 @@ definitions:
       - department
       - description
   
-  OverheadValue:
+  EstimateOverhead:
       type: object
-      description: An Object holds the basic data for a Over Head Value
+      description: An Object holds the basic data of Estimate Overheads
       properties:
         id:
           type: string
-          description: Unique Identifier of the Overhead Value
+          description: Unique Identifier of the Estimate Overheads
         tenantId:
           type: string
-          description: Tenant id of the Overhead Value
+          description: Tenant id of the Estimate Overheads
           maxLength: 128
           minLength: 4
         overhead:
@@ -1378,9 +1384,11 @@ definitions:
         amount:
           type: integer
           format: BigDecimal
+          maxLength: 20
           description: Overhead amount
         detailedEstimate:
           $ref: '#/definitions/DetailedEstimate'
+          description: Reference of the Detailed Estimate for Overheads
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1391,7 +1399,7 @@ definitions:
       
   AssetsForEstimate:
       type: object
-      description: An Object holds the basic data for a Assets for Estimate
+      description: An Object holds the basic data for Assets for Estimate
       properties:
         id:
           type: string
@@ -1401,7 +1409,7 @@ definitions:
           description: Tenant id of the Assets For Estimate
           maxLength: 128
           minLength: 4
-        assetCode:
+        asset:
           type: string
           description: Code of the Asset
           pattern: '[a-zA-Z0-9-\\]'
@@ -1409,16 +1417,17 @@ definitions:
           maxLength: 100
         detailedEstimate:
           $ref: '#/definitions/DetailedEstimate'
+          description: Reference of the Detailed Estimate for Estimate and Assets linking
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
         - tenantId
-        - assetCode
+        - asset
         - detailedEstimate
       
   EstimateActivity:
       type: object
-      description: An Object holds the basic data for a Estimate Activity
+      description: An Object holds the basic data of Estimate Activity
       properties:
         id:
           type: string
@@ -1428,43 +1437,53 @@ definitions:
           description: Tenant id of the Estimate Activity
           maxLength: 128
           minLength: 4
-        schedule:
+        scheduleOfRate:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/ScheduleOfRate'
+          description: Schedule Of Rate reference of the Estimate Activity. Either Schedule Of Rate or Non SOR is mandatory for any activity.
         nonSor:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/NonSOR'
+          description: Schedule Of Rate reference of the Estimate Activity. Either Schedule Of Rate or Non SOR is mandatory for any activity.
         uom:
-          type: string
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/UOM"
           description: UOM for the Estimate Activity
+          format: singleValueList
         unitRate:
           type: integer
           format: BigDecimal
+          maxLength: 20
           description: Unit Rate of the Estimate Activity
         estimateRate:
           type: integer
           format: BigDecimal
+          maxLength: 20
           description: Estimate Rate of the Estimate Activity
         quantity:
           type: integer
           format: double
+          maxLength: 20
           description: Quantity of the Estimate Activity
         serviceTaxPerc:
           type: integer
           format: double
-          description: Service Tax Percentage of the Estimate Activity
+          maxLength: 20
+          description: Service Tax or VAT Percentage of the Estimate Activity
         revisionType:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/RevisionType'
+          description: Revision Type for the Revision Estimate Activity
         parent:
           $ref: '#/definitions/EstimateActivity'
+          description: Parent Activity in case of Revision Estimate Activity (Additional/Reduced Quantity)
         #parent:
         #  type: string
         #  description: Parent of the Estimate Activity
         detailedEstimate:
           $ref: '#/definitions/DetailedEstimate'
-        measurementSheetList:
+          description: Reference of the Detailed Estimate for Estimate Activity
+        estimateMeasurementSheets:
           type: array
           description: Measurement sheet list for the Estimate Activity
           items:
-            $ref: '#/definitions/MeasurementSheet'
+            $ref: '#/definitions/EstimateMeasurementSheet'
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1475,27 +1494,28 @@ definitions:
         - detailedEstimate
         - quantity
     
-  MeasurementSheet:
+  EstimateMeasurementSheet:
       type: object
-      description: An Object holds the basic data for a Measurement Sheet
+      description: An Object holds the basic data of Estimate Measurement Sheet
       properties:
         id:
           type: string
-          description: Unique Identifier of the Measurement Sheet
+          description: Unique Identifier of the Estimate Measurement Sheet
         tenantId:
           type: string
-          description: tenant id of the Measurement Sheet
+          description: Tenant id of the Estimate Measurement Sheet
           maxLength: 128
           minLength: 4
         slNo:
           type: integer
-          description: sl No of the Measurement sheet
+          description: Sl No of the Estimate Measurement sheet
           pattern: "[0-9]"
           maxLength: 10
           minLength: 1
         identifier:
           type: string
-          description: identifier of the Measurement sheet
+          description: Identifier of the Estimate Measurement sheet. A-Addition, D-Deduction.
+          maxLength: 1
         remarks:
           type: string
           description: remarks of the Measurement sheet
@@ -1504,37 +1524,34 @@ definitions:
         no:
           type: integer
           format: BigDecimal
-          description: no of the Measurement sheet
-          pattern: "[0-9.]"
-          maxLength: 10
+          description: No. of the Estimate Measurement sheet
+          maxLength: 12
         length:
           type: integer
           format: BigDecimal
-          description: length of the Measurement sheet
-          pattern: "[0-9.]"
-          maxLength: 10
+          description: length of the Estimate Measurement sheet
+          maxLength: 12
         width:
           type: integer
           format: BigDecimal
-          description: width of the Measurement sheet
-          pattern: "[0-9.]"
-          maxLength: 10
+          description: Width of the Estimate Measurement sheet
+          maxLength: 12
         depthOrHeight:
           type: integer
           format: BigDecimal
-          description: depth Or Height of the Measurement sheet
-          pattern: "[0-9.]"
-          maxLength: 10
+          description: Depth Or Height of the Estimate Measurement sheet
+          maxLength: 12
         quantity:
           type: integer
           format: BigDecimal
-          description: quantity of the Measurement sheet
-          pattern: "[0-9.]"
-          maxLength: 10
+          description: Quantity of the Estimate Measurement sheet
+          maxLength: 12
         estimateActivity:
           $ref: '#/definitions/EstimateActivity'
+          description: Estimate Activity reference for the Estimate Measurement sheet
         parent:
-          $ref: '#/definitions/MeasurementSheet'
+          $ref: '#/definitions/EstimateMeasurementSheet'
+          description: Parent Estimate Measurement sheet reference for change in quantity of Revision Estimate
         #parent:
         #  type: string
         #  description: Parent of the Measurement sheet
@@ -1547,7 +1564,7 @@ definitions:
         
   MultiYearEstimate:
       type: object
-      description: An Object holds the basic data for a Multi Year Estimate
+      description: An Object that holds the basic data of Multi Year Estimate
       properties:
         id:
           type: string
@@ -1560,11 +1577,14 @@ definitions:
         financialYear:
           type: string
           description: Financial Year of the Multi Year Estimate
+          format: singleValueList
         detailedEstimate:
           $ref: '#/definitions/DetailedEstimate'
+          description: Reference of the Detailed Estimate for Multi Year Estimate
         percentage:
           type: integer
           format: double
+          maxLength: 6
           description: Percentage for the Multi Year Estimate
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
@@ -1576,7 +1596,7 @@ definitions:
       
   EstimateTechnicalSanction:
       type: object
-      description: An Object holds the basic data for a Estimate Technical Sanction
+      description: An Object that holds the basic data of Technical Sanction for Detailed Estimate
       properties:
         id:
           type: string
@@ -1594,9 +1614,11 @@ definitions:
           minLength: 1
         detailedEstimate:
           $ref: '#/definitions/DetailedEstimate'
+          description: Reference of the Detailed Estimate for which the Technical sanction belongs to
         technicalSanctionDate:
           type: integer
           format: int64
+          x-displayformat: 'dd/MM/yyyy'
           description: Epoch time of the Technical Sanction Date
         technicalSanctionBy:
           type: string
@@ -1612,7 +1634,7 @@ definitions:
       
   DetailedEstimateDeduction:
       type: object
-      description: An Object holds the basic data for a Detailed Estimate Deduction
+      description: An Object that holds the basic data of Detailed Estimate Deductions
       properties:
         id:
           type: string
@@ -1624,15 +1646,15 @@ definitions:
           minLength: 4
         chartOfAccounts:
           type: string
-          description: Chart Of Accounts of the Detailed Estimate Deduction
+          description: Chart Of Accounts of the Detailed Estimate Deduction from Financials
+          format: autoComplete
         detailedEstimate:
           $ref: '#/definitions/DetailedEstimate'
         percentage:
           type: integer
           format: double
-          pattern: "[0-9.]"
           description: Percentage for the Detailed Estimate Deduction
-          minimum: 0.0
+          maxLength: 6
         amount:
           type: integer
           format: BigDecimal
@@ -1643,10 +1665,13 @@ definitions:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
         - tenantId
+        - chartOfAccounts
+        - detailedEstimate
+        - amount
       
   ProjectCode:
       type: object
-      description: An Object holds the basic data for a Project Code
+      description: An Object that holds the basic data for a Project Code
       properties:
         id:
           type: string
@@ -1682,7 +1707,7 @@ definitions:
         projectValue:
           type: integer
           format: BigDecimal
-          pattern: "[0-9.]"
+          maxLength: 20
           description: The cost of the Project. This value will be updated on Project closure which will include the complete expenditure on the project.
         completionDate:
           type: integer

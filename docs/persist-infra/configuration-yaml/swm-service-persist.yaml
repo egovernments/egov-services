@@ -19,7 +19,7 @@ serviceMaps:
        - jsonPath: $.vehicleFuellingDetails.*.transactionDate
          dbType: LONG
 
-       - jsonPath: $.vehicleFuellingDetails.*.vehicleType.name
+       - jsonPath: $.vehicleFuellingDetails.*.vehicleType.code
          
        - jsonPath: $.vehicleFuellingDetails.*.vehicleRegNo.regNumber
        
@@ -29,7 +29,7 @@ serviceMaps:
 
        - jsonPath: $.vehicleFuellingDetails.*.fuelFilled
 
-       - jsonPath: $.vehicleFuellingDetails.*.typeOfFuel
+       - jsonPath: $.vehicleFuellingDetails.*.typeOfFuel.code
 
        - jsonPath: $.vehicleFuellingDetails.*.totalCostIncurred
 
@@ -61,7 +61,7 @@ serviceMaps:
        - jsonPath: $.vehicleFuellingDetails.*.transactionDate
          dbType: LONG
 
-       - jsonPath: $.vehicleFuellingDetails.*.vehicleType.name
+       - jsonPath: $.vehicleFuellingDetails.*.vehicleType.code
          
        - jsonPath: $.vehicleFuellingDetails.*.vehicleRegNo.regNumber
        
@@ -71,7 +71,7 @@ serviceMaps:
 
        - jsonPath: $.vehicleFuellingDetails.*.fuelFilled
 
-       - jsonPath: $.vehicleFuellingDetails.*.typeOfFuel
+       - jsonPath: $.vehicleFuellingDetails.*.typeOfFuel.code
 
        - jsonPath: $.vehicleFuellingDetails.*.totalCostIncurred
 

@@ -8,26 +8,32 @@ UIInfo:
       - vehicleFuellingDetails[0].transactionDate
     VehicleDetails2:
       fields:
-      - vehicleFuellingDetails[0].vehicleType.name
+      - vehicleFuellingDetails[0].vehicleType.code
       - vehicleFuellingDetails[0].vehicleRegNo.regNumber
       - vehicleFuellingDetails[0].vehicleReadingDuringFuelling
     VehicleDetails3:
       fields:
       - vehicleFuellingDetails[0].refuellingStation.name
       - vehicleFuellingDetails[0].fuelFilled
-      - vehicleFuellingDetails[0].typeOfFuel
+      - vehicleFuellingDetails[0].typeOfFuel.code
       - vehicleFuellingDetails[0].totalCostIncurred
       - vehicleFuellingDetails[0].receiptNo
       - vehicleFuellingDetails[0].receiptDate
+  dependents:
+  - onChangeField: vehicleFuellingDetails[0].vehicleType.code
+    affectedFields:
+      vehicleFuellingDetails[0].vehicleRegNo.regNumber:
+        pattern: /swm-services/vehicles/_search?&vehicleTypeCode={vehicleFuellingDetails[0].vehicleType.code}|$..regNumber|$..regNumber
+        type: dropDown
   externalData:
-  - fieldName: vehicleFuellingDetails[0].vehicleType.name
+  - fieldName: vehicleFuellingDetails[0].vehicleType.code
     url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType"
-    keyPath: "$..name"
-    valPath: "$..name"
-  - fieldName: vehicleFuellingDetails[0].vehicleRegNo.regNumber
-    url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vehicle"
-    keyPath: "$..regNumber"
-    valPath: "$..regNumber"
+    keyPath: "$..code"
+    valPath: "$..code"
+  - fieldName: vehicleFuellingDetails[0].typeOfFuel.code
+    url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=FuelType"
+    keyPath: "$..code"
+    valPath: "$..code"
   - fieldName: vehicleFuellingDetails[0].refuellingStation.name
     url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=RefillingPumpStation"
     keyPath: "$..name"
@@ -50,13 +56,14 @@ UIInfo:
     values:
     - transactionNo
     - transactionDate
-    - vehicleType.name
+    - vehicleType.code
     - vehicleRegNo.regNumber
     - vehicleReadingDuringFuelling
     - refuellingStation.name
     - fuelFilled
-    - typeOfFuel
+    - typeOfFuel.code
     - totalCostIncurred
     - receiptNo
     - receiptDate
     resultObjectName: vehicleFuellingDetails
+

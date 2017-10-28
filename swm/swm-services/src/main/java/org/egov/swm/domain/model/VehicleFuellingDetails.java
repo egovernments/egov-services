@@ -58,9 +58,8 @@ public class VehicleFuellingDetails {
 	private String fuelFilled = null;
 
 	@NotNull
-	@Length(min = 1, max = 256)
 	@JsonProperty("typeOfFuel")
-	private String typeOfFuel = null;
+	private FuelType typeOfFuel = null;
 
 	@NotNull
 	@JsonProperty("totalCostIncurred")

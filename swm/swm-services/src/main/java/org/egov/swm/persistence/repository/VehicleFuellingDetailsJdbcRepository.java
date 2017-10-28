@@ -74,12 +74,19 @@ public class VehicleFuellingDetailsJdbcRepository {
 			params.append("transactionDate =:transactionDate");
 			paramValues.put("transactionDate", searchRequest.getTransactionDate());
 		}
-		if (searchRequest.getVehicleTypeName() != null) {
+		if (searchRequest.getVehicleTypeCode() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
 			params.append("vehicleType =:vehicleType");
-			paramValues.put("vehicleType", searchRequest.getVehicleTypeName());
+			paramValues.put("vehicleType", searchRequest.getVehicleTypeCode());
+		}
+		if (searchRequest.getFuelTypeCode() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("typeOfFuel =:typeOfFuel");
+			paramValues.put("typeOfFuel", searchRequest.getFuelTypeCode());
 		}
 		if (searchRequest.getRegNumber() != null) {
 			if (params.length() > 0) {
@@ -110,14 +117,6 @@ public class VehicleFuellingDetailsJdbcRepository {
 			}
 			params.append("fuelFilled =:fuelFilled");
 			paramValues.put("fuelFilled", searchRequest.getFuelFilled());
-		}
-
-		if (searchRequest.getTypeOfFuel() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("typeOfFuel =:typeOfFuel");
-			paramValues.put("typeOfFuel", searchRequest.getTypeOfFuel());
 		}
 
 		if (searchRequest.getTotalCostIncurred() != null) {

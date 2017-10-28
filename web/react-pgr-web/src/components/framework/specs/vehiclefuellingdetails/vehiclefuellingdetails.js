@@ -27,14 +27,21 @@ var dat = {
             "patternErrorMsg": "vehiclefuellingdetails.create.field.message.transactionDate"
           },
           {
-            "name": "vehicleTypeName",
-            "jsonPath": "vehicleTypeName",
+            "name": "vehicleTypeCode",
+            "jsonPath": "vehicleTypeCode",
             "label": "vehiclefuellingdetails.create.vehicleType",
             "type": "singleValueList",
             "isDisabled": false,
             "maxLength": 265,
-            "patternErrorMsg": "vehiclefuellingdetails.create.field.message.vehicleType.name",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..name|$..name"
+            "patternErrorMsg": "vehiclefuellingdetails.create.field.message.vehicleType.code",
+            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..code|$..code",
+            "depedants": [
+              {
+                "jsonPath": "vehicleFuellingDetails[0].vehicleRegNo.regNumber",
+                "type": "dropDown",
+                "pattern": "/swm-services/vehicles/_search?&vehicleTypeCode={vehicleFuellingDetails[0].vehicleType.code}|$..regNumber|$..regNumber"
+              }
+            ]
           },
           {
             "name": "regNumber",
@@ -43,8 +50,7 @@ var dat = {
             "type": "singleValueList",
             "isDisabled": false,
             "maxLength": 265,
-            "patternErrorMsg": "vehiclefuellingdetails.create.field.message.vehicleRegNo.regNumber",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vehicle|$..regNumber|$..regNumber"
+            "patternErrorMsg": "vehiclefuellingdetails.create.field.message.vehicleRegNo.regNumber"
           },
           {
             "name": "vehicleReadingDuringFuelling",
@@ -74,13 +80,14 @@ var dat = {
             "patternErrorMsg": "vehiclefuellingdetails.create.field.message.fuelFilled"
           },
           {
-            "name": "typeOfFuel",
-            "jsonPath": "typeOfFuel",
+            "name": "typeOfFuelCode",
+            "jsonPath": "typeOfFuelCode",
             "label": "vehiclefuellingdetails.create.typeOfFuel",
-            "type": "text",
+            "type": "singleValueList",
             "isDisabled": false,
             "maxLength": 265,
-            "patternErrorMsg": "vehiclefuellingdetails.create.field.message.typeOfFuel"
+            "patternErrorMsg": "vehiclefuellingdetails.create.field.message.typeOfFuel.code",
+            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=FuelType|$..code|$..code"
           },
           {
             "name": "totalCostIncurred",
@@ -117,7 +124,7 @@ var dat = {
         },
         {
           "label": "vehiclefuellingdetails.search.result.transactionDate",
-	  "isDate": true
+          "isDate": true
         },
         {
           "label": "vehiclefuellingdetails.search.result.vehicleType"
@@ -145,18 +152,18 @@ var dat = {
         },
         {
           "label": "vehiclefuellingdetails.search.result.receiptDate",
-	  "isDate": true
+          "isDate": true
         }
       ],
       "values": [
         "transactionNo",
         "transactionDate",
-        "vehicleType.name",
+        "vehicleType.code",
         "vehicleRegNo.regNumber",
         "vehicleReadingDuringFuelling",
         "refuellingStation.name",
         "fuelFilled",
-        "typeOfFuel",
+        "typeOfFuel.code",
         "totalCostIncurred",
         "receiptNo",
         "receiptDate"
@@ -191,16 +198,23 @@ var dat = {
         "label": "vehiclefuellingdetails.create.group.title.VehicleDetails2",
         "fields": [
           {
-            "name": "name",
-            "jsonPath": "vehicleFuellingDetails[0].vehicleType.name",
+            "name": "code",
+            "jsonPath": "vehicleFuellingDetails[0].vehicleType.code",
             "label": "vehiclefuellingdetails.create.vehicleType",
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
             "maxLength": 128,
-            "minLength": 4,
+            "minLength": 1,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..name|$..name"
+            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..code|$..code",
+            "depedants": [
+              {
+                "jsonPath": "vehicleFuellingDetails[0].vehicleRegNo.regNumber",
+                "type": "dropDown",
+                "pattern": "/swm-services/vehicles/_search?&vehicleTypeCode={vehicleFuellingDetails[0].vehicleType.code}|$..regNumber|$..regNumber"
+              }
+            ]
           },
           {
             "name": "regNumber",
@@ -211,8 +225,7 @@ var dat = {
             "isDisabled": false,
             "maxLength": 12,
             "minLength": 6,
-            "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vehicle|$..regNumber|$..regNumber"
+            "patternErrorMsg": ""
           },
           {
             "name": "vehicleReadingDuringFuelling",
@@ -253,15 +266,16 @@ var dat = {
             "patternErrorMsg": ""
           },
           {
-            "name": "typeOfFuel",
-            "jsonPath": "vehicleFuellingDetails[0].typeOfFuel",
+            "name": "code",
+            "jsonPath": "vehicleFuellingDetails[0].typeOfFuel.code",
             "label": "vehiclefuellingdetails.create.typeOfFuel",
-            "type": "text",
+            "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
-            "maxLength": 256,
+            "maxLength": 128,
             "minLength": 1,
-            "patternErrorMsg": ""
+            "patternErrorMsg": "",
+            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=FuelType|$..code|$..code"
           },
           {
             "name": "totalCostIncurred",
@@ -307,15 +321,6 @@ var dat = {
         "name": "VehicleDetails1",
         "label": "vehiclefuellingdetails.create.group.title.VehicleDetails1",
         "fields": [
-	  {
-            "name": "transactionNo",
-            "jsonPath": "vehicleFuellingDetails[0].transactionNo",
-            "label": "vehiclefuellingdetails.create.transactionNo",
-            "type": "text",
-            "isRequired": true,
-            "isDisabled": false,
-            "patternErrorMsg": ""
-          },
           {
             "name": "transactionDate",
             "jsonPath": "vehicleFuellingDetails[0].transactionDate",
@@ -325,7 +330,6 @@ var dat = {
             "isDisabled": false,
             "patternErrorMsg": ""
           }
-	 
         ]
       },
       {
@@ -333,16 +337,23 @@ var dat = {
         "label": "vehiclefuellingdetails.create.group.title.VehicleDetails2",
         "fields": [
           {
-            "name": "name",
-            "jsonPath": "vehicleFuellingDetails[0].vehicleType.name",
+            "name": "code",
+            "jsonPath": "vehicleFuellingDetails[0].vehicleType.code",
             "label": "vehiclefuellingdetails.create.vehicleType",
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
             "maxLength": 128,
-            "minLength": 4,
+            "minLength": 1,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..name|$..name"
+            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..code|$..code",
+            "depedants": [
+              {
+                "jsonPath": "vehicleFuellingDetails[0].vehicleRegNo.regNumber",
+                "type": "dropDown",
+                "pattern": "/swm-services/vehicles/_search?&vehicleTypeCode={vehicleFuellingDetails[0].vehicleType.code}|$..regNumber|$..regNumber"
+              }
+            ]
           },
           {
             "name": "regNumber",
@@ -353,8 +364,7 @@ var dat = {
             "isDisabled": false,
             "maxLength": 12,
             "minLength": 6,
-            "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vehicle|$..regNumber|$..regNumber"
+            "patternErrorMsg": ""
           },
           {
             "name": "vehicleReadingDuringFuelling",
@@ -395,15 +405,16 @@ var dat = {
             "patternErrorMsg": ""
           },
           {
-            "name": "typeOfFuel",
-            "jsonPath": "vehicleFuellingDetails[0].typeOfFuel",
+            "name": "code",
+            "jsonPath": "vehicleFuellingDetails[0].typeOfFuel.code",
             "label": "vehiclefuellingdetails.create.typeOfFuel",
-            "type": "text",
+            "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
-            "maxLength": 256,
+            "maxLength": 128,
             "minLength": 1,
-            "patternErrorMsg": ""
+            "patternErrorMsg": "",
+            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=FuelType|$..code|$..code"
           },
           {
             "name": "totalCostIncurred",
@@ -465,16 +476,23 @@ var dat = {
         "label": "vehiclefuellingdetails.create.group.title.VehicleDetails2",
         "fields": [
           {
-            "name": "name",
-            "jsonPath": "vehicleFuellingDetails[0].vehicleType.name",
+            "name": "code",
+            "jsonPath": "vehicleFuellingDetails[0].vehicleType.code",
             "label": "vehiclefuellingdetails.create.vehicleType",
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
             "maxLength": 128,
-            "minLength": 4,
+            "minLength": 1,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..name|$..name"
+            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..code|$..code",
+            "depedants": [
+              {
+                "jsonPath": "vehicleFuellingDetails[0].vehicleRegNo.regNumber",
+                "type": "dropDown",
+                "pattern": "/swm-services/vehicles/_search?&vehicleTypeCode={vehicleFuellingDetails[0].vehicleType.code}|$..regNumber|$..regNumber"
+              }
+            ]
           },
           {
             "name": "regNumber",
@@ -485,8 +503,7 @@ var dat = {
             "isDisabled": false,
             "maxLength": 12,
             "minLength": 6,
-            "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vehicle|$..regNumber|$..regNumber"
+            "patternErrorMsg": ""
           },
           {
             "name": "vehicleReadingDuringFuelling",
@@ -527,15 +544,16 @@ var dat = {
             "patternErrorMsg": ""
           },
           {
-            "name": "typeOfFuel",
-            "jsonPath": "vehicleFuellingDetails[0].typeOfFuel",
+            "name": "code",
+            "jsonPath": "vehicleFuellingDetails[0].typeOfFuel.code",
             "label": "vehiclefuellingdetails.create.typeOfFuel",
-            "type": "text",
+            "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
-            "maxLength": 256,
+            "maxLength": 128,
             "minLength": 1,
-            "patternErrorMsg": ""
+            "patternErrorMsg": "",
+            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=FuelType|$..code|$..code"
           },
           {
             "name": "totalCostIncurred",

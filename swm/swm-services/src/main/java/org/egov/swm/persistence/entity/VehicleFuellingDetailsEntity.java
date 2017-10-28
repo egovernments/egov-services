@@ -1,6 +1,7 @@
 package org.egov.swm.persistence.entity;
 
 import org.egov.swm.domain.model.AuditDetails;
+import org.egov.swm.domain.model.FuelType;
 import org.egov.swm.domain.model.RefillingPumpStation;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleFuellingDetails;
@@ -60,12 +61,12 @@ public class VehicleFuellingDetailsEntity {
 		vehicleFuellingDetails.setTenantId(tenantId);
 		vehicleFuellingDetails.setTransactionNo(transactionNo);
 		vehicleFuellingDetails.setTransactionDate(transactionDate);
-		vehicleFuellingDetails.setVehicleType(VehicleType.builder().name(vehicleType).build());
+		vehicleFuellingDetails.setVehicleType(VehicleType.builder().code(vehicleType).build());
 		vehicleFuellingDetails.setVehicleRegNo(Vehicle.builder().regNumber(vehicleRegNo).build());
 		vehicleFuellingDetails.setVehicleReadingDuringFuelling(vehicleReadingDuringFuelling);
 		vehicleFuellingDetails.setRefuellingStation(RefillingPumpStation.builder().name(refuellingStation).build());
 		vehicleFuellingDetails.setFuelFilled(fuelFilled);
-		vehicleFuellingDetails.setTypeOfFuel(typeOfFuel);
+		vehicleFuellingDetails.setTypeOfFuel(FuelType.builder().code(typeOfFuel).build());
 		vehicleFuellingDetails.setTotalCostIncurred(totalCostIncurred);
 		vehicleFuellingDetails.setReceiptNo(receiptNo);
 		vehicleFuellingDetails.setReceiptDate(receiptDate);

@@ -6,6 +6,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import AutoComplete from 'material-ui/AutoComplete';
 import RaisedButton from 'material-ui/RaisedButton';
+import Chip from 'material-ui/Chip';
 import DataTable from '../../../../common/Table';
 import Api from '../../../../../api/api';
 import styles from '../../../../../styles/material-ui';
@@ -20,6 +21,16 @@ import pdfFonts from "pdfmake/build/vfs_fonts";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 var flag = 0;
+
+const style = {
+  chip: {
+    margin: 4,
+  },
+  wrapper: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+};
 
 const getNameById = function(object, id, property = "") {
   if (id == "" || id == null) {
@@ -222,6 +233,18 @@ class BulkEscalationGeneration extends Component {
         });
   }
 
+  renderComplaintTypeChips = () => {
+    let {bulkEscalationGeneration} = this.props;
+    let {serviceCode} = this.state;
+    console.log(serviceCode);
+    return bulkEscalationGeneration.serviceCode && bulkEscalationGeneration.serviceCode.map((serviceId) => {
+      let obj = serviceCode.find((service)=> {return service.serviceCode == serviceId});
+      return(
+        <Chip style={style.chip}>{obj.serviceName}</Chip>
+      )
+    })
+  }
+
     render() {
 
       let {
@@ -255,7 +278,7 @@ class BulkEscalationGeneration extends Component {
       	  if(isSearchClicked)
       		return (
    	        <Card style={styles.marginStyle}>
-   	          <CardHeader title={<strong style = {{color:"#5a3e1b"}} >{translate('pgr.lbl.result')}</strong>}/>
+   	          <CardHeader title={<strong style = {{color:"#5a3e1b"}} >{translate('pgr.lbl.escalation.overwrite')}</strong>}/>
    	          <CardText>
    		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
    		          <thead style={{backgroundColor:"#f2851f",color:"white"}}>
@@ -271,7 +294,7 @@ class BulkEscalationGeneration extends Component {
    		        </Table>
    		       </CardText>
 			   <div style={{textAlign:'center'}}>
-				  <RaisedButton style={{margin:'15px 5px'}} type="button" label={translate('core.lbl.save')} primary={true} onClick={()=>{
+				  <RaisedButton style={{margin:'15px 5px'}} type="button" label={translate('pgr.lbl.overwrite')} primary={true} onClick={()=>{
 					  self.updateToPosition();
 				  }}/>
 			   </div>
@@ -343,6 +366,9 @@ class BulkEscalationGeneration extends Component {
                                            />
                                   ))}
                                   </SelectField>
+                                  <div style={style.wrapper}>
+                                    {this.renderComplaintTypeChips()}
+                                  </div>
                           </Col>
                           <Col xs={12} sm={4} md={3} lg={3}>
                               <AutoComplete
@@ -377,7 +403,7 @@ class BulkEscalationGeneration extends Component {
               </CardText>
           </Card>
           <div style={{textAlign:'center'}}>
-              <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={translate('core.lbl.search')} primary={true}/>
+              <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={translate('core.lbl.submit')} primary={true}/>
           </div>
           {viewTable()}
           </form>

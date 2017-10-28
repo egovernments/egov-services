@@ -8,6 +8,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
+import Chip from 'material-ui/Chip';
 import Api from '../../../../../api/api';
 import styles from '../../../../../styles/material-ui';
 import DataTable from '../../../../common/Table';
@@ -23,6 +24,16 @@ require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
 require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
 require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
 require('datatables.net-buttons/js/buttons.print.js'); // Print view button
+
+const style = {
+  chip: {
+    margin: 4,
+  },
+  wrapper: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  }
+};
 
 var _this = 0;
 var flag = 0;
@@ -250,6 +261,29 @@ class routerGeneration extends Component {
     }
   }
 
+  renderComplaintTypeChips = () => {
+    let {routerCreateSet} = this.props;
+    let {typeList} = this.state;
+    return routerCreateSet.serviceId && routerCreateSet.serviceId.map((serviceId) => {
+      let obj = typeList.find((service)=> {return service.id == serviceId});
+      return(
+        <Chip style={style.chip}>{obj.serviceName}</Chip>
+      )
+    })
+  }
+
+  renderBoundaryChips = () => {
+    let {routerCreateSet} = this.props;
+    let {boundariesList} = this.state;
+    return routerCreateSet.boundaryId && routerCreateSet.boundaryId.map((boundaryId) => {
+      let obj = boundariesList.find((boundary)=> {return boundary.code == boundaryId});
+      console.log(boundaryId, obj);
+      return(
+        <Chip style={style.chip}>{obj.name}</Chip>
+      )
+    })
+  }
+
   render() {
    _this = this;
    let {
@@ -284,7 +318,7 @@ class routerGeneration extends Component {
    		if(isSearchClicked && isFormValid) {
    			return (
    				<div style={{textAlign: 'center'}}>
-	   				<RaisedButton style={{margin:'15px 5px'}} type="button" label={translate("core.lbl.save")} primary={true} onClick={(e) => {save(e)}}/>
+	   				<RaisedButton style={{margin:'15px 5px'}} type="button" label={translate("pgr.lbl.overwrite")} primary={true} onClick={(e) => {save(e)}}/>
 	   			</div>
    			)
    		}
@@ -309,7 +343,7 @@ class routerGeneration extends Component {
    	  if(isSearchClicked)
    		return (
 	        <Card style={styles.marginStyle}>
-	          <CardHeader title={<strong style = {{color:"#5a3e1b"}} > {translate("pgr.searchresult")} </strong>}/>
+	          <CardHeader title={<strong style = {{color:"#5a3e1b"}} > {translate("pgr.lbl.router.overwrite")} </strong>}/>
 	          <CardText>
 		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
 		         <thead>
@@ -329,7 +363,6 @@ class routerGeneration extends Component {
 		    </Card>
 		)
    }
-
    return (
     <div className="routerGeneration">
          <form autoComplete="off" onSubmit={(e) => {search(e)}}>
@@ -372,6 +405,9 @@ class routerGeneration extends Component {
                                       />
 			                       ))}
                     </SelectField>
+                    <div style={style.wrapper}>
+                      {this.renderComplaintTypeChips()}
+                    </div>
                    </Col>
                    <Col xs={12} sm={4} md={3} lg={3}>
                      <SelectField fullWidth={true} className="custom-form-control-for-select" hintText="Select"
@@ -407,6 +443,9 @@ class routerGeneration extends Component {
                                       />
 			                      ))}
                     </SelectField>
+                    <div style={style.wrapper}>
+                      {this.renderBoundaryChips()}
+                    </div>
                    </Col>
                    </Row>
                    <Row>
@@ -445,7 +484,7 @@ class routerGeneration extends Component {
               </CardText>
            </Card>
            <div style={{textAlign: 'center'}}>
-             <RaisedButton style={{margin:'15px 5px'}} type="submit" label={translate("core.lbl.search")} disabled={!isFormValid} primary={true}/>
+             <RaisedButton style={{margin:'15px 5px'}} type="submit" label={translate("core.lbl.submit")} disabled={!isFormValid} primary={true}/>
            </div>
            {viewTable()}
            {showSaveButton()}
@@ -485,9 +524,6 @@ class routerGeneration extends Component {
    );
   }
 }
-
-
-
 
 const mapStateToProps = state => {
   // console.log(state.form.form);

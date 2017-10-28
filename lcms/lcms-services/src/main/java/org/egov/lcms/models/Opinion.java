@@ -6,8 +6,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -29,36 +27,32 @@ public class Opinion {
 
 	@JsonProperty("opinionRequestDate")
 	@NotNull
-	@NotEmpty
 	private Long opinionRequestDate = null;
 
 	@JsonProperty("departmentName")
 	@NotNull
-	@NotEmpty
 	private String departmentName = null;
 
 	@JsonProperty("opinionOn")
 	@NotNull
-	@NotEmpty
 	private String opinionOn = null;
 
 	@JsonProperty("documents")
 	private List<String> documents = null;
 
 	@JsonProperty("opinionDescriptions")
-	private List<String> opinionDescriptions = null;
+	private String opinionDescriptions = null;
 
 	@JsonProperty("opinionsBy")
 	private Advocate opinionsBy = null;
 
-	@JsonProperty("opinionsBy")
+	@JsonProperty("additionalAdvocate")
 	private String additionalAdvocate = null;
 
 	@JsonProperty("inWardDate")
 	private Long inWardDate = null;
 
 	@JsonProperty("tenantId")
-	@NotEmpty
 	@NotNull
 	@Size(min = 4, max = 128)
 	private String tenantId = null;
@@ -70,6 +64,6 @@ public class Opinion {
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
 
-	@JsonProperty("auditDetails")
+	@JsonProperty("stateId")
 	private String stateId;
 }

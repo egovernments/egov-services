@@ -2,9 +2,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.egov</groupId>
-	<artifactId>lcms-service</artifactId>
+	<artifactId>lcms-services</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>lcms-service</name>
+	<name>lcms-services</name>
 	<url>http://maven.apache.org</url>
 	<parent>
 		<groupId>org.springframework.boot</groupId>

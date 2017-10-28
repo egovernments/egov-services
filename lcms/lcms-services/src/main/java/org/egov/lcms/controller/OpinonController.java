@@ -9,6 +9,7 @@ import org.egov.lcms.service.OpinionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,32 +22,30 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 @RestController
-@RequestMapping(path = "/opinion/")
+@RequestMapping(path = "/legalcase")
 public class OpinonController {
 
 	@Autowired
 	OpinionService opinionService;
 
 	/**
-	 * create method for opinion service
 	 * 
 	 * @param opinionRequest
-	 * @return
+	 * @return opinionResponse
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "_create", method = RequestMethod.POST)
+	@RequestMapping(path = "/opinion/_create", method = RequestMethod.POST)
 	public ResponseEntity<?> createOpinion(@RequestBody @Valid OpinionRequest opinionRequest) throws Exception {
 		return new ResponseEntity<>(opinionService.createOpinion(opinionRequest), HttpStatus.OK);
-
 	}
 
 	/**
 	 * Update method for opinion service
 	 * 
 	 * @param opinionRequest
-	 * @return
+	 * @return opinionResponse
 	 */
-	@RequestMapping(path = "_update", method = RequestMethod.POST)
+	@RequestMapping(path = "/opinion/_update", method = RequestMethod.POST)
 	public ResponseEntity<?> updateOpinion(@RequestBody @Valid OpinionRequest opinionRequest) {
 		return new ResponseEntity<>(opinionService.updateOpinion(opinionRequest), HttpStatus.OK);
 	}
@@ -56,11 +55,12 @@ public class OpinonController {
 	 * 
 	 * @param requestInfo
 	 * @param opinionSearchCriteria
-	 * @return
+	 * @return opinionResponse
+	 * @throws Exception 
 	 */
-	@RequestMapping(path = "_search", method = RequestMethod.POST)
+	@RequestMapping(path = "/opinion/_search", method = RequestMethod.POST)
 	public ResponseEntity<?> searchOpinion(@RequestBody @Valid RequestInfo requestInfo,
-			@RequestBody @Valid OpinionSearchCriteria opinionSearchCriteria) {
+			@Valid @ModelAttribute OpinionSearchCriteria opinionSearchCriteria) throws Exception {
 		return new ResponseEntity<>(opinionService.searchOpinion(requestInfo, opinionSearchCriteria), HttpStatus.OK);
 	}
 }

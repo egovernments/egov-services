@@ -1,12 +1,7 @@
 package org.egov.lcms.models;
 
-import java.util.List;
-
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -20,49 +15,29 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OpinionSearchCriteria {
-	@JsonProperty("id")
-	private Long id = null;
+
+	private String[] codes = null;
 
 	@JsonProperty("opinionRequestDate")
-	@NotNull
-	@NotEmpty
 	private Long opinionRequestDate = null;
 
+	@JsonProperty("opinionsBy")
+	private String opinionsBy = null;
+
 	@JsonProperty("departmentName")
-	@NotNull
-	@NotEmpty
 	private String departmentName = null;
 
-	@JsonProperty("opinionOn")
-	@NotNull
-	@NotEmpty
-	private String opinionOn = null;
-
-	@JsonProperty("documents")
-	private List<String> documents = null;
-
-	@JsonProperty("opinionDescriptions")
-	private List<String> opinionDescriptions = null;
-
-	@JsonProperty("opinionsBy")
-	private List<String> opinionsBy = null;
-
-	@JsonProperty("inWardDate")
-	private Long inWardDate = null;
-
 	@JsonProperty("tenantId")
-	@NotEmpty
 	@NotNull
 	@Size(min = 4, max = 128)
 	private String tenantId = null;
 
-	@JsonProperty("workFlowDetails")
-	@Valid
-	private WorkFlowDetails workFlowDetails = null;
+	@JsonProperty("pageSize")
+	private Integer pageSize;
 
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+	@JsonProperty("pageNumber")
+	private Integer pageNumber;
 
-	@JsonProperty("auditDetails")
-	private String stateId;
+	@JsonProperty("sort")
+	private String sort;
 }

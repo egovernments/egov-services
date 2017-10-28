@@ -33,8 +33,34 @@ public class PropertiesManager {
 	
 	@Value("${ulb.format}")
 	private String ulbFormat;
+
+	@Value("${opinion.ulb.name}")
+	private String opinionUlbName;
+	
+	@Value("${opinion.ulb.format}")
+	private String opinionUlbFormat;
+	
+	@Value("${lcms.opinion.create}")
+	private String opinionCreateValidated;
+
+	@Value("${lcms.opinion.update}")
+	private String opinionUpdateValidated;
 	
 	@Value("${egov.lcms.create.summon.validated}")
 	private String createSummonvalidated;
-
+	
+	@Value("${egov.lcms.search.opinion.error.code}")
+	private String opinionSearchErrorCode;
+	
+	@Value("${egov.lcms.code}")
+	private String sortCode;
+	
+	@Value("${egov.lcms.json.error}")
+	private String jsonStringError;
+	
+	@Value("${egov.lcms.tenant.code}")
+	private String tenantCode;
+	
+	@Value("${egov.lcms.tenant.service.error}")
+	private String tenantServiceErrorMsg;
 }

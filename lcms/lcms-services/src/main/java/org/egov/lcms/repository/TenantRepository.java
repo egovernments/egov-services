@@ -4,6 +4,7 @@ package org.egov.lcms.repository;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.tracer.http.LogAwareRestTemplate;
+import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,11 +47,11 @@ public class TenantRepository {
 			logger.info("calling tennat service url :" + tenantCodeUrl.toString() + " request is " + requestInfo);
 			response = restTemplate.postForObject(builder.buildAndExpand().toUri(), requestInfo, String.class);
 			logger.info("after calling tennat service response :" + response);
-			if (response == null && response.isEmpty()) {
-				
+			if (response == null) {
+				throw new CustomException(propertiesManager.getTenantCode(), propertiesManager.getTenantServiceErrorMsg());
 			}
 		} catch (final HttpClientErrorException exception) {
-		
+			throw new CustomException(propertiesManager.getTenantCode(), propertiesManager.getTenantServiceErrorMsg());
 		}
 		return response;
 	}

@@ -61,6 +61,12 @@ public class PropertiesManager {
 	@Value("${egov.lcms.tenant.code}")
 	private String tenantCode;
 	
+	@Value("${egov.lcms.tenant.mandatory.code}")
+	private String tenantMandatoryCode;
+	
+	@Value("${egov.lcms.tenant.mandatory.message}")
+	private String tenantMandatoryMessage;
+	
 	@Value("${egov.lcms.tenant.service.error}")
 	private String tenantServiceErrorMsg;
 	
@@ -69,4 +75,21 @@ public class PropertiesManager {
 	
 	@Value("${egov.lcms.parawisecomment.update}")
 	private String paraWiseUpdateValidated;
+
+	@Value("${egov.lcms.search.payment.error.code}")
+	private String paymentSearchErrorCode;
+	
+	
+	@Value("${egov.lcms.advocate.payment.create.key}")
+    private String advocatePaymentCreate;
+    
+    @Value("${egov.lcms.advocate.payment.update.key}")
+    private String advocatePaymentUpdate;
+    
+    @Value("${advocate.payment.ulb.format}")
+    private String advocatePaymentUlbFormat;
+    
+    @Value("${advocate.payment.ulb.name}")
+    private String AdvocatePaymentUlbName;
+
 }

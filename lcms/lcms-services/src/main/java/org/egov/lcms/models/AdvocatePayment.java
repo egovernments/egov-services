@@ -1,103 +1,63 @@
 package org.egov.lcms.models;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotEmpty;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
-
-/**
- * This object holds information about the advocate payment
- */
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class AdvocatePayment {
-	@JsonProperty("id")
-	private Long id = null;
 
-	@JsonProperty("advocateName")
-	@NotEmpty
-	@NotNull
-	private String advocateName = null;
+	@JsonProperty("code")
+	private String code = null;
 
+	@JsonProperty("advocate")
+	private Advocate advocate = null;
+
+	@NonNull
 	@JsonProperty("demandDate")
-	@NotEmpty
-	@NotNull
 	private Long demandDate = null;
 
 	@JsonProperty("year")
 	private String year = null;
 
 	@JsonProperty("caseType")
-	@NotEmpty
-	@NotNull
-	private String caseType = null;
+	private CaseType caseType = null;
 
+	@NonNull
 	@JsonProperty("caseNo")
-	@NotEmpty
-	@NotNull
 	private String caseNo = null;
 
 	@JsonProperty("caseStatus")
-	private String caseStatus = null;
+	private CaseStatus caseStatus = null;
 
 	@JsonProperty("amountClaimed")
-	@NotEmpty
-	@NotNull
 	private Double amountClaimed = null;
 
 	@JsonProperty("amountRecived")
-	@NotEmpty
-	@NotNull
 	private Double amountRecived = null;
 
 	@JsonProperty("allowance")
 	private Double allowance = null;
 
+	@NonNull
 	@JsonProperty("isPartialPayment")
-	@NotEmpty
-	@NotNull
 	private Boolean isPartialPayment = null;
 
-	@JsonProperty("bankName")
-	@NotEmpty
-	@NotNull
-	private String bankName = null;
-
-	@JsonProperty("bankBranch")
-	@NotEmpty
-	@NotNull
-	private String bankBranch = null;
-
-	@JsonProperty("bankAccountNo")
-	@NotEmpty
-	@NotNull
-	private String bankAccountNo = null;
-
-	@JsonProperty("panNo")
-	@NotEmpty
-	@NotNull
-	@Size(min = 12, max = 12)
-	private String panNo = null;
-
+	@NonNull
 	@JsonProperty("invoiceDoucment")
 	private String invoiceDoucment = null;
 
 	@JsonProperty("tenantId")
 	private String tenantId = null;
-
-	@JsonProperty("isGenerateBill")
-	private Boolean isGenerateBill = null;
 
 	@JsonProperty("workFlowDetails")
 	private WorkFlowDetails workFlowDetails = null;
@@ -114,6 +74,19 @@ public class AdvocatePayment {
 	@JsonProperty("resolutionRemarks")
 	private String resolutionRemarks = null;
 
-	private String stateId;
+	@JsonProperty("advocateCharges")
+	private List<AdvocateCharge> advocateCharges = null;
+
+	@JsonProperty("modeOfPayment")
+	private String modeOfPayment = null;
+
+	@JsonProperty("instrumentNumber")
+	private String instrumentNumber = null;
+
+	@JsonProperty("instrumentDate")
+	private Long instrumentDate = null;
+
+	@JsonProperty("stateId")
+	private String stateId = null;
 
 }

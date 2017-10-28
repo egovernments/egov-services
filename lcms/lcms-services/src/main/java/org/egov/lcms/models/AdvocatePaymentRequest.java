@@ -18,10 +18,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdvocatePaymentRequest   {
-  @JsonProperty("requestInfo")
+  @JsonProperty("RequestInfo")
   private RequestInfo requestInfo = null;
 
-  @JsonProperty("advocatepayments")
-  private List<AdvocatePayment> advocatepayments = null;
+  @JsonProperty("advocatePayments")
+  private List<AdvocatePayment> advocatePayments = null;
 }
 

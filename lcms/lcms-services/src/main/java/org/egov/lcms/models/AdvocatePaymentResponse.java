@@ -16,9 +16,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdvocatePaymentResponse {
-	@JsonProperty("responseInfo")
+	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo = null;
 
-	@JsonProperty("advocatepayments")
-	private List<AdvocatePayment> advocatepayments = null;
+	@JsonProperty("advocatePayments")
+	private List<AdvocatePayment> advocatePayments = null;
 }

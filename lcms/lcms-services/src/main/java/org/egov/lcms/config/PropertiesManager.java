@@ -53,7 +53,6 @@ public class PropertiesManager {
 	
 	@Value("${egov.lcms.create.summon.validated}")
 	private String createSummonvalidated;
-	
 
 	@Value("${egov.lcms.search.opinion.error.code}")
 	private String opinionSearchErrorCode;
@@ -153,4 +152,55 @@ public class PropertiesManager {
 	@Value("${case.mandatory.department.person.message}")
 	private String isVakalatNamaRequiredMessage;
 
+
+	@Value("${advocate.ulb.name}")
+	private String advocateUlbName;
+	
+	@Value("${advocate.ulb.format}")
+	private String advocateUlbFormat;
+	
+	@Value("${egov.lcms.create.advocate}")
+	private String createAdvocateTopic;
+	
+	@Value("${egov.lcms.update.advocate}")
+	private String updateAdvocateTopic;
+	
+	@Value("${invalid.tenant.code}")
+	private String invalidTenantCode;
+	
+	@Value("${exception.message}")
+	private String exceptionMessage;
+	
+	@Value("${invalid.idgeneration.code}")
+	private String invalidIdGenerationCode;
+	
+	@Value("${idgeneration.exception.message}")
+	private String idGenerationExceptionMessage;
+	
+	@Value("${invalid.organization.code}")
+	private String invalidOrganizationCode;
+	
+	@Value("${organization.exception.message}")
+	private String organizationExceptionMessage;
+	
+	@Value("${register.ulb.name}")
+	private String registerUlbName;
+	
+	@Value("${register.ulb.format}")
+	private String registerUlbFormat;
+	
+	@Value("${egov.lcms.create.register}")
+	private String createRegisterTopic;
+	
+	@Value("${egov.lcms.update.register}")
+	private String updateRegisterTopic;
+	
+	@Value("${default.page.size}")
+	public String defaultPageSize;
+	
+	@Value("${default.page.number}")
+	public String defaultPageNumber;
+	
+	@Value("${default.offset}")
+	public String defaultOffset;
 }

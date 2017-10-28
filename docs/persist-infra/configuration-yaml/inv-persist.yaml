@@ -64,11 +64,11 @@ serviceMaps:
             - jsonPath: $.stores.*.code
             - jsonPath: $.stores.*.auditDetails.tenantId
 
- - version: 1.0
-   name: materials create
-   description: create materials in inventory
-   fromTopic: inv-materials-save-topic
-   queryMaps: 
+    - version: 1.0
+      name: materials create
+      description: create materials in inventory
+      fromTopic: inv-materials-save-topic
+      queryMaps: 
     - query: INSERT INTO material(id, code, name, description, oldcode, materialtype, baseuom, inventorytype, status, purchaseuom, expenseaccount, minquality, maxquality, stockinguom, materialclass, reorderlevel, reorderquantity, materialcontroltype, model, manufacturepartno, technicalspecs, termsofdelivery, overridematerialcontroltype, tenantid , createdby, lastmodifiedby, createdtime, lastmodifiedtime ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.materials.*
       jsonMaps:
@@ -135,12 +135,11 @@ serviceMaps:
        - jsonPath: $.materials.*.auditDetails.lastModifiedTime
          dbType: LONG
 
- - version: 1.0
-   name: materials update
-   description: update materials in inventory
-   fromTopic: inv-materials-update-topic
-   queryMaps:
-
+    - version: 1.0
+      name: materials update
+      description: update materials in inventory
+      fromTopic: inv-materials-update-topic
+      queryMaps:
     - query: UPDATE public.material SET name=?,  description=?,  oldcode=?,  materialtype=?,  baseuom=?,  inventorytype=?,  status=?,  purchaseuom=?,  expenseaccount=?,  minquality=?,  maxquality=?,  stockinguom=?,  materialclass=?,  reorderlevel=?,  reorderquantity=?,  materialcontroltype=?,  model=?,  manufacturepartno=?,  technicalspecs=?,  termsofdelivery=?,  overridematerialcontroltype=?,  lastmodifiedby=?,  lastmodifiedtime=? WHERE code=? AND tenantid=?;
       basePath: $.materials.*
       jsonMaps:
@@ -199,5 +198,4 @@ serviceMaps:
        - jsonPath: $.materials.*.code
 
        - jsonPath: $.materials.*.auditDetails.tenantId
-
 

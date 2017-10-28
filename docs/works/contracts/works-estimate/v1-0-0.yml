@@ -834,7 +834,7 @@ definitions:
         minLength: 4
       abstractEstimateNumber:
         type: string
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         description: Unique number for the Abstract Estimate
         maxLength: 20
         minLength: 1
@@ -856,7 +856,7 @@ definitions:
       description:
         type: string
         description : description for the Abstract Estimate
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
         minLength: 1
       fund:
@@ -890,7 +890,7 @@ definitions:
         format: singleValueList
       adminSanctionNumber:
         type: string
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         description: Unique number after admin sanction for the Abstract Estimate
         maxLength: 50
         minLength: 1
@@ -941,7 +941,7 @@ definitions:
         format: singleValueList
       technicalSanctionNumber: 
         type: string
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         description: Technical sanction number of the Abstract Estimate
         maxLength: 50   
       technicalSanctionDate: 
@@ -962,7 +962,7 @@ definitions:
         format: singleValueList
       councilResolutionNumber:
         type: string
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         description: Council resolution number of the Abstract Estimate
       councilResolutionDate:
         type: integer
@@ -983,12 +983,12 @@ definitions:
         description: Boolean value if bills created or not. Required only if Abstract Estimate is Spill Over. Default value is false.
       cancellationReason:
         type: string
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Reason for cancellation of the Abstract Estimate, Required only while cancelling Abstract Estimate
         maxLength: 100
       cancellationRemarks:
         type: string
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Remarks for cancellation of the Abstract Estimate, Required only while cancelling Abstract Estimate
         maxLength: 512
       workFlowDetails:
@@ -1009,7 +1009,7 @@ definitions:
         description: Boolean vlaue to capture whether the fund available to execute this work.
       fundSanctioningAuthority:
         type: string
-        pattern: '[a-zA-Z0-9\s\.,]'
+        pattern: '[a-zA-Z0-9\s\.,]+'
         description: The sanctioning Authority for fund to carry out the work
       pmcRequired:
         type: boolean
@@ -1020,7 +1020,7 @@ definitions:
         format: singleValueList
       pmcName:
         type: string
-        pattern: '[a-zA-Z0-9\s\.,]'
+        pattern: '[a-zA-Z0-9\s\.,]+'
         description: Name of the PMC Panel/New Appointment.
         format: singleValueList
       auditDetails:
@@ -1058,7 +1058,7 @@ definitions:
         description: Reference to Abstract Estimate Object 
       nameOfWork:
         type: string
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Name Of Work of the Abstract Estimate
         maxLength: 1024
         minLength: 1
@@ -1068,7 +1068,7 @@ definitions:
         description: Estimate amount for the Abstract Estimate
       estimateNumber:
         type: string
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         description: Estimate number of the Abstract Estimate
         maxLength: 50
         minLength: 1
@@ -1132,7 +1132,7 @@ definitions:
         minLength: 4
       estimateNumber:
         type: string
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         description: Unique number for the Detailed Estimate
         maxLength: 50
         minLength: 1
@@ -1143,13 +1143,13 @@ definitions:
         description: Epoch time of the Detailed Estimate Created
       nameOfWork:
         type: string
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: name of the work of Detailed Estimate Details
         maxLength: 1024
         minLength: 1
       description:
         type: string
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description : description for the Detailed Estimate
         maxLength: 1024
         minLength: 1
@@ -1159,7 +1159,7 @@ definitions:
         description: Department for which Detailed Estimate belongs to
       adminSanctionNumber:
         type: string
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         maxLength: 50
         description: Unique number after admin sanction for the Detailed Estimate
       adminSanctionDate:
@@ -1235,7 +1235,7 @@ definitions:
         description: Ward of the Detailed Estimate
       location:
         type: string
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 512
         description: Location of the Detailed Estimate where the work is executed
       latitude:
@@ -1256,7 +1256,7 @@ definitions:
         format: singleValueList
       councilResolutionNumber:
         type: string
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         description: Council resolution number of the Detailed Estimate
         maxLength: 50
       councilResolutionDate:
@@ -1279,12 +1279,12 @@ definitions:
         description: Gross Amount Billed if billsCreated flag is true 
       cancellationReason:
         type: string
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 100
         description: Reason for cancellation of the Detailed Estimate, Required only while cancelling Detailed Estimate
       cancellationRemarks:
         type: string
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Remarks for cancellation of the Detailed Estimate, Required only while cancelling Detailed Estimate
         maxLength: 512
       totalIncludingRE:
@@ -1511,7 +1511,6 @@ definitions:
         slNo:
           type: integer
           description: Sl No of the Estimate Measurement sheet
-          pattern: "[0-9]"
           maxLength: 10
           minLength: 1
         identifier:
@@ -1521,7 +1520,7 @@ definitions:
         remarks:
           type: string
           description: remarks of the Measurement sheet
-          pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+          pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
           maxLength: 1024
         no:
           type: integer
@@ -1610,7 +1609,7 @@ definitions:
           minLength: 4
         technicalSanctionNumber:
           type: string
-          pattern: '[a-zA-Z0-9-\\]'
+          pattern: '[a-zA-Z0-9-\\]+'
           description: Technical Sanction Number of the Detailed Estimate
           maxLength: 50
           minLength: 1
@@ -1686,18 +1685,18 @@ definitions:
         code:
           type: string
           description: Code of the Project 
-          pattern: '[a-zA-Z0-9-\\]'
+          pattern: '[a-zA-Z0-9-\\]+'
           maxLength: 100
           minLength: 1
         name:
           type: string
-          pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+          pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
           description: Name of the Project
           maxLength: 1024
           minLength: 1
         description:
           type: string
-          pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+          pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
           description: Description of the Project
           maxLength: 1024
         status:
@@ -1763,13 +1762,13 @@ definitions:
       name:
         type: string
         description: Unique name of the Mode Of Allotment
-        pattern: '[a-zA-Z0-9\s\.,]'
+        pattern: '[a-zA-Z0-9\s\.,]+'
         maxLength: 100
         minLength: 1
       code:
         type: string
         description: Unique code of the Mode Of Allotment
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         maxLength: 100
         minLength: 1
     required:

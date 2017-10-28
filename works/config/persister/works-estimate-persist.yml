@@ -200,7 +200,7 @@ serviceMaps:
        
        - jsonPath: $.projectCodes.*.name
        
-       - jsonPath: $.projectCodes.*.status
+       - jsonPath: $.projectCodes.*.status.value
        
        - jsonPath: $.projectCodes.*.completionDate
         
@@ -215,3 +215,30 @@ serviceMaps:
          dbType: LONG
 
        - jsonPath: $.projectCodes.auditDetails.lastModifiedTime
+
+ - version: 1.0
+   name: Works Project Code Update
+   description: Update Project Code in egw_projectcode table
+   fromTopic: works-projectcode-update
+   isTransaction: true
+   queryMaps:   
+    - query: UPDATE egw_projectcode SET status= ?, active=?, projectValue=?, completionDate=?, lastModifiedBy=?, lastModifiedTime=?  WHERE id = ? AND tenantId = ?;
+      basePath: $.projectCodes.*
+      jsonMaps:
+         
+       - jsonPath: $.projectCodes.*.status.value
+
+       - jsonPath: $.projectCodes.*.active
+
+       - jsonPath: $.projectCodes.*.projectValue
+
+       - jsonPath: $.projectCodes.*.completionDate
+
+       - jsonPath: $.projectCodes.*.auditDetails.lastModifiedBy
+         dbType: LONG
+       
+       - jsonPath: $.projectCodes.*.auditDetails.lastModifiedTime
+
+       - jsonPath: $.projectCodes.*.id
+       
+       - jsonPath: $.projectCodes.*.tenantId

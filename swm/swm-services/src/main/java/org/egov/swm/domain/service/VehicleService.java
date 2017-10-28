@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.AuditDetails;
-import org.egov.swm.domain.model.Documents;
 import org.egov.swm.domain.model.FuelType;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Vehicle;
@@ -60,14 +59,22 @@ public class VehicleService {
 			}
 			setAuditDetails(v, userId);
 			v.setId(UUID.randomUUID().toString().replace("-", ""));
-			if (v.getInsuranceDocuments() == null) {
-				v.setInsuranceDocuments(Documents.builder().id(null).build());
-			}
 
+			prepareInsuranceDocument(v);
 		}
 
 		return vehicleRepository.save(vehicleRequest);
 
+	}
+
+	private void prepareInsuranceDocument(Vehicle v) {
+
+		if (v.getInsuranceDocument() != null && v.getInsuranceDocument().getFileStoreId() != null) {
+			v.getInsuranceDocument().setId(UUID.randomUUID().toString().replace("-", ""));
+			v.getInsuranceDocument().setTenantId(v.getTenantId());
+			v.getInsuranceDocument().setRegNumber(v.getRegNumber());
+			v.getInsuranceDocument().setAuditDetails(v.getAuditDetails());
+		}
 	}
 
 	@Transactional
@@ -83,6 +90,8 @@ public class VehicleService {
 			}
 
 			setAuditDetails(v, userId);
+
+			prepareInsuranceDocument(v);
 
 		}
 

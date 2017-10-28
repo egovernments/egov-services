@@ -3,6 +3,7 @@ package org.egov.swm.domain.repository;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleSearch;
+import org.egov.swm.persistence.repository.DocumentJdbcRepository;
 import org.egov.swm.persistence.repository.VehicleJdbcRepository;
 import org.egov.swm.web.requests.VehicleRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class VehicleRepository {
 	@Autowired
 	private VehicleJdbcRepository vehicleJdbcRepository;
 
+	@Autowired
+	private DocumentJdbcRepository documentJdbcRepository;
+
 	@Value("${egov.swm.vehicle.save.topic}")
 	private String saveTopic;
 
@@ -28,9 +32,16 @@ public class VehicleRepository {
 	@Value("${egov.swm.vehicle.indexer.topic}")
 	private String indexerTopic;
 
+	@Value("${egov.swm.vehicle.document.save.topic}")
+	private String documentSaveTopic;
+
 	public VehicleRequest save(VehicleRequest vehicleRequest) {
 
 		kafkaTemplate.send(saveTopic, vehicleRequest);
+
+		for (Vehicle v : vehicleRequest.getVehicles()) {
+			kafkaTemplate.send(documentSaveTopic, v);
+		}
 
 		kafkaTemplate.send(indexerTopic, vehicleRequest.getVehicles());
 
@@ -41,6 +52,11 @@ public class VehicleRepository {
 	public VehicleRequest update(VehicleRequest vehicleRequest) {
 
 		kafkaTemplate.send(updateTopic, vehicleRequest);
+
+		for (Vehicle v : vehicleRequest.getVehicles()) {
+			documentJdbcRepository.delete(v.getRegNumber());
+			kafkaTemplate.send(documentSaveTopic, v);
+		}
 
 		kafkaTemplate.send(indexerTopic, vehicleRequest.getVehicles());
 

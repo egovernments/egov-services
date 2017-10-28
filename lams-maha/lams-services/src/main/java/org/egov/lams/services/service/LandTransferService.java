@@ -4,11 +4,16 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.lams.common.web.contract.LandPossessionResponse;
+import org.egov.lams.common.web.contract.LandPossessionSearchCriteria;
 import org.egov.lams.common.web.contract.LandTransfer;
 import org.egov.lams.common.web.contract.LandTransferRequest;
 import org.egov.lams.common.web.contract.LandTransferResponse;
+import org.egov.lams.common.web.contract.LandTransferSearchCriteria;
 import org.egov.lams.services.config.PropertiesManager;
 import org.egov.lams.services.factory.ResponseFactory;
+import org.egov.lams.services.service.persistence.repository.LandPossessionRepository;
+import org.egov.lams.services.service.persistence.repository.LandTransferRepository;
 import org.egov.lams.services.util.SequenceGenUtil;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +32,9 @@ public class LandTransferService {
 	
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	
+	@Autowired
+	private LandTransferRepository landTransferRepository;
 	
 public LandTransferResponse  create(LandTransferRequest landTransferRequest) {
 		
@@ -47,6 +55,11 @@ public LandTransferResponse  create(LandTransferRequest landTransferRequest) {
 	return getLandTransferResponse(landTransferRequest.getLandTransfer(),
 			landTransferRequest.getRequestInfo());	
 	}
+		
+		public LandTransferResponse search(LandTransferSearchCriteria landTransferSearchCriteria, RequestInfo requestInfo) {
+			LandTransferResponse landTransferResponseList = landTransferRepository.search(landTransferSearchCriteria);
+			return landTransferResponseList;
+		}
 
 		private LandTransferResponse getLandTransferResponse(List<LandTransfer> landTransfer,
 				RequestInfo requestInfo) {

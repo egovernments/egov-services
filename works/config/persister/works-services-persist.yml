@@ -43,3 +43,74 @@ serviceMaps:
          dbType: LONG
        
        - jsonPath: $.documentDetails.*.auditDetails.lastModifiedTime
+       
+ - version: 1.0
+   name: Works Documents Update
+   description: Update works document data in egw_documentdetail table 
+   fromTopic: works.documentdetails.update
+   isTransaction: true
+   queryMaps:   
+    - query: UPDATE egw_documentdetail SET id=?, objectid= ?,objectType = ?, documentType=?, fileStore=?, latitude=?, longitude=?, description=?, dateOfCapture=?, workProgress=?, lastModifiedBy=?, lastModifiedTime=?  WHERE id = ? AND tenantId = ?;
+      basePath: $.documentDetails.*
+      jsonMaps:
+         
+       - jsonPath: $.documentDetails.*.id
+         
+       - jsonPath: $.documentDetails.*.objectId
+         
+       - jsonPath: $.documentDetails.*.objectType
+       
+       - jsonPath: $.documentDetails.*.documentType
+       
+       - jsonPath: $.documentDetails.*.fileStore
+       
+       - jsonPath: $.documentDetails.*.latitude
+       
+       - jsonPath: $.documentDetails.*.longitude
+       
+       - jsonPath: $.documentDetails.*.description
+       
+       - jsonPath: $.documentDetails.*.dateOfCapture
+       
+       - jsonPath: $.documentDetails.*.workProgress
+       
+       - jsonPath: $.documentDetails.*.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.documentDetails.*.auditDetails.lastModifiedTime 
+
+       - jsonPath: $.documentDetails.*.id
+
+       - jsonPath: $.documentDetails.*.tenantId 
+
+ - version: 1.0
+   name: Estimate Appropriation
+   description: Persists Estimate Appropriation in egw_estimate_appropriation table
+   fromTopic: works.estimateappropriation.create
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO egw_estimate_appropriation(
+            id, tenantid, objecttype, objectnumber, budgetusage, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?);
+      basePath: $.estimateAppropriations.*
+      jsonMaps:
+         
+       - jsonPath: $.estimateAppropriations.*.id
+       
+       - jsonPath: $.estimateAppropriations.*.tenantId
+         
+       - jsonPath: $.estimateAppropriations.*.objectType
+         
+       - jsonPath: $.estimateAppropriations.*.objectNumber
+       
+       - jsonPath: $.estimateAppropriations.*.budgetUsage
+       
+       - jsonPath: $.estimateAppropriations.*.auditDetails.createdBy
+         dbType: LONG
+       
+       - jsonPath: $.estimateAppropriations.*.auditDetails.createdTime
+
+       - jsonPath: $.estimateAppropriations.*.auditDetails.lastModifiedBy
+         dbType: LONG
+       
+       - jsonPath: $.estimateAppropriations.*.auditDetails.lastModifiedTime
+       
+ 

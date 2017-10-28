@@ -10,16 +10,16 @@ import javax.validation.constraints.*;
 
 
 
-public class ReportRequest extends MetadataRequest  {
+public class SearchRequest extends MetadataRequest  {
   @JsonProperty("searchParams")
   private List<SearchParam> searchParams = new ArrayList<SearchParam>();
 
-  public ReportRequest searchParams(List<SearchParam> searchParams) {
+  public SearchRequest searchParams(List<SearchParam> searchParams) {
     this.searchParams = searchParams;
     return this;
   }
 
-  public ReportRequest addSearchParamsItem(SearchParam searchParamsItem) {
+  public SearchRequest addSearchParamsItem(SearchParam searchParamsItem) {
     this.searchParams.add(searchParamsItem);
     return this;
   }
@@ -46,7 +46,7 @@ public class ReportRequest extends MetadataRequest  {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ReportRequest reportRequest = (ReportRequest) o;
+    SearchRequest reportRequest = (SearchRequest) o;
     return Objects.equals(this.searchParams, reportRequest.searchParams) &&
         super.equals(o);
   }

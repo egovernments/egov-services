@@ -1,44 +1,32 @@
 package org.egov.report.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.egov.SearchApp;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.domain.model.MetaDataRequest;
-import org.egov.domain.model.ReportDefinitions;
 import org.egov.domain.model.Response;
+import org.egov.domain.model.SearchDefinitions;
 import org.egov.swagger.model.CustomJsonMapping;
-import org.egov.swagger.model.FieldMapping;
 import org.egov.report.repository.SearchRepository;
 import org.egov.swagger.model.ColumnDetail;
 import org.egov.swagger.model.ColumnDetail.TypeEnum;
 import org.egov.swagger.model.MetadataResponse;
 import org.egov.swagger.model.ReportDataResponse;
 import org.egov.swagger.model.SearchDefinition;
+import org.egov.swagger.model.SearchRequest;
 import org.egov.swagger.model.ReportMetadata;
-import org.egov.swagger.model.ReportRequest;
 import org.egov.swagger.model.ReportResponse;
 import org.egov.swagger.model.SearchColumn;
 import org.egov.swagger.model.SourceColumn;
-import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.mvc.annotation.ResponseStatusExceptionResolver;
-
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
-
-import net.minidev.json.JSONObject;
 
 @Service
 public class SearchService {
@@ -58,10 +46,10 @@ public class SearchService {
 
 	public MetadataResponse getMetaData(MetaDataRequest metaDataRequest, String moduleName) {
 		MetadataResponse metadataResponse = new MetadataResponse();
-		ReportDefinitions rds = SearchApp.getReportDefs();
+		SearchDefinitions rds = SearchApp.getSearchDefs();
 		SearchDefinition reportDefinition = new SearchDefinition();
 		//LOGGER.info("updated repot defs " + ReportApp.getReportDefs() + "\n\n\n");
-		reportDefinition = rds.getReportDefinition(moduleName+" "+metaDataRequest.getReportName());
+		reportDefinition = rds.getSearchDefinition(moduleName+" "+metaDataRequest.getReportName());
 		ReportMetadata rmt = new ReportMetadata();
 		rmt.setReportName(reportDefinition.getReportName());
         rmt.setSummary(reportDefinition.getSummary());
@@ -114,7 +102,7 @@ public class SearchService {
 		return new ResponseEntity<>(metadataResponses, HttpStatus.OK);
 
 	}
-	public ResponseEntity<?> getReportDataSuccessResponse(final List<ReportResponse> reportResponse, final RequestInfo requestInfo
+	public ResponseEntity<?> getDataSearchSuccessResponse(final List<ReportResponse> reportResponse, final RequestInfo requestInfo
 			,String tenantId) {
 		final ReportDataResponse reportDataResponse = new ReportDataResponse();
 		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
@@ -188,11 +176,11 @@ public class SearchService {
 
 
 
-	public List<String> getReportData(ReportRequest reportRequest,String moduleName,String reportName) {
+	public List<String> searchData(SearchRequest reportRequest,String moduleName,String reportName) {
 		
 	
-		ReportDefinitions reportDefinitions = SearchApp.getReportDefs();
-		SearchDefinition reportDefinition = reportDefinitions.getReportDefinition(moduleName+ " "+reportName);
+		SearchDefinitions reportDefinitions = SearchApp.getSearchDefs();
+		SearchDefinition reportDefinition = reportDefinitions.getSearchDefinition(moduleName+ " "+reportName);
 		
 		List<Object> convertedMaps = new ArrayList<>();
 		

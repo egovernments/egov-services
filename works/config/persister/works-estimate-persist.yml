@@ -171,41 +171,47 @@ serviceMaps:
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.grossAmountBilled
        
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectcode
-       
-       
+
+ - version: 1.0
+   name: Project Code
+   description: Persists Project Code in egw_projectcode table
+   fromTopic: works-projectcode-create
+   isTransaction: true
+   queryMaps:
     - query: INSERT INTO egw_projectcode(
-            id, tenantid, code, detailedestimate, description, name, status, 
+            id, tenantid, code, status, active, description, name, status, 
             completiondate, projectvalue, createdby, createdtime, lastmodifiedby, 
             lastmodifiedtime) VALUES 
             (?, ?, ?, ?, ?, ?, ?, 
             ?, ?, ?, ?, ?, 
-            ?);
-      basePath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*
+            ?,?,?);
+      basePath: $.projectCodes.*
       jsonMaps:
          
-       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.id
+       - jsonPath: $.projectCodes.*.id
          
-       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.tenantId
+       - jsonPath: $.projectCodes.*.tenantId
          
-       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.code
+       - jsonPath: $.projectCodes.*.code
        
-       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.detailedEstimate
+       - jsonPath: $.projectCodes.*.active
        
-       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.description
+       - jsonPath: $.projectCodes.*.description
        
-       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.name
+       - jsonPath: $.projectCodes.*.name
        
-       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.status
+       - jsonPath: $.projectCodes.*.status
        
-       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.completionDate
+       - jsonPath: $.projectCodes.*.completionDate
         
-       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.projectValue
+       - jsonPath: $.projectCodes.*.projectValue
        
-       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.auditDetails.createdBy
+       - jsonPath: $.projectCodes.*.auditDetails.createdBy
+         dbType: LONG
  
-       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.auditDetails.createdTime
+       - jsonPath: $.projectCodes.auditDetails.createdTime
        
-       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.auditDetails.lastModifiedBy
+       - jsonPath: $.projectCodes.*.auditDetails.lastModifiedBy
+         dbType: LONG
 
-       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.*.auditDetails.lastModifiedTime
-
+       - jsonPath: $.projectCodes.auditDetails.lastModifiedTime

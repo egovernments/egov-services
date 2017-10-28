@@ -1347,6 +1347,7 @@ var localization_EN_Data = {
     "pgr.error.servicerequest.notfound": " service code or jurisdiction id was not provided or General service error.",
     "pgr.error.upload.photovideo": " Upload grievance relevated photo / video (Max : 3 files)!",
     "pgr.lbl.actions": " Actions",
+    "pgr.lbl.uploadphoto":"Upload Photo",
     "pgr.lbl.active": " Active",
     "pgr.lbl.actmobnum": " Account already exist with mobile number",
     "pgr.lbl.add": " Add",

@@ -9,13 +9,13 @@ import javax.validation.Valid;
 import org.egov.SearchApp;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.domain.model.MetaDataRequest;
-import org.egov.domain.model.ReportDefinitions;
+import org.egov.domain.model.SearchDefinitions;
 import org.egov.domain.model.Response;
 import org.egov.domain.model.SearchResponse;
 import org.egov.report.service.SearchService;
 import org.egov.swagger.model.MetadataResponse;
 import org.egov.swagger.model.ReportDataResponse;
-import org.egov.swagger.model.ReportRequest;
+import org.egov.swagger.model.SearchRequest;
 import org.egov.swagger.model.ReportResponse;
 import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
@@ -40,10 +40,10 @@ import net.minidev.json.JSONObject;
 @RestController
 public class SearchController {
 
-	public ReportDefinitions reportDefinitions;
+	public SearchDefinitions reportDefinitions;
 	
 	@Autowired
-	public SearchController(ReportDefinitions reportDefinitions) {
+	public SearchController(SearchDefinitions reportDefinitions) {
 		this.reportDefinitions = reportDefinitions;
 	}
 	
@@ -73,11 +73,11 @@ public class SearchController {
 	
 	@PostMapping("/{moduleName}/_get")
 	@ResponseBody
-	public ResponseEntity<?> getReportData(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final ReportRequest reportRequest,
+	public ResponseEntity<?> getReportData(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final SearchRequest reportRequest,
 			final BindingResult errors) {
 		SearchResponse searchResponse = new SearchResponse();
 		try {
-			List<String> reportData = reportService.getReportData(reportRequest,moduleName,reportRequest.getReportName());
+			List<String> reportData = reportService.searchData(reportRequest,moduleName,reportRequest.getReportName());
 		    Type type = new TypeToken<ArrayList<Map<String, Object>>>() {}.getType();
 			Gson gson = new Gson();
 			List<Map<String, Object>> data = gson.fromJson(reportData.toString(), type);

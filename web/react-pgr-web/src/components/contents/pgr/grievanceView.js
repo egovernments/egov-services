@@ -14,11 +14,12 @@ import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../api/api';
 import {translate, validate_fileupload} from '../../common/common';
 import Fields from '../../common/Fields';
-import ViewSRN from '../../common/viewSRN';
-import EmployeeDocs from '../../common/employeeDocs';
-import WorkFlow from '../../common/workflow';
+import ViewSRN from '../../common/PGR/viewSRN';
+import EmployeeDocs from '../../common/PGR/employeeDocs';
+import WorkFlow from '../../common/PGR/workflow';
 import styles from '../../../styles/material-ui';
 var Rating = require('react-rating');
+const constants = require('../../common/constants');
 
 var currentThis;
 
@@ -27,7 +28,8 @@ class grievanceView extends Component{
     super(props);
     this.state={
       open: false,
-      isUpdateAllowed : true
+      isUpdateAllowed : true,
+      commentsMandat : true
     };
   }
   handleOpen = () => {
@@ -78,8 +80,10 @@ class grievanceView extends Component{
         }
         if(localStorage.getItem('type') === 'CITIZEN' && (currentThis.state.systemStatus === 'COMPLETED' || currentThis.state.systemStatus === 'REJECTED')){
           currentThis.props.ADD_MANDATORY('systemRating');
-          if(currentThis.state.systemRating)
+          if(currentThis.state.systemRating){
             handleChange(currentThis.state.systemRating, "systemRating", true, "");
+            currentThis.commentsTrigger('',false);
+          }
         }
         if(currentThis.state.systemStatus === 'FORWARDED' && localStorage.getItem('type') === 'EMPLOYEE'){
           currentThis.props.ADD_MANDATORY('designationId');
@@ -403,6 +407,16 @@ class grievanceView extends Component{
       }
     }
   }
+  commentsTrigger = (msg='', boolean) => {
+    if(boolean){
+      this.props.ADD_MANDATORY_LATEST(msg, 'systemApprovalComments', boolean, '', '');
+      this.setState({commentsMandat : true});
+    }
+    else{
+      this.props.REMOVE_MANDATORY_LATEST(msg, 'systemApprovalComments', boolean, '', '');
+      this.setState({commentsMandat : false});
+    }
+  }
   render(){
     let
     {
@@ -441,8 +455,8 @@ class grievanceView extends Component{
         <EmployeeDocs srn={this.state.srn}/>
         <WorkFlow workflowdetails={this.state.workflow} />
         { (this.state.isUpdateAllowed && localStorage.getItem('type') === 'EMPLOYEE' && this.state.systemStatus !== 'REJECTED' && this.state.systemStatus !== 'COMPLETED') ||  (localStorage.getItem('type') === 'CITIZEN' && this.state.systemStatus !== 'WITHDRAWN') ?
-        <Grid style={{width:'100%'}}>
-          <Card style={{margin:'15px 0'}}>
+        <div>
+          <Card style={styles.cardMargin}>
             <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
              {translate('pgr.lbl.actions')}
             < /div>}/>
@@ -454,8 +468,14 @@ class grievanceView extends Component{
                     fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('pgr.lbl.change.status')+' *'} maxHeight={200} value={grievanceView.systemStatus ? grievanceView.systemStatus : this.state.systemStatus}
                     dropDownMenuProps={{targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                     onChange={(event, key, value) => {
-                    handleStatusChange(value, "systemStatus", false, "")
+                      handleStatusChange(value, "systemStatus", false, "")
+                      if(localStorage.getItem('type') === constants.ROLE_CITIZEN && (value === 'REOPENED' || value === 'WITHDRAWN')){
+                        this.commentsTrigger(this.props.grievanceView.systemApprovalComments,true);
+                      }else if(localStorage.getItem('type') === constants.ROLE_CITIZEN){
+                        this.commentsTrigger(this.props.grievanceView.systemApprovalComments,false);
+                      }
                   }}>
+                    {localStorage.getItem('type') === constants.ROLE_CITIZEN ? <MenuItem value={this.state.systemStatus} primaryText="Select" /> : ''}
                     {this.state.nextStatus !== undefined ?
                     this.state.nextStatus.map((status, index) => (
                         <MenuItem value={status.code} key={index} primaryText={status.name} />
@@ -549,13 +569,22 @@ class grievanceView extends Component{
               <Row>
                 <Col xs={12} sm={4} md={3} lg={3}>
                   <h4>Feedback</h4>
-                  <Rating className="rating" empty="glyphicon glyphicon-star-empty" full="glyphicon glyphicon-star" initialRate={grievanceView.systemRating} onClick={(rate, event) => { handleChange(rate,"systemRating", true,"")}}/>
+                  <Rating className="rating" empty="glyphicon glyphicon-star-empty" full="glyphicon glyphicon-star" initialRate={grievanceView.systemRating}
+                  onClick={(rate, event) => {
+                    let {systemStatus} = this.props.grievanceView;
+                    handleChange(rate,"systemRating", true,"");
+                    if(systemStatus === 'WITHDRAWN' || systemStatus === 'REOPENED'){
+                      this.commentsTrigger(this.props.grievanceView.systemApprovalComments,true);
+                    }else{
+                      this.commentsTrigger(this.props.grievanceView.systemApprovalComments,false);
+                    }
+                  }}/>
                 </Col>
               </Row> : ''}
               <Row>
                 <Col xs={12} sm={12} md={12} lg={12}>
                   <TextField className="custom-form-control-for-textarea" floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('core.lbl.comments')+' *'} fullWidth={true} multiLine={true} rows={2} rowsMax={4} value={grievanceView.systemApprovalComments ? grievanceView.systemApprovalComments : ''} maxLength="500" onChange={(event, newValue) => {
-                    handleChange(newValue, "systemApprovalComments", true, /^.[^]{0,500}$/) }} errorText={fieldErrors.systemApprovalComments ? fieldErrors.systemApprovalComments : ""}/>
+                    handleChange(newValue, "systemApprovalComments", this.state.commentsMandat, /^.[^]{0,500}$/) }} errorText={fieldErrors.systemApprovalComments ? fieldErrors.systemApprovalComments : ""}/>
                 </Col>
               </Row>
               { localStorage.getItem('type') === 'EMPLOYEE' ?
@@ -575,7 +604,7 @@ class grievanceView extends Component{
               </div>
             </CardText>
           </Card>
-        </Grid>
+        </div>
         : ''
         }
       </form>
@@ -593,7 +622,6 @@ class grievanceView extends Component{
 }
 
 const mapStateToProps = state => {
-  //console.log(state.form.fieldErrors);
   return ({grievanceView: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 }
 
@@ -613,11 +641,19 @@ const mapDispatchToProps = dispatch => ({
       }
     });
   },
+  ADD_MANDATORY_LATEST : (value, property, isRequired, pattern, errorMsg) => {
+    // console.log(value, property, isRequired, pattern);
+     dispatch({type: "ADD_MANDATORY_LATEST", property, value, isRequired, pattern});
+  },
+  REMOVE_MANDATORY_LATEST : (value, property, isRequired, pattern, errorMsg) => {
+    // console.log(value, property, isRequired, pattern);
+     dispatch({type: "REMOVE_MANDATORY_LATEST", property, value, isRequired, pattern});
+  },
   ADD_MANDATORY : (property) => {
      dispatch({type: "ADD_MANDATORY", property, value: '', isRequired : true, pattern: ''});
   },
   handleChange: (value, property, isRequired, pattern) => {
-    //console.log(value, property, isRequired, pattern);
+    // console.log(value, property, isRequired, pattern);
     dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
   },
   handleStatusChange: (value, property, isRequired, pattern) => {

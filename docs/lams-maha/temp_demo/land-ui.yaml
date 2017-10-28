@@ -1,0 +1,19 @@
+UIInfo:
+- referencePath: "/lands"
+  groups:
+    LandRegisters2:
+      fields:
+      - landRegisters[0].landNumber
+  externalData:
+  - fieldName: landRegisters[0].propertyType.name
+    url: "/egov-mdms-service/v1/_get?&moduleName=lams-maha&masterName=PropertyType"
+    keyPath: "$..name"
+    valPath: "$..name"
+  searchResult:
+    rowClickUrlUpdate: /update/lands/{landNumber}
+    rowClickUrlView: /view/lands/{landNumber}
+    columns:
+    - landNumber
+    values:
+    - landNumber
+    resultObjectName: landRegisters

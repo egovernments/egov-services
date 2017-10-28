@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {Grid, Row, Col, DropdownButton} from 'react-bootstrap';
+import {Row, Col, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-import styles from '../../styles/material-ui';
+import styles from '../../../styles/material-ui';
 import {
   Table,
   TableBody,
@@ -10,7 +10,7 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table';
-import {translate} from './common';
+import {translate} from '../common';
 
 const workflow = ({workflowdetails}) => {
   const renderWorkflow = () => {
@@ -35,12 +35,12 @@ const workflow = ({workflowdetails}) => {
     }
   }
   return(
-    <Grid style={{width:'100%'}}>
-      <Card style={{margin:'15px 0'}}>
-        <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
+    <div>
+      <Card style={styles.cardMargin}>
+        <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
          {translate('core.lbl.history')}
         < /div>}/>
-        <CardText style={{padding:'8px 16px 0'}}>
+        <CardText style={styles.cardTextPadding}>
           <Table>
             <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
               <TableRow>
@@ -58,7 +58,7 @@ const workflow = ({workflowdetails}) => {
           </Table>
         </CardText>
       </Card>
-    </Grid>
+    </div>
   );
 }
 

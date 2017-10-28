@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
-import {Grid, Row, Col, DropdownButton} from 'react-bootstrap';
+import {Row, Col, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import FileDownload from 'material-ui/svg-icons/action/get-app';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
-import {translate} from './common';
-import styles from '../../styles/material-ui';
+import {translate} from '../common';
+import styles from '../../../styles/material-ui';
 var axios = require('axios');
 
 class viewsrn extends Component{
@@ -51,12 +51,12 @@ class viewsrn extends Component{
   }
   render(){
     return (
-      <Grid style={{width:'100%'}}>
-        <Card style={{margin:'15px 0'}}>
-          <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
+      <div>
+        <Card style={styles.cardMargin}>
+          <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
              {translate('pgr.0061')}
            < /div>}/>
-           <CardText style={{padding:'8px 16px 0'}}>
+           <CardText style={styles.cardTextPadding}>
             <List>
               <Row>
                 <Col xs={12} sm={6} md={4} lg={3}>
@@ -87,11 +87,11 @@ class viewsrn extends Component{
             </List>
            </CardText>
         </Card>
-        <Card style={{margin:'15px 0'}}>
-          <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
+        <Card style={styles.cardMargin}>
+          <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
              {translate('pgr.lbl.grievancedetails')}
            < /div>}/>
-           <CardText style={{padding:'8px 16px 0'}}>
+           <CardText style={styles.cardTextPadding}>
              <List>
                <Row>
                  <Col xs={12} sm={6} md={4} lg={3}>
@@ -181,7 +181,7 @@ class viewsrn extends Component{
              </List>
            </CardText>
         </Card>
-      </Grid>
+      </div>
     )
   }
 }

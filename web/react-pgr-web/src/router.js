@@ -156,7 +156,8 @@ import transactionRevaluation from './components/non-framework/asset/transaction
 import transactionTransfer from './components/non-framework/asset/transactionTransfer';
 import transactionGeneral from './components/non-framework/asset/transactionGeneral';
 
-
+//Template parser
+import TemplateParser from './components/framework/templates/templateParser/templateParser';
 const base = "";
 
 const Main = () => {
@@ -328,7 +329,7 @@ const Main = () => {
       <Route exact path= {base + '/transactionRevaluation/asset/revaluationAsset'} component={transactionRevaluation}/>
       <Route exact path= {base + '/transactionTransfer/asset/translateAsset'} component={transactionTransfer}/>
       <Route exact path= {base + '/transactionTransfer/asset/generalAsset'} component={transactionGeneral}/>
-
+      <Route exact path= {base + '/print/report/:templatePath'} component={TemplateParser}/>
     </Switch>
   </main>
 )}

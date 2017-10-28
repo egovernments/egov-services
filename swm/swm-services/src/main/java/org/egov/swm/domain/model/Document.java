@@ -16,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Documents {
+public class Document {
 
 	@Length(min = 1, max = 256)
 	@JsonProperty("id")
@@ -29,20 +29,12 @@ public class Documents {
 
 	@NotNull
 	@Length(min = 1, max = 256)
-	@JsonProperty("refId")
-	private String refId = null;
-
-	@NotNull
-	@JsonProperty("documentTypeId")
-	private Long documentTypeId = null;
-
+	@JsonProperty("regNumber")
+	private String regNumber = null;
+	
 	@NotNull
 	@JsonProperty("fileStoreId")
 	private String fileStoreId = null;
-
-	@Length(max = 1024)
-	@JsonProperty("comments")
-	private String comments = null;
 
 	@JsonProperty("auditDetails")
 	@Valid

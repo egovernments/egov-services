@@ -101,8 +101,8 @@ public class Vehicle {
 	@JsonProperty("insuranceValidityDate")
 	private Long insuranceValidityDate = null;
 
-	@JsonProperty("insuranceDocuments")
-	private Documents insuranceDocuments = null;
+	@JsonProperty("insuranceDocument")
+	private Document insuranceDocument = null;
 
 	@JsonProperty("isUnderWarranty")
 	private Boolean isUnderWarranty = null;

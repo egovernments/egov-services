@@ -291,7 +291,7 @@ class CustomMenu extends Component {
   componentWillReceiveProps()
   {
     //this.resetMenu();
-    console.log("HERE");
+    // console.log("HERE");
   }
 
   componentDidMount() {

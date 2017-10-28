@@ -18,9 +18,9 @@ html, body{
 }
 
 .custom-form-control-for-select > div:nth-child(2){
-	bottom: 2px !important;
+	bottom: 1px !important;
 	z-index: 1 !important;
-	left: 10px !important;
+	left: 11px !important;
   pointer-events: none;
 }
 
@@ -70,7 +70,7 @@ html, body{
 
 .custom-form-control-for-textarea textarea{
 	top:5px !important;
-	min-height: 50px;
+	min-height: 63px;
 }
 
 .custom-form-control-for-textfield div:last-child{
@@ -78,7 +78,7 @@ html, body{
 }
 
 .custom-form-control-for-textarea div:last-child{
-	bottom: 12px !important;
+	bottom: 0px !important;
 }
 
 .custom-form-control-for-textfield div:nth-child(2){

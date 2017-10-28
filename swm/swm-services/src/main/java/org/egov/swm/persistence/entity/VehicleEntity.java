@@ -1,7 +1,6 @@
 package org.egov.swm.persistence.entity;
 
 import org.egov.swm.domain.model.AuditDetails;
-import org.egov.swm.domain.model.Documents;
 import org.egov.swm.domain.model.FuelType;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleType;
@@ -99,7 +98,6 @@ public class VehicleEntity {
 		vehicle.setRemarks(remarks);
 		vehicle.setInsuranceNumber(insuranceNumber);
 		vehicle.setInsuranceValidityDate(insuranceValidityDate);
-		vehicle.setInsuranceDocuments(Documents.builder().id(insuranceDocuments).build());
 		vehicle.setIsUnderWarranty(isUnderWarranty);
 		vehicle.setKilometers(kilometers);
 		vehicle.setEndOfWarranty(endOfWarranty);

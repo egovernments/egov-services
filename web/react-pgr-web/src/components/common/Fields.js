@@ -52,7 +52,7 @@ export default class Fields extends Component{
            return(<CustomAutoComplete obj={obj} description={description} value={this.props.value} handler={this.props.handler}/>);
          return (
             <Col xs={12} sm={4} md={3} lg={3}>
-              <TextField fullWidth={true} ref={obj.code} floatingLabelText={description} value={this.props.value} onChange={(e,newValue) => this.props.handler(newValue, obj.code, obj.required, '')} errorText={this.props.error ? this.props.error : ""} maxLength="50"/>
+              <TextField className="custom-form-control-for-textfield" fullWidth={true} ref={obj.code} floatingLabelText={description} value={this.props.value} onChange={(e,newValue) => this.props.handler(newValue, obj.code, obj.required, '')} errorText={this.props.error ? this.props.error : ""} maxLength="50"/>
             </Col>
          );
         case "checkbox":
@@ -87,31 +87,31 @@ export default class Fields extends Component{
         case "textarea":
           return (
              <Col xs={12} sm={4} md={3} lg={3}>
-               <TextField fullWidth={true} ref={obj.code} multiLine={true} rowsMax={4} floatingLabelText={description} value={this.props.value} onChange={(e,newValue) => this.props.handler(newValue, obj.code, obj.required, '')} errorText={this.props.error ? this.props.error : ""} maxLength="500"/>
+               <TextField className="custom-form-control-for-textarea" fullWidth={true} ref={obj.code} multiLine={true} rowsMax={4} floatingLabelText={description} value={this.props.value} onChange={(e,newValue) => this.props.handler(newValue, obj.code, obj.required, '')} errorText={this.props.error ? this.props.error : ""} maxLength="500"/>
              </Col>
           );
         case "integer":
           return (
             <Col xs={12} sm={4} md={3} lg={3}>
-              <TextField fullWidth={true} ref={obj.code} floatingLabelText={description} value={this.props.value} onChange={(e,newValue) => this.props.handler(newValue, obj.code, obj.required, /^[+-]?\d+$/)} errorText={this.props.error ? this.props.error : ""} maxLength="10" />
+              <TextField className="custom-form-control-for-textfield" fullWidth={true} ref={obj.code} floatingLabelText={description} value={this.props.value} onChange={(e,newValue) => this.props.handler(newValue, obj.code, obj.required, /^[+-]?\d+$/)} errorText={this.props.error ? this.props.error : ""} maxLength="10" />
             </Col>
           );
         case "long":
           return (
               <Col xs={12} sm={4} md={3} lg={3}>
-                <TextField fullWidth={true} ref={obj.code} floatingLabelText={description} value={this.props.value} onChange={(e,newValue) => this.props.handler(newValue, obj.code, obj.required, /^[+-]?\d+$/)} errorText={this.props.error ? this.props.error : ""} maxLength="18" />
+                <TextField className="custom-form-control-for-textfield" fullWidth={true} ref={obj.code} floatingLabelText={description} value={this.props.value} onChange={(e,newValue) => this.props.handler(newValue, obj.code, obj.required, /^[+-]?\d+$/)} errorText={this.props.error ? this.props.error : ""} maxLength="18" />
               </Col>
         );
         case "double":
           return (
             <Col xs={12} sm={4} md={3} lg={3}>
-              <TextField fullWidth={true} ref={obj.code} floatingLabelText={description} value={this.props.value} onChange={(e,newValue) => this.props.handler(newValue, obj.code, obj.required, /^[+-]?\d+(\.\d+)?$/)} errorText={this.props.error ? this.props.error : ""}/>
+              <TextField className="custom-form-control-for-textfield" fullWidth={true} ref={obj.code} floatingLabelText={description} value={this.props.value} onChange={(e,newValue) => this.props.handler(newValue, obj.code, obj.required, /^[+-]?\d+(\.\d+)?$/)} errorText={this.props.error ? this.props.error : ""}/>
             </Col>
           );
         case "date":
           return(
             <Col xs={12} sm={4} md={3} lg={3}>
-              <DatePicker fullWidth={true} ref={obj.code} floatingLabelText={description} value={this.props.value ? new Date(this.props.value.split('-')[2], this.props.value.split('-')[1]-1, this.props.value.split('-')[0]) : ''}
+              <DatePicker className="custom-form-control-for-textfield" fullWidth={true} ref={obj.code} floatingLabelText={description} value={this.props.value ? new Date(this.props.value.split('-')[2], this.props.value.split('-')[1]-1, this.props.value.split('-')[0]) : ''}
               formatDate={(date)=>{
                 let dateObj = new Date(date);
                 let year = dateObj.getFullYear();
@@ -143,7 +143,7 @@ export default class Fields extends Component{
           }
           return (
             <Col xs={12} sm={4} md={3} lg={3}>
-              <DatePicker fullWidth={true} ref={obj.code} floatingLabelText={description} value={(this.props.value && date && time) ? new Date(date.split('-')[2], date.split('-')[1]-1, date.split('-')[0], time.split(':')[0], time.split(':')[1], time.split(':')[2]) : ''}
+              <DatePicker className="custom-form-control-for-textfield" fullWidth={true} ref={obj.code} floatingLabelText={description} value={(this.props.value && date && time) ? new Date(date.split('-')[2], date.split('-')[1]-1, date.split('-')[0], time.split(':')[0], time.split(':')[1], time.split(':')[2]) : ''}
               formatDate={(date)=>{
                 return this.props.value;
               }}
@@ -167,7 +167,7 @@ export default class Fields extends Component{
            return(<CustomSelectField obj={obj} description={description} isMultiple={false} value={this.props.value} handler={this.props.handler}/>);
           return(
             <Col xs={12} sm={4} md={3} lg={3}>
-              <SelectField fullWidth={true} ref={obj.code} floatingLabelText={description} value={this.props.value} onChange={(event, key, value) => {
+              <SelectField className="custom-form-control-for-select" fullWidth={true} ref={obj.code} floatingLabelText={description} value={this.props.value} onChange={(event, key, value) => {
                 this.props.handler(value, obj.code, obj.required, "")
               }} >
               {obj.attribValues.map((dd, index) => (
@@ -181,7 +181,7 @@ export default class Fields extends Component{
           return(<CustomSelectField obj={obj} description={description} isMultiple={true} value={this.props.value} handler={this.props.handler}/>);
           return(
             <Col xs={12} sm={4} md={3} lg={3}>
-              <SelectField fullWidth={true} ref={obj.code} multiple={true} floatingLabelText={description}  value={this.props.value} onChange={(event, key, value) => {
+              <SelectField className="custom-form-control-for-select" fullWidth={true} ref={obj.code} multiple={true} floatingLabelText={description}  value={this.props.value} onChange={(event, key, value) => {
                 this.props.handler(value, obj.code, obj.required, "")
               }} >
               {obj.attribValues && obj.attribValues.map((dd, index) => (

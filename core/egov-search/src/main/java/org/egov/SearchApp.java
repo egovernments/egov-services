@@ -12,7 +12,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import org.egov.domain.model.ReportDefinitions;
+import org.egov.domain.model.SearchDefinitions;
 import org.egov.swagger.model.SearchDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,16 +56,13 @@ public class SearchApp implements EnvironmentAware {
         SearchApp.env = env;
     }
     
-    @Autowired
-    private static ReportDefinitions reportDefinitions;
-    
-    public void setReportDefinitions(ReportDefinitions reportDefinitions) {
-		SearchApp.reportDefinitions = reportDefinitions;
-	}
-
 	public SearchApp(ResourceLoader resourceLoader) {
     	this.resourceLoader = resourceLoader;
     }
+    
+    @Autowired
+    private static SearchDefinitions searchDefinitions;
+    
     
     @Bean
     public RestTemplate restTemplate(){
@@ -76,33 +73,33 @@ public class SearchApp implements EnvironmentAware {
 	}
 	
 	
-	@Bean("reportDefinitions")
+	@Bean("searchDefinitions")
 	@Value("common")
-	public static ReportDefinitions loadYaml(String moduleName) throws Exception {
+	public static SearchDefinitions loadYaml(String moduleName) throws Exception {
     
 	ObjectMapper mapper = getMapperConfig();
 	List<SearchDefinition> localrd = new ArrayList<SearchDefinition>();
-	ReportDefinitions rd = new ReportDefinitions();
-	ReportDefinitions localReportDefinitions = new ReportDefinitions();
+	SearchDefinitions rd = new SearchDefinitions();
+	SearchDefinitions localSearchDefinitions = new SearchDefinitions();
 
 	if(!moduleName.equals("common")){
-		localrd.addAll(reportDefinitions.getReportDefinitions());
+		localrd.addAll(searchDefinitions.getReportDefinitions());
 	}
-	loadReportDefinitions(moduleName, mapper, localrd, rd); 
+	loadSearchDefinitions(moduleName, mapper, localrd, rd); 
 	
-	localReportDefinitions.setReportDefinitions(localrd);
+	localSearchDefinitions.setReportDefinitions(localrd);
 
-	reportDefinitions = localReportDefinitions;
+	searchDefinitions = localSearchDefinitions;
      
 	LOGGER.info("ModuleName : "+moduleName);
 	
-	return reportDefinitions;
+	return searchDefinitions;
 	
 
 	}
 
-	private static void loadReportDefinitions(String moduleName, ObjectMapper mapper, List<SearchDefinition> localrd,
-			ReportDefinitions rd) throws Exception {
+	private static void loadSearchDefinitions(String moduleName, ObjectMapper mapper, List<SearchDefinition> localrd,
+			SearchDefinitions rd) throws Exception {
 		BufferedReader br;
 		FileReader fr;
 		String yamllist = env.getProperty("search.yaml.path");
@@ -118,7 +115,7 @@ public class SearchApp implements EnvironmentAware {
 					LOGGER.info("The Yaml Location is : "+yamlLocation);
 					URL oracle = new URL(yamlLocation);
 					try{
-					rd = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);
+					rd = mapper.readValue(new InputStreamReader(oracle.openStream()), SearchDefinitions.class);
 					} catch(Exception e) {
 						
 						LOGGER.info("Skipping the report definition "+yamlLocation);
@@ -132,7 +129,7 @@ public class SearchApp implements EnvironmentAware {
 						 Resource yamlResource = resourceLoader.getResource(yamlLocation.toString());
 						 File yamlFile = yamlResource.getFile();
 						try{
-						rd = mapper.readValue(yamlFile, ReportDefinitions.class);
+						rd = mapper.readValue(yamlFile, SearchDefinitions.class);
 						 } catch(Exception e) {
 							LOGGER.info("Skipping the report definition "+yamlLocation);
 							e.printStackTrace();
@@ -160,8 +157,8 @@ public class SearchApp implements EnvironmentAware {
 	
 	
 
-	public static ReportDefinitions getReportDefs() {
-		return reportDefinitions;
+	public static SearchDefinitions getSearchDefs() {
+		return searchDefinitions;
 	}
 	
 	

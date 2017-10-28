@@ -9,10 +9,10 @@ import org.egov.lams.common.web.contract.LandPossessionSearchCriteria;
 import org.egov.lams.services.service.persistence.queryBuilder.LandPossessionQueryBuilder;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 
-@Component
+@Repository
 public class LandPossessionRepository {
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 

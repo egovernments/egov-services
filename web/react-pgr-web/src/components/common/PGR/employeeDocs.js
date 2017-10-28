@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import {Grid, Row, Col, DropdownButton} from 'react-bootstrap';
+import {Row, Col, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import FileDownload from 'material-ui/svg-icons/action/get-app';
-import styles from '../../styles/material-ui';
-import {translate} from './common';
+import styles from '../../../styles/material-ui';
+import {translate} from '../common';
 
 class employeeDocs extends Component{
   constructor(props){
@@ -50,18 +50,18 @@ class employeeDocs extends Component{
     return(
       <div>
         {this.state.docs != undefined && this.state.docs.length > 0 ?
-            <Grid style={{width:'100%'}}>
-              <Card style={{margin:'15px 0'}}>
-              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
+            <div>
+              <Card style={styles.cardMargin}>
+              <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
                {translate('core.documents')}
               < /div>}/>
-              <CardText style={{padding:'8px 16px 0'}}>
+              <CardText style={styles.cardTextPadding}>
                 <Row>
                   {this.docs()}
                 </Row>
               </CardText>
               </Card>
-            </Grid>
+            </div>
           : ""
         }
       </div>

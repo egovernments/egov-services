@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.*;
 
-import org.egov.domain.model.ReportDefinitions;
+import org.egov.domain.model.SearchDefinitions;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;

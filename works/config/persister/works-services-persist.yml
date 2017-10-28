@@ -89,7 +89,7 @@ serviceMaps:
    isTransaction: true
    queryMaps:
     - query: INSERT INTO egw_estimate_appropriation(
-            id, tenantid, objecttype, objectnumber, budgetusage, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?);
+            id, tenantid, objecttype, objectnumber, budgetusage, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.estimateAppropriations.*
       jsonMaps:
          

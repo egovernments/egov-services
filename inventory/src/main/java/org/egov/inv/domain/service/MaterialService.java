@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public class MaterialService {
 
-    public static final String SEQ_MATERIAL = "seq_material";
+    public static final String SEQ_MATERIAL = "seq_materials";
     public static final String SEQ_SERIAL_NO = "seq_material_code_serial_no";
     private MaterialRepository materialRepository;
     private InventoryUtilityService inventoryUtilityService;

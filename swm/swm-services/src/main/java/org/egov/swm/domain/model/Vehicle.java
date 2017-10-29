@@ -3,6 +3,7 @@ package org.egov.swm.domain.model;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.egov.swm.web.contract.Employee;
 import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -69,9 +70,8 @@ public class Vehicle {
 	@JsonProperty("vendor")
 	private Vendor vendor = null;
 
-	@Length(min = 0, max = 256)
-	@JsonProperty("vehicleDriverName")
-	private String vehicleDriverName = null;
+	@JsonProperty("driver")
+	private Employee driver = null;
 
 	@Valid
 	@JsonProperty("purchaseDate")

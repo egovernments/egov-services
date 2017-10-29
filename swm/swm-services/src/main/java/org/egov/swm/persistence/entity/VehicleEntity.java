@@ -5,6 +5,7 @@ import org.egov.swm.domain.model.FuelType;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleType;
 import org.egov.swm.domain.model.Vendor;
+import org.egov.swm.web.contract.Employee;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,7 +44,7 @@ public class VehicleEntity {
 
 	private String vendor = null;
 
-	private String vehicleDriverName = null;
+	private String driver = null;
 
 	private Long purchaseDate = null;
 
@@ -90,7 +91,7 @@ public class VehicleEntity {
 		vehicle.setModel(model);
 		vehicle.setUlbOwnedVehicle(ulbOwnedVehicle);
 		vehicle.setVendor(Vendor.builder().name(vendor).build());
-		vehicle.setVehicleDriverName(vehicleDriverName);
+		vehicle.setDriver(Employee.builder().code(driver).build());
 		vehicle.setPurchaseDate(purchaseDate);
 		vehicle.setYearOfPurchase(yearOfPurchase);
 		vehicle.setPrice(price);

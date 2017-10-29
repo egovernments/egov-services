@@ -14,11 +14,15 @@ import org.egov.swm.domain.model.VehicleType;
 import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.repository.VehicleRepository;
 import org.egov.swm.persistence.entity.VendorEntity;
+import org.egov.swm.web.contract.DesignationResponse;
+import org.egov.swm.web.contract.EmployeeResponse;
 import org.egov.swm.web.contract.MasterDetails;
 import org.egov.swm.web.contract.MdmsCriteria;
 import org.egov.swm.web.contract.MdmsRequest;
 import org.egov.swm.web.contract.MdmsResponse;
 import org.egov.swm.web.contract.ModuleDetails;
+import org.egov.swm.web.repository.DesignationRepository;
+import org.egov.swm.web.repository.EmployeeRepository;
 import org.egov.swm.web.repository.MdmsRepository;
 import org.egov.swm.web.requests.VehicleRequest;
 import org.egov.tracer.model.CustomException;
@@ -39,6 +43,12 @@ public class VehicleService {
 
 	@Autowired
 	private MdmsRepository mdmsRepository;
+
+	@Autowired
+	private DesignationRepository designationRepository;
+
+	@Autowired
+	private EmployeeRepository employeeRepository;
 
 	@Transactional
 	public VehicleRequest create(VehicleRequest vehicleRequest) {
@@ -115,21 +125,23 @@ public class VehicleService {
 		ArrayList<Vendor> vResponseList;
 		ArrayList<FuelType> ftResponseList;
 		ObjectMapper mapper = new ObjectMapper();
-
-		for (Vehicle details : vehicleRequest.getVehicles()) {
+		DesignationResponse designationResponse = null;
+		String designationId = null;
+		EmployeeResponse employeeResponse = null;
+		for (Vehicle vehicle : vehicleRequest.getVehicles()) {
 
 			// Validate VehicleType
-			if (details.getVehicleType() != null) {
+			if (vehicle.getVehicleType() != null) {
 				masterDetailsArray = new MasterDetails[1];
 				masterDetailsArray[0] = MasterDetails.builder().name(Constants.VEHICLETYPE_MASTER_NAME)
-						.filter("[?(@.code == '" + details.getVehicleType().getCode() + "')]").build();
+						.filter("[?(@.code == '" + vehicle.getVehicleType().getCode() + "')]").build();
 				moduleDetailsArray = new ModuleDetails[1];
 				moduleDetailsArray[0] = ModuleDetails.builder().moduleName(Constants.MODULE_CODE)
 						.masterDetails(masterDetailsArray).build();
 
 				request = MdmsRequest.builder()
 						.mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetailsArray)
-								.tenantId(details.getTenantId()).build())
+								.tenantId(vehicle.getTenantId()).build())
 						.requestInfo(vehicleRequest.getRequestInfo()).build();
 				response = mdmsRepository.getByCriteria(request);
 				if (response == null || response.getMdmsRes() == null
@@ -140,7 +152,7 @@ public class VehicleService {
 						|| response.getMdmsRes().get(Constants.MODULE_CODE)
 								.get(Constants.VEHICLETYPE_MASTER_NAME) == null) {
 					throw new CustomException("VehicleType",
-							"Given VehicleType is invalid: " + details.getVehicleType().getCode());
+							"Given VehicleType is invalid: " + vehicle.getVehicleType().getCode());
 				} else {
 					vtResponseList = new ArrayList<VehicleType>();
 
@@ -153,24 +165,24 @@ public class VehicleService {
 
 					if (vtResponseList.isEmpty())
 						throw new CustomException("VehicleType",
-								"Given VehicleType is invalid: " + details.getVehicleType().getCode());
+								"Given VehicleType is invalid: " + vehicle.getVehicleType().getCode());
 					else
-						details.setVehicleType(vtResponseList.get(0));
+						vehicle.setVehicleType(vtResponseList.get(0));
 				}
 			}
 
 			// Validate vendor
-			if (details.getVendor() != null) {
+			if (vehicle.getVendor() != null) {
 				masterDetailsArray = new MasterDetails[1];
 				masterDetailsArray[0] = MasterDetails.builder().name(Constants.VENDOR_MASTER_NAME)
-						.filter("[?(@.name == '" + details.getVendor().getName() + "')]").build();
+						.filter("[?(@.name == '" + vehicle.getVendor().getName() + "')]").build();
 				moduleDetailsArray = new ModuleDetails[1];
 				moduleDetailsArray[0] = ModuleDetails.builder().moduleName(Constants.MODULE_CODE)
 						.masterDetails(masterDetailsArray).build();
 
 				request = MdmsRequest.builder()
 						.mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetailsArray)
-								.tenantId(details.getTenantId()).build())
+								.tenantId(vehicle.getTenantId()).build())
 						.requestInfo(vehicleRequest.getRequestInfo()).build();
 				response = mdmsRepository.getByCriteria(request);
 				if (response == null || response.getMdmsRes() == null
@@ -178,7 +190,7 @@ public class VehicleService {
 						|| response.getMdmsRes().get(Constants.MODULE_CODE) == null
 						|| !response.getMdmsRes().get(Constants.MODULE_CODE).containsKey(Constants.VENDOR_MASTER_NAME)
 						|| response.getMdmsRes().get(Constants.MODULE_CODE).get(Constants.VENDOR_MASTER_NAME) == null) {
-					throw new CustomException("vender", "Given vender is invalid: " + details.getVendor().getName());
+					throw new CustomException("vender", "Given vender is invalid: " + vehicle.getVendor().getName());
 				} else {
 					vResponseList = new ArrayList<Vendor>();
 
@@ -191,24 +203,24 @@ public class VehicleService {
 
 					if (vResponseList.isEmpty())
 						throw new CustomException("vender",
-								"Given vender is invalid: " + details.getVendor().getName());
+								"Given vender is invalid: " + vehicle.getVendor().getName());
 					else
-						details.setVendor(vResponseList.get(0));
+						vehicle.setVendor(vResponseList.get(0));
 				}
 			}
 
 			// Validate FuelType
-			if (details.getFuelType() != null) {
+			if (vehicle.getFuelType() != null) {
 				masterDetailsArray = new MasterDetails[1];
 				masterDetailsArray[0] = MasterDetails.builder().name(Constants.FUELTYPE_MASTER_NAME)
-						.filter("[?(@.code == '" + details.getFuelType().getCode() + "')]").build();
+						.filter("[?(@.code == '" + vehicle.getFuelType().getCode() + "')]").build();
 				moduleDetailsArray = new ModuleDetails[1];
 				moduleDetailsArray[0] = ModuleDetails.builder().moduleName(Constants.MODULE_CODE)
 						.masterDetails(masterDetailsArray).build();
 
 				request = MdmsRequest.builder()
 						.mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetailsArray)
-								.tenantId(details.getTenantId()).build())
+								.tenantId(vehicle.getTenantId()).build())
 						.requestInfo(vehicleRequest.getRequestInfo()).build();
 				response = mdmsRepository.getByCriteria(request);
 				if (response == null || response.getMdmsRes() == null
@@ -218,7 +230,7 @@ public class VehicleService {
 						|| response.getMdmsRes().get(Constants.MODULE_CODE)
 								.get(Constants.FUELTYPE_MASTER_NAME) == null) {
 					throw new CustomException("FuelType",
-							"Given FuelType is invalid: " + details.getFuelType().getCode());
+							"Given FuelType is invalid: " + vehicle.getFuelType().getCode());
 				} else {
 					ftResponseList = new ArrayList<FuelType>();
 
@@ -231,10 +243,38 @@ public class VehicleService {
 
 					if (ftResponseList.isEmpty())
 						throw new CustomException("FuelType",
-								"Given FuelType is invalid: " + details.getFuelType().getCode());
+								"Given FuelType is invalid: " + vehicle.getFuelType().getCode());
 					else
-						details.setFuelType(ftResponseList.get(0));
+						vehicle.setFuelType(ftResponseList.get(0));
 				}
+			}
+
+			// Validate Driver
+			if (vehicle.getDriver() != null && vehicle.getDriver().getCode() != null) {
+
+				designationResponse = designationRepository.getDesignationByName("Driver", vehicle.getTenantId(),
+						vehicleRequest.getRequestInfo());
+				if (designationResponse != null && designationResponse.getDesignation() != null
+						&& !designationResponse.getDesignation().isEmpty()) {
+					designationId = designationResponse.getDesignation().get(0).getId().toString();
+				} else {
+					throw new CustomException("Driver", "Given Driver is invalid: " + vehicle.getDriver().getCode());
+				}
+
+				if (designationId != null) {
+					employeeResponse = employeeRepository.getEmployeeByDesgIdAndCode(designationId,
+							vehicle.getDriver().getCode(), vehicle.getTenantId(), vehicleRequest.getRequestInfo());
+				} else {
+					throw new CustomException("Driver", "Given Driver is invalid: " + vehicle.getDriver().getCode());
+				}
+
+				if (employeeResponse == null || employeeResponse.getEmployees() == null
+						|| employeeResponse.getEmployees().isEmpty()) {
+					throw new CustomException("Driver", "Given Driver is invalid: " + vehicle.getDriver().getCode());
+				} else {
+					vehicle.setDriver(employeeResponse.getEmployees().get(0));
+				}
+
 			}
 
 		}

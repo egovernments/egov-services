@@ -94,7 +94,7 @@ serviceMaps:
    description: create vehicle in egswm_vehicle
    fromTopic: swm-vehicle-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_vehicle(id, tenantid, vehicletype, fueltype, regnumber, enginesrnumber, chassissrnumber, vehiclecapacity, numberofpersonsreq, model, ulbownedvehicle, vendor, vehicledrivername, purchasedate, yearofpurchase, price, sourceofpurchase, remarks, insurancenumber, insurancevaliditydate, isUnderWarranty, kilometers, endOfWarranty, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_vehicle(id, tenantid, vehicletype, fueltype, regnumber, enginesrnumber, chassissrnumber, vehiclecapacity, numberofpersonsreq, model, ulbownedvehicle, vendor, driver, purchasedate, yearofpurchase, price, sourceofpurchase, remarks, insurancenumber, insurancevaliditydate, isUnderWarranty, kilometers, endOfWarranty, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vehicles.*
       jsonMaps:
        
@@ -124,7 +124,7 @@ serviceMaps:
 
        - jsonPath: $.vehicles.*.vendor.name
 
-       - jsonPath: $.vehicles.*.vehicleDriverName
+       - jsonPath: $.vehicles.*.driver.code
 
        - jsonPath: $.vehicles.*.purchaseDate
          dbType: LONG
@@ -167,7 +167,7 @@ serviceMaps:
    fromTopic: swm-vehicle-update-topic
    queryMaps: 
 
-    - query: UPDATE egswm_vehicle SET vehicletype=?, fueltype=?, regnumber=?, enginesrnumber=?, chassissrnumber=?, vehiclecapacity=?, numberofpersonsreq=?, model=?, ulbownedvehicle=?, vendor=?, vehicledrivername=?, purchasedate=?, yearofpurchase=?, price=?, sourceofpurchase=?, remarks=?, insurancenumber=?, insurancevaliditydate=?, isUnderWarranty=?, kilometers=?, endOfWarranty=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+    - query: UPDATE egswm_vehicle SET vehicletype=?, fueltype=?, regnumber=?, enginesrnumber=?, chassissrnumber=?, vehiclecapacity=?, numberofpersonsreq=?, model=?, ulbownedvehicle=?, vendor=?, driver=?, purchasedate=?, yearofpurchase=?, price=?, sourceofpurchase=?, remarks=?, insurancenumber=?, insurancevaliditydate=?, isUnderWarranty=?, kilometers=?, endOfWarranty=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
       basePath: $.vehicles.*
       jsonMaps:
 
@@ -193,7 +193,7 @@ serviceMaps:
 
        - jsonPath: $.vehicles.*.vendor.name
 
-       - jsonPath: $.vehicles.*.vehicleDriverName
+       - jsonPath: $.vehicles.*.driver.code
 
        - jsonPath: $.vehicles.*.purchaseDate
          dbType: LONG

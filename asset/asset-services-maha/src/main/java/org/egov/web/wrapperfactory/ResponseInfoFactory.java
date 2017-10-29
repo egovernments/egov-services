@@ -16,7 +16,7 @@ public class ResponseInfoFactory {
             responseInfo.setMsgId(requestInfo.getMsgId());
             // responseInfo.setResMsgId("");
             // responseInfo.setStatus(status);
-            responseInfo.setTs(new Date().toString());
+            responseInfo.setTs(new Date().getTime());
             responseInfo.setVer("v1");
         }
         return responseInfo;

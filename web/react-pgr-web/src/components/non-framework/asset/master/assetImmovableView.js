@@ -22,7 +22,76 @@ import ContentRemove from 'material-ui/svg-icons/content/remove';
 import UiTable from '../../../framework/components/UiTable';
 
 var specifications={};
+const styles = {
 
+  underlineStyle: {
+
+  },
+  underlineFocusStyle: {
+
+  },
+  floatingLabelStyle: {
+    color: "#354f57"
+  },
+  floatingLabelFocusStyle: {
+    color:"#354f57"
+  },
+  customWidth: {
+    width:100
+  },
+  checkbox: {
+    marginBottom: 0,
+    marginTop:15
+  },
+  uploadButton: {
+   verticalAlign: 'middle',
+ },
+ uploadInput: {
+   cursor: 'pointer',
+   position: 'absolute',
+   top: 0,
+   bottom: 0,
+   right: 0,
+   left: 0,
+   width: '100%',
+   opacity: 0,
+ },
+ floatButtonMargin: {
+   marginLeft: 20,
+   fontSize:12,
+   width:30,
+   height:30
+ },
+ iconFont: {
+   fontSize:17,
+   cursor:'pointer'
+ },
+ radioButton: {
+    marginBottom:0,
+  },
+actionWidth: {
+  width:160
+},
+reducePadding: {
+  paddingTop:4,
+  paddingBottom:0
+},
+noPadding: {
+  paddingBottom:0,
+  paddingTop:0
+},
+noMargin: {
+  marginBottom: 0
+},
+textRight: {
+  textAlign:'right'
+},
+chip: {
+  marginTop:4
+}
+};
+
+var CONST_API_GET_FILE = "filestore/v1/files/id";
 let reqRequired = [];
 class assetImmovableView extends Component {
   constructor(props) {
@@ -202,21 +271,22 @@ class assetImmovableView extends Component {
 
     specifications = require(`../../../framework/specs/asset/master/assetImmovable`).default;
 
+
     let { setMetaData, setModuleName, setActionName, setMockData } = this.props;
     let hashLocation = window.location.hash;
     let self = this;
-    let obj = specifications[`asset.view`];
+    let obj = specifications["asset.view"];
     self.setLabelAndReturnRequired(obj);
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
-    setModuleName('asset');
-    setActionName('view');
+    setModuleName("asset");
+    setActionName("view");
     //Get view form data
-    var url = specifications[`asset.view`].url.split("?")[0];
+    var url = specifications["asset.view"].url.split("?")[0];
     var hash = window.location.hash.split("/");
     var value = self.props.match.params.id;
     var query = {
-      [specifications[`asset.view`].url.split("?")[1].split("=")[0]]: value
+      [specifications["asset.view"].url.split("?")[1].split("=")[0]]: value
     };
 
     if(window.location.href.indexOf("?") > -1) {
@@ -230,10 +300,10 @@ class assetImmovableView extends Component {
      }
    }
 
-   console.log(query);
-    Api.commonApiPost(url, query, {}, false, specifications[`asset.view`].useTimestamp).then(function(res){
+  Api.commonApiPost(url, query, {}, false, specifications["asset.view"].useTimestamp).then(function(res){
       self.props.setFormData(res);
-      self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), 'asset', 'view', specifications[`asset.view`].objectName);
+      console.log(res);
+      //self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)),"tl", "view", specifications["tl.view"].objectName);
     }, function(err){
 
     })
@@ -243,80 +313,104 @@ class assetImmovableView extends Component {
       this.initData();
   }
 
-  getVal = (path,isDate) => {
-    var val = _.get(this.props.formData, path);
 
-    if( isDate && val && ((val + "").length == 13 || (val + "").length == 12) && new Date(Number(val)).getTime() > 0) {
-      var _date = new Date(Number(val));
-      return ('0' + _date.getDate()).slice(-2) + '/'
-               + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
-               + _date.getFullYear();
-    }
-console.log(val);
-    return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ?  (val === true) ? "Yes" : (val === false) ? "No" : (val + "") : "";
+getVal = (path,isDate) => {
+  var val = _.get(this.props.formData, path);
+
+  if( isDate && val && ((val + "").length == 13 || (val + "").length == 12) && new Date(Number(val)).getTime() > 0) {
+    var _date = new Date(Number(val));
+    return ('0' + _date.getDate()).slice(-2) + '/'
+             + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
+             + _date.getFullYear();
   }
 
-  printer = () => {
-    var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+  return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ? (val + "") : "";
+}
 
-   var cdn = `
-     <!-- Latest compiled and minified CSS -->
-     <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+printer = () => {
+  var mywindow = window.open('', 'PRINT', 'height=400,width=600');
 
-     <!-- Optional theme -->
-     <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">  `;
-   mywindow.document.write('<html><head><title> </title>');
-   mywindow.document.write(cdn);
-   mywindow.document.write('</head><body>');
-   mywindow.document.write(document.getElementById('printable').innerHTML);
-   mywindow.document.write('</body></html>');
+ var cdn = `
+   <!-- Latest compiled and minified CSS -->
+   <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-   mywindow.document.close(); // necessary for IE >= 10
-   mywindow.focus(); // necessary for IE >= 10*/
+   <!-- Optional theme -->
+   <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">  `;
+ mywindow.document.write('<html><head><title> </title>');
+ mywindow.document.write(cdn);
+ mywindow.document.write('</head><body>');
+ mywindow.document.write(document.getElementById('printable').innerHTML);
+ mywindow.document.write('</body></html>');
 
-   setTimeout(function(){
-     mywindow.print();
-     mywindow.close();
-   }, 1000);
+ mywindow.document.close(); // necessary for IE >= 10
+ mywindow.focus(); // necessary for IE >= 10*/
 
-   return true;
+ setTimeout(function(){
+   mywindow.print();
+   mywindow.close();
+ }, 1000);
+
+ return true;
 }
 
   render() {
-    let {mockData, moduleName, actionName, formData, fieldErrors} = this.props;
-    let {handleChange, getVal, addNewCard, removeCard, printer} = this;
+    let {mockData, moduleName, actionName, formData, fieldErrors,date} = this.props;
+    let {handleChange, getVal, addNewCard, removeCard, printer,feeMatrices} = this;
 
-    const renderTable = function() {
-      if(moduleName && actionName && formData && formData[objectName]) {
-        var objectName = mockData[`${moduleName}.${actionName}`].objectName;
-        if(formData[objectName].documents && formData[objectName].documents.length) {
-          var dataList = {
-            resultHeader: ["#", "Name", "File"],
-            resultValues: []
-          };
 
-          for(var i=0; i<formData[objectName].documents.length; i++) {
-            dataList.resultValues.push([i+1, formData[objectName].documents[i].name || "File", "<a href=/filestore/v1/files/id?tenantId=" + localStorage.getItem("tenantId") + "&fileStoreId=" + formData[objectName].documents[i].fileStoreId + ">Download</a>"]);
-          }
-
-          return (
-            <UiTable resultList={dataList}/>
-          );
-        }
-      }
-    }
+      //     const renderBody = function() {
+      //
+      //       console.log(formData);
+      //
+      //
+      //         // console.log(formData.feeMatrices);
+      //         if(formData && formData.hasOwnProperty("Assets") && formData.Assets[0].hasOwnProperty("assetAttributes")){
+      //           console.log(formData.Assets[0].assetAttributes);
+      //             var createCustomObject = formData.Assets[0].assetAttributes;
+      //             var disArray = [];
+      //             _.forEach(createCustomObject, function(value, key) {
+      //               var temp = {};
+      //               console.log(value.key);
+      //               console.log(value.value);
+      //
+      //               temp.label = value.key;
+      //               temp.value = value.value;
+      //               disArray.push(temp);
+      //             });
+      //             console.log(disArray);
+      //             <div>
+      //             <Card className="uiCard">
+      //                 <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("Asset Attributes")}</div>}/>
+      //                 <CardText>
+      //                 {
+      //                   return disArray.map(function(item, index) {
+      //                   console.log(item);
+      //                       return (
+      //                             <TextField
+      //                             defaultValue="Default Value"
+      //                             floatingLabelText="hi"
+      //                             />
+      //                           )
+      //                       })
+      //                 }
+      //        </CardText>
+      //        </Card>
+      //      </div>
+      //       }
+      //
+      // }
 
     return (
       <div className="Report">
         <form id="printable">
-        {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
-          <br/>
-          {renderTable()}
-          <br/>
+        {!_.isEmpty(mockData) && mockData["asset.view"] && <ShowFields groups={mockData["asset.view"].groups} noCols={mockData["asset.view"].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["asset.view"].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
+
+
+           {/*renderBody()*/}
+
+
         </form>
-        <div style={{"textAlign": "center"}}>
-            <UiButton item={{"label": "Print", "uiType":"view"}} ui="google" handler={printer}/>
-        </div>
+
       </div>
     );
   }

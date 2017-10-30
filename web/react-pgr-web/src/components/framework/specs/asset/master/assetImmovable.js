@@ -1391,7 +1391,7 @@ var dat = {
           },
           {
             "name": "DefectLiabilityPeriod",
-            "jsonPath": "Assets[0].defectLiabilityPeriod[0].year",
+            "jsonPath": "Assets[0].defectLiabilityPeriod.year",
             "label": "ac.create.Defect.liability.Period",
             "pattern": "",
             "type": "text",
@@ -1417,7 +1417,7 @@ var dat = {
           },
 					{
             "name": "DefectLiabilityPeriod",
-            "jsonPath": "Assets[0].defectLiabilityPeriod[0].month",
+            "jsonPath": "Assets[0].defectLiabilityPeriod.month",
             "label": "ac.create.Defect.liability.Period.month",
             "pattern": "",
             "type": "text",
@@ -1443,7 +1443,7 @@ var dat = {
           },
 					{
             "name": "DefectLiabilityPeriod",
-            "jsonPath": "Assets[0].defectLiabilityPeriod[0].day",
+            "jsonPath": "Assets[0].defectLiabilityPeriod.day",
             "label": "ac.create.Defect.liability.Period.day",
             "pattern": "",
             "type": "text",

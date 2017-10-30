@@ -4,7 +4,7 @@ import MenuItem from 'material-ui/MenuItem';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import Api from '../../../api/api';
-import {translate} from '../../common/common';
+import {translate, epochToDate} from '../../common/common';
 import _ from 'lodash';
 
 import $ from 'jquery';
@@ -44,7 +44,8 @@ class ShowField extends Component {
   componentDidMount(){
     // console.log(this.props);
     this.setState({
-      reportName : this.props.match.params.reportName
+      reportName : this.props.match.params.reportName,
+      moduleName : this.props.match.params.moduleName
     });
   }
 
@@ -52,7 +53,8 @@ class ShowField extends Component {
     if((this.props.match.params.moduleName !== nextprops.match.params.moduleName) || (this.props.match.params.reportName !== nextprops.match.params.reportName)){
       // console.log(nextprops);
       this.setState({
-        reportName : nextprops.match.params.reportName
+        reportName : nextprops.match.params.reportName,
+        moduleName : nextprops.match.params.moduleName
       });
     }
 
@@ -68,7 +70,7 @@ class ShowField extends Component {
          {
             extend: 'pdf',
             filename : this.state.reportName,
-            title : this.state.reportName,
+            // title : this.state.reportSubTitle,
             orientation: 'landscape',
             pageSize: 'TABLOID',
             footer : true
@@ -285,6 +287,43 @@ class ShowField extends Component {
     }
   }
 
+  subHeader = () => {
+    let {metaData,searchParams}=this.props;
+    let {moduleName} = this.state;
+    let paramsLength = searchParams.length;
+    // console.log(paramsLength);
+    let result = `${metaData.reportDetails.summary} for `;
+    searchParams.map((search, index) => {
+      let idx = index+1;
+      let lastText = (idx == paramsLength);
+      let obj = metaData.reportDetails.searchParams.find((obj)=>{ return search.name === obj.name});
+      if(moduleName === 'pgr'){
+        if(obj.name === 'fromDate' || obj.name === 'toDate'){//split date and time
+          let date = `${search.input}`.split(' ')[0];
+          let customDate = date.split('-');
+          // result +=  obj.name === 'toDate' ? ' - ' : '';
+          result += `${customDate[2]}/${customDate[1]}/${customDate[0]} (${translate(obj.label)})`;
+          // result +=  lastText ? '' : obj.name === 'toDate' ? ', ' : '';
+        }else{
+          result += `${search.input} (${translate(obj.label)})`;
+          // result += !lastText ? ', ' : '';
+        }
+      }else{
+        if(obj.name === 'fromDate' || obj.name === 'toDate'){//epoch to date
+          // result +=  obj.name === 'toDate' ? ' - ' : '';
+          result += `${epochToDate(search.input)} (${translate(obj.label)})`;
+          // result +=  lastText ? '' : obj.name === 'toDate' ? ', ' : '';
+        }else{
+            result += `${search.input} (${translate(obj.label)})`;
+            // result += !lastText ? ', ' : '';
+        }
+      }
+      result += !lastText ? ', ' : '';
+    });
+    // this.setState({reportSubTitle:result})
+    return result;
+  }
+
   render() {
     let {drillDown,checkIfDate}=this
     let {
@@ -298,7 +337,7 @@ class ShowField extends Component {
       return (
         <div>
         <Card>
-          <CardHeader title={< strong > {this.state.reportName} < /strong>}/>
+          <CardHeader title={this.subHeader()}/>
           <CardText>
           <Table id="reportTable" style={{color:"black",fontWeight: "normal",padding:"0 !important"}} bordered responsive>
             {this.renderHeader()}
@@ -403,8 +442,7 @@ class ShowField extends Component {
 }
 
 const mapStateToProps = state => {
-  // console.log(state.form.form);
-  // console.log(state.form.searchParams);
+  // console.log(state);
   return ({isTableShow:state.form.showTable,metaData:state.report.metaData,reportResult:state.report.reportResult,flag:state.report.flag,searchForm:state.form.form,searchParams:state.report.searchParams});
 }
 

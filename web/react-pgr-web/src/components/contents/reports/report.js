@@ -76,7 +76,6 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState,msg});
   },
   setForm: (required=[],pattern=[]) => {
-    console.log(required);
     dispatch({
       type: "SET_FORM",
       form:{},

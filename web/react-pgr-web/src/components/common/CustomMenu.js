@@ -217,13 +217,16 @@ const menuConvention={
 "Asset Management.Asset Masters.Asset Category.CreateAssetCategory":"/create/asset/createAssetCategroy",
 "Asset Management.Asset Masters.Asset Category.ViewAssetCategory":"/search/asset/createAssetCategroy/view",
 "Asset Management.Asset Masters.Asset Category.ModifyAssetCategory":"/search/asset/createAssetCategroy/update",
-"Asset Management.Asset Masters.Asset.CreateAsset":"/non-framework/asset/master/assetImmovableCreate",
+"Asset Management.Asset Masters.Asset.CreateAssetImmovable":"/non-framework/asset/master/assetImmovableCreate",
 "Asset Management.Asset Masters.Asset.ViewAsset":"/search/asset/assetImmovable/view",
 "Asset Management.Asset Masters.Asset.ModifyAsset":"/search/asset/assetImmovable/update",
 "Asset Management.Asset Transactions.Asset Revaluation.AssetRevaluationSearchToCreate":"/transactionRevaluation/asset/revaluationAsset",
 "Asset Management.Asset Transactions.Asset Revaluation.AssetRevaluationSearchToView":"",
 "Asset Management.Asset Transactions.Asset Sale And Disposal.AssetSaleAndDisposalSearchToCreate":"/transactionTransfer/asset/translateAsset",
 "Asset Management.Asset Transactions.Asset Sale And Disposal.AssetSaleAndDisposalSearchToView":"",
+"Asset Management.Asset Masters.Asset.CreateAssetMovable":"/non-framework/asset/master/assetMovableCreate",
+
+"Asset Management.Asset Reports.AssetImmovableRegister":"/report/asset/AssetImmovableRegister",
 //SWM
 "Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Create": "/create/vehiclefuellingdetails",
 "Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Search": "/search/vehiclefuellingdetails/view",

@@ -9,7 +9,6 @@ import org.egov.works.commons.domain.enums.WorkCategory;
 import org.egov.works.commons.domain.model.AuditDetails;
 import org.egov.works.commons.domain.model.TypeOfWork;
 import org.egov.works.commons.domain.model.WorkFlowDetails;
-import org.egov.works.estimate.web.model.Department;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -24,7 +23,7 @@ import java.util.Objects;
  * An Object holds the basic data for a Detailed Estimate
  */
 @ApiModel(description = "An Object holds the basic data for a Detailed Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-30T09:20:31.421Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-30T10:26:20.111Z")
 
 public class DetailedEstimate   {
     @JsonProperty("id")
@@ -106,10 +105,10 @@ public class DetailedEstimate   {
     private String location = null;
 
     @JsonProperty("latitude")
-    private BigDecimal latitude = null;
+    private Double latitude = null;
 
     @JsonProperty("longitude")
-    private BigDecimal longitude = null;
+    private Double longitude = null;
 
     @JsonProperty("workCategory")
     private WorkCategory workCategory = null;
@@ -133,7 +132,7 @@ public class DetailedEstimate   {
     private Boolean spillOverFlag = null;
 
     @JsonProperty("grossAmountBilled")
-    private Integer grossAmountBilled = null;
+    private BigDecimal grossAmountBilled = null;
 
     @JsonProperty("cancellationReason")
     private String cancellationReason = null;
@@ -734,7 +733,7 @@ public class DetailedEstimate   {
         this.location = location;
     }
 
-    public DetailedEstimate latitude(BigDecimal latitude) {
+    public DetailedEstimate latitude(Double latitude) {
         this.latitude = latitude;
         return this;
     }
@@ -745,17 +744,16 @@ public class DetailedEstimate   {
      **/
     @ApiModelProperty(value = "Latitude of the location")
 
-    @Valid
 
-    public BigDecimal getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(BigDecimal latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    public DetailedEstimate longitude(BigDecimal longitude) {
+    public DetailedEstimate longitude(Double longitude) {
         this.longitude = longitude;
         return this;
     }
@@ -766,13 +764,12 @@ public class DetailedEstimate   {
      **/
     @ApiModelProperty(value = "Longitude of the location")
 
-    @Valid
 
-    public BigDecimal getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(BigDecimal longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
@@ -918,7 +915,7 @@ public class DetailedEstimate   {
         this.spillOverFlag = spillOverFlag;
     }
 
-    public DetailedEstimate grossAmountBilled(Integer grossAmountBilled) {
+    public DetailedEstimate grossAmountBilled(BigDecimal grossAmountBilled) {
         this.grossAmountBilled = grossAmountBilled;
         return this;
     }
@@ -929,12 +926,13 @@ public class DetailedEstimate   {
      **/
     @ApiModelProperty(value = "Gross Amount Billed if billsCreated flag is true")
 
+    @Valid
 
-    public Integer getGrossAmountBilled() {
+    public BigDecimal getGrossAmountBilled() {
         return grossAmountBilled;
     }
 
-    public void setGrossAmountBilled(Integer grossAmountBilled) {
+    public void setGrossAmountBilled(BigDecimal grossAmountBilled) {
         this.grossAmountBilled = grossAmountBilled;
     }
 

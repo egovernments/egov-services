@@ -7,9 +7,6 @@ import org.egov.works.commons.domain.enums.RevisionType;
 import org.egov.works.commons.domain.model.AuditDetails;
 import org.egov.works.commons.domain.model.NonSOR;
 import org.egov.works.commons.domain.model.ScheduleOfRate;
-import org.egov.works.estimate.web.model.DetailedEstimate;
-import org.egov.works.estimate.web.model.EstimateMeasurementSheet;
-import org.egov.works.estimate.web.model.UOM;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -23,7 +20,7 @@ import java.util.Objects;
  * An Object holds the basic data of Estimate Activity
  */
 @ApiModel(description = "An Object holds the basic data of Estimate Activity")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-30T09:25:28.667Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-30T10:26:20.111Z")
 
 public class EstimateActivity   {
     @JsonProperty("id")
@@ -48,10 +45,10 @@ public class EstimateActivity   {
     private BigDecimal estimateRate = null;
 
     @JsonProperty("quantity")
-    private BigDecimal quantity = null;
+    private Double quantity = null;
 
     @JsonProperty("serviceTaxPerc")
-    private BigDecimal serviceTaxPerc = null;
+    private Double serviceTaxPerc = null;
 
     @JsonProperty("revisionType")
     private RevisionType revisionType = null;
@@ -217,7 +214,7 @@ public class EstimateActivity   {
         this.estimateRate = estimateRate;
     }
 
-    public EstimateActivity quantity(BigDecimal quantity) {
+    public EstimateActivity quantity(Double quantity) {
         this.quantity = quantity;
         return this;
     }
@@ -229,17 +226,16 @@ public class EstimateActivity   {
     @ApiModelProperty(required = true, value = "Quantity of the Estimate Activity")
     @NotNull
 
-    @Valid
 
-    public BigDecimal getQuantity() {
+    public Double getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(BigDecimal quantity) {
+    public void setQuantity(Double quantity) {
         this.quantity = quantity;
     }
 
-    public EstimateActivity serviceTaxPerc(BigDecimal serviceTaxPerc) {
+    public EstimateActivity serviceTaxPerc(Double serviceTaxPerc) {
         this.serviceTaxPerc = serviceTaxPerc;
         return this;
     }
@@ -250,13 +246,12 @@ public class EstimateActivity   {
      **/
     @ApiModelProperty(value = "Service Tax or VAT Percentage of the Estimate Activity")
 
-    @Valid
 
-    public BigDecimal getServiceTaxPerc() {
+    public Double getServiceTaxPerc() {
         return serviceTaxPerc;
     }
 
-    public void setServiceTaxPerc(BigDecimal serviceTaxPerc) {
+    public void setServiceTaxPerc(Double serviceTaxPerc) {
         this.serviceTaxPerc = serviceTaxPerc;
     }
 

@@ -10,6 +10,9 @@ ReportDefinitions:
     label: reports.asset.id
     type: number
     source: asset
+    linkedReport:
+      reportName: AssetDetail
+      linkedColumn: _url?/print/report/assetImmovableReport/:id
   - name: quantity
     label: reports.asset.quantity
     type: number

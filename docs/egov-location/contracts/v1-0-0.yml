@@ -116,7 +116,7 @@ paths:
             
   '/hierarchyTypes/_search':
     post:
-      summary: Get the list of hierarchyTypes Based on search parameters.
+      summary: Get the list of hierarchyTypes Based on search parameters. This End Point Will support tenantId and Id and code as serach parametrs.
       description: To update an existing HierarchyType.
       parameters:
         - name: hierarchyType
@@ -248,7 +248,7 @@ paths:
   '/boundarytypes/_search':
     post:
       summary: Get List Of Boundary Types Based on criteria
-      description: Get List Of Boundary Types Based on criteria
+      description: Get List Of Boundary Types Based on criteria.This EndPoint Will support tenantId and Id and Code as search parameters.
       parameters:
         - name: boundaryType
           in: body
@@ -511,7 +511,7 @@ paths:
       summary: List of cross Hierarchy data for the given query parameters.
       description: |
         Provides a list of available boundary  and their associated
-         id's. These request types can be unique to each tenant.
+         id's. These request types can be unique to each tenant. This End will support tenantId , id and code as search parametrs.
       parameters:
         - name: crossHierarchyRequest
           in: body
@@ -804,7 +804,7 @@ definitions:
         type: string
         format: varchar
         description: HierarchyType Name.
-      loalname:
+      localName:
         type: string
         format: varchar
         description: Local HierarchyType name 
@@ -823,18 +823,24 @@ definitions:
       id:
         type: string
         description: Unique id of the Boundary Type.
+      name:
+        type: string
+        format: varchar  
+      code:
+        type: string
+        description: unique Code of the BoundaryType.  
       tenantId:
         type: string
         description: tenantId of the BoundaryType.
       hierarchy:
         type: integer
         description: hierarchy of the BoundaryType.
-      code:
+      localName:
         type: string
-        description: unique Code of the BoundaryType.  
-      name:
+        description: localName of the BoundaryType.
+      parentName:
         type: string
-        format: varchar
+        description: parentName of the BoundaryType.
       parent:
         $ref: '#/definitions/BoundaryType'
       hierarchyType:
@@ -894,6 +900,10 @@ definitions:
       materializedPath:
         type: string
         description: materialized path of the boundary.
+      children:
+        type: array
+        items :
+          $ref: '#/definitions/Boundary'
     required:
       - code
       - tenantId

@@ -1,0 +1,93 @@
+{
+	"variables": [],
+	"info": {
+		"name": "register",
+		"_postman_id": "5bcaf2db-555a-8b7c-eec3-1029694e97f6",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8080/lcms-services/legalcase/register/_create",
+			"request": {
+				"url": "http://localhost:8080/lcms-services/legalcase/register/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\": {\n\t\t\"apiId\": \"org.egov.pt\",\n\t\t\"ver\": \"1.0\",\n\t\t\"ts\": 1503743889632,\n\t\t\"action\": \"asd\",\n\t\t\"did\": \"4354648646\",\n\t\t\"key\": \"xyz\",\n\t\t\"msgId\": \"654654\",\n\t\t\"requesterId\": \"61\",\n\t\t\"userInfo\":{\n        \t\"id\":74\n    \t},\n\t\t\"authToken\":  \"826c0e65-921c-4421-9294-4306c491bd9f\"\n\t},\n\t\"registers\": [{\n\t\t\"tenantId\":\"default\",\n\t\t\"register\":\"STAMP\",\n\t\t\"isActive\":true\n\t}]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/lcms-services/legalcase/register/_search?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/lcms-services/legalcase/register/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lcms-services",
+						"legalcase",
+						"register",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\": {\n\t\t\"apiId\": \"org.egov.pt\",\n\t\t\"ver\": \"1.0\",\n\t\t\"ts\": 1503743889632,\n\t\t\"action\": \"asd\",\n\t\t\"did\": \"4354648646\",\n\t\t\"key\": \"xyz\",\n\t\t\"msgId\": \"654654\",\n\t\t\"requesterId\": \"61\",\n\t\t\"userInfo\":{\n        \t\"id\":74\n    \t},\n\t\t\"authToken\":  \"826c0e65-921c-4421-9294-4306c491bd9f\"\n\t}\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/lcms-services/legalcase/register/_update",
+			"request": {
+				"url": "http://localhost:8080/lcms-services/legalcase/register/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\": {\n\t\t\"apiId\": \"org.egov.pt\",\n\t\t\"ver\": \"1.0\",\n\t\t\"ts\": 1503743889632,\n\t\t\"action\": \"asd\",\n\t\t\"did\": \"4354648646\",\n\t\t\"key\": \"xyz\",\n\t\t\"msgId\": \"654654\",\n\t\t\"requesterId\": \"61\",\n\t\t\"userInfo\":{\n        \t\"id\":74\n    \t},\n\t\t\"authToken\":  \"826c0e65-921c-4421-9294-4306c491bd9f\"\n\t},\n\t\"registers\": [{\n\t\t\"code\":\"default000001\",\n\t\t\"tenantId\":\"default\",\n\t\t\"register\":\"STAMP-UPDATE\",\n\t\t\"isActive\":true\n\t}]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

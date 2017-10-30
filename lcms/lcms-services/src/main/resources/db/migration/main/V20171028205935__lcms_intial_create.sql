@@ -42,6 +42,13 @@ Create table egov_lcms_case(
 	age character varying,
 	days bigint,
 	address jsonb,
+	pleaderEngagementDetails character varying,
+    receiptDate bigint,
+    reslovtion character varying,
+    reslovtionDate bigint,
+    advocateInfoDate bigint,
+    remarks character varying,
+    isUlbinitiated boolean,
 	CONSTRAINT pk_egov_lcms_case PRIMARY KEY ( code )
 );
 	
@@ -78,8 +85,7 @@ CREATE TABLE eglcms_advocate_payment(
     reslovtion character varying,
     reslovtionDate bigint,
     advocateInfoDate bigint,
-    remarks character varying,
-    isUlbinitiated boolean
+    remarks character varying
 );
 
 

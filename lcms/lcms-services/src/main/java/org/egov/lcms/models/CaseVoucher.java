@@ -15,7 +15,6 @@ public class CaseVoucher {
 	@JsonProperty("code")
 	private String code = null;
 	
-	@NonNull
 	@JsonProperty("caseCode")
 	private String caseCode = null;
 	

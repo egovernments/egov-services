@@ -8,13 +8,14 @@ import org.egov.works.commons.domain.model.AuditDetails;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
  * An Object that holds the basic data of Multi Year Estimate
  */
 @ApiModel(description = "An Object that holds the basic data of Multi Year Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-28T12:22:31.360Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-30T09:25:28.667Z")
 
 public class MultiYearEstimate   {
     @JsonProperty("id")
@@ -30,7 +31,7 @@ public class MultiYearEstimate   {
     private DetailedEstimate detailedEstimate = null;
 
     @JsonProperty("percentage")
-    private Integer percentage = null;
+    private BigDecimal percentage = null;
 
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;
@@ -120,7 +121,7 @@ public class MultiYearEstimate   {
         this.detailedEstimate = detailedEstimate;
     }
 
-    public MultiYearEstimate percentage(Integer percentage) {
+    public MultiYearEstimate percentage(BigDecimal percentage) {
         this.percentage = percentage;
         return this;
     }
@@ -132,12 +133,13 @@ public class MultiYearEstimate   {
     @ApiModelProperty(required = true, value = "Percentage for the Multi Year Estimate")
     @NotNull
 
+    @Valid
 
-    public Integer getPercentage() {
+    public BigDecimal getPercentage() {
         return percentage;
     }
 
-    public void setPercentage(Integer percentage) {
+    public void setPercentage(BigDecimal percentage) {
         this.percentage = percentage;
     }
 

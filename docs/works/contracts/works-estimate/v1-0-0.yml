@@ -1239,12 +1239,12 @@ definitions:
         maxLength: 512
         description: Location of the Detailed Estimate where the work is executed
       latitude:
-        type: integer
-        format: double
+        type: number
+        format: BigDecimal
         description: Latitude of the location
       longitude:
-        type: integer
-        format: double
+        type: number
+        format: BigDecimal
         description: Longitude of the location
       workCategory:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkCategory'
@@ -1288,7 +1288,7 @@ definitions:
         description: Remarks for cancellation of the Detailed Estimate, Required only while cancelling Detailed Estimate
         maxLength: 512
       totalIncludingRE:
-        type: integer
+        type: number
         format: BigDecimal
         description: Total Estimate Amount including Revision Estimates
       abstractEstimateDetail:
@@ -1450,23 +1450,23 @@ definitions:
           description: UOM for the Estimate Activity
           format: singleValueList
         unitRate:
-          type: integer
+          type: number
           format: BigDecimal
           maxLength: 20
           description: Unit Rate of the Estimate Activity
         estimateRate:
-          type: integer
+          type: number
           format: BigDecimal
           maxLength: 20
           description: Estimate Rate of the Estimate Activity
         quantity:
-          type: integer
-          format: double
+          type: number
+          format: BigDecimal
           maxLength: 20
           description: Quantity of the Estimate Activity
         serviceTaxPerc:
-          type: integer
-          format: double
+          type: number
+          format: BigDecimal
           maxLength: 20
           description: Service Tax or VAT Percentage of the Estimate Activity
         revisionType:
@@ -1583,8 +1583,8 @@ definitions:
           $ref: '#/definitions/DetailedEstimate'
           description: Reference of the Detailed Estimate for Multi Year Estimate
         percentage:
-          type: integer
-          format: double
+          type: number
+          format: BigDecimal
           maxLength: 6
           description: Percentage for the Multi Year Estimate
         auditDetails:
@@ -1652,12 +1652,12 @@ definitions:
         detailedEstimate:
           $ref: '#/definitions/DetailedEstimate'
         percentage:
-          type: integer
-          format: double
+          type: number
+          format: BigDecimal
           description: Percentage for the Detailed Estimate Deduction
           maxLength: 6
         amount:
-          type: integer
+          type: number
           format: BigDecimal
           maxLength: 12
           minLength: 1

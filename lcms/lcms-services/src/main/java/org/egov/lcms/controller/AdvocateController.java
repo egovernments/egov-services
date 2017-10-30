@@ -8,6 +8,7 @@ import org.egov.lcms.factory.ResponseFactory;
 import org.egov.lcms.models.AdvocateRequest;
 import org.egov.lcms.models.AdvocateResponse;
 import org.egov.lcms.models.AdvocateSearchCriteria;
+import org.egov.lcms.models.RequestInfoWrapper;
 import org.egov.lcms.service.AdvocateService;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,12 +48,12 @@ public class AdvocateController {
 	}
 
 	@RequestMapping(path = "_search")
-	public ResponseEntity<?> searchAdvocate(@RequestBody RequestInfo requestInfo,
+	public ResponseEntity<?> searchAdvocate(@RequestBody RequestInfoWrapper requestInfoWrapper,
 			@ModelAttribute @Valid AdvocateSearchCriteria advocateSearchCriteria, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new CustomException(propertiesManager.getInvalidTenantCode(), propertiesManager.getExceptionMessage());
 		}
-		AdvocateResponse advocateResponse = advocateService.searchAdvocate(advocateSearchCriteria, requestInfo);
+		AdvocateResponse advocateResponse = advocateService.searchAdvocate(advocateSearchCriteria, requestInfoWrapper.getRequestInfo());
 		return new ResponseEntity<>(advocateResponse, HttpStatus.CREATED);
 	}
 }

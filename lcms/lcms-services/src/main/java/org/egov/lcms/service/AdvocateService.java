@@ -58,7 +58,7 @@ public class AdvocateService {
 
 			try {
 				code = uniqueCodeGeneration.getUniqueCode(advocate.getTenantId(), requestInfo,
-						propertiesManager.getAdvocateUlbFormat(), propertiesManager.getAdvocateUlbName());
+						propertiesManager.getAdvocateUlbFormat(), propertiesManager.getAdvocateUlbName(), Boolean.FALSE, null);
 			} catch (Exception e) {
 				throw new CustomException(propertiesManager.getInvalidIdGenerationCode(),
 						propertiesManager.getIdGenerationExceptionMessage());

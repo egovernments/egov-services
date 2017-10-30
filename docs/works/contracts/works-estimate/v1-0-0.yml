@@ -507,7 +507,7 @@ paths:
           in: query
           required: false
           description: Estimate Amount of the Detailed Estimate
-          type: integer
+          type: number
           format: double
         - name: nameOfWork
           in: query
@@ -1240,11 +1240,11 @@ definitions:
         description: Location of the Detailed Estimate where the work is executed
       latitude:
         type: number
-        format: BigDecimal
+        format: double
         description: Latitude of the location
       longitude:
         type: number
-        format: BigDecimal
+        format: double
         description: Longitude of the location
       workCategory:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkCategory'
@@ -1274,7 +1274,7 @@ definitions:
         type: boolean
         description: Boolean value to identify whether the spill over or not. Default value is false.
       grossAmountBilled:  
-        type: integer
+        type: number
         format: BigDecimal
         description: Gross Amount Billed if billsCreated flag is true 
       cancellationReason:
@@ -1386,7 +1386,7 @@ definitions:
         overhead:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/Overhead'
         amount:
-          type: integer
+          type: number
           format: BigDecimal
           maxLength: 20
           description: Overhead amount
@@ -1461,12 +1461,12 @@ definitions:
           description: Estimate Rate of the Estimate Activity
         quantity:
           type: number
-          format: BigDecimal
+          format: double
           maxLength: 20
           description: Quantity of the Estimate Activity
         serviceTaxPerc:
           type: number
-          format: BigDecimal
+          format: double
           maxLength: 20
           description: Service Tax or VAT Percentage of the Estimate Activity
         revisionType:
@@ -1523,27 +1523,27 @@ definitions:
           pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
           maxLength: 1024
         no:
-          type: integer
+          type: number
           format: BigDecimal
           description: No. of the Estimate Measurement sheet
           maxLength: 12
         length:
-          type: integer
+          type: number
           format: BigDecimal
           description: length of the Estimate Measurement sheet
           maxLength: 12
         width:
-          type: integer
+          type: number
           format: BigDecimal
           description: Width of the Estimate Measurement sheet
           maxLength: 12
         depthOrHeight:
-          type: integer
+          type: number
           format: BigDecimal
           description: Depth Or Height of the Estimate Measurement sheet
           maxLength: 12
         quantity:
-          type: integer
+          type: number
           format: BigDecimal
           description: Quantity of the Estimate Measurement sheet
           maxLength: 12
@@ -1584,7 +1584,7 @@ definitions:
           description: Reference of the Detailed Estimate for Multi Year Estimate
         percentage:
           type: number
-          format: BigDecimal
+          format: double
           maxLength: 6
           description: Percentage for the Multi Year Estimate
         auditDetails:
@@ -1653,7 +1653,7 @@ definitions:
           $ref: '#/definitions/DetailedEstimate'
         percentage:
           type: number
-          format: BigDecimal
+          format: double
           description: Percentage for the Detailed Estimate Deduction
           maxLength: 6
         amount:
@@ -1706,7 +1706,7 @@ definitions:
           type: boolean
           description: The active/inactive status of the project which refresents the boolean value True/False. By default the boolean value will be True.
         projectValue:
-          type: integer
+          type: number
           format: BigDecimal
           maxLength: 20
           description: The cost of the Project. This value will be updated on Project closure which will include the complete expenditure on the project.

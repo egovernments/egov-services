@@ -89,7 +89,7 @@ serviceMaps:
 
   - version: 1.0
     name: lcms-update-summon
-    description: create opinion in lcms
+    description: create summon in lcms
     fromTopic: lcms-update-summon
     queryMaps:
       - query: UPDATE egov_lcms_case SET oldCaseNo=?,suitNo=?,judgeDetails=?,caseRefernceNo=?,departmentPerson=?,caseRegistrationDate=?,stateId=? WHERE code =?;
@@ -114,7 +114,7 @@ serviceMaps:
         
   - version: 1.0
     name: lcms-update-summon
-    description: create opinion in lcms
+    description: create vakalatnama in lcms
     fromTopic: lcms-create-vakalatnama
     queryMaps:
       - query: UPDATE egov_lcms_case SET isVakalatnamaGenerated=?,vakalatnamaGenerationDate=?,witness=?,coName=?,age=?,days=?,stateId=? WHERE code=?;
@@ -225,7 +225,7 @@ serviceMaps:
         
   - version: 1.0
     name: lcms-assign-advocate
-    description: create opinion in lcms
+    description: create assign-advocate in lcms
     fromTopic: lcms-assign-advocate
     queryMaps:
       - query: INSERT INTO egov_lcms_case_advocate (code,casecode,advocatecode,assigndate) VALUES (?,?,?,?);
@@ -351,10 +351,10 @@ serviceMaps:
        - jsonPath: $.advocates.*.tenantId
          type: STRING
 
-       - jsonPath: $.requestInfo.userInfo.id
+       - jsonPath: $.RequestInfo.userInfo.id
          type: STRING
 
-       - jsonPath: $.requestInfo.userInfo.id
+       - jsonPath: $.RequestInfo.userInfo.id
          type: STRING
 
        - jsonPath: createdTime
@@ -471,7 +471,7 @@ serviceMaps:
        - jsonPath: $.advocates.*.reasonOfTermination
          type: STRING
 
-       - jsonPath: $.requestInfo.userInfo.id
+       - jsonPath: $.RequestInfo.userInfo.id
          type: STRING        
 
        - jsonPath: lastModifiedTime

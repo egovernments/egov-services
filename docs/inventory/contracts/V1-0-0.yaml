@@ -2210,6 +2210,8 @@ definitions:
           format: int64
           description: |
             expected delivery date for Indent Note
+        workFlowDetails:
+          $ref: "#/definitions/WorkFlowDetails"    
         stateId:
           type: integer
           format: int64
@@ -2264,6 +2266,8 @@ definitions:
           $ref: "#/definitions/Indent"
         indentStore:
           $ref: "#/definitions/Store"
+        workFlowDetails:
+          $ref: "#/definitions/WorkFlowDetails"   
         stateId:
           type: integer
           format: int64
@@ -2375,6 +2379,8 @@ definitions:
           minLength: 5
           description: |
             status of the PurchaseOrder
+        workFlowDetails:
+          $ref: "#/definitions/WorkFlowDetails"     
         stateId:
           type: integer
           format: int64
@@ -2859,6 +2865,8 @@ definitions:
           minLength: 4    
         materialIssue:
           $ref: "#/definitions/MaterialIssue"
+        workFlowDetails:
+          $ref: "#/definitions/WorkFlowDetails"   
         stateId:
           type: integer
           format: int64
@@ -2959,6 +2967,8 @@ definitions:
             - ReturnToSupplier
           description: |
             issue purpose of the Non Indent Issue
+        workFlowDetails:
+          $ref: "#/definitions/WorkFlowDetails"     
         stateId:
           type: integer
           format: int64
@@ -3066,6 +3076,8 @@ definitions:
           minLength: 5
           description: |
             inward note status of the TransferInward
+        workFlowDetails:
+          $ref: "#/definitions/WorkFlowDetails"     
         stateId:
           type: integer
           format: int64
@@ -3162,6 +3174,8 @@ definitions:
             outward note status of the TransferOutward
         indent:
           $ref: "#/definitions/Indent"
+        workFlowDetails:
+          $ref: "#/definitions/WorkFlowDetails"   
         stateId:
           type: integer
           format: int64
@@ -3702,6 +3716,8 @@ definitions:
             - CANCELED
           description: |
             scrap status of the Scrap
+        workFlowDetails:
+          $ref: "#/definitions/WorkFlowDetails"     
         stateId:
           type: integer
           format: int64
@@ -3839,6 +3855,8 @@ definitions:
             - CANCELED
           description: |
             disposal status of the Disposal
+        workFlowDetails:
+          $ref: "#/definitions/WorkFlowDetails"     
         stateId:
           type: integer
           format: int64
@@ -3903,8 +3921,51 @@ definitions:
           items:
             $ref: '#/definitions/Disposal'
         page:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'         
-          
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
+    
+    WorkFlowDetails:
+      type: object
+      description: An Object to hold the Application workflow details for a given Object like Indent, Material Transfer, Purchase Order, Material Issue, Outward Notice, Inward Notice etc.
+      properties:
+        type:
+          type: string
+          description: Workflow type to be processed for an application the Abstract Estimate
+        businessKey:
+          type: string
+          description: Businesskey of the workflow processing application
+        department:
+          type: string
+          description: Department of the workflow processing authority
+        designation:
+          type: string
+          description: Designation of the workflow processing authority
+          maxLength: 1024
+          minLength: 3
+        assignee:
+          type: integer
+          format: int64
+          description: Assignee id
+        action:
+          type: string
+          description: Action to be taken for processing workflow
+        status:
+          type: string
+          description: Status of the application
+        comments:
+          type: string
+          description: Comments given by the workflow processing person
+        senderName:
+          type: string
+          description: Name of the workflow processing person
+        details:
+          type: string
+          description: Details about the workflow process
+        workFlowDetails:
+          $ref: "#/definitions/WorkFlowDetails"
+        stateId:
+          type: string
+          description: State id of the workflow
+        
 parameters:
   offset:
     name: offset

@@ -341,7 +341,7 @@ const Main = () => {
       //Assets
       <Route exact path= {base + '/non-framework/asset/master/assetImmovableCreate'} component={assetImmovableCreate}/>
       <Route exact path= {base + '/non-framework/asset/master/assetMovableCreate'} component={assetMovableCreate}/>
-      <Route exact path= {base + '/non-framework/asset/master/assetImmovableView'} component={assetImmovableView}/>
+      <Route exact path= {base + '/non-framework/asset/master/assetImmovableView/:id'} component={assetImmovableView}/>
 
     </Switch>
   </main>

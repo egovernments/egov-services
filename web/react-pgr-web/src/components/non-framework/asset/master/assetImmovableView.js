@@ -205,18 +205,18 @@ class assetImmovableView extends Component {
     let { setMetaData, setModuleName, setActionName, setMockData } = this.props;
     let hashLocation = window.location.hash;
     let self = this;
-    let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+    let obj = specifications[`asset.view`];
     self.setLabelAndReturnRequired(obj);
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
-    setModuleName(hashLocation.split("/")[2]);
-    setActionName(hashLocation.split("/")[1]);
+    setModuleName('asset');
+    setActionName('view');
     //Get view form data
-    var url = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].url.split("?")[0];
+    var url = specifications[`asset.view`].url.split("?")[0];
     var hash = window.location.hash.split("/");
     var value = self.props.match.params.id;
     var query = {
-      [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].url.split("?")[1].split("=")[0]]: value
+      [specifications[`asset.view`].url.split("?")[1].split("=")[0]]: value
     };
 
     if(window.location.href.indexOf("?") > -1) {
@@ -231,9 +231,9 @@ class assetImmovableView extends Component {
    }
 
    console.log(query);
-    Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
+    Api.commonApiPost(url, query, {}, false, specifications[`asset.view`].useTimestamp).then(function(res){
       self.props.setFormData(res);
-      self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
+      self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), 'asset', 'view', specifications[`asset.view`].objectName);
     }, function(err){
 
     })

@@ -74,7 +74,7 @@ var dat = {
   						"jsonPath": "Asset.assetCategory.assetCategoryType",
   						"label": "Asset Category Type",
   						"pattern": "",
-  						"type": "singleValueList",
+  						"type": "text",
   						"url": "",
   						"isRequired": true,
   						"isDisabled": true,
@@ -669,8 +669,8 @@ var dat = {
             "label": "ac.create.Asset.account.code",
             "pattern": "",
             "type": "singleValueList",
-						//"url": "",
-            "url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Fixed Assets|$..name|$..name",
+						"url": "",
+            //"url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Fixed Assets|$..name|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -934,7 +934,7 @@ var dat = {
 			"values": ["code","name", "modeOfAcquisition", "dateOfCreation"],
 			"resultPath": "Assets",
 			// "rowClickUrlUpdate": "/update/asset/assetMovable/{id}",
-			 "rowClickUrlView": "/view/asset/assetImmovable/{id}"
+			 "rowClickUrlView": "/non-framework/asset/master/assetImmovableView/{id}"
 			}
 	},
 	"asset.view": {

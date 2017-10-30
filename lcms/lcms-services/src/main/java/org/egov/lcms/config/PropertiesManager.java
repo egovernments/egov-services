@@ -45,7 +45,13 @@ public class PropertiesManager {
 
 	@Value("${summom.code.format}")
 	private String summonCodeFormat;
-
+	
+	@Value("${legacy.dataload.code.format}")
+	private String legacyLoadCodeFormat;
+	
+	@Value("${legacy.code.format}")
+	private String legacyLoadCodeName;
+	
 	
 	@Value("${egov.lcms.create.summon.validated}")
 	private String createSummonvalidated;

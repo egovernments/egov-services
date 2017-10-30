@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProjectCodeJdbcRepository extends JdbcRepository {
 
+	public static final String TABLE_NAME = "egw_projectcode";
+	
 	public List<ProjectCode> search(ProjectCodeSearchContract projectCodeSearchContract) {
 		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
@@ -29,7 +31,7 @@ public class ProjectCodeJdbcRepository extends JdbcRepository {
 			orderBy = "order by " + projectCodeSearchContract.getSortBy();
 		}
 
-		searchQuery = searchQuery.replace(":tablename", ProjectCode.TABLE_NAME);
+		searchQuery = searchQuery.replace(":tablename", TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 

@@ -19,8 +19,6 @@ import java.util.Objects;
 
 public class ProjectCode   {
 
-	public static final String TABLE_NAME = "egw_projectcode";
-
   @JsonProperty("id")
   private String id = null;
 

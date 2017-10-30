@@ -25,8 +25,6 @@ import java.util.Objects;
 
 public class AbstractEstimate   {
 
-  public static final String TABLE_NAME = "egw_abstractestimate";
-
   @JsonProperty("id")
   private String id = null;
 

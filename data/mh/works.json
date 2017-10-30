@@ -9,13 +9,13 @@
       "name": "EXCAVATION - FAKE"
     },
     {
-      "id": 1,
+      "id": 2,
       "code": "CCR - FAKE",
       "tenantId": "mh",
       "name": "Concrete roads - FAKE"
     },
     {
-      "id": 1,
+      "id": 3,
       "code": "BTR - FAKE",
       "tenantId": "mh",
       "name": "Black top roads - FAKE"
@@ -218,5 +218,31 @@
         }
       ]
     }
-  ]
+  ],
+  "ReferenceType": [
+    {
+      "id": 1,
+      "code": "DemandfromMember",
+      "tenantId": "mh",
+      "name": "Demand from Member"
+    },
+    {
+      "id": 2,
+      "code": "Demandfrompublic",
+      "tenantId": "mh",
+      "name": "Demand from public"
+    },
+    {
+      "id": 3,
+      "code": "DepartmentalInitiative",
+      "tenantId": "mh",
+      "name": "Departmental Initiative"
+    },
+    {
+      "id": 4,
+      "code": "Other",
+      "tenantId": "mh",
+      "name": "Other"
+    }
+  ],
 }

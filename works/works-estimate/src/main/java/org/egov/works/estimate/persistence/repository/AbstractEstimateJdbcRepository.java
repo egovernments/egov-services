@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class AbstractEstimateJdbcRepository extends JdbcRepository {
 
+	public static final String TABLE_NAME = "egw_abstractestimate";
+	
 	public List<AbstractEstimate> search(AbstractEstimateSearchContract abstractEstimateSearchContract) {
 		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
@@ -29,11 +31,10 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 			orderBy = "order by " + abstractEstimateSearchContract.getSortBy();
 		}
 
-		searchQuery = searchQuery.replace(":tablename", AbstractEstimate.TABLE_NAME);
+		searchQuery = searchQuery.replace(":tablename", TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
-		// implement jdbc specfic search
 		if (abstractEstimateSearchContract.getTenantId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");

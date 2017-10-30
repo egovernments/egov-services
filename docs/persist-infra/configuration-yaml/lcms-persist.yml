@@ -143,24 +143,6 @@ serviceMaps:
         - jsonPath: $.cases.*.summon.code
 
   - version: 1.0
-    name: lcms-assign-advocate
-    description: assign advocate for the case
-    fromTopic: lcms-assign-advocate
-    queryMaps:
-      - query: INSERT INTO egov_lcms_case_advocate (code,casecode,advocatecode,assigndate) VALUES (?,?,?,?);
-        basePath: $.cases.*
-        jsonMaps:        
-
-        - jsonPath: $.cases.*.advocatesDetails.*.code
-        
-        - jsonPath: $.cases.*.summon.code
-        
-        - jsonPath: $.cases.*.advocatesDetails.*.advocate.code
-       
-        - jsonPath: $.cases.*.advocatesDetails.*.assignedDate
-          type: LONG 
-  
-  - version: 1.0
     name: lcms-parawisecomments
     description: create parawisecomments in lcms
     fromTopic: lcms-parawisecomment-create
@@ -246,14 +228,16 @@ serviceMaps:
     description: create opinion in lcms
     fromTopic: lcms-assign-advocate
     queryMaps:
-      - query: INSERT INTO egov_lcms_case_advocate (code,casecode,advocatecode,assigndate) VALUES (?,?,?,?);
+      - query: INSERT INTO egov_lcms_case_advocate (code,casecode,advocate,assignedDate) VALUES (?,?,?,?);
         basePath: $.cases.*
         jsonMaps:        
         - jsonPath: $.cases.*.advocatesDetails.*.code
         
         - jsonPath: $.cases.*.summon.code
         
-        - jsonPath: $.cases.*.advocatesDetails.*.advocate.code
+        - jsonPath: $.cases.*.advocatesDetails.*.advocate
+          type: JSON
+          dbType: JSONB
         
         - jsonPath: $.cases.*.advocatesDetails.*.assignedDate
           type: LONG

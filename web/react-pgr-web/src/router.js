@@ -161,6 +161,7 @@ import TemplateParser from './components/framework/templates/templateParser/temp
 
 //Assets
 import assetImmovableCreate from './components/non-framework/asset/master/assetImmovableCreate';
+import assetMovableCreate from './components/non-framework/asset/master/assetMovableCreate';
 
 const base = "";
 
@@ -337,6 +338,7 @@ const Main = () => {
 
       //Assets
       <Route exact path= {base + '/non-framework/asset/master/assetImmovableCreate'} component={assetImmovableCreate}/>
+      <Route exact path= {base + '/non-framework/asset/master/assetMovableCreate'} component={assetMovableCreate}/>
 
     </Switch>
   </main>

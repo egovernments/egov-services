@@ -42,22 +42,23 @@ class ShowField extends Component {
   }
 
   componentDidMount(){
-    // console.log(this.props);
+    // console.log('Did Mount');
     this.setState({
       reportName : this.props.match.params.reportName,
       moduleName : this.props.match.params.moduleName
     });
+    this.subHeader(this.props.match.params.moduleName);
   }
 
   componentWillReceiveProps(nextprops){
-    if((this.props.match.params.moduleName !== nextprops.match.params.moduleName) || (this.props.match.params.reportName !== nextprops.match.params.reportName)){
-      // console.log(nextprops);
+    // if((this.props.match.params.moduleName !== nextprops.match.params.moduleName) || (this.props.match.params.reportName !== nextprops.match.params.reportName)){
+      // console.log('nextprops');
       this.setState({
         reportName : nextprops.match.params.reportName,
         moduleName : nextprops.match.params.moduleName
       });
-    }
-
+      this.subHeader(nextprops.match.params.moduleName);
+    // }
   }
 
   componentDidUpdate() {
@@ -70,7 +71,7 @@ class ShowField extends Component {
          {
             extend: 'pdf',
             filename : this.state.reportName,
-            // title : this.state.reportSubTitle,
+            title : this.state.reportSubTitle,
             orientation: 'landscape',
             pageSize: 'TABLOID',
             footer : true
@@ -287,11 +288,13 @@ class ShowField extends Component {
     }
   }
 
-  subHeader = () => {
+  subHeader = (moduleName) => {
     let {metaData,searchParams}=this.props;
-    let {moduleName} = this.state;
     let paramsLength = searchParams.length;
     // console.log(paramsLength);
+    if(_.isEmpty(metaData)){
+      return;
+    }
     let result = `${metaData.reportDetails.summary} for `;
     searchParams.map((search, index) => {
       let idx = index+1;
@@ -320,8 +323,7 @@ class ShowField extends Component {
       }
       result += !lastText ? ', ' : '';
     });
-    // this.setState({reportSubTitle:result})
-    return result;
+    this.setState({reportSubTitle:result})
   }
 
   render() {
@@ -337,7 +339,7 @@ class ShowField extends Component {
       return (
         <div>
         <Card>
-          <CardHeader title={this.subHeader()}/>
+          <CardHeader title={this.state.reportSubTitle}/>
           <CardText>
           <Table id="reportTable" style={{color:"black",fontWeight: "normal",padding:"0 !important"}} bordered responsive>
             {this.renderHeader()}

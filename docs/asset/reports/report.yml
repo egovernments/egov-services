@@ -11,7 +11,7 @@ ReportDefinitions:
     source: asset
     linkedReport:
       reportName: AssetImmovableRegisterDetail
-      linkedColumn: _parent?reportName={reportName}&assetid={id}
+      linkedColumn: _parent?reportName={reportName}&assetdetail={id}
   - name: quantity
     label: reports.asset.quantity
     type: number
@@ -347,12 +347,12 @@ ReportDefinitions:
     isMandatory: false
     source: asset
     searchClause : AND asset.assetCategory=$assetCategory
-  - name: assetid
-    label: reports.asset.id
+  - name: assetdetail
+    label: reports.asset.detail
     type: number
     isMandatory: false
     source: asset
-    searchClause : and asset.id in ($assetid)
+    searchClause : and asset.id in ($assetdetail)
   
   query: select asset.id,asset.quantity,asset.plintharea,asset.cubiccontents,asset.landsurveyno,asset.length,asset.width,asset.height,asset.totalarea,
          asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,

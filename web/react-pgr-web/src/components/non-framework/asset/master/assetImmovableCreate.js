@@ -271,7 +271,7 @@ class assetImmovableCreate extends Component {
       var customSpecs = {};
     //  var customFieldsArray = [];
     //  var customArr;
-      Api.commonApiPost("/egov-mdms-service/v1/_get",{"moduleName":"ASSET", "masterName":"AssetCategory", "filter": "%5B%3F%28%40.isAssetAllow%3D%3Dtrue%29%5D"}).then(function(response)
+      Api.commonApiPost("/egov-mdms-service/v1/_get",{"moduleName":"ASSET", "masterName":"AssetCategory", "filter": "%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22IMMOVABLE%22)%5D%0A"}).then(function(response)
      {
 
        if(response) {
@@ -294,19 +294,17 @@ class assetImmovableCreate extends Component {
 
       for(var i=0; i < response.MdmsRes.ASSET.AssetCategory.length; i++ ){
         if(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination != null){
-          console.log(response.MdmsRes.ASSET.AssetCategory[i].id);
           var  customFieldsArray = [];
           catId = response.MdmsRes.ASSET.AssetCategory[i].id;
           for(var j=0; j< response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination.length; j++){
 
             var customTemp = {};
              customTemp.name = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name;
-             customTemp.jsonPath = "Asset.assetAttributes.|" + response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name +".|"+response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].type+"|";
+             customTemp.jsonPath = "Asset.assetAttributesCheck." + response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name +"."+response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].type;
              customTemp.label = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name;
              customTemp.type = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].type ;
              customTemp.isRequired = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].isMandatory;
              customTemp.isDisabled = !(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].isActive);
-             console.log(customTemp);
              switch(customTemp.type) {
                    case 'Text':
                       customTemp.type = 'text';
@@ -329,7 +327,6 @@ class assetImmovableCreate extends Component {
         self.setState({
             customFieldsGen: customSpecs
           }, () => {
-            console.log(self.state.customFieldsGen);
           })
       }
 
@@ -443,23 +440,20 @@ class assetImmovableCreate extends Component {
 
 
   //  var createCustomObject = [];
-  var  createCustomObject = this.props.formData.Asset.assetAttributes;
-    console.log(createCustomObject);
-  //   if(createCustomObject){
-  //     console.log(createCustomObject.length);
-  //     for each(var x=0; x<createCustomObject.length; x++){
-  //       console.log(createCustomObject[x]);
-  //
-  //     }
-  // }
-  //createCustomObject.forEach(function(value, key) {
+  var  createCustomObject = this.props.formData.Asset.assetAttributesCheck;
+  var assetAttributes = [];
   _.forEach(createCustomObject, function(value, key) {
-    console.log(value);
-    var keys = key.split("|", 2);
-    console.log(keys);
-    var values = value.split("|", 2);
-    console.log(values);
+    var tempFinObj = {};
+    tempFinObj.key = key;
+    var splitObject = value;
+    _.forEach(splitObject, function(value, key) {
+      tempFinObj.value =  value;
+      tempFinObj.type = key;
+    });
+    assetAttributes.push(tempFinObj);
   });
+console.log(assetAttributes);
+formData.Asset.assetAttributes = assetAttributes;
 
     //Check if documents, upload and get fileStoreId
     if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"].length) {

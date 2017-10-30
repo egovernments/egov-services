@@ -1,6 +1,6 @@
 ---
 ReportDefinitions:
-- reportName: ImmovableAssetRegister
+- reportName: AssetImmovableRegister
   summary: Immovable Asset Register Report
   version: 1.0.0
   moduleName: asset

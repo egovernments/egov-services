@@ -6,7 +6,7 @@ serviceMaps:
     description: create summon
     fromTopic: lcms-create-summon-validated
     queryMaps: 
-    - query: INSERT INTO egov_lcms_case (code,isSummon,summonReferenceNo,caseNo,summonDate,year,caseType,plantiffName,dependentName,caseCategory,courtName,departmentName,sectionApplied,hearingDate,hearingTime,ward,bench,side,stamp,caseDetails,plantiffAddress,createdBy,lastModifiedBy,createdTime,lastModifiedTime,tenantId,stateId,documents) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+    - query: INSERT INTO egov_lcms_case (code,isSummon,summonReferenceNo,caseNo,summonDate,year,caseType,plantiffName,defendant,caseCategory,courtName,departmentName,sectionApplied,hearingDate,hearingTime,ward,bench,side,stamp,caseDetails,plantiffAddress,createdBy,lastModifiedBy,createdTime,lastModifiedTime,tenantId,stateId,documents) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
       basePath: $.summons.*
       jsonMaps:       
       - jsonPath: $.summons.*.code
@@ -28,7 +28,7 @@ serviceMaps:
         
       - jsonPath: $.summons.*.plantiffName
       
-      - jsonPath: $.summons.*.dependentName
+      - jsonPath: $.summons.*.defendant
       
       - jsonPath: $.summons.*.caseCategory
         type: JSON
@@ -88,9 +88,9 @@ serviceMaps:
         dbType: JSONB
 
   - version: 1.0
-    name: lcms-update-summon
-    description: create summon in lcms
-    fromTopic: lcms-update-summon
+    name:  lcms-create-case
+    description: create case
+    fromTopic: lcms-create-case
     queryMaps:
       - query: UPDATE egov_lcms_case SET oldCaseNo=?,suitNo=?,judgeDetails=?,caseRefernceNo=?,departmentPerson=?,caseRegistrationDate=?,stateId=? WHERE code =?;
         basePath: $.cases.*
@@ -113,8 +113,8 @@ serviceMaps:
         - jsonPath: $.cases.*.summon.code
         
   - version: 1.0
-    name: lcms-update-summon
-    description: create vakalatnama in lcms
+    name: lcms-create-vakalatnama
+    description: create vakalatnama for the case
     fromTopic: lcms-create-vakalatnama
     queryMaps:
       - query: UPDATE egov_lcms_case SET isVakalatnamaGenerated=?,vakalatnamaGenerationDate=?,witness=?,coName=?,age=?,days=?,stateId=? WHERE code=?;
@@ -141,6 +141,24 @@ serviceMaps:
         - jsonPath: $.cases.*.stateId
         
         - jsonPath: $.cases.*.summon.code
+
+  - version: 1.0
+    name: lcms-assign-advocate
+    description: assign advocate for the case
+    fromTopic: lcms-assign-advocate
+    queryMaps:
+      - query: INSERT INTO egov_lcms_case_advocate (code,casecode,advocatecode,assigndate) VALUES (?,?,?,?);
+        basePath: $.cases.*
+        jsonMaps:        
+
+        - jsonPath: $.cases.*.advocatesDetails.*.code
+        
+        - jsonPath: $.cases.*.summon.code
+        
+        - jsonPath: $.cases.*.advocatesDetails.*.advocate.code
+       
+        - jsonPath: $.cases.*.advocatesDetails.*.assignedDate
+          type: LONG 
   
   - version: 1.0
     name: lcms-parawisecomments
@@ -191,7 +209,7 @@ serviceMaps:
     fromTopic: lcms-parawisecomment-update
     queryMaps: 
       - query:  UPDATE egov_lcms_parawise_comments SET parawiseCommentsAskedDate=?,parawiseCommentsReceivedDate=?,hodProvidedDate=?,resolutionDate=?,paraWiseComments=?,documents=?,tenantId=?,casecode=?,lastModifiedBy=?,lastModifiedTime=? WHERE code=?;
-        basepath: $.parawiseComments.*
+        basePath: $.parawiseComments.*
         jsonMaps: 
         - jsonPath: $.parawiseComments.*.parawiseCommentsAskedDate
           type: LONG
@@ -225,7 +243,7 @@ serviceMaps:
         
   - version: 1.0
     name: lcms-assign-advocate
-    description: create assign-advocate in lcms
+    description: create opinion in lcms
     fromTopic: lcms-assign-advocate
     queryMaps:
       - query: INSERT INTO egov_lcms_case_advocate (code,casecode,advocatecode,assigndate) VALUES (?,?,?,?);

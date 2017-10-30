@@ -324,7 +324,7 @@ const Main = () => {
       <Route exact path= {base + '/receipt/:page/:type/:cc/:sid'} component={ReceiptDownload}/>
       <Route exact path= {base + '/non-framework/citizenServices/tl/:status/:id/:paymentGateWayRes?'} component={CS_TradeLicense}/>
       <Route exact path= {base + '/non-framework/citizenServices/tl/:status/:id/:ackNo/:paymentGateWayRes?'} component={CS_VIEW_TradeLicense}/>
-      <Route exact path= {base + '/service/request/view/:srn'} component={CertificateView}/>
+      <Route exact path= {base + '/service/request/view/:srn/:isCertificate'} component={CertificateView}/>
       <Route exact path= {base + '/createLegacy/wc/legacy'} component={createLegacy}/>
       <Route exact path= {base + '/non-framework/wc/masters/serviceCharge/create'} component={createServiceCharge}/>
       <Route exact path= {base + '/non-framework/wc/masters/serviceCharge/update/:id'} component={createServiceCharge}/>

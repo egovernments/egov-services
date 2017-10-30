@@ -18,6 +18,8 @@ import org.egov.citizen.config.ApplicationProperties;
 import org.egov.citizen.model.AuditDetails;
 import org.egov.citizen.model.ServiceReqRequest;
 import org.egov.citizen.model.ServiceReqResponse;
+import org.egov.citizen.repository.CitizenServiceRepository;
+import org.egov.citizen.repository.CollectionRepository;
 import org.egov.citizen.repository.ServiceReqRepository;
 import org.egov.citizen.web.contract.PGPayload;
 import org.egov.citizen.web.contract.PGPayloadResponse;
@@ -72,6 +74,9 @@ public class CitizenPersistService {
 	private ResponseInfoFactory responseInfoFactory;
 	
 	@Autowired
+	private CollectionRepository collectionRepository;
+	
+	@Autowired
 	private ServiceReqRepository serviceReqRepository;
 	
 	@Autowired
@@ -111,12 +116,22 @@ public class CitizenPersistService {
 			}
 
 		}
-		System.out.println("response:"+response);
+		System.out.println("serviceReq:"+response);
 		
 		responeMap.put("serviceReq", response);
 		responeMap.put("comments", mapsRes.get(mapsRes.size() - 1).get("comments"));
 		responeMap.put("documents", mapsRes.get(mapsRes.size() - 1).get("documents"));
-
+		if(true == serviceRequestSearchCriteria.getAnonymous()){
+			Object receiptresponse = null;
+			try{
+				receiptresponse = collectionRepository.searchReceipt(requestInfo, 
+						serviceRequestSearchCriteria.getTenantId(), serviceRequestSearchCriteria.getServiceRequestId());
+			}catch(Exception e){
+				LOGGER.info("Couldn't fetch receiptdetails for srn: "+serviceRequestSearchCriteria.getServiceRequestId());
+			}
+			
+			responeMap.put("receiptDetails", receiptresponse);
+		}
 		responeMap.put("ResponseInfo", responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
 		return responeMap;
 	}

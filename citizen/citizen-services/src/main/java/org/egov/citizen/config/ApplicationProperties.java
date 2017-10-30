@@ -88,6 +88,9 @@ public class ApplicationProperties {
 	@Value("${egov.services.collection_service.receipt.create}")
 	private String createReceiptURI;
 	
+	@Value("${egov.services.collection_service.receipt.search}")
+	private String searchReceiptURI;
+	
 	@Value("${egov.services.billing_service.dues.search}")
 	private String searchDues;
 	

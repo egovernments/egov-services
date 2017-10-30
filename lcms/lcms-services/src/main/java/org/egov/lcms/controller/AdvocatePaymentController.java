@@ -8,6 +8,7 @@ import org.egov.lcms.factory.ResponseFactory;
 import org.egov.lcms.models.AdvocatePaymentRequest;
 import org.egov.lcms.models.AdvocatePaymentResponse;
 import org.egov.lcms.models.AdvocatePaymentSearchCriteria;
+import org.egov.lcms.models.RequestInfoWrapper;
 import org.egov.lcms.service.AdvocatePaymentService;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,13 +66,13 @@ public class AdvocatePaymentController {
 	 * @return
 	 */
 	@RequestMapping(path = "/_search", method = RequestMethod.POST)
-	public ResponseEntity<?> searchAdvocatePayment(@RequestBody @Valid RequestInfo requestInfo,
+	public ResponseEntity<?> searchAdvocatePayment(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
 			@ModelAttribute @Valid AdvocatePaymentSearchCriteria advocatePaymentSearchCriteria) {
 		
 		if(advocatePaymentSearchCriteria.getTenantId() == null ){
 			throw new CustomException(propertiesManager.getTenantMandatoryCode(), propertiesManager.getTenantMandatoryMessage());
 		}
-		return new ResponseEntity<>(advocatePaymentService.searchAdvocatePayment(requestInfo, advocatePaymentSearchCriteria), HttpStatus.OK);
+		return new ResponseEntity<>(advocatePaymentService.searchAdvocatePayment(requestInfoWrapper.getRequestInfo(), advocatePaymentSearchCriteria), HttpStatus.OK);
 	}
 	
 }

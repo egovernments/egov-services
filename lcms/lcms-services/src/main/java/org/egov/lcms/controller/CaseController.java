@@ -59,8 +59,8 @@ public class CaseController {
 	
 	@RequestMapping(path = "/case/_search", method = RequestMethod.POST)
 	public ResponseEntity<?> assignAdvocate(@ModelAttribute @Valid CaseSearchCriteria caseSearchCriteria,
-			@RequestBody RequestInfoWrapper requestInfo) throws Exception {
-		CaseResponse caseResponse = caseService.caseSearch(caseSearchCriteria, requestInfo);
+			@RequestBody RequestInfoWrapper requestInfoWrapper) throws Exception {
+		CaseResponse caseResponse = caseService.caseSearch(caseSearchCriteria, requestInfoWrapper.getRequestInfo());
 		return new ResponseEntity<>(caseResponse, HttpStatus.CREATED);
 
 	}

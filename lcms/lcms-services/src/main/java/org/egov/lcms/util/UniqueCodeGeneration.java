@@ -65,10 +65,10 @@ public class UniqueCodeGeneration {
 		}
 		
 		if ( isCaseRef ){
-		return ulbCode+SequenceNo;
+			return ulbCode+caseCode+SequenceNo; 
 		}
 		else{
-			return ulbCode+caseCode+SequenceNo; 
+			return ulbCode+SequenceNo;
 		}
 		
 	}

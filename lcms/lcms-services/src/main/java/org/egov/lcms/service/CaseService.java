@@ -124,11 +124,11 @@ public class CaseService {
 	}
 	
 	
-	public CaseResponse caseSearch(CaseSearchCriteria caseSearchCriteria, RequestInfoWrapper requestInfo) {
+	public CaseResponse caseSearch(CaseSearchCriteria caseSearchCriteria, RequestInfo requestInfo) {
 
 		List<Case> cases = caseSearchRepository.searchCases(caseSearchCriteria);
 
-		return new CaseResponse(responseFactory.getResponseInfo(requestInfo.getRequestInfo(), HttpStatus.CREATED), cases);
+		return new CaseResponse(responseFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), cases);
 
 	}
 

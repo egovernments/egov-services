@@ -30,10 +30,6 @@ public class PropertiesManager {
 	
 	@Value("${summon.code.name}")
 	private String summonName;
-	
-
-	@Value("${ulb.format}")
-	private String ulbFormat;
 
 	@Value("${opinion.ulb.name}")
 	private String opinionUlbName;
@@ -212,5 +208,8 @@ public class PropertiesManager {
 	
 	@Value("${hearingdetails.ulb.format}")
 	private String hearingDetailsUlbFormat;	
+	
+    @Value("${egov.lcms.case.load.key}")
+    private String loadLegacyData;
 	
 }

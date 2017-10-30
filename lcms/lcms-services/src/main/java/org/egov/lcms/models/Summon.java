@@ -105,4 +105,7 @@ public class Summon {
 
 	@JsonProperty("documents")
 	private List<String> documents = null;
+	
+	@JsonProperty("isUlbinitiated")
+	private Boolean isUlbinitiated = null;
 }

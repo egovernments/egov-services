@@ -9,6 +9,7 @@ import org.egov.lcms.models.Case;
 import org.egov.lcms.models.CaseRequest;
 import org.egov.lcms.models.CaseResponse;
 import org.egov.lcms.models.CaseSearchCriteria;
+import org.egov.lcms.models.HearingDetails;
 import org.egov.lcms.models.ParaWiseComment;
 import org.egov.lcms.repository.CaseSearchRepository;
 import org.egov.lcms.repository.OpinionRepository;
@@ -132,6 +133,64 @@ public class CaseService {
 
 	public CaseResponse createVakalatnama(CaseRequest caseRequest) {
 		kafkaTemplate.send(propertiesManager.getCreateVakalatnama(), caseRequest);
+		return new CaseResponse(responseFactory.getResponseInfo(caseRequest.getRequestInfo(), HttpStatus.CREATED),
+				caseRequest.getCases());
+	}
+	
+	/**
+	 * This API will load legacy
+	 * 
+	 * @param caseRequest
+	 * @return {@link CaseResponse}
+	 */
+	public CaseResponse legacyDataLoad(CaseRequest caseRequest) throws Exception {
+	
+		for(Case caseobj: caseRequest.getCases()){
+			if(caseobj.getSummon().getIsUlbinitiated() == null){
+				caseobj.getSummon().setIsUlbinitiated(Boolean.FALSE);
+			}
+		}
+		for(Case caseobj: caseRequest.getCases()){
+			String caseCode = uniqueCodeGeneration.getUniqueCode(caseobj.getTenantId(), caseRequest.getRequestInfo(),
+					propertiesManager.getCaseCodeFormat(), propertiesManager.getCaseCodeName(), Boolean.FALSE, null);
+			caseobj.setCode(caseCode);
+		
+			
+			for(HearingDetails hearingDetail : caseobj.getHearingDetails()){
+				
+				String hearingcode = uniqueCodeGeneration.getUniqueCode(caseobj.getTenantId(), caseRequest.getRequestInfo(),
+						propertiesManager.getHearingDetailsUlbFormat(), propertiesManager.getHearingDetailsUlbName(), Boolean.FALSE, null);
+				hearingDetail.setCode(hearingcode);
+				
+				
+			}
+			
+			if(caseobj.getSummon() != null ){
+				
+				String summonCode = uniqueCodeGeneration.getUniqueCode(caseobj.getSummon().getTenantId(), caseRequest.getRequestInfo(),
+						propertiesManager.getSummonCodeFormat(), propertiesManager.getSummonName(), Boolean.FALSE, null);
+
+				String summonRefrence = uniqueCodeGeneration.getUniqueCode(caseobj.getSummon().getTenantId(),
+						caseRequest.getRequestInfo(), propertiesManager.getSummonRefrenceFormat(),
+						propertiesManager.getSummonReferenceGenName(), Boolean.FALSE, null);
+
+				caseobj.getSummon().setSummonReferenceNo(summonRefrence);
+				caseobj.getSummon().setCode(summonCode);
+			}
+			
+			
+			if(caseobj.getCaseVoucher() != null ){
+				String caseVoucherCode = uniqueCodeGeneration.getUniqueCode(caseobj.getSummon().getTenantId(), caseRequest.getRequestInfo(),
+						propertiesManager.getLegacyLoadCodeFormat(), propertiesManager.getLegacyLoadCodeName(), Boolean.FALSE, null);
+				caseobj.getCaseVoucher().setCode(caseVoucherCode);
+				caseobj.getCaseVoucher().setCaseCode(caseobj.getCode());
+			}
+			
+			
+		}
+		
+		kafkaTemplate.send(propertiesManager.getLoadLegacyData(), caseRequest);
+
 		return new CaseResponse(responseFactory.getResponseInfo(caseRequest.getRequestInfo(), HttpStatus.CREATED),
 				caseRequest.getCases());
 	}

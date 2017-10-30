@@ -724,3 +724,184 @@ serviceMaps:
         - jsonPath: $.opinions.*.auditDetails.lastModifiedTime
           type: LONG
         - jsonPath: $.opinions.*.code
+		      
+  - version: 1.0
+    name: lcms legacy load
+    description: legacy load case
+    fromTopic: legacy-load-validated
+    queryMaps: 
+    - query: INSERT INTO egov_lcms_case (code, isSummon, side, caseType, caseNo, summonDate, plantiffName, pleaderEngagementDetails, receiptDate, reslovtion, reslovtionDate, advocateInfoDate, vakalatnamaGenerationDate, coName, age, address, remarks, caseDetails, defendent, hearingDate, hearingTime, departmentName, year, courtName, ward, bench, stamp, sectionApplied, lastModifiedBy, createdTime, lastModifiedTime, tenantId, isUlbinitiated) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+      basePath: $.cases.*
+      jsonMaps:       
+      - jsonPath: $.cases.*.code
+      
+      - jsonPath: $.summon.isSummon
+        type: BOOLEAN
+        
+      - jsonPath: $.cases.*.side
+      
+      - jsonPath: $.summon.caseType
+      
+      - jsonPath: $.summon.caseNo
+    
+      - jsonPath: $.summon.summonDate
+        type: LONG
+    
+      - jsonPath: $.summon.plantiffName
+    
+      - jsonPath: $.cases.*.pleaderEngagementDetails
+
+      - jsonPath: $.cases.*.receiptDate
+        type: LONG
+    
+      - jsonPath: $.cases.*.reslovtion
+    
+      - jsonPath: $.cases.*.reslovtionDate
+        type: LONG
+    
+      - jsonPath: $.cases.*.advocateInfoDate
+        type: LONG
+    
+      - jsonPath: $.cases.*.vakalatnamaGenerationDate
+        type: LONG
+    
+      - jsonPath: $.cases.*.coName
+    
+      - jsonPath: $.cases.*.age
+    
+      - jsonPath: $.cases.*.address
+        type: JSON
+        dbType: JSONB
+    
+      - jsonPath: $.cases.*.remarks
+    
+      - jsonPath: $.summon.caseDetails
+    
+      - jsonPath: $.summon.defendent
+    
+      - jsonPath: $.summon.hearingDate
+        type: LONG
+    
+      - jsonPath: $.summon.hearingTime
+        type: LONG
+    
+      - jsonPath: $.summon.departmentName
+          
+      - jsonPath: $.summon.year
+    
+      - jsonPath: $.summon.courtName
+        type: JSON
+        dbType: JSONB
+    
+      - jsonPath: $.summon.ward
+      
+      - jsonPath: $.summon.bench
+        type: JSON
+        dbType: JSONB
+          
+      - jsonPath: $.summon.stamp
+        type: JSON
+        dbType: JSONB
+    
+      - jsonPath: $.summon.sectionApplied,
+      
+      - jsonPath: $.RequestInfo.userInfo.id
+        type: STRING
+
+      - jsonPath: $.RequestInfo.userInfo.id
+        type: STRING
+
+      - jsonPath: createdTime
+        type: CURRENTDATE
+        dbType: LONG         
+
+      - jsonPath: lastModifiedTime
+        type: CURRENTDATE
+        dbType: LONG
+        
+      - jsonPath: $.cases.*.tenantId
+    
+      - jsonPath: $.summon.isUlbinitiated
+        type: BOOLEAN
+      
+  - version: 1.0
+    name: lcms legacy load
+    description: legacy load case
+    fromTopic: legacy-load-validated
+    queryMaps:
+      - query: INSERT INTO egov_lcms_hearing_details (code,judgeMentDate,caseJudgeMent,advocateOpinion, furtherProcesssDetails, darkhasthDueDate, tenantId , casecode,createdBy,lastModifiedBy,createdTime,lastModifiedTime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+        basePath: $.cases.*.hearingdetails.*
+        jsonMaps:
+        - jsonPath: $.hearingdetails.*.code
+        
+        - jsonPath: $.hearingdetails.*.judgeMentDate
+          type: LONG
+      
+        - jsonPath: $.hearingdetails.*.caseJudgeMent
+    
+        - jsonPath: $.hearingdetails.*.advocateOpinion
+    
+        - jsonPath: $.hearingdetails.*.furtherProcesssDetails
+    
+        - jsonPath: $.hearingdetails.*.darkhasthDueDate
+          type: LONG
+      
+        - jsonPath: $.hearingdetails.*.tenantId
+    
+        - jsonPath: $.cases.*.code
+    
+        - jsonPath: $.RequestInfo.userInfo.id
+          type: STRING
+
+        - jsonPath: $.RequestInfo.userInfo.id
+          type: STRING
+
+        - jsonPath: createdTime
+          type: CURRENTDATE
+          dbType: LONG         
+
+        - jsonPath: lastModifiedTime
+          type: CURRENTDATE
+          dbType: LONG
+
+  - version: 1.0
+    name: lcms legacy load
+    description: legacy load case
+    fromTopic: legacy-load-validated  
+    queryMaps:
+      - query: INSERT INTO egov_lcms_case_voucher (code,casecode,vocherType,vocherDate,details,verificationRemarks,officerSignature) VALUES (?,?,?,?)
+        basePath: $.cases.*.caseVoucher
+        jsonMaps:
+        - jsonPath: $.caseVoucher.code
+     
+        - jsonPath: $.cases.*.code
+     
+        - jsonPath: $.caseVoucher.*.vocherType
+    
+        - jsonPath: $.caseVoucher.*.vocherDate
+          type: LONG
+     
+        - jsonPath: $.caseVoucher.*.details
+       
+        - jsonPath: $.caseVoucher.*.verificationRemarks
+       
+        - jsonPath: $.caseVoucher.*.officerSignature
+    
+    
+  - version: 1.0
+    name: lcms legacy load
+    description: legacy load case
+    fromTopic: legacy-load-validated
+    queryMaps:
+      - query: INSERT INTO egov_lcms_case_advocate (code,casecode,advocate,fee) VALUES (?,?,?,?)
+        basePath: $.cases.*.advocatesDetails.*
+        jsonMaps:
+    
+        - jsonPath: $.advocatesDetails.*.code
+    
+        - jsonPath: $.cases.*.code
+    
+        - jsonPath: $.advocatesDetails.*.advocate
+    
+        - jsonPath: $.advocatesDetails.*.fee
+       

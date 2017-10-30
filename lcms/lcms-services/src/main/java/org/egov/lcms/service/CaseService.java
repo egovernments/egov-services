@@ -11,6 +11,7 @@ import org.egov.lcms.models.CaseRequest;
 import org.egov.lcms.models.CaseResponse;
 import org.egov.lcms.models.CaseSearchCriteria;
 import org.egov.lcms.models.ParaWiseComment;
+import org.egov.lcms.models.RequestInfoWrapper;
 import org.egov.lcms.repository.CaseSearchRepository;
 import org.egov.lcms.repository.OpinionRepository;
 import org.egov.lcms.util.UniqueCodeGeneration;
@@ -123,11 +124,11 @@ public class CaseService {
 	}
 	
 	
-	public CaseResponse caseSearch(CaseSearchCriteria caseSearchCriteria, RequestInfo requestInfo) {
+	public CaseResponse caseSearch(CaseSearchCriteria caseSearchCriteria, RequestInfoWrapper requestInfo) {
 
 		List<Case> cases = caseSearchRepository.searchCases(caseSearchCriteria);
 
-		return new CaseResponse(responseFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), cases);
+		return new CaseResponse(responseFactory.getResponseInfo(requestInfo.getRequestInfo(), HttpStatus.CREATED), cases);
 
 	}
 

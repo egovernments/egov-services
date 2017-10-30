@@ -121,16 +121,13 @@ public class CaseBuilder {
 			preparedStatementValues.add(caseSearchCriteria.getCaseType());
 		}
 
-		if (caseSearchCriteria.getFromDate() != null && caseSearchCriteria.getToDate() != null) {
+	     if (caseSearchCriteria.getFromDate() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" caseRegistrationDate>=? AND caseRegistrationDate <=?");
-			preparedStatementValues.add(caseSearchCriteria.getFromDate());
-			preparedStatementValues.add(caseSearchCriteria.getToDate());
-
-		} else if (caseSearchCriteria.getFromDate() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" caseRegistrationDate>=? ");
 			preparedStatementValues.add(caseSearchCriteria.getFromDate());
 		} else if (caseSearchCriteria.getToDate() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" caseRegistrationDate<=? ");
 			preparedStatementValues.add(caseSearchCriteria.getToDate());
 		}
 

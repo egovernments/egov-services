@@ -1,11 +1,10 @@
 package org.egov.lcms.controller;
 
 import javax.validation.Valid;
-
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.lcms.models.CaseRequest;
 import org.egov.lcms.models.CaseResponse;
 import org.egov.lcms.models.CaseSearchCriteria;
+import org.egov.lcms.models.RequestInfoWrapper;
 import org.egov.lcms.service.CaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -62,7 +61,7 @@ public class CaseController {
 	
 	@RequestMapping(path = "/case/_search", method = RequestMethod.POST)
 	public ResponseEntity<?> assignAdvocate(@ModelAttribute @Valid CaseSearchCriteria caseSearchCriteria,
-			@RequestBody RequestInfo requestInfo) throws Exception {
+			@RequestBody RequestInfoWrapper requestInfo) throws Exception {
 		CaseResponse caseResponse = caseService.caseSearch(caseSearchCriteria, requestInfo);
 		return new ResponseEntity<>(caseResponse, HttpStatus.CREATED);
 

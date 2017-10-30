@@ -8,7 +8,7 @@ Create table egov_lcms_case(
 	year character varying NOT NULL,
 	caseType jsonb,
 	plantiffName character varying NOT NULL,
-	defendent character varying NOT NULL,
+	defendant character varying NOT NULL,
 	caseCategory jsonb,
 	courtName jsonb,
 	departmentName character varying NOT NULL,

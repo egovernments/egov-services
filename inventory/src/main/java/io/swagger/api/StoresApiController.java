@@ -39,7 +39,9 @@
  */
 package io.swagger.api;
 
+import io.swagger.model.Pagination;
 import io.swagger.model.Store;
+import io.swagger.model.StoreGetRequest;
 import io.swagger.model.StoreRequest;
 import io.swagger.model.StoreResponse;
 
@@ -52,16 +54,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import javax.validation.constraints.*;
 import javax.validation.Valid;
 
@@ -102,20 +100,29 @@ public class StoresApiController implements StoresApi {
 			@ApiParam(value = "code of the Store ") @Valid @RequestParam(value = "code", required = false) String code,
 			@ApiParam(value = "name of the Store ") @Valid @RequestParam(value = "name", required = false) String name,
 			@ApiParam(value = "description of the Store ") @Valid @RequestParam(value = "description", required = false) String description,
-			@ApiParam(value = "department of the Store ") @Valid @RequestParam(value = "department", required = false) Long department,
+			@ApiParam(value = "department of the Store ") @Valid @RequestParam(value = "department", required = false) String department,
 			@ApiParam(value = "billing address of the Store ") @Valid @RequestParam(value = "billingAddress", required = false) String billingAddress,
 			@ApiParam(value = "delivery address of the Store ") @Valid @RequestParam(value = "deliveryAddress", required = false) String deliveryAddress,
 			@ApiParam(value = "contact no1 of the Store ") @Valid @RequestParam(value = "contactNo1", required = false) String contactNo1,
 			@ApiParam(value = "contact no2 of the Store ") @Valid @RequestParam(value = "contactNo2", required = false) String contactNo2,
 			@ApiParam(value = "email of the Store ") @Valid @RequestParam(value = "email", required = false) String email,
-			@ApiParam(value = "store in charge of the Store ") @Valid @RequestParam(value = "storeInCharge", required = false) Long storeInCharge,
+			@ApiParam(value = "store in charge of the Store ") @Valid @RequestParam(value = "storeInCharge", required = false) String storeInCharge,
 			@ApiParam(value = "is central store of the Store ") @Valid @RequestParam(value = "isCentralStore", required = false) Boolean isCentralStore,
 			@ApiParam(value = "Whether Store is Active or not. If the value is TRUE, then Store is active,If the value is FALSE then Store is inactive,Default value is TRUE ") @Valid @RequestParam(value = "active", required = false) Boolean active,
 			@ApiParam(value = "pageSize") @Valid @RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@ApiParam(value = "offset") @Valid @RequestParam(value = "offset", required = false) Integer offset,
 			@ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords.   example name asc,code desc or name,code or name,code desc  ") @Valid @RequestParam(value = "sortBy", required = false) String sortBy,
 			@RequestHeader(value = "Accept", required = false) String accept) throws Exception {
-		// do some magic!
+
+		StoreGetRequest storeGetRequest = StoreGetRequest.builder().ids(ids).code(code).name(name).active(active)
+				.tenantId(tenantId).description(description).department(department).billingAddress(billingAddress)
+				.deliveryAddress(deliveryAddress).contactNo1(contactNo1).contactNo2(contactNo2).email(email)
+				.isCentralStore(isCentralStore).storeInCharge(storeInCharge).sortBy(sortBy).pageSize(pageSize)
+				.offset(offset).build();
+		Pagination<Store> storesList = storesService.search(storeGetRequest);
+		StoreResponse response = new StoreResponse();
+		response.setStores(storesList.getPagedData());
+		response.setResponseInfo(getResponseInfo(requestInfo));
 
 		if (accept != null && accept.contains("application/json")) {
 			return new ResponseEntity<StoreResponse>(objectMapper.readValue(
@@ -123,7 +130,7 @@ public class StoresApiController implements StoresApi {
 					StoreResponse.class), HttpStatus.OK);
 		}
 
-		return new ResponseEntity<StoreResponse>(HttpStatus.OK);
+		return new ResponseEntity(response, HttpStatus.OK);
 	}
 
 	public ResponseEntity<StoreResponse> storesUpdatePost(
@@ -151,13 +158,11 @@ public class StoresApiController implements StoresApi {
 				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 
-	@Override
-	public ResponseEntity<StoreResponse> storesSearchPost(String tenantId, io.swagger.model.RequestInfo requestInfo,
-			List<String> ids, String code, String name, String description, Long department, String billingAddress,
-			String deliveryAddress, String contactNo1, String contactNo2, String email, Long storeInCharge,
-			Boolean isCentralStore, Boolean active, Integer pageSize, Integer offset, String sortBy, String accept)
-			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
+
+
+
+	
+
+	
 }

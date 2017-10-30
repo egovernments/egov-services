@@ -31,7 +31,7 @@ public class caseRowMapper implements RowMapper<Case> {
 
 	@Autowired
 	private ObjectMapper objectMapper;
-	
+
 	@Autowired
 	PropertiesManager propertiesManager;
 
@@ -167,11 +167,21 @@ public class caseRowMapper implements RowMapper<Case> {
 				caseObj.setAddress(address);
 			}
 
+			if (rs.getString("plantiffaddress") != null) {
+				Address address = new Address();
+				TypeReference<Address> adReference = new TypeReference<Address>() {
+				};
+				address = objectMapper.readValue(getString(rs.getString("plantiffaddress")), adReference);
+				summon.setPlantiffAddress(address);
+
+			}
+
 			caseObj.setSummon(summon);
 
 			caseObj.setHearingDetails(hearingDetails);
 			caseObj.setAdvocatesDetails(advocateDetails);
-			caseObj.setAssignedDates(assignedDates);
+
+			// caseObj.setAssignedDates(assignedDates);
 			caseObj.setParawiseComments(paraWiseComments);
 
 		} catch (Exception e) {

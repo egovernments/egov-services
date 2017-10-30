@@ -28,6 +28,12 @@ public class StoreGetRequest {
     private String department;
 
     private String contactNo1;
+    
+    private String billingAddress;
+    
+    private String deliveryAddress;
+    
+    private String contactNo2;
 
     private String email;
 

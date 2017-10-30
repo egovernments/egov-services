@@ -16,4 +16,12 @@ ServiceMaps:
       id: $.id
       isBulk: true
       jsonPath: $.stores.*
+  - topic: inv-store-update-topic
+    indexes:
+    - name: stores
+      type: stores
+      id: $.id
+      isBulk: true
+      jsonPath: $.stores.*
+
       

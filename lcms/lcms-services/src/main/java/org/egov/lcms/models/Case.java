@@ -68,9 +68,6 @@ public class Case {
 	@JsonProperty("advocatesDetails")
 	private List<AdvocateDetails> advocatesDetails = null;
 
-	@JsonProperty("assignedDates")
-	private List<Long> assignedDates = null;
-
 	@JsonProperty("parawiseComments")
 	private List<ParaWiseComment> parawiseComments = null;
 	

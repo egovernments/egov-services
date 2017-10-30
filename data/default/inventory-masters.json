@@ -1,10 +1,10 @@
 {  
-   "tenantId":"mh",
+   "tenantId":"default",
    "moduleName":"inventory",
    "Store":[  
       {  
          "id":1,
-         "tenantId":"mh",
+         "tenantId":"default",
          "code":"STORE1",
          "name":"Fake Store Name 1",
          "department":"DEPT1",
@@ -18,7 +18,7 @@
       },
       {  
          "id":2,
-         "tenantId":"mh",
+         "tenantId":"default",
          "code":"STORE2",
          "name":"Fake Store Name 2",
          "department":"DEPT2",
@@ -32,7 +32,7 @@
       },
       {  
          "id":3,
-         "tenantId":"mh",
+         "tenantId":"default",
          "code":"STORE3",
          "name":"Fake Store Name 3",
          "department":"DEPT3",
@@ -48,7 +48,7 @@
    "MaterialType":[  
       {  
          "id":1,
-         "tenantId":"mh",
+         "tenantId":"default",
          "code":"MT1",
          "name":"Fake Material Type Name 1",
          "description":"Fake Material Type Description 1",
@@ -60,7 +60,7 @@
       },
       {  
          "id":2,
-         "tenantId":"mh",
+         "tenantId":"default",
          "code":"MT2",
          "name":"Fake Material Type Name 2",
          "description":"Fake Material Type Description 2",
@@ -72,7 +72,7 @@
       },
       {  
          "id":3,
-         "tenantId":"mh",
+         "tenantId":"default",
          "code":"MT3",
          "name":"Fake Material Type Name 3",
          "description":"Fake Material Type Description 3",
@@ -86,13 +86,13 @@
    "MaterialControlType":[  
       {  
          "id":1,
-         "tenantId":"mh",
+         "tenantId":"default",
          "code":"LOTCONTROL",
          "name":"LOT Control"
       },
       {  
          "id":2,
-         "tenantId":"mh",
+         "tenantId":"default",
          "code":"Shelf_life_Control",
          "name":"SHELF_LIFE_CONTROL"
       }
@@ -100,19 +100,19 @@
    "MaterialClass":[  
       {  
          "id":1,
-         "tenantId":"mh",
+         "tenantId":"default",
          "code":"HIGHUSAGE",
          "name":"HighUsage"
       },
       {  
          "id":2,
-         "tenantId":"mh",
+         "tenantId":"default",
          "code":"MEDIUMUSAGE",
          "name":"MediumUsage"
       },
       {  
          "id":3,
-         "tenantId":"mh",
+         "tenantId":"default",
          "code":"LOWUSAGE",
          "name":"LowUsage"
       }
@@ -120,19 +120,19 @@
    "Status":[  
       {  
          "id":1,
-         "tenantId":"mh",
+         "tenantId":"default",
          "code":"ACTIVE",
          "name":"Active"
       },
       {  
          "id":2,
-         "tenantId":"mh",
+         "tenantId":"default",
          "code":"WITHDRAWN",
          "name":"Withdrawn"
       },
       {  
          "id":3,
-         "tenantId":"mh",
+         "tenantId":"default",
          "code":"OBSOLETE",
          "name":"Obsolete"
       }
@@ -140,13 +140,13 @@
    "InventoryType":[  
       {  
          "id":1,
-         "tenantId":"mh",
+         "tenantId":"default",
          "code":"ASSET",
          "name":"Asset"
       },
       {  
          "id":2,
-         "tenantId":"mh",
+         "tenantId":"default",
          "code":"CONSUMABLE",
          "name":"consumable"
       }

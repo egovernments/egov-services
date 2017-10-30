@@ -242,3 +242,142 @@ serviceMaps:
        - jsonPath: $.projectCodes.*.id
        
        - jsonPath: $.projectCodes.*.tenantId
+       
+ - version: 1.0
+   name: Detailed AbstractEstimate Create
+   description: Persists detailed abstract estimate  in egw_detailed_estimate table
+   fromTopic: works-detailed-abstract-estimate-create #need to change. It's a temp name
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO egw_detailed_estimate(
+            id, tenantid, estimatenumber, estimatedate, nameofwork, description, 
+            department, adminsanctionnumber, adminsanctiondate, adminsanctionby, 
+            status, workvalue, estimatevalue, projectcode, parent, copiedfrom, 
+            approveddate, approvedby, copiedestimate, beneficiary, modeofallotment, 
+            workstype, workssubtype, natureofwork, ward, location, longitude, 
+            latitude, workcategory, locality, councilresolutionnumber, councilresolutiondate, 
+            workordercreated, billscreated, spilloverflag, grossamountbilled, 
+            cancellationreason, cancellationremarks, totalincludingre, abstractestimatedetail, 
+            stateid, fund, function, functionary, scheme, subscheme, budgetgroup, 
+            createdby, createdtime, lastmodifiedby, lastmodifiedtime) 
+            VALUES (?, ?, ?, ?, ?, ?, 
+            ?, ?, ?, ?, 
+            ?, ?, ?, ?, ?, ?, 
+            ?, ?, ?, ?, ?, 
+            ?, ?, ?, ?, ?, ?, 
+            ?, ?, ?, ?, ?, 
+            ?, ?, ?, ?, 
+            ?, ?, ?, ?, 
+            ?, ?, ?, ?, ?, ?, ?, 
+            ?, ?, ?, ?);
+      basePath: $.detailedEstimates.*
+      jsonMaps:
+         
+       - jsonPath: $.detailedEstimates.*.id
+       
+       - jsonPath: $.detailedEstimates.*.tenantId
+         
+       - jsonPath: $.detailedEstimates.*.estimateNumber
+         
+       - jsonPath: $.detailedEstimates.*.nameOfWork
+       
+       - jsonPath: $.detailedEstimates.*.description
+       
+       - jsonPath: $.detailedEstimates.*.department
+       
+       - jsonPath: $.detailedEstimates.*.adminSanctionNumber
+       
+       - jsonPath: $.detailedEstimates.*.adminSanctionDate
+         dbType: LONG
+       
+       - jsonPath: $.detailedEstimates.*.adminSanctionBy
+       
+       - jsonPath: $.detailedEstimates.*.status
+       
+       - jsonPath: $.detailedEstimates.*.workValue
+                 
+       - jsonPath: $.detailedEstimates.*.estimateValue
+                 
+       - jsonPath: $.detailedEstimates.*.projectCode
+         
+       - jsonPath: $.detailedEstimates.*.parent
+                  
+       - jsonPath: $.detailedEstimates.*.copiedFrom
+       
+       - jsonPath: $.detailedEstimates.*.approvedDate
+         dbType: LONG
+       
+       - jsonPath: $.detailedEstimates.*.approvedBy
+       
+       - jsonPath: $.detailedEstimates.*.copiedEstimate
+         type: BOOLEAN
+       
+       - jsonPath: $.detailedEstimates.*.beneficiary
+                  
+       - jsonPath: $.detailedEstimates.*.modeOfAllotment.code
+         
+       - jsonPath: $.detailedEstimates.*.worksType.code
+       
+       - jsonPath: $.detailedEstimates.*.worksSubtype.code
+       
+       - jsonPath: $.detailedEstimates.*.subTypeOfWork.code
+       
+       - jsonPath: $.detailedEstimates.*.natureOfWork.code
+       
+       - jsonPath: $.detailedEstimates.*.ward.code
+       
+       - jsonPath: $.detailedEstimates.*.location.code
+       
+       - jsonPath: $.detailedEstimates.*.longitude
+       
+       - jsonPath: $.detailedEstimates.*.latitude
+       
+       - jsonPath: $.detailedEstimates.*.workCategory
+       
+       - jsonPath: $.detailedEstimates.*.locality.code
+       
+       - jsonPath: $.detailedEstimates.*.councilResolutionNumber
+                
+       - jsonPath: $.detailedEstimates.*.councilResolutionDate
+         dbType: LONG
+                
+       - jsonPath: $.detailedEstimates.*.workOrderCreated
+         type: BOOLEAN
+       
+       - jsonPath: $.detailedEstimates.*.billsCreated
+         type: BOOLEAN
+                  
+       - jsonPath: $.detailedEstimates.*.spillOverFlag
+         type: BOOLEAN
+
+       - jsonPath: $.detailedEstimates.*.grossAmountBilled
+       
+       - jsonPath: $.detailedEstimates.*.cancellationReason
+       
+       - jsonPath: $.detailedEstimates.*.cancellationRemarks
+       
+       - jsonPath: $.detailedEstimates.*.totalIncludingRE
+       
+       - jsonPath: $.detailedEstimates.*.abstractEstimateDetail
+
+       - jsonPath: $.detailedEstimates.*.stateId
+
+       - jsonPath: $.detailedEstimates.*.fund
+
+       - jsonPath: $.detailedEstimates.*.function
+
+       - jsonPath: $.detailedEstimates.*.functionary
+
+       - jsonPath: $.detailedEstimates.*.scheme
+
+       - jsonPath: $.detailedEstimates.*.subScheme
+
+       - jsonPath: $.detailedEstimates.*.budgetGroup
+       
+       - jsonPath: $.detailedEstimates.*.auditDetails.createdBy
+ 
+       - jsonPath: $.detailedEstimates.*.auditDetails.createdTime
+       
+       - jsonPath: $.detailedEstimates.*.auditDetails.lastModifiedBy
+  
+       - jsonPath: $.detailedEstimates.*.auditDetails.lastModifiedTime

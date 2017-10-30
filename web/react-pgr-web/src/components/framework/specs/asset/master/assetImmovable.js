@@ -74,17 +74,19 @@ var dat = {
   						"jsonPath": "Asset.assetCategory.assetCategoryType",
   						"label": "Asset Category Type",
   						"pattern": "",
-  						"type": "singleValueList",
+  						"type": "text",
   						"url": "",
   						"isRequired": true,
-  						"isDisabled": false,
+  						"isDisabled": true,
   						"requiredErrMsg": "",
   						"patternErrMsg": "",
-							"defaultValue": [	  {
-	            "key": "IMMOVABLE",
-	            "value": "IMMOVABLE"
-	          }
-					],
+							"defaultValue":"IMMOVABLE"
+					// 		 [	  {
+	        //     "key": "IMMOVABLE",
+	        //     "value": "IMMOVABLE"
+	        //   }
+					// ]
+
 					// "depedants": [{
 					// 	"jsonPath": "Asset.assetCategory",
 					// 	"type": "dropDown",
@@ -207,7 +209,7 @@ var dat = {
 					{
 						"name": "SurveyNoOfLandOnWhichStructureIsLocated ",
 						"jsonPath": "Asset.landSurveyNo",
-						"label": "ac.create.Survey.no.of.land", 
+						"label": "ac.create.Survey.no.of.land",
 						"pattern": "",
 						"type": "number",
 						"url": "",
@@ -669,7 +671,7 @@ var dat = {
             "type": "singleValueList",
 						"url": "",
             //"url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Fixed Assets|$..name|$..name",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -932,11 +934,11 @@ var dat = {
 			"values": ["code","name", "modeOfAcquisition", "dateOfCreation"],
 			"resultPath": "Assets",
 			// "rowClickUrlUpdate": "/update/asset/assetMovable/{id}",
-			 "rowClickUrlView": "/view/asset/assetImmovable/{id}"
+			 "rowClickUrlView": "/non-framework/asset/master/assetImmovableView/{id}"
 			}
 	},
 	"asset.view": {
-		"numCols": 12/2,
+		"numCols": 12/3,
 		"url": "asset-services-maha/assets/_search?id={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,

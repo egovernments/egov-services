@@ -39,7 +39,9 @@
  */
 package org.egov.inv.domain.service;
 
+import io.swagger.model.Pagination;
 import io.swagger.model.Store;
+import io.swagger.model.StoreGetRequest;
 import io.swagger.model.StoreRequest;
 
 import org.egov.inv.domain.repository.StoreRepository;
@@ -74,6 +76,10 @@ public class StoreService {
 					inventoryUtilityService.mapAuditDetailsForUpdate(storeRequest.getRequestInfo(), tenantId));
 		}
 		return storeRepository.update(storeRequest);
+	}
+
+	public Pagination<Store> search(StoreGetRequest storeGetRequest) {
+		return storeRepository.search(storeGetRequest);
 	}
 
 }

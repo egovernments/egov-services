@@ -25,8 +25,8 @@ public class AdvocateDetails {
 	@JsonProperty("advocate")
 	private Advocate advocate;
 	
-	@JsonProperty("assigndate")
-	private Long assigndate;
+	@JsonProperty("assignedDate")
+	private Long assignedDate;
 	
 	@JsonProperty("fee")
 	private Double fee;

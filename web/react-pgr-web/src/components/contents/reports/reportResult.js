@@ -42,22 +42,23 @@ class ShowField extends Component {
   }
 
   componentDidMount(){
-    // console.log(this.props);
+    // console.log('Did Mount');
     this.setState({
       reportName : this.props.match.params.reportName,
       moduleName : this.props.match.params.moduleName
     });
+    this.subHeader(this.props.match.params.moduleName);
   }
 
   componentWillReceiveProps(nextprops){
-    if((this.props.match.params.moduleName !== nextprops.match.params.moduleName) || (this.props.match.params.reportName !== nextprops.match.params.reportName)){
-      // console.log(nextprops);
+    // if((this.props.match.params.moduleName !== nextprops.match.params.moduleName) || (this.props.match.params.reportName !== nextprops.match.params.reportName)){
+      // console.log('nextprops');
       this.setState({
         reportName : nextprops.match.params.reportName,
         moduleName : nextprops.match.params.moduleName
       });
-    }
-
+      this.subHeader(nextprops.match.params.moduleName);
+    // }
   }
 
   componentDidUpdate() {
@@ -70,7 +71,7 @@ class ShowField extends Component {
          {
             extend: 'pdf',
             filename : this.state.reportName,
-            // title : this.state.reportSubTitle,
+            title : this.state.reportSubTitle,
             orientation: 'landscape',
             pageSize: 'TABLOID',
             footer : true
@@ -287,41 +288,52 @@ class ShowField extends Component {
     }
   }
 
-  subHeader = () => {
+  subHeader = (moduleName) => {
     let {metaData,searchParams}=this.props;
-    let {moduleName} = this.state;
     let paramsLength = searchParams.length;
-    // console.log(paramsLength);
-    let result = `${metaData.reportDetails.summary} for `;
-    searchParams.map((search, index) => {
-      let idx = index+1;
-      let lastText = (idx == paramsLength);
-      let obj = metaData.reportDetails.searchParams.find((obj)=>{ return search.name === obj.name});
-      if(moduleName === 'pgr'){
-        if(obj.name === 'fromDate' || obj.name === 'toDate'){//split date and time
-          let date = `${search.input}`.split(' ')[0];
-          let customDate = date.split('-');
-          // result +=  obj.name === 'toDate' ? ' - ' : '';
-          result += `${customDate[2]}/${customDate[1]}/${customDate[0]} (${translate(obj.label)})`;
-          // result +=  lastText ? '' : obj.name === 'toDate' ? ', ' : '';
-        }else{
-          result += `${search.input} (${translate(obj.label)})`;
-          // result += !lastText ? ', ' : '';
-        }
-      }else{
-        if(obj.name === 'fromDate' || obj.name === 'toDate'){//epoch to date
-          // result +=  obj.name === 'toDate' ? ' - ' : '';
-          result += `${epochToDate(search.input)} (${translate(obj.label)})`;
-          // result +=  lastText ? '' : obj.name === 'toDate' ? ', ' : '';
-        }else{
-            result += `${search.input} (${translate(obj.label)})`;
-            // result += !lastText ? ', ' : '';
-        }
-      }
-      result += !lastText ? ', ' : '';
-    });
-    // this.setState({reportSubTitle:result})
-    return result;
+    if(_.isEmpty(metaData)){
+      return;
+    }
+    // let responseSearchParams = metaData.reportDetails.searchParams;
+    let result = `${metaData.reportDetails.summary}`;
+    // searchParams.map((search, index) => {
+    //   let idx = index+1;
+    //   let lastText = (idx == paramsLength);
+    //   let obj = metaData.reportDetails.searchParams.find((obj)=>{ return search.name === obj.name});
+    //   if(moduleName === 'pgr'){
+    //     if(obj.name === 'fromDate' || obj.name === 'toDate'){//split date and time
+    //       let date = `${search.input}`.split(' ')[0];
+    //       let customDate = date.split('-');
+    //       // result +=  obj.name === 'toDate' ? ' - ' : '';
+    //       result += `${customDate[2]}/${customDate[1]}/${customDate[0]} (${translate(obj.label)})`;
+    //       // result +=  lastText ? '' : obj.name === 'toDate' ? ', ' : '';
+    //     }else{
+    //       let responsevalue = responseSearchParams.find((sp)=> {return sp.name === obj.name});
+    //       if(!_.isEmpty(responsevalue.defaultValue)){
+    //         result += `${responsevalue.defaultValue[search.input]} (${translate(obj.label)})`;
+    //       }else{
+    //         result += `${search.input} (${translate(obj.label)})`;
+    //       }
+    //       // result += !lastText ? ', ' : '';
+    //     }
+    //   }else{
+    //     if(obj.name === 'fromDate' || obj.name === 'toDate'){//epoch to date
+    //       // result +=  obj.name === 'toDate' ? ' - ' : '';
+    //       result += `${epochToDate(search.input)} (${translate(obj.label)})`;
+    //       // result +=  lastText ? '' : obj.name === 'toDate' ? ', ' : '';
+    //     }else{
+    //       let responsevalue = responseSearchParams.find((sp)=> {return sp.name === obj.name});
+    //       if(!_.isEmpty(responsevalue.defaultValue)){
+    //         result += `${responsevalue.defaultValue[search.input]} (${translate(obj.label)})`;
+    //       }else{
+    //         result += `${search.input} (${translate(obj.label)})`;
+    //       }
+    //         // result += !lastText ? ', ' : '';
+    //     }
+    //   }
+    //   result += !lastText ? ', ' : '';
+    // });
+    this.setState({reportSubTitle:result})
   }
 
   render() {
@@ -337,7 +349,7 @@ class ShowField extends Component {
       return (
         <div>
         <Card>
-          <CardHeader title={this.subHeader()}/>
+          <CardHeader title={this.state.reportSubTitle}/>
           <CardText>
           <Table id="reportTable" style={{color:"black",fontWeight: "normal",padding:"0 !important"}} bordered responsive>
             {this.renderHeader()}

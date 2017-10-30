@@ -39,8 +39,12 @@
  */
 package org.egov.inv.domain.repository;
 
+import io.swagger.model.Pagination;
 import io.swagger.model.Store;
+import io.swagger.model.StoreGetRequest;
 import io.swagger.model.StoreRequest;
+
+import org.egov.inv.persistence.repository.StoreJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,6 +60,9 @@ public class StoreRepository {
 
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	
+	@Autowired
+	private StoreJdbcRepository storeJdbcRepository;
 
 	@Value("${inv.store.save.topic}")
 	private String createTopic;
@@ -74,6 +81,10 @@ public class StoreRepository {
 	public List<Store> update(StoreRequest storeRequest) {
 		kafkaTemplate.send(updateTopic, storeRequest);
 		return storeRequest.getStores();
+	}
+
+	public Pagination<Store> search(StoreGetRequest storeGetRequest) {
+		   return storeJdbcRepository.search(storeGetRequest);
 	}
 
 }

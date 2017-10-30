@@ -12,17 +12,7 @@ import _ from "lodash";
 import AutoComplete from 'material-ui/AutoComplete';
 import Checkbox from 'material-ui/Checkbox';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
-
-const styles = {
-  checkbox: {
-     marginTop: 10,
-     marginBottom: 5
-  },
-  radioButton: {
-    width:0
-  }
-};
-
+import styles from '../../styles/material-ui';
 
 export default class Fields extends Component{
   constructor(props){
@@ -45,6 +35,7 @@ export default class Fields extends Component{
     let des = translate(obj.description);
     let mandatory = (obj.required == true) ? " *" : ""
     let description = des + mandatory;
+    console.log(obj.dataType);
     if(obj.variable){
       switch(obj.dataType){
         case "string":
@@ -59,7 +50,7 @@ export default class Fields extends Component{
            return (
                <Col xs={12} sm={12} md={12} lg={12}>
                  {/* errorText={this.props.error ? this.props.error : ""} */}
-                <div style={styles.checkbox}>
+                <div>
                    <Checkbox label={description} checked={this.props.value? this.props.value : false} onCheck={(e, isChecked)=>{
                      this.props.handler((isChecked? true : ""), obj.code, obj.required, '');
                    }} />
@@ -78,7 +69,7 @@ export default class Fields extends Component{
                     </div>
                     <RadioButtonGroup name={obj.code} defaultSelected={this.props.value} className="row" onChange={(e, value)=> {this.props.handler(value, obj.code, obj.required, '');}}>
                      {obj.attribValues && obj.attribValues.map((dd, index) => (
-                         dd.isActive ? <RadioButton style={styles.radioButton} className="col-md-4" key={index} value={dd.key} label={translate(dd.name)}/> : null
+                         dd.isActive ? <RadioButton className="col-md-4" key={index} value={dd.key} label={translate(dd.name)}/> : null
                      ))}
                     </RadioButtonGroup>
                   </div>
@@ -167,9 +158,10 @@ export default class Fields extends Component{
            return(<CustomSelectField obj={obj} description={description} isMultiple={false} value={this.props.value} handler={this.props.handler}/>);
           return(
             <Col xs={12} sm={4} md={3} lg={3}>
-              <SelectField className="custom-form-control-for-select" fullWidth={true} ref={obj.code} floatingLabelText={description} value={this.props.value} onChange={(event, key, value) => {
+              <SelectField className="custom-form-control-for-select" hintText="Select" fullWidth={true} ref={obj.code} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={description} value={this.props.value} onChange={(event, key, value) => {
                 this.props.handler(value, obj.code, obj.required, "")
               }} >
+              <MenuItem value="" primaryText="Select" />
               {obj.attribValues.map((dd, index) => (
                   dd.isActive ? <MenuItem value={translate(dd.key)} key={index} primaryText={translate(dd.name)} /> : null
               ))}
@@ -181,7 +173,7 @@ export default class Fields extends Component{
           return(<CustomSelectField obj={obj} description={description} isMultiple={true} value={this.props.value} handler={this.props.handler}/>);
           return(
             <Col xs={12} sm={4} md={3} lg={3}>
-              <SelectField className="custom-form-control-for-select" fullWidth={true} ref={obj.code} multiple={true} floatingLabelText={description}  value={this.props.value} onChange={(event, key, value) => {
+              <SelectField className="custom-form-control-for-select" hintText="Select" fullWidth={true} ref={obj.code} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} multiple={true} floatingLabelText={description}  value={this.props.value} onChange={(event, key, value) => {
                 this.props.handler(value, obj.code, obj.required, "")
               }} >
               {obj.attribValues && obj.attribValues.map((dd, index) => (

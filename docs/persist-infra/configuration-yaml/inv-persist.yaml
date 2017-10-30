@@ -7,10 +7,10 @@ serviceMaps:
       fromTopic: inv-store-save-topic
       queryMaps:
         - query: >-
-            INSERT INTO stores(id, code, name, description, departmentcode,
-            storeinchargecode,billingaddress, deliveryaddress,
-            contactnumber1,contactnumber2, emailid, iscentralstore, active,
-            tenantId, createdby, lastmodifiedby,createddate,lastmodifieddate)
+            INSERT INTO stores(id, code, name, description, department,
+            storeincharge,billingaddress, deliveryaddress,
+            contactno1,contactno2, email, iscentralstore, active,
+            tenantId, createdby, lastmodifiedby,createdtime,lastmodifiedtime)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);
           basePath: $.stores.*
           jsonMaps:
@@ -43,8 +43,8 @@ serviceMaps:
       queryMaps:
         - query: >-
             UPDATE stores SET
-            name=?,description=?,departmentcode=?,storeinchargecode=?,
-            billingaddress=?,deliveryaddress=?,contactnumber1=?,contactnumber2=?,emailid=?,iscentralstore=?,active=?,lastmodifiedby=?,lastmodifieddate=?
+            name=?,description=?,department=?,storeincharge=?,
+            billingaddress=?,deliveryaddress=?,contactno1=?,contactno2=?,email=?,iscentralstore=?,active=?,lastmodifiedby=?,lastmodifiedtime=?
             WHERE code=? AND tenantid=?;
           basePath: $.stores.*
           jsonMaps:

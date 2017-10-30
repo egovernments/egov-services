@@ -3,7 +3,10 @@ package io.swagger.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.Size;
@@ -16,6 +19,8 @@ import java.util.Objects;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-28T13:21:55.964+05:30")
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AuditDetails {
     @JsonProperty("createdBy")
     private String createdBy = null;

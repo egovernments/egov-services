@@ -8,7 +8,9 @@ import io.swagger.annotations.ApiModelProperty;
 import io.swagger.model.Page;
 
 import io.swagger.model.Store;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,8 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-28T13:21:55.964+05:30")
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class StoreResponse   {
   @JsonProperty("responseInfo")
   private org.egov.common.contract.response.ResponseInfo responseInfo = null;

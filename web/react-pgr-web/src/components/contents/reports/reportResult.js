@@ -294,45 +294,45 @@ class ShowField extends Component {
     if(_.isEmpty(metaData)){
       return;
     }
-    let responseSearchParams = metaData.reportDetails.searchParams;
-    let result = `${metaData.reportDetails.summary} for `;
-    searchParams.map((search, index) => {
-      let idx = index+1;
-      let lastText = (idx == paramsLength);
-      let obj = metaData.reportDetails.searchParams.find((obj)=>{ return search.name === obj.name});
-      if(moduleName === 'pgr'){
-        if(obj.name === 'fromDate' || obj.name === 'toDate'){//split date and time
-          let date = `${search.input}`.split(' ')[0];
-          let customDate = date.split('-');
-          // result +=  obj.name === 'toDate' ? ' - ' : '';
-          result += `${customDate[2]}/${customDate[1]}/${customDate[0]} (${translate(obj.label)})`;
-          // result +=  lastText ? '' : obj.name === 'toDate' ? ', ' : '';
-        }else{
-          let responsevalue = responseSearchParams.find((sp)=> {return sp.name === obj.name});
-          if(!_.isEmpty(responsevalue.defaultValue)){
-            result += `${responsevalue.defaultValue[search.input]} (${translate(obj.label)})`;
-          }else{
-            result += `${search.input} (${translate(obj.label)})`;
-          }
-          // result += !lastText ? ', ' : '';
-        }
-      }else{
-        if(obj.name === 'fromDate' || obj.name === 'toDate'){//epoch to date
-          // result +=  obj.name === 'toDate' ? ' - ' : '';
-          result += `${epochToDate(search.input)} (${translate(obj.label)})`;
-          // result +=  lastText ? '' : obj.name === 'toDate' ? ', ' : '';
-        }else{
-          let responsevalue = responseSearchParams.find((sp)=> {return sp.name === obj.name});
-          if(!_.isEmpty(responsevalue.defaultValue)){
-            result += `${responsevalue.defaultValue[search.input]} (${translate(obj.label)})`;
-          }else{
-            result += `${search.input} (${translate(obj.label)})`;
-          }
-            // result += !lastText ? ', ' : '';
-        }
-      }
-      result += !lastText ? ', ' : '';
-    });
+    // let responseSearchParams = metaData.reportDetails.searchParams;
+    let result = `${metaData.reportDetails.summary}`;
+    // searchParams.map((search, index) => {
+    //   let idx = index+1;
+    //   let lastText = (idx == paramsLength);
+    //   let obj = metaData.reportDetails.searchParams.find((obj)=>{ return search.name === obj.name});
+    //   if(moduleName === 'pgr'){
+    //     if(obj.name === 'fromDate' || obj.name === 'toDate'){//split date and time
+    //       let date = `${search.input}`.split(' ')[0];
+    //       let customDate = date.split('-');
+    //       // result +=  obj.name === 'toDate' ? ' - ' : '';
+    //       result += `${customDate[2]}/${customDate[1]}/${customDate[0]} (${translate(obj.label)})`;
+    //       // result +=  lastText ? '' : obj.name === 'toDate' ? ', ' : '';
+    //     }else{
+    //       let responsevalue = responseSearchParams.find((sp)=> {return sp.name === obj.name});
+    //       if(!_.isEmpty(responsevalue.defaultValue)){
+    //         result += `${responsevalue.defaultValue[search.input]} (${translate(obj.label)})`;
+    //       }else{
+    //         result += `${search.input} (${translate(obj.label)})`;
+    //       }
+    //       // result += !lastText ? ', ' : '';
+    //     }
+    //   }else{
+    //     if(obj.name === 'fromDate' || obj.name === 'toDate'){//epoch to date
+    //       // result +=  obj.name === 'toDate' ? ' - ' : '';
+    //       result += `${epochToDate(search.input)} (${translate(obj.label)})`;
+    //       // result +=  lastText ? '' : obj.name === 'toDate' ? ', ' : '';
+    //     }else{
+    //       let responsevalue = responseSearchParams.find((sp)=> {return sp.name === obj.name});
+    //       if(!_.isEmpty(responsevalue.defaultValue)){
+    //         result += `${responsevalue.defaultValue[search.input]} (${translate(obj.label)})`;
+    //       }else{
+    //         result += `${search.input} (${translate(obj.label)})`;
+    //       }
+    //         // result += !lastText ? ', ' : '';
+    //     }
+    //   }
+    //   result += !lastText ? ', ' : '';
+    // });
     this.setState({reportSubTitle:result})
   }
 

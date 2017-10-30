@@ -358,47 +358,54 @@ printer = () => {
     let {handleChange, getVal, addNewCard, removeCard, printer,feeMatrices} = this;
 
 
-      //     const renderBody = function() {
-      //
-      //       console.log(formData);
-      //
-      //
-      //         // console.log(formData.feeMatrices);
-      //         if(formData && formData.hasOwnProperty("Assets") && formData.Assets[0].hasOwnProperty("assetAttributes")){
-      //           console.log(formData.Assets[0].assetAttributes);
-      //             var createCustomObject = formData.Assets[0].assetAttributes;
-      //             var disArray = [];
-      //             _.forEach(createCustomObject, function(value, key) {
-      //               var temp = {};
-      //               console.log(value.key);
-      //               console.log(value.value);
-      //
-      //               temp.label = value.key;
-      //               temp.value = value.value;
-      //               disArray.push(temp);
-      //             });
-      //             console.log(disArray);
-      //             <div>
-      //             <Card className="uiCard">
-      //                 <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("Asset Attributes")}</div>}/>
-      //                 <CardText>
-      //                 {
-      //                   return disArray.map(function(item, index) {
-      //                   console.log(item);
-      //                       return (
-      //                             <TextField
-      //                             defaultValue="Default Value"
-      //                             floatingLabelText="hi"
-      //                             />
-      //                           )
-      //                       })
-      //                 }
-      //        </CardText>
-      //        </Card>
-      //      </div>
-      //       }
-      //
-      // }
+          const renderBody = function() {
+
+            console.log(formData);
+
+
+              // console.log(formData.feeMatrices);
+              if(formData && formData.hasOwnProperty("Assets") && formData.Assets[0].hasOwnProperty("assetAttributes")){
+                console.log(formData.Assets[0].assetAttributes);
+                  var createCustomObject = formData.Assets[0].assetAttributes;
+                  var disArray = [];
+                  _.forEach(createCustomObject, function(value, key) {
+                    var temp = {};
+                    console.log(value.key);
+                    console.log(value.value);
+
+                    temp.label = value.key;
+                    temp.value = value.value;
+                    disArray.push(temp);
+                  });
+                  console.log(disArray);
+                  return (
+                  <div>
+                  <Card className="uiCard">
+                      <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("Asset Attributes")}</div>}/>
+                      <CardText>
+
+             { disArray.map(function(item, index) {
+                console.log(item);
+
+                return(
+                  <TextField
+                  floatingLabelText={item.label}
+                  floatingLabelFixed={true}
+                  defaultValue={item.value}
+                  />
+                )
+
+
+
+             })}
+
+             </CardText>
+             </Card>
+           </div>
+         )
+            }
+
+      }
 
     return (
       <div className="Report">
@@ -406,7 +413,7 @@ printer = () => {
         {!_.isEmpty(mockData) && mockData["asset.view"] && <ShowFields groups={mockData["asset.view"].groups} noCols={mockData["asset.view"].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["asset.view"].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
 
 
-           {/*renderBody()*/}
+            {renderBody()}
 
 
         </form>

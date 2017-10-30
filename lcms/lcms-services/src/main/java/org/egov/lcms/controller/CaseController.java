@@ -38,7 +38,7 @@ public class CaseController {
 	public ResponseEntity<?> createParaWiseComment(@RequestBody @Valid CaseRequest caseRequest) throws Exception {
 		return new ResponseEntity<>(caseService.createParaWiseComment(caseRequest), HttpStatus.OK);
 	}
-
+	
 	/**
 	 * Update method for ParaWise API service
 	 * 
@@ -46,12 +46,10 @@ public class CaseController {
 	 * @return caseResponse
 	 */
 	@RequestMapping(path = "/parawisecomment/_update", method = RequestMethod.POST)
-	public ResponseEntity<?> updateOpinion(@RequestBody @Valid CaseRequest caseRequest) {
+	public ResponseEntity<?> updateParaWiseComment(@RequestBody @Valid CaseRequest caseRequest) {
 		return new ResponseEntity<>(caseService.updateParaWiseComment(caseRequest), HttpStatus.OK);
 	}
 	
-
-
 	@RequestMapping(path = "/case/_registration", method = RequestMethod.POST)
 	public ResponseEntity<?> updateSummon(@RequestBody @Valid CaseRequest caseRequest) throws Exception {
 		CaseResponse summonResponse = caseService.createCase(caseRequest);

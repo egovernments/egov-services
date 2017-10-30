@@ -3929,7 +3929,7 @@ definitions:
       properties:
         type:
           type: string
-          description: Workflow type to be processed for an application the Abstract Estimate
+          description: Workflow type to be processed for an application the Inventory Object
         businessKey:
           type: string
           description: Businesskey of the workflow processing application

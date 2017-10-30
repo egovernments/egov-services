@@ -42,32 +42,4 @@ public class SummonController {
 
 	}
 
-	@RequestMapping(path = "/parawisecomment/_create", method = RequestMethod.POST)
-	public ResponseEntity<?> createParaWiseComment(@RequestBody @Valid CaseRequest caseRequest) throws Exception {
-		CaseResponse caseResponse = summonService.createParaWiseComment(caseRequest);
-		return new ResponseEntity<>(caseResponse, HttpStatus.CREATED);
-
-	}
-
-	@RequestMapping(path = "/parawisecomment/_update", method = RequestMethod.POST)
-	public ResponseEntity<?> updateParaWiseComment(@RequestBody @Valid CaseRequest caseRequest) throws Exception {
-		CaseResponse caseResponse = summonService.updateParaWiseComment(caseRequest);
-		return new ResponseEntity<>(caseResponse, HttpStatus.CREATED);
-
-	}
-
-	@RequestMapping(path = "/hearingdetails/_create", method = RequestMethod.POST)
-	public ResponseEntity<?> createHearingDetails(@RequestBody @Valid CaseRequest caseRequest) throws Exception {
-		CaseResponse caseResponse = summonService.createHearingDetails(caseRequest);
-		return new ResponseEntity<>(caseResponse, HttpStatus.CREATED);
-
-	}
-
-	@RequestMapping(path = "/hearingdetails/_update", method = RequestMethod.POST)
-	public ResponseEntity<?> updateHearingDetails(@RequestBody @Valid CaseRequest caseRequest) throws Exception {
-		CaseResponse caseResponse = summonService.createHearingDetails(caseRequest);
-		return new ResponseEntity<>(caseResponse, HttpStatus.CREATED);
-
-	}
-
 }

@@ -1,7 +1,6 @@
 package org.egov.lcms.service;
 
 import java.util.List;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.lcms.config.PropertiesManager;
@@ -11,7 +10,6 @@ import org.egov.lcms.models.CaseRequest;
 import org.egov.lcms.models.CaseResponse;
 import org.egov.lcms.models.CaseSearchCriteria;
 import org.egov.lcms.models.ParaWiseComment;
-import org.egov.lcms.models.RequestInfoWrapper;
 import org.egov.lcms.repository.CaseSearchRepository;
 import org.egov.lcms.repository.OpinionRepository;
 import org.egov.lcms.util.UniqueCodeGeneration;

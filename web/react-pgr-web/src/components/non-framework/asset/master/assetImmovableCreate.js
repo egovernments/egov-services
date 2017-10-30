@@ -23,6 +23,7 @@ import ContentRemove from 'material-ui/svg-icons/content/remove';
 var specifications={};
 var fields = [];
 var groups = [];
+var finArr = [];
 let reqRequired = [];
 let baseUrl="https://raw.githubusercontent.com/abhiegov/test/master/specs/";
 class assetImmovableCreate extends Component {
@@ -300,7 +301,7 @@ class assetImmovableCreate extends Component {
 
             var customTemp = {};
              customTemp.name = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name;
-             customTemp.jsonPath = "Asset."+ response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name;
+             customTemp.jsonPath = "Asset.assetAttributes.|" + response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name +".|"+response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].type+"|";
              customTemp.label = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name;
              customTemp.type = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].type ;
              customTemp.isRequired = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].isMandatory;
@@ -320,7 +321,7 @@ class assetImmovableCreate extends Component {
                           break;
               }
               customFieldsArray.push(customTemp);
-              console.log(customFieldsArray);
+
           }
           customSpecs[catId] = customFieldsArray;
 
@@ -334,7 +335,7 @@ class assetImmovableCreate extends Component {
 
 
 
- 
+
 
       },function(err) {
             console.log(err);
@@ -439,6 +440,26 @@ class assetImmovableCreate extends Component {
       var jPath = match.replace(/\{|}/g,"");
       _url = _url.replace(match, _.get(formData, jPath));
     }
+
+
+  //  var createCustomObject = [];
+  var  createCustomObject = this.props.formData.Asset.assetAttributes;
+    console.log(createCustomObject);
+  //   if(createCustomObject){
+  //     console.log(createCustomObject.length);
+  //     for each(var x=0; x<createCustomObject.length; x++){
+  //       console.log(createCustomObject[x]);
+  //
+  //     }
+  // }
+  //createCustomObject.forEach(function(value, key) {
+  _.forEach(createCustomObject, function(value, key) {
+    console.log(value);
+    var keys = key.split("|", 2);
+    console.log(keys);
+    var values = value.split("|", 2);
+    console.log(values);
+  });
 
     //Check if documents, upload and get fileStoreId
     if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"].length) {
@@ -777,11 +798,20 @@ class assetImmovableCreate extends Component {
             {
               "label": "Asset Attributes",
               "name": "assetAttributes",
-              "jsonPath": "Asset.attributes",
+              "jsonPath": "Asset.assetAttributes",
               fields
             }
           ];
 
+console.log(fields);
+
+          for(var x=0; x<fields.length; x++){
+            var formFin = {};
+            formFin.key = fields[x].name;
+            formFin.type = fields[x].type;
+            finArr.push(formFin);
+          }
+          console.log(finArr);
           this.setState({
             hide: false
           })
@@ -1083,10 +1113,11 @@ class assetImmovableCreate extends Component {
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
-    console.log(groups);
-    if(moduleName && actionName){
-      console.log(mockData[`${moduleName}.${actionName}`].groups);
-    }
+  //  {formData && formData.hasOwnProperty("Asset") && formData.Asset.hasOwnProperty("assetAttributes") && formData.Asset.assetAttributes.map((item,index)=>{
+      console.log(formData);
+    // })}
+
+
 
     return (
       <div className="Report">

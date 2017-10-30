@@ -226,7 +226,7 @@ var commom_fields_rules = {
         alphanumeric: true
     },
     bank: {
-        required: false
+        required: true
     },
     bankBranch: {
         required: true

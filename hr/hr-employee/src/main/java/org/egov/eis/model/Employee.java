@@ -135,6 +135,7 @@ public class Employee {
 
     private String gpfNo;
 
+    @NotNull
     private Long bank;
 
     @NotNull

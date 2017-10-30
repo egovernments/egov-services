@@ -2032,7 +2032,7 @@ definitions:
     Indent:
       type: object
       description: |
-          
+         This object holds common information required by indent materail and transfer indent. 
       properties:
         id:
           type: string
@@ -2155,10 +2155,10 @@ definitions:
           maxLength: 1000
           description: |
             remarks of the IndentDetail
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
       - uom
+      - material
+      - indentQantity
       
     IndentRequest:
       description: Contract class for web request. Array of Indent items  are used in case of create or update
@@ -2509,8 +2509,6 @@ definitions:
           maxLength: 1000
           description: |
             remarks of the PurchaseMaterial
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
       - material
       - uom
@@ -2731,8 +2729,6 @@ definitions:
             materials that are of type shelf life control. Date must be greater
             than the receipt date.
           format: int64
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"  
       required:
         - mrnNumber
         - id
@@ -2942,8 +2938,6 @@ definitions:
           maxLength: 1000
           description: |
             description of the IndentIssueDetail
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
       - indentIssue
       - indentDetail
@@ -3771,8 +3765,6 @@ definitions:
           format: BigDecimal
           description: |
             scrap quantity of the ScrapDetails
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"   
       required:
       - material
       - lotNumber

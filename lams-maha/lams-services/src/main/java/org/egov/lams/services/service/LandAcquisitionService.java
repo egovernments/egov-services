@@ -84,7 +84,7 @@ public class LandAcquisitionService {
 	private LandAcquisitionResponse getLandAcquisitionResponse(List<LandAcquisition> landAcquisition,
 			RequestInfo requestInfo) {
 		LandAcquisitionResponse landAcquisitionResponse = new LandAcquisitionResponse();
-		landAcquisitionResponse.setLandAcquisitions(landAcquisition);
+		landAcquisitionResponse.setLandAcquisition(landAcquisition);
 		landAcquisitionResponse.setResponseInfo(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK));
 		return landAcquisitionResponse;
 	}

@@ -31,7 +31,7 @@ public class LandAcquisitionRepository {
 		System.out.println(landAcquisitionQueryBuilder.getQuery(landAcquisitionSearchCriteria));
 
 		return LandAcquisitionResponse.builder()
-		.landAcquisitions(landAcquisitionList)
+		.landAcquisition(landAcquisitionList)
 		.build();
 		
     }

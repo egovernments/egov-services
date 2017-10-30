@@ -291,10 +291,10 @@ class ShowField extends Component {
   subHeader = (moduleName) => {
     let {metaData,searchParams}=this.props;
     let paramsLength = searchParams.length;
-    // console.log(paramsLength);
     if(_.isEmpty(metaData)){
       return;
     }
+    let responseSearchParams = metaData.reportDetails.searchParams;
     let result = `${metaData.reportDetails.summary} for `;
     searchParams.map((search, index) => {
       let idx = index+1;
@@ -308,7 +308,12 @@ class ShowField extends Component {
           result += `${customDate[2]}/${customDate[1]}/${customDate[0]} (${translate(obj.label)})`;
           // result +=  lastText ? '' : obj.name === 'toDate' ? ', ' : '';
         }else{
-          result += `${search.input} (${translate(obj.label)})`;
+          let responsevalue = responseSearchParams.find((sp)=> {return sp.name === obj.name});
+          if(!_.isEmpty(responsevalue.defaultValue)){
+            result += `${responsevalue.defaultValue[search.input]} (${translate(obj.label)})`;
+          }else{
+            result += `${search.input} (${translate(obj.label)})`;
+          }
           // result += !lastText ? ', ' : '';
         }
       }else{
@@ -317,7 +322,12 @@ class ShowField extends Component {
           result += `${epochToDate(search.input)} (${translate(obj.label)})`;
           // result +=  lastText ? '' : obj.name === 'toDate' ? ', ' : '';
         }else{
+          let responsevalue = responseSearchParams.find((sp)=> {return sp.name === obj.name});
+          if(!_.isEmpty(responsevalue.defaultValue)){
+            result += `${responsevalue.defaultValue[search.input]} (${translate(obj.label)})`;
+          }else{
             result += `${search.input} (${translate(obj.label)})`;
+          }
             // result += !lastText ? ', ' : '';
         }
       }

@@ -74,17 +74,21 @@ public class PropertiesManager {
 	
 	@Value("${egov.lcms.tenant.service.error}")
 	private String tenantServiceErrorMsg;
-
 	
 	@Value("${egov.lcms.parawisecomment.create}")
 	private String paraWiseCreateValidated;
 	
 	@Value("${egov.lcms.parawisecomment.update}")
 	private String paraWiseUpdateValidated;
+	
+	@Value("${parawisecomment.ulb.name}")
+	private String paraWiseCommentsUlbName;
+	
+	@Value("${parawisecomment.ulb.format}")
+	private String paraWiseCommentsUlbFormat;
 
 	@Value("${egov.lcms.search.payment.error.code}")
 	private String paymentSearchErrorCode;
-	
 	
 	@Value("${egov.lcms.advocate.payment.create.key}")
     private String advocatePaymentCreate;
@@ -128,12 +132,6 @@ public class PropertiesManager {
 	@Value("${egov.lcms.object.parse.exception}")
 	private String parsingError;
 	
-	@Value("${hearing.code.name}")
-	private String hearingCodeName;
-	
-	@Value("${hearinng.code.format}")
-	private String hearingCodeFormat;
-	
 	@Value("${case.mandatory.reg.date.message}")
 	private String requiedCaseGenerationDateMessage;
 	
@@ -151,7 +149,6 @@ public class PropertiesManager {
 	
 	@Value("${case.mandatory.department.person.message}")
 	private String isVakalatNamaRequiredMessage;
-
 
 	@Value("${advocate.ulb.name}")
 	private String advocateUlbName;
@@ -196,11 +193,24 @@ public class PropertiesManager {
 	private String updateRegisterTopic;
 	
 	@Value("${default.page.size}")
-	public String defaultPageSize;
+	private String defaultPageSize;
 	
 	@Value("${default.page.number}")
-	public String defaultPageNumber;
+	private String defaultPageNumber;
 	
 	@Value("${default.offset}")
-	public String defaultOffset;
+	private String defaultOffset;
+	
+	@Value("${egov.lcms.hearingdetails.create}")
+	private String hearingCreateValidated;
+	
+	@Value("${egov.lcms.hearingdetails.update}")
+	private String hearingUpdateValidated;
+	
+	@Value("${hearingdetails.ulb.name}")
+	private String hearingDetailsUlbName;
+	
+	@Value("${hearingdetails.ulb.format}")
+	private String hearingDetailsUlbFormat;	
+	
 }

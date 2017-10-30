@@ -1,15 +1,15 @@
 package org.egov.works.estimate.web.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.model.AuditDetails;
-import io.swagger.model.DetailedEstimate;
-import io.swagger.model.Overhead;
+import org.egov.works.commons.domain.model.AuditDetails;
+import org.egov.works.commons.domain.model.Overhead;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.Objects;
 
 /**
  * An Object holds the basic data of Estimate Overheads

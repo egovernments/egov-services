@@ -24,6 +24,9 @@ import java.util.Objects;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-28T12:22:31.360Z")
 
 public class AbstractEstimate   {
+
+  public static final String TABLE_NAME = "egw_abstractestimate";
+
   @JsonProperty("id")
   private String id = null;
 

@@ -1,4 +1,4 @@
-package io.swagger.model;
+package org.egov.works.estimate.web.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;

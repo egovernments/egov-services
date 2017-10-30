@@ -1,5 +1,7 @@
 package org.egov.contract;
 
+import javax.validation.Valid;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.model.Asset;
 
@@ -18,6 +20,7 @@ public class AssetRequest   {
 	  @JsonProperty("RequestInfo")
 	  private RequestInfo requestInfo;
 
+	  @Valid
 	  @JsonProperty("Asset")
 	  private Asset asset;
 

@@ -3,6 +3,8 @@ package org.egov.model;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import org.egov.model.enums.ModeOfAcquisitionEnum;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,8 +24,9 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Asset   {
-	  
-	@JsonProperty("anticipatedLife")
+
+	  @NotNull
+	  @JsonProperty("anticipatedLife")
 	  private Long anticipatedLife = null;
 
 	  @JsonProperty("orderNumber")
@@ -32,6 +35,7 @@ public class Asset   {
 	  @JsonProperty("orderDate")
 	  private Long orderDate = null;
 
+	  @NotNull
 	  @JsonProperty("wipReferenceNo")
 	  private String wipReferenceNo = null;
 
@@ -53,21 +57,27 @@ public class Asset   {
 	  @JsonProperty("securityDepositRealized")
 	  private BigDecimal securityDepositRealized = null;
 
+	  @NotNull
 	  @JsonProperty("acquisitionDate")
 	  private Long acquisitionDate = null;
 
+	  @NotNull
 	  @JsonProperty("originalValue")
 	  private BigDecimal originalValue = null;
 
+	  @NotNull
 	  @JsonProperty("assetAccount")
 	  private String assetAccount = null;
 
+	  @NotNull
 	  @JsonProperty("accumulatedDepreciationAccount")
 	  private String accumulatedDepreciationAccount = null;
 
+	  @NotNull
 	  @JsonProperty("revaluationReserveAccount")
 	  private String revaluationReserveAccount = null;
-
+	  
+	  @NotNull
 	  @JsonProperty("depreciationExpenseAccount")
 	  private String depreciationExpenseAccount = null;
 
@@ -95,6 +105,7 @@ public class Asset   {
 	  @JsonProperty("plinthArea")
 	  private Double plinthArea = null;
 
+	  @NotNull
 	  @JsonProperty("address")
 	  private String address = null;
 
@@ -122,6 +133,7 @@ public class Asset   {
 	  @JsonProperty("id")
 	  private Long id = null;
 
+	  @NotNull
 	  @JsonProperty("name")
 	  private String name = null;
 
@@ -131,27 +143,33 @@ public class Asset   {
 	  @JsonProperty("oldCode")
 	  private String oldCode = null;
 
+	  @NotNull
 	  @JsonProperty("departmentCode")
 	  private String departmentCode = null;
 
+	  @NotNull
 	  @JsonProperty("assetCategory")
 	  private AssetCategory assetCategory = null;
 
+	  @NotNull
 	  @JsonProperty("modeOfAcquisition")
 	  private ModeOfAcquisitionEnum modeOfAcquisition = null;
 
 	  @JsonProperty("status")
 	  private String status = null;
 
+	  @NotNull
 	  @JsonProperty("grossValue")
 	  private BigDecimal grossValue = null;
 
 	  @JsonProperty("accumulatedDepreciation")
 	  private BigDecimal accumulatedDepreciation = null;
 
+	  @NotNull
 	  @JsonProperty("description")
 	  private String description = null;
 
+	  @NotNull
 	  @JsonProperty("dateOfCreation")
 	  private Long dateOfCreation = null;
 

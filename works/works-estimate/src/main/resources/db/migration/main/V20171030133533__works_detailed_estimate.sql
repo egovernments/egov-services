@@ -2,7 +2,7 @@ CREATE TABLE egw_detailed_estimate
 (
   id character varying(256),
   tenantId character varying(256) NOT NULL,
-  estimatenumber varying(50) NOT NULL,
+  estimatenumber character varying(50) NOT NULL,
   estimatedate bigint NOT NULL,
   nameofwork character varying(1024) NOT NULL,
   description character varying(1024) NOT NULL,
@@ -56,7 +56,7 @@ CREATE TABLE egw_detailed_estimate
 );
 
 
-CREATE TABLE egw_estimate_assets
+CREATE TABLE egw_detailedestimate_assets
 (
   id character varying(256),
   tenantId character varying(256) NOT NULL,
@@ -71,7 +71,7 @@ CREATE TABLE egw_estimate_assets
 
 );
 
-CREATE TABLE egw_detailed_estimate_deductions
+CREATE TABLE egw_detailedestimate_deductions
 (
   id character varying(256),
   tenantId character varying(256) NOT NULL,
@@ -88,7 +88,7 @@ CREATE TABLE egw_detailed_estimate_deductions
 );
 
 
-CREATE TABLE egw_estimate_activity
+CREATE TABLE egw_detailedestimate_activity
 (
   id character varying(256),
   tenantId character varying(256) NOT NULL,
@@ -110,7 +110,7 @@ CREATE TABLE egw_estimate_activity
   --//TODO Unique key
 );
 
-CREATE TABLE egw_multiyear_estimate
+CREATE TABLE egw_multiyear_detailedestimate
 (
   id character varying(256),
   tenantId character varying(256) NOT NULL,
@@ -125,7 +125,7 @@ CREATE TABLE egw_multiyear_estimate
   --//TODO Unique key
 );
 
-CREATE TABLE egw_estimate_overheads
+CREATE TABLE egw_detailedestimate_overheads
 (
   id character varying(256),
   tenantId character varying(256) NOT NULL,

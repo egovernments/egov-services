@@ -191,7 +191,7 @@ serviceMaps:
     fromTopic: lcms-parawisecomment-update
     queryMaps: 
       - query:  UPDATE egov_lcms_parawise_comments SET parawiseCommentsAskedDate=?,parawiseCommentsReceivedDate=?,hodProvidedDate=?,resolutionDate=?,paraWiseComments=?,documents=?,tenantId=?,casecode=?,lastModifiedBy=?,lastModifiedTime=? WHERE code=?;
-        basePath: $.parawiseComments.*
+        basePath: $.cases.*.parawiseComments.*
         jsonMaps: 
         - jsonPath: $.parawiseComments.*.parawiseCommentsAskedDate
           type: LONG
@@ -723,4 +723,4 @@ serviceMaps:
           type: LONG
         - jsonPath: $.opinions.*.auditDetails.lastModifiedTime
           type: LONG
-        - jsonPath: $.opinions.*.code        
+        - jsonPath: $.opinions.*.code

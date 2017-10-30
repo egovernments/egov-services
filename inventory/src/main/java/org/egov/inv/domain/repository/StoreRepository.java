@@ -37,43 +37,43 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.inv.domain.service;
+package org.egov.inv.domain.repository;
 
 import io.swagger.model.Store;
 import io.swagger.model.StoreRequest;
-
-import org.egov.inv.domain.repository.StoreRepository;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-public class StoreService {
+@Transactional(readOnly = true)
+public class StoreRepository {
 
 	@Autowired
-	private InventoryUtilityService inventoryUtilityService;
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+	@Value("${inv.store.save.topic}")
+	private String createTopic;
+
+	@Value("${inv.store.update.topic}")
+	private String updateTopic;
 
 	@Autowired
-	private StoreRepository storeRepository;
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-	public List<Store> create(StoreRequest storeRequest, String tenantId) {
-		List<Long> storesIdList = inventoryUtilityService.getIdList(storeRequest.getStores().size(), "seq_stores");
-		for (int i = 0; i <= storeRequest.getStores().size() - 1; i++) {
-			storeRequest.getStores().get(i).setId(storesIdList.get(i).toString());
-			storeRequest.getStores().get(i)
-					.setAuditDetails(inventoryUtilityService.mapAuditDetails(storeRequest.getRequestInfo(), tenantId));
-		}
-		return storeRepository.create(storeRequest);
+	public List<Store> create(StoreRequest storeRequest) {
+		kafkaTemplate.send(createTopic, storeRequest);
+		return storeRequest.getStores();
 	}
 
-	public List<Store> update(StoreRequest storeRequest, String tenantId) {
-		List<Store> storesList = storeRequest.getStores();
-		for (int i = 0; i <= storesList.size() - 1; i++) {
-			storeRequest.getStores().get(i).setAuditDetails(
-					inventoryUtilityService.mapAuditDetailsForUpdate(storeRequest.getRequestInfo(), tenantId));
-		}
-		return storeRepository.update(storeRequest);
+	public List<Store> update(StoreRequest storeRequest) {
+		kafkaTemplate.send(updateTopic, storeRequest);
+		return storeRequest.getStores();
 	}
 
 }

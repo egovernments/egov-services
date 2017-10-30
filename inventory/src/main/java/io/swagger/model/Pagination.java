@@ -31,49 +31,39 @@
  *            is required that all modified versions of this material be marked in
  *            reasonable ways as different from the original version.
  *
- *         3) This license does not grant any rights to any user of the program
+ *         3) This license does not grant any rights to any Long of the program
  *            with regards to rights under trademark law for use of the trade names
  *            or trademarks of eGovernments Foundation.
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.inv.domain.service;
+package io.swagger.model;
 
-import io.swagger.model.Store;
-import io.swagger.model.StoreRequest;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import lombok.Data;
 
-import org.egov.inv.domain.repository.StoreRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import javax.validation.constraints.Max;
 import java.util.List;
 
-@Service
-public class StoreService {
+@Data
+public class Pagination<T> {
 
-	@Autowired
-	private InventoryUtilityService inventoryUtilityService;
+	public static int DEFAULT_PAGE_SIZE = 500;
+	public static int DEFAULT_PAGE_OFFSET = 0;
 
-	@Autowired
-	private StoreRepository storeRepository;
+	private Integer totalResults;
 
-	public List<Store> create(StoreRequest storeRequest, String tenantId) {
-		List<Long> storesIdList = inventoryUtilityService.getIdList(storeRequest.getStores().size(), "seq_stores");
-		for (int i = 0; i <= storeRequest.getStores().size() - 1; i++) {
-			storeRequest.getStores().get(i).setId(storesIdList.get(i).toString());
-			storeRequest.getStores().get(i)
-					.setAuditDetails(inventoryUtilityService.mapAuditDetails(storeRequest.getRequestInfo(), tenantId));
-		}
-		return storeRepository.create(storeRequest);
-	}
+	private Integer totalPages;
 
-	public List<Store> update(StoreRequest storeRequest, String tenantId) {
-		List<Store> storesList = storeRequest.getStores();
-		for (int i = 0; i <= storesList.size() - 1; i++) {
-			storeRequest.getStores().get(i).setAuditDetails(
-					inventoryUtilityService.mapAuditDetailsForUpdate(storeRequest.getRequestInfo(), tenantId));
-		}
-		return storeRepository.update(storeRequest);
-	}
+	@Max(500l)
+	private Integer pageSize = DEFAULT_PAGE_SIZE;
+
+	private Integer currentPage;
+
+	private Integer offset = DEFAULT_PAGE_OFFSET;
+
+	@JsonProperty(access = Access.WRITE_ONLY)
+	List<T> pagedData;
 
 }

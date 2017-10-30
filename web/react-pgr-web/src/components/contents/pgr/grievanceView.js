@@ -559,7 +559,6 @@ class grievanceView extends Component{
                   </SelectField>
                 </Col>
               </Row>
-
               : "" }
               { localStorage.getItem('type') === 'EMPLOYEE' ?
               <Row>

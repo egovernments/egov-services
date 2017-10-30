@@ -3458,18 +3458,21 @@ definitions:
           minLength: 4
         code:
           type: string
+          pattern: ^[a-zA-Z0-9]+$
           maxLength: 50
           minLength: 5
           description: |
             code of the Store
         name:
           type: string
+          pattern: ^[a-zA-Z ]+$
           maxLength: 50
           minLength: 5
           description: |
             name of the Store
         description:
           type: string
+          pattern: ^[a-zA-Z0-9 ]+$
           maxLength: 1000
           description: |
             description of the Store
@@ -3477,25 +3480,30 @@ definitions:
           $ref: "#/definitions/Department"
         billingAddress:
           type: string
+          pattern: ^[a-zA-Z0-9 ]+$
           maxLength: 1000
           description: |
             billing address of the Store
         deliveryAddress:
           type: string
+          pattern: ^[a-zA-Z0-9 ]+$
           maxLength: 1000
           description: |
             delivery address of the Store
         contactNo1:
           type: string
+          pattern: ^[0-9]+$
           maxLength: 10
           description: |
             contact no1 of the Store
         contactNo2:
           type: string
+          pattern: ^[0-9]+$
           description: |
             contact no2 of the Store
         email:
           type: string
+          pattern: ^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$
           maxLength: 100
           description: |
             email of the Store
@@ -3541,6 +3549,7 @@ definitions:
             code of the Department
         name:
           type: string
+          pattern: ^[a-zA-Z ]$
           description: |
             name of the Department
         active:
@@ -3615,6 +3624,7 @@ definitions:
             code of the Employee
         name:
           type: string
+          pattern: ^[a-zA-Z ]$
           description: |
             name of the Employee
         auditDetails:

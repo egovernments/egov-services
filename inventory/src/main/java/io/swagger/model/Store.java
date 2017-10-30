@@ -13,11 +13,11 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * 
+ * This object holds the store information.   
  */
-@ApiModel(description = "")
+@ApiModel(description = "This object holds the store information.   ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-28T13:21:55.964+05:30")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-30T12:37:47.075+05:30")
 
 public class Store   {
   @JsonProperty("id")
@@ -138,7 +138,7 @@ public class Store   {
   @ApiModelProperty(required = true, value = "name of the Store ")
   @NotNull
 
- @Size(min=5,max=50)
+ @Pattern(regexp="^[a-zA-Z ]+$") @Size(min=5,max=50)
   public String getName() {
     return name;
   }
@@ -159,7 +159,7 @@ public class Store   {
   @ApiModelProperty(required = true, value = "description of the Store ")
   @NotNull
 
- @Size(max=1000)
+ @Pattern(regexp="^[a-zA-Z0-9 ]+$") @Size(max=1000)
   public String getDescription() {
     return description;
   }
@@ -202,7 +202,7 @@ public class Store   {
   @ApiModelProperty(required = true, value = "billing address of the Store ")
   @NotNull
 
- @Size(max=1000)
+ @Pattern(regexp="^[a-zA-Z0-9 ]+$") @Size(max=1000)
   public String getBillingAddress() {
     return billingAddress;
   }
@@ -223,7 +223,7 @@ public class Store   {
   @ApiModelProperty(required = true, value = "delivery address of the Store ")
   @NotNull
 
- @Size(max=1000)
+ @Pattern(regexp="^[a-zA-Z0-9 ]+$") @Size(max=1000)
   public String getDeliveryAddress() {
     return deliveryAddress;
   }
@@ -244,7 +244,7 @@ public class Store   {
   @ApiModelProperty(required = true, value = "contact no1 of the Store ")
   @NotNull
 
- @Size(max=10)
+ @Pattern(regexp="^[0-9]+$") @Size(max=10)
   public String getContactNo1() {
     return contactNo1;
   }
@@ -264,7 +264,7 @@ public class Store   {
   **/
   @ApiModelProperty(value = "contact no2 of the Store ")
 
-
+ @Pattern(regexp="^[0-9]+$")
   public String getContactNo2() {
     return contactNo2;
   }
@@ -285,7 +285,7 @@ public class Store   {
   @ApiModelProperty(required = true, value = "email of the Store ")
   @NotNull
 
- @Size(max=100)
+ @Pattern(regexp="^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$") @Size(max=100)
   public String getEmail() {
     return email;
   }
@@ -443,4 +443,3 @@ public class Store   {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

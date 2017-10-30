@@ -207,7 +207,36 @@ paths:
       tags:
         - Case  
 
-              
+  /case/_dataentry:
+    post:
+      summary: Create legacy case in system .
+      description: |
+          To create case in the system. API supports bulk creation with max limit as defined in the case request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create, please pass array with one case. 
+            
+           
+          
+      parameters:
+        - name: caseRequest
+          in: body
+          description: Details for the new legacy case(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/CaseRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: ReponseInfo with case(s) created successfully
+          schema:
+            $ref: '#/definitions/CaseResponse'
+        400:
+          description: Legacy Case(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Case              
   /case/_vakalatnamageneration:
     post:
       summary: Create vakalatnama in system .
@@ -1254,6 +1283,21 @@ definitions:
         description: tenant id of the Case
         maxLength: 128
         minLength: 4 
+      judgeMentDate:
+        type: integer
+        format: int64
+        description: This field holds information about the judgement date
+      advocateOpinion:
+        type: integer
+        format: int64
+        description: This field holds information about the advocate opinion
+      furtherProcesssDetails:
+        type: string
+        description: This field holds information about the further processs details
+      darkhasthDueDate:
+        type: integer
+        format: int64
+        description: This field holds information about the darkhast due date
       auditDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'  
 
@@ -1417,6 +1461,8 @@ definitions:
         description: This filed holds information about the co age.TODO-need clarification about this filed.  
       address:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Address'
+      caseVoucher:
+        $ref: '#/definitions/CaseVoucher'
       hearingDetails:
         type: array
         items:
@@ -1431,6 +1477,27 @@ definitions:
           description: parawise comments of case.TODO-need clarification either parawise comments can update or not and either it's should be single parawise comment or multiple parawise comments
           items:
             $ref: '#/definitions/ParaWiseComment'
+      pleaderEngagementDetails:
+        type: string
+        description: This field holds information about the pleader engagement details
+      receiptDate:
+        type: integer
+        format: int64
+        description: This field holds information about the receipt date
+      reslovtion:
+        type: string
+        description: This field holds information about the reslovtion
+      reslovtionDate:
+        type: integer
+        format: int64
+        description: This field holds information about the reslovtion date
+      advocateInfoDate:
+        type: integer
+        format: int64
+        description: This field holds information about the advocate information date 
+      remarks:
+        type: string
+        description: This field holds information about the remarks
     required:
      - summon
      - caseRegistrationDate
@@ -1751,6 +1818,38 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Opinion'
+  CaseVoucher:
+    type: object
+    description: This object holds information about the case voucher details
+    properties:
+      code:
+        type: string
+        description: Sysstem will generate code based on tenantId and sequence number
+      caseCode:
+        type: string
+        description: This field holds information about the code of case
+      voucherType:
+        type: string
+        description: This filed holds information about the voucher type
+        enum:
+            - PAYMENT
+            - RECEIPT
+      voucherDate:
+        type: integer
+        format: int64
+        description: This field holds information about the voucherDate.In case of payment,it will be debit date,in case of receipt,it will be  credit date
+      details:
+        type: string
+        description: This field holds information about the details of vocher
+      verificationRemarks:
+        type: string
+        description: This field holds information about the verification remarks
+      officerSignature:
+        type: string
+        description: This field holds information about the officer Signature
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"   
+        
   AdvocateRequest:
     type: object
     description: This object holds information about the advocate request

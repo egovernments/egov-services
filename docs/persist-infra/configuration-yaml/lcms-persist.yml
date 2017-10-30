@@ -140,7 +140,7 @@ serviceMaps:
           
         - jsonPath: $.cases.*.stateId
         
-        - jsonPath: $.cases.*.summon.code
+        - jsonPath: $.cases.*.code
 
   - version: 1.0
     name: lcms-parawisecomments

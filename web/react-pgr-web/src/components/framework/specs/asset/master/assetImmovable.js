@@ -77,14 +77,16 @@ var dat = {
   						"type": "singleValueList",
   						"url": "",
   						"isRequired": true,
-  						"isDisabled": false,
+  						"isDisabled": true,
   						"requiredErrMsg": "",
   						"patternErrMsg": "",
-							"defaultValue": [	  {
-	            "key": "IMMOVABLE",
-	            "value": "IMMOVABLE"
-	          }
-					],
+							"defaultValue":"IMMOVABLE"
+					// 		 [	  {
+	        //     "key": "IMMOVABLE",
+	        //     "value": "IMMOVABLE"
+	        //   }
+					// ]
+
 					// "depedants": [{
 					// 	"jsonPath": "Asset.assetCategory",
 					// 	"type": "dropDown",
@@ -207,7 +209,7 @@ var dat = {
 					{
 						"name": "SurveyNoOfLandOnWhichStructureIsLocated ",
 						"jsonPath": "Asset.landSurveyNo",
-						"label": "ac.create.Survey.no.of.land", 
+						"label": "ac.create.Survey.no.of.land",
 						"pattern": "",
 						"type": "number",
 						"url": "",
@@ -667,9 +669,9 @@ var dat = {
             "label": "ac.create.Asset.account.code",
             "pattern": "",
             "type": "singleValueList",
-						"url": "",
-            //"url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Fixed Assets|$..name|$..name",
-            "isRequired": false,
+						//"url": "",
+            "url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Fixed Assets|$..name|$..name",
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -936,7 +938,7 @@ var dat = {
 			}
 	},
 	"asset.view": {
-		"numCols": 12/2,
+		"numCols": 12/3,
 		"url": "asset-services-maha/assets/_search?id={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,

@@ -12,7 +12,7 @@ ReportDefinitions:
     source: asset
     linkedReport:
       reportName: AssetDetail
-      linkedColumn: _url?/print/report/assetImmovableReport/:id
+      linkedColumn: _url?/print/report/assetImmovableReport/:srn
   - name: quantity
     label: reports.asset.quantity
     type: number

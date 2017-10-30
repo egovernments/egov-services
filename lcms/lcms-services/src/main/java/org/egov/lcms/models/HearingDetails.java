@@ -43,4 +43,16 @@ public class HearingDetails {
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
+	
+	@JsonProperty("judgeMentDate")
+	private Long judgeMentDate = null;
+	
+	@JsonProperty("advocateOpinion")
+	private String advocateOpinion = null;
+	
+	@JsonProperty("furtherProcesssDetails")
+	private String furtherProcesssDetails = null;
+	
+	@JsonProperty("darkhasthDueDate")
+	private Long darkhasthDueDate = null;
 }

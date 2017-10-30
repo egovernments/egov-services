@@ -28,6 +28,9 @@ public class AdvocateDetails {
 	@JsonProperty("assigndate")
 	private Long assigndate;
 	
+	@JsonProperty("fee")
+	private Double fee;
+	
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
 	

@@ -73,4 +73,22 @@ public class Case {
 
 	@JsonProperty("parawiseComments")
 	private List<ParaWiseComment> parawiseComments = null;
+	
+	@JsonProperty("pleaderEngagementDetails")
+	private String pleaderEngagementDetails = null;
+	
+	@JsonProperty("receiptDate")
+	private Long receiptDate = null;
+	
+	@JsonProperty("resolvation")
+	private String resolvation;
+	
+	@JsonProperty("resolvationDate")
+	private Long resolvationDate;
+	
+	@JsonProperty("advocateInfoDate")
+	private Long advocateInfoDate;
+	
+	@JsonProperty("remarks")
+	private String remarks = null;
 }

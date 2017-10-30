@@ -298,7 +298,7 @@ class EmployeeReport extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                 <div className="col-sm-6 label-text">
-                                    <label for="">Employee Type </label>
+                                    <label for="">Recruitment Type </label>
                                 </div>
                                 <div className="col-sm-6">
                                   <div className="styled-select">

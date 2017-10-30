@@ -701,20 +701,39 @@ definitions:
           minLength: 4
         name:
           type: string
-          description: name of the Route. Shall be unique within a ward
+          description: name of the Route. Shall be unique within ULB
           maxLength: 128
           minLength: 4
         collectionType:
           $ref: "#/definitions/CollectionType"
-        startingPoint:
+        startingCollectionPoint:
+          description: Starting point will be shown based on what collection type has been selected.
           $ref: "#/definitions/CollectionPoint"
-        endingPoint:
+        isEndingPointDumpingGround:
+          type: boolean
+          format: checkbox
+          description: Ending point can be a dumping ground / processing site. If ending point of a route is dumping ground or processing site, checkbox will be ticked
+        endingDumpingGroundPoint:
+          description: If isDumpingGround is selected, this dropdown will show the list of dumping grounds and processing plants. Else disable this
+          $ref: "#/definitions/DumpingGround"
+          format: singleValueList
+        endingCollectionPoint:  
           $ref: "#/definitions/CollectionPoint"
-        stopsSelection:
+          format: singleValueList
+          description: If isDumpingGround is "not selected", this field shall allow the user to select a collection point as ending point. Else disable this field 
+        collectionPoints:
           type: array
-          description: List of CollectionPoint for Route. This filed is intersection between Collection Type and (Starting and Ending points)
+          description: List of CollectionPoint on the Route. This will have all the selected collection points based on Ward / zone / street.
           items:
-            $ref: '#/definitions/CollectionPoint'
+            $ref: '#/definitions/RouteCollectionPointMap'
+        distance:
+          type: number
+          format: double
+          description: it captures distance (in KMs) of the route, starting from First point to ending point. e.g. 10.75
+        garbageEstimate:
+          type: number
+          format: double
+          description: it captures expected garbage collection (in tonnes) for a route. e.g. 4.26
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
@@ -722,13 +741,39 @@ definitions:
       - tenantId
       - name
       - collectionType
-      - startingPoint
-      - endingPoint
-      - stopsSelection
+      - startingCollectionPoint
+      - collectionPoints
+      - distance
+      - garbageEstimate
+    
+    RouteCollectionPointMap:
+      type: object
+      description: capture collection points on a route
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Route Map
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the Route Map
+          maxLength: 128
+          minLength: 4
+        route:
+          $ref: '#/definitions/Route'
+        collectionPoint:
+          $ref: '#/definitions/CollectionPoint'
+      required:
+      - id
+      - tenantId
+      - route
+      - collectionPoint
+    
       
     FuelType:
       type: object
-      description: Defines the type of vehicle. e.g.  Diesel, Petrol etc
+      description: Defines the type of fuel. e.g.  Diesel, Petrol etc
       properties:
         id:
           type: string
@@ -752,8 +797,6 @@ definitions:
           description: code of the FuelType. Unique code assigned to the FuelType. Shall be of at least 2 digits. fuelCode will be system generated
           maxLength: 128
           minLength: 1
-        auditDetails:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - id
       - tenantId
@@ -785,8 +828,6 @@ definitions:
           description: code of the VehicleType
           maxLength: 128
           minLength: 1
-        auditDetails:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - id
       - tenantId
@@ -809,8 +850,80 @@ definitions:
           minLength: 4
         vehicleType:
           $ref: "#/definitions/VehicleType"
+        vehiclePurchaseInfo:
+          $ref: "#/definitions/VehiclePurchaseInfo"
         fuelType:
           $ref: "#/definitions/FuelType"
+        operatorsReq:
+          type: integer
+          format: int64
+          description: number Of Persons Required to operate the Vehicle. Shall be > 0
+          minimum: 1
+          example: 3
+        ulbOwnedVehicle:
+          type: boolean
+          format: checkbox
+          description: "Option should be selected if vehilce is owned by ULB. By default option should be in Selected state."
+        vendor:
+          $ref: "#/definitions/Vendor"
+          description: name of the vendor who supplied the Vehicle. Mandatory when ulbOwnedVehicle is in "Not Selected" state. Else, disable this field"
+        vehicleDriverName:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/hr/contracts/hr-employee/v1-0-0.yml#/definitions/EmployeeInfo'
+          #type: string
+          description: name of the driver who will drive the Vehicle. Driver name shall be fetched from HRMS. Assumption-> One driver shall be assigned to one vehicle only. Raise an visual alert if driver is being assigned to more than 1 vehicle but allow the assignment.
+          #maxLength: 256
+          #minLength: 0
+        vehicleManufacturingDetails:
+          $ref: '#/definitions/VehicleManufacturingDetails'
+        insuranceDetails:
+          type: array
+          items:
+            $ref: '#/definitions/InsuranceDetails'
+          minItems: 1
+          description: Captures insurance details of vehicle. Current and previuos insurance information 
+        isUnderWarranty:
+          type: boolean
+          format: checkbox
+          description: captures whether vehicle is under warranty or not. Option should be selected if vehicle is under warranty. At least one of kilometers or endOfWarranty field is required if isUnderWarranty is slected
+        kilometers:
+          type: integer
+          format: int64
+          maximum: 75000
+          minimum: 1
+          description: If isUnderWarranty is selected, this field is mandatory.
+          example: 24502
+        endOfWarranty:
+          type: string
+          format: date
+          description:  If isUnderWarranty is selected, this field is mandatory. Should be a future date
+          x-displayformat: 26/10/2017
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - vehicleType
+      - vehiclePurchaseInfo
+      - fuelType
+      - vehicleManufacturingDetails
+      - operatorsReq
+      - insuranceDetails
+      - vehicleDriverName 
+ 
+    VehiclePurchaseInfo:
+      type: object
+      description: Purchase related information of the vehicle. e.g registration number, purchase price etc
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the VehiclePurchaseInfo object
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the VehiclePurchaseInfo object
+          maxLength: 128
+          minLength: 4
         regNumber:
           type: string
           format: singleValueList
@@ -818,6 +931,57 @@ definitions:
           maxLength: 12
           minLength: 6
           example: KA519876
+        purchaseDate:
+          type: string
+          format: date
+          x-displayformat: 20/10/2015
+          description: Purchase date of the vehicle. # We might have to intgrate with Asset management module to fetch vehicle related record.
+        yearOfPurchase:
+          type: integer
+          format: int64
+          minLength: 4
+          maxLength: 4
+          x-displayformat: 2015
+          #$ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/FinancialYear'
+          description: Purchase year of the vehicle.
+        price:
+          type: number 
+          format: double
+          description: purchase price of the Vehicle
+          example: 367000.00
+        sourceOfPurchase:
+          type: string
+          description: source of purchase of the Vehicle
+          maxLength: 256
+          minLength: 0
+        remarks:
+          type: string
+          description: ULB admin can enter a comment 
+          maxLength: 300
+          minLength: 15
+      required:
+      - id
+      - tenantId
+      - regNumber
+      - purchaseDate
+      - yearOfPurchase
+      - price
+    
+    
+    VehicleManufacturingDetails:
+      type: object
+      description: Captures manufacturing related details of the vehicle. e.g. engine number, chassis number etc
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Vehicle
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the Vehicle
+          maxLength: 128
+          minLength: 4
         engineSrNumber:
           type: string
           description: engine serial number of the Vehicle. Should be unique across the platform. Special characters are allowed. Space not allowed
@@ -837,55 +1001,38 @@ definitions:
           minimum: 0
           exclusiveMinimum: true
           example: 0.24
-        numberOfPersonsReq:
-          type: integer
-          format: int64
-          description: number Of Persons Required to operate the Vehicle. Shall be > 0
-          minimum: 1
-          example: 3
-        model:
+        vehicleModel:
           type: string
           description: Make / Model / Manufaturer of the Vehicle. / special character is allowed. Space is not allowed
           maxLength: 256
           minLength: 1
           example: Dzire/LDi/Maruti
-        ulbOwnedVehicle:
-          type: boolean
-          format: checkbox
-          description: "Option should be selected if vehilce is owned by ULB. By default option should be in Selected state."
-        vendor:
-          $ref: "#/definitions/Vendor"
-          description: name of the vendor who supplied the Vehicle. Mandatory when ulbOwnedVehicle is in "Not Selected" state. Else, disable this field"
-        vehicleDriverName:
+      required:
+      - id
+      - tenantId
+      - engineSrNumber
+      - chassisSrNumber
+      - vehicleCapacity
+      - vehicleModel
+      
+    
+    InsuranceDetails:
+      type: object
+      description: Captures Insurance details of the vehicle
+      properties:
+        id:
           type: string
-          description: name of the driver who will drive the Vehicle. Driver name shall be fetched from HRMS. Assumption-> One driver shall be assigned to one vehicle only. # HRMS APIs are required.
+          description: Unique Identifier of the Vehicle
           maxLength: 256
-          minLength: 0
-        purchaseDate:
+          minLength: 1
+        tenantId:
           type: string
-          format: date
-          description: Purchase date of the vehicle. # We might have to intgrate with Asset management module to fetch vehicle related record.
-        yearOfPurchase:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/FinancialYear'
-          description: Purchase year of the vehicle. # We might have to remove this field as that year is already captured in Date filed.
-        price:
-          type: number 
-          format: double
-          description: purchase price of the Vehicle
-          example: 367000.00
-        sourceOfPurchase:
-          type: string
-          description: source of purchase of the Vehicle
-          maxLength: 256
-          minLength: 0
-        remarks:
-          type: string
-          description: ULB admin can enter a comment 
-          maxLength: 300
-          minLength: 15
+          description: tenant id of the Vehicle
+          maxLength: 128
+          minLength: 4
         insuranceNumber:
           type: string
-          description: Insurance number of vehicle
+          description: Current Insurance number of vehicle
           maxLength: 256
           minLength: 1
         insuranceValidityDate:
@@ -895,41 +1042,16 @@ definitions:
           description: Current or Futrure date at which insurance is going to expire
         insuranceDocuments:
           $ref: '#/definitions/Documents'
-        isUnderWarranty:
-          type: boolean
-          format: checkbox
-          description: captures whether vehicle is under warranty or not. Option should be selected if vehicle is under warranty.
-        kilometers:
-          type: integer
-          format: int64
-          maximum: 75000
-          minimum: 1
-          description: If isUnderWarranty is selected, this field is mandatory.
-          example: 24502
-        endOfWarranty:
-          type: string
-          format: date
-          description:  If isUnderWarranty is selected, this field is mandatory. Should be a future date
-          x-displayformat: 26/10/2017
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - id
       - tenantId
-      - vehicleType
-      - fuelType
-      - regNumber
-      - engineSrNumber
-      - chassisSrNumber
-      - vehicleCapacity
-      - numberOfPersonsReq
-      - model
       - insuranceNumber
       - insuranceValidityDate
-      - purchaseDate
-      - yearOfPurchase
-      - price
- 
+    
+    
+    
     VehicleRequest:
       description: Contract class to receive request. Array of Vehicle items are used in case of create, whereas single Vehicle item is used for update
       properties:
@@ -976,8 +1098,6 @@ definitions:
           description: code of the WasteType. e.g. Dry, wet or medicinal waste etc. Special chararcter not allowed. Space allowed
           maxLength: 128
           minLength: 1
-        auditDetails:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - id
       - tenantId
@@ -986,6 +1106,7 @@ definitions:
       
     WasteSubType:
       type: object
+      description: waste subtype will be defined undedr waste type
       properties:
         id:
           type: string
@@ -1009,8 +1130,7 @@ definitions:
           minLength: 1
         wasteType:
           $ref: "#/definitions/WasteType"
-        auditDetails:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+          format: singleValueList
       required:
       - id
       - tenantId
@@ -1047,11 +1167,15 @@ definitions:
         area:
           type: number
           format: double
-          description: area of the Dumping Ground in Km^2. CAN'T be 0
+          description: area of the Dumping Ground in Km^2. Shall be > 0
+          minimum: 0
+          exclusiveMinimum: true
         capacity:
           type: number
           format: double
-          description: capacity of the Dumping Ground in Tonnes
+          description: capacity of the Dumping Ground in Tonnes. Shall be > 0
+          minimum: 0
+          exclusiveMinimum: true
         address:
           type: string
           description: address of the Dumping Ground
@@ -1060,16 +1184,19 @@ definitions:
         latitude:
           type: number 
           format: double
-          description: latitude of the Dumping Ground
+          description: latitude of the Dumping Ground. e.g. 12.9716. Latitudes range from -90 to 90. Positive latitude is above the equator (N), and negative latitude is below the equator (S).
+          example: 38.544907
         longitude:
           type: number 
           format: double
-          description: longitude of the Dumping Ground
+          description: longitude of the Dumping Ground. e.g. 77.5946. Longitudes range from -180 to 180. Positive longitude is east of the prime meridian, while negative longitude is west of the prime meridian
+          example: -121.740517
         wasteTypes:
-          description: waste types that can be dumped at dumping groundp or process. At least one waste type has to be selected
+          description: waste types that can be dumped at dumping groundp or processing site. At least one waste type has to be selected
           type: array
           items: 
             type: string
+          minItems: 1
         mpcbAuthorisation:
           type: boolean 
           description: Option should be selected if dumping ground is authorized by MPCB (Maharashtra Pollution Control Board). By default keep it unchecked
@@ -1080,14 +1207,16 @@ definitions:
           type: string
           description: name of the bank that has given guarantee. Enable this field Iff mpcbAuthorisation is checked.
           maxLength: 256
-          minLength: 0
+          minLength: 1
         bankValidityFrom:
           type: string
           format: date
+          x-displayformat: 20/10/2017
           description: Enable this field Iff mpcbAuthorisation is checked.
         bankValidityTo:
           type: string
           format: date
+          x-displayformat: 20/11/2017
           description: Enable this field Iff mpcbAuthorisation is checked. Shall be > bankValidityFrom
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
@@ -1119,30 +1248,25 @@ definitions:
           description: tenant id of the Vendor
           maxLength: 128
           minLength: 4
-        name:
+        vendorNo:
           type: string
-          format: singleValueList
-          description: name of the Vendor
-          maxLength: 256
+          description: Vendor number of the Vendor. unique Vendor number shall be generated by the system
+          maxLength: 128
           minLength: 1
-        ward:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        zone:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        street:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        colony:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        vendorContactInformation:
+          $ref: "#/definitions/ContactInformation"
+        agreementDocuments:
+          $ref: '#/definitions/Documents'
+        servicedLocations:
+          type: array
+          items:
+           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+           minItems: 1
         registrationNo:
           type: string
           description: registration number of the vendor. Should be unique 
           maxLength: 256
           minLength: 1
-        email:
-          type: string
-          description: email id of the vendor. Combination of vendor name and email id shall be unique
-          maxLength: 256
-          minLength: 7
         tinNumber:
           type: string
           description: TIN number of the vendor
@@ -1150,21 +1274,71 @@ definitions:
           minLength: 1
         gst:
           type: string
-          description: GST of the vendor
+          description: GST of the vendor. Combination of Vendor anme and GST Should be unique
           maxLength: 256
           minLength: 1
-        phoneNo:
+        servicesOffered:
+          type: array
+          items: 
+            $ref: "#/definitions/SWMprocesses"
+            minItems: 1
+            format: multiSelectcheckbox
+            description: list of various services provided by vendor. At least one service has to be selected. That can be "others" too.
+        details:
           type: string
-          description: phone number of the vendor. Phone number without +91. One phone number shall be assigned to one vendor name only
+          description: provide details if selected service under "servicesOffered" is others. if "others" is selected in "servicesOffered" field, details are mandatory
+          maxLength: 500
+          minLength: 10
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - vendorContactInformation
+      - registrationNo
+      - gst
+      - servicesOffered
+      - servicedLocations
+    
+    ContactInformation:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Vendor
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the ContactInformation
+          maxLength: 128
+          minLength: 4
+        userName:
+          type: string
+          description: name of the user. Space and ' allowed. no other special character allowed. Numerals not allowed
+          maxLength: 256
+          minLength: 1
+        email:
+          type: string
+          format: email
+          description: email id of the vendor. @ and . are must in email 
+          maxLength: 256
+          minLength: 7
+        mobileNo:
+          type: integer
+          format: int64
+          description: phone number of the vendor. Mobile phone number without +91. One phone number shall be assigned to one vendor name only. Raise an alert if there is a conflict.
           maxLength: 10
           minLength: 10
         contactNo:
-          type: string
+          type: integer
+          format: int64
           description: contact number of the vendor. Phone number without +91. One phone number shall be assigned to one vendor name only
           maxLength: 10
           minLength: 10
         faxNumber:
-          type: string
+          type: integer
+          format: int64
           description: FAX number of the vendor
           maxLength: 10
           minLength: 10
@@ -1173,36 +1347,71 @@ definitions:
           description: address of the Vendor
           maxLength: 500
           minLength: 10
-        services:
+      required:
+      - id
+      - tenantId
+      - userName
+      - email
+      - contactNo
+      - address
+    
+    SWMprocesses:
+      type: object
+      properties:
+        id:
           type: string
-          description: list of various services under SWM process including others. 
+          description: Unique Identifier of the Vendor
           maxLength: 256
-          minLength: 0
-        details:
+          minLength: 1
+        tenantId:
           type: string
-          description: details if selected service is others
-          maxLength: 500
-          minLength: 10
+          description: tenant id of the Vendor
+          maxLength: 128
+          minLength: 4
+        processName:
+          type: string
+          description: defines various processes names, including others, under SWM . e.g. collection, disposal etc
+          maxLength: 256
+          minLength: 1
+      required:
+      - id
+      - tenantId
+      - processName
+    
+    VendorContract:
+      type: object
+      description: This object captures contract information of a vendor. One vendor can have multiple contracts. However, two contracts CAN NOT be similar in all aspects. Either period of service shall be non-overlapping or services provided shall be different. 
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Vendor
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the Vendor
+          maxLength: 128
+          minLength: 4
+        vendorName:
+          $ref: "#/definitions/Vendor"
+          format: singleValueList
+        contractDetails:
+          type: array
+          description: Captures list of different contract a vendor has with ULB.
+          items:
+            $ref: '#/definitions/ContractDetails'
+          minItems: 1
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - id
       - tenantId
-      - name
-      - ward
-      - zone
-      - street
-      - colony
-      - registrationNo
-      - email
-      - tinNumber
-      - gst
-      - contactNo
-      - address
-      - services
+      - vendorName
+      - contractDetails
       
-    VendorContract:
+    ContractDetails:
       type: object
+      description: This object captures individual contract details 
       properties:
         id:
           type: string
@@ -1216,11 +1425,9 @@ definitions:
           minLength: 4
         contractNo:
           type: string
-          description: contract number of the Vendor Contract. unique contract number shall be generated 
+          description: contract number of the Contract. unique contract number shall be generated by the system
           maxLength: 128
-          minLength: 1
-        vendorName:
-          $ref: "#/definitions/Vendor"
+          minLength: 6
         contractDate:
           type: string
           format: date
@@ -1230,38 +1437,61 @@ definitions:
         contractPeriodTo:
           type: string
           format: date
+          description: Shall be > contractPeriodFrom
         securityDeposit:
           type: number 
           format: double
-          description: securityDeposit provided by the Vendor
+          description: securityDeposit (in Rs.)provided by the Vendor
         servicesOffered:
           type: array
-          description: List of services vendor is providing. Select from vendor master
           items:
             $ref: '#/definitions/Vendor'
+            format: multiSelectCheckbox
+            description: List of services vendor is providing. show serviced location list from vendor master. At least one service has to be selected
         paymentTerms:
-          type: string
-          description: payment terms  of the Vendor Contract
-          maxLength: 256
-          minLength: 1
+          type: array
+          items:
+            $ref: '#/definitions/PaymentTerms'
+            description: payment terms  of the Vendor Contract. At least one of the option has to be selected. Only one can be selected
+          minItems: 1
         remarks:
           type: string
           description: ULB Admin can put remarks, if any
           maxLength: 500
-          minLength: 0
-        auditDetails:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+          minLength: 15
       required:
       - id
       - tenantId
-      - contractNo
-      - vendorName
       - contractDate
       - contractPeriodFrom
       - contractPeriodTo
       - securityDeposit
       - servicesOffered
       - paymentTerms
+    
+    PaymentTerms:
+      type: object
+      description: This object captures payment frequency. e.g Monthly, quarterly 
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Vendor
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the Vendor
+          maxLength: 128
+          minLength: 4
+        paymentTermName:
+          type: string
+          description: define payment term name. e.g. yearly
+          maxLength: 20
+          minLength: 4
+      required:
+      - id
+      - tenantId
+      - paymentTermName
       
     ShiftType:
       type: object
@@ -1286,8 +1516,6 @@ definitions:
           description: code of the ShiftType
           maxLength: 128
           minLength: 1
-        auditDetails:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - id
       - tenantId
@@ -1310,10 +1538,7 @@ definitions:
         shiftType:
           $ref: '#/definitions/ShiftType'
         department:
-          type: string
-          description: department of the the employee who is going to work in selected shift
-          maxLength: 128
-          minLength: 4
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/Department'
         designation:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/hr/contracts/hr-masters/v1-0-0.yml#/definitions/Designation'
         shiftStartTime:
@@ -1384,8 +1609,6 @@ definitions:
           description: code of the CollectionType. e.g. Door to Door, community bin
           maxLength: 128
           minLength: 1
-        auditDetails:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - id
       - tenantId
@@ -1394,6 +1617,7 @@ definitions:
       
     CollectionPointDetails:
       type: object
+      description: Creates a mapping between collection types and collection points. Also captures the expected garbage collection at collection points. Display the list of bins associated with respective collection points
       properties:
         id:
           type: string
@@ -1407,12 +1631,19 @@ definitions:
           minLength: 4
         collectionPointType:
           $ref: '#/definitions/CollectionType'
-        collectionPointName:
+          format: singleValueList
+        collectionPoint:
           $ref: '#/definitions/CollectionPoint'
+          format: singleValueList
         garbageEstimate:
           type: number
           format: double
           description: Quantity of garbage (in tonnes) that is expected at collection point
+        binIdDetails:
+          type: array
+          items:
+            $ref: '#/definitions/BinIdDetails'
+          description: display bin details of selected collection point
         description:
           type: string
           description: ULB Admin can enter the remarkks, if any
@@ -1424,7 +1655,7 @@ definitions:
       - id
       - tenantId
       - collectionPointType
-      - collectionPointName
+      - collectionPoint
       - garbageEstimate
       
     VehicleMaintenance:
@@ -1440,37 +1671,36 @@ definitions:
           description: tenant id of the VehicleMaintenance
           maxLength: 128
           minLength: 4
-        #ward:
-         # $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        #zone:
-         # $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        #street:
-         # $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        #colony:
-         # $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
         vehicleType:
-          $ref: "#/definitions/VehicleType"  
+          $ref: "#/definitions/VehicleType"
+          description: This field shall be Auto filled based on Vehicle registration number 
         vehicleRegNo:
-          $ref: "#/definitions/Vehicle" # vehicleRegNoadded by MK
-        maintenanceAfter:
+          $ref: "#/definitions/Vehicle"
+          format: autoComplete
+        
+        # At least one of the maintenance parameter has to provided
+        
+        maintenanceAfterDays:
           type: integer
           format: int64
-          description: Expected days / KMs after which regular maintenance is due
+          minimum: 1
+          maximum: 500
+          description: Expected days after which regular maintenance is due
+        maintenanceAfterKm:
+          type: integer
+          format: int64
+          minimum: 1
+          maximum: 20000
+          description: Expected KMs after which regular maintenance is due
         downtimeforMaintenance:
           type: number
           format: double
-          description: Expected downtime of Vehicle due to regular maintenance
+          description: Expected downtime of Vehicle due to regular maintenance. It can be in Hours or Days
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - id
       - tenantId
-      #- ward
-      #- zone
-      #- street
-      #- colony
-      - vehicleType
-      - maintenanceAfter
       - downtimeforMaintenance
       - vehicleRegNo
       
@@ -1487,10 +1717,10 @@ definitions:
           description: tenant id of the Population
           maxLength: 128
           minLength: 4
-        ward:
+        location:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        zone:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        #zone:
+         # $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
         censusYear:
           type: integer
           format: int64
@@ -1502,16 +1732,14 @@ definitions:
           format: int64
           description: population according to census year
         garbageToBeCollected:
-          type: integer
-          format: int64
-          description: Expected garbage that is to be collected from the Ward and Zone based on Population
-        auditDetails:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+          type: number
+          format: double
+          description: Expected garbage (in tonnes) that is to be collected from the Ward and Zone based on Population. e.g 20.86
       required:
       - id
       - tenantId
-      - ward
-      - zone
+      - location
+      #- zone
       - censusYear
       - population
       - garbageToBeCollected
@@ -1529,54 +1757,71 @@ definitions:
           description: tenant id of the RefillingPumpStation
           maxLength: 128
           minLength: 4
-        ward:
+        location:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        zone:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        street:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        colony:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+          description: Location of Ward -> Zone -> Street -> Colony shall be captured
         name:
           type: string
           format: singleValueList
           description: name of the RefillingPumpStation
           maxLength: 256
           minLength: 1
-        type:
-          type: string
+        typeOfPump:
+          $ref: '#/definitions/OilCompanyName'
+          format: singleValueList
           description: pump Type of the RefillingPumpStation. e.g. HP, Indian Oil etc
-          maxLength: 256
-          minLength: 1
         remarks:
           type: string
           description: ULB Admin can enter remarks, if any
           maxLength: 300
           minLength: 15
         typeOfFuel:
-          type: string
-          description: type of the fuel. e.g Petrol, Diesel etc
-          maxLength: 256
-          minLength: 1
+          $ref: '#/definitions/FuelType'
+          format: multiValueList
+          description: type of the fuel. e.g Petrol, Diesel etc. At least one option has to be selected
         quantity:
           type: number
           format: double
-          description: quantity of the fuel. # Need to check if we really need this parameter
+          description: quantity of the fuel.
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - id
       - tenantId
-      - ward
-      - zone
-      - street
+      - location
       - name
-      - type
+      - typeOfPump
       - typeOfFuel
       - quantity
       
-    Toilet: # details will be integrated with Assest Management. A unique ID for toilet shall be generated. 
+    OilCompanyName:
       type: object
+      description: This object captures name of Oil Companies operating petrol pumps. e.g Indian Oil 
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Vendor
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the Vendor
+          maxLength: 128
+          minLength: 4
+        oilCompanyName:
+          type: string
+          description: name of oil OilCompany, operating petrol pumps. e.g. HP
+          maxLength: 20
+          minLength: 2
+      required:
+      - id
+      - tenantId
+      - oilCompanyName
+    
+    
+    Toilet: 
+      type: object
+      description: details will be integrated with Assest Management. A unique ID for toilet shall be generated. Either Public or Community toilet option shall be selected.
       properties:
         id:
           type: string
@@ -1588,25 +1833,18 @@ definitions:
           description: tenant id of the Toilet
           maxLength: 128
           minLength: 4
-        publicToilet: # added by MK
+        publicToilet:
           type: boolean
           description: Option should be selected if toilet is public toilet
-        communityToilet: #added by MK
+        communityToilet:
           type: boolean
           description: Option should be selected if toilet is community toilet
-          # Either Public or Community toilet option can be selected. At least one option shall be selected. 
         name:
           type: string
-          description: name of the Toilet
+          description: name of the Toilet. Shall be unique within ULB
           maxLength: 128
           minLength: 4
-        ward:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        zone:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        street:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        colony:
+        location:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
         latitude:
           type: number 
@@ -1615,26 +1853,24 @@ definitions:
         longitude:
           type: number 
           format: double
-          description: longitude of the toilet
-        seatCount: #added by MK
+          description: longitude of the toilet. e.g. 77.5946. Longitudes range from -180 to 180. Positive longitude is east of the prime meridian, while negative longitude is west of the prime meridian
+          example: -121.740517
+        seatCount: 
           type: integer 
           format: int64
           description: number of seats in the toilet
-        auditDetails:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+          minimum: 0
+          exclusiveMinimum: true
       required:
       - id
       - tenantId
       - name
-      - ward
-      - zone
-      - street
-      - colony
+      - location
       - latitude
       - longitude
       - seatCount
       
-    VehicleSchedule:
+    SetVehicleSchedule:
       type: object
       properties:
         id:
@@ -1647,16 +1883,37 @@ definitions:
           description: tenant id of the SetVehicleSchedule
           maxLength: 128
           minLength: 4
-        targetNo: # added by MK. Location details shall be captured against target number
-          $ref: "#/definitions/SanitationStaffTarget"
-        ward:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        zone:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        street:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        colony:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        scheduleNo:
+          type: string
+          description: System shall geneate unique target number
+          maxLength: 256
+          minLength: 1
+        scheduleDetails:
+          type: array
+          items:
+            $ref: '#/definitions/VehicleScheduleInfo'
+          minItems: 1
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - scheduleDetails
+
+      
+    VehicleScheduleInfo:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the SetVehicleSchedule
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the SetVehicleSchedule
+          maxLength: 128
+          minLength: 4
         scheduledFrom:
           type: string
           format: date
@@ -1667,32 +1924,26 @@ definitions:
           description: date picker is requireed. scheduledTo date should be > scheduledFrom
         route:
          $ref: "#/definitions/Route"
-        collectionType: #added by MK
-          $ref: "#/definitions/CollectionType"
+         format: autoComplete
+        collectionType:
+          $ref: "#/definitions/Route"
+          description: autopopulate this field from route
         vehicleType:
           $ref: "#/definitions/VehicleType"
+          description: autopopulate this field from registration number
         vehicleRegNo:
           $ref: "#/definitions/Vehicle"
         targetedGarbage:
-          type: number
-          format: double
-          description: Expected Garbage (in tonnes) to be collected
-        auditDetails:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+          $ref: "#/definitions/Route"
+          description: Expected Garbage (in tonnes). autopopulate this field from route
       required:
       - id
       - tenantId
-      - ward
-      - zone
-      - street
-      - colony
       - scheduledFrom
       - scheduledTo
       - route
-      - vehicleType
       - vehicleRegNo
-      - targetedGarbage
-      
+    
     SanitationStaffTarget:
       type: object
       properties:
@@ -1720,29 +1971,21 @@ definitions:
           format: date
           description: date picker is required. Should be > targetFrom date
         swmProcess:
-          type: string
-          description: dropdown of SWM process shall be provided. One option is to be selected by ULB admin
-          maxLength: 256
-          minLength: 1
-        ward:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        zone:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        street:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        colony:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+          $ref: '#/definitions/SWMprocesses'
+          format: singleValueList
         route:
           $ref: "#/definitions/Route"
+          format: singleValueList
+          description: route contains the location information too with associated collection points. Ward / Zone etc shall be displayed on the screen
         department:
-          type: string
-          description: department of sanitary staff. # We might have to integrate with HRMS
-          maxLength: 256
-          minLength: 1
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/Department'
+          format: singleValueList
         designation:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/hr/contracts/hr-masters/v1-0-0.yml#/definitions/Designation'
+          format: singleValueList
         employeeName:
           type: string
+          format: singleValueList
           description: sanitary staff name based on dept. and designation. # We might have to integrate with HRMS
           maxLength: 256
           minLength: 1
@@ -1751,29 +1994,24 @@ definitions:
           description: Collection point location based on the route selected
           maxLength: 256
           minLength: 1
-        targetedGarbage:
-          type: number
-          format: double
-          description: targeted Garbage (in tonnes) to be collected by Sanitatary Staff
+        #targetedGarbage: This will be captured from selcted collection points on the route
+         # type: number
+          #format: double
+          #description: targeted Garbage (in tonnes) to be collected by Sanitatary Staff
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - id
       - tenantId
-      - targetNo
+      #- targetNo
       - targetFrom
       - targetTo
       - swmProcess
-      - ward
-      - zone
-      - street
-      - colony
       - route
       - department
       - designation
       - employeeName
       - locationName
-      - targetedGarbage
       
     VehicleFuellingDetails:
       type: object
@@ -1790,7 +2028,7 @@ definitions:
           minLength: 4
         transactionNo:
           type: string
-          description: transactionNo. unique across the system
+          description: transactionNo. unique across the system. Shall be generated by system
           maxLength: 256
           minLength: 1
         transactionDate:
@@ -1799,6 +2037,7 @@ definitions:
           description: transactionDate. By default set to current date
         vehicleType:
           $ref: "#/definitions/VehicleType"
+          description: this field shall be auto filled based on vehicle registration number
         vehicleRegNo:
           $ref: "#/definitions/Vehicle"
         vehicleReadingDuringFuelling:
@@ -1807,15 +2046,16 @@ definitions:
           description: vehicle Reading During Fueling
         refuellingStation:
           $ref: "#/definitions/RefillingPumpStation"
+          format: autocomplete
         fuelFilled:
           type: number
           format: double
-          description: fuel Filled in the Vehicle in liters
+          description: fuel Filled in the Vehicle in liters. e.g. 40.67
           maxLength: 256
           minLength: 1
         typeOfFuel:
           type: string
-          description: Type of Fuel. e.g. Petrol 
+          description: Type of Fuel. e.g. Petrol. Shall be autofilled based on Vehicle registration number
           maxLength: 256
           minLength: 1
         totalCostIncurred:
@@ -1824,13 +2064,15 @@ definitions:
           description: total Cost of the fuel
         receiptNo: # We shall provide document upload to attached scan copy of receipt
           type: string
-          description: receipt Number containing fueling Details
+          description: receipt Number of receipt that contains fueling Details. Space not allowed
           maxLength: 256
           minLength: 1
         receiptDate:
           type: string
           format: date
-          description: receipt date of the Fuel receipt
+          description: receipt date of the Fuel receipt. e.g. 20/10/2017
+        receiptCopy:
+          $ref: '#/definitions/Documents'
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
@@ -1884,23 +2126,39 @@ definitions:
           description: tenant id of the VehicleMaintenanceDetails
           maxLength: 128
           minLength: 4
-        maintenanceType:
-          type: string
-          description: Maintenance is either scheduled servicing or unplanned breakdown
-          maxLength: 256
-          minLength: 1
+        isScheduled:
+          type: boolean
+          format: checkbox
+          description: Maintenance is either scheduled or non-scheduled. This field captures whether it is sheduled or non-scheduled maintenance / repair. Not selected corresponds to non-scheduled
+        
+        # ONLY one of "isMaintenance" OR "isRepair" can be selected. At least one of the two shall be selected  
+          
+        isMaintenance:
+          type: boolean
+          format: checkbox
+          description: select if it is maintenance
+        isRepair:
+          type: boolean
+          format: checkbox
+          description: select if it is repair
         vehicleType:
           $ref: "#/definitions/VehicleType"
+          description: shall be autofilled based on registration number
         vehicleRegNo:
           $ref: "#/definitions/Vehicle"
+          description: Registration number of the vehicle whose details are being captured
         actualMaintenanceDate:
           type: string
           format: date
-          description: actual Maintenance Date of the VehicleMaintenanceDetails
+          description: actual Date when the maintenance / repair took place
         vehicleScheduledMaintenanceDate:
           type: string
           format: date
-          description: vehicle Scheduled Maintenance Date. Populate this field from Vehicle Maintenance Master. # We need to define a formula to calculate this date
+          description: vehicle Scheduled Maintenance Date. Populate this field from Vehicle Maintenance Master. Applicable ONLY in case of scheduled activities. Else this filed is not required# We need to define a formula to calculate this date
+        insuranceValidityDate:
+          type: string
+          format: date
+          description: Insurance validity Date. Populate this field from Vehicle Maintenance Master. Applicable ONLY in case of scheduled activities. Else this filed is not required
         costIncurred:
           type: number 
           format: double
@@ -1908,32 +2166,33 @@ definitions:
         vehicleDowntimeDefined:
           type: number
           format: double
-          description: Expected vehicle downtime  due to planned maintenance. Populate this field from Vehicle Maintenance Master
+          description: Expected vehicle downtime  due to planned maintenance. Populate this field from Vehicle Maintenance Master. Applicable ONLY in case of scheduled activities. Else this filed is not required
         vehicleDowntimeActual:
           type: number
           format: double
           description: Actual Downtime (in hours) due to planned maintenance 
         vehicleReadingDuringMaintenance:
-          type: integer
-          format: int64
+          type: number
+          format: double
           description: vehicle reading during maintenance
+        receipt:
+          $ref: '#/definitions/Documents'
+          description: upload the receipt related to manintenance / repair activities
         remarks:
           type: string
           description: remarks by ULB Admin
           maxLength: 300
-          minLength: 0
+          minLength: 15
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - id
       - tenantId
-      - maintenanceType
+      - isScheduled
       - vehicleType
       - vehicleRegNo
       - actualMaintenanceDate
-      - vehicleScheduledMaintenanceDate
       - costIncurred
-      - vehicleDowntimeDefined
       - vehicleDowntimeActual
       - vehicleReadingDuringMaintenance
       
@@ -1959,8 +2218,9 @@ definitions:
           items:
             $ref: '#/definitions/VehicleMaintenanceDetails'
     
-    VehicleTripSheetDetails: #added by MK.  SWM will integrate with vehicle tracking system too for live tracking and to check the route taken on previous days
+    VehicleTripSheetDetails: 
       type: object
+      description: SWM will integrate with vehicle tracking system too for live tracking and to check the route taken on previous days. System will generate unique TripID
       properties:
         id:
           type: string
@@ -1972,55 +2232,63 @@ definitions:
           description: tenant id of the VehicleTripSheetDetails
           maxLength: 128
           minLength: 4
+        routeTaken:
+          $ref: '#/definitions/Route'
+          format: autoComplete
+          description: this field identifies the route that a garbage vehicle was assigned to. 
         dumpingGoundName:
-          type: string
-          description: dumping Gound Name. Populate this field from dumping ground master
-          maxLength: 128
-          minLength: 1
+          $ref: '#/definitions/DumpingGround'
+          description: this field is applicable only if end point of the route is a dumping ground / processing plant
         tripNo:
           type: string
-          description: system generated unique trip no.
+          description: system generated unique trip number for every trip.
           maxLength: 128
           minLength: 1
+        vehicleRegistrationNumber:
+          $ref: '#/definitions/Vehicle'
+          description: List of vehicles that are assigned against selected route under "routeTaken"
         vendorName:
           $ref: "#/definitions/Vendor"
-        scheduleStartDate:
+          description: auto fill this field, if applicable, from vehicle registration number
+        isULBOwnedVehicle:
+          type: boolean
+          format: checkbox
+          description: auto fill this field, if applicable, from vehicle registration number  
+        tripStartDate:
           type: string 
           format: date
-          description: schedule start date of the VehicleTripSheetDetails.  
-        scheduleEndDate:
+          description: start date of the trip.  
+        tripEndDate:
           type: string 
           format: date
-          description: schedule end date of the VehicleTripSheetDetails
-        ward:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        zone:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        street:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        colony:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+          description: end date of the trip. Should be >= tripStartDate
+        location:
+          type: array
+          items:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+          description: display the location (ward, zone, street)and collection points covered while taking the assigned route
         inTime:
           type: string 
           format: date
-          description: time at which vehicle enters the dumping ground
+          description: time at which vehicle enters the dumping ground. Mandatory if ending point is Dumping ground
         outTime:
           type: string 
           format: date
-          description: time at which vehicle leaves the dumping ground
-          # added by MK. Garbage type is to be defined 
+          description: time at which vehicle leaves the dumping ground. Mandatory if ending point is Dumping ground
         entryWeight:
           type: number
           format: double
-          description: Weight of vehicle at the time of entering dumping ground
+          description: Weight of vehicle at the time of entering dumping ground. Mandatory if ending point is Dumping ground
         exitWeight:
           type: number
           format: double
-          description: Weight of vehicle at the time of leaving dumping ground
+          description: Weight of vehicle at the time of leaving dumping ground. Mandatory if ending point is Dumping ground
+        collectionType:
+          $ref: '#/definitions/Route'
         distanceCovered:
           type: number
           format: double
-          description: distnace covered during the trip (in KMs)
+          description: distnace covered during the trip (in KMs). Autofill this field from route
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
@@ -2028,12 +2296,8 @@ definitions:
       - tenantId
       - dumpingGoundName
       - vendorName
-      - scheduleStartDate
-      - scheduleEndDate
-      - inTime
-      - outTime
-      - entryWeight
-      - exitWeight
+      - tripStartDate
+      - tripEndDate
       - distanceCovered
       
     VehicleTripSheetDetailsRequest:
@@ -2072,38 +2336,38 @@ definitions:
           maxLength: 128
           minLength: 4
         dumpingGoundName:
+          $ref: '#/definitions/DumpingGround'
+          description: With the name of dumping ground, display the location data Ward / Zone/ street etc on GUI
+        ulbName:
           type: string
-          description: dumping Gound Name. Populate this field from dumping ground master 
+          description: Name of the ULB
           maxLength: 128
           minLength: 1
         date:
           type: string 
           format: date
-          description: date picker required. date on which Segregation was done. By default leave it blank
-        ward:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        zone:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        street:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        colony:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        collectionType:
-          $ref: "#/definitions/CollectionType"
-        quantityOfWetWasteCollected:
-          type: number
-          format: double
-          description: quantity of wet waste collected (in tonnes)
-        quantityOfDryWasteCollected:
-          type: number
-          format: double
-          description: quantity of dry waste collected (in tonnes)
-        #exitWeight: added by MK. These fields are not required
-         # type: integer
-          #format: int64
-        #distanceCovered:
-         # type: integer
-          #format: int64
+          description: date picker required. date on which Segregation was done. By default make it system date
+        collectionDetails:
+          type: array
+          items:
+            type: object
+            properties:
+              collectionType:
+                $ref: "#/definitions/CollectionType"
+              wetWasteCollected:
+                type: number
+                format: double
+                description: quantity of wet waste collected (in tonnes)
+                minimum: 0
+              dryWasteCollected:
+                type: number
+                format: double
+                description: quantity of dry waste collected (in tonnes)
+                minimum: 0
+            required:
+            - collectionType
+            - wetWasteCollected
+            - dryWasteCollected
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
@@ -2111,9 +2375,8 @@ definitions:
       - tenantId
       - dumpingGoundName
       - date
-      - collectionType
-      - quantityOfWetWasteCollected
-      - quantityOfDryWasteCollected
+      - ulbName
+      - collectionDetails
       
     SourceSegregationRequest:
       description: Contract class to receive request. Array of SourceSegregation items are used in case of create, whereas single SourceSegregation item is used for update
@@ -2152,11 +2415,25 @@ definitions:
           minLength: 4
         vendorName:
           $ref: "#/definitions/Vendor"
+          format: singleValueList
         contractNo:
           type: string
-          description: contract No. Populate this field from vendor contract master 
+          description: contract Number. Populate this field from vendor contract master 
           maxLength: 256
-          minLength: 0
+          minLength: 1
+        invoiceNo:
+          type: string
+          description: invoice Number. 
+          maxLength: 256
+          minLength: 1
+        fromDate:
+          type: string
+          format: date
+          description: service period start date for which invoice is being submitted
+        toDate:
+          type: string
+          format: date
+          description: service period end date for which invoice is being submitted
         approvalAmount:
           type: number 
           format: double
@@ -2170,12 +2447,19 @@ definitions:
           description: List of Documents. Invoice or document supporting the invoice etc
           items:
             $ref: '#/definitions/Documents'
+        department:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/Department'
+        designation:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/hr/contracts/hr-masters/v1-0-0.yml#/definitions/Designation'
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - id
       - tenantId
       - vendorName
+      - invoiceNo
+      - fromDate
+      - toDate
       - vendorInvoiceAmount
       
     Documents:

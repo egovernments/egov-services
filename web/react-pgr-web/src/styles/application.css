@@ -207,8 +207,9 @@ a:hover, a:focus{
 
 button:focus{outline: none;}
 
-button span {
+button span, input[type='file'] + span {
 	font-weight: normal !important;
+	text-transform: capitalize !important;
 }
 
 ul{list-style-type: none; padding: 0; margin: 0;}
@@ -655,7 +656,7 @@ table thead th, table tfoot th {
 	border-bottom:none !important;
 	font-weight:500 !important;
 	font-size:12px !important;
-	background-color: #009C8A !important;
+	background-color: #607d8b !important;
 	border: 1px solid rgba(0,0,0,0.12) !important;
 	color: #ffffff !important;
 	font-weight: 500;
@@ -742,7 +743,7 @@ table td {
  }
 
  .searchButton button{
-	 background-color:#009C8A !important;
+	 background-color:#607d8b !important;
  }
 
 

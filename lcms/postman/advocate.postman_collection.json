@@ -1,0 +1,99 @@
+{
+	"variables": [],
+	"info": {
+		"name": "advocate",
+		"_postman_id": "c0c8c333-06f3-a41e-bacd-7f3c472cbfe9",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8080/lcms-services/legalcase/advocate/_create",
+			"request": {
+				"url": "http://localhost:8080/lcms-services/legalcase/advocate/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\": {\n\t\t\"apiId\": \"org.egov.pt\",\n\t\t\"ver\": \"1.0\",\n\t\t\"ts\": 1503743889632,\n\t\t\"action\": \"asd\",\n\t\t\"did\": \"4354648646\",\n\t\t\"key\": \"xyz\",\n\t\t\"msgId\": \"654654\",\n\t\t\"requesterId\": \"61\",\n\t\t\"userInfo\":{\n        \t\"id\":74\n    \t},\n\t\t\"authToken\": \"39bc4908-b3cd-4b63-a673-ae96a307d54e\"\n\t},\n\t\"advocates\": [{\n\t\t\"name\": \"SHUBHAM Pradhan\",\n\t\t\"organizationName\": \"Test Org\",\n\t\t\"isIndividual\": true,\n\t\t\"title\": \"Pradhan\",\n\t\t\"firstName\": \"Yosadhara\",\n\t\t\"secondName\": \"K\",\n\t\t\"lastName\": \"Pradhan\",\n\t\t\"address\": \"Address1\",\n\t\t\"contactNo\": \"9700608711\",\n\t\t\"dateOfEmpanelment\":1234567,\n\t\t\"standingCommitteeDecisionDate\":1234567,\n\t\t\"empanelmentFromDate\":1234567,\n\t\t\"aadhar\": 123456789012,\n\t\t\"gender\": \"Female\",\n\t\t\"age\": \"23\",\n\t\t\"dob\": 1234567,\n\t\t\"mobileNumber\":\"9700608711\",\n\t\t\"emailId\":\"test@gmail.com\",\n\t\t\"pan\":\"1234567890\",\n\t\t\"vatTinNo\":\"123458\",\n\t\t\"newsPaperAdvertismentDate\":1234567,\n\t\t\"empanelmentToDate\":1234567,\n\t\t\"bankName\":\"HDFC\",\n\t\t\"bankBranch\":\"Kukatpally\",\n\t\t\"bankAccountNo\": \"1234577687\",\n\t\t\"isfcCode\":\"sf234\",\n\t\t\"micr\":\"121hghjds\",\n\t\t\"isActive\": true,\n\t\t\"isTerminate\": false,\n\t\t\"inActiveDate\": 1234567,\n\t\t\"terminationDate\": 1234567,\n\t\t\"reasonOfTermination\": \"None\",\n\t\t\"tenantId\":\"default\"\n\t}]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/lcms-services/legalcase/advocate/_search?tenantId=default&isIndividual=true",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/lcms-services/legalcase/advocate/_search?tenantId=default&isIndividual=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lcms-services",
+						"legalcase",
+						"advocate",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "isIndividual",
+							"value": "true",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1509336914793,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"60589b95-9bb0-45ac-b8b6-7e694ca2409f\"\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/lcms-services/legalcase/advocate/_update",
+			"request": {
+				"url": "http://localhost:8080/lcms-services/legalcase/advocate/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\": {\n\t\t\"apiId\": \"org.egov.pt\",\n\t\t\"ver\": \"1.0\",\n\t\t\"ts\": 1503743889632,\n\t\t\"action\": \"asd\",\n\t\t\"did\": \"4354648646\",\n\t\t\"key\": \"xyz\",\n\t\t\"msgId\": \"654654\",\n\t\t\"requesterId\": \"61\",\n\t\t\"userInfo\":{\n        \t\"id\":74\n    \t},\n\t\t\"authToken\":  \"39bc4908-b3cd-4b63-a673-ae96a307d54e\"\n\t},\n\t\"advocates\": [{\n\t\t\"code\":\"default000021\",\n\t\t\"name\": \"YYYYYY Pradhan\",\n\t\t\"organizationName\": \"Test Org\",\n\t\t\"isIndividual\": true,\n\t\t\"title\": \"Pradhan\",\n\t\t\"firstName\": \"YYYYYY\",\n\t\t\"secondName\": \"K\",\n\t\t\"lastName\": \"Pradhan\",\n\t\t\"address\": \"Address1\",\n\t\t\"contactNo\": \"9700608711\",\n\t\t\"dateOfEmpanelment\":1234567,\n\t\t\"standingCommitteeDecisionDate\":1234567,\n\t\t\"empanelmentFromDate\":1234567,\n\t\t\"aadhar\": 123456789012,\n\t\t\"gender\": \"Female\",\n\t\t\"age\": \"23\",\n\t\t\"dob\": 1234567,\n\t\t\"mobileNumber\":\"9700608711\",\n\t\t\"emailId\":\"test@gmail.com\",\n\t\t\"pan\":\"1234567890\",\n\t\t\"vatTinNo\":\"123458\",\n\t\t\"newsPaperAdvertismentDate\":1234567,\n\t\t\"empanelmentToDate\":1234567,\n\t\t\"bankName\":\"HDFC\",\n\t\t\"bankBranch\":\"Kukatpally\",\n\t\t\"bankAccountNo\": \"1234577687\",\n\t\t\"isfcCode\":\"sf234\",\n\t\t\"micr\":\"121hghjds\",\n\t\t\"isActive\": true,\n\t\t\"isTerminate\": false,\n\t\t\"inActiveDate\": 1234567,\n\t\t\"terminationDate\": 1234567,\n\t\t\"reasonOfTermination\": \"None\",\n\t\t\"tenantId\":\"default\"\n\t}]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

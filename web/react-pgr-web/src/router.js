@@ -340,11 +340,8 @@ const Main = () => {
 
       //Assets
       <Route exact path= {base + '/non-framework/asset/master/assetImmovableCreate'} component={assetImmovableCreate}/>
-<<<<<<< Updated upstream
       <Route exact path= {base + '/non-framework/asset/master/assetMovableCreate'} component={assetMovableCreate}/>
-=======
       <Route exact path= {base + '/non-framework/asset/master/assetImmovableView'} component={assetImmovableView}/>
->>>>>>> Stashed changes
 
     </Switch>
   </main>

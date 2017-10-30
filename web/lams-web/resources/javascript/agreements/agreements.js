@@ -1005,7 +1005,14 @@ $(`#approverDesignation`).html(`<option value=''>Select</option>`)
 
 
 }*/
-
+var cityGrade = commonApiPost("tenant", "v1/tenant", "_search", {
+  code: tenantId
+}).responseJSON["tenant"][0]["city"]["ulbGrade"] || {};
+console.log(cityGrade);
+var agreementType = "Create Municipality Agreement";
+if (cityGrade.toLowerCase() === 'corp') {
+  agreementType = "Create Corporation Agreement";
+}
 getDesignations(null, function(designations) {
     for (let variable in designations) {
         if (!designations[variable]["id"]) {
@@ -1015,7 +1022,7 @@ getDesignations(null, function(designations) {
 
         $(`#approverDesignation`).append(`<option value='${designations[variable]["id"]}'>${designations[variable]["name"]}</option>`);
     }
-},"Create Corporation Agreement");
+},agreementType);
 
 // var locality=commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"}).responseJSON["Boundary"] || [],
 // var electionwards=commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"ADMINISTRATION"}).responseJSON["Boundary"] || [],

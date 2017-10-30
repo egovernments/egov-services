@@ -952,6 +952,14 @@ for (var variable in paymentCycle) {
 
     }
 }
+var cityGrade = commonApiPost("tenant", "v1/tenant", "_search", {
+  code: tenantId
+}).responseJSON["tenant"][0]["city"]["ulbGrade"] || {};
+console.log(cityGrade);
+var agreementType = "Create Municipality Agreement";
+if (cityGrade.toLowerCase() === 'corp') {
+  agreementType = "Create Corporation Agreement";
+}
 
 
 getDesignations(null, function(designations) {
@@ -963,7 +971,7 @@ getDesignations(null, function(designations) {
 
         $(`#approverDesignation`).append(`<option value='${designations[variable]["id"]}'>${designations[variable]["name"]}</option>`);
     }
-},"Create Corporation Agreement");
+},agreementType);
 
 if (assetDetails && Object.keys(assetDetails).length) {
     $("#assetCategory\\.name").val(assetDetails["assetCategory"]["name"]);

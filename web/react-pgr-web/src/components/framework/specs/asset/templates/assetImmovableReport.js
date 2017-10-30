@@ -11,41 +11,41 @@ export default class assetImmovableReport extends Component {
 			        <Table responsive bordered condensed>
 			            <tbody>
 			                <tr>
-			                    <td  colSpan={1} rowSpan={3} style={{textAlign: "left"}}>
+			                    <td  colSpan={4} rowSpan={3} style={{textAlign: "left"}}>
 			                        <img src="./temp/images/headerLogo.png" height="60" width="60" />
 			                    </td>
-			                    <td colSpan={2} style={{textAlign: "center"}} >
+			                    <td colSpan={5} style={{textAlign: "center"}} >
 			                        <b>PIMPRI CHINCHWAD MUNICIPAL CORPORATION</b>
 			                    </td>
-			                    <td  colSpan={1} rowSpan={3} style={{textAlign: "right"}}>
+			                    <td  colSpan={5} rowSpan={3} style={{textAlign: "right"}}>
 			                        <img src="./temp/images/AS.png" height="60" width="60" />
 			                    </td>
 			                </tr>
 			                <tr>
-			                    <td colSpan={2} style={{textAlign: "center"}} >
+			                    <td colSpan={5} style={{textAlign: "center"}} >
 			                       <b>नमुना  क्रमांक  १६</b>
 			                    </td>
 
 			                </tr>
 			                <tr>
-			                    <td colSpan={2} style={{textAlign: "center"}} >
+			                    <td colSpan={5} style={{textAlign: "center"}} >
 			                        <b>( नियम क्रमांक ६२ , १९१ पहा )</b>
 			                    </td>
 			                </tr>
 
 			            </tbody>
 									<tbody>
-										<td  colSpan={4} style={{textAlign: "center"}}>
+										<td  colSpan={17} style={{textAlign: "center"}}>
 												<b>स्थावर  मालमत्तांची नोंदवही</b>
 										</td>
 									</tbody>
 
 									<tbody>
 										<td colSpan={4} style={{textAlign: "center"}}>
-												<b>मत्तेचे  नाव</b>
+												<b>मत्तेचे  नाव Name of Asset </b>
 										</td>
 										<td colSpan={4} style={{textAlign: "center"}}>
-												<b>Storm Water Drain</b>
+												<b>N/A</b>
 										</td>
 										<td colSpan={5} style={{textAlign: "center"}}>
 												<b>संपादनाची पद्धत</b>
@@ -66,23 +66,24 @@ export default class assetImmovableReport extends Component {
 												<b> निधीचे स्रोत</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "center"}}>
-												<b>Own</b>
+												<b>N/A</b>
 										</td>
 									</tbody>
 
 									<tbody>
 											<tr>
-													<td colSpan={4} rowSpan={2} style={{textAlign: "left"}}>
-															<b>मालमत्ता ज्या अन्वये संपादित केली होती</b>
+													<td colSpan={4} rowSpan={2} style={{textAlign: "center"}}>
+															<b>मालमत्ता ज्या अन्वये संपादित केली होती, खरेदी केली होती किंवा बांधली होती,
+ 															त्या आदेशाचा क्रमांक व दिनांक</b>
 													</td>
 													<td colSpan={4} rowSpan={2} style={{textAlign: "center"}} >
-															<b> GO/ROH/202 </b>
+															<b>{this.props.data[18]?this.props.data[18]:""}</b>
 													</td>
-													<td colSpan={5} style={{textAlign: "right"}}>
+													<td colSpan={5} style={{textAlign: "center"}}>
 															<b>अधिपत्र ( होय / नाही )</b>
 													</td>
-													<td colSpan={4} style={{textAlign: "right"}}>
-															<b>10 Years</b>
+													<td colSpan={4} style={{textAlign: "center"}}>
+															<b>N/A</b>
 													</td>
 											</tr>
 											<tr>
@@ -90,7 +91,7 @@ export default class assetImmovableReport extends Component {
 														 <b>असल्यास , समाप्ती दिनांक</b>
 													</td>
 													<td colSpan={4} style={{textAlign: "center"}} >
-														 <b>05/10/2022</b>
+														 <b>{this.props.data[12]?this.props.data[12]:""}</b>
 													</td>
 											</tr>
 									</tbody>
@@ -100,13 +101,13 @@ export default class assetImmovableReport extends Component {
 												<b>स्थान</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "center"}}>
-												<b>Gandhinagar</b>
+												<b>N/A</b>
 										</td>
 										<td colSpan={5} style={{textAlign: "center"}}>
 												<b>दोषी दायित्व</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "center"}}>
-												<b></b>
+												<b>{this.props.data[13]?this.props.data[13]:""}</b>
 										</td>
 									</tbody>
 
@@ -115,28 +116,13 @@ export default class assetImmovableReport extends Component {
 												<b>प्रगतिपथावरील बांधकाम नोंदवहीचा संदर्भ क्रमांक</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "center"}}>
-												<b></b>
+												<b>N/A</b>
 										</td>
 										<td colSpan={5} style={{textAlign: "center"}}>
 												<b>राखून ठेवलेली प्रतिभूती ठेव</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "center"}}>
-												<b></b>
-										</td>
-									</tbody>
-
-									<tbody>
-										<td colSpan={4} style={{textAlign: "center"}}>
-												<b></b>
-										</td>
-										<td colSpan={4} style={{textAlign: "center"}}>
-												<b></b>
-										</td>
-										<td colSpan={5} style={{textAlign: "center"}}>
-												<b>वसूल केलेली प्रतिभूति ठेव</b>
-										</td>
-										<td colSpan={4} style={{textAlign: "center"}}>
-												<b>5000000</b>
+												<b>{this.props.data[16]?this.props.data[16]:""}</b>
 										</td>
 									</tbody>
 
@@ -145,13 +131,28 @@ export default class assetImmovableReport extends Component {
 												<b>मजल्यांची संख्या :</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "center"}}>
+												<b>N/A</b>
+										</td>
+										<td colSpan={5} style={{textAlign: "center"}}>
+												<b>वसूल केलेली प्रतिभूति ठेव</b>
+										</td>
+										<td colSpan={4} style={{textAlign: "center"}}>
+												<b>{this.props.data[17]?this.props.data[17]:""}</b>
+										</td>
+									</tbody>
+
+									<tbody>
+										<td colSpan={4} style={{textAlign: "center"}}>
 												<b>जोते क्षेत्र :</b>
+										</td>
+										<td colSpan={4} style={{textAlign: "center"}}>
+												<b>{this.props.data[2]?this.props.data[2]:""}</b>
 										</td>
 										<td colSpan={5} style={{textAlign: "center"}}>
 												<b>दिनांक</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "center"}}>
-												<b></b>
+												<b>N/A</b>
 										</td>
 									</tbody>
 
@@ -160,13 +161,13 @@ export default class assetImmovableReport extends Component {
 												<b> घनफळ</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "center"}}>
-												<b></b>
+												<b>{this.props.data[3]?this.props.data[3]:""}</b>
 										</td>
 										<td colSpan={5} style={{textAlign: "center"}}>
 												<b> रक्कम रु.</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "center"}}>
-												<b>310000000</b>
+												<b>{this.props.data[23]?this.props.data[23]:""}</b>
 										</td>
 									</tbody>
 
@@ -175,7 +176,7 @@ export default class assetImmovableReport extends Component {
 												<b> ज्यावर बांधकाम केले आहे अशा जमिनीचा सर्वेक्षण क्रमांक</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "center"}}>
-												<b></b>
+												<b>{this.props.data[4]?this.props.data[4]:""}</b>
 										</td>
 										<td  colSpan={9} style={{textAlign: "center"}}>
 												<b>विक्री करणे</b>
@@ -187,13 +188,15 @@ export default class assetImmovableReport extends Component {
 												<b> संरचनेचा आकार</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "center"}}>
-												<b>L:20Kms B:3mts H:2mts</b>
+												<b>{this.props.data[5]?this.props.data[5]:""}</b>
+												<b>{this.props.data[6]?this.props.data[6]:""}</b>
+												<b>{this.props.data[7]?this.props.data[7]:""}</b>
 										</td>
 										<td colSpan={5} style={{textAlign: "center"}}>
 												<b> ज्यास मत्ता विकण्यात आली त्या व्यक्तीचे नाव (asset sold to)</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "center"}}>
-												<b></b>
+												<b>N/A</b>
 										</td>
 									</tbody>
 
@@ -203,7 +206,7 @@ export default class assetImmovableReport extends Component {
 													<b>बांधण्यात आलेल्या जमिनीचे क्षेत्र</b>
 											</td>
 											<td colSpan={4} style={{textAlign: "center"}}>
-													<b></b>
+													<b>{this.props.data[8]?this.props.data[8]:""}</b>
 											</td>
 											<td rowSpan={4} colSpan={9} style={{textAlign: "center"}}>
 													<b></b>
@@ -214,7 +217,7 @@ export default class assetImmovableReport extends Component {
 													<b> उपलब्ध शीर्ष दस्तऐवज</b>
 											</td>
 											<td colSpan={4} style={{textAlign: "center"}}>
-													<b>Yes</b>
+													<b>N/A</b>
 											</td>
 											<td rowSpan={4} colSpan={9} style={{textAlign: "center"}}>
 													<b></b>
@@ -225,7 +228,7 @@ export default class assetImmovableReport extends Component {
 													<b>कोणाकडून संपादित केली</b>
 											</td>
 											<td colSpan={4} style={{textAlign: "center"}}>
-													<b>600 Sq.Meters</b>
+													<b>{this.props.data[9]?this.props.data[9]:""}</b>
 											</td>
 											<td rowSpan={4} colSpan={9} style={{textAlign: "center"}}>
 													<b></b>
@@ -236,7 +239,7 @@ export default class assetImmovableReport extends Component {
 													<b> मत्तेचे  अपेक्षित आयुर्मान</b>
 											</td>
 											<td colSpan={4} style={{textAlign: "center"}}>
-													<b>25 Years</b>
+													<b>{this.props.data[10]?this.props.data[10]:""}</b>
 											</td>
 											<td rowSpan={4} colSpan={9} style={{textAlign: "center"}}>
 													<b></b>
@@ -378,7 +381,37 @@ export default class assetImmovableReport extends Component {
 							<tbody>
 							<tr>
 									<td style={{textAlign: "center"}} >
-											<b>Data</b>
+											<b>{this.props.data[19]?this.props.data[19]:""}</b>
+									</td>
+									<td style={{textAlign: "center"}} >
+											<b>N/A</b>
+									</td>
+									<td style={{textAlign: "center"}} >
+											<b>{this.props.data[11]?this.props.data[11]:""}</b>
+									</td>
+									<td style={{textAlign: "center"}} >
+											<b>{this.props.data[25]?this.props.data[25]:""}</b>
+									</td>
+									<td style={{textAlign: "center"}} >
+											<b>{this.props.data[26]?this.props.data[26]:""}</b>
+									</td>
+									<td style={{textAlign: "center"}} >
+											<b>{this.props.data[1]?this.props.data[1]:""}</b>
+									</td>
+									<td style={{textAlign: "center"}} >
+											<b>N/A</b>
+									</td>
+									<td style={{textAlign: "center"}} >
+											<b>N/A</b>
+									</td>
+									<td style={{textAlign: "center"}} >
+											<b>{this.props.data[27]?this.props.data[27]:""}</b>
+									</td>
+									<td style={{textAlign: "center"}} >
+											<b>{this.props.data[28]?this.props.data[28]:""}</b>
+									</td>
+									<td style={{textAlign: "center"}} >
+											<b>{this.props.data[29]?this.props.data[29]:""}</b>
 									</td>
 									<td style={{textAlign: "center"}} >
 											<b>Data</b>
@@ -387,46 +420,16 @@ export default class assetImmovableReport extends Component {
 											<b>Data</b>
 									</td>
 									<td style={{textAlign: "center"}} >
-											<b>Data</b>
+											<b>{this.props.data[30]?this.props.data[30]:""}</b>
 									</td>
 									<td style={{textAlign: "center"}} >
-											<b>Data</b>
+											<b>{this.props.data[31]?this.props.data[31]:""}</b>
 									</td>
 									<td style={{textAlign: "center"}} >
-											<b>Data</b>
+											<b>{this.props.data[22]?this.props.data[22]:""}</b>
 									</td>
 									<td style={{textAlign: "center"}} >
-											<b>Data</b>
-									</td>
-									<td style={{textAlign: "center"}} >
-											<b>Data</b>
-									</td>
-									<td style={{textAlign: "center"}} >
-											<b>Data</b>
-									</td>
-									<td style={{textAlign: "center"}} >
-											<b>Data</b>
-									</td>
-									<td style={{textAlign: "center"}} >
-											<b>Data</b>
-									</td>
-									<td style={{textAlign: "center"}} >
-											<b>Data</b>
-									</td>
-									<td style={{textAlign: "center"}} >
-											<b>Data</b>
-									</td>
-									<td style={{textAlign: "center"}} >
-											<b>Data</b>
-									</td>
-									<td style={{textAlign: "center"}} >
-											<b>Data</b>
-									</td>
-									<td style={{textAlign: "center"}} >
-											<b>Data</b>
-									</td>
-									<td style={{textAlign: "center"}} >
-											<b>Data</b>
+											<b>N/A</b>
 									</td>
 							</tr>
 							</tbody>

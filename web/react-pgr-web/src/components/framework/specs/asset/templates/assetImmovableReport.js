@@ -51,7 +51,7 @@ export default class assetImmovableReport extends Component {
 												<b>संपादनाची पद्धत</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "center"}}>
-												<b>New</b>
+												<b>{this.props.data[11]?this.props.data[11]:""}</b>
 										</td>
 									</tbody>
 
@@ -60,7 +60,7 @@ export default class assetImmovableReport extends Component {
 												<b>मत्तेचा  ओळखपत्र क्रमांक</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "center"}}>
-												<b>ROH/SWD/IM/1234</b>
+												<b>{this.props.data[0]?this.props.data[0]:""}</b>
 										</td>
 										<td colSpan={5} style={{textAlign: "center"}}>
 												<b> निधीचे स्रोत</b>

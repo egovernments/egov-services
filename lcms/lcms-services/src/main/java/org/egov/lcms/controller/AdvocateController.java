@@ -1,8 +1,6 @@
 package org.egov.lcms.controller;
 
 import javax.validation.Valid;
-
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.factory.ResponseFactory;
 import org.egov.lcms.models.AdvocateRequest;

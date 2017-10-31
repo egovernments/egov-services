@@ -125,19 +125,19 @@ var dat = {
   						"label": "ac.create.Department",
   						"pattern": "",
   						"type": "singleValueList",
-  						"url": "",
+  						"url": "/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name",
   						"isRequired": true,
   						"isDisabled": false,
   						"requiredErrMsg": "",
   						"patternErrMsg": "",
-							"defaultValue": [	{
-									"key": "1",
-									"value": "REVENUE"
-								},  {
-	            "key": "2",
-	            "value": "ADMINISTARTION"
-	          }
-					]
+					// 		"defaultValue": [	{
+					// 				"key": "1",
+					// 				"value": "REVENUE"
+					// 			},  {
+	        //     "key": "2",
+	        //     "value": "ADMINISTARTION"
+	        //   }
+					// ]
   					},
             {
   						"name": "NoOfOrder",
@@ -577,78 +577,78 @@ var dat = {
             "jsonPath": "Asset.defectLiabilityPeriod.year",
             "label": "ac.create.Defect.liability.Period",
             "pattern": "",
-            "type": "singleValueList",
+            "type": "number",
             "url": "",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-						"defaultValue": [	{
-								"key": null,
-								"value": "Years"
-							},  {
-            "key": "1",
-            "value": "1"
-          },  {
-            "key": "2",
-            "value": "2"
-          },  {
-            "key": "3",
-            "value": "3"
-          }
-				]
+				// 		"defaultValue": [	{
+				// 				"key": null,
+				// 				"value": "Years"
+				// 			},  {
+        //     "key": "1",
+        //     "value": "1"
+        //   },  {
+        //     "key": "2",
+        //     "value": "2"
+        //   },  {
+        //     "key": "3",
+        //     "value": "3"
+        //   }
+				// ]
           },
 					{
             "name": "DefectLiabilityPeriod",
             "jsonPath": "Asset.defectLiabilityPeriod.month",
             "label": "ac.create.Defect.liability.Period.month",
             "pattern": "",
-            "type": "singleValueList",
+            "type": "number",
             "url": "",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-						"defaultValue": [	{
-								"key": null,
-								"value": "Months"
-							},  {
-            "key": "1",
-            "value": "1"
-          },  {
-            "key": "2",
-            "value": "2"
-          },  {
-            "key": "3",
-            "value": "3"
-          }
-				]
+				// 		"defaultValue": [	{
+				// 				"key": null,
+				// 				"value": "Months"
+				// 			},  {
+        //     "key": "1",
+        //     "value": "1"
+        //   },  {
+        //     "key": "2",
+        //     "value": "2"
+        //   },  {
+        //     "key": "3",
+        //     "value": "3"
+        //   }
+				// ]
           },
 					{
             "name": "DefectLiabilityPeriod",
             "jsonPath": "Asset.defectLiabilityPeriod.day",
             "label": "ac.create.Defect.liability.Period.day",
             "pattern": "",
-            "type": "singleValueList",
+            "type": "number",
             "url": "",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-						"defaultValue": [	{
-								"key": null,
-								"value": "Days"
-							},  {
-            "key": "1",
-            "value": "1"
-          },  {
-            "key": "2",
-            "value": "2"
-          },  {
-            "key": "3",
-            "value": "3"
-          }
-				]
+				// 		"defaultValue": [	{
+				// 				"key": null,
+				// 				"value": "Days"
+				// 			},  {
+        //     "key": "1",
+        //     "value": "1"
+        //   },  {
+        //     "key": "2",
+        //     "value": "2"
+        //   },  {
+        //     "key": "3",
+        //     "value": "3"
+        //   }
+				// ]
           },
 
           {

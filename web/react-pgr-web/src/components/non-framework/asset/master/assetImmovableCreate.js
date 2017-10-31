@@ -314,9 +314,33 @@ class assetImmovableCreate extends Component {
                         customTemp.type = 'number';
                         break;
 
+                    case 'Select':
+                        customTemp.type = 'singleValueList';
+                        break;
+
                     case null:
                           customTemp.type = 'text';
                           break;
+              }
+              if(customTemp.type == 'singleValueList'){
+                if(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values.length){
+                    var handleDropdown = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values;
+                    var dropdownSplit = handleDropdown.split(",");
+                    var valueHolder = [];
+                    for(var y= 0; y<dropdownSplit.length; y++){
+                      var holder = {};
+                      holder.key = dropdownSplit[y];
+                      holder.value = dropdownSplit[y];
+                      valueHolder.push(holder);
+                  }
+
+                }
+                else{
+                  customTemp.url = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].url;
+                }
+                customTemp.defaultValue = valueHolder;
+
+
               }
               customFieldsArray.push(customTemp);
 
@@ -447,8 +471,11 @@ class assetImmovableCreate extends Component {
     tempFinObj.key = key;
     var splitObject = value;
     _.forEach(splitObject, function(value, key) {
-      tempFinObj.value =  value;
       tempFinObj.type = key;
+      tempFinObj.value =  value;
+
+      // if(tempFinObj.type == "Select"){
+      // }
     });
     assetAttributes.push(tempFinObj);
   });

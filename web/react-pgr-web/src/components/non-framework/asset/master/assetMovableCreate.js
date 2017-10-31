@@ -21,16 +21,21 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import ContentRemove from 'material-ui/svg-icons/content/remove';
 
 var specifications={};
+var fields = [];
+var groups = [];
+var finArr = [];
 let reqRequired = [];
 let baseUrl="https://raw.githubusercontent.com/abhiegov/test/master/specs/";
-class assetImmovableCreate extends Component {
+class assetMovableCreate extends Component {
   state={
     pathname:""
   }
   constructor(props) {
     super(props);
     this.state = {
-      customFields:[]
+      customFieldsGen:{},
+      hide: true,
+      customArr: []
     }
   }
 
@@ -252,13 +257,84 @@ class assetImmovableCreate extends Component {
       //   console.log(e);
       // }
 
-      specifications = require(`../../../framework/specs/asset/master/assetMovable`).default;
+      specifications = require(`../../../framework/specs/asset/master/assetImmovable`).default;
       self.displayUI(specifications);
 
   }
 
   componentDidMount() {
       this.initData();
+
+      let self = this;
+      var catId;
+      var name, jsonPath, label, type, isRequired, isDisabled;
+      var customSpecs = {};
+    //  var customFieldsArray = [];
+    //  var customArr;
+      Api.commonApiPost("/egov-mdms-service/v1/_get",{"moduleName":"ASSET", "masterName":"AssetCategory", "filter": "%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22MOVABLE%22)%5D"}).then(function(response)
+     {
+       console.log("yes");
+       if(response) {
+         let keys=jp.query(response, "$.MdmsRes.ASSET.AssetCategory.*.id");
+         let values=jp.query(response, "$.MdmsRes.ASSET.AssetCategory.*.name");
+         let dropDownData=[];
+         for (var k = 0; k < keys.length; k++) {
+             let obj={};
+             obj["key"]=keys[k];
+             obj["value"]=values[k];
+             dropDownData.push(obj);
+         }
+
+         dropDownData.sort(function(s1, s2) {
+           return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+         });
+         dropDownData.unshift({key: null, value: "-- Please Select --"});
+         self.props.setDropDownData("Asset.assetCategory.id", dropDownData);
+       }
+
+      for(var i=0; i < response.MdmsRes.ASSET.AssetCategory.length; i++ ){
+        console.log(i);
+        if(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination != null){
+          var  customFieldsArray = [];
+          catId = response.MdmsRes.ASSET.AssetCategory[i].id;
+          for(var j=0; j< response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination.length; j++){
+
+            var customTemp = {};
+             customTemp.name = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name;
+             customTemp.jsonPath = "Asset.assetAttributesCheck." + response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name +"."+response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].type;
+             customTemp.label = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name;
+             customTemp.type = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].type ;
+             customTemp.isRequired = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].isMandatory;
+             customTemp.isDisabled = !(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].isActive);
+             switch(customTemp.type) {
+                   case 'Text':
+                      customTemp.type = 'text';
+                      break;
+
+                   case 'Number':
+                        customTemp.type = 'number';
+                        break;
+
+                    case null:
+                          customTemp.type = 'text';
+                          break;
+              }
+              customFieldsArray.push(customTemp);
+
+          }
+          customSpecs[catId] = customFieldsArray;
+
+        }
+        self.setState({
+            customFieldsGen: customSpecs
+          }, () => {
+          })
+      }
+
+      },function(err) {
+            console.log(err);
+        });
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -358,6 +434,23 @@ class assetImmovableCreate extends Component {
       var jPath = match.replace(/\{|}/g,"");
       _url = _url.replace(match, _.get(formData, jPath));
     }
+
+
+  //  var createCustomObject = [];
+  var  createCustomObject = this.props.formData.Asset.assetAttributesCheck;
+  var assetAttributes = [];
+  _.forEach(createCustomObject, function(value, key) {
+    var tempFinObj = {};
+    tempFinObj.key = key;
+    var splitObject = value;
+    _.forEach(splitObject, function(value, key) {
+      tempFinObj.value =  value;
+      tempFinObj.type = key;
+    });
+    assetAttributes.push(tempFinObj);
+  });
+console.log(assetAttributes);
+formData.Asset.assetAttributes = assetAttributes;
 
     //Check if documents, upload and get fileStoreId
     if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"].length) {
@@ -684,32 +777,41 @@ class assetImmovableCreate extends Component {
 
   handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch", expression, expErr, isDate) => {
       let {getVal} = this;
+      let self = this;
       let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;
       let obj = specifications[`asset.create`];
 
       if(property=="Asset.assetCategory.id"){
-        console.log("sub");
-        Api.commonApiPost("/egov-mdms-service/v1/_get",{"moduleName":"ASSET", "masterName":"AssetCategory"}).then(function(response)
-       {
-         var lone = response.MdmsRes.ASSET.AssetCategory;
-         console.log(response.MdmsRes.ASSET.AssetCategory);
-         for(var i=0; i < response.MdmsRes.ASSET.AssetCategory.length; i++ ){
-           if(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination != null){
-             for(var j=0; j<response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination.length; j++){
-               console.log(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j]);
-               this.setState({
-                   customFields: this.getCategory(e.target.value)
-               })
-             }
-           }
+        if(self.state.customFieldsGen[e.target.value]) {
+          fields = self.state.customFieldsGen[e.target.value]
+          groups = [
+            {
+              "label": "Asset Attributes",
+              "name": "assetAttributes",
+              "jsonPath": "Asset.assetAttributes",
+              fields
+            }
+          ];
 
-         }
-        },function(err) {
-            console.log(err);
-        });
-        console.log("subcat");
-      }
+console.log(fields);
+
+          for(var x=0; x<fields.length; x++){
+            var formFin = {};
+            formFin.key = fields[x].name;
+            formFin.type = fields[x].type;
+            finArr.push(formFin);
+          }
+          console.log(finArr);
+          this.setState({
+            hide: false
+          })
+        } else {
+          this.setState({
+            hide: true
+          })
+        }
+       }
 
       if(expression && e.target.value){
         let str = expression;
@@ -1002,12 +1104,20 @@ class assetImmovableCreate extends Component {
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
+  //  {formData && formData.hasOwnProperty("Asset") && formData.Asset.hasOwnProperty("assetAttributes") && formData.Asset.assetAttributes.map((item,index)=>{
+      console.log(formData);
+    // })}
+
+
+
     return (
       <div className="Report">
         <form onSubmit={(e) => {
           create(e)
         }}>
-        {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields
+        {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] &&
+                          <div>
+                                <ShowFields
                                     groups={mockData[`${moduleName}.${actionName}`].groups}
                                     noCols={mockData[`${moduleName}.${actionName}`].numCols}
                                     ui="google"
@@ -1017,7 +1127,20 @@ class assetImmovableCreate extends Component {
                                     useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false}
                                     addNewCard={addNewCard}
                                     removeCard={removeCard}
-                                    autoComHandler={autoComHandler}/>}
+                                    autoComHandler={autoComHandler}/>
+                                    {!this.state.hide ? <ShowFields
+                                    groups={groups}
+                                    noCols={mockData[`${moduleName}.${actionName}`].numCols}
+                                    ui="google"
+                                    handler={handleChange}
+                                    getVal={getVal}
+                                    fieldErrors={fieldErrors}
+                                    useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false}
+                                    addNewCard={addNewCard}
+                                    removeCard={removeCard}
+                                    autoComHandler={autoComHandler}/> : ""}
+                            </div>
+                                  }
           <div style={{"textAlign": "center"}}>
             <br/>
             {actionName == "create" && <UiButton item={{"label": "Create", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
@@ -1087,4 +1210,4 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(assetImmovableCreate);
+export default connect(mapStateToProps, mapDispatchToProps)(assetMovableCreate);

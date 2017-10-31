@@ -1,0 +1,20 @@
+CREATE TABLE egov_lcms_notice (
+	code character varying NOT NULL,
+	tenantId character varying NOT NULL,
+	exhibitNo character varying,
+	courtName character varying,
+	courtAddress character varying,
+	applicant character varying,
+	defendant character varying,
+	chiefOfficerDetails character varying,
+	advocateName character varying,
+	day character varying,
+	witness jsonb,
+	noticeType character varying,
+	fileStoreId character varying,
+	createdBy character varying,
+	lastModifiedBy character varying,
+	createdTime bigint,
+	lastModifiedTime bigint,
+	CONSTRAINT pk_egov_lcms_notice PRIMARY KEY (code)
+);

@@ -76,7 +76,6 @@ public class SearchService {
 				searchDefinitionMap.get(moduleName).getDefinitions().parallelStream()
 											.filter(def -> (def.getName().equals(searchName)))
 		                                 .collect(Collectors.toList());
-		
 		if(0 == definitions.size()){
 			logger.error("There's no Search Definition provided for this search feature");
 			throw new CustomException(HttpStatus.BAD_REQUEST.toString(), 

@@ -245,4 +245,14 @@
       "name": "Other"
     }
   ],
+  "AppConfiguration": [
+    {
+      "id": 1,
+      "keyName": "ASSET_MANDATORY",
+      "tenantId": "mh",
+      "description": "To make Asset linking required or not in Estimate screen",
+      "values": "Yes",
+      "effectiveFrom": ""
+    }
+  ]
 }

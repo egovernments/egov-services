@@ -47,9 +47,9 @@ public class SearchRepository {
 		Long totalExecutionTime = endTime - startTime;
 		LOGGER.info("Query execution time in millisec: "+totalExecutionTime);
 		if((endTime - startTime) > maxExecutionTime){
-			LOGGER.error("Sql query is taking unusually more time, query: "+query);
+			LOGGER.error("Json query is taking unusually more time, query: "+query);
 			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), 
-					"Query Execution Timeout! Sql query is taking more time than the max exec time, query: "+query);
+					"Query Execution Timeout! Json query is taking more time than the max exec time, query: "+query);
 		}
 		for(PGobject obj: maps){
 			LOGGER.info("obj::"+obj);

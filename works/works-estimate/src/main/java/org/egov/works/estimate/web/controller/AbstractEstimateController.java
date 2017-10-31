@@ -4,14 +4,14 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.works.commons.web.contract.RequestInfo;
-import org.egov.works.commons.web.contract.ResponseInfo;
 import org.egov.works.estimate.domain.exception.CustomBindException;
 import org.egov.works.estimate.domain.service.AbstractEstimateService;
 import org.egov.works.estimate.web.contract.AbstractEstimateRequest;
 import org.egov.works.estimate.web.contract.AbstractEstimateResponse;
 import org.egov.works.estimate.web.contract.AbstractEstimateSearchContract;
 import org.egov.works.estimate.web.model.AbstractEstimate;
+import org.egov.works.estimate.web.model.RequestInfo;
+import org.egov.works.estimate.web.model.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;

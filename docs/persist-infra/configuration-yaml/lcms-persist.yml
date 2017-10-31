@@ -191,14 +191,16 @@ serviceMaps:
         
         - jsonPath: $.cases[?({code} in @.parawiseComments[*].code)].code
         
-        - jsonPath: $.parawiseComments.*.auditDetails.createdBy
-        
         - jsonPath: $.RequestInfo.userInfo.id
           type: STRING
-        
-        - jsonPath: $.parawiseComments.*.auditDetails.createdTime
-          type: LONG
-          
+
+        - jsonPath: $.RequestInfo.userInfo.id
+          type: STRING
+
+        - jsonPath: createdTime
+          type: CURRENTDATE
+          dbType: LONG         
+
         - jsonPath: lastModifiedTime
           type: CURRENTDATE
           dbType: LONG
@@ -555,7 +557,7 @@ serviceMaps:
        - jsonPath: $.advocatePayments.*.invoiceDoucment
          type: JSON
          dbType: JSONB
-		 
+     
        - jsonPath: $.advocatePayments.*.tenantId
          type: STRING
 

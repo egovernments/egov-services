@@ -20,6 +20,7 @@ import org.egov.service.AssetService;
 import org.egov.service.CurrentValueService;
 import org.egov.service.DisposalService;
 import org.egov.service.RevaluationService;
+import org.egov.web.validator.AssetValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -52,6 +53,9 @@ public class AssetController {
 	
 	@Autowired
 	private CurrentValueService currentValueService;
+	
+	@Autowired
+	private AssetValidator assetValidator;
 
 	@PostMapping("_search")
 	@ResponseBody
@@ -66,6 +70,7 @@ public class AssetController {
 	@PostMapping("_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid final AssetRequest assetRequest) {
+		assetValidator.addMissingPathForPersister(assetRequest);
 		final AssetResponse assetResponse = assetService.createAsync(assetRequest);
 		return new ResponseEntity<>(assetResponse, HttpStatus.CREATED);
 	}

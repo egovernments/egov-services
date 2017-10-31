@@ -52,6 +52,11 @@ public class SubmissionSpecification implements Specification<Submission> {
 
         }
 
+        if (criteria.getStartDate() != null) {
+            predicates.add(
+                criteriaBuilder.greaterThanOrEqualTo(createdDate, new DateTime(criteria.getStartDate()).toDate()));
+        }
+        
         if (criteria.getEndDate() != null) {
             predicates.add(
                 criteriaBuilder.lessThan(createdDate, new DateTime(criteria.getEndDate()).plusDays(1).toDate()));

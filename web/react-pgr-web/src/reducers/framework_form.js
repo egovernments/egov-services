@@ -143,7 +143,7 @@ export default (state = defaultState, action) => {
 }
 
 function validate(fieldErrors, property, value, isRequired, form, requiredFields, pattern, patErrMsg) {
-  let errorText = isRequired && !value ? translate('ui.framework.required') : '';
+  let errorText = isRequired && (typeof value == 'undefined' || value === '') ? translate('ui.framework.required') : '';
   let isFormValid = true;
   for(var i=0; i<requiredFields.length; i++) {
     if(typeof _.get(form, requiredFields[i]) == 'undefined' || _.get(form, requiredFields[i]) === "") {
@@ -159,6 +159,7 @@ function validate(fieldErrors, property, value, isRequired, form, requiredFields
 
   for(let key in fieldErrors) {
     if(fieldErrors[key] && key != property) {
+        console.log(fieldErrors[key] + "--" + key);
         isFormValid = false;
         break;
     }

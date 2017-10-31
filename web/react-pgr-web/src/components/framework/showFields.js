@@ -64,7 +64,7 @@ export default class ShowFields extends Component {
               {group.fields.map((field, fieldIndex)=>{
                   if(!field.isHidden) {
                     return (
-                      <Col key={fieldIndex} xs={12} sm={field.type === "documentList" || field.type === "fileTable" || field.type === "tableList" ? 12 : noCols} md={field.type === "documentList" || field.type === "fileTable" || field.type === "tableList" ? 12 : noCols}>
+                      <Col key={fieldIndex} xs={12} sm={field.type === "documentList" || field.type === "fileTable" || field.type === "tableList" || (field.type === "textarea" && field.fullWidth === true) ? 12 : noCols} md={field.type === "documentList" || field.type === "fileTable" || field.type === "tableList" || (field.type === "textarea" && field.fullWidth === true) ? 12 : noCols}>
                           {renderField(field, self.props.screen,fieldIndex)}
                       </Col>
                     )

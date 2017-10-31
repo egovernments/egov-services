@@ -278,16 +278,32 @@ console.log(val);
     const renderTable = function() {
       if(moduleName && actionName && formData && formData[objectName]) {
         var objectName = mockData[`${moduleName}.${actionName}`].objectName;
-        if(formData[objectName].documents && formData[objectName].documents.length) {
-          var dataList = {
+        let flag = 0;
+        let count = 0;
+        var dataList = {
             resultHeader: ["#", "Name", "File"],
             resultValues: []
-          };
+        };
+        for(let i=0; i<mockData[moduleName + "." + actionName].groups.length; i++) {
+          for(let j=0; j<mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+            if(mockData[moduleName + "." + actionName].groups[i].fields[j].type == "singleFileUpload" && _.get(formData, mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath)) {
+              flag = 1;
+              count++;
+              let fileStoreId = _.get(formData, mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+              dataList.resultValues.push([count, "File", "<a href=/filestore/v1/files/id?tenantId=" + localStorage.getItem("tenantId") + "&fileStoreId=" + fileStoreId + ">Download</a>"]);
+            }
+          }
+        }
 
+
+        if(formData[objectName].documents && formData[objectName].documents.length) {
+          flag = 1;
           for(var i=0; i<formData[objectName].documents.length; i++) {
             dataList.resultValues.push([i+1, formData[objectName].documents[i].name || "File", "<a href=/filestore/v1/files/id?tenantId=" + localStorage.getItem("tenantId") + "&fileStoreId=" + formData[objectName].documents[i].fileStoreId + ">Download</a>"]);
           }
+        }
 
+        if(flag == 1) {
           return (
             <UiTable resultList={dataList}/>
           );

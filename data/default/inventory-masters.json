@@ -93,8 +93,8 @@
       {  
          "id":2,
          "tenantId":"default",
-         "code":"Shelf_life_Control",
-         "name":"SHELF_LIFE_CONTROL"
+         "code":"SHELF_LIFE_CONTROL",
+         "name":"Shelf_life_Control"
       }
    ],
    "MaterialClass":[  

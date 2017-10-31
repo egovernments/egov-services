@@ -97,6 +97,10 @@ ReportDefinitions:
     label: reports.asset.originalvalue
     type: number
     source: asset
+  - name: currentvalue
+    label: reports.asset.currentvalue
+    type: number
+    source: asset    
   - name: currentamount
     label: reports.asset.currentamount
     type: number
@@ -322,6 +326,10 @@ ReportDefinitions:
     source: asset
   - name: originalvalue
     label: reports.asset.originalvalue
+    type: number
+    source: asset
+  - name: currentvalue
+    label: reports.asset.currentvalue
     type: number
     source: asset
   - name: currentamount

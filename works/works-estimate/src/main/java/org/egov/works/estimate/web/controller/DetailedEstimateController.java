@@ -8,6 +8,7 @@ import org.egov.works.commons.web.contract.RequestInfo;
 import org.egov.works.commons.web.contract.ResponseInfo;
 import org.egov.works.estimate.domain.exception.CustomBindException;
 import org.egov.works.estimate.domain.service.DetailedEstimateService;
+import org.egov.works.estimate.web.contract.DetailedEstimateRequest;
 import org.egov.works.estimate.web.contract.DetailedEstimateResponse;
 import org.egov.works.estimate.web.contract.DetailedEstimateSearchContract;
 import org.egov.works.estimate.web.model.DetailedEstimate;
@@ -43,6 +44,22 @@ public class DetailedEstimateController {
 		response.setResponseInfo(getResponseInfo(requestInfo));
 		return response;
 	}
+
+
+    @PostMapping("/_create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public DetailedEstimateResponse create(@RequestBody DetailedEstimateRequest detailedEstimateRequest,
+                                           BindingResult errors) {
+        if (errors.hasErrors()) {
+            throw new CustomBindException(errors);
+        }
+
+        final List<DetailedEstimate> detailedEstimates = detailedEstimateService.create(detailedEstimateRequest);
+        final DetailedEstimateResponse response = new DetailedEstimateResponse();
+        response.setDetailedEstimates(detailedEstimates);
+        response.setResponseInfo(getResponseInfo(detailedEstimateRequest.getRequestInfo()));
+        return response;
+    }
 	
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())

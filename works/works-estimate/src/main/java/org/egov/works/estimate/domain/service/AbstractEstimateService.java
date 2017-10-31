@@ -10,6 +10,7 @@ import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.domain.exception.ErrorCode;
 import org.egov.works.estimate.domain.exception.InvalidDataException;
 import org.egov.works.estimate.domain.repository.AbstractEstimateRepository;
+import org.egov.works.estimate.persistence.repository.IdGenerationRepository;
 import org.egov.works.estimate.web.contract.AbstractEstimateRequest;
 import org.egov.works.estimate.web.contract.AbstractEstimateSearchContract;
 import org.egov.works.estimate.web.model.AbstractEstimate;
@@ -32,11 +33,16 @@ public class AbstractEstimateService {
 	@Autowired
 	private PropertiesManager propertiesManager;
 
+    @Autowired
+    private IdGenerationRepository idGenerationRepository;
+
 	@Transactional
 	public List<AbstractEstimate> create(AbstractEstimateRequest abstractEstimateRequest) {
 		for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
 			estimate.setId(UUID.randomUUID().toString().replace("-", ""));
 			estimate.setAuditDetails(setAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUsername(), false));
+            String abstractEstimateNumber = idGenerationRepository.generateAbstractEstimateNumber(estimate.getTenantId(),abstractEstimateRequest.getRequestInfo());
+            estimate.setAbstractEstimateNumber(abstractEstimateNumber);
 			for (final AbstractEstimateDetails details : estimate.getAbstractEstimateDetails()) {
 				details.setId(UUID.randomUUID().toString().replace("-", ""));
 				details.setAuditDetails(setAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUsername(), false));

@@ -6,13 +6,13 @@ import java.util.Objects;
 
 import javax.validation.Valid;
 
-import org.egov.works.commons.web.contract.ResponseInfo;
 import org.egov.works.estimate.web.model.AbstractEstimate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.egov.works.estimate.web.model.ResponseInfo;
 
 /**
  * Contract class to send response. Array of AbstractEstimate items are used in

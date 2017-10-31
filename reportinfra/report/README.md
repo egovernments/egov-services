@@ -15,51 +15,51 @@ couple of APIS.
 
 
 #### Report Configuration Details:
-reportName: Name of the report
-summary: Summary message for the report(AssetReport)
-version: version of the report(optional)
-moduleName: modulename of which the report belongs to (eg : asset)
-sourceColumns: - (list of source columns fetched from the query.)
-  - name: receiptNo (column name)
-    label: reports.citizen.receiptno (label which will get displayed in the report)
-    type: string (typr of the column)
-    source: citizen (source module)
-searchParams:(list of search parameters which is required for the report)
-  - name: consumerno (name of the search param)
-    label: reports.citizen.consumerno (label which will be used for displaying the search param. It has to be created in common.js Front end team will update this information)
-    type: string (type of the search param)
-    source: (source module)
-    isMandatory: false (specifies whether the search param is optional or not)
+reportName: Name of the report<br />
+summary: Summary message for the report(AssetReport)<br />
+version: version of the report(optional)<br />
+moduleName: modulename of which the report belongs to (eg : asset)<br />
+sourceColumns: - (list of source columns fetched from the query.)<br />
+- name: receiptNo (column name)<br />
+  label: reports.citizen.receiptno (label which will get displayed in the report)<br />
+  type: string (typr of the column)<br />
+  source: citizen (source module)<br />
+searchParams:(list of search parameters which is required for the report)<br />
+  - name: consumerno (name of the search param)<br />
+    label: reports.citizen.consumerno (label which will be used for displaying the search param. It has to be created in common.js Front end team will update this information)<br />
+    type: string (type of the search param)<br />
+    source: (source module)<br />
+    isMandatory: false (specifies whether the search param is optional or not)<br />
     searchClause: and consumerNo = $consumerno (Search clause will get appended to the query based on the ismandatory flag. if it is false and the search param is having that parameter then it will get appended
-    otherwise it will not get appended)
-query: (query string which needs to get execute to generate the report with the place holders for the search params. refer sample config for clarifications)
-groupby: group by clause if needed(group by fieldname)
-orderby: order by clause if needed(order by fieldname asc)
+    otherwise it will not get appended)<br />
+query: (query string which needs to get execute to generate the report with the place holders for the search params. refer sample config for clarifications)<br />
+groupby: group by clause if needed(group by fieldname)<br />
+orderby: order by clause if needed(order by fieldname asc)<br />
 ### API Details:
 
 /report/asset/metadata/_get
 
 Request  Sample for Metadata API:
 {
-   "RequestInfo": {
-       "apiId" : "emp",
-       "ver" : "1.0",
-       "ts" : "10-03-2017 00:00:00",
-       "action" : "create",
-       "did" : "1",
-       "key" : "abcdkey",
-       "msgId" : "20170310130900",
-       "requesterId" : "rajesh",
-       "authToken" : "0348d66f-d818-47fc-933b-ba23079986b8"
+   "RequestInfo": {<br />
+       "apiId" : "emp",<br />
+       "ver" : "1.0",<br />
+       "ts" : "10-03-2017 00:00:00",<br />
+       "action" : "create",<br />
+       "did" : "1",<br />
+       "key" : "abcdkey",<br />
+       "msgId" : "20170310130900",<br />
+       "requesterId" : "rajesh",<br />
+       "authToken" : "0348d66f-d818-47fc-933b-ba23079986b8"<br />
       
-   } ,
-   "tenantId" : "default",
-   "reportName" :"ImmovableAssetRegister"
+   } ,<br />
+   "tenantId" : "default",<br />
+   "reportName" :"ImmovableAssetRegister"<br />
    
-}
+}<br />
 #########################
 
-/report/asset/_get
+/report/asset/_get<br />
 
 {
    "RequestInfo": {

@@ -1036,4 +1036,185 @@ serviceMaps:
         type: CURRENTDATE
         dbType: LONG
         
-      - jsonPath: $.hearingDetails.*.code    
+      - jsonPath: $.hearingDetails.*.code
+  - version: 1.0
+    name: create notice
+    description: Persists notices service details egov_lcms_notice table
+    fromTopic: lcms-notice-create
+    isTransaction: true
+    queryMaps: 
+    - query: INSERT INTO egov_lcms_notice (code, tenantId, exhibitNo, courtName, courtAddress, applicant, defendant, chiefOfficerDetails, advocateName, day, witness, noticeType, fileStoreId, createdBy, lastModifiedBy, createdTime, lastModifiedTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.notice
+      jsonMaps:
+       - jsonPath: $.notice.code
+         type: STRING
+
+       - jsonPath: $.notice.tenantId
+         type: STRING
+       
+       - jsonPath: $.notice.exhibitNo
+         type: STRING
+
+       - jsonPath: $.notice.courtName
+         type: STRING
+
+       - jsonPath: $.notice.courtAddress
+         type: STRING
+       
+       - jsonPath: $.notice.applicant
+         type: STRING
+       
+       - jsonPath: $.notice.defendant
+         type: STRING
+       
+       - jsonPath: $.notice.chiefOfficerDetails
+         type: STRING
+
+       - jsonPath: $.notice.advocateName
+         type: STRING     
+
+       - jsonPath: $.notice.day
+         type: STRING
+         
+       - jsonPath: $.notice.witness
+         type: JSON
+         dbType: JSONB
+           
+       - jsonPath: $.notice.noticeType
+         type: STRING
+
+       - jsonPath: $.notice.fileStoreId
+         type: STRING
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING
+
+       - jsonPath: createdTime
+         type: CURRENTDATE
+         dbType: LONG         
+
+       - jsonPath: lastModifiedTime
+         type: CURRENTDATE
+         dbType: LONG
+         
+  - version: 1.0
+    name: update notice
+    description: Updates notice service details in egov_lcms_notice table for specified code and tenantId
+    fromTopic: lcms-notice-update
+    isTransaction: true
+    queryMaps: 
+    - query: UPDATE egov_lcms_notice SET exhibitNo=?, courtName=?, courtAddress=?, applicant=?, defendant=?, chiefOfficerDetails=?, advocateName=?, day=?, witness=?, noticeType=?, fileStoreId=?, lastModifiedBy=?, lastModifiedTime=? WHERE code=? and tenantid=?;
+      basePath: $.notice
+      jsonMaps:
+       - jsonPath: $.notice.exhibitNo
+         type: STRING
+       
+       - jsonPath: $.notice.courtName
+         type: STRING
+
+       - jsonPath: $.notice.courtAddress
+         type: STRING
+
+       - jsonPath: $.notice.applicant
+         type: STRING
+       
+       - jsonPath: $.notice.defendant
+         type: STRING
+       
+       - jsonPath: $.notice.chiefOfficerDetails
+         type: STRING
+         
+       - jsonPath: $.notice.advocateName
+         type: STRING  
+
+       - jsonPath: $.notice.day
+         type: STRING 
+
+       - jsonPath: $.notice.witness
+         type: JSON
+         dbType: JSONB
+         
+       - jsonPath: $.notice.noticeType
+         type: STRING
+  
+       - jsonPath: $.notice.fileStoreId
+         type: STRING    
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING        
+
+       - jsonPath: lastModifiedTime
+         type: CURRENTDATE
+         dbType: LONG
+         
+       - jsonPath: $.notice.code
+         type: STRING
+       
+       - jsonPath: $.notice.tenantId
+         type: STRING
+  - version: 1.0
+    name: register_create
+    description: Persists register service details egov_lcms_register table
+    fromTopic: lcms-register-create
+    isTransaction: true
+    queryMaps: 
+    - query: INSERT INTO egov_lcms_register (code, register, isActive, tenantId, createdBy, lastModifiedBy, createdTime, lastModifiedTime) VALUES (?,?,?,?,?,?,?,?);
+      basePath: $.registers.*
+      jsonMaps:
+       - jsonPath: $.registers.*.code
+         type: STRING
+
+       - jsonPath: $.registers.*.register
+         type: STRING
+
+       - jsonPath: $.registers.*.isActive
+         type: BOOLEAN
+
+       - jsonPath: $.registers.*.tenantId
+         type: STRING
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING
+
+       - jsonPath: createdTime
+         type: CURRENTDATE
+         dbType: LONG         
+
+       - jsonPath: lastModifiedTime
+         type: CURRENTDATE
+         dbType: LONG
+         
+  - version: 1.0
+    name: register_update
+    description: Updates registers service details in egov_lcms_register table for specified code and tenantId
+    fromTopic: lcms-register-update
+    isTransaction: true
+    queryMaps: 
+    - query: UPDATE egov_lcms_register SET register=?, isActive=?, lastModifiedBy=?, lastModifiedTime=? WHERE code=? and tenantid=?;
+      basePath: $.registers.*
+      jsonMaps:
+
+       - jsonPath: $.registers.*.register
+         type: STRING
+
+       - jsonPath: $.registers.*.isActive
+         type: BOOLEAN
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING        
+
+       - jsonPath: lastModifiedTime
+         type: CURRENTDATE
+         dbType: LONG
+         
+       - jsonPath: $.registers.*.code
+         type: STRING
+       
+       - jsonPath: $.registers.*.tenantId
+         type: STRING

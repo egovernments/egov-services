@@ -23,14 +23,6 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 	</properties>
-	
-	<repositories>
-		<repository>
-			<id>repo.egovernments.org</id>
-			<name>eGov ERP Releases Repository</name>
-			<url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
-		</repository>
-	</repositories>
 
 	<dependencies>
 		<dependency>
@@ -106,7 +98,7 @@
 			<artifactId>tracer</artifactId>
 			<version>0.18.1</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.egov.works</groupId>
 			<artifactId>works-commons</artifactId>
@@ -114,18 +106,35 @@
 		</dependency>
 	</dependencies>
 
-    <distributionManagement>
-        <repository>
-            <id>repo.egovernments.org</id>
-            <name>eGov ERP Releases Repository</name>
-            <url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>repo.egovernments.org</id>
-            <name>eGov ERP Snapshots Repository</name>
-            <url>http://repo.egovernments.org/nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
+	<distributionManagement>
+		<repository>
+			<id>repo.egovernments.org</id>
+			<name>eGov ERP Releases Repository</name>
+			<url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>repo.egovernments.org</id>
+			<name>eGov ERP Snapshots Repository</name>
+			<url>http://repo.egovernments.org/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<repositories>
+		<repository>
+			<id>repo.egovernments.org</id>
+			<name>eGov Public Repository Group</name>
+			<url>http://repo.egovernments.org/nexus/content/groups/public/</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+	</repositories>
+
+
 	<build>
 		<plugins>
 			<plugin>

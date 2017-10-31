@@ -1,9 +1,11 @@
 package org.egov.lcms.service;
 
 import java.util.List;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.factory.ResponseFactory;
+import org.egov.lcms.models.AdvocateDetails;
 import org.egov.lcms.models.Case;
 import org.egov.lcms.models.CaseRequest;
 import org.egov.lcms.models.CaseResponse;
@@ -62,6 +64,7 @@ public class SummonService {
 
 	}
 
+	
 	private void generateSummonReferenceNumber(SummonRequest summonRequest) throws Exception {
 
 		for (Summon summon : summonRequest.getSummons()) {
@@ -83,11 +86,23 @@ public class SummonService {
 
 	
 
-	public CaseResponse assignAdvocate(CaseRequest caseRequest) {
+	public CaseResponse assignAdvocate(CaseRequest caseRequest) throws Exception {
 
+		generateAdvocateCode(caseRequest);
 		kafkaTemplate.send(propertiesManager.getAssignAdvocate(), caseRequest);
 		return new CaseResponse(responseInfoFactory.getResponseInfo(caseRequest.getRequestInfo(), HttpStatus.CREATED),
 				caseRequest.getCases());
+	}
+
+	private void generateAdvocateCode(CaseRequest caseRequest) throws Exception {
+		List<Case> cases = caseRequest.getCases();
+		for ( Case caseObj : cases){
+			for ( AdvocateDetails advocatedetail : caseObj.getAdvocatesDetails()){
+				String advocateCode = uniqueCodeGeneration.getUniqueCode(caseObj.getTenantId(), caseRequest.getRequestInfo(), propertiesManager.getAdvocateDetailsCodeFormat(), propertiesManager.getAdvocateDetailsCodeName(), Boolean.FALSE, null);
+				advocatedetail.setCode(advocateCode);
+			}
+		}
+		
 	}
 
 	public CaseResponse caseSearch(CaseSearchCriteria caseSearchCriteria, RequestInfo requestInfo) {

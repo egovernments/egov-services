@@ -46,11 +46,11 @@ public class PropertiesManager {
 	@Value("${summom.code.format}")
 	private String summonCodeFormat;
 	
-	@Value("${legacy.dataload.code.format}")
-	private String legacyLoadCodeFormat;
+	@Value("${voucher.code.format}")
+	private String voucherCodeFormat;
 	
-	@Value("${legacy.code.format}")
-	private String legacyLoadCodeName;
+	@Value("${voucher.code.name}")
+	private String voucherCodeFormatName;
 	
 	
 	@Value("${egov.lcms.create.summon.validated}")
@@ -217,5 +217,11 @@ public class PropertiesManager {
 	
     @Value("${egov.lcms.case.load.key}")
     private String loadLegacyData;
+    
+    @Value("${advocate.assign.details.code}")
+    private String advocateDetailsCodeName;
+    
+    @Value("${advocate.assign.details.code.format}")
+    private String advocateDetailsCodeFormat;
 	
 }

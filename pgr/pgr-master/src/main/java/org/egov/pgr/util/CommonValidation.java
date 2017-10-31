@@ -20,7 +20,7 @@ public class CommonValidation {
     HashMap<String, String> error = new HashMap<>();
 
     public void validateCode(String code) {
-        Pattern pattern = Pattern.compile("[A-Z]+");
+        Pattern pattern = Pattern.compile("^[A-Za-z0-9]+$");
         Matcher matcher = pattern.matcher(code);
         if (!matcher.matches()) {
             error.put(CODE, "pgr.0063");

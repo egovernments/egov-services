@@ -257,7 +257,7 @@ class assetMovableCreate extends Component {
       //   console.log(e);
       // }
 
-      specifications = require(`../../../framework/specs/asset/master/assetImmovable`).default;
+      specifications = require(`../../../framework/specs/asset/master/assetMovable`).default;
       self.displayUI(specifications);
 
   }
@@ -271,9 +271,9 @@ class assetMovableCreate extends Component {
       var customSpecs = {};
     //  var customFieldsArray = [];
     //  var customArr;
-      Api.commonApiPost("/egov-mdms-service/v1/_get",{"moduleName":"ASSET", "masterName":"AssetCategory", "filter": "%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22MOVABLE%22)%5D"}).then(function(response)
+      Api.commonApiPost("/egov-mdms-service/v1/_get",{"moduleName":"ASSET", "masterName":"AssetCategory", "filter": "%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22IMMOVABLE%22)%5D%0A"}).then(function(response)
      {
-       console.log("yes");
+
        if(response) {
          let keys=jp.query(response, "$.MdmsRes.ASSET.AssetCategory.*.id");
          let values=jp.query(response, "$.MdmsRes.ASSET.AssetCategory.*.name");
@@ -293,7 +293,6 @@ class assetMovableCreate extends Component {
        }
 
       for(var i=0; i < response.MdmsRes.ASSET.AssetCategory.length; i++ ){
-        console.log(i);
         if(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination != null){
           var  customFieldsArray = [];
           catId = response.MdmsRes.ASSET.AssetCategory[i].id;
@@ -315,9 +314,33 @@ class assetMovableCreate extends Component {
                         customTemp.type = 'number';
                         break;
 
+                    case 'Select':
+                        customTemp.type = 'singleValueList';
+                        break;
+
                     case null:
                           customTemp.type = 'text';
                           break;
+              }
+              if(customTemp.type == 'singleValueList'){
+                if(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values.length){
+                    var handleDropdown = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values;
+                    var dropdownSplit = handleDropdown.split(",");
+                    var valueHolder = [];
+                    for(var y= 0; y<dropdownSplit.length; y++){
+                      var holder = {};
+                      holder.key = dropdownSplit[y];
+                      holder.value = dropdownSplit[y];
+                      valueHolder.push(holder);
+                  }
+
+                }
+                else{
+                  customTemp.url = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].url;
+                }
+                customTemp.defaultValue = valueHolder;
+
+
               }
               customFieldsArray.push(customTemp);
 
@@ -330,6 +353,10 @@ class assetMovableCreate extends Component {
           }, () => {
           })
       }
+
+
+
+
 
       },function(err) {
             console.log(err);
@@ -444,8 +471,11 @@ class assetMovableCreate extends Component {
     tempFinObj.key = key;
     var splitObject = value;
     _.forEach(splitObject, function(value, key) {
-      tempFinObj.value =  value;
       tempFinObj.type = key;
+      tempFinObj.value =  value;
+
+      // if(tempFinObj.type == "Select"){
+      // }
     });
     assetAttributes.push(tempFinObj);
   });

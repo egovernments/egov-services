@@ -49,7 +49,7 @@ public class CaseService {
 			if (casee.getParawiseComments() != null && casee.getParawiseComments().size() > 0) {
 				for (ParaWiseComment parawiseComment : casee.getParawiseComments()) {
 					String code = uniqueCodeGeneration.getUniqueCode(parawiseComment.getTenantId(), requestInfo,
-							propertiesManager.getOpinionUlbFormat(), propertiesManager.getOpinionUlbName(),
+							propertiesManager.getParaWiseCommentsUlbFormat(), propertiesManager.getParaWiseCommentsUlbName(),
 							Boolean.FALSE, null);
 					parawiseComment.setCode(code);
 				}

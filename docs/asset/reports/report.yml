@@ -12,6 +12,44 @@ ReportDefinitions:
     linkedReport:
       reportName: AssetImmovableRegisterDetail
       linkedColumn: _parent?reportName={reportName}&assetdetail={id}
+  - name: name
+    label: reports.asset.name
+    type: string
+    source: asset
+  - name: code
+    label: reports.asset.code
+    type: string
+    source: asset    
+  - name: ordernumber
+    label: reports.asset.ordernumber
+    type: number
+  - name: warrantyavailable
+    label: reports.asset.warrantyavailable
+    type: string
+    source: asset   
+  - name: wipreferenceno
+    label: reports.asset.wipreferenceno
+    type: string
+    source: asset
+  - name: floors
+    label: reports.asset.floors
+    type: number
+    source: asset   
+  - name: titledocumentsavailable
+    label: reports.asset.titledocumentsavailable
+    type: number
+  - name: buyername
+    label: reports.asset.buyername
+    type: string
+    source: asset   
+  - name: accumulateddepreciation
+    label: reports.asset.accumulateddepreciation
+    type: number
+    source: asset
+  - name: grossvalue
+    label: reports.asset.grossvalue
+    type: number
+    source: asset
   - name: quantity
     label: reports.asset.quantity
     type: number
@@ -95,10 +133,6 @@ ReportDefinitions:
     source: asset
   - name: originalvalue
     label: reports.asset.originalvalue
-    type: number
-    source: asset
-  - name: currentvalue
-    label: reports.asset.currentvalue
     type: number
     source: asset
   - name: currentamount
@@ -161,11 +195,11 @@ ReportDefinitions:
     source: asset
     searchClause : and asset.id in ($assetid)
   
-  query: select asset.id,asset.quantity,asset.plintharea,asset.cubiccontents,asset.landsurveyno,asset.length,asset.width,asset.height,asset.totalarea,
+  query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.floors,asset.titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.plintharea,asset.cubiccontents,asset.landsurveyno,asset.length,asset.width,asset.height,asset.totalarea,
          asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,
          asset.defectliabilityday as defectliabilityday,asset.securitydepositretained,
          asset.securitydepositrealized,asset.dateofcreation,asset.acquisitiondate,asset.grossvalue,asset.originalvalue,currentvalue.currentamount,
-         disposal.salevalue as disposalsalevalue,disposal.profitlossvoucherreference as disposalvoucherno,disposal.disposaldate,
+         disposal.salevalue as disposalsalevalue,disposal.profitlossvoucherreference as disposalvoucherno,disposal.disposaldate,disposal.buyername,disposal.buyeraddress,
          revaluation.revaluationdate,revaluation.incrementalrevalsum,revaluation.decrementalrevalsum,
          depreciation.depreciationvalue,depreciation.totaldepreciationval 
          from egasset_asset asset left outer join 
@@ -203,6 +237,44 @@ ReportDefinitions:
   sourceColumns:
   - name: id
     label: reports.asset.id
+    type: number
+    source: asset
+  - name: name
+    label: reports.asset.name
+    type: string
+    source: asset
+  - name: code
+    label: reports.asset.code
+    type: string
+    source: asset    
+  - name: ordernumber
+    label: reports.asset.ordernumber
+    type: number
+  - name: warrantyavailable
+    label: reports.asset.warrantyavailable
+    type: string
+    source: asset   
+  - name: wipreferenceno
+    label: reports.asset.wipreferenceno
+    type: string
+    source: asset
+  - name: floors
+    label: reports.asset.floors
+    type: number
+    source: asset   
+  - name: titledocumentsavailable
+    label: reports.asset.titledocumentsavailable
+    type: number
+  - name: buyername
+    label: reports.asset.buyername
+    type: string
+    source: asset   
+  - name: accumulateddepreciation
+    label: reports.asset.accumulateddepreciation
+    type: number
+    source: asset
+  - name: grossvalue
+    label: reports.asset.grossvalue
     type: number
     source: asset
   - name: quantity
@@ -290,10 +362,6 @@ ReportDefinitions:
     label: reports.asset.originalvalue
     type: number
     source: asset
-  - name: currentvalue
-    label: reports.asset.currentvalue
-    type: number
-    source: asset
   - name: currentamount
     label: reports.asset.currentamount
     type: number
@@ -354,11 +422,11 @@ ReportDefinitions:
     source: asset
     searchClause : and asset.id in ($assetdetail)
   
-  query: select asset.id,asset.quantity,asset.plintharea,asset.cubiccontents,asset.landsurveyno,asset.length,asset.width,asset.height,asset.totalarea,
+  query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.floors,asset.titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.plintharea,asset.cubiccontents,asset.landsurveyno,asset.length,asset.width,asset.height,asset.totalarea,
          asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,
          asset.defectliabilityday as defectliabilityday,asset.securitydepositretained,
          asset.securitydepositrealized,asset.dateofcreation,asset.acquisitiondate,asset.grossvalue,asset.originalvalue,currentvalue.currentamount,
-         disposal.salevalue as disposalsalevalue,disposal.profitlossvoucherreference as disposalvoucherno,disposal.disposaldate,
+         disposal.salevalue as disposalsalevalue,disposal.profitlossvoucherreference as disposalvoucherno,disposal.disposaldate,disposal.buyername,disposal.buyeraddress,
          revaluation.revaluationdate,revaluation.incrementalrevalsum,revaluation.decrementalrevalsum,
          depreciation.depreciationvalue,depreciation.totaldepreciationval 
          from egasset_asset asset left outer join 
@@ -387,4 +455,3 @@ ReportDefinitions:
          where (rev1.createddate between $fromDate AND $toDate) AND rev1.tenantid = $tenantid) revaluation 
          ON asset.tenantid=revaluation.tenantid AND asset.id=revaluation.assetid
          where (asset.createddate between $fromDate AND $toDate) AND asset.tenantid = $tenantid
-

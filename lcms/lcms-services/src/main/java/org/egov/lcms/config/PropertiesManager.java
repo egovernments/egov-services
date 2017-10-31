@@ -213,8 +213,17 @@ public class PropertiesManager {
 	private String hearingDetailsUlbName;
 	
 	@Value("${hearingdetails.ulb.format}")
-	private String hearingDetailsUlbFormat;	
+	private String hearingDetailsUlbFormat;
 	
+	@Value("${notice.ulb.name}")
+	private String noticeUlbName;
+	
+	@Value("${notice.ulb.format}")
+	private String noticeUlbFormat;
+	
+	@Value("${egov.lcms.create.notice}")
+	private String createNoticeTopic;
+
     @Value("${egov.lcms.case.load.key}")
     private String loadLegacyData;
     
@@ -223,5 +232,13 @@ public class PropertiesManager {
     
     @Value("${advocate.assign.details.code.format}")
     private String advocateDetailsCodeFormat;
+
+	@Value("${egov.lcms.update.notice}")
+	private String updateNoticeTopic;
 	
+	@Value("${invalid.tenant.ulb.code}")
+	private String invalidTenantUlbCode;
+	
+	@Value("${tenant.ulb.exception.message}")
+	private String tenantUlbExceptionMessage;
 }

@@ -17,6 +17,10 @@ ReportDefinitions:
     label: reports.asset.wipreferenceno
     type: string
     source: asset
+  - name: modeofacquisition
+    label: reports.asset.modeofacquisition
+    type: string
+    source: asset
   - name: id
     label: reports.asset.id
     type: number
@@ -24,10 +28,6 @@ ReportDefinitions:
     linkedReport:
       reportName: AssetImmovableRegisterDetail
       linkedColumn: _parent?reportName={reportName}&assetdetail={id}
-  - name: modeofacquisition
-    label: reports.asset.modeofacquisition
-    type: string
-    source: asset   
   searchParams:
   - name: fromDate
     label: reports.asset.fromDate

@@ -199,7 +199,7 @@ ReportDefinitions:
   summary: Immovable Asset Register Report
   version: 1.0.0
   moduleName: asset
-  viewPath: /print/report/assetImmovableReport
+  viewPath: assetImmovableReport
   sourceColumns:
   - name: id
     label: reports.asset.id

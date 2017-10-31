@@ -257,7 +257,7 @@ class Dashboard extends Component {
 
     let current = this;
     let currentUser=JSON.parse(localStorage.userRequest);
-    let count = 4, _state = {};
+    let count = 3, _state = {};
     const checkCountAndSetState = function(key, res) {
       _state[key] = res;
       count--;
@@ -313,21 +313,21 @@ class Dashboard extends Component {
         checkCountAndSetState("citizenServices", []);
       })
 
-      Api.commonApiPost("/citizen-services/v1/requests/_search", {userId:currentUser.id}, {}, null, true).then(function(res3){
-        if(res3 && res3.serviceReq && res3.serviceReq) {
-          res3.serviceReq.sort(function(v1, v2) {
-            return v1.auditDetails.createdDate > v2.auditDetails.createdDate ? -1 : (v1.auditDetails.createdDate < v2.auditDetails.createdDate ? 1 : 0);
-          });
-
-
-
-          checkCountAndSetState("serviceRequestsTwo", res3.serviceReq);
-        } else {
-          checkCountAndSetState("serviceRequestsTwo", []);
-        }
-      }, function(err) {
-        checkCountAndSetState("serviceRequestsTwo", []);
-      })
+      // Api.commonApiPost("/citizen-services/v1/requests/_search", {userId:currentUser.id}, {}, null, true).then(function(res3){
+      //   if(res3 && res3.serviceReq && res3.serviceReq) {
+      //     res3.serviceReq.sort(function(v1, v2) {
+      //       return v1.auditDetails.createdDate > v2.auditDetails.createdDate ? -1 : (v1.auditDetails.createdDate < v2.auditDetails.createdDate ? 1 : 0);
+      //     });
+      //
+      //
+      //
+      //     checkCountAndSetState("serviceRequestsTwo", res3.serviceReq);
+      //   } else {
+      //     checkCountAndSetState("serviceRequestsTwo", []);
+      //   }
+      // }, function(err) {
+      //   checkCountAndSetState("serviceRequestsTwo", []);
+      // })
 
       /*Promise.all([
           Api.commonApiPost("/pgr/seva/v1/_search",{userId:currentUser.id},{}),
@@ -492,6 +492,7 @@ class Dashboard extends Component {
         for (var i = 0; i < UserRequest.roles.length; i++) {
           roleCodes.push(UserRequest.roles[i].code);
         }
+        if(localStorage.getItem('type') === constants.ROLE_EMPLOYEE){
         Api.commonApiPost("access/v1/actions/_get",{},{tenantId:localStorage.tenantId, roleCodes, enabled:true}).then(function(response){
           var actions = response.actions;
           var roles = JSON.parse(localStorage.userRequest).roles;
@@ -517,6 +518,7 @@ class Dashboard extends Component {
         }, function(err) {
             console.log(err);
         });
+      }
 
         if(window.location.href.indexOf("?") > -1 && window.location.href.indexOf("link") > -1) {
           var query = window.location.href.split("?")[1].split("&");
@@ -749,7 +751,7 @@ class Dashboard extends Component {
 
                       <Col md={10}>
                           <br/>
-                          <Card>
+                          {/*<Card>
                             <CardHeader title="My Service Requests"/>
                               <CardText>
                                 <Table id="requestTable">
@@ -787,22 +789,22 @@ class Dashboard extends Component {
                                     </tbody>
                                 </Table>
                               </CardText>
-                          </Card>
+                          </Card>*/}
                           <br/>
 
-                        {/*  <Card>
-                            <CardHeader title="My Grievances"/>
+                        <Card>
+                            <CardHeader title={translate('pgr.lbl.grievance.citizen')}/>
                               <CardText>
                               <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
                                <thead>
                                 <tr>
                                   <th>#</th>
-                                  <th>Application No.</th>
-                                  <th>Date</th>
-                                  <th>Sender</th>
-                                  <th>Nature of Work</th>
-                                  <th>Status</th>
-                                  <th>Comments</th>
+                                  <th>{translate('pgr.grievanceno')}</th>
+                                  <th>{translate('pgr.grievanceDate')}</th>
+                                  <th>{translate('pgr.grievanceSender')}</th>
+                                  <th>{translate('pgr.grievanceNOW')}</th>
+                                  <th>{translate('pgr.grievanceStatus')}</th>
+                                  <th>{translate('pgr.grievanceComments')}</th>
                                 </tr>
 
                                 </thead>
@@ -811,7 +813,7 @@ class Dashboard extends Component {
                                 </tbody>
                             </Table>
                               </CardText>
-                          </Card>*/}
+                          </Card>
 
                       </Col>
                   </Row>

@@ -61,70 +61,70 @@ Request  Sample for Metadata API:
 
 /report/asset/_get<br />
 
-{
-   "RequestInfo": {
-       "apiId" : "emp",
-       "ver" : "1.0",
-       "ts" : "10-03-2017 00:00:00",
-       "action" : "create",
-       "did" : "1",
-       "key" : "abcdkey",
-       "msgId" : "20170310130900",
-       "requesterId" : "rajesh",
-       "authToken" : "39b6d8aa-e312-441e-8162-7032ae1303e1"
+{<br />
+   "RequestInfo": {<br />
+       "apiId" : "emp",<br />
+       "ver" : "1.0",<br />
+       "ts" : "10-03-2017 00:00:00",<br />
+       "action" : "create",<br />
+       "did" : "1",<br />
+       "key" : "abcdkey",<br />
+       "msgId" : "20170310130900",<br />
+       "requesterId" : "rajesh",<br />
+       "authToken" : "39b6d8aa-e312-441e-8162-7032ae1303e1"<br />
       
-   },
-    "tenantId": "default",
-    "reportName": "ImmovableAssetRegister",
-    "searchParams": [
+   },<br />
+    "tenantId": "default",<br />
+    "reportName": "ImmovableAssetRegister",<br />
+    "searchParams": [<br />
     	
-    	{
-              "name" : "assetid",
-              "input": ["1","2"]
+    	{<br />
+              "name" : "assetid",<br />
+              "input": ["1","2"]<br />
               
-        },
+        },<br />
         {
-              "name" : "assetCategory",
-              "input": "1"
+              "name" : "assetCategory",<br />
+              "input": "1"<br />
               
-        },
+        },<br />
         
         
-        {
-            "name": "fromDate",
-            "input": 1
-        },
-        {
-            "name": "toDate",
-            "input": 10
-        }
+        {<br />
+            "name": "fromDate",<br />
+            "input": 1<br />
+        },<br />
+        {<br />
+            "name": "toDate",<br />
+            "input": 10<br />
+        }<br />
         
         
         
-    ]
-}
+    ]<br />
+}<br />
 
 ########################
 
-: /report/_reload
-Request Sample for reload API:
-{
-   "RequestInfo": {
-       "apiId" : "emp",
-       "ver" : "1.0",
-       "ts" : "10-03-2017 00:00:00",
-       "action" : "create",
-       "did" : "1",
-       "key" : "abcdkey",
-       "msgId" : "20170310130900",
-       "requesterId" : "rajesh",
-       "authToken" : "3081f773-159b-455b-b977-acfd6ed2c61b"
+: /report/_reload<br />
+Request Sample for reload API:<br />
+{<br />
+   "RequestInfo": {<br />
+       "apiId" : "emp",<br />
+       "ver" : "1.0",<br />
+       "ts" : "10-03-2017 00:00:00",<br />
+       "action" : "create",<br />
+       "did" : "1",<br />
+       "key" : "abcdkey",<br />
+       "msgId" : "20170310130900",<br />
+       "requesterId" : "rajesh",<br />
+       "authToken" : "3081f773-159b-455b-b977-acfd6ed2c61b"<br />
       
-   } ,
-   "tenantId" : "default",
+   } ,<br />
+   "tenantId" : "default",<br />
   
    
-}
+}<br />
 
 
 

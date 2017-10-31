@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
+
 @Service
 @Slf4j
 public class IdGenerationRepository {
@@ -25,10 +27,10 @@ public class IdGenerationRepository {
     @Autowired
     private PropertiesManager propertiesManager;
 
-    public IdGenerationRepository(final RestTemplate restTemplate,@Value("{egov.idgen.hostname}") final String idGenHostName,
-                                  @Value("{works.numbergeneration.uri}") final String url) {
+    public IdGenerationRepository(final RestTemplate restTemplate,@Value("${egov.idgen.hostname}") final String idGenHostName,
+                                  @Value("${works.numbergeneration.uri}") final String url) {
         this.restTemplate = restTemplate;
-        this.url = url + idGenHostName;
+        this.url = idGenHostName + url;
     }
 
     public String generateAbstractEstimateNumber(final String tenantId, final RequestInfo requestInfo) {
@@ -38,6 +40,7 @@ public class IdGenerationRepository {
         idRequest.setTenantId(tenantId);
         idRequest.setFormat(propertiesManager.getWorksAbstractEstimateNumberFormat());
         idRequest.setIdName(propertiesManager.getWorksAbstractEstimateNumber());
+        idGenerationRequest.setIdRequests(Arrays.asList(idRequest));
         idGenerationRequest.setRequestInfo(requestInfo);
         try {
             response = restTemplate.postForObject(url,

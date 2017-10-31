@@ -42,7 +42,7 @@ public class AbstractEstimateService {
 			estimate.setId(UUID.randomUUID().toString().replace("-", ""));
 			estimate.setAuditDetails(setAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUsername(), false));
             String abstractEstimateNumber = idGenerationRepository.generateAbstractEstimateNumber(estimate.getTenantId(),abstractEstimateRequest.getRequestInfo());
-            estimate.setAbstractEstimateNumber(abstractEstimateNumber);
+            estimate.setAbstractEstimateNumber("AE/"+estimate.getDepartment().getCode()+abstractEstimateNumber);
 			for (final AbstractEstimateDetails details : estimate.getAbstractEstimateDetails()) {
 				details.setId(UUID.randomUUID().toString().replace("-", ""));
 				details.setAuditDetails(setAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUsername(), false));
@@ -74,7 +74,7 @@ public class AbstractEstimateService {
 						estimate.getTenantId());
 		}
 	}
-	
+
 	public AuditDetails setAuditDetails(final String userName, final Boolean isUpdate) {
 		AuditDetails auditDetails = new AuditDetails();
 		if (isUpdate) {

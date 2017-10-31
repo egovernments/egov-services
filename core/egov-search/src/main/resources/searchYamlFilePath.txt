@@ -1,1 +1,0 @@
-citizen=file://home/vishal/WaterCharge/egov-services/core/egov-search/src/main/resources/search.yml

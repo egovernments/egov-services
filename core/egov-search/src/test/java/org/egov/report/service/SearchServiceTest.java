@@ -14,7 +14,7 @@ import org.junit.Test;
 public class SearchServiceTest {
 
 	/**
-	 * Test method for {@link org.egov.report.service.SearchService#getMetaData(org.egov.domain.model.MetaDataRequest)}.
+	 * Test method for {@link org.egov.search.service.SearchService#getMetaData(org.egov.domain.model.MetaDataRequest)}.
 	 */
 	@Test
 	public void testGetMetaData() {
@@ -22,7 +22,7 @@ public class SearchServiceTest {
 	}
 
 	/**
-	 * Test method for {@link org.egov.report.service.SearchService#getSuccessResponse(org.egov.swagger.model.MetadataResponse, org.egov.common.contract.request.RequestInfo, java.lang.String)}.
+	 * Test method for {@link org.egov.search.service.SearchService#getSuccessResponse(org.egov.swagger.model.MetadataResponse, org.egov.common.contract.request.RequestInfo, java.lang.String)}.
 	 */
 	@Test
 	public void testGetSuccessResponse() {
@@ -30,7 +30,7 @@ public class SearchServiceTest {
 	}
 
 	/**
-	 * Test method for {@link org.egov.report.service.SearchService#getFailureResponse(org.egov.common.contract.request.RequestInfo, java.lang.String)}.
+	 * Test method for {@link org.egov.search.service.SearchService#getFailureResponse(org.egov.common.contract.request.RequestInfo, java.lang.String)}.
 	 */
 	@Test
 	public void testGetFailureResponse() {
@@ -38,7 +38,7 @@ public class SearchServiceTest {
 	}
 
 	/**
-	 * Test method for {@link org.egov.report.service.SearchService#reloadResponse(org.egov.common.contract.request.RequestInfo)}.
+	 * Test method for {@link org.egov.search.service.SearchService#reloadResponse(org.egov.common.contract.request.RequestInfo)}.
 	 */
 	@Test
 	public void testReloadResponse() {
@@ -46,7 +46,7 @@ public class SearchServiceTest {
 	}
 
 	/**
-	 * Test method for {@link org.egov.report.service.SearchService#getReportData(org.egov.swagger.model.ReportRequest)}.
+	 * Test method for {@link org.egov.search.service.SearchService#getReportData(org.egov.swagger.model.ReportRequest)}.
 	 */
 	@Test
 	public void testGetReportData() {

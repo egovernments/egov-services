@@ -60,6 +60,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class EmployeeAssignmentValidator implements Validator {
@@ -88,11 +89,18 @@ public class EmployeeAssignmentValidator implements Validator {
         List<Assignment> assignments = employee.getAssignments();
 
 		/*if (isPassportvalid(employee)) {
-			throw new InvalidDataException("passportno", "Should provide a valid Passport Number", "null");
+            throw new InvalidDataException("passportno", "Should provide a valid Passport Number", "null");
 		}*/
 
         List<Assignment> primaryAssignments = new ArrayList<>();
         DateFormat dateFormat = new SimpleDateFormat("dd MMMMM, yyyy");
+
+        List<Boolean> primaryList = assignments.stream().map(assignment -> assignment.getIsPrimary()).collect(Collectors.toList());
+        if (!primaryList.contains(true)) {
+            errors.rejectValue("employee.assignments", "invalid",
+                    "No Primary Assignment Found In Request. Please Enter At Least One Primary Assignment");
+        }
+
 
         // Used to mark primary assignments for conveying the index of
         // assignment with errors
@@ -144,11 +152,6 @@ public class EmployeeAssignmentValidator implements Validator {
                 }
             }
 
-            // check for atleast 1 primary assignment
-            if (primaryAssignments.size() == 0) {
-                errors.rejectValue("employee.assignments", "invalid",
-                        "No Primary Assignment Found In Request. Please Enter At Least One Primary Assignment");
-            }
 
             // check if assignmentDates are overlapping for primary assignments
             for (int i = 0; i < primaryAssignments.size(); i++) {
@@ -192,6 +195,7 @@ public class EmployeeAssignmentValidator implements Validator {
                 }
             }
         }
+
     }
 
     public boolean isPassportvalid(Employee emp) {

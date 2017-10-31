@@ -5,7 +5,7 @@ import java.util.List;
 import org.egov.lcms.models.Case;
 import org.egov.lcms.models.CaseSearchCriteria;
 import org.egov.lcms.repository.builder.CaseBuilder;
-import org.egov.lcms.repository.rowmapper.caseRowMapper;
+import org.egov.lcms.repository.rowmapper.CaseRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -29,7 +29,7 @@ public class CaseSearchRepository {
 	JdbcTemplate jdbcTemplate;
 	
 	@Autowired
-	caseRowMapper caseRowMapper;
+	CaseRowMapper caseRowMapper;
 	
 	/**
 	 * This will search the cases based on the given casesearchCriteria

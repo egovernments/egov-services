@@ -54,7 +54,7 @@ public class AdvocatePayment {
 
 	@NonNull
 	@JsonProperty("invoiceDoucment")
-	private String invoiceDoucment = null;
+	private Document invoiceDoucment = null;
 
 	@JsonProperty("tenantId")
 	private String tenantId = null;

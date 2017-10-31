@@ -1,6 +1,5 @@
 package org.egov.works.estimate.domain.service;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -12,7 +11,6 @@ import org.egov.works.estimate.domain.exception.ErrorCode;
 import org.egov.works.estimate.domain.exception.InvalidDataException;
 import org.egov.works.estimate.domain.repository.AbstractEstimateRepository;
 import org.egov.works.estimate.web.contract.AbstractEstimateRequest;
-import org.egov.works.estimate.web.contract.AbstractEstimateResponse;
 import org.egov.works.estimate.web.contract.AbstractEstimateSearchContract;
 import org.egov.works.estimate.web.model.AbstractEstimate;
 import org.egov.works.estimate.web.model.AbstractEstimateDetails;

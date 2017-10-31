@@ -39,6 +39,8 @@ serviceMaps:
         dbType: JSONB
         
       - jsonPath: $.summons.*.departmentName
+        type: JSON
+        dbType: JSONB 
       
       - jsonPath: $.summons.*.sectionApplied
       
@@ -533,8 +535,9 @@ serviceMaps:
          type: Boolean
 
        - jsonPath: $.advocatePayments.*.invoiceDoucment
-         type: STRING
-
+         type: JSON
+         dbType: JSONB
+		 
        - jsonPath: $.advocatePayments.*.tenantId
          type: STRING
 
@@ -618,8 +621,9 @@ serviceMaps:
          type: Boolean
 
        - jsonPath: $.advocatePayments.*.invoiceDoucment
-         type: STRING
-
+         type: JSON
+         dbType: JSONB
+		 
        - jsonPath: $.advocatePayments.*.auditDetails.createdBy
          type: STRING
        
@@ -697,7 +701,7 @@ serviceMaps:
         
   - version: 1.0
     name: lcms-update-opinion
-    description: create opinion in lcms
+    description: update opinion in lcms
     fromTopic: lcms-opinion-update
     queryMaps:
       - query: UPDATE egov_lcms_opinion SET opinionRequestDate=?,departmentName=?,opinionOn=?,documents=?,opinionDescription=?,opinionsBy=?,additionalAdvocate=?,inWardDate=?,tenantId=?,stateId=?,lastModifiedBy=?,lastModifiedTime=? WHERE code=?;
@@ -790,6 +794,8 @@ serviceMaps:
         type: LONG
     
       - jsonPath: $.cases.*.summon.departmentName
+        type: JSON
+        dbType: JSONB
           
       - jsonPath: $.cases.*.summon.year
     

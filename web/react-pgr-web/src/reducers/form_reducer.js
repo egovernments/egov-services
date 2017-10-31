@@ -537,7 +537,7 @@ export default(state = defaultState, action) => {
   case "SET_FORM_DATA":
     return {
       ...state,
-      form: action.formData
+      form: action.formData || {}
     }
 	case "SET_OWNER_STATE":
 		return {

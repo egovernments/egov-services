@@ -257,81 +257,81 @@ var dat = {
         "multiple":false,
         "jsonPath":"Asset",
 				"fields": [
-					// {
-          //   "name": "searchLocation",
-          //   "jsonPath": "Asset.captLocationDetails",
-          //   "label": "search Location",
-          //   "pattern": "",
-          //   "type": "googleMaps",
-          //   "url": "",
-          //   "isRequired": false,
-          //   "isDisabled": false,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": "",
-					// 	"depedants":[
-					// 		{
-					// 				"jsonPath":"Asset.latitude",
-					// 				"type":"textField",
-					// 				"pattern":"`${getVal('Asset.captLocationDetails.lat')}`",
-					// 				"rg":"",
-					// 				"isRequired": false,
-					// 				"isDisabled": true,
-					// 				"requiredErrMsg": "",
-					// 				"patternErrMsg": ""
-					// 			},
-					// 		{
-					// 			"jsonPath":"Asset.longitude",
-					// 			"type":"textField",
-					// 			"pattern":"`${getVal('Asset.captLocationDetails.lng')}`",
-					// 			"rg":"",
-					// 			"isRequired": false,
-					// 			"isDisabled": true,
-					// 			"requiredErrMsg": "",
-					// 			"patternErrMsg": "",
-					// 			"defaultValue": localStorage.getItem("longitude")
-					// 		}
-					//
-					// 	]
-          // },
-          // {
-          //   "name": "Location",
-          //   "jsonPath": "Asset.locationDetails",
-          //   "label": "ac.create.Location",
-          //   "pattern": "",
-          //   "type": "text",
-          //   "url": "",
-          //   "isRequired": false,
-          //   "isDisabled": false,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
-          // {
-          //   "name": "Longitude",
-          //   "jsonPath": "Asset.longitude",
-					// 	//"jsonPathLng": "Asset.longitude",
-          //   "label": "ac.create.Longitude",
-          //   "pattern": "",
-          //   "type": "text",
-          //   "url": "",
-          //   "isRequired": false,
-          //   "isDisabled": true,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": "",
-					// 	"defaultValue": localStorage.getItem("longitude")
-          // },
-          // {
-          //   "name": "Latitude",
-          //   "jsonPath": "Asset.latitude",
-          //   "label": "ac.create.Latitude",
-          //   "pattern": "",
-          //   "type": "text",
-          //   "url": "",
-          //   "isRequired": false,
-          //   "isDisabled": true,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": "",
-					// "defaultValue": ""
-          // },
+					{
+            "name": "searchLocation",
+            "jsonPath": "Asset.captLocationDetails",
+            "label": "search Location",
+            "pattern": "",
+            "type": "googleMaps",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+						"depedants":[
+							{
+									"jsonPath":"Asset.latitude",
+									"type":"textField",
+									"pattern":"`${getVal('Asset.captLocationDetails.lat')}`",
+									"rg":"",
+									"isRequired": false,
+									"isDisabled": true,
+									"requiredErrMsg": "",
+									"patternErrMsg": ""
+								},
+							{
+								"jsonPath":"Asset.longitude",
+								"type":"textField",
+								"pattern":"`${getVal('Asset.captLocationDetails.lng')}`",
+								"rg":"",
+								"isRequired": false,
+								"isDisabled": true,
+								"requiredErrMsg": "",
+								"patternErrMsg": "",
+								"defaultValue": localStorage.getItem("longitude")
+							}
+
+						]
+          },
+          {
+            "name": "Location",
+            "jsonPath": "Asset.locationDetails",
+            "label": "ac.create.Location",
+            "pattern": "",
+            "type": "text",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "Longitude",
+            "jsonPath": "Asset.longitude",
+						//"jsonPathLng": "Asset.longitude",
+            "label": "ac.create.Longitude",
+            "pattern": "",
+            "type": "text",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+						"defaultValue": localStorage.getItem("longitude")
+          },
+          {
+            "name": "Latitude",
+            "jsonPath": "Asset.latitude",
+            "label": "ac.create.Latitude",
+            "pattern": "",
+            "type": "text",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+					"defaultValue": ""
+          },
           {
             "name": "Address",
             "jsonPath": "Asset.address",
@@ -656,7 +656,7 @@ var dat = {
             "jsonPath": "Asset.description",
             "label": "ac.create.Asset.description",
             "pattern": "",
-            "type": "text",
+            "type": "textarea",
             "url": "",
             "isRequired": true,
             "isDisabled": false,
@@ -670,7 +670,7 @@ var dat = {
             "pattern": "",
             "type": "singleValueList",
 						//"url": "",
-            "url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Fixed Assets|$..name|$..name",
+            "url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Fixed Assets|$..code|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -682,7 +682,7 @@ var dat = {
             "label": "ac.create.Accumulated.Depreciation.Account",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egf-master/accountcodepurposes/_search?tenantId=default&name=Accumulated Depreciation|$..name|$..name",
+            "url": "/egf-master/accountcodepurposes/_search?tenantId=default&name=Accumulated Depreciation|$..code|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -694,7 +694,7 @@ var dat = {
             "label": "ac.create.Revaluation.Reserve.Account",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egf-master/accountcodepurposes/_search?tenantId=default&name=Revaluation Reserve Account|$..name|$..name",
+            "url": "/egf-master/accountcodepurposes/_search?tenantId=default&name=Revaluation Reserve Account|$..code|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -706,7 +706,7 @@ var dat = {
             "label": "ac.create.Depreciation.Expenses.Account",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egf-master/accountcodepurposes/_search?tenantId=default&name=Depreciation Expense Account|$..name|$..name",
+            "url": "/egf-master/accountcodepurposes/_search?tenantId=default&name=Depreciation Expense Account|$..code|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -930,8 +930,8 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "Asset Code"},{label: "ac.create.Asset.Name"},  {label: "ac.create.Mode.of.Acquisition"}, {label: "Date of Creation"}],
-			"values": ["code","name", "modeOfAcquisition", "dateOfCreation"],
+			"header": [{label: "Asset Code"},{label: "ac.create.Asset.Name"},  {label: "ac.create.Asset.SubCategory.Name"},{label: "ac.create.Original.Value.of.Asset"}, {label: "Date of Creation", "isDate": true}],
+			"values": ["code","name", "assetCategory.name", "originalValue", "dateOfCreation"],
 			"resultPath": "Assets",
 			// "rowClickUrlUpdate": "/update/asset/assetMovable/{id}",
 			 "rowClickUrlView": "/non-framework/asset/master/assetImmovableView/{id}"
@@ -1018,6 +1018,18 @@ var dat = {
   					// 	"requiredErrMsg": "",
   					// 	"patternErrMsg": ""
   					// },
+						{
+  						"name": "AssetSubType",
+  						"jsonPath": "Assets[0].assetCategory.name",
+  						"label": "ac.create.Asset.SubCategory.Name",
+  						"pattern": "",
+  						"type": "text",
+							"url": "",
+							"isRequired": true,
+  						"isDisabled": false,
+  						"requiredErrMsg": "",
+  						"patternErrMsg": ""
+  					},
             {
   						"name": "Department",
   						"jsonPath": "Assets[0].departmentCode",

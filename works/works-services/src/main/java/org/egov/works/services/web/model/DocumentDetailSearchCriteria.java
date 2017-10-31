@@ -1,9 +1,10 @@
 package org.egov.works.services.web.model;
 
 import lombok.*;
-import org.egov.works.services.web.contract.DocumentDetailSearchRequest;
 
 import java.util.List;
+
+import org.egov.works.services.web.contract.DocumentDetailSearchRequest;
 
 @Getter
 @Setter

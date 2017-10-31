@@ -152,7 +152,7 @@ export default class assetImmovableReport extends Component {
 												<b>दिनांक</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "center"}}>
-												<b>N/A</b>
+												<b>{this.props.data[18]?this.props.data[18]:""}</b>
 										</td>
 									</tbody>
 
@@ -384,13 +384,13 @@ export default class assetImmovableReport extends Component {
 											<b>{this.props.data[19]?this.props.data[19]:""}</b>
 									</td>
 									<td style={{textAlign: "center"}} >
+											<b>{this.props.data[20]?this.props.data[20]:""}</b>
+									</td>
+									<td style={{textAlign: "center"}} >
 											<b>N/A</b>
 									</td>
 									<td style={{textAlign: "center"}} >
-											<b>{this.props.data[11]?this.props.data[11]:""}</b>
-									</td>
-									<td style={{textAlign: "center"}} >
-											<b>{this.props.data[25]?this.props.data[25]:""}</b>
+											<b>N/A</b>
 									</td>
 									<td style={{textAlign: "center"}} >
 											<b>{this.props.data[26]?this.props.data[26]:""}</b>
@@ -399,10 +399,10 @@ export default class assetImmovableReport extends Component {
 											<b>{this.props.data[1]?this.props.data[1]:""}</b>
 									</td>
 									<td style={{textAlign: "center"}} >
-											<b>N/A</b>
+											<b>{this.props.data[24]?this.props.data[24]:""}</b>
 									</td>
 									<td style={{textAlign: "center"}} >
-											<b>N/A</b>
+											<b>{this.props.data[25]?this.props.data[25]:""}</b>
 									</td>
 									<td style={{textAlign: "center"}} >
 											<b>{this.props.data[27]?this.props.data[27]:""}</b>
@@ -414,10 +414,10 @@ export default class assetImmovableReport extends Component {
 											<b>{this.props.data[29]?this.props.data[29]:""}</b>
 									</td>
 									<td style={{textAlign: "center"}} >
-											<b>Data</b>
+											<b>N/A</b>
 									</td>
 									<td style={{textAlign: "center"}} >
-											<b>Data</b>
+											<b>N/A</b>
 									</td>
 									<td style={{textAlign: "center"}} >
 											<b>{this.props.data[30]?this.props.data[30]:""}</b>

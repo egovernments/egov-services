@@ -78,26 +78,11 @@ Request  Sample for Metadata API:
     "reportName": "ImmovableAssetRegister",<br />
     "searchParams": [<br />
     	
-    	{<br />
-              "name" : "assetid",<br />
-              "input": ["1","2"]<br />
+    	{
+              "name" : "assetid"
+              "input": ["1","2"]
               
-        },<br />
-        {
-              "name" : "assetCategory",<br />
-              "input": "1"<br />
-              
-        },<br />
-        
-        
-        {<br />
-            "name": "fromDate",<br />
-            "input": 1<br />
-        },<br />
-        {<br />
-            "name": "toDate",<br />
-            "input": 10<br />
-        }<br />
+        }
         
         
         

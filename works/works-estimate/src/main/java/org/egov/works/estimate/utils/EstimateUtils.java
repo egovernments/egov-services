@@ -1,7 +1,6 @@
 package org.egov.works.estimate.utils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.egov.works.commons.domain.model.AppConfiguration;
 import org.egov.works.estimate.web.contract.MasterDetails;
@@ -22,7 +21,6 @@ import net.minidev.json.JSONArray;
 @Service
 public class EstimateUtils {
 
-	public static final String WORKS_MASTER_NAME = "AppConfiguration";
 	public static final String MODULE_CODE = "Works";
 
 	private final RestTemplate restTemplate;
@@ -38,7 +36,18 @@ public class EstimateUtils {
 		this.mdmsBySearchCriteriaUrl = mdmsServiceHostname + mdmsBySearchCriteriaUrl;
 	}
 
-	public List<AppConfiguration> getAppConfigurationData(final String keyName, final String tenantId,
+	/**
+	 * 
+	 * @param objectName
+	 *            accepts the name of entity like : ScheduleOfRate,Contractor
+	 *            camelcase should be follwed
+	 * @param tenantId
+	 *            tenantId for which the data to should be retrived
+	 * @param requestInfo
+	 * @return the json map it to your object.
+	 */
+
+	public JSONArray getAppConfigurationData(final String objectName, final String tenantId,
 			final RequestInfo requestInfo) {
 		MasterDetails[] masterDetailsArray;
 		ModuleDetails[] moduleDetailsArray;
@@ -49,8 +58,7 @@ public class EstimateUtils {
 		ObjectMapper mapper = new ObjectMapper();
 
 		masterDetailsArray = new MasterDetails[1];
-		masterDetailsArray[0] = MasterDetails.builder().name(WORKS_MASTER_NAME)
-				.filter("[?(@.keyName == '" + keyName + "')]").build();
+		masterDetailsArray[0] = MasterDetails.builder().name(objectName).build();
 		moduleDetailsArray = new ModuleDetails[1];
 
 		moduleDetailsArray = new ModuleDetails[1];
@@ -65,12 +73,13 @@ public class EstimateUtils {
 
 		acResponseList = new ArrayList<AppConfiguration>();
 
-		responseJSONArray = mdmsResponse.getMdmsRes().get(MODULE_CODE).get(WORKS_MASTER_NAME);
+		// responseJSONArray =
 
-		for (int i = 0; i < responseJSONArray.size(); i++) {
-			acResponseList.add(mapper.convertValue(responseJSONArray.get(i), AppConfiguration.class));
-		}
+		// for (int i = 0; i < responseJSONArray.size(); i++) {
+		// acResponseList.add(mapper.convertValue(responseJSONArray.get(i),
+		// AppConfiguration.class));
+		// }
 
-		return acResponseList;
+		return mdmsResponse.getMdmsRes().get(MODULE_CODE).get(objectName);
 	}
 }

@@ -273,6 +273,8 @@ definitions:
         items:
           $ref: '#/definitions/MarketRate'
         maximum: 50
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - tenantId
       - code

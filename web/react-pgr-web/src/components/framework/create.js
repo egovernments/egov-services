@@ -1102,7 +1102,7 @@ class Report extends Component {
         <form onSubmit={(e) => {
           create(e)
         }}>
-        <div style={{"textAlign": "right", "color": "#FF0000", "margin": "15px"}}><i>( * ) Fields are mandatory</i></div>
+        <div style={{"textAlign": "right", "color": "#FF0000", "margin": "15px"}}><i>( * ) {translate("framework.required.note")}</i></div>
         {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields
                                     groups={mockData[`${moduleName}.${actionName}`].groups}
                                     noCols={mockData[`${moduleName}.${actionName}`].numCols}

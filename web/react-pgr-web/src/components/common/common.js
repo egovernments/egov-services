@@ -2048,7 +2048,7 @@ var localization_EN_Data = {
 "reports.asset.defectliablitymonth":"Defectliablity Month",
 "reports.asset.defectliablityday":"Defectliablity Day",
 "reports.asset.defectliablityday":"Defectliablity Day",
-
+"framework.required.note": "Fields are mandatory"
 
 
 
@@ -3548,8 +3548,8 @@ var localization_MR_Data = {
 "error.license.documentendpoint": " document end point error-Marathi",
 "error.license.locationendpoint": " location end point error-Marathi",
 "error.license.propertyendpoint ": " proeprty endpoint error-Marathi",
-"error.license.feeDetailYearNotFound ": "Financial Does not exists for Current/Future Year-Marathi"
-
+"error.license.feeDetailYearNotFound ": "Financial Does not exists for Current/Future Year-Marathi",
+"framework.required.note": "Fields are mandatory-Marathi"
 }
 
 export function translate(locale_text) {

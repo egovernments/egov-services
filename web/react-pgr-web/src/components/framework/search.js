@@ -300,6 +300,7 @@ class Search extends Component {
         <form onSubmit={(e) => {
           search(e)
         }}>
+        <div style={{"textAlign": "right", "color": "#FF0000", "margin": "15px"}}><i>( * ) {translate("framework.required.note")}</i></div>
         {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
           <div style={{"textAlign": "center"}}>
             <br/>

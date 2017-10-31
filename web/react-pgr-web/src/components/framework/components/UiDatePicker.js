@@ -34,7 +34,7 @@ export default class UiEmailField extends Component {
 	   		} else {
 	   			return timeLong;
 	   		}
-   		}
+   		} else if(!timeLong) return '';
    	}
 
 	renderDatePicker = (item) => {

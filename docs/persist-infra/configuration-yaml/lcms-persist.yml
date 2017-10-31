@@ -247,7 +247,7 @@ serviceMaps:
         
   - version: 1.0
     name: lcms-assign-advocate
-    description: create opinion in lcms
+    description: create assign advocate in lcms
     fromTopic: lcms-assign-advocate
     queryMaps:
       - query: INSERT INTO egov_lcms_case_advocate (code,casecode,advocate,assignedDate) VALUES (?,?,?,?);
@@ -643,7 +643,7 @@ serviceMaps:
        - jsonPath: $.advocatePayments.*.invoiceDoucment
          type: JSON
          dbType: JSONB
-		 
+     
        - jsonPath: $.advocatePayments.*.auditDetails.createdBy
          type: STRING
        
@@ -692,7 +692,7 @@ serviceMaps:
     description: create opinion in lcms
     fromTopic: lcms-opinion-create
     queryMaps:
-      - query: INSERT INTO egov_lcms_opinion (code,opinionRequestDate, departmentName, opinionOn, documents,opinionDescription, opinionsBy, additionalAdvocate,inWardDate, tenantId, createdBy,lastModifiedBy, createdTime,lastModifiedTime,stateId)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+      - query: INSERT INTO egov_lcms_opinion (code,opinionRequestDate, departmentName, opinionOn, documents,opinionDescription, opinionsBy, additionalAdvocate,inWardDate, tenantId, createdBy,lastModifiedBy,createdTime,lastModifiedTime,stateId)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
         basePath: $.opinions.*
         jsonMaps:
         - jsonPath: $.opinions.*.code
@@ -711,12 +711,16 @@ serviceMaps:
         - jsonPath: $.opinions.*.inWardDate
           type: LONG
         - jsonPath: $.opinions.*.tenantId
-        - jsonPath: $.opinions.*.auditDetails.createdBy
-        - jsonPath: $.opinions.*.auditDetails.lastModifiedBy
-        - jsonPath: $.opinions.*.auditDetails.createdTime
-          type: LONG
-        - jsonPath: $.opinions.*.auditDetails.lastModifiedTime
-          type: LONG
+        - jsonPath: $.RequestInfo.userInfo.id
+          type: STRING
+        - jsonPath: $.RequestInfo.userInfo.id
+          type: STRING  
+        - jsonPath: createdTime
+          type: CURRENTDATE
+          dbType: LONG
+        - jsonPath: lastModifiedTime
+          type: CURRENTDATE
+          dbType: LONG
         - jsonPath: $.opinions.*.stateId
         
   - version: 1.0
@@ -743,10 +747,11 @@ serviceMaps:
           type: LONG
         - jsonPath: $.opinions.*.tenantId
         - jsonPath: $.opinions.*.stateId
-        - jsonPath: $.opinions.*.auditDetails.lastModifiedBy
-          type: LONG
-        - jsonPath: $.opinions.*.auditDetails.lastModifiedTime
-          type: LONG
+        - jsonPath: $.RequestInfo.userInfo.id
+          type: STRING
+        - jsonPath: lastModifiedTime
+          type: CURRENTDATE
+          dbType: LONG
         - jsonPath: $.opinions.*.code
                 
   - version: 1.0
@@ -924,3 +929,111 @@ serviceMaps:
       - jsonPath: $.advocatesDetails.*.fee
         type: DOUBLE
        
+       
+  - version: 1.0
+    name: lcms-create-hearingdetails
+    description: create hearingdetails in lcms
+    fromTopic: lcms-hearingdetails-create
+    queryMaps:
+    - query: INSERT INTO egov_lcms_hearing_details (code,caseJudgeMent,caseFinalDecision,caseStatus,nextHearingDate,attendees,judges,tenantId,casecode,judgeMentDate,advocateOpinion,furtherProcesssDetails,darkhasthDueDate,createdBy,lastModifiedBy,createdTime,lastModifiedTime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+      basePath: $.cases.*.hearingDetails.*
+      jsonMaps:
+      - jsonPath: $.hearingDetails.*.code
+      
+      - jsonPath: $.hearingDetails.*.caseJudgeMent
+      
+      - jsonPath: $.hearingDetails.*.caseFinalDecision
+      
+      - jsonPath: $.hearingDetails.*.caseStatus
+        type: JSON
+        dbType: JSONB
+        
+      - jsonPath: $.hearingDetails.*.nextHearingDate
+        type: LONG
+        
+      - jsonPath: $.hearingDetails.*.attendees
+        type: JSON
+        dbType: JSONB
+        
+      - jsonPath: $.hearingDetails.*.judges
+        type: JSON
+        dbType: JSONB          
+        
+      - jsonPath: $.hearingDetails.*.tenantId
+      
+      - jsonPath: $.cases[?({code} in @.hearingDetails[*].code)].code
+        
+      - jsonPath: $.hearingDetails.*.judgeMentDate
+        type: LONG
+        
+      - jsonPath: $.hearingDetails.*.advocateOpinion
+        
+      - jsonPath: $.hearingDetails.*.furtherProcesssDetails
+        
+      - jsonPath: $.hearingDetails.*.darkhasthDueDate
+        type: LONG
+       
+      - jsonPath: $.RequestInfo.userInfo.id
+        type: STRING
+
+      - jsonPath: $.RequestInfo.userInfo.id
+        type: STRING
+
+      - jsonPath: createdTime
+        type: CURRENTDATE
+        dbType: LONG         
+
+      - jsonPath: lastModifiedTime
+        type: CURRENTDATE
+        dbType: LONG
+          
+          
+  - version: 1.0
+    name: lcms-update-hearingdetails
+    description: update hearing details in lcms
+    fromTopic: lcms-hearingdetails-update
+    queryMaps:
+    - query: UPDATE egov_lcms_hearing_details SET caseJudgeMent=?,caseFinalDecision=?,caseStatus=?,nextHearingDate=?,attendees=?,judges=?,tenantId=?,casecode=?,judgeMentDate=?,advocateOpinion=?,furtherProcesssDetails=?,darkhasthDueDate=?,lastModifiedBy=?,lastModifiedTime=? WHERE code=?;
+      basePath: $.cases.*.hearingDetails.*
+      jsonMaps:        
+      - jsonPath: $.hearingDetails.*.caseJudgeMent
+      
+      - jsonPath: $.hearingDetails.*.caseFinalDecision
+      
+      - jsonPath: $.hearingDetails.*.caseStatus
+        type: JSON
+        dbType: JSONB
+        
+      - jsonPath: $.hearingDetails.*.nextHearingDate
+        type: LONG
+        
+      - jsonPath: $.hearingDetails.*.attendees
+        type: JSON
+        dbType: JSONB
+        
+      - jsonPath: $.hearingDetails.*.judges
+        type: JSON
+        dbType: JSONB          
+        
+      - jsonPath: $.hearingDetails.*.tenantId
+      
+      - jsonPath: $.cases[?({code} in @.hearingDetails[*].code)].code
+        
+      - jsonPath: $.hearingDetails.*.judgeMentDate
+        type: LONG
+        
+      - jsonPath: $.hearingDetails.*.advocateOpinion
+        
+      - jsonPath: $.hearingDetails.*.furtherProcesssDetails
+        
+      - jsonPath: $.hearingDetails.*.darkhasthDueDate
+        type: LONG
+        
+      - jsonPath: $.RequestInfo.userInfo.id
+        type: STRING
+      
+      - jsonPath: lastModifiedTime
+        type: CURRENTDATE
+        dbType: LONG
+        
+      - jsonPath: $.hearingDetails.*.code    

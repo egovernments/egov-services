@@ -209,4 +209,27 @@ public class CaseService {
 				caseRequest.getCases());
 	}
 
+	public CaseResponse createHearingDetails(CaseRequest caseRequest) throws Exception {
+		List<Case> cases = caseRequest.getCases();
+		RequestInfo requestInfo = caseRequest.getRequestInfo();
+		for (Case casee : cases) {
+			if (casee.getHearingDetails() != null && casee.getHearingDetails().size() > 0) {
+				for (HearingDetails hearingDetails : casee.getHearingDetails()) {
+					String code = uniqueCodeGeneration.getUniqueCode(hearingDetails.getTenantId(), requestInfo,
+							propertiesManager.getHearingDetailsUlbFormat(),
+							propertiesManager.getHearingDetailsUlbName(), Boolean.FALSE, null);
+					hearingDetails.setCode(code);
+				}
+			}
+		}
+
+		kafkaTemplate.send(propertiesManager.getHearingCreateValidated(), caseRequest);
+		return getResponseInfo(caseRequest);
+	}
+
+	public CaseResponse updateHearingDetails(CaseRequest caseRequest) {
+		kafkaTemplate.send(propertiesManager.getHearingUpdateValidated(), caseRequest);
+		return getResponseInfo(caseRequest);
+	}
+
 }

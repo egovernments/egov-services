@@ -129,30 +129,19 @@ const content=[
                 to: '#/non-framework/citizenServices/fireNoc/fill/create',
             }
         ],
-    },
+    }
+    ,
     {
         icon: 'icon-class-name',
-        label: 'Grievance Redressal',
+        label: 'Grievance',
         content: [
             {
                 icon: 'icon-class-name',
-                label: 'Create Grievance',
+                label: 'New Grievance',
                 to: '#/pgr/createGrievance',
             }
         ],
     }
-    // ,
-    // {
-    //     icon: 'icon-class-name',
-    //     label: 'Grievance',
-    //     content: [
-    //         {
-    //             icon: 'icon-class-name',
-    //             label: 'New Grievance',
-    //             to: '#/pgr/createGrievance',
-    //         }
-    //     ],
-    // }
 ];
 
 const style={
@@ -268,7 +257,7 @@ class Dashboard extends Component {
 
     let current = this;
     let currentUser=JSON.parse(localStorage.userRequest);
-    let count = 3, _state = {};
+    let count = 4, _state = {};
     const checkCountAndSetState = function(key, res) {
       _state[key] = res;
       count--;
@@ -324,21 +313,21 @@ class Dashboard extends Component {
         checkCountAndSetState("citizenServices", []);
       })
 
-      // Api.commonApiPost("/citizen-services/v1/requests/_search", {userId:currentUser.id}, {}, null, true).then(function(res3){
-      //   if(res3 && res3.serviceReq && res3.serviceReq) {
-      //     res3.serviceReq.sort(function(v1, v2) {
-      //       return v1.auditDetails.createdDate > v2.auditDetails.createdDate ? -1 : (v1.auditDetails.createdDate < v2.auditDetails.createdDate ? 1 : 0);
-      //     });
-      //
-      //
-      //
-      //     checkCountAndSetState("serviceRequestsTwo", res3.serviceReq);
-      //   } else {
-      //     checkCountAndSetState("serviceRequestsTwo", []);
-      //   }
-      // }, function(err) {
-      //   checkCountAndSetState("serviceRequestsTwo", []);
-      // })
+      Api.commonApiPost("/citizen-services/v1/requests/_search", {userId:currentUser.id}, {}, null, true).then(function(res3){
+        if(res3 && res3.serviceReq && res3.serviceReq) {
+          res3.serviceReq.sort(function(v1, v2) {
+            return v1.auditDetails.createdDate > v2.auditDetails.createdDate ? -1 : (v1.auditDetails.createdDate < v2.auditDetails.createdDate ? 1 : 0);
+          });
+
+
+
+          checkCountAndSetState("serviceRequestsTwo", res3.serviceReq);
+        } else {
+          checkCountAndSetState("serviceRequestsTwo", []);
+        }
+      }, function(err) {
+        checkCountAndSetState("serviceRequestsTwo", []);
+      })
 
       /*Promise.all([
           Api.commonApiPost("/pgr/seva/v1/_search",{userId:currentUser.id},{}),
@@ -496,7 +485,6 @@ class Dashboard extends Component {
 
    componentDidMount() {
       let self = this;
-
       if(localStorage.token && localStorage.userRequest && !localStorage.actions) {
         this.props.login(false, localStorage.token, JSON.parse(localStorage.userRequest), true);
         let roleCodes = [];
@@ -504,33 +492,31 @@ class Dashboard extends Component {
         for (var i = 0; i < UserRequest.roles.length; i++) {
           roleCodes.push(UserRequest.roles[i].code);
         }
-        if(localStorage.getItem('type') === constants.ROLE_EMPLOYEE){
-          Api.commonApiPost("access/v1/actions/_get",{},{tenantId:localStorage.tenantId, roleCodes, enabled:true}).then(function(response){
-            var actions = response.actions;
-            var roles = JSON.parse(localStorage.userRequest).roles;
-            actions.unshift({
-              "id": 12299,
-              "name": "SearchRequest",
-              "url": "/search/service/requests",
-              "displayName": "Search Service Requests",
-              "orderNumber": 35,
-              "queryParams": "",
-              "parentModule": 75,
-              "enabled": true,
-              "serviceCode": "",
-              "tenantId": null,
-              "createdDate": null,
-              "createdBy": null,
-              "lastModifiedDate": null,
-              "lastModifiedBy": null,
-              "path": "Service Request.Requests.Search"
-            });
-            localStorage.setItem("actions", JSON.stringify(actions));
-            self.props.setActionList(actions);
-          }, function(err) {
-              console.log(err);
+        Api.commonApiPost("access/v1/actions/_get",{},{tenantId:localStorage.tenantId, roleCodes, enabled:true}).then(function(response){
+          var actions = response.actions;
+          var roles = JSON.parse(localStorage.userRequest).roles;
+          actions.unshift({
+            "id": 12299,
+            "name": "SearchRequest",
+            "url": "/search/service/requests",
+            "displayName": "Search Service Requests",
+            "orderNumber": 35,
+            "queryParams": "",
+            "parentModule": 75,
+            "enabled": true,
+            "serviceCode": "",
+            "tenantId": null,
+            "createdDate": null,
+            "createdBy": null,
+            "lastModifiedDate": null,
+            "lastModifiedBy": null,
+            "path": "Service Request.Requests.Search"
           });
-        }
+          localStorage.setItem("actions", JSON.stringify(actions));
+          self.props.setActionList(actions);
+        }, function(err) {
+            console.log(err);
+        });
 
         if(window.location.href.indexOf("?") > -1 && window.location.href.indexOf("link") > -1) {
           var query = window.location.href.split("?")[1].split("&");
@@ -677,7 +663,7 @@ class Dashboard extends Component {
     //filter citizen services
     let servicesMenus=[];
     let serviceTypeMenus=[];
-    // let {serviceRequestsTwo}=this.state;
+    let {serviceRequestsTwo}=this.state;
 
     if(!this.state.selectedServiceCode)
       servicesMenus = this.state.citizenServices.filter(
@@ -762,14 +748,11 @@ class Dashboard extends Component {
                       </Col>
 
                       <Col md={10}>
-                      <br/>
-                          {/*
+                          <br/>
                           <Card>
                             <CardHeader title="My Service Requests"/>
                               <CardText>
-                              <div className="table-responsive">
-
-                                <table id="requestTable">
+                                <Table id="requestTable">
                                     <thead>
                                         <tr>
                                           <th>
@@ -802,36 +785,33 @@ class Dashboard extends Component {
 
                                         }) }
                                     </tbody>
-                                </table>
-                                </div>
+                                </Table>
                               </CardText>
                           </Card>
-                          */}
-                        <br/>
-                        <Card>
+                          <br/>
+
+                        {/*  <Card>
                             <CardHeader title="My Grievances"/>
                               <CardText>
-                              <div className="table-responsive">
-                              <table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered className="table-striped">
+                              <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
                                <thead>
                                 <tr>
                                   <th>#</th>
-                                  <th>{translate('pgr.grievanceno')}</th>
-                                  <th>{translate('pgr.grievanceDate')}</th>
-                                  <th>{translate('pgr.grievanceSender')}</th>
-                                  <th>{translate('pgr.grievanceNOW')}</th>
-                                  <th>{translate('pgr.grievanceStatus')}</th>
-                                  <th>{translate('pgr.grievanceComments')}</th>
+                                  <th>Application No.</th>
+                                  <th>Date</th>
+                                  <th>Sender</th>
+                                  <th>Nature of Work</th>
+                                  <th>Status</th>
+                                  <th>Comments</th>
                                 </tr>
 
                                 </thead>
                                 <tbody>
                                 {renderBody()}
                                 </tbody>
-                            </table>
-                            </div>
+                            </Table>
                               </CardText>
-                          </Card>
+                          </Card>*/}
 
                       </Col>
                   </Row>
@@ -842,8 +822,7 @@ class Dashboard extends Component {
 						 <Grid style={{"paddingTop":"0"}}>
                     <Row>
                       <div className="col-md-12">
-                        <div className="table-responsive">
-                          <table id="searchTable" style={{color:"black",fontWeight: "normal"}} className="table-striped">
+                          <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
                             <thead>
                               <tr>
                                 {
@@ -872,8 +851,7 @@ class Dashboard extends Component {
                                 })
                               }
                             </tbody>
-                          </table>
-                        </div>
+                          </Table>
                       </div>
 				{/*<div  className="tableLayout">
             <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
@@ -1191,3 +1169,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
 //
 //     </div>
 //   </SwipeableViews>
+
+
+
+// WEBPACK FOOTER //
+// ./src/components/contents/Dashboard.js

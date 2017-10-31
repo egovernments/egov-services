@@ -249,7 +249,7 @@ serviceMaps:
    fromTopic: works-detailed-abstract-estimate-create #need to change. It's a temp name
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO egw_detailed_estimate(
+    - query: INSERT INTO egw_detailedestimate(
             id, tenantid, estimatenumber, estimatedate, nameofwork, description, 
             department, adminsanctionnumber, adminsanctiondate, adminsanctionby, 
             status, workvalue, estimatevalue, projectcode, parent, copiedfrom, 
@@ -278,6 +278,9 @@ serviceMaps:
        - jsonPath: $.detailedEstimates.*.tenantId
          
        - jsonPath: $.detailedEstimates.*.estimateNumber
+       
+       - jsonPath: $.detailedEstimates.*.estimateDate
+         dbType: LONG
          
        - jsonPath: $.detailedEstimates.*.nameOfWork
        
@@ -381,3 +384,194 @@ serviceMaps:
        - jsonPath: $.detailedEstimates.*.auditDetails.lastModifiedBy
   
        - jsonPath: $.detailedEstimates.*.auditDetails.lastModifiedTime
+
+    - query: INSERT INTO egw_estimate_assets(id, tenantid, asset, detailedestimate, createdby,       createdtime,lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, 
+            ?, ?);
+      basePath: $.detailedEstimates.*.assets.*
+      jsonMaps:
+         
+       - jsonPath: $.detailedEstimates.*.assets.*.id
+         
+       - jsonPath: $.detailedEstimates.*.assets.*.tenantId
+         
+       - jsonPath: $.detailedEstimates.*.assets.*.asset
+       
+       - jsonPath: $.detailedEstimates[?({id} in @.assets[*].id)].id
+       
+       - jsonPath: $.detailedEstimates.*.assets.*.auditDetails.createdBy
+       
+       - jsonPath: $.detailedEstimates.*.assets.*.auditDetails.createdTime
+
+       - jsonPath: $.detailedEstimates.*.assets.*.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.detailedEstimates.*.assets.*.auditDetails.lastModifiedTime
+       
+    - query: INSERT INTO egw_estimate_deductions(id, tenantid, chartofaccounts,                      detailedestimate, percentage, amount, createdby, createdtime, lastmodifiedby,            lastmodifiedtime) VALUES (?, ?, ?, ?, ?, 
+            ?, ?, ?, ?, ?);
+      basePath: $.detailedEstimates.*.detailedEstimateDeductions.*
+      jsonMaps:
+         
+       - jsonPath: $.detailedEstimates.*.detailedEstimateDeductions.*.id
+         
+       - jsonPath: $.detailedEstimates.*.detailedEstimateDeductions.*.tenantId
+         
+       - jsonPath: $.detailedEstimates.*.detailedEstimateDeductions.*.chartOfAccounts
+       
+       - jsonPath: $.detailedEstimates[?({id} in @.detailedEstimateDeductions[*].id)].id
+       
+       - jsonPath: $.detailedEstimates.*.detailedEstimateDeductions.*.percentage
+       
+       - jsonPath: $.detailedEstimates.*.detailedEstimateDeductions.*.amount
+       
+       - jsonPath: $.detailedEstimates.*.detailedEstimateDeductions.*.auditDetails.createdBy
+       
+       - jsonPath: $.detailedEstimates.*.detailedEstimateDeductions.*.auditDetails.createdTime
+
+       - jsonPath: $.detailedEstimates.*.detailedEstimateDeductions.*.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.detailedEstimates.*.detailedEstimateDeductions.*.auditDetails.lastModifiedTime
+       
+    - query: INSERT INTO egw_multiyear_estimate(id, tenantid, detailedestimate, financialyear,       percentage, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?,       ?, ?,   ?, ?, ?, ?, ?);
+      basePath: $.detailedEstimates.*.multiYearEstimates.*
+      jsonMaps:
+         
+       - jsonPath: $.detailedEstimates.*.multiYearEstimates.*.id
+         
+       - jsonPath: $.detailedEstimates.*.multiYearEstimates.*.tenantId
+         
+       - jsonPath: $.detailedEstimates[?({id} in @.multiYearEstimates[*].id)].id
+       
+       - jsonPath: $.detailedEstimates.*.multiYearEstimates.*.financialYear
+       
+       - jsonPath: $.detailedEstimates.*.multiYearEstimates.*.percentage
+       
+       - jsonPath: $.detailedEstimates.*.multiYearEstimates.*.auditDetails.createdBy
+       
+       - jsonPath: $.detailedEstimates.*.multiYearEstimates.*.auditDetails.createdTime
+
+       - jsonPath: $.detailedEstimates.*.multiYearEstimates.*.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.detailedEstimates.*.multiYearEstimates.*.auditDetails.lastModifiedTime
+       
+    - query: INSERT INTO egw_estimate_overheads(id, tenantid, overhead, amount,                      detailedestimate, createdby, createdtime, lastmodifiedby, lastmodifiedtime)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.detailedEstimates.*.estimateOverheads.*
+      jsonMaps:
+         
+       - jsonPath: $.detailedEstimates.*.estimateOverheads.*.id
+         
+       - jsonPath: $.detailedEstimates.*.estimateOverheads.*.tenantId
+         
+       - jsonPath: $.detailedEstimates.*.estimateOverheads.*.overhead
+       
+       - jsonPath: $.detailedEstimates.*.estimateOverheads.*.amount
+       
+       - jsonPath: $.detailedEstimates[?({id} in @.estimateOverheads[*].id)].id
+       
+       - jsonPath: $.detailedEstimates.*.estimateOverheads.*.auditDetails.createdBy
+       
+       - jsonPath: $.detailedEstimates.*.estimateOverheads.*.auditDetails.createdTime
+
+       - jsonPath: $.detailedEstimates.*.estimateOverheads.*.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.detailedEstimates.*.estimateOverheads.*.auditDetails.lastModifiedTime
+
+    - query: INSERT INTO egw_estimate_activity(id, tenantid, scheduleofrate, nonsor, uom,            unitrate, estimaterate, quantity, servicetaxperc, revisiontype, parent,                  detailedestimate, createdby, createdtime, lastmodifiedby, lastmodifiedtime)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.detailedEstimates.*.estimateActivities.*
+      jsonMaps:
+         
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.id
+         
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.tenantId
+         
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.scheduleOfRate
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.nonSor
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.uom
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.unitRate
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateRate
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.quantity
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.serviceTaxPerc
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.revisionType
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.parent
+        
+       - jsonPath: $.detailedEstimates[?({id} in @.estimateActivities[*].id)].id
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.auditDetails.createdBy
+ 
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.auditDetails.createdTime
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.projedetailedEstimates.*.estimateActivitiesctCodes.*.auditDetails.lastModifiedTime
+       
+    - query: INSERT INTO egw_estimate_measurementsheet(id, tenantid, slno, identifier,               remarks, no, length, width, depthorheight, quantity, estimateactivity, parent,           createdby, createdtime, lastmodifiedby, lastmodifiedtime)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*
+      jsonMaps:
+         
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.id
+         
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.tenantId
+         
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.slNo
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.identifier
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.remarks
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.no
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.length
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.width
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.depthOrHeight
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.quantity
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.estimateActivity
+        
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.parent
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.auditDetails.createdBy
+ 
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.auditDetails.createdTime
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.projedetailedEstimates.*.estimateActivitiesctCodes.*.auditDetails.lastModifiedTime
+       
+    - query: INSERT INTO egw_estimate_technicalsanction(id, tenantid, technicalsanctionnumber,       detailedestimate, technicalsanctiondate, technicalsanctionby, createdby,                 createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, 
+            ?, ?, ?, ?, ?);
+      basePath: $.detailedEstimates.*.estimateTechnicalSanctions.*
+      jsonMaps:
+         
+       - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.id
+         
+       - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.tenantId
+         
+       - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.technicalSanctionNumber
+       
+       - jsonPath: $.detailedEstimates[?({id} in @.estimateTechnicalSanctions[*].id)].id
+       
+       - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.technicalSanctionDate
+         dbType: LONG
+       
+       - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.technicalSanctionBy
+       
+       - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.auditDetails.createdBy
+ 
+       - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.auditDetails.createdTime
+       
+       - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.projedetailedEstimates.*.estimateTechnicalSanctions.*.auditDetails.lastModifiedTime

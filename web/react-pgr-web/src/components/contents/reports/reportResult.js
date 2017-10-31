@@ -122,7 +122,7 @@ class ShowField extends Component {
   }
 
   drillDown=(e,i,i2,item,item1)=>{
-     let { reportResult ,searchForm ,setReportResult,setFlag,toggleSnackbarAndSetText,searchParams,setRoute,match} = this.props;
+     let { reportResult ,searchForm ,setReportResult,setFlag,toggleSnackbarAndSetText,searchParams,setRoute,match, metaData} = this.props;
      let object=reportResult.reportHeader[i2];
 
     if (object.defaultValue && object.defaultValue.search("_parent")>-1) {
@@ -166,15 +166,17 @@ class ShowField extends Component {
         },function(err) {
             console.log(err);
         });
-    }
-    else if(object.defaultValue && object.defaultValue.search("_url")>-1) {
+    } else if (metaData && metaData.reportDetails && metaData.reportDetails.viewPath) {
+      localStorage.reportData = JSON.stringify(item);
+      setRoute("/print/report/" + metaData.reportDetails.viewPath);
+    } else if (object.defaultValue && object.defaultValue.search("_url") > -1) {
       // console.log(item1);
       let afterURL = object.defaultValue.split('?')[1];
       let URLparams = afterURL.split(':');
       // console.log(URLparams, URLparams.length);
-      if(URLparams.length > 1){
+      if(URLparams.length > 1) {
         setRoute(`${URLparams[0]+item1}`);
-      }else{
+      } else {
         setRoute(URLparams[0]);
       }
     }
@@ -213,13 +215,6 @@ class ShowField extends Component {
     )
   }
 
-  openTemplate = (item) => {
-    if(this.props.metaData.reportDetails.viewPath) {
-      localStorage.reportData = JSON.stringify(item);
-      this.props.setRoute("/print/report/" + this.props.metaData.reportDetails.viewPath);
-    }
-  }
-
   renderBody = () => {
     sumColumn = [];
     let { reportResult } = this.props;
@@ -231,9 +226,7 @@ class ShowField extends Component {
           //array of array
           let reportHeaderObj = reportResult.reportHeader;
           return(
-            <tr key={dataIndex} onClick={() => {
-              this.openTemplate(dataItem);
-            }}>
+            <tr key={dataIndex}>
               {dataItem.map((item,itemIndex)=>{
                 var columnObj = {};
                 //array for particular row

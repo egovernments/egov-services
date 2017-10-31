@@ -35,7 +35,7 @@ export default class TemplateParser extends Component {
 		return(
 			<div>
 				<div id="printTemplate">
-					<Template data={localStorage.data ? JSON.parse(localStorage.data) : {}}/>
+					<Template data={localStorage.reportData ? JSON.parse(localStorage.reportData) : {}}/>
 					<br/>
 				</div>
 				<div style={{"textAlign": "center"}}>

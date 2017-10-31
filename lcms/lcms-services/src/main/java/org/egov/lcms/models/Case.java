@@ -88,4 +88,7 @@ public class Case {
 	
 	@JsonProperty("remarks")
 	private String remarks = null;
+	
+	@JsonProperty("caseVoucher")
+    private CaseVoucher caseVoucher = null;
 }

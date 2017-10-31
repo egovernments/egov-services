@@ -48,6 +48,11 @@ public class SummonService {
 	 */
 	public SummonResponse createSummon(SummonRequest summonRequest) throws Exception {
 
+		for(Summon Summon: summonRequest.getSummons()){
+			if(Summon.getIsUlbinitiated() == null){
+				Summon.setIsUlbinitiated(Boolean.FALSE);
+			}
+		}
 		generateSummonReferenceNumber(summonRequest);
 
 		kafkaTemplate.send(propertiesManager.getCreateSummonvalidated(), summonRequest);

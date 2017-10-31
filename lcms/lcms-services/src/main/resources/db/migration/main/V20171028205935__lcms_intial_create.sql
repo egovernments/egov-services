@@ -42,6 +42,13 @@ Create table egov_lcms_case(
 	age character varying,
 	days bigint,
 	address jsonb,
+	pleaderEngagementDetails character varying,
+    receiptDate bigint,
+    reslovtion character varying,
+    reslovtionDate bigint,
+    advocateInfoDate bigint,
+    remarks character varying,
+    isUlbinitiated boolean,
 	CONSTRAINT pk_egov_lcms_case PRIMARY KEY ( code )
 );
 	
@@ -72,7 +79,13 @@ CREATE TABLE eglcms_advocate_payment(
 	modeOfPayment character varying,
 	instrumentNumber character varying,
 	instrumentDate bigint,
-	stateId character varying
+	stateId character varying,
+    pleaderEngagementDetails character varying,
+    receiptDate bigint,
+    reslovtion character varying,
+    reslovtionDate bigint,
+    advocateInfoDate bigint,
+    remarks character varying
 );
 
 
@@ -128,6 +141,7 @@ CREATE TABLE egov_lcms_case_advocate(
 	casecode character varying,
 	advocate jsonb,
 	assigndate bigint,
+	fee NUMERIC,
 	CONSTRAINT pk_egov_lcms_case_advocate PRIMARY KEY (code)
 );
 
@@ -172,6 +186,10 @@ CREATE TABLE egov_lcms_hearing_details(
 	lastModifiedBy character varying,
 	createdTime bigint,
 	lastModifiedTime bigint,
+	judgeMentDate bigint,
+    advocateOpinion character varying,
+    furtherProcesssDetails character varying,
+    darkhasthDueDate bigint,
 	CONSTRAINT pk_egov_lcms_hearing_details PRIMARY KEY (code)
 );
 
@@ -237,3 +255,15 @@ CREATE TABLE egov_lcms_opinion(
 	lastModifiedTime bigint,
 	CONSTRAINT pk_egov_lcms_opinion PRIMARY KEY (code)
 );
+
+CREATE TABLE egov_lcms_case_voucher(
+    code character varying NOT NULL,
+    casecode character varying NOT NULL,
+    vocherType character varying,
+    vocherDate bigint,
+    details character varying,
+    verificationRemarks character varying,
+    officerSignature character varying,
+    CONSTRAINT pk_egov_lcms_case_voucher PRIMARY KEY (code)
+);
+ALTER TABLE egov_lcms_case_voucher ADD CONSTRAINT fk_egov_lcms_case_voucher FOREIGN KEY(casecode) REFERENCES egov_lcms_case(code);

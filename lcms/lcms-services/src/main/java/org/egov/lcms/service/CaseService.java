@@ -144,86 +144,59 @@ public class CaseService {
 	 */
 	public CaseResponse legacyDataLoad(CaseRequest caseRequest) throws Exception {
 
-		for (Case caseobj : caseRequest.getCases()) {
-			if (caseobj.getSummon().getIsUlbinitiated() == null) {
-				caseobj.getSummon().setIsUlbinitiated(Boolean.FALSE);
-
-				// temporory Code
-				caseobj.setCode("00007");
-				if (caseobj.getCaseVoucher() != null) {
-					caseobj.getCaseVoucher().setCode(caseobj.getCode());
-					caseobj.getCaseVoucher().setCaseCode(caseobj.getCode());
-				}
-
-				if (caseobj.getHearingDetails() != null && caseobj.getHearingDetails().size() > 0) {
-					for (HearingDetails hearingDetails : caseobj.getHearingDetails()) {
-						hearingDetails.setCode(caseobj.getCode());
-					}
-				}
-
-				if (caseobj.getSummon() != null) {
-					caseobj.getSummon().setCode(caseobj.getCode());
-					if(caseobj.getSummon().getIsSummon() == null){
-						caseobj.getSummon().setIsSummon(Boolean.FALSE);
-					}
-				}
-
-				if (caseobj.getAdvocatesDetails() != null && caseobj.getAdvocatesDetails().size() > 0) {
-					for (AdvocateDetails AdvocateDetails : caseobj.getAdvocatesDetails()) {
-						AdvocateDetails.setCode(caseobj.getCode());
-					}
-				}
+		for (Case caseObj : caseRequest.getCases()) {
+			
+			if (caseObj.getSummon().getIsUlbinitiated() == null) {
+				caseObj.getSummon().setIsUlbinitiated(Boolean.FALSE);
 			}
+			
+			
+
+			for (HearingDetails hearingDetail : caseObj.getHearingDetails()) {
+
+				String hearingcode = uniqueCodeGeneration.getUniqueCode(caseObj.getTenantId(),
+						caseRequest.getRequestInfo(), propertiesManager.getHearingDetailsUlbFormat(),
+						propertiesManager.getHearingDetailsUlbName(), Boolean.FALSE, null);
+				hearingDetail.setCode(hearingcode);
+
+			}
+
+		
+			String summonCode = uniqueCodeGeneration.getUniqueCode(caseObj.getTenantId(), caseRequest.getRequestInfo(),
+					propertiesManager.getSummonCodeFormat(), propertiesManager.getSummonName(), Boolean.FALSE, null);
+			caseObj.setCode(summonCode);
+			
+
+				String summonRefrence = uniqueCodeGeneration.getUniqueCode(caseObj.getSummon().getTenantId(),
+						caseRequest.getRequestInfo(), propertiesManager.getSummonRefrenceFormat(),
+						propertiesManager.getSummonReferenceGenName(), Boolean.FALSE, null);
+
+				caseObj.getSummon().setSummonReferenceNo(summonRefrence);
+				caseObj.getSummon().setCode(summonCode);
+			
+
+			if (caseObj.getCaseVoucher() != null) {
+				String caseVoucherCode = uniqueCodeGeneration.getUniqueCode(caseObj.getSummon().getTenantId(),
+						caseRequest.getRequestInfo(), propertiesManager.getVoucherCodeFormat(),
+						propertiesManager.getVoucherCodeFormatName(), Boolean.FALSE, null);
+				caseObj.getCaseVoucher().setCode(caseVoucherCode);
+				caseObj.getCaseVoucher().setCaseCode(summonCode);
+			}
+			
+			String caseReferenceNumber = uniqueCodeGeneration.getUniqueCode(caseObj.getTenantId(),
+					caseRequest.getRequestInfo(), propertiesManager.getCaseReferenceFormat(),
+					propertiesManager.getCaseReferenceGenName(), Boolean.TRUE,
+					caseObj.getSummon().getCaseType().getCode());
+			
+			caseObj.setCaseRefernceNo(caseReferenceNumber);
+			
+			
+			for ( AdvocateDetails advocatedetail : caseObj.getAdvocatesDetails()){
+				String advocateCode = uniqueCodeGeneration.getUniqueCode(caseObj.getTenantId(), caseRequest.getRequestInfo(), propertiesManager.getAdvocateDetailsCodeFormat(), propertiesManager.getAdvocateDetailsCodeName(), Boolean.FALSE, null);
+				advocatedetail.setCode(advocateCode);
+			}
+
 		}
-		/*
-		 * for(Case caseobj: caseRequest.getCases()){ String caseCode =
-		 * uniqueCodeGeneration.getUniqueCode(caseobj.getTenantId(),
-		 * caseRequest.getRequestInfo(), propertiesManager.getCaseCodeFormat(),
-		 * propertiesManager.getCaseCodeName(), Boolean.FALSE, null);
-		 * caseobj.setCode(caseCode);
-		 * 
-		 * 
-		 * for(HearingDetails hearingDetail : caseobj.getHearingDetails()){
-		 * 
-		 * String hearingcode =
-		 * uniqueCodeGeneration.getUniqueCode(caseobj.getTenantId(),
-		 * caseRequest.getRequestInfo(),
-		 * propertiesManager.getHearingDetailsUlbFormat(),
-		 * propertiesManager.getHearingDetailsUlbName(), Boolean.FALSE, null);
-		 * hearingDetail.setCode(hearingcode);
-		 * 
-		 * 
-		 * }
-		 * 
-		 * if(caseobj.getSummon() != null ){
-		 * 
-		 * String summonCode =
-		 * uniqueCodeGeneration.getUniqueCode(caseobj.getSummon().getTenantId(),
-		 * caseRequest.getRequestInfo(),
-		 * propertiesManager.getSummonCodeFormat(),
-		 * propertiesManager.getSummonName(), Boolean.FALSE, null);
-		 * 
-		 * String summonRefrence =
-		 * uniqueCodeGeneration.getUniqueCode(caseobj.getSummon().getTenantId(),
-		 * caseRequest.getRequestInfo(),
-		 * propertiesManager.getSummonRefrenceFormat(),
-		 * propertiesManager.getSummonReferenceGenName(), Boolean.FALSE, null);
-		 * 
-		 * caseobj.getSummon().setSummonReferenceNo(summonRefrence);
-		 * caseobj.getSummon().setCode(summonCode); }
-		 * 
-		 * 
-		 * if(caseobj.getCaseVoucher() != null ){ String caseVoucherCode =
-		 * uniqueCodeGeneration.getUniqueCode(caseobj.getSummon().getTenantId(),
-		 * caseRequest.getRequestInfo(),
-		 * propertiesManager.getLegacyLoadCodeFormat(),
-		 * propertiesManager.getLegacyLoadCodeName(), Boolean.FALSE, null);
-		 * caseobj.getCaseVoucher().setCode(caseVoucherCode);
-		 * caseobj.getCaseVoucher().setCaseCode(caseobj.getCode()); }
-		 * 
-		 * 
-		 * }
-		 */
 
 		kafkaTemplate.send(propertiesManager.getLoadLegacyData(), caseRequest);
 

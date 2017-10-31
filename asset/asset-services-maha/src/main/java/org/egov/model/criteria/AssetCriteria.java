@@ -1,4 +1,5 @@
 package org.egov.model.criteria;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
@@ -33,6 +34,7 @@ public class AssetCriteria {
 	private Long electionWard;
 	private String doorNo;
 	private String status;
+	private List<String> sort=null;
 	
 	
 	private Long size;

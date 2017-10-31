@@ -121,16 +121,18 @@ public class CitizenPersistService {
 		responeMap.put("serviceReq", response);
 		responeMap.put("comments", mapsRes.get(mapsRes.size() - 1).get("comments"));
 		responeMap.put("documents", mapsRes.get(mapsRes.size() - 1).get("documents"));
-		if(true == serviceRequestSearchCriteria.getAnonymous()){
-			Object receiptresponse = null;
-			try{
-				receiptresponse = collectionRepository.searchReceipt(requestInfo, 
-						serviceRequestSearchCriteria.getTenantId(), serviceRequestSearchCriteria.getServiceRequestId());
-			}catch(Exception e){
-				LOGGER.info("Couldn't fetch receiptdetails for srn: "+serviceRequestSearchCriteria.getServiceRequestId());
+		if(null != serviceRequestSearchCriteria.getAnonymous()){
+			if(true == serviceRequestSearchCriteria.getAnonymous()){
+				Object receiptresponse = null;
+				try{
+					receiptresponse = collectionRepository.searchReceipt(requestInfo, 
+							serviceRequestSearchCriteria.getTenantId(), serviceRequestSearchCriteria.getServiceRequestId());
+				}catch(Exception e){
+					LOGGER.info("Couldn't fetch receiptdetails for srn: "+serviceRequestSearchCriteria.getServiceRequestId());
+				}
+				
+				responeMap.put("receiptDetails", receiptresponse);
 			}
-			
-			responeMap.put("receiptDetails", receiptresponse);
 		}
 		responeMap.put("ResponseInfo", responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
 		return responeMap;

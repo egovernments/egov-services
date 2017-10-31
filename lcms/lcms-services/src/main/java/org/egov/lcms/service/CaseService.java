@@ -1,6 +1,7 @@
 package org.egov.lcms.service;
 
 import java.util.List;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.lcms.config.PropertiesManager;
@@ -17,14 +18,9 @@ import org.egov.lcms.repository.OpinionRepository;
 import org.egov.lcms.util.UniqueCodeGeneration;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonAnyFormatVisitor;
-import com.google.gson.Gson;
 
 @Service
 public class CaseService {

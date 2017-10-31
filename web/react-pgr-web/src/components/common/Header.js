@@ -224,9 +224,9 @@ class Header extends Component {
     return (
       <div className="Header">
 
-      { showMenu && <div className="drawer-backGround">
+      { /*showMenu && <div className="drawer-backGround">
             {actionList && actionList.length>0 && <CustomMenu menuItems={[]} actionList={actionList} />}
-        </div>
+        </div>*/
       }
         <AppBar
                 onLeftIconButtonTouchTap={handleToggle}
@@ -235,9 +235,9 @@ class Header extends Component {
                 title={<div><Logo tenantInfo={this.props.tenantInfo} tenantContext={tenantContext}/> </div>}
                 iconElementRight={< RightIcon showHome={this.props.showHome} signOut={this.signOut} token={this.props.token} logout={this.props.logout} setRoute={this.props.setRoute} handleToggle={this.props.handleToggle}/>} />
 
-        {/*<Drawer containerClassName="drawer-backGround" open={showMenu}>
+        <Drawer containerClassName="drawer-backGround" open={showMenu}>
           {actionList && actionList.length>0 && <CustomMenu menuItems={[]} actionList={actionList} />}
-        </Drawer>*/}
+        </Drawer>
 
 
       </div>

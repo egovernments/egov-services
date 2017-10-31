@@ -593,7 +593,7 @@ class CustomMenu extends Component {
              />
           }
 
-        <Menu desktop={true}>
+        <Menu disableAutoFocus={true} desktop={true}>
 
 
 		{(path|| searchText) &&  <div className="pull-left" style={{marginLeft:12, marginBottom:10, cursor:'pointer'}}  onTouchTap={()=>{changeLevel(path)}}><i className="material-icons" style={{"color": "white"}}>arrow_back</i></div>}

@@ -254,7 +254,7 @@ public class ReportService {
 						.collect(Collectors.toList());
 				
 
-				
+		reportResponse.setViewPath(reportDefinition.getViewPath());		
 		reportResponse.setReportHeader(columnDetails);
 	}
 }

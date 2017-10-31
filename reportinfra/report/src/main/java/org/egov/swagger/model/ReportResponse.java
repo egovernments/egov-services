@@ -14,6 +14,18 @@ import javax.validation.constraints.*;
 
 
 public class ReportResponse   {
+  
+	
+	@JsonProperty("viewPath")
+	  private String viewPath = null;
+
+	  public String getViewPath() {
+		return viewPath;
+	}
+
+	public void setViewPath(String viewPath) {
+		this.viewPath = viewPath;
+	}
 
   @JsonProperty("reportHeader")
   private List<ColumnDetail> reportHeader = new ArrayList<ColumnDetail>();
@@ -29,6 +41,8 @@ public class ReportResponse   {
     this.reportHeader = reportHeader;
     return this;
   }
+  
+  
 
   public ReportResponse addReportHeaderItem(ColumnDetail reportHeaderItem) {
     this.reportHeader.add(reportHeaderItem);

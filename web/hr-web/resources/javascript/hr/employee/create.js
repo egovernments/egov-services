@@ -2590,8 +2590,26 @@ function loadUI() {
                         if (!hasAllRequiredFields(employee)) {
                             showError("Please enter all mandatory fields.");
                         } else if (employee.assignments.length > 0 && employee.jurisdictions.length > 0) {
-                            if (!isHavingPrimary())
+                            if (!isHavingPrimary()){
                                 return showError("Atleast one primary assignment is required.");
+                              }else{
+                                for (var i = 0; i < employee.assignments.length; i++) {
+
+                                    var _from = employee.dateOfAppointment;
+                                    var _to = employee.assignments[i].fromDate;
+                                    if (_from && _to) {
+                                        var dateParts1 = _from.split("/");
+                                        var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
+                                        var date1 = new Date(newDateStr);
+                                        var dateParts2 = _to.split("/");
+                                        var newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
+                                        var date2 = new Date(newDateStr);
+                                        if (date1 > date2) {
+                                            return showError("Appointment Date must be before Assignment Date.");
+                                        }
+                                    }
+                                }
+                              }
                             //Call api
                             var __emp = Object.assign({}, employee);
 

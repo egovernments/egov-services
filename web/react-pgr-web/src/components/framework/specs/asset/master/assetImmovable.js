@@ -68,32 +68,6 @@ var dat = {
   						"requiredErrMsg": "",
   						"patternErrMsg": ""
   					},
-
-            {
-  						"name": "AssetCategoryType",
-  						"jsonPath": "Asset.assetCategory.assetCategoryType",
-  						"label": "Asset Category Type",
-  						"pattern": "",
-  						"type": "text",
-  						"url": "",
-  						"isRequired": true,
-  						"isDisabled": true,
-  						"requiredErrMsg": "",
-  						"patternErrMsg": "",
-							"defaultValue":"IMMOVABLE"
-					// 		 [	  {
-	        //     "key": "IMMOVABLE",
-	        //     "value": "IMMOVABLE"
-	        //   }
-					// ]
-
-					// "depedants": [{
-					// 	"jsonPath": "Asset.assetCategory",
-					// 	"type": "dropDown",
-					// 	"pattern": "/asset-services/assetCategories/_search?tenantId=default&assetCategoryType={Asset.assetCategory[0].assetCategoryType}|$..name|$..name"
-					// }]
-  					},
-
 						{
   						"name": "AssetSubType",
   						"jsonPath": "Asset.assetCategory.id",
@@ -106,17 +80,6 @@ var dat = {
   						"isDisabled": false,
   						"requiredErrMsg": "",
   						"patternErrMsg": ""
-					// 		"defaultValue": [	{
-					// 				"key": "1",
-					// 				"value": "BUILDING"
-					// 			},  {
-	        //     "key": "2",
-	        //     "value": "SCHOOL"
-	        //   },  {
-	        //     "key": "3",
-	        //     "value": "FIRE STATION"
-	        //   }
-					// ],
   					},
 
             {
@@ -130,14 +93,6 @@ var dat = {
   						"isDisabled": false,
   						"requiredErrMsg": "",
   						"patternErrMsg": "",
-					// 		"defaultValue": [	{
-					// 				"key": "1",
-					// 				"value": "REVENUE"
-					// 			},  {
-	        //     "key": "2",
-	        //     "value": "ADMINISTARTION"
-	        //   }
-					// ]
   					},
             {
   						"name": "NoOfOrder",
@@ -195,7 +150,21 @@ var dat = {
 	            "value": "PURCHASE"
 	          }
 					]
-  					}
+				},
+				{
+					"name": "AssetCategoryType",
+					"jsonPath": "Asset.assetCategory.assetCategoryType",
+					"label": "Asset Category Type",
+					"pattern": "",
+					"type": "text",
+					"url": "",
+					"isRequired": true,
+					"isDisabled": true,
+					"requiredErrMsg": "",
+					"patternErrMsg": "",
+					"defaultValue":"IMMOVABLE",
+					"isHidden": "true"
+				}
 
 				]
 			},
@@ -206,18 +175,6 @@ var dat = {
 				"jsonPath": "Asset",
 				"multiple":true,
 				"fields": [
-					{
-						"name": "SurveyNoOfLandOnWhichStructureIsLocated ",
-						"jsonPath": "Asset.landSurveyNo",
-						"label": "ac.create.Survey.no.of.land",
-						"pattern": "",
-						"type": "number",
-						"url": "",
-						"isRequired": false,
-						"isDisabled": true,
-						"requiredErrMsg": "",
-						"patternErrMsg": ""
-					},
 					{
 						"name": "LandAssetID",
 						"jsonPath": "Asset.",
@@ -236,6 +193,19 @@ var dat = {
 							 }
 						 }
 					},
+					{
+						"name": "SurveyNoOfLandOnWhichStructureIsLocated ",
+						"jsonPath": "Asset.landSurveyNo",
+						"label": "ac.create.Survey.no.of.land",
+						"pattern": "",
+						"type": "number",
+						"url": "",
+						"isRequired": false,
+						"isDisabled": true,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+
 					{
             "name": "AreaofLandonwhichconstructed",
             "jsonPath": "Asset.totalArea",
@@ -333,8 +303,17 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          },
-          {
+          }
+
+				]
+			},
+      {
+				"label": "ac.create.Asset.Details",
+				"name": "AssetField",
+        "multiple":false,
+        "jsonPath":"Asset",
+				"fields": [
+					{
             "name": "No of Floors",
             "jsonPath": "Asset.floors",
             "label": "ac.create.No.of.Floors",
@@ -429,15 +408,7 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          }
-				]
-			},
-      {
-				"label": "ac.create.Asset.Details",
-				"name": "AssetField",
-        "multiple":false,
-        "jsonPath":"Asset",
-				"fields": [
+          },
           {
             "name": "AnticipatedLifeOfAsset",
             "jsonPath": "Asset.anticipatedLife",

@@ -259,46 +259,12 @@ var dat = {
 				"fields": [
 					{
             "name": "searchLocation",
-            "jsonPath": "Asset.captLocationDetails",
-            "label": "search Location",
+						"jsonPathAddress": "Asset.locationDetails",
+            "jsonPathLng": "Asset.longitude",
+						"jsonPathLat": "Asset.latitude",
+            "label": "search",
             "pattern": "",
             "type": "googleMaps",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-						"depedants":[
-							{
-									"jsonPath":"Asset.latitude",
-									"type":"textField",
-									"pattern":"`${getVal('Asset.captLocationDetails.lat')}`",
-									"rg":"",
-									"isRequired": false,
-									"isDisabled": true,
-									"requiredErrMsg": "",
-									"patternErrMsg": ""
-								},
-							{
-								"jsonPath":"Asset.longitude",
-								"type":"textField",
-								"pattern":"`${getVal('Asset.captLocationDetails.lng')}`",
-								"rg":"",
-								"isRequired": false,
-								"isDisabled": true,
-								"requiredErrMsg": "",
-								"patternErrMsg": "",
-								"defaultValue": localStorage.getItem("longitude")
-							}
-
-						]
-          },
-          {
-            "name": "Location",
-            "jsonPath": "Asset.locationDetails",
-            "label": "ac.create.Location",
-            "pattern": "",
-            "type": "text",
             "url": "",
             "isRequired": false,
             "isDisabled": false,
@@ -306,9 +272,20 @@ var dat = {
             "patternErrMsg": ""
           },
           {
+            "name": "Location",
+						"jsonPath": "Asset.locationDetails",
+            "label": "ac.create.Location",
+            "pattern": "",
+            "type": "text",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
             "name": "Longitude",
             "jsonPath": "Asset.longitude",
-						//"jsonPathLng": "Asset.longitude",
             "label": "ac.create.Longitude",
             "pattern": "",
             "type": "text",
@@ -316,8 +293,7 @@ var dat = {
             "isRequired": false,
             "isDisabled": true,
             "requiredErrMsg": "",
-            "patternErrMsg": "",
-						"defaultValue": localStorage.getItem("longitude")
+            "patternErrMsg": ""
           },
           {
             "name": "Latitude",

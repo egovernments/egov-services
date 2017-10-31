@@ -12,44 +12,6 @@ ReportDefinitions:
     linkedReport:
       reportName: AssetImmovableRegisterDetail
       linkedColumn: _parent?reportName={reportName}&assetdetail={id}
-  - name: name
-    label: reports.asset.name
-    type: string
-    source: asset
-  - name: code
-    label: reports.asset.code
-    type: string
-    source: asset    
-  - name: ordernumber
-    label: reports.asset.ordernumber
-    type: number
-  - name: warrantyavailable
-    label: reports.asset.warrantyavailable
-    type: string
-    source: asset   
-  - name: wipreferenceno
-    label: reports.asset.wipreferenceno
-    type: string
-    source: asset
-  - name: floors
-    label: reports.asset.floors
-    type: number
-    source: asset   
-  - name: titledocumentsavailable
-    label: reports.asset.titledocumentsavailable
-    type: number
-  - name: buyername
-    label: reports.asset.buyername
-    type: string
-    source: asset   
-  - name: accumulateddepreciation
-    label: reports.asset.accumulateddepreciation
-    type: number
-    source: asset
-  - name: grossvalue
-    label: reports.asset.grossvalue
-    type: number
-    source: asset
   - name: quantity
     label: reports.asset.quantity
     type: number
@@ -171,6 +133,44 @@ ReportDefinitions:
     label: reports.asset.totaldepreciationval
     type: number
     source: asset
+  - name: name
+    label: reports.asset.name
+    type: string
+    source: asset
+  - name: code
+    label: reports.asset.code
+    type: string
+    source: asset    
+  - name: ordernumber
+    label: reports.asset.ordernumber
+    type: number
+  - name: warrantyavailable
+    label: reports.asset.warrantyavailable
+    type: string
+    source: asset   
+  - name: wipreferenceno
+    label: reports.asset.wipreferenceno
+    type: string
+    source: asset
+  - name: floors
+    label: reports.asset.floors
+    type: number
+    source: asset   
+  - name: titledocumentsavailable
+    label: reports.asset.titledocumentsavailable
+    type: number
+  - name: buyername
+    label: reports.asset.buyername
+    type: string
+    source: asset   
+  - name: accumulateddepreciation
+    label: reports.asset.accumulateddepreciation
+    type: number
+    source: asset
+  - name: grossvalue
+    label: reports.asset.grossvalue
+    type: number
+    source: asset  
   searchParams:
   - name: fromDate
     label: reports.asset.fromDate
@@ -239,44 +239,6 @@ ReportDefinitions:
     label: reports.asset.id
     type: number
     source: asset
-  - name: name
-    label: reports.asset.name
-    type: string
-    source: asset
-  - name: code
-    label: reports.asset.code
-    type: string
-    source: asset    
-  - name: ordernumber
-    label: reports.asset.ordernumber
-    type: number
-  - name: warrantyavailable
-    label: reports.asset.warrantyavailable
-    type: string
-    source: asset   
-  - name: wipreferenceno
-    label: reports.asset.wipreferenceno
-    type: string
-    source: asset
-  - name: floors
-    label: reports.asset.floors
-    type: number
-    source: asset   
-  - name: titledocumentsavailable
-    label: reports.asset.titledocumentsavailable
-    type: number
-  - name: buyername
-    label: reports.asset.buyername
-    type: string
-    source: asset   
-  - name: accumulateddepreciation
-    label: reports.asset.accumulateddepreciation
-    type: number
-    source: asset
-  - name: grossvalue
-    label: reports.asset.grossvalue
-    type: number
-    source: asset
   - name: quantity
     label: reports.asset.quantity
     type: number
@@ -396,6 +358,44 @@ ReportDefinitions:
     source: asset
   - name: totaldepreciationval
     label: reports.asset.totaldepreciationval
+    type: number
+    source: asset
+  - name: name
+    label: reports.asset.name
+    type: string
+    source: asset
+  - name: code
+    label: reports.asset.code
+    type: string
+    source: asset    
+  - name: ordernumber
+    label: reports.asset.ordernumber
+    type: number
+  - name: warrantyavailable
+    label: reports.asset.warrantyavailable
+    type: string
+    source: asset   
+  - name: wipreferenceno
+    label: reports.asset.wipreferenceno
+    type: string
+    source: asset
+  - name: floors
+    label: reports.asset.floors
+    type: number
+    source: asset   
+  - name: titledocumentsavailable
+    label: reports.asset.titledocumentsavailable
+    type: number
+  - name: buyername
+    label: reports.asset.buyername
+    type: string
+    source: asset   
+  - name: accumulateddepreciation
+    label: reports.asset.accumulateddepreciation
+    type: number
+    source: asset
+  - name: grossvalue
+    label: reports.asset.grossvalue
     type: number
     source: asset
   searchParams:

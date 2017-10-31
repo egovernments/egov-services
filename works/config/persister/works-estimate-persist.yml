@@ -569,4 +569,281 @@ serviceMaps:
        - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.auditDetails.lastModifiedBy
 
        - jsonPath: $.projedetailedEstimates.*.estimateTechnicalSanctions.*.auditDetails.lastModifiedTime
+       
+ - version: 1.0
+   name: Detailed AbstractEstimate Update
+   description: Update detailed abstract estimate  in egw_detailed_estimate table
+   fromTopic: works-detailed-abstract-estimate-update #need to change. It's a temp name
+   isTransaction: true
+   queryMaps:
+    - query: UPDATE egw_detailedestimate SET estimatenumber=?, estimatedate=?, nameofwork=?, description=?, department=?, adminsanctionnumber=?, adminsanctiondate=?, adminsanctionby=?, status=?, workvalue=?, estimatevalue=?, projectcode=?, parent=?, copiedfrom=?, approveddate=?, approvedby=?, copiedestimate=?, beneficiary=?, modeofallotment=?, workstype=?, workssubtype=?, natureofwork=?, ward=?, location=?, longitude=?, latitude=?, workcategory=?, locality=?, councilresolutionnumber=?, councilresolutiondate=?, 
+       workordercreated=?, billscreated=?, spilloverflag=?, grossamountbilled=?, cancellationreason=?, cancellationremarks=?, totalincludingre=?, abstractestimatedetail=?, stateid=?, fund=?, function=?, functionary=?, scheme=?, subscheme=?, budgetgroup=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+      basePath: $.detailedEstimates.*
+      jsonMaps:
+         
+       - jsonPath: $.detailedEstimates.*.estimateNumber
+       
+       - jsonPath: $.detailedEstimates.*.estimateDate
+         dbType: LONG
+         
+       - jsonPath: $.detailedEstimates.*.nameOfWork
+       
+       - jsonPath: $.detailedEstimates.*.description
+       
+       - jsonPath: $.detailedEstimates.*.department.code
+       
+       - jsonPath: $.detailedEstimates.*.adminSanctionNumber
+       
+       - jsonPath: $.detailedEstimates.*.adminSanctionDate
+         dbType: LONG
+       
+       - jsonPath: $.detailedEstimates.*.adminSanctionBy.name
+       
+       - jsonPath: $.detailedEstimates.*.status
+       
+       - jsonPath: $.detailedEstimates.*.workValue
+                 
+       - jsonPath: $.detailedEstimates.*.estimateValue
+                 
+       - jsonPath: $.detailedEstimates.*.projectCode.code
+         
+       - jsonPath: $.detailedEstimates.*.parent.id
+                  
+       - jsonPath: $.detailedEstimates.*.copiedFrom
+       
+       - jsonPath: $.detailedEstimates.*.approvedDate
+         dbType: LONG
+       
+       - jsonPath: $.detailedEstimates.*.approvedBy.name
+       
+       - jsonPath: $.detailedEstimates.*.copiedEstimate
+         type: BOOLEAN
+       
+       - jsonPath: $.detailedEstimates.*.beneficiary
+                  
+       - jsonPath: $.detailedEstimates.*.modeOfAllotment.code
+         
+       - jsonPath: $.detailedEstimates.*.worksType.code
+       
+       - jsonPath: $.detailedEstimates.*.worksSubtype.code
+       
+       - jsonPath: $.detailedEstimates.*.subTypeOfWork.code
+       
+       - jsonPath: $.detailedEstimates.*.natureOfWork.code
+       
+       - jsonPath: $.detailedEstimates.*.ward.code
+       
+       - jsonPath: $.detailedEstimates.*.location.code
+       
+       - jsonPath: $.detailedEstimates.*.longitude
+       
+       - jsonPath: $.detailedEstimates.*.latitude
+       
+       - jsonPath: $.detailedEstimates.*.workCategory
+       
+       - jsonPath: $.detailedEstimates.*.locality.code
+       
+       - jsonPath: $.detailedEstimates.*.councilResolutionNumber
+                
+       - jsonPath: $.detailedEstimates.*.councilResolutionDate
+         dbType: LONG
+                
+       - jsonPath: $.detailedEstimates.*.workOrderCreated
+         type: BOOLEAN
+       
+       - jsonPath: $.detailedEstimates.*.billsCreated
+         type: BOOLEAN
+                  
+       - jsonPath: $.detailedEstimates.*.spillOverFlag
+         type: BOOLEAN
+
+       - jsonPath: $.detailedEstimates.*.grossAmountBilled
+       
+       - jsonPath: $.detailedEstimates.*.cancellationReason
+       
+       - jsonPath: $.detailedEstimates.*.cancellationRemarks
+       
+       - jsonPath: $.detailedEstimates.*.totalIncludingRE
+       
+       - jsonPath: $.detailedEstimates.*.abstractEstimateDetail.id
+
+       - jsonPath: $.detailedEstimates.*.stateId
+
+       - jsonPath: $.detailedEstimates.*.fund.code
+
+       - jsonPath: $.detailedEstimates.*.function.code
+
+       - jsonPath: $.detailedEstimates.*.functionary.code
+
+       - jsonPath: $.detailedEstimates.*.scheme.code
+
+       - jsonPath: $.detailedEstimates.*.subScheme.code
+
+       - jsonPath: $.detailedEstimates.*.budgetGroup.name
+       
+       - jsonPath: $.detailedEstimates.*.auditDetails.lastModifiedBy
+  
+       - jsonPath: $.detailedEstimates.*.auditDetails.lastModifiedTime
+       
+       - jsonPath: $.detailedEstimates.*.id
+       
+       - jsonPath: $.detailedEstimates.*.tenantId
+
+    - query: UPDATE egw_estimate_assets SET asset=?, detailedestimate=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+      basePath: $.detailedEstimates.*.assets.*
+      jsonMaps:
+         
+       - jsonPath: $.detailedEstimates.*.assets.*.asset.code
+       
+       - jsonPath: $.detailedEstimates[?({id} in @.assets[*].id)].id
+       
+       - jsonPath: $.detailedEstimates.*.assets.*.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.detailedEstimates.*.assets.*.auditDetails.lastModifiedTime
+       
+       - jsonPath: $.detailedEstimates.*.assets.*.id
+         
+       - jsonPath: $.detailedEstimates.*.assets.*.tenantId
+       
+    - query: UPDATE egw_estimate_deductions SET chartofaccounts=?, detailedestimate=?, percentage=?, amount=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+      basePath: $.detailedEstimates.*.detailedEstimateDeductions.*
+      jsonMaps:
+         
+       - jsonPath: $.detailedEstimates.*.detailedEstimateDeductions.*.chartOfAccounts.glcode
+       
+       - jsonPath: $.detailedEstimates[?({id} in @.detailedEstimateDeductions[*].id)].id
+       
+       - jsonPath: $.detailedEstimates.*.detailedEstimateDeductions.*.percentage
+       
+       - jsonPath: $.detailedEstimates.*.detailedEstimateDeductions.*.amount
+       
+       - jsonPath: $.detailedEstimates.*.detailedEstimateDeductions.*.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.detailedEstimates.*.detailedEstimateDeductions.*.auditDetails.lastModifiedTime
+           
+       - jsonPath: $.detailedEstimates.*.detailedEstimateDeductions.*.id
+         
+       - jsonPath: $.detailedEstimates.*.detailedEstimateDeductions.*.tenantId
+       
+    - query: UPDATE egw_multiyear_estimate SET detailedestimate=?, financialyear=?, percentage=?,       lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+      basePath: $.detailedEstimates.*.multiYearEstimates.*
+      jsonMaps:
+         
+       - jsonPath: $.detailedEstimates[?({id} in @.multiYearEstimates[*].id)].id
+       
+       - jsonPath: $.detailedEstimates.*.multiYearEstimates.*.financialYear.finYearRange
+       
+       - jsonPath: $.detailedEstimates.*.multiYearEstimates.*.percentage
+       
+       - jsonPath: $.detailedEstimates.*.multiYearEstimates.*.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.detailedEstimates.*.multiYearEstimates.*.auditDetails.lastModifiedTime
+       
+       - jsonPath: $.detailedEstimates.*.multiYearEstimates.*.id
+         
+       - jsonPath: $.detailedEstimates.*.multiYearEstimates.*.tenantId
+       
+    - query: UPDATE egw_estimate_overheads SET overhead=?, amount=?, detailedestimate=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+      basePath: $.detailedEstimates.*.estimateOverheads.*
+      jsonMaps:
+         
+       - jsonPath: $.detailedEstimates.*.estimateOverheads.*.overhead.code
+       
+       - jsonPath: $.detailedEstimates.*.estimateOverheads.*.amount
+       
+       - jsonPath: $.detailedEstimates[?({id} in @.estimateOverheads[*].id)].id
+       
+       - jsonPath: $.detailedEstimates.*.estimateOverheads.*.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.detailedEstimates.*.estimateOverheads.*.auditDetails.lastModifiedTime
+       
+       - jsonPath: $.detailedEstimates.*.estimateOverheads.*.id
+         
+       - jsonPath: $.detailedEstimates.*.estimateOverheads.*.tenantId
+
+    - query: UPDATE egw_estimate_activity SET scheduleofrate=?, nonsor=?, uom=?, unitrate=?, estimaterate=?, quantity=?, servicetaxperc=?, revisiontype=?, parent=?, detailedestimate=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+      basePath: $.detailedEstimates.*.estimateActivities.*
+      jsonMaps:
+         
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.scheduleOfRate.code
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.nonSor.id
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.uom.code
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.unitRate
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateRate
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.quantity
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.serviceTaxPerc
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.revisionType
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.parent.id
+        
+       - jsonPath: $.detailedEstimates[?({id} in @.estimateActivities[*].id)].id
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.projedetailedEstimates.*.estimateActivitiesctCodes.*.auditDetails.lastModifiedTime
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.id
+         
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.tenantId
+       
+    - query: UPDATE egw_estimate_measurementsheet SET slno=?, identifier=?, remarks=?, no=?, length=?, width=?, depthorheight=?, quantity=?, estimateactivity=?, parent=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+      basePath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*
+      jsonMaps:
+         
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.slNo
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.identifier
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.remarks
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.no
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.length
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.width
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.depthOrHeight
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.quantity
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.estimateActivity.id
+        
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.parent.id
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.projedetailedEstimates.*.estimateActivitiesctCodes.*.auditDetails.lastModifiedTime
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.id
+         
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.tenantId
+       
+    - query: UPDATE egw_estimate_technicalsanction SET technicalsanctionnumber=?, detailedestimate=?, 
+            technicalsanctiondate=?, technicalsanctionby=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+      basePath: $.detailedEstimates.*.estimateTechnicalSanctions.*
+      jsonMaps:
+         
+       - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.technicalSanctionNumber
+       
+       - jsonPath: $.detailedEstimates[?({id} in @.estimateTechnicalSanctions[*].id)].id
+       
+       - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.technicalSanctionDate
+         dbType: LONG
+       
+       - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.technicalSanctionBy
+       
+       - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.projedetailedEstimates.*.estimateTechnicalSanctions.*.auditDetails.lastModifiedTime
+       
+       - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.id
+         
+       - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.tenantId
 

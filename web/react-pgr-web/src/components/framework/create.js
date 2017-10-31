@@ -329,6 +329,40 @@ class Report extends Component {
     }
   }
 
+  checkForOtherFiles = (formData, _url) => {
+    let { mockData, actionName, moduleName } = this.props;
+    let counter = 0, breakOut = 0, self = this;
+    for(let i=0; i<mockData[moduleName + "." + actionName].groups.length; i++) {
+      for(let j=0; j<mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+        if(mockData[moduleName + "." + actionName].groups[i].fields[j].type == "singleFileUpload" && _.get(formData, mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath)) {
+          counter++;
+          fileUpload(_.get(formData, mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath), self.props.moduleName, function(err, res) {
+            if(breakOut == 1) return;
+            if(err) {
+              breakOut = 1;
+              self.props.setLoadingStatus('hide');
+              self.props.toggleSnackbarAndSetText(true, err, false, true);
+            } else {
+              counter--;
+              _.set(formData, mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, res.files[0].fileStoreId);
+              if(counter == 0 && breakOut == 0)
+                self.makeAjaxCall(formData, _url);
+            }
+          })
+        } /*else if(mockData[moduleName + "." + actionName].groups[i].fields[j].type == "multiFileUpload") {
+          let files = _.get(formData, mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
+          if(files && files.length) {
+            counter += files.length;
+
+          }
+        }*/
+      }
+    }
+
+    if(counter == 0 && breakOut == 0)
+      self.makeAjaxCall(formData, _url);
+  }
+
   create=(e) => {
     let self = this, _url;
     e.preventDefault();
@@ -373,13 +407,13 @@ class Report extends Component {
             counter--;
             if(counter == 0 && breakOut == 0) {
               formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] = _docs;
-              self.makeAjaxCall(formData, _url);
+              self.checkForOtherFiles(formData, _url);
             }
           }
         })
       }
     } else {
-      self.makeAjaxCall(formData, _url);
+      self.checkForOtherFiles(formData, _url);
     }
 
   }
@@ -769,8 +803,6 @@ class Report extends Component {
                 },function(err) {
                     console.log(err);
                 });
-                // console.log(id);
-                // console.log(context);
             } else if (value.type == "textField") {
               let object={
                 target: {
@@ -1070,6 +1102,7 @@ class Report extends Component {
         <form onSubmit={(e) => {
           create(e)
         }}>
+        <div style={{"textAlign": "right", "color": "#FF0000", "margin": "15px"}}><i>( * ) Fields are mandatory</i></div>
         {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields
                                     groups={mockData[`${moduleName}.${actionName}`].groups}
                                     noCols={mockData[`${moduleName}.${actionName}`].numCols}
@@ -1085,6 +1118,9 @@ class Report extends Component {
             <br/>
             {actionName == "create" && <UiButton item={{"label": "Create", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
             {actionName == "update" && <UiButton item={{"label": "Update", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
+            &nbsp;&nbsp;<RaisedButton label="Reset" primary={false} onClick={() => {
+              this.initData();
+            }}/>
             <br/>
           </div>
         </form>

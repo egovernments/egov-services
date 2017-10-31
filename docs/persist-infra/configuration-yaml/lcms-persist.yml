@@ -94,7 +94,7 @@ serviceMaps:
     description: create case
     fromTopic: lcms-create-case
     queryMaps:
-      - query: UPDATE egov_lcms_case SET oldCaseNo=?,suitNo=?,judgeDetails=?,caseRefernceNo=?,departmentPerson=?,caseRegistrationDate=?,stateId=? WHERE code =?;
+      - query: UPDATE egov_lcms_case SET oldCaseNo=?,suitNo=?,judgeDetails=?,caseRefernceNo=?,departmentPerson=?,caseRegistrationDate=?,stateId=?,lastModifiedBy=?,lastModifiedTime=? WHERE code =?;
         basePath: $.cases.*
         jsonMaps:        
         - jsonPath: $.cases.*.oldCaseNo
@@ -113,13 +113,20 @@ serviceMaps:
         - jsonPath: $.cases.*.summon.stateId
            
         - jsonPath: $.cases.*.summon.code
+    
+        - jsonPath: $.RequestInfo.userInfo.id
+          type: STRING
+      
+        - jsonPath: lastModifiedTime
+          type: CURRENTDATE
+          dbType: LONG
         
   - version: 1.0
     name: lcms-create-vakalatnama
     description: create vakalatnama for the case
     fromTopic: lcms-create-vakalatnama
     queryMaps:
-      - query: UPDATE egov_lcms_case SET isVakalatnamaGenerated=?,vakalatnamaGenerationDate=?,witness=?,coName=?,age=?,days=?,stateId=? WHERE code=?;
+      - query: UPDATE egov_lcms_case SET isVakalatnamaGenerated=?,vakalatnamaGenerationDate=?,witness=?,coName=?,age=?,days=?,stateId=?,lastModifiedBy=?,lastModifiedTime=? WHERE code=?;
         basePath: $.cases.*
         jsonMaps:        
         - jsonPath: $.cases.*.isVakalatnamaGenerated
@@ -142,7 +149,14 @@ serviceMaps:
           
         - jsonPath: $.cases.*.stateId
         
-        - jsonPath: $.cases.*.code
+        - jsonPath: $.cases.*.summon.code
+    
+        - jsonPath: $.RequestInfo.userInfo.id
+          type: STRING
+      
+        - jsonPath: lastModifiedTime
+          type: CURRENTDATE
+          dbType: LONG
 
   - version: 1.0
     name: lcms-parawisecomments
@@ -179,13 +193,15 @@ serviceMaps:
         
         - jsonPath: $.parawiseComments.*.auditDetails.createdBy
         
-        - jsonPath: $.parawiseComments.*.auditDetails.lastModifiedBy
+        - jsonPath: $.RequestInfo.userInfo.id
+          type: STRING
         
         - jsonPath: $.parawiseComments.*.auditDetails.createdTime
           type: LONG
           
-        - jsonPath: $.parawiseComments.*.auditDetails.lastModifiedTime
-          type: LONG
+        - jsonPath: lastModifiedTime
+          type: CURRENTDATE
+          dbType: LONG
           
   - version: 1.0
     name: lcms-parawisecomments
@@ -216,12 +232,14 @@ serviceMaps:
           
         - jsonPath: $.parawiseComments.*.tenantId
         
-        - jsonPath: $.cases.*.code
+        - jsonPath: $.cases[?({code} in @.parawiseComments[*].code)].code
         
-        - jsonPath: $.parawiseComments.*.auditDetails.lastModifiedBy
+        - jsonPath: $.RequestInfo.userInfo.id
+          type: STRING
         
-        - jsonPath: $.parawiseComments.*.auditDetails.lastModifiedTime
-          type: LONG
+        - jsonPath: lastModifiedTime
+          type: CURRENTDATE
+          dbType: LONG
           
         - jsonPath: $.parawiseComments.*.code
         
@@ -235,7 +253,7 @@ serviceMaps:
         jsonMaps:        
         - jsonPath: $.cases.*.advocatesDetails.*.code
         
-        - jsonPath: $.cases.*.summon.code
+        - jsonPath: $.cases[?({code} in @.advocatesDetails[*].code)].code
         
         - jsonPath: $.cases.*.advocatesDetails.*.advocate
           type: JSON
@@ -728,7 +746,7 @@ serviceMaps:
         - jsonPath: $.opinions.*.auditDetails.lastModifiedTime
           type: LONG
         - jsonPath: $.opinions.*.code
-		            
+                
   - version: 1.0
     name: lcms legacy load
     description: legacy load case
@@ -737,7 +755,7 @@ serviceMaps:
     - query: INSERT INTO egov_lcms_case (code, isSummon, side, caseType, caseNo, summonDate, plantiffName, pleaderEngagementDetails, receiptDate, reslovtion, reslovtionDate, advocateInfoDate, vakalatnamaGenerationDate, coName, age, address, remarks, caseDetails, defendant, hearingDate, hearingTime, departmentName, year, courtName, ward, bench, stamp, sectionApplied, lastModifiedBy,createdBy, createdTime, lastModifiedTime, tenantId, isUlbinitiated) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
       basePath: $.cases.*
       jsonMaps:       
-      - jsonPath: $.cases.*.code
+      - jsonPath: $.cases.*.summon.code
       
       - jsonPath: $.cases.*.summon.isSummon
         type: BOOLEAN
@@ -853,8 +871,8 @@ serviceMaps:
         type: LONG
     
       - jsonPath: $.hearingDetails.*.tenantId
-  
-      - jsonPath: $.cases.*.code
+      
+      - jsonPath: $.cases[?({code} in @.hearingDetails[*].code)].code
   
       - jsonPath: $.RequestInfo.userInfo.id
         type: STRING
@@ -875,7 +893,7 @@ serviceMaps:
       jsonMaps:
       - jsonPath: $.cases.*.caseVoucher.code
    
-      - jsonPath: $.cases.*.code
+      - jsonPath: $.cases[?({code} in @.caseVoucher.code)].code
    
       - jsonPath: $.caseVoucher.*.vocherType
   
@@ -895,7 +913,7 @@ serviceMaps:
   
       - jsonPath: $.advocatesDetails.*.code
   
-      - jsonPath: $.cases.*.code
+      - jsonPath: $.cases[?({code} in @.advocatesDetails[*].code)].code
   
       - jsonPath: $.advocatesDetails.*.advocate
         type: JSON

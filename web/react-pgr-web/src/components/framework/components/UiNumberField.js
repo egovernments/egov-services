@@ -26,7 +26,11 @@ export default class UiNumberField extends Component {
 						errorText={this.props.fieldErrors[item.jsonPath]}
 						onChange={(e) => {
 							if(e.target.value && !/^\d.*$/.test(e.target.value)) return;
-							this.props.handler(e, item.jsonPath, item.isRequired ? true : false, item.pattern, item.requiredErrMsg, item.patternErrMsg, item.expression, item.expressionMsg)}
+							let val = e.target.value;
+							if(val && item.isNumber) {
+								val = Number(val);
+							};
+							this.props.handler({target: { value: val }}, item.jsonPath, item.isRequired ? true : false, item.pattern, item.requiredErrMsg, item.patternErrMsg, item.expression, item.expressionMsg)}
 						} />
 				);
 		}

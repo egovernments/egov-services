@@ -1,5 +1,7 @@
 var utilities = require('./utility');
 const getTitleCase = utilities.getTitleCase;
+const getType = utilities.getType;
+const getQuery = utilities.getQuery;
 
 let getFieldsFromInnerObject = function(reference, fields, definition, module, jPath, isArray) {
     let errors = {};
@@ -105,7 +107,7 @@ let addAutoFills = function(fields, uiInfoDef) {
     };
 }
 
-let addRadios = function(fields, uiInfoDef) {
+let addRadios = function(fields, uiInfoDef, module) {
     let errors = {};
     let localeFields = {};
     for (var i = 0; i < uiInfoDef.radios.length; i++) {
@@ -132,7 +134,7 @@ let addRadios = function(fields, uiInfoDef) {
     };
 }
 
-let addGroups = function(specifications, fields, uiInfoDef) {
+let addGroups = function(specifications, fields, uiInfoDef, module) {
     let errors = {};
     let localeFields = {};
     for (var key in uiInfoDef.groups) {

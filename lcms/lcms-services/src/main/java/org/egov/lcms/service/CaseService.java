@@ -90,6 +90,12 @@ public class CaseService {
 				caseRequest.getCases());
 	}
 
+	/**
+	 * This will validate the case object
+	 * 
+	 * @param caseRequest
+	 * @throws Exception
+	 */
 	private void validateCase(CaseRequest caseRequest) throws Exception {
 		List<Case> cases = caseRequest.getCases();
 
@@ -107,6 +113,12 @@ public class CaseService {
 		}
 	}
 
+	/**
+	 * This will generate the case code and case reference number
+	 * 
+	 * @param caseRequest
+	 * @throws Exception
+	 */
 	private void generateCaseReferenceNumber(CaseRequest caseRequest) throws Exception {
 		for (Case caseobj : caseRequest.getCases()) {
 
@@ -123,6 +135,13 @@ public class CaseService {
 
 	}
 
+	/**
+	 * This will search the cases based on the given parameters
+	 * 
+	 * @param caseSearchCriteria
+	 * @param requestInfo
+	 * @return {@link CaseResponse}
+	 */
 	public CaseResponse caseSearch(CaseSearchCriteria caseSearchCriteria, RequestInfo requestInfo) {
 
 		List<Case> cases = caseSearchRepository.searchCases(caseSearchCriteria);
@@ -131,7 +150,14 @@ public class CaseService {
 
 	}
 
-	public CaseResponse createVakalatnama(CaseRequest caseRequest) {
+	/**
+	 * This will create the vakalatnama for the case
+	 * 
+	 * @param caseRequest
+	 * @return
+	 */
+	public CaseResponse createVakalatnama(CaseRequest caseRequest) throws Exception {
+		validateVakalatnama(caseRequest);
 		kafkaTemplate.send(propertiesManager.getCreateVakalatnama(), caseRequest);
 		return new CaseResponse(responseFactory.getResponseInfo(caseRequest.getRequestInfo(), HttpStatus.CREATED),
 				caseRequest.getCases());
@@ -230,6 +256,50 @@ public class CaseService {
 	public CaseResponse updateHearingDetails(CaseRequest caseRequest) {
 		kafkaTemplate.send(propertiesManager.getHearingUpdateValidated(), caseRequest);
 		return getResponseInfo(caseRequest);
+	}
+
+	/**
+	 * This APi wil validate the vakalatnama
+	 * 
+	 * @param caseRequest
+	 * @throws Exception
+	 */
+	private void validateVakalatnama(CaseRequest caseRequest) throws Exception {
+		for (Case caseObj : caseRequest.getCases()) {
+			if (caseObj.getTenantId() == null) {
+				throw new CustomException(propertiesManager.getTenantMandatoryCode(),
+						propertiesManager.getTenantMandatoryMessage());
+			} else if (caseObj.getIsVakalatnamaGenerated() == null) {
+				throw new CustomException(propertiesManager.getIsVakalatNamaRequiredCode(),
+						propertiesManager.getIsVakalatNamaRequiredMessage());
+
+			} else if (caseObj.getSummon().getSummonReferenceNo() == null
+					|| caseObj.getSummon().getSummonReferenceNo().isEmpty()) {
+				throw new CustomException(propertiesManager.getSummonrefrencenoCode(),
+						propertiesManager.getSummonrefrencenoMessage());
+			} else if (caseObj.getWitness() == null || caseObj.getWitness().size() <= 0) {
+				throw new CustomException(propertiesManager.getWitnessCode(), propertiesManager.getWitnessMessage());
+			} else if (caseObj.getDepartmentPerson() == null || caseObj.getDepartmentPerson().isEmpty()) {
+				throw new CustomException(propertiesManager.getDepartmenteCode(),
+						propertiesManager.getDepartmentMessage());
+			} else if (caseObj.getDays() == null) {
+				throw new CustomException(propertiesManager.getDaysCode(), propertiesManager.getDaysMessage());
+			} else if (caseObj.getCaseRefernceNo() == null || caseObj.getCaseRefernceNo().isEmpty()) {
+				throw new CustomException(propertiesManager.getRefrencecasenoCode(),
+						propertiesManager.getRefrencecasenoMessage());
+			}
+
+			for (AdvocateDetails advocateDetails : caseObj.getAdvocatesDetails()) {
+
+				if (advocateDetails.getAdvocate().getName() == null
+						|| advocateDetails.getAdvocate().getName().isEmpty())
+					throw new CustomException(propertiesManager.getAdvocatenameCode(),
+							propertiesManager.getAdvocatenameMessage());
+
+			}
+
+		}
+
 	}
 
 }

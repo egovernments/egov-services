@@ -12,31 +12,31 @@ import lombok.Getter;
 @Configuration
 @Getter
 public class PropertiesManager {
-	
+
 	@Value("${egov.services.tenant.hostname}")
 	private String tenantHostName;
-	
+
 	@Value("${egov.services.tenant.basepath}")
 	private String tenantBasePath;
 
 	@Value("${egov.services.tenant.searchpath}")
 	private String tenantSearchPath;
-	
+
 	@Value("${egov.services.egov_idgen.hostname}")
 	private String idHostName;
-	
+
 	@Value("${egov.services.egov_idgen.createpath}")
 	private String idCreatepath;
-	
+
 	@Value("${summon.code.name}")
 	private String summonName;
 
 	@Value("${opinion.ulb.name}")
 	private String opinionUlbName;
-	
+
 	@Value("${opinion.ulb.format}")
 	private String opinionUlbFormat;
-	
+
 	@Value("${egov.lcms.opinion.create}")
 	private String opinionCreateValidated;
 
@@ -45,200 +45,373 @@ public class PropertiesManager {
 
 	@Value("${summom.code.format}")
 	private String summonCodeFormat;
-	
+
 	@Value("${voucher.code.format}")
 	private String voucherCodeFormat;
-	
+
 	@Value("${voucher.code.name}")
 	private String voucherCodeFormatName;
-	
-	
+
 	@Value("${egov.lcms.create.summon.validated}")
 	private String createSummonvalidated;
 
 	@Value("${egov.lcms.search.opinion.error.code}")
 	private String opinionSearchErrorCode;
-	
+
 	@Value("${egov.lcms.code}")
 	private String sortCode;
-	
+
 	@Value("${egov.lcms.json.error}")
 	private String jsonStringError;
-	
+
 	@Value("${egov.lcms.tenant.code}")
 	private String tenantCode;
-	
+
 	@Value("${egov.lcms.tenant.mandatory.code}")
 	private String tenantMandatoryCode;
-	
+
 	@Value("${egov.lcms.tenant.mandatory.message}")
 	private String tenantMandatoryMessage;
-	
+
 	@Value("${egov.lcms.tenant.service.error}")
 	private String tenantServiceErrorMsg;
-	
+
 	@Value("${egov.lcms.parawisecomment.create}")
 	private String paraWiseCreateValidated;
-	
+
 	@Value("${egov.lcms.parawisecomment.update}")
 	private String paraWiseUpdateValidated;
-	
+
 	@Value("${parawisecomment.ulb.name}")
 	private String paraWiseCommentsUlbName;
-	
+
 	@Value("${parawisecomment.ulb.format}")
 	private String paraWiseCommentsUlbFormat;
 
 	@Value("${egov.lcms.search.payment.error.code}")
 	private String paymentSearchErrorCode;
-	
+
 	@Value("${egov.lcms.advocate.payment.create.key}")
-    private String advocatePaymentCreate;
-    
-    @Value("${egov.lcms.advocate.payment.update.key}")
-    private String advocatePaymentUpdate;
-    
-    @Value("${advocate.payment.ulb.format}")
-    private String advocatePaymentUlbFormat;
-    
-    @Value("${advocate.payment.ulb.name}")
-    private String AdvocatePaymentUlbName;
+	private String advocatePaymentCreate;
+
+	@Value("${egov.lcms.advocate.payment.update.key}")
+	private String advocatePaymentUpdate;
+
+	@Value("${advocate.payment.ulb.format}")
+	private String advocatePaymentUlbFormat;
+
+	@Value("${advocate.payment.ulb.name}")
+	private String AdvocatePaymentUlbName;
 
 	@Value("${egov.lcms.update.summon}")
 	private String updateSummonValidate;
-	
+
 	@Value("${egov.lcms.create.vakalatnama}")
 	private String createVakalatnama;
-	
+
 	@Value("${summon.ref.name}")
 	private String summonReferenceGenName;
-	
+
 	@Value("${summon.ref.format}")
 	private String summonRefrenceFormat;
-	
+
 	@Value("${egov.lcms.assign.advocate}")
 	private String assignAdvocate;
-	
+
 	@Value("${case.ref.name}")
 	private String caseReferenceGenName;
-	
+
 	@Value("${case.ref.format}")
-	private String  caseReferenceFormat;
-	
+	private String caseReferenceFormat;
+
 	@Value("${case.ref.name}")
 	private String caseCodeName;
-	
+
 	@Value("${case.ref.format}")
 	private String caseCodeFormat;
-	
+
 	@Value("${egov.lcms.object.parse.exception}")
 	private String parsingError;
-	
+
 	@Value("${case.mandatory.reg.date.message}")
 	private String requiedCaseGenerationDateMessage;
-	
+
 	@Value("${case.mandatory.reg.date.code}")
 	private String requiredCaseGenerationCode;
-	
+
 	@Value("${case.mandatory.department.person.code}")
 	private String requiredDepartmentPersonCode;
-	
+
 	@Value("${case.mandatory.department.person.message}")
 	private String requiredDepartmentPersonMessage;
-	
+
 	@Value("${case.mandatory.department.person.message}")
 	private String isVakalatNamaRequiredCode;
-	
+
 	@Value("${case.mandatory.department.person.message}")
 	private String isVakalatNamaRequiredMessage;
 
 	@Value("${advocate.ulb.name}")
 	private String advocateUlbName;
-	
+
 	@Value("${advocate.ulb.format}")
 	private String advocateUlbFormat;
-	
+
 	@Value("${egov.lcms.create.advocate}")
 	private String createAdvocateTopic;
-	
+
 	@Value("${egov.lcms.update.advocate}")
 	private String updateAdvocateTopic;
-	
+
 	@Value("${invalid.tenant.code}")
 	private String invalidTenantCode;
-	
+
 	@Value("${exception.message}")
 	private String exceptionMessage;
-	
+
 	@Value("${invalid.idgeneration.code}")
 	private String invalidIdGenerationCode;
-	
+
 	@Value("${idgeneration.exception.message}")
 	private String idGenerationExceptionMessage;
-	
+
 	@Value("${invalid.organization.code}")
 	private String invalidOrganizationCode;
-	
+
 	@Value("${organization.exception.message}")
 	private String organizationExceptionMessage;
-	
+
 	@Value("${register.ulb.name}")
 	private String registerUlbName;
-	
+
 	@Value("${register.ulb.format}")
 	private String registerUlbFormat;
-	
+
 	@Value("${egov.lcms.create.register}")
 	private String createRegisterTopic;
-	
+
 	@Value("${egov.lcms.update.register}")
 	private String updateRegisterTopic;
-	
+
 	@Value("${default.page.size}")
 	private String defaultPageSize;
-	
+
 	@Value("${default.page.number}")
 	private String defaultPageNumber;
-	
+
 	@Value("${default.offset}")
 	private String defaultOffset;
-	
+
 	@Value("${egov.lcms.hearingdetails.create}")
 	private String hearingCreateValidated;
-	
+
 	@Value("${egov.lcms.hearingdetails.update}")
 	private String hearingUpdateValidated;
-	
+
 	@Value("${hearingdetails.ulb.name}")
 	private String hearingDetailsUlbName;
-	
+
 	@Value("${hearingdetails.ulb.format}")
 	private String hearingDetailsUlbFormat;
-	
+
 	@Value("${notice.ulb.name}")
 	private String noticeUlbName;
-	
+
 	@Value("${notice.ulb.format}")
 	private String noticeUlbFormat;
-	
+
 	@Value("${egov.lcms.create.notice}")
 	private String createNoticeTopic;
 
-    @Value("${egov.lcms.case.load.key}")
-    private String loadLegacyData;
-    
-    @Value("${advocate.assign.details.code}")
-    private String advocateDetailsCodeName;
-    
-    @Value("${advocate.assign.details.code.format}")
-    private String advocateDetailsCodeFormat;
+	@Value("${egov.lcms.case.load.key}")
+	private String loadLegacyData;
+
+	@Value("${advocate.assign.details.code}")
+	private String advocateDetailsCodeName;
+
+	@Value("${advocate.assign.details.code.format}")
+	private String advocateDetailsCodeFormat;
 
 	@Value("${egov.lcms.update.notice}")
 	private String updateNoticeTopic;
-	
+
 	@Value("${invalid.tenant.ulb.code}")
 	private String invalidTenantUlbCode;
-	
+
 	@Value("${tenant.ulb.exception.message}")
 	private String tenantUlbExceptionMessage;
+
+	@Value("${egov.lcms.courtname.mandatory.code}")
+	private String courtnameCode;
+
+	@Value("${egov.lcms.courtname.mandatory.message}")
+	private String courtnameMessage;
+
+	@Value("${egov.lcms.defendant.mandatory.code}")
+	private String defendentCode;
+
+	@Value("${egov.lcms.defendant.mandatory.message}")
+	private String defendentMessage;
+
+	@Value("${egov.lcms.ward.mandatory.code}")
+	private String wardCode;
+
+	@Value("${egov.lcms.ward.mandatory.message}")
+	private String wardMessage;
+
+	@Value("${egov.lcms.bench.mandatory.code}")
+	private String benchCode;
+
+	@Value("${egov.lcms.bench.mandatory.message}")
+	private String benchMessage;
+
+	@Value("${egov.lcms.caseno.mandatory.code}")
+	private String casenoCode;
+
+	@Value("${egov.lcms.caseno.mandatory.message}")
+	private String casenoMessage;
+
+	@Value("${egov.lcms.casetype.mandatory.code}")
+	private String casetypeCode;
+
+	@Value("${egov.lcms.casetype.mandatory.message}")
+	private String casetypeMessage;
+
+	@Value("${egov.lcms.casedetails.mandatory.code}")
+	private String casedetailsCode;
+
+	@Value("${egov.lcms.casedetails.mandatory.message}")
+	private String casedetailsMessage;
+
+	@Value("${egov.lcms.plaintiff.mandatory.code}")
+	private String plaintiffCode;
+
+	@Value("${egov.lcms.plaintiff.mandatory.message}")
+	private String plaintiffMessage;
+
+	@Value("${egov.lcms.plaintiffaddress.mandatory.code}")
+	private String plaintiffaddressCode;
+
+	@Value("${egov.lcms.plaintiffaddress.mandatory.message}")
+	private String plaintiffaddressMessage;
+
+	@Value("${egov.lcms.year.mandatory.code}")
+	private String yearCode;
+
+	@Value("${egov.lcms.year.mandatory.message}")
+	private String yearMessage;
+
+	@Value("${egov.lcms.side.mandatory.code}")
+	private String sideCode;
+
+	@Value("${egov.lcms.side.mandatory.message}")
+	private String sideMessage;
+
+	@Value("${egov.lcms.hearingdate.mandatory.code}")
+	private String hearingdateCode;
+
+	@Value("${egov.lcms.hearingdate.mandatory.message}")
+	private String hearingdateMessage;
+
+	@Value("${egov.lcms.hearingtime.mandatory.code}")
+	private String hearingtimeCode;
+
+	@Value("${egov.lcms.hearingtime.mandatory.message}")
+	private String hearingtimeMessage;
+
+	@Value("${egov.lcms.stamp.mandatory.code}")
+	private String stampCode;
+
+	@Value("${egov.lcms.stamp.mandatory.message}")
+	private String stampMessage;
+
+	@Value("${egov.lcms.summondate.mandatory.code}")
+	private String summondateCode;
+
+	@Value("${egov.lcms.summondate.mandatory.message}")
+	private String summondateMessage;
+
+	@Value("${egov.lcms.departmentname.mandatory.code}")
+	private String departmentNameCode;
+
+	@Value("${egov.lcms.departmentname.mandatory.message}")
+	private String departmentNameMessage;
+
+	@Value("${egov.lcms.sectionapplied.mandatory.code}")
+	private String sectionappliedCode;
+
+	@Value("${egov.lcms.sectionapplied.mandatory.message}")
+	private String sectionappliedMessage;
+
+	@Value("${egov.lcms.refrenceno.mandatory.code}")
+	private String refrencenoCode;
+
+	@Value("${egov.lcms.refrenceno.mandatory.message}")
+	private String refrencenoMessage;
+
+	@Value("${egov.lcms.summonrefrenceno.mandatory.code}")
+	private String summonrefrencenoCode;
+
+	@Value("${egov.lcms.summonrefrenceno.mandatory.message}")
+	private String summonrefrencenoMessage;
+
+	@Value("${egov.lcms.chiefofficerdetails.mandatory.code}")
+	private String chiefofficerdetailsCode;
+
+	@Value("${egov.lcms.chiefofficerdetails.mandatory.message}")
+	private String chiefofficerdetailsMessage;
+
+	@Value("${egov.lcms.refrencecaseno.mandatory.code}")
+	private String refrencecasenoCode;
+
+	@Value("${egov.lcms.refrencecaseno.mandatory.message}")
+	private String refrencecasenoMessage;
+
+	@Value("${egov.lcms.witness.mandatory.code}")
+	private String witnessCode;
+
+	@Value("${egov.lcms.witness.mandatory.message}")
+	private String witnessMessage;
+
+	@Value("${egov.lcms.advocatename.mandatory.code}")
+	private String advocatenameCode;
+
+	@Value("${egov.lcms.advocatename.mandatory.message}")
+	private String advocatenameMessage;
+
+	@Value("${egov.lcms.department.mandatory.code}")
+	private String departmenteCode;
+
+	@Value("${egov.lcms.department.mandatory.message}")
+	private String departmentMessage;
+
+	@Value("${egov.lcms.days.mandatory.code}")
+	private String daysCode;
+
+	@Value("${egov.lcms.days.mandatory.message}")
+	private String daysMessage;
+
+	@Value("${egov.lcms.caseregistrationdate.mandatory.code}")
+	private String caseregistrationdateCode;
+
+	@Value("${egov.lcms.caseregistrationdate.mandatory.message}")
+	private String caseregistrationdateMessage;
+
+	@Value("${egov.lcms.assign.advocate.mandatory.code}")
+	private String advocateDetailsMandatorycode;
+
+	@Value("${egov.lcms.assign.advocate.mandatory.message}")
+	private String advocateDetailsMandatoryMessage;
+
+	@Value("${egov.lcms.assign.advocatedetails.advocate.code}")
+	private String advocateMandatoryCode;
+
+	@Value("${egov.lcms.assign.advocatedetails.advocate.message}")
+	private String advocateMandatoryMessage;
+
+	@Value("${egov.lcms.assign.advocatedetails.assigndate.code}")
+	private String advocateAssignDateCode;
+
+	@Value("${egov.lcms.assign.advocatedetails.assigndate.message}")
+	private String advocateAssignDateMessage;
 }

@@ -391,7 +391,7 @@ printer = () => {
                   <TextField
                   floatingLabelText={item.label}
                   floatingLabelFixed={true}
-                  defaultValue={item.value}
+                  defaultValue={item.value ? item.value : "NA"}
                   />
                 )
 

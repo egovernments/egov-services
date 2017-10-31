@@ -86,6 +86,19 @@ var dat = {
 					// 	"pattern": "/asset-services/assetCategories/_search?tenantId=default&assetCategoryType={Asset.assetCategory[0].assetCategoryType}|$..name|$..name"
 					// }]
   					},
+						{
+  						"name": "AssetSubType",
+  						"jsonPath": "Asset.assetCategory.id",
+  						"label": "ac.create.Asset.SubCategory.Name",
+  						"pattern": "",
+  						"type": "singleValueList",
+  						//"url": "/egov-mdms-service/v1/_get?&masterName=AssetCategory&moduleName=ASSET|$..id|$..name",
+							"url": "",
+							"isRequired": true,
+  						"isDisabled": false,
+  						"requiredErrMsg": "",
+  						"patternErrMsg": ""
+  					},
             {
 							"name": "Department",
 							"jsonPath": "Asset.departmentCode",

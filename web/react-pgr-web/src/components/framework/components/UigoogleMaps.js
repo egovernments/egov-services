@@ -193,7 +193,7 @@ export default class UigoogleMaps extends Component {
 			case 'google':
 			const actions = [
       <FlatButton
-        label="Select"
+        label="Select" 
         primary={true}
         onClick={this.handleClose}
       />,

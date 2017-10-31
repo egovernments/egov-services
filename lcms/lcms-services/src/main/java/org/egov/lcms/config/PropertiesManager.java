@@ -217,5 +217,11 @@ public class PropertiesManager {
 	
     @Value("${egov.lcms.case.load.key}")
     private String loadLegacyData;
+    
+    @Value("${advocate.assign.details.code}")
+    private String advocateDetailsCodeName;
+    
+    @Value("${advocate.assign.details.code.format}")
+    private String advocateDetailsCodeFormat;
 	
 }

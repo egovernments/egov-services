@@ -64,6 +64,7 @@ public class CaseRowMapper implements RowMapper<Case> {
 		summon.setYear(getString(rs.getObject("year")));
 		summon.setPlantiffName(getString(rs.getObject("plantiffName")));
 		summon.setDefendant(getString(rs.getObject("defendant")));
+		summon.setDefendant(getString(rs.getObject("defendant")));
 		summon.setSectionApplied(getString(rs.getObject("sectionApplied")));
 		summon.setHearingDate(getLong(rs.getObject("hearingDate")));
 		summon.setHearingTime(getLong(rs.getObject("hearingTime")));
@@ -151,14 +152,14 @@ public class CaseRowMapper implements RowMapper<Case> {
 
 			}
 
-			if (rs.getString("documents") != null) {
-				List<Document> documents = new ArrayList<Document>();
-				TypeReference<List<Document>> documentRefType = new TypeReference<List<Document>>() {
+		/*	if (rs.getString("documents") != null) {
+				List<String> documents = new ArrayList<String>();
+				TypeReference<List<String>> documentRefType = new TypeReference<List<String>>() {
 				};
 				documents = objectMapper.readValue(rs.getString("documents"), documentRefType);
 				summon.setDocuments(documents);
 
-			}
+			}*/
 
 			if (rs.getString("witness") != null) {
 				List<String> witness = new ArrayList<String>();

@@ -29,7 +29,7 @@ public class SummonController {
 	@Autowired
 	UniqueCodeGeneration UniqueCodeGeneration;
 
-	@RequestMapping(path = "summmon/_create", method = RequestMethod.POST)
+	@RequestMapping(path = "summon/_create", method = RequestMethod.POST)
 	public ResponseEntity<?> createSummon(@RequestBody @Valid SummonRequest summonRequest) throws Exception {
 		SummonResponse summonResponse = summonService.createSummon(summonRequest);
 		return new ResponseEntity<>(summonResponse, HttpStatus.CREATED);

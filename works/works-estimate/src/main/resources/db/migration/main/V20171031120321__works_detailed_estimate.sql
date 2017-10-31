@@ -1,4 +1,4 @@
-CREATE TABLE egw_detailed_estimate
+CREATE TABLE egw_detailedestimate
 (
   id character varying(256),
   tenantId character varying(256) NOT NULL,
@@ -52,11 +52,11 @@ CREATE TABLE egw_detailed_estimate
   lastmodifiedby character varying(256),
   lastmodifiedtime bigint,
   CONSTRAINT detailed_estimate_pkey PRIMARY  KEY(id,tenantId),
-  CONSTRAINT tenantid_detailed_estimatenumber_unique UNIQUE (tenantId, estimatenumber)
+  CONSTRAINT detailed_estimate_unique_key UNIQUE (tenantId, estimatenumber)
 );
 
 
-CREATE TABLE egw_detailedestimate_assets
+CREATE TABLE egw_estimate_assets
 (
   id character varying(256),
   tenantId character varying(256) NOT NULL,
@@ -66,12 +66,10 @@ CREATE TABLE egw_detailedestimate_assets
   createdtime bigint NOT NULL,
   lastmodifiedby character varying(256),
   lastmodifiedtime bigint,
-  CONSTRAINT assets_estimate_pkey PRIMARY  KEY(id,tenantId),
-  CONSTRAINT tenantid_estimate_asset_unique UNIQUE (tenantId, asset,detailedEstimate)
-
+  CONSTRAINT assets_estimate_pkey PRIMARY  KEY(id,tenantId)
 );
 
-CREATE TABLE egw_detailedestimate_deductions
+CREATE TABLE egw_estimate_deductions
 (
   id character varying(256),
   tenantId character varying(256) NOT NULL,
@@ -83,12 +81,11 @@ CREATE TABLE egw_detailedestimate_deductions
   createdtime bigint NOT NULL,
   lastmodifiedby character varying(256),
   lastmodifiedtime bigint,
-  CONSTRAINT estimate_deductions_pkey PRIMARY  KEY(id,tenantId),
-  CONSTRAINT tenantid_estimate_deductions_unique UNIQUE (tenantId, chartOfAccounts, detailedEstimate)
+  CONSTRAINT estimate_deductions_pkey PRIMARY  KEY(id,tenantId)
 );
 
 
-CREATE TABLE egw_detailedestimate_activity
+CREATE TABLE egw_estimate_activity
 (
   id character varying(256),
   tenantId character varying(256) NOT NULL,
@@ -107,10 +104,9 @@ CREATE TABLE egw_detailedestimate_activity
   lastmodifiedby character varying(256),
   lastmodifiedtime bigint,
   CONSTRAINT estimate_activity_pkey PRIMARY  KEY(id,tenantId)
-  --//TODO Unique key
 );
 
-CREATE TABLE egw_multiyear_detailedestimate
+CREATE TABLE egw_multiyear_estimate
 (
   id character varying(256),
   tenantId character varying(256) NOT NULL,
@@ -121,11 +117,11 @@ CREATE TABLE egw_multiyear_detailedestimate
   createdtime bigint NOT NULL,
   lastmodifiedby character varying(256),
   lastmodifiedtime bigint,
-  CONSTRAINT multiyear_estimate_pkey PRIMARY  KEY(id,tenantId)
-  --//TODO Unique key
+  CONSTRAINT multiyear_estimate_pkey PRIMARY  KEY(id,tenantId),
+  CONSTRAINT multiyear_estimate_unique_key UNIQUE (tenantId, detailedestimate, financialYear)
 );
 
-CREATE TABLE egw_detailedestimate_overheads
+CREATE TABLE egw_estimate_overheads
 (
   id character varying(256),
   tenantId character varying(256) NOT NULL,
@@ -136,8 +132,45 @@ CREATE TABLE egw_detailedestimate_overheads
   createdtime bigint NOT NULL,
   lastmodifiedby character varying(256),
   lastmodifiedtime bigint,
-  CONSTRAINT estimate_overheads_pkey PRIMARY  KEY(id,tenantId)
-  --//TODO Unique key
+  CONSTRAINT estimate_overheads_pkey PRIMARY  KEY(id,tenantId),
+  CONSTRAINT estimate_overheads_unique_key UNIQUE (tenantId, overhead, detailedEstimate)
 
 );
 
+CREATE TABLE egw_estimate_measurementsheet
+(
+ id character varying(256),
+ tenantId character varying(256) NOT NULL,
+ slNo bigint,
+ identifier character varying(2),
+ remarks character varying(1024),
+ no double PRECISION ,
+ length double PRECISION,
+ width double PRECISION,
+ depthOrHeight double PRECISION,
+ quantity double PRECISION NOT NULL,
+ estimateActivity character varying(256) NOT NULL,
+ parent character varying(256),
+ createdby character varying(256) NOT NULL,
+ createdtime bigint NOT NULL,
+ lastmodifiedby character varying(256),
+ lastmodifiedtime bigint,
+ CONSTRAINT estimate_measurement_pkey PRIMARY  KEY(id,tenantId)
+);
+
+
+CREATE TABLE egw_estimate_technicalsanction
+(
+ id character varying(256),
+ tenantId character varying(256) NOT NULL,
+ technicalSanctionNumber character varying(50) NOT NULL,
+ detailedEstimate character varying(256) NOT NULL,
+ technicalSanctionDate bigint NOT NULL,
+ technicalSanctionBy character varying(256) NOT NULL,
+ createdby character varying(256) NOT NULL,
+ createdtime bigint NOT NULL,
+ lastmodifiedby character varying(256),
+ lastmodifiedtime bigint,
+ CONSTRAINT estimate_technicalsanction_pkey PRIMARY  KEY(id,tenantId),
+ CONSTRAINT estimate_technicalsanction_unique_key UNIQUE (tenantId, technicalSanctionNumber)
+);

@@ -391,11 +391,6 @@ public class PropertiesManager {
 	@Value("${egov.lcms.days.mandatory.message}")
 	private String daysMessage;
 
-	@Value("${egov.lcms.caseregistrationdate.mandatory.code}")
-	private String caseregistrationdateCode;
-
-	@Value("${egov.lcms.caseregistrationdate.mandatory.message}")
-	private String caseregistrationdateMessage;
 
 	@Value("${egov.lcms.assign.advocate.mandatory.code}")
 	private String advocateDetailsMandatorycode;

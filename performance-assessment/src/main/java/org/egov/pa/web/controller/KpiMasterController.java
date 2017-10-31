@@ -46,7 +46,7 @@ import javax.validation.Valid;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pa.model.KPI;
-import org.egov.pa.service.PerformanceAssessmentService;
+import org.egov.pa.service.KpiMasterService;
 import org.egov.pa.validator.RequestValidator;
 import org.egov.pa.web.contract.KPIGetRequest;
 import org.egov.pa.web.contract.KPIRequest;
@@ -55,6 +55,7 @@ import org.egov.pa.web.contract.RequestInfoWrapper;
 import org.egov.pa.web.contract.factory.ResponseInfoFactory;
 import org.egov.pa.web.errorhandler.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -75,11 +76,14 @@ public class KpiMasterController {
     @Autowired
     private RequestValidator requestValidator; 
 
-    @Autowired
-    private PerformanceAssessmentService perfAssessmentService;
+    @Autowired 
+	@Qualifier("kpiMasterServ")
+	private KpiMasterService kpiMasterService;
     
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
+    
+    
     
     @PostMapping(value = "/_create")
     @ResponseBody
@@ -93,7 +97,7 @@ public class KpiMasterController {
         final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiRequest, Boolean.TRUE);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-        perfAssessmentService.createNewKpi(kpiRequest);
+        kpiMasterService.createNewKpi(kpiRequest);
         return getCreateUpdateSuccessResponse(kpiRequest); 
     }
     
@@ -109,7 +113,7 @@ public class KpiMasterController {
         final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiRequest, Boolean.FALSE);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-        perfAssessmentService.updateNewKpi(kpiRequest);
+        kpiMasterService.updateNewKpi(kpiRequest);
         return getCreateUpdateSuccessResponse(kpiRequest); 
     }
     
@@ -125,7 +129,7 @@ public class KpiMasterController {
         /*final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiRequest, Boolean.FALSE);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);*/
-        perfAssessmentService.deleteNewKpi(kpiRequest);
+        kpiMasterService.deleteNewKpi(kpiRequest);
         return getCreateUpdateSuccessResponse(kpiRequest);
     }
     
@@ -141,7 +145,7 @@ public class KpiMasterController {
             final ErrorResponse errRes = requestValidator.populateErrors(errors); 
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        List<KPI> kpiList = perfAssessmentService.searchKpi(kpiGetRequest); 
+        List<KPI> kpiList = kpiMasterService.searchKpi(kpiGetRequest); 
         return getSuccessResponse(kpiList, requestInfo); 
     }
     

@@ -46,7 +46,7 @@ import javax.validation.Valid;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pa.model.KpiValueList;
-import org.egov.pa.service.PerformanceAssessmentService;
+import org.egov.pa.service.KpiValueService;
 import org.egov.pa.validator.RequestValidator;
 import org.egov.pa.web.contract.KPIResponse;
 import org.egov.pa.web.contract.KPIValueRequest;
@@ -55,6 +55,7 @@ import org.egov.pa.web.contract.KPIValueSearchResponse;
 import org.egov.pa.web.contract.factory.ResponseInfoFactory;
 import org.egov.pa.web.errorhandler.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -71,8 +72,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class KpiValueController {
 
-    @Autowired
-    private PerformanceAssessmentService perfAssessmentService;
+	@Autowired 
+	@Qualifier("kpiValueServ")
+	private KpiValueService kpiValueService;
     
     @Autowired
     private RequestValidator requestValidator;
@@ -92,7 +94,7 @@ public class KpiValueController {
         final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiValueRequest, Boolean.TRUE);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-        perfAssessmentService.createKpiValue(kpiValueRequest); 
+        kpiValueService.createKpiValue(kpiValueRequest); 
         return new ResponseEntity<KPIResponse>(HttpStatus.OK);
     }
 
@@ -108,7 +110,7 @@ public class KpiValueController {
         final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiValueRequest, Boolean.FALSE);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-        perfAssessmentService.updateKpiValue(kpiValueRequest); 
+        kpiValueService.updateKpiValue(kpiValueRequest); 
         return new ResponseEntity<KPIResponse>(HttpStatus.OK);
     }
     
@@ -124,7 +126,7 @@ public class KpiValueController {
         final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiValueSearchReq);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-        List<KpiValueList> kpiValueList = perfAssessmentService.searchKpiValue(kpiValueSearchReq); 
+        List<KpiValueList> kpiValueList = kpiValueService.searchKpiValue(kpiValueSearchReq); 
         return getSuccessResponse(kpiValueList, kpiValueSearchReq.getRequestInfo()); 
     }
     

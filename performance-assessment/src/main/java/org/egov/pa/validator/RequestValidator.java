@@ -47,7 +47,8 @@ import org.egov.common.contract.response.ErrorField;
 import org.egov.pa.model.Document;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiValue;
-import org.egov.pa.service.PerformanceAssessmentService;
+import org.egov.pa.service.impl.KpiMasterServiceImpl;
+import org.egov.pa.service.impl.KpiValueServiceImpl;
 import org.egov.pa.utils.PerformanceAssessmentConstants;
 import org.egov.pa.web.contract.KPIRequest;
 import org.egov.pa.web.contract.KPIValueRequest;
@@ -67,10 +68,13 @@ import lombok.extern.slf4j.Slf4j;
 public class RequestValidator {
 	
 	@Autowired
-	private PerformanceAssessmentService perfAssessmentService; 
-	
-	@Autowired
 	private RestCallService restCallService; 
+	
+	@Autowired 
+	private KpiMasterServiceImpl kpiMasterService;
+	
+	@Autowired 
+	private KpiValueServiceImpl kpiValueService;
 	
 	private static final String DEFAULT_COUNT = "0"; 
 	private static final String SEARCH_POSSIBLE = "YES"; 
@@ -125,7 +129,7 @@ public class RequestValidator {
 			
 			// Check whether KPI Name and Code already exists
 			if(StringUtils.isNotBlank(kpi.getName()) && StringUtils.isNotBlank(kpi.getCode())) { 
-				boolean recordExists = perfAssessmentService.checkNameOrCodeExists(kpiRequest, createOrUpdate);
+				boolean recordExists = kpiMasterService.checkNameOrCodeExists(kpiRequest, createOrUpdate);
 				if (recordExists) { 
 					errorFields.add(buildErrorField(PerformanceAssessmentConstants.NAMECODE_UNIQUE_CODE, 
 		                    PerformanceAssessmentConstants.NAMECODE_UNIQUE_ERROR_MESSAGE,
@@ -196,7 +200,7 @@ public class RequestValidator {
 			if(null != kpiValueRequest.getKpiValue()) { 
 				for(int i=0 ; i < kpiValueRequest.getKpiValue().size() ; i++) {
 					KpiValue eachValue = kpiValueRequest.getKpiValue().get(i); 
-					if(!perfAssessmentService.checkKpiExists(eachValue.getKpiCode())) { 
+					if(!kpiValueService.checkKpiExists(eachValue.getKpiCode())) { 
 						errorFields.add(buildErrorField(PerformanceAssessmentConstants.KPICODE_INVALID_CODE, 
 			                    PerformanceAssessmentConstants.KPICODE_INVALID_ERROR_MESSAGE,
 			                    PerformanceAssessmentConstants.KPICODE_INVALID_FIELD_NAME));
@@ -208,13 +212,13 @@ public class RequestValidator {
 			                    PerformanceAssessmentConstants.TENANT_INVALID_FIELD_NAME));
 					}
 					
-					if(!perfAssessmentService.checkKpiTargetExists(eachValue.getKpiCode())) { 
+					if(!kpiValueService.checkKpiTargetExists(eachValue.getKpiCode())) { 
 						errorFields.add(buildErrorField(PerformanceAssessmentConstants.TARGET_UNAVAILABLE_CODE, 
 			                    PerformanceAssessmentConstants.TARGET_UNAVAILABLE_ERROR_MESSAGE,
 			                    PerformanceAssessmentConstants.TARGET_UNAVAILABLE_FIELD_NAME));
 					}
 					
-					if(createOrUpdate && perfAssessmentService.checkKpiValueExistsForTenant(eachValue.getKpiCode(), eachValue.getTenantId())) { 
+					if(createOrUpdate && kpiValueService.checkKpiValueExistsForTenant(eachValue.getKpiCode(), eachValue.getTenantId())) { 
 						errorFields.add(buildErrorField(PerformanceAssessmentConstants.CODE_TENANT_UNIQUE_CODE, 
 			                    PerformanceAssessmentConstants.CODE_TENANT_UNIQUE_ERROR_MESSAGE,
 			                    PerformanceAssessmentConstants.CODE_TENANT_UNIQUE_FIELD_NAME));
@@ -255,7 +259,7 @@ public class RequestValidator {
 		if(null != kpiValueSearchRequest.getKpiCodes() && kpiValueSearchRequest.getKpiCodes().size() > 0) { 
 			kpiCount = (kpiValueSearchRequest.getKpiCodes().size() == 1) ? "1" : "*" ;  	
 		}
-		String check = perfAssessmentService.searchPossibilityCheck(tenantCount, kpiCount, finYearCount);
+		String check = kpiValueService.searchPossibilityCheck(tenantCount, kpiCount, finYearCount);
 		if(!check.equals(SEARCH_POSSIBLE)) { 
 			errorFields.add(buildErrorField(PerformanceAssessmentConstants.SEARCH_PARAMETERS_INVALID_CODE,  
                     PerformanceAssessmentConstants.SEARCH_PARAMETERS_INVALID_ERROR_MESSAGE,

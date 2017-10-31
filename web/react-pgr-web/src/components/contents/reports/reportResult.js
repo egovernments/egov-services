@@ -166,9 +166,9 @@ class ShowField extends Component {
         },function(err) {
             console.log(err);
         });
-    } else if (metaData && metaData.reportDetails && metaData.reportDetails.viewPath) {
+    } else if (reportResult.viewPath) {
       localStorage.reportData = JSON.stringify(item);
-      setRoute("/print/report/" + metaData.reportDetails.viewPath);
+      setRoute("/print/report/" + reportResult.viewPath);
     } else if (object.defaultValue && object.defaultValue.search("_url") > -1) {
       // console.log(item1);
       let afterURL = object.defaultValue.split('?')[1];

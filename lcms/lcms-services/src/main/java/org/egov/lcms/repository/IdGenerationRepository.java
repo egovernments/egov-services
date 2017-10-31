@@ -9,6 +9,7 @@ import org.egov.lcms.models.IdGenerationRequest;
 import org.egov.lcms.models.IdGenerationResponse;
 import org.egov.lcms.models.IdRequest;
 import org.egov.tracer.http.LogAwareRestTemplate;
+import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class IdGenerationRepository {
 	 * @param upicFormat
 	 * @return UpicNumber
 	 */
-	public IdGenerationResponse getIdGeneration(String tenantId, RequestInfo requestInfo, String upicFormat, String idName) {
+	public IdGenerationResponse getIdGeneration(String tenantId, RequestInfo requestInfo, String upicFormat, String idName) throws Exception {
 
 		StringBuffer idGenerationUrl = new StringBuffer();
 		idGenerationUrl.append(propertiesManager.getIdHostName());
@@ -61,7 +62,8 @@ public class IdGenerationRepository {
 					+ " request is " + requestInfo);
 			 response = restTemplate.postForObject(idGenerationUrl.toString(), idGeneration, IdGenerationResponse.class);
 		} catch (Exception ex) {
-			// TODO need to throw Exception
+			throw new CustomException(propertiesManager.getInvalidIdGenerationCode(),
+					propertiesManager.getIdGenerationExceptionMessage());
 		}
 		return response;
 	}

@@ -1,6 +1,8 @@
 package org.egov.lcms.repository.builder;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.models.AdvocateSearchCriteria;
 
@@ -63,21 +65,8 @@ public class AdvocateBuilders {
 		
 		if (advocateSearchCriteria.getCode() != null) {
 			
-			String[] codes = advocateSearchCriteria.getCode();
-			if(codes != null && codes.length > 0 ){
-				int count = 1;
-				String stringIds = "";
-				for(String code : codes){
-					if(count < codes.length ){
-						stringIds = "'" + stringIds + code + "',"; 
-					}else{
-						stringIds = "'" + stringIds + code + "'"; 
-					}
-					count++;
-				}
-				
-	            selectQuery.append(" AND code IN (" + stringIds + ")");
-			}			
+			selectQuery.append(" AND code IN ("
+					+ Stream.of(advocateSearchCriteria.getCode()).collect(Collectors.joining("','", "'", "'")) + ")");			
 		}		
 	}
 

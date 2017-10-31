@@ -7,7 +7,7 @@ import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.models.Advocate;
 import org.egov.lcms.models.AdvocateSearchCriteria;
 import org.egov.lcms.repository.builder.AdvocateBuilders;
-import org.egov.lcms.rowmapper.AdvocateRowMapper;
+import org.egov.lcms.repository.rowmapper.AdvocateRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

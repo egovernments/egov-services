@@ -9,6 +9,7 @@ import java.util.List;
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.models.Advocate;
 import org.egov.lcms.models.AuditDetails;
+import org.egov.lcms.models.Document;
 import org.egov.lcms.models.Opinion;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +49,9 @@ public class OpinionRowMapper implements RowMapper<Opinion> {
 		auditDetails.setLastModifiedTime(rs.getBigDecimal("lastmodifiedtime"));
 		opinion.setAuditDetails(auditDetails);
 
-		List<String> documents = new ArrayList<>();
+		List<Document> documents = new ArrayList<Document>();
 		Advocate opinionBy = new Advocate();
-		TypeReference<List<String>> documentReference = new TypeReference<List<String>>() {
+		TypeReference<List<Document>> documentReference = new TypeReference<List<Document>>() {
 		};
 		TypeReference<Advocate> advocateReference = new TypeReference<Advocate>() {
 		};

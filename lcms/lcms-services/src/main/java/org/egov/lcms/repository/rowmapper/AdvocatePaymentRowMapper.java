@@ -12,6 +12,7 @@ import org.egov.lcms.models.AdvocatePayment;
 import org.egov.lcms.models.AuditDetails;
 import org.egov.lcms.models.CaseStatus;
 import org.egov.lcms.models.CaseType;
+import org.egov.lcms.models.Document;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
@@ -26,27 +27,26 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 
 @Component
-public class AdvocatePaymentRowMapper implements RowMapper<AdvocatePayment>{
+public class AdvocatePaymentRowMapper implements RowMapper<AdvocatePayment> {
 
 	@Autowired
 	private ObjectMapper objectMapper;
-	
+
 	@Autowired
 	PropertiesManager propertiesManager;
-	
+
 	@Override
 	public AdvocatePayment mapRow(ResultSet rs, int rowNum) throws SQLException {
 		AuditDetails auditDetails = new AuditDetails();
-		AdvocatePayment advocatePayment=new AdvocatePayment();
+		AdvocatePayment advocatePayment = new AdvocatePayment();
 		advocatePayment.setCode(rs.getString("code"));
-		advocatePayment.setDemandDate((Long)rs.getObject("demanddate"));
+		advocatePayment.setDemandDate((Long) rs.getObject("demanddate"));
 		advocatePayment.setYear(rs.getString("year"));
 		advocatePayment.setCaseNo(rs.getString("caseno"));
 		advocatePayment.setAmountClaimed(rs.getDouble("amountclaimed"));
 		advocatePayment.setAmountRecived(rs.getDouble("amountrecived"));
 		advocatePayment.setAllowance(rs.getDouble("allowance"));
 		advocatePayment.setIsPartialPayment(rs.getBoolean("ispartialpayment"));
-		advocatePayment.setInvoiceDoucment(rs.getString("invoicedoucment"));
 		advocatePayment.setTenantId(rs.getString("tenantid"));
 		auditDetails.setCreatedBy(rs.getString("createdby"));
 		auditDetails.setLastModifiedBy(rs.getString("lastModifiedBy"));
@@ -60,44 +60,52 @@ public class AdvocatePaymentRowMapper implements RowMapper<AdvocatePayment>{
 		advocatePayment.setInstrumentNumber(rs.getString("instrumentnumber"));
 		advocatePayment.setInstrumentDate(rs.getLong("instrumentdate"));
 		advocatePayment.setStateId(rs.getString("stateid"));
-		
+
 		Advocate advocate = new Advocate();
 		CaseType caseType = new CaseType();
 		CaseStatus caseStatus = new CaseStatus();
 		List<AdvocateCharge> advocateCharges = new ArrayList<AdvocateCharge>();
-		
-		
+
 		TypeReference<Advocate> advocateRefObj = new TypeReference<Advocate>() {
 		};
-		
+
 		TypeReference<CaseType> caseTypeRefObj = new TypeReference<CaseType>() {
 		};
-		
+
 		TypeReference<CaseStatus> caseStatusRefObj = new TypeReference<CaseStatus>() {
 		};
-		
+
 		TypeReference<List<AdvocateCharge>> advocateChargesRefObj = new TypeReference<List<AdvocateCharge>>() {
 		};
-		
-		try{
-			if(rs.getString("advocate") != null)
-			advocate = objectMapper.readValue(rs.getString("advocate"), advocateRefObj);
-			if(rs.getString("casetype") != null)
-			caseType = objectMapper.readValue(rs.getString("casetype"), caseTypeRefObj);
-			if(rs.getString("casestatus") != null)
-			caseStatus = objectMapper.readValue(rs.getString("casestatus"), caseStatusRefObj);
-			if(rs.getString("advocatecharges") != null)
-			advocateCharges = objectMapper.readValue(rs.getString("advocatecharges"), advocateChargesRefObj);
-			
-		}catch(Exception ex){
+
+		try {
+
+			if (rs.getString("invoicedoucment") != null) {
+				TypeReference<Document> invoiceDocument = new TypeReference<Document>() {
+				};
+				Document document = new Document();
+				document = objectMapper.readValue(rs.getString("invoicedoucment"), invoiceDocument);
+				advocatePayment.setInvoiceDoucment(document);
+			}
+
+			if (rs.getString("advocate") != null)
+				advocate = objectMapper.readValue(rs.getString("advocate"), advocateRefObj);
+			if (rs.getString("casetype") != null)
+				caseType = objectMapper.readValue(rs.getString("casetype"), caseTypeRefObj);
+			if (rs.getString("casestatus") != null)
+				caseStatus = objectMapper.readValue(rs.getString("casestatus"), caseStatusRefObj);
+			if (rs.getString("advocatecharges") != null)
+				advocateCharges = objectMapper.readValue(rs.getString("advocatecharges"), advocateChargesRefObj);
+
+		} catch (Exception ex) {
 			throw new CustomException(propertiesManager.getJsonStringError(), ex.getMessage());
 		}
-		
+
 		advocatePayment.setAdvocate(advocate);
 		advocatePayment.setCaseType(caseType);
 		advocatePayment.setCaseStatus(caseStatus);
 		advocatePayment.setAdvocateCharges(advocateCharges);
-		
+
 		return advocatePayment;
 	}
 }

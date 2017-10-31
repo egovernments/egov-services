@@ -57,7 +57,7 @@ public class Summon {
 	@NotNull
 
 	@JsonProperty("departmentName")
-	private String departmentName = null;
+	private Department departmentName = null;
 
 	@JsonProperty("sectionApplied")
 	private String sectionApplied = null;
@@ -104,7 +104,7 @@ public class Summon {
 	private String stateId = null;
 
 	@JsonProperty("documents")
-	private List<String> documents = null;
+	private List<Document> documents = null;
 	
 	@JsonProperty("isUlbinitiated")
 	private Boolean isUlbinitiated = null;

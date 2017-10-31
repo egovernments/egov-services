@@ -38,7 +38,7 @@ public class Opinion {
 	private String opinionOn = null;
 
 	@JsonProperty("documents")
-	private List<String> documents = null;
+	private List<Document> documents = null;
 
 	@JsonProperty("opinionDescription")
 	private String opinionDescription = null;

@@ -13,6 +13,8 @@ import org.egov.lcms.models.Case;
 import org.egov.lcms.models.CaseCategory;
 import org.egov.lcms.models.CaseType;
 import org.egov.lcms.models.Court;
+import org.egov.lcms.models.Department;
+import org.egov.lcms.models.Document;
 import org.egov.lcms.models.HearingDetails;
 import org.egov.lcms.models.ParaWiseComment;
 import org.egov.lcms.models.Side;
@@ -27,7 +29,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
-public class caseRowMapper implements RowMapper<Case> {
+public class CaseRowMapper implements RowMapper<Case> {
 
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -62,7 +64,6 @@ public class caseRowMapper implements RowMapper<Case> {
 		summon.setYear(getString(rs.getObject("year")));
 		summon.setPlantiffName(getString(rs.getObject("plantiffName")));
 		summon.setDefendant(getString(rs.getObject("defendant")));
-		summon.setDepartmentName(getString(rs.getObject("departmentName")));
 		summon.setSectionApplied(getString(rs.getObject("sectionApplied")));
 		summon.setHearingDate(getLong(rs.getObject("hearingDate")));
 		summon.setHearingTime(getLong(rs.getObject("hearingTime")));
@@ -92,6 +93,13 @@ public class caseRowMapper implements RowMapper<Case> {
 		};
 
 		try {
+			if (rs.getString("departmentName") != null) {
+				TypeReference<Department> departmentNameRefernce = new TypeReference<Department>() {
+				};
+				Department department = new Department();
+				department = objectMapper.readValue(getString(rs.getString("departmentName")), departmentNameRefernce);
+				summon.setDepartmentName(department);
+			}
 
 			if (rs.getString("caseType") != null) {
 				CaseType caseType = new CaseType();
@@ -144,8 +152,8 @@ public class caseRowMapper implements RowMapper<Case> {
 			}
 
 			if (rs.getString("documents") != null) {
-				List<String> documents = new ArrayList<String>();
-				TypeReference<List<String>> documentRefType = new TypeReference<List<String>>() {
+				List<Document> documents = new ArrayList<Document>();
+				TypeReference<List<Document>> documentRefType = new TypeReference<List<Document>>() {
 				};
 				documents = objectMapper.readValue(rs.getString("documents"), documentRefType);
 				summon.setDocuments(documents);

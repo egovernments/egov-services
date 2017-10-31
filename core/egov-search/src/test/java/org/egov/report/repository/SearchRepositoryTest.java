@@ -14,7 +14,7 @@ import org.junit.Test;
 public class SearchRepositoryTest {
 
 	/**
-	 * Test method for {@link org.egov.report.repository.SearchRepository#getData(org.egov.swagger.model.ReportRequest, org.egov.swagger.model.ReportDefinition)}.
+	 * Test method for {@link org.egov.search.repository.SearchRepository#getData(org.egov.swagger.model.ReportRequest, org.egov.swagger.model.ReportDefinition)}.
 	 */
 	@Test
 	public void testGetData() {

@@ -1,0 +1,1 @@
+ALTER TABLE egov_lcms_case_voucher DROP CONSTRAINT fk_egov_lcms_case_voucher;

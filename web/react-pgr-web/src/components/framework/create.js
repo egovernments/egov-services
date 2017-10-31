@@ -803,8 +803,6 @@ class Report extends Component {
                 },function(err) {
                     console.log(err);
                 });
-                // console.log(id);
-                // console.log(context);
             } else if (value.type == "textField") {
               let object={
                 target: {

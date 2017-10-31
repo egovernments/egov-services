@@ -35,7 +35,6 @@ export default class Fields extends Component{
     let des = translate(obj.description);
     let mandatory = (obj.required == true) ? " *" : ""
     let description = des + mandatory;
-    console.log(obj.dataType);
     if(obj.variable){
       switch(obj.dataType){
         case "string":

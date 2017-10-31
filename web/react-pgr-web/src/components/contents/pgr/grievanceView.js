@@ -582,8 +582,11 @@ class grievanceView extends Component{
               </Row> : ''}
               <Row>
                 <Col xs={12} sm={12} md={12} lg={12}>
-                  <TextField className="custom-form-control-for-textarea" floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('core.lbl.comments')+' *'} fullWidth={true} multiLine={true} rows={2} rowsMax={4} value={grievanceView.systemApprovalComments ? grievanceView.systemApprovalComments : ''} maxLength="500" onChange={(event, newValue) => {
-                    handleChange(newValue, "systemApprovalComments", this.state.commentsMandat, /^.[^]{0,500}$/) }} errorText={fieldErrors.systemApprovalComments ? fieldErrors.systemApprovalComments : ""}/>
+                  <TextField className="custom-form-control-for-textarea" floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('core.lbl.comments')+' *'} fullWidth={true} multiLine={true} rows={2} rowsMax={4}
+                    value={grievanceView.systemApprovalComments ? grievanceView.systemApprovalComments : ''} maxLength="500"
+                    onChange={(event, newValue) => {
+                      handleChange(newValue, "systemApprovalComments", this.state.commentsMandat, /^.[^]{0,500}$/)
+                    }} errorText={fieldErrors.systemApprovalComments ? fieldErrors.systemApprovalComments : ""}/>
                 </Col>
               </Row>
               { localStorage.getItem('type') === 'EMPLOYEE' ?
@@ -594,7 +597,9 @@ class grievanceView extends Component{
                 <Col xs={12} sm={4} md={3} lg={3}>
                   <div className="input-group">
                       <input type="file" className="form-control" ref="file" onChange={(e)=>handleUploadValidation(e, ['doc','docx','xls','xlsx','rtf','pdf','jpeg','jpg','png','txt','zip','dxf'])}/>
-                      <span className="input-group-addon" onClick={() => {this.refs.file.value = ''; this.props.handleFileEmpty();}}><i className="glyphicon glyphicon-trash specific"></i></span>
+                      {files.length > 0 ?
+                      <span className="input-group-addon" style={{cursor:'pointer'}} onClick={() => {this.refs.file.value = ''; this.props.handleFileEmpty();}}><i className="glyphicon glyphicon-trash specific"></i></span>
+                      : ''}
                   </div>
                 </Col>
               </Row> : ""}

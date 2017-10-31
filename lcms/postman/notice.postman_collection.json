@@ -8,7 +8,7 @@
 	},
 	"item": [
 		{
-			"name": "http://localhost:9090/lcms-services/legalcase/notice/_create",
+			"name": "http://localhost:8080/lcms-services/legalcase/notice/_create",
 			"request": {
 				"url": "http://localhost:8080/lcms-services/legalcase/notice/_create",
 				"method": "POST",
@@ -21,14 +21,14 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"RequestInfo\": {\n\t\t\"apiId\": \"org.egov.pt\",\n\t\t\"ver\": \"1.0\",\n\t\t\"ts\": 1503743889632,\n\t\t\"action\": \"asd\",\n\t\t\"did\": \"4354648646\",\n\t\t\"key\": \"xyz\",\n\t\t\"msgId\": \"654654\",\n\t\t\"requesterId\": \"61\",\n\t\t\"userInfo\":{\n        \t\"id\":74\n    \t},\n\t\t\"authToken\":\"c64cfa63-0212-4361-acb0-832bc2b361c0\"\n\t},\n\t\"notice\": {\n\t\t\"tenantId\":\"default\",\n\t\t\"exhibitNo\":\"12345678\",\n\t\t\"courtName\":\"Nagpur High Court\",\n\t\t\"courtAddress\":\"Nagpur\",\n\t\t\"applicant\":\"Anil Sandrapati\",\n\t\t\"defendant\":\"Stevenson Nelli\",\n\t\t\"chiefOfficerDetails\":\"Chief Justice Ramanath Singh\",\n\t\t\"advocateName\":\"Mr. Rahul Mallhotra\",\n\t\t\"day\":\"5\", \n\t\t\"witness\":\"Shubham Malla\",\n\t\t\"noticeType\":\"CREATE_VAKALATNAMA\", \n\t\t\"fileStoreId\":\"1234567dgffhgagfhsg\"\n\t}\n}"
+					"raw": "{\n\t\"RequestInfo\": {\n\t\t\"apiId\": \"org.egov.pt\",\n\t\t\"ver\": \"1.0\",\n\t\t\"ts\": 1503743889632,\n\t\t\"action\": \"asd\",\n\t\t\"did\": \"4354648646\",\n\t\t\"key\": \"xyz\",\n\t\t\"msgId\": \"654654\",\n\t\t\"requesterId\": \"61\",\n\t\t\"userInfo\":{\n        \t\"id\":74\n    \t},\n\t\t\"authToken\":\"574d4de2-e23c-4e4f-9a13-c3ff235ef21c\"\n\t},\n\t\"notice\": {\n\t\t\"tenantId\":\"default\",\n\t\t\"exhibitNo\":\"12345678\",\n\t\t\"courtName\":\"Nagpur High Court\",\n\t\t\"courtAddress\":\"Nagpur\",\n\t\t\"applicant\":\"Anil Sandrapati\",\n\t\t\"defendant\":\"Stevenson Nelli\",\n\t\t\"chiefOfficerDetails\":\"Chief Justice Ramanath Singh\",\n\t\t\"advocateName\":\"Mr. Rahul Mallhotra\",\n\t\t\"day\":\"5\", \n\t\t\"witness\":[\"Shubham M\",\"Alli Baba\"],\n\t\t\"noticeType\":\"CREATE_VAKALATNAMA\", \n\t\t\"fileStoreId\":\"1234567dgffhgagfhsg\"\n\t}\n}"
 				},
 				"description": ""
 			},
 			"response": []
 		},
 		{
-			"name": "http://localhost:8080/lcms-services/legalcase/notice/_update",
+			"name": "http://localhost:9090/lcms-services/legalcase/notice/_update",
 			"request": {
 				"url": "http://localhost:8080/lcms-services/legalcase/notice/_update",
 				"method": "POST",
@@ -41,7 +41,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"RequestInfo\": {\n\t\t\"apiId\": \"org.egov.pt\",\n\t\t\"ver\": \"1.0\",\n\t\t\"ts\": 1503743889632,\n\t\t\"action\": \"asd\",\n\t\t\"did\": \"4354648646\",\n\t\t\"key\": \"xyz\",\n\t\t\"msgId\": \"654654\",\n\t\t\"requesterId\": \"61\",\n\t\t\"userInfo\":{\n        \t\"id\":74\n    \t},\n\t\t\"authToken\":\"c64cfa63-0212-4361-acb0-832bc2b361c0\"\n\t},\n    \"notice\": {\n        \"code\": \"default000001\",\n        \"tenantId\": \"default\",\n        \"exhibitNo\": \"12345678UU\",\n        \"courtName\": \"Maharastra High Court\",\n        \"courtAddress\": \"Mumbai\",\n        \"applicant\": \"Yosadhara Pradhan\",\n        \"defendant\": \"Prasad Khanadagale\",\n        \"chiefOfficerDetails\": \"Chief Justice RMM Hota\",\n        \"advocateName\": \"Mr. Nagendra B\",\n        \"day\": \"5\",\n        \"witness\": \"Sup Malla\",\n        \"noticeType\": \"CREATE_VAKALATNAMA\",\n        \"fileStoreId\": \"1234567dagfhsg\",\n        \"auditDetails\": null\n    }\n}"
+					"raw": "{\n\t\"RequestInfo\": {\n\t\t\"apiId\": \"org.egov.pt\",\n\t\t\"ver\": \"1.0\",\n\t\t\"ts\": 1503743889632,\n\t\t\"action\": \"asd\",\n\t\t\"did\": \"4354648646\",\n\t\t\"key\": \"xyz\",\n\t\t\"msgId\": \"654654\",\n\t\t\"requesterId\": \"61\",\n\t\t\"userInfo\":{\n        \t\"id\":74\n    \t},\n\t\t\"authToken\": \"574d4de2-e23c-4e4f-9a13-c3ff235ef21c\"\n\t},\n\t\"notice\": {\n\t\t\"code\":\"default000001\",\n\t\t\"tenantId\":\"default\",\n\t\t\"exhibitNo\":\"12345678\",\n\t\t\"courtName\":\"Nagpur High Court\",\n\t\t\"courtAddress\":\"Nagpur\",\n\t\t\"applicant\":\"Anil Sandrapati\",\n\t\t\"defendant\":\"Stevenson Nelli\",\n\t\t\"chiefOfficerDetails\":\"Chief Justice Ramanath Singh\",\n\t\t\"advocateName\":\"Mr. Rahul Mallhotra\",\n\t\t\"day\":\"5\", \n\t\t\"witness\":[\"S C Pradhan\",\"Bhupen Pradhan\"],\n\t\t\"noticeType\":\"CREATE_VAKALATNAMA\", \n\t\t\"fileStoreId\":\"1234567dgffhgagfhsg\"\n\t}\n}"
 				},
 				"description": ""
 			},

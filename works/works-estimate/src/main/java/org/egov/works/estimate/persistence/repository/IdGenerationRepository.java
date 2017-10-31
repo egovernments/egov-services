@@ -2,9 +2,11 @@ package org.egov.works.estimate.persistence.repository;
 
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
+import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.config.WorksEstimateServiceConstants;
 import org.egov.works.estimate.domain.exception.ValidationException;
-import org.egov.works.estimate.web.contract.factory.RequestInfoWrapper;
+import org.egov.works.estimate.web.contract.IdGenerationRequest;
+import org.egov.works.estimate.web.contract.IdRequest;
 import org.egov.works.estimate.web.model.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +22,9 @@ public class IdGenerationRepository {
 
     private String url;
 
+    @Autowired
+    private PropertiesManager propertiesManager;
+
     public IdGenerationRepository(final RestTemplate restTemplate,@Value("{egov.idgen.hostname}") final String idGenHostName,
                                   @Value("{works.numbergeneration.uri}") final String url) {
         this.restTemplate = restTemplate;
@@ -28,18 +33,22 @@ public class IdGenerationRepository {
 
     public String generateAbstractEstimateNumber(final String tenantId, final RequestInfo requestInfo) {
         Object response = null;
-        RequestInfoWrapper idRequestWrapper = new RequestInfoWrapper();
-        idRequestWrapper.setRequestInfo(requestInfo);
-     try {
-        response = restTemplate.postForObject(url,
-                idRequestWrapper, Object.class);
-    } catch (Exception e) {
-        throw new ValidationException(null,
-                WorksEstimateServiceConstants.ABSTRACT_ESTIMATE_NUMBER_GENERATION_ERROR, WorksEstimateServiceConstants.ABSTRACT_ESTIMATE_NUMBER_GENERATION_ERROR);
+        IdGenerationRequest idGenerationRequest = new IdGenerationRequest();
+        IdRequest idRequest = new IdRequest();
+        idRequest.setTenantId(tenantId);
+        idRequest.setFormat(propertiesManager.getWorksAbstractEstimateNumberFormat());
+        idRequest.setIdName(propertiesManager.getWorksAbstractEstimateNumber());
+        idGenerationRequest.setRequestInfo(requestInfo);
+        try {
+            response = restTemplate.postForObject(url,
+                    idGenerationRequest, Object.class);
+        } catch (Exception e) {
+            throw new ValidationException(null,
+                    WorksEstimateServiceConstants.ABSTRACT_ESTIMATE_NUMBER_GENERATION_ERROR, WorksEstimateServiceConstants.ABSTRACT_ESTIMATE_NUMBER_GENERATION_ERROR);
 
-    }
-    log.info("Response from id gen service: " + response.toString());
+        }
+        log.info("Response from id gen service: " + response.toString());
 
-    return JsonPath.read(response, "$.idResponses[0].id");
+        return JsonPath.read(response, "$.idResponses[0].id");
     }
 }

@@ -8,12 +8,14 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 // import MenuItem from 'material-ui/MenuItem';
 // import Paper from 'material-ui/Paper';
-
+import {logo, tenantName} from './temp/local';
 import Divider from 'material-ui/Divider';
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import jp from "jsonpath";
 import _ from "lodash";
+import {getTitleCase} from '../framework/utility/utility';
+
 
 // import {brown500} from 'material-ui/styles/colors';
 // import { stack as Menu } from 'react-burger-menu'
@@ -267,6 +269,20 @@ const Logo = (props) => {
         return (<img width="64" src={require("../../images/headerLogo.png")} style={styles.mainLogo} alt="logo"/>);
     // }
   }
+}
+const getTenantId = () => {
+  if(localStorage.getItem("tenantId")) {
+    return localStorage.getItem("tenantId");
+  }
+
+  return window.location.hash.split("#/")[1];
+}
+
+const getTitle = (tenantInfo, tenantContext) => {
+  if(tenantContext) {
+      return tenantContext.name;
+  } else
+      return tenantInfo && tenantInfo[0] && tenantInfo[0].city && tenantInfo[0].city.name ? getTitleCase(tenantInfo[0].city.name) : (tenantName[getTenantId()] || "My City");
 }
 
 class CustomMenu extends Component {
@@ -565,7 +581,8 @@ class CustomMenu extends Component {
       return (
       <div className="custom-menu" style={style}  ref={this.setWrapperRef}>
           <Logo tenantInfo={this.props.tenantInfo}/>
-          <h4 style={{padding:'0 15px'}}>Quick Actions</h4>
+          <span style={{ fontSize:18, marginLeft:2}}>{getTitle(this.props.tenantInfo, this.props.tenantContext)}</span>
+          <h4 style={{padding:'0 15px', fontSize:15, paddingTop:10}}>Quick Actions</h4>
           {
             <TextField
                hintText = "&nbsp;&nbsp;Search"

@@ -14,7 +14,7 @@ var dat = {
 						// 	"name": "AssetIdNo",
 						// 	"jsonPath": "Asset[0].code",
 						// 	"label": "ac.create.Asset.Id.No",
-						// 	"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
+						// 	"pattern": "",
 						// 	"type": "text",
 						// 	"isRequired": false,
 						// 	"isDisabled": true,
@@ -895,17 +895,17 @@ var dat = {
 				"label": "ac.create.Header.Details",
 				"name": "createAsset",
 				"fields": [
-						// {
-						// 	"name": "AssetIdNo",
-						// 	"jsonPath": "Asset[0].code",
-						// 	"label": "ac.create.Asset.Id.No",
-						// 	"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
-						// 	"type": "text",
-						// 	"isRequired": false,
-						// 	"isDisabled": true,
-						// 	"requiredErrMsg": "",
-						// 	"patternErrMsg": ""
-						// },
+						{
+							"name": "AssetIdNo",
+							"jsonPath": "Assets[0].code",
+							"label": "ac.create.Asset.Id.No",
+							"pattern": "",
+							"type": "text",
+							"isRequired": false,
+							"isDisabled": true,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
             {
   						"name": "OldReferenceNumber",
   						"jsonPath": "Assets[0].oldCode",
@@ -1644,7 +1644,7 @@ var dat = {
 							"name": "AssetIdNo",
 							"jsonPath": "Asset[0].code",
 							"label": "ac.create.Asset.Id.No",
-							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
+							"pattern": "",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": true,

@@ -179,9 +179,6 @@ export default class UigoogleMaps extends Component {
 			axios.post('https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&sensor=true')
 				.then(function (response) {
 					addressHolder = response.data.results[0] ? response.data.results[0].formatted_address : '';
-
-            // console.log(address);
-            // addressHolder = address;
             console.log(addressHolder);
 				});
         console.log(addressHolder);
@@ -193,7 +190,7 @@ export default class UigoogleMaps extends Component {
 			case 'google':
 			const actions = [
       <FlatButton
-        label="Select" 
+        label="Select"
         primary={true}
         onClick={this.handleClose}
       />,
@@ -202,7 +199,7 @@ export default class UigoogleMaps extends Component {
 				return (
 					<div>
 					<FlatButton id={item.label.split(".").join("-")} type={item.uiType || "button"} label={item.label} primary={typeof item.primary != 'undefined' ? item.primary : true} secondary={item.secondary || false} onClick={this.handleOpen} disabled={item.isDisabled ? true : false}/>
-					<Dialog
+          <Dialog
           title="Google Maps"
 					style={{width: '90%', height: '90%'}}
           actions={actions}
@@ -214,12 +211,14 @@ export default class UigoogleMaps extends Component {
               let self = this;
 						this.props.handler({target: {value:lng}}, item.jsonPathLng, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
 						this.props.handler({target: {value:lat}}, item.jsonPathLat, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
-            axios.post('https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&sensor=true')
-      				.then(function (response) {
-      					addressHolder = response.data.results[0] ? response.data.results[0].formatted_address : '';
-                console.log(addressHolder);
-                self.props.handler({target: {value:addressHolder}}, item.jsonPathAddress, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
-      				});
+            console.log(item);
+                axios.post('https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&sensor=true')
+          				.then(function (response) {
+          					addressHolder = response.data.results[0] ? response.data.results[0].formatted_address : '';
+                    console.log(addressHolder);
+                    self.props.handler({target: {value:addressHolder}}, item.jsonPathAddress, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
+          				});
+
 
 
 

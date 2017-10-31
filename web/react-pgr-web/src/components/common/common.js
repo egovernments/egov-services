@@ -2074,7 +2074,7 @@ var localization_EN_Data = {
 "reports.asset.accumulatedDepreciation" : "Opening Depreciation Value",
 "reports.asset.grossValue": "opening WDV",
 "reports.asset.depreciationvalue": "Depericiation Value",
-
+"framework.required.note": "Fields are mandatory"
 
 
 

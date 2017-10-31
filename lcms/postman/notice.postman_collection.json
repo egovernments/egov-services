@@ -1,0 +1,99 @@
+{
+	"variables": [],
+	"info": {
+		"name": "notice",
+		"_postman_id": "da05370d-7191-8173-30a8-fbcd4d785ed6",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:9090/lcms-services/legalcase/notice/_create",
+			"request": {
+				"url": "http://localhost:8080/lcms-services/legalcase/notice/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\": {\n\t\t\"apiId\": \"org.egov.pt\",\n\t\t\"ver\": \"1.0\",\n\t\t\"ts\": 1503743889632,\n\t\t\"action\": \"asd\",\n\t\t\"did\": \"4354648646\",\n\t\t\"key\": \"xyz\",\n\t\t\"msgId\": \"654654\",\n\t\t\"requesterId\": \"61\",\n\t\t\"userInfo\":{\n        \t\"id\":74\n    \t},\n\t\t\"authToken\":\"c64cfa63-0212-4361-acb0-832bc2b361c0\"\n\t},\n\t\"notice\": {\n\t\t\"tenantId\":\"default\",\n\t\t\"exhibitNo\":\"12345678\",\n\t\t\"courtName\":\"Nagpur High Court\",\n\t\t\"courtAddress\":\"Nagpur\",\n\t\t\"applicant\":\"Anil Sandrapati\",\n\t\t\"defendant\":\"Stevenson Nelli\",\n\t\t\"chiefOfficerDetails\":\"Chief Justice Ramanath Singh\",\n\t\t\"advocateName\":\"Mr. Rahul Mallhotra\",\n\t\t\"day\":\"5\", \n\t\t\"witness\":\"Shubham Malla\",\n\t\t\"noticeType\":\"CREATE_VAKALATNAMA\", \n\t\t\"fileStoreId\":\"1234567dgffhgagfhsg\"\n\t}\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/lcms-services/legalcase/notice/_update",
+			"request": {
+				"url": "http://localhost:8080/lcms-services/legalcase/notice/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n\t\t\"apiId\": \"org.egov.pt\",\n\t\t\"ver\": \"1.0\",\n\t\t\"ts\": 1503743889632,\n\t\t\"action\": \"asd\",\n\t\t\"did\": \"4354648646\",\n\t\t\"key\": \"xyz\",\n\t\t\"msgId\": \"654654\",\n\t\t\"requesterId\": \"61\",\n\t\t\"userInfo\":{\n        \t\"id\":74\n    \t},\n\t\t\"authToken\":\"c64cfa63-0212-4361-acb0-832bc2b361c0\"\n\t},\n    \"notice\": {\n        \"code\": \"default000001\",\n        \"tenantId\": \"default\",\n        \"exhibitNo\": \"12345678UU\",\n        \"courtName\": \"Maharastra High Court\",\n        \"courtAddress\": \"Mumbai\",\n        \"applicant\": \"Yosadhara Pradhan\",\n        \"defendant\": \"Prasad Khanadagale\",\n        \"chiefOfficerDetails\": \"Chief Justice RMM Hota\",\n        \"advocateName\": \"Mr. Nagendra B\",\n        \"day\": \"5\",\n        \"witness\": \"Sup Malla\",\n        \"noticeType\": \"CREATE_VAKALATNAMA\",\n        \"fileStoreId\": \"1234567dagfhsg\",\n        \"auditDetails\": null\n    }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/lcms-services/legalcase/notice/_search?tenantId=default&code=default000002,default000001",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/lcms-services/legalcase/notice/_search?tenantId=default&code=default000002,default000001",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lcms-services",
+						"legalcase",
+						"notice",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "code",
+							"value": "default000002,default000001",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\": {\n\t\t\"apiId\": \"org.egov.pt\",\n\t\t\"ver\": \"1.0\",\n\t\t\"ts\": 1503743889632,\n\t\t\"action\": \"asd\",\n\t\t\"did\": \"4354648646\",\n\t\t\"key\": \"xyz\",\n\t\t\"msgId\": \"654654\",\n\t\t\"requesterId\": \"61\",\n\t\t\"userInfo\":{\n        \t\"id\":74\n    \t},\n\t\t\"authToken\":\"c64cfa63-0212-4361-acb0-832bc2b361c0\"\n\t}\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

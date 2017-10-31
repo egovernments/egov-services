@@ -114,6 +114,7 @@ paths:
           required: false
           type: string
           format: varchar
+        - $ref: '#/parameters/sortAssets'
       tags:
         - Asset
       responses:
@@ -1786,3 +1787,20 @@ definitions:
               type: array
               items:
                 type: string
+            
+parameters:
+  sortAssets:
+    name: sort
+    in: query
+    description: >-
+      Result will be sorted by code ascending by default if this parameters are not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 3
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](code|name|assetCategory)'
+    default:
+      - +code

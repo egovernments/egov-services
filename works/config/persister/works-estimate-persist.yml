@@ -246,7 +246,7 @@ serviceMaps:
  - version: 1.0
    name: Detailed AbstractEstimate Create
    description: Persists detailed abstract estimate  in egw_detailed_estimate table
-   fromTopic: works-detailed-abstract-estimate-create #need to change. It's a temp name
+   fromTopic: works-detailedestimate-create
    isTransaction: true
    queryMaps:
     - query: INSERT INTO egw_detailedestimate(
@@ -573,7 +573,7 @@ serviceMaps:
  - version: 1.0
    name: Detailed AbstractEstimate Update
    description: Update detailed abstract estimate  in egw_detailed_estimate table
-   fromTopic: works-detailed-abstract-estimate-update #need to change. It's a temp name
+   fromTopic: works-detailedestimate-update
    isTransaction: true
    queryMaps:
     - query: UPDATE egw_detailedestimate SET estimatenumber=?, estimatedate=?, nameofwork=?, description=?, department=?, adminsanctionnumber=?, adminsanctiondate=?, adminsanctionby=?, status=?, workvalue=?, estimatevalue=?, projectcode=?, parent=?, copiedfrom=?, approveddate=?, approvedby=?, copiedestimate=?, beneficiary=?, modeofallotment=?, workstype=?, workssubtype=?, natureofwork=?, ward=?, location=?, longitude=?, latitude=?, workcategory=?, locality=?, councilresolutionnumber=?, councilresolutiondate=?, 

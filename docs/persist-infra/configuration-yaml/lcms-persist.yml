@@ -189,7 +189,7 @@ serviceMaps:
           
         - jsonPath: $.parawiseComments.*.tenantId
         
-        - jsonPath: $.cases.*.code
+        - jsonPath: $.cases[?({code} in @.parawiseComments[*].code)].code
         
         - jsonPath: $.parawiseComments.*.auditDetails.createdBy
         

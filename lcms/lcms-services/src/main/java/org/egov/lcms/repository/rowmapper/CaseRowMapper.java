@@ -188,7 +188,7 @@ public class CaseRowMapper implements RowMapper<Case> {
 			caseObj.setSummon(summon);
 
 			caseObj.setHearingDetails(hearingDetails);
-			caseObj.setAdvocatesDetails(advocateDetails);
+			caseObj.setAdvocateDetails(advocateDetails);
 
 			// caseObj.setAssignedDates(assignedDates);
 			caseObj.setParawiseComments(paraWiseComments);

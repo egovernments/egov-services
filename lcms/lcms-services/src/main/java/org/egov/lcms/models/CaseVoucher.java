@@ -3,11 +3,12 @@ package org.egov.lcms.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class CaseVoucher {
@@ -18,11 +19,11 @@ public class CaseVoucher {
 	@JsonProperty("caseCode")
 	private String caseCode = null;
 	
-	@JsonProperty("vocherType")
-	private VocherType vocherType = null;
+	@JsonProperty("voucherType")
+	private VocherType voucherType;
 	
-	@JsonProperty("vocherDate")
-	private Long vocherDate = null;
+	@JsonProperty("voucherDate")
+	private Long voucherDate = null;
 	
 	@JsonProperty("details")
 	private String details = null;

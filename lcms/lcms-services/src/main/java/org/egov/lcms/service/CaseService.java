@@ -181,17 +181,6 @@ public class CaseService {
 				caseObj.getSummon().setIsSummon(Boolean.FALSE);
 			}
 
-			if (caseObj.getHearingDetails() != null) {
-				for (HearingDetails hearingDetail : caseObj.getHearingDetails()) {
-
-					String hearingcode = uniqueCodeGeneration.getUniqueCode(caseObj.getTenantId(),
-							caseRequest.getRequestInfo(), propertiesManager.getHearingDetailsUlbFormat(),
-							propertiesManager.getHearingDetailsUlbName(), Boolean.FALSE, null);
-					hearingDetail.setCode(hearingcode);
-
-				}
-			}
-
 			String summonCode = uniqueCodeGeneration.getUniqueCode(caseObj.getTenantId(), caseRequest.getRequestInfo(),
 					propertiesManager.getSummonCodeFormat(), propertiesManager.getSummonName(), Boolean.FALSE, null);
 			caseObj.setCode(summonCode);
@@ -203,33 +192,48 @@ public class CaseService {
 			caseObj.getSummon().setSummonReferenceNo(summonRefrence);
 			caseObj.getSummon().setCode(summonCode);
 
-			if (caseObj.getCaseVoucher() != null) {
-				String caseVoucherCode = uniqueCodeGeneration.getUniqueCode(caseObj.getSummon().getTenantId(),
-						caseRequest.getRequestInfo(), propertiesManager.getVoucherCodeFormat(),
-						propertiesManager.getVoucherCodeFormatName(), Boolean.FALSE, null);
-				caseObj.getCaseVoucher().setCode(caseVoucherCode);
-				caseObj.getCaseVoucher().setCaseCode(summonCode);
-			}
-
 			String caseReferenceNumber = uniqueCodeGeneration.getUniqueCode(caseObj.getTenantId(),
 					caseRequest.getRequestInfo(), propertiesManager.getCaseReferenceFormat(),
 					propertiesManager.getCaseReferenceGenName(), Boolean.TRUE,
 					caseObj.getSummon().getCaseType().getCode());
 
 			caseObj.setCaseRefernceNo(caseReferenceNumber);
-			if (caseObj.getAdvocatesDetails() != null) {
-				for (AdvocateDetails advocatedetail : caseObj.getAdvocatesDetails()) {
+
+			kafkaTemplate.send(propertiesManager.getCreateLegacyCase(), caseRequest);
+
+			if (caseObj.getCaseVoucher() != null) {
+				String caseVoucherCode = uniqueCodeGeneration.getUniqueCode(caseObj.getSummon().getTenantId(),
+						caseRequest.getRequestInfo(), propertiesManager.getVoucherCodeFormat(),
+						propertiesManager.getVoucherCodeFormatName(), Boolean.FALSE, null);
+				caseObj.getCaseVoucher().setCode(caseVoucherCode);
+				caseObj.getCaseVoucher().setCaseCode(summonCode);
+
+				kafkaTemplate.send(propertiesManager.getCreateLegacyCaseVoucher(), caseRequest);
+			}
+
+			if (caseObj.getAdvocateDetails() != null) {
+				for (AdvocateDetails advocatedetail : caseObj.getAdvocateDetails()) {
 					String advocateCode = uniqueCodeGeneration.getUniqueCode(caseObj.getTenantId(),
 							caseRequest.getRequestInfo(), propertiesManager.getAdvocateDetailsCodeFormat(),
 							propertiesManager.getAdvocateDetailsCodeName(), Boolean.FALSE, null);
 					advocatedetail.setCode(advocateCode);
 				}
+				kafkaTemplate.send(propertiesManager.getCreateLegacyCaseAdvocate(), caseRequest);
+			}
 
+			if (caseObj.getHearingDetails() != null) {
+				for (HearingDetails hearingDetail : caseObj.getHearingDetails()) {
+
+					String hearingcode = uniqueCodeGeneration.getUniqueCode(caseObj.getTenantId(),
+							caseRequest.getRequestInfo(), propertiesManager.getHearingDetailsUlbFormat(),
+							propertiesManager.getHearingDetailsUlbName(), Boolean.FALSE, null);
+					hearingDetail.setCode(hearingcode);
+
+				}
+				kafkaTemplate.send(propertiesManager.getCreateLegacyHearing(), caseRequest);
 			}
 
 		}
-
-		kafkaTemplate.send(propertiesManager.getLoadLegacyData(), caseRequest);
 
 		return new CaseResponse(responseFactory.getResponseInfo(caseRequest.getRequestInfo(), HttpStatus.CREATED),
 				caseRequest.getCases());
@@ -289,7 +293,7 @@ public class CaseService {
 						propertiesManager.getRefrencecasenoMessage());
 			}
 
-			for (AdvocateDetails advocateDetails : caseObj.getAdvocatesDetails()) {
+			for (AdvocateDetails advocateDetails : caseObj.getAdvocateDetails()) {
 
 				if (advocateDetails.getAdvocate().getName() == null
 						|| advocateDetails.getAdvocate().getName().isEmpty())

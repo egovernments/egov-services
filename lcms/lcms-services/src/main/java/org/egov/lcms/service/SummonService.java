@@ -104,11 +104,15 @@ public class SummonService {
 	 */
 	private void generateAdvocateCode(CaseRequest caseRequest) throws Exception {
 		List<Case> cases = caseRequest.getCases();
+
 		for (Case caseObj : cases) {
-			for (AdvocateDetails advocatedetail : caseObj.getAdvocatesDetails()) {
+			for (AdvocateDetails advocatedetail : caseObj.getAdvocateDetails()) {
 				String advocateCode = uniqueCodeGeneration.getUniqueCode(caseObj.getTenantId(),
 						caseRequest.getRequestInfo(), propertiesManager.getAdvocateDetailsCodeFormat(),
 						propertiesManager.getAdvocateDetailsCodeName(), Boolean.FALSE, null);
+
+	
+
 				advocatedetail.setCode(advocateCode);
 			}
 		}
@@ -205,12 +209,12 @@ public class SummonService {
 		List<Case> cases = caseRequest.getCases();
 		for (Case caseObj : cases) {
 
-			if (caseObj.getAdvocatesDetails() == null || caseObj.getAdvocatesDetails().size() <= 0) {
+			if (caseObj.getAdvocateDetails() == null || caseObj.getAdvocateDetails().size() <= 0) {
 				throw new CustomException(propertiesManager.getAdvocateDetailsMandatorycode(),
 						propertiesManager.getAdvocateDetailsMandatoryMessage());
 			}
 
-			for (AdvocateDetails advocateDetails : caseObj.getAdvocatesDetails()) {
+			for (AdvocateDetails advocateDetails : caseObj.getAdvocateDetails()) {
 
 				if (advocateDetails.getAdvocate() == null) {
 

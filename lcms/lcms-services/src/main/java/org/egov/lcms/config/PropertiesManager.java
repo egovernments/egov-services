@@ -223,14 +223,24 @@ public class PropertiesManager {
 	@Value("${egov.lcms.create.notice}")
 	private String createNoticeTopic;
 
-	@Value("${egov.lcms.case.load.key}")
-	private String loadLegacyData;
-
 	@Value("${advocate.assign.details.code}")
 	private String advocateDetailsCodeName;
 
 	@Value("${advocate.assign.details.code.format}")
 	private String advocateDetailsCodeFormat;
+
+    @Value("${egov.lcms.legacy.case.create}")
+    private String createLegacyCase;
+    
+    @Value("${egov.lcms.legacy.hearing.create}")
+    private String createLegacyHearing;
+    
+    @Value("${egov.lcms.legacy.case.voucher.create}")
+    private String createLegacyCaseVoucher;
+    
+    @Value("${egov.lcms.legacy.case.advocate.create}")
+    private String createLegacyCaseAdvocate;
+    
 
 	@Value("${egov.lcms.update.notice}")
 	private String updateNoticeTopic;

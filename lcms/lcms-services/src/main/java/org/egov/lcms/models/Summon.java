@@ -108,4 +108,7 @@ public class Summon {
 	
 	@JsonProperty("isUlbinitiated")
 	private Boolean isUlbinitiated = null;
+	
+	@JsonProperty("amountReceived")
+	private Double amountReceived = null;
 }

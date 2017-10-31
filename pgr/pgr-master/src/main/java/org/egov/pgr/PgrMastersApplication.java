@@ -79,7 +79,6 @@ public class PgrMastersApplication {
     public static void main(final String[] args) {
         SpringApplicationBuilder application = new SpringApplicationBuilder();
     	application.sources(PgrMastersApplication.class);
-    	application.sources(ReportApp.class);
     	application.run(args);
     	
     }

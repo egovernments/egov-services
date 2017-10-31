@@ -73,7 +73,7 @@ public class AbstractEstimateController {
 		response.setResponseInfo(getResponseInfo(requestInfo));
 		return response;
 	}
-	
+
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").build();

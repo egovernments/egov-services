@@ -81,7 +81,7 @@ public class PersistRepository {
 					//String parentPath = jsonMap.getJsonPath()()
 					String attribute = jsonPath.substring(jsonPath.indexOf("{") + 1, jsonPath.indexOf("}"));
 					log.info("persistList atribute:" + attribute);
-					jsonPath = jsonPath.replace("{".concat(attribute).concat("}"), linkedHashMap.get(attribute).toString());
+					jsonPath = jsonPath.replace("{".concat(attribute).concat("}"),"\""+linkedHashMap.get(attribute).toString()+"\"");
 					log.info("persistList parentPath:" + jsonPath);
 					JSONArray jsonArray = JsonPath.read(document, jsonPath);
 					log.info("ParentPath jsonArray:" + jsonArray);

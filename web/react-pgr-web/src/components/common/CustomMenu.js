@@ -299,7 +299,7 @@ class CustomMenu extends Component {
       path:"",
       menuItems:[]
     }
-    this.handleClickOutside = this.handleClickOutside.bind(this);
+    // this.handleClickOutside = this.handleClickOutside.bind(this);
     this.setWrapperRef = this.setWrapperRef.bind(this);
   }
 
@@ -315,7 +315,7 @@ class CustomMenu extends Component {
 
   componentDidMount() {
 
-    document.addEventListener('mousedown', this.handleClickOutside);
+    // document.addEventListener('mousedown', this.handleClickOutside);
     // console.log(actionList);
     // duplicteMenuItems=jp.query(actionList,'$...path');
     // console.log(duplicteMenuItems);
@@ -348,11 +348,11 @@ class CustomMenu extends Component {
     })
   }
 
-  handleClickOutside(event) {
-      if (this.wrapperRef && !this.wrapperRef.contains(event.target) && event.target.innerHTML != "menu") {
-          // this.props.handleToggle(false);
-      }
-  }
+  // handleClickOutside(event) {
+  //     if (this.wrapperRef && !this.wrapperRef.contains(event.target) && event.target.innerHTML != "menu") {
+  //         // this.props.handleToggle(false);
+  //     }
+  // }
 
 
   changeModulesActions(modules,items)
@@ -477,7 +477,7 @@ class CustomMenu extends Component {
                                style={{whiteSpace: "initial",color:"white"}}
                                key={index}
                                leftIcon={<i className="material-icons marginLeft">view_module</i>}
-                               primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name}</span><span>{item.name}</span></div>}
+                               primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name ||""}</span><span>{item.name ||""}</span></div>}
                                rightIcon={<i className="material-icons">keyboard_arrow_right</i>}
                                onTouchTap={()=>{menuChangeTwo(!item.path?item.name:item.path)}}
                             />
@@ -495,7 +495,7 @@ class CustomMenu extends Component {
                                key={index}
                                onTouchTap={()=>{checkUrl(item); document.title=item.name; changeRoute(menuConvention[item.path])}}
                                leftIcon={<i className="material-icons marginLeft">view_module</i>}
-                               primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name}</span><span>{item.name}</span></div>}
+                               primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name ||""}</span><span>{item.name  ||""}</span></div>}
                             />
 
                       )
@@ -517,7 +517,7 @@ class CustomMenu extends Component {
                              <MenuItem
                                   style={{whiteSpace: "initial",color:"white"}}
                                   leftIcon={<i style={{top: "12px", margin: "0px", left: "24px"}} className="material-icons marginLeft">view_module</i>}
-                                  primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name}</span><span>{item.name}</span></div>}
+                                  primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name ||""}</span><span>{item.name ||""}</span></div>}
                                />
                             </a>
                           )
@@ -540,7 +540,7 @@ class CustomMenu extends Component {
                             style={{whiteSpace: "initial",color:"white"}}
                              onTouchTap={()=>{checkUrl(item); document.title=item.displayName;}}
                              leftIcon={<i className="material-icons marginLeft">view_module</i>}
-                             primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.displayName}</span><span>{item.displayName}</span></div>}
+                             primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.displayName ||""}</span><span>{item.displayName ||""}</span></div>}
                           />
                       </Link>
                     )
@@ -562,7 +562,7 @@ class CustomMenu extends Component {
                            <MenuItem
                                 style={{whiteSpace: "initial",color:"white"}}
                                 leftIcon={<i className="material-icons marginLeft">view_module</i>}
-                                primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.displayName}</span><span>{item.displayName}</span></div>}
+                                primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.displayName ||""}</span><span>{item.displayName ||""}</span></div>}
                              />
                           </a>
                         )

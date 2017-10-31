@@ -2110,8 +2110,84 @@ var localization_EN_Data = {
 "vehicles.create.group.title.InsuranceDetails": "Insurance Details for Contracted Vehicle-Marathi",
 "vehicles.create.group.title.PurchaseDetails": "Purchase Details-Marathi",
 "vehicles.create.group.title.WarrantyDetails": "Warranty Details - Marathi",
-"error.license.feeDetailYearNotFound ": "Financial Does not exists for Current/Future Year-Marathi"
+"error.license.feeDetailYearNotFound ": "Financial Does not exists for Current/Future Year-Marathi",
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"reports.asset.fromDate" :"From Date",
+  "reports.asset.toDate" :"To Date",
+  "reports.asset.assetCategory" :"Asset Category",
+ "reports.asset.id"                           : "AssetId",
+ "reports.asset.code"                         : "Assetcode",
+ "reports.asset.quantity"                     : "Quantity",
+ "reports.asset.plintharea"                   : "Plinth Area",
+ "reports.asset.cubiccontents"                : "Cubic Contents",
+ "reports.asset.landsurveyno"                : "Survey Number Of Land",
+ "reports.asset.length"                       : "Dimension Length",
+ "reports.asset.width"                       : "Dimension Width",
+ "reports.asset.height"                       : "Dimension Height",
+ "reports.asset.totalarea"                   : "Area Of Land On which Constructed",
+ "reports.asset.acquiredfrom"                : "From Whom Acquired",
+ "reports.asset.anticipatedLife"              : "Anticipated Life Of Asset",
+ "reports.asset.modeofacquisition"          : "Mode Of Acquisition",
+ "reports.asset.warrantyexpirydate"         : "Warranty Expiry Date",
+ "reports.asset.defectliability"             : "Defect Liability Year",
+ "reports.asset.defectliabilitymonth"        : "Defect Liability Month",
+ "reports.asset.defectliabilityday"          : "Defect Liability Day",
+ "reports.asset.securitydepositretained"      : "Security Deposit Retained",
+ "reports.asset.securitydepositrealized"     : "Security Deposit Realized",
+ "reports.asset.dateofcreation"               : "Asset Creation Date",
+ "reports.asset.acquisitiondate"             : "Date Of Acquisition",
+ "reports.asset.grossvalue"                  : "gross Value(opening Written Down Value)",
+ "reports.asset.originalvalue"               : "Original Value",
+ "reports.asset.currentamount"                : "Closing Written Down Value",
+ "reports.asset.disposalsalevalue"            : "Disposal Sale value",
+ "reports.asset.disposalvoucherno"           : "Disposal Voucher No",
+ "reports.asset.disposaldate"                 : "Date Of Diposal",
+ "reports.asset.revaluationdate"              : "Revaluation Date",
+ "reports.asset.incrementalrevalsum"          : "Addition Amount",
+ "reports.asset.decrementalrevalsum"         : "Decuted Amount",
+ "reports.asset.totaldepreciationval"        : "Total Depreciation amount",
+ "reports.asset.name"   :   "Name",
+ "reports.asset.FundSource " : "Source Of fund",
+ "reports.asset.orderNumber" : "Order Number",
+ "reports.asset.warrantyavailable" :  "Warranty",
+ "reports.asset.location" :"Location",
+ "reports.asset.wipreferenceNo" : "Reference Number Of Wip",
+ "reports.asset.floors"   : "No Of Floor",
+ "reports.asset.titleDocuments" : "Title documents available",
+ "reports.asset.soldTo" : "sold To",
+ "reports.asset.accumulatedDepreciation" : "Opening Depreciation Value",
+ "reports.asset.grossValue": "opening WDV",
+ "reports.asset.depreciationvalue": "Depericiation Value",
+ "reports.asset.currentvalue": "Current Value",
+
+"reports.asset.ordernumber":"Order Number",
+"reports.asset.wipreferenceno":"Wip Reference No",
+"reports.asset.buyername":"Buyer Name",
+"reports.asset.titledocumentsavailable":"Title Document Available",
+"reports.asset.accumulateddepreciation":"Aaccumulated Depreciation",
 
 
 

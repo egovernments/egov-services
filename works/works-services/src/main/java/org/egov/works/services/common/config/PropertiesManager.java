@@ -25,5 +25,11 @@ public class PropertiesManager {
 
     @Value("${kafka.topics.works.documentdetails.update.name}")
     private String documentDetailsUpdateTopic;
+    
+    @Value("${egov.services.egov_mdms.hostname}")
+    private String mdmsServiceHostname;
+    
+	@Value("${egov.services.egov_mdms.searchpath}")
+	private String mdmsBySearchCriteriaUrl;
 
 }

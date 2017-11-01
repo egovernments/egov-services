@@ -287,8 +287,8 @@ class ShowForm extends Component {
         }}>
 
         <Card style={styles.marginStyle}>
-          <CardHeader style={{paddingBottom:0}} title={!_.isEmpty(metaData)?metaData.reportDetails
-.summary:""}/>
+          <CardHeader style={{paddingBottom:0}} title={!_.isEmpty(metaData) && metaData.reportDetails ? metaData.reportDetails
+.summary : ""}/>
           <CardText style={{padding:0}}>
           <Grid>
             <Row>

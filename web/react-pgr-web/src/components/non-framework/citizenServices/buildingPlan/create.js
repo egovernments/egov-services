@@ -1496,7 +1496,7 @@ class Report extends Component {
                                         {self.state.Receipt[0].instrument.instrumentType.name=="Online" ? <td> {getFullDate(self.state.Receipt[0].Bill[0].billDetails[0].receiptDate)} </td> : <td> {getFullDate(self.state.Receipt[0].Bill[0].billDetails[0].receiptDate)}</td>}
 
                                         <td colSpan={6}>
-                                          {self.state.Receipt[0].instrument.instrumentType.name == ("Cash" || "Online") ? "NA" : self.state.Receipt[0].instrument.bank.name}
+                                          {self.state.Receipt[0].instrument.instrumentType.name == "Cash" || self.state.Receipt[0].instrument.instrumentType.name == "Online" ? "NA" : self.state.Receipt[0].instrument.bank.name}
                                         </td>
                                       </tr>
                                   </tbody>

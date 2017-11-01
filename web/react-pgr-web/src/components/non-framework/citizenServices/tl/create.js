@@ -1564,7 +1564,7 @@ if(property == "licenses[0].categoryId"){
                                         {self.state.Receipt[0].instrument.instrumentType.name=="Online" ? <td> {getFullDate(self.state.Receipt[0].Bill[0].billDetails[0].receiptDate)} </td> : <td> {getFullDate(self.state.Receipt[0].Bill[0].billDetails[0].receiptDate)}</td>}
 
                                         <td colSpan={6}>
-                                          {self.state.Receipt[0].instrument.instrumentType.name ==("Online" ||"Cash") ? "NA" : self.state.Receipt[0].instrument.bank.name}
+                                          {self.state.Receipt[0].instrument.instrumentType.name == "Online" || self.state.Receipt[0].instrument.instrumentType.name == "Cash" ? "NA" : self.state.Receipt[0].instrument.bank.name}
                                         </td>
                                       </tr>
                                   </tbody>

@@ -1217,7 +1217,7 @@ class NoDues extends Component {
                                           {Receipt[0].instrument.instrumentType.name=="Online"?<td colSpan={2}>{getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}</td>: <td colSpan={2}>{getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}</td>}
 
 
-                                          {Receipt[0].instrument.instrumentType.name==("Online" || "Cash")?<td colSpan={2}>NA</td>: <td colSpan={2}>Receipt[0].instrument.bank.name</td>}
+                                          {Receipt[0].instrument.instrumentType.name == "Online" || Receipt[0].instrument.instrumentType.name == "Cash" ?<td colSpan={2}>NA</td>: <td colSpan={2}>Receipt[0].instrument.bank.name</td>}
 
 
                                       </tr>

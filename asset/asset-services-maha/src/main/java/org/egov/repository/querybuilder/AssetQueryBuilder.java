@@ -17,7 +17,8 @@ public class AssetQueryBuilder {
     @Autowired
     private ApplicationProperties applicationProperties;
 
-    private static final String BASE_QUERY = "SELECT * from egasset_asset asset ";
+    private static final String BASE_QUERY = "SELECT *,asd.code as landcode from egasset_asset asset left outer join egasset_asset_landdetails asd ON "
+    		+ " asset.id=asd.assetid AND asset.tenantid=asd.tenantid ";
 
     @SuppressWarnings("rawtypes")
     public String getQuery(final AssetCriteria searchAsset, final List preparedStatementValues) {

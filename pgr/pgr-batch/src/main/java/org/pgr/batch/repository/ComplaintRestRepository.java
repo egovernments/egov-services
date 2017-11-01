@@ -28,7 +28,7 @@ public class ComplaintRestRepository {
 
     public ServiceResponse getComplaintsEligibleForEscalation(String tenantId, Long userId) {
 
-        String status = String.join(",", Arrays.asList("FORWARDED", "REGISTERED", "INPROGRESS", "REOPENED"));
+        String status = String.join(",", Arrays.asList("FORWARDED", "REGISTERED", "INPROGRESS", "REOPENED", "ONHOLD"));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         String escalationDate = simpleDateFormat.format(new Date());
 

@@ -108,7 +108,7 @@ export default class assetImmovableReport extends Component {
 												<b> निधीचे स्रोत</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "left"}}>
-												<b>N/A</b>
+												<b>{this.props.data[42]?this.props.data[42]:""}</b>
 										</td>
 									</tbody>
 
@@ -145,7 +145,7 @@ export default class assetImmovableReport extends Component {
 												<b>स्थान</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "left"}}>
-												<b>N/A</b>
+												<b>{this.props.data[43]?this.props.data[43]:""}</b>
 										</td>
 										<td colSpan={5} style={{textAlign: "left"}}>
 												<b>दोषी दायित्व</b>
@@ -444,7 +444,7 @@ export default class assetImmovableReport extends Component {
 													<b>{numberWithCommas(this.props.data[29]?this.props.data[29]:"")}</b>
 											</td>
 											<td style={{textAlign: "center"}} >
-													<b>N/A</b>
+													<b>{this.props.data[23]?this.props.data[23]:""}</b>
 											</td>
 											<td style={{textAlign: "center"}} >
 													<b>{numberWithCommas(this.props.data[40]?this.props.data[40]:"")}</b>
@@ -459,7 +459,7 @@ export default class assetImmovableReport extends Component {
 													<b>{numberWithCommas(this.props.data[23]?this.props.data[23]:"")}</b>
 											</td>
 											<td style={{textAlign: "center"}} >
-													<b>N/A</b>
+													<b></b>
 											</td>
 									</tr>
 									</tbody>

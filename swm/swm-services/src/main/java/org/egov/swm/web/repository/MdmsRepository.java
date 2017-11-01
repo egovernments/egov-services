@@ -39,12 +39,18 @@
  */
 package org.egov.swm.web.repository;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.swm.web.contract.MasterDetails;
+import org.egov.swm.web.contract.MdmsCriteria;
 import org.egov.swm.web.contract.MdmsRequest;
 import org.egov.swm.web.contract.MdmsResponse;
+import org.egov.swm.web.contract.ModuleDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import net.minidev.json.JSONArray;
 
 @Service
 public class MdmsRepository {
@@ -62,7 +68,33 @@ public class MdmsRepository {
 		this.mdmsBySearchCriteriaUrl = mdmsServiceHostname + mdmsBySearchCriteriaUrl;
 	}
 
-	public MdmsResponse getByCriteria(MdmsRequest mdmsRequest) {
-		return restTemplate.postForObject(mdmsBySearchCriteriaUrl, mdmsRequest, MdmsResponse.class);
+	public JSONArray getByCriteria(String tenantId, String moduleName, String masterName, String filterFieldName,
+			String filterFieldValue, RequestInfo requestInfo) {
+
+		MasterDetails[] masterDetails;
+		ModuleDetails[] moduleDetails;
+		MdmsRequest request = null;
+		MdmsResponse response = null;
+		masterDetails = new MasterDetails[1];
+		moduleDetails = new ModuleDetails[1];
+
+		masterDetails[0] = MasterDetails.builder().name(masterName)
+				.filter("[?(@." + filterFieldName + " == '" + filterFieldValue + "')]").build();
+		moduleDetails[0] = ModuleDetails.builder().moduleName(moduleName).masterDetails(masterDetails).build();
+
+		request = MdmsRequest.builder()
+				.mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetails).tenantId(tenantId).build())
+				.requestInfo(requestInfo).build();
+		response = restTemplate.postForObject(mdmsBySearchCriteriaUrl, request, MdmsResponse.class);
+		if (response == null || response.getMdmsRes() == null || !response.getMdmsRes().containsKey(moduleName)
+				|| response.getMdmsRes().get(moduleName) == null
+				|| !response.getMdmsRes().get(moduleName).containsKey(masterName)
+				|| response.getMdmsRes().get(moduleName).get(masterName) == null) {
+			return null;
+		} else {
+
+			return response.getMdmsRes().get(moduleName).get(masterName);
+
+		}
 	}
 }

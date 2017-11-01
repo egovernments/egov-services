@@ -19,10 +19,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VehicleFuellingDetails {
 
-	@Length(min = 1, max = 256)
-	@JsonProperty("id")
-	private String id = null;
-
 	@NotNull
 	@Length(min = 1, max = 128)
 	@JsonProperty("tenantId")
@@ -37,12 +33,8 @@ public class VehicleFuellingDetails {
 	private Long transactionDate = null;
 
 	@NotNull
-	@JsonProperty("vehicleType")
-	private VehicleType vehicleType = null;
-
-	@NotNull
-	@JsonProperty("vehicleRegNo")
-	private Vehicle vehicleRegNo = null;
+	@JsonProperty("vehicle")
+	private Vehicle vehicle = null;
 
 	@NotNull
 	@JsonProperty("vehicleReadingDuringFuelling")
@@ -53,9 +45,8 @@ public class VehicleFuellingDetails {
 	private RefillingPumpStation refuellingStation = null;
 
 	@NotNull
-	@Length(min = 1, max = 256)
 	@JsonProperty("fuelFilled")
-	private String fuelFilled = null;
+	private Double fuelFilled = null;
 
 	@NotNull
 	@JsonProperty("typeOfFuel")
@@ -73,6 +64,9 @@ public class VehicleFuellingDetails {
 	@NotNull
 	@JsonProperty("receiptDate")
 	private Long receiptDate = null;
+
+	@JsonProperty("receiptCopy")
+	private Document receiptCopy = null;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;

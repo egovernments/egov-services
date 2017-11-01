@@ -1,6 +1,5 @@
 package org.egov.swm.domain.model;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -22,8 +21,8 @@ public class FuelType {
 
 	@NotNull
 	@Length(min = 1, max = 256)
-	@JsonProperty("id")
-	private String id = null;
+	@JsonProperty("code")
+	private String code = null;
 
 	@NotNull
 	@Length(min = 4, max = 128)
@@ -34,14 +33,5 @@ public class FuelType {
 	@Length(min = 1, max = 128)
 	@JsonProperty("name")
 	private String name = null;
-
-	@NotNull
-	@Length(min = 1, max = 128)
-	@JsonProperty("code")
-	private String code = null;
-
-	@Valid
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
 
 }

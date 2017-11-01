@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.swm.domain.model.BinIdDetails;
+import org.egov.swm.domain.model.BinDetails;
+import org.egov.swm.domain.model.BinDetailsSearch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class BinIdDetailsJdbcRepository {
+public class BinDetailsJdbcRepository {
 
 	@Autowired
 	public JdbcTemplate jdbcTemplate;
@@ -22,14 +23,14 @@ public class BinIdDetailsJdbcRepository {
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Transactional
-	public void delete(String collectionPointId) {
-		String delQuery = "delete from  egswm_biniddetails where collectionPointId = '" + collectionPointId + "'";
+	public void delete(String collectionPoint) {
+		String delQuery = "delete from  egswm_bindetails where collectionPoint = '" + collectionPoint + "'";
 		jdbcTemplate.execute(delQuery);
 	}
 
-	public List<BinIdDetails> search(BinIdDetails searchRequest) {
+	public List<BinDetails> search(BinDetailsSearch searchRequest) {
 
-		String searchQuery = "select * from egswm_biniddetails :condition ";
+		String searchQuery = "select * from egswm_bindetails :condition ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
@@ -66,28 +67,12 @@ public class BinIdDetailsJdbcRepository {
 			paramValues.put("assetOrBinId", searchRequest.getAssetOrBinId());
 		}
 
-		if (searchRequest.getCollectionPointId() != null) {
+		if (searchRequest.getCollectionPoint() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("collectionPointId =:collectionPointId");
-			paramValues.put("collectionPointId", searchRequest.getCollectionPointId());
-		}
-
-		if (searchRequest.getLatitude() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("latitude =:latitude");
-			paramValues.put("latitude", searchRequest.getLatitude());
-		}
-
-		if (searchRequest.getLongitude() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("longitude =:longitude");
-			paramValues.put("longitude", searchRequest.getLongitude());
+			params.append("collectionPoint =:collectionPoint");
+			paramValues.put("collectionPoint", searchRequest.getCollectionPoint());
 		}
 
 		if (searchRequest.getRfid() != null) {
@@ -106,7 +91,7 @@ public class BinIdDetailsJdbcRepository {
 
 			searchQuery = searchQuery.replace(":condition", "");
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(BinIdDetails.class);
+		BeanPropertyRowMapper row = new BeanPropertyRowMapper(BinDetails.class);
 
 		return namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
 	}

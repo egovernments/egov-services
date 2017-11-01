@@ -18,9 +18,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BinIdDetails {
+public class BinDetails {
 
-	@Length(min = 1, max = 256)
 	@JsonProperty("id")
 	private String id = null;
 
@@ -28,11 +27,6 @@ public class BinIdDetails {
 	@Length(min = 1, max = 128)
 	@JsonProperty("tenantId")
 	private String tenantId = null;
-
-	@NotNull
-	@Size(min = 1, max = 256)
-	@JsonProperty("collectionPointId")
-	private String collectionPointId = null;
 
 	@Size(min = 5, max = 256)
 	@JsonProperty("assetOrBinId")
@@ -44,11 +38,5 @@ public class BinIdDetails {
 	@Size(min = 1, max = 256)
 	@JsonProperty("rfid")
 	private String rfid = null;
-
-	@JsonProperty("latitude")
-	private Double latitude = null;
-
-	@JsonProperty("longitude")
-	private Double longitude = null;
 
 }

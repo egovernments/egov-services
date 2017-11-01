@@ -3,6 +3,7 @@ package org.egov.swm.domain.repository;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.VehicleFuellingDetails;
 import org.egov.swm.domain.model.VehicleFuellingDetailsSearch;
+import org.egov.swm.persistence.repository.DocumentJdbcRepository;
 import org.egov.swm.persistence.repository.VehicleFuellingDetailsJdbcRepository;
 import org.egov.swm.web.requests.VehicleFuellingDetailsRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class VehicleFuellingDetailsRepository {
 
 	@Autowired
 	private VehicleFuellingDetailsJdbcRepository vehicleFuellingDetailsJdbcRepository;
+
+	@Autowired
+	private DocumentJdbcRepository documentJdbcRepository;
 
 	@Value("${egov.swm.vehiclefuellingdetails.save.topic}")
 	private String saveTopic;
@@ -40,6 +44,10 @@ public class VehicleFuellingDetailsRepository {
 
 	public VehicleFuellingDetailsRequest update(VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
 
+		for (VehicleFuellingDetails vfd : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
+			documentJdbcRepository.delete(vfd.getTransactionNo());
+		}
+		
 		kafkaTemplate.send(updateTopic, vehicleFuellingDetailsRequest);
 
 		kafkaTemplate.send(indexerTopic, vehicleFuellingDetailsRequest.getVehicleFuellingDetails());

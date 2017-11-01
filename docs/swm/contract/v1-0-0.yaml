@@ -676,7 +676,7 @@ definitions:
       type: object
       description: Creates a mapping between collection types and collection points. Also captures the expected garbage collection at collection points. Display the list of bins associated with respective collection points
       properties:
-        code:
+        id:
           type: string
           description: Unique Identifier of the CollectionPointDetails
           maxLength: 256
@@ -726,7 +726,7 @@ definitions:
         startingCollectionPoint:
           description: Starting point will be shown based on what collection type  and what location has been selected.
           $ref: "#/definitions/CollectionPoint"
-        dumpingGround:
+        endingDumpingGroundPoint:
           description: This dropdown will show the list of dumping grounds and processing plants. Either endPoint or Dumping ground can be selected. At least one has to be selected
           $ref: "#/definitions/DumpingGround"
           format: singleValueList
@@ -826,10 +826,12 @@ definitions:
           example: KA519876
         vehicleType:
           $ref: "#/definitions/VehicleType"
-        vehiclePurchaseInfo:
-          $ref: "#/definitions/VehiclePurchaseInfo"
+        purchaseInfo:
+          $ref: "#/definitions/PurchaseInfo"
         fuelType:
           $ref: "#/definitions/FuelType"
+        ulbOwnedVehicle:
+          type: boolean
         operatorsReq:
           type: integer
           format: int64
@@ -842,7 +844,7 @@ definitions:
         driver:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/hr/contracts/hr-employee/v1-0-0.yml#/definitions/Employee'
           description: name of the driver who will drive the Vehicle. Driver name shall be fetched from HRMS. Assumption-> One driver shall be assigned to one vehicle only. Raise an visual alert if driver is being assigned to more than 1 vehicle but allow the assignment.
-        vehicleManufacturingDetails:
+        manufacturingDetails:
           $ref: '#/definitions/ManufacturingDetails'
         insuranceDetail:
           $ref: '#/definitions/InsuranceDetails'
@@ -859,28 +861,28 @@ definitions:
           format: int64
           description: If date provided is past date, vehicle is not under warranty
           x-displayformat: 26/10/2017
+        remarks:
+          type: string
+          description: ULB admin can enter a comment 
+          maxLength: 300
+          minLength: 15
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - tenantId
       - regNumber
       - vehicleType
-      - vehiclePurchaseInfo
+      - purchaseInfo
       - fuelType
-      - vehicleManufacturingDetails
+      - manufacturingDetails
       - operatorsReq
       - insuranceDetail
       - driver 
  
-    VehiclePurchaseInfo:
+    PurchaseInfo:
       type: object
       description: Purchase related information of the vehicle. e.g registration number, purchase price etc
       properties:
-        tenantId:
-          type: string
-          description: tenant id of the CollectionPoint
-          maxLength: 128
-          minLength: 1
         purchaseDate:
           type: integer
           format: int64
@@ -896,26 +898,15 @@ definitions:
           description: source of purchase of the Vehicle
           maxLength: 256
           minLength: 0
-        remarks:
-          type: string
-          description: ULB admin can enter a comment 
-          maxLength: 300
-          minLength: 15
       required:
       - purchaseDate
       - price
-      - tenantId
     
     
     ManufacturingDetails:
       type: object
       description: Captures manufacturing related details of the vehicle. e.g. engine number, chassis number etc
       properties:
-        tenantId:
-          type: string
-          description: tenant id of the VehicleType
-          maxLength: 128
-          minLength: 1
         engineSrNumber:
           type: string
           description: engine serial number of the Vehicle. Should be unique across the platform. Special characters are allowed. Space not allowed
@@ -942,7 +933,6 @@ definitions:
           minLength: 1
           example: Dzire/LDi/Maruti
       required:
-      - tenantId
       - engineSrNumber
       - chassisSrNumber
       - vehicleCapacity
@@ -953,11 +943,6 @@ definitions:
       type: object
       description: Captures Insurance details of the vehicle
       properties:
-        tenantId:
-          type: string
-          description: tenant id of the VehicleType
-          maxLength: 128
-          minLength: 1
         insuranceNumber:
           type: string
           description: Current Insurance number of vehicle
@@ -970,11 +955,8 @@ definitions:
           description: Current or Futrure date at which insurance is going to expire
         insuranceDocuments:
           $ref: '#/definitions/Document'
-        auditDetails:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - insuranceNumber
-      - tenantId
       - insuranceValidityDate
     
     
@@ -1274,14 +1256,14 @@ definitions:
           description: tenant id of the Vendor
           maxLength: 128
           minLength: 1
-        processName:
+        name:
           type: string
           description: defines various processes names, including others, under SWM . e.g. collection, disposal etc
           maxLength: 256
           minLength: 1
       required:
       - tenantId
-      - processName
+      - name
     
     VendorContract:
       type: object
@@ -1634,7 +1616,7 @@ definitions:
           description: tenant id of the Vendor
           maxLength: 128
           minLength: 1
-        oilCompanyName:
+        name:
           type: string
           description: name of oil OilCompany, operating petrol pumps. e.g. HP
           maxLength: 20
@@ -1642,7 +1624,7 @@ definitions:
       required:
       - code
       - tenantId
-      - oilCompanyName
+      - name
     
     
     Toilet: 
@@ -1818,13 +1800,9 @@ definitions:
           type: number
           format: double
           description: fuel Filled in the Vehicle in liters. e.g. 40.67
-          maxLength: 256
-          minLength: 1
         typeOfFuel:
-          type: string
+          $ref: "#/definitions/FuelType"
           description: Type of Fuel. e.g. Petrol. Shall be autofilled based on Vehicle registration number
-          maxLength: 256
-          minLength: 1
         totalCostIncurred:
           type: number 
           format: double
@@ -2248,5 +2226,6 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 

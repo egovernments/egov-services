@@ -1,7 +1,6 @@
 package org.egov.swm.persistence.entity;
 
 import org.egov.swm.domain.model.AuditDetails;
-import org.egov.swm.domain.model.CollectionPoint;
 import org.egov.swm.domain.model.CollectionPointDetails;
 import org.egov.swm.domain.model.CollectionType;
 
@@ -44,7 +43,6 @@ public class CollectionPointDetailsEntity {
 		collectionPointDetails.setId(id);
 		collectionPointDetails.setTenantId(tenantId);
 		collectionPointDetails.setCollectionType(CollectionType.builder().code(collectionType).build());
-		collectionPointDetails.setCollectionPoint(CollectionPoint.builder().name(collectionPoint).build());
 		collectionPointDetails.setGarbageEstimate(garbageEstimate);
 		collectionPointDetails.setDescription(description);
 		collectionPointDetails.setAuditDetails(new AuditDetails());

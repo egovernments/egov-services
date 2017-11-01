@@ -29,9 +29,9 @@ public class Document {
 
 	@NotNull
 	@Length(min = 1, max = 256)
-	@JsonProperty("regNumber")
-	private String regNumber = null;
-	
+	@JsonProperty("refCode")
+	private String refCode = null;
+
 	@NotNull
 	@JsonProperty("fileStoreId")
 	private String fileStoreId = null;

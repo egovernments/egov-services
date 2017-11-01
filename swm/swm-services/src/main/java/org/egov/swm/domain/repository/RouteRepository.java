@@ -52,14 +52,14 @@ public class RouteRepository {
 
 	public RouteRequest update(RouteRequest routeRequest) {
 
-		kafkaTemplate.send(updateTopic, routeRequest);
-
 		for (Route r : routeRequest.getRoutes()) {
 
-			routeCollectionPointMapJdbcRepository.delete(r.getName());
-
+			routeCollectionPointMapJdbcRepository.delete(r.getCode());
+			
 			kafkaTemplate.send(saveRouteCollectionPointMapTopic, r);
 		}
+
+		kafkaTemplate.send(updateTopic, routeRequest);
 
 		kafkaTemplate.send(indexerTopic, routeRequest.getRoutes());
 

@@ -9,9 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CollectionPointDetailsSearch extends CollectionPointDetails {
-	private String ids;
-	private String collectionTypeCode;
+public class BinDetailsSearch extends BinDetails {
 	private String collectionPoint;
 	private String sortBy;
 	private Integer pageSize;

@@ -1,6 +1,5 @@
 package org.egov.swm.domain.model;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -18,7 +17,12 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RouteCollectionPointMap {
+public class OilCompanyName {
+
+	@NotNull
+	@Length(min = 1, max = 256)
+	@JsonProperty("code")
+	private String code = null;
 
 	@NotNull
 	@Length(min = 1, max = 128)
@@ -26,15 +30,8 @@ public class RouteCollectionPointMap {
 	private String tenantId = null;
 
 	@NotNull
-	@JsonProperty("route")
-	private String route = null;
-
-	@NotNull
-	@JsonProperty("collectionPoint")
-	private String collectionPoint = null;
-
-	@Valid
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+	@Length(min = 1, max = 128)
+	@JsonProperty("name")
+	private String name = null;
 
 }

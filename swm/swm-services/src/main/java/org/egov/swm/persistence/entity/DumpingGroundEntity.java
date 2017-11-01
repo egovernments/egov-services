@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.swm.domain.model.AuditDetails;
-import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.DumpingGround;
-import org.egov.swm.domain.model.WasteType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +19,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class DumpingGroundEntity {
 
-	private String id = null;
+	private String code = null;
 
 	private String tenantId = null;
 
@@ -68,28 +66,30 @@ public class DumpingGroundEntity {
 	public DumpingGround toDomain() {
 
 		DumpingGround dumpingGround = new DumpingGround();
-		dumpingGround.setId(id);
+		dumpingGround.setCode(code);
 		dumpingGround.setTenantId(tenantId);
-		dumpingGround.setName(name);
-		dumpingGround.setWard(Boundary.builder().code(ward).build());
-		dumpingGround.setZone(Boundary.builder().code(zone).build());
-		dumpingGround.setStreet(Boundary.builder().code(street).build());
-		dumpingGround.setColony(Boundary.builder().code(colony).build());
-		dumpingGround.setArea(area);
-		dumpingGround.setCapacity(capacity);
-		dumpingGround.setAddress(address);
-		dumpingGround.setLatitude(latitude);
-		dumpingGround.setLongitude(longitude);
-		dumpingGround.setMpcbAuthorisation(mpcbAuthorisation);
-		dumpingGround.setBankGuarantee(bankGuarantee);
-		dumpingGround.setBankName(bankName);
-		dumpingGround.setBankValidityFrom(bankValidityFrom);
-		dumpingGround.setBankValidityTo(bankValidityTo);
-		dumpingGround.setWasteTypes(new ArrayList<WasteType>());
-		if (wasteTypes != null && !wasteTypes.isEmpty()) {
-			for (String wt : wasteTypes)
-				dumpingGround.getWasteTypes().add(WasteType.builder().code(wt).build());
-		}
+		/*
+		 * dumpingGround.setId(id); dumpingGround.setTenantId(tenantId);
+		 * dumpingGround.setName(name);
+		 * dumpingGround.setWard(Boundary.builder().code(ward).build());
+		 * dumpingGround.setZone(Boundary.builder().code(zone).build());
+		 * dumpingGround.setStreet(Boundary.builder().code(street).build());
+		 * dumpingGround.setColony(Boundary.builder().code(colony).build());
+		 * dumpingGround.setArea(area); dumpingGround.setCapacity(capacity);
+		 * dumpingGround.setAddress(address);
+		 * dumpingGround.setLatitude(latitude);
+		 * dumpingGround.setLongitude(longitude);
+		 * dumpingGround.setMpcbAuthorisation(mpcbAuthorisation);
+		 * dumpingGround.setBankGuarantee(bankGuarantee);
+		 * dumpingGround.setBankName(bankName);
+		 * dumpingGround.setBankValidityFrom(bankValidityFrom);
+		 * dumpingGround.setBankValidityTo(bankValidityTo);
+		 * dumpingGround.setWasteTypes(new ArrayList<WasteType>()); if
+		 * (wasteTypes != null && !wasteTypes.isEmpty()) { for (String wt :
+		 * wasteTypes)
+		 * dumpingGround.getWasteTypes().add(WasteType.builder().code(wt).build(
+		 * )); }
+		 */
 		dumpingGround.setAuditDetails(new AuditDetails());
 		dumpingGround.getAuditDetails().setCreatedBy(createdBy);
 		dumpingGround.getAuditDetails().setCreatedTime(createdTime);

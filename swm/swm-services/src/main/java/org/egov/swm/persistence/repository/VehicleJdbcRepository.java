@@ -39,26 +39,12 @@ public class VehicleJdbcRepository {
 			orderBy = "order by " + searchRequest.getSortBy();
 		}
 
-		if (searchRequest.getIds() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("id in (:ids)");
-			paramValues.put("ids", new ArrayList<String>(Arrays.asList(searchRequest.getIds().split(","))));
-		}
 		if (searchRequest.getTenantId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", searchRequest.getTenantId());
-		}
-		if (searchRequest.getId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("id =:id");
-			paramValues.put("id", searchRequest.getId());
 		}
 		if (searchRequest.getRegNumber() != null) {
 			if (params.length() > 0) {
@@ -67,57 +53,63 @@ public class VehicleJdbcRepository {
 			params.append("regNumber =:regNumber");
 			paramValues.put("regNumber", searchRequest.getRegNumber());
 		}
-		if (searchRequest.getUlbOwnedVehicle() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
+		if (searchRequest.getManufacturingDetails() != null) {
+
+			if (searchRequest.getManufacturingDetails().getChassisSrNumber() != null) {
+				if (params.length() > 0) {
+					params.append(" and ");
+				}
+				params.append("chassisSrNumber =:chassisSrNumber");
+				paramValues.put("chassisSrNumber", searchRequest.getManufacturingDetails().getChassisSrNumber());
 			}
-			params.append("ulbOwnedVehicle =:ulbOwnedVehicle");
-			paramValues.put("ulbOwnedVehicle", searchRequest.getUlbOwnedVehicle());
-		}
-		if (searchRequest.getChassisSrNumber() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
+
+			if (searchRequest.getManufacturingDetails().getEngineSrNumber() != null) {
+				if (params.length() > 0) {
+					params.append(" and ");
+				}
+				params.append("engineSrNumber =:engineSrNumber");
+				paramValues.put("engineSrNumber", searchRequest.getManufacturingDetails().getEngineSrNumber());
 			}
-			params.append("chassisSrNumber =:chassisSrNumber");
-			paramValues.put("chassisSrNumber", searchRequest.getChassisSrNumber());
-		}
-		if (searchRequest.getEngineSrNumber() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
+
+			if (searchRequest.getInsuranceDetails().getInsuranceNumber() != null) {
+				if (params.length() > 0) {
+					params.append(" and ");
+				}
+				params.append("insuranceNumber =:insuranceNumber");
+				paramValues.put("insuranceNumber", searchRequest.getInsuranceDetails().getInsuranceNumber());
 			}
-			params.append("engineSrNumber =:engineSrNumber");
-			paramValues.put("engineSrNumber", searchRequest.getEngineSrNumber());
-		}
-		if (searchRequest.getInsuranceNumber() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
+
+			if (searchRequest.getManufacturingDetails().getModel() != null) {
+				if (params.length() > 0) {
+					params.append(" and ");
+				}
+				params.append("model =:model");
+				paramValues.put("model", searchRequest.getManufacturingDetails().getModel());
 			}
-			params.append("insuranceNumber =:insuranceNumber");
-			paramValues.put("insuranceNumber", searchRequest.getInsuranceNumber());
+
 		}
 
-		if (searchRequest.getInsuranceValidityDate() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
+		if (searchRequest.getInsuranceDetails() != null) {
+			if (searchRequest.getInsuranceDetails().getInsuranceValidityDate() != null) {
+				if (params.length() > 0) {
+					params.append(" and ");
+				}
+				params.append("insuranceValidityDate =:insuranceValidityDate");
+				paramValues.put("insuranceValidityDate",
+						searchRequest.getInsuranceDetails().getInsuranceValidityDate());
 			}
-			params.append("insuranceValidityDate =:insuranceValidityDate");
-			paramValues.put("insuranceValidityDate", searchRequest.getInsuranceValidityDate());
 		}
 
-		if (searchRequest.getModel() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("model =:model");
-			paramValues.put("model", searchRequest.getModel());
-		}
+		if (searchRequest.getPurchaseInfo() != null) {
 
-		if (searchRequest.getPurchaseDate() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
+			if (searchRequest.getPurchaseInfo().getPurchaseDate() != null) {
+				if (params.length() > 0) {
+					params.append(" and ");
+				}
+				params.append("purchaseDate =:purchaseDate");
+				paramValues.put("purchaseDate", searchRequest.getPurchaseInfo().getPurchaseDate());
 			}
-			params.append("purchaseDate =:purchaseDate");
-			paramValues.put("purchaseDate", searchRequest.getPurchaseDate());
+
 		}
 
 		if (searchRequest.getVehicleTypeCode() != null) {
@@ -152,14 +144,6 @@ public class VehicleJdbcRepository {
 			paramValues.put("vendor", searchRequest.getVendorName());
 		}
 
-		if (searchRequest.getIsUnderWarranty() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("isUnderWarranty =:isUnderWarranty");
-			paramValues.put("isUnderWarranty", searchRequest.getIsUnderWarranty());
-		}
-
 		Pagination<Vehicle> page = new Pagination<>();
 		if (searchRequest.getOffset() != null) {
 			page.setOffset(searchRequest.getOffset());
@@ -178,7 +162,9 @@ public class VehicleJdbcRepository {
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
-		page = (Pagination<Vehicle>) getPagination(searchQuery, page, paramValues);
+		page = (Pagination
+
+		<Vehicle>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination",

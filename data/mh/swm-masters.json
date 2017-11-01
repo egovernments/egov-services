@@ -88,19 +88,16 @@
   ],
   "VehicleType": [
     {
-      "id": 1,
       "tenantId": "mh",
       "name": "Fake Vehicle Type Name 1",
       "code": "Fake Vehicle Type Code 1"
     },
     {
-      "id": 2,
       "tenantId": "mh",
       "name": "Fake Vehicle Type Name 2",
       "code": "Fake Vehicle Type Code 2"
     },
     {
-      "id": 3,
       "tenantId": "mh",
       "name": "Fake Vehicle Type Name 3",
       "code": "Fake Vehicle Type Code 3"
@@ -108,19 +105,16 @@
   ],
 "FuelType": [
     {
-      "id": 1,
       "tenantId": "mh",
       "name": "Fake Fuel Type Name 1",
       "code": "Fake Fuel Type Code 1"
     },
     {
-      "id": 2,
       "tenantId": "mh",
       "name": "Fake Fuel Type Name 2",
       "code": "Fake Fuel Type Code 2"
     },
     {
-      "id": 3,
       "tenantId": "mh",
       "name": "Fake Fuel Type Name 3",
       "code": "Fake Fuel Type Code 3"
@@ -239,72 +233,23 @@
   ],
   "DumpingGround": [
     {
-      "id": 1,
-      "tenantId": "mh",
-      "name": "Fake Dumping Ground name 1",
-      "ward": "Fake Dumping Ground ward 1",
-      "zone": "Fake Dumping Ground zone 1",
-      "street": "Fake Dumping Ground street 1",
-      "colony": "Fake Dumping Ground colony 1",
-      "area": 100,
-      "capacity": 100,
-      "address": "Fake Dumping Ground address 1",
-      "latitude": 111.111,
-      "longitude": 222.222,
-      "mpcbAuthorisation": true,
-      "bankGuarantee": true,
-      "bankName": "Fake Dumping Ground bank name 1",
-      "bankValidityFrom": "1509190483",
-      "bankValidityTo": "1509190483"
+      "code": "Fake Dumping Ground Code 1",
+      "tenantId": "mh"
     },
     {
-      "id": 2,
-      "tenantId": "mh",
-      "name": "Fake Dumping Ground name 2",
-      "ward": "Fake Dumping Ground ward 2",
-      "zone": "Fake Dumping Ground zone 2",
-      "street": "Fake Dumping Ground street 2",
-      "colony": "Fake Dumping Ground colony 2",
-      "area": 200,
-      "capacity": 200,
-      "address": "Fake Dumping Ground address 2",
-      "latitude": 222.222,
-      "longitude": 222.222,
-      "mpcbAuthorisation": true,
-      "bankGuarantee": true,
-      "bankName": "Fake Dumping Ground bank name 2",
-      "bankValidityFrom": "1509190483",
-      "bankValidityTo": "1509190483"
+     "code": "Fake Dumping Ground Code 2",
+      "tenantId": "mh"
     },
     {
-      "id": 3,
-      "tenantId": "mh",
-      "name": "Fake Dumping Ground name 3",
-      "ward": "Fake Dumping Ground ward 3",
-      "zone": "Fake Dumping Ground zone 3",
-      "street": "Fake Dumping Ground street 3",
-      "colony": "Fake Dumping Ground colony 3",
-      "area": 300,
-      "capacity": 300,
-      "address": "Fake Dumping Ground address 3",
-      "latitude": 333.333,
-      "longitude": 333.333,
-      "mpcbAuthorisation": true,
-      "bankGuarantee": true,
-      "bankName": "Fake Dumping Ground bank name 3",
-      "bankValidityFrom": "1509190483",
-      "bankValidityTo": "1509190483"
+      "code": "Fake Dumping Ground Code 3",
+      "tenantId": "mh"
     }
   ],
   "Vendor": [
     {
-      "id": 1,
+      "vendorNo": 1,
       "tenantId": "mh",
       "name": "Fake Vendor name 1",
-      "ward": "Fake Vendor ward 1",
-      "zone": "Fake Vendor zone 1",
-      "street": "Fake Vendor street 1",
-      "colony": "Fake Vendor colony 1",
       "registrationNo": "Fake Vendor registration number 1",
       "email": "Fake Vendor email 1",
       "tinNumber": "Fake Vendor tin number 1",
@@ -313,17 +258,12 @@
       "contactNo": "Fake Vendor contact no 1",
       "faxNumber": "Fake Vendor fax num 1",
       "address": "Fake Vendor address 1",
-      "services": "Fake Vendor services 1",
       "details": "Fake Vendor details 1"
     },
     {
-      "id": 2,
+      "vendorNo": 2,
       "tenantId": "mh",
       "name": "Fake Vendor name 2",
-      "ward": "Fake Vendor ward 2",
-      "zone": "Fake Vendor zone 2",
-      "street": "Fake Vendor street 2",
-      "colony": "Fake Vendor colony 2",
       "registrationNo": "Fake Vendor registration number 2",
       "email": "Fake Vendor email 2",
       "tinNumber": "Fake Vendor tin number 2",
@@ -332,17 +272,12 @@
       "contactNo": "Fake Vendor contact no 2",
       "faxNumber": "Fake Vendor fax num 2",
       "address": "Fake Vendor address 2",
-      "services": "Fake Vendor services 2",
       "details": "Fake Vendor details 2"
     },
     {
-      "id": 3,
+      "vendorNo": 3,
       "tenantId": "mh",
       "name": "Fake Vendor name 3",
-      "ward": "Fake Vendor ward 3",
-      "zone": "Fake Vendor zone 3",
-      "street": "Fake Vendor street 3",
-      "colony": "Fake Vendor colony 3",
       "registrationNo": "Fake Vendor registration number 3",
       "email": "Fake Vendor email 3",
       "tinNumber": "Fake Vendor tin number 3",
@@ -351,7 +286,6 @@
       "contactNo": "Fake Vendor contact no 3",
       "faxNumber": "Fake Vendor fax num 3",
       "address": "Fake Vendor address 3",
-      "services": "Fake Vendor services 3",
       "details": "Fake Vendor details 3"
     }
   ],
@@ -572,41 +506,32 @@
   ],
   "RefillingPumpStation": [
     {
-      "id": 1,
+      "code": "Fake RefillingPumpStation Code 1",
       "tenantId": "mh",
-      "ward": "Fake Ward 1",
-      "zone": "Fake Zone 1",
-      "street": "Fake Street 1",
-      "colony": "Fake colony 1",
+      "location": "Fake location 1",
       "name": "Fake name 1",
-      "type": "Fake Type 1",
       "remarks": "Fake remarks 1",
+      "typeOfPump": "Fake type Of Pump 1",
       "typeOfFuel": "Fake type of fuel 1",
       "quantity": 1000
     },
     {
-      "id": 2,
+      "code": "Fake RefillingPumpStation Code 2",
       "tenantId": "mh",
-      "ward": "Fake Ward 2",
-      "zone": "Fake Zone 2",
-      "street": "Fake Street 2",
-      "colony": "Fake colony 2",
+      "location": "Fake location 2",
       "name": "Fake name 2",
-      "type": "Fake Type 2",
       "remarks": "Fake remarks 2",
+      "typeOfPump": "Fake type Of Pump 2",
       "typeOfFuel": "Fake type of fuel 2",
       "quantity": 2000
     },
     {
-      "id": 3,
+      "code": "Fake RefillingPumpStation Code 3",
       "tenantId": "mh",
-      "ward": "Fake Ward 3",
-      "zone": "Fake Zone 3",
-      "street": "Fake Street 3",
-      "colony": "Fake colony 3",
+      "location": "Fake location 3",
       "name": "Fake name 3",
-      "type": "Fake Type 3",
       "remarks": "Fake remarks 3",
+      "typeOfPump": "Fake type Of Pump 3",
       "typeOfFuel": "Fake type of fuel 3",
       "quantity": 3000
     }

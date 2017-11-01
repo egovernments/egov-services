@@ -18,23 +18,19 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RouteCollectionPointMap {
+public class InsuranceDetails {
 
 	@NotNull
-	@Length(min = 1, max = 128)
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+	@Length(min = 1, max = 256)
+	@JsonProperty("insuranceNumber")
+	private String insuranceNumber = null;
 
 	@NotNull
-	@JsonProperty("route")
-	private String route = null;
-
-	@NotNull
-	@JsonProperty("collectionPoint")
-	private String collectionPoint = null;
-
 	@Valid
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+	@JsonProperty("insuranceValidityDate")
+	private Long insuranceValidityDate = null;
+
+	@JsonProperty("insuranceDocument")
+	private Document insuranceDocument = null;
 
 }

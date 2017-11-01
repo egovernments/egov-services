@@ -20,7 +20,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CollectionPointDetails {
 
-	@Length(min = 1, max = 256)
 	@JsonProperty("id")
 	private String id = null;
 
@@ -32,10 +31,6 @@ public class CollectionPointDetails {
 	@NotNull
 	@JsonProperty("collectionType")
 	private CollectionType collectionType = null;
-
-	@NotNull
-	@JsonProperty("collectionPoint")
-	private CollectionPoint collectionPoint = null;
 
 	@NotNull
 	@JsonProperty("garbageEstimate")

@@ -8,7 +8,6 @@ import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.CollectionPoint;
 import org.egov.swm.domain.model.CollectionPointSearch;
-import org.egov.swm.domain.model.CollectionType;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Route;
 import org.egov.swm.domain.model.RouteCollectionPointMap;
@@ -16,11 +15,6 @@ import org.egov.swm.domain.model.RouteSearch;
 import org.egov.swm.domain.repository.CollectionPointRepository;
 import org.egov.swm.domain.repository.RouteRepository;
 import org.egov.swm.persistence.entity.DumpingGroundEntity;
-import org.egov.swm.web.contract.MasterDetails;
-import org.egov.swm.web.contract.MdmsCriteria;
-import org.egov.swm.web.contract.MdmsRequest;
-import org.egov.swm.web.contract.MdmsResponse;
-import org.egov.swm.web.contract.ModuleDetails;
 import org.egov.swm.web.repository.MdmsRepository;
 import org.egov.swm.web.requests.RouteRequest;
 import org.egov.tracer.model.CustomException;
@@ -59,23 +53,13 @@ public class RouteService {
 				userId = routeRequest.getRequestInfo().getUserInfo().getId();
 			}
 			setAuditDetails(r, userId);
-			r.setId(UUID.randomUUID().toString().replace("-", ""));
+			r.setCode(UUID.randomUUID().toString().replace("-", ""));
 
 			populateCollectionPointDetails(r);
-		}
 
+		}
 		return routeRepository.save(routeRequest);
 
-	}
-
-	private void populateCollectionPointDetails(Route r) {
-		if (r.getCollectionPoints() != null)
-			for (RouteCollectionPointMap map : r.getCollectionPoints()) {
-				map.setId(UUID.randomUUID().toString().replace("-", ""));
-				map.setTenantId(r.getTenantId());
-				map.setRoute(r.getName());
-				map.setAuditDetails(r.getAuditDetails());
-			}
 	}
 
 	@Transactional
@@ -93,12 +77,27 @@ public class RouteService {
 			}
 
 			setAuditDetails(r, userId);
-
 			populateCollectionPointDetails(r);
 		}
 
 		return routeRepository.update(routeRequest);
 
+	}
+
+	private void populateCollectionPointDetails(Route r) {
+
+		if (r.getCollectionPoints() != null) {
+			RouteCollectionPointMap map;
+			r.setRouteCollectionPointMaps(new ArrayList<RouteCollectionPointMap>());
+			for (CollectionPoint cp : r.getCollectionPoints()) {
+				map = new RouteCollectionPointMap();
+				map.setTenantId(r.getTenantId());
+				map.setRoute(r.getName());
+				map.setCollectionPoint(cp.getCode());
+				map.setAuditDetails(r.getAuditDetails());
+				r.getRouteCollectionPointMaps().add(map);
+			}
+		}
 	}
 
 	public Pagination<Route> search(RouteSearch routeSearch) {
@@ -109,141 +108,69 @@ public class RouteService {
 	private void validate(RouteRequest routeRequest) {
 
 		JSONArray responseJSONArray = null;
-		MasterDetails[] masterDetailsArray;
-		ModuleDetails[] moduleDetailsArray;
-		MdmsRequest request;
-		MdmsResponse response;
-		ArrayList<CollectionType> ctResponseList;
-		ArrayList<DumpingGroundEntity> dgResponseList;
 		ObjectMapper mapper = new ObjectMapper();
 
 		for (Route route : routeRequest.getRoutes()) {
 
-			// Validate CollectionType
-			if (route.getCollectionType() != null && route.getCollectionType().getCode() != null) {
-				masterDetailsArray = new MasterDetails[1];
-				masterDetailsArray[0] = MasterDetails.builder().name(Constants.COLLECTIONTYPE_MASTER_NAME)
-						.filter("[?(@.code == '" + route.getCollectionType().getCode() + "')]").build();
-				moduleDetailsArray = new ModuleDetails[1];
-				moduleDetailsArray[0] = ModuleDetails.builder().moduleName(Constants.MODULE_CODE)
-						.masterDetails(masterDetailsArray).build();
-
-				request = MdmsRequest.builder()
-						.mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetailsArray)
-								.tenantId(route.getTenantId()).build())
-						.requestInfo(routeRequest.getRequestInfo()).build();
-				response = mdmsRepository.getByCriteria(request);
-				if (response == null || response.getMdmsRes() == null
-						|| !response.getMdmsRes().containsKey(Constants.MODULE_CODE)
-						|| response.getMdmsRes().get(Constants.MODULE_CODE) == null
-						|| !response.getMdmsRes().get(Constants.MODULE_CODE)
-								.containsKey(Constants.COLLECTIONTYPE_MASTER_NAME)
-						|| response.getMdmsRes().get(Constants.MODULE_CODE)
-								.get(Constants.COLLECTIONTYPE_MASTER_NAME) == null) {
-					throw new CustomException("CollectionType",
-							"Given CollectionType is invalid: " + route.getCollectionType().getCode());
-				} else {
-					ctResponseList = new ArrayList<CollectionType>();
-
-					responseJSONArray = response.getMdmsRes().get(Constants.MODULE_CODE)
-							.get(Constants.COLLECTIONTYPE_MASTER_NAME);
-
-					for (int i = 0; i < responseJSONArray.size(); i++) {
-						ctResponseList.add(mapper.convertValue(responseJSONArray.get(i), CollectionType.class));
-					}
-
-					if (ctResponseList.isEmpty())
-						throw new CustomException("CollectionType",
-								"Given CollectionType is invalid: " + route.getCollectionType().getCode());
-					else
-						route.setCollectionType(ctResponseList.get(0));
-				}
-			}
-
 			// Validate Starting Collection Point
 
-			if (route.getStartingCollectionPoint() != null && route.getStartingCollectionPoint().getName() != null) {
+			if (route.getStartingCollectionPoint() != null && route.getStartingCollectionPoint().getCode() != null) {
 
 				CollectionPointSearch search = new CollectionPointSearch();
 				search.setTenantId(route.getTenantId());
-				search.setName(route.getStartingCollectionPoint().getName());
+				search.setCode(route.getStartingCollectionPoint().getCode());
 
 				Pagination<CollectionPoint> collectionPoints = collectionPointRepository.search(search);
 
 				if (collectionPoints == null || collectionPoints.getPagedData() == null
 						|| collectionPoints.getPagedData().isEmpty())
 					throw new CustomException("StartingCollectionPoint", "Given StartingCollectionPoint is invalid: "
-							+ route.getStartingCollectionPoint().getName());
+							+ route.getStartingCollectionPoint().getCode());
 				else
 					route.setStartingCollectionPoint(collectionPoints.getPagedData().get(0));
 			}
 
 			// Validate Ending Collection Point
 
-			if (route.getEndingCollectionPoint() != null && route.getEndingCollectionPoint().getName() != null) {
+			if (route.getEndingCollectionPoint() != null && route.getEndingCollectionPoint().getCode() != null) {
 
 				CollectionPointSearch search = new CollectionPointSearch();
 				search.setTenantId(route.getTenantId());
-				search.setName(route.getEndingCollectionPoint().getName());
+				search.setCode(route.getEndingCollectionPoint().getCode());
 
 				Pagination<CollectionPoint> collectionPoints = collectionPointRepository.search(search);
 
 				if (collectionPoints == null || collectionPoints.getPagedData() == null
 						|| collectionPoints.getPagedData().isEmpty())
 					throw new CustomException("EndingCollectionPoint",
-							"Given EndingCollectionPoint is invalid: " + route.getEndingCollectionPoint().getName());
+							"Given EndingCollectionPoint is invalid: " + route.getEndingCollectionPoint().getCode());
 				else
 					route.setEndingCollectionPoint(collectionPoints.getPagedData().get(0));
 			}
 
-			// Validate Dumping Ground
-			if (route.getEndingDumpingGroundPoint() != null && route.getEndingDumpingGroundPoint().getName() != null) {
-				masterDetailsArray = new MasterDetails[1];
-				masterDetailsArray[0] = MasterDetails.builder().name(Constants.DUMPINGGROUND_MASTER_NAME)
-						.filter("[?(@.name == '" + route.getEndingDumpingGroundPoint().getName() + "')]").build();
-				moduleDetailsArray = new ModuleDetails[1];
-				moduleDetailsArray[0] = ModuleDetails.builder().moduleName(Constants.MODULE_CODE)
-						.masterDetails(masterDetailsArray).build();
+			// Validate Ending Dumping ground
+			if (route.getEndingDumpingGroundPoint() != null && route.getEndingDumpingGroundPoint().getCode() != null) {
 
-				request = MdmsRequest.builder()
-						.mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetailsArray)
-								.tenantId(route.getTenantId()).build())
-						.requestInfo(routeRequest.getRequestInfo()).build();
-				response = mdmsRepository.getByCriteria(request);
-				if (response == null || response.getMdmsRes() == null
-						|| !response.getMdmsRes().containsKey(Constants.MODULE_CODE)
-						|| response.getMdmsRes().get(Constants.MODULE_CODE) == null
-						|| !response.getMdmsRes().get(Constants.MODULE_CODE)
-								.containsKey(Constants.DUMPINGGROUND_MASTER_NAME)
-						|| response.getMdmsRes().get(Constants.MODULE_CODE)
-								.get(Constants.DUMPINGGROUND_MASTER_NAME) == null) {
-					throw new CustomException("Ending Dumping Ground",
-							"Given Ending Dumping Ground is invalid: " + route.getEndingDumpingGroundPoint().getName());
-				} else {
-					dgResponseList = new ArrayList<DumpingGroundEntity>();
+				responseJSONArray = mdmsRepository.getByCriteria(route.getTenantId(), Constants.MODULE_CODE,
+						Constants.DUMPINGGROUND_MASTER_NAME, "code", route.getEndingDumpingGroundPoint().getCode(),
+						routeRequest.getRequestInfo());
 
-					responseJSONArray = response.getMdmsRes().get(Constants.MODULE_CODE)
-							.get(Constants.DUMPINGGROUND_MASTER_NAME);
+				if (responseJSONArray != null && responseJSONArray.size() > 0)
+					route.setEndingDumpingGroundPoint(
+							mapper.convertValue(responseJSONArray.get(0), DumpingGroundEntity.class).toDomain());
+				else
+					throw new CustomException("DumpingGround",
+							"Given DumpingGround is invalid: " + route.getEndingDumpingGroundPoint().getCode());
 
-					for (int i = 0; i < responseJSONArray.size(); i++) {
-						dgResponseList.add(mapper.convertValue(responseJSONArray.get(i), DumpingGroundEntity.class));
-					}
-
-					if (dgResponseList.isEmpty())
-						throw new CustomException("Ending Dumping Ground", "Given Ending Dumping Ground is invalid: "
-								+ route.getEndingDumpingGroundPoint().getName());
-					else
-						route.setEndingDumpingGroundPoint(dgResponseList.get(0).toDomain());
-				}
 			}
 
 			// Validate CollectionPoints
 			if (route.getCollectionPoints() != null)
-				for (RouteCollectionPointMap map : route.getCollectionPoints()) {
-					if (map.getCollectionPoint() != null && map.getCollectionPoint() != null) {
+				for (CollectionPoint cp : route.getCollectionPoints()) {
+					if (cp != null) {
 						CollectionPointSearch search = new CollectionPointSearch();
 						search.setTenantId(route.getTenantId());
-						search.setName(map.getCollectionPoint());
+						search.setCode(cp.getCode());
 
 						Pagination<CollectionPoint> collectionPoints = collectionPointRepository.search(search);
 
@@ -252,7 +179,7 @@ public class RouteService {
 							throw new CustomException("CollectionPoint",
 									"Given CollectionPoint is invalid: " + route.getEndingCollectionPoint().getName());
 						else
-							map.setCollectionPoint(collectionPoints.getPagedData().get(0).getName());
+							cp = collectionPoints.getPagedData().get(0);
 					}
 				}
 		}
@@ -263,7 +190,7 @@ public class RouteService {
 		if (contract.getAuditDetails() == null)
 			contract.setAuditDetails(new AuditDetails());
 
-		if (null == contract.getId() || contract.getId().isEmpty()) {
+		if (null == contract.getCode() || contract.getCode().isEmpty()) {
 			contract.getAuditDetails().setCreatedBy(null != userId ? userId.toString() : null);
 			contract.getAuditDetails().setCreatedTime(new Date().getTime());
 		}

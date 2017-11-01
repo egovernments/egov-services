@@ -1,6 +1,7 @@
 package org.egov.swm.domain.model;
 
-import javax.validation.Valid;
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -20,10 +21,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Vendor {
 
-	@NotNull
 	@Length(min = 1, max = 256)
-	@JsonProperty("id")
-	private String id = null;
+	@JsonProperty("vendorNo")
+	private String vendorNo = null;
 
 	@NotNull
 	@Length(min = 1, max = 256)
@@ -36,24 +36,8 @@ public class Vendor {
 	private String name = null;
 
 	@NotNull
-	@Valid
-	@JsonProperty("ward")
-	private Boundary ward = null;
-
-	@NotNull
-	@Valid
-	@JsonProperty("zone")
-	private Boundary zone = null;
-
-	@NotNull
-	@Valid
-	@JsonProperty("street")
-	private Boundary street = null;
-
-	@NotNull
-	@Valid
-	@JsonProperty("colony")
-	private Boundary colony = null;
+	@JsonProperty("servicedLocations")
+	private List<Boundary> servicedLocations = null;
 
 	@NotNull
 	@Length(min = 1, max = 256)
@@ -93,10 +77,12 @@ public class Vendor {
 	@JsonProperty("address")
 	private String address = null;
 
+	@JsonProperty("agreementDocument")
+	private Document agreementDocument;
+
 	@NotNull
-	@Length(max = 256)
-	@JsonProperty("services")
-	private String services = null;
+	@JsonProperty("servicesOffered")
+	private List<SwmProcess> servicesOffered = null;
 
 	@Length(min = 10, max = 500)
 	@JsonProperty("details")

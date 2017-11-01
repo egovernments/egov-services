@@ -1,5 +1,7 @@
 package org.egov.swm.domain.model;
 
+import java.util.List;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -18,23 +20,30 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RouteCollectionPointMap {
+public class ProcessingSite {
 
-	@NotNull
-	@Length(min = 1, max = 128)
+	@JsonProperty("code")
+	private String code;
+
 	@JsonProperty("tenantId")
-	private String tenantId = null;
+	@Length(min = 1, max = 128)
+	@NotNull
+	private String tenantId;
 
 	@NotNull
-	@JsonProperty("route")
-	private String route = null;
+	@JsonProperty("distanceFromDumpingGround")
+	private Double distanceFromDumpingGround;
 
 	@NotNull
-	@JsonProperty("collectionPoint")
-	private String collectionPoint = null;
+	@JsonProperty("siteDetails")
+	private SiteDetails siteDetails;
 
-	@Valid
+	@NotNull
+	@JsonProperty("dumpingGrounds")
+	private List<DumpingGround> dumpingGrounds;
+
 	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+	@Valid
+	private AuditDetails auditDetails;
 
 }

@@ -6,8 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.swm.domain.model.BinIdDetails;
+import org.egov.swm.domain.model.BinDetailsSearch;
 import org.egov.swm.domain.model.CollectionPoint;
+import org.egov.swm.domain.model.CollectionPointDetailsSearch;
 import org.egov.swm.domain.model.CollectionPointSearch;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.persistence.entity.CollectionPointEntity;
@@ -28,7 +29,10 @@ public class CollectionPointJdbcRepository {
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
-	public BinIdDetailsJdbcRepository binIdDetailsJdbcRepository;
+	public BinDetailsJdbcRepository binIdDetailsJdbcRepository;
+
+	@Autowired
+	public CollectionPointDetailsJdbcRepository collectionPointDetailsJdbcRepository;
 
 	public Pagination<CollectionPoint> search(CollectionPointSearch searchRequest) {
 
@@ -47,12 +51,12 @@ public class CollectionPointJdbcRepository {
 			orderBy = "order by " + searchRequest.getSortBy();
 		}
 
-		if (searchRequest.getIds() != null) {
+		if (searchRequest.getCodes() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("id in (:ids)");
-			paramValues.put("ids", new ArrayList<String>(Arrays.asList(searchRequest.getIds().split(","))));
+			params.append("code in (:codes)");
+			paramValues.put("codes", new ArrayList<String>(Arrays.asList(searchRequest.getCodes().split(","))));
 		}
 		if (searchRequest.getTenantId() != null) {
 			if (params.length() > 0) {
@@ -62,12 +66,12 @@ public class CollectionPointJdbcRepository {
 			paramValues.put("tenantId", searchRequest.getTenantId());
 		}
 
-		if (searchRequest.getId() != null) {
+		if (searchRequest.getCode() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("id =:id");
-			paramValues.put("id", searchRequest.getId());
+			params.append("code =:code");
+			paramValues.put("code", searchRequest.getCode());
 		}
 
 		if (searchRequest.getName() != null) {
@@ -78,35 +82,12 @@ public class CollectionPointJdbcRepository {
 			paramValues.put("name", searchRequest.getName());
 		}
 
-		if (searchRequest.getWard() != null) {
+		if (searchRequest.getLocation() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("ward =:ward");
-			paramValues.put("ward", searchRequest.getWard());
-		}
-
-		if (searchRequest.getZoneCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("zoneCode =:zoneCode");
-			paramValues.put("zoneCode", searchRequest.getZoneCode());
-		}
-
-		if (searchRequest.getStreet() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("street =:street");
-			paramValues.put("street", searchRequest.getStreet());
-		}
-		if (searchRequest.getColony() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("colony =:colony");
-			paramValues.put("colony", searchRequest.getColony());
+			params.append("location =:location");
+			paramValues.put("location", searchRequest.getLocation());
 		}
 
 		Pagination<CollectionPoint> page = new Pagination<>();
@@ -139,12 +120,24 @@ public class CollectionPointJdbcRepository {
 
 		List<CollectionPointEntity> collectionPointEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
 				paramValues, row);
-
+		CollectionPoint cp;
+		BinDetailsSearch bds;
+		CollectionPointDetailsSearch cpds;
 		for (CollectionPointEntity collectionPointEntity : collectionPointEntities) {
-			CollectionPoint cp = collectionPointEntity.toDomain();
-			BinIdDetails bid = BinIdDetails.builder().tenantId(cp.getTenantId()).collectionPointId(cp.getId()).build();
-			cp.setBinIdDetails(binIdDetailsJdbcRepository.search(bid));
+
+			cp = collectionPointEntity.toDomain();
+
+			bds = new BinDetailsSearch();
+			bds.setCollectionPoint(cp.getCode());
+			bds.setTenantId(cp.getTenantId());
+			cp.setBinDetails(binIdDetailsJdbcRepository.search(bds));
 			collectionPointList.add(cp);
+
+			cpds = new CollectionPointDetailsSearch();
+			cpds.setTenantId(cp.getTenantId());
+			cpds.setCollectionPoint(cp.getCode());
+
+			cp.setCollectionPointDetails(collectionPointDetailsJdbcRepository.search(cpds));
 		}
 
 		page.setTotalResults(collectionPointList.size());

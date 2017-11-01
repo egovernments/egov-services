@@ -1,11 +1,9 @@
 
 Create table egswm_vehiclefuellingdetails( 
-  id varchar(256) NOT NULL,
   tenantId varchar(128) NOT NULL,
   transactionNo varchar(256) NOT NULL,
   transactionDate bigint NOT NULL,
-  vehicleType varchar(50) NOT NULL,
-  vehicleRegNo varchar(50) NOT NULL,
+  vehicle varchar(50) NOT NULL,
   vehicleReadingDuringFuelling bigint NOT NULL,
   refuellingStation varchar(50) NOT NULL,
   fuelFilled varchar(256) NOT NULL,
@@ -19,5 +17,5 @@ Create table egswm_vehiclefuellingdetails(
   lastmodifiedtime bigint,
   version bigint
 );
-alter table egswm_vehiclefuellingdetails add constraint pk_egswm_vehiclefuellingdetails primary key (id);
-create sequence egseq_swm_vehiclefuellingdetails;
+alter table egswm_vehiclefuellingdetails add constraint pk_egswm_vehiclefuellingdetails primary key (transactionNo);
+create sequence seq_egswm_vehiclefuellingdetails;

@@ -22,8 +22,8 @@ public class DocumentJdbcRepository {
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Transactional
-	public void delete(String regNumber) {
-		String delQuery = "delete from  egswm_document where regNumber = '" + regNumber + "'";
+	public void delete(String refCode) {
+		String delQuery = "delete from  egswm_document where refCode = '" + refCode + "'";
 		jdbcTemplate.execute(delQuery);
 	}
 
@@ -50,12 +50,12 @@ public class DocumentJdbcRepository {
 			paramValues.put("id", searchRequest.getId());
 		}
 
-		if (searchRequest.getRegNumber() != null) {
+		if (searchRequest.getRefCode() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("regNumber =:regNumber");
-			paramValues.put("regNumber", searchRequest.getRegNumber());
+			params.append("refCode =:refCode");
+			paramValues.put("refCode", searchRequest.getRefCode());
 		}
 
 		if (params.length() > 0) {

@@ -1365,7 +1365,7 @@ var localization_EN_Data = {
     "pgr.lbl.complaintnumber": " Complaint Number",
     "pgr.lbl.applicationnumber": " Application Number",
     "pgr.lbl.certificateNumber":"Certificate Number",
-    "core.lbl.varify":"Varify",
+    "core.lbl.varify":"Verify",
     "pgr.lbl.complaint.raise": " Raise a complaint",
     "pgr.lbl.complaint.sentto": " Complaint Sent to ",
     "pgr.lbl.complaints.resolved": " COMPLAINTS RESOLVED",

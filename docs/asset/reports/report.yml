@@ -35,12 +35,18 @@ ReportDefinitions:
     type: date
     source: asset
     isMandatory: true
-  - name: assetCategory
-    label: reports.asset.assetCategory
-    type: number
+  - name: name
+    label: reports.asset.name
+    type: string
     isMandatory: false
     source: asset
-    searchClause : AND asset.assetCategory=$assetCategory
+    searchClause : AND asset.name=$name
+  - name: code
+    label: reports.asset.code
+    type: string
+    isMandatory: false
+    source: asset
+    searchClause : AND asset.code=$code
   - name: assetid
     label: reports.asset.id
     type: number
@@ -266,12 +272,18 @@ ReportDefinitions:
     type: date
     source: asset
     isMandatory: true
-  - name: assetCategory
-    label: reports.asset.assetCategory
-    type: number
+  - name: name
+    label: reports.asset.name
+    type: string
     isMandatory: false
     source: asset
-    searchClause : AND asset.assetCategory=$assetCategory
+    searchClause : AND asset.name=$name
+  - name: code
+    label: reports.asset.code
+    type: string
+    isMandatory: false
+    source: asset
+    searchClause : AND asset.code=$code
   - name: assetdetail
     label: reports.asset.detail
     type: number

@@ -3,6 +3,7 @@ package org.egov.lcms.repository.rowmapper;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.models.Attender;
@@ -49,7 +50,7 @@ public class HearingDetailsRowMapper implements RowMapper<HearingDetails> {
 
 		TypeReference<CaseStatus> caseStatusReference = new TypeReference<CaseStatus>() {
 		};
-		TypeReference<Attender> attenderReference = new TypeReference<Attender>() {
+		TypeReference<List<Attender>> attenderReference = new TypeReference<List<Attender>>() {
 		};
 		try {
 			if (rs.getString("casestatus") != null)

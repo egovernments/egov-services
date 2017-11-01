@@ -3628,7 +3628,12 @@ definitions:
           description: |
             address of the Supplier  
         status:
-          $ref: "#/definitions/CommonEnum"                 
+          $ref: "#/definitions/CommonEnum"
+        inActiveDate:
+          type: integer
+          format: int64
+          description: |
+            inactive date of the Supplier
         supplierContactNo:
           type: string
           pattern: ^[0-9]+$

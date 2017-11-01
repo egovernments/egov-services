@@ -17,6 +17,10 @@ ReportDefinitions:
     label: reports.asset.dateofcreation
     type: string
     source: asset
+  - name: currentamount
+    label: reports.asset.currentamount
+    type: number
+    source: asset
   - name: id
     label: reports.asset.id
     type: number

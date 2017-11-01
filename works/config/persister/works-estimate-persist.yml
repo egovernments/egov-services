@@ -171,6 +171,144 @@ serviceMaps:
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.grossAmountBilled
        
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectcode
+       
+ - version: 1.0
+   name: AbstractEstimate Update
+   description: Update abstract estimate  in egw_abstractestimate table
+   fromTopic: works-abstract-estimate-update
+   isTransaction: true
+   queryMaps:
+    - query: UPDATE egw_abstractestimate SET abstractestimatenumber=?, subject=?, fund=?, referencetype=?, referencenumber=?, function=?, description=?, budgethead=?, scheme=?, subscheme=?, dateofproposal=?, department=?, adminsanctionnumber=?, adminsanctiondate=?, adminsanctionby=?, status=?, beneficiary=?, modeofallotment=?, typeofwork=?, natureofwork=?, subtypeofwork=?, ward=?, technicalsanctionnumber=?, technicalsanctiondate=?, technicalsanctionby=?, locality=?, workcategory=?, councilresolutionnumber=?, councilresolutiondate=?, workordercreated=?, billscreated=?, spilloverflag=?, cancellationreason=?, cancellationremarks=?, detailedestimatecreated=?, stateid=?, asset=?, implementationperiod=?, fundavailable=?, fundsanctioningauthority=?, pmcrequired=?, pmctype=?, pmcname=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+      basePath: $.abstractEstimates.*
+      jsonMaps:
+         
+       - jsonPath: $.abstractEstimates.*.abstractEstimateNumber
+         
+       - jsonPath: $.abstractEstimates.*.subject
+       
+       - jsonPath: $.abstractEstimates.*.fund.code
+       
+       - jsonPath: $.abstractEstimates.*.referenceType
+       
+       - jsonPath: $.abstractEstimates.*.referenceNumber
+       
+       - jsonPath: $.abstractEstimates.*.function.code
+       
+       - jsonPath: $.abstractEstimates.*.description
+       
+       - jsonPath: $.abstractEstimates.*.budgetGroup.code
+       
+       - jsonPath: $.abstractEstimates.*.scheme.code
+                 
+       - jsonPath: $.abstractEstimates.*.subScheme.code
+                 
+       - jsonPath: $.abstractEstimates.*.dateOfProposal
+         dbType: LONG
+         
+       - jsonPath: $.abstractEstimates.*.department.code
+                  
+       - jsonPath: $.abstractEstimates.*.adminSanctionNumber
+       
+       - jsonPath: $.abstractEstimates.*.adminSanctionDate
+         dbType: LONG
+       
+       - jsonPath: $.abstractEstimates.*.adminSanctionBy.userName
+       
+       - jsonPath: $.abstractEstimates.*.status
+       
+       - jsonPath: $.abstractEstimates.*.beneficiary
+                  
+       - jsonPath: $.abstractEstimates.*.modeOfAllotment.code
+         
+       - jsonPath: $.abstractEstimates.*.typeOfWork.code
+       
+       - jsonPath: $.abstractEstimates.*.natureOfWork.code
+       
+       - jsonPath: $.abstractEstimates.*.subTypeOfWork.code
+       
+       - jsonPath: $.abstractEstimates.*.ward.code
+       
+       - jsonPath: $.abstractEstimates.*.technicalSanctionNumber
+               
+       - jsonPath: $.abstractEstimates.*.technicalSanctionDate
+         dbType: LONG
+       
+       - jsonPath: $.abstractEstimates.*.technicalSanctionBy.userName
+       
+       - jsonPath: $.abstractEstimates.*.locality.code
+       
+       - jsonPath: $.abstractEstimates.*.workCategory
+       
+       - jsonPath: $.abstractEstimates.*.councilResolutionNumber
+                
+       - jsonPath: $.abstractEstimates.*.councilResolutionDate
+                
+       - jsonPath: $.abstractEstimates.*.workOrderCreated
+         type: BOOLEAN
+       
+       - jsonPath: $.abstractEstimates.*.billsCreated
+         type: BOOLEAN
+                  
+       - jsonPath: $.abstractEstimates.*.spillOverFlag
+         type: BOOLEAN
+       
+       - jsonPath: $.abstractEstimates.*.cancellationReason
+       
+       - jsonPath: $.abstractEstimates.*.cancellationRemarks
+       
+       - jsonPath: $.abstractEstimates.*.detailedEstimateCreated
+         type: BOOLEAN
+       
+       - jsonPath: $.abstractEstimates.*.stateId
+       
+       - jsonPath: $.abstractEstimates.*.asset
+       
+       - jsonPath: $.abstractEstimates.*.implementationPeriod
+         dbType: LONG
+                
+       - jsonPath: $.abstractEstimates.*.fundAvailable
+         type: BOOLEAN
+                  
+       - jsonPath: $.abstractEstimates.*.fundSanctioningAuthority
+                  
+       - jsonPath: $.abstractEstimates.*.pmcRequired
+         type: BOOLEAN
+                
+       - jsonPath: $.abstractEstimates.*.pmcType
+               
+       - jsonPath: $.abstractEstimates.*.pmcName
+       
+       - jsonPath: $.abstractEstimates.*.auditDetails.lastModifiedBy
+  
+       - jsonPath: $.abstractEstimates.*.auditDetails.lastModifiedTime
+       
+       - jsonPath: $.abstractEstimates.*.id
+       
+       - jsonPath: $.abstractEstimates.*.tenantId
+       
+    - query: UPDATE egw_abstractestimate_details SET abstractestimate=?, nameofwork=?, estimateamount=?, estimatenumber=?, lastmodifiedby=?, lastmodifiedtime=?, grossamountbilled=?, projectcode=? WHERE id=? AND tenantid=?;
+      basePath: $.abstractEstimates.*.abstractEstimateDetails.*
+      jsonMaps:
+         
+       - jsonPath: $.abstractEstimates[?({id} in @.abstractEstimateDetails[*].id)].id
+       
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.nameOfWork
+       
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.estimateAmount
+       
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.estimateNumber
+       
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.auditDetails.lastModifiedTime
+
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.grossAmountBilled
+       
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectcode
+       
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.id
+         
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.tenantId
 
  - version: 1.0
    name: Project Code
@@ -846,3 +984,4 @@ serviceMaps:
        - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.id
          
        - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.tenantId
+

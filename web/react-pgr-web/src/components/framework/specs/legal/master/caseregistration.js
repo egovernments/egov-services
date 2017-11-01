@@ -122,7 +122,7 @@ var dat = {
             isDisabled: false,
             patternErrorMsg: "",
             url:
-              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..name|$..name"
+              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name"
           },
           {
             name: "hearingTime",

@@ -114,7 +114,7 @@ var dat = {
             isDisabled: false,
             patternErrorMsg: "",
             url:
-              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..name|$..name"
+              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name"
           },
           {
             name: "hearingTime",
@@ -192,19 +192,23 @@ var dat = {
         label: "legal.create.group.title.UploadDocument",
         fields: [
           {
-            name: "File",
-            jsonPath: "cases[0].summon.documents",
-            type: "documentList",
-            pathToArray: "documentTypes",
-            displayNameJsonPath: "name",
-            url: "/tl-masters/documenttype/v2/_search",
-            autoFillFields: [
-              {
-                name: "documentName",
-                jsonPath: "fileStoreId"
-              }
-            ]
-          }
+          "name":"UploadDocument",
+          "jsonPath": "cases[0].summon.documents",
+          "label": "legal.create.sectionApplied",
+           "type": "fileTable",
+            "isRequired": false,
+            "isDisabled": false,
+            
+            "patternErrMsg": "",
+            "fileList":{
+                "name":"documentName",
+                "id":"fileStoreId"
+            },
+              // "fileCount":3
+
+
+
+        }
         ]
       },
       {

@@ -2406,7 +2406,11 @@ var localization_EN_Data = {
 "legal.parawisecomments.create.approve": "Approve",
 "legal.parawisecomments.create.reject": "Reject",
 "legal.parawisecomments.create.forwardTo": "Forward To",
-"legal.parawisecomments.create.group.parawiseComments": "Parawise Comments"
+"legal.parawisecomments.create.group.parawiseComments": "Parawise Comments",
+"legacylegal.create.paymentDate": "Payment Date",
+"legacylegal.create.receiptDate": "Receipt Date",
+"legacylegal.create.ULB": "ULB",
+"legacylegal.create.voucherType": "Voucher Type",
 
 
 
@@ -4130,7 +4134,11 @@ var localization_MR_Data = {
 "legal.parawisecomments.create.approve": "Approve-marathi",
 "legal.parawisecomments.create.reject": "Reject-marathi",
 "legal.parawisecomments.create.forwardTo": "Forward To-marathi",
-"legal.parawisecomments.create.group.parawiseComments": "Parawise Comments-marathi"
+"legal.parawisecomments.create.group.parawiseComments": "Parawise Comments-marathi",
+"legacylegal.create.paymentDate": "Payment Date-marathi",
+"legacylegal.create.receiptDate": "Receipt Date-marathi",
+"legacylegal.create.ULB": "ULB-marathi",
+"legacylegal.create.voucherType": "Voucher Type-marathi",
 
 }
 

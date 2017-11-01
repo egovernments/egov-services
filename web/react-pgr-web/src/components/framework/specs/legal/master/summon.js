@@ -291,13 +291,13 @@ var dat ={
           },
           {
             "name": "departmentName",
-            "jsonPath": "summons[0].departmentName",
+            "jsonPath": "summons[0].departmentName.code",
             "label": "legal.create.departmentName",
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
             "patternErrorMsg": "",
-            "url": "/egov-common-masters/departments/_search?|$.Department[*]|$..name"
+            "url": "/egov-common-masters/departments/_search?|$..code|$..name"
           },{
             "name": "year",
             "jsonPath": "summons[0].year",
@@ -335,7 +335,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..name|$..name"
+            "url": "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name"
           },{
             "name": "ward",
             "jsonPath": "summons[0].ward",
@@ -397,7 +397,7 @@ var dat ={
         }]
       }
     ],
-    "url": "http://192.168.1.116:9090/lcms-services/legalcase/summon/_create",
+    "url": "/lcms-services/legalcase/summon/_create",
     "tenantIdRequired": true
   },
   "legal.view": {
@@ -519,13 +519,13 @@ var dat ={
           },
           {
             "name": "departmentName",
-            "jsonPath": "summons[0].departmentName",
+            "jsonPath": "summons[0].departmentName.code",
             "label": "legal.create.departmentName",
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
             "patternErrorMsg": "",
-            "url": "/egov-common-masters/departments/_search?|$..Department[*]|$..name"
+            "url": "/egov-common-masters/departments/_search?|$..code|$..name"
           },
           {
             "name": "courtName",

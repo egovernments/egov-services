@@ -172,26 +172,25 @@ var dat = {
   "legal.create": {
     numCols: 4,
     useTimestamp: true,
-    objectName: "summons",
+    objectName: "cases",
     groups: [
       {
         name: "CaseTypeDetails",
         label: "legacylegal.create.group.title.CaseTypeDetails",
         fields: [
           {
-            name: "ULB",
-            jsonPath: "cases[0].summon.isULBInitiated",
-            label: "legacylegal.create.ULB",
-            pattern: "",
-            type: "checkbox",
-            isRequired: false,
-            isDisabled: false,
-            requiredErrMsg: "",
-            patternErrMsg: ""
-          },
-          {
+            "name": "ULB",
+            "jsonPath": "cases[0].summon.isULBInitiated",
+            "label": "legacylegal.create.ULB",
+            "pattern": "",
+            "type": "checkbox",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },{
             name: "side",
-            jsonPath: "summons[0].side.name",
+            jsonPath: "cases[0].side.name",
             label: "legacylegal.create.side",
             type: "singleValueList",
             isRequired: true,
@@ -240,7 +239,7 @@ var dat = {
             isDisabled: false,
             patternErrorMsg: "",
             url:
-              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..name|$..name"
+              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name"
           },
           {
             name: "ward",
@@ -302,7 +301,7 @@ var dat = {
           },
           {
             name: "departmentName",
-            jsonPath: "cases[0].summon.departmentName",
+            jsonPath: "cases[0].summon.departmentName.code",
             label: "legacylegal.create.departmentName",
             type: "singleValueList",
             isRequired: true,
@@ -413,7 +412,7 @@ var dat = {
           },
           {
             name: "hearingDate",
-            jsonPath: "summons[0].hearingDate",
+            jsonPath: "cases[0].summon.hearingDate",
             label: "legacylegal.create.hearingDate",
             type: "datePicker",
             isRequired: true,
@@ -449,7 +448,7 @@ var dat = {
           },
           {
             name: "judgementDetails",
-            jsonPath: "summons[0].judgementDetails",
+            jsonPath: "cases[0].summon.judgementDetails",
             label: "legacylegal.create.judgementDetails",
             type: "text",
             isRequired: false,
@@ -485,7 +484,7 @@ var dat = {
           },
           {
             name: "amountReceived",
-            jsonPath: "summons[0].amountReceived",
+            jsonPath: "cases[0].summon.amountReceived",
             label: "legacylegal.create.amountReceived",
             type: "number",
             isRequired: false,
@@ -493,9 +492,67 @@ var dat = {
             patternErrorMsg: ""
           },
           {
+            name: "voucherType",
+            jsonPath: "cases[0].caseVoucher.voucherType",
+            label: "legacylegal.create.voucherType",
+            type: "singleValueList",
+            isRequired: false,
+            isDisabled: false,
+            patternErrorMsg: "",
+            "defaultValue": [{
+              "active": true,
+              "key": "Payment",
+              "code": "Payment",
+              "value": "Payment",
+              "tenantId": "default"
+            },  {
+              "active": true,
+              "key": "Receipt",
+              "code": "Receipt",
+              "value": "Receipt",
+              "tenantId": "default"
+            }],
+            "showHideFields": [{
+             "ifValue":"Payment",
+             "hide": [{
+               "name": "creditDate",
+               "isGroup": false,
+               "isField": true
+                }],
+             "show": [{
+               "name": "debitDate",
+               "isGroup": false,
+               "isField": true
+                }]
+            },{
+             "ifValue":"Receipt",
+             "show": [{
+               "name": "creditDate",
+               "isGroup": false,
+               "isField": true
+                }],
+             "hide": [{
+               "name": "debitDate",
+               "isGroup": false,
+               "isField": true
+                }]
+            }],
+          },
+          {
             name: "creditDate",
+            hide: true,
             jsonPath: "cases[0].caseVoucher.voucherDate",
-            label: "legacylegal.create.creditDate",
+            label: "legacylegal.create.receiptDate",
+            type: "datePicker",
+            isRequired: false,
+            isDisabled: false,
+            patternErrorMsg: ""
+          },
+          {
+            name: "debitDate",
+            hide: true,
+            jsonPath: "cases[0].caseVoucher.voucherDate",
+            label: "legacylegal.create.paymentDate",
             type: "datePicker",
             isRequired: false,
             isDisabled: false,
@@ -503,18 +560,9 @@ var dat = {
           },
           {
             name: "paymentDetails",
-            jsonPath: "summons[0].paymentDetails",
+            jsonPath: "cases[0].caseVoucher.details",
             label: "legacylegal.create.paymentDetails",
             type: "text",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: ""
-          },
-          {
-            name: "debitDate",
-            jsonPath: "cases[0].caseVoucher.voucherDate",
-            label: "legacylegal.create.debitDate",
-            type: "datePicker",
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""
@@ -533,53 +581,44 @@ var dat = {
       {
         name: "UploadDocument",
         label: "legacylegal.create.group.title.UploadDocument",
-        fields: [
+        "fields": [
           {
-            type: "tableList",
-            jsonPath: "summons",
-            tableList: {
-              header: [
-                {
-                  label: "legacylegal.create.advocateName"
-                },
-                {
-                  label: "legacylegal.create.applicantType"
-                },
-                {
-                  label: "legacylegal.create.fee"
-                }
-              ],
-              values: [
-                {
-                  name: "advocateName",
-                  pattern: "",
-                  type: "singleValueList",
-                  jsonPath: "cases[0].advocateDetails[0].advocate.name",
-                  isRequired: true,
-                  isDisabled: false,
-                  url:
-                    "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=advocate|$..code|$..name"
-                },
-                {
-                  name: "advocateAssignDate",
-                  pattern: "",
-                  type: "datePicker",
-                  jsonPath: "cases[0].advocateDetails[0].assignedDate",
-                  isRequired: true,
-                  isDisabled: false
-                },
-                {
-                  name: "fee",
-                  pattern: "",
-                  type: "text",
-                  jsonPath: "cases[0].advocateDetails[0].fee",
-                  isRequired: true,
-                  isDisabled: false
-                }
-              ]
+              "type": "tableList",
+              "jsonPath": "summons",
+              "tableList": {
+                "header": [{
+                  "label": "legacylegal.create.advocateName"
+                }, {
+                  "label": "legacylegal.create.applicantType"
+                },{
+                  "label": "legacylegal.create.fee"
+                }],
+                "values": [{
+                  "name": "advocateName",
+                  "pattern": "",
+                  "type": "singleValueList",
+                  "jsonPath": "cases[0].advocateDetails[0].advocate.name",
+                  "isRequired": true,
+                  "isDisabled": false,
+                  "url": "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=advocate|$..code|$..name"
+                }, {
+                  "name": "advocateAssignDate",
+                  "pattern": "",
+                  "type": "datePicker",
+                  "jsonPath": "cases[0].advocateDetails[0].assignedDate",
+                  "isRequired": true,
+                  "isDisabled": false
+                },{
+                  "name": "fee",
+                  "pattern": "",
+                  "type": "text",
+                  "jsonPath": "cases[0].advocateDetails[0].fee",
+                  "isRequired": true,
+                  "isDisabled": false
+                }]
+              } 
             }
-          }
-        ]
+      ]
       }
     ],
     url: "http://192.168.1.206:9090/lcms-services/legalcase/case/_dataentry",

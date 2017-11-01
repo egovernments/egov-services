@@ -15,8 +15,20 @@ paths:
       summary: 'List of Hierarchy Types Like "ADMIN","LOCATION", "REVENUE" etc.'
       description: |
         Provides a list of available Hierarchy Type and their associated
-         codes. These request types can be unique to each tenant.
+         codes. These request types can be unique to each tenant. This End point will support tenantId , hierarchyType , HierarchyType.tenantId , HierarchyType.code , HierarchyType.id as search parameter
       parameters:
+        - name: tenantId
+          in: query
+          description: Unique id for for a tenant.
+          required: true
+          type: string
+          format: varchar
+        - name: hierarchyType
+          in: query
+          description: Unique id for HierarchyType.
+          required: false
+          type: integer
+          format: varchar  
         - name: HierarchyType.tenantId
           in: query
           description: Unique id for for a tenant.
@@ -146,8 +158,20 @@ paths:
       summary: 'List of boundary Types Like "City","Zone", "Ward" etc.'
       description: |
         Provides a list of available boundary Types and their associated
-         codes. These are the request search parameters
+         codes. These are the request search parameters.This end point will support tenantId , boundaryType, BoundaryType.tenantId, BoundaryType.code, BoundaryType.id as search parameter.
       parameters:
+        - name: tenantId
+          in: query
+          description: Unique tenantId for BoundaryType.
+          required: false
+          type: string
+          format: varchar
+        - name: boundaryType
+          in: query
+          description: Unique id for BoundaryType.
+          required: false
+          type: integer
+          format: varchar  
         - name: BoundaryType.tenantId
           in: query
           description: Unique tenantId for BoundaryType.

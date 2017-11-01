@@ -83,7 +83,7 @@ public class SubmissionSpecification implements Specification<Submission> {
             predicates.add(criteriaBuilder.equal(positionId, criteria.getPageSize()));
         }
 
-        if (!criteria.getCrnList().isEmpty() && criteria.isSearchAttribute()) {
+        if (criteria.getCrnList() != null && !criteria.getCrnList().isEmpty() && criteria.isSearchAttribute()) {
             predicates.add(crn.in(criteria.getCrnList()));
         }
 

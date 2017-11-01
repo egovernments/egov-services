@@ -23,6 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 import java.util.List;
+
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.*;
 import javax.validation.Valid;
@@ -39,7 +41,7 @@ public interface StoresApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<StoreResponse> storesCreatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,@ApiParam(value = "Create  new"  )  @Valid @RequestBody StoreRequest storeRequest, @RequestHeader(value = "Accept", required = false) String accept) throws Exception;
+    ResponseEntity<StoreResponse> storesCreatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,@ApiParam(value = "Create  new"  )  @Valid @RequestBody StoreRequest storeRequest, @RequestHeader(value = "Accept", required = false) String accept, BindingResult errors) throws Exception;
 
 
     @ApiOperation(value = "Get the list of stores", nickname = "storesSearchPost", notes = "stores", response = StoreResponse.class, tags={ "Inventory","Store", })
@@ -61,6 +63,6 @@ public interface StoresApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<StoreResponse> storesUpdatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,@ApiParam(value = "common Request info"  )  @Valid @RequestBody StoreRequest storeRequest, @RequestHeader(value = "Accept", required = false) String accept) throws Exception;
+    ResponseEntity<StoreResponse> storesUpdatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,@ApiParam(value = "common Request info"  )  @Valid @RequestBody StoreRequest storeRequest, @RequestHeader(value = "Accept", required = false) String accept,BindingResult errors) throws Exception;
 
 }

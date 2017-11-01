@@ -1,6 +1,6 @@
-Create sequence seq_stores;
+Create sequence seq_store;
 
-Create table stores(
+Create table store(
 id character varying(50) NOT NULL,
 code character varying(50) NOT NULL,
 name character varying(50) NOT NULL,
@@ -18,5 +18,6 @@ tenantid character varying(232) NOT NULL,
 createdby character varying(50) NOT NULL,
 createdtime bigint NOT NULL,
 lastmodifiedby character varying(50) NOT NULL,
-lastmodifiedtime bigint NOT NULL
+lastmodifiedtime bigint NOT NULL,
+constraint primary_inv_store primary key (code,tenantId);
 );

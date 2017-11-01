@@ -44,9 +44,18 @@ import io.swagger.model.Store;
 import io.swagger.model.StoreGetRequest;
 import io.swagger.model.StoreRequest;
 
-import org.egov.inv.domain.repository.StoreRepository;
+import org.egov.inv.domain.exception.CustomBindException;
+import org.egov.inv.domain.exception.ErrorCode;
+import org.egov.inv.domain.exception.InvalidDataException;
+import org.egov.inv.persistence.entity.StoreEntity;
+import org.egov.inv.persistence.repository.StoreJdbcRepository;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 import java.util.List;
 
@@ -54,32 +63,81 @@ import java.util.List;
 public class StoreService {
 
 	@Autowired
-	private InventoryUtilityService inventoryUtilityService;
+	private StoreJdbcRepository storeJdbcRepository;
+
+	@Value("${inv.store.save.topic}")
+	private String createTopic;
+
+	@Value("${inv.store.update.topic}")
+	private String updateTopic;
 
 	@Autowired
-	private StoreRepository storeRepository;
+	private InventoryUtilityService inventoryUtilityService;
 
-	public List<Store> create(StoreRequest storeRequest, String tenantId) {
-		List<Long> storesIdList = inventoryUtilityService.getIdList(storeRequest.getStores().size(), "seq_stores");
-		for (int i = 0; i <= storeRequest.getStores().size() - 1; i++) {
-			storeRequest.getStores().get(i).setId(storesIdList.get(i).toString());
-			storeRequest.getStores().get(i)
-					.setAuditDetails(inventoryUtilityService.mapAuditDetails(storeRequest.getRequestInfo(), tenantId));
+	
+
+	@Autowired
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+
+	public List<Store> create(StoreRequest storeRequest, String tenantId, BindingResult errors) {
+
+		try {
+
+			for (Store store : storeRequest.getStores()) {
+				store.setAuditDetails(inventoryUtilityService.mapAuditDetails(storeRequest.getRequestInfo(), tenantId));
+				if (!storeJdbcRepository.uniqueCheck("code", new StoreEntity().toEntity(store))) {
+					errors.addError(new FieldError("store", "code", store.getCode(), false,
+							new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null,
+							ErrorCode.NON_UNIQUE_VALUE.getMessage() + " . " + ErrorCode.NON_UNIQUE_VALUE.getDescription()));
+				}
+				if (errors.hasErrors()) {
+					throw new CustomBindException(errors.getFieldError().getCode() + " : " + (errors.getFieldError().getDefaultMessage().replace("{0}", errors.getFieldError().getField())).replace("{1}", errors.getFieldError().getRejectedValue().toString()));
+				}
+				store.setId(storeJdbcRepository.getSequence(store));
+			}
+		} catch (CustomBindException e) {
+			throw e;
 		}
-		return storeRepository.create(storeRequest);
+			
+				
+		return push(storeRequest);
 	}
 
-	public List<Store> update(StoreRequest storeRequest, String tenantId) {
-		List<Store> storesList = storeRequest.getStores();
-		for (int i = 0; i <= storesList.size() - 1; i++) {
-			storeRequest.getStores().get(i).setAuditDetails(
-					inventoryUtilityService.mapAuditDetailsForUpdate(storeRequest.getRequestInfo(), tenantId));
+	public List<Store> update(StoreRequest storeRequest, String tenantId, BindingResult errors) {
+		try {
+
+			for (Store store : storeRequest.getStores()) {
+				 if (store.getId() == null) {
+                     throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), store.getId());
+                 }
+				store.setAuditDetails(inventoryUtilityService.mapAuditDetailsForUpdate(storeRequest.getRequestInfo(), tenantId));
+				if (!storeJdbcRepository.uniqueCheck("code", new StoreEntity().toEntity(store))) {
+					errors.addError(new FieldError("store", "code", store.getCode(), false,
+							new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, ErrorCode.NON_UNIQUE_VALUE.getMessage() + " . " + ErrorCode.NON_UNIQUE_VALUE.getDescription()));
+				}
+				if (errors.hasErrors()) {
+					throw new CustomBindException(errors.getFieldError().getCode() + " : " + (errors.getFieldError().getDefaultMessage().replace("{0}", errors.getFieldError().getField())).replace("{1}", errors.getFieldError().getRejectedValue().toString()));
+				}
+				store.setId(storeJdbcRepository.getSequence(store));
+			}
+		} catch (CustomBindException e) {
+			throw e;
 		}
-		return storeRepository.update(storeRequest);
+		return pushForUpdate(storeRequest);
 	}
 
 	public Pagination<Store> search(StoreGetRequest storeGetRequest) {
-		return storeRepository.search(storeGetRequest);
+		return storeJdbcRepository.search(storeGetRequest);
+	}
+
+	public List<Store> push(StoreRequest storeRequest) {
+		kafkaTemplate.send(createTopic, storeRequest);
+		return storeRequest.getStores();
+	}
+
+	public List<Store> pushForUpdate(StoreRequest storeRequest) {
+		kafkaTemplate.send(updateTopic, storeRequest);
+		return storeRequest.getStores();
 	}
 
 }

@@ -57,8 +57,12 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class StoresEntity {
+public class StoreEntity {
 
+	public static final String TABLE_NAME = "store";
+	public static final String SEQUENCE_NAME = "seq_store";
+	public static final String ALIAS = "store";
+	
    private String id = null;
    
     private String code = null;
@@ -123,5 +127,27 @@ public class StoresEntity {
         return store;
         
     }
+
+	public Object toEntity(Store store) {
+		this.id = store.getId();
+		this.name = store.getName();
+		this.code = store.getCode();
+		this.contactno1 = store.getContactNo1();
+		this.contactno2 = store.getContactNo2();
+		this.billingAddress = store.getBillingAddress();
+		this.deliveryAddress = store.getDeliveryAddress();
+		this.active = store.isActive();
+		this.description = store.getDescription();
+		this.email = store.getEmail();
+		this.isCentralStore = store.isIsCentralStore();
+		this.tenantId = store.getAuditDetails().getTenantId();
+		this.department = store.getDepartment().getCode();
+		this.storeInCharge = store.getStoreInCharge().getCode();
+		this.createdBy = store.getAuditDetails().getCreatedBy();
+		this.createdTime = store.getAuditDetails().getCreatedTime();
+		this.lastmodifiedBy = store.getAuditDetails().getLastModifiedBy();
+		this.lastmodifiedTime = store.getAuditDetails().getLastModifiedTime();
+		return this;
+	}
     
 }

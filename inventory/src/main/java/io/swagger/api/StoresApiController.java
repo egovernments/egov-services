@@ -54,6 +54,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -80,8 +81,8 @@ public class StoresApiController implements StoresApi {
 	public ResponseEntity<StoreResponse> storesCreatePost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "Create  new") @Valid @RequestBody StoreRequest storeRequest,
-			@RequestHeader(value = "Accept", required = false) String accept) throws Exception {
-		List<Store> stores = storesService.create(storeRequest, tenantId);
+			@RequestHeader(value = "Accept", required = false) String accept,BindingResult errors) throws Exception {
+		List<Store> stores = storesService.create(storeRequest, tenantId , errors);
 		StoreResponse storeResponse = buildStoreResponse(stores, storeRequest.getRequestInfo());
 
 		if (accept != null && accept.contains("application/json")) {
@@ -136,8 +137,8 @@ public class StoresApiController implements StoresApi {
 	public ResponseEntity<StoreResponse> storesUpdatePost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "common Request info") @Valid @RequestBody StoreRequest storeRequest,
-			@RequestHeader(value = "Accept", required = false) String accept) throws Exception {
-		List<Store> stores = storesService.update(storeRequest, tenantId);
+			@RequestHeader(value = "Accept", required = false) String accept, BindingResult errors) throws Exception {
+		List<Store> stores = storesService.update(storeRequest, tenantId , errors);
 		StoreResponse storeResponse = buildStoreResponse(stores, storeRequest.getRequestInfo());
 
 		if (accept != null && accept.contains("application/json")) {

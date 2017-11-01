@@ -123,7 +123,7 @@ var dat =  {
             type: "singleValueList",
             isRequired: false,
             isDisabled: false,
-            "url": "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=advocate|$..code|$..name",
+            "url": "/lcms-services/legalcase/advocate/_search?|$..code|$..name",
             patternErrorMsg: "",
             //  autoCompleteDependancy: {
 						// 		"autoCompleteUrl": "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=advocate/_search?tenantId=default&name={value}",

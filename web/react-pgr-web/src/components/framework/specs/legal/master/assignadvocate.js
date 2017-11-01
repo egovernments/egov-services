@@ -239,7 +239,7 @@ var dat = {
                   isRequired: true,
                   isDisabled: false,
                   url:
-                    "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=advocate|$..code|$..name"
+                    "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
                 },
                 {
                   name: "advocateAssignDate",

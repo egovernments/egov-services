@@ -57,7 +57,7 @@ var dat ={
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": "",
-            "url": "/egov-common-masters/departments/_search?|$..id|$..name"
+            "url": "/lcms-services/legalcase/advocate/_search?|$..id|$..name"
           },
           {
             "name": "advocateName",
@@ -265,7 +265,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "patternErrorMsg": "",
-            "url": "/egov-common-masters/departments/_search?|$..code|$..name"
+            "url": "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
           },{
             "name": "year",
             "jsonPath": "summons[0].year",

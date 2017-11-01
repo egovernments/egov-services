@@ -61,7 +61,7 @@ var dat = {
             label: "legal.vakalatnama.create.department",
             pattern: "",
             type: "singleValueList",
-            url: "/egov-common-masters/departments/_search?|$..code|$..name",
+            url: "/lcms-services/legalcase/advocate/_search?|$..code|$..name",
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",

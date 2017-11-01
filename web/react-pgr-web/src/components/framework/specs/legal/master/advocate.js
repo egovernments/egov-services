@@ -304,8 +304,8 @@ var dat = {
         ]
       },
       {
-        name: "persnolDetails",
-        label: "advocates.create.group.title.PersnolDetails",
+        name: "personalDetails",
+        label: "advocates.create.group.title.personalDetails",
         fields: [
           {
             name: "advocateTitle",

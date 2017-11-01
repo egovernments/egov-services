@@ -2224,7 +2224,7 @@ var localization_EN_Data = {
 "advocates.create.primaryOwner": "Primary Owner",
 "advocates.create.individual": "Individual",
 "advocates.create.Agency_Organization": "Agency/Organization",
-"advocates.create.group.title.PersnolDetails": "Persnol Details",
+"advocates.create.group.title.PersonalDetails": "Personal Details",
 "advocates.create.advocateTitle": "Advocate Title",
 "advocates.create.aadharNumber": "Aadhar Number",
 "advocates.create.firstName": "First Name",
@@ -2434,7 +2434,16 @@ var localization_EN_Data = {
 "legal.search.advocatepayment.title":"Search Advocate Payments",
 "legal.create.fromDate": "From Date",
 "legal.create.toDate": "To Date",
-"legal.create.caseStatus":"Case Status"
+"legal.create.caseStatus":"Case Status",
+"opinion.search.title":"Search",
+"opinion.createsortProperty":"Sort",
+"opinion.createids":"ID",
+"opinion.createopinionRequestDate":"Opinion Request Date",
+"opinion.createopinionBy":"OpinionBy",
+"opinion.createdepartMentName":"Department Name",
+"opinion.search.result.id":"ID",
+"opinion.search.result.departmentName":"Department Name",
+"opinion.search.result.opinionOn":"Opinion On"
 
 
 
@@ -3972,7 +3981,7 @@ var localization_MR_Data = {
 "advocates.create.primaryOwner": "Primary Owner-Marathi",
 "advocates.create.individual": "Individual-Marathi",
 "advocates.create.Agency_Organization": "Agency/Organization-Marathi",
-"advocates.create.group.title.PersnolDetails": "Persnol Details-Marathi",
+"advocates.create.group.title.PersonalDetails": "Personal Details-Marathi",
 "advocates.create.advocateTitle": "Advocate Title-Marathi",
 "advocates.create.aadharNumber": "Aadhar Number-Marathi",
 "advocates.create.firstName": "First Name-Marathi",
@@ -4186,7 +4195,17 @@ var localization_MR_Data = {
 "legal.search.advocatepayment.title":"Search Advocate Payments-Marathi",
 "legal.create.fromDate": "From Date-Marathi",
 "legal.create.toDate": "To Date-Marathi",
-"legal.create.caseStatus":"Case Status-Marathi"
+"legal.create.caseStatus":"Case Status-Marathi",
+
+"opinion.search.title":"Search-Marathi",
+"opinion.createsortProperty":"Sort-Marathi",
+"opinion.createids":"ID-Marathi",
+"opinion.createopinionRequestDate":"Opinion Request Date-Marathi",
+"opinion.createopinionBy":"OpinionBy-Marathi",
+"opinion.createdepartMentName":"Department Name-Marathi",
+"opinion.search.result.id":"ID-Marathi",
+"opinion.search.result.departmentName":"Department Name-Marathi",
+"opinion.search.result.opinionOn":"Opinion On-Marathi"
 
 
 }

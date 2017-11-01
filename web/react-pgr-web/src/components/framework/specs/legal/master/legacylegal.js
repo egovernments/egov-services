@@ -307,7 +307,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: "",
-            url: "/egov-common-masters/departments/_search?|$..code|$..name"
+            url: "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
           },
           {
             name: "pleadersEngagementDetails",
@@ -600,7 +600,7 @@ var dat = {
                   "jsonPath": "cases[0].advocateDetails[0].advocate.name",
                   "isRequired": true,
                   "isDisabled": false,
-                  "url": "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=advocate|$..code|$..name"
+                  "url": "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
                 }, {
                   "name": "advocateAssignDate",
                   "pattern": "",
@@ -750,7 +750,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: "",
-            url: "/egov-common-masters/departments/_search?|$..code|$..name"
+            url: "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
           },
           {
             name: "courtName",
@@ -964,7 +964,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: "",
-            url: "/egov-common-masters/departments/_search?|$..code|$..name"
+            url: "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
           },
           {
             name: "courtName",

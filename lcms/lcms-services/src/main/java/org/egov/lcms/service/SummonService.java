@@ -1,6 +1,7 @@
 package org.egov.lcms.service;
 
 import java.util.List;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.factory.ResponseFactory;
@@ -15,6 +16,7 @@ import org.egov.lcms.models.SummonResponse;
 import org.egov.lcms.repository.CaseSearchRepository;
 import org.egov.lcms.repository.IdGenerationRepository;
 import org.egov.lcms.util.UniqueCodeGeneration;
+import org.egov.lcms.utility.SummonValidator;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,9 @@ public class SummonService {
 
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	
+	@Autowired
+	private SummonValidator summonValidator;
 
 	/**
 	 * This API will create the summon
@@ -49,7 +54,7 @@ public class SummonService {
 	 * @return {@link SummonResponse}
 	 */
 	public SummonResponse createSummon(SummonRequest summonRequest) throws Exception {
-         validateSummon(summonRequest);
+         
 		for (Summon Summon : summonRequest.getSummons()) {
 			if (Summon.getIsUlbinitiated() == null) {
 				Summon.setIsUlbinitiated(Boolean.FALSE);
@@ -89,7 +94,7 @@ public class SummonService {
 	 * @throws Exception
 	 */
 	public CaseResponse assignAdvocate(CaseRequest caseRequest) throws Exception {
-
+		summonValidator.validateSummon(caseRequest);
 		validateAssignAdvocate(caseRequest);
 		generateAdvocateCode(caseRequest);
 		kafkaTemplate.send(propertiesManager.getAssignAdvocate(), caseRequest);
@@ -133,73 +138,7 @@ public class SummonService {
 
 	}
 
-	/**
-	 * * This API will validate the summon object
-	 * 
-	 * @param summonRequest
-	 * @throws Exception
-	 */
-	private void validateSummon(SummonRequest summonRequest) throws Exception {
-		for (Summon summon : summonRequest.getSummons()) {
-			if (summon.getTenantId() == null) {
-				throw new CustomException(propertiesManager.getTenantMandatoryCode(),
-						propertiesManager.getTenantMandatoryMessage());
-			} else if (summon.getSummonReferenceNo() == null || summon.getSummonReferenceNo().isEmpty()) {
-				throw new CustomException(propertiesManager.getRefrencenoCode(),
-						propertiesManager.getRefrencenoMessage());
-			} else if (summon.getYear() == null) {
-				throw new CustomException(propertiesManager.getYearCode(), propertiesManager.getYearMessage());
-			} else if (summon.getPlantiffName() == null) {
-				throw new CustomException(propertiesManager.getPlaintiffCode(),
-						propertiesManager.getPlaintiffMessage());
-
-			} else if (summon.getPlantiffAddress() == null) {
-				throw new CustomException(propertiesManager.getPlaintiffaddressCode(),
-						propertiesManager.getPlaintiffaddressMessage());
-			} else if (summon.getDefendant() == null || summon.getDefendant().isEmpty()) {
-				throw new CustomException(propertiesManager.getDefendentCode(),
-						propertiesManager.getDefendentMessage());
-
-			} else if (summon.getCourtName() == null) {
-				throw new CustomException(propertiesManager.getCourtnameCode(),
-						propertiesManager.getCourtnameMessage());
-
-			} else if (summon.getWard() == null || summon.getWard().isEmpty()) {
-				throw new CustomException(propertiesManager.getWardCode(), propertiesManager.getWardMessage());
-			} else if (summon.getBench() == null) {
-				throw new CustomException(propertiesManager.getBenchCode(), propertiesManager.getBenchMessage());
-			} else if (summon.getStamp() == null) {
-				throw new CustomException(propertiesManager.getStampCode(), propertiesManager.getStampMessage());
-			} else if (summon.getSummonDate() == null) {
-				throw new CustomException(propertiesManager.getSummondateCode(),
-						propertiesManager.getSummondateMessage());
-			} else if (summon.getCaseType() == null) {
-				throw new CustomException(propertiesManager.getCasetypeCode(), propertiesManager.getCasetypeMessage());
-			} else if (summon.getCaseNo() == null || summon.getCaseNo().isEmpty()) {
-				throw new CustomException(propertiesManager.getCasenoCode(), propertiesManager.getCasenoMessage());
-
-			} else if (summon.getCaseDetails() == null) {
-				throw new CustomException(propertiesManager.getCasedetailsCode(),
-						propertiesManager.getCasedetailsMessage());
-
-			} else if (summon.getDepartmentName() == null) {
-				throw new CustomException(propertiesManager.getDepartmentNameCode(),
-						propertiesManager.getDepartmentNameMessage());
-			} else if (summon.getHearingDate() == null) {
-				throw new CustomException(propertiesManager.getHearingdateCode(),
-						propertiesManager.getHearingdateMessage());
-			} else if (summon.getHearingTime() == null) {
-				throw new CustomException(propertiesManager.getHearingtimeCode(),
-						propertiesManager.getHearingtimeMessage());
-			} else if (summon.getSide() == null) {
-				throw new CustomException(propertiesManager.getSideCode(), propertiesManager.getSideMessage());
-			} else if (summon.getSectionApplied() == null) {
-				throw new CustomException(propertiesManager.getSectionappliedCode(),
-						propertiesManager.getSectionappliedMessage());
-			}
-		}
-	}
-
+	
 	/**
 	 * This API will validate the assign advocate details
 	 * @param caseRequest

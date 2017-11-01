@@ -55,7 +55,6 @@ public class Summon {
 	private Court courtName = null;
 
 	@NotNull
-
 	@JsonProperty("departmentName")
 	private Department departmentName = null;
 

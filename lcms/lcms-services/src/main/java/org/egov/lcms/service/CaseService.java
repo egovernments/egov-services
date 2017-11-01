@@ -17,6 +17,7 @@ import org.egov.lcms.models.ParaWiseComment;
 import org.egov.lcms.repository.CaseSearchRepository;
 import org.egov.lcms.repository.OpinionRepository;
 import org.egov.lcms.util.UniqueCodeGeneration;
+import org.egov.lcms.utility.SummonValidator;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,9 @@ public class CaseService {
 
 	@Autowired
 	CaseSearchRepository caseSearchRepository;
+
+	@Autowired
+	private SummonValidator summonValidator;
 
 	public CaseResponse createParaWiseComment(CaseRequest caseRequest) throws Exception {
 		List<Case> cases = caseRequest.getCases();
@@ -83,7 +87,7 @@ public class CaseService {
 	 * @return {@link CaseResponse}
 	 */
 	public CaseResponse createCase(CaseRequest caseRequest) throws Exception {
-
+		summonValidator.validateSummon(caseRequest);
 		validateCase(caseRequest);
 		generateCaseReferenceNumber(caseRequest);
 		kafkaTemplate.send(propertiesManager.getUpdateSummonValidate(), caseRequest);
@@ -158,6 +162,7 @@ public class CaseService {
 	 * @return
 	 */
 	public CaseResponse createVakalatnama(CaseRequest caseRequest) throws Exception {
+		summonValidator.validateSummon(caseRequest);
 		validateVakalatnama(caseRequest);
 		kafkaTemplate.send(propertiesManager.getCreateVakalatnama(), caseRequest);
 		return new CaseResponse(responseFactory.getResponseInfo(caseRequest.getRequestInfo(), HttpStatus.CREATED),
@@ -171,7 +176,7 @@ public class CaseService {
 	 * @return {@link CaseResponse}
 	 */
 	public CaseResponse legacyDataLoad(CaseRequest caseRequest) throws Exception {
-		
+
 		User user = new User();
 		user.setId(57l);
 		caseRequest.getRequestInfo().setUserInfo(user);
@@ -211,10 +216,9 @@ public class CaseService {
 						propertiesManager.getVoucherCodeFormatName(), Boolean.FALSE, null);
 				caseObj.getCaseVoucher().setCode(caseVoucherCode);
 				caseObj.getCaseVoucher().setCaseCode(summonCode);
-				if(caseObj.getTenantId() != null && !caseObj.getTenantId().trim().isEmpty()){
+				if (caseObj.getTenantId() != null && !caseObj.getTenantId().trim().isEmpty()) {
 					caseObj.getCaseVoucher().setTenantId(caseObj.getTenantId());
 				}
-				
 
 				kafkaTemplate.send(propertiesManager.getCreateLegacyCaseVoucher(), caseRequest);
 			}

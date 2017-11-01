@@ -99,7 +99,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: "",
-            url: "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
+            url: "/egov-common-masters/departments/_search?|$..code|$..name"
           },{
             name: "Case",
             jsonPath: "opinions[0].case",
@@ -108,13 +108,14 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: "",
-            url: "/egov-common-masters/departments/_search?|$..code|$..name"
+            url: "/lcms-services/legalcase/case/_search?|$..summon.summonReferenceNo|$..summon.caseNo"
           },
           {
             name: "opinionOn",
             jsonPath: "opinions[0].opinionOn",
             label: "opinion.create.opinionOn",
             type: "textarea",
+            fullWidth:true,
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: ""
@@ -210,7 +211,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: "",
-            url: "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
+            url: "/egov-common-masters/departments/_search?|$..code|$..name"
           },
           {
             name: "opinionOn",

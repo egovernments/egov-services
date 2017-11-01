@@ -57,7 +57,7 @@ var dat ={
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": "",
-            "url": "/lcms-services/legalcase/advocate/_search?|$..id|$..name"
+            "url": "/egov-common-masters/departments/_search?|$..id|$..name"
           },
           {
             "name": "advocateName",
@@ -158,15 +158,15 @@ var dat ={
         "name": "CaseTypeDetails",
         "label": "legal.create.group.title.CaseTypeDetails",
         "fields": [
-          // {
-          //   "name": "orgnatedBYULB",
-          //   "jsonPath": "summons[0].orgnatedBYULB",
-          //   "label": "legal.create.orgnatedBYULB",
-          //   "type": "checkbox",
-          //   "isRequired": false,
-          //   "isDisabled": false,
-          //   "patternErrorMsg": ""
-          // },
+          {
+            "name": "orignatedBYULB",
+            "jsonPath": "summons[0].orignatedBYULB",
+            "label": "legal.create.orignatedBYULB",
+            "type": "checkbox",
+            "isRequired": false,
+            "isDisabled": false,
+            "patternErrorMsg": ""
+          },
           {
             "name": "referenceNo",
             "jsonPath": "summons[0].summonReferenceNo",
@@ -243,7 +243,8 @@ var dat ={
             "name": "caseDetails",
             "jsonPath": "summons[0].caseDetails",
             "label": "legal.create.caseDetails",
-            "type": "text",
+            "type": "textarea",
+            "fullWidth":true,
             "isRequired": true,
             "isDisabled": false,
             "patternErrorMsg": ""
@@ -265,7 +266,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "patternErrorMsg": "",
-            "url": "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
+            "url": "/egov-common-masters/departments/_search?|$..code|$..name"
           },{
             "name": "year",
             "jsonPath": "summons[0].year",
@@ -289,7 +290,7 @@ var dat ={
             "name": "hearingTime",
             "jsonPath": "summons[0].hearingTime",
             "label": "legal.create.hearingTime",
-            "type": "number",
+            "type": "text",
             "isNumber":true,
             "isRequired": false,
             "isDisabled": false,
@@ -471,7 +472,8 @@ var dat ={
             "name": "caseDetails",
             "jsonPath": "summons[0].caseDetails",
             "label": "legal.create.caseDetails",
-            "type": "text",
+            "type": "textarea",
+            "fullWidth":true,
             "isRequired": true,
             "isDisabled": false,
             "patternErrorMsg": ""
@@ -680,7 +682,8 @@ var dat ={
             "name": "caseDetails",
             "jsonPath": "summons[0].caseDetails",
             "label": "legal.create.caseDetails",
-            "type": "text",
+            "type": "textarea",
+            "fullWidth":true,
             "isRequired": true,
             "isDisabled": false,
             "patternErrorMsg": ""

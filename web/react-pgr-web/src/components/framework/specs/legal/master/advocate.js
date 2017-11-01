@@ -61,21 +61,21 @@ var dat = {
     "result": {
       "header": [
         {
-          "label": "legal.search.result.referenceNo"
+           "label": "legal.search.result.advocateName"
         },
         {
-          "label": "legal.search.result.advocateName"
+            "label": "legal.search.result.emailId"
         },
         {
-          "label": "legal.search.result.isIndividual"
+          "label": "legal.search.result.mobileNumber"
         }
       ],
       "values": [
-        "referenceNo",
-        "advocateName",
-        "isIndividual"
+        "name",
+        "emailId",
+        "contactNo"
       ],
-      "resultPath": "advocates[0]",
+      "resultPath": "advocates",
       "rowClickUrlUpdate": "/update/legalcase/{id}",
       "rowClickUrlView": "/view/legalcase/{id}"
     }
@@ -153,10 +153,11 @@ var dat = {
             name: "advocateTitle",
             jsonPath: "advocates[0].title",
             label: "advocates.create.advocateTitle",
-            type: "text",
+            type: "singleValueList",
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: "",
+            defaultValue:[{ key:"Mr",value:"Mr"},{ key:"Mrs",value:"Mrs"},{ key:"Ms",value:"Ms"},{ key:"Miss",value:"Miss"}]
           },
           {
             name: "aadharNumber",
@@ -174,11 +175,12 @@ var dat = {
             jsonPath: "advocates[0].gender",
             label: "advocates.create.gender",
             pattern: "",
-            type: "text",
+            type: "singleValueList",
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",
-            patternErrMsg: ""
+            patternErrMsg: "",
+             defaultValue:[{ key:"Male",value:"Male"},{ key:"Female",value:"Female"}]
           },
           {
             name: "firstName",
@@ -311,10 +313,11 @@ var dat = {
             name: "advocateTitle",
             jsonPath: "advocates[0].title",
             label: "advocates.create.advocateTitle",
-            type: "text",
+            type: "singleValueList",
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: "",
+            defaultValue:[{ key:"Mr",value:"Mr"},{ key:"Mrs",value:"Mrs"},{ key:"Ms",value:"Ms"},{ key:"Miss",value:"Miss"}]
           },
           {
             name: "aadharNumber",
@@ -332,11 +335,12 @@ var dat = {
             jsonPath: "advocates[0].gender",
             label: "advocates.create.gender",
             pattern: "",
-            type: "text",
+            type: "singleValueList",
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",
-            patternErrMsg: ""
+            patternErrMsg: "",
+            defaultValue:[{ key:"Male",value:"Male"},{ key:"Female",value:"Female"}]
           },
           {
             name: "firstName",
@@ -486,11 +490,10 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: "",
             patternErrMsg: ""
-          },
-          {
-            name: "empanelmentFromDate",
-            jsonPath: "advocates[0].empanelmentFromDate",
-            label: "advocates.create.empanelmentFromDate",
+          }, {
+            name: "newsPaperAdvertismentDate",
+            jsonPath: "advocates[0].newsPaperAdvertismentDate",
+            label: "advocates.create.newsPaperAdvertismentDate",
             pattern: "",
             type: "datePicker",
             isRequired: true,
@@ -499,9 +502,9 @@ var dat = {
             patternErrMsg: ""
           },
           {
-            name: "newsPaperAdvertismentDate",
-            jsonPath: "advocates[0].newsPaperAdvertismentDate",
-            label: "advocates.create.newsPaperAdvertismentDate",
+            name: "empanelmentFromDate",
+            jsonPath: "advocates[0].empanelmentFromDate",
+            label: "advocates.create.empanelmentFromDate",
             pattern: "",
             type: "datePicker",
             isRequired: true,

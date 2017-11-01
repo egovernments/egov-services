@@ -2224,7 +2224,7 @@ var localization_EN_Data = {
 "advocates.create.primaryOwner": "Primary Owner",
 "advocates.create.individual": "Individual",
 "advocates.create.Agency_Organization": "Agency/Organization",
-"advocates.create.group.title.PersonalDetails": "Personal Details",
+"advocates.create.group.title.personalDetails": "Personal Details",
 "advocates.create.advocateTitle": "Advocate Title",
 "advocates.create.aadharNumber": "Aadhar Number",
 "advocates.create.firstName": "First Name",
@@ -2237,13 +2237,13 @@ var localization_EN_Data = {
 "advocates.create.mobileNumber": "Mobile Number",
 "advocates.create.contactNumber": "Contact Number",
 "advocates.create.email": "Email",
-"advocates.create.dateOfEmpanelment": "Date of empanelment",
+"advocates.create.dateOfEmpanelment": "Date of Empanelment",
 "advocates.create.panNumber": "PAN Number",
 "advocates.create.standingCommiteDecisionDate": "Standing Commite Decision Date",
 "advocates.create.VATTinNumber": "VAT Tin Number",
 "advocates.create.empanelmentFromDate": "Empanelment From Date",
 "advocates.create.newsPaperAdvertismentDate": "NewsPaper Advertisment Date",
-"advocates.create.empanelementToDate": "Empanelement To Date",
+"advocates.create.empanelementToDate": "Empanelment To Date",
 "advocates.create.group.title.bankDetails": "Bank Details",
 "advocates.create.bankName": "Bank Name",
 "advocates.create.bankBranch": "Bank Branch",
@@ -2383,7 +2383,7 @@ var localization_EN_Data = {
 "legal.vakalatnama.create.witness": "Witness",
 "legal.vakalatnama.create.addWitness": "Add Witness",
 "legal.vakalatnama.create.generateVakalatnama": "Generate Vakalatnama",
-"legal.create.orgnatedBYULB":"Orginated by ULB",
+"legal.create.orignatedBYULB":"Initiated by ULB",
 "legal.vakalatnama.create.exhibitNumber":"Exhibit Number",
 "legal.create.group.title.assignAdvocate":"Assign Advocate",
 "legal.create.case":"Case",
@@ -2410,7 +2410,7 @@ var localization_EN_Data = {
 "legal.parawisecomments.create.group.parawiseComments": "Parawise Comments",
 "legacylegal.create.paymentDate": "Payment Date",
 "legacylegal.create.receiptDate": "Receipt Date",
-"legacylegal.create.ULB": "ULB",
+"legacylegal.create.ULB": "Initiated by ULB",
 "legacylegal.create.voucherType": "Voucher Type",
 
 "legal.create.group.title.CaseDetails":"Case Details",
@@ -2443,7 +2443,9 @@ var localization_EN_Data = {
 "opinion.createdepartMentName":"Department Name",
 "opinion.search.result.id":"ID",
 "opinion.search.result.departmentName":"Department Name",
-"opinion.search.result.opinionOn":"Opinion On"
+"opinion.search.result.opinionOn":"Opinion On",
+"legal.search.result.emailId":"Email-id",
+"legal.search.result.mobileNumber":"Mobile Number"
 
 
 
@@ -3981,7 +3983,7 @@ var localization_MR_Data = {
 "advocates.create.primaryOwner": "Primary Owner-Marathi",
 "advocates.create.individual": "Individual-Marathi",
 "advocates.create.Agency_Organization": "Agency/Organization-Marathi",
-"advocates.create.group.title.PersonalDetails": "Personal Details-Marathi",
+"advocates.create.group.title.personalDetails": "Personal Details-Marathi",
 "advocates.create.advocateTitle": "Advocate Title-Marathi",
 "advocates.create.aadharNumber": "Aadhar Number-Marathi",
 "advocates.create.firstName": "First Name-Marathi",
@@ -3994,11 +3996,11 @@ var localization_MR_Data = {
 "advocates.create.mobileNumber": "Mobile Number-Marathi",
 "advocates.create.contactNumber": "Contact Number-Marathi",
 "advocates.create.email": "Email-Marathi",
-"advocates.create.dateOfEmpanelment": "Date of empanelment-Marathi",
+"advocates.create.dateOfEmpanelment": "Date of Empanelment-Marathi",
 "advocates.create.panNumber": "PAN Number-Marathi",
 "advocates.create.standingCommiteDecisionDate": "Standing Commite Decision Date-Marathi",
 "advocates.create.VATTinNumber": "VAT Tin Number-Marathi",
-"advocates.create.empanelmentFromDate": "empanelment From Date-Marathi",
+"advocates.create.empanelmentFromDate": "Empanelment From Date-Marathi",
 "advocates.create.newsPaperAdvertismentDate": "NewsPaper Advertisment Date-Marathi",
 "advocates.create.empanelementToDate": "Empanelement To Date-Marathi",
 "advocates.create.group.title.bankDetails": "Bank Details-Marathi",
@@ -4142,7 +4144,7 @@ var localization_MR_Data = {
 "legal.vakalatnama.create.witness": "Witness-marathi",
 "legal.vakalatnama.create.addWitness": "Add Witness-marathi",
 "legal.vakalatnama.create.generateVakalatnama": "Generate Vakalatnama-marathi",
-"legal.create.orgnatedBYULB":"Orginated by ULB-marathi",
+"legal.create.orignatedBYULB":"Initiated by ULB-marathi",
 "legal.vakalatnama.create.exhibitNumber":"Exhibit Number-marathi",
 "legal.create.amount":"Amount-marathi",
  "legal.create.group.title.assignAdvocate":"Assign Advocate-marathi",
@@ -4172,7 +4174,7 @@ var localization_MR_Data = {
 "legal.parawisecomments.create.group.parawiseComments": "Parawise Comments-marathi",
 "legacylegal.create.paymentDate": "Payment Date-marathi",
 "legacylegal.create.receiptDate": "Receipt Date-marathi",
-"legacylegal.create.ULB": "ULB-marathi",
+"legacylegal.create.ULB": "Initiated by ULB-marathi",
 "legacylegal.create.voucherType": "Voucher Type-marathi",
 "legal.create.group.title.CaseDetails":"Case Details-Marathi",
 "legal.create.group.title.hearingDetails":"Hearing Details-Marathi",
@@ -4205,7 +4207,9 @@ var localization_MR_Data = {
 "opinion.createdepartMentName":"Department Name-Marathi",
 "opinion.search.result.id":"ID-Marathi",
 "opinion.search.result.departmentName":"Department Name-Marathi",
-"opinion.search.result.opinionOn":"Opinion On-Marathi"
+"opinion.search.result.opinionOn":"Opinion On-Marathi",
+"legal.search.result.emailId":"Email-id-marathi",
+"legal.search.result.mobileNumber":"Mobile Number-marathi"
 
 
 }

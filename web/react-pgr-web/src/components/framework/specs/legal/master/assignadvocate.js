@@ -198,7 +198,7 @@ var dat = {
            "type": "fileTable",
             "isRequired": false,
             "isDisabled": false,
-            
+            "screenView":true,
             "patternErrMsg": "",
             "fileList":{
                 "name":"documentName",

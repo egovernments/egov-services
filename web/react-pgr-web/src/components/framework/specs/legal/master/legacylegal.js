@@ -307,7 +307,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: "",
-            url: "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
+            url: "/egov-common-masters/departments/_search?|$..code|$..name"
           },
           {
             name: "pleadersEngagementDetails",
@@ -385,7 +385,8 @@ var dat = {
             name: "remarks",
             jsonPath: "cases[0].remarks",
             label: "legacylegal.create.remarks",
-            type: "text",
+            type: "textarea",
+            fullWidth:true,
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""
@@ -394,7 +395,8 @@ var dat = {
             name: "caseDetails",
             jsonPath: "cases[0].summon.caseDetails",
             label: "legacylegal.create.caseDetails",
-            type: "text",
+            type: "textarea",
+            fullWidth:true,
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: ""
@@ -450,7 +452,8 @@ var dat = {
             name: "judgementDetails",
             jsonPath: "cases[0].summon.judgementDetails",
             label: "legacylegal.create.judgementDetails",
-            type: "text",
+            type: "textarea",
+            fullWidth:true,
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""
@@ -459,7 +462,8 @@ var dat = {
             name: "advocateOpinion",
             jsonPath: "cases[0].hearingDetails[0].advocateOpinion",
             label: "legacylegal.create.advocateOpinion",
-            type: "text",
+            type: "textarea",
+            fullWidth:true,
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""
@@ -468,7 +472,8 @@ var dat = {
             name: "furtherProcessDetails",
             jsonPath: "cases[0].hearingDetails[0].furtherProcesssDetails",
             label: "legacylegal.create.furtherProcessDetails",
-            type: "text",
+            type: "textarea",
+            fullWidth:true,
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""
@@ -478,15 +483,6 @@ var dat = {
             jsonPath: "cases[0].hearingDetails[0].darkhasthDueDate",
             label: "legacylegal.create.darkhastDueDate",
             type: "datePicker",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: ""
-          },
-          {
-            name: "amountReceived",
-            jsonPath: "cases[0].summon.amountReceived",
-            label: "legacylegal.create.amountReceived",
-            type: "number",
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""
@@ -537,6 +533,14 @@ var dat = {
                "isField": true
                 }]
             }],
+          }, {
+            name: "amountReceived",
+            jsonPath: "cases[0].summon.amountReceived",
+            label: "legacylegal.create.amountReceived",
+            type: "number",
+            isRequired: false,
+            isDisabled: false,
+            patternErrorMsg: ""
           },
           {
             name: "creditDate",
@@ -562,7 +566,8 @@ var dat = {
             name: "paymentDetails",
             jsonPath: "cases[0].caseVoucher.details",
             label: "legacylegal.create.paymentDetails",
-            type: "text",
+            type: "textarea",
+            fullWidth:true,
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""
@@ -571,7 +576,8 @@ var dat = {
             name: "verificationRemarks",
             jsonPath: "cases[0].caseVoucher.verificationRemarks",
             label: "legacylegal.create.verificationRemarks",
-            type: "text",
+            type: "textarea",
+            fullWidth:true,
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""
@@ -728,7 +734,8 @@ var dat = {
             name: "caseDetails",
             jsonPath: "summons[0].caseDetails",
             label: "legacylegal.create.caseDetails",
-            type: "text",
+            type: "textarea",
+            fullWidth:true,
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""
@@ -750,7 +757,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: "",
-            url: "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
+            url: "/egov-common-masters/departments/_search?|$..code|$..name"
           },
           {
             name: "courtName",
@@ -942,7 +949,8 @@ var dat = {
             name: "caseDetails",
             jsonPath: "summons[0].caseDetails",
             label: "legacylegal.create.caseDetails",
-            type: "text",
+            type: "textarea",
+             fullWidth:true,
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""
@@ -964,7 +972,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: "",
-            url: "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
+            url: "/egov-common-masters/departments/_search?|$..code|$..name"
           },
           {
             name: "courtName",

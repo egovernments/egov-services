@@ -234,7 +234,7 @@ var dat = {
 						"jsonPathLat": "Asset.latitude",
             "label": "search",
             "pattern": "",
-            "type": "googleMaps",
+            "type": "googleMaps", 
             "url": "",
             "isRequired": false,
             "isDisabled": false,

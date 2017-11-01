@@ -24,13 +24,6 @@ ReportDefinitions:
     label: reports.asset.currentamount
     type: number
     source: asset
-  - name: id
-    label: reports.asset.id
-    type: number
-    source: asset
-    linkedReport:
-      reportName: AssetImmovableRegisterDetail
-      linkedColumn: _parent?reportName={reportName}&assetdetail={id}
   searchParams:
   - name: fromDate
     label: reports.asset.fromDate
@@ -61,7 +54,7 @@ ReportDefinitions:
     source: asset
     searchClause : and asset.id in ($assetid)
   
-  query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.floors,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.plintharea,asset.cubiccontents,asset.landsurveyno,asset.length,asset.width,asset.height,asset.totalarea,
+  query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.floors,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.plintharea,asset.cubiccontents,asset.landsurveyno,asset.length,asset.width,asset.height,asset.totalarea,asset.openingdate,asset.fundsource,asset.location,
          asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,
          asset.defectliabilityday as defectliabilityday,asset.securitydepositretained,
          asset.securitydepositrealized,asset.dateofcreation,asset.acquisitiondate,asset.grossvalue,asset.originalvalue,currentvalue.currentamount,
@@ -264,9 +257,17 @@ ReportDefinitions:
     label: reports.asset.accumulateddepreciation
     type: number
     source: asset
-  - name: grossvalue
-    label: reports.asset.grossvalue
+  - name: openingdate
+    label: reports.asset.openingdate
     type: number
+    source: asset
+  - name: fundsource
+    label: reports.asset.fundsource
+    type: string
+    source: asset
+  - name: location
+    label: reports.asset.location
+    type: string
     source: asset
   searchParams:
   - name: fromDate
@@ -298,7 +299,7 @@ ReportDefinitions:
     source: asset
     searchClause : and asset.code in ($assetdetail)
   
-  query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.floors,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.plintharea,asset.cubiccontents,asset.landsurveyno,asset.length,asset.width,asset.height,asset.totalarea,
+  query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.floors,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.plintharea,asset.cubiccontents,asset.landsurveyno,asset.length,asset.width,asset.height,asset.totalarea,asset.openingdate,asset.fundsource,asset.location,
          asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,
          asset.defectliabilityday as defectliabilityday,asset.securitydepositretained,
          asset.securitydepositrealized,asset.dateofcreation,asset.acquisitiondate,asset.grossvalue,asset.originalvalue,currentvalue.currentamount,

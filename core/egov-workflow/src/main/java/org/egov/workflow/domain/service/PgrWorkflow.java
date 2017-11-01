@@ -143,8 +143,11 @@ public class PgrWorkflow implements Workflow {
             t = stateHistory.map();
             Employee user;
             User sender = null;
-            if (stateHistory.getLastModifiedBy() > 0)
-                sender = userRepository.findUserByIdAndTenantId(stateHistory.getLastModifiedBy(), tenantId).getUser().get(0);
+            if (stateHistory.getLastModifiedBy() > 0){
+                UserResponse userResponse = userRepository.findUserByIdAndTenantId(stateHistory.getLastModifiedBy(), tenantId);
+                if(userResponse != null && userResponse.getUser() != null && userResponse.getUser().size() > 0)
+                    sender = userResponse.getUser().get(0);
+            }
             if (sender != null)
                 t.setSender(sender.getUserName() + "::" + sender.getName());
             else

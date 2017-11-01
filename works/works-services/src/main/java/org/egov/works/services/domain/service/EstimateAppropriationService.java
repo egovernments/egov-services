@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.works.services.common.config.PropertiesManager;
+import org.egov.works.services.config.PropertiesManager;
 import org.egov.works.services.web.contract.EstimateAppropriationRequest;
 import org.egov.works.services.web.contract.RequestInfo;
 import org.egov.works.services.web.model.AuditDetails;

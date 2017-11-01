@@ -2,7 +2,7 @@ package org.egov.works.services.domain.service;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.works.services.common.config.PropertiesManager;
+import org.egov.works.services.config.PropertiesManager;
 import org.egov.works.services.domain.exception.ErrorCode;
 import org.egov.works.services.domain.exception.InvalidDataException;
 import org.egov.works.services.domain.repository.DocumentDetailRepository;

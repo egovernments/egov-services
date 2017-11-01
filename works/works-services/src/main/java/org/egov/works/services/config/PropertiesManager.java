@@ -1,4 +1,4 @@
-package org.egov.works.services.common.config;
+package org.egov.works.services.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -31,5 +31,11 @@ public class PropertiesManager {
     
 	@Value("${egov.services.egov_mdms.searchpath}")
 	private String mdmsBySearchCriteriaUrl;
+	
+    @Value("${works.appropriationnumber}")
+    private String worksAppropriationNumber;
+
+    @Value("${works.appropriationnumber.format}")
+    private String worksAppropriationNumberFormat;
 
 }

@@ -190,7 +190,7 @@ var dat = {
             "patternErrMsg": ""
           },{
             name: "side",
-            jsonPath: "cases[0].side.name",
+            jsonPath: "cases[0].summon.side.name",
             label: "legacylegal.create.side",
             type: "singleValueList",
             isRequired: true,
@@ -311,7 +311,7 @@ var dat = {
           },
           {
             name: "pleadersEngagementDetails",
-            jsonPath: "cases[0].pleadersEngagementDetails",
+            jsonPath: "cases[0].pleaderEngagementDetails",
             label: "legacylegal.create.pleadersEngagementDetails",
             type: "text",
             isRequired: false,
@@ -338,7 +338,7 @@ var dat = {
           },
           {
             name: "ULBResolution",
-            jsonPath: "summons[0].ULBResolution",
+            jsonPath: "cases[0].resolution",
             label: "legacylegal.create.ULBResolution",
             type: "text",
             isRequired: false,
@@ -347,7 +347,7 @@ var dat = {
           },
           {
             name: "ULBResolutionDate",
-            jsonPath: "summons[0].ULBResolutionDate",
+            jsonPath: "cases[0].resolutionDate",
             label: "legacylegal.create.ULBResolutionDate",
             type: "datePicker",
             isRequired: false,

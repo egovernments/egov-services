@@ -2,7 +2,7 @@ var dat = {
   "legal.create": {
     numCols: 6,
     url:
-      "http://192.168.1.116:9090/lcms-services/legalcase/parawisecomment/_create",
+      "/lcms-services/legalcase/parawisecomment/_create",
     tenantIdRequired: true,
     useTimestamp: true,
     objectName: "parawiseComments",

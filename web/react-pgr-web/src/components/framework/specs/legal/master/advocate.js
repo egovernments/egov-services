@@ -3,7 +3,7 @@ var dat = {
     numCols: 4,
     useTimestamp: true,
     objectName: "",
-    url: "http://192.168.1.116:9090/lcms-services/legalcase/advocate/_search",
+    url: "/lcms-services/legalcase/advocate/_search",
     groups: [
       {
         name: "advocateCategory",

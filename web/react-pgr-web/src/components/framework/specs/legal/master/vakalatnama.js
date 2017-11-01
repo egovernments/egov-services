@@ -2,7 +2,7 @@ var dat = {
   "legal.create": {
     numCols: 12 / 3,
     url:
-      "http://192.168.1.116:9090/lcms-services/legalcase/case/_vakalatnamageneration",
+      "/lcms-services/legalcase/case/_vakalatnamageneration",
     tenantIdRequired: true,
     useTimestamp: true,
     objectName: "vakalatnama",

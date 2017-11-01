@@ -238,7 +238,23 @@ const menuConvention={
 "Solid Waste Management.SWM Masters.Vehicle.Vehicle Update": "/search/vehicles/update",
 "Solid Waste Management.SWM Masters.Collection Point.CollectionPoint Create": "/create/collectionpoints",
 "Solid Waste Management.SWM Masters.Collection Point.CollectionPoint Search": "/search/collectionpoints/view",
-"Solid Waste Management.SWM Masters.Collection Point.CollectionPoint Update": "/search/collectionpoints/update"
+"Solid Waste Management.SWM Masters.Collection Point.CollectionPoint Update": "/search/collectionpoints/update",
+"Legal Case Management.Legal Case Transactions.Case.Legacy Case Create":"/create/legal/legacylegal",
+"Legal Case Management.Legal Case Transactions.Case.New Case Create":"/create/legal/summon",
+"Legal Case Management.Legal Case Transactions.Case.Case Search":"/search/legal/summon/view",
+"Legal Case Management.Legal Case Transactions.Opinion.Opinion Create":"/create/legal/opinion",
+"Legal Case Management.Legal Case Transactions.Opinion.Opinion Search":"/search/legal/opinion/view",
+"Legal Case Management.Legal Case Transactions.Payment Request.AdvocatePayment Create":"/create/legal/advocatepayment",
+"Legal Case Management.Legal Case Transactions.Payment Request.AdvocatePayment Search":"/search/legal/advocatepayment/view",
+"Legal Case Management.Legal Case Masters.Advocate.Advocate Create":"/create/legal/advocate",
+"Legal Case Management.Legal Case Masters.Advocate.Advocate Search":"/search/legal/advocate/view"
+
+
+
+
+
+
+
 }
 
 const style = {

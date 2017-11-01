@@ -4,7 +4,7 @@ var dat = {
     useTimestamp: true,
     objectName: "cases",
     searchUrl:
-      "http://192.168.1.116:9090/lcms-services/legalcase/case/_search?code={id}",
+      "/lcms-services/legalcase/case/_search?code={id}",
     groups: [
       {
         name: "CaseTypeDetails",
@@ -264,7 +264,7 @@ var dat = {
       }
     ],
     url:
-      "http://192.168.1.116:9090/lcms-services/legalcase/summon/_assignadvocate",
+      "/lcms-services/legalcase/summon/_assignadvocate",
     tenantIdRequired: true
   }
 };

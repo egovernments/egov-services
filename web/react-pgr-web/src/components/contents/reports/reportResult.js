@@ -23,6 +23,7 @@ var footerexist = false;
 class ShowField extends Component {
   constructor(props) {
        super(props);
+       this.state = {};
    }
 
   componentWillUnmount()
@@ -330,24 +331,25 @@ class ShowField extends Component {
   }
 
   render() {
-    let {drillDown,checkIfDate}=this
+    let { drillDown, checkIfDate } = this;
     let {
       isTableShow,
       metaData,
       reportResult
     } = this.props;
+    let self = this;
 
     const viewTabel=()=>
     {
       return (
         <div>
         <Card>
-          <CardHeader title={this.state.reportSubTitle}/>
+          <CardHeader title={self.state.reportSubTitle}/>
           <CardText>
           <Table id="reportTable" style={{color:"black",fontWeight: "normal",padding:"0 !important"}} bordered responsive>
-            {this.renderHeader()}
-            {this.renderBody()}
-            {this.renderFooter()}
+            {self.renderHeader()}
+            {self.renderBody()}
+            {self.renderFooter()}
         </Table>
       </CardText>
       </Card>

@@ -1,5 +1,6 @@
 var localization_EN_Data = {
     //citizen servers
+    "service.requests":"My Service Requests",
     "This is computer generated receipt no authorised signature required":"This is computer generated receipt no authorised signature required",
     "Total (Rs)":"Amount to Pay (Rs)",
     "noDues.search.citizenServices.title":"Search - Provide one...",
@@ -4121,7 +4122,7 @@ var localization_MR_Data = {
    "legal.create.modeOfPayment":"Mode Of Payment-marathi",
    "advocatepayment.create.instrumentNumber_InstrumentDate":"Instrument Number/Instrument Date-marathi",
    "legal.create.additionalAdvocate" :"Additional Advocate-marathi",
- 
+
 //parawisecomments
 "legal.parawisecomments.create.group.title.viewDetails": "View Summon/Warrant Details-marathi",
 "legal.parawisecomments.create.summonWarrantDetails": "Summon /warrant Details-marathi",

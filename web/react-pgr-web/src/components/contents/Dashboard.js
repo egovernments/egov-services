@@ -257,7 +257,7 @@ class Dashboard extends Component {
 
     let current = this;
     let currentUser=JSON.parse(localStorage.userRequest);
-    let count = 3, _state = {};
+    let count = 4, _state = {};
     const checkCountAndSetState = function(key, res) {
       _state[key] = res;
       count--;
@@ -313,21 +313,21 @@ class Dashboard extends Component {
         checkCountAndSetState("citizenServices", []);
       })
 
-      // Api.commonApiPost("/citizen-services/v1/requests/_search", {userId:currentUser.id}, {}, null, true).then(function(res3){
-      //   if(res3 && res3.serviceReq && res3.serviceReq) {
-      //     res3.serviceReq.sort(function(v1, v2) {
-      //       return v1.auditDetails.createdDate > v2.auditDetails.createdDate ? -1 : (v1.auditDetails.createdDate < v2.auditDetails.createdDate ? 1 : 0);
-      //     });
-      //
-      //
-      //
-      //     checkCountAndSetState("serviceRequestsTwo", res3.serviceReq);
-      //   } else {
-      //     checkCountAndSetState("serviceRequestsTwo", []);
-      //   }
-      // }, function(err) {
-      //   checkCountAndSetState("serviceRequestsTwo", []);
-      // })
+      Api.commonApiPost("/citizen-services/v1/requests/_search", {userId:currentUser.id}, {}, null, true).then(function(res3){
+        if(res3 && res3.serviceReq && res3.serviceReq) {
+          res3.serviceReq.sort(function(v1, v2) {
+            return v1.auditDetails.createdDate > v2.auditDetails.createdDate ? -1 : (v1.auditDetails.createdDate < v2.auditDetails.createdDate ? 1 : 0);
+          });
+
+
+
+          checkCountAndSetState("serviceRequestsTwo", res3.serviceReq);
+        } else {
+          checkCountAndSetState("serviceRequestsTwo", []);
+        }
+      }, function(err) {
+        checkCountAndSetState("serviceRequestsTwo", []);
+      })
 
       /*Promise.all([
           Api.commonApiPost("/pgr/seva/v1/_search",{userId:currentUser.id},{}),
@@ -751,8 +751,8 @@ class Dashboard extends Component {
 
                       <Col md={10}>
                           <br/>
-                          {/*<Card>
-                            <CardHeader title="My Service Requests"/>
+                          <Card>
+                            <CardHeader title={translate('service.requests')}/>
                               <CardText>
                                 <Table id="requestTable">
                                     <thead>
@@ -789,7 +789,7 @@ class Dashboard extends Component {
                                     </tbody>
                                 </Table>
                               </CardText>
-                          </Card>*/}
+                          </Card>
                           <br/>
 
                         <Card>

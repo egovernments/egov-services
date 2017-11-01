@@ -1,0 +1,46 @@
+{
+	"id": "81901e4a-0963-6d88-9d30-040238262bfe",
+	"name": "Legacy Case Create",
+	"description": "",
+	"order": [
+		"6c317182-b481-7271-f68b-a8c20e1bcb03"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1509523715247,
+	"owner": "2600522",
+	"public": false,
+	"requests": [
+		{
+			"id": "6c317182-b481-7271-f68b-a8c20e1bcb03",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/lcms-services/legalcase/case/_dataentry",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "81901e4a-0963-6d88-9d30-040238262bfe",
+			"data": [],
+			"dataMode": "raw",
+			"name": "LegacyCaseCreate",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1509523723329,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\r\n\t\"cases\": [{\r\n\t\t\"summon\": {\r\n\t\t\t\"isULBInitiated\": true,\r\n\t\t\t\"side\": {\r\n\t\t\t\t\"name\": \"CRMNL\"\r\n\t\t\t},\r\n\t\t\t\"caseType\": {\r\n\t\t\t\t\"name\": \"AFO\"\r\n\t\t\t},\r\n\t\t\t\"caseCategory\": {\r\n\t\t\t\t\"name\": \"MAJOR_CASE\"\r\n\t\t\t},\r\n\t\t\t\"caseNo\": \"123\",\r\n\t\t\t\"courtName\": {\r\n\t\t\t\t\"name\": \"COC\"\r\n\t\t\t},\r\n\t\t\t\"ward\": \"123\",\r\n\t\t\t\"bench\": {\r\n\t\t\t\t\"name\": \"AURANGABAD\"\r\n\t\t\t},\r\n\t\t\t\"stamp\": {\r\n\t\t\t\t\"name\": \"REGISTER\"\r\n\t\t\t},\r\n\t\t\t\"plantiffName\": \"123\",\r\n\t\t\t\"plantiffAddress\": {\r\n\t\t\t\t\"addressLine1\": \"123\"\r\n\t\t\t},\r\n\t\t\t\"defendant\": \"123\",\r\n\t\t\t\"departmentName\": {\r\n\t\t\t\t\"code\": \"ADM\"\r\n\t\t\t},\r\n\t\t\t\"summonDate\": 1286649000000,\r\n\t\t\t\"caseDetails\": \"10010\",\r\n\t\t\t\"year\": \"2000\",\r\n\t\t\t\"hearingDate\": 1265740200000,\r\n\t\t\t\"hearingTime\": \"10100\",\r\n\t\t\t\"sectionApplied\": \"1000\",\r\n\t\t\t\"judgementDetails\": \"10100\",\r\n\t\t\t\"amountReceived\": \"10000\"\r\n\t\t},\r\n\t\t\"pleaderEngagementDetails\": \"123\",\r\n\t\t\"receiptDate\": 1286649000000,\r\n\t\t\"resolution\": \"1000\",\r\n\t\t\"resolutionDate\": 1263061800000,\r\n\t\t\"advocateInfoDate\": 1286649000000,\r\n\t\t\"vakalatnamaGenerationDate\": 1286649000000,\r\n\t\t\"remarks\": \"1000\",\r\n\t\t\"hearingDetails\": [{\r\n\t\t\t\"judgeMentDate\": 1286649000000,\r\n\t\t\t\"advocateOpinion\": \"10010\",\r\n\t\t\t\"furtherProcesssDetails\": \"10000\",\r\n\t\t\t\"darkhasthDueDate\": 1286649000000\r\n\t\t}],\r\n\t\t\"caseVoucher\": {\r\n\t\t\t\"voucherDate\": 1286649000000,\r\n\t\t\t\"voucherType\": \"Payment\",\r\n\t\t\t\"details\": \"1001010\",\r\n\t\t\t\"verificationRemarks\": \"000001\"\r\n\t\t},\r\n\t\t\"advocateDetails\": [{\r\n\t\t\t\"advocate\": {\r\n\t\t\t\t\"name\": \"7\"\r\n\t\t\t},\r\n\t\t\t\"assignedDate\": 1286649000000,\r\n\t\t\t\"fee\": \"100000000\"\r\n\t\t}],\r\n\t\t\"tenantId\": \"default\"\r\n\t}],\r\n\t\"summons\": [{\r\n\t\t\"responsibleOfficer\": \"1000\"\r\n\t}],\r\n\t\"RequestInfo\": {\r\n\t\t\"apiId\": \"org.egov.pt\",\r\n\t\t\"ver\": \"1.0\",\r\n\t\t\"ts\": 1509520655792,\r\n\t\t\"action\": \"asd\",\r\n\t\t\"did\": \"4354648646\",\r\n\t\t\"key\": \"xyz\",\r\n\t\t\"msgId\": \"654654\",\r\n\t\t\"requesterId\": \"61\",\r\n\t\t\"authToken\": \"6a2651e9-971c-47a0-bf8b-a0b3eb4555b8\"\r\n\t}\r\n}"
+		}
+	]
+}

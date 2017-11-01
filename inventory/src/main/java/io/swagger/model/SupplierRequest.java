@@ -2,16 +2,15 @@ package io.swagger.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.model.RequestInfo;
 import io.swagger.model.Supplier;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+
 
 /**
  * Contract class for web request. Array of Supplier items  are used in case of create or update
@@ -22,13 +21,13 @@ import javax.validation.constraints.*;
 
 public class SupplierRequest   {
   @JsonProperty("requestInfo")
-  private RequestInfo requestInfo = null;
+  private org.egov.common.contract.request.RequestInfo requestInfo = null;
 
   @JsonProperty("suppliers")
   @Valid
   private List<Supplier> suppliers = null;
 
-  public SupplierRequest requestInfo(RequestInfo requestInfo) {
+  public SupplierRequest requestInfo(org.egov.common.contract.request.RequestInfo requestInfo) {
     this.requestInfo = requestInfo;
     return this;
   }
@@ -41,11 +40,11 @@ public class SupplierRequest   {
 
   @Valid
 
-  public RequestInfo getRequestInfo() {
+  public org.egov.common.contract.request.RequestInfo getRequestInfo() {
     return requestInfo;
   }
 
-  public void setRequestInfo(RequestInfo requestInfo) {
+  public void setRequestInfo(org.egov.common.contract.request.RequestInfo requestInfo) {
     this.requestInfo = requestInfo;
   }
 

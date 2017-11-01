@@ -7,11 +7,23 @@ import Api from '../../../../../api/api';
 var value= "" ;
 var logo = "";
 export default class assetImmovableReport extends Component {
+	constructor(props) {
+    super(props);
+    this.state= {
+		value: "",
+		logo: ""
 
-	componentWillMount() {
+    }
+  }
+
+	componentDidMount() {
+		var self = this;
 		Api.commonApiPost("tenant/v1/tenant/_search", {code:localStorage.getItem("tenantId")?localStorage.getItem("tenantId"):'default'}).then(function(res){
-			 value= res.tenant[0].city.name;
-			 logo = res.tenant[0].logoId;
+
+			 self.setState({
+				 value: res.tenant[0].city.name,
+				 logo : res.tenant[0].logoId
+			 })
 			 console.log(value);
 		}, function(err){
 				console.log(err);
@@ -54,10 +66,10 @@ export default class assetImmovableReport extends Component {
 			            <tbody>
 			                <tr>
 			                    <td  colSpan={2} rowSpan={3} style={{textAlign: "center"}}>
-			                        <img src={logo} height="60" width="60" />
+			                        <img src={this.state.logo} height="60" width="60" />
 			                    </td>
 			                    <td colSpan={13} style={{textAlign: "center"}} >
-			                        <b>{value}</b>
+			                        <b>{this.state.value}</b>
 			                    </td>
 			                    <td  colSpan={2} rowSpan={3} style={{textAlign: "center"}}>
 			                        <img src="./temp/images/AS.png" height="60" width="60" />

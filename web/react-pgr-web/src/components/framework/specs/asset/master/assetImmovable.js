@@ -98,13 +98,13 @@ var dat = {
   						"name": "NoOfOrder",
   						"jsonPath": "Asset.orderNumber",
   						"label": "ac.create.No.Of.Order",
-  						"pattern": "",
-  						"type": "number",
+  						"pattern": "^[a-zA-Z0-9_]*$",
+  						"type": "text",
   						"url": "",
   						"isRequired": false,
   						"isDisabled": false,
   						"requiredErrMsg": "",
-  						"patternErrMsg": ""
+  						"patternErrMsg": "Please enter valid No of Order (Alpha/Numeric)"
   					},
             {
               "name": "DateOfOrder",
@@ -208,8 +208,8 @@ var dat = {
 
 					{
             "name": "AreaofLandonwhichconstructed",
-            "jsonPath": "Asset.totalArea",
-            "label": "Area of Land on which constructed",
+            "jsonPath": "Asset.landDetails[0].area",
+            "label": "ac.create.areaOfLand",
             "pattern": "",
             "type": "text",
             "url": "",
@@ -234,7 +234,7 @@ var dat = {
 						"jsonPathLat": "Asset.latitude",
             "label": "search",
             "pattern": "",
-            "type": "googleMaps", 
+            "type": "googleMaps",
             "url": "",
             "isRequired": false,
             "isDisabled": false,
@@ -349,18 +349,6 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
-					{
-            "name": "Usage",
-            "jsonPath": "Asset.usage",
-            "label": "ac.create.Usage",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
 					// {
           //   "name": "floorWise",
           //   "jsonPath": "Asset.floorWise",
@@ -409,6 +397,18 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
+					{
+            "name": "Usage",
+            "jsonPath": "Asset.usage",
+            "label": "ac.create.Usage",
+            "pattern": "",
+            "type": "text",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
           {
             "name": "AnticipatedLifeOfAsset",
             "jsonPath": "Asset.anticipatedLife",
@@ -418,6 +418,18 @@ var dat = {
             "url": "",
             "isRequired": true,
             "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+					{
+            "name": "AreaofLandonwhichconstructed",
+            "jsonPath": "Asset.totalArea",
+            "label": "ac.create.areaOfLandWhichConstructed",
+            "pattern": "",
+            "type": "text",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -519,6 +531,18 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
+					{
+            "name": "AssetDescription",
+            "jsonPath": "Asset.description",
+            "label": "ac.create.Asset.description",
+            "pattern": "",
+            "type": "textarea",
+            "url": "",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
           {
             "name": "DefectLiabilityPeriod",
             "jsonPath": "Asset.defectLiabilityPeriod.year",
@@ -529,21 +553,7 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "",
-				// 		"defaultValue": [	{
-				// 				"key": null,
-				// 				"value": "Years"
-				// 			},  {
-        //     "key": "1",
-        //     "value": "1"
-        //   },  {
-        //     "key": "2",
-        //     "value": "2"
-        //   },  {
-        //     "key": "3",
-        //     "value": "3"
-        //   }
-				// ]
+            "patternErrMsg": ""
           },
 					{
             "name": "DefectLiabilityPeriod",
@@ -555,21 +565,7 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "",
-				// 		"defaultValue": [	{
-				// 				"key": null,
-				// 				"value": "Months"
-				// 			},  {
-        //     "key": "1",
-        //     "value": "1"
-        //   },  {
-        //     "key": "2",
-        //     "value": "2"
-        //   },  {
-        //     "key": "3",
-        //     "value": "3"
-        //   }
-				// ]
+            "patternErrMsg": ""
           },
 					{
             "name": "DefectLiabilityPeriod",
@@ -579,33 +575,6 @@ var dat = {
             "type": "number",
             "url": "",
             "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-				// 		"defaultValue": [	{
-				// 				"key": null,
-				// 				"value": "Days"
-				// 			},  {
-        //     "key": "1",
-        //     "value": "1"
-        //   },  {
-        //     "key": "2",
-        //     "value": "2"
-        //   },  {
-        //     "key": "3",
-        //     "value": "3"
-        //   }
-				// ]
-          },
-
-          {
-            "name": "AssetDescription",
-            "jsonPath": "Asset.description",
-            "label": "ac.create.Asset.description",
-            "pattern": "",
-            "type": "textarea",
-            "url": "",
-            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -677,18 +646,18 @@ var dat = {
           // },
 
 
-          // {
-          //   "name": "OpeningDate",
-          //   "jsonPath": "Asset.",
-          //   "label": "ac.create.Opening.date",
-          //   "pattern": "",
-          //   "type": "datePicker",
-          //   "url": "",
-          //   "isRequired": true,
-          //   "isDisabled": false,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
+          {
+            "name": "OpeningDate",
+            "jsonPath": "Asset.",
+            "label": "ac.create.Opening.date",
+            "pattern": "",
+            "type": "datePicker",
+            "url": "",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
           {
             "name": "OpeningWrittenDownValue",
             "jsonPath": "Asset.grossValue",
@@ -1030,7 +999,7 @@ var dat = {
   						"pattern": "",
   						"type": "text",
   						"url": "",
-  						"isRequired": false,
+  						"isRequired": true,
   						"isDisabled": false,
   						"requiredErrMsg": "",
   						"patternErrMsg": ""
@@ -1067,48 +1036,93 @@ var dat = {
   					// },
 				]
 			},
+			{
+			"label": "ac.create.Land.Details",
+			"name": "landDetails",
+			"jsonPath": "Asset",
+			"multiple":true,
+			"fields": [
+				{
+					"name": "LandAssetID",
+					"jsonPath": "Assets[0].",
+					"label": "ac.create.Land.Asset.ID",
+					"pattern": "",
+					"type": "text",
+					"url": "",
+					"isRequired": false,
+					"isDisabled": false,
+					"requiredErrMsg": "",
+					"patternErrMsg": ""
+				},
+				{
+					"name": "SurveyNoOfLandOnWhichStructureIsLocated ",
+					"jsonPath": "Assets[0].landSurveyNo",
+					"label": "ac.create.Survey.no.of.land",
+					"pattern": "",
+					"type": "number",
+					"url": "",
+					"isRequired": false,
+					"isDisabled": true,
+					"requiredErrMsg": "",
+					"patternErrMsg": ""
+				},
+
+				{
+					"name": "AreaofLandonwhichconstructed",
+					"jsonPath": "Assets[0].landDetails[0].area",
+					"label": "ac.create.areaOfLand",
+					"pattern": "",
+					"type": "text",
+					"url": "",
+					"isRequired": false,
+					"isDisabled": true,
+					"requiredErrMsg": "",
+					"patternErrMsg": ""
+				}
+				]
+			},
       {
 				"label": "ac.create.Location.Details",
 				"name": "LocationField",
         "multiple":false,
         "jsonPath":"Asset",
 				"fields": [
-          // {
-          //   "name": "Location",
-          //   "jsonPath": "Asset[0].locationDetails",
-          //   "label": "ac.create.Location",
-          //   "pattern": "",
-          //   "type": "text",
-          //   "url": "",
-          //   "isRequired": false,
-          //   "isDisabled": false,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
-          // {
-          //   "name": "Longitude",
-          //   "jsonPath": "Asset[0].longitude",
-          //   "label": "ac.create.Longitude",
-          //   "pattern": "",
-          //   "type": "text",
-          //   "url": "",
-          //   "isRequired": false,
-          //   "isDisabled": true,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
-          // {
-          //   "name": "Latitude",
-          //   "jsonPath": "Asset[0].latitude",
-          //   "label": "ac.create.Latitude",
-          //   "pattern": "",
-          //   "type": "text",
-          //   "url": "",
-          //   "isRequired": false,
-          //   "isDisabled": true,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
+          {
+            "name": "Location",
+            "jsonPath": "Assets[0].locationDetails",
+            "label": "ac.create.Location",
+            "pattern": "",
+            "type": "text",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "Longitude",
+            "jsonPath": "Assets[0].longitude",
+            "label": "ac.create.Longitude",
+            "pattern": "",
+            "type": "text",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "Latitude",
+            "jsonPath": "Assets[0].latitude",
+            "label": "ac.create.Latitude",
+            "pattern": "",
+            "type": "text",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
           {
             "name": "Address",
             "jsonPath": "Assets[0].address",
@@ -1132,8 +1146,16 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          },
-          {
+          }
+				]
+			},
+      {
+				"label": "ac.create.Asset.Details",
+				"name": "AssetField",
+        "multiple":false,
+        "jsonPath":"Asset[0].",
+				"fields": [
+					{
             "name": "No of Floors",
             "jsonPath": "Assets[0].floors",
             "label": "ac.create.No.of.Floors",
@@ -1163,18 +1185,6 @@ var dat = {
             "label": "ac.create.Cubic.Contents",
             "pattern": "",
             "type": "number",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-					{
-            "name": "Usage",
-            "jsonPath": "Assets[0].usage",
-            "label": "ac.create.Usage",
-            "pattern": "",
-            "type": "text",
             "url": "",
             "isRequired": false,
             "isDisabled": false,
@@ -1218,30 +1228,33 @@ var dat = {
             "patternErrMsg": ""
           },
 					{
-            "name": "AreaofLandonwhichconstructed",
-            "jsonPath": "Assets[0].totalArea",
-            "label": "Area of Land on which constructed",
+            "name": "Usage",
+            "jsonPath": "Assets[0].usage",
+            "label": "ac.create.Usage",
             "pattern": "",
             "type": "text",
             "url": "",
             "isRequired": false,
-            "isDisabled": true,
+            "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
-
-				]
-			},
-      {
-				"label": "ac.create.Asset.Details",
-				"name": "AssetField",
-        "multiple":false,
-        "jsonPath":"Asset[0].",
-				"fields": [
-          {
+					{
             "name": "AnticipatedLifeOfAsset",
             "jsonPath": "Assets[0].anticipatedLife",
             "label": "ac.create.Anticipated.life.of.Asset",
+            "pattern": "",
+            "type": "text",
+            "url": "",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+					{
+            "name": "AreaofLandonwhichconstructed",
+            "jsonPath": "Assets[0].totalArea",
+            "label": "ac.create.areaOfLandWhichConstructed",
             "pattern": "",
             "type": "text",
             "url": "",
@@ -1332,7 +1345,7 @@ var dat = {
             "type": "text",
             "url": "",
             "isRequired": false,
-            "isDisabled": true,
+            "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -1344,7 +1357,19 @@ var dat = {
             "type": "text",
             "url": "",
             "isRequired": false,
-            "isDisabled": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+					{
+            "name": "AssetDescription",
+            "jsonPath": "Assets[0].description",
+            "label": "ac.create.Asset.description",
+            "pattern": "",
+            "type": "text",
+            "url": "",
+            "isRequired": true,
+            "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -1358,21 +1383,7 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "",
-				// 		"defaultValue": [	{
-				// 				"key": null,
-				// 				"value": "Years"
-				// 			},  {
-        //     "key": "1",
-        //     "value": "1"
-        //   },  {
-        //     "key": "2",
-        //     "value": "2"
-        //   },  {
-        //     "key": "3",
-        //     "value": "3"
-        //   }
-				// ]
+            "patternErrMsg": ""
           },
 					{
             "name": "DefectLiabilityPeriod",
@@ -1384,53 +1395,12 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "",
-				// 		"defaultValue": [	{
-				// 				"key": null,
-				// 				"value": "Months"
-				// 			},  {
-        //     "key": "1",
-        //     "value": "1"
-        //   },  {
-        //     "key": "2",
-        //     "value": "2"
-        //   },  {
-        //     "key": "3",
-        //     "value": "3"
-        //   }
-				// ]
+            "patternErrMsg": ""
           },
 					{
             "name": "DefectLiabilityPeriod",
             "jsonPath": "Assets[0].defectLiabilityPeriod.day",
             "label": "ac.create.Defect.liability.Period.day",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-				// 		"defaultValue": [	{
-				// 				"key": null,
-				// 				"value": "Days"
-				// 			},  {
-        //     "key": "1",
-        //     "value": "1"
-        //   },  {
-        //     "key": "2",
-        //     "value": "2"
-        //   },  {
-        //     "key": "3",
-        //     "value": "3"
-        //   }
-				// ]
-          },
-
-          {
-            "name": "AssetDescription",
-            "jsonPath": "Assets[0].description",
-            "label": "ac.create.Asset.description",
             "pattern": "",
             "type": "text",
             "url": "",
@@ -1503,18 +1473,18 @@ var dat = {
           //     "resultValues": [[{}, ], [], []]
           //   }
           // },
-          // {
-          //   "name": "OpeningDate",
-          //   "jsonPath": "Assets[0].",
-          //   "label": "ac.create.Opening.date",
-          //   "pattern": "",
-          //   "type": "datePicker",
-          //   "url": "",
-          //   "isRequired": true,
-          //   "isDisabled": false,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
+          {
+            "name": "OpeningDate",
+            "jsonPath": "Assets[0].",
+            "label": "ac.create.Opening.date",
+            "pattern": "",
+            "type": "datePicker",
+            "url": "",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
           {
             "name": "OpeningWrittenDownValue",
             "jsonPath": "Assets[0].grossValue",
@@ -1642,7 +1612,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "AssetIdNo",
-							"jsonPath": "Asset[0].code",
+							"jsonPath": "Assets[0].code",
 							"label": "ac.create.Asset.Id.No",
 							"pattern": "",
 							"type": "text",

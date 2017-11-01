@@ -102,7 +102,7 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("adminSanctionDate <:adminSanctionToDate");
+			params.append("adminSanctionDate <=:adminSanctionToDate");
 			paramValues.put("adminSanctionToDate", abstractEstimateSearchContract.getAdminSanctionToDate());
 		}
 		if (abstractEstimateSearchContract.getSpillOverFlag() != null) {

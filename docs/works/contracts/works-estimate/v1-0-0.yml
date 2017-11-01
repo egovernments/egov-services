@@ -503,7 +503,13 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Abstract Estimate Numbers for which Detailed Estimate belongs to
-        - name: estimateAmount
+        - name: fromAmount
+          in: query
+          required: false
+          description: Estimate Amount of the Detailed Estimate
+          type: number
+          format: double
+        - name: toAmount
           in: query
           required: false
           description: Estimate Amount of the Detailed Estimate

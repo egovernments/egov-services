@@ -1,8 +1,11 @@
 package org.egov.report.repository.builder;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.report.repository.ReportRepository;
 import org.egov.swagger.model.ReportDefinition;
@@ -12,6 +15,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class ReportQueryBuilder {
@@ -191,61 +199,96 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
       }
       }
       LOGGER.info("generate baseUnionQuery with union all:"+finalQuery);
-return finalUnionQuery.toString();
-}
-public String generateJoinQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition){
-	
-	LOGGER.info("searchParams:" + searchParams);
-	
-	String baseQuery = reportDefinition.getQuery();
-	
-	String[] joinQueries = baseQuery.split("FULLJOIN");
-	
-	StringBuffer query = new StringBuffer();
-	StringBuffer finalQuery = new StringBuffer();
-	
-	for(int i=0; i<joinQueries.length; i++) {
-		
-		query = new StringBuffer(joinQueries[i]);
-		
-		for(SearchParam searchParam : searchParams){
-			
-			Object name = searchParam.getName();
-			
-		    for (SearchColumn sc : reportDefinition.getSearchParams()) 
-		    {
-		            if(name.equals(sc.getName()) && !sc.getIsMandatory()){
-		            	if(sc.getSearchClause() != null) {
-		            	query.append(" " +sc.getSearchClause());
-		            	}
-		            }
-		    }
-			
-		
-	}
-		String groupByQuery = reportDefinition.getGroupByQuery(); 
-		if(groupByQuery != null){
-			if (i==0){
-				String[] group = groupByQuery.split("using");
-				groupByQuery = group[i];
-				 
-			}
-			groupByQuery = groupByQuery.replaceAll("\\$result", ("result"+i));
-			query.append(" "+ groupByQuery);
-	    }
-		if(i > 0) {
-		finalQuery.append(" JOIN "+query.toString()+ " ");
-		} else {
-			finalQuery.append(query.toString());
-		}
-	}
-	String orderByQuery = reportDefinition.getOrderByQuery(); 
-	if(orderByQuery != null){
-		finalQuery.append(" "+ orderByQuery);
+      
+      return finalUnionQuery.toString();
     }
+	public String generateJoinQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition){
+		
+		LOGGER.info("searchParams:" + searchParams);
+		
+		String baseQuery = reportDefinition.getQuery();
+		
+		String[] joinQueries = baseQuery.split("FULLJOIN");
+		
+		StringBuffer query = new StringBuffer();
+		StringBuffer finalQuery = new StringBuffer();
+		
+		for(int i=0; i<joinQueries.length; i++) {
+			
+			query = new StringBuffer(joinQueries[i]);
+			
+			for(SearchParam searchParam : searchParams){
+				
+				Object name = searchParam.getName();
+				
+			    for (SearchColumn sc : reportDefinition.getSearchParams()) 
+			    {
+			            if(name.equals(sc.getName()) && !sc.getIsMandatory()){
+			            	if(sc.getSearchClause() != null) {
+			            	query.append(" " +sc.getSearchClause());
+			            	}
+			            }
+			    }
+				
+			
+		}
+			String groupByQuery = reportDefinition.getGroupByQuery(); 
+			if(groupByQuery != null){
+				if (i==0){
+					String[] group = groupByQuery.split("using");
+					groupByQuery = group[i];
+					 
+				}
+				groupByQuery = groupByQuery.replaceAll("\\$result", ("result"+i));
+				query.append(" "+ groupByQuery);
+		    }
+			if(i > 0) {
+			finalQuery.append(" JOIN "+query.toString()+ " ");
+			} else {
+				finalQuery.append(query.toString());
+			}
+		}
+		String orderByQuery = reportDefinition.getOrderByQuery(); 
+		if(orderByQuery != null){
+			finalQuery.append(" "+ orderByQuery);
+	    }
+		
+		finalQuery.toString();
+	LOGGER.info("generate baseJoinQuery :"+finalQuery);
+	return finalQuery.toString();
+	}
 	
-	finalQuery.toString();
-LOGGER.info("generate baseJoinQuery :"+finalQuery);
-return finalQuery.toString();
-}
+	
+	public String buildInlineQuery(Object json) throws JsonParseException, JsonMappingException, IOException{
+		ObjectMapper mapper = new ObjectMapper();
+		StringBuilder inlineQuery = new StringBuilder();
+		if(json instanceof net.minidev.json.JSONArray){
+			
+		}else{
+			Map<String, Object> map = new HashMap<>();
+			map = mapper.readValue(json.toString(), new TypeReference<Map<String, String>>(){});
+			StringBuilder table = new StringBuilder();
+			StringBuilder values = new StringBuilder();
+			table.append("table (");
+			values.append("(VALUES (");
+			for(Map.Entry<String, Object> row: map.entrySet()){
+				table.append(row.getKey()+",");
+				values.append("'"+row.getValue()+"'"+",");	
+			}
+			table.replace(table.length() - 1, table.length(), ")");
+			LOGGER.info("tables: "+table.toString());
+			
+			values.replace(values.length() - 1, values.length(), "))");
+			LOGGER.info("values: "+values.toString());
+			
+			inlineQuery.append(table.toString())
+			.append("AS")
+			.append(values.toString());
+			
+			LOGGER.info("from statment for inlineQuery: "+inlineQuery.toString());
+		}
+		
+		return inlineQuery.toString();
+	}
+
 }

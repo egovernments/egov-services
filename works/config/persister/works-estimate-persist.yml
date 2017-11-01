@@ -38,33 +38,33 @@ serviceMaps:
          
        - jsonPath: $.abstractEstimates.*.subject
        
-       - jsonPath: $.abstractEstimates.*.fund
+       - jsonPath: $.abstractEstimates.*.fund.code
        
        - jsonPath: $.abstractEstimates.*.referenceType
        
        - jsonPath: $.abstractEstimates.*.referenceNumber
        
-       - jsonPath: $.abstractEstimates.*.function
+       - jsonPath: $.abstractEstimates.*.function.code
        
        - jsonPath: $.abstractEstimates.*.description
        
-       - jsonPath: $.abstractEstimates.*.budgetHead
+       - jsonPath: $.abstractEstimates.*.budgetGroup.code
        
-       - jsonPath: $.abstractEstimates.*.scheme
+       - jsonPath: $.abstractEstimates.*.scheme.code
                  
-       - jsonPath: $.abstractEstimates.*.subScheme
+       - jsonPath: $.abstractEstimates.*.subScheme.code
                  
        - jsonPath: $.abstractEstimates.*.dateOfProposal
          dbType: LONG
          
-       - jsonPath: $.abstractEstimates.*.department
+       - jsonPath: $.abstractEstimates.*.department.code
                   
        - jsonPath: $.abstractEstimates.*.adminSanctionNumber
        
        - jsonPath: $.abstractEstimates.*.adminSanctionDate
          dbType: LONG
        
-       - jsonPath: $.abstractEstimates.*.adminSanctionBy
+       - jsonPath: $.abstractEstimates.*.adminSanctionBy.userName
        
        - jsonPath: $.abstractEstimates.*.status
        
@@ -85,7 +85,7 @@ serviceMaps:
        - jsonPath: $.abstractEstimates.*.technicalSanctionDate
          dbType: LONG
        
-       - jsonPath: $.abstractEstimates.*.technicalSanctionBy
+       - jsonPath: $.abstractEstimates.*.technicalSanctionBy.userName
        
        - jsonPath: $.abstractEstimates.*.locality.code
        
@@ -846,4 +846,3 @@ serviceMaps:
        - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.id
          
        - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.tenantId
-

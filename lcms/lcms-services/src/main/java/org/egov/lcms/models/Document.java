@@ -1,7 +1,5 @@
 package org.egov.lcms.models;
 
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -23,7 +21,6 @@ public class Document {
 	private Long id = null;
 
 	@JsonProperty("documentName")
-	@NotNull
 	private String documentName = null;
 
 	@JsonProperty("fileStoreId")

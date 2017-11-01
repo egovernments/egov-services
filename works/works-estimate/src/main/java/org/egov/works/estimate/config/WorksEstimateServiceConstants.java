@@ -6,4 +6,15 @@ import org.springframework.context.annotation.Configuration;
 public class WorksEstimateServiceConstants {
 
     public static final String ABSTRACT_ESTIMATE_NUMBER_GENERATION_ERROR = "Abstract estimate numebr can not be generated";
+
+    public static final String TYPEOFWORK_OBJECT = "TypeOfWork";
+    public static final String FUND_OBJECT = "Fund";
+    public static final String FUNCTION_OBJECT = "Function";
+    public static final String SUBTYPEOFWORK_OBJECT = "SubTypeOfWork";
+    public static final String SCHEME_OBJECT = "Scheme";
+    public static final String SUBSCHEME_OBJECT = "SubScheme";
+    public static final String BUDGETGROUP_OBJECT = "BudgetGroup";
+    public static final String DEPARTMENT_OBJECT = "Department";
+
+
 }

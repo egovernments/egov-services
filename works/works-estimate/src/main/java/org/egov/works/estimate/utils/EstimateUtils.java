@@ -47,7 +47,7 @@ public class EstimateUtils {
 	 * @return the json map it to your object.
 	 */
 
-	public JSONArray getAppConfigurationData(final String objectName, final String tenantId,
+	public JSONArray getAppConfigurationData(final String objectName, final String filter,final String tenantId,
 			final RequestInfo requestInfo) {
 		MasterDetails[] masterDetailsArray;
 		ModuleDetails[] moduleDetailsArray;
@@ -58,7 +58,7 @@ public class EstimateUtils {
 		ObjectMapper mapper = new ObjectMapper();
 
 		masterDetailsArray = new MasterDetails[1];
-		masterDetailsArray[0] = MasterDetails.builder().name(objectName).build();
+		masterDetailsArray[0] = MasterDetails.builder().name(objectName).filter("[?(@.code == '" + filter + "')]").build();
 		moduleDetailsArray = new ModuleDetails[1];
 
 		moduleDetailsArray = new ModuleDetails[1];
@@ -83,3 +83,16 @@ public class EstimateUtils {
 		return mdmsResponse.getMdmsRes().get(MODULE_CODE).get(objectName);
 	}
 }
+/*
+
+masterDetailsArray = new MasterDetails[1];
+        masterDetailsArray[0] = MasterDetails.builder().name(Constants.COLLECTIONTYPE_MASTER_NAME)
+        .filter("[?(@.code == '" + details.getCollectionType().getCode() + "')]").build();
+        moduleDetailsArray = new ModuleDetails[1];
+        moduleDetailsArray[0] = ModuleDetails.builder().moduleName(Constants.MODULE_CODE)
+        .masterDetails(masterDetailsArray).build();
+
+        request = MdmsRequest.builder()
+        .mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetailsArray)
+        .tenantId(details.getTenantId()).build())
+        .requestInfo(collectionPointDetailsRequest.getRequestInfo()).build();*/

@@ -1,6 +1,9 @@
 package org.egov.works.estimate.web.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Objects;
 
@@ -10,7 +13,18 @@ import java.util.Objects;
 @ApiModel(description = "")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-28T12:22:31.360Z")
 
+@Getter
+@Setter
 public class SubScheme   {
+
+    @JsonProperty("id")
+    private Long id = null;
+
+    @JsonProperty("name")
+    private String name = null;
+
+    @JsonProperty("code")
+    private String code = null;
 
   @Override
   public boolean equals(Object o) {

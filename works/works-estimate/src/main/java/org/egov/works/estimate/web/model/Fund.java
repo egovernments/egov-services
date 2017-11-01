@@ -1,7 +1,11 @@
 package org.egov.works.estimate.web.model;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Fund is a defining concept in municipal accounting – where it is required to segregate all accounting transactions into designated funds. Each fund needs to be treated as an independent accounting entity – in other words, all vouchers within a fund must be self-balancing and balance sheets and IncomeExpenditure reports must be generated for each fund. A hierarchy of funds may be defined – i.e. each fund can have multiple sub-funds and so on. 
@@ -9,7 +13,18 @@ import io.swagger.annotations.ApiModel;
 @ApiModel(description = "Fund is a defining concept in municipal accounting – where it is required to segregate all accounting transactions into designated funds. Each fund needs to be treated as an independent accounting entity – in other words, all vouchers within a fund must be self-balancing and balance sheets and IncomeExpenditure reports must be generated for each fund. A hierarchy of funds may be defined – i.e. each fund can have multiple sub-funds and so on. ")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-28T12:22:31.360Z")
 
+@Getter
+@Setter
 public class Fund   {
+
+    @JsonProperty("id")
+    private Long id = null;
+
+    @JsonProperty("name")
+    private String name = null;
+
+    @JsonProperty("code")
+    private String code = null;
 
   @Override
   public boolean equals(Object o) {

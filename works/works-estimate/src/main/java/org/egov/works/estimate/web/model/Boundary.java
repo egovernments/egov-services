@@ -8,12 +8,16 @@ import javax.validation.Valid;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Boundary
  */
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-24T10:20:21.690Z")
 
+@Getter
+@Setter
 public class Boundary {
 	@JsonProperty("id")
 	private String id = null;

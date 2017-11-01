@@ -566,19 +566,19 @@ serviceMaps:
    fromTopic: save-asset-maha
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO egasset_asset_landdetails(code, surveynumber, area, tenantid, assetid) VALUES (?, ?, ?, ?, ?);
+    - query: INSERT INTO egasset_asset_landdetails(code, surveynumber, area, assetid, tenantid) VALUES (?, ?, ?, ?, ?);
       basePath: Asset.landDetails.*
       jsonMaps:
          
        - jsonPath: $.Asset.landDetails.*.code
          
-       - jsonPath: $.Asset.landDetails.*.surveynumber
+       - jsonPath: $.Asset.landDetails.*.surveyNo
          
        - jsonPath: $.Asset.landDetails.*.area
        
-       - jsonPath: $.Asset[?({id} in @.landDetails[*].code)].id
+       - jsonPath: $.Asset[?({code} in @.landDetails[*].code)].id
        
-       - jsonPath: $.Asset[?({id} in @.landDetails[*].code)].tenantId
+       - jsonPath: $.Asset[?({code} in @.landDetails[*].code)].tenantId
        
        
        
@@ -593,13 +593,13 @@ serviceMaps:
       basePath: Asset
       jsonMaps:
          
-       - jsonPath: $.Asset.landDetails.*.surveynumber
+       - jsonPath: $.Asset.landDetails.*.surveyNo
          
        - jsonPath: $.Asset.landDetails.*.area
        
+       - jsonPath: $.Asset[?({code} in @.landDetails[*].code)].id
+       
        - jsonPath: $.Asset.landDetails.*.code
        
-       - jsonPath: $.Asset[?({id} in @.landDetails[*].code)].id
-       
-       - jsonPath: $.Asset[?({id} in @.landDetails[*].code)].tenantId
+       - jsonPath: $.Asset[?({code} in @.landDetails[*].code)].tenantId
        

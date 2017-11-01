@@ -13,12 +13,8 @@ ReportDefinitions:
     label: reports.asset.code
     type: string
     source: asset      
-  - name: wipreferenceno
-    label: reports.asset.wipreferenceno
-    type: string
-    source: asset
-  - name: modeofacquisition
-    label: reports.asset.modeofacquisition
+  - name: dateofcreation
+    label: reports.asset.dateofcreation
     type: string
     source: asset
   - name: id

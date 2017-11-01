@@ -12,6 +12,9 @@ ReportDefinitions:
   - name: code
     label: reports.asset.code
     type: string
+    linkedReport:
+      reportName: AssetImmovableRegisterDetail
+      linkedColumn: _parent?reportName={reportName}&assetdetail={code}
     source: asset      
   - name: dateofcreation
     label: reports.asset.dateofcreation
@@ -293,7 +296,7 @@ ReportDefinitions:
     type: number
     isMandatory: false
     source: asset
-    searchClause : and asset.id in ($assetdetail)
+    searchClause : and asset.code in ($assetdetail)
   
   query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.floors,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.plintharea,asset.cubiccontents,asset.landsurveyno,asset.length,asset.width,asset.height,asset.totalarea,
          asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,

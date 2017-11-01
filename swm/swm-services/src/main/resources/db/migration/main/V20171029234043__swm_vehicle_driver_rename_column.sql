@@ -1,1 +1,0 @@
-ALTER TABLE egswm_vehicle RENAME COLUMN vehicleDriverName TO driver;

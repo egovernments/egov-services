@@ -1,18 +1,20 @@
 package org.egov.works.estimate.web.contract;
 
+import java.util.List;
+
+import org.egov.works.commons.web.contract.RequestInfo;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
-import org.egov.works.estimate.web.model.RequestInfo;
 
 @Getter
 @Setter
 public class IdGenerationRequest {
 
+    @JsonProperty("RequestInfo")
     public RequestInfo requestInfo;
 
-    public String idName;
-
-    public String tenantId;
-
-    public String format;
+    private List<IdRequest> idRequests;
 }

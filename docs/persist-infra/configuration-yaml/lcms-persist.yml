@@ -48,7 +48,6 @@ serviceMaps:
         type: LONG
         
       - jsonPath: $.summons.*.hearingTime
-        type: LONG
         
       - jsonPath: $.summons.*.ward
         type: LONG
@@ -247,7 +246,7 @@ serviceMaps:
         
   - version: 1.0
     name: lcms-assign-advocate
-    description: create opinion in lcms
+    description: create assign advocate in lcms
     fromTopic: lcms-assign-advocate
     queryMaps:
       - query: INSERT INTO egov_lcms_case_advocate (code,casecode,advocate,assignedDate) VALUES (?,?,?,?);
@@ -515,7 +514,7 @@ serviceMaps:
     fromTopic: advocate-payment-create
     isTransaction: true
     queryMaps: 
-    - query: INSERT INTO eglcms_advocate_payment(code, advocate, demandDate, year, caseType, caseNo, caseStatus, amountClaimed, amountRecived, allowance, isPartialPayment, invoiceDoucment, tenantId, createdBy, lastmodifiedby, createdTime, lastModifiedTime, resolutionDate, resolutionNo, resolutionRemarks, advocateCharges, modeOfPayment, instrumentNumber, instrumentDate, stateId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egov_lcms_advocate_payment(code, advocate, demandDate, year, caseType, caseNo, caseStatus, amountClaimed, amountRecived, allowance, isPartialPayment, invoiceDoucment, tenantId, createdBy, lastmodifiedby, createdTime, lastModifiedTime, resolutionDate, resolutionNo, resolutionRemarks, resolution, advocateCharges, modeOfPayment, instrumentNumber, instrumentDate, stateId, voucherNo, voucherDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.advocatePayments.*
       jsonMaps:
        - jsonPath: $.advocatePayments.*.code
@@ -581,6 +580,9 @@ serviceMaps:
 
        - jsonPath: $.advocatePayments.*.resolutionRemarks
          type: STRING
+         
+       - jsonPath: $.advocatePayments.*.resolution
+         type: STRING
 
        - jsonPath: $.advocatePayments.*.advocateCharges
          type: JSON
@@ -598,13 +600,19 @@ serviceMaps:
        - jsonPath: $.advocatePayments.*.stateId
          type: STRING
          
+       - jsonPath: $.advocatePayments.*.voucherNo
+         type: STRING
+         
+       - jsonPath: $.advocatePayments.*.voucherDate
+         type: LONG
+             
   - version: 1.0
     name: lcms-AdvocatePayment
     description: Update Advocate Payment in eglcms_advocate_payment table
     fromTopic: advocate-payment-update
     isTransaction: true
     queryMaps: 
-    - query: UPDATE eglcms_advocate_payment SET advocate=?, demandDate=?, year=?, caseType=?, caseNo=?, caseStatus=?, amountClaimed=?, amountRecived=?, allowance=?, isPartialPayment=?, invoiceDoucment=?, createdBy=?, lastmodifiedby=?, createdTime=?, lastModifiedTime=?, resolutionDate=?, resolutionNo=?, resolutionRemarks=?, advocateCharges=?, modeOfPayment=?, instrumentNumber=?, instrumentDate=?, stateId=? WHERE code=? AND tenantid=?;
+    - query: UPDATE egov_lcms_advocate_payment SET advocate=?, demandDate=?, year=?, caseType=?, caseNo=?, caseStatus=?, amountClaimed=?, amountRecived=?, allowance=?, isPartialPayment=?, invoiceDoucment=?, createdBy=?, lastmodifiedby=?, createdTime=?, lastModifiedTime=?, resolutionDate=?, resolutionNo=?, resolutionRemarks=?, resolution=?, advocateCharges=?, modeOfPayment=?, instrumentNumber=?, instrumentDate=?, stateId=?, voucherNo=?, voucherDate=? WHERE code=? AND tenantid=?;
       basePath: $.advocatePayments.*
       jsonMaps:
        - jsonPath: $.advocatePayments.*.advocate
@@ -643,7 +651,7 @@ serviceMaps:
        - jsonPath: $.advocatePayments.*.invoiceDoucment
          type: JSON
          dbType: JSONB
-		 
+     
        - jsonPath: $.advocatePayments.*.auditDetails.createdBy
          type: STRING
        
@@ -664,6 +672,9 @@ serviceMaps:
 
        - jsonPath: $.advocatePayments.*.resolutionRemarks
          type: STRING
+         
+       - jsonPath: $.advocatePayments.*.resolution
+         type: STRING
 
        - jsonPath: $.advocatePayments.*.advocateCharges
          type: JSON
@@ -680,6 +691,12 @@ serviceMaps:
 
        - jsonPath: $.advocatePayments.*.stateId
          type: STRING
+         
+       - jsonPath: $.advocatePayments.*.voucherNo
+         type: STRING
+         
+       - jsonPath: $.advocatePayments.*.voucherDate
+         type: LONG
                
        - jsonPath: $.advocatePayments.*.code
          type: STRING
@@ -687,12 +704,13 @@ serviceMaps:
        - jsonPath: $.advocatePayments.*.tenantId
          type: STRING
          
+         
   - version: 1.0
     name: lcms-opinion
     description: create opinion in lcms
     fromTopic: lcms-opinion-create
     queryMaps:
-      - query: INSERT INTO egov_lcms_opinion (code,opinionRequestDate, departmentName, opinionOn, documents,opinionDescription, opinionsBy, additionalAdvocate,inWardDate, tenantId, createdBy,lastModifiedBy, createdTime,lastModifiedTime,stateId)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+      - query: INSERT INTO egov_lcms_opinion (code,opinionRequestDate, departmentName, opinionOn, documents,opinionDescription, opinionsBy, additionalAdvocate,inWardDate, tenantId, createdBy,lastModifiedBy,createdTime,lastModifiedTime,stateId)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
         basePath: $.opinions.*
         jsonMaps:
         - jsonPath: $.opinions.*.code
@@ -711,12 +729,16 @@ serviceMaps:
         - jsonPath: $.opinions.*.inWardDate
           type: LONG
         - jsonPath: $.opinions.*.tenantId
-        - jsonPath: $.opinions.*.auditDetails.createdBy
-        - jsonPath: $.opinions.*.auditDetails.lastModifiedBy
-        - jsonPath: $.opinions.*.auditDetails.createdTime
-          type: LONG
-        - jsonPath: $.opinions.*.auditDetails.lastModifiedTime
-          type: LONG
+        - jsonPath: $.RequestInfo.userInfo.id
+          type: STRING
+        - jsonPath: $.RequestInfo.userInfo.id
+          type: STRING  
+        - jsonPath: createdTime
+          type: CURRENTDATE
+          dbType: LONG
+        - jsonPath: lastModifiedTime
+          type: CURRENTDATE
+          dbType: LONG
         - jsonPath: $.opinions.*.stateId
         
   - version: 1.0
@@ -743,26 +765,38 @@ serviceMaps:
           type: LONG
         - jsonPath: $.opinions.*.tenantId
         - jsonPath: $.opinions.*.stateId
-        - jsonPath: $.opinions.*.auditDetails.lastModifiedBy
-          type: LONG
-        - jsonPath: $.opinions.*.auditDetails.lastModifiedTime
-          type: LONG
+        - jsonPath: $.RequestInfo.userInfo.id
+          type: STRING
+        - jsonPath: lastModifiedTime
+          type: CURRENTDATE
+          dbType: LONG
         - jsonPath: $.opinions.*.code
                 
   - version: 1.0
-    name: lcms legacy load
-    description: legacy load case
-    fromTopic: legacy-load-validated
+    name: lcms legacy case load
+    description: legacy load case load
+    fromTopic: legacy-case-create
     queryMaps: 
-    - query: INSERT INTO egov_lcms_case (code, isSummon, side, caseType, caseNo, summonDate, plantiffName, pleaderEngagementDetails, receiptDate, reslovtion, reslovtionDate, advocateInfoDate, vakalatnamaGenerationDate, coName, age, address, remarks, caseDetails, defendant, hearingDate, hearingTime, departmentName, year, courtName, ward, bench, stamp, sectionApplied, lastModifiedBy,createdBy, createdTime, lastModifiedTime, tenantId, isUlbinitiated) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+    - query: INSERT INTO egov_lcms_case (code, isSummon, summonReferenceNo, amountReceived, caseCategory, caseRefernceNo, side, caseType, caseNo, summonDate, plantiffName, plantiffAddress, pleaderEngagementDetails, receiptDate, resloution, resloutiondate, advocateInfoDate, vakalatnamaGenerationDate, coName, age, address, remarks, caseDetails, defendant, hearingDate, hearingTime, departmentName, year, courtName, ward, bench, stamp, sectionApplied, lastModifiedBy,createdBy, createdTime, lastModifiedTime, tenantId, isUlbinitiated) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
       basePath: $.cases.*
       jsonMaps:       
       - jsonPath: $.cases.*.summon.code
       
       - jsonPath: $.cases.*.summon.isSummon
         type: BOOLEAN
+         
+      - jsonPath: $.cases.*.summon.summonReferenceNo
+          
+      - jsonPath: $.cases.*.summon.amountReceived
+        type: DOUBLE
         
-      - jsonPath: $.cases.*.side
+      - jsonPath: $.cases.*.summon.caseCategory
+        type: JSON
+        dbType: JSONB
+        
+      - jsonPath: $.cases.*.caseRefernceNo
+        
+      - jsonPath: $.cases.*.summon.side
         type: JSON
         dbType: JSONB
       
@@ -776,15 +810,19 @@ serviceMaps:
         type: LONG
     
       - jsonPath: $.cases.*.summon.plantiffName
+      
+      - jsonPath: $.cases.*.summon.plantiffAddress
+        type: JSON
+        dbType: JSONB
     
       - jsonPath: $.cases.*.pleaderEngagementDetails
 
       - jsonPath: $.cases.*.receiptDate
         type: LONG
     
-      - jsonPath: $.cases.*.reslovtion
+      - jsonPath: $.cases.*.resolution
     
-      - jsonPath: $.cases.*.reslovtionDate
+      - jsonPath: $.cases.*.resolutionDate
         type: LONG
     
       - jsonPath: $.cases.*.advocateInfoDate
@@ -811,7 +849,6 @@ serviceMaps:
         type: LONG
     
       - jsonPath: $.cases.*.summon.hearingTime
-        type: LONG
     
       - jsonPath: $.cases.*.summon.departmentName
         type: JSON
@@ -855,11 +892,18 @@ serviceMaps:
         type: BOOLEAN
       
   
-    - query: INSERT INTO egov_lcms_hearing_details (code,judgeMentDate,caseJudgeMent,advocateOpinion, furtherProcesssDetails, darkhasthDueDate, tenantId , casecode,createdBy,lastModifiedBy,createdTime,lastModifiedTime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);
+  - version: 1.0
+    name: lcms hearing legacy load
+    description: legacy hearing load case
+    fromTopic: legacy-hearing-create
+    queryMaps: 
+    - query: INSERT INTO egov_lcms_hearing_details (code, tenantId, judgeMentDate, caseJudgeMent, advocateOpinion, furtherProcesssDetails, darkhasthDueDate , casecode, createdBy, lastModifiedBy, createdTime, lastModifiedTime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);
       basePath: $.cases.*.hearingDetails.*
       jsonMaps:
       - jsonPath: $.hearingDetails.*.code
-      
+        
+      - jsonPath: $.cases[?({code} in @.hearingDetails[*].code)].tenantId
+        
       - jsonPath: $.hearingDetails.*.judgeMentDate
         type: LONG
     
@@ -871,8 +915,6 @@ serviceMaps:
   
       - jsonPath: $.hearingDetails.*.darkhasthDueDate
         type: LONG
-    
-      - jsonPath: $.hearingDetails.*.tenantId
       
       - jsonPath: $.cases[?({code} in @.hearingDetails[*].code)].code
   
@@ -890,37 +932,342 @@ serviceMaps:
         type: CURRENTDATE
         dbType: LONG
   
-    - query: INSERT INTO egov_lcms_case_voucher (code,casecode,vocherType,vocherDate,details,verificationRemarks,officerSignature) VALUES (?,?,?,?,?,?,?)
+  - version: 1.0
+    name: lcms legacy voucher load
+    description: legacy case voucher load
+    fromTopic: legacy-case-voucher-create
+    queryMaps:
+    - query: INSERT INTO egov_lcms_case_voucher (code, casecode, tenantId, voucherType, voucherDate, details,verificationRemarks,officerSignature) VALUES (?,?,?,?,?,?,?,?)
       basePath: $.cases.*.caseVoucher
       jsonMaps:
       - jsonPath: $.cases.*.caseVoucher.code
    
-      - jsonPath: $.cases[?({code} in @.caseVoucher.code)].code
-   
-      - jsonPath: $.caseVoucher.*.vocherType
+      - jsonPath: $.cases.*.caseVoucher.caseCode
+          
+      - jsonPath: $.cases.*.caseVoucher.tenantId
+ 
+      - jsonPath: $.cases.*.caseVoucher.voucherType
   
-      - jsonPath: $.caseVoucher.*.vocherDate
+      - jsonPath: $.cases.*.caseVoucher.voucherDate
         type: LONG
    
-      - jsonPath: $.caseVoucher.*.details
+      - jsonPath: $.cases.*.caseVoucher.details
      
-      - jsonPath: $.caseVoucher.*.verificationRemarks
+      - jsonPath: $.cases.*.caseVoucher.verificationRemarks
      
-      - jsonPath: $.caseVoucher.*.officerSignature
+      - jsonPath: $.cases.*.caseVoucher.officerSignature
       
-     
-    - query: INSERT INTO egov_lcms_case_advocate (code,casecode,advocate,fee) VALUES (?,?,?,?)
-      basePath: $.cases.*.advocatesDetails.*
+  - version: 1.0
+    name: lcms legacy load
+    description: legacy advocate case
+    fromTopic: legacy-case-advocate-create
+    queryMaps:     
+    - query: INSERT INTO egov_lcms_case_advocate (code,casecode,assigndate,advocate,fee) VALUES (?,?,?,?,?)
+      basePath: $.cases.*.advocateDetails.*
       jsonMaps:
   
-      - jsonPath: $.advocatesDetails.*.code
+      - jsonPath: $.advocateDetails.*.code
   
-      - jsonPath: $.cases[?({code} in @.advocatesDetails[*].code)].code
+      - jsonPath: $.cases[?({code} in @.advocateDetails[*].code)].code
+         
+      - jsonPath: $.cases.*.advocateDetails.*.assignedDate
+        type: LONG
   
-      - jsonPath: $.advocatesDetails.*.advocate
+      - jsonPath: $.advocateDetails.*.advocate
         type: JSON
         dbType: JSONB
   
-      - jsonPath: $.advocatesDetails.*.fee
+      - jsonPath: $.advocateDetails.*.fee
         type: DOUBLE
+
+    
+  - version: 1.0
+    name: lcms-create-hearingdetails
+    description: create hearingdetails in lcms
+    fromTopic: lcms-hearingdetails-create
+    queryMaps:
+    - query: INSERT INTO egov_lcms_hearing_details (code,caseJudgeMent,caseFinalDecision,caseStatus,nextHearingDate,nextHearingTime,attendees,judges,tenantId,casecode,judgeMentDate,advocateOpinion,furtherProcesssDetails,darkhasthDueDate,createdBy,lastModifiedBy,createdTime,lastModifiedTime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+      basePath: $.cases.*.hearingDetails.*
+      jsonMaps:
+      - jsonPath: $.hearingDetails.*.code
+      
+      - jsonPath: $.hearingDetails.*.caseJudgeMent
+      
+      - jsonPath: $.hearingDetails.*.caseFinalDecision
+      
+      - jsonPath: $.hearingDetails.*.caseStatus
+        type: JSON
+        dbType: JSONB
+        
+      - jsonPath: $.hearingDetails.*.nextHearingDate
+        type: LONG
+
+      - jsonPath: $.hearingDetails.*.nextHearingTime
+
+      - jsonPath: $.hearingDetails.*.attendees
+        type: JSON
+        dbType: JSONB
+      - jsonPath: $.hearingDetails.*.judges
+        type: JSON
+        dbType: JSONB
+      - jsonPath: $.hearingDetails.*.tenantId
+      
+      - jsonPath: $.cases[?({code} in @.hearingDetails[*].code)].code
+        
+      - jsonPath: $.hearingDetails.*.judgeMentDate
+        type: LONG
+        
+      - jsonPath: $.hearingDetails.*.advocateOpinion
+        
+      - jsonPath: $.hearingDetails.*.furtherProcesssDetails
+        
+      - jsonPath: $.hearingDetails.*.darkhasthDueDate
+        type: LONG
        
+      - jsonPath: $.RequestInfo.userInfo.id
+        type: STRING
+
+      - jsonPath: $.RequestInfo.userInfo.id
+        type: STRING
+
+      - jsonPath: createdTime
+        type: CURRENTDATE
+        dbType: LONG         
+
+      - jsonPath: lastModifiedTime
+        type: CURRENTDATE
+        dbType: LONG
+        
+  - version: 1.0
+    name: lcms-update-hearingdetails
+    description: update hearing details in lcms
+    fromTopic: lcms-hearingdetails-update
+    queryMaps:
+    - query: UPDATE egov_lcms_hearing_details SET caseJudgeMent=?,caseFinalDecision=?,caseStatus=?,nextHearingDate=?,nextHearingTime=?,attendees=?,judges=?,tenantId=?,casecode=?,judgeMentDate=?,advocateOpinion=?,furtherProcesssDetails=?,darkhasthDueDate=?,lastModifiedBy=?,lastModifiedTime=? WHERE code=?;
+      basePath: $.cases.*.hearingDetails.*
+      jsonMaps:
+      - jsonPath: $.hearingDetails.*.caseJudgeMent
+      
+      - jsonPath: $.hearingDetails.*.caseFinalDecision
+      - jsonPath: $.hearingDetails.*.caseStatus
+        type: JSON
+        dbType: JSONB
+        
+      - jsonPath: $.hearingDetails.*.nextHearingDate
+        type: LONG
+
+      - jsonPath: $.hearingDetails.*.nextHearingTime
+
+      - jsonPath: $.hearingDetails.*.attendees
+        type: JSON
+        dbType: JSONB
+        
+      - jsonPath: $.hearingDetails.*.judges
+        type: JSON
+        dbType: JSONB          
+        
+      - jsonPath: $.hearingDetails.*.tenantId
+      
+      - jsonPath: $.cases[?({code} in @.hearingDetails[*].code)].code
+        
+      - jsonPath: $.hearingDetails.*.judgeMentDate
+        type: LONG
+        
+      - jsonPath: $.hearingDetails.*.advocateOpinion
+        
+      - jsonPath: $.hearingDetails.*.furtherProcesssDetails
+        
+      - jsonPath: $.hearingDetails.*.darkhasthDueDate
+        type: LONG
+        
+      - jsonPath: $.RequestInfo.userInfo.id
+        type: STRING
+      
+      - jsonPath: lastModifiedTime
+        type: CURRENTDATE
+        dbType: LONG
+        
+      - jsonPath: $.hearingDetails.*.code
+      
+  - version: 1.0
+    name: create notice
+    description: Persists notices service details egov_lcms_notice table
+    fromTopic: lcms-notice-create
+    isTransaction: true
+    queryMaps: 
+    - query: INSERT INTO egov_lcms_notice (code, tenantId, exhibitNo, courtName, courtAddress, applicant, defendant, chiefOfficerDetails, advocateName, day, witness, noticeType, fileStoreId, createdBy, lastModifiedBy, createdTime, lastModifiedTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.notice
+      jsonMaps:
+       - jsonPath: $.notice.code
+         type: STRING
+
+       - jsonPath: $.notice.tenantId
+         type: STRING
+       
+       - jsonPath: $.notice.exhibitNo
+         type: STRING
+
+       - jsonPath: $.notice.courtName
+         type: STRING
+
+       - jsonPath: $.notice.courtAddress
+         type: STRING
+       
+       - jsonPath: $.notice.applicant
+         type: STRING
+       
+       - jsonPath: $.notice.defendant
+         type: STRING
+       
+       - jsonPath: $.notice.chiefOfficerDetails
+         type: STRING
+
+       - jsonPath: $.notice.advocateName
+         type: STRING     
+
+       - jsonPath: $.notice.day
+         type: STRING
+         
+       - jsonPath: $.notice.witness
+         type: JSON
+         dbType: JSONB
+           
+       - jsonPath: $.notice.noticeType
+         type: STRING
+
+       - jsonPath: $.notice.fileStoreId
+         type: STRING
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING
+
+       - jsonPath: createdTime
+         type: CURRENTDATE
+         dbType: LONG         
+
+       - jsonPath: lastModifiedTime
+         type: CURRENTDATE
+         dbType: LONG
+         
+  - version: 1.0
+    name: update notice
+    description: Updates notice service details in egov_lcms_notice table for specified code and tenantId
+    fromTopic: lcms-notice-update
+    isTransaction: true
+    queryMaps: 
+    - query: UPDATE egov_lcms_notice SET exhibitNo=?, courtName=?, courtAddress=?, applicant=?, defendant=?, chiefOfficerDetails=?, advocateName=?, day=?, witness=?, noticeType=?, fileStoreId=?, lastModifiedBy=?, lastModifiedTime=? WHERE code=? and tenantid=?;
+      basePath: $.notice
+      jsonMaps:
+       - jsonPath: $.notice.exhibitNo
+         type: STRING
+       
+       - jsonPath: $.notice.courtName
+         type: STRING
+
+       - jsonPath: $.notice.courtAddress
+         type: STRING
+
+       - jsonPath: $.notice.applicant
+         type: STRING
+       
+       - jsonPath: $.notice.defendant
+         type: STRING
+       
+       - jsonPath: $.notice.chiefOfficerDetails
+         type: STRING
+         
+       - jsonPath: $.notice.advocateName
+         type: STRING  
+
+       - jsonPath: $.notice.day
+         type: STRING 
+
+       - jsonPath: $.notice.witness
+         type: JSON
+         dbType: JSONB
+         
+       - jsonPath: $.notice.noticeType
+         type: STRING
+  
+       - jsonPath: $.notice.fileStoreId
+         type: STRING    
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING        
+
+       - jsonPath: lastModifiedTime
+         type: CURRENTDATE
+         dbType: LONG
+         
+       - jsonPath: $.notice.code
+         type: STRING
+       
+       - jsonPath: $.notice.tenantId
+         type: STRING
+         
+  - version: 1.0
+    name: register_create
+    description: Persists register service details egov_lcms_register table
+    fromTopic: lcms-register-create
+    isTransaction: true
+    queryMaps: 
+    - query: INSERT INTO egov_lcms_register (code, register, isActive, tenantId, createdBy, lastModifiedBy, createdTime, lastModifiedTime) VALUES (?,?,?,?,?,?,?,?);
+      basePath: $.registers.*
+      jsonMaps:
+       - jsonPath: $.registers.*.code
+         type: STRING
+
+       - jsonPath: $.registers.*.register
+         type: STRING
+
+       - jsonPath: $.registers.*.isActive
+         type: BOOLEAN
+
+       - jsonPath: $.registers.*.tenantId
+         type: STRING
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING
+
+       - jsonPath: createdTime
+         type: CURRENTDATE
+         dbType: LONG         
+
+       - jsonPath: lastModifiedTime
+         type: CURRENTDATE
+         dbType: LONG
+         
+  - version: 1.0
+    name: register_update
+    description: Updates registers service details in egov_lcms_register table for specified code and tenantId
+    fromTopic: lcms-register-update
+    isTransaction: true
+    queryMaps: 
+    - query: UPDATE egov_lcms_register SET register=?, isActive=?, lastModifiedBy=?, lastModifiedTime=? WHERE code=? and tenantid=?;
+      basePath: $.registers.*
+      jsonMaps:
+
+       - jsonPath: $.registers.*.register
+         type: STRING
+
+       - jsonPath: $.registers.*.isActive
+         type: BOOLEAN
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING        
+
+       - jsonPath: lastModifiedTime
+         type: CURRENTDATE
+         dbType: LONG
+         
+       - jsonPath: $.registers.*.code
+         type: STRING
+       
+       - jsonPath: $.registers.*.tenantId
+         type: STRING

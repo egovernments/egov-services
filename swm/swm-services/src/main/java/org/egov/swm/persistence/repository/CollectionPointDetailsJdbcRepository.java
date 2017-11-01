@@ -16,6 +16,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CollectionPointDetailsJdbcRepository {
@@ -26,9 +27,15 @@ public class CollectionPointDetailsJdbcRepository {
 	@Autowired
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	public Pagination<CollectionPointDetails> search(CollectionPointDetailsSearch searchRequest) {
+	@Transactional
+	public void delete(String collectionPoint) {
+		String delQuery = "delete from  egswm_collectionpointdetails where collectionPoint = '" + collectionPoint + "'";
+		jdbcTemplate.execute(delQuery);
+	}
 
-		String searchQuery = "select * from egswm_collectionpointdetails :condition  :orderby ";
+	public List<CollectionPointDetails> search(CollectionPointDetailsSearch searchRequest) {
+
+		String searchQuery = "select * from egswm_collectionpointdetails :condition ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
@@ -66,12 +73,12 @@ public class CollectionPointDetailsJdbcRepository {
 			paramValues.put("id", searchRequest.getId());
 		}
 
-		if (searchRequest.getCollectionPointName() != null) {
+		if (searchRequest.getCollectionPoint() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
 			params.append("collectionPoint =:collectionPoint");
-			paramValues.put("collectionPoint", searchRequest.getCollectionPointName());
+			paramValues.put("collectionPoint", searchRequest.getCollectionPoint());
 		}
 
 		if (searchRequest.getCollectionTypeCode() != null) {
@@ -90,14 +97,6 @@ public class CollectionPointDetailsJdbcRepository {
 			paramValues.put("garbageEstimate", searchRequest.getGarbageEstimate());
 		}
 
-		Pagination<CollectionPointDetails> page = new Pagination<>();
-		if (searchRequest.getOffset() != null) {
-			page.setOffset(searchRequest.getOffset());
-		}
-		if (searchRequest.getPageSize() != null) {
-			page.setPageSize(searchRequest.getPageSize());
-		}
-
 		if (params.length() > 0) {
 
 			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
@@ -105,14 +104,6 @@ public class CollectionPointDetailsJdbcRepository {
 		} else
 
 			searchQuery = searchQuery.replace(":condition", "");
-
-		searchQuery = searchQuery.replace(":orderby", orderBy);
-
-		page = (Pagination<CollectionPointDetails>) getPagination(searchQuery, page, paramValues);
-		searchQuery = searchQuery + " :pagination";
-
-		searchQuery = searchQuery.replace(":pagination",
-				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(CollectionPointDetailsEntity.class);
 
@@ -125,11 +116,7 @@ public class CollectionPointDetailsJdbcRepository {
 			collectionPointDetailsList.add(collectionPointDetailsEntity.toDomain());
 		}
 
-		page.setTotalResults(collectionPointDetailsList.size());
-
-		page.setPagedData(collectionPointDetailsList);
-
-		return page;
+		return collectionPointDetailsList;
 	}
 
 	public Pagination<?> getPagination(String searchQuery, Pagination<?> page, Map<String, Object> paramValues) {

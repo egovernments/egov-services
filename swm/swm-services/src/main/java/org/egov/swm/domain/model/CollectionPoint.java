@@ -23,9 +23,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CollectionPoint {
 
-	@Length(min = 1, max = 256)
-	@JsonProperty("id")
-	private String id = null;
+	@JsonProperty("code")
+	private String code = null;
 
 	@NotNull
 	@Length(min = 1, max = 128)
@@ -36,24 +35,21 @@ public class CollectionPoint {
 	@Size(min = 1, max = 128)
 	@JsonProperty("name")
 	private String name = null;
+
+	@JsonProperty("location")
+	private Boundary location = null;
+
+	@JsonProperty("latitude")
+	private Double latitude = null;
+
+	@JsonProperty("longitude")
+	private Double longitude = null;
+
+	@JsonProperty("binDetails")
+	private List<BinDetails> binDetails = null;
 	
-	@NotNull
-	@JsonProperty("ward")
-	private Boundary ward = null;
-
-	@NotNull
-	@JsonProperty("zoneCode")
-	private Boundary zoneCode = null;
-
-	@NotNull
-	@JsonProperty("street")
-	private Boundary street = null;
-
-	@JsonProperty("colony")
-	private Boundary colony = null;
-
-	@JsonProperty("binIdDetails")
-	private List<BinIdDetails> binIdDetails = null;
+	@JsonProperty("collectionPointDetails")
+	private List<CollectionPointDetails> collectionPointDetails = null;
 
 	@Valid
 	@JsonProperty("auditDetails")

@@ -846,20 +846,23 @@ definitions:
         type: string
         description: Tenant id of the Letter Of Acceptance
         maxLength: 128
-        minLength: 4
+        minLength: 2
       contractor:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/Contractor'
       loaDate:
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of LOA Date
       loaNumber:
         type: string
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         description: LOA Number of the Letter Of Acceptance
+        maxLength: 50
+        minLength: 1
       contractPeriod:
         type: number
-        pattern: "[0-9]"
+        pattern: "[0-9]+"
         description: Contract Period (In days) for the Letter Of Acceptance
         maxLength: 10
         minLength: 1
@@ -885,6 +888,7 @@ definitions:
       loaAmount:
         type: number
         format: BigDecimal
+        pattern: "[0-9]+"
         description: LOA Amount for the Letter Of Acceptance
         maxLength: 12
         minLength: 1
@@ -896,11 +900,14 @@ definitions:
       status:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/LOAStatus'
       tenderFinalizedPercentage:
-        type: string
+        type: number
+        format: double
+        maxLength: 6
         description: Tender Finalized Percentage for the Letter Of Acceptance
       approvedDate:
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of Date on which Letter Of Acceptance approved.
       fileNumber:
         type: string
@@ -908,6 +915,7 @@ definitions:
       fileDate:
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of File Date of the Letter Of Acceptance.
       #parent:
       #  $ref: '#/definitions/LetterOfAcceptance'
@@ -921,11 +929,13 @@ definitions:
         description: State id of the workflow
       cancellationReason:
         type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Reason for cancellation of the LOA, Required only while cancelling LOA
         maxLength: 1024
         minLength: 1
       cancellationRemarks:
         type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: remarks for cancellation of the LOA, Required only while cancelling LOA
         maxLength: 1024
         minLength: 1
@@ -952,10 +962,11 @@ definitions:
           type: string
           description: Tenant id of the Assets for LOA
           maxLength: 128
-          minLength: 4
+          minLength: 2
         assetCode:
           type: string
           description: Code of the Asset
+          pattern: '[a-zA-Z0-9-\\]+'
           minLength: 1
           maxLength: 100
         letterOfAcceptanceEstimate:
@@ -978,18 +989,20 @@ definitions:
         type: string
         description: Tenant id of the Letter Of Acceptance Estimate
         maxLength: 128
-        minLength: 4
+        minLength: 2
       letterOfAcceptance:
         $ref: '#/definitions/LetterOfAcceptance'
       #detailedEstimate:
         #$ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/DetailedEstimate'
       workCompletionDate:
-        type: string
+        type: integer
+        format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description: Work Completion Date of Letter Of Acceptance Estimate
       estimateLOAAmount:
-        type: integer
+        type: number
         format: BigDecimal
-        pattern: "[0-9]"
+        pattern: "[0-9]+"
         description: Estimate wise LOA amount of the Letter Of Acceptance
       assetForLOA:
         $ref: '#/definitions/AssetsForLOA'
@@ -1010,20 +1023,20 @@ definitions:
         type: string
         description: Tenant id of the Security Deposit
         maxLength: 128
-        minLength: 4
+        minLength: 2
       mode:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/CollectionMode'
       percentage:
         type: string
         description: Percentage for the given mode
-        pattern: "[0-9]"
+        pattern: "[0-9]+"
         maxLength: 10
         minLength: 1
       amount:
         type: number
         format: BigDecimal
         description: Amount of Security Deposit should be calculated as per percentage
-        pattern: "[0-9]"
+        pattern: "[0-9]+"
         maxLength: 50
         minLength: 1
       auditDetails:
@@ -1070,7 +1083,7 @@ definitions:
         type: string
         description: Tenant id of the Work Order
         maxLength: 128
-        minLength: 4
+        minLength: 2
       letterOfAcceptance:
         $ref: '#/definitions/LetterOfAcceptance'
       loaActivity:
@@ -1084,10 +1097,11 @@ definitions:
       workOrderDate:
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of Work Order Date
       workOrderNumber:
         type: string
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         description: Work Order Number
         maxLength: 10
         minLength: 1
@@ -1110,12 +1124,13 @@ definitions:
         type: string
         description: tenant id of the Work Order Details
         maxLength: 128
-        minLength: 4
+        minLength: 2
       workOrder:
         $ref: '#/definitions/WorkOrder'
       remarks:
         type: string
         description: Remarks for the Work Order.
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
         minLength: 1
       auditDetails:
@@ -1160,7 +1175,7 @@ definitions:
         type: string
         description: Tenant id of the Notice
         maxLength: 128
-        minLength: 4
+        minLength: 2
       letterOfAcceptance:
         $ref: '#/definitions/LetterOfAcceptance'
       noticeDetails:
@@ -1197,12 +1212,13 @@ definitions:
         type: string
         description: Tenant id of the Notice Detail
         maxLength: 128
-        minLength: 4
+        minLength: 2
       notice:
         $ref: '#/definitions/Notice'
       remarks:
         type: string
         description: Remarks for the Notice.
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
         minLength: 1
       auditDetails:
@@ -1247,7 +1263,7 @@ definitions:
         type: string
         description: Tenant id of the Milestone
         maxLength: 128
-        minLength: 4
+        minLength: 2
       letterOfAcceptanceEstimate:
         $ref: '#/definitions/LetterOfAcceptanceEstimate'
       status:
@@ -1266,10 +1282,12 @@ definitions:
           $ref: '#/definitions/TrackMilestone'
       cancellationReason:
         type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Reason for cancellation of the Milestone, Required only while cancelling Milestone
         maxLength: 100
       cancellationRemarks:
         type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Remarks for cancellation of the Milestone, Required only while cancelling Milestone
         maxLength: 1024
       auditDetails:
@@ -1291,27 +1309,32 @@ definitions:
         type: string
         description: Tenant id of the Milestone Activity
         maxLength: 128
-        minLength: 4
+        minLength: 2
       milestone:
         $ref: '#/definitions/Milestone'
       scheduleStartDate:
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of the Schedule start date for activity
       scheduleEndDate:
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of the Schedule end date for activity
       percentage:
-        type: integer
+        type: number
         format: BigDecimal
         description: Percentage for the given Milestone Activity.
+        maxLength: 6
       description:
         type: string
         description: Descritpion for Milestone Activity.
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
       stageOrderNumber:
         type: string
+        pattern: '[a-zA-Z0-9-\\]+'
         description: Stage Order Number for Milestone Activity.
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
@@ -1357,15 +1380,16 @@ definitions:
         type: string
         description: Tenant id of the  Track Milestone
         maxLength: 128
-        minLength: 4
+        minLength: 2
       milestone:
         $ref: '#/definitions/Milestone'
       status:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/TrackMilestoneStatus'
       totalPercentage:
-        type: integer
+        type: number
         format: BigDecimal
         description: Unit Rate of Track Milestone
+        maxLength: 6
       projectCompleted:
         type: boolean
         description: True if project completed.
@@ -1394,7 +1418,7 @@ definitions:
         type: string
         description: Tenant id of the Track Milestone Activity
         maxLength: 128
-        minLength: 4
+        minLength: 2
       trackMilestone:
         $ref: '#/definitions/TrackMilestone'
       milestoneActivities:
@@ -1405,16 +1429,19 @@ definitions:
           $ref: '#/definitions/MilestoneActivity'
       remarks:
         type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Remarks for the Track milestone activity
         maxLength: 1024
         minLength: 4
       percentage:
-        type: integer
+        type: number
         format: BigDecimal
         description: Percentage for the Completed Percentage in Track Milestone Activity.
+        maxLength: 6
       completionDate:
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of the Completion Date for the milestone.
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
@@ -1487,7 +1514,7 @@ definitions:
         type: string
         description: tenant id of the Contractor Advance Requisition Form
         maxLength: 128
-        minLength: 4
+        minLength: 2
       
       letterOfAcceptanceEstimate:
         $ref: '#/definitions/LetterOfAcceptanceEstimate'
@@ -1513,7 +1540,7 @@ definitions:
         type: string
         description: Tenant id of the Letter Of Acceptance Activity
         maxLength: 128
-        minLength: 4
+        minLength: 2
       estimateActivity:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/EstimateActivity'
       #parent:
@@ -1536,6 +1563,7 @@ definitions:
       remarks:
         type: string
         description: Remarks for the work order.
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
       loaMeasurements:
         type: array
@@ -1561,28 +1589,28 @@ definitions:
           type: string
           description: Tenant id of the Measurement Sheet
           maxLength: 128
-          minLength: 4
+          minLength: 2
         no:
-          type: integer
+          type: number
           format: BigDecimal
           description: No. of the Measurement sheet
           maxLength: 20
         length:
-          type: integer
+          type: number
           format: BigDecimal
           description: Length of the Measurement sheet
           maxLength: 20
         width:
-          type: integer
+          type: number
           format: BigDecimal
           description: Width of the Measurement sheet
         depthOrHeight:
-          type: integer
+          type: number
           format: BigDecimal
           description: Depth or Height of the Measurement sheet
           maxLength: 20
         quantity:
-          type: integer
+          type: number
           format: BigDecimal
           description: Quantity of the Measurement sheet
           maxLength: 20
@@ -1612,3 +1640,4 @@ tags:
     description: APIs required for Track Milestone.
   - name: Contractor Advance Requisition
     description: APIs required for Contractor Advance Requisition.
+

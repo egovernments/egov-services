@@ -5,7 +5,6 @@ import org.egov.swm.domain.model.FuelType;
 import org.egov.swm.domain.model.RefillingPumpStation;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleFuellingDetails;
-import org.egov.swm.domain.model.VehicleType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,13 +29,13 @@ public class VehicleFuellingDetailsEntity {
 
 	private String vehicleType = null;
 
-	private String vehicleRegNo = null;
+	private String vehicle = null;
 
 	private Long vehicleReadingDuringFuelling = null;
 
 	private String refuellingStation = null;
 
-	private String fuelFilled = null;
+	private Double fuelFilled = null;
 
 	private String typeOfFuel = null;
 
@@ -57,12 +56,10 @@ public class VehicleFuellingDetailsEntity {
 	public VehicleFuellingDetails toDomain() {
 
 		VehicleFuellingDetails vehicleFuellingDetails = new VehicleFuellingDetails();
-		vehicleFuellingDetails.setId(id);
 		vehicleFuellingDetails.setTenantId(tenantId);
 		vehicleFuellingDetails.setTransactionNo(transactionNo);
 		vehicleFuellingDetails.setTransactionDate(transactionDate);
-		vehicleFuellingDetails.setVehicleType(VehicleType.builder().code(vehicleType).build());
-		vehicleFuellingDetails.setVehicleRegNo(Vehicle.builder().regNumber(vehicleRegNo).build());
+		vehicleFuellingDetails.setVehicle(Vehicle.builder().regNumber(vehicle).build());
 		vehicleFuellingDetails.setVehicleReadingDuringFuelling(vehicleReadingDuringFuelling);
 		vehicleFuellingDetails.setRefuellingStation(RefillingPumpStation.builder().name(refuellingStation).build());
 		vehicleFuellingDetails.setFuelFilled(fuelFilled);

@@ -12,7 +12,7 @@ import lombok.Setter;
 public class CollectionPointDetailsSearch extends CollectionPointDetails {
 	private String ids;
 	private String collectionTypeCode;
-	private String collectionPointName;
+	private String collectionPoint;
 	private String sortBy;
 	private Integer pageSize;
 	private Integer offset;

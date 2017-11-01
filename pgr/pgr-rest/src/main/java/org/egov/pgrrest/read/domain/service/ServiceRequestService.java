@@ -56,7 +56,10 @@ public class ServiceRequestService {
     }
 
     public Long getCount(ServiceRequestSearchCriteria searchCriteria) {
-        return serviceRequestRepository.getCount(searchCriteria);
+        if(postgresEnabled)
+            return (long) serviceRequestRepository.findFromDb(searchCriteria).size();
+        else
+            return serviceRequestRepository.getCount(searchCriteria);
     }
 
     public void save(ServiceRequest serviceRequest, SevaRequest contractSevaRequest) {

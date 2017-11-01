@@ -1,6 +1,5 @@
 package org.egov.swm.domain.model;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -21,11 +20,6 @@ import lombok.Setter;
 public class CollectionType {
 
 	@NotNull
-	@Length(min = 1, max = 256)
-	@JsonProperty("id")
-	private String id = null;
-
-	@NotNull
 	@Length(min = 1, max = 128)
 	@JsonProperty("tenantId")
 	private String tenantId = null;
@@ -34,14 +28,10 @@ public class CollectionType {
 	@Length(min = 1, max = 128)
 	@JsonProperty("name")
 	private String name = null;
-	
+
 	@NotNull
 	@Length(min = 1, max = 128)
 	@JsonProperty("code")
 	private String code = null;
-
-	@Valid
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
 
 }

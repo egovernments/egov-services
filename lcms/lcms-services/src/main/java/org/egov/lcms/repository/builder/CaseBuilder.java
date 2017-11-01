@@ -1,10 +1,13 @@
 package org.egov.lcms.repository.builder;
 
 import java.util.List;
+
+import org.egov.lcms.models.Case;
 import org.egov.lcms.models.CaseSearchCriteria;
 import org.egov.lcms.repository.AdvocateSearchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -121,7 +124,7 @@ public class CaseBuilder {
 			preparedStatementValues.add(caseSearchCriteria.getCaseType());
 		}
 
-	     if (caseSearchCriteria.getFromDate() != null) {
+		if (caseSearchCriteria.getFromDate() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" caseRegistrationDate>=? ");
 			preparedStatementValues.add(caseSearchCriteria.getFromDate());
@@ -172,4 +175,16 @@ public class CaseBuilder {
 		}
 	}
 
+	public String searchByCaseCodeQuery(Case casee, String tableName, final List<Object> preparedStatementValues) {
+		StringBuilder paraWiseSearchQuery = new StringBuilder();
+		paraWiseSearchQuery.append("SELECT * FROM " + tableName);
+
+		paraWiseSearchQuery.append(" WHERE casecode=?");
+		preparedStatementValues.add(casee.getCode());
+
+		paraWiseSearchQuery.append(" AND tenantid=?");
+		preparedStatementValues.add(casee.getTenantId());
+
+		return paraWiseSearchQuery.toString();
+	}
 }

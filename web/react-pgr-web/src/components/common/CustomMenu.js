@@ -8,12 +8,14 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 // import MenuItem from 'material-ui/MenuItem';
 // import Paper from 'material-ui/Paper';
-
+import {logo, tenantName} from './temp/local';
 import Divider from 'material-ui/Divider';
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import jp from "jsonpath";
 import _ from "lodash";
+import {getTitleCase} from '../framework/utility/utility';
+
 
 // import {brown500} from 'material-ui/styles/colors';
 // import { stack as Menu } from 'react-burger-menu'
@@ -236,7 +238,23 @@ const menuConvention={
 "Solid Waste Management.SWM Masters.Vehicle.Vehicle Update": "/search/vehicles/update",
 "Solid Waste Management.SWM Masters.Collection Point.CollectionPoint Create": "/create/collectionpoints",
 "Solid Waste Management.SWM Masters.Collection Point.CollectionPoint Search": "/search/collectionpoints/view",
-"Solid Waste Management.SWM Masters.Collection Point.CollectionPoint Update": "/search/collectionpoints/update"
+"Solid Waste Management.SWM Masters.Collection Point.CollectionPoint Update": "/search/collectionpoints/update",
+"Legal Case Management.Legal Case Transactions.Case.Legacy Case Create":"/create/legal/legacylegal",
+"Legal Case Management.Legal Case Transactions.Case.New Case Create":"/create/legal/summon",
+"Legal Case Management.Legal Case Transactions.Case.Case Search":"/search/legal/summon/view",
+"Legal Case Management.Legal Case Transactions.Opinion.Opinion Create":"/create/legal/opinion",
+"Legal Case Management.Legal Case Transactions.Opinion.Opinion Search":"/search/legal/opinion/view",
+"Legal Case Management.Legal Case Transactions.Payment Request.AdvocatePayment Create":"/create/legal/advocatepayment",
+"Legal Case Management.Legal Case Transactions.Payment Request.AdvocatePayment Search":"/search/legal/advocatepayment/view",
+"Legal Case Management.Legal Case Masters.Advocate.Advocate Create":"/create/legal/advocate",
+"Legal Case Management.Legal Case Masters.Advocate.Advocate Search":"/search/legal/advocate/view"
+
+
+
+
+
+
+
 }
 
 const style = {
@@ -257,7 +275,7 @@ const Logo = (props) => {
 
   } else */
   if(props.tenantInfo.length>0 && props.tenantInfo[0].hasOwnProperty("logoId") && props.tenantInfo[0].logoId) {
-    return (<img width="64" src={require(props.tenantInfo[0].logoId+".png")} style={styles.mainLogo} alt="logo"/>);
+    return (<img width="64" src={props.tenantInfo[0].logoId} style={styles.mainLogo} alt="logo"/>);
   } else {
     // if(logo[getTenantId()]) {
     //     return (<img width="64" src={logo[getTenantId()]} style={styles.mainLogo} alt="logo"/>);
@@ -267,6 +285,20 @@ const Logo = (props) => {
         return (<img width="64" src={require("../../images/headerLogo.png")} style={styles.mainLogo} alt="logo"/>);
     // }
   }
+}
+const getTenantId = () => {
+  if(localStorage.getItem("tenantId")) {
+    return localStorage.getItem("tenantId");
+  }
+
+  return window.location.hash.split("#/")[1];
+}
+
+const getTitle = (tenantInfo, tenantContext) => {
+  if(tenantContext) {
+      return tenantContext.name;
+  } else
+      return tenantInfo && tenantInfo[0] && tenantInfo[0].city && tenantInfo[0].city.name ? getTitleCase(tenantInfo[0].city.name) : (tenantName[getTenantId()] || "My City");
 }
 
 class CustomMenu extends Component {
@@ -283,7 +315,7 @@ class CustomMenu extends Component {
       path:"",
       menuItems:[]
     }
-    this.handleClickOutside = this.handleClickOutside.bind(this);
+    // this.handleClickOutside = this.handleClickOutside.bind(this);
     this.setWrapperRef = this.setWrapperRef.bind(this);
   }
 
@@ -299,7 +331,7 @@ class CustomMenu extends Component {
 
   componentDidMount() {
 
-    document.addEventListener('mousedown', this.handleClickOutside);
+    // document.addEventListener('mousedown', this.handleClickOutside);
     // console.log(actionList);
     // duplicteMenuItems=jp.query(actionList,'$...path');
     // console.log(duplicteMenuItems);
@@ -332,11 +364,11 @@ class CustomMenu extends Component {
     })
   }
 
-  handleClickOutside(event) {
-      if (this.wrapperRef && !this.wrapperRef.contains(event.target) && event.target.innerHTML != "menu") {
-          // this.props.handleToggle(false);
-      }
-  }
+  // handleClickOutside(event) {
+  //     if (this.wrapperRef && !this.wrapperRef.contains(event.target) && event.target.innerHTML != "menu") {
+  //         // this.props.handleToggle(false);
+  //     }
+  // }
 
 
   changeModulesActions(modules,items)
@@ -461,7 +493,7 @@ class CustomMenu extends Component {
                                style={{whiteSpace: "initial",color:"white"}}
                                key={index}
                                leftIcon={<i className="material-icons marginLeft">view_module</i>}
-                               primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name}</span><span>{item.name}</span></div>}
+                               primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name ||""}</span><span>{item.name ||""}</span></div>}
                                rightIcon={<i className="material-icons">keyboard_arrow_right</i>}
                                onTouchTap={()=>{menuChangeTwo(!item.path?item.name:item.path)}}
                             />
@@ -479,7 +511,7 @@ class CustomMenu extends Component {
                                key={index}
                                onTouchTap={()=>{checkUrl(item); document.title=item.name; changeRoute(menuConvention[item.path])}}
                                leftIcon={<i className="material-icons marginLeft">view_module</i>}
-                               primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name}</span><span>{item.name}</span></div>}
+                               primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name ||""}</span><span>{item.name  ||""}</span></div>}
                             />
 
                       )
@@ -501,7 +533,7 @@ class CustomMenu extends Component {
                              <MenuItem
                                   style={{whiteSpace: "initial",color:"white"}}
                                   leftIcon={<i style={{top: "12px", margin: "0px", left: "24px"}} className="material-icons marginLeft">view_module</i>}
-                                  primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name}</span><span>{item.name}</span></div>}
+                                  primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name ||""}</span><span>{item.name ||""}</span></div>}
                                />
                             </a>
                           )
@@ -524,7 +556,7 @@ class CustomMenu extends Component {
                             style={{whiteSpace: "initial",color:"white"}}
                              onTouchTap={()=>{checkUrl(item); document.title=item.displayName;}}
                              leftIcon={<i className="material-icons marginLeft">view_module</i>}
-                             primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.displayName}</span><span>{item.displayName}</span></div>}
+                             primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.displayName ||""}</span><span>{item.displayName ||""}</span></div>}
                           />
                       </Link>
                     )
@@ -546,7 +578,7 @@ class CustomMenu extends Component {
                            <MenuItem
                                 style={{whiteSpace: "initial",color:"white"}}
                                 leftIcon={<i className="material-icons marginLeft">view_module</i>}
-                                primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.displayName}</span><span>{item.displayName}</span></div>}
+                                primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.displayName ||""}</span><span>{item.displayName ||""}</span></div>}
                              />
                           </a>
                         )
@@ -565,7 +597,8 @@ class CustomMenu extends Component {
       return (
       <div className="custom-menu" style={style}  ref={this.setWrapperRef}>
           <Logo tenantInfo={this.props.tenantInfo}/>
-          <h4 style={{padding:'0 15px'}}>Quick Actions</h4>
+          <span style={{ fontSize:18, marginLeft:2}}>{getTitle(this.props.tenantInfo, this.props.tenantContext)}</span>
+          <h4 style={{padding:'0 15px', fontSize:15, paddingTop:10}}>Quick Actions</h4>
           {
             <TextField
                hintText = "&nbsp;&nbsp;Search"
@@ -576,7 +609,7 @@ class CustomMenu extends Component {
              />
           }
 
-        <Menu desktop={true}>
+        <Menu disableAutoFocus={true} desktop={true}>
 
 
 		{(path|| searchText) &&  <div className="pull-left" style={{marginLeft:12, marginBottom:10, cursor:'pointer'}}  onTouchTap={()=>{changeLevel(path)}}><i className="material-icons" style={{"color": "white"}}>arrow_back</i></div>}

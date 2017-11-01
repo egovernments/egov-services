@@ -98,8 +98,8 @@ const Logo = (props) => {
     fontSize: "15px",
     marginLeft: "0px",
    lineHeight: "21px"}}>
-      <span style={{color:"orange"}}>Government of Maharastra</span><br/>
-      <span style={{color:"black"}}>Maharastra Shasan</span><br/>
+      <span style={{color:"orange"}}>Government of Maharashtra</span><br/>
+      <span style={{color:"black"}}>{"महाराष्ट्र शासन"}</span><br/>
       <span style={{color:"green"}}>Integrated Citizen Services Portal</span>
   </div>)
 
@@ -116,7 +116,6 @@ const RightIcon = (props) => {
   if (props.token) {
     return (
       <div>
-      {/*<img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>*/}
       <span style={{color:"#555"}}>{"मराठी"}</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <span style={{color:"#555"}}>{"English"}</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <i style={{color:"#555"}} className="material-icons">account_circle</i>&nbsp;
@@ -141,12 +140,12 @@ const RightIcon = (props) => {
        }
      }} className="material-icons" style={{"color":"#555", "cursor": "pointer"}}>home</i>
 
-
+      {/* <img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/> */}
       </div>
     );
   } else if(window.location.hash === "#/") {
-    return('');
-    //   {/*<img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>*/}
+    return
+      // <img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>
     // )
   } else {
     return(
@@ -160,7 +159,7 @@ const RightIcon = (props) => {
           }
         }} className="material-icons"
            style={{"color":"#555", "cursor": "pointer"}}>home</i>}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        {/*<img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>*/}
+        {/* <img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/> */}
       </div>
     )
 
@@ -224,6 +223,11 @@ class Header extends Component {
     let {showMenu,actionList,menuDontToggle,handleToggle}=this.props;
     return (
       <div className="Header">
+
+      { /*showMenu && <div className="drawer-backGround">
+            {actionList && actionList.length>0 && <CustomMenu menuItems={[]} actionList={actionList} />}
+        </div>*/
+      }
         <AppBar
                 onLeftIconButtonTouchTap={handleToggle}
                 iconElementLeft={this.props.token && this.props.currentUser.type !== "CITIZEN" ? <IconButton ><i className="material-icons icon-left-style">menu</i></IconButton> : <div></div>}
@@ -231,9 +235,11 @@ class Header extends Component {
                 title={<div><Logo tenantInfo={this.props.tenantInfo} tenantContext={tenantContext}/> </div>}
                 iconElementRight={< RightIcon showHome={this.props.showHome} signOut={this.signOut} token={this.props.token} logout={this.props.logout} setRoute={this.props.setRoute} handleToggle={this.props.handleToggle}/>} />
 
-        <Drawer containerClassName="drawer-backGround" open={showMenu} onRequestChange={(open) => menuDontToggle(open)}>
+        <Drawer containerClassName="drawer-backGround" open={showMenu}>
           {actionList && actionList.length>0 && <CustomMenu menuItems={[]} actionList={actionList} />}
         </Drawer>
+
+
       </div>
     );
   }

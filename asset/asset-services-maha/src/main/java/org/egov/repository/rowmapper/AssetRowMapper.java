@@ -15,6 +15,7 @@ import org.egov.model.AssetCategory;
 import org.egov.model.Attributes;
 import org.egov.model.AuditDetails;
 import org.egov.model.DefectLiability;
+import org.egov.model.LandDetail;
 import org.egov.model.Location;
 import org.egov.model.enums.ModeOfAcquisitionEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -144,6 +145,18 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 log.debug("AssetRowMapper asset:: " + asset);
                 map.put(assetId, asset);
             }
+            
+            LandDetail landDetail = LandDetail.builder()
+            		.surveyNo(rs.getString("surveynumber"))
+            		.area(getDoubleFromBigDecimal(rs.getBigDecimal("area"))).code(rs.getString("landcode")).build();
+            if(asset.getLandDetails() != null)
+            	asset.getLandDetails().add(landDetail);
+            else {
+            	List<LandDetail> landDetails = new ArrayList<>();
+            	landDetails.add(landDetail);
+            	asset.setLandDetails(landDetails);
+            }
+            	
           }
         return new ArrayList<Asset>(map.values());
         

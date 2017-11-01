@@ -1,8 +1,36 @@
 import React, {Component} from 'react';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
+import Api from '../../../../../api/api';
 
+
+var value= "" ;
+var logo = "";
 export default class assetImmovableReport extends Component {
+	constructor(props) {
+    super(props);
+    this.state= {
+		value: "",
+		logo: ""
+
+    }
+  }
+
+	componentDidMount() {
+		var self = this;
+		Api.commonApiPost("tenant/v1/tenant/_search", {code:localStorage.getItem("tenantId")?localStorage.getItem("tenantId"):'default'}).then(function(res){
+
+			 self.setState({
+				 value: res.tenant[0].city.name,
+				 logo : res.tenant[0].logoId
+			 })
+			 console.log(value);
+		}, function(err){
+				console.log(err);
+		})
+  }
+
+
 
 	convertToDate = (time) => {
 		if (time) {
@@ -38,10 +66,10 @@ export default class assetImmovableReport extends Component {
 			            <tbody>
 			                <tr>
 			                    <td  colSpan={2} rowSpan={3} style={{textAlign: "center"}}>
-			                        <img src="./temp/images/headerLogo.png" height="60" width="60" />
+			                        <img src={this.state.logo} height="60" width="60" />
 			                    </td>
 			                    <td colSpan={13} style={{textAlign: "center"}} >
-			                        <b>PIMPRI CHINCHWAD MUNICIPAL CORPORATION</b>
+			                        <b>{this.state.value}</b>
 			                    </td>
 			                    <td  colSpan={2} rowSpan={3} style={{textAlign: "center"}}>
 			                        <img src="./temp/images/AS.png" height="60" width="60" />
@@ -92,7 +120,7 @@ export default class assetImmovableReport extends Component {
 												<b> निधीचे स्रोत</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "left"}}>
-												<b>N/A</b>
+												<b>{this.props.data[42]?this.props.data[42]:""}</b>
 										</td>
 									</tbody>
 
@@ -129,7 +157,7 @@ export default class assetImmovableReport extends Component {
 												<b>स्थान</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "left"}}>
-												<b>N/A</b>
+												<b>{this.props.data[43]?this.props.data[43]:""}</b>
 										</td>
 										<td colSpan={5} style={{textAlign: "left"}}>
 												<b>दोषी दायित्व</b>
@@ -428,7 +456,7 @@ export default class assetImmovableReport extends Component {
 													<b>{numberWithCommas(this.props.data[29]?this.props.data[29]:"")}</b>
 											</td>
 											<td style={{textAlign: "center"}} >
-													<b>N/A</b>
+													<b>{this.props.data[23]?this.props.data[23]:""}</b>
 											</td>
 											<td style={{textAlign: "center"}} >
 													<b>{numberWithCommas(this.props.data[40]?this.props.data[40]:"")}</b>
@@ -443,7 +471,7 @@ export default class assetImmovableReport extends Component {
 													<b>{numberWithCommas(this.props.data[23]?this.props.data[23]:"")}</b>
 											</td>
 											<td style={{textAlign: "center"}} >
-													<b>N/A</b>
+													<b></b>
 											</td>
 									</tr>
 									</tbody>

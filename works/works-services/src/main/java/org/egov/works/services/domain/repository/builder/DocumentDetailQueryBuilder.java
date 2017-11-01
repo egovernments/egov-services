@@ -1,7 +1,7 @@
 package org.egov.works.services.domain.repository.builder;
 
 import org.apache.commons.lang3.StringUtils;
-import org.egov.works.services.common.config.PropertiesManager;
+import org.egov.works.services.config.PropertiesManager;
 import org.egov.works.services.web.model.DocumentDetailSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

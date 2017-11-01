@@ -1,47 +1,51 @@
 {
-	"info": {
-		"name": "Abstract Estimate",
-		"_postman_id": "a04472bb-1275-f820-e0ae-04b2431287f9",
-		"description": "",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	},
-	"item": [
+	"id": "bfc9dd90-baf2-0689-b1ad-a6da72426a5d",
+	"name": "Abstract Estimate",
+	"description": "",
+	"order": [
+		"99e62202-43ef-c35d-9950-94a14bf1f6b3"
+	],
+	"folders_order": [],
+	"folders": [],
+	"owner": "3022735",
+	"hasRequests": true,
+	"requests": [
 		{
+			"id": "99e62202-43ef-c35d-9950-94a14bf1f6b3",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/works-estimate/abstractestimates/_create?tenantId=mh",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "mh",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1509523429844,
 			"name": "Create Abstract Estimate",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"requestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"yosadhara\",\n    \"authToken\": \"a8666711-1d0a-456f-9c3a-2cb5f56b9666\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"default\",\n    \"userInfo\": {\n      \"id\": 73,\n      \"userName\": \"abc\"\n    }\n  },\n  \"abstractEstimates\": [\n    {\n      \"tenantId\": \"default\",\n      \"abstractEstimateNumber\": \"1234\",\n      \"fund\": \"fund_1\",\n      \"subject\": \"subject\",\n      \"referenceType\": \"type\",\n      \"referenceNumber\": \"1234\",\n      \"function\": \"function_1\",\n      \"description\": \"abcd\",\n      \"budgetHead\": \"budget_1\",\n      \"scheme\": \"scheme_1\",\n      \"subScheme\": \"subscheme_1\",\n      \"dateOfProposal\": \"1509088047\",\n      \"department\": \"department_1\",\n      \"adminSanctionNumber\": \"1234\",\n      \"adminSanctionDate\": \"1509088047\",\n      \"adminSanctionBy\": \"abcd\",\n      \"status\": \"APPROVED\",\n      \"beneficiary\": \"GENERAL\",\n      \"modeOfAllotment\": {\n        \"code\": \"mode_1\"\n      },\n      \"typeOfWork\": {\n        \"code\": \"type_1\"\n      },\n      \"subTypeOfWork\": {\n        \"code\": \"subtype_1\"\n      },\n      \"natureOfWork\": {\n        \"code\": \"nature_1\"\n      },\n      \"ward\": {\n        \"code\": \"ward_1\"\n      },\n      \"technicalSanctionNumber\": \"1234\",\n      \"technicalSanctionDate\": \"1509088047\",\n      \"technicalSanctionBy\": \"abcd\",\n      \"locality\": {\n        \"code\": \"locality_1\"\n      },\n      \"workCategory\": \"NON_SLUM\",\n      \"councilResolutionNumber\": 1234,\n      \"councilResolutionDate\": 1509088047,\n      \"workOrderCreated\": \"false\",\n      \"billsCreated\": \"false\",\n      \"spillOverFlag\": \"false\",\n      \"detailedEstimateCreated\": \"false\",\n      \"abstractEstimateDetails\": [\n        {\n          \"tenantId\": \"default\",\n          \"nameOfWork\": \"Road Construction\",\n          \"estimateAmount\": \"1000\",\n          \"estimateNumber\": \"12345\",\n          \"grossAmountBilled\": \"1000\"\n        }\n      ],\n      \"workFlowDetails\": {\n        \"action\": \"Forward\"\n      }\n    }\n  ]\n}"
-				},
-				"url": {
-					"raw": "localhost:8080/works-estimate/abstractestimates/_create?tenantId=default",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"works-estimate",
-						"abstractestimates",
-						"_create"
-					],
-					"query": [
-						{
-							"key": "tenantId",
-							"value": "default",
-							"equals": true
-						}
-					]
-				},
-				"description": ""
-			},
-			"response": []
+			"description": "",
+			"collectionId": "bfc9dd90-baf2-0689-b1ad-a6da72426a5d",
+			"responses": [],
+			"rawModeData": "{\n  \"requestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"yosadhara\",\n    \"authToken\": \"2ed6b59b-4bf6-4134-9bc7-3330945db27c\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"mh\",\n    \"userInfo\": {\n      \"id\": 73,\n      \"userName\": \"abc\"\n    }\n  },\n  \"abstractEstimates\": [\n    {\n      \"tenantId\": \"mh\",\n      \"abstractEstimateNumber\": \"1234\",\n      \"subject\": \"subject\",\n      \"referenceType\": \"type\",\n      \"referenceNumber\": \"1234\",\n      \"description\": \"abcd\",\n      \"dateOfProposal\": \"1509088047\",\n      \"department\": {\"code\" : \"EL\"},\n      \"adminSanctionNumber\": \"1234\",\n      \"adminSanctionDate\": \"1509088047\",\n      \"adminSanctionBy\": {\"userName\" : \"abcd\"},\n      \"status\": \"APPROVED\",\n      \"beneficiary\": \"GENERAL\",\n      \"modeOfAllotment\": {\n        \"code\": \"mode_1\"\n      },\n      \"typeOfWork\": {\n        \"code\": \"Roads - Fake\"\n      },\n      \"subTypeOfWork\": {\n        \"code\": \"CC - Roads - Fake\"\n      },\n      \"natureOfWork\": {\n        \"code\": \"nature_1\"\n      },\n      \"ward\": {\n        \"code\": \"ward_1\"\n      },\n      \"technicalSanctionNumber\": \"1234\",\n      \"technicalSanctionDate\": \"1509088047\",\n      \"technicalSanctionBy\": {\"userName\" : \"abcd\"},\n      \"locality\": {\n        \"code\": \"locality_1\"\n      },\n      \"workCategory\": \"NON_SLUM\",\n      \"councilResolutionNumber\": 1234,\n      \"councilResolutionDate\": 1509088047,\n      \"workOrderCreated\": \"false\",\n      \"billsCreated\": \"false\",\n      \"spillOverFlag\": \"false\",\n      \"detailedEstimateCreated\": \"false\",\n      \"abstractEstimateDetails\": [\n        {\n          \"tenantId\": \"mh\",\n          \"nameOfWork\": \"Road Construction\",\n          \"estimateAmount\": \"1000\",\n          \"estimateNumber\": \"12345\",\n          \"grossAmountBilled\": \"1000\"\n        }\n      ],\n      \"workFlowDetails\": {\n        \"action\": \"Forward\"\n      }\n    }\n  ]\n}"
 		}
 	]
 }

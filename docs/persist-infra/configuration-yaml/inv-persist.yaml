@@ -7,7 +7,7 @@ serviceMaps:
       fromTopic: inv-store-save-topic
       queryMaps:
         - query: >-
-            INSERT INTO stores(id, code, name, description, department,
+            INSERT INTO store(id, code, name, description, department,
             storeincharge,billingaddress, deliveryaddress,
             contactno1,contactno2, email, iscentralstore, active,
             tenantId, createdby, lastmodifiedby,createdtime,lastmodifiedtime)
@@ -42,7 +42,7 @@ serviceMaps:
       fromTopic: inv-store-update-topic
       queryMaps:
         - query: >-
-            UPDATE stores SET
+            UPDATE store SET
             name=?,description=?,department=?,storeincharge=?,
             billingaddress=?,deliveryaddress=?,contactno1=?,contactno2=?,email=?,iscentralstore=?,active=?,lastmodifiedby=?,lastmodifiedtime=?
             WHERE code=? AND tenantid=?;

@@ -17,19 +17,17 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CollectionPointEntity {
 
-	private String id = null;
+	private String code = null;
 
 	private String tenantId = null;
 
 	private String name = null;
 
-	private String ward = null;
+	private String location = null;
 
-	private String zoneCode = null;
+	private Double latitude = null;
 
-	private String street = null;
-
-	private String colony = null;
+	private Double longitude = null;
 
 	private String createdBy = null;
 
@@ -42,13 +40,12 @@ public class CollectionPointEntity {
 	public CollectionPoint toDomain() {
 
 		CollectionPoint collectionPoint = new CollectionPoint();
-		collectionPoint.setId(id);
+		collectionPoint.setCode(code);
 		collectionPoint.setTenantId(tenantId);
 		collectionPoint.setName(name);
-		collectionPoint.setWard(Boundary.builder().code(ward).build());
-		collectionPoint.setZoneCode(Boundary.builder().code(zoneCode).build());
-		collectionPoint.setStreet(Boundary.builder().code(street).build());
-		collectionPoint.setColony(Boundary.builder().code(colony).build());
+		collectionPoint.setLocation(Boundary.builder().code(location).build());
+		collectionPoint.setLatitude(latitude);
+		collectionPoint.setLongitude(longitude);
 		collectionPoint.setAuditDetails(new AuditDetails());
 		collectionPoint.getAuditDetails().setCreatedBy(createdBy);
 		collectionPoint.getAuditDetails().setCreatedTime(createdTime);

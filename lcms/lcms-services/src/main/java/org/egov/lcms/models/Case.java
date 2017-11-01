@@ -65,8 +65,8 @@ public class Case {
 	@JsonProperty("hearingDetails")
 	private List<HearingDetails> hearingDetails = null;
 
-	@JsonProperty("advocatesDetails")
-	private List<AdvocateDetails> advocatesDetails = null;
+	@JsonProperty("advocateDetails")
+	private List<AdvocateDetails> advocateDetails = null;
 
 	@JsonProperty("parawiseComments")
 	private List<ParaWiseComment> parawiseComments = null;
@@ -77,11 +77,11 @@ public class Case {
 	@JsonProperty("receiptDate")
 	private Long receiptDate = null;
 	
-	@JsonProperty("resolvation")
-	private String resolvation;
+	@JsonProperty("resolution")
+	private String resolution;
 	
-	@JsonProperty("resolvationDate")
-	private Long resolvationDate;
+	@JsonProperty("resolutionDate")
+	private Long resolutionDate;
 	
 	@JsonProperty("advocateInfoDate")
 	private Long advocateInfoDate;

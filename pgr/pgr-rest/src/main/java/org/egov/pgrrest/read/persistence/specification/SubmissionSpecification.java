@@ -52,6 +52,11 @@ public class SubmissionSpecification implements Specification<Submission> {
 
         }
 
+        if (criteria.getStartDate() != null) {
+            predicates.add(
+                criteriaBuilder.greaterThanOrEqualTo(createdDate, new DateTime(criteria.getStartDate()).toDate()));
+        }
+        
         if (criteria.getEndDate() != null) {
             predicates.add(
                 criteriaBuilder.lessThan(createdDate, new DateTime(criteria.getEndDate()).plusDays(1).toDate()));
@@ -78,7 +83,7 @@ public class SubmissionSpecification implements Specification<Submission> {
             predicates.add(criteriaBuilder.equal(positionId, criteria.getPageSize()));
         }
 
-        if (!criteria.getCrnList().isEmpty() && criteria.isSearchAttribute()) {
+        if (criteria.getCrnList() != null && !criteria.getCrnList().isEmpty() && criteria.isSearchAttribute()) {
             predicates.add(crn.in(criteria.getCrnList()));
         }
 

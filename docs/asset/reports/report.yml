@@ -5,138 +5,6 @@ ReportDefinitions:
   version: 1.0.0
   moduleName: asset
   sourceColumns:
-  - name: id
-    label: reports.asset.id
-    type: number
-    source: asset
-    linkedReport:
-      reportName: AssetImmovableRegisterDetail
-      linkedColumn: _parent?reportName={reportName}&assetdetail={id}
-  - name: quantity
-    label: reports.asset.quantity
-    type: number
-    source: asset
-  - name: plintharea
-    label: reports.asset.plintharea
-    type: number
-    source: asset
-    showColumn: true
-  - name: cubiccontents
-    label: reports.asset.cubiccontents
-    type: string
-    source: asset
-  - name: landsurveyno
-    label: reports.asset.landsurveyno
-    type: string
-    source: asset
-  - name: length
-    label: reports.asset.length
-    type: number
-    source: asset
-  - name: width
-    label: reports.asset.width
-    type: number
-    source: asset
-  - name: height
-    label: reports.asset.height
-    type: number
-    source: asset
-  - name: totalarea
-    label: reports.asset.totalarea
-    type: number
-    source: asset
-  - name: acquiredfrom
-    label: reports.asset.acquiredfrom
-    type: string
-    source: asset
-  - name: anticipatedLife
-    label: reports.asset.anticipatedLife
-    type: number
-    source: asset
-  - name: modeofacquisition
-    label: reports.asset.modeofacquisition
-    type: string
-    source: asset
-  - name: warrantyexpirydate
-    label: reports.asset.warrantyexpirydate
-    type: number
-    source: asset
-  - name: defectliability
-    label: reports.asset.defectliability
-    type: number
-    source: asset
-  - name: defectliabilitymonth
-    label: reports.asset.defectliabilitymonth
-    type: number
-    source: asset
-  - name: defectliabilityday
-    label: reports.asset.defectliabilityday
-    type: string
-    source: asset
-  - name: securitydepositretained
-    label: reports.asset.securitydepositretained
-    type: number
-    source: asset
-  - name: securitydepositrealized
-    label: reports.asset.securitydepositrealized
-    type: number
-    source: asset
-  - name: dateofcreation
-    label: reports.asset.dateofcreation
-    type: string
-    source: asset
-  - name: acquisitiondate
-    label: reports.asset.acquisitiondate
-    type: string
-    source: asset
-  - name: grossvalue
-    label: reports.asset.grossvalue
-    type: number
-    source: asset
-  - name: originalvalue
-    label: reports.asset.originalvalue
-    type: number
-    source: asset
-  - name: currentvalue
-    label: reports.asset.currentvalue
-    type: number
-    source: asset    
-  - name: currentamount
-    label: reports.asset.currentamount
-    type: number
-    source: asset
-  - name: disposalsalevalue
-    label: reports.asset.disposalsalevalue
-    type: number
-    source: asset
-  - name: disposalvoucherno
-    label: reports.asset.disposalvoucherno
-    type: number
-    source: asset
-  - name: disposaldate
-    label: reports.asset.disposaldate
-    type: string
-    source: asset
-  - name: revaluationdate
-    label: reports.asset.revaluationdate
-    type: string
-    source: asset
-  - name: incrementalrevalsum
-    label: reports.asset.incrementalrevalsum
-    type: number
-    source: asset
-  - name: decrementalrevalsum
-    label: reports.asset.decrementalrevalsum
-    type: number
-    source: asset
-  - name: depreciationvalue
-    label: reports.asset.depreciationvalue
-    type: number
-    source: asset
-  - name: totaldepreciationval
-    label: reports.asset.totaldepreciationval
-    type: number
-    source: asset
   - name: name
     label: reports.asset.name
     type: string
@@ -144,37 +12,18 @@ ReportDefinitions:
   - name: code
     label: reports.asset.code
     type: string
-    source: asset    
-  - name: ordernumber
-    label: reports.asset.ordernumber
-    type: number
-  - name: warrantyavailable
-    label: reports.asset.warrantyavailable
-    type: string
-    source: asset   
-  - name: wipreferenceno
-    label: reports.asset.wipreferenceno
-    type: string
-    source: asset
-  - name: floors
-    label: reports.asset.floors
-    type: number
-    source: asset   
-  - name: titledocumentsavailable
-    label: reports.asset.titledocumentsavailable
-    type: number
-  - name: buyername
-    label: reports.asset.buyername
-    type: string
-    source: asset   
-  - name: accumulateddepreciation
-    label: reports.asset.accumulateddepreciation
-    type: number
+    linkedReport:
+      reportName: AssetImmovableRegisterDetail
+      linkedColumn: _parent?reportName={reportName}&assetdetail={code}
+    source: asset      
+  - name: dateofcreation
+    label: reports.asset.dateofcreation
+    type: epoch
     source: asset
   - name: grossvalue
     label: reports.asset.grossvalue
     type: number
-    source: asset  
+    source: asset
   searchParams:
   - name: fromDate
     label: reports.asset.fromDate
@@ -186,20 +35,21 @@ ReportDefinitions:
     type: date
     source: asset
     isMandatory: true
-  - name: assetCategory
-    label: reports.asset.assetCategory
-    type: number
+  - name: name
+    label: reports.asset.name
+    type: string
     isMandatory: false
     source: asset
-    searchClause : AND asset.assetCategory=$assetCategory
-  - name: assetid
-    label: reports.asset.id
-    type: number
+    searchClause : AND asset.name=$name
+  - name: code
+    label: reports.asset.code
+    type: string
     isMandatory: false
     source: asset
-    searchClause : and asset.id in ($assetid)
+    searchClause : AND asset.code in ($code)
+
   
-  query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.floors,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.plintharea,asset.cubiccontents,asset.landsurveyno,asset.length,asset.width,asset.height,asset.totalarea,
+  query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.floors,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.plintharea,asset.cubiccontents,asset.landsurveyno,asset.length,asset.width,asset.height,asset.totalarea,asset.openingdate,asset.fundsource,asset.location,
          asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,
          asset.defectliabilityday as defectliabilityday,asset.securitydepositretained,
          asset.securitydepositrealized,asset.dateofcreation,asset.acquisitiondate,asset.grossvalue,asset.originalvalue,currentvalue.currentamount,
@@ -402,9 +252,17 @@ ReportDefinitions:
     label: reports.asset.accumulateddepreciation
     type: number
     source: asset
-  - name: grossvalue
-    label: reports.asset.grossvalue
+  - name: openingdate
+    label: reports.asset.openingdate
     type: number
+    source: asset
+  - name: fundsource
+    label: reports.asset.fundsource
+    type: string
+    source: asset
+  - name: location
+    label: reports.asset.location
+    type: string
     source: asset
   searchParams:
   - name: fromDate
@@ -417,20 +275,26 @@ ReportDefinitions:
     type: date
     source: asset
     isMandatory: true
-  - name: assetCategory
-    label: reports.asset.assetCategory
-    type: number
+  - name: name
+    label: reports.asset.name
+    type: string
     isMandatory: false
     source: asset
-    searchClause : AND asset.assetCategory=$assetCategory
+    searchClause : AND asset.name=$name
+  - name: code
+    label: reports.asset.code
+    type: string
+    isMandatory: false
+    source: asset
+    searchClause : AND asset.code=$code
   - name: assetdetail
     label: reports.asset.detail
     type: number
     isMandatory: false
     source: asset
-    searchClause : and asset.id in ($assetdetail)
+    searchClause : and asset.code in ($assetdetail)
   
-  query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.floors,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.plintharea,asset.cubiccontents,asset.landsurveyno,asset.length,asset.width,asset.height,asset.totalarea,
+  query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.floors,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.plintharea,asset.cubiccontents,asset.landsurveyno,asset.length,asset.width,asset.height,asset.totalarea,asset.openingdate,asset.fundsource,asset.location,
          asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,
          asset.defectliabilityday as defectliabilityday,asset.securitydepositretained,
          asset.securitydepositrealized,asset.dateofcreation,asset.acquisitiondate,asset.grossvalue,asset.originalvalue,currentvalue.currentamount,

@@ -1,6 +1,5 @@
 package org.egov.swm.domain.service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
@@ -9,21 +8,14 @@ import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.FuelType;
 import org.egov.swm.domain.model.Pagination;
-import org.egov.swm.domain.model.RefillingPumpStation;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleFuellingDetails;
 import org.egov.swm.domain.model.VehicleFuellingDetailsSearch;
 import org.egov.swm.domain.model.VehicleSearch;
-import org.egov.swm.domain.model.VehicleType;
 import org.egov.swm.domain.repository.VehicleFuellingDetailsRepository;
 import org.egov.swm.domain.repository.VehicleRepository;
 import org.egov.swm.persistence.entity.RefillingPumpStationEntity;
 import org.egov.swm.web.contract.IdGenerationResponse;
-import org.egov.swm.web.contract.MasterDetails;
-import org.egov.swm.web.contract.MdmsCriteria;
-import org.egov.swm.web.contract.MdmsRequest;
-import org.egov.swm.web.contract.MdmsResponse;
-import org.egov.swm.web.contract.ModuleDetails;
 import org.egov.swm.web.repository.IdgenRepository;
 import org.egov.swm.web.repository.MdmsRepository;
 import org.egov.swm.web.requests.VehicleFuellingDetailsRequest;
@@ -63,18 +55,20 @@ public class VehicleFuellingDetailsService {
 
 		Long userId = null;
 
-		for (VehicleFuellingDetails v : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
+		for (VehicleFuellingDetails vfd : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
 
-			v.setTransactionNo(
-					generateTransactionNumber(v.getTenantId(), vehicleFuellingDetailsRequest.getRequestInfo()));
+			setAuditDetails(vfd, userId);
+
+			vfd.setTransactionNo(
+					generateTransactionNumber(vfd.getTenantId(), vehicleFuellingDetailsRequest.getRequestInfo()));
 
 			if (vehicleFuellingDetailsRequest.getRequestInfo() != null
 					&& vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo() != null
 					&& null != vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo().getId()) {
 				userId = vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo().getId();
 			}
-			setAuditDetails(v, userId);
-			v.setId(UUID.randomUUID().toString().replace("-", ""));
+
+			prepareReceiptCopy(vfd);
 
 		}
 
@@ -89,7 +83,7 @@ public class VehicleFuellingDetailsService {
 
 		Long userId = null;
 
-		for (VehicleFuellingDetails v : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
+		for (VehicleFuellingDetails vfd : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
 
 			if (vehicleFuellingDetailsRequest.getRequestInfo() != null
 					&& vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo() != null
@@ -97,12 +91,24 @@ public class VehicleFuellingDetailsService {
 				userId = vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo().getId();
 			}
 
-			setAuditDetails(v, userId);
+			setAuditDetails(vfd, userId);
+
+			prepareReceiptCopy(vfd);
 
 		}
 
 		return vehicleFuellingDetailsRepository.update(vehicleFuellingDetailsRequest);
 
+	}
+
+	private void prepareReceiptCopy(VehicleFuellingDetails vfd) {
+
+		if (vfd.getReceiptCopy() != null && vfd.getReceiptCopy().getFileStoreId() != null) {
+			vfd.getReceiptCopy().setId(UUID.randomUUID().toString().replace("-", ""));
+			vfd.getReceiptCopy().setTenantId(vfd.getTenantId());
+			vfd.getReceiptCopy().setRefCode(vfd.getTransactionNo());
+			vfd.getReceiptCopy().setAuditDetails(vfd.getAuditDetails());
+		}
 	}
 
 	public Pagination<VehicleFuellingDetails> search(VehicleFuellingDetailsSearch vehicleFuellingDetailsSearch) {
@@ -113,166 +119,58 @@ public class VehicleFuellingDetailsService {
 	private void validate(VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
 
 		JSONArray responseJSONArray = null;
-		MasterDetails[] masterDetailsArray;
-		ModuleDetails[] moduleDetailsArray;
-		MdmsRequest request;
-		MdmsResponse response;
-		ArrayList<VehicleType> vtResponseList;
-		ArrayList<FuelType> ftResponseList;
-		ArrayList<RefillingPumpStation> rpsResponseList;
 		ObjectMapper mapper = new ObjectMapper();
 
 		for (VehicleFuellingDetails details : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
 
-			// Validate VehicleType
-			if (details.getVehicleType() != null && details.getVehicleType().getCode() != null) {
-				masterDetailsArray = new MasterDetails[1];
-				masterDetailsArray[0] = MasterDetails.builder().name(Constants.VEHICLETYPE_MASTER_NAME)
-						.filter("[?(@.code == '" + details.getVehicleType().getCode() + "')]").build();
-				moduleDetailsArray = new ModuleDetails[1];
-				moduleDetailsArray[0] = ModuleDetails.builder().moduleName(Constants.MODULE_CODE)
-						.masterDetails(masterDetailsArray).build();
-
-				request = MdmsRequest.builder()
-						.mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetailsArray)
-								.tenantId(details.getTenantId()).build())
-						.requestInfo(vehicleFuellingDetailsRequest.getRequestInfo()).build();
-				response = mdmsRepository.getByCriteria(request);
-				if (response == null || response.getMdmsRes() == null
-						|| !response.getMdmsRes().containsKey(Constants.MODULE_CODE)
-						|| response.getMdmsRes().get(Constants.MODULE_CODE) == null
-						|| !response.getMdmsRes().get(Constants.MODULE_CODE)
-								.containsKey(Constants.VEHICLETYPE_MASTER_NAME)
-						|| response.getMdmsRes().get(Constants.MODULE_CODE)
-								.get(Constants.VEHICLETYPE_MASTER_NAME) == null) {
-					throw new CustomException("VehicleType",
-							"Given VehicleType is invalid: " + details.getVehicleType().getCode());
-				} else {
-					vtResponseList = new ArrayList<VehicleType>();
-
-					responseJSONArray = response.getMdmsRes().get(Constants.MODULE_CODE)
-							.get(Constants.VEHICLETYPE_MASTER_NAME);
-
-					for (int i = 0; i < responseJSONArray.size(); i++) {
-						vtResponseList.add(mapper.convertValue(responseJSONArray.get(i), VehicleType.class));
-					}
-
-					if (vtResponseList.isEmpty())
-						throw new CustomException("VehicleType",
-								"Given VehicleType is invalid: " + details.getVehicleType().getCode());
-					else
-						details.setVehicleType(vtResponseList.get(0));
-				}
-			}
-
 			// Validate Fuel Type
 			if (details.getTypeOfFuel() != null) {
-				masterDetailsArray = new MasterDetails[1];
-				masterDetailsArray[0] = MasterDetails.builder().name(Constants.FUELTYPE_MASTER_NAME)
-						.filter("[?(@.code == '" + details.getTypeOfFuel().getCode() + "')]").build();
-				moduleDetailsArray = new ModuleDetails[1];
-				moduleDetailsArray[0] = ModuleDetails.builder().moduleName(Constants.MODULE_CODE)
-						.masterDetails(masterDetailsArray).build();
 
-				request = MdmsRequest.builder()
-						.mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetailsArray)
-								.tenantId(details.getTenantId()).build())
-						.requestInfo(vehicleFuellingDetailsRequest.getRequestInfo()).build();
-				response = mdmsRepository.getByCriteria(request);
-				if (response == null || response.getMdmsRes() == null
-						|| !response.getMdmsRes().containsKey(Constants.MODULE_CODE)
-						|| response.getMdmsRes().get(Constants.MODULE_CODE) == null
-						|| !response.getMdmsRes().get(Constants.MODULE_CODE).containsKey(Constants.FUELTYPE_MASTER_NAME)
-						|| response.getMdmsRes().get(Constants.MODULE_CODE)
-								.get(Constants.FUELTYPE_MASTER_NAME) == null) {
+				responseJSONArray = mdmsRepository.getByCriteria(details.getTenantId(), Constants.MODULE_CODE,
+						Constants.FUELTYPE_MASTER_NAME, "code", details.getTypeOfFuel().getCode(),
+						vehicleFuellingDetailsRequest.getRequestInfo());
+
+				if (responseJSONArray != null && responseJSONArray.size() > 0)
+					details.setTypeOfFuel(mapper.convertValue(responseJSONArray.get(0), FuelType.class));
+				else
 					throw new CustomException("FuelType",
 							"Given FuelType is invalid: " + details.getTypeOfFuel().getCode());
-				} else {
-					ftResponseList = new ArrayList<FuelType>();
 
-					responseJSONArray = response.getMdmsRes().get(Constants.MODULE_CODE)
-							.get(Constants.FUELTYPE_MASTER_NAME);
-
-					for (int i = 0; i < responseJSONArray.size(); i++) {
-						ftResponseList.add(mapper.convertValue(responseJSONArray.get(i), FuelType.class));
-					}
-
-					if (ftResponseList.isEmpty())
-						throw new CustomException("FuelType",
-								"Given FuelType is invalid: " + details.getTypeOfFuel().getCode());
-					else
-						details.setTypeOfFuel(ftResponseList.get(0));
-				}
 			}
 
 			// Validate Vehicle
-			if (details.getVehicleRegNo() != null && details.getVehicleRegNo().getRegNumber() != null) {
+			if (details.getVehicle() != null && details.getVehicle().getRegNumber() != null) {
 
 				VehicleSearch vehicleSearch = new VehicleSearch();
 				vehicleSearch.setTenantId(details.getTenantId());
-				vehicleSearch.setRegNumber(details.getVehicleRegNo().getRegNumber());
+				vehicleSearch.setRegNumber(details.getVehicle().getRegNumber());
 				Pagination<Vehicle> vehicleList = vehicleRepository.search(vehicleSearch);
 
 				if (vehicleList == null || vehicleList.getPagedData() == null || vehicleList.getPagedData().isEmpty())
-					throw new CustomException("VehicleRegNo",
-							"Given VehicleReg .No is invalid: " + details.getVehicleRegNo().getRegNumber());
+					throw new CustomException("Vehicle",
+							"Given Vehicle is invalid: " + details.getVehicle().getRegNumber());
 				else {
-					details.setVehicleRegNo(vehicleList.getPagedData().get(0));
+					details.setVehicle(vehicleList.getPagedData().get(0));
 				}
 
 			}
 
 			// Validate RefuellingPumpStation
 			if (details.getRefuellingStation() != null) {
-				masterDetailsArray = new MasterDetails[1];
-				masterDetailsArray[0] = MasterDetails.builder().name(Constants.REFILLINGPUMPSTATION_MASTER_NAME)
-						.filter("[?(@.name == '" + details.getRefuellingStation().getName() + "')]").build();
-				moduleDetailsArray = new ModuleDetails[1];
-				moduleDetailsArray[0] = ModuleDetails.builder().moduleName(Constants.MODULE_CODE)
-						.masterDetails(masterDetailsArray).build();
 
-				request = MdmsRequest.builder()
-						.mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetailsArray)
-								.tenantId(details.getTenantId()).build())
-						.requestInfo(vehicleFuellingDetailsRequest.getRequestInfo()).build();
-				response = mdmsRepository.getByCriteria(request);
-				if (response == null || response.getMdmsRes() == null
-						|| !response.getMdmsRes().containsKey(Constants.MODULE_CODE)
-						|| response.getMdmsRes().get(Constants.MODULE_CODE) == null
-						|| !response.getMdmsRes().get(Constants.MODULE_CODE)
-								.containsKey(Constants.REFILLINGPUMPSTATION_MASTER_NAME)
-						|| response.getMdmsRes().get(Constants.MODULE_CODE)
-								.get(Constants.REFILLINGPUMPSTATION_MASTER_NAME) == null) {
+				responseJSONArray = mdmsRepository.getByCriteria(details.getTenantId(), Constants.MODULE_CODE,
+						Constants.REFILLINGPUMPSTATION_MASTER_NAME, "name", details.getRefuellingStation().getName(),
+						vehicleFuellingDetailsRequest.getRequestInfo());
+
+				if (responseJSONArray != null && responseJSONArray.size() > 0)
+					details.setRefuellingStation(
+							mapper.convertValue(responseJSONArray.get(0), RefillingPumpStationEntity.class).toDomain());
+				else
 					throw new CustomException("RefuellingPumpStation",
-							"Given RefuellingPumpStation is invalid: " + details.getRefuellingStation().getId());
-				} else {
-					rpsResponseList = new ArrayList<RefillingPumpStation>();
+							"Given RefuellingPumpStation is invalid: " + details.getRefuellingStation().getName());
 
-					responseJSONArray = response.getMdmsRes().get(Constants.MODULE_CODE)
-							.get(Constants.REFILLINGPUMPSTATION_MASTER_NAME);
-
-					for (int i = 0; i < responseJSONArray.size(); i++) {
-						rpsResponseList.add(mapper
-								.convertValue(responseJSONArray.get(i), RefillingPumpStationEntity.class).toDomain());
-					}
-
-					if (rpsResponseList.isEmpty())
-						throw new CustomException("RefuellingPumpStation",
-								"Given RefuellingPumpStation is invalid: " + details.getRefuellingStation().getId());
-					else
-						details.setRefuellingStation(rpsResponseList.get(0));
-				}
 			}
 
-			if (details.getVehicleType() != null && details.getVehicleRegNo() != null
-					&& details.getVehicleType().getCode() != null && details.getVehicleRegNo().getRegNumber() != null) {
-				if (!details.getVehicleType().getCode()
-						.equalsIgnoreCase(details.getVehicleRegNo().getVehicleType().getCode())) {
-					throw new CustomException("VehicleRegNo",
-							"Given Vehicle Registration No is invalid. Vehicle type is not matching with vehicle's vehicle type: "
-									+ details.getRefuellingStation().getId());
-				}
-			}
 		}
 	}
 
@@ -281,7 +179,7 @@ public class VehicleFuellingDetailsService {
 		if (contract.getAuditDetails() == null)
 			contract.setAuditDetails(new AuditDetails());
 
-		if (null == contract.getId() || contract.getId().isEmpty()) {
+		if (null == contract.getTransactionNo() || contract.getTransactionNo().isEmpty()) {
 			contract.getAuditDetails().setCreatedBy(null != userId ? userId.toString() : null);
 			contract.getAuditDetails().setCreatedTime(new Date().getTime());
 		}

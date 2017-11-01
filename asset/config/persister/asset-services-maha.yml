@@ -7,10 +7,10 @@ serviceMaps:
    fromTopic: save-asset-maha
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO egasset_asset(id, name, code, oldcode, departmentcode, assetcategory, modeofacquisition,status, grossvalue, accumulateddepreciation, description, dateofcreation,remarks, version, assetreference, enableyearwisedepreciation,assetattributes, depreciationrate, anticipatedlife, ordernumber,orderdate, wipreferenceno, acquiredfrom, warrantyavailable, warrantyexpirydate,defectliabilityyear, defectliabilitymonth, defectliabilityday,securitydepositretained, securitydepositrealized, acquisitiondate,originalvalue, assetaccount, accumulateddepreciationaccount,revaluationreserveaccount, depreciationexpenseaccount, titledocumentsavalable,usage, length, width, height, totalarea, plintharea, address,longitude, latitude, floors, landsurveyno, cubiccontents, quantity,tenantid, zone, revenueward, street, electionward, doorno, pincode,locality, block, createdby, createddate, lastmodifiedby, lastmodifieddate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egasset_asset(id, name, code, oldcode, departmentcode, assetcategory, modeofacquisition,status, grossvalue, accumulateddepreciation, description, dateofcreation,remarks, version, assetreference, enableyearwisedepreciation,assetattributes, depreciationrate, anticipatedlife, ordernumber,orderdate, wipreferenceno, acquiredfrom, warrantyavailable, warrantyexpirydate,defectliabilityyear, defectliabilitymonth, defectliabilityday,securitydepositretained, securitydepositrealized, acquisitiondate,originalvalue, assetaccount, accumulateddepreciationaccount,revaluationreserveaccount, depreciationexpenseaccount, titledocumentsavalable,usage, length, width, height, totalarea, plintharea, address,longitude, latitude, floors, landsurveyno, cubiccontents, quantity,tenantid, zone, revenueward, street, electionward, doorno, pincode,locality, block, createdby, createddate, lastmodifiedby, lastmodifieddate,fundsource,openingdate,location) VALUES (?,?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: Asset
       jsonMaps:
-         
+           
        - jsonPath: $.Asset.id
          
        - jsonPath: $.Asset.name
@@ -141,13 +141,35 @@ serviceMaps:
        
        - jsonPath: $.Asset.auditDetails.lastModifiedDate       
        
+       - jsonPath: $.Asset.fundSource
+       
+       - jsonPath: $.Asset.openingDate
+       
+       - jsonPath: $.Asset.location
+       
+    - query: INSERT INTO egasset_asset_landdetails(code, surveynumber, area, assetid, tenantid) VALUES (?, ?, ?, ?, ?);
+      basePath: Asset.landDetails.*
+      jsonMaps:
+         
+       - jsonPath: $.Asset.landDetails.*.code
+         
+       - jsonPath: $.Asset.landDetails.*.surveyNo
+         
+       - jsonPath: $.Asset.landDetails.*.area
+       
+       - jsonPath: $.Asset[?({code} in @.landDetails[*].code)].id
+       
+       - jsonPath: $.Asset[?({code} in @.landDetails[*].code)].tenantId
+              
+              
+       
  - version: 1.0
    name: Asset
    description: Persists asset details in eg_asset table
    fromTopic: update-asset-maha
    isTransaction: true
    queryMaps:
-    - query: UPDATE egasset_asset SET id=?, name=?, code=?, oldcode=?, departmentcode=?, assetcategory=?,modeofacquisition=?, status=?, grossvalue=?, accumulateddepreciation=?,description=?, dateofcreation=?, remarks=?, version=?, assetreference=?,enableyearwisedepreciation=?, assetattributes=?, depreciationrate=?,anticipatedlife=?, ordernumber=?, orderdate=?, wipreferenceno=?,acquiredfrom=?, warrantyavailable=?, warrantyexpirydate=?, defectliabilityyear=?,defectliabilitymonth=?, defectliabilityday=?, securitydepositretained=?,securitydepositrealized=?, acquisitiondate=?, originalvalue=?,assetaccount=?, accumulateddepreciationaccount=?, revaluationreserveaccount=?,depreciationexpenseaccount=?, titledocumentsavalable=?, usage=?,length=?, width=?, height=?, totalarea=?, plintharea=?, address=?,longitude=?, latitude=?, floors=?, landsurveyno=?, cubiccontents=?,quantity=?, tenantid=?, zone=?, revenueward=?, street=?, electionward=?,doorno=?, pincode=?, locality=?, block=? , createdby=?, createddate=?, lastmodifiedby=?, lastmodifieddate=? WHERE id = ? AND tenantId = ?;
+    - query: UPDATE egasset_asset SET id=?, name=?, code=?, oldcode=?, departmentcode=?, assetcategory=?,modeofacquisition=?, status=?, grossvalue=?, accumulateddepreciation=?,description=?, dateofcreation=?, remarks=?, version=?, assetreference=?,enableyearwisedepreciation=?, assetattributes=?, depreciationrate=?,anticipatedlife=?, ordernumber=?, orderdate=?, wipreferenceno=?,acquiredfrom=?, warrantyavailable=?, warrantyexpirydate=?, defectliabilityyear=?,defectliabilitymonth=?, defectliabilityday=?, securitydepositretained=?,securitydepositrealized=?, acquisitiondate=?, originalvalue=?,assetaccount=?, accumulateddepreciationaccount=?, revaluationreserveaccount=?,depreciationexpenseaccount=?, titledocumentsavalable=?, usage=?,length=?, width=?, height=?, totalarea=?, plintharea=?, address=?,longitude=?, latitude=?, floors=?, landsurveyno=?, cubiccontents=?,quantity=?, tenantid=?, zone=?, revenueward=?, street=?, electionward=?,doorno=?, pincode=?, locality=?, block=? , createdby=?, createddate=?, lastmodifiedby=?, lastmodifieddate=? fundsource=?, openingdate=?, location=? WHERE id = ? AND tenantId = ?;
       basePath: Asset
       jsonMaps:
          
@@ -281,9 +303,31 @@ serviceMaps:
        
        - jsonPath: $.Asset.auditDetails.lastModifiedDate
        
+       - jsonPath: $.Asset.fundSource
+       
+       - jsonPath: $.Asset.openingDate
+       
+       - jsonPath: $.Asset.location
+       
        - jsonPath: $.Asset.id
        
-       - jsonPath: $.Asset.tenantId     
+       - jsonPath: $.Asset.tenantId 
+       
+       
+    - query: UPDATE egasset_asset_landdetails SET surveynumber=?, area=?, WHERE assetid=? AND code=? AND tenantid=?;
+      basePath: Asset
+      jsonMaps:
+         
+       - jsonPath: $.Asset.landDetails.*.surveyNo
+         
+       - jsonPath: $.Asset.landDetails.*.area
+       
+       - jsonPath: $.Asset[?({code} in @.landDetails[*].code)].id
+       
+       - jsonPath: $.Asset.landDetails.*.code
+       
+       - jsonPath: $.Asset[?({code} in @.landDetails[*].code)].tenantId
+       
        
        
  - version: 1.0

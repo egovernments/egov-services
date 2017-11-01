@@ -102,11 +102,17 @@ html, body{
 .drawer-backGround {
 	background-color: #009688 !important;
 	color: white !important;
+	width: 254px;
+	position: absolute;
+	left: 0;
+	height: auto;
 }
 
 .icon-left-style {
 	color: #555 !important;
 }
+
+
 
 .app-bar-bg {
 	background-color: #eee !important;

@@ -85,13 +85,11 @@
    ],
    "MaterialControlType":[  
       {  
-         "id":1,
          "tenantId":"default",
          "code":"LOTCONTROL",
          "name":"LOT Control"
       },
       {  
-         "id":2,
          "tenantId":"default",
          "code":"SHELF_LIFE_CONTROL",
          "name":"Shelf_life_Control"
@@ -99,19 +97,16 @@
    ],
    "MaterialClass":[  
       {  
-         "id":1,
          "tenantId":"default",
          "code":"HIGHUSAGE",
          "name":"HighUsage"
       },
       {  
-         "id":2,
          "tenantId":"default",
          "code":"MEDIUMUSAGE",
          "name":"MediumUsage"
       },
       {  
-         "id":3,
          "tenantId":"default",
          "code":"LOWUSAGE",
          "name":"LowUsage"
@@ -119,36 +114,73 @@
    ],
    "Status":[  
       {  
-         "id":1,
          "tenantId":"default",
          "code":"ACTIVE",
          "name":"Active"
       },
       {  
-         "id":2,
          "tenantId":"default",
          "code":"WITHDRAWN",
          "name":"Withdrawn"
       },
       {  
-         "id":3,
          "tenantId":"default",
          "code":"OBSOLETE",
          "name":"Obsolete"
-      }
+      },
+      {  
+         "tenantId":"default",
+         "code":"SUSPENDED",
+         "name":"suspended"
+      },      
+      {  
+         "tenantId":"default",
+         "code":"BARRED",
+         "name":"barred"
+      },
+      {  
+         "tenantId":"default",
+         "code":"INACTIVE",
+         "name":"inactive"
+      }     
    ],
    "InventoryType":[  
       {  
-         "id":1,
          "tenantId":"default",
          "code":"ASSET",
          "name":"Asset"
       },
       {  
-         "id":2,
          "tenantId":"default",
          "code":"CONSUMABLE",
          "name":"consumable"
       }
+   ],
+   "SuplierType":[  
+      {  
+         "tenantId":"default",
+         "code":"INDIVIDUAL",
+         "name":"individual"
+      },
+      {  
+         "tenantId":"default",
+         "code":"FIRM",
+         "name":"firm"
+      },
+      {  
+         "tenantId":"default",
+         "code":"COMPANY",
+         "name":"company"
+      },
+      {  
+         "tenantId":"default",
+         "code":"REGISTERED",
+         "name":"registered"
+      },
+      {  
+         "tenantId":"default",
+         "code":"SOCIETY",
+         "name":"society"
+      }                     
    ]
 }

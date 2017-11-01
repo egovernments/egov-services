@@ -4,8 +4,9 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.egov.swm.domain.model.AuditDetails;
-import org.egov.swm.domain.model.BinIdDetails;
+import org.egov.swm.domain.model.BinDetails;
 import org.egov.swm.domain.model.CollectionPoint;
+import org.egov.swm.domain.model.CollectionPointDetails;
 import org.egov.swm.domain.model.CollectionPointSearch;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.repository.CollectionPointRepository;
@@ -33,10 +34,14 @@ public class CollectionPointService {
 					&& null != collectionPointRequest.getRequestInfo().getUserInfo().getId()) {
 				userId = collectionPointRequest.getRequestInfo().getUserInfo().getId();
 			}
-			setAuditDetails(cp, userId);
-			cp.setId(UUID.randomUUID().toString().replace("-", ""));
 
-			populateBinIdDetailsIds(cp);
+			setAuditDetails(cp, userId);
+
+			cp.setCode(UUID.randomUUID().toString().replace("-", ""));
+
+			populateBinDetailsIds(cp);
+
+			populateCollectionPointDetails(cp);
 
 		}
 
@@ -58,20 +63,29 @@ public class CollectionPointService {
 			}
 
 			setAuditDetails(cp, userId);
-			populateBinIdDetailsIds(cp);
+
+			populateBinDetailsIds(cp);
+
+			populateCollectionPointDetails(cp);
 		}
 
 		return collectionPointRepository.update(collectionPointRequest);
 
 	}
 
-	private void populateBinIdDetailsIds(CollectionPoint cp) {
-		if (cp != null && cp.getBinIdDetails() != null)
-			for (BinIdDetails bid : cp.getBinIdDetails()) {
+	private void populateBinDetailsIds(CollectionPoint cp) {
+		if (cp != null && cp.getBinDetails() != null)
+			for (BinDetails bid : cp.getBinDetails()) {
 				bid.setId(UUID.randomUUID().toString().replace("-", ""));
 				bid.setTenantId(cp.getTenantId());
-				bid.setCollectionPointId(cp.getId());
+			}
+	}
 
+	private void populateCollectionPointDetails(CollectionPoint cp) {
+		if (cp != null && cp.getCollectionPointDetails() != null)
+			for (CollectionPointDetails cpd : cp.getCollectionPointDetails()) {
+				cpd.setId(UUID.randomUUID().toString().replace("-", ""));
+				cpd.setTenantId(cp.getTenantId());
 			}
 	}
 
@@ -85,7 +99,7 @@ public class CollectionPointService {
 		if (contract.getAuditDetails() == null)
 			contract.setAuditDetails(new AuditDetails());
 
-		if (null == contract.getId() || contract.getId().isEmpty()) {
+		if (null == contract.getCode() || contract.getCode().isEmpty()) {
 			contract.getAuditDetails().setCreatedBy(null != userId ? userId.toString() : null);
 			contract.getAuditDetails().setCreatedTime(new Date().getTime());
 		}

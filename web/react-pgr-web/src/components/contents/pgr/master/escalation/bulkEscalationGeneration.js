@@ -4,6 +4,8 @@ import {Grid, Row, Col, Table} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 import AutoComplete from 'material-ui/AutoComplete';
 import RaisedButton from 'material-ui/RaisedButton';
 import Chip from 'material-ui/Chip';
@@ -25,6 +27,7 @@ var flag = 0;
 const style = {
   chip: {
     margin: 4,
+    cursor:'pointer'
   },
   wrapper: {
     display: 'flex',
@@ -233,15 +236,47 @@ class BulkEscalationGeneration extends Component {
         });
   }
 
+  handleOpenChips = (chips, title, chipType) => {
+    this.setState({
+      handleOpenChips:true,
+      chipsTitle: title,
+      chips:chips,
+      chipType:chipType
+    });
+  }
+
+  handleCloseChips = () => {
+    this.setState({handleOpenChips:false});
+  }
+
+  presentChips = () => {
+    let {serviceCode, chips, chipType} = this.state;
+    if(chipType === 'grievanceType'){
+      return chips && chips.map((serviceId) => {
+        let obj = serviceCode.find((service)=> {return service.serviceCode == serviceId});
+        return(
+          <Chip style={style.chip}>{obj.serviceName}</Chip>
+        )
+      });
+    }
+  }
+
   renderComplaintTypeChips = () => {
     let {bulkEscalationGeneration} = this.props;
     let {serviceCode} = this.state;
-    console.log(serviceCode);
-    return bulkEscalationGeneration.serviceCode && bulkEscalationGeneration.serviceCode.map((serviceId) => {
+    let servicearray = bulkEscalationGeneration.serviceCode ? [...bulkEscalationGeneration.serviceCode].splice(0,2) : [];
+    bulkEscalationGeneration.serviceCode && [...bulkEscalationGeneration.serviceCode].length > 2 ? servicearray.push('More >') : '';
+    return servicearray.map((serviceId) => {
       let obj = serviceCode.find((service)=> {return service.serviceCode == serviceId});
-      return(
-        <Chip style={style.chip}>{obj.serviceName}</Chip>
-      )
+      if(obj){
+        return(
+          <Chip style={style.chip}>{obj.serviceName}</Chip>
+        )
+      }else{
+        return(
+          <Chip style={style.chip} onClick={(e)=>{this.handleOpenChips(bulkEscalationGeneration.serviceCode, translate("pgr.lbl.grievance.type"),'grievanceType')}}>{serviceId}</Chip>
+        )
+      }
     })
   }
 
@@ -407,10 +442,24 @@ class BulkEscalationGeneration extends Component {
           </div>
           {viewTable()}
           </form>
-      </div>)
+          <Dialog
+            title={this.state.chipsTitle}
+            actions={
+              [<FlatButton
+                  label={translate('core.lbl.close')}
+                  primary={false}
+                  onTouchTap={this.handleCloseChips}
+                />]
+            }
+            open={this.state.handleOpenChips}
+            onRequestClose={this.handleCloseChips}
+          >
+            <div style={style.wrapper}>{this.state.handleOpenChips && this.presentChips()}</div>
+          </Dialog>
+      </div>
+      )
     }
 }
-
 
 const mapStateToProps = state => {
   return ({bulkEscalationGeneration : state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});

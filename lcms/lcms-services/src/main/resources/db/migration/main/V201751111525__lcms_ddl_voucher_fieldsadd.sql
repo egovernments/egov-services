@@ -1,0 +1,1 @@
+ALTER TABLE egov_lcms_case_voucher ADD COLUMN tenantId character varying(128);

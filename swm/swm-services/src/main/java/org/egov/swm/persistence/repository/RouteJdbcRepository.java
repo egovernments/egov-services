@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.swm.domain.model.CollectionPoint;
+import org.egov.swm.domain.model.CollectionPointSearch;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Route;
 import org.egov.swm.domain.model.RouteCollectionPointMap;
@@ -23,6 +25,9 @@ public class RouteJdbcRepository {
 
 	@Autowired
 	public RouteCollectionPointMapJdbcRepository routeCollectionPointMapJdbcRepository;
+
+	@Autowired
+	public CollectionPointJdbcRepository collectionPointJdbcRepository;
 
 	@Autowired
 	public JdbcTemplate jdbcTemplate;
@@ -47,13 +52,6 @@ public class RouteJdbcRepository {
 			orderBy = "order by " + searchRequest.getSortBy();
 		}
 
-		if (searchRequest.getIds() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("id in (:ids)");
-			paramValues.put("ids", new ArrayList<String>(Arrays.asList(searchRequest.getIds().split(","))));
-		}
 		if (searchRequest.getTenantId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
@@ -62,12 +60,12 @@ public class RouteJdbcRepository {
 			paramValues.put("tenantId", searchRequest.getTenantId());
 		}
 
-		if (searchRequest.getId() != null) {
+		if (searchRequest.getCode() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("id =:id");
-			paramValues.put("id", searchRequest.getId());
+			params.append("code =:code");
+			paramValues.put("code", searchRequest.getCode());
 		}
 
 		if (searchRequest.getName() != null) {
@@ -100,14 +98,6 @@ public class RouteJdbcRepository {
 			}
 			params.append("endingDumpingGroundPoint =:endingDumpingGroundPoint");
 			paramValues.put("endingDumpingGroundPoint", searchRequest.getEndingDumpingGroundPointName());
-		}
-
-		if (searchRequest.getIsEndingPointDumpingGround() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("isEndingPointDumpingGround =:isEndingPointDumpingGround");
-			paramValues.put("isEndingPointDumpingGround", searchRequest.getIsEndingPointDumpingGround());
 		}
 
 		if (searchRequest.getDistance() != null) {
@@ -155,13 +145,26 @@ public class RouteJdbcRepository {
 		List<Route> routeList = new ArrayList<>();
 
 		List<RouteEntity> routeEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
-
+		StringBuffer cpCodes = new StringBuffer();
+		RouteCollectionPointMap sr;
+		List<RouteCollectionPointMap> collectionPoints;
+		Route route;
+		CollectionPointSearch cps;
+		Pagination<CollectionPoint> collectionPointList;
 		for (RouteEntity routeEntity : routeEntities) {
-
-			RouteCollectionPointMap sr = RouteCollectionPointMap.builder().route(routeEntity.getName()).build();
-			List<RouteCollectionPointMap> collectionPoints = routeCollectionPointMapJdbcRepository.search(sr);
-			Route route = routeEntity.toDomain();
-			route.setCollectionPoints(collectionPoints);
+			sr = RouteCollectionPointMap.builder().route(routeEntity.getCode()).build();
+			collectionPoints = routeCollectionPointMapJdbcRepository.search(sr);
+			if (collectionPoints != null)
+				for (RouteCollectionPointMap map : collectionPoints) {
+					if (cpCodes.length() > 0)
+						cpCodes.append(",");
+					cpCodes.append(map.getCollectionPoint());
+				}
+			cps = new CollectionPointSearch();
+			cps.setCodes(cpCodes.toString());
+			collectionPointList = collectionPointJdbcRepository.search(cps);
+			route = routeEntity.toDomain();
+			route.setCollectionPoints(collectionPointList.getPagedData());
 			routeList.add(route);
 		}
 

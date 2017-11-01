@@ -9,6 +9,7 @@ import org.egov.works.commons.domain.model.AuditDetails;
 import org.egov.works.commons.web.contract.RequestInfo;
 import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.domain.repository.ProjectCodeRepository;
+import org.egov.works.estimate.persistence.repository.IdGenerationRepository;
 import org.egov.works.estimate.web.contract.ProjectCodeRequest;
 import org.egov.works.estimate.web.contract.ProjectCodeSearchContract;
 import org.egov.works.estimate.web.model.ProjectCode;
@@ -29,6 +30,9 @@ public class ProjectCodeService {
 	@Autowired
 	private ProjectCodeRepository projectCodeRepository;
 	
+	@Autowired
+	private IdGenerationRepository idGenerationRepository;
+	
 	public List<ProjectCode> create(ProjectCodeRequest projectCodeRequest) {
 
 //		ProjectCode projectCode = projectCodeRequest.getProjectCodes().get(0);
@@ -45,11 +49,19 @@ public class ProjectCodeService {
 
 		RequestInfo requestInfo = projectCodeRequest.getRequestInfo();
 		AuditDetails auditDetails = new AuditDetails();
-
+		String workIdentificationNumber;
 		for(ProjectCode projectCode:projectCodeRequest.getProjectCodes()) {
 			projectCode.setId(UUID.randomUUID().toString().replace("-", ""));
 			auditDetails.setCreatedBy(requestInfo.getUserInfo().getUsername());
 			auditDetails.setCreatedTime(new Date().getTime());
+			
+			if(projectCode.getCode() == null || projectCode.getCode().isEmpty()) {
+				workIdentificationNumber = idGenerationRepository
+						.generateWorkIdentificationNumber(projectCode.getTenantId(), projectCodeRequest.getRequestInfo());
+				projectCode.setCode(workIdentificationNumber);
+			}
+				
+			
 			projectCode.setAuditDetails(auditDetails);
 
 		}

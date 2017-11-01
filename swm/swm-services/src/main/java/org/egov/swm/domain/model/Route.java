@@ -22,9 +22,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Route {
 
-	@Length(min = 1, max = 256)
-	@JsonProperty("id")
-	private String id = null;
+	@JsonProperty("code")
+	private String code = null;
 
 	@NotNull
 	@Length(min = 1, max = 128)
@@ -35,33 +34,32 @@ public class Route {
 	@Length(min = 1, max = 128)
 	@JsonProperty("name")
 	private String name = null;
-	
-	@JsonProperty("collectionType")
-	private CollectionType collectionType = null;
 
-	@JsonProperty("isEndingPointDumpingGround")
-	private Boolean isEndingPointDumpingGround = null;
-	
+	@NotNull
 	@JsonProperty("startingCollectionPoint")
 	private CollectionPoint startingCollectionPoint = null;
 
 	@JsonProperty("endingCollectionPoint")
 	private CollectionPoint endingCollectionPoint = null;
-	
+
 	@JsonProperty("endingDumpingGroundPoint")
 	private DumpingGround endingDumpingGroundPoint = null;
 
+	@NotNull
 	@JsonProperty("collectionPoints")
-	private List<RouteCollectionPointMap> collectionPoints = null;
+	private List<CollectionPoint> collectionPoints = null;
+
+	@JsonProperty("routeCollectionPointMaps")
+	private List<RouteCollectionPointMap> routeCollectionPointMaps = null;
 
 	@NotNull
 	@JsonProperty("distance")
 	private Double distance = null;
-	
+
 	@NotNull
 	@JsonProperty("garbageEstimate")
 	private Double garbageEstimate = null;
-	
+
 	@Valid
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;

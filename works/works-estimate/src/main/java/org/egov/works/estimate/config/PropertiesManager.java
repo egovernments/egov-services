@@ -40,5 +40,17 @@ public class PropertiesManager {
 
     @Value("${egov.services.works.detailed.estimate.update.topic}")
     private String worksDetailedEstimateUpdateTopic;
+
+    @Value("${works.abstractestimatenumber}")
+    private String worksAbstractEstimateNumber;
+
+    @Value("${works.abstractestimatenumber.format}")
+    private String worksAbstractEstimateNumberFormat;
+    
+    @Value("${works.projectcode}")
+    private String worksWorkIdentificationNumber;
+
+    @Value("${works.projectcode.format}")
+    private String worksWorkIdentificationNumberFormat;
 	
 }

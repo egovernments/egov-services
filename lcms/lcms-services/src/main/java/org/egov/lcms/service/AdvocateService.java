@@ -34,7 +34,7 @@ public class AdvocateService {
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-	public AdvocateResponse createAdvocate(AdvocateRequest advocateRequest) {
+	public AdvocateResponse createAdvocate(AdvocateRequest advocateRequest) throws Exception{
 
 		RequestInfo requestInfo = advocateRequest.getRequestInfo();
 		String code = null;
@@ -55,27 +55,21 @@ public class AdvocateService {
 				throw new CustomException(propertiesManager.getInvalidOrganizationCode(),
 						propertiesManager.getOrganizationExceptionMessage());
 			}
-
-			try {
-				code = uniqueCodeGeneration.getUniqueCode(advocate.getTenantId(), requestInfo,
-						propertiesManager.getAdvocateUlbFormat(), propertiesManager.getAdvocateUlbName(), Boolean.FALSE, null);
-			} catch (Exception e) {
-				throw new CustomException(propertiesManager.getInvalidIdGenerationCode(),
-						propertiesManager.getIdGenerationExceptionMessage());
-			}
-
+			code = uniqueCodeGeneration.getUniqueCode(advocate.getTenantId(), requestInfo,
+					propertiesManager.getAdvocateUlbFormat(), propertiesManager.getAdvocateUlbName(), Boolean.FALSE,
+					null);
 			advocate.setCode(code);
 			advocate.setName(name);
 		}
 
 		kafkaTemplate.send(propertiesManager.getCreateAdvocateTopic(), advocateRequest);
-
+		
 		return new AdvocateResponse(
 				responseInfoFactory.getResponseInfo(advocateRequest.getRequestInfo(), HttpStatus.CREATED),
 				advocateRequest.getAdvocates());
 	}
 
-	public AdvocateResponse updateAdvocate(AdvocateRequest advocateRequest) {
+	public AdvocateResponse updateAdvocate(AdvocateRequest advocateRequest) throws Exception {
 
 		String name = null;
 
@@ -91,7 +85,8 @@ public class AdvocateService {
 
 			if (!advocate.getIsIndividual() && advocate.getOrganizationName() == null) {
 
-				throw new CustomException();
+				throw new CustomException(propertiesManager.getInvalidOrganizationCode(),
+						propertiesManager.getOrganizationExceptionMessage());
 			}
 
 			advocate.setName(name);

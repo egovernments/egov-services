@@ -55,7 +55,6 @@ public class Summon {
 	private Court courtName = null;
 
 	@NotNull
-
 	@JsonProperty("departmentName")
 	private Department departmentName = null;
 
@@ -67,7 +66,7 @@ public class Summon {
 	private Long hearingDate = null;
 
 	@JsonProperty("hearingTime")
-	private Long hearingTime = null;
+	private String hearingTime = null;
 
 	@NotNull
 	@JsonProperty("ward")
@@ -108,4 +107,7 @@ public class Summon {
 	
 	@JsonProperty("isUlbinitiated")
 	private Boolean isUlbinitiated = null;
+	
+	@JsonProperty("amountReceived")
+	private Double amountReceived = null;
 }

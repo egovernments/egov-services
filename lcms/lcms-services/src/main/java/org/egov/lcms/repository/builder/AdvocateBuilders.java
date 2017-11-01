@@ -1,6 +1,9 @@
 package org.egov.lcms.repository.builder;
 
 import java.util.List;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.models.AdvocateSearchCriteria;
 
@@ -33,7 +36,7 @@ public class AdvocateBuilders {
 		selectQuery.append(" WHERE");        
 		if (advocateSearchCriteria.getTenantId() != null) {
 		
-            selectQuery.append(" LOWER(tenantId) =LOWER(?)");
+            selectQuery.append(" tenantid =LOWER(?)");
             preparedStatementValues.add(advocateSearchCriteria.getTenantId());
 		}
 		
@@ -44,40 +47,31 @@ public class AdvocateBuilders {
 		}
 		
 		if (advocateSearchCriteria.getAdvocateName() != null) {
-		
-            selectQuery.append(" AND LOWER(name) = LOWER(?)");
-            preparedStatementValues.add(advocateSearchCriteria.getAdvocateName());			
+			
+			StringJoiner advocateName = new StringJoiner("", "%", "%");
+			advocateName.add(advocateSearchCriteria.getAdvocateName());
+            selectQuery.append(" AND LOWER(name) LIKE ? ");
+            preparedStatementValues.add(advocateName.toString().toLowerCase());			
 		}
 		
 		if (advocateSearchCriteria.getOrganizationName() != null) {
 			
-            selectQuery.append(" AND organizationname = ?");
-            preparedStatementValues.add(advocateSearchCriteria.getOrganizationName());			
+			StringJoiner organizationName = new StringJoiner("", "%", "%");
+			organizationName.add(advocateSearchCriteria.getOrganizationName());
+            selectQuery.append(" AND LOWER(organizationname) LIKE ?");
+            preparedStatementValues.add(organizationName.toString().toLowerCase());			
 		}
 		
 		if (advocateSearchCriteria.getIsActive() != null) {
 			
-            selectQuery.append(" isactive = ?");
+            selectQuery.append(" AND isactive = ?");
             preparedStatementValues.add(advocateSearchCriteria.getIsActive());			
 		}
 		
 		if (advocateSearchCriteria.getCode() != null) {
 			
-			String[] codes = advocateSearchCriteria.getCode();
-			if(codes != null && codes.length > 0 ){
-				int count = 1;
-				String stringIds = "";
-				for(String code : codes){
-					if(count < codes.length ){
-						stringIds = "'" + stringIds + code + "',"; 
-					}else{
-						stringIds = "'" + stringIds + code + "'"; 
-					}
-					count++;
-				}
-				
-	            selectQuery.append(" AND code IN (" + stringIds + ")");
-			}			
+			selectQuery.append(" AND code IN ("
+					+ Stream.of(advocateSearchCriteria.getCode()).collect(Collectors.joining("','", "'", "'")) + ")");			
 		}		
 	}
 

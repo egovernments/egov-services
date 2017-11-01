@@ -40,8 +40,8 @@
 
 package org.egov.works.estimate.web.contract.factory;
 
-import org.egov.works.estimate.web.model.RequestInfo;
-import org.egov.works.estimate.web.model.ResponseInfo;
+import org.egov.works.commons.web.contract.RequestInfo;
+import org.egov.works.commons.web.contract.ResponseInfo;
 import org.springframework.stereotype.Component;
 
 @Component

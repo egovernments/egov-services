@@ -16,7 +16,9 @@ import org.egov.lcms.models.SummonResponse;
 import org.egov.lcms.repository.CaseSearchRepository;
 import org.egov.lcms.repository.IdGenerationRepository;
 import org.egov.lcms.util.UniqueCodeGeneration;
+import org.egov.lcms.utility.SummonValidator;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -41,6 +43,9 @@ public class SummonService {
 
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	
+	@Autowired
+	private SummonValidator summonValidator;
 
 	/**
 	 * This API will create the summon
@@ -49,9 +54,9 @@ public class SummonService {
 	 * @return {@link SummonResponse}
 	 */
 	public SummonResponse createSummon(SummonRequest summonRequest) throws Exception {
-
-		for(Summon Summon: summonRequest.getSummons()){
-			if(Summon.getIsUlbinitiated() == null){
+         
+		for (Summon Summon : summonRequest.getSummons()) {
+			if (Summon.getIsUlbinitiated() == null) {
 				Summon.setIsUlbinitiated(Boolean.FALSE);
 			}
 		}
@@ -64,7 +69,6 @@ public class SummonService {
 
 	}
 
-	
 	private void generateSummonReferenceNumber(SummonRequest summonRequest) throws Exception {
 
 		for (Summon summon : summonRequest.getSummons()) {
@@ -83,28 +87,49 @@ public class SummonService {
 
 	}
 
-
-	
-
+	/**
+	 * This will assign the advocate for the case
+	 * @param caseRequest
+	 * @return {@link CaseResponse}
+	 * @throws Exception
+	 */
 	public CaseResponse assignAdvocate(CaseRequest caseRequest) throws Exception {
-
+		summonValidator.validateSummon(caseRequest);
+		validateAssignAdvocate(caseRequest);
 		generateAdvocateCode(caseRequest);
 		kafkaTemplate.send(propertiesManager.getAssignAdvocate(), caseRequest);
 		return new CaseResponse(responseInfoFactory.getResponseInfo(caseRequest.getRequestInfo(), HttpStatus.CREATED),
 				caseRequest.getCases());
 	}
 
+	/**
+	 * This API will generate the advocate code
+	 * @param caseRequest
+	 * @throws Exception
+	 */
 	private void generateAdvocateCode(CaseRequest caseRequest) throws Exception {
 		List<Case> cases = caseRequest.getCases();
-		for ( Case caseObj : cases){
-			for ( AdvocateDetails advocatedetail : caseObj.getAdvocatesDetails()){
-				String advocateCode = uniqueCodeGeneration.getUniqueCode(caseObj.getTenantId(), caseRequest.getRequestInfo(), propertiesManager.getAdvocateDetailsCodeFormat(), propertiesManager.getAdvocateDetailsCodeName(), Boolean.FALSE, null);
+
+		for (Case caseObj : cases) {
+			for (AdvocateDetails advocatedetail : caseObj.getAdvocateDetails()) {
+				String advocateCode = uniqueCodeGeneration.getUniqueCode(caseObj.getTenantId(),
+						caseRequest.getRequestInfo(), propertiesManager.getAdvocateDetailsCodeFormat(),
+						propertiesManager.getAdvocateDetailsCodeName(), Boolean.FALSE, null);
+
+	
+
 				advocatedetail.setCode(advocateCode);
 			}
 		}
-		
+
 	}
 
+	/**
+	 * This will search the cases based on the given parameters
+	 * @param caseSearchCriteria
+	 * @param requestInfo
+	 * @return {@link CaseResponse}
+	 */
 	public CaseResponse caseSearch(CaseSearchCriteria caseSearchCriteria, RequestInfo requestInfo) {
 
 		List<Case> cases = caseSearchRepository.searchCases(caseSearchCriteria);
@@ -113,47 +138,38 @@ public class SummonService {
 
 	}
 
-	public CaseResponse createVakalatnama(CaseRequest caseRequest) {
-		validateVakalatName(caseRequest);
-		kafkaTemplate.send(propertiesManager.getCreateVakalatnama(), caseRequest);
-		return new CaseResponse(responseInfoFactory.getResponseInfo(caseRequest.getRequestInfo(), HttpStatus.CREATED),
-				caseRequest.getCases());
-	}
-
-	private void validateVakalatName(CaseRequest caseRequest) {
-		for ( Case caseObj : caseRequest.getCases() ){
-			
-		}
-		
-		
-	}
-
-	public CaseResponse createParaWiseComment(CaseRequest caseRequest) {
-		return new CaseResponse(responseInfoFactory.getResponseInfo(caseRequest.getRequestInfo(), HttpStatus.CREATED),
-				caseRequest.getCases());
-	}
-
-	public CaseResponse updateParaWiseComment(CaseRequest caseRequest) {
-		return new CaseResponse(responseInfoFactory.getResponseInfo(caseRequest.getRequestInfo(), HttpStatus.CREATED),
-				caseRequest.getCases());
-	}
-
-	public CaseResponse createHearingDetails(CaseRequest caseRequest) {
-		generateUniqueCodeForHearing(caseRequest);
-		return new CaseResponse(responseInfoFactory.getResponseInfo(caseRequest.getRequestInfo(), HttpStatus.CREATED),
-				caseRequest.getCases());
-	}
-
-	private void generateUniqueCodeForHearing(CaseRequest caseRequest) {
-		
-		
 	
-		
-	}
+	/**
+	 * This API will validate the assign advocate details
+	 * @param caseRequest
+	 */
+	private void validateAssignAdvocate(CaseRequest caseRequest) {
 
-	public CaseResponse updateHearingDetails(CaseRequest caseRequest) {
-		return new CaseResponse(responseInfoFactory.getResponseInfo(caseRequest.getRequestInfo(), HttpStatus.CREATED),
-				caseRequest.getCases());
+		List<Case> cases = caseRequest.getCases();
+		for (Case caseObj : cases) {
+
+			if (caseObj.getAdvocateDetails() == null || caseObj.getAdvocateDetails().size() <= 0) {
+				throw new CustomException(propertiesManager.getAdvocateDetailsMandatorycode(),
+						propertiesManager.getAdvocateDetailsMandatoryMessage());
+			}
+
+			for (AdvocateDetails advocateDetails : caseObj.getAdvocateDetails()) {
+
+				if (advocateDetails.getAdvocate() == null) {
+
+					throw new CustomException(propertiesManager.getAdvocateMandatoryCode(),
+							propertiesManager.getAdvocateMandatoryMessage());
+				}
+
+				if (advocateDetails.getAssignedDate() == null) {
+
+					throw new CustomException(propertiesManager.getAdvocateAssignDateCode(),
+							propertiesManager.getAdvocateAssignDateMessage());
+				}
+
+			}
+		}
+
 	}
 
 }

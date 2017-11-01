@@ -61,9 +61,6 @@ public class Store {
 	@JsonProperty("id")
 	private String id = null;
 
-	@JsonProperty("tenantId")
-	private String tenantId = null;
-
 	@JsonProperty("code")
 	private String code = null;
 
@@ -124,26 +121,13 @@ public class Store {
 		this.id = id;
 	}
 
-	public Store tenantId(String tenantId) {
-		this.tenantId = tenantId;
-		return this;
-	}
 
 	/**
 	 * Tenant id of the Store
 	 * 
 	 * @return tenantId
 	 **/
-	@ApiModelProperty(value = "Tenant id of the Store")
 
-	@Size(min = 4, max = 128)
-	public String getTenantId() {
-		return tenantId;
-	}
-
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
 
 	public Store code(String code) {
 		this.code = code;
@@ -444,8 +428,8 @@ public class Store {
 			return false;
 		}
 		Store store = (Store) o;
-		return Objects.equals(this.id, store.id) && Objects.equals(this.tenantId, store.tenantId)
-				&& Objects.equals(this.code, store.code) && Objects.equals(this.name, store.name)
+		return 
+				 Objects.equals(this.code, store.code) && Objects.equals(this.name, store.name)
 				&& Objects.equals(this.description, store.description)
 				&& Objects.equals(this.department, store.department)
 				&& Objects.equals(this.billingAddress, store.billingAddress)
@@ -459,7 +443,7 @@ public class Store {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, tenantId, code, name, description, department, billingAddress, deliveryAddress,
+		return Objects.hash(id, code, name, description, department, billingAddress, deliveryAddress,
 				contactNo1, contactNo2, email, storeInCharge, isCentralStore, active, auditDetails);
 	}
 
@@ -469,7 +453,6 @@ public class Store {
 		sb.append("class Store {\n");
 
 		sb.append("    id: ").append(toIndentedString(id)).append("\n");
-		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
 		sb.append("    code: ").append(toIndentedString(code)).append("\n");
 		sb.append("    name: ").append(toIndentedString(name)).append("\n");
 		sb.append("    description: ").append(toIndentedString(description)).append("\n");

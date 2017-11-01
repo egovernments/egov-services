@@ -19,34 +19,19 @@ import lombok.Setter;
 @NoArgsConstructor
 public class RefillingPumpStation {
 
-	@NotNull
 	@Size(min = 1, max = 256)
-	@JsonProperty("id")
-	private String id = null;
+	@JsonProperty("code")
+	private String code = null;
 
 	@NotNull
 	@Size(min = 1, max = 128)
 	@JsonProperty("tenantId")
 	private String tenantId = null;
 
+	@Valid
 	@NotNull
-	@Valid
-	@JsonProperty("ward")
-	private Boundary ward = null;
-
-	@NotNull
-	@Valid
-	@JsonProperty("zone")
-	private Boundary zone = null;
-
-	@NotNull
-	@Valid
-	@JsonProperty("street")
-	private Boundary street = null;
-
-	@Valid
-	@JsonProperty("colony")
-	private Boundary colony = null;
+	@JsonProperty("location")
+	private Boundary location = null;
 
 	@NotNull
 	@Size(min = 1, max = 256)
@@ -55,8 +40,8 @@ public class RefillingPumpStation {
 
 	@NotNull
 	@Size(min = 1, max = 256)
-	@JsonProperty("type")
-	private String type = null;
+	@JsonProperty("typeOfPump")
+	private OilCompanyName typeOfPump = null;
 
 	@Size(min = 0, max = 300)
 	@JsonProperty("remarks")
@@ -65,14 +50,10 @@ public class RefillingPumpStation {
 	@NotNull
 	@Size(min = 1, max = 256)
 	@JsonProperty("typeOfFuel")
-	private String typeOfFuel = null;
+	private FuelType typeOfFuel = null;
 
 	@NotNull
 	@JsonProperty("quantity")
 	private Long quantity = null;
-
-	@Valid
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
 
 }

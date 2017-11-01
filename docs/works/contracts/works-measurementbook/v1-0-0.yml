@@ -329,42 +329,46 @@ definitions:
         type: string
         description: Tenant id of the Measurement Book
         maxLength: 128
-        minLength: 4
+        minLength: 2
       letterOfAcceptance:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LetterOfAcceptance"
       mbRefNo:
         type: string
-        pattern: "[0-9]"
+        pattern: "[0-9]+"
         description: Referance number for the measurement book. 
         maxLength: 50
         minLength: 1
       contractorComments:
         type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Comments for the measurement book
         maxLength: 1024
         minLength: 1
       mbDate:
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of when the measurement book created
       mbIssuedDate:
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of Issued date of the measurement book
       mbAbstract:
         type: string
         description: Abstract comments for the measurement book
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
         minLength: 1
       fromPageNo:
         type: integer
-        pattern: "[0-9]"
+        pattern: "[0-9]+"
         description: From page number for the measurement book
         maxLength: 10
         minLength: 1
       toPageNo:
         type: integer
-        pattern: "[0-9]"
+        pattern: "[0-9]+"
         description: To page number for the measurement book
         maxLength: 10
       letterOfAcceptanceEstimate:
@@ -391,13 +395,14 @@ definitions:
       mbAmount:
         type: number
         format: BigDecimal
-        pattern: "[0-9]"
+        pattern: "[0-9]+"
         description: Amount for the Measurement book.
         maxLength: 50
         minLength: 1
       approvedDate:
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of the Measurement book Approved date 
       documentDetails:
         type: array
@@ -411,11 +416,13 @@ definitions:
         description: State id of the workflow
       cancellationReason:
         type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Reason for cancellation of the Measurement book, Required only while cancelling Measurement book
         maxLength: 1024
         minLength: 1
       cancellationRemarks:
         type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Remarks for cancellation of the Measurement book, Required only while cancelling Measurement book
         maxLength: 1024
         minLength: 1
@@ -438,7 +445,7 @@ definitions:
         type: string
         description: Tenant id of the BillMB
         maxLength: 128
-        minLength: 4
+        minLength: 2
       measurementBook:
         $ref: '#/definitions/MeasurementBook'
       contractorBill:
@@ -460,14 +467,14 @@ definitions:
         type: string
         description: Tenant id of the MB Detail
         maxLength: 128
-        minLength: 4
+        minLength: 2
       measurementBook:
         $ref: '#/definitions/MeasurementBook'
      # loaActivity:
       #  $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LOAActivity"        
       quantity:
         type: number
-        pattern: "[0-9]"
+        pattern: "[0-9]+"
         format: double
         description: Quantity for the Measurement book details
         maxLength: 20
@@ -475,6 +482,7 @@ definitions:
       rate:
         type: number
         format: double
+        pattern: "[0-9]+"
         description: Rate for the Measurement book details
         maxLength: 20
         minLength: 1
@@ -487,6 +495,7 @@ definitions:
       amount:
         type: number
         format: BigDecimal
+        pattern: "[0-9]+"
         description: Amount for the Measurement book details
         maxLength: 12
         minLength: 1
@@ -497,12 +506,12 @@ definitions:
         items:
           $ref: '#/definitions/MBMeasurementSheet'
       partRate:
-        type: integer
+        type: number
         format: BigDecimal
         maxLength: 20
         description: Part Rate of the Measurement sheet
       revisedRate:
-        type: integer
+        type: number
         format: BigDecimal
         maxLength: 20
         description: Revised Rate of the Measurement sheet
@@ -527,7 +536,7 @@ definitions:
           type: string
           description: Tenant id of the Measurement Sheet
           maxLength: 128
-          minLength: 4
+          minLength: 2
         remarks:
           type: string
           description: Remarks of the Measurement sheet
@@ -535,27 +544,28 @@ definitions:
           maxLength: 1024
           minLength: 1
         no:
-          type: integer
+          type: number
           format: BigDecimal
           description: No. of the Measurement sheet
           maxLength: 20
         length:
-          type: integer
+          type: number
           format: BigDecimal
           description: Length of the Measurement sheet
           maxLength: 20
         width:
-          type: integer
+          type: number
           format: BigDecimal
           description: Width of the Measurement sheet
         depthOrHeight:
-          type: integer
+          type: number
           format: BigDecimal
           description: Depth or Height of the Measurement sheet
           maxLength: 20
         quantity:
-          type: integer
+          type: number
           format: BigDecimal
+          pattern: "[0-9]+"
           description: Quantity of the Measurement sheet
           maxLength: 20
         measurementBookDetails:
@@ -633,25 +643,28 @@ definitions:
         type: string
         description: Tenant id of the Contractor Bill
         maxLength: 128
-        minLength: 4
+        minLength: 2
       billSequenceNumber:
         type: string
         description: Bill sequence number of the Bill
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
       approvedDate:
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of when the Bill approved
       approvedBy:
         type: string
         description: User name of the User who approved the Bill
       cancellationReason:
         type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Reason for cancellation of the Bill, Required only while cancelling Contractor Bill
         maxLength: 100
         minLength: 1
       cancellationRemarks:
         type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Remarks for cancellation of the Bill, Required only while cancelling Bill
         maxLength: 1024
         minLength: 1
@@ -684,7 +697,7 @@ definitions:
         type: string
         description: Tenant id of the Asset for Contractor Bill
         maxLength: 128
-        minLength: 4
+        minLength: 2
       assetCode:
         type: string
         description: Asset code of the Contractor Bill
@@ -695,6 +708,7 @@ definitions:
         description: Chart of Accounts for the Assets for Bill
       description:
         type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Description for the Asset for Bill
         maxLength: 1024
       amount:
@@ -716,3 +730,4 @@ tags:
     description: APIs required for Measurement Book.
   - name: Contractor Bill
     description: APIs required for Contractor Bill.
+

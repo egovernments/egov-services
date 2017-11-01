@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,11 +25,15 @@ public class DetailedEstimateSearchContract {
 	
 	private List<String> ids;
 
-	private List<String> estimateNumbers;
+	private List<String> detailedEstimateNumbers;
 	
 	private Long fromDate;
 
 	private Long toDate;
+	
+	private Long fromAmount;
+
+	private Long toAmount;
 	
 	private String department;
 	

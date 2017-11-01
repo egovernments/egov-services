@@ -2,6 +2,9 @@ package org.egov.swm.persistence.entity;
 
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.FuelType;
+import org.egov.swm.domain.model.InsuranceDetails;
+import org.egov.swm.domain.model.ManufacturingDetails;
+import org.egov.swm.domain.model.PurchaseInfo;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleType;
 import org.egov.swm.domain.model.Vendor;
@@ -36,19 +39,15 @@ public class VehicleEntity {
 
 	private Double vehicleCapacity = null;
 
-	private Long numberOfPersonsReq = null;
+	private Long operatorsReq = null;
 
 	private String model = null;
-
-	private Boolean ulbOwnedVehicle = null;
 
 	private String vendor = null;
 
 	private String driver = null;
 
 	private Long purchaseDate = null;
-
-	private String yearOfPurchase = null;
 
 	private Double price = null;
 
@@ -59,10 +58,6 @@ public class VehicleEntity {
 	private String insuranceNumber = null;
 
 	private Long insuranceValidityDate = null;
-
-	private String insuranceDocuments = null;
-
-	private Boolean isUnderWarranty = null;
 
 	private Long kilometers = null;
 
@@ -79,27 +74,26 @@ public class VehicleEntity {
 	public Vehicle toDomain() {
 
 		Vehicle vehicle = new Vehicle();
-		vehicle.setId(id);
 		vehicle.setTenantId(tenantId);
 		vehicle.setVehicleType(VehicleType.builder().code(vehicleType).build());
 		vehicle.setFuelType(FuelType.builder().code(fuelType).build());
 		vehicle.setRegNumber(regNumber);
-		vehicle.setEngineSrNumber(engineSrNumber);
-		vehicle.setChassisSrNumber(chassisSrNumber);
-		vehicle.setVehicleCapacity(vehicleCapacity);
-		vehicle.setNumberOfPersonsReq(numberOfPersonsReq);
-		vehicle.setModel(model);
-		vehicle.setUlbOwnedVehicle(ulbOwnedVehicle);
+		vehicle.setManufacturingDetails(new ManufacturingDetails());
+		vehicle.getManufacturingDetails().setEngineSrNumber(engineSrNumber);
+		vehicle.getManufacturingDetails().setChassisSrNumber(chassisSrNumber);
+		vehicle.getManufacturingDetails().setVehicleCapacity(vehicleCapacity);
+		vehicle.setOperatorsReq(operatorsReq);
+		vehicle.getManufacturingDetails().setModel(model);
 		vehicle.setVendor(Vendor.builder().name(vendor).build());
 		vehicle.setDriver(Employee.builder().code(driver).build());
-		vehicle.setPurchaseDate(purchaseDate);
-		vehicle.setYearOfPurchase(yearOfPurchase);
-		vehicle.setPrice(price);
-		vehicle.setSourceOfPurchase(sourceOfPurchase);
+		vehicle.setPurchaseInfo(new PurchaseInfo());
+		vehicle.getPurchaseInfo().setPurchaseDate(purchaseDate);
+		vehicle.getPurchaseInfo().setPrice(price);
+		vehicle.getPurchaseInfo().setSourceOfPurchase(sourceOfPurchase);
 		vehicle.setRemarks(remarks);
-		vehicle.setInsuranceNumber(insuranceNumber);
-		vehicle.setInsuranceValidityDate(insuranceValidityDate);
-		vehicle.setIsUnderWarranty(isUnderWarranty);
+		vehicle.setInsuranceDetails(new InsuranceDetails());
+		vehicle.getInsuranceDetails().setInsuranceNumber(insuranceNumber);
+		vehicle.getInsuranceDetails().setInsuranceValidityDate(insuranceValidityDate);
 		vehicle.setKilometers(kilometers);
 		vehicle.setEndOfWarranty(endOfWarranty);
 		vehicle.setAuditDetails(new AuditDetails());

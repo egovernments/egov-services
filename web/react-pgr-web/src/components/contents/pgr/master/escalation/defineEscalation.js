@@ -102,10 +102,10 @@ class DefineEscalation extends Component {
            buttons: [
                      'excel', 'pdf', 'print'
             ],
-            "columnDefs": [
-              { "orderable": false, "targets": 5 }
-            ],
-            //ordering: false,
+            // "columnDefs": [
+            //   { "orderable": false, "targets": 5 }
+            // ],
+            ordering: false,
             bDestroy: true,
       });
     }
@@ -146,6 +146,7 @@ class DefineEscalation extends Component {
 
     Api.commonApiPost("/hr-masters/designations/_search",{}).then(function(response) {
         self.setState({localDesignation : response.Designation});
+        self.setState({designations : response.Designation});
         },function(err) {
 
     });
@@ -162,9 +163,10 @@ componentWillUpdate() {
           dom:'<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
           buttons: ['excel', 'pdf'],
           bDestroy: true,
-          "columnDefs": [
-          { "orderable": false, "targets": 5 }
-          ]
+          ordering: false,
+          // "columnDefs": [
+          // { "orderable": false, "targets": 5 }
+          // ]
         });
 
     }
@@ -210,44 +212,64 @@ componentWillUpdate() {
       })
   }
 
+	handleDepartment = (data, mode) => {
 
-	handleDepartment = (data) => {
-		 let {toggleSnackbarAndSetText, emptyProperty} = this.props;
+		  this.setState({toPosition : []});
+      // console.log(data.target.value, this.props.defineEscalation.designation);
 
-		 var currentThis = this;
-	    currentThis.setState({designations : []});
-		  currentThis.setState({toPosition : []});
+      if(mode === 'create'){
+        if(data.target.value && this.props.defineEscalation.designation)
+          this.loadPosition(data.target.value, this.props.defineEscalation.designation);
+      }else if(mode === 'edit'){
 
-		let query = {
-			id : data.department ? data.department :  data.target.value
-		}
+      }
 
-		  Api.commonApiPost("/hr-masters/designations/_search",query).then(function(response)
-		  {
-			currentThis.setState({designations : response.Designation});
-		  },function(err) {
-			toggleSnackbarAndSetText(true, err);
-		  });
+		// let query = {
+		// 	id : data.department ? data.department :  data.target.value
+		// }
+
+		  // Api.commonApiPost("/hr-masters/designations/_search").then(function(response)
+		  // {
+			// currentThis.setState({designations : response.Designation});
+		  // },function(err) {
+			// toggleSnackbarAndSetText(true, err);
+		  // });
   }
 
-  handleDesignation = (data) => {
-  let {setLoadingStatus, toggleSnackbarAndSetText} = this.props;
+  handleDesignation = (data, mode) => {
 
-		var current = this;
 		this.setState({toPosition : []});
 
-		let query = {
-			departmentId:data.department ? data.department : this.props.defineEscalation.department,
-			designationId:data.designation ? data.designation : data.target.value
-		}
+    // console.log(this.props.defineEscalation.department , data.target.value);
+    // let query = {
+		// 	departmentId:data.department ? data.department : this.props.defineEscalation.department,
+		// 	designationId:data.designation ? data.designation : data.target.value
+		// }
 
-		  Api.commonApiPost("/hr-masters/positions/_search",query).then(function(response) {
-			setLoadingStatus('hide');
-			current.setState({toPosition : response.Position});
-		  },function(err) {
-			  toggleSnackbarAndSetText(true, err.message);
-			  setLoadingStatus('hide');
-		  });
+    if(mode === 'create'){
+      if(this.props.defineEscalation.department && data.target.value)
+        this.loadPosition(this.props.defineEscalation.department, data.target.value);
+    }else if(mode === 'edit'){
+
+    }
+
+  }
+
+  loadPosition = (dep,des) => {
+    let query = {
+			departmentId:dep,
+			designationId:des
+		}
+    let {setLoadingStatus, toggleSnackbarAndSetText} = this.props;
+    setLoadingStatus('loading');
+    var current = this;
+    Api.commonApiPost("/hr-masters/positions/_search",query).then(function(response) {
+    setLoadingStatus('hide');
+    current.setState({toPosition : response.Position});
+    },function(err) {
+      toggleSnackbarAndSetText(true, err.message);
+      setLoadingStatus('hide');
+    });
   }
 
 
@@ -364,12 +386,13 @@ componentWillUpdate() {
 
   editObject = (index) => {
       let {setLoadingStatus} = this.props;
-      setLoadingStatus('loading');
+      // console.log(this.state.resultList[index]);
+      this.loadPosition(this.state.resultList[index].department, this.state.resultList[index].designation);
       this.props.setForm(this.state.resultList[index])
 
-      this.handleDepartment(this.state.resultList[index]);
-
-      this.handleDesignation(this.state.resultList[index]);
+      // this.handleDepartment(this.state.resultList[index], 'edit');
+      //
+      // this.handleDesignation(this.state.resultList[index], 'edit');
   }
 
 
@@ -481,7 +504,7 @@ componentWillUpdate() {
                                }
                              };
                              handleChange(e, "department", true, "");
-                             current.handleDepartment(e);
+                             current.handleDepartment(e, 'create');
                             }}
                          >
                          <MenuItem value="" primaryText="Select" />
@@ -506,7 +529,7 @@ componentWillUpdate() {
                                }
                              };
                              handleChange(e, "designation", true, "");
-                             current.handleDesignation(e);
+                             current.handleDesignation(e, 'create');
                             }}
                          >
                          <MenuItem value="" primaryText="Select" />
@@ -557,12 +580,12 @@ componentWillUpdate() {
    		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
    		          <thead >
    		            <tr>
-						<th>{translate('pgr.lbl.fromposition')}</th>
-						<th>{translate('pgr.lbl.grievance.type')}</th>
-						<th>{translate('core.lbl.department')}</th>
-						<th>{translate('pgr.lbl.designation')}</th>
-						<th>{translate('core.position.to')}</th>
-						<th>{translate('pgr.lbl.actions')}</th>
+        						<th>{translate('pgr.lbl.fromposition')}</th>
+        						<th>{translate('pgr.lbl.grievance.type')}</th>
+        						<th>{translate('core.lbl.department')}</th>
+        						<th>{translate('pgr.lbl.designation')}</th>
+        						<th>{translate('core.position.to')}</th>
+        						<th>{translate('pgr.lbl.actions')}</th>
    		            </tr>
    		          </thead>
    		          <tbody>

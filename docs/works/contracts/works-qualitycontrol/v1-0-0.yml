@@ -175,7 +175,7 @@ definitions:
         type: string
         description: Tenant id of the Quality Testing
         maxLength: 128
-        minLength: 4
+        minLength: 2
       letterOfAcceptanceEstimate:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LetterOfAcceptanceEstimate'
       qualityTestingDetails:
@@ -188,6 +188,7 @@ definitions:
         type: string
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
         description: Remarks for the Quality Testing
+        maxLength: 1024
       testReports:
         type: array
         description: Array of test reports in PDF format
@@ -210,20 +211,20 @@ definitions:
         type: string
         description: Tenant id of the Quality Testing Detail
         maxLength: 128
-        minLength: 4
+        minLength: 2
       qualityTesting:
         $ref: '#/definitions/QualityTesting'
       materialName:
         type: string
         description: Material name for the Quality Testing
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         maxLength: 100
         minLength: 2
       testName:
         type: string
         maxLength: 100
         minLength: 2
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         description: Test name for the Quality Testing
       resultUnit:
         type: string
@@ -244,13 +245,13 @@ definitions:
         type: string
         maxLength: 1024
         minLength: 2
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: HOD remarksname for the Quality Testing
       coRemarks:
         type: string
         maxLength: 1024
         minLength: 2
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: CO remarks for the Quality Testing
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"

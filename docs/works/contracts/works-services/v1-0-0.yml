@@ -440,7 +440,7 @@ definitions:
         type: string
         description: tenant id of the Offline Status
         maxLength: 128
-        minLength: 4
+        minLength: 2
       objectType:
         type: string
         description: Object type for the offline status
@@ -451,6 +451,7 @@ definitions:
         type: integer
         format: int64
         description: Epoch time of Offline Status Date
+        x-displayformat: 'dd/MM/yyyy'
       objectId:
         type: string
         description: Unique Identifier for the specified obect type.
@@ -500,16 +501,16 @@ definitions:
         type: string
         description: Tenant id for which this object belongs to
         maxLength: 128
-        minLength: 4
+        minLength: 2
       objectNumber:
         type: string
         description: Unique object number to be defined for the object type
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         maxLength: 100
       objectType:
         type: string
         description: Object type for the Estimate Appropriation.
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         maxLength: 100
       budgetUsage:
         type: string

@@ -48,21 +48,32 @@ import io.swagger.model.Store;
 import io.swagger.model.StoreGetRequest;
 import io.swagger.model.Pagination;
 
-import org.egov.inv.persistence.entity.StoresEntity;
+
+import org.egov.inv.persistence.entity.StoreEntity;
 import org.egov.tracer.model.CustomException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class StoreJdbcRepository {
+public class StoreJdbcRepository extends JdbcRepository{
+	
+	private static final Logger LOG = LoggerFactory.getLogger(StoreJdbcRepository.class);
 
     @Autowired
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    
+    static {
+		LOG.debug("init fund");
+		init(StoreEntity.class);
+		LOG.debug("end init fund");
+	}
 
     public Pagination<Store> search(StoreGetRequest storeGetRequest) {
-        String searchQuery = "select * from stores :condition :orderby";
+        String searchQuery = "select * from store :condition :orderby";
         StringBuffer params = new StringBuffer();
         Map<String, Object> paramValues = new HashMap<>();
         if (storeGetRequest.getSortBy() != null && !storeGetRequest.getSortBy().isEmpty()) {
@@ -175,14 +186,14 @@ public class StoreJdbcRepository {
 
         searchQuery = searchQuery + " :pagination";
         searchQuery = searchQuery.replace(":pagination", "limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
-        BeanPropertyRowMapper row = new BeanPropertyRowMapper(StoresEntity.class);
+        BeanPropertyRowMapper row = new BeanPropertyRowMapper(StoreEntity.class);
 
         List<Store> storesList = new ArrayList<>();
 
-        List<StoresEntity> storesEntities = namedParameterJdbcTemplate
+        List<StoreEntity> storesEntities = namedParameterJdbcTemplate
                         .query(searchQuery.toString(), paramValues, row);
 
-        for (StoresEntity storesEntity : storesEntities) {
+        for (StoreEntity storesEntity : storesEntities) {
 
             storesList.add(storesEntity.toDomain());
         }
@@ -194,60 +205,7 @@ public class StoreJdbcRepository {
         return page;
     }
 
-    public Pagination<?> getPagination(String searchQuery, Pagination<?> page, Map<String, Object> paramValues) {
-        String countQuery = "select count(*) from (" + searchQuery + ") as x";
-        Long count = namedParameterJdbcTemplate.queryForObject(countQuery.toString(), paramValues, Long.class);
-        Integer totalpages = (int) Math.ceil((double) count / page.getPageSize());
-        page.setTotalPages(totalpages);
-        page.setCurrentPage(page.getOffset());
-        return page;
-    }
+  
 
-    public void validateSortByOrder(final String sortBy) {
-        List<String> sortByList = new ArrayList<String>();
-        if (sortBy.contains(",")) {
-            sortByList = Arrays.asList(sortBy.split(","));
-        } else {
-            sortByList = Arrays.asList(sortBy);
-        }
-        for (String s : sortByList) {
-            if (s.contains(" ")
-                    && (!s.toLowerCase().trim().endsWith("asc") && !s.toLowerCase().trim().endsWith("desc"))) {
-
-                throw new CustomException(s.split(" ")[0],
-                        "Please send the proper sortBy order for the field " + s.split(" ")[0]);
-            }
-        }
-
-    }
-
-    public void validateEntityFieldName(String sortBy, final Class<?> object) {
-        List<String> sortByList = new ArrayList<String>();
-        if (sortBy.contains(",")) {
-            sortByList = Arrays.asList(sortBy.split(","));
-        } else {
-            sortByList = Arrays.asList(sortBy);
-        }
-        Boolean isFieldExist = Boolean.FALSE;
-        for (String s : sortByList) {
-            for (int i = 0; i < object.getDeclaredFields().length; i++) {
-                if (object.getDeclaredFields()[i].getName().equals(s.contains(" ") ? s.split(" ")[0] : s)) {
-                    isFieldExist = Boolean.TRUE;
-                    break;
-                } else {
-                    isFieldExist = Boolean.FALSE;
-                }
-            }
-            if (!isFieldExist) {
-                throw new CustomException(s.contains(" ") ? s.split(" ")[0] : s, "Please send the proper Field Names ");
-
-            }
-        }
-
-    }
-
-   /* public String checkCodeExistsQuery() {
-       return "select id from stores where code = :code and tenantid = :tenantid";        
-    }*/
-
+  
 }

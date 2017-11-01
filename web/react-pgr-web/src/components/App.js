@@ -188,6 +188,8 @@ class App extends Component {
            {actionList && actionList.length>0 && <CustomMenu menuItems={[]} actionList={actionList} />}
           </Drawer>*/}
 
+          
+
           <div className={classnames('app-content', {'expanded': showMenu ||false})}>
             <Header/>
                 {router}

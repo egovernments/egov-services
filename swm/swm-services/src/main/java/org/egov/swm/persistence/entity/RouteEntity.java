@@ -2,7 +2,6 @@ package org.egov.swm.persistence.entity;
 
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.CollectionPoint;
-import org.egov.swm.domain.model.CollectionType;
 import org.egov.swm.domain.model.DumpingGround;
 import org.egov.swm.domain.model.Route;
 
@@ -19,15 +18,13 @@ import lombok.Setter;
 @NoArgsConstructor
 public class RouteEntity {
 
-	private String id = null;
+	private String code = null;
 
 	private String tenantId = null;
 
 	private String name = null;
 
 	private String collectionType = null;
-
-	private Boolean isEndingPointDumpingGround = null;
 
 	private String startingCollectionPoint = null;
 
@@ -50,14 +47,12 @@ public class RouteEntity {
 	public Route toDomain() {
 
 		Route route = new Route();
-		route.setId(id);
+		route.setCode(code);
 		route.setTenantId(tenantId);
 		route.setName(name);
-		route.setCollectionType(CollectionType.builder().code(collectionType).build());
 		route.setStartingCollectionPoint(CollectionPoint.builder().name(startingCollectionPoint).build());
-		route.setIsEndingPointDumpingGround(isEndingPointDumpingGround);
 		route.setEndingCollectionPoint(CollectionPoint.builder().name(endingCollectionPoint).build());
-		route.setEndingDumpingGroundPoint(DumpingGround.builder().name(endingDumpingGroundPoint).build());
+		route.setEndingDumpingGroundPoint(DumpingGround.builder().code(endingDumpingGroundPoint).build());
 		route.setDistance(distance);
 		route.setGarbageEstimate(garbageEstimate);
 		route.setAuditDetails(new AuditDetails());

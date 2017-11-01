@@ -32,14 +32,14 @@ public class AdvocateController {
 	PropertiesManager propertiesManager;
 
 	@RequestMapping(path = "_create")
-	public ResponseEntity<?> createAdvocate(@RequestBody @Valid AdvocateRequest advocateRequest) {
+	public ResponseEntity<?> createAdvocate(@RequestBody @Valid AdvocateRequest advocateRequest) throws Exception {
 
 		AdvocateResponse advocateResponse = advocateService.createAdvocate(advocateRequest);
 		return new ResponseEntity<>(advocateResponse, HttpStatus.CREATED);
 	}
 
 	@RequestMapping(path = "_update")
-	public ResponseEntity<?> updateAdvocate(@RequestBody @Valid AdvocateRequest advocateRequest) {
+	public ResponseEntity<?> updateAdvocate(@RequestBody @Valid AdvocateRequest advocateRequest) throws Exception {
 
 		AdvocateResponse advocateResponse = advocateService.updateAdvocate(advocateRequest);
 		return new ResponseEntity<>(advocateResponse, HttpStatus.CREATED);
@@ -47,7 +47,7 @@ public class AdvocateController {
 
 	@RequestMapping(path = "_search")
 	public ResponseEntity<?> searchAdvocate(@RequestBody RequestInfoWrapper requestInfoWrapper,
-			@ModelAttribute @Valid AdvocateSearchCriteria advocateSearchCriteria, BindingResult bindingResult) {
+			@ModelAttribute @Valid AdvocateSearchCriteria advocateSearchCriteria, BindingResult bindingResult) throws Exception {
 		if (bindingResult.hasErrors()) {
 			throw new CustomException(propertiesManager.getInvalidTenantCode(), propertiesManager.getExceptionMessage());
 		}

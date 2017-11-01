@@ -17,7 +17,8 @@ public class AssetQueryBuilder {
     @Autowired
     private ApplicationProperties applicationProperties;
 
-    private static final String BASE_QUERY = "SELECT * from egasset_asset asset ";
+    private static final String BASE_QUERY = "SELECT *,asd.code as landcode from egasset_asset asset left outer join egasset_asset_landdetails asd ON "
+    		+ " asset.id=asd.assetid AND asset.tenantid=asd.tenantid ";
 
     @SuppressWarnings("rawtypes")
     public String getQuery(final AssetCriteria searchAsset, final List preparedStatementValues) {
@@ -129,8 +130,27 @@ public class AssetQueryBuilder {
     private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final AssetCriteria searchAsset) {
         // handle limit(also called pageSize) here
-        //selectQuery.append(" ORDER BY asset.name");
-
+    	// selectQuery.append(" ORDER BY asset.code");
+    	
+    	List<String> sort = searchAsset.getSort();
+    	
+    	if(searchAsset.getSort()==null) {
+    		selectQuery.append(" ORDER BY asset.code");
+    		}
+    	
+    	else if(searchAsset.getSort()!=null) {
+    		System.out.println("searchAsset.getSort().get(0)"+searchAsset.getSort().get(0));
+    		StringBuilder baseSort = new StringBuilder(" ORDER BY "+sort.get(0));
+    		System.err.println("baseSort"+baseSort);
+    		 selectQuery.append(baseSort);
+    		 for(int i=1;i<=searchAsset.getSort().size()-1;i++) {
+    			 selectQuery.append(","+sort.get(i));
+    			 }
+    		 System.err.println("selectQuery after"+selectQuery);
+    		  StringBuilder baseSort1 = new StringBuilder(selectQuery);
+    		  System.err.println("selectQuery baseSort1"+baseSort1);
+    	
+    	}
         selectQuery.append(" LIMIT ?");
         long pageSize = 500;
 

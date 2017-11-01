@@ -178,8 +178,23 @@ public class HierarchyTypeController {
 
 	@GetMapping
 	@ResponseBody
-	public ResponseEntity<?> search(@ModelAttribute HierarchyTypeRequest hierarchyTypeRequest) {
+	public ResponseEntity<?> search(@Valid @RequestParam(value = "hierarchyType", required = false) Long hierarchyType,
+			@RequestParam(value = "tenantId", required = false) String tenantId,@ModelAttribute HierarchyTypeRequest hierarchyTypeRequest,BindingResult errors) {
 
+		if (errors.hasErrors()) {
+			LOGGER.info("HierarchyTypeRequest binding error: " + hierarchyTypeRequest);
+		}
+		LOGGER.info("BoundaryRequest: " + hierarchyTypeRequest);
+		if (tenantId != null && hierarchyType != null) {
+			HierarchyType hierarchyTypeObj = new HierarchyType();
+			hierarchyTypeObj.setTenantId(tenantId);
+			hierarchyTypeObj.setId(hierarchyType);
+			hierarchyTypeRequest.setHierarchyType(hierarchyTypeObj);
+		} else if (tenantId != null) {
+			HierarchyType hierarchyTypeObj = new HierarchyType();
+			hierarchyTypeObj.setTenantId(tenantId);
+			hierarchyTypeRequest.setHierarchyType(hierarchyTypeObj);
+		}
 		HierarchyTypeResponse hierarchyTypeResponse = new HierarchyTypeResponse();
 		if (hierarchyTypeRequest.getHierarchyType() != null
 				&& hierarchyTypeRequest.getHierarchyType().getTenantId() != null

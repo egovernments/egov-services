@@ -1,10 +1,8 @@
 
 Create table egswm_route( 
-  id varchar(256) NOT NULL,
+  code varchar(256) NOT NULL,
   tenantId varchar(128) NOT NULL,
   name varchar(128) NOT NULL,
-  isEndingPointDumpingGround boolean,
-  collectionType varchar(256) NOT NULL,
   startingCollectionPoint varchar(256) NOT NULL,
   endingCollectionPoint varchar(256) ,
   endingDumpingGroundPoint varchar(256) ,
@@ -16,5 +14,5 @@ Create table egswm_route(
   lastmodifiedtime bigint,
   version bigint
 );
-alter table egswm_route add constraint pk_egswm_route primary key (id);
+alter table egswm_route add constraint pk_egswm_route primary key (code);
 create sequence seq_egswm_route;

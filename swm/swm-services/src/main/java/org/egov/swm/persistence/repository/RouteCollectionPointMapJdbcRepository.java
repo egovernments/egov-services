@@ -22,8 +22,8 @@ public class RouteCollectionPointMapJdbcRepository {
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Transactional
-	public void delete(String routeName) {
-		String delQuery = "delete from  egswm_routecollectionpointmap where route = '" + routeName + "'";
+	public void delete(String route) {
+		String delQuery = "delete from  egswm_routecollectionpointmap where route = '" + route + "'";
 		jdbcTemplate.execute(delQuery);
 	}
 
@@ -40,14 +40,6 @@ public class RouteCollectionPointMapJdbcRepository {
 			}
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", searchRequest.getTenantId());
-		}
-
-		if (searchRequest.getId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("id =:id");
-			paramValues.put("id", searchRequest.getId());
 		}
 
 		if (searchRequest.getRoute() != null && searchRequest.getRoute() != null) {

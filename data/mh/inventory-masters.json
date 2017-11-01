@@ -85,13 +85,11 @@
    ],
    "MaterialControlType":[  
       {  
-         "id":1,
          "tenantId":"mh",
          "code":"LOTCONTROL",
          "name":"LOT Control"
       },
       {  
-         "id":2,
          "tenantId":"mh",
          "code":"SHELF_LIFE_CONTROL",
          "name":"Shelf_life_Control"
@@ -99,19 +97,16 @@
    ],
    "MaterialClass":[  
       {  
-         "id":1,
          "tenantId":"mh",
          "code":"HIGHUSAGE",
          "name":"HighUsage"
       },
       {  
-         "id":2,
          "tenantId":"mh",
          "code":"MEDIUMUSAGE",
          "name":"MediumUsage"
       },
       {  
-         "id":3,
          "tenantId":"mh",
          "code":"LOWUSAGE",
          "name":"LowUsage"
@@ -119,36 +114,73 @@
    ],
    "Status":[  
       {  
-         "id":1,
          "tenantId":"mh",
          "code":"ACTIVE",
          "name":"Active"
       },
       {  
-         "id":2,
          "tenantId":"mh",
          "code":"WITHDRAWN",
          "name":"Withdrawn"
       },
       {  
-         "id":3,
          "tenantId":"mh",
          "code":"OBSOLETE",
          "name":"Obsolete"
+      },
+      {  
+         "tenantId":"mh",
+         "code":"SUSPENDED",
+         "name":"suspended"
+      },      
+      {  
+         "tenantId":"mh",
+         "code":"BARRED",
+         "name":"barred"
+      },
+      {  
+         "tenantId":"mh",
+         "code":"INACTIVE",
+         "name":"inactive"
       }
    ],
    "InventoryType":[  
       {  
-         "id":1,
          "tenantId":"mh",
          "code":"ASSET",
          "name":"Asset"
       },
       {  
-         "id":2,
          "tenantId":"mh",
          "code":"CONSUMABLE",
          "name":"consumable"
       }
-   ]
+   ],
+   "SuplierType":[  
+      {  
+         "tenantId":"mh",
+         "code":"INDIVIDUAL",
+         "name":"individual"
+      },
+      {  
+         "tenantId":"mh",
+         "code":"FIRM",
+         "name":"firm"
+      },
+      {  
+         "tenantId":"mh",
+         "code":"COMPANY",
+         "name":"company"
+      },
+      {  
+         "tenantId":"mh",
+         "code":"REGISTERED",
+         "name":"registered"
+      },
+      {  
+         "tenantId":"mh",
+         "code":"SOCIETY",
+         "name":"society"
+      }                     
+   ]   
 }

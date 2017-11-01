@@ -32,16 +32,9 @@ public class VehicleRepository {
 	@Value("${egov.swm.vehicle.indexer.topic}")
 	private String indexerTopic;
 
-	@Value("${egov.swm.vehicle.document.save.topic}")
-	private String documentSaveTopic;
-
 	public VehicleRequest save(VehicleRequest vehicleRequest) {
 
 		kafkaTemplate.send(saveTopic, vehicleRequest);
-
-		for (Vehicle v : vehicleRequest.getVehicles()) {
-			kafkaTemplate.send(documentSaveTopic, v);
-		}
 
 		kafkaTemplate.send(indexerTopic, vehicleRequest.getVehicles());
 
@@ -51,12 +44,11 @@ public class VehicleRepository {
 
 	public VehicleRequest update(VehicleRequest vehicleRequest) {
 
-		kafkaTemplate.send(updateTopic, vehicleRequest);
-
 		for (Vehicle v : vehicleRequest.getVehicles()) {
 			documentJdbcRepository.delete(v.getRegNumber());
-			kafkaTemplate.send(documentSaveTopic, v);
 		}
+
+		kafkaTemplate.send(updateTopic, vehicleRequest);
 
 		kafkaTemplate.send(indexerTopic, vehicleRequest.getVehicles());
 

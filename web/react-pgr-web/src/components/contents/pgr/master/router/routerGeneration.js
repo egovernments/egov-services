@@ -28,6 +28,7 @@ require('datatables.net-buttons/js/buttons.print.js'); // Print view button
 const style = {
   chip: {
     margin: 4,
+    cursor:'pointer'
   },
   wrapper: {
     display: 'flex',
@@ -261,26 +262,74 @@ class routerGeneration extends Component {
     }
   }
 
+  handleOpenChips = (chips, title, chipType) => {
+    this.setState({
+      handleOpenChips:true,
+      chipsTitle: title,
+      chips:chips,
+      chipType:chipType
+    });
+  }
+
+  handleCloseChips = () => {
+    this.setState({handleOpenChips:false});
+  }
+
+  presentChips = () => {
+    let {typeList, boundariesList, chips, chipType} = this.state;
+    if(chipType === 'grievanceType'){
+      return chips && chips.map((serviceId) => {
+        let obj = typeList.find((service)=> {return service.id == serviceId});
+        return(
+          <Chip style={style.chip}>{obj.serviceName}</Chip>
+        )
+      });
+    }else if(chipType === 'boundaryType'){
+      return chips && chips.map((boundaryId) => {
+        let obj = boundariesList.find((boundary)=> {return boundary.code == boundaryId});
+        return(
+          <Chip style={style.chip}>{obj.name}</Chip>
+        )
+      });
+    }
+  }
+
   renderComplaintTypeChips = () => {
     let {routerCreateSet} = this.props;
     let {typeList} = this.state;
-    return routerCreateSet.serviceId && routerCreateSet.serviceId.map((serviceId) => {
+    let servicearray = routerCreateSet.serviceId ? [...routerCreateSet.serviceId].splice(0,2) : [];
+    routerCreateSet.serviceId && [...routerCreateSet.serviceId].length > 2 ? servicearray.push('More >') : '';
+    return servicearray.map((serviceId) => {
       let obj = typeList.find((service)=> {return service.id == serviceId});
-      return(
-        <Chip style={style.chip}>{obj.serviceName}</Chip>
-      )
+      if(obj){
+        return(
+          <Chip style={style.chip}>{obj.serviceName}</Chip>
+        )
+      }else{
+        return(
+          <Chip style={style.chip} onClick={(e)=>{this.handleOpenChips(routerCreateSet.serviceId, translate("pgr.lbl.grievance.type"),'grievanceType')}}>{serviceId}</Chip>
+        )
+      }
     })
   }
 
   renderBoundaryChips = () => {
     let {routerCreateSet} = this.props;
     let {boundariesList} = this.state;
-    return routerCreateSet.boundaryId && routerCreateSet.boundaryId.map((boundaryId) => {
+    let boundaryarray = routerCreateSet.boundaryId ? [...routerCreateSet.boundaryId].splice(0,2) : [];
+    routerCreateSet.boundaryId && [...routerCreateSet.boundaryId].length > 2 ? boundaryarray.push('More >') : '';
+    return boundaryarray.map((boundaryId) => {
       let obj = boundariesList.find((boundary)=> {return boundary.code == boundaryId});
-      console.log(boundaryId, obj);
-      return(
-        <Chip style={style.chip}>{obj.name}</Chip>
-      )
+      if(obj){
+        return(
+          <Chip style={style.chip}>{obj.name}</Chip>
+        )
+      }else{
+        return(
+          <Chip style={style.chip} onClick={(e)=>{this.handleOpenChips(routerCreateSet.boundaryId, translate("pgr.lbl.boundary"),'boundaryType')}}>{boundaryId}</Chip>
+        )
+      }
+
     })
   }
 
@@ -520,6 +569,20 @@ class routerGeneration extends Component {
         >
           {translate("pgr.lbl.router.create.success")}
         </Dialog>
+        <Dialog
+          title={this.state.chipsTitle}
+          actions={
+            [<FlatButton
+				        label={translate('core.lbl.close')}
+				        primary={false}
+                onTouchTap={this.handleCloseChips}
+				      />]
+          }
+          open={this.state.handleOpenChips}
+          onRequestClose={this.handleCloseChips}
+        >
+          <div style={style.wrapper}>{this.state.handleOpenChips && this.presentChips()}</div>
+        </Dialog>
         </div>
    );
   }
@@ -554,6 +617,9 @@ const mapDispatchToProps = dispatch => ({
 	},
   setLoadingStatus: (loadingStatus) => {
     dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+  },
+  toggleDailogAndSetText: (dailogState,msg) => {
+    dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState,msg});
   },
   toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});

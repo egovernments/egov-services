@@ -196,6 +196,17 @@ public class Asset   {
 	  
 	  @JsonProperty("auditDetails")
 	  private AuditDetails auditDetails;
+	  
+	  @JsonProperty("fundSource")
+	  private String fundSource;
+	  
+	  @JsonProperty("location")
+	  private String location;
+	  
+	  @JsonProperty("openingDate")
+	  private Long openingDate;
 
-
+	  @JsonProperty("landDetails")
+	  private List<LandDetail> landDetails;
+	  
 }

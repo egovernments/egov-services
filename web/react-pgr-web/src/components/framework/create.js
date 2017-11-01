@@ -387,9 +387,13 @@ class Report extends Component {
       _url = _url.replace(match, _.get(formData, jPath));
     }
 
+  
     //Check if documents, upload and get fileStoreId
-    if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"].length) {
-      let documents = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"]];
+    let formdocumentData = formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName];
+    formdocumentData = formdocumentData && formdocumentData.length &&  formdocumentData[0] || formdocumentData ;
+
+    if(formdocumentData["documents"] && formdocumentData["documents"].length) {
+      let documents = [...formdocumentData["documents"]];
       let _docs = [];
       let counter = documents.length, breakOut = 0;
       for(let i=0; i<documents.length; i++) {
@@ -406,7 +410,7 @@ class Report extends Component {
             })
             counter--;
             if(counter == 0 && breakOut == 0) {
-              formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] = _docs;
+              formdocumentData["documents"] = _docs;
               self.checkForOtherFiles(formData, _url);
             }
           }

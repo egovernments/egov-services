@@ -9,7 +9,7 @@ public enum VocherType {
 	PAYMENT("Payment"),
 	
 	RECEIPT("Receipt");
-	
+
 	private String value;
 
 	VocherType(String value) {
@@ -19,13 +19,13 @@ public enum VocherType {
 	@Override
 	@JsonValue
 	public String toString() {
-		return String.valueOf(value).toUpperCase();
+		return name().toUpperCase();
 	}
 
 	@JsonCreator
 	public static VocherType fromValue(String text) {
 		for (VocherType vocherType : VocherType.values()) {
-			if (String.valueOf(vocherType.value).equals(text.toUpperCase())) {
+			if (String.valueOf(vocherType.value).equals(text)) {
 				return vocherType;
 			}
 		}

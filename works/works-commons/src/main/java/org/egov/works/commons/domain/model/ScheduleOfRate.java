@@ -1,23 +1,24 @@
 package org.egov.works.commons.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModelProperty;
-
 /**
- * ScheduleOfRate
+ * An Object which holds Schedule Of Rate Master Data. The combination of SOR code and Schedule Category is unique for given tenant.
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-24T13:08:31.335Z")
+@ApiModel(description = "An Object which holds Schedule Of Rate Master Data. The combination of SOR code and Schedule Category is unique for given tenant.")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-01T07:44:06.082Z")
 
-public class ScheduleOfRate {
+public class ScheduleOfRate   {
 	@JsonProperty("id")
 	private String id = null;
 
@@ -34,13 +35,16 @@ public class ScheduleOfRate {
 	private ScheduleCategory scheduleCategory = null;
 
 	@JsonProperty("uom")
-	private String uom = null;
+	private UOM uom = null;
 
 	@JsonProperty("sorRates")
 	private List<SORRate> sorRates = new ArrayList<SORRate>();
 
 	@JsonProperty("marketRates")
 	private List<MarketRate> marketRates = null;
+
+	@JsonProperty("auditDetails")
+	private AuditDetails auditDetails = null;
 
 	public ScheduleOfRate id(String id) {
 		this.id = id;
@@ -49,10 +53,10 @@ public class ScheduleOfRate {
 
 	/**
 	 * Unique Identifier of the Schedule Of Rate
-	 * 
 	 * @return id
 	 **/
 	@ApiModelProperty(value = "Unique Identifier of the Schedule Of Rate")
+
 
 	public String getId() {
 		return id;
@@ -69,13 +73,12 @@ public class ScheduleOfRate {
 
 	/**
 	 * Tenant id of the Schedule Of Rate
-	 * 
 	 * @return tenantId
 	 **/
 	@ApiModelProperty(required = true, value = "Tenant id of the Schedule Of Rate")
 	@NotNull
 
-	@Size(min = 4, max = 128)
+	@Size(min=4,max=128)
 	public String getTenantId() {
 		return tenantId;
 	}
@@ -91,13 +94,12 @@ public class ScheduleOfRate {
 
 	/**
 	 * Unique code of the Schedule Of Rate
-	 * 
 	 * @return code
 	 **/
 	@ApiModelProperty(required = true, value = "Unique code of the Schedule Of Rate")
 	@NotNull
 
-	@Size(min = 1, max = 100)
+	@Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(min=1,max=100)
 	public String getCode() {
 		return code;
 	}
@@ -113,13 +115,12 @@ public class ScheduleOfRate {
 
 	/**
 	 * Description of the Schedule Of Rate
-	 * 
 	 * @return description
 	 **/
 	@ApiModelProperty(required = true, value = "Description of the Schedule Of Rate")
 	@NotNull
 
-	@Size(min = 1, max = 4000)
+	@Pattern(regexp="[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+") @Size(min=1,max=4000)
 	public String getDescription() {
 		return description;
 	}
@@ -134,11 +135,10 @@ public class ScheduleOfRate {
 	}
 
 	/**
-	 * Get scheduleCategory
-	 * 
+	 * Schedule Category of the SOR
 	 * @return scheduleCategory
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@ApiModelProperty(required = true, value = "Schedule Category of the SOR")
 	@NotNull
 
 	@Valid
@@ -151,24 +151,25 @@ public class ScheduleOfRate {
 		this.scheduleCategory = scheduleCategory;
 	}
 
-	public ScheduleOfRate uom(String uom) {
+	public ScheduleOfRate uom(UOM uom) {
 		this.uom = uom;
 		return this;
 	}
 
 	/**
-	 * UOM for the SOR
-	 * 
+	 * Unit Of Measurement of the SOR
 	 * @return uom
 	 **/
-	@ApiModelProperty(required = true, value = "UOM for the SOR")
+	@ApiModelProperty(required = true, value = "Unit Of Measurement of the SOR")
 	@NotNull
 
-	public String getUom() {
+	@Valid
+
+	public UOM getUom() {
 		return uom;
 	}
 
-	public void setUom(String uom) {
+	public void setUom(UOM uom) {
 		this.uom = uom;
 	}
 
@@ -183,12 +184,10 @@ public class ScheduleOfRate {
 	}
 
 	/**
-	 * Array of Rate Details, Either of the rate details or marketRateDetails is
-	 * mandatory for creating Schedule of rate.
-	 * 
+	 * Array of Rate Details.
 	 * @return sorRates
 	 **/
-	@ApiModelProperty(required = true, value = "Array of Rate Details, Either of the rate details or marketRateDetails is mandatory for creating Schedule of rate.")
+	@ApiModelProperty(required = true, value = "Array of Rate Details.")
 	@NotNull
 
 	@Valid
@@ -215,12 +214,10 @@ public class ScheduleOfRate {
 	}
 
 	/**
-	 * Array of Market Rate Details, , Either of the rate details or
-	 * marketRateDetails is mandatory for creating Schedule of rate.
-	 * 
+	 * Array of Market Rate Details..
 	 * @return marketRates
 	 **/
-	@ApiModelProperty(value = "Array of Market Rate Details, , Either of the rate details or marketRateDetails is mandatory for creating Schedule of rate.")
+	@ApiModelProperty(value = "Array of Market Rate Details..")
 
 	@Valid
 
@@ -232,6 +229,28 @@ public class ScheduleOfRate {
 		this.marketRates = marketRates;
 	}
 
+	public ScheduleOfRate auditDetails(AuditDetails auditDetails) {
+		this.auditDetails = auditDetails;
+		return this;
+	}
+
+	/**
+	 * Get auditDetails
+	 * @return auditDetails
+	 **/
+	@ApiModelProperty(value = "")
+
+	@Valid
+
+	public AuditDetails getAuditDetails() {
+		return auditDetails;
+	}
+
+	public void setAuditDetails(AuditDetails auditDetails) {
+		this.auditDetails = auditDetails;
+	}
+
+
 	@Override
 	public boolean equals(java.lang.Object o) {
 		if (this == o) {
@@ -241,18 +260,20 @@ public class ScheduleOfRate {
 			return false;
 		}
 		ScheduleOfRate scheduleOfRate = (ScheduleOfRate) o;
-		return Objects.equals(this.id, scheduleOfRate.id) && Objects.equals(this.tenantId, scheduleOfRate.tenantId)
-				&& Objects.equals(this.code, scheduleOfRate.code)
-				&& Objects.equals(this.description, scheduleOfRate.description)
-				&& Objects.equals(this.scheduleCategory, scheduleOfRate.scheduleCategory)
-				&& Objects.equals(this.uom, scheduleOfRate.uom)
-				&& Objects.equals(this.sorRates, scheduleOfRate.sorRates)
-				&& Objects.equals(this.marketRates, scheduleOfRate.marketRates);
+		return Objects.equals(this.id, scheduleOfRate.id) &&
+				Objects.equals(this.tenantId, scheduleOfRate.tenantId) &&
+				Objects.equals(this.code, scheduleOfRate.code) &&
+				Objects.equals(this.description, scheduleOfRate.description) &&
+				Objects.equals(this.scheduleCategory, scheduleOfRate.scheduleCategory) &&
+				Objects.equals(this.uom, scheduleOfRate.uom) &&
+				Objects.equals(this.sorRates, scheduleOfRate.sorRates) &&
+				Objects.equals(this.marketRates, scheduleOfRate.marketRates) &&
+				Objects.equals(this.auditDetails, scheduleOfRate.auditDetails);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, tenantId, code, description, scheduleCategory, uom, sorRates, marketRates);
+		return Objects.hash(id, tenantId, code, description, scheduleCategory, uom, sorRates, marketRates, auditDetails);
 	}
 
 	@Override
@@ -268,6 +289,7 @@ public class ScheduleOfRate {
 		sb.append("    uom: ").append(toIndentedString(uom)).append("\n");
 		sb.append("    sorRates: ").append(toIndentedString(sorRates)).append("\n");
 		sb.append("    marketRates: ").append(toIndentedString(marketRates)).append("\n");
+		sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}

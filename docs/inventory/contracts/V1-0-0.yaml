@@ -3604,13 +3604,157 @@ definitions:
           type: string
           description: Tenant id of the Transfer Indent Note
           maxLength: 128
-          minLength: 4    
+          minLength: 4
+        supplierType:
+          $ref: "#/definitions/CommonEnum"          
+        code:
+          type: string
+          maxLength: 50
+          minLength: 5
+          pattern: ^[a-zA-Z0-9]+$
+          description: |
+            code of the Supplier
+        name:
+          type: string
+          maxLength: 50
+          minLength: 5
+          pattern: ^[a-zA-Z ]+$
+          description: |
+            name of the Material
+        address:
+          type: string
+          pattern: ^[a-zA-Z0-9 ]+$
+          maxLength: 1000
+          description: |
+            address of the Supplier  
+        status:
+          $ref: "#/definitions/CommonEnum"                 
+        supplierContactNo:
+          type: string
+          pattern: ^[0-9]+$
+          maxLength: 10
+          description: |
+            contact no of the Supplier   
+        faxNo:
+          type: string
+          pattern: ^[0-9]+$
+          description: |
+            fax number of Supplier 
+        website:
+          type: string
+          pattern: ^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$
+          description: |
+            website of the Supplier
+        email:
+          type: string
+          pattern: ^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$
+          maxLength: 100
+          description: |
+            email of the Supplier
+        narration:
+          type: string
+          pattern: ^[0-9a-zA-Z ]+$
+          maxLength: 1000
+          description: |
+            description of the Supplier
+        panNo:
+          type: string
+          maxLength: 10
+          description: |
+            pan number of supplier
+        tinNo:
+          type: string
+          maxLength: 10
+          description: |
+            tin number of supplier   
+        cstNo:
+          type: string
+          maxLength: 10
+          description: |
+            cst number of supplier  
+        vatNo:
+          type: string
+          maxLength: 10
+          description: |
+            vat number of supplier  
+        contactPerson:
+          type: string
+          pattern: ^[a-zA-Z ]+$
+          maxLength: 50
+          minLength: 5
+          description: |
+            name of the contact person   
+        contactPersonNo:
+          type: string
+          pattern: ^[0-9]+$
+          maxLength: 10
+          description: |
+            contact number of the contact person  
+        bankInfo:
+          $ref: "#/definitions/Bank"
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
+      required:
+      - code
+      - name
+      - address
+      - supplierContactNo
+      - bankInfo
+      - supplierType
+
+    Bank:
+      type: object
+      description: |
+        This object holds the bank information.  
+      properties:
+        tenantId:
+          type: string
+          description: Tenant id of the Enum
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          pattern: ^[a-zA-Z ]$
+          description: |
+            name of the Employee
+        acctNo:
+          type: string
+          pattern: ^[0-9]+$
+          description: |
+            account number in the bank 
+        ifsc:
+          type: string
+          pattern: ^[a-zA-Z0-9]+$
+          description: |
+            ifsc of the bank
+        micr:
+          type: string
+          pattern: ^[a-zA-Z0-9]+$
+          description: |
+            micr of the bank   
+      required:
+      - name
+      - acctNo
+      - ifsc 
+      
+    CommonEnum:
+      type: object
+      description: |
+        This object holds the Enum information.  
+      properties:
+        tenantId:
+          type: string
+          description: Tenant id of the Enum
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: |
+            name of the Enum 
         code:
           type: string
           description: |
-            code of the Supplier
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
+            code of Enum  
             
     Employee:
       type: object

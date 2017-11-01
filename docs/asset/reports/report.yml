@@ -20,8 +20,8 @@ ReportDefinitions:
     label: reports.asset.dateofcreation
     type: epoch
     source: asset
-  - name: currentamount
-    label: reports.asset.currentamount
+  - name: grossvalue
+    label: reports.asset.grossvalue
     type: number
     source: asset
   searchParams:

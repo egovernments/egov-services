@@ -70,6 +70,9 @@ public class AdvocatePayment {
 
 	@JsonProperty("resolutionNo")
 	private String resolutionNo = null;
+	
+	@JsonProperty("resolution")
+	private String resolution = null;
 
 	@JsonProperty("resolutionRemarks")
 	private String resolutionRemarks = null;
@@ -88,5 +91,11 @@ public class AdvocatePayment {
 
 	@JsonProperty("stateId")
 	private String stateId = null;
+	
+	@JsonProperty("voucherNo")
+	private String voucherNo = null;
+	
+	@JsonProperty("voucherDate")
+	private Long voucherDate = null;
 
 }

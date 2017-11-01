@@ -48,7 +48,6 @@ serviceMaps:
         type: LONG
         
       - jsonPath: $.summons.*.hearingTime
-        type: LONG
         
       - jsonPath: $.summons.*.ward
         type: LONG
@@ -515,7 +514,7 @@ serviceMaps:
     fromTopic: advocate-payment-create
     isTransaction: true
     queryMaps: 
-    - query: INSERT INTO eglcms_advocate_payment(code, advocate, demandDate, year, caseType, caseNo, caseStatus, amountClaimed, amountRecived, allowance, isPartialPayment, invoiceDoucment, tenantId, createdBy, lastmodifiedby, createdTime, lastModifiedTime, resolutionDate, resolutionNo, resolutionRemarks, advocateCharges, modeOfPayment, instrumentNumber, instrumentDate, stateId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egov_lcms_advocate_payment(code, advocate, demandDate, year, caseType, caseNo, caseStatus, amountClaimed, amountRecived, allowance, isPartialPayment, invoiceDoucment, tenantId, createdBy, lastmodifiedby, createdTime, lastModifiedTime, resolutionDate, resolutionNo, resolutionRemarks, resolution, advocateCharges, modeOfPayment, instrumentNumber, instrumentDate, stateId, voucherNo, voucherDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.advocatePayments.*
       jsonMaps:
        - jsonPath: $.advocatePayments.*.code
@@ -580,6 +579,9 @@ serviceMaps:
          type: STRING
 
        - jsonPath: $.advocatePayments.*.resolutionRemarks
+         type: STRING
+         
+       - jsonPath: $.advocatePayments.*.resolution
          type: STRING
 
        - jsonPath: $.advocatePayments.*.advocateCharges
@@ -598,13 +600,19 @@ serviceMaps:
        - jsonPath: $.advocatePayments.*.stateId
          type: STRING
          
+       - jsonPath: $.advocatePayments.*.voucherNo
+         type: STRING
+         
+       - jsonPath: $.advocatePayments.*.voucherDate
+         type: LONG
+             
   - version: 1.0
     name: lcms-AdvocatePayment
     description: Update Advocate Payment in eglcms_advocate_payment table
     fromTopic: advocate-payment-update
     isTransaction: true
     queryMaps: 
-    - query: UPDATE eglcms_advocate_payment SET advocate=?, demandDate=?, year=?, caseType=?, caseNo=?, caseStatus=?, amountClaimed=?, amountRecived=?, allowance=?, isPartialPayment=?, invoiceDoucment=?, createdBy=?, lastmodifiedby=?, createdTime=?, lastModifiedTime=?, resolutionDate=?, resolutionNo=?, resolutionRemarks=?, advocateCharges=?, modeOfPayment=?, instrumentNumber=?, instrumentDate=?, stateId=? WHERE code=? AND tenantid=?;
+    - query: UPDATE egov_lcms_advocate_payment SET advocate=?, demandDate=?, year=?, caseType=?, caseNo=?, caseStatus=?, amountClaimed=?, amountRecived=?, allowance=?, isPartialPayment=?, invoiceDoucment=?, createdBy=?, lastmodifiedby=?, createdTime=?, lastModifiedTime=?, resolutionDate=?, resolutionNo=?, resolutionRemarks=?, resolution=?, advocateCharges=?, modeOfPayment=?, instrumentNumber=?, instrumentDate=?, stateId=?, voucherNo=?, voucherDate=? WHERE code=? AND tenantid=?;
       basePath: $.advocatePayments.*
       jsonMaps:
        - jsonPath: $.advocatePayments.*.advocate
@@ -664,6 +672,9 @@ serviceMaps:
 
        - jsonPath: $.advocatePayments.*.resolutionRemarks
          type: STRING
+         
+       - jsonPath: $.advocatePayments.*.resolution
+         type: STRING
 
        - jsonPath: $.advocatePayments.*.advocateCharges
          type: JSON
@@ -680,12 +691,19 @@ serviceMaps:
 
        - jsonPath: $.advocatePayments.*.stateId
          type: STRING
+         
+       - jsonPath: $.advocatePayments.*.voucherNo
+         type: STRING
+         
+       - jsonPath: $.advocatePayments.*.voucherDate
+         type: LONG
                
        - jsonPath: $.advocatePayments.*.code
          type: STRING
  
        - jsonPath: $.advocatePayments.*.tenantId
          type: STRING
+         
          
   - version: 1.0
     name: lcms-opinion
@@ -831,7 +849,6 @@ serviceMaps:
         type: LONG
     
       - jsonPath: $.cases.*.summon.hearingTime
-        type: LONG
     
       - jsonPath: $.cases.*.summon.departmentName
         type: JSON
@@ -986,7 +1003,6 @@ serviceMaps:
         type: LONG
 
       - jsonPath: $.hearingDetails.*.nextHearingTime
-        type: LONG
 
       - jsonPath: $.hearingDetails.*.attendees
         type: JSON
@@ -1041,7 +1057,6 @@ serviceMaps:
         type: LONG
 
       - jsonPath: $.hearingDetails.*.nextHearingTime
-        type: LONG
 
       - jsonPath: $.hearingDetails.*.attendees
         type: JSON

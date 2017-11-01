@@ -32,7 +32,7 @@ public class HearingDetails {
 	private Long nextHearingDate = null;
 	
 	@JsonProperty("nextHearingTime")
-	private Long nextHearingTime = null;
+	private String nextHearingTime = null;
 
 	@JsonProperty("attendees")
 	private List<Attender> attendees = null;

@@ -34,7 +34,7 @@ public class HearingDetailsRowMapper implements RowMapper<HearingDetails> {
 		hearingDetails.setCaseJudgeMent(getString(rs.getString("casejudgement")));
 		hearingDetails.setCaseFinalDecision(getString(rs.getString("casefinaldecision")));
 		hearingDetails.setNextHearingDate(getLong(rs.getLong("nexthearingdate")));
-		hearingDetails.setNextHearingTime(getLong(rs.getLong("nextHearingTime")));
+        hearingDetails.setNextHearingTime(getString(rs.getString("nextHearingTime")));
 		hearingDetails.setTenantId(getString(rs.getString("tenantid")));
 		hearingDetails.setJudgeMentDate(getLong(rs.getLong("judgementdate")));
 		hearingDetails.setAdvocateOpinion(getString(rs.getString("advocateopinion")));

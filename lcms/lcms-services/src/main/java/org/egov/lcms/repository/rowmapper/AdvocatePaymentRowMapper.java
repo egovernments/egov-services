@@ -60,6 +60,8 @@ public class AdvocatePaymentRowMapper implements RowMapper<AdvocatePayment> {
 		advocatePayment.setInstrumentNumber(rs.getString("instrumentnumber"));
 		advocatePayment.setInstrumentDate(rs.getLong("instrumentdate"));
 		advocatePayment.setStateId(rs.getString("stateid"));
+		advocatePayment.setVoucherNo(rs.getString("voucherno"));
+		advocatePayment.setVoucherDate(rs.getLong("voucherdate"));
 
 		Advocate advocate = new Advocate();
 		CaseType caseType = new CaseType();

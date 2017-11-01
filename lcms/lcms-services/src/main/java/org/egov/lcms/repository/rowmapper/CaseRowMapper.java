@@ -67,7 +67,7 @@ public class CaseRowMapper implements RowMapper<Case> {
 		summon.setDefendant(getString(rs.getObject("defendant")));
 		summon.setSectionApplied(getString(rs.getObject("sectionApplied")));
 		summon.setHearingDate(getLong(rs.getObject("hearingDate")));
-		summon.setHearingTime(getLong(rs.getObject("hearingTime")));
+		summon.setHearingTime(getString(rs.getObject("hearingTime")));
 		summon.setWard(getString(rs.getObject("ward")));
 		summon.setTenantId(getString(rs.getObject("tenantId")));
 		summon.setStateId(getString(rs.getObject("stateId")));

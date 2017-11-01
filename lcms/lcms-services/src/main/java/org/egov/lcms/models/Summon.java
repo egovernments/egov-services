@@ -66,7 +66,7 @@ public class Summon {
 	private Long hearingDate = null;
 
 	@JsonProperty("hearingTime")
-	private Long hearingTime = null;
+	private String hearingTime = null;
 
 	@NotNull
 	@JsonProperty("ward")

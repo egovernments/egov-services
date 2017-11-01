@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AdvocatePaymentQueryBuilder {
 
-    private static final String SELECT_BASE_QUERY = "SELECT * FROM eglcms_advocate_payment";
+    private static final String SELECT_BASE_QUERY = "SELECT * FROM egov_lcms_advocate_payment";
 
     public String getQuery(final AdvocatePaymentSearchCriteria advocatePaymentSearchCriteria,
             final List<Object> preparedStatementValues) {

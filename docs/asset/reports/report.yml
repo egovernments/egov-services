@@ -18,7 +18,7 @@ ReportDefinitions:
     source: asset      
   - name: dateofcreation
     label: reports.asset.dateofcreation
-    type: string
+    type: epoch
     source: asset
   - name: currentamount
     label: reports.asset.currentamount

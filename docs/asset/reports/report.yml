@@ -46,13 +46,8 @@ ReportDefinitions:
     type: string
     isMandatory: false
     source: asset
-    searchClause : AND asset.code=$code
-  - name: assetid
-    label: reports.asset.id
-    type: number
-    isMandatory: false
-    source: asset
-    searchClause : and asset.id in ($assetid)
+    searchClause : AND asset.code in ($code)
+
   
   query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.floors,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.plintharea,asset.cubiccontents,asset.landsurveyno,asset.length,asset.width,asset.height,asset.totalarea,asset.openingdate,asset.fundsource,asset.location,
          asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,

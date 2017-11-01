@@ -2,67 +2,26 @@ var dat ={
   "legal.search": {
     "numCols": 4,
     "useTimestamp": true,
-    "objectName": "",
-    "url": "/lcms-services/legalcase/advocate/_search",
+    "objectName": "cases",
+    "url": "/lcms-services/legalcase/case/_search",
     "groups": [
       {
         "name": "search",
-        "label": "legal.search.title",
+        "label": "legal.search.case.title",
         "fields": [
           {
-            "label": "legal.createundefined",
-            "type": "",
-            "isDisabled": false,
-            "patternErrorMsg": "legal.create.field.message.undefined"
-          },
-          {
-            "name": "sortProperty",
-            "jsonPath": "sortProperty",
-            "label": "legal.createsortProperty",
-            "type": "text",
-            "isDisabled": false,
-            "patternErrorMsg": "legal.create.field.message.sortProperty"
-          },
-          {
-            "name": "ids",
-            "jsonPath": "ids",
-            "label": "legal.createids",
-            "type": "",
-            "isDisabled": false,
-            "patternErrorMsg": "legal.create.field.message.ids"
-          },
-          {
             "name": "referenceNo",
-            "jsonPath": "referenceNo",
-            "label": "legal.createreferenceNo",
+            "jsonPath": "cases[0].summon.summonReferenceNo",
+            "label": "legal.create.referenceNo",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": "legal.create.field.message.referenceNo"
           },
           {
-            "name": "isSummon",
-            "jsonPath": "isSummon",
-            "label": "legal.createisSummon",
-            "type": "radio",
-            "isRequired": false,
-            "isDisabled": false,
-            "patternErrorMsg": "legal.create.field.message.isSummon",
-            "values": [
-              {
-                "label": "legal.create.Summon",
-                "value": true
-              },
-              {
-                "label": "legal.create.Warrant",
-                "value": false
-              }
-            ]
-          },
-          {
             "name": "referenceCaseNo",
-            "jsonPath": "referenceCaseNo",
-            "label": "legal.createreferenceCaseNo",
+            "jsonPath": "cases[0].caseRefernceNo",
+            "label": "caseRegistration.create.referenceCaseNo",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -70,53 +29,50 @@ var dat ={
           },
           {
             "name": "caseStatus",
-            "jsonPath": "caseStatus",
-            "label": "legal.createcaseStatus",
-            "type": "radio",
+            "jsonPath": "cases[0].hearingDetails.caseStatus",
+            "label": "advocatepayment.create.caseStatus",
+            "type": "singleValueList",
             "isRequired": false,
             "isDisabled": false,
-            "patternErrorMsg": "legal.create.field.message.caseStatus"
+            "patternErrorMsg": "",
+            "url":
+              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseStatus|$..code|$..name"
           },
           {
             "name": "caseType",
-            "jsonPath": "caseType",
-            "label": "legal.createcaseType",
+            "jsonPath": "cases[0].summon.caseType.name",
+            "label": "legal.create.caseType",
             "type": "singleValueList",
             "isRequired": false,
             "isDisabled": false,
-            "patternErrorMsg": "legal.create.field.message.caseType"
+            "patternErrorMsg": "",
+            "url":
+              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name"
           },
           {
             "name": "departmentName",
-            "jsonPath": "departmentName",
-            "label": "legal.createdepartmentName",
+            "jsonPath": "cases[0].summon.departmentName.id",
+            "label": "legal.create.departmentName",
             "type": "singleValueList",
             "isRequired": false,
             "isDisabled": false,
-            "patternErrorMsg": "legal.create.field.message.departmentName"
+            "patternErrorMsg": "",
+            "url": "/egov-common-masters/departments/_search?|$..id|$..name"
           },
           {
             "name": "advocateName",
-            "jsonPath": "advocateName",
-            "label": "legal.createadvocateName",
             "type": "singleValueList",
+              "label": "legal.create.advocateName",
+            "jsonPath": "cases[0].advocateDetails[0].advocate.name",
             "isRequired": false,
             "isDisabled": false,
-            "patternErrorMsg": "legal.create.field.message.advocateName"
-          },
-          {
-            "name": "caseCategory",
-            "jsonPath": "caseCategory",
-            "label": "legal.createcaseCategory",
-            "type": "singleValueList",
-            "isRequired": false,
-            "isDisabled": false,
-            "patternErrorMsg": "legal.create.field.message.caseCategory"
+            "url":
+              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=advocate|$..code|$..name"
           },
           {
             "name": "fromDate",
             "jsonPath": "fromDate",
-            "label": "legal.createfromDate",
+            "label": "legal.create.fromDate",
             "type": "number",
             "isRequired": false,
             "isDisabled": false,
@@ -125,7 +81,7 @@ var dat ={
           {
             "name": "toDate",
             "jsonPath": "toDate",
-            "label": "legal.createtoDate",
+            "label": "legal.create.toDate",
             "type": "number",
             "isRequired": false,
             "isDisabled": false,
@@ -137,23 +93,35 @@ var dat ={
     "result": {
       "header": [
         {
-          "label": "legal.search.result.referenceNo"
+          "label": "legal.create.referenceNo"
         },
         {
-          "label": "legal.search.result.advocateName"
+          "label":"caseRegistration.create.referenceCaseNo"
         },
         {
-          "label": "legal.search.result.isIndividual"
+          "label": "advocatepayment.create.caseStatus"
+        },
+        {
+          "label": "legal.create.departmentName"
+        },
+        {
+          "label": "legal.create.caseType"
+        },
+        {
+          "label": "legal.create.advocateName"
         }
       ],
       "values": [
-        "code",
-        "name",
-        "isIndividual"
+        "summon.summonReferenceNo",
+        "caseRefernceNo",
+        "hearingDetails.caseStatus",
+        "departmentName",
+        "caseType",
+        "advocateName"
       ],
-      "resultPath": "advocates[0]",
-      "rowClickUrlUpdate": "/update/legalcase/{id}",
-      "rowClickUrlView": "/view/legalcase/{id}"
+      "resultPath": "cases",
+      "rowClickUrlUpdate": "/update/legalcase/case/{id}",
+      "rowClickUrlView": "/view/legalcase/case/{id}"
     }
   },
   "legal.create": {

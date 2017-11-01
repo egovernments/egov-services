@@ -621,7 +621,7 @@ var dat = {
       ]
       }
     ],
-    url: "http://192.168.1.206:9090/lcms-services/legalcase/case/_dataentry",
+    url: "/lcms-services/legalcase/case/_dataentry",
     tenantIdRequired: true
   },
   "legal.view": {

@@ -638,7 +638,7 @@ var dat = {
           }]
         }
     ],
-    url: "http://192.168.1.71:9090/lcms-services/legalcase/advocate/_create",
+    url: "/lcms-services/legalcase/advocate/_create",
     tenantIdRequired: true
   },
   "legal.view": {

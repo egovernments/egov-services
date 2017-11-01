@@ -2413,6 +2413,28 @@ var localization_EN_Data = {
 "legacylegal.create.ULB": "ULB",
 "legacylegal.create.voucherType": "Voucher Type",
 
+"legal.create.group.title.CaseDetails":"Case Details",
+"legal.create.group.title.hearingDetails":"Hearing Details",
+"legal.create.caseRegistrationDate":"Case Registration Date",
+"legal.create.caseStatus":"Case Status",
+"legal.create.caseFinalDecision":"Case Final Decision",
+"legal.create.caseJudgement":"Case Judgement",
+"legal.create.nextHearingDate":"Next Hearing Date",
+"legal.create.nextHearingTime":"Next Hearing Time",
+"legal.create.group.title.attendeeDetails":"Attendee Details",
+"legal.create.group.title.judgeDetails":"Judge Details",
+"legal.create.attendeeName":"Attendee Name",
+"legal.create.judgeName":"Judge Name",
+"legal.create.gender":"Gender",
+"legal.create.mobileNo":"Mobile Number",
+"legal.create.address":"Address",
+"legal.create.male":"Male",
+"legal.create.female":"Female",
+"legal.search.case.title":"Search Cases",
+"legal.search.advocatepayment.title":"Search Advocate Payments",
+"legal.create.fromDate": "From Date",
+"legal.create.toDate": "To Date",
+"legal.create.caseStatus":"Case Status"
 
 
 
@@ -4143,6 +4165,29 @@ var localization_MR_Data = {
 "legacylegal.create.receiptDate": "Receipt Date-marathi",
 "legacylegal.create.ULB": "ULB-marathi",
 "legacylegal.create.voucherType": "Voucher Type-marathi",
+"legal.create.group.title.CaseDetails":"Case Details-Marathi",
+"legal.create.group.title.hearingDetails":"Hearing Details-Marathi",
+"legal.create.caseRegistrationDate":"Case Registration Date-Marathi",
+"legal.create.caseStatus":"Case Status-Marathi",
+"legal.create.caseFinalDecision":"Case Final Decision-Marathi",
+"legal.create.caseJudgement":"Case Judgement-Marathi",
+"legal.create.nextHearingDate":"Next Hearing Date-Marathi",
+"legal.create.nextHearingTime":"Next Hearing Time-Marathi",
+"legal.create.group.title.attendeeDetails":"Attendee Details-Marathi",
+"legal.create.group.title.judgeDetails":"Judge Details-Marathi",
+"legal.create.attendeeName":"Attendee Name-Marathi",
+"legal.create.judgeName":"Judge Name-Marathi",
+"legal.create.gender":"Gender-Marathi",
+"legal.create.mobileNo":"Mobile Number-Marathi",
+"legal.create.address":"Address-Marathi",
+"legal.create.male":"Male-Marathi",
+"legal.create.female":"Female-Marathi",
+"legal.search.case.title":"Search Cases-Marathi",
+"legal.search.advocatepayment.title":"Search Advocate Payments-Marathi",
+"legal.create.fromDate": "From Date-Marathi",
+"legal.create.toDate": "To Date-Marathi",
+"legal.create.caseStatus":"Case Status-Marathi"
+
 
 }
 

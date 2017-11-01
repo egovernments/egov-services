@@ -247,7 +247,7 @@ componentWillUpdate() {
 		// }
 
     if(mode === 'create'){
-      if(data.target.value && this.props.defineEscalation.designation)
+      if(this.props.defineEscalation.department && data.target.value)
         this.loadPosition(this.props.defineEscalation.department, data.target.value);
     }else if(mode === 'edit'){
 

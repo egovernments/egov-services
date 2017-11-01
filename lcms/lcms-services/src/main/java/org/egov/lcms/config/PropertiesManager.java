@@ -419,4 +419,13 @@ public class PropertiesManager {
 
 	@Value("${egov.lcms.assign.advocatedetails.assigndate.message}")
 	private String advocateAssignDateMessage;
+	
+	@Value("${lcms.cases.error.code}")
+	private String caseResponseErrorCode;
+	
+	@Value("${lcms.parawisecomments.error.code}")
+	private String paraWiseResponseErrorCode;
+	
+	@Value("${lcms.hearingdetails.error.code}")
+	private String hearingDetailsResponseErrorCode;
 }

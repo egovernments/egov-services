@@ -14,9 +14,7 @@ import org.egov.lcms.models.CaseCategory;
 import org.egov.lcms.models.CaseType;
 import org.egov.lcms.models.Court;
 import org.egov.lcms.models.Department;
-import org.egov.lcms.models.Document;
 import org.egov.lcms.models.HearingDetails;
-import org.egov.lcms.models.ParaWiseComment;
 import org.egov.lcms.models.Side;
 import org.egov.lcms.models.Stamp;
 import org.egov.lcms.models.Summon;
@@ -54,6 +52,8 @@ public class CaseRowMapper implements RowMapper<Case> {
 		caseObj.setCoName(rs.getString("coName"));
 		caseObj.setAge(rs.getString("age"));
 		caseObj.setDays(rs.getInt("days"));
+		caseObj.setTenantId(getString(rs.getString("tenantid")));
+		
 
 		Summon summon = new Summon();
 		summon.setCode(getString(rs.getObject("code")));
@@ -75,23 +75,6 @@ public class CaseRowMapper implements RowMapper<Case> {
 
 		List<HearingDetails> hearingDetails = new ArrayList<HearingDetails>();
 		List<AdvocateDetails> advocateDetails = new ArrayList<AdvocateDetails>();
-		List<Long> assignedDates = new ArrayList<Long>();
-
-		List<ParaWiseComment> paraWiseComments = new ArrayList<ParaWiseComment>();
-
-		TypeReference<Summon> summonRefType = new TypeReference<Summon>() {
-		};
-
-		TypeReference<HearingDetails> hearingRefType = new TypeReference<HearingDetails>() {
-		};
-		TypeReference<List<AdvocateDetails>> advocateRefType = new TypeReference<List<AdvocateDetails>>() {
-		};
-
-		TypeReference<List<Long>> assignDateRefType = new TypeReference<List<Long>>() {
-		};
-
-		TypeReference<ParaWiseComment> paraWiseRefType = new TypeReference<ParaWiseComment>() {
-		};
 
 		try {
 			if (rs.getString("departmentName") != null) {
@@ -189,9 +172,6 @@ public class CaseRowMapper implements RowMapper<Case> {
 
 			caseObj.setHearingDetails(hearingDetails);
 			caseObj.setAdvocateDetails(advocateDetails);
-
-			// caseObj.setAssignedDates(assignedDates);
-			caseObj.setParawiseComments(paraWiseComments);
 
 		} catch (Exception e) {
 

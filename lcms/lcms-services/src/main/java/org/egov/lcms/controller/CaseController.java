@@ -81,7 +81,7 @@ public class CaseController {
 	}
 
 	/**
-	 * Create method for hearingdetails API service
+	 * Create method for Hearing Details API service
 	 * 
 	 * @param caseRequest
 	 * @return

@@ -778,7 +778,7 @@ serviceMaps:
         
       - jsonPath: $.cases.*.caseRefernceNo
         
-      - jsonPath: $.cases.*.side
+      - jsonPath: $.cases.*.summon.side
         type: JSON
         dbType: JSONB
       
@@ -943,13 +943,16 @@ serviceMaps:
     description: legacy advocate case
     fromTopic: legacy-case-advocate-create
     queryMaps:     
-    - query: INSERT INTO egov_lcms_case_advocate (code,casecode,advocate,fee) VALUES (?,?,?,?)
+    - query: INSERT INTO egov_lcms_case_advocate (code,casecode,assigndate,advocate,fee) VALUES (?,?,?,?,?)
       basePath: $.cases.*.advocateDetails.*
       jsonMaps:
   
       - jsonPath: $.advocateDetails.*.code
   
       - jsonPath: $.cases[?({code} in @.advocateDetails[*].code)].code
+         
+      - jsonPath: $.cases.*.advocateDetails.*.assignedDate
+        type: LONG
   
       - jsonPath: $.advocateDetails.*.advocate
         type: JSON
@@ -958,13 +961,13 @@ serviceMaps:
       - jsonPath: $.advocateDetails.*.fee
         type: DOUBLE
 
-		
+    
   - version: 1.0
     name: lcms-create-hearingdetails
     description: create hearingdetails in lcms
     fromTopic: lcms-hearingdetails-create
     queryMaps:
-    - query: INSERT INTO egov_lcms_hearing_details (code,caseJudgeMent,caseFinalDecision,caseStatus,nextHearingDate,attendees,judges,tenantId,casecode,judgeMentDate,advocateOpinion,furtherProcesssDetails,darkhasthDueDate,createdBy,lastModifiedBy,createdTime,lastModifiedTime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+    - query: INSERT INTO egov_lcms_hearing_details (code,caseJudgeMent,caseFinalDecision,caseStatus,nextHearingDate,nextHearingTime,attendees,judges,tenantId,casecode,judgeMentDate,advocateOpinion,furtherProcesssDetails,darkhasthDueDate,createdBy,lastModifiedBy,createdTime,lastModifiedTime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
       basePath: $.cases.*.hearingDetails.*
       jsonMaps:
       - jsonPath: $.hearingDetails.*.code
@@ -979,15 +982,16 @@ serviceMaps:
         
       - jsonPath: $.hearingDetails.*.nextHearingDate
         type: LONG
-        
+
+      - jsonPath: $.hearingDetails.*.nextHearingTime
+        type: LONG
+
       - jsonPath: $.hearingDetails.*.attendees
         type: JSON
         dbType: JSONB
-        
       - jsonPath: $.hearingDetails.*.judges
         type: JSON
-        dbType: JSONB          
-        
+        dbType: JSONB
       - jsonPath: $.hearingDetails.*.tenantId
       
       - jsonPath: $.cases[?({code} in @.hearingDetails[*].code)].code
@@ -1015,27 +1019,28 @@ serviceMaps:
       - jsonPath: lastModifiedTime
         type: CURRENTDATE
         dbType: LONG
-          
-          
+        
   - version: 1.0
     name: lcms-update-hearingdetails
     description: update hearing details in lcms
     fromTopic: lcms-hearingdetails-update
     queryMaps:
-    - query: UPDATE egov_lcms_hearing_details SET caseJudgeMent=?,caseFinalDecision=?,caseStatus=?,nextHearingDate=?,attendees=?,judges=?,tenantId=?,casecode=?,judgeMentDate=?,advocateOpinion=?,furtherProcesssDetails=?,darkhasthDueDate=?,lastModifiedBy=?,lastModifiedTime=? WHERE code=?;
+    - query: UPDATE egov_lcms_hearing_details SET caseJudgeMent=?,caseFinalDecision=?,caseStatus=?,nextHearingDate=?,nextHearingTime=?,attendees=?,judges=?,tenantId=?,casecode=?,judgeMentDate=?,advocateOpinion=?,furtherProcesssDetails=?,darkhasthDueDate=?,lastModifiedBy=?,lastModifiedTime=? WHERE code=?;
       basePath: $.cases.*.hearingDetails.*
-      jsonMaps:        
+      jsonMaps:
       - jsonPath: $.hearingDetails.*.caseJudgeMent
       
       - jsonPath: $.hearingDetails.*.caseFinalDecision
-      
       - jsonPath: $.hearingDetails.*.caseStatus
         type: JSON
         dbType: JSONB
         
       - jsonPath: $.hearingDetails.*.nextHearingDate
         type: LONG
-        
+
+      - jsonPath: $.hearingDetails.*.nextHearingTime
+        type: LONG
+
       - jsonPath: $.hearingDetails.*.attendees
         type: JSON
         dbType: JSONB
@@ -1066,6 +1071,7 @@ serviceMaps:
         dbType: LONG
         
       - jsonPath: $.hearingDetails.*.code
+      
   - version: 1.0
     name: create notice
     description: Persists notices service details egov_lcms_notice table
@@ -1184,6 +1190,7 @@ serviceMaps:
        
        - jsonPath: $.notice.tenantId
          type: STRING
+         
   - version: 1.0
     name: register_create
     description: Persists register service details egov_lcms_register table

@@ -30,6 +30,9 @@ public class HearingDetails {
 
 	@JsonProperty("nextHearingDate")
 	private Long nextHearingDate = null;
+	
+	@JsonProperty("nextHearingTime")
+	private Long nextHearingTime = null;
 
 	@JsonProperty("attendees")
 	private List<Attender> attendees = null;

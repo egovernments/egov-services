@@ -1,8 +1,22 @@
 import React, {Component} from 'react';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
+import Api from '../../../../../api/api';
 
+
+var value= "" ;
 export default class assetImmovableReport extends Component {
+
+	componentWillMount() {
+		Api.commonApiPost("tenant/v1/tenant/_search", {code:localStorage.getItem("tenantId")?localStorage.getItem("tenantId"):'default'}).then(function(res){
+			 value= res.tenant[0].city.name;
+			 console.log(value);
+		}, function(err){
+				console.log(err);
+		})
+  }
+
+
 
 	convertToDate = (time) => {
 		if (time) {
@@ -41,7 +55,7 @@ export default class assetImmovableReport extends Component {
 			                        <img src="./temp/images/headerLogo.png" height="60" width="60" />
 			                    </td>
 			                    <td colSpan={13} style={{textAlign: "center"}} >
-			                        <b>PIMPRI CHINCHWAD MUNICIPAL CORPORATION</b>
+			                        <b>{value}</b>
 			                    </td>
 			                    <td  colSpan={2} rowSpan={3} style={{textAlign: "center"}}>
 			                        <img src="./temp/images/AS.png" height="60" width="60" />

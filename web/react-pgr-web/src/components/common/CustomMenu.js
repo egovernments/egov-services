@@ -275,7 +275,7 @@ const Logo = (props) => {
 
   } else */
   if(props.tenantInfo.length>0 && props.tenantInfo[0].hasOwnProperty("logoId") && props.tenantInfo[0].logoId) {
-    return (<img width="64" src={require(props.tenantInfo[0].logoId+".png")} style={styles.mainLogo} alt="logo"/>);
+    return (<img width="64" src={props.tenantInfo[0].logoId} style={styles.mainLogo} alt="logo"/>);
   } else {
     // if(logo[getTenantId()]) {
     //     return (<img width="64" src={logo[getTenantId()]} style={styles.mainLogo} alt="logo"/>);

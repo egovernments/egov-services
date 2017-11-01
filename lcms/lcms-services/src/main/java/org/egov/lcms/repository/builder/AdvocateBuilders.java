@@ -59,7 +59,7 @@ public class AdvocateBuilders {
 		
 		if (advocateSearchCriteria.getIsActive() != null) {
 			
-            selectQuery.append(" isactive = ?");
+            selectQuery.append("AND isactive = ?");
             preparedStatementValues.add(advocateSearchCriteria.getIsActive());			
 		}
 		

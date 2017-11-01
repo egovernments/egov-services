@@ -6,8 +6,8 @@ import java.util.Objects;
 
 import javax.validation.Valid;
 
-import org.egov.works.commons.web.contract.RequestInfo;
 import org.egov.works.estimate.web.model.ProjectCode;
+import org.egov.works.estimate.web.model.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

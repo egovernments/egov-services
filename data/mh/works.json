@@ -27,24 +27,24 @@
       "tenantId": "mh",
       "class": "001 - Fake",
       "description": "Class - 1 - Fake",
-      "minimumAmount": 10.0,
-      "maximumAmount": 1000.0
+      "minimumAmount": 10,
+      "maximumAmount": 1000
     },
     {
       "id": 2,
       "tenantId": "mh",
       "class": "002 - Fake",
       "description": "Class - 2 - Fake",
-      "minimumAmount": 1000.0,
-      "maximumAmount": 100000.0
+      "minimumAmount": 1000,
+      "maximumAmount": 100000
     },
     {
       "id": 3,
       "tenantId": "mh",
       "class": "003 - Fake",
       "description": "Class - 3 - Fake",
-      "minimumAmount": 100000.0,
-      "maximumAmount": 10000000.0
+      "minimumAmount": 100000,
+      "maximumAmount": 10000000
     }
   ],
   "TypeOfWork": [
@@ -90,8 +90,8 @@
         {
           "id": 1,
           "tenantId": "mh",
-          "lumpsumAmount": 0.0,
-          "percentage": 100.0,
+          "lumpsumAmount": 0,
+          "percentage": 100,
           "fromDate": 1546541452157,
           "toDate": 1546541452157
         }
@@ -108,8 +108,8 @@
         {
           "id": 1,
           "tenantId": "mh",
-          "lumpsumAmount": 2548.0,
-          "percentage": 0.0,
+          "lumpsumAmount": 2548,
+          "percentage": 0,
           "fromDate": 1546541452157,
           "toDate": 1546541452157
         }
@@ -171,14 +171,14 @@
           "id": 3,
           "tenantId": "mh",
           "stageOrderNumber": 1,
-          "percentage": 50.0,
+          "percentage": 50,
           "description": "Laying of road - fake"
         },
         {
           "id": 4,
           "tenantId": "mh",
           "stageOrderNumber": 1,
-          "percentage": 50.0,
+          "percentage": 50,
           "description": "Laying of road - fake"
         }
       ]
@@ -212,7 +212,7 @@
               "id": 1
             }
           ],
-          "rate": 10.0,
+          "rate": 10,
           "fromDate": 1546541452157,
           "toDate": 1546541452157
         }
@@ -254,5 +254,139 @@
       "values": "Yes",
       "effectiveFrom": ""
     }
-  ]
+  ],
+  "Fund": [
+    {
+      "id": "2",
+      "name": "Capital Fund",
+      "code": "02",
+      "identifier": "2",
+      "level": 1,
+      "parentid": null,
+      "active": false,
+      "createdby": null,
+      "createddate": "213123456456",
+      "lastmodifiedby": null,
+      "lastmodifieddate": null,
+      "version": 0,
+      "tenantid": "mh"
+    },
+    {
+      "id": "3",
+      "name": "Elementary Education Fund",
+      "code": "03",
+      "identifier": "3",
+      "level": 1,
+      "parentid": null,
+      "active": false,
+      "createdby": null,
+      "createddate": "213123456456",
+      "lastmodifiedby": null,
+      "lastmodifieddate": null,
+      "version": 0,
+      "tenantid": "mh"
+    },
+    {
+      "id": "4",
+      "name": "Earmarked Funds",
+      "code": "04",
+      "identifier": "4",
+      "level": 1,
+      "parentid": null,
+      "active": false,
+      "createdby": null,
+      "createddate": "213123456456",
+      "lastmodifiedby": null,
+      "lastmodifieddate": null,
+      "version": 0,
+      "tenantid": "mh"
+    },
+    {
+      "id": "1",
+      "name": "Municipal Fund",
+      "code": "01",
+      "identifier": "1",
+      "level": 1,
+      "parentid": null,
+      "active": true,
+      "createdby": null,
+      "createddate": "213123456456",
+      "lastmodifiedby": null,
+      "lastmodifieddate": null,
+      "version": 0,
+      "tenantid": "mh"
+    }
+  ],
+  "Function": [
+  {
+    "id": "1",
+    "name": "GENERAL ADMINISTRATION",
+    "code": "00",
+    "level": 0,
+    "active": false,
+    "parentid": null,
+    "createdby": null,
+    "createddate": null,
+    "lastmodifiedby": null,
+    "lastmodifieddate": null,
+    "version": 0,
+    "tenantid": "mh"
+  },
+  {
+    "id": "2",
+    "name": "PUBLIC WORKS",
+    "code": "20",
+    "level": 0,
+    "active": false,
+    "parentid": null,
+    "createdby": null,
+    "createddate": null,
+    "lastmodifiedby": null,
+    "lastmodifieddate": null,
+    "version": 0,
+    "tenantid": "mh"
+  },
+  {
+    "id": "3",
+    "name": "REVENUE",
+    "code": "90",
+    "level": 0,
+    "active": false,
+    "parentid": null,
+    "createdby": null,
+    "createddate": null,
+    "lastmodifiedby": null,
+    "lastmodifieddate": null,
+    "version": 0,
+    "tenantid": "mh"
+  },
+  {
+    "id": "4",
+    "name": "PLANNING AND REGULATIONS",
+    "code": "10",
+    "level": 0,
+    "active": false,
+    "parentid": null,
+    "createdby": null,
+    "createddate": null,
+    "lastmodifiedby": null,
+    "lastmodifieddate": null,
+    "version": 0,
+    "tenantid": "mh"
+  },
+  {
+    "id": "5",
+    "name": "CIVIC AMENITIES",
+    "code": "50",
+    "level": 0,
+    "active": false,
+    "parentid": null,
+    "createdby": null,
+    "createddate": null,
+    "lastmodifiedby": null,
+    "lastmodifieddate": null,
+    "version": 0,
+    "tenantid": "mh"
+  }
+]
 }

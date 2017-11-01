@@ -1,4 +1,4 @@
-serviceMaps:
+ serviceMaps:
  serviceName: User Service
  mappings:
  - version: 1.0
@@ -557,3 +557,49 @@ serviceMaps:
        - jsonPath: $.AssetCurrentValue.*.auditDetails.lastModifiedDate
        
        - jsonPath: $.AssetCurrentValue.*.assetTranType
+       
+       
+       
+ - version: 1.0
+   name: Asset
+   description: Persists land detials of asset details in egasset_asset_landdetails table
+   fromTopic: save-asset-maha
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO egasset_asset_landdetails(code, surveynumber, area, tenantid, assetid) VALUES (?, ?, ?, ?, ?);
+      basePath: Asset.landDetails.*
+      jsonMaps:
+         
+       - jsonPath: $.Asset.landDetails.*.code
+         
+       - jsonPath: $.Asset.landDetails.*.surveynumber
+         
+       - jsonPath: $.Asset.landDetails.*.area
+       
+       - jsonPath: $.Asset[?({id} in @.landDetails[*].code)].id
+       
+       - jsonPath: $.Asset[?({id} in @.landDetails[*].code)].tenantId
+       
+       
+       
+       
+ - version: 1.0
+   name: Asset
+   description: update land detials of asset details in egasset_asset_landdetails table
+   fromTopic: update-asset-maha
+   isTransaction: true
+   queryMaps:
+    - query: UPDATE egasset_asset_landdetails SET surveynumber=?, area=?, WHERE assetid=? AND code=? AND tenantid=?;
+      basePath: Asset
+      jsonMaps:
+         
+       - jsonPath: $.Asset.landDetails.*.surveynumber
+         
+       - jsonPath: $.Asset.landDetails.*.area
+       
+       - jsonPath: $.Asset.landDetails.*.code
+       
+       - jsonPath: $.Asset[?({id} in @.landDetails[*].code)].id
+       
+       - jsonPath: $.Asset[?({id} in @.landDetails[*].code)].tenantId
+       

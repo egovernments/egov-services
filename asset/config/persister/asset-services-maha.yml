@@ -1,4 +1,4 @@
- serviceMaps:
+serviceMaps:
  serviceName: User Service
  mappings:
  - version: 1.0
@@ -10,7 +10,7 @@
     - query: INSERT INTO egasset_asset(id, name, code, oldcode, departmentcode, assetcategory, modeofacquisition,status, grossvalue, accumulateddepreciation, description, dateofcreation,remarks, version, assetreference, enableyearwisedepreciation,assetattributes, depreciationrate, anticipatedlife, ordernumber,orderdate, wipreferenceno, acquiredfrom, warrantyavailable, warrantyexpirydate,defectliabilityyear, defectliabilitymonth, defectliabilityday,securitydepositretained, securitydepositrealized, acquisitiondate,originalvalue, assetaccount, accumulateddepreciationaccount,revaluationreserveaccount, depreciationexpenseaccount, titledocumentsavalable,usage, length, width, height, totalarea, plintharea, address,longitude, latitude, floors, landsurveyno, cubiccontents, quantity,tenantid, zone, revenueward, street, electionward, doorno, pincode,locality, block, createdby, createddate, lastmodifiedby, lastmodifieddate,fundsource,openingdate,location) VALUES (?,?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: Asset
       jsonMaps:
-         
+           
        - jsonPath: $.Asset.id
          
        - jsonPath: $.Asset.name

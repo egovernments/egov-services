@@ -836,7 +836,7 @@ definitions:
         type: string
         pattern: '[a-zA-Z0-9-\\]+'
         description: Unique number for the Abstract Estimate
-        maxLength: 20
+        maxLength: 50
         minLength: 1
       subject:
         type: string

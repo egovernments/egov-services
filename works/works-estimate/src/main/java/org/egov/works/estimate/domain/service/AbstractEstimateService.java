@@ -1,5 +1,7 @@
 package org.egov.works.estimate.domain.service;
 
+import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -7,6 +9,7 @@ import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.commons.domain.model.AuditDetails;
+import org.egov.works.commons.web.contract.RequestInfo;
 import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.config.WorksEstimateServiceConstants;
 import org.egov.works.estimate.domain.exception.ErrorCode;
@@ -18,7 +21,6 @@ import org.egov.works.estimate.web.contract.AbstractEstimateRequest;
 import org.egov.works.estimate.web.contract.AbstractEstimateSearchContract;
 import org.egov.works.estimate.web.model.AbstractEstimate;
 import org.egov.works.estimate.web.model.AbstractEstimateDetails;
-import org.egov.works.estimate.web.model.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,7 +75,7 @@ public class AbstractEstimateService {
 		return abstractEstimateRepository.search(abstractEstimateSearchContract);
 	}
 
-	public void validateEstimates(AbstractEstimateRequest abstractEstimateRequest, BindingResult errors) {
+	public void validateEstimates(AbstractEstimateRequest abstractEstimateRequest, BindingResult errors, Boolean isNew) {
 		for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
 			if (estimate.getDateOfProposal() == null)
 				throw new InvalidDataException("dateOfProposal", ErrorCode.NOT_NULL.getCode(), null);
@@ -84,9 +86,45 @@ public class AbstractEstimateService {
 			if (estimate.getTenantId() == null)
 				throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
 						estimate.getTenantId());
-
 			validateMasterData(estimate, errors, abstractEstimateRequest.getRequestInfo());
+			
+			AbstractEstimateSearchContract searchContract = new AbstractEstimateSearchContract();
+			searchContract.setIds(Arrays.asList(estimate.getId()));
+			searchContract.setAbstractEstimateNumbers(Arrays.asList(estimate.getAbstractEstimateNumber()));
+			searchContract.setTenantId(estimate.getTenantId());
+			List<AbstractEstimate> oldEstimates = search(searchContract);
+			if (isNew && !oldEstimates.isEmpty())
+				throw new InvalidDataException("abstractEstimateNumber", ErrorCode.NON_UNIQUE_VALUE.getCode(),
+						estimate.getAbstractEstimateNumber());
+			searchContract.setAbstractEstimateNumbers(null);
+			if (!isNew && estimate.getWorkFlowDetails() != null
+					&& "Approve".equalsIgnoreCase(estimate.getWorkFlowDetails().getAction())) {
+				if (StringUtils.isBlank(estimate.getAdminSanctionNumber()))
+					throw new InvalidDataException("adminSanctionNumber", ErrorCode.NON_UNIQUE_VALUE.getCode(),
+							estimate.getAdminSanctionNumber());
+				if (StringUtils.isBlank(estimate.getCouncilResolutionNumber()))
+					throw new InvalidDataException("councilResolutionNumber", ErrorCode.NON_UNIQUE_VALUE.getCode(),
+							estimate.getCouncilResolutionNumber());
+				if (estimate.getCouncilResolutionDate() == null)
+					throw new InvalidDataException("councilResolutionDate", ErrorCode.NON_UNIQUE_VALUE.getCode(),
+							estimate.getCouncilResolutionDate().toString());
+				searchContract.setAdminSanctionNumbers(Arrays.asList(estimate.getAdminSanctionNumber()));
+				oldEstimates = search(searchContract);
+				if (!oldEstimates.isEmpty() && !estimate.getId().equalsIgnoreCase(oldEstimates.get(0).getId()))
+					throw new InvalidDataException("adminSanctionNumber", ErrorCode.NOT_NULL.getCode(),
+							estimate.getAdminSanctionNumber());
+			}
+			validateEstimateDetails(estimate, errors);
 		}
+	}
+	
+	private void validateEstimateDetails(AbstractEstimate estimate, BindingResult errors) {
+		BigDecimal estimateAmount = BigDecimal.ZERO;
+        for (final AbstractEstimateDetails aed : estimate.getAbstractEstimateDetails())
+            estimateAmount = estimateAmount.add(aed.getEstimateAmount());
+        if (Double.parseDouble(estimateAmount.toString()) <= 0)
+        	throw new InvalidDataException("estimateAmount", "estimateamount.notvalid",
+					estimateAmount.toString());
 	}
 
 	public void validateMasterData(AbstractEstimate abstractEstimate, BindingResult errors, RequestInfo requestInfo) {

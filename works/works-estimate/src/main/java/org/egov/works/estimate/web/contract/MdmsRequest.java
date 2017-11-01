@@ -1,6 +1,6 @@
 package org.egov.works.estimate.web.contract;
 
-import org.egov.works.estimate.web.model.RequestInfo;
+import org.egov.works.commons.web.contract.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

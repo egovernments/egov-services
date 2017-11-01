@@ -1,19 +1,21 @@
 package org.egov.works.estimate.persistence.repository;
 
-import com.jayway.jsonpath.JsonPath;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Arrays;
+
+import org.egov.works.commons.web.contract.RequestInfo;
 import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.config.WorksEstimateServiceConstants;
 import org.egov.works.estimate.domain.exception.ValidationException;
 import org.egov.works.estimate.web.contract.IdGenerationRequest;
 import org.egov.works.estimate.web.contract.IdRequest;
-import org.egov.works.estimate.web.model.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
+import com.jayway.jsonpath.JsonPath;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j

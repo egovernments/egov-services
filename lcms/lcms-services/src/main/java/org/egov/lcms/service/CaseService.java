@@ -3,6 +3,7 @@ package org.egov.lcms.service;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.factory.ResponseFactory;
@@ -170,7 +171,10 @@ public class CaseService {
 	 * @return {@link CaseResponse}
 	 */
 	public CaseResponse legacyDataLoad(CaseRequest caseRequest) throws Exception {
-
+		
+		User user = new User();
+		user.setId(57l);
+		caseRequest.getRequestInfo().setUserInfo(user);
 		for (Case caseObj : caseRequest.getCases()) {
 
 			if (caseObj.getSummon().getIsUlbinitiated() == null) {
@@ -207,6 +211,10 @@ public class CaseService {
 						propertiesManager.getVoucherCodeFormatName(), Boolean.FALSE, null);
 				caseObj.getCaseVoucher().setCode(caseVoucherCode);
 				caseObj.getCaseVoucher().setCaseCode(summonCode);
+				if(caseObj.getTenantId() != null && !caseObj.getTenantId().trim().isEmpty()){
+					caseObj.getCaseVoucher().setTenantId(caseObj.getTenantId());
+				}
+				
 
 				kafkaTemplate.send(propertiesManager.getCreateLegacyCaseVoucher(), caseRequest);
 			}

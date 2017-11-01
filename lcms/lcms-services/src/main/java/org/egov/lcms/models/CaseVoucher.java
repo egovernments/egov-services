@@ -34,6 +34,9 @@ public class CaseVoucher {
 	@JsonProperty("officerSignature")
 	private String officerSignature = null;
 	
+	@JsonProperty("tenantId")
+	private String tenantId = null;
+	
 	
 
 }

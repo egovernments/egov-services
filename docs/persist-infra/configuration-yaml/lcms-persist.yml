@@ -880,11 +880,13 @@ serviceMaps:
     description: legacy hearing load case
     fromTopic: legacy-hearing-create
     queryMaps: 
-    - query: INSERT INTO egov_lcms_hearing_details (code,judgeMentDate,caseJudgeMent,advocateOpinion, furtherProcesssDetails, darkhasthDueDate, tenantId , casecode,createdBy,lastModifiedBy,createdTime,lastModifiedTime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);
+    - query: INSERT INTO egov_lcms_hearing_details (code, tenantId, judgeMentDate, caseJudgeMent, advocateOpinion, furtherProcesssDetails, darkhasthDueDate , casecode, createdBy, lastModifiedBy, createdTime, lastModifiedTime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);
       basePath: $.cases.*.hearingDetails.*
       jsonMaps:
       - jsonPath: $.hearingDetails.*.code
-      
+        
+      - jsonPath: $.cases[?({code} in @.hearingDetails[*].code)].tenantId
+        
       - jsonPath: $.hearingDetails.*.judgeMentDate
         type: LONG
     
@@ -896,8 +898,6 @@ serviceMaps:
   
       - jsonPath: $.hearingDetails.*.darkhasthDueDate
         type: LONG
-    
-      - jsonPath: $.hearingDetails.*.tenantId
       
       - jsonPath: $.cases[?({code} in @.hearingDetails[*].code)].code
   
@@ -920,13 +920,15 @@ serviceMaps:
     description: legacy case voucher load
     fromTopic: legacy-case-voucher-create
     queryMaps:
-    - query: INSERT INTO egov_lcms_case_voucher (code,casecode, voucherType, voucherDate, details,verificationRemarks,officerSignature) VALUES (?,?,?,?,?,?,?)
+    - query: INSERT INTO egov_lcms_case_voucher (code, casecode, tenantId, voucherType, voucherDate, details,verificationRemarks,officerSignature) VALUES (?,?,?,?,?,?,?,?)
       basePath: $.cases.*.caseVoucher
       jsonMaps:
       - jsonPath: $.cases.*.caseVoucher.code
    
       - jsonPath: $.cases.*.caseVoucher.caseCode
-   
+          
+      - jsonPath: $.cases.*.caseVoucher.tenantId
+ 
       - jsonPath: $.cases.*.caseVoucher.voucherType
   
       - jsonPath: $.cases.*.caseVoucher.voucherDate

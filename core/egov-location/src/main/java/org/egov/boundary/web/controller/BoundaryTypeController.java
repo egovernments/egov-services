@@ -181,7 +181,25 @@ public class BoundaryTypeController {
 
 	@GetMapping
 	@ResponseBody
-	public ResponseEntity<?> search(@ModelAttribute BoundaryTypeRequest boundaryTypeRequest) {
+	public ResponseEntity<?> search(@Valid @RequestParam(value = "boundaryType", required = false) Long boundaryType,
+			@RequestParam(value = "tenantId", required = false) String tenantId,@ModelAttribute BoundaryTypeRequest boundaryTypeRequest,BindingResult errors) {
+		
+		if (errors.hasErrors()) {
+			LOGGER.info("BoundaryTypeRequest binding error: " + boundaryTypeRequest);
+		}
+		LOGGER.info("BoundaryTypeRequest: " + boundaryTypeRequest);
+
+		if (tenantId != null && boundaryType != null) {
+			BoundaryType boundaryTypeObj = new BoundaryType();
+			boundaryTypeObj.setTenantId(tenantId);
+			boundaryTypeObj.setId(boundaryType.toString());
+			boundaryTypeRequest.setBoundaryType(boundaryTypeObj);
+		} else if (tenantId != null) {
+			BoundaryType boundaryTypeObj = new BoundaryType();
+			boundaryTypeObj.setTenantId(tenantId);
+			boundaryTypeRequest.setBoundaryType(boundaryTypeObj);
+		}
+		
 		BoundaryTypeResponse boundaryTypeResponse = new BoundaryTypeResponse();
 		ResponseInfo responseInfo = new ResponseInfo();
 		if (boundaryTypeRequest.getBoundaryType() != null && boundaryTypeRequest.getBoundaryType().getTenantId() != null

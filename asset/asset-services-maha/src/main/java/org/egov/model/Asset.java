@@ -205,4 +205,8 @@ public class Asset   {
 	  
 	  @JsonProperty("openingDate")
 	  private Long openingDate;
+
+	  @JsonProperty("landDetails")
+	  private List<LandDetail> landDetails;
+	  
 }

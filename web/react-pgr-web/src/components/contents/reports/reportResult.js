@@ -158,17 +158,17 @@ class ShowField extends Component {
             var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : '';
 
 
-        let response=Api.commonApiPost("/report/"+match.params.moduleName+"/_get",{},{tenantId:tenantId,reportName:splitArray[0].split("=")[1],searchParams}).then(function(response)
-        {
-          // console.log(response)
-          setReportResult(response)
-          setFlag(1);
+        let response=Api.commonApiPost("/report/"+match.params.moduleName+"/_get",{},{tenantId:tenantId,reportName:splitArray[0].split("=")[1],searchParams}).then(function(response) {
+          if(response.viewPath && response.reportData && response.reportData[0]) {
+            localStorage.reportData = JSON.stringify(response.reportData[0]);
+            setRoute("/print/report/" + response.viewPath);
+          } else {
+            setReportResult(response);
+            setFlag(1);
+          }
         },function(err) {
             console.log(err);
         });
-    } else if (reportResult.viewPath) {
-      localStorage.reportData = JSON.stringify(item);
-      setRoute("/print/report/" + reportResult.viewPath);
     } else if (object.defaultValue && object.defaultValue.search("_url") > -1) {
       // console.log(item1);
       let afterURL = object.defaultValue.split('?')[1];

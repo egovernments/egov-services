@@ -3,6 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "asset-services-maha/assets/_create",
 		"tenantIdRequired": true,
+		"useTimestamp":true,
 		"idJsonPath": "",
 		"objectName": "Asset",
 		"groups": [
@@ -79,7 +80,7 @@ var dat = {
 							"isRequired": true,
   						"isDisabled": false,
   						"requiredErrMsg": "",
-  						"patternErrMsg": ""
+  						"patternErrMsg": "",
   					},
 
             {
@@ -172,33 +173,34 @@ var dat = {
 			{
 				"label": "ac.create.Land.Details",
 				"name": "landDetails",
-				"jsonPath": "Asset",
 				"multiple":true,
+        "jsonPath":"Asset.landDetails[0]",
 				"fields": [
 					{
 						"name": "LandAssetID",
-						"jsonPath": "Asset.",
+						"jsonPath": "Asset.landDetails[0].code",
 						"label": "ac.create.Land.Asset.ID",
 						"pattern": "",
 						"type": "autoCompelete",
-						"url": "",
+						"url": "asset-services-maha/assets/_search?&id=55,56,57,58,59,60,61,62,63,64,65|$..id|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"autoCompleteDependancy": {
-							"autoCompleteUrl": "/egf-masters/chartofaccounts/_search?id={value}",
+							"autoCompleteUrl": "asset-services-maha/assets/_search?id={value}",
 							"autoFillFields": {
-								"BusinessDetails[0].accountDetails[0].chartOfAccounts": "chartOfAccounts[0].glcode"
+								"Asset.landDetails[0].surveyNo": "Assets[0].landSurveyNo",
+								"Asset.landDetails[0].area": "Assets[0].totalArea"
 							 }
 						 }
 					},
 					{
 						"name": "SurveyNoOfLandOnWhichStructureIsLocated ",
-						"jsonPath": "Asset.landSurveyNo",
+						"jsonPath": "Asset.landDetails[0].surveyNo",
 						"label": "ac.create.Survey.no.of.land",
 						"pattern": "",
-						"type": "number",
+						"type": "text",
 						"url": "",
 						"isRequired": false,
 						"isDisabled": true,
@@ -211,12 +213,13 @@ var dat = {
             "jsonPath": "Asset.landDetails[0].area",
             "label": "ac.create.areaOfLand",
             "pattern": "",
-            "type": "text",
+            "type": "number",
             "url": "",
             "isRequired": false,
             "isDisabled": true,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+
           }
 					]
 				},
@@ -417,7 +420,7 @@ var dat = {
             "type": "text",
             "url": "",
             "isRequired": true,
-            "isDisabled": false,
+            "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },

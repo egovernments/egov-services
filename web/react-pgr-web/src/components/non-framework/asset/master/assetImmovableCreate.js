@@ -269,6 +269,7 @@ class assetImmovableCreate extends Component {
       var catId;
       var name, jsonPath, label, type, isRequired, isDisabled;
       var customSpecs = {};
+      var depericiationValue = {};
     //  var customFieldsArray = [];
     //  var customArr;
       Api.commonApiPost("/egov-mdms-service/v1/_get",{"moduleName":"ASSET", "masterName":"AssetCategory", "filter": "%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22IMMOVABLE%22)%5D%0A"}).then(function(response)
@@ -296,6 +297,7 @@ class assetImmovableCreate extends Component {
         if(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination != null){
           var  customFieldsArray = [];
           catId = response.MdmsRes.ASSET.AssetCategory[i].id;
+
           for(var j=0; j< response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination.length; j++){
 
             var customTemp = {};
@@ -346,10 +348,13 @@ class assetImmovableCreate extends Component {
 
           }
           customSpecs[catId] = customFieldsArray;
+          depericiationValue[catId] = response.MdmsRes.ASSET.AssetCategory[i].depreciationRate;
 
         }
+        console.log(depericiationValue);
         self.setState({
-            customFieldsGen: customSpecs
+            customFieldsGen: customSpecs,
+            depericiationValue
           }, () => {
           })
       }
@@ -813,6 +818,25 @@ formData.Asset.assetAttributes = assetAttributes;
       let obj = specifications[`asset.create`];
 
       if(property=="Asset.assetCategory.id"){
+        if (self.state.depericiationValue[e.target.value]) {
+          console.log(self.state.depericiationValue[e.target.value]);
+          var newVal = Math.round(100/self.state.depericiationValue[e.target.value]);
+          this.props.handleChange({target:{value: newVal}},"Asset.anticipatedLife",true,"","","");
+        }
+
+        // if (/Asset\.landDetails\[\d*\]\.area/.test(property)) {
+        //   console.log("HERE22")
+        //   // var landValue = this.props.getval('Asset.landDetails');
+        //   // if(landDetails && landDetails.length)
+        //   // { var area = 0 ; for(var i = 0 ; i < landDetails.length;i++)
+        //   //   {
+        //   //     area+=landDetails[i].area ; return area;
+        //   //   }
+        //   // }
+        //   // this.props.handleChange({target:{value: newVal}},"Asset.anticipatedLife",true,"","","");
+        // }
+
+
         if(self.state.customFieldsGen[e.target.value]) {
           fields = self.state.customFieldsGen[e.target.value]
           groups = [

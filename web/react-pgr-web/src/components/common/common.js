@@ -365,6 +365,19 @@ var localization_EN_Data = {
       "reports.property.code" : "Code",
       "reports.property.propertyowner" : "Owner",
 
+      //report Lables Legal case management
+      "reports.lcms.caseRefNo" : "Case No.",
+      "reports.lcms.NameOfPlaintiff": "Name Of Plaintiff",
+      "reports.lcms.NameOfDefendant" : "Name Of Defendant",
+      "reports.lcms.fromDate": "From Date",
+      "reports.lcms.toDate": "To Date",
+      "reports.lcms.caseNo": "Case No.",
+      "reports.lcms.courtName": "Court Name",
+      "reports.lcms.plantiffName": "Plaintiff",
+      "reports.lcms.defendant": "Defendant",
+      "reports.lcms.department": "Department",
+      "reports.lcms.caseStatus": "Case Status",
+
       //Water Connection
       "reports.wcms.fromdate":"From Date",
       "reports.wcms.todate":"To Date",
@@ -3382,6 +3395,19 @@ var localization_MR_Data = {
   "reports.property.latepenaltycoll" : "Late Penalty Collection - Marathi",
   "reports.property.code" : "Code - Marathi",
   "reports.property.propertyowner" : "Owner - Marathi",
+
+  //report Lables Legal case management
+      "reports.lcms.caseRefNo" : "Case No. - Marathi",
+      "reports.lcms.NameOfPlaintiff": "Name Of Plaintiff - Marathi",
+      "reports.lcms.NameOfDefendant" : "Name Of Defendant - Marathi",
+      "reports.lcms.fromDate": "From Date - Marathi",
+      "reports.lcms.toDate": "To Date - Marathi",
+      "reports.lcms.caseNo": "Case No. - Marathi",
+      "reports.lcms.courtName": "Court Name - Marathi",
+      "reports.lcms.plantiffName": "Plaintiff - Marathi",
+      "reports.lcms.defendant": "Defendant - Marathi",
+      "reports.lcms.department": "Department - Marathi",
+      "reports.lcms.caseStatus": "Case Status - Marathi",
 
   //Water Connection
   "reports.wcms.fromdate":"From Date - Marathi",

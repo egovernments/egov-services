@@ -247,8 +247,15 @@ const menuConvention={
 "Legal Case Management.Legal Case Transactions.Payment Request.AdvocatePayment Create":"/create/legal/advocatepayment",
 "Legal Case Management.Legal Case Transactions.Payment Request.AdvocatePayment Search":"/search/legal/advocatepayment/view",
 "Legal Case Management.Legal Case Masters.Advocate.Advocate Create":"/create/legal/advocate",
-"Legal Case Management.Legal Case Masters.Advocate.Advocate Search":"/search/legal/advocate/view"
-
+"Legal Case Management.Legal Case Masters.Advocate.Advocate Search":"/search/legal/advocate/view",
+//legal case report
+"Legal Case Management.Legal Case Reports.Case Register Report":"/report/lcms/CaseRegisterReport",
+"Legal Case Management.Legal Case Reports.Case Summary Report":"/report/lcms/CaseSummaryReport",
+"Legal Case Management.Legal Case Reports.Case Detail Report":"/report/lcms/CaseDetailReport",
+"Legal Case Management.Legal Case Reports.Case History Report":"/report/lcms/CaseHistoryReport",
+"Legal Case Management.Legal Case Reports.Case Pendency Report":"/report/lcms/CasePendencyReport",
+"Legal Case Management.Legal Case Reports.Case Status Report":"/report/lcms/CaseStatusReport",
+"Legal Case Management.Legal Case Reports.Due Date Report":"/report/lcms/DueDateReport"
 
 
 

@@ -48,7 +48,7 @@ serviceMaps:
        
        - jsonPath: $.abstractEstimates.*.description
        
-       - jsonPath: $.abstractEstimates.*.budgetGroup.code
+       - jsonPath: $.abstractEstimates.*.budgetGroup.name
        
        - jsonPath: $.abstractEstimates.*.scheme.code
                  
@@ -196,7 +196,7 @@ serviceMaps:
        
        - jsonPath: $.abstractEstimates.*.description
        
-       - jsonPath: $.abstractEstimates.*.budgetGroup.code
+       - jsonPath: $.abstractEstimates.*.budgetGroup.name
        
        - jsonPath: $.abstractEstimates.*.scheme.code
                  

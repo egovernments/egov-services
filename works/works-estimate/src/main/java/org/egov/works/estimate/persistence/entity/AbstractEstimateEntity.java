@@ -199,7 +199,7 @@ public class AbstractEstimateEntity {
 		abstractEstimate.setBeneficiary(Beneficiary.valueOf(this.beneficiary));
 		abstractEstimate.setBillsCreated(this.billsCreated);
 		abstractEstimate.setBudgetGroup(new BudgetGroup());
-		abstractEstimate.getBudgetGroup().setCode(this.budgetHead);
+		abstractEstimate.getBudgetGroup().setName(this.budgetHead);
 		abstractEstimate.setCancellationReason(this.cancellationReason);
 		abstractEstimate.setCancellationRemarks(this.cancellationRemarks);
 		abstractEstimate.setCouncilResolutionDate(this.councilResolutionDate);

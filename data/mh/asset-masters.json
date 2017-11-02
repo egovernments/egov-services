@@ -647,7 +647,7 @@
         },
         {
           "name": "Road Type",
-          "type": "select",
+          "type": "Select",
           "isActive": true,
           "isMandatory": false,
           "values": "WBM, Bitomun, Concrete, Tremix concrete",

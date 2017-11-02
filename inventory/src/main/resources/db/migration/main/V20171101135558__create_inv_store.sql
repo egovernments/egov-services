@@ -19,5 +19,5 @@ createdby character varying(50) NOT NULL,
 createdtime bigint NOT NULL,
 lastmodifiedby character varying(50) NOT NULL,
 lastmodifiedtime bigint NOT NULL,
-constraint primary_inv_store primary key (code,tenantId);
+constraint primary_inv_store primary key (code,tenantId)
 );

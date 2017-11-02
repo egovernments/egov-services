@@ -67,9 +67,9 @@ public class StoreJdbcRepository extends JdbcRepository{
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     
     static {
-		LOG.debug("init fund");
+		LOG.debug("init store");
 		init(StoreEntity.class);
-		LOG.debug("end init fund");
+		LOG.debug("end store fund");
 	}
 
     public Pagination<Store> search(StoreGetRequest storeGetRequest) {

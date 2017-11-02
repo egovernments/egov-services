@@ -9,12 +9,13 @@ import org.egov.inv.persistence.repository.SupplierJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
 import io.swagger.model.Supplier;
 import io.swagger.model.SupplierRequest;
-
+@Service
 public class SupplierService {
 	
 	@Autowired

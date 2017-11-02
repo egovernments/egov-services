@@ -47,7 +47,7 @@ public class OpinionQueryBuilder {
 
 		String[] codes = opinionSearchCriteria.getCodes();
 		if (codes != null && codes.length > 0) {
-			selectQuery.append(" code IN ("
+			selectQuery.append(" AND code IN ("
 					+ Stream.of(opinionSearchCriteria.getCodes()).collect(Collectors.joining("','", "'", "'")) + ")");
 		}
 

@@ -41,7 +41,9 @@ public class SearchUtils {
 		
 		if(null != query.getOrderBy()){
 			queryString.append(" order by ")
-						.append(query.getOrderBy());
+						.append(query.getOrderBy().split(",")[0])
+						.append(" ")
+						.append(query.getOrderBy().split(",")[1]);
 		}
 		
 		if(null != query.getSort()){

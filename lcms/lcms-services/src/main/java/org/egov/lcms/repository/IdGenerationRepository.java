@@ -62,6 +62,7 @@ public class IdGenerationRepository {
 					+ " request is " + requestInfo);
 			 response = restTemplate.postForObject(idGenerationUrl.toString(), idGeneration, IdGenerationResponse.class);
 		} catch (Exception ex) {
+			logger.info("Exception in generating the code :" + ex.getMessage());
 			throw new CustomException(propertiesManager.getInvalidIdGenerationCode(),
 					propertiesManager.getIdGenerationExceptionMessage());
 		}

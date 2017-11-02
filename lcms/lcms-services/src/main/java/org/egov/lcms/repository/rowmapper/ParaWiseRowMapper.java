@@ -19,11 +19,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
-public class ParaWiseRowMapper implements RowMapper<ParaWiseComment>{
-	
+public class ParaWiseRowMapper implements RowMapper<ParaWiseComment> {
+
 	@Autowired
 	ObjectMapper objectMapper;
-	
+
 	@Autowired
 	PropertiesManager propertiesManager;
 
@@ -38,7 +38,7 @@ public class ParaWiseRowMapper implements RowMapper<ParaWiseComment>{
 		paraWiseComment.setResolutionDate(getLong(rs.getLong("resolutiondate")));
 		paraWiseComment.setParaWiseComments(getString(rs.getString("parawisecomments")));
 		paraWiseComment.setTenantId(getString(rs.getString("tenantid")));
-		
+
 		List<Document> documents = new ArrayList<Document>();
 		TypeReference<List<Document>> documentReference = new TypeReference<List<Document>>() {
 		};
@@ -46,21 +46,22 @@ public class ParaWiseRowMapper implements RowMapper<ParaWiseComment>{
 			if (rs.getString("documents") != null)
 				documents = objectMapper.readValue(rs.getString("documents"), documentReference);
 		} catch (IOException ex) {
-			throw new CustomException(propertiesManager.getJsonStringError(), ex.getMessage());
+			throw new CustomException(propertiesManager.getParaWiseResponseErrorCode(),
+					propertiesManager.getParaWiseCommentsResponseErrorMsg());
 		}
-		
-		paraWiseComment.setDocuments(documents);		
-		
+
+		paraWiseComment.setDocuments(documents);
+
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(rs.getString("createdby"));
 		auditDetails.setLastModifiedBy(rs.getString("lastmodifiedby"));
 		auditDetails.setCreatedTime(rs.getBigDecimal("createdtime"));
 		auditDetails.setLastModifiedTime(rs.getBigDecimal("lastmodifiedtime"));
 		paraWiseComment.setAuditDetails(auditDetails);
-				
+
 		return paraWiseComment;
 	}
-	
+
 	private String getString(Object object) {
 		return object == null ? null : object.toString();
 	}

@@ -61,9 +61,6 @@ public class PropertiesManager {
 	@Value("${egov.lcms.code}")
 	private String sortCode;
 
-	@Value("${egov.lcms.json.error}")
-	private String jsonStringError;
-
 	@Value("${egov.lcms.tenant.code}")
 	private String tenantCode;
 
@@ -434,4 +431,37 @@ public class PropertiesManager {
 	
 	@Value("${lcms.casevoucher.error.code}")
 	private String caseVoucherResponseErrorCode;
+	
+	@Value("${lcms.advocatedetails.error.msg}")
+	private String advocateDetailsResponseErrorMsg;
+	
+	@Value("${lcms.hearingdetails.error.msg}")
+	private String hearingDetailsResponseErrorMsg;
+	
+	@Value("${lcms.parawisecomments.error.msg}")
+	private String paraWiseCommentsResponseErrorMsg;
+	
+	@Value("${lcms.casevoucher.error.msg}")
+	private String caseVoucherResponseErrorMsg;
+	
+	@Value("${lcms.opinion.error.msg}")
+	private String opinionSearchErrorMsg;
+	
+	@Value("${lcms.advocate.error.code}")
+	private String advocateErrorCode;
+	
+	@Value("${lcms.advocate.error.msg}")
+	private String advocateErrorMsg;
+	
+	@Value("${lcms.notice.error.code}")
+	private String noticeErrorMsg;
+	
+	@Value("${lcms.notice.error.msg}")
+	private String noticeErrorCode;
+	
+	@Value("${lcms.register.error.code}")
+	private String registerErrorCode;
+	
+	@Value("${lcms.register.error.msg}")
+	private String registerErrorMsg;
 }

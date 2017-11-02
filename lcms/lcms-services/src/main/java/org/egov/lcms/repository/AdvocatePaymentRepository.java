@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 
  * @author Shubham Pratap
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
+@Slf4j
 public class AdvocatePaymentRepository {
 
 	@Autowired
@@ -44,6 +47,7 @@ public class AdvocatePaymentRepository {
 		try {
 			advocatePayment = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), advocatePaymentRowMapper);
 		} catch (final Exception exception) {
+			log.info("Exception in advocate payment :" + exception.getMessage());
 			throw new CustomException(propertiesManager.getPaymentSearchErrorCode(), exception.getMessage());
 		}
 

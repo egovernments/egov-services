@@ -100,7 +100,8 @@ public class AdvocatePaymentRowMapper implements RowMapper<AdvocatePayment> {
 				advocateCharges = objectMapper.readValue(rs.getString("advocatecharges"), advocateChargesRefObj);
 
 		} catch (Exception ex) {
-			throw new CustomException(propertiesManager.getJsonStringError(), ex.getMessage());
+			throw new CustomException(propertiesManager.getAdvocateDetailsResponseErrorCode(),
+					propertiesManager.getAdvocateDetailsResponseErrorMsg());
 		}
 
 		advocatePayment.setAdvocate(advocate);

@@ -31,6 +31,9 @@ public class AdvocateDetails {
 	@JsonProperty("fee")
 	private Double fee;
 	
+	@JsonProperty("tenantId")
+	private String tenantId;
+	
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
 	

@@ -61,7 +61,8 @@ public class OpinionRowMapper implements RowMapper<Opinion> {
 			if (rs.getString("opinionsby") != null)
 				opinionBy = objectMapper.readValue(rs.getString("opinionsby"), advocateReference);
 		} catch (IOException ex) {
-			throw new CustomException(propertiesManager.getJsonStringError(), ex.getMessage());
+			throw new CustomException(propertiesManager.getOpinionSearchErrorCode(),
+					propertiesManager.getOpinionSearchErrorMsg());
 		}
 
 		opinion.setDocuments(documents);

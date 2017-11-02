@@ -1,6 +1,5 @@
 package org.egov.lcms.repository;
 
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.tracer.http.LogAwareRestTemplate;
@@ -19,17 +18,14 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 @Repository
 public class TenantRepository {
-	
+
 	@Autowired
 	PropertiesManager propertiesManager;
 
 	@Autowired
 	LogAwareRestTemplate restTemplate;
 
-
-
 	private static final Logger logger = LoggerFactory.getLogger(TenantRepository.class);
-
 
 	public String getTenantRepository(String tenantId, RequestInfo requestInfo) {
 
@@ -48,13 +44,14 @@ public class TenantRepository {
 			response = restTemplate.postForObject(builder.buildAndExpand().toUri(), requestInfo, String.class);
 			logger.info("after calling tennat service response :" + response);
 			if (response == null) {
-				throw new CustomException(propertiesManager.getTenantCode(), propertiesManager.getTenantServiceErrorMsg());
+				throw new CustomException(propertiesManager.getTenantCode(),
+						propertiesManager.getTenantServiceErrorMsg());
 			}
 		} catch (final HttpClientErrorException exception) {
+			logger.info("Exception occured in while getting the tennat service response :" + response);
 			throw new CustomException(propertiesManager.getTenantCode(), propertiesManager.getTenantServiceErrorMsg());
 		}
 		return response;
 	}
-
 
 }

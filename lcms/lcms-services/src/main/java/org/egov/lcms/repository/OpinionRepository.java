@@ -12,12 +12,15 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
 /**
  * 
  * @author Veswanth
  *
  */
 @Service
+@Slf4j
 public class OpinionRepository {
 
 	@Autowired
@@ -41,6 +44,7 @@ public class OpinionRepository {
 		try {
 			opinions = jdbcTemplate.query(searchQuery, preparedStatementValues.toArray(), opinionRowMapper);
 		} catch (Exception ex) {
+			log.info("the exception in opinion :" + ex.getMessage());
 			throw new CustomException(propertiesManager.getOpinionSearchErrorCode(), ex.getMessage());
 		}
 		return opinions;

@@ -1341,7 +1341,7 @@ paths:
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - name: materialStoreMappingRequest
             in: body
-            description: Create  new 
+            description: This object holds the material store mapping information.
             schema:
               $ref: '#/definitions/MaterialStoreMappingRequest'
         responses:
@@ -2812,7 +2812,7 @@ definitions:
     MaterialIssue:
       type: object
       description: |
-        This object holds the common set of information for both IndentIssue and Non Indent Issue.  
+        This object holds the common set of information for both Indent Issue and Non Indent Issue.  
       properties:
         id:
           type: string

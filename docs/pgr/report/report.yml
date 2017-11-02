@@ -1,4 +1,3 @@
----
 ReportDefinitions:
 - reportName: GrievanceByType
   summary: Report grouped by Grievance Type and status - based on a date period
@@ -339,7 +338,7 @@ ReportDefinitions:
     source:
     linkedReport:
       reportName: DrillDownComplaintDetailByFunctionary
-      linkedColumn: _parent?reportName={reportName}&status=FORWARDED','PROCESSING','NOTCOMPLETED&username={employeename}
+      linkedColumn: _parent?reportName={reportName}&status=FORWARDED','PROCESSING','NOTCOMPLETED','ONHOLD&username={employeename}
   - name: completed
     label: reports.pgr.status.completed
     type: number

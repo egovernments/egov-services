@@ -1,5 +1,6 @@
 package org.egov.works.estimate.domain.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.works.estimate.persistence.repository.DetailedEstimateJdbcRepository;
@@ -16,9 +17,11 @@ public class DetailedEstimateRepository {
 	private DetailedEstimateJdbcRepository detailedEstimateJdbcRepository;
 	
 	public List<DetailedEstimate> search(DetailedEstimateSearchContract detailedEstimateSearchContract) {
-		return detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
+		List<DetailedEstimate> detailedEstimates = new ArrayList<>();
+		for(org.egov.works.estimate.web.contract.DetailedEstimate estimate : detailedEstimateJdbcRepository.search(detailedEstimateSearchContract)) {
+			detailedEstimates.add(estimate.toDomain(estimate));
+		}
+		return detailedEstimates;
 	}
-
-	
 	
 }

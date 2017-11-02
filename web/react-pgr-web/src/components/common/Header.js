@@ -1,27 +1,18 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-// import {Link} from 'react-router-dom';
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
-// import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-// import PropTypes from 'prop-types'
 import { withRouter } from 'react-router';
 import Api from '../../api/api';
 import {logo, tenantName} from './temp/local';
 import {getTitleCase} from '../framework/utility/utility';
 import $ from 'jquery';
-import classnames from 'classnames'
-// import {history} from 'react-router-dom'
-
-// import {Grid, Row, Col} from 'react-bootstrap';
-
-
+import classnames from 'classnames';
 import CustomMenu from './CustomMenu';
 
-// var base='/';
 var tenantContent = {
   "details" : {
     "panavel" : {
@@ -34,27 +25,6 @@ var tenantContent = {
     }
   }
 };
-
-// import {brown500} from 'material-ui/styles/colors';
-// import { stack as Menu } from 'react-burger-menu'
-
-// import '../../styles/jquery.multilevelpushmenu.min.css';
-// import './jquery.multilevelpushmenu.min.js';
-//
-// import './custom-menu.js';
-
-const styles = {
-  mainLogo: {
-    height: 60,
-    borderRadius: '50%',
-    marginTop: -6
-  },
-
-  rightIcon: {
-    marginRight: "10px",
-    marginBottom: "15px"
-  }
-}
 
 const getTenantId = () => {
   if(localStorage.getItem("tenantId")) {
@@ -116,10 +86,10 @@ const RightIcon = (props) => {
   if (props.token) {
     return (
       <div>
-      <span style={{color:"#555"}}>{"मराठी"}</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <span style={{color:"#555"}}>{"English"}</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <i style={{color:"#555"}} className="material-icons">account_circle</i>&nbsp;
-      <span style={{color:"#555"}}>{window.localStorage.getItem("userRequest")?JSON.parse(window.localStorage.getItem("userRequest")).name:""}</span>
+      <span style={{color:"#555",'verticalAlign':'super'}}>{"मराठी"}</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style={{color:"#555",'verticalAlign':'super'}}>{"English"}</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <i style={{color:"#555",'verticalAlign':'sub'}} className="material-icons">account_circle</i>&nbsp;
+      <span style={{color:"#555",'verticalAlign':'super'}}>{window.localStorage.getItem("userRequest")?JSON.parse(window.localStorage.getItem("userRequest")).name:""}</span>
       <IconMenu
             iconButtonElement={<IconButton style={{color:"#555"}}><i className="material-icons">more_vert</i></IconButton>}
             anchorOrigin={{horizontal: 'left', vertical: 'top'}}
@@ -235,7 +205,7 @@ class Header extends Component {
                 title={<div><Logo tenantInfo={this.props.tenantInfo} tenantContext={tenantContext}/> </div>}
                 iconElementRight={< RightIcon showHome={this.props.showHome} signOut={this.signOut} token={this.props.token} logout={this.props.logout} setRoute={this.props.setRoute} handleToggle={this.props.handleToggle}/>} />
 
-        <Drawer containerClassName="drawer-backGround" open={showMenu}>
+        <Drawer width={256} containerClassName="drawer-backGround" open={showMenu}>
           {actionList && actionList.length>0 && <CustomMenu menuItems={[]} actionList={actionList} />}
         </Drawer>
 

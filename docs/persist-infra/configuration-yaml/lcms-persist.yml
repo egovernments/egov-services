@@ -248,23 +248,24 @@ serviceMaps:
     name: lcms-assign-advocate
     description: create assign advocate in lcms
     fromTopic: lcms-assign-advocate
-    queryMaps:
-      - query: INSERT INTO egov_lcms_case_advocate (code,casecode,advocate,assigndate,fee) VALUES (?,?,?,?,?);
-        basePath: $.cases.*
-        jsonMaps:        
-        - jsonPath: $.cases.*.advocatesDetails.*.code
-        
-        - jsonPath: $.cases[?({code} in @.advocatesDetails[*].code)].code
-        
-        - jsonPath: $.cases.*.advocatesDetails.*.advocate
-          type: JSON
-          dbType: JSONB
-        
-        - jsonPath: $.cases.*.advocatesDetails.*.assignedDate
-          type: LONG
-            
-        - jsonPath: $.cases.*.advocatesDetails.*.fee
-          type: DOUBLE
+    queryMaps:     
+    - query: INSERT INTO egov_lcms_case_advocate (code,casecode,assigndate,advocate,fee) VALUES (?,?,?,?,?)
+      basePath: $.cases.*.advocateDetails.*
+      jsonMaps:
+  
+      - jsonPath: $.advocateDetails.*.code
+  
+      - jsonPath: $.cases[?({code} in @.advocateDetails[*].code)].code
+         
+      - jsonPath: $.cases.*.advocateDetails.*.assignedDate
+        type: LONG
+  
+      - jsonPath: $.advocateDetails.*.advocate
+        type: JSON
+        dbType: JSONB
+  
+      - jsonPath: $.advocateDetails.*.fee
+        type: DOUBLE
 
   - version: 1.0
     name: advocates_create

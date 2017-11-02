@@ -174,7 +174,7 @@ var dat = {
 				"label": "ac.create.Land.Details",
 				"name": "landDetails",
 				"multiple":true,
-        "jsonPath":"Asset.landDetails[0]",
+        "jsonPath":"Asset.landDetails",
 				"fields": [
 					{
 						"name": "LandAssetID",

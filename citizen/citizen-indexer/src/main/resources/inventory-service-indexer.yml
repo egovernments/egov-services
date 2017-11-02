@@ -39,8 +39,8 @@ ServiceMaps:
       jsonPath: $.suppliers.*      
   - topic: inv-materialstore-save-topic
     indexes:
-    - name: materialstoremapping
-      type: materialstoremapping
+    - name: materialstoremappings
+      type: materialstoremappings
       id: $.id
       isBulk: true
       jsonPath: $.materialstoremappings.*

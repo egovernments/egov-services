@@ -2,11 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-    <groupId>org.egov</groupId>
+    <groupId>org.egov.services</groupId>
 	<artifactId>egov-search</artifactId>
 	<packaging>jar</packaging>
 	<name>eGov Data Retrieval Framework</name>
-	<description>SearchComponent</description>
+	<description>Common library providing search operation on the Database</description>
 	
 	<version>0.0.1-SNAPSHOT</version>
 
@@ -101,30 +101,27 @@
    	       <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
 </dependencies>
-	<repositories>
-		<repository>
-			<id>repo.egovernments.org</id>
-			<name>eGov ERP Releases Repository</name>
-			<url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
-		</repository>
-		<repository>
-			<id>repo.egovernments.org.snapshots</id>
-			<name>eGov ERP Releases Repository</name>
-			<url>http://repo.egovernments.org/nexus/content/repositories/snapshots/</url>
-		</repository>
-	</repositories>
-	<!--  <distributionManagement>
-        <repository>
-            <id>repo.egovernments.org</id>
-            <name>eGov ERP Releases Repository</name>
-            <url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
-        </repository>
+    <distributionManagement>
         <snapshotRepository>
             <id>repo.egovernments.org</id>
             <name>eGov ERP Snapshots Repository</name>
             <url>http://repo.egovernments.org/nexus/content/repositories/snapshots/</url>
         </snapshotRepository>
-    </distributionManagement> -->
+        <repository>
+            <id>repo.egovernments.org</id>
+            <name>eGov ERP Releases Repository</name>
+            <url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
+    
+    <repositories>
+    <repository>
+            <id>repo.egovernments.org</id>
+            <name>eGov ERP Releases Repository</name>
+            <url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
+        </repository>
+    </repositories>
+    
 	<build>
 		<plugins>
 			<!-- Package as an executable jar/war -->

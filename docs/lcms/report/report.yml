@@ -5,7 +5,7 @@ ReportDefinitions:
   version: 1.0.0
   moduleName: lcms
   sourceColumns:
-  - name: caseNo
+  - name: caseno
     label: reports.lcms.caseRefNo
     type: string
     source: lcms
@@ -70,4 +70,4 @@ ReportDefinitions:
     source: lcms
     isMandatory: false
     searchClause : AND case.caseStatus = $caseStatus
-  query: select case.defendant defendant,case.caseno as caseNo,case.plantiffName as plantiffName from egov_lcms_case case  WHERE case.summondate>=$fromDate and case.summondate<=$toDate;
+  query: select defendant,caseno,plantiffName from egov_lcms_case WHERE caseregistrationdate>=$fromDate and case.caseregistrationdate<=$toDate;

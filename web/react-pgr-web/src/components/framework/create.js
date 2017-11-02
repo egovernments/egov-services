@@ -46,7 +46,6 @@ class Report extends Component {
     for(var i=0; i<groups.length; i++) {
       for(var j=0; j<groups[i].fields.length; j++) {
         if(typeof groups[i].fields[j].defaultValue == 'string' || typeof groups[i].fields[j].defaultValue == 'number' || typeof groups[i].fields[j].defaultValue == 'boolean') {
-          //console.log(groups[i].fields[j].name + "--" + groups[i].fields[j].defaultValue);
           _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
 

@@ -132,7 +132,7 @@ public class CaseService {
 			String caseReferenceNumber = uniqueCodeGeneration.getUniqueCode(caseobj.getTenantId(),
 					caseRequest.getRequestInfo(), propertiesManager.getCaseReferenceFormat(),
 					propertiesManager.getCaseReferenceGenName(), Boolean.TRUE,
-					caseobj.getSummon().getCaseType().getCode());
+					caseobj.getSummon().getDepartmentName().getCode());
 			caseobj.setCode(caseReferenceNumber);
 			caseobj.setCode(code);
 

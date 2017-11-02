@@ -229,7 +229,7 @@ var dat = {
 				"fields": [
 					{
             "name": "searchLocation",
-						"jsonPathAddress": "Asset.locationDetails",
+						"jsonPathAddress": "Asset.location",
             "jsonPathLng": "Asset.longitude",
 						"jsonPathLat": "Asset.latitude",
             "label": "search",
@@ -243,7 +243,7 @@ var dat = {
           },
           {
             "name": "Location",
-						"jsonPath": "Asset.locationDetails",
+						"jsonPath": "Asset.location",
             "label": "ac.create.Location",
             "pattern": "",
             "type": "text",
@@ -471,7 +471,7 @@ var dat = {
           },
           {
             "name": "SourceOfFunds",
-            "jsonPath": "Asset.funds",
+            "jsonPath": "Asset.funSource",
             "label": "ac.create.Source.of.funds",
             "pattern": "",
             "type": "singleValueList",
@@ -648,7 +648,7 @@ var dat = {
 
           {
             "name": "OpeningDate",
-            "jsonPath": "Asset.",
+            "jsonPath": "Asset.openingDate",
             "label": "ac.create.Opening.date",
             "pattern": "",
             "type": "datePicker",
@@ -1089,7 +1089,7 @@ var dat = {
 				"fields": [
           {
             "name": "Location",
-            "jsonPath": "Assets[0].locationDetails",
+            "jsonPath": "Assets[0].location",
             "label": "ac.create.Location",
             "pattern": "",
             "type": "text",
@@ -1301,7 +1301,7 @@ var dat = {
           },
           {
             "name": "SourceOfFunds",
-            "jsonPath": "Assets[0].fund",
+            "jsonPath": "Assets[0].fundSource",
             "label": "ac.create.Source.of.funds",
             "pattern": "",
             "type": "singleValueList",
@@ -1475,7 +1475,7 @@ var dat = {
           // },
           {
             "name": "OpeningDate",
-            "jsonPath": "Assets[0].",
+            "jsonPath": "Assets[0].openingDate",
             "label": "ac.create.Opening.date",
             "pattern": "",
             "type": "datePicker",
@@ -1778,7 +1778,7 @@ var dat = {
 				"fields": [
           {
             "name": "Location",
-            "jsonPath": "Asset[0].locationDetails",
+            "jsonPath": "Asset[0].location",
             "label": "ac.create.Location",
             "pattern": "",
             "type": "text",
@@ -1991,7 +1991,7 @@ var dat = {
           },
           {
             "name": "SourceOfFunds",
-            "jsonPath": "Asset[0].",
+            "jsonPath": "Asset[0].fundSource",
             "label": "ac.create.Source.of.funds",
             "pattern": "",
             "type": "singleValueList",
@@ -2210,7 +2210,7 @@ var dat = {
 
           // {
           //   "name": "OpeningDate",
-          //   "jsonPath": "Asset[0].",
+          //   "jsonPath": "Asset[0].openingDate",
           //   "label": "ac.create.Opening.date",
           //   "pattern": "",
           //   "type": "date",

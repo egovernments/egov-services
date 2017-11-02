@@ -330,4 +330,4 @@ ReportDefinitions:
          ON rev1.assetid=revdec.assetid and rev1.tenantid=revdec.tenantid 
          where rev1.tenantid = $tenantid) revaluation 
          ON asset.tenantid=revaluation.tenantid AND asset.id=revaluation.assetid
-         where AND asset.tenantid = $tenantid
+         where asset.tenantid = $tenantid

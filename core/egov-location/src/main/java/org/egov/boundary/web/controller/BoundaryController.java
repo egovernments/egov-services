@@ -219,6 +219,10 @@ public class BoundaryController {
 		} else if (tenantId != null) {
 			org.egov.boundary.domain.model.Boundary boundaryObj = org.egov.boundary.domain.model.Boundary.builder()
 					.build();
+			if(boundaryRequest.getBoundary().getLatitude()!=null && boundaryRequest.getBoundary().getLongitude()!=null){
+				boundaryObj.setLatitude(boundaryRequest.getBoundary().getLatitude());
+				boundaryObj.setLongitude(boundaryRequest.getBoundary().getLongitude());
+			}
 			boundaryObj.setTenantId(tenantId);
 			boundaryRequest.setBoundary(boundaryObj);
 		}

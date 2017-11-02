@@ -4135,7 +4135,7 @@ definitions:
         disposalDetails:
           type:  array
           description:  |
-            disposal details of the Disposal
+            This object contains the list of materials marked as scraped in the selected store and are to be disposed.
           items:
             $ref: "#/definitions/DisposalDetails"
         disposalStatus:
@@ -4168,7 +4168,7 @@ definitions:
     DisposalDetails:
       type: object
       description: |
-        This object holds the disposal details information.  
+        This object contains the list of materials marked as scraped in the selected store and are to be disposed.  
       properties:
         id:
           type: string

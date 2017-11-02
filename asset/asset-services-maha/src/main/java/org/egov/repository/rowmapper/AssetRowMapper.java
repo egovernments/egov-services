@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.egov.model.Asset;
 import org.egov.model.AssetCategory;
@@ -38,7 +39,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
 
     @Override
     public ArrayList<Asset> extractData(final ResultSet rs) throws SQLException, DataAccessException {
-        final Map<Long, Asset> map = new HashMap<Long, Asset>();
+        final Map<Long, Asset> map = new TreeMap<Long, Asset>();
 
         while (rs.next()) {
             final Long assetId = (Long) rs.getObject("id");

@@ -670,7 +670,7 @@
           "columns": []
         },
         {
-          "name": "No. Of Layers",
+          "name": "No Of Layers",
           "type": "Text",
           "isActive": true,
           "isMandatory": false,

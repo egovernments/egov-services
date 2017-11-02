@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.models.Advocate;
 import org.egov.lcms.models.AdvocateDetails;
-import org.egov.lcms.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
@@ -28,7 +27,7 @@ public class AdvocateDetailsRowMapper implements RowMapper<AdvocateDetails> {
 
 		AdvocateDetails advocateDetails = new AdvocateDetails();
 		advocateDetails.setCode(rs.getString("code"));
-		advocateDetails.setAssignedDate(getLong(rs.getLong("assigneddate")));
+		advocateDetails.setAssignedDate(getLong(rs.getLong("assigndate")));
 		advocateDetails.setFee(getDouble(rs.getDouble("fee")));
 
 		TypeReference<Advocate> advocateTypeRef = new TypeReference<Advocate>() {

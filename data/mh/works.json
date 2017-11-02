@@ -248,11 +248,31 @@
   "AppConfiguration": [
     {
       "id": 1,
+      "code" : "ASSET_MANDATORY",
       "keyName": "ASSET_MANDATORY",
       "tenantId": "mh",
       "description": "To make Asset linking required or not in Estimate screen",
       "values": "Yes",
-      "effectiveFrom": ""
+      "effectivefrom" : "2017-08-22",
+      "createdby": null,
+      "createddate": null,
+      "lastmodifiedby": null,
+      "lastmodifieddate": null,
+      "version": 0,
+    },
+    {
+    "id": "2",
+    "code" : "GIS_INTEGRATION",
+    "keyname": "GIS_INTEGRATION",
+    "value" : "No",
+    "description" : "Location details required or not for estimate",
+    "effectivefrom" : "2017-08-22",
+    "createdby": null,
+    "createddate": null,
+    "lastmodifiedby": null,
+    "lastmodifieddate": null,
+    "version": 0,
+    "tenantid": "mh"
     }
   ],
   "Fund": [

@@ -18,5 +18,11 @@ public class WorksEstimateServiceConstants {
     public static final String DEPARTMENT_OBJECT = "Department";
     public static final String WORKS_MODULE_CODE = "Works";
 
+    public static final String BOUNDARY_OBJECT = "Boundary";
+    public static final String APPCONFIGURATION_OBJECT = "AppConfiguration";
+    public static final String GIS_INTEGRATION_APPCONFIG = "GIS_INTEGRATION";
+    public static final String ASSET_DETAILES_REQUIRED_APPCONFIG = "ASSET_MANDATORY";
+
+
 
 }

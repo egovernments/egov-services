@@ -52,5 +52,7 @@ public class PropertiesManager {
 
     @Value("${works.projectcode.format}")
     private String worksWorkIdentificationNumberFormat;
-	
+
+    @Value("${location.required}")
+    private String locationRequiredForEstimate;
 }

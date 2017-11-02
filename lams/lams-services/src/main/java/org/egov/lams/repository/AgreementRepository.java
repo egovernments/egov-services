@@ -41,6 +41,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class AgreementRepository {
     public static final Logger logger = LoggerFactory.getLogger(AgreementRepository.class);
+    
+	public static final String AGREEMENT_SEARCH_QUERY = "SELECT *,agreement.id as lamsagreementid FROM eglams_agreement agreement LEFT OUTER JOIN eglams_demand demand ON agreement.id = demand.agreementid LEFT OUTER JOIN eglams_rentincrementtype rent ON agreement.rent_increment_method = rent.id where agreement.agreement_No=:agreementNumber and agreement.tenant_id=:tenantId order by agreement.id desc";
 
     @Autowired
     private AssetHelper assetHelper;
@@ -213,6 +215,21 @@ public class AgreementRepository {
         return agreements;
     }
 
+	public List<Agreement> findByAgreementNumber(String agreementNumber, String tenantId) {
+		String query = AGREEMENT_SEARCH_QUERY;
+		List<Agreement> agreements = null;
+		Map<String, Object> params = new HashMap<>();
+		params.put("agreementNumber", agreementNumber);
+		params.put("tenantId", tenantId);
+
+		try {
+			agreements = namedParameterJdbcTemplate.query(query, params, new AgreementRowMapper());
+		} catch (DataAccessException e) {
+			logger.info("exception occured while getting agreement by agreementNumber" + e);
+			throw new RuntimeException(e.getMessage());
+		}
+		return agreements;
+	}
     /*
      * method to return a list of Allottee objects by making an API call to
      * Allottee API

@@ -24,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -69,6 +70,39 @@ public class AgreementController {
 		return new ResponseEntity<>(agreementResponse, HttpStatus.OK);
 	}
 
+	@PostMapping("_commonsearch")
+	@ResponseBody
+	public ResponseEntity<?> commonSearch(@ModelAttribute @Valid AgreementCriteria agreementCriteria,
+			@RequestBody RequestInfoWrapper requestInfoWrapper, BindingResult bindingResult) {
+
+		if (bindingResult.hasErrors()) {
+			ErrorResponse errorResponse = populateErrors(bindingResult);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		List<Agreement> agreements = null;
+		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+		if (agreementCriteria.getAgreementNumber() != null && agreementCriteria.getTenantId() != null) {
+			agreements = agreementService.getAgreementsByAgreementNumber(agreementCriteria.getAgreementNumber(),
+					agreementCriteria.getTenantId());
+		}
+		if (agreements != null && !agreements.isEmpty()) {
+			agreementValidator.validateAgreementForWorkFLow(agreements.get(0), bindingResult,
+					agreementCriteria.getAction());
+
+			if (bindingResult.hasErrors()) {
+				ErrorResponse errorResponse = populateValidationErrors(bindingResult);
+				return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+			} else
+				return getSuccessResponse(agreements, requestInfo);
+		} else {
+			Error error = new Error();
+			error.setCode(1);
+			error.setDescription("No Agreements Found!");
+			ErrorResponse errorResponse = new ErrorResponse();
+			errorResponse.setError(error);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+	}
 	@PostMapping("/_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid AgreementRequest agreementRequest, BindingResult errors) {
@@ -475,5 +509,15 @@ public class AgreementController {
 		agreementResponse.setAgreement(agreements);
 		agreementResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
 		return agreementResponse;
+	}
+
+	private ErrorResponse populateValidationErrors(BindingResult errors) {
+		ErrorResponse errRes = new ErrorResponse();
+		ObjectError validationError = errors.getGlobalError();
+		Error error = new Error();
+		error.setCode(1);
+		error.setDescription(validationError.getDefaultMessage());
+		errRes.setError(error);
+		return errRes;
 	}
 }

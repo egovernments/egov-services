@@ -15,6 +15,7 @@ import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.RentIncrementType;
 import org.egov.lams.model.WorkflowDetails;
 import org.egov.lams.model.enums.Source;
+import org.egov.lams.model.enums.Action;
 import org.egov.lams.repository.AllotteeRepository;
 import org.egov.lams.repository.AssetRepository;
 import org.egov.lams.repository.DemandRepository;
@@ -340,5 +341,24 @@ public class AgreementValidator {
 		Agreement agreement = agreementRequest.getAgreement();
 		validateWorkflowDetails(agreement.getWorkflowDetails(), errors);
 
+	}
+
+	public void validateAgreementForWorkFLow(Agreement agreement, Errors errors, String action) {
+
+		AgreementRequest agreementRequest = new AgreementRequest();
+		agreementRequest.setAgreement(agreement);
+		if (Action.RENEWAL.toString().equals(action)) {
+			validateRenewal(agreementRequest, errors);
+		} else if (Action.CANCELLATION.toString().equals(action)) {
+			validateCancel(agreementRequest, errors);
+		} else if (Action.EVICTION.toString().equals(action)) {
+			validateEviction(agreementRequest, errors);
+		} else if (Action.OBJECTION.toString().equals(action)) {
+			validateObjection(agreementRequest, errors);
+		} else if (Action.JUDGEMENT.toString().equals(action)) {
+			validateJudgement(agreementRequest, errors);
+		} else if (Action.REMISSION.toString().equals(action)) {
+			validateRemission(agreementRequest, errors);
+		}
 	}
 }

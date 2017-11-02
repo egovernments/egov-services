@@ -383,6 +383,10 @@ public class AgreementService {
 			return agreementRepository.findByAgreement(agreementCriteria, requestInfo);
 		}
 	}
+	
+	public List<Agreement> getAgreementsByAgreementNumber(String agreementNumber, String tenantId){
+		return agreementRepository.findByAgreementNumber(agreementNumber, tenantId);
+	}
 
 	private static Date setToTime(Date toDate) {
 		Calendar cal = Calendar.getInstance();

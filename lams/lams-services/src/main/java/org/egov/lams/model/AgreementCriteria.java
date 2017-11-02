@@ -48,6 +48,7 @@ public class AgreementCriteria {
 	 private String stateId;
 	 private Set<Long> asset;
 	 private Set<Long> allottee;
+	 private String action;
 
 	/* Below three methods use the Java Stream api and stream all specified fields
 	 * and check for null all these methods return true only when all the fields

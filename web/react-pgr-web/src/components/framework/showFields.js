@@ -147,7 +147,7 @@ export default class ShowFields extends Component {
 
 
   renderField=(item, screen, index)=> {
-    if(screen == "view" && ["documentList", "fileTable", "arrayText", "arrayNumber", "tableList", "workflow"].indexOf(item.type) > -1 ) {
+    if(screen == "view" && ["documentList", "fileTable", "arrayText", "arrayNumber", "tableList", "workflow"].indexOf(item.type) == -1 ) {
       if (item.type == "datePicker") {
         item.isDate = true;
       }

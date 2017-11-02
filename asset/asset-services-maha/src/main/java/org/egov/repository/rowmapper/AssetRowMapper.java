@@ -98,6 +98,9 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 asset.setCubicContents(rs.getString("cubiccontents"));
                 asset.setQuantity((Long) rs.getObject("quantity"));
                 asset.setAssetReference((Long) rs.getObject("assetreference"));
+                asset.setOpeningDate(rs.getLong("openingDate"));
+                asset.setLocation(rs.getString("location"));
+                asset.setFundSource(rs.getString("fundSource"));
               
 
                 final String properties = rs.getString("assetAttributes");

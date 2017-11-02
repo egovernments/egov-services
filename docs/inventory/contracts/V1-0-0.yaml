@@ -3426,6 +3426,10 @@ definitions:
       description: |
         This object holds the material store mapping details information.  
       properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the Material Store Mapping      
         material:
           type: string
           description: |

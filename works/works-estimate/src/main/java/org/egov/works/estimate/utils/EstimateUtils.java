@@ -1,5 +1,6 @@
 package org.egov.works.estimate.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.works.commons.web.contract.RequestInfo;
 import org.egov.works.estimate.web.contract.MasterDetails;
 import org.egov.works.estimate.web.contract.MdmsCriteria;
@@ -40,18 +41,21 @@ public class EstimateUtils {
 	 * @return the json map it to your object.
 	 */
 
-	public JSONArray getMDMSData(final String objectName, final String filter, final String tenantId,
+	public JSONArray getMDMSData(final String objectName, final String codeFilter, final String nameFilter, final String tenantId,
 			final RequestInfo requestInfo,final String moduleName) {
 		MasterDetails[] masterDetailsArray;
 		ModuleDetails[] moduleDetailsArray;
 		MdmsRequest mdmsRequest;
 		MdmsResponse mdmsResponse;
+        String filter = "";
+
+        if(StringUtils.isNotBlank(codeFilter))
+            filter = "[?(@.code == '" + codeFilter + "')]";
+        else if(StringUtils.isNotBlank(codeFilter))
+        filter = "[?(@.name == '" + nameFilter + "')]";
 
 		masterDetailsArray = new MasterDetails[1];
-		masterDetailsArray[0] = MasterDetails.builder().name(objectName).filter("[?(@.code == '" + filter + "')]")
-				.build();
-		moduleDetailsArray = new ModuleDetails[1];
-
+		masterDetailsArray[0] = MasterDetails.builder().name(objectName).filter(filter).build();
 		moduleDetailsArray = new ModuleDetails[1];
 		moduleDetailsArray[0] = ModuleDetails.builder().moduleName(moduleName).masterDetails(masterDetailsArray)
 				.build();

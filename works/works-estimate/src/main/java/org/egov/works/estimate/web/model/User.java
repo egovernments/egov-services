@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * User
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-28T12:22:31.360Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-02T10:57:47.412Z")
 
 public class User   {
   @JsonProperty("id")

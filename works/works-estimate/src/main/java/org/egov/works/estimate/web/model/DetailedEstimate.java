@@ -161,6 +161,10 @@ public class DetailedEstimate   {
     @JsonProperty("estimateOverheads")
     private List<EstimateOverhead> estimateOverheads = null;
 
+    //Added manually as code generation was giving error
+    @JsonProperty("estimateActivities")
+    private List<EstimateActivity> estimateActivities = null;
+
     @JsonProperty("workFlowDetails")
     private WorkFlowDetails workFlowDetails = null;
 
@@ -1162,6 +1166,39 @@ public class DetailedEstimate   {
     public void setEstimateOverheads(List<EstimateOverhead> estimateOverheads) {
         this.estimateOverheads = estimateOverheads;
     }
+
+
+    public DetailedEstimate estimateActivities(List<EstimateActivity> estimateActivities) {
+        this.estimateActivities = estimateActivities;
+        return this;
+    }
+
+    public DetailedEstimate addEstimateActivitiesItem(EstimateActivity estimateActivitiesItem) {
+        if (this.estimateActivities == null) {
+            this.estimateActivities = new ArrayList<EstimateActivity>();
+        }
+        this.estimateActivities.add(estimateActivitiesItem);
+        return this;
+    }
+
+    /**
+     * Array of Detaields Estimate Activity Values
+     * @return estimateActivities
+     **/
+    @ApiModelProperty(value = "Array of Detaields Estimate Activity Values")
+
+    @Valid
+
+    public List<EstimateActivity> getEstimateActivities() {
+        return estimateActivities;
+    }
+
+    public void setEstimateActivities(List<EstimateActivity> estimateActivities) {
+        this.estimateActivities = estimateActivities;
+    }
+
+
+
 
     public DetailedEstimate workFlowDetails(WorkFlowDetails workFlowDetails) {
         this.workFlowDetails = workFlowDetails;

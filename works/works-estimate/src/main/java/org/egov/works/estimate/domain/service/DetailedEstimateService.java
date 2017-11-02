@@ -121,34 +121,28 @@ public class DetailedEstimateService {
 
     }
 
-/*    public void validateActivities(final DetailedEstimate detailedEstimate, final BindingResult errors) {
-        for (int i = 0; i < detailedEstimate.gets.getSorActivities().size() - 1; i++)
-            for (int j = i + 1; j < abstractEstimate.getSorActivities().size(); j++)
-                if (abstractEstimate.getSorActivities().get(i).getSchedule() != null
-                        && abstractEstimate.getSorActivities().get(i).getSchedule().getId()
-                        .equals(abstractEstimate.getSorActivities().get(j).getSchedule().getId())) {
+    public void validateActivities(final DetailedEstimate detailedEstimate, final BindingResult errors) {
+        for (int i = 0; i < detailedEstimate.getEstimateActivities().size() - 1; i++)
+            for (int j = i + 1; j < detailedEstimate.getEstimateActivities().size(); j++)
+                if (detailedEstimate.getEstimateActivities().get(i).getScheduleOfRate() != null
+                        && detailedEstimate.getEstimateActivities().get(i).getScheduleOfRate().getId()
+                        .equals(detailedEstimate.getEstimateActivities().get(j).getScheduleOfRate().getId())) {
                     errors.reject("error.sor.duplicate", "error.sor.duplicate");
                     break;
                 }
 
-        for (final Activity activity : abstractEstimate.getSorActivities()) {
+        for (final EstimateActivity activity : detailedEstimate.getEstimateActivities()) {
             if (activity.getQuantity() <= 0)
                 errors.reject("error.quantity.zero", "error.quantity.zero");
-            if (activity.getRate() <= 0)
+            if (activity.getEstimateRate().compareTo(BigDecimal.ZERO) <= 0)
                 errors.reject("error.rates.zero", "error.rates.zero");
         }
 
-        for (final Activity activity : abstractEstimate.getNonSorActivities()) {
-            if (activity.getQuantity() <= 0)
-                errors.reject("error.quantity.zero", "error.quantity.zero");
-            if (activity.getRate() <= 0)
-                errors.reject("error.rates.zero", "error.rates.zero");
-        }
-    }*/
+    }
 
     public void validateLocationDetails(final DetailedEstimate detailedEstimate, final BindingResult bindErrors, final RequestInfo requestInfo) {
         if (propertiesManager.getLocationRequiredForEstimate().toString().equalsIgnoreCase("Yes")) {
-            JSONArray mdmsArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.APPCONFIGURATION_OBJECT, WorksEstimateServiceConstants.GIS_INTEGRATION_APPCONFIG,
+            JSONArray mdmsArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.APPCONFIGURATION_OBJECT, WorksEstimateServiceConstants.GIS_INTEGRATION_APPCONFIG, null,
                     detailedEstimate.getTenantId(), requestInfo, WorksEstimateServiceConstants.WORKS_MODULE_CODE);
             if (mdmsArray != null && !mdmsArray.isEmpty() && mdmsArray.get(0).equals("Yes") && (StringUtils.isBlank(detailedEstimate.getLocation())
                     || detailedEstimate.getLatitude() == null || detailedEstimate.getLongitude() == null))
@@ -158,7 +152,7 @@ public class DetailedEstimateService {
 
     public void validateAssetDetails(final DetailedEstimate detailedEstimate, final BindingResult bindErrors, final RequestInfo requestInfo) {
 
-        JSONArray mdmsArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.APPCONFIGURATION_OBJECT, WorksEstimateServiceConstants.ASSET_DETAILES_REQUIRED_APPCONFIG,
+        JSONArray mdmsArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.APPCONFIGURATION_OBJECT, WorksEstimateServiceConstants.ASSET_DETAILES_REQUIRED_APPCONFIG, null,
                 detailedEstimate.getTenantId(), requestInfo, WorksEstimateServiceConstants.WORKS_MODULE_CODE);
             if (mdmsArray != null && !mdmsArray.isEmpty() && mdmsArray.get(0).equals("Yes") && detailedEstimate.getAssets() != null
                     && detailedEstimate.getAssets().isEmpty())

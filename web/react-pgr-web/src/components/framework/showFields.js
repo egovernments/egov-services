@@ -31,6 +31,7 @@ import UiFileTable from './components/UiFileTable';
 import UiMultiFieldTable from './components/UiMultiFieldTable';
 import UiDialogBox from './components/UiDialogBox'
 import UigoogleMaps from './components/UigoogleMaps'
+import UiWorkflow from './components/UiWorkflow';
 
 let styles={
   reducePadding: {
@@ -64,7 +65,7 @@ export default class ShowFields extends Component {
               {group.fields.map((field, fieldIndex)=>{
                   if(!field.isHidden) {
                     return (
-                      <Col key={fieldIndex} xs={12} sm={field.type === "documentList" || field.type === "fileTable" || field.type === "tableList" || (field.type === "textarea" && field.fullWidth === true) ? 12 : noCols} md={field.type === "documentList" || field.type === "fileTable" || field.type === "tableList" || (field.type === "textarea" && field.fullWidth === true) ? 12 : noCols}>
+                      <Col key={fieldIndex} xs={12} sm={field.type === "documentList" || field.type === "fileTable" || field.type === "tableList" || (field.type === "textarea" && field.fullWidth === true) || field.type === "workflow" ? 12 : noCols} md={field.type === "documentList" || field.type === "fileTable" || field.type === "tableList" || (field.type === "textarea" && field.fullWidth === true) || field.type === "workflow" ? 12 : noCols}>
                           {renderField(field, self.props.screen,fieldIndex)}
                       </Col>
                     )
@@ -146,7 +147,7 @@ export default class ShowFields extends Component {
 
 
   renderField=(item, screen, index)=> {
-    if(screen == "view" && ["documentList", "fileTable", "arrayText", "arrayNumber", "tableList"].indexOf(item.type) > -1 ) {
+    if(screen == "view" && ["documentList", "fileTable", "arrayText", "arrayNumber", "tableList", "workflow"].indexOf(item.type) > -1 ) {
       if (item.type == "datePicker") {
         item.isDate = true;
       }
@@ -204,6 +205,8 @@ export default class ShowFields extends Component {
         return <UiFileTable tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} readonly={screen === "view" ? "true" : ""}/>
       case 'tableList':
         return <UiMultiFieldTable tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} screen={screen}/>
+      case 'workflow':
+        return <UiWorkflow tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} initiateWF={this.props.initiateWF} workflowId={this.props.workflowId || ""}/>
       case 'customComponent':
         // console.log(item.path);
         // {

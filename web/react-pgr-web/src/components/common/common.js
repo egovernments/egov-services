@@ -2447,7 +2447,8 @@ var localization_EN_Data = {
 "opinion.search.result.departmentName":"Department Name",
 "opinion.search.result.opinionOn":"Opinion On",
 "legal.search.result.emailId":"Email-id",
-"legal.search.result.mobileNumber":"Mobile Number"
+"legal.search.result.mobileNumber":"Mobile Number",
+"framework.required.note": "Fields are mandatory"
 
 
 
@@ -4211,8 +4212,8 @@ var localization_MR_Data = {
 "opinion.search.result.departmentName":"Department Name-Marathi",
 "opinion.search.result.opinionOn":"Opinion On-Marathi",
 "legal.search.result.emailId":"Email-id-marathi",
-"legal.search.result.mobileNumber":"Mobile Number-marathi"
-
+"legal.search.result.mobileNumber":"Mobile Number-marathi",
+"framework.required.note": "Fields are mandatory-marathi"
 
 }
 

@@ -363,9 +363,28 @@ class Report extends Component {
       self.makeAjaxCall(formData, _url);
   }
 
+  initiateWF = (action, workflowItem, isHidden, status) => {
+    let formData = {...this.props.formData};
+    if(!_.get(formData. workflowItem.jsonPath.objectPath)) {
+      _.set(formData, workflowItem.jsonPath.objectPath, {});
+    }
+
+    if(!isHidden && !_.get(formData, workflowItem.jsonPath.assigneePath)) {
+      return this.props.toggleSnackbarAndSetText(true, translate("wc.create.workflow.fields"), false, true);
+    }
+
+    if(action.key.toLowerCase() == "reject" && !_.get(formData, workflowItem.commentsPath)) {
+      return this.props.toggleSnackbarAndSetText(true, translate("wc.create.workflow.comment"), false ,true);
+    }
+
+    _.set(formData, workflowItem.jsonPath.actionPath, action.key);
+    _.set(formData, workflowItem.jsonPath.statusPath, status);
+    this.create();
+  }
+
   create=(e) => {
     let self = this, _url;
-    e.preventDefault();
+    if(e) e.preventDefault();
     self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
     if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
@@ -1099,7 +1118,7 @@ class Report extends Component {
 
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
-    let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
+    let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler, initiateWF} = this;
 
     return (
       <div className="Report">
@@ -1117,7 +1136,10 @@ class Report extends Component {
                                     useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false}
                                     addNewCard={addNewCard}
                                     removeCard={removeCard}
-                                    autoComHandler={autoComHandler}/>}
+                                    autoComHandler={autoComHandler}
+                                    initiateWF={initiateWF}
+                                    workflowId={window.location.hash.split("/").indexOf("update") == 1 ? (this.props.match.params.id || this.props.match.params.master) : ""}
+                                    />}
           <div style={{"textAlign": "center"}}>
             <br/>
             {actionName == "create" && <UiButton item={{"label": "Create", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}

@@ -1094,9 +1094,17 @@ if (assetDetails && Object.keys(assetDetails).length) {
     }
 }
 
+$('#commencementDate').datepicker("option",{
+                    format: 'dd/mm/yyyy',
+                    autoclose:true
+
+                });
+
 $('.datepicker').datepicker({
       format: 'dd/mm/yyyy',
+      endDate: new Date(),
       autoclose:true
+
 });
 
 $(".datepicker").on("change", function() {

@@ -29,6 +29,8 @@ public class SupplierEntity {
 	private String address = null;
 
 	private String status = null;
+	
+	private Long inactivedate = null;
 
 	private String supplierContactNo = null;
 
@@ -68,6 +70,8 @@ public class SupplierEntity {
 
 	private Long lastmodifiedTime = null;
 	
+	private String tenantId;
+	
 	public Object toEntity(Supplier supplier) {
 		this.id = supplier.getId();
 		this.name = supplier.getName();
@@ -75,6 +79,7 @@ public class SupplierEntity {
 		this.supplierType = supplier.getSupplierType().getName();
 		this.address = supplier.getAddress();
 		this.status = supplier.getStatus().getName();
+		this.inactivedate = supplier.getInActiveDate();
 		this.supplierContactNo = supplier.getSupplierContactNo();
 		this.faxNo = supplier.getFaxNo();
 		this.website = supplier.getWebsite();
@@ -94,6 +99,8 @@ public class SupplierEntity {
 		this.createdTime = supplier.getAuditDetails().getCreatedTime();
 		this.lastmodifiedBy = supplier.getAuditDetails().getLastModifiedBy();
 		this.lastmodifiedTime = supplier.getAuditDetails().getLastModifiedTime();
+		this.tenantId = supplier.getAuditDetails().getTenantId();
+		
 		return this;
 	}
 

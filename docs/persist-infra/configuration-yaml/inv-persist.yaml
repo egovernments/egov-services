@@ -29,9 +29,7 @@ serviceMaps:
             - jsonPath: $.stores.*.active
             - jsonPath: $.stores.*.auditDetails.tenantId
             - jsonPath: $.stores.*.auditDetails.createdBy
-              dbType: LONG
             - jsonPath: $.stores.*.auditDetails.lastModifiedBy
-              dbType: LONG
             - jsonPath: $.stores.*.auditDetails.createdTime
               dbType: LONG
             - jsonPath: $.stores.*.auditDetails.lastModifiedTime
@@ -61,6 +59,7 @@ serviceMaps:
             - jsonPath: $.stores.*.active
             - jsonPath: $.stores.*.auditDetails.lastModifiedBy
             - jsonPath: $.stores.*.auditDetails.lastModifiedTime
+              dbType: LONG
             - jsonPath: $.stores.*.code
             - jsonPath: $.stores.*.auditDetails.tenantId
 
@@ -145,3 +144,53 @@ serviceMaps:
               dbType: LONG
             - jsonPath: $.materials.*.code
             - jsonPath: $.materials.*.auditDetails.tenantId
+            
+    - version: 1
+      name: Supplier create
+      description: create suppliers in ulb
+      fromTopic: inv-supplier-save-topic
+      queryMaps:
+        - query: >-
+            INSERT INTO supplier(id, code, name, address, suppliertype,
+            status, inactivedate, suppliercontactno, faxno,
+            website, email, narration, panno,
+            tinno, cstno, vatno, contactperson,contactpersonno, bankname, bankifsc,
+            bankAcctNo, bankmicr, createdby, createdtime, lastmodifiedby, lastmodifiedtime,
+            tenantid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?,
+            ?, ?, ?, ?, ?, ?);
+          basePath: $.suppliers.*
+          jsonMaps:
+            - jsonPath: $.suppliers.*.id
+            - jsonPath: $.suppliers.*.code
+            - jsonPath: $.suppliers.*.name
+            - jsonPath: $.suppliers.*.address
+            - jsonPath: $.suppliers.*.supplierType.name
+            - jsonPath: $.suppliers.*.status.name
+            - jsonPath: $.suppliers.*.inActiveDate
+              dbType: LONG
+            - jsonPath: $.suppliers.*.supplierContactNo
+            - jsonPath: $.suppliers.*.faxNo
+            - jsonPath: $.suppliers.*.website
+            - jsonPath: $.suppliers.*.email
+            - jsonPath: $.suppliers.*.narration
+            - jsonPath: $.suppliers.*.panNo
+            - jsonPath: $.suppliers.*.tinNo
+            - jsonPath: $.suppliers.*.cstNo
+            - jsonPath: $.suppliers.*.vatNo
+            - jsonPath: $.suppliers.*.contactPerson
+            - jsonPath: $.suppliers.*.contactPersonNo
+            - jsonPath: $.suppliers.*.bankInfo.name
+            - jsonPath: $.suppliers.*.bankInfo.ifsc
+            - jsonPath: $.suppliers.*.bankInfo.acctNo
+            - jsonPath: $.suppliers.*.bankInfo.micr
+            - jsonPath: $.suppliers.*.auditDetails.createdBy
+            - jsonPath: $.suppliers.*.auditDetails.createdTime
+              dbType: LONG
+            - jsonPath: $.suppliers.*.auditDetails.lastModifiedBy
+            - jsonPath: $.suppliers.*.auditDetails.lastModifiedTime
+              dbType: LONG
+            - jsonPath: $.suppliers.*.auditDetails.tenantId
+              
+               
+            
+            	

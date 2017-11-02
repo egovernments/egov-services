@@ -62,7 +62,7 @@ public class Bank   {
   @ApiModelProperty(required = true, value = "name of the Employee ")
   @NotNull
 
- @Pattern(regexp="^[a-zA-Z ]$")
+ @Pattern(regexp="^[a-zA-Z ]+$")
   public String getName() {
     return name;
   }

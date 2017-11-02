@@ -2,7 +2,6 @@ package io.swagger.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.model.Supplier;
@@ -10,14 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
-
+import javax.validation.constraints.*;
 
 /**
  * Contract class for web request. Array of Supplier items  are used in case of create or update
  */
 @ApiModel(description = "Contract class for web request. Array of Supplier items  are used in case of create or update")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-28T13:21:55.964+05:30")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-02T13:59:35.200+05:30")
 
 public class SupplierRequest   {
   @JsonProperty("requestInfo")
@@ -118,4 +117,3 @@ public class SupplierRequest   {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

@@ -38,7 +38,7 @@ public class SupplierService {
 			for (Supplier supplier : supplierRequest.getSuppliers()) {
 				supplier.setAuditDetails(inventoryUtilityService.mapAuditDetails(supplierRequest.getRequestInfo(), tenantId));
 				if (!supplierJdbcRepository.uniqueCheck("code", new SupplierEntity().toEntity(supplier))) {
-					errors.addError(new FieldError("store", "code", supplier.getCode(), false,
+					errors.addError(new FieldError("supplier", "code", supplier.getCode(), false,
 							new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null,
 							ErrorCode.NON_UNIQUE_VALUE.getMessage() + " . " + ErrorCode.NON_UNIQUE_VALUE.getDescription()));
 				}

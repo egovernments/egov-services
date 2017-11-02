@@ -40,9 +40,9 @@ ServiceMaps:
   - topic: inv-materialstore-save-topic
     indexes:
     - name: materialstoremappings
-      type: materialstoremappings
+      type: materialStoreMappings
       id: $.id
       isBulk: true
-      jsonPath: $.materialstoremappings.*
+      jsonPath: $.materialStoreMappings.*
 
       

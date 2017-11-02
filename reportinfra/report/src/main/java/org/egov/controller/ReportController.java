@@ -7,16 +7,21 @@ import org.egov.ReportApp;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.domain.model.MetaDataRequest;
 import org.egov.domain.model.ReportDefinitions;
+import org.egov.report.repository.builder.ReportQueryBuilder;
 import org.egov.report.service.ReportService;
 import org.egov.swagger.model.MetadataResponse;
 import org.egov.swagger.model.ReportDataResponse;
 import org.egov.swagger.model.ReportRequest;
 import org.egov.swagger.model.ReportResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +33,9 @@ public class ReportController {
 
 	public ReportDefinitions reportDefinitions;
 	
+	public static final Logger LOGGER = LoggerFactory.getLogger(ReportController.class);
+
+	
 	@Autowired
 	public ReportController(ReportDefinitions reportDefinitions) {
 		this.reportDefinitions = reportDefinitions;
@@ -35,6 +43,9 @@ public class ReportController {
 	
 	@Autowired
 	private ReportService reportService;
+	
+	@Autowired
+	private ReportQueryBuilder reportQueryBuilder;
 	
 	@Autowired
     public static ResourceLoader resourceLoader;
@@ -119,5 +130,21 @@ public class ReportController {
 		return reportService.reloadResponse(reportRequest.getRequestInfo(),null);
 
 	}
+	
+	
+	@PostMapping("_test")
+	@ResponseBody
+	public ResponseEntity<?> test(@RequestBody Object request) {
+		try {
+			LOGGER.info("Request: "+request);
+			reportQueryBuilder.buildInlineQuery(request);
+		} catch(Exception e){
+			LOGGER.error("Exp: ",e );
+			return new ResponseEntity<>(request, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(request, HttpStatus.OK);
+
+	}
+	
 	
 }

@@ -1,24 +1,19 @@
 package org.egov.report.repository.builder;
 
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.report.repository.ReportRepository;
 import org.egov.swagger.model.ReportDefinition;
 import org.egov.swagger.model.SearchColumn;
 import org.egov.swagger.model.SearchParam;
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
@@ -259,31 +254,72 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
 	}
 	
 	
-	public String buildInlineQuery(Object json) throws JsonParseException, JsonMappingException, IOException{
+	public String buildInlineQuery(Object json) throws Exception{
 		ObjectMapper mapper = new ObjectMapper();
+		json = mapper.writeValueAsString(json);
 		StringBuilder inlineQuery = new StringBuilder();
-		if(json instanceof net.minidev.json.JSONArray){
+		if(json.toString().startsWith("[") && json.toString().endsWith("]")){
+			LOGGER.info("Building inline query for JSONArray.....");
+			JSONArray array = new JSONArray(json.toString());
+			try{
+				Map<String, Object> map = new HashMap<>();
+				map = mapper.readValue(array.getString(0).toString(), new TypeReference<Map<String, String>>(){});
+				StringBuilder table = new StringBuilder();
+				StringBuilder values = new StringBuilder();
+				table.append("table (");
+				values.append("(VALUES (");
+				for(Map.Entry<String, Object> row: map.entrySet()){
+					table.append(row.getKey()+",");
+				}
+				for(int i = 0; i < array.length(); i++){
+					Map<String, Object> jsonMap = new HashMap<>();
+					jsonMap = mapper.readValue(array.getString(i).toString(), new TypeReference<Map<String, String>>(){});
+					values.append("(");
+					for(Map.Entry<String, Object> row: jsonMap.entrySet()){
+						values.append("'"+row.getValue()+"'"+",");	
+					}
+					values.replace(values.length() - 1, values.length(), "),");
+				}
+				table.replace(table.length() - 1, table.length(), ")");
+				LOGGER.info("tables: "+table.toString());
+				
+				values.replace(values.length() - 1, values.length(), ")");
+				LOGGER.info("values: "+values.toString());
+				
+				inlineQuery.append(values.toString())
+				.append(" AS ")
+				.append(table.toString());
+			}catch(Exception e){
+				LOGGER.error("Exception while building inline query, Valid Data format: [{},{}]. Please verify: ",e);
+			}
+			
+			LOGGER.info("from statment for inlineQuery: "+inlineQuery.toString());
 			
 		}else{
-			Map<String, Object> map = new HashMap<>();
-			map = mapper.readValue(json.toString(), new TypeReference<Map<String, String>>(){});
-			StringBuilder table = new StringBuilder();
-			StringBuilder values = new StringBuilder();
-			table.append("table (");
-			values.append("(VALUES (");
-			for(Map.Entry<String, Object> row: map.entrySet()){
-				table.append(row.getKey()+",");
-				values.append("'"+row.getValue()+"'"+",");	
+			LOGGER.info("Building inline query for a JSON Object.....");
+			try{
+				Map<String, Object> map = new HashMap<>();
+				map = mapper.readValue(json.toString(), new TypeReference<Map<String, Object>>(){});
+				StringBuilder table = new StringBuilder();
+				StringBuilder values = new StringBuilder();
+				table.append("table (");
+				values.append("(VALUES (");
+				for(Map.Entry<String, Object> row: map.entrySet()){
+					table.append(row.getKey()+",");
+					values.append("'"+row.getValue()+"'"+",");	
+				}
+				table.replace(table.length() - 1, table.length(), ")");
+				LOGGER.info("tables: "+table.toString());
+				
+				values.replace(values.length() - 1, values.length(), "))");
+				LOGGER.info("values: "+values.toString());
+				
+				inlineQuery.append(values.toString())
+				.append(" AS ")
+				.append(table.toString());
+			}catch(Exception e){
+				LOGGER.error("Exception while building inline query: ",e);
 			}
-			table.replace(table.length() - 1, table.length(), ")");
-			LOGGER.info("tables: "+table.toString());
-			
-			values.replace(values.length() - 1, values.length(), "))");
-			LOGGER.info("values: "+values.toString());
-			
-			inlineQuery.append(table.toString())
-			.append("AS")
-			.append(values.toString());
 			
 			LOGGER.info("from statment for inlineQuery: "+inlineQuery.toString());
 		}

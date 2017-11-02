@@ -1359,7 +1359,7 @@ paths:
         summary: Update any of the materials
         description: Update any of the materials
         tags:
-          - Material
+          - MaterialStoreMappings
         parameters:
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - name: materialStoreMappingRequest
@@ -1370,6 +1370,51 @@ paths:
         responses:
           200:
             description: Material store mapping updated Successfully
+            schema:
+              $ref: '#/definitions/MaterialStoreMappingResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /materialstoremapping/_search:
+      post:
+        summary: Get the list of material store mappings
+        description: material store mappings
+        tags: 
+          - MaterialStoreMappings
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: ids
+            type: array
+            items: 
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: material
+            type: string
+            in: query
+            description: |
+              material code of material store mapping
+          - name: store
+            type: string
+            in: query
+            description: |
+              store code of material store mapping
+          - name: active
+            type: boolean
+            in: query
+            description: |
+              active flag of material store mapping
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/offset"
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
+        responses:
+          200:
+            description: Material Store Mapping retrieved Successfully
             schema:
               $ref: '#/definitions/MaterialStoreMappingResponse'
           400:

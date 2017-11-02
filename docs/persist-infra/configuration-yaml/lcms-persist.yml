@@ -93,32 +93,32 @@ serviceMaps:
     description: create case
     fromTopic: lcms-create-case
     queryMaps:
-      - query: UPDATE egov_lcms_case SET oldCaseNo=?,suitNo=?,judgeDetails=?,caseRefernceNo=?,departmentPerson=?,caseRegistrationDate=?,stateId=?,lastModifiedBy=?,lastModifiedTime=? WHERE code =?;
-        basePath: $.cases.*
-        jsonMaps:        
-        - jsonPath: $.cases.*.oldCaseNo
+    - query: UPDATE egov_lcms_case SET oldCaseNo=?,suitNo=?,judgeDetails=?,caseRefernceNo=?,departmentPerson=?,caseRegistrationDate=?,stateId=?,lastModifiedBy=?,lastModifiedTime=? WHERE code =?;
+      basePath: $.cases.*
+      jsonMaps:        
+      - jsonPath: $.cases.*.oldCaseNo
         
-        - jsonPath: $.cases.*.suitNo
+      - jsonPath: $.cases.*.suitNo
         
-        - jsonPath: $.cases.*.judgeDetails
+      - jsonPath: $.cases.*.judgeDetails
         
-        - jsonPath: $.cases.*.caseRefernceNo
+      - jsonPath: $.cases.*.caseRefernceNo
         
-        - jsonPath: $.cases.*.departmentPerson
+      - jsonPath: $.cases.*.departmentPerson
         
-        - jsonPath: $.cases.*.caseRegistrationDate
-          type: LONG
+      - jsonPath: $.cases.*.caseRegistrationDate
+        type: LONG
           
-        - jsonPath: $.cases.*.summon.stateId
-           
-        - jsonPath: $.cases.*.summon.code
+      - jsonPath: $.cases.*.summon.stateId
     
-        - jsonPath: $.RequestInfo.userInfo.id
-          type: STRING
+      - jsonPath: $.RequestInfo.userInfo.id
+        type: STRING
       
-        - jsonPath: lastModifiedTime
-          type: CURRENTDATE
-          dbType: LONG
+      - jsonPath: lastModifiedTime
+        type: CURRENTDATE
+        dbType: LONG
+
+      - jsonPath: $.cases.*.summon.code
         
   - version: 1.0
     name: lcms-create-vakalatnama
@@ -147,8 +147,6 @@ serviceMaps:
           type: INT
           
         - jsonPath: $.cases.*.stateId
-        
-        - jsonPath: $.cases.*.summon.code
     
         - jsonPath: $.RequestInfo.userInfo.id
           type: STRING
@@ -156,6 +154,8 @@ serviceMaps:
         - jsonPath: lastModifiedTime
           type: CURRENTDATE
           dbType: LONG
+   
+        - jsonPath: $.cases.*.summon.code
 
   - version: 1.0
     name: lcms-parawisecomments

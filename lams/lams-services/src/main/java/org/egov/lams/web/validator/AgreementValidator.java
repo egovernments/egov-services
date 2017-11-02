@@ -14,13 +14,12 @@ import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.RentIncrementType;
 import org.egov.lams.model.WorkflowDetails;
-import org.egov.lams.model.enums.Source;
 import org.egov.lams.model.enums.Action;
+import org.egov.lams.model.enums.Source;
 import org.egov.lams.repository.AllotteeRepository;
 import org.egov.lams.repository.AssetRepository;
 import org.egov.lams.repository.DemandRepository;
 import org.egov.lams.repository.RentIncrementRepository;
-import org.egov.lams.repository.WorkFlowRepository;
 import org.egov.lams.service.AgreementService;
 import org.egov.lams.service.LamsConfigurationService;
 import org.egov.lams.web.contract.AgreementRequest;
@@ -30,7 +29,6 @@ import org.egov.lams.web.contract.DemandSearchCriteria;
 import org.egov.lams.web.contract.LamsConfigurationGetRequest;
 import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.web.contract.RequestInfoWrapper;
-import org.egov.lams.web.contract.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,11 +42,10 @@ public class AgreementValidator {
 
 	public static final String WF_ACTION_CANCEL = "Cancel";
 	public static final String WF_ACTION_PRINT_NOTICE = "Print Notice";
+	public static final String ERROR_FIELD_AGREEMENT_NO = "Agreement.agreementNumber" ;
+	public static final String ERROR_MSG_UNDER_WORKFLOW = "Agreement is already under going in some workflow.";
 	@Autowired
 	private AssetRepository assetService;
-
-	@Autowired
-	private WorkFlowRepository workFlowRepository;
 
 	@Autowired
 	private AllotteeRepository allotteeService;
@@ -116,6 +113,9 @@ public class AgreementValidator {
 		Agreement agreement = agreementRequest.getAgreement();
 		AssetCategory assetCategory = agreement.getAsset().getCategory();
 
+		if(agreement.getIsUnderWorkflow()){
+			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_UNDER_WORKFLOW);
+		}
 		List<String> assetCategoryNames = getConfigurations(propertiesManager.getEvictionAssetCategoryKey(),
 				agreement.getTenantId());
 		logger.info("the eviction asset category names found ::: " + assetCategoryNames);
@@ -133,15 +133,16 @@ public class AgreementValidator {
 		Agreement agreement = agreementRequest.getAgreement();
 		RequestInfo requestInfo = agreementRequest.getRequestInfo();
 
-		checkWorkFlowState(agreement.getStateId(), agreement.getTenantId(), requestInfo, errors,
-				agreement.getAction().toString());
+		if(agreement.getIsUnderWorkflow()){
+			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_UNDER_WORKFLOW);
+			}
 		checkRentDue(agreement.getDemands().get(0), requestInfo, errors, agreement.getAction().toString());
 
 		Long assetId = agreement.getAsset().getId();
 
 		for (Agreement agreement2 : agreementService.getAgreementsForAssetId(assetId)) {
 			if (!agreement2.getAgreementNumber().equals(agreement.getAgreementNumber())) {
-				errors.rejectValue("Renewal Rejected", "",
+				errors.rejectValue(ERROR_FIELD_AGREEMENT_NO, "",
 						"new agreement has already been signed for the particular asset");
 			}
 		}
@@ -165,10 +166,10 @@ public class AgreementValidator {
 
 		if (!(today.compareTo(beforeExpiry) >= 0 && today.compareTo(afterExpiry) <= 0)) {
 			if (today.compareTo(beforeExpiry) < 0)
-				errors.rejectValue("Renewal Rejected", "",
+				errors.rejectValue(ERROR_FIELD_AGREEMENT_NO, "",
 						"agreement can be renewed only in the period of " + 3 + " months before expiry date");
 			else if (today.compareTo(afterExpiry) > 0)
-				errors.rejectValue("Renewal Rejected", "",
+				errors.rejectValue(ERROR_FIELD_AGREEMENT_NO, "",
 						"agreement can be renewed only in the period of " + 3 + " months after expiry date");
 		}
 	}
@@ -178,25 +179,33 @@ public class AgreementValidator {
 		Agreement agreement = agreementRequest.getAgreement();
 		RequestInfo requestInfo = agreementRequest.getRequestInfo();
 
-		checkWorkFlowState(agreement.getStateId(), agreement.getTenantId(), requestInfo, errors,
-				agreement.getAction().toString());
+		if(agreement.getIsUnderWorkflow()){
+			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_UNDER_WORKFLOW);
+		}
 		checkRentDue(agreement.getDemands().get(0), requestInfo, errors, agreement.getAction().toString());
 	}
 
 	public void validateObjection(AgreementRequest agreementRequest, Errors errors) {
+		Agreement agreement = agreementRequest.getAgreement();
 		String renewalStatus = agreementService.checkRenewalStatus(agreementRequest);
 		if (!"ACTIVE".equals(renewalStatus)) {
 			errors.reject("Can't do objection", "Renewal status is not active");
+		}
+		if(agreement.getIsUnderWorkflow()){
+			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_UNDER_WORKFLOW);
 		}
 
 	}
 
 	public void validateJudgement(AgreementRequest agreementRequest, Errors errors) {
+		Agreement agreement = agreementRequest.getAgreement();
 		String objectionStatus = agreementService.checkObjectionStatus(agreementRequest);
 		if (!"ACTIVE".equals(objectionStatus)) {
 			errors.reject("Can't proceed ", "Judgement will be applicable on objected agreements only!");
 		}
-
+		if(agreement.getIsUnderWorkflow()){
+			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_UNDER_WORKFLOW);
+		}
 	}
 
 	public void validateRemission(AgreementRequest agreementRequest, Errors errors) {
@@ -245,7 +254,7 @@ public class AgreementValidator {
 		allottee.setTenantId(agreementRequest.getAgreement().getTenantId());
 
 		AllotteeResponse allotteeResponse = allotteeService.getAllottees(allottee, requestInfo);
-		if (allotteeResponse.getAllottee() == null || allotteeResponse.getAllottee().size() == 0) {
+		if (allotteeResponse.getAllottee() == null || allotteeResponse.getAllottee().isEmpty()) {
 			allotteeService.createAllottee(allottee, requestInfo);
 		} else
 			allottee.setId(allotteeResponse.getAllottee().get(0).getId());
@@ -259,15 +268,7 @@ public class AgreementValidator {
 			errors.rejectValue("Agreement.workflowDetails.assignee", "", "Approver assignee details has to be filled");
 	}
 
-	private void checkWorkFlowState(String stateId, String tenantId, RequestInfo requestInfo, Errors errors,
-			String processName) {
-
-		Task task = workFlowRepository.getWorkFlowState(stateId, tenantId, requestInfo);
-		if (!"END".equalsIgnoreCase(task.getState()))
-			errors.rejectValue("Agreement workflow Incomplete", "",
-					"Agreement workflow must be in end state to initiate " + processName);
-	}
-
+	
 	private void checkRentDue(String demandId, RequestInfo requestInfo, Errors errors, String processName) {
 
 		DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();

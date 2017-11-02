@@ -74,8 +74,8 @@ public class CaseController {
 	}
 
 	@RequestMapping(path = "/case/_dataentry", method = RequestMethod.POST)
-	public ResponseEntity<?> caseDataEntry(@RequestBody @Valid CaseRequest caseRequest) throws Exception {
-		CaseResponse caseResponse = caseService.legacyDataLoad(caseRequest);
+	public ResponseEntity<?> createLegacyCase(@RequestBody @Valid CaseRequest caseRequest) throws Exception {
+		CaseResponse caseResponse = caseService.createLegacyCase(caseRequest);
 		return new ResponseEntity<>(caseResponse, HttpStatus.CREATED);
 
 	}

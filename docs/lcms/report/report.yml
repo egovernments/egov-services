@@ -40,7 +40,7 @@ ReportDefinitions:
   - name: courtName
     label: reports.lcms.courtName
     type: singlevaluelist
-    pattern: http://egov-location:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=lcms&masterName=court&pageSize=500|$..code|$..name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=lcms&masterName=court&pageSize=500|$..code|$..name
     source: lcms
     isMandatory: false
     searchClause : AND case.courtName = $courtName
@@ -59,14 +59,14 @@ ReportDefinitions:
   - name: department
     label: reports.lcms.department
     type: singlevaluelist
-    pattern: http://egov-location:8080/egov-common-masters/departments/_search?tenantId=$tenantid&pageSize=500|$..code|$..name
+    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid&pageSize=500|$..code|$..name
     source: lcms
     isMandatory: false
     searchClause : AND case.department = $department
   - name: caseStatus
     label: reports.lcms.caseStatus
     type: singlevaluelist
-    pattern: http://egov-location:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=lcms&masterName=caseStatus&pageSize=500|$..code|$..name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=lcms&masterName=caseStatus&pageSize=500|$..code|$..name
     source: lcms
     isMandatory: false
     searchClause : AND case.caseStatus = $caseStatus

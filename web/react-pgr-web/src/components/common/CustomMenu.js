@@ -6,8 +6,7 @@ import DropDownMenu from 'material-ui/DropDownMenu';
 import {connect} from 'react-redux';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
-// import MenuItem from 'material-ui/MenuItem';
-// import Paper from 'material-ui/Paper';
+import {orange500} from 'material-ui/styles/colors';
 import {logo, tenantName} from './temp/local';
 import Divider from 'material-ui/Divider';
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
@@ -15,15 +14,6 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import jp from "jsonpath";
 import _ from "lodash";
 import {getTitleCase} from '../framework/utility/utility';
-
-
-// import {brown500} from 'material-ui/styles/colors';
-// import { stack as Menu } from 'react-burger-menu'
-
-// import '../../styles/jquery.multilevelpushmenu.min.css';
-// import './jquery.multilevelpushmenu.min.js';
-//
-// import './custom-menu.js';
 
 const menuConvention={
   "Grievance Redressal.Grievance.Create Complaint":"/pgr/createGrievance",
@@ -257,23 +247,21 @@ const menuConvention={
 "Legal Case Management.Legal Case Reports.Case Status Report":"/report/lcms/CaseStatusReport",
 "Legal Case Management.Legal Case Reports.Due Date Report":"/report/lcms/DueDateReport"
 
-
-
-
-
-
 }
 
 const style = {
   display: 'inline-block',
-  margin: '14px 32px 16px 0'
+  margin: '14px 0 16px 0'
 };
 
 const styles={
   mainLogo: {
     height: 60,
     borderRadius: '50%',
-    marginTop: -6
+    margin: '0 10px'
+  },
+  menuStyle:{
+    width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"
   }
 }
 
@@ -502,7 +490,7 @@ class CustomMenu extends Component {
                                style={{whiteSpace: "initial",color:"white"}}
                                key={index}
                                leftIcon={<i className="material-icons marginLeft">view_module</i>}
-                               primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name ||""}</span><span>{item.name ||""}</span></div>}
+                               primaryText={<div className="menuStyle" style={styles.menuStyle}><span className="onHoverText hidden-sm hidden-xs">{item.name ||""}</span><span>{item.name ||""}</span></div>}
                                rightIcon={<i className="material-icons">keyboard_arrow_right</i>}
                                onTouchTap={()=>{menuChangeTwo(!item.path?item.name:item.path)}}
                             />
@@ -520,7 +508,7 @@ class CustomMenu extends Component {
                                key={index}
                                onTouchTap={()=>{checkUrl(item); document.title=item.name; changeRoute(menuConvention[item.path])}}
                                leftIcon={<i className="material-icons marginLeft">view_module</i>}
-                               primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name ||""}</span><span>{item.name  ||""}</span></div>}
+                               primaryText={<div className="menuStyle" style={styles.menuStyle}><span className="onHoverText hidden-sm hidden-xs">{item.name ||""}</span><span>{item.name  ||""}</span></div>}
                             />
 
                       )
@@ -542,7 +530,7 @@ class CustomMenu extends Component {
                              <MenuItem
                                   style={{whiteSpace: "initial",color:"white"}}
                                   leftIcon={<i style={{top: "12px", margin: "0px", left: "24px"}} className="material-icons marginLeft">view_module</i>}
-                                  primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name ||""}</span><span>{item.name ||""}</span></div>}
+                                  primaryText={<div className="menuStyle" style={styles.menuStyle}><span className="onHoverText hidden-sm hidden-xs">{item.name ||""}</span><span>{item.name ||""}</span></div>}
                                />
                             </a>
                           )
@@ -565,7 +553,7 @@ class CustomMenu extends Component {
                             style={{whiteSpace: "initial",color:"white"}}
                              onTouchTap={()=>{checkUrl(item); document.title=item.displayName;}}
                              leftIcon={<i className="material-icons marginLeft">view_module</i>}
-                             primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.displayName ||""}</span><span>{item.displayName ||""}</span></div>}
+                             primaryText={<div className="menuStyle" style={styles.menuStyle}><span className="onHoverText hidden-sm hidden-xs">{item.displayName ||""}</span><span>{item.displayName ||""}</span></div>}
                           />
                       </Link>
                     )
@@ -587,7 +575,7 @@ class CustomMenu extends Component {
                            <MenuItem
                                 style={{whiteSpace: "initial",color:"white"}}
                                 leftIcon={<i className="material-icons marginLeft">view_module</i>}
-                                primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.displayName ||""}</span><span>{item.displayName ||""}</span></div>}
+                                primaryText={<div className="menuStyle" style={styles.menuStyle}><span className="onHoverText hidden-sm hidden-xs">{item.displayName ||""}</span><span>{item.displayName ||""}</span></div>}
                              />
                           </a>
                         )
@@ -607,14 +595,15 @@ class CustomMenu extends Component {
       <div className="custom-menu" style={style}  ref={this.setWrapperRef}>
           <Logo tenantInfo={this.props.tenantInfo}/>
           <span style={{ fontSize:18, marginLeft:2}}>{getTitle(this.props.tenantInfo, this.props.tenantContext)}</span>
-          <h4 style={{padding:'0 15px', fontSize:15, paddingTop:10}}>Quick Actions</h4>
+          <h4 style={{padding:'0 15px', fontSize:15, paddingTop:10,fontWeight: 600}}>Quick Actions</h4>
           {
             <TextField
-               hintText = "&nbsp;&nbsp;Search"
+               hintText = "Search"
                onChange={this.handleChange}
                value={searchText}
+               underlineFocusStyle={{borderColor: orange500}}
 			         className="searchMargin"
-               style={{color:"white"}}
+               inputStyle={{color:"white",padding:'0 25px 0 0'}}
              />
           }
 

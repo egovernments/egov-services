@@ -1341,7 +1341,7 @@ paths:
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - name: materialStoreMappingRequest
             in: body
-            description: Create  new 
+            description: This object holds the material store mapping information.
             schema:
               $ref: '#/definitions/MaterialStoreMappingRequest'
         responses:
@@ -2014,6 +2014,108 @@ paths:
             in: query
             description: |
               code of the Supplier
+          - name: name
+            type: string
+            in: query
+            description: |
+              name of the Supplier
+          - name: supplyType
+            type: string
+            in: query
+            description: |
+              type of the Supplier
+          - name: address
+            type: string
+            in: query
+            description: |
+              address of the Supplier
+          - name: status
+            type: string
+            in: query
+            description: |
+              status    
+          - name: inActiveDate
+            type: integer
+            format: int64
+            in: query
+            description: |
+              inActiveDate
+          - name: supplierContactNo
+            type: string
+            in: query
+            description: |
+              contactNo of the Supplier
+          - name: faxNo
+            type: string
+            in: query
+            description: |
+              faxNo of the Supplier
+          - name: website
+            type: string
+            in: query
+            description: |
+              website of the Supplier
+          - name: email
+            type: string
+            in: query
+            description: |
+              email of the Supplier
+          - name: narration
+            type: string
+            in: query
+            description: |
+              description
+          - name: panNo
+            type: string
+            in: query
+            description: |
+              panNo of the Supplier
+          - name: tinNo
+            type: string
+            in: query
+            description: |
+              tinNo of the Supplier
+          - name: cstNo
+            type: string
+            in: query
+            description: |
+              cstNo of the Supplier
+          - name: vatNo
+            type: string
+            in: query
+            description: |
+              vatNo   
+          - name: contactPerson
+            type: string
+            in: query
+            description: |
+              contactPerson     
+          - name: contactPersonNo
+            type: string
+            in: query
+            description: |
+              contactPersonNo     
+          - name: bankName
+            type: string
+            in: query
+            description: |
+              name of the bank
+          - name: bankAccNo
+            type: string
+            in: query
+            description: |
+              account number of the bank account
+          - name: bankIfsc
+            type: string
+            in: query
+            description: |
+              ifsc code of the bank account
+          - name: bankMicr
+            type: string
+            in: query
+            description: |
+              micr code of the bank account
+              
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/offset"
           - $ref: "#/parameters/pageNumber"
@@ -2812,7 +2914,7 @@ definitions:
     MaterialIssue:
       type: object
       description: |
-        This object holds the common set of information for both IndentIssue and Non Indent Issue.  
+        This object holds the common set of information for both Indent Issue and Non Indent Issue.  
       properties:
         id:
           type: string

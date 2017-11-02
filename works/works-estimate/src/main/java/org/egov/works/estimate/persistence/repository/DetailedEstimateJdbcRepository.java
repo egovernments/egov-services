@@ -15,7 +15,7 @@ public class DetailedEstimateJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egw_detailedestimate";
 
-	public List<DetailedEstimate> search(DetailedEstimateSearchContract detailedEstimateSearchContract) {
+	public List<org.egov.works.estimate.web.contract.DetailedEstimate> search(DetailedEstimateSearchContract detailedEstimateSearchContract) {
 		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
 		Map<String, Object> paramValues = new HashMap<>();
@@ -164,7 +164,7 @@ public class DetailedEstimateJdbcRepository extends JdbcRepository {
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(DetailedEstimate.class);
+		BeanPropertyRowMapper row = new BeanPropertyRowMapper(org.egov.works.estimate.web.contract.DetailedEstimate.class);
 
 		return namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
 	}

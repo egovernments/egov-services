@@ -101,8 +101,9 @@ html, body{
 
 .drawer-backGround {
 	background-color: #009688 !important;
+	overflow-x: hidden !important;
+  overflow-y: auto !important;
 	color: white !important;
-	width: 254px;
 	position: absolute;
 	left: 0;
 	height: auto;
@@ -174,13 +175,6 @@ html, body{
   direction: ltr;
   -webkit-font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
-}
-
-.menuStyle{
-
-	white-space: nowrap;
-	overflow: hidden;
-
 }
 
 .side-bar {
@@ -696,11 +690,6 @@ table td {
 	margin: 15px;
 }
 
-.menuStyle{
-
-
-}
-
 .menuStyle .onHoverText {
     visibility: hidden;
     width: 210px;
@@ -715,6 +704,10 @@ table td {
     position: absolute;
     z-index: 1;
 		margin-left: -60px;
+}
+
+.drawer-backGround a:hover {
+		text-decoration: none;
 }
 
 .menuStyle:hover .onHoverText {
@@ -741,7 +734,7 @@ table td {
 	 padding:0 15px;
 	 background-image:url('../images/search_icon.svg');
 	 background-repeat: no-repeat;
-     background-position: 218px 12px;
+     background-position: 218px 14px;
  }
 
  .searchMargin hr {
@@ -910,4 +903,18 @@ span.errorMsg{
 
 @media print {
 	.page-break	{ display: block; page-break-after: always; }
+}
+
+.drawer-backGround::-webkit-scrollbar {
+    width: 6px;
+    background-color: #F5F5F5;
+}
+
+.drawer-backGround::-webkit-scrollbar-thumb {
+    background-color: #00C49F;
+}
+
+.drawer-backGround::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #F5F5F5;
 }

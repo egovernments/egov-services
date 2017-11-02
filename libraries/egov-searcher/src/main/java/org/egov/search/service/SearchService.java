@@ -72,10 +72,16 @@ public class SearchService {
 	private Definition getSearchDefinition(Map<String, SearchDefinition> searchDefinitionMap,
 			String moduleName, String searchName){
 		logger.info("Fetching Definitions for module: "+moduleName+" and search feature: "+searchName);
-		List<Definition> definitions = 
-				searchDefinitionMap.get(moduleName).getDefinitions().parallelStream()
+		List<Definition> definitions = null;
+		try{
+			definitions = searchDefinitionMap.get(moduleName).getDefinitions().parallelStream()
 											.filter(def -> (def.getName().equals(searchName)))
 		                                 .collect(Collectors.toList());
+		}catch(Exception e){
+			logger.error("There's no Search Definition provided for this search feature");
+			throw new CustomException(HttpStatus.BAD_REQUEST.toString(), 
+					"There's no Search Definition provided for this search feature");
+		}
 		if(0 == definitions.size()){
 			logger.error("There's no Search Definition provided for this search feature");
 			throw new CustomException(HttpStatus.BAD_REQUEST.toString(), 

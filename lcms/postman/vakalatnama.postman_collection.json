@@ -1,0 +1,44 @@
+{
+	"id": "5ba2e48d-dbcb-321a-dfa4-fe40fd06a286",
+	"name": "vakalatnama",
+	"description": "",
+	"order": [
+		"bf307356-478d-6c51-c47d-b98277eab595"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1509115024786,
+	"owner": "2338793",
+	"public": false,
+	"requests": [
+		{
+			"id": "bf307356-478d-6c51-c47d-b98277eab595",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:9090/lcms-services/legalcase/case/_vakalatnamageneration",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1509616892952,
+			"name": "Vakalatnama_Creation",
+			"description": "",
+			"collectionId": "5ba2e48d-dbcb-321a-dfa4-fe40fd06a286",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1503743889632,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"userInfo\": {\n      \"id\": 74\n    },\n    \"authToken\": \"6424af05-e108-44c0-a03b-62e8f18f8ad4\"\n  },\n  \"cases\": [\n    {\n\n       \"tenantId\":\"default\",\n      \"oldCaseNo\": \"string\",\n      \"suitNo\": \"string\",\n      \"judgeDetails\": \"string\",\n      \"caseRefernceNo\": \"string\",\n      \"departmentPerson\": \"Test Dept.Person\",\n      \"caseRegistrationDate\": 0,\n      \"vakalatnamaGenerationDate\": 0,\n      \"isVakalatnamaGenerated\": true,\n      \"coName\": \"string\",\n      \"age\": \"string\",\n      \"days\": 0,\n      \"witness\": [\n        \"string\"\n      ],\n      \"advocateDetails\": [\n        {\n          \"code\": \"default000018\",\n          \"advocate\": {\n            \"name\": \"default000012\",\n            \"code\": null,\n            \"organizationName\": null,\n            \"isIndividual\": null,\n            \"title\": null,\n            \"firstName\": null,\n            \"secondName\": null,\n            \"lastName\": null,\n            \"address\": null,\n            \"contactNo\": null,\n            \"dateOfEmpanelment\": null,\n            \"standingCommitteeDecisionDate\": null,\n            \"empanelmentFromDate\": null,\n            \"aadhar\": null,\n            \"gender\": null,\n            \"age\": null,\n            \"dob\": null,\n            \"mobileNumber\": null,\n            \"emailId\": null,\n            \"pan\": null,\n            \"vatTinNo\": null,\n            \"newsPaperAdvertismentDate\": null,\n            \"empanelmentToDate\": null,\n            \"bankName\": null,\n            \"bankBranch\": null,\n            \"bankAccountNo\": null,\n            \"isfcCode\": null,\n            \"micr\": null,\n            \"isActive\": null,\n            \"isTerminate\": null,\n            \"inActiveDate\": null,\n            \"terminationDate\": null,\n            \"reasonOfTermination\": null,\n            \"tenantId\": null,\n            \"auditDetails\": null\n          },\n          \"assignedDate\": 1510252200000,\n          \"fee\": 89,\n          \"auditDetails\": null\n        }\n      ],\n      \"summon\": {\n        \"code\": \"default000009\",\n        \"isSummon\": true,\n        \"summonReferenceNo\": \"string\",\n        \"caseNo\": \"string\",\n        \"defendant\": \"shubham\",\n        \"summonDate\": 0,\n        \"year\": \"string\",\n        \"plantiffName\": \"string\",\n        \"departmentName\": {\n          \"name\": \"Test Dept\",\n          \"code\": \"default000041\",\n          \"tenantId\": \"string\"\n        },\n        \"sectionApplied\": \"string\",\n        \"hearingDate\": 0,\n        \"hearingTime\": 0,\n        \"ward\": \"string\",\n        \"tenantId\": \"string\",\n        \"stateId\": \"string\",\n        \"caseDetails\": \"string\",\n        \"caseType\": {\n          \"name\": \"CRIMINAL\",\n          \"code\": \"CRML\",\n          \"side\": {\n            \"name\": \"CRIMINAL\",\n            \"code\": \"CRML\",\n            \"active\": true,\n            \"tenantId\": \"string\"\n          },\n          \"active\": true,\n          \"tenantId\": \"string\"\n        },\n        \"caseCategory\": {\n          \"name\": \"string\",\n          \"code\": \"string\",\n          \"active\": true,\n          \"tenantId\": \"string\"\n        },\n        \"courtName\": {\n          \"name\": \"string\",\n          \"code\": \"string\",\n          \"active\": true,\n          \"tenantId\": \"string\"\n        },\n        \"bench\": {\n          \"name\": \"string\",\n          \"code\": \"string\",\n          \"active\": true,\n          \"tenantId\": \"string\"\n        },\n        \"side\": {\n          \"name\": \"string\",\n          \"code\": \"string\",\n          \"active\": true,\n          \"tenantId\": \"string\"\n        },\n        \"stamp\": {\n          \"name\": \"string\",\n          \"code\": \"string\",\n          \"active\": true,\n          \"tenantId\": \"string\"\n        },\n        \"plantiffAddress\": {\n          \"tenantId\": \"string\",\n          \"latitude\": 0,\n          \"longitude\": 0,\n          \"addressNumber\": \"string\",\n          \"addressLine1\": \"string\",\n          \"addressLine2\": \"string\",\n          \"landmark\": \"string\",\n          \"city\": \"string\",\n          \"pincode\": \"string\",\n          \"detail\": \"string\"\n        },\n        \"workFlowDetails\": {\n          \"type\": \"string\",\n          \"businessKey\": \"string\",\n          \"department\": \"string\",\n          \"designation\": \"string\",\n          \"assignee\": 0,\n          \"action\": \"string\",\n          \"status\": \"string\",\n          \"comments\": \"string\",\n          \"senderName\": \"string\",\n          \"details\": \"string\",\n          \"stateId\": \"string\"\n        },\n        \"documents\": [\n          {\n            \"documentName\": \"shubham\"\n          }\n        ]\n      },\n      \"address\": {\n        \"tenantId\": \"string\",\n        \"latitude\": 0,\n        \"longitude\": 0,\n        \"addressNumber\": \"string\",\n        \"addressLine1\": \"string\",\n        \"addressLine2\": \"string\",\n        \"landmark\": \"string\",\n        \"city\": \"string\",\n        \"pincode\": \"string\",\n        \"detail\": \"string\"\n      },\n      \"hearingDetails\": [\n        {\n          \"caseJudgeMent\": \"string\",\n          \"caseFinalDecision\": \"string\",\n          \"caseStatus\": {\n            \"name\": \"string\",\n            \"code\": \"string\",\n            \"active\": true,\n            \"tenantId\": \"string\"\n          },\n          \"nextHearingDate\": 0,\n          \"attendees\": [\n            {\n              \"code\": \"string\",\n              \"name\": \"string\",\n              \"mobileNumber\": \"string\",\n              \"gender\": \"string\",\n              \"tenantId\": \"string\"\n            }\n          ],\n          \"judges\": [\n            {\n              \"code\": \"string\",\n              \"name\": \"string\",\n              \"mobileNumber\": \"string\",\n              \"gender\": \"string\",\n              \"address\": {\n                \"tenantId\": \"string\",\n                \"latitude\": 0,\n                \"longitude\": 0,\n                \"addressNumber\": \"string\",\n                \"addressLine1\": \"string\",\n                \"addressLine2\": \"string\",\n                \"landmark\": \"string\",\n                \"city\": \"string\",\n                \"pincode\": \"string\",\n                \"detail\": \"string\"\n              },\n              \"tenantId\": \"string\"\n            }\n          ],\n          \"tenantId\": \"string\"\n        }\n      ],\n      \"parawiseComments\": []\n    }\n  ]\n}"
+		}
+	]
+}

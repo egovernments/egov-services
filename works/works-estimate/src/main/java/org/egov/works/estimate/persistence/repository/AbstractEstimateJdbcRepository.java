@@ -1,12 +1,17 @@
 package org.egov.works.estimate.persistence.repository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.egov.common.persistence.repository.JdbcRepository;
+import org.egov.works.estimate.persistence.entity.AbstractEstimateEntity;
+import org.egov.works.estimate.web.contract.AbstractEstimateDetailsSearchContract;
 import org.egov.works.estimate.web.contract.AbstractEstimateSearchContract;
 import org.egov.works.estimate.web.model.AbstractEstimate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +19,9 @@ import org.springframework.stereotype.Service;
 public class AbstractEstimateJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egw_abstractestimate";
+	
+	@Autowired
+	private AbstractEstimateDetailsJdbcRepository abstractEstimateDetailsJdbcRepository;
 	
 	public List<AbstractEstimate> search(AbstractEstimateSearchContract abstractEstimateSearchContract) {
 		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
@@ -144,9 +152,24 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(AbstractEstimate.class);
-
-		return namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+		BeanPropertyRowMapper row = new BeanPropertyRowMapper(AbstractEstimateEntity.class);
+		
+		List<AbstractEstimateEntity> abstractEstimateEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+		
+		List<AbstractEstimate> abstractEstimates = new ArrayList<>();
+		
+		AbstractEstimate abstractEstimate;
+		AbstractEstimateDetailsSearchContract abstractEstimateDetailsSearchContract;
+		
+		for(AbstractEstimateEntity abstractEstimateEntity : abstractEstimateEntities) {
+			abstractEstimate = abstractEstimateEntity.toDomain();
+			abstractEstimateDetailsSearchContract = new AbstractEstimateDetailsSearchContract();
+			abstractEstimateDetailsSearchContract.setTenantId(abstractEstimateEntity.getTenantId());
+			abstractEstimateDetailsSearchContract.setAbstractEstimateIds(Arrays.asList(abstractEstimateEntity.getId()));
+			abstractEstimate.setAbstractEstimateDetails(abstractEstimateDetailsJdbcRepository.search(abstractEstimateDetailsSearchContract));
+			abstractEstimates.add(abstractEstimate);
+		}
+		return abstractEstimates;
 	}
 
 }

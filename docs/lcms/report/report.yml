@@ -1,0 +1,73 @@
+---
+ReportDefinitions:
+- reportName: CaseRegisterReport
+  summary: Case Register Report
+  version: 1.0.0
+  moduleName: lcms
+  sourceColumns:
+  - name: caseNo
+    label: reports.lcms.caseRefNo
+    type: string
+    source: lcms
+    showColumn: true
+  - name: plantiffName
+    label: reports.lcms.NameOfPlaintiff
+    type: string
+    source: lcms
+    showColumn: true
+  - name: defendant
+    label: reports.lcms.NameOfDefendant
+    type: string
+    source: lcms
+    showColumn: true
+  searchParams:
+  - name: fromDate
+    label: reports.lcms.fromDate
+    type: epoch
+    source: lcms
+    isMandatory: true
+  - name: toDate
+    label: reports.lcms.toDate
+    type: epoch
+    source: lcms
+    isMandatory: true
+  - name: caseNo
+    label: reports.lcms.caseNo
+    type: string
+    isMandatory: false
+    source: lcms
+    searchClause : AND case.caseNo=$caseNo
+  - name: courtName
+    label: reports.lcms.courtName
+    type: singlevaluelist
+    pattern: http://egov-location:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=lcms&masterName=court&pageSize=500|$..code|$..name
+    source: lcms
+    isMandatory: false
+    searchClause : AND case.courtName = $courtName
+  - name: plantiffName
+    label: reports.lcms.plantiffName
+    type: string
+    isMandatory: false
+    source: lcms
+    searchClause : AND case.plantiffName = $plantiffName
+  - name: defendant
+    label: reports.lcms.defendant
+    type: string
+    isMandatory: false
+    source: lcms
+    searchClause : AND case.defendant = $defendant
+  - name: department
+    label: reports.lcms.department
+    type: singlevaluelist
+    pattern: http://egov-location:8080/egov-common-masters/departments/_search?tenantId=$tenantid&pageSize=500|$..code|$..name
+    source: lcms
+    isMandatory: false
+    searchClause : AND case.department = $department
+  - name: caseStatus
+    label: reports.lcms.caseStatus
+    type: singlevaluelist
+    pattern: http://egov-location:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=lcms&masterName=caseStatus&pageSize=500|$..code|$..name
+    source: lcms
+    isMandatory: false
+    searchClause : AND case.caseStatus = $caseStatus
+  query: select case.defendant defendant,case.caseno as caseNo,case.plantiffName as plantiffName from egov_lcms_case case  WHERE case.summondate>=$fromDate and case.summondate<=$toDate;

@@ -6,3 +6,4 @@ hr=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/hr/r
 property=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/propertytax/report/report.yml
 citizen=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/citizen/reports/report.yml
 asset=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/asset/reports/report.yml
+lcms=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lcms/report/report.yml

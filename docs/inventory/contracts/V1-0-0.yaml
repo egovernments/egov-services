@@ -2864,7 +2864,7 @@ definitions:
         designation:
           type: string
           description: Designation of the created by user at the time of Indent Issue/Non Indent Issue created.
-          format: varchar    
+          format: varchar
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
@@ -2978,6 +2978,11 @@ definitions:
           $ref: "#/definitions/IndentIssue"
         indentDetail:
           $ref: "#/definitions/IndentDetail"
+        quantityToBeIssued:
+          type: number
+          format: BigDecimal
+          description: |
+            Balance quantity to be issued of the IndentDetails  
         quantityIssued:
           type: number
           format: BigDecimal

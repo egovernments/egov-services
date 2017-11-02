@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 @Service
 public class UserRepository {
 
@@ -27,6 +29,10 @@ public class UserRepository {
         request.setUserName(userName);
         request.setTenantId(tenantId);
         String url = userHost + getUserByUserNameUrl;
-        return restTemplate.postForObject(url, request, UserResponse.class).getUser().get(0);
+
+        List<User> userResponse = restTemplate.postForObject(url, request, UserResponse.class).getUser();
+
+        return (!userResponse.isEmpty()) ? userResponse.get(0) : User.builder().build();
+
     }
 }

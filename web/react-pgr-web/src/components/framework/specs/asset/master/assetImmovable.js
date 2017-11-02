@@ -648,7 +648,7 @@ var dat = {
 
           {
             "name": "OpeningDate",
-            "jsonPath": "Asset.",
+            "jsonPath": "Asset.openingDate",
             "label": "ac.create.Opening.date",
             "pattern": "",
             "type": "datePicker",
@@ -1475,7 +1475,7 @@ var dat = {
           // },
           {
             "name": "OpeningDate",
-            "jsonPath": "Assets[0].",
+            "jsonPath": "Assets[0].openingDate",
             "label": "ac.create.Opening.date",
             "pattern": "",
             "type": "datePicker",
@@ -2210,7 +2210,7 @@ var dat = {
 
           // {
           //   "name": "OpeningDate",
-          //   "jsonPath": "Asset[0].",
+          //   "jsonPath": "Asset[0].openingDate",
           //   "label": "ac.create.Opening.date",
           //   "pattern": "",
           //   "type": "date",

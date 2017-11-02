@@ -52,6 +52,13 @@ public class ResponseInfoFactory {
 		final Long ts = requestInfo != null ? requestInfo.getTs() : null;
 		final String resMsgId = "uief87324"; // FIXME : Hard-coded
 		final String msgId = requestInfo != null ? requestInfo.getMsgId() : "";
-		return new ResponseInfo(apiId, ver, ts, resMsgId, msgId, success ? ResponseInfo.StatusEnum.SUCCESSFUL : ResponseInfo.StatusEnum.FAILED);
+        ResponseInfo responseInfo = new ResponseInfo();
+        requestInfo.setApiId(apiId);
+        requestInfo.setVer(ver);
+        responseInfo.setTs(ts);
+        responseInfo.setResMsgId(resMsgId);
+        responseInfo.setMsgId(msgId);
+        responseInfo.setStatus(success ? ResponseInfo.StatusEnum.SUCCESSFUL : ResponseInfo.StatusEnum.FAILED);
+		return responseInfo;
 	}
 }

@@ -59,18 +59,18 @@ public class EscalationService {
 
     //Method to fetch all eligible complaints in one tenant
     private void escalateComplaintForTenant(String tenantId) {
-        Long userId = getRequestInfo().getUserInfo().getId();
+        Long userId = getRequestInfo(tenantId).getUserInfo().getId();
         List<ServiceRequest> serviceRequests = complaintRestRepository.getComplaintsEligibleForEscalation(tenantId, userId)
                 .getServiceRequests();
-        serviceRequests.forEach(this::escalate);
+        serviceRequests.forEach(serviceRequest -> escalate(serviceRequest, tenantId));
     }
 
     //method to escalate complaint
-    private void escalate(ServiceRequest serviceRequest) {
+    private void escalate(ServiceRequest serviceRequest, String tenantId) {
         try {
             validateAndLog(serviceRequest);
             serviceRequest.setPreviousAssignee(serviceRequest.getPositionId());
-            workflowService.enrichWorkflowForEscalation(serviceRequest, getRequestInfo());
+            workflowService.enrichWorkflowForEscalation(serviceRequest, getRequestInfo(tenantId));
 
             if (serviceRequest.isNewAssigneeSameAsPreviousAssignee()) {
                 log.info("Skipping escalation for CRN {} since new assignee {} is the same",
@@ -79,7 +79,7 @@ public class EscalationService {
             }
 
             positionService.enrichRequestWithPosition(serviceRequest);
-            SevaRequest enrichedSevaRequest = new SevaRequest(getRequestInfo(), serviceRequest);
+            SevaRequest enrichedSevaRequest = new SevaRequest(getRequestInfo(tenantId), serviceRequest);
             escalationDateService.enrichRequestWithEscalationDate(enrichedSevaRequest);
             enrichedSevaRequest.markEscalated();
             complaintMessageQueueRepository.save(enrichedSevaRequest);
@@ -102,10 +102,10 @@ public class EscalationService {
                     + "Escalation Date Is Not Present");
     }
 
-    private RequestInfo getRequestInfo() {
+    private RequestInfo getRequestInfo(String tenantId) {
         return RequestInfo.builder()
                 .action("PUT")
-                .userInfo(userService.getUserByUserName("system", "default"))
+                .userInfo(userService.getUserByUserName("system", tenantId))
                 .build();
     }
 }

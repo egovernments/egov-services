@@ -19,28 +19,29 @@ public class AssetValidator implements Validator {
 
 	@Override
 	public boolean supports(Class<?> clazz) {
-		// TODO Auto-generated method stub
-		return false;
+		return AssetRequest.class.equals(clazz);
 	}
 
 	@Override
 	public void validate(Object target, Errors errors) {
-
+		
 	}
-
+	
 	public void validateAsset(AssetRequest assetRequest) {
-
+		
 		Map<String, String> errorMap = new HashMap<>();
 		Asset asset = assetRequest.getAsset();
 		AssetCategory assetCategory = asset.getAssetCategory();
-
+		
 		addMissingPathForPersister(asset);
-		validateAnticipatedLife(asset.getAnticipatedLife(), asset.getOriginalValue(),
-				assetCategory.getDepreciationRate(), errorMap);
-
-		if (!errorMap.isEmpty())
-			throw new CustomException(errorMap);
+		validateAnticipatedLife(asset.getAnticipatedLife(),asset.getOriginalValue(),assetCategory.getDepreciationRate(),errorMap);
+		
+		
+		if(!errorMap.isEmpty())
+		throw new CustomException(errorMap);
 	}
+	
+	
 
 	private void validateAnticipatedLife(Long anticipatedLife, BigDecimal originalValue, Double depreciationRate,
 			Map<String, String> errorMap) {

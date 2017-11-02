@@ -1268,8 +1268,11 @@ definitions:
       nextHearingDate:
         type: integer
         format: int64
-        description: This field holds information about the case next hearing date and time(Epoch)
+        description: This field holds information about the case next hearing date(Epoch)
         x-displayformat: 'dd/MM/yyyy'
+      nextHearingTime:
+        type: string
+        description: This field holds information about the case next hearing  time
       attendees:
         type: array
         items:
@@ -1331,16 +1334,15 @@ definitions:
       plantiffName:
         type: string
         description: This field holds information about the plantiff name
-      dependentName:
+      defendent:
         type: string
-        description: This field holds information about the depenendent name
+        description: This field holds information about the depfendent info
       caseCategory:
         $ref: '#/definitions/CaseCategory'
       courtName:
         $ref: '#/definitions/Court'
       departmentName:
-        type: string
-        description: This field holds information about the department name/code
+       $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/Department'
       sectionApplied:
         type: string
         description: This field holds information about the case section information 
@@ -1381,11 +1383,9 @@ definitions:
         type: string
         description: This field holds information about the workflow stateId  
       documents:
-        description: The documents attached at the time of summon creation
         type: array
         items:
-          type: string
-          description: This field holds information about file store id of document
+          $ref: '/definitions/Document'
     required:
      - isSummon
      - caseNo
@@ -1395,7 +1395,7 @@ definitions:
      - side
      - stamp
      - plantiffName
-     - dependentName
+     - defendent
      - caseType
      - caseCategory
      - courtName
@@ -1406,7 +1406,22 @@ definitions:
      - year
      - workFlowDetails
   
-          
+  Document:
+    type: object
+    description: This object holds list of documents attached during the transaciton for a property
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id of the Document.
+      documentName:
+        type: string
+        description: name of the document
+      fileStoreId:
+        type: string
+        description: File store reference key.
+      auditDetails:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'    
   Case:
     type: object
     description: An object hold the information about case information
@@ -1515,6 +1530,10 @@ definitions:
         type: integer
         format: int64
         description: This field holds information about the advocate assigned date
+      fee:
+        type: number
+        format: double
+        description: This field holds information about the advocate fee
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
   ParaWiseComment:
@@ -1555,11 +1574,9 @@ definitions:
         minLength: 4
         description: this field holds information about the tenantId
       documents:
-        description: The documents attached during creation of parawise comments
         type: array
         items:
-          type: string
-          description: this field holds information about the file store id of document
+          $ref: '#/definitions/Document'
     
     required:
     - parawiseCommentsAskedDate 
@@ -1672,8 +1689,17 @@ definitions:
         type: boolean
         description: This field holds information about the partial payment or full payment
       invoiceDoucment:
+        $ref: '#/definitions/Document'
+      voucherNo:
         type: string
-        description: this field holds information about the file store id of invoice document
+        description: This field holds information about the vocher number
+      voucherDate:
+        type: integer
+        format: int64
+        description: This field holds information about the vocher date
+      resolution:
+        type: string
+        description: This field holds information about reslovtion of ulb 
       tenantId:
         type: string
         description: tenant id of the Case
@@ -1760,11 +1786,9 @@ definitions:
         type: string
         description: This field holds information about the opinionOn
       documents:
-        description: The documents attached during opinion creation.
         type: array
         items:
-          type: string
-          description: This filed holds information about the file store id of document
+          $ref: '#/definitions/Document'
       opinionDescription:
         type: string
         description: This field holds information about the opinion descriptions.

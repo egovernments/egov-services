@@ -70,7 +70,7 @@ public class AssetController {
 	@PostMapping("_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid final AssetRequest assetRequest) {
-		assetValidator.addMissingPathForPersister(assetRequest);
+		assetValidator.validateAsset(assetRequest);
 		final AssetResponse assetResponse = assetService.createAsync(assetRequest);
 		return new ResponseEntity<>(assetResponse, HttpStatus.CREATED);
 	}

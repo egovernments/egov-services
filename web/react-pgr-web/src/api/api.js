@@ -15,6 +15,8 @@ var instance = axios.create({
     }
 });
 
+var counter=0;
+
 //document.cookie = "SESSIONID=75dedd21-1145-4745-a8aa-1790a737b7c5; JSESSIONID=Nw2kKeNF6Eu42vtXypb3kP4fER1ghjXNMNISiIF5.ip-10-0-0-100; Authorization=Basic Og==";
 
 var authToken = localStorage.getItem("token");
@@ -120,17 +122,24 @@ module.exports = {
                   throw new Error(_err);
                 }
                 else if(response && response.response && !response.response.data && response.response.status === 400) {
-                    document.title = "eGovernments";
-                    var locale = localStorage.getItem('locale');
-                    var _tntId = localStorage.getItem("tenantId") || "default";
-                    var lang_response = localStorage.getItem("lang_response");
-                    localStorage.clear();
-                    localStorage.setItem('locale', locale);
-                    localStorage.setItem('tenantId', _tntId);
-                    localStorage.setItem('lang_response', lang_response);
-                    alert("Session expired. Please login again.");
-                    //localStorage.reload = true;
-                    window.location.hash = "#/" + _tntId;
+                  if (counter==0) {
+
+                      document.title = "eGovernments";
+                      var locale = localStorage.getItem('locale');
+                      var _tntId = localStorage.getItem("tenantId") || "default";
+                      var lang_response = localStorage.getItem("lang_response");
+                      localStorage.clear();
+                      localStorage.setItem('locale', locale);
+                      localStorage.setItem('tenantId', _tntId);
+                      localStorage.setItem('lang_response', lang_response);
+                      alert("Session expired. Please login again.");
+                      //localStorage.reload = true;
+                      window.location = window.location.href + _tntId;
+
+                    counter++;
+                  }
+
+
                 } else if(response){
                     throw new Error("Oops! Something isn't right. Please try again later.");
                 }else {

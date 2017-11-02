@@ -969,11 +969,12 @@ class NoDues extends Component {
       switch (stepIndex) {
         case 0:
           return (<div>
-            <ShowFields groups={mockData["noDues.search"].groups} noCols={mockData["noDues.search"].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["noDues.search"].useTimestamp || false} addNewCard={""} removeCard={""}/>
+            {mockData!="undefined" && mockData.hasOwnProperty("noDues.search") &&  !_.isEmpty(mockData["noDues.search"].groups)  && <div><ShowFields groups={mockData["noDues.search"].groups} noCols={mockData["noDues.search"].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["noDues.search"].useTimestamp || false} addNewCard={""} removeCard={""}/>
 
               <div style={{"textAlign": "center"}}>
                 <UiButton handler={search} item={{"label": "Search", "uiType":"button", "isDisabled": isFormValid ? false : true}} ui="google"/>
               </div>
+              </div>}
             </div>);
         case 1:
           return (<div>{showResult &&

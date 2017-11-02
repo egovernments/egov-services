@@ -912,7 +912,7 @@ class NoDues extends Component {
             self.props.toggleSnackbarAndSetText(true, err.message, false, true);
             self.props.setLoadingStatus('hide');
           })
-          
+
           if(Receipt)
             Receipt[0]["onlinePayment"]= {
                   // "receiptHeader" : "",
@@ -1228,7 +1228,13 @@ class NoDues extends Component {
     this.props.setRoute("/prd/dashboard");
   }
 
+
+
+
+
+
   render() {
+
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid,match} = this.props;
     let {search,cancel,pay, handleChange, getVal, addNewCard, removeCard, rowClickHandler,handleClose,handleOpen,generatePdf,getTotal,int_to_words, goBackToDashboard} = this;
     let {showResult, resultList,open,demands,Receipt, ReceiptOne,applicationFeeDemand} = this.state;
@@ -1259,15 +1265,17 @@ class NoDues extends Component {
       } else return "";
     }
 
+
+
     const getStepContent=(stepIndex)=> {
       switch (stepIndex) {
         case 0:
           return (<div>
-            <ShowFields groups={mockData["noDues.search"].groups} noCols={mockData["noDues.search"].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["noDues.search"].useTimestamp || false} addNewCard={""} removeCard={""}/>
+              {mockData!="undefined" && mockData.hasOwnProperty("noDues.search") &&  !_.isEmpty(mockData["noDues.search"].groups)  && <div><ShowFields groups={mockData["noDues.search"].groups} noCols={mockData["noDues.search"].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["noDues.search"].useTimestamp || false} addNewCard={""} removeCard={""}/>
 
               <div style={{"textAlign": "center"}}>
-                <UiButton handler={search} item={{"label": "Search", "uiType":"button", "isDisabled": isFormValid ? false : true}} ui="google"/>
-              </div>
+                <UiButton  handler={search} item={{"label": "Search", "uiType":"button", "isDisabled": isFormValid ? false : true}} ui="google"/>
+              </div></div>}
             </div>);
         case 1:
           return (<div>{showResult &&

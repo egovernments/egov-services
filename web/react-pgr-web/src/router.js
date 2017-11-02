@@ -171,6 +171,7 @@ const Main = () => {
     return (
     <main style={{"marginBottom": "50px"}}>
     <Switch>
+
         <Route exact path= {base + '/:tenantId?'} component={Login}/>
         <Route exact path={base + '/service/request/search'} component={ServiceRequests}/>
         <Route exact path={base + '/coming/soon'} component={ComingSoon}/>

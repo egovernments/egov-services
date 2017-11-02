@@ -47,7 +47,6 @@ public class AssetValidator implements Validator {
 			Map<String, String> errorMap) {
 
 		double depAmtPerYear = originalValue.doubleValue() * (depreciationRate / 100);
-		System.err.println("amt per year : "+ depAmtPerYear);
 		Long expectedLife =  new Double(originalValue.doubleValue()/depAmtPerYear).longValue();
 		if (!anticipatedLife.equals(expectedLife))
 			errorMap.put("Asset_anticipatedLife", "anticipatedLife Value is wrong");

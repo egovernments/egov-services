@@ -6,7 +6,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.model.AssetCurrentValue;
+import org.egov.model.CurrentValue;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -30,5 +30,5 @@ public class AssetCurrentValueRequest   {
       
 	  @Valid
 	  @JsonProperty("AssetCurrentValue")
-	  private List<AssetCurrentValue> assetCurrentValue = null;
+	  private List<CurrentValue> assetCurrentValue = null;
 }

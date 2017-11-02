@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
-import org.egov.model.AssetCurrentValue;
+import org.egov.model.CurrentValue;
 import org.egov.model.AuditDetails;
 import org.egov.repository.querybuilder.CurrentValueQueryBuilder;
 import org.egov.repository.rowmapper.CurrentValueRowMapper;
@@ -33,7 +33,7 @@ public class CurrentValueRepository {
    /* @Autowired
     private AssetConfigurationService assetConfigurationService;*/
 
-    public List<AssetCurrentValue> getCurrentValues(final Set<Long> assetIds, final String tenantId) {
+    public List<CurrentValue> getCurrentValues(final Set<Long> assetIds, final String tenantId) {
 
         final String sql = currentValueQueryBuilder.getCurrentValueQuery(assetIds, tenantId);
 
@@ -41,7 +41,7 @@ public class CurrentValueRepository {
         return jdbcTemplate.query(sql, currentValueRowMapper);
     }
 
-    public void create(final List<AssetCurrentValue> assetCurrentValues) {
+    public void create(final List<CurrentValue> assetCurrentValues) {
 
         final String sql = currentValueQueryBuilder.getInsertQuery();
         final String tenantId = assetCurrentValues.get(0).getTenantId();
@@ -53,7 +53,7 @@ public class CurrentValueRepository {
 
         for (int j = 0; j < assetCurrentValues.size(); j += batchSize) {
 
-            final List<AssetCurrentValue> batchList = assetCurrentValues.subList(j,
+            final List<CurrentValue> batchList = assetCurrentValues.subList(j,
                     j + batchSize > assetCurrentValues.size() ? assetCurrentValues.size() : j + batchSize);
 
             jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
@@ -61,7 +61,7 @@ public class CurrentValueRepository {
                 @Override
                 public void setValues(final PreparedStatement ps, final int rowNum) throws SQLException {
 
-                    final AssetCurrentValue assetCurrentValue = assetCurrentValues.get(rowNum);
+                    final CurrentValue assetCurrentValue = assetCurrentValues.get(rowNum);
                     final AuditDetails auditDetails = assetCurrentValue.getAuditDetails();
                     ps.setLong(1, assetCurrentValue.getId());
                     ps.setLong(2, assetCurrentValue.getAssetId());

@@ -7,7 +7,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.config.ApplicationProperties;
 import org.egov.contract.AssetCurrentValueRequest;
 import org.egov.contract.AssetCurrentValueResponse;
-import org.egov.model.AssetCurrentValue;
+import org.egov.model.CurrentValue;
 import org.egov.model.AuditDetails;
 import org.egov.model.enums.Sequence;
 import org.egov.repository.CurrentValueRepository;
@@ -50,12 +50,12 @@ public class CurrentValueService {
     public AssetCurrentValueResponse createCurrentValueAsync(final AssetCurrentValueRequest assetCurrentValueRequest) {
         log.info(" CurrentValueService  assetCurrentValueRequest"+assetCurrentValueRequest);
         final RequestInfo requestInfo = assetCurrentValueRequest.getRequestInfo();
-        final List<AssetCurrentValue> assetCurrentValues = assetCurrentValueRequest.getAssetCurrentValue();
+        final List<CurrentValue> assetCurrentValues = assetCurrentValueRequest.getAssetCurrentValue();
         final AuditDetails auditDetails = assetCommonService.getAuditDetails(requestInfo);
 
         final List<Long> idList = sequenceGenService.getIds(assetCurrentValues.size(), Sequence.CURRENTVALUESEQUENCE.toString());
         int i = 0;
-        for (final AssetCurrentValue assetCurrentValue : assetCurrentValues) {
+        for (final CurrentValue assetCurrentValue : assetCurrentValues) {
             assetCurrentValue.setAuditDetails(auditDetails);
             assetCurrentValue.setId(idList.get(i++));
         }

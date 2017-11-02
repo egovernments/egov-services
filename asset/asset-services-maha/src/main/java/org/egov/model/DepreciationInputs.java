@@ -14,10 +14,14 @@ import lombok.NoArgsConstructor;
 public class DepreciationInputs {
 
 	private Long assetId;
+	
+	private Long lastDepreciationDate;
 
 	private String tenantId;
 
 	private BigDecimal grossValue;
+	
+	private BigDecimal originalValue;
 
 	private BigDecimal accumulatedDepreciation;
 

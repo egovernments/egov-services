@@ -19,7 +19,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AssetCurrentValue {
+public class CurrentValue {
 	
 	private Long id;
 	

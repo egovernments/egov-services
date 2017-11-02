@@ -3,7 +3,7 @@ package org.egov.contract;
 import java.util.List;
 
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.model.AssetCurrentValue;
+import org.egov.model.CurrentValue;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -21,6 +21,6 @@ public class AssetCurrentValueResponse {
 	
 	
 	@JsonProperty("AssetCurrentValues")
-	private List<AssetCurrentValue> assetCurrentValues;
+	private List<CurrentValue> assetCurrentValues;
 	
 }

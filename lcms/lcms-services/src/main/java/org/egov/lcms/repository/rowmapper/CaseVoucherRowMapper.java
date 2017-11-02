@@ -16,7 +16,9 @@ public class CaseVoucherRowMapper implements RowMapper<CaseVoucher> {
 
 		CaseVoucher caseVoucher = new CaseVoucher();
 		caseVoucher.setCode(rs.getString("code"));
-		caseVoucher.setVoucherType(VocherType.valueOf(rs.getString("vochertype")));
+		if (rs.getString("vouchertype") != null) {
+			caseVoucher.setVoucherType(VocherType.valueOf(rs.getString("vouchertype")));
+		}
 		caseVoucher.setVoucherDate(getLong(rs.getLong("voucherdate")));
 		caseVoucher.setDetails(getString(rs.getString("details")));
 		caseVoucher.setVerificationRemarks(getString(rs.getString("verificationremarks")));

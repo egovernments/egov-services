@@ -2,6 +2,8 @@ package org.egov.inv.domain.service;
 
 import io.swagger.model.Material;
 import io.swagger.model.MaterialRequest;
+import io.swagger.model.MaterialSearchRequest;
+import io.swagger.model.Pagination;
 import org.egov.inv.domain.repository.MaterialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,6 +57,10 @@ public class MaterialService {
         materialRepository.update(materialRequest);
 
         return materialRequest.getMaterials();
+    }
+
+    public Pagination<Material> search(MaterialSearchRequest materialSearchRequest) {
+        return materialRepository.search(materialSearchRequest);
     }
 
 }

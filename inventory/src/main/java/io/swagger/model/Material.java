@@ -5,10 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -19,7 +21,7 @@ import java.util.Objects;
 @ApiModel(description = "")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-28T13:21:55.964+05:30")
-
+@Builder
 public class Material {
     @JsonProperty("id")
     private String id = null;
@@ -262,7 +264,6 @@ public class Material {
      * @return code
      **/
     @ApiModelProperty(value = "code of the Material ")
-
     @Size(min = 5, max = 50)
     public String getCode() {
         return code;
@@ -284,11 +285,11 @@ public class Material {
      **/
     @ApiModelProperty(required = true, value = "name of the Material ")
     @NotNull
-
     @Size(min = 5, max = 50)
     public String getName() {
         return name;
     }
+
 
     public void setName(String name) {
         this.name = name;

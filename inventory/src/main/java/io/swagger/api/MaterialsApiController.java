@@ -2,10 +2,8 @@ package io.swagger.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
-import io.swagger.model.Material;
-import io.swagger.model.MaterialRequest;
-import io.swagger.model.MaterialResponse;
-import io.swagger.model.RequestInfo;
+import io.swagger.model.*;
+import org.egov.common.contract.request.*;
 import org.egov.inv.domain.service.InventoryUtilityService;
 import org.egov.inv.domain.service.MaterialService;
 import org.springframework.http.HttpStatus;
@@ -51,13 +49,13 @@ public class MaterialsApiController implements MaterialsApi {
     }
 
     public ResponseEntity<MaterialResponse> materialsSearchPost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
-                                                                @ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody RequestInfo requestInfo,
+                                                                @ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody org.egov.common.contract.request.RequestInfo requestInfo,
                                                                 @Size(max = 50) @ApiParam(value = "comma seperated list of Ids") @Valid @RequestParam(value = "ids", required = false) List<String> ids,
                                                                 @ApiParam(value = "code of the Material ") @Valid @RequestParam(value = "code", required = false) String code,
                                                                 @ApiParam(value = "name of the Material ") @Valid @RequestParam(value = "name", required = false) String name,
                                                                 @ApiParam(value = "description of the Material ") @Valid @RequestParam(value = "description", required = false) String description,
                                                                 @ApiParam(value = "old code of the Material ") @Valid @RequestParam(value = "oldCode", required = false) String oldCode,
-                                                                @ApiParam(value = "material type of the Material ") @Valid @RequestParam(value = "materialType", required = false) Long materialType,
+                                                                @ApiParam(value = "material type of the Material ") @Valid @RequestParam(value = "materialType", required = false) String materialType,
                                                                 @ApiParam(value = "base uom of the Material ") @Valid @RequestParam(value = "baseUom", required = false) Long baseUom,
                                                                 @ApiParam(value = "inventory type of the Material ", allowableValues = "Asset, Consumable") @Valid @RequestParam(value = "inventoryType", required = false) String inventoryType,
                                                                 @ApiParam(value = "status of the Material ", allowableValues = "Active, Withdrawn, Obsolete") @Valid @RequestParam(value = "status", required = false) String status,
@@ -79,13 +77,36 @@ public class MaterialsApiController implements MaterialsApi {
                                                                 @ApiParam(value = "offset") @Valid @RequestParam(value = "offset", required = false) Integer offset,
                                                                 @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords.   example name asc,code desc or name,code or name,code desc  ") @Valid @RequestParam(value = "sortBy", required = false) String sortBy,
                                                                 @RequestHeader(value = "Accept", required = false) String accept) throws Exception {
-        // do some magic!
+
 
         if (accept != null && accept.contains("application/json")) {
             return new ResponseEntity<MaterialResponse>(objectMapper.readValue("{  \"materials\" : [ {    \"code\" : \"code\",    \"maxQuantity\" : 7.061401241503109105224211816675961017608642578125,    \"description\" : \"description\",    \"reorderQuantity\" : 3.61607674925191080461672754609026014804840087890625,    \"reorderLevel\" : 9.301444243932575517419536481611430644989013671875,    \"techincalSpecs\" : \"techincalSpecs\",    \"termsOfDelivery\" : \"termsOfDelivery\",    \"minQuantity\" : 2.3021358869347654518833223846741020679473876953125,    \"auditDetails\" : {      \"lastModifiedTime\" : 1,      \"createdBy\" : \"createdBy\",      \"lastModifiedBy\" : \"lastModifiedBy\",      \"createdTime\" : 6    },    \"materialControlType\" : \"LOTControl\",    \"manufacturePartNo\" : \"manufacturePartNo\",    \"model\" : \"model\",    \"id\" : \"id\",    \"staockingUom\" : {      \"code\" : \"code\",      \"auditDetails\" : {        \"lastModifiedTime\" : 1,        \"createdBy\" : \"createdBy\",        \"lastModifiedBy\" : \"lastModifiedBy\",        \"createdTime\" : 6      },      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"id\" : \"id\"    },    \"inventoryType\" : \"Asset\",    \"materialClass\" : \"HighUsage\",    \"materialType\" : {      \"parent\" : 5,      \"code\" : \"code\",      \"auditDetails\" : {        \"lastModifiedTime\" : 1,        \"createdBy\" : \"createdBy\",        \"lastModifiedBy\" : \"lastModifiedBy\",        \"createdTime\" : 6      },      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"id\" : \"id\"    },    \"purchaseUom\" : {      \"code\" : \"code\",      \"auditDetails\" : {        \"lastModifiedTime\" : 1,        \"createdBy\" : \"createdBy\",        \"lastModifiedBy\" : \"lastModifiedBy\",        \"createdTime\" : 6      },      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"id\" : \"id\"    },    \"baseUom\" : {      \"code\" : \"code\",      \"auditDetails\" : {        \"lastModifiedTime\" : 1,        \"createdBy\" : \"createdBy\",        \"lastModifiedBy\" : \"lastModifiedBy\",        \"createdTime\" : 6      },      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"id\" : \"id\"    },    \"oldCode\" : \"oldCode\",    \"tenantId\" : \"tenantId\",    \"name\" : \"name\",    \"expenseAccount\" : {      \"glCode\" : \"glCode\",      \"auditDetails\" : {        \"lastModifiedTime\" : 1,        \"createdBy\" : \"createdBy\",        \"lastModifiedBy\" : \"lastModifiedBy\",        \"createdTime\" : 6      },      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"id\" : \"id\"    },    \"overrideMaterialControlType\" : true,    \"status\" : \"Active\"  }, {    \"code\" : \"code\",    \"maxQuantity\" : 7.061401241503109105224211816675961017608642578125,    \"description\" : \"description\",    \"reorderQuantity\" : 3.61607674925191080461672754609026014804840087890625,    \"reorderLevel\" : 9.301444243932575517419536481611430644989013671875,    \"techincalSpecs\" : \"techincalSpecs\",    \"termsOfDelivery\" : \"termsOfDelivery\",    \"minQuantity\" : 2.3021358869347654518833223846741020679473876953125,    \"auditDetails\" : {      \"lastModifiedTime\" : 1,      \"createdBy\" : \"createdBy\",      \"lastModifiedBy\" : \"lastModifiedBy\",      \"createdTime\" : 6    },    \"materialControlType\" : \"LOTControl\",    \"manufacturePartNo\" : \"manufacturePartNo\",    \"model\" : \"model\",    \"id\" : \"id\",    \"staockingUom\" : {      \"code\" : \"code\",      \"auditDetails\" : {        \"lastModifiedTime\" : 1,        \"createdBy\" : \"createdBy\",        \"lastModifiedBy\" : \"lastModifiedBy\",        \"createdTime\" : 6      },      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"id\" : \"id\"    },    \"inventoryType\" : \"Asset\",    \"materialClass\" : \"HighUsage\",    \"materialType\" : {      \"parent\" : 5,      \"code\" : \"code\",      \"auditDetails\" : {        \"lastModifiedTime\" : 1,        \"createdBy\" : \"createdBy\",        \"lastModifiedBy\" : \"lastModifiedBy\",        \"createdTime\" : 6      },      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"id\" : \"id\"    },    \"purchaseUom\" : {      \"code\" : \"code\",      \"auditDetails\" : {        \"lastModifiedTime\" : 1,        \"createdBy\" : \"createdBy\",        \"lastModifiedBy\" : \"lastModifiedBy\",        \"createdTime\" : 6      },      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"id\" : \"id\"    },    \"baseUom\" : {      \"code\" : \"code\",      \"auditDetails\" : {        \"lastModifiedTime\" : 1,        \"createdBy\" : \"createdBy\",        \"lastModifiedBy\" : \"lastModifiedBy\",        \"createdTime\" : 6      },      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"id\" : \"id\"    },    \"oldCode\" : \"oldCode\",    \"tenantId\" : \"tenantId\",    \"name\" : \"name\",    \"expenseAccount\" : {      \"glCode\" : \"glCode\",      \"auditDetails\" : {        \"lastModifiedTime\" : 1,        \"createdBy\" : \"createdBy\",        \"lastModifiedBy\" : \"lastModifiedBy\",        \"createdTime\" : 6      },      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"id\" : \"id\"    },    \"overrideMaterialControlType\" : true,    \"status\" : \"Active\"  } ],  \"page\" : {    \"totalResults\" : 1,    \"offSet\" : 1,    \"totalPages\" : 1,    \"pageSize\" : 6,    \"currentPage\" : 7  },  \"responseInfo\" : {    \"ver\" : \"ver\",    \"resMsgId\" : \"resMsgId\",    \"msgId\" : \"msgId\",    \"apiId\" : \"apiId\",    \"ts\" : 0,    \"status\" : \"SUCCESSFUL\"  }}", MaterialResponse.class), HttpStatus.OK);
         }
 
-        return new ResponseEntity<MaterialResponse>(HttpStatus.OK);
+
+        MaterialSearchRequest materialSearchRequest = MaterialSearchRequest.builder()
+                .tenantId(tenantId)
+                .ids(ids)
+                .code(code)
+                .name(name)
+                .description(description)
+                .oldCode(oldCode)
+                .materialType(materialType)
+                .inventoryType(inventoryType)
+                .status(status)
+                .materialClass(materialClass)
+                .materialControlType(materialControlType)
+                .model(model)
+                .manufacturePartNo(manufacturePartNo)
+                .pageSize(pageSize)
+                .offSet(offset)
+                .sortBy(sortBy)
+                .build();
+
+        Pagination<Material> materialList = materialService
+                .search(materialSearchRequest);
+
+        return new ResponseEntity<MaterialResponse>(buildMaterialResponse(materialList.getPagedData(), requestInfo), HttpStatus.OK);
     }
 
     public ResponseEntity<MaterialResponse> materialsUpdatePost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,

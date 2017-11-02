@@ -69,7 +69,7 @@ serviceMaps:
       description: create materials in inventory
       fromTopic: inv-materials-save-topic
       queryMaps:
-        - query: INSERT INTO materials(id, code, name, description, oldcode, materialtype, baseuom, inventorytype, status, purchaseuom, expenseaccount, minquantity, maxquantity, staockinguom, materialclass, reorderlevel, reorderquantity, materialcontroltype, model, manufacturepartno, techincalspecs, termsofdelivery, overridematerialcontroltype, tenantid , createdby, lastmodifiedby, createdtime, lastmodifiedtime ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        - query: INSERT INTO material(id, code, name, description, oldcode, materialtype, baseuom, inventorytype, status, purchaseuom, expenseaccount, minquantity, maxquantity, staockinguom, materialclass, reorderlevel, reorderquantity, materialcontroltype, model, manufacturepartno, techincalspecs, termsofdelivery, overridematerialcontroltype, tenantid , createdby, lastmodifiedby, createdtime, lastmodifiedtime ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: $.materials.*
           jsonMaps:
             - jsonPath: $.materials.*.id
@@ -112,7 +112,7 @@ serviceMaps:
       description: update materials in inventory
       fromTopic: inv-materials-update-topic
       queryMaps:
-        - query: UPDATE materials SET name=?,  description=?,  oldcode=?,  materialtype=?,  baseuom=?,  inventorytype=?,  status=?,  purchaseuom=?,  expenseaccount=?,  minquantity=?,  maxquantity=?,  staockinguom=?,  materialclass=?,  reorderlevel=?,  reorderquantity=?,  materialcontroltype=?,  model=?,  manufacturepartno=?,  techincalspecs=?,  termsofdelivery=?,  overridematerialcontroltype=?,  lastmodifiedby=?,  lastmodifiedtime=? WHERE code=? AND tenantid=?;
+        - query: UPDATE material SET name=?,  description=?,  oldcode=?,  materialtype=?,  baseuom=?,  inventorytype=?,  status=?,  purchaseuom=?,  expenseaccount=?,  minquantity=?,  maxquantity=?,  staockinguom=?,  materialclass=?,  reorderlevel=?,  reorderquantity=?,  materialcontroltype=?,  model=?,  manufacturepartno=?,  techincalspecs=?,  termsofdelivery=?,  overridematerialcontroltype=?,  lastmodifiedby=?,  lastmodifiedtime=? WHERE code=? AND tenantid=?;
           basePath: $.materials.*
           jsonMaps:
             - jsonPath: $.materials.*.name

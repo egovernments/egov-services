@@ -1,4 +1,4 @@
-create table materials (
+create table material (
       id character varying(50) NOT NULL,
       code varchar(50),
       name varchar(256) NOT NULL,
@@ -29,9 +29,9 @@ create table materials (
       tenantid varchar(256) NOT NULL
       );
 
-alter table materials add constraint pk_material primary key (name, tenantid);
+alter table material add constraint pk_material primary key (name, tenantid);
 
-create sequence seq_materials;
+create sequence seq_material;
 
 create sequence seq_material_code_serial_no;
 

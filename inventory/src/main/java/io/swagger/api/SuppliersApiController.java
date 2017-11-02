@@ -56,13 +56,9 @@ public class SuppliersApiController implements SuppliersApi {
     		@RequestHeader(value = "Accept", required = false) String accept,BindingResult errors) throws Exception {
     	List<Supplier> suppliers = supplierService.create(supplierRequest, tenantId, errors);
     	SupplierResponse supplierResponse = buildSupplierResponse(suppliers, supplierRequest.getRequestInfo());
-      
         if (accept != null && accept.contains("application/json")) {
-           
                 return new ResponseEntity<SupplierResponse>(objectMapper.readValue("{  \"suppliers\" : [ {    \"bankInfo\" : {      \"acctNo\" : \"acctNo\",      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"micr\" : \"micr\",      \"ifsc\" : \"ifsc\"    },    \"website\" : \"website\",    \"code\" : \"code\",    \"address\" : \"address\",    \"panNo\" : \"panNo\",    \"vatNo\" : \"vatNo\",    \"contactPerson\" : \"contactPerson\",    \"cstNo\" : \"cstNo\",    \"tinNo\" : \"tinNo\",    \"contactPersonNo\" : \"contactPersonNo\",    \"faxNo\" : \"faxNo\",    \"supplierContactNo\" : \"supplierContactNo\",    \"narration\" : \"narration\",    \"auditDetails\" : {      \"lastModifiedTime\" : 1,      \"createdBy\" : \"createdBy\",      \"lastModifiedBy\" : \"lastModifiedBy\",      \"createdTime\" : 6    },    \"tenantId\" : \"tenantId\",    \"name\" : \"name\",    \"inActiveDate\" : 0,    \"id\" : \"id\",    \"supplierType\" : {      \"code\" : \"code\",      \"tenantId\" : \"tenantId\",      \"name\" : \"name\"    },    \"email\" : \"email\",    \"status\" : {      \"code\" : \"code\",      \"tenantId\" : \"tenantId\",      \"name\" : \"name\"    }  }, {    \"bankInfo\" : {      \"acctNo\" : \"acctNo\",      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"micr\" : \"micr\",      \"ifsc\" : \"ifsc\"    },    \"website\" : \"website\",    \"code\" : \"code\",    \"address\" : \"address\",    \"panNo\" : \"panNo\",    \"vatNo\" : \"vatNo\",    \"contactPerson\" : \"contactPerson\",    \"cstNo\" : \"cstNo\",    \"tinNo\" : \"tinNo\",    \"contactPersonNo\" : \"contactPersonNo\",    \"faxNo\" : \"faxNo\",    \"supplierContactNo\" : \"supplierContactNo\",    \"narration\" : \"narration\",    \"auditDetails\" : {      \"lastModifiedTime\" : 1,      \"createdBy\" : \"createdBy\",      \"lastModifiedBy\" : \"lastModifiedBy\",      \"createdTime\" : 6    },    \"tenantId\" : \"tenantId\",    \"name\" : \"name\",    \"inActiveDate\" : 0,    \"id\" : \"id\",    \"supplierType\" : {      \"code\" : \"code\",      \"tenantId\" : \"tenantId\",      \"name\" : \"name\"    },    \"email\" : \"email\",    \"status\" : {      \"code\" : \"code\",      \"tenantId\" : \"tenantId\",      \"name\" : \"name\"    }  } ],  \"page\" : {    \"totalResults\" : 1,    \"offSet\" : 1,    \"totalPages\" : 1,    \"pageSize\" : 6,    \"currentPage\" : 7  },  \"responseInfo\" : {    \"ver\" : \"ver\",    \"resMsgId\" : \"resMsgId\",    \"msgId\" : \"msgId\",    \"apiId\" : \"apiId\",    \"ts\" : 0,    \"status\" : \"SUCCESSFUL\"  }}", SupplierResponse.class), HttpStatus.OK);
-           
         }
-
         return new ResponseEntity(supplierResponse,HttpStatus.OK);
     }
 
@@ -80,18 +76,15 @@ public class SuppliersApiController implements SuppliersApi {
         return new ResponseEntity<SupplierResponse>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<SupplierResponse> suppliersUpdatePost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,@ApiParam(value = "common Request info"  )  @Valid @RequestBody SupplierRequest supplierRequest) {
-        String accept = request.getHeader("Accept");
+    public ResponseEntity<SupplierResponse> suppliersUpdatePost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
+    		@ApiParam(value = "common Request info"  )  @Valid @RequestBody SupplierRequest supplierRequest,
+    		@RequestHeader(value = "Accept", required = false) String accept,BindingResult errors) throws Exception {
+    	List<Supplier> suppliers = supplierService.update(supplierRequest, tenantId, errors);
+    	SupplierResponse supplierResponse = buildSupplierResponse(suppliers, supplierRequest.getRequestInfo());
         if (accept != null && accept.contains("application/json")) {
-            try {
                 return new ResponseEntity<SupplierResponse>(objectMapper.readValue("{  \"suppliers\" : [ {    \"bankInfo\" : {      \"acctNo\" : \"acctNo\",      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"micr\" : \"micr\",      \"ifsc\" : \"ifsc\"    },    \"website\" : \"website\",    \"code\" : \"code\",    \"address\" : \"address\",    \"panNo\" : \"panNo\",    \"vatNo\" : \"vatNo\",    \"contactPerson\" : \"contactPerson\",    \"cstNo\" : \"cstNo\",    \"tinNo\" : \"tinNo\",    \"contactPersonNo\" : \"contactPersonNo\",    \"faxNo\" : \"faxNo\",    \"supplierContactNo\" : \"supplierContactNo\",    \"narration\" : \"narration\",    \"auditDetails\" : {      \"lastModifiedTime\" : 1,      \"createdBy\" : \"createdBy\",      \"lastModifiedBy\" : \"lastModifiedBy\",      \"createdTime\" : 6    },    \"tenantId\" : \"tenantId\",    \"name\" : \"name\",    \"inActiveDate\" : 0,    \"id\" : \"id\",    \"supplierType\" : {      \"code\" : \"code\",      \"tenantId\" : \"tenantId\",      \"name\" : \"name\"    },    \"email\" : \"email\",    \"status\" : {      \"code\" : \"code\",      \"tenantId\" : \"tenantId\",      \"name\" : \"name\"    }  }, {    \"bankInfo\" : {      \"acctNo\" : \"acctNo\",      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"micr\" : \"micr\",      \"ifsc\" : \"ifsc\"    },    \"website\" : \"website\",    \"code\" : \"code\",    \"address\" : \"address\",    \"panNo\" : \"panNo\",    \"vatNo\" : \"vatNo\",    \"contactPerson\" : \"contactPerson\",    \"cstNo\" : \"cstNo\",    \"tinNo\" : \"tinNo\",    \"contactPersonNo\" : \"contactPersonNo\",    \"faxNo\" : \"faxNo\",    \"supplierContactNo\" : \"supplierContactNo\",    \"narration\" : \"narration\",    \"auditDetails\" : {      \"lastModifiedTime\" : 1,      \"createdBy\" : \"createdBy\",      \"lastModifiedBy\" : \"lastModifiedBy\",      \"createdTime\" : 6    },    \"tenantId\" : \"tenantId\",    \"name\" : \"name\",    \"inActiveDate\" : 0,    \"id\" : \"id\",    \"supplierType\" : {      \"code\" : \"code\",      \"tenantId\" : \"tenantId\",      \"name\" : \"name\"    },    \"email\" : \"email\",    \"status\" : {      \"code\" : \"code\",      \"tenantId\" : \"tenantId\",      \"name\" : \"name\"    }  } ],  \"page\" : {    \"totalResults\" : 1,    \"offSet\" : 1,    \"totalPages\" : 1,    \"pageSize\" : 6,    \"currentPage\" : 7  },  \"responseInfo\" : {    \"ver\" : \"ver\",    \"resMsgId\" : \"resMsgId\",    \"msgId\" : \"msgId\",    \"apiId\" : \"apiId\",    \"ts\" : 0,    \"status\" : \"SUCCESSFUL\"  }}", SupplierResponse.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<SupplierResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
         }
-
-        return new ResponseEntity<SupplierResponse>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity(supplierResponse,HttpStatus.OK);
     }
     
     private SupplierResponse buildSupplierResponse(List<Supplier> suppliers, RequestInfo requestInfo) {

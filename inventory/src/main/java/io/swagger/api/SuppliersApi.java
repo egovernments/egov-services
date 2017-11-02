@@ -60,6 +60,6 @@ public interface SuppliersApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<SupplierResponse> suppliersUpdatePost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,@ApiParam(value = "common Request info"  )  @Valid @RequestBody SupplierRequest supplierRequest);
+    ResponseEntity<SupplierResponse> suppliersUpdatePost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,@ApiParam(value = "common Request info"  )  @Valid @RequestBody SupplierRequest supplierRequest,@RequestHeader(value = "Accept", required = false) String accept,BindingResult errors) throws Exception;
 
 }

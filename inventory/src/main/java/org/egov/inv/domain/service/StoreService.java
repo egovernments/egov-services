@@ -118,7 +118,6 @@ public class StoreService {
 				if (errors.hasErrors()) {
 					throw new CustomBindException(errors.getFieldError().getCode() + " : " + (errors.getFieldError().getDefaultMessage().replace("{0}", errors.getFieldError().getField())).replace("{1}", errors.getFieldError().getRejectedValue().toString()));
 				}
-				store.setId(storeJdbcRepository.getSequence(store));
 			}
 		} catch (CustomBindException e) {
 			throw e;

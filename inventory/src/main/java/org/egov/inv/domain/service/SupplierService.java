@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.egov.inv.domain.exception.CustomBindException;
 import org.egov.inv.domain.exception.ErrorCode;
+import org.egov.inv.domain.exception.InvalidDataException;
 import org.egov.inv.persistence.entity.SupplierEntity;
 import org.egov.inv.persistence.repository.SupplierJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
+import io.swagger.model.Store;
+import io.swagger.model.StoreRequest;
 import io.swagger.model.Supplier;
 import io.swagger.model.SupplierRequest;
 @Service
@@ -29,6 +32,9 @@ public class SupplierService {
 	
 	@Value("${inv.supplier.save.topic}")
 	private String createTopic;
+	
+	@Value("${inv.supplier.update.topic}")
+	private String updateTopic;
 
 	
 
@@ -60,7 +66,36 @@ public class SupplierService {
 		kafkaTemplate.send(createTopic, supplierRequest);
 		return supplierRequest.getSuppliers();
 	}
-		
+
+
+	public List<Supplier> update(SupplierRequest supplierRequest, String tenantId, BindingResult errors) {
+		try {
+
+			for (Supplier supplier : supplierRequest.getSuppliers()) {
+				 if (supplier.getId() == null) {
+                     throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), supplier.getId());
+                 }
+				supplier.setAuditDetails(inventoryUtilityService.mapAuditDetailsForUpdate(supplierRequest.getRequestInfo(), tenantId));
+				if (!supplierJdbcRepository.uniqueCheck("code", new SupplierEntity().toEntity(supplier))) {
+					errors.addError(new FieldError("supplier", "code", supplier.getCode(), false,
+							new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null,
+							ErrorCode.NON_UNIQUE_VALUE.getMessage() + " . " + ErrorCode.NON_UNIQUE_VALUE.getDescription()));
+				}
+				if (errors.hasErrors()) {
+					throw new CustomBindException(errors.getFieldError().getCode() + " : " + (errors.getFieldError().getDefaultMessage().replace("{0}", errors.getFieldError().getField())).replace("{1}", errors.getFieldError().getRejectedValue().toString()));
+				}
+			}
+		} catch (CustomBindException e) {
+			throw e;
+		}
+			
+				
+		return pushForUpdate(supplierRequest);
+	}
+	public List<Supplier> pushForUpdate(SupplierRequest supplierRequest) {
+		kafkaTemplate.send(updateTopic, supplierRequest);
+		return supplierRequest.getSuppliers();
+	}	
 
 
 }

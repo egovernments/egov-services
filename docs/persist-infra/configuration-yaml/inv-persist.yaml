@@ -144,7 +144,6 @@ serviceMaps:
               dbType: LONG
             - jsonPath: $.materials.*.code
             - jsonPath: $.materials.*.auditDetails.tenantId
-            
     - version: 1
       name: Supplier create
       description: create suppliers in ulb
@@ -190,7 +189,42 @@ serviceMaps:
             - jsonPath: $.suppliers.*.auditDetails.lastModifiedTime
               dbType: LONG
             - jsonPath: $.suppliers.*.auditDetails.tenantId
-              
-               
-            
-            	
+    - version: 1
+      name: Supplier update
+      description: update suppliers in ulb
+      fromTopic: inv-supplier-update-topic
+      queryMaps:
+        - query: >-
+            Update supplier set  name = ?, address = ?, suppliertype = ?,
+            status = ?, inactivedate = ?, suppliercontactno = ?, faxno = ?,
+            website = ?, email = ?, narration = ?, panno = ?,
+            tinno = ?, cstno = ?, vatno = ?, contactperson = ?,contactpersonno = ?,
+            bankname = ?, bankifsc = ?,bankAcctNo = ?, bankmicr = ?, lastmodifiedby = ?, lastmodifiedtime = ? where code = ? and tenantid = ?
+          basePath: $.suppliers.*
+          jsonMaps:
+            - jsonPath: $.suppliers.*.name
+            - jsonPath: $.suppliers.*.address
+            - jsonPath: $.suppliers.*.supplierType.name
+            - jsonPath: $.suppliers.*.status.name
+            - jsonPath: $.suppliers.*.inActiveDate
+              dbType: LONG
+            - jsonPath: $.suppliers.*.supplierContactNo
+            - jsonPath: $.suppliers.*.faxNo
+            - jsonPath: $.suppliers.*.website
+            - jsonPath: $.suppliers.*.email
+            - jsonPath: $.suppliers.*.narration
+            - jsonPath: $.suppliers.*.panNo
+            - jsonPath: $.suppliers.*.tinNo
+            - jsonPath: $.suppliers.*.cstNo
+            - jsonPath: $.suppliers.*.vatNo
+            - jsonPath: $.suppliers.*.contactPerson
+            - jsonPath: $.suppliers.*.contactPersonNo
+            - jsonPath: $.suppliers.*.bankInfo.name
+            - jsonPath: $.suppliers.*.bankInfo.ifsc
+            - jsonPath: $.suppliers.*.bankInfo.acctNo
+            - jsonPath: $.suppliers.*.bankInfo.micr
+            - jsonPath: $.suppliers.*.auditDetails.lastModifiedBy
+            - jsonPath: $.suppliers.*.auditDetails.lastModifiedTime
+              dbType: LONG
+            - jsonPath: $.suppliers.*.code
+            - jsonPath: $.suppliers.*.auditDetails.tenantId            

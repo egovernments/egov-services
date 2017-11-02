@@ -110,7 +110,7 @@ public class CaseService {
 						propertiesManager.getRequiedCaseGenerationDateMessage());
 			}
 
-			else if (caseObj.getDepartmentPerson() == null || !caseObj.getDepartmentPerson().isEmpty()) {
+			else if (caseObj.getDepartmentPerson() == null || caseObj.getDepartmentPerson().isEmpty()) {
 				throw new CustomException(propertiesManager.getRequiredDepartmentPersonCode(),
 						propertiesManager.getRequiredDepartmentPersonCode());
 			}

@@ -82,7 +82,7 @@ public class Asset   {
 	  private String depreciationExpenseAccount = null;
 
 	  @JsonProperty("titleDocumentsAvalable")
-	  private List<String> titleDocumentsAvalable = null;
+	  private String titleDocumentsAvalable = null;
 
 	  @JsonProperty("usage")
 	  private String usage = null;

@@ -80,10 +80,10 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 asset.setAccumulatedDepreciationAccount(rs.getString("accumulateddepreciationaccount"));
                 asset.setRevaluationReserveAccount(rs.getString("revaluationreserveaccount"));
                 asset.setDepreciationExpenseAccount(rs.getString("depreciationexpenseaccount"));
-                String titleDocument = rs.getString("titledocumentsavalable");
-                List<String> titleDocumentsAvalable= new ArrayList<>();
-                titleDocumentsAvalable.add(titleDocument);
-                asset.setTitleDocumentsAvalable(titleDocumentsAvalable);
+                //String titleDocument = rs.getString("titledocumentsavalable");
+              //  List<String> titleDocumentsAvalable= new ArrayList<>();
+               // titleDocumentsAvalable.add(titleDocument);
+                asset.setTitleDocumentsAvalable(rs.getString("titledocumentsavalable"));
                 asset.setUsage(rs.getString("usage"));
                 asset.setLength(getDoubleFromBigDecimal(rs.getBigDecimal("length")));
                 asset.setWidth(getDoubleFromBigDecimal(rs.getBigDecimal("width")));

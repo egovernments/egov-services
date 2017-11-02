@@ -42,7 +42,7 @@ public class SuppliersApiController implements SuppliersApi {
         @ApiParam(value = "Create  new"  )  @Valid @RequestBody SupplierRequest supplierRequest , BindingResult errors) {
     	
     	List<Supplier> suppliers = supplierService.create(supplierRequest, tenantId , errors);
-    	StoreResponse storeResponse = buildSupplierResponse(suppliers, supplierRequest.getRequestInfo());
+    	SupplierResponse storeResponse = buildSupplierResponse(suppliers, supplierRequest.getRequestInfo());
     	return new ResponseEntity(storeResponse, HttpStatus.OK);
     }
 
@@ -64,8 +64,8 @@ public class SuppliersApiController implements SuppliersApi {
         return new ResponseEntity<SupplierResponse>(HttpStatus.OK);
     }
     
-	private StoreResponse buildSupplierResponse(List<Supplier> suppliers, RequestInfo requestInfo) {
-		return SupplierResponse.builder().responseInfo(getResponseInfo(requestInfo)).supplier(suppliers).build();
+	private SupplierResponse buildSupplierResponse(List<Supplier> suppliers, RequestInfo requestInfo) {
+		return SupplierResponse.builder().responseInfo(getResponseInfo(requestInfo)).suppliers(suppliers).build();
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {

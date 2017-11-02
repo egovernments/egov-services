@@ -23,5 +23,20 @@ ServiceMaps:
       id: $.id
       isBulk: true
       jsonPath: $.stores.*
+  - topic: inv-supplier-save-topic
+    indexes:
+    - name: suppliers
+      type: suppliers
+      id: $.id
+      isBulk: true
+      jsonPath: $.suppliers.*
+  - topic: inv-supplier-update-topic
+    indexes:
+    - name: suppliers
+      type: suppliers
+      id: $.id
+      isBulk: true
+      jsonPath: $.suppliers.*      
+      
 
       

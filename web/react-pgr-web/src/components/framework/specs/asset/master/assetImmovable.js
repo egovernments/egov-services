@@ -182,13 +182,13 @@ var dat = {
 						"label": "ac.create.Land.Asset.ID",
 						"pattern": "",
 						"type": "autoCompelete",
-						"url": "asset-services-maha/assets/_search?&id=55,56,57,58,59,60,61,62,63,64,65|$..id|$..name",
+						"url": "asset-services-maha/assets/_search?&id=55,56,57,58,59,60,61,62,63,64,65|$..name|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"autoCompleteDependancy": {
-							"autoCompleteUrl": "asset-services-maha/assets/_search?id={value}",
+							"autoCompleteUrl": "asset-services-maha/assets/_search?name={value}",
 							"autoFillFields": {
 								"Asset.landDetails[0].surveyNo": "Assets[0].landSurveyNo",
 								"Asset.landDetails[0].area": "Assets[0].totalArea"
@@ -955,7 +955,7 @@ var dat = {
   						"label": "ac.create.Department",
   						"pattern": "",
   						"type": "text",
-  						"url": "",
+  						"url": "/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name",
   						"isRequired": true,
   						"isDisabled": false,
   						"requiredErrMsg": "",
@@ -1047,7 +1047,7 @@ var dat = {
 			"fields": [
 				{
 					"name": "LandAssetID",
-					"jsonPath": "Assets[0].",
+					"jsonPath": "Assets[0].landDetails[0].code",
 					"label": "ac.create.Land.Asset.ID",
 					"pattern": "",
 					"type": "text",
@@ -1059,10 +1059,10 @@ var dat = {
 				},
 				{
 					"name": "SurveyNoOfLandOnWhichStructureIsLocated ",
-					"jsonPath": "Assets[0].landSurveyNo",
+					"jsonPath": "Assets[0].landDetails[0].surveyNo",
 					"label": "ac.create.Survey.no.of.land",
 					"pattern": "",
-					"type": "number",
+					"type": "text",
 					"url": "",
 					"isRequired": false,
 					"isDisabled": true,
@@ -1143,12 +1143,13 @@ var dat = {
             "jsonPath": "Assets[0].locationDetails.electionWard",
             "label": "ac.create.Election.Ward",
             "pattern": "",
-            "type": "text",
-            "url": "",
+            "type": "singleValueList",
+            "url": "/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$..id|$..name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+						"convertToString":true
           }
 				]
 			},

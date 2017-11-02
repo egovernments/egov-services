@@ -381,7 +381,7 @@ printer = () => {
                   return (
                   <div>
                   <Card className="uiCard">
-                      <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("Asset Attributes")}</div>}/>
+                      <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("as.assetAttributes")}</div>}/>
                       <CardText>
 
              { disArray.map(function(item, index) {

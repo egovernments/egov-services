@@ -1919,6 +1919,7 @@ var localization_EN_Data = {
     "ac.create.Land.Details": "Land Details",
     "ac.create.areaOfLand": "Area of Land (sq.ft.)",
     "ac.create.areaOfLandWhichConstructed": "Area of Land on which constructed (sq.ft.)",
+    "as.assetAttributes":"Asset Attributes",
 
 
 

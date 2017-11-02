@@ -1,10 +1,13 @@
 package org.egov.lcms.repository.builder;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.egov.lcms.models.Case;
 import org.egov.lcms.models.CaseSearchCriteria;
 import org.egov.lcms.repository.AdvocateSearchRepository;
+import org.egov.lcms.utility.ConstantUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -45,23 +48,24 @@ public class CaseBuilder {
 			preparedStatementValues.add(caseSearchCriteria.getTenantId());
 		}
 
+		// if (caseSearchCriteria.getAdvocateName() != null &&
+		// caseSearchCriteria.getSummonReferenceNo() == null
+		// && caseSearchCriteria.getCaseRefernceNo() == null &&
+		// caseSearchCriteria.getCaseStatus() == null
+		// && caseSearchCriteria.getCaseType() == null &&
+		// caseSearchCriteria.getDepartmentName() == null
+		// && caseSearchCriteria.getCaseCategory() == null &&
+		// caseSearchCriteria.getFromDate() == null
+		// && caseSearchCriteria.getToDate() == null) {
+		// selectQuery.append(" AND code IN (" +
+		// getAdvocateInnerQuery(caseSearchCriteria.getAdvocateName(),
+		// caseSearchCriteria.getTenantId(), preparedStatementValues));
+		// }
+
 		if (caseSearchCriteria.getCode() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-
-			int count = 1;
-
-			String codeIds = "";
-			for (String code : caseSearchCriteria.getCode()) {
-				if (count < caseSearchCriteria.getCode().length)
-					codeIds = codeIds + "'" + code + "',";
-				else
-					codeIds = codeIds + "'" + code + "'";
-
-				count++;
-			}
-
-			selectQuery.append(" code IN(" + codeIds + ")");
-
+			selectQuery.append(" code IN ("
+					+ Stream.of(caseSearchCriteria.getCode()).collect(Collectors.joining("','", "'", "'")) + ")");
 		}
 
 		if (caseSearchCriteria.getSummonReferenceNo() != null && !caseSearchCriteria.getSummonReferenceNo().isEmpty()) {
@@ -136,6 +140,20 @@ public class CaseBuilder {
 
 	}
 
+	private String getAdvocateInnerQuery(String advocateName, String tenantId,
+			final List<Object> preparedStatementValues) {
+		StringBuilder advocateInnerQuery = new StringBuilder();
+		advocateInnerQuery.append("select casecode from " + ConstantUtility.ADVOCATE_DETAILS_TABLE_NAME
+				+ " WHERE advocate ->> 'name'=? )");
+		preparedStatementValues.add(advocateName);
+
+		if (tenantId != null) {
+			advocateInnerQuery.append(" AND tenantid=?");
+			preparedStatementValues.add(tenantId);
+		}
+		return null;
+	}
+
 	/**
 	 * This method is always called at the beginning of the method so that and
 	 * is prepended before the field's predicate is handled.
@@ -175,15 +193,18 @@ public class CaseBuilder {
 		}
 	}
 
-	public String searchByCaseCodeQuery(Case casee, String tableName, final List<Object> preparedStatementValues) {
+	public String searchByCaseCodeQuery(Case casee, String tableName, Boolean isTenantIdExixts,
+			final List<Object> preparedStatementValues) {
 		StringBuilder paraWiseSearchQuery = new StringBuilder();
 		paraWiseSearchQuery.append("SELECT * FROM " + tableName);
 
 		paraWiseSearchQuery.append(" WHERE casecode=?");
 		preparedStatementValues.add(casee.getCode());
 
-		paraWiseSearchQuery.append(" AND tenantid=?");
-		preparedStatementValues.add(casee.getTenantId());
+		if (isTenantIdExixts) {
+			paraWiseSearchQuery.append(" AND tenantid=?");
+			preparedStatementValues.add(casee.getTenantId());
+		}
 
 		return paraWiseSearchQuery.toString();
 	}

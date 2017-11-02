@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.lcms.config.PropertiesManager;
+import org.egov.lcms.models.AdvocateDetails;
 import org.egov.lcms.models.Case;
 import org.egov.lcms.models.CaseSearchCriteria;
+import org.egov.lcms.models.CaseVoucher;
 import org.egov.lcms.models.HearingDetails;
 import org.egov.lcms.models.ParaWiseComment;
 import org.egov.lcms.repository.builder.CaseBuilder;
+import org.egov.lcms.repository.rowmapper.AdvocateDetailsRowMapper;
 import org.egov.lcms.repository.rowmapper.CaseRowMapper;
+import org.egov.lcms.repository.rowmapper.CaseVoucherRowMapper;
 import org.egov.lcms.repository.rowmapper.HearingDetailsRowMapper;
 import org.egov.lcms.repository.rowmapper.ParaWiseRowMapper;
 import org.egov.lcms.utility.ConstantUtility;
@@ -45,6 +49,12 @@ public class CaseSearchRepository {
 	HearingDetailsRowMapper hearingDetailsRowMapper;
 
 	@Autowired
+	AdvocateDetailsRowMapper advocateDetailsRowMapper;
+
+	@Autowired
+	CaseVoucherRowMapper caseVoucherRowMapper;
+
+	@Autowired
 	PropertiesManager propertiesManager;
 
 	/**
@@ -66,14 +76,11 @@ public class CaseSearchRepository {
 			throw new CustomException(propertiesManager.getCaseResponseErrorCode(), exception.getMessage());
 		}
 
-		List<ParaWiseComment> paraWiseComments = new ArrayList<>();
-		List<HearingDetails> hearingDetails = new ArrayList<>();
 		for (Case casee : cases) {
-			paraWiseComments = searchParaWiseComments(casee);
-			hearingDetails = searchHearingDetails(casee);
-
-			casee.setParawiseComments(paraWiseComments);
-			casee.setHearingDetails(hearingDetails);
+			casee.setParawiseComments(searchParaWiseComments(casee));
+			casee.setHearingDetails(searchHearingDetails(casee));
+			casee.setAdvocateDetails(searchAdvocateDetails(casee));
+			casee.setCaseVoucher(searchCaseVoucher(casee));
 		}
 
 		return cases;
@@ -83,7 +90,7 @@ public class CaseSearchRepository {
 		List<ParaWiseComment> paraWiseComments = new ArrayList<ParaWiseComment>();
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
 		final String queryStr = caseBuilder.searchByCaseCodeQuery(casee, ConstantUtility.PARAWISE_COMMENTS_TABLE_NAME,
-				preparedStatementValues);
+				Boolean.TRUE, preparedStatementValues);
 
 		try {
 			paraWiseComments = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), paraWiseRowMapper);
@@ -97,7 +104,7 @@ public class CaseSearchRepository {
 		List<HearingDetails> hearingDetails = new ArrayList<HearingDetails>();
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
 		final String queryStr = caseBuilder.searchByCaseCodeQuery(casee, ConstantUtility.HEARING_DETAILS_TABLE_NAME,
-				preparedStatementValues);
+				Boolean.TRUE, preparedStatementValues);
 
 		try {
 			hearingDetails = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), hearingDetailsRowMapper);
@@ -105,5 +112,36 @@ public class CaseSearchRepository {
 			throw new CustomException(propertiesManager.getHearingDetailsResponseErrorCode(), ex.getMessage());
 		}
 		return hearingDetails;
+	}
+
+	private List<AdvocateDetails> searchAdvocateDetails(Case casee) {
+		List<AdvocateDetails> advocateDetails = new ArrayList<>();
+		final List<Object> preparedStatementValues = new ArrayList<Object>();
+		final String queryStr = caseBuilder.searchByCaseCodeQuery(casee, ConstantUtility.ADVOCATE_DETAILS_TABLE_NAME,
+				Boolean.FALSE, preparedStatementValues);
+
+		try {
+			advocateDetails = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), advocateDetailsRowMapper);
+		} catch (Exception ex) {
+			throw new CustomException(propertiesManager.getAdvocateDetailsResponseErrorCode(), ex.getMessage());
+		}
+		return advocateDetails;
+	}
+
+	private CaseVoucher searchCaseVoucher(Case casee) {
+		List<CaseVoucher> caseVouchers = new ArrayList<>();
+		final List<Object> preparedStatementValues = new ArrayList<Object>();
+		final String queryStr = caseBuilder.searchByCaseCodeQuery(casee, ConstantUtility.CASE_VOUCHER_TABLE_NAME,
+				Boolean.TRUE, preparedStatementValues);
+
+		try {
+			caseVouchers = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), caseVoucherRowMapper);
+		} catch (Exception ex) {
+			throw new CustomException(propertiesManager.getCaseVoucherResponseErrorCode(), ex.getMessage());
+		}
+		if (caseVouchers != null && caseVouchers.size() > 0)
+			return caseVouchers.get(0);
+
+		return null;
 	}
 }

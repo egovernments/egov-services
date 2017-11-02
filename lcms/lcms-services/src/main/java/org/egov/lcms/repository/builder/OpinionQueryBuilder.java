@@ -1,6 +1,8 @@
 package org.egov.lcms.repository.builder;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.models.OpinionSearchCriteria;
@@ -45,19 +47,8 @@ public class OpinionQueryBuilder {
 
 		String[] codes = opinionSearchCriteria.getCodes();
 		if (codes != null && codes.length > 0) {
-
-			String searchIds = "";
-			int count = 1;
-			for (String code : codes) {
-
-				if (count < codes.length)
-					searchIds = "'" + searchIds + code + "',";
-				else
-					searchIds = "'" + searchIds + code + "'";
-
-				count++;
-			}
-			selectQuery.append(" AND code IN (" + searchIds + ") ");
+			selectQuery.append(" code IN ("
+					+ Stream.of(opinionSearchCriteria.getCodes()).collect(Collectors.joining("','", "'", "'")) + ")");
 		}
 
 		if (opinionSearchCriteria.getOpinionRequestDate() != null) {

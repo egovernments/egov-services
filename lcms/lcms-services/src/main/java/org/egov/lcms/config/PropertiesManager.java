@@ -428,4 +428,10 @@ public class PropertiesManager {
 	
 	@Value("${lcms.hearingdetails.error.code}")
 	private String hearingDetailsResponseErrorCode;
+	
+	@Value("${lcms.advocatedetails.error.code}")
+	private String advocateDetailsResponseErrorCode;
+	
+	@Value("${lcms.casevoucher.error.code}")
+	private String caseVoucherResponseErrorCode;
 }

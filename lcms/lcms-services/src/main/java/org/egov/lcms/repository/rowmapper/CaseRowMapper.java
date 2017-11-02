@@ -7,14 +7,12 @@ import java.util.List;
 
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.models.Address;
-import org.egov.lcms.models.AdvocateDetails;
 import org.egov.lcms.models.Bench;
 import org.egov.lcms.models.Case;
 import org.egov.lcms.models.CaseCategory;
 import org.egov.lcms.models.CaseType;
 import org.egov.lcms.models.Court;
 import org.egov.lcms.models.Department;
-import org.egov.lcms.models.HearingDetails;
 import org.egov.lcms.models.Side;
 import org.egov.lcms.models.Stamp;
 import org.egov.lcms.models.Summon;
@@ -53,7 +51,6 @@ public class CaseRowMapper implements RowMapper<Case> {
 		caseObj.setAge(rs.getString("age"));
 		caseObj.setDays(rs.getInt("days"));
 		caseObj.setTenantId(getString(rs.getString("tenantid")));
-		
 
 		Summon summon = new Summon();
 		summon.setCode(getString(rs.getObject("code")));
@@ -72,9 +69,6 @@ public class CaseRowMapper implements RowMapper<Case> {
 		summon.setTenantId(getString(rs.getObject("tenantId")));
 		summon.setStateId(getString(rs.getObject("stateId")));
 		summon.setCaseDetails(getString(rs.getObject("caseDetails")));
-
-		List<HearingDetails> hearingDetails = new ArrayList<HearingDetails>();
-		List<AdvocateDetails> advocateDetails = new ArrayList<AdvocateDetails>();
 
 		try {
 			if (rs.getString("departmentName") != null) {
@@ -169,9 +163,6 @@ public class CaseRowMapper implements RowMapper<Case> {
 			}
 
 			caseObj.setSummon(summon);
-
-			caseObj.setHearingDetails(hearingDetails);
-			caseObj.setAdvocateDetails(advocateDetails);
 
 		} catch (Exception e) {
 

@@ -6,7 +6,7 @@ serviceMaps:
    description: Create a new KPI Master Record
    fromTopic: egov.pa.newkpi-create
    queryMaps: 
-    - query: INSERT INTO egpa_kpi_master (id, name, code, finyear, createdby, createddate) values (?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egpa_kpi_master (id, name, code, finyear, targetvalue, instructions, tenantid, createdby, createddate) values (?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.KPIs.*
       jsonMaps:
 
@@ -16,12 +16,19 @@ serviceMaps:
 
        - jsonPath: $.KPIs.*.code
          
-       - jsonPath: $.KPIs.*.finYear
+       - jsonPath: $.KPIs.*.financialYear
+       
+       - jsonPath: $.KPIs.*.targetValue
+         type: LONG
+         
+       - jsonPath: $.KPIs.*.instructions
+       
+       - jsonPath: $.KPIs.*.tenantId
          
        - jsonPath: $.RequestInfo.userInfo.id
          type: LONG
        
-       - jsonPath: $.KPIs.*.createdDate
+       - jsonPath: $.KPIs.*.auditDetails.createdTime
          type: LONG
          
     - query: INSERT INTO egpa_kpi_master_document (id, kpicode, documentcode, documentname, mandatoryflag, createdby, createddate)  values (nextval('seq_egpa_kpi_master_document'), ?, ?, ?, ?, ?, ?);
@@ -39,47 +46,36 @@ serviceMaps:
        - jsonPath: $.RequestInfo.userInfo.id
          type: LONG
        
-       - jsonPath: $.KPIs.*.createdDate
+       - jsonPath: $.KPIs.*.auditDetails.createdTime
          type: LONG
-         
-    - query: INSERT INTO egpa_kpi_master_targets (id, kpicode, targetvalue, targetdescription, instructions, createdby, createddate) values (nextval('seq_egpa_kpi_master_targets'), ?, ?, ?, ?, ?, ?);  
-      basePath: $.KPIs.*.kpiTarget
-      jsonMaps:
 
-       - jsonPath: $.*.kpiCode
-
-       - jsonPath: $.*.targetValue
-         type: LONG
-         
-       - jsonPath: $.*.targetDescription
-         
-       - jsonPath: $.*.instructions
-
-       - jsonPath: $.RequestInfo.userInfo.id
-         type: LONG
-       
-       - jsonPath: $.*.createdDate
-         type: LONG
  
  - version: 1.0
    name: kpiMaster update
    description: Update an existing KPI Master Record
    fromTopic: egov.pa.newkpi-update
    queryMaps: 
-    - query: UPDATE egpa_kpi_master SET name = ?, finyear = ?, lastmodifiedby = ?, lastmodifieddate = ? WHERE code = ? ;
+    - query: UPDATE egpa_kpi_master SET name = ?, finyear = ?, targetvalue = ?, instructions =?, lastmodifiedby = ?, lastmodifieddate = ? WHERE code = ? AND id = ? ;
       basePath: $.KPIs.*
       jsonMaps:
 
        - jsonPath: $.KPIs.*.name
        
-       - jsonPath: $.KPIs.*.finYear
+       - jsonPath: $.KPIs.*.financialYear
+       
+       - jsonPath: $.KPIs.*.targetValue
+         type: LONG
+         
+       - jsonPath: $.KPIs.*.instructions
          
        - jsonPath: $.RequestInfo.userInfo.id
          
-       - jsonPath: $.KPIs.*.lastModifiedDate
+       - jsonPath: $.KPIs.*.auditDetails.lastModifiedTime
          type: LONG
        
        - jsonPath: $.KPIs.*.code
+       
+       - jsonPath: $.KPIs.*.id
       
     - query: DELETE FROM egpa_kpi_master_document WHERE kpicode = ?;
       basePath: $.KPIs.*
@@ -102,7 +98,7 @@ serviceMaps:
        - jsonPath: $.RequestInfo.userInfo.id
          type: LONG
        
-       - jsonPath: $.KPIs.*.createdDate
+       - jsonPath: $.KPIs.*.auditDetails.lastModifiedTime
          type: LONG
          
  - version: 1.0
@@ -121,58 +117,6 @@ serviceMaps:
          type: LONG
          
        - jsonPath: $.KPIs.*.code
-         type: LONG
- 
- - version: 1.0
-   name: kpiMasterTarget create
-   description: Insert a new target for KPI Master Record
-   fromTopic: egov.pa.kpitarget-create
-   queryMaps: 
-    - query: INSERT INTO egpa_kpi_master_targets (id, kpicode, targetvalue, targetdescription, instructions, createdby, createddate) VALUES (nextval('seq_egpa_kpi_master_targets'), ?, ?, ?, ?, ?, ? ) ;
-      basePath: $.kpiTargets.*
-      jsonMaps:
-       
-       - jsonPath: $.kpiTargets.*.kpiCode
-         
-       - jsonPath: $.kpiTargets.*.targetValue
-         type: LONG
-         
-       - jsonPath: $.kpiTargets.*.targetDescription
-         
-       - jsonPath: $.kpiTargets.*.instructions
-
-       - jsonPath: $.kpiTargets.*.createdBy
-         type: LONG
-       
-       - jsonPath: $.kpiTargets.*.createdDate
-         type: LONG
-         
- - version: 1.0
-   name: kpiMasterTarget update
-   description: Update existing target for KPI Master Record
-   fromTopic: egov.pa.kpitarget-update
-   queryMaps: 
-    - query: UPDATE egpa_kpi_master_targets SET targetvalue = ?, targetdescription = ?, instructions = ?, lastmodifiedby = ?, lastmodifieddate = ? WHERE kpicode = ? and id = ?;
-      basePath: $.kpiTargets.*
-      jsonMaps:
-
-       - jsonPath: $.kpiTargets.*.targetValue
-         type: LONG
-         
-       - jsonPath: $.kpiTargets.*.targetDescription
-         
-       - jsonPath: $.kpiTargets.*.instructions
-
-       - jsonPath: $.kpiTargets.*.lastModifiedBy
-         type: LONG
-       
-       - jsonPath: $.kpiTargets.*.lastModifiedDate
-         type: LONG
-         
-       - jsonPath: $.kpiTargets.*.kpiCode
-         type: LONG
-       
-       - jsonPath: $.kpiTargets.*.id
          type: LONG
 
  - version: 1.0

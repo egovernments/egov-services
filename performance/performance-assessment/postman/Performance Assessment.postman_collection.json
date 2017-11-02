@@ -1,0 +1,320 @@
+{
+	"info": {
+		"name": "Performance Assessment",
+		"_postman_id": "5b5afa85-2c97-5b37-490e-62adfd68e0f3",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "KPI Master Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"8bde7ff0-54dc-489c-9c42-3568daaf88a4\",\n    \"userInfo\" : {\n      \"id\" : 10\n    }\n  } , \n  \"KPIs\" : [{ \n    \"name\" : \"NEWKPI999\",\n    \"code\" : \"KPICODE999\",\n    \"description\" : \"KPIDESC999\",\n    \"finYear\" : \"2017-18\",\n    \"kpiTarget\" : { \n      \"kpiCode\" : \"KPICODE999\",\n      \"targetValue\" : 100,\n      \"targetDescription\" : \"DescriptionNew\",\n      \"instructions\" : \"InsNew\"  \n    },\n    \"documents\" : [ { \n      \"name\" : \"Aadhaar Card\",\n      \"code\" : \"AACA\", \n      \"active\" : true\n    },{ \n      \"name\" : \"PAN Card\",\n      \"code\" : \"PACA\", \n      \"active\" : false\n    }\n      ]\n  },{ \n    \"name\" : \"NEWKPI998\",\n    \"code\" : \"KPICODE998\",\n    \"description\" : \"KPIDESC998\",\n    \"finYear\" : \"2017-18\"\n  },{ \n    \"name\" : \"NEWKPI997\",\n    \"code\" : \"KPICODE997\",\n    \"description\" : \"KPIDESC997\",\n    \"finYear\" : \"2017-18\",\n    \"documents\" : [ { \n      \"name\" : \"Aadhaar Card\",\n      \"code\" : \"AACA\", \n      \"active\" : true\n    },{ \n      \"name\" : \"PAN Card\",\n      \"code\" : \"PACA\", \n      \"active\" : false\n    }\n      ]\n  },{ \n    \"name\" : \"NEWKPI996\",\n    \"code\" : \"KPICODE996\",\n    \"description\" : \"KPIDESC996\",\n    \"finYear\" : \"2017-18\"\n  }]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9901/performance-assessment/kpimaster/_create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9901",
+					"path": [
+						"performance-assessment",
+						"kpimaster",
+						"_create"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "KPI Master Update",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"8bde7ff0-54dc-489c-9c42-3568daaf88a4\",\n    \"userInfo\" : {\n      \"id\" : 10\n    }\n  } , \n  \"KPIs\" : [{ \n    \"id\" : 45,\n    \"name\" : \"NEWKPI999 Updated\",\n    \"code\" : \"KPICODE999\",\n    \"description\" : \"KPIDESC999 Updated\",\n    \"finYear\" : \"2017-18\",\n    \"kpiTarget\" : { \n      \"id\": 19,\n      \"kpiCode\" : \"KPICODE999\",\n      \"targetValue\" : 999,\n      \"targetDescription\" : \"Updated Description\",\n      \"instructions\" : \"Changed Instructions\"  \n    },\n    \"documents\" : [ { \n      \"name\" : \"Aadhaar Card Updated\",\n      \"code\" : \"AACAU\", \n      \"active\" : false\n    },{ \n      \"name\" : \"PAN Card Updated\",\n      \"code\" : \"PACAU\", \n      \"active\" : false\n    }\n      ]\n  },{ \n    \"id\" : 46,\n    \"name\" : \"NEWKPI998 Updated\",\n    \"code\" : \"KPICODE998\",\n    \"description\" : \"KPIDESC998 Updated\",\n    \"finYear\" : \"2017-18\",\n    \"kpiTarget\" : { \n      \"kpiCode\" : \"KPICODE998\",\n      \"targetValue\" : 998,\n      \"targetDescription\" : \"KPICODE998 Desc\",\n      \"instructions\" : \"KPICODE998 Ins\"  \n    }\n  },{ \n    \"id\" : 47,\n    \"name\" : \"NEWKPI997 Changed\",\n    \"code\" : \"KPICODE997\",\n    \"description\" : \"KPIDESC997 Changed\",\n    \"finYear\" : \"2017-18\",\n    \"kpiTarget\" : { \n      \"kpiCode\" : \"KPICODE997\",\n      \"targetValue\" : 997,\n      \"targetDescription\" : \"New Record\",\n      \"instructions\" : \"New Record Instructions\"  \n    },\n    \"documents\" : [ { \n      \"name\" : \"Aadhaar Card\",\n      \"code\" : \"AACA\", \n      \"active\" : true\n    }\n      ]\n  }, { \n  \t\"id\" : 48,\n    \"name\" : \"NEWKPI996\",\n    \"code\" : \"KPICODE996\",\n    \"description\" : \"KPIDESC996\",\n    \"finYear\" : \"2017-18\",\n    \"documents\" : [ { \n      \"name\" : \"New Doc Added in Update\",\n      \"code\" : \"AACA\", \n      \"active\" : true\n    }\n      ]\n  }]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9901/performance-assessment/kpimaster/_update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9901",
+					"path": [
+						"performance-assessment",
+						"kpimaster",
+						"_update"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "KPI Master Delete",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"8bde7ff0-54dc-489c-9c42-3568daaf88a4\",\n    \"userInfo\" : {\n      \"id\" : 10\n    }\n  } , \n  \"KPIs\" : [{ \n  \t\"id\" : 48,\n    \"name\" : \"NEWKPI996\",\n    \"code\" : \"KPICODE996\",\n    \"description\" : \"KPIDESC996\",\n    \"finYear\" : \"2017-18\",\n    \"documents\" : [ { \n      \"name\" : \"New Doc Added in Update\",\n      \"code\" : \"AACA\", \n      \"active\" : true\n    }]\n}]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9901/performance-assessment/kpimaster/_delete",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9901",
+					"path": [
+						"performance-assessment",
+						"kpimaster",
+						"_delete"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "KPI Master Search",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"8bde7ff0-54dc-489c-9c42-3568daaf88a4\",\n    \"userInfo\" : {\n      \"id\" : 10\n    }\n  }} "
+				},
+				"url": {
+					"raw": "http://localhost:9901/performance-assessment/kpimaster/_search",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9901",
+					"path": [
+						"performance-assessment",
+						"kpimaster",
+						"_search"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "KPI Target Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"8bde7ff0-54dc-489c-9c42-3568daaf88a4\",\n    \"userInfo\" : {\n      \"id\" : 10\n    }\n  } , \n  \"kpiTargets\" : [{ \n    \"kpiCode\" : \"KPICODE92\", \n    \"targetValue\" : 501,\n    \"targetDescription\" : \"501 Desc\", \n    \"instructions\" : \"501 Ins\" \n  }] \n}"
+				},
+				"url": {
+					"raw": "http://localhost:8601/performance-assessment/kpitarget/_create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8601",
+					"path": [
+						"performance-assessment",
+						"kpitarget",
+						"_create"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "KPI Target Update",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"8bde7ff0-54dc-489c-9c42-3568daaf88a4\",\n    \"userInfo\" : {\n      \"id\" : 10\n    }\n  } , \n  \"kpiTarget\" : { \n    \"targetId\" : 2,\n    \"kpiId\" : 2, \n    \"targetValue\" : 5000,\n    \"targetDescription\" : \"targetDescriptionUpdate\", \n    \"instructions\" : \"instructionsUpdate\" \n  }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8601/performance-assessment/kpitarget/_update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8601",
+					"path": [
+						"performance-assessment",
+						"kpitarget",
+						"_update"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "KPI Value Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"8bde7ff0-54dc-489c-9c42-3568daaf88a4\",\n    \"userInfo\" : {\n      \"id\" : 10\n    }\n  } ,\n   \"kpiValues\": [\n      {\n         \"kpiCode\": \"KPICODE999\",\n         \"actualValue\": 100,\n         \"tenantId\": \"default\"\n      },\n      {\n         \"kpiCode\": \"KPICODE999\",\n         \"actualValue\": 80,\n         \"tenantId\": \"mh.rohatest\"\n      },\n      {\n         \"kpiCode\": \"KPICODE999\",\n         \"actualValue\": 90,\n         \"tenantId\": \"mh.khop\"\n      },\n      {\n         \"kpiCode\": \"KPICODE999\",\n         \"actualValue\": 110,\n         \"tenantId\": \"mh.aliba\"\n      },\n      {\n         \"kpiCode\": \"KPICODE999\",\n         \"actualValue\": 100,\n         \"tenantId\": \"mh.amba\"\n      },\n      {\n         \"kpiCode\": \"KPICODE999\",\n         \"actualValue\": 99,\n         \"tenantId\": \"panavel\"\n      },\n      {\n         \"kpiCode\": \"KPICODE998\",\n         \"actualValue\": 700,\n         \"tenantId\": \"default\"\n      },\n      {\n         \"kpiCode\": \"KPICODE998\",\n         \"actualValue\": 1200,\n         \"tenantId\": \"mh.rohatest\"\n      },\n      {\n         \"kpiCode\": \"KPICODE998\",\n         \"actualValue\": 1250,\n         \"tenantId\": \"mh.khop\"\n      },\n      {\n         \"kpiCode\": \"KPICODE998\",\n         \"actualValue\": 1300,\n         \"tenantId\": \"mh.aliba\"\n      },\n      {\n         \"kpiCode\": \"KPICODE998\",\n         \"actualValue\": 1310,\n         \"tenantId\": \"mh.amba\"\n      },\n      {\n         \"kpiCode\": \"KPICODE998\",\n         \"actualValue\": 500,\n         \"tenantId\": \"panavel\"\n      },\n      {\n         \"kpiCode\": \"KPICODE997\",\n         \"actualValue\": 900,\n         \"tenantId\": \"default\"\n      },\n      {\n         \"kpiCode\": \"KPICODE997\",\n         \"actualValue\": 1400,\n         \"tenantId\": \"mh.aliba\"\n      },\n      {\n         \"kpiCode\": \"KPICODE997\",\n         \"actualValue\": 1390,\n         \"tenantId\": \"mh.amba\"\n      },\n      {\n         \"kpiCode\": \"KPICODE997\",\n         \"actualValue\": 900,\n         \"tenantId\": \"panavel\"\n      }\n   ]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9901/performance-assessment/kpivalue/_create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9901",
+					"path": [
+						"performance-assessment",
+						"kpivalue",
+						"_create"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "KPI Master Create - Multiple",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"8bde7ff0-54dc-489c-9c42-3568daaf88a4\",\n    \"userInfo\" : {\n      \"id\" : 10\n    }\n  } , \n  \"KPIs\" : [{ \n    \"name\" : \"NEWKPI999\",\n    \"code\" : \"KPICODE999\",\n    \"description\" : \"KPIDESC999\",\n    \"finYear\" : \"2017-18\",\n    \"kpiTarget\" : { \n      \"kpiCode\" : \"KPICODE999\",\n      \"targetValue\" : 100,\n      \"targetDescription\" : \"KPICODE999 Description\",\n      \"instructions\" : \"KPICODE999 Instructions\"  \n    },\n    \"documents\" : [ { \n      \"name\" : \"Aadhaar Card\",\n      \"code\" : \"AACA\", \n      \"active\" : true\n    },{ \n      \"name\" : \"PAN Card\",\n      \"code\" : \"PACA\", \n      \"active\" : false\n    }\n      ]\n  },{ \n    \"name\" : \"NEWKPI998\",\n    \"code\" : \"KPICODE998\",\n    \"description\" : \"KPIDESC998\",\n    \"finYear\" : \"2017-18\",\n    \"kpiTarget\" : { \n      \"kpiCode\" : \"KPICODE998\",\n      \"targetValue\" : 998,\n      \"targetDescription\" : \"KPICODE998 Description\",\n      \"instructions\" : \"KPICODE998 Instructions\"  \n    }\n  },{ \n    \"name\" : \"NEWKPI997\",\n    \"code\" : \"KPICODE997\",\n    \"description\" : \"KPIDESC997\",\n    \"finYear\" : \"2017-18\",\n    \"kpiTarget\" : { \n      \"kpiCode\" : \"KPICODE997\",\n      \"targetValue\" : 997,\n      \"targetDescription\" : \"KPICODE997 Description\",\n      \"instructions\" : \"KPICODE997 Instructions\"  \n    },\n    \"documents\" : [ { \n      \"name\" : \"Aadhaar Card\",\n      \"code\" : \"AACA\", \n      \"active\" : true\n    },{ \n      \"name\" : \"PAN Card\",\n      \"code\" : \"PACA\", \n      \"active\" : false\n    }\n      ]\n  }]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8601/performance-assessment/kpimaster/_create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8601",
+					"path": [
+						"performance-assessment",
+						"kpimaster",
+						"_create"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "KPI Value Search",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"8bde7ff0-54dc-489c-9c42-3568daaf88a4\",\n    \"userInfo\" : {\n      \"id\" : 10\n    }\n  }, \n  \"tenantId\" : [\"panavel\",\"mh.aliba\",\"mh.amba\"],\n  \"kpiCodes\" : [\"KPICODE999\"],\n  \"finYear\" : [\"2017-18\",\"2018-19\"]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9901/performance-assessment/kpivalue/_search",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9901",
+					"path": [
+						"performance-assessment",
+						"kpivalue",
+						"_search"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "KPI Value Update",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"8bde7ff0-54dc-489c-9c42-3568daaf88a4\",\n    \"userInfo\" : {\n      \"id\" : 10\n    }\n  } ,\n   \"kpiValues\": [\n      {\n      \t \"id\" : 81,\n         \"kpiCode\": \"KPICODE999\",\n         \"actualValue\": 78,\n         \"tenantId\": \"default\"\n      },\n      {\n      \t \"id\" : 82,\n         \"kpiCode\": \"KPICODE999\",\n         \"actualValue\": 81,\n         \"tenantId\": \"mh.rohatest\"\n      },\n      {\n      \t \"id\" : 83,\n         \"kpiCode\": \"KPICODE999\",\n         \"actualValue\": 91,\n         \"tenantId\": \"mh.khop\"\n      }\n   ]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9901/performance-assessment/kpivalue/_update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9901",
+					"path": [
+						"performance-assessment",
+						"kpivalue",
+						"_update"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

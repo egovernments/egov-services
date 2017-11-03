@@ -6,13 +6,13 @@ import javax.validation.Valid;
 
 import org.egov.works.services.domain.exception.CustomBindException;
 import org.egov.works.services.domain.service.DocumentDetailsService;
+import org.egov.works.services.web.contract.DocumentDetail;
 import org.egov.works.services.web.contract.DocumentDetailRequest;
 import org.egov.works.services.web.contract.DocumentDetailResponse;
+import org.egov.works.services.web.contract.DocumentDetailSearchCriteria;
 import org.egov.works.services.web.contract.DocumentDetailSearchRequest;
 import org.egov.works.services.web.contract.RequestInfo;
 import org.egov.works.services.web.contract.factory.ResponseInfoFactory;
-import org.egov.works.services.web.model.DocumentDetail;
-import org.egov.works.services.web.model.DocumentDetailSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

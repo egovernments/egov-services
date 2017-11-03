@@ -1,7 +1,7 @@
 package org.egov.works.services.domain.repository;
 
-import com.jayway.jsonpath.JsonPath;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Arrays;
+
 import org.egov.works.commons.exception.ValidationException;
 import org.egov.works.commons.web.contract.RequestInfo;
 import org.egov.works.services.config.PropertiesManager;
@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
+import com.jayway.jsonpath.JsonPath;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j

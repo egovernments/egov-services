@@ -1,10 +1,11 @@
 package org.egov.works.services.web.contract.factory;
 
+import org.egov.works.services.web.contract.RequestInfo;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.egov.works.services.web.contract.RequestInfo;
 
 @Data
 @AllArgsConstructor

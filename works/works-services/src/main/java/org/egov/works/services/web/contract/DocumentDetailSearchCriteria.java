@@ -1,4 +1,4 @@
-package org.egov.works.services.web.model;
+package org.egov.works.services.web.contract;
 
 import lombok.*;
 

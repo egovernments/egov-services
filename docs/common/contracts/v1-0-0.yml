@@ -105,7 +105,7 @@ definitions:
         type: integer
         format: int32
         description: User id of the authenticated user. Will be deprecated in future
-      username: 
+      userName: 
         type: string
         description: Unique user name of the authenticated user
       mobile:
@@ -126,7 +126,7 @@ definitions:
           $ref: '#/definitions/TenantRole'
     required:
       - tenantId
-      - username
+      - userName
       - primaryrole
       
   Role:

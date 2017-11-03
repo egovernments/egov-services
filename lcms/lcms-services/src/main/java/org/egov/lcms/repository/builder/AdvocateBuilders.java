@@ -120,4 +120,7 @@ public class AdvocateBuilders {
 		preparedStatementValues.add(offset);
 		preparedStatementValues.add(limit);
 	}
+	
+	
+	public static final String SEARCH_CASE_CODE_BY_ADVOCATE ="select casecode from egov_lcms_case_advocate where advocate->>'code'=?";
 }

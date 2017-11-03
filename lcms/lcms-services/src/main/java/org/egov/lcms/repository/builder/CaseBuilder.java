@@ -3,11 +3,10 @@ package org.egov.lcms.repository.builder;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import org.egov.lcms.models.Case;
 import org.egov.lcms.models.CaseSearchCriteria;
-import org.egov.lcms.repository.AdvocateSearchRepository;
-import org.egov.lcms.utility.ConstantUtility;
+import org.egov.lcms.models.HearingRepository;
+import org.egov.lcms.repository.AdvocateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 public class CaseBuilder {
 
 	@Autowired
-	AdvocateSearchRepository advocateSearchRepository;
+	AdvocateRepository AdvocateRepository;
+	
+	@Autowired
+	HearingRepository hearingRepository;
 
 	private static final String SELECT_BASE_QUERY = "SELECT * FROM egov_lcms_case";
 
@@ -48,20 +50,6 @@ public class CaseBuilder {
 			preparedStatementValues.add(caseSearchCriteria.getTenantId());
 		}
 
-		// if (caseSearchCriteria.getAdvocateName() != null &&
-		// caseSearchCriteria.getSummonReferenceNo() == null
-		// && caseSearchCriteria.getCaseRefernceNo() == null &&
-		// caseSearchCriteria.getCaseStatus() == null
-		// && caseSearchCriteria.getCaseType() == null &&
-		// caseSearchCriteria.getDepartmentName() == null
-		// && caseSearchCriteria.getCaseCategory() == null &&
-		// caseSearchCriteria.getFromDate() == null
-		// && caseSearchCriteria.getToDate() == null) {
-		// selectQuery.append(" AND code IN (" +
-		// getAdvocateInnerQuery(caseSearchCriteria.getAdvocateName(),
-		// caseSearchCriteria.getTenantId(), preparedStatementValues));
-		// }
-
 		if (caseSearchCriteria.getCode() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" code IN ("
@@ -82,50 +70,43 @@ public class CaseBuilder {
 
 		if (caseSearchCriteria.getCaseType() != null && !caseSearchCriteria.getCaseType().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" casetype ->>'name'=?");
+			selectQuery.append(" casetype ->>'code'=?");
 			preparedStatementValues.add(caseSearchCriteria.getCaseType());
 
 		}
 
 		if (caseSearchCriteria.getCaseStatus() != null && !caseSearchCriteria.getCaseStatus().isEmpty()) {
-			/*
-			 * isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
-			 * selectQuery); selectQuery.append(" casetype ->>'name'=?");
-			 * preparedStatementValues.add(caseSearchCriteria.getCaseType());
-			 */
-			// TODO need to add after hearing api integration
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			List<String> caseCodes = hearingRepository.getCaseCodesByCaseStatus(caseSearchCriteria.getCaseStatus());
+
+			int count = 1;
+			String code = "";
+			for (String caseCode : caseCodes) {
+				if (count < caseCodes.size())
+					code = code +"'"+ caseCode + "',";
+				else
+					code = code + "'"+caseCode+"'";
+				count++;
+
+			}
+
+			selectQuery.append(" code IN(" + code + ")");
 
 		}
 
 		if (caseSearchCriteria.getDepartmentName() != null && !caseSearchCriteria.getDepartmentName().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" departmentname =?");
+			selectQuery.append(" departmentname->>'code'=?");
 			preparedStatementValues.add(caseSearchCriteria.getDepartmentName());
 
 		}
 
 		if (caseSearchCriteria.getAdvocateName() != null && !caseSearchCriteria.getAdvocateName().isEmpty()) {
-			List<String> caseCodes = advocateSearchRepository
-					.getcaseCodeByAdvocateName(caseSearchCriteria.getAdvocateName());
-			int count = 1;
-
-			String caseCodeIds = "";
-			for (String caseObj : caseCodes) {
-				if (count < caseSearchCriteria.getCode().length)
-					caseCodeIds = caseCodeIds + "'" + caseObj + "',";
-				else
-					caseCodeIds = caseCodeIds + "'" + caseObj + "'";
-
-				count++;
-			}
+			String caseCode = AdvocateRepository
+					.getcaseCodeByAdvocateCode(caseSearchCriteria.getAdvocateName());
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" code IN(" + caseCodeIds + ")");
+			selectQuery.append(" code IN('" + caseCode + "')");
 
-		}
-
-		if (caseSearchCriteria.getCaseType() != null && !caseSearchCriteria.getCaseType().isEmpty()) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			preparedStatementValues.add(caseSearchCriteria.getCaseType());
 		}
 
 		if (caseSearchCriteria.getFromDate() != null) {
@@ -138,20 +119,6 @@ public class CaseBuilder {
 			preparedStatementValues.add(caseSearchCriteria.getToDate());
 		}
 
-	}
-
-	private String getAdvocateInnerQuery(String advocateName, String tenantId,
-			final List<Object> preparedStatementValues) {
-		StringBuilder advocateInnerQuery = new StringBuilder();
-		advocateInnerQuery.append("select casecode from " + ConstantUtility.ADVOCATE_DETAILS_TABLE_NAME
-				+ " WHERE advocate ->> 'name'=? )");
-		preparedStatementValues.add(advocateName);
-
-		if (tenantId != null) {
-			advocateInnerQuery.append(" AND tenantid=?");
-			preparedStatementValues.add(tenantId);
-		}
-		return null;
 	}
 
 	/**

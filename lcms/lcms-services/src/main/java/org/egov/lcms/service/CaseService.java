@@ -1,27 +1,39 @@
 package org.egov.lcms.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.factory.ResponseFactory;
 import org.egov.lcms.models.AdvocateDetails;
+import org.egov.lcms.models.Bench;
 import org.egov.lcms.models.Case;
+import org.egov.lcms.models.CaseCategory;
 import org.egov.lcms.models.CaseRequest;
 import org.egov.lcms.models.CaseResponse;
 import org.egov.lcms.models.CaseSearchCriteria;
+import org.egov.lcms.models.CaseStatus;
+import org.egov.lcms.models.CaseType;
+import org.egov.lcms.models.Court;
 import org.egov.lcms.models.DepartmentResponse;
 import org.egov.lcms.models.HearingDetails;
 import org.egov.lcms.models.ParaWiseComment;
+import org.egov.lcms.models.Register;
+import org.egov.lcms.models.RegisterSearchCriteria;
 import org.egov.lcms.models.RequestInfoWrapper;
+import org.egov.lcms.models.Side;
+import org.egov.lcms.models.Summon;
 import org.egov.lcms.repository.AdvocateRepository;
 import org.egov.lcms.repository.CaseSearchRepository;
 import org.egov.lcms.repository.DepartmentRepository;
 import org.egov.lcms.repository.MdmsRepository;
 import org.egov.lcms.repository.OpinionRepository;
+import org.egov.lcms.repository.RegisterRepository;
 import org.egov.lcms.util.UniqueCodeGeneration;
 import org.egov.lcms.utility.SummonValidator;
 import org.egov.mdms.model.MdmsResponse;
@@ -30,6 +42,11 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import net.minidev.json.JSONArray;
 
 @Service
 public class CaseService {
@@ -54,15 +71,21 @@ public class CaseService {
 
 	@Autowired
 	private SummonValidator summonValidator;
-	
+
 	@Autowired
 	DepartmentRepository departmentRepository;
-	
+
 	@Autowired
 	AdvocateRepository advocateRepository;
-	
+
 	@Autowired
 	MdmsRepository mdmsRepository;
+
+	@Autowired
+	RegisterRepository registerRepository;
+
+	@Autowired
+	ObjectMapper objectMapper;
 
 	public CaseResponse createParaWiseComment(CaseRequest caseRequest) throws Exception {
 		List<Case> cases = caseRequest.getCases();
@@ -166,61 +189,212 @@ public class CaseService {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		List<Case> cases = caseSearchRepository.searchCases(caseSearchCriteria);
-		addDepartmentDetails(cases,requestInfo);
-		addMasterDetails(cases,requestInfo);
+		addDepartmentDetails(cases, requestInfo);
+		addMasterDetails(cases, requestInfo);
 
 		return new CaseResponse(responseFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), cases);
 
 	}
 
 	/**
+	 * This Will add the master details for the list of cases object
 	 * 
 	 * @param cases
 	 */
-	private void addMasterDetails(List<Case> cases,RequestInfo requestInfo) throws Exception {
+	private void addMasterDetails(List<Case> cases, RequestInfo requestInfo) throws Exception {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		Map<String, String> masterMap = new HashMap<>();
-		for (Case caseObj : cases){
-			
-			if ( caseObj.getSummon()!=null && caseObj.getSummon().getCaseType()!=null && caseObj.getSummon().getCaseType().getCode()!=null){
-			masterMap.put("caseType", caseObj.getSummon().getCaseType().getCode());
+		for (Case caseObj : cases) {
+
+			if (caseObj.getSummon() != null) {
+				Summon summon = caseObj.getSummon();
+				if (summon.getCaseType() != null && summon.getCaseType().getCode() != null) {
+					masterMap.put("caseType", caseObj.getSummon().getCaseType().getCode());
+				}
+				if (summon.getCaseCategory() != null && summon.getCaseCategory().getCode() != null) {
+					masterMap.put("caseCategory", caseObj.getSummon().getCaseCategory().getCode());
+				}
+
+				if (summon.getCourtName() != null && summon.getCourtName().getCode() != null) {
+					masterMap.put("court", summon.getCourtName().getCode());
+				}
+
+				if (summon.getBench() != null && summon.getBench().getCode() != null) {
+					masterMap.put("bench", summon.getBench().getCode());
+				}
+
+				if (summon.getSide() != null && summon.getSide().getCode() != null) {
+					masterMap.put("side", summon.getSide().getCode());
+				}
+
+				List<String> caseStatusCodes = new ArrayList<String>();
+				for (HearingDetails hearingDetail : caseObj.getHearingDetails()) {
+
+					caseStatusCodes.add(hearingDetail.getCaseStatus().getCode());
+				}
+
+				String caseStatusCode = "";
+				int count = 1;
+				for (String caseStatus : caseStatusCodes) {
+					if (count < caseStatusCodes.size())
+						caseStatusCode = caseStatusCode + caseStatus + ",";
+					else
+						caseStatusCode = caseStatusCode + caseStatus;
+					count++;
+
+				}
+
+				getStampDetails(caseObj);
+
+				if (!masterMap.isEmpty()) {
+					MdmsResponse mdmsResponse = mdmsRepository.getMasterData(caseObj.getTenantId(), masterMap,
+							requestInfoWrapper);
+					Map<String, Map<String, JSONArray>> response = mdmsResponse.getMdmsRes();
+
+					Map<String, JSONArray> mastersmap = response.get("lcms");
+
+					for (String key : mastersmap.keySet()) {
+
+						String masterName = key;
+
+						addParticularMastervalues(masterName, caseObj, mastersmap);
+					}
+
+				}
 			}
-			if (  caseObj.getSummon()!=null && caseObj.getSummon().getCaseCategory()!=null && caseObj.getSummon().getCaseCategory().getCode()!=null ){
-			masterMap.put("caseCategory", caseObj.getSummon().getCaseCategory().getCode());
-			}
-			if (!masterMap.isEmpty()){
-			MdmsResponse mdmsResponse = mdmsRepository.getMasterData(caseObj.getTenantId(), masterMap, requestInfoWrapper);
-	
-			}
+
 		}
-		
-		
-		
-		
-		
+
+	}
+
+	private void addParticularMastervalues(String masterName, Case caseObj, Map<String, JSONArray> mastersmap)
+			throws Exception {
+
+		switch (masterName) {
+		case "court": {
+			List<Court> courts = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
+					new TypeReference<List<Court>>() {
+					});
+			caseObj.getSummon().setCourtName(courts.get(0));
+			break;
+		}
+
+		case "side": {
+			List<Side> sides = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
+					new TypeReference<List<Side>>() {
+					});
+			if (sides != null && sides.size() > 0)
+				caseObj.getSummon().setSide(sides.get(0));
+			break;
+		}
+
+		case "caseType": {
+			List<CaseType> caseTypes = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
+					new TypeReference<List<CaseType>>() {
+					});
+			if (caseTypes != null && caseTypes.size() > 0)
+				caseObj.getSummon().setCaseType(caseTypes.get(0));
+			break;
+		}
+
+		case "caseCategory": {
+			List<CaseCategory> caseCategories = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
+					new TypeReference<List<CaseCategory>>() {
+					});
+			if (caseCategories != null && caseCategories.size() > 0)
+				caseObj.getSummon().setCaseCategory(caseCategories.get(0));
+			break;
+		}
+
+		case "bench": {
+			List<Bench> benchs = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
+					new TypeReference<List<Bench>>() {
+					});
+			if (benchs != null && benchs.size() > 0)
+				caseObj.getSummon().setBench(benchs.get(0));
+			break;
+		}
+
+		case "caseStatus": {
+			List<CaseStatus> caseStatus = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
+					new TypeReference<List<CaseStatus>>() {
+					});
+
+			List<HearingDetails> hearingDetails = caseObj.getHearingDetails();
+
+			for (HearingDetails hearingDetail : hearingDetails) {
+
+				addHearingDetail(hearingDetail, caseStatus);
+			}
+
+			break;
+		}
+
+		default:
+			break;
+		}
+
 	}
 
 	/**
-	 * This will Add the department details for the given cases 
+	 * This will filter the Hearing detail
+	 * 
+	 * @param hearingDetail
+	 * @param caseStatus
+	 */
+	private void addHearingDetail(HearingDetails hearingDetail, List<CaseStatus> caseStatus) {
+		List<CaseStatus> caseStatusList = caseStatus.stream()
+				.filter(CaseStatus -> CaseStatus.getCode().equalsIgnoreCase(hearingDetail.getCaseStatus().getCode()))
+				.collect(Collectors.toList());
+		if (caseStatusList != null && caseStatusList.size() > 0)
+			hearingDetail.setCaseStatus((caseStatusList.get(0)));
+
+	}
+
+	/**
+	 * This APi will add the stamp details for the given case object
+	 * 
+	 * @param caseObj
+	 */
+	private void getStampDetails(Case caseObj) {
+		RegisterSearchCriteria registerSearchCriteria = new RegisterSearchCriteria();
+
+		Summon summon = caseObj.getSummon();
+		if (summon.getRegister() != null && summon.getRegister().getCode() != null) {
+			registerSearchCriteria.setCode(new String[] { caseObj.getSummon().getRegister().getCode() });
+			registerSearchCriteria.setTenantId(caseObj.getTenantId());
+			List<Register> registers = registerRepository.search(registerSearchCriteria);
+			if (registers != null && registers.size() > 0)
+				caseObj.getSummon().setRegister(registers.get(0));
+
+		}
+
+	}
+
+	/**
+	 * This will Add the department details for the given cases
+	 * 
 	 * @param cases
 	 * @param requestInfo
 	 * @throws Exception
 	 */
-	private void addDepartmentDetails(List<Case> cases,RequestInfo requestInfo)  throws Exception{
-		
+	private void addDepartmentDetails(List<Case> cases, RequestInfo requestInfo) throws Exception {
+
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
-		for ( Case caseObj : cases){
-			
-			if ( caseObj.getSummon()!=null && caseObj.getSummon().getDepartmentName()!=null && caseObj.getSummon().getDepartmentName().getCode()!=null){
-			DepartmentResponse departmentResponse = departmentRepository.getDepartments(caseObj.getTenantId(), caseObj.getSummon().getDepartmentName().getCode(), requestInfoWrapper);
-			if ( departmentResponse.getDepartment()!=null && departmentResponse.getDepartment().size()>0){
-			caseObj.getSummon().setDepartmentName(departmentResponse.getDepartment().get(0));
+		for (Case caseObj : cases) {
+
+			if (caseObj.getSummon() != null && caseObj.getSummon().getDepartmentName() != null
+					&& caseObj.getSummon().getDepartmentName().getCode() != null) {
+				DepartmentResponse departmentResponse = departmentRepository.getDepartments(caseObj.getTenantId(),
+						caseObj.getSummon().getDepartmentName().getCode(), requestInfoWrapper);
+				if (departmentResponse.getDepartment() != null && departmentResponse.getDepartment().size() > 0) {
+					caseObj.getSummon().setDepartmentName(departmentResponse.getDepartment().get(0));
+				}
 			}
 		}
-		}
-		
+
 	}
 
 	/**
@@ -245,7 +419,6 @@ public class CaseService {
 	 */
 	public CaseResponse createLegacyCase(CaseRequest caseRequest) throws Exception {
 
-		
 		for (Case caseObj : caseRequest.getCases()) {
 
 			if (caseObj.getSummon().getIsUlbinitiated() == null) {
@@ -310,7 +483,7 @@ public class CaseService {
 				}
 				kafkaTemplate.send(propertiesManager.getCreateLegacyHearing(), caseRequest);
 			}
-			
+
 			kafkaTemplate.send(propertiesManager.getCreateLegacyCaseIndexer(), caseRequest);
 		}
 

@@ -14,10 +14,9 @@ import org.egov.lcms.models.CaseType;
 import org.egov.lcms.models.Court;
 import org.egov.lcms.models.Department;
 import org.egov.lcms.models.Document;
+import org.egov.lcms.models.Register;
 import org.egov.lcms.models.Side;
-import org.egov.lcms.models.Stamp;
 import org.egov.lcms.models.Summon;
-import org.egov.lcms.repository.DepartmentRepository;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
@@ -120,12 +119,12 @@ public class CaseRowMapper implements RowMapper<Case> {
 				summon.setSide(side);
 			}
 
-			if (rs.getString("stamp") != null) {
-				Stamp stamp = new Stamp();
-				TypeReference<Stamp> stampRef = new TypeReference<Stamp>() {
+			if (rs.getString("register") != null) {
+				Register register = new Register();
+				TypeReference<Register> registerRef = new TypeReference<Register>() {
 				};
-				stamp = objectMapper.readValue(rs.getString("stamp"), stampRef);
-				summon.setStamp(stamp);
+				register = objectMapper.readValue(rs.getString("register"), registerRef);
+				summon.setRegister(register);
 
 			}
 

@@ -2,7 +2,6 @@ package org.egov.lcms.repository;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.models.Advocate;
 import org.egov.lcms.models.AdvocateSearchCriteria;
@@ -12,7 +11,6 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Repository
@@ -50,4 +48,18 @@ public class AdvocateRepository {
 
 		return advocates;
 	}
+	
+	/**
+	 * This will give the case codes for the given advocateName
+	 * 
+	 * @param advocateCode
+	 * @return {@link String} AdvocateName
+	 */
+	public String getcaseCodeByAdvocateCode(String advocateCode) {
+		String searchQuery = AdvocateBuilders.SEARCH_CASE_CODE_BY_ADVOCATE;
+		String caseCode = jdbcTemplate.queryForObject(searchQuery, new Object[] { advocateCode }, String.class);
+		return caseCode;
+
+	}
+
 }

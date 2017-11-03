@@ -484,5 +484,11 @@ public class PropertiesManager {
 	
 	@Value("${egov.lcms.legacy.case.create.indexer}")
     private String createLegacyCaseIndexer;
+	
+	@Value("${egov.services.department.search.code}")
+	private String searchDeparatmentErrorCode;
+	
+	@Value("${egov.services.department.search.message}")
+	private String searchDepartmentErrorMessage;
 }
 

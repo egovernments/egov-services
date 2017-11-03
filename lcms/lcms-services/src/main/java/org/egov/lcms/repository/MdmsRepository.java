@@ -18,10 +18,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**

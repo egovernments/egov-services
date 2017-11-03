@@ -78,8 +78,8 @@ public class Summon {
 	@JsonProperty("side")
 	private Side side = null;
 
-	@JsonProperty("stamp")
-	private Stamp stamp = null;
+	@JsonProperty("register")
+	private Register register = null;
 
 	@NotNull
 	@JsonProperty("caseDetails")

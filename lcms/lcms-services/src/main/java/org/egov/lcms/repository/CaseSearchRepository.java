@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.lcms.config.PropertiesManager;
+import org.egov.lcms.models.Advocate;
 import org.egov.lcms.models.AdvocateDetails;
+import org.egov.lcms.models.AdvocateSearchCriteria;
 import org.egov.lcms.models.Case;
 import org.egov.lcms.models.CaseSearchCriteria;
 import org.egov.lcms.models.CaseVoucher;
@@ -56,6 +58,10 @@ public class CaseSearchRepository {
 
 	@Autowired
 	PropertiesManager propertiesManager;
+	
+	@Autowired
+	AdvocateRepository advocateRepository;
+	
 
 	/**
 	 * This will search the cases based on the given casesearchCriteria
@@ -114,6 +120,11 @@ public class CaseSearchRepository {
 		return hearingDetails;
 	}
 
+	/**
+	 * 
+	 * @param casee
+	 * @return 
+	 */
 	private List<AdvocateDetails> searchAdvocateDetails(Case casee) {
 		List<AdvocateDetails> advocateDetails = new ArrayList<>();
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
@@ -125,7 +136,33 @@ public class CaseSearchRepository {
 		} catch (Exception ex) {
 			throw new CustomException(propertiesManager.getAdvocateDetailsResponseErrorCode(), ex.getMessage());
 		}
+		setAdvocate(advocateDetails);
+		
 		return advocateDetails;
+	}
+
+	/**
+	 * This Api will set the advocate details based on the given advocateDetails
+	 * @param advocateDetails
+	 */
+	private void setAdvocate(List<AdvocateDetails> advocateDetails) {
+		
+		for ( AdvocateDetails advocateDetail : advocateDetails ){
+			AdvocateSearchCriteria advocateSearchCriteria = new AdvocateSearchCriteria();
+			advocateSearchCriteria.setTenantId(advocateDetail.getTenantId());
+			if ( advocateDetail.getAdvocate().getCode()!=null && !advocateDetail.getAdvocate().getCode().isEmpty()){
+				advocateSearchCriteria.setCode(new String [] {advocateDetail.getAdvocate().getCode()});
+				List<Advocate> advocates = advocateRepository.search(advocateSearchCriteria);
+				if ( advocates!=null && advocates.size()>0)
+				advocateDetail.setAdvocate(advocates.get(0));
+				
+			}
+			
+			
+			
+		}
+		
+		
 	}
 
 	private CaseVoucher searchCaseVoucher(Case casee) {

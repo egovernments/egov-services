@@ -1,27 +1,17 @@
 package org.egov.lcms.repository;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.models.DepartmentResponse;
 import org.egov.lcms.models.RequestInfoWrapper;
-import org.egov.mdms.model.MasterDetail;
-import org.egov.mdms.model.MdmsCriteria;
-import org.egov.mdms.model.MdmsCriteriaReq;
-import org.egov.mdms.model.MdmsResponse;
-import org.egov.mdms.model.ModuleDetail;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import com.google.gson.Gson;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -59,11 +49,13 @@ public class DepartmentRepository {
 	
 		try {
 			response = restTemplate.postForObject(uri, requestInfo, DepartmentResponse.class);
-			log.info("Get demand response is :" + response);
+			log.info("Get Department response is :" + response);
 			
 		
 		} catch (Exception exception) {
-		  System.out.println(exception.getMessage());
+		 
+			throw new CustomException(propertiesManager.getSearchDeparatmentErrorCode(), propertiesManager.getSearchDepartmentErrorMessage());
+		
 		}
 	
 

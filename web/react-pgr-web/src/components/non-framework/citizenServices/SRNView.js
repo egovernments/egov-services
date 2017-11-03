@@ -80,6 +80,7 @@ const renderProperty = function(floors) {
 // }
 
 class CertificateView extends Component {
+	static isPrivate = false; 
 	constructor(props) {
 		super(props);
 		this.state = {

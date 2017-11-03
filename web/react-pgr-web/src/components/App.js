@@ -68,8 +68,10 @@ class App extends Component {
   componentWillReceiveProps(nextProps) {
       if (nextProps.redirectTo) {
             // console.log("Login");
-            this.props.history.replace(nextProps.redirectTo);
-            this.props.onRedirect();
+              this.props.history.replace(nextProps.redirectTo);
+              this.props.onRedirect();
+
+
       }
 
 
@@ -188,7 +190,7 @@ class App extends Component {
            {actionList && actionList.length>0 && <CustomMenu menuItems={[]} actionList={actionList} />}
           </Drawer>*/}
 
-          
+
 
           <div className={classnames('app-content', {'expanded': showMenu ||false})}>
             <Header/>

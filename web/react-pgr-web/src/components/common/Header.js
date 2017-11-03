@@ -96,8 +96,7 @@ const RightIcon = (props) => {
             targetOrigin={{horizontal: 'left', vertical: 'top'}}
           >
             <MenuItem primaryText="Sign Out" onClick={(e)=>{
-                props.logout(localStorage.getItem('tenantId'));
-                props.handleToggle()
+                props.showHome && props.handleToggle();
                 props.signOut();
             }} leftIcon={<i style={{color:"#555"}} className="material-icons">lock</i>}></MenuItem>
      </IconMenu>
@@ -149,14 +148,18 @@ class Header extends Component {
   }
 
   signOut = (e) => {
+    let {logout}=this.props;
     var locale = localStorage.getItem('locale');
     var lang_response = localStorage.getItem('lang_response');
+    var tenantId=localStorage.getItem('tenantId')
 
     Api.commonApiPost("/user/_logout", {access_token : localStorage.getItem("token")}).then(function(response) {
-      document.title = "Dashboard";
+      document.title = "Egov";
       localStorage.clear();
       localStorage.setItem('locale', locale);
       localStorage.setItem('lang_response', lang_response);
+      localStorage.setItem('tenantId', tenantId);
+      logout(tenantId);
     }, function(err) {
       document.title = "Dashboard";
       localStorage.clear();
@@ -203,7 +206,7 @@ class Header extends Component {
                 iconElementLeft={this.props.token && this.props.currentUser.type !== "CITIZEN" ? <IconButton ><i className="material-icons icon-left-style">menu</i></IconButton> : <div></div>}
                 className="app-bar-bg"
                 title={<div><Logo tenantInfo={this.props.tenantInfo} tenantContext={tenantContext}/> </div>}
-                iconElementRight={< RightIcon showHome={this.props.showHome} signOut={this.signOut} token={this.props.token} logout={this.props.logout} setRoute={this.props.setRoute} handleToggle={this.props.handleToggle}/>} />
+                iconElementRight={< RightIcon showHome={this.props.showHome} signOut={this.signOut} showMenu={showMenu} token={this.props.token} logout={this.props.logout} setRoute={this.props.setRoute} handleToggle={this.props.handleToggle}/>} />
 
         <Drawer width={256} containerClassName="drawer-backGround" open={showMenu}>
           {actionList && actionList.length>0 && <CustomMenu menuItems={[]} actionList={actionList} />}

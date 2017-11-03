@@ -1,5 +1,6 @@
 import React from 'react';
-import {Switch,Route} from 'react-router-dom';
+import {Switch} from 'react-router-dom';
+import Route from "./AuthRoute";
 
 import Login from './components/contents/Login';
 import Dashboard from './components/contents/Dashboard';
@@ -175,7 +176,7 @@ const Main = () => {
         <Route exact path= {base + '/:tenantId?'} component={Login}/>
         <Route exact path={base + '/service/request/search'} component={ServiceRequests}/>
         <Route exact path={base + '/coming/soon'} component={ComingSoon}/>
-	     <Route exact path= {base + '/view/:moduleName/:master?/:id'} component={View}/>
+	      <Route exact path= {base + '/view/:moduleName/:master?/:id'} component={View}/>
 
         <Route exact path= {base + '/search/:moduleName/:master?/:action'} component={Search}/>
         <Route exact path={base + '/employee/:action/:id?'} component={Employee}/>
@@ -339,7 +340,7 @@ const Main = () => {
       <Route exact path= {base + '/transactionTransfer/asset/generalAsset'} component={transactionGeneral}/>
       <Route exact path= {base + '/print/report/:templatePath'} component={TemplateParser}/>
 
-      //Assets
+      {/*Assets*/}
       <Route exact path= {base + '/non-framework/asset/master/assetImmovableCreate'} component={assetImmovableCreate}/>
       <Route exact path= {base + '/non-framework/asset/master/assetMovableCreate'} component={assetMovableCreate}/>
       <Route exact path= {base + '/non-framework/asset/master/assetImmovableView/:id'} component={assetImmovableView}/>

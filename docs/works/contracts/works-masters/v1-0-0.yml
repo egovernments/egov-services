@@ -1,0 +1,193 @@
+swagger: '2.0'
+# eGSP YAML Template Version: 1.0 
+# This is a version number for the YAML template. This must not be changed.
+
+info:
+  version: 1.0.0
+  ######################################################
+  # All API's are POST. _create,_search,_update for post,get and put. RequestInfo will be part of body. For multiple records we can pass multiple value with comman seperated values*.
+  # All _search will be synchronous and all _create and _update will be asynchronous*.
+  # RequestInfo and ResponseInfo object should be reffered from Common*.
+  # In _search API, tenantId should be passed in query param. In _create/_update, tenantId should be passed in the model.
+  # Readonly means that even if these fields are passed in the request, it will be ignored in create/update and will not be added/updated in the entities. The readonly fields might be passed to the _search API's to make use of fields for the search Query API. while calling _search API's even mandatory fields might not be available, it is mandatory only in the _create API's*.
+  # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message.
+  # Definition must start with Upper case followed by camel case.
+  # Every model will have tenantId. Validate tenantId on create.
+  # Parameter name must start with small case followed by camel case.
+  # Path must be in small case.
+  ######################################################
+  
+  title: eGov Works Management System - MAsters.
+  description: |
+    APIs for Works Management module. This module handles search, create and update of Masters.
+  contact:
+    name: eGovernments Foundation
+    email : contacts@egovernments.org
+schemes:
+  - https
+basePath: '/works-masters/v1'
+x-api-id: 'org.egov.works.masters'
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
+paths:
+  /scheduleofrates/_search:
+    post:
+      summary: Get the list of Schedule Of Rate defined in the system.
+      description: |
+          Search and get Schedule Of Rate based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed, Schedule Of Rate will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of Schedule Of Rate as defined in ScheduleOfRateResponse model.
+          
+          Search results will be sorted by the sortProperty Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageSize"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
+        - name: sorCodes
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of code of Schedule Of Rates
+        - name: ids
+          in: query
+          type: array
+          items:
+            type: string
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Ids of Schedule Of Rate to get the Schedule Of Rates
+        - name: scheduleCategoryCodes
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of schedule category code of Schedule Of Rate
+        - name: validSORRateDate
+          in: query
+          description: This validSORRateDate is a Epoch time of Date, this will be compared between the available from and to values of 'SORRate'.
+          type: integer
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
+        - name: validMarketRateDate
+          in: query
+          description: This validMarketRateDate is a Epoch time of Date, this will be compared between the available from and to values of 'MarketRate'.
+          type: integer
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
+      responses:
+        200:
+          description: Schedule Of Rate Retrieved Successfully
+          schema:
+            $ref: "#/definitions/ScheduleOfRateResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Schedule Of Rate
+       
+  /scheduleofrates/_create:
+    post:
+      summary: Create new Schedule Of Rate.
+      description: |
+          To create new Schedule Of Rate in the system. API supports bulk creation with max limit as defined in the Schedule Of Rate Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Schedule Of Rate, please pass array with one Schedule Of Rate object.
+          
+          This API is used for creating a Scheduler of rates for a schedule category with from and to date range.
+          
+      parameters:
+        - name: ScheduleOfRateRequest
+          in: body
+          description: Details of new ScheduleOfRates + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/ScheduleOfRateRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        200:
+          description: Schedule Of Rate(s) created successfully
+          schema:
+            $ref: '#/definitions/ScheduleOfRateResponse'
+        400:
+          description: Schedule Of Rate creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Schedule Of Rate
+        
+  /scheduleofrates/_update:
+    post:
+      summary: Update existing Schedule Of Rate.
+      description: |
+          To update existing Schedule Of Rate in the system. API supports bulk updation with max limit as defined in the Schedule Of Rate Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Schedule Of Rate, please pass array with one Schedule Of Rate object.
+          
+      parameters:
+        - name: ScheduleOfRateRequest
+          in: body
+          description: Details of ScheduleOfRates + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/ScheduleOfRateRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        200:
+          description: Schedule Of Rate(s) updated successfully
+          schema:
+            $ref: '#/definitions/ScheduleOfRateResponse'
+        400:
+          description: Schedule Of Rate updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Schedule Of Rate
+
+definitions:      
+  ScheduleOfRateRequest:
+      description: Contract class to send response. Array of Revision Estimate items are used in case of search results, also multiple  Revision Estimate item is used for create and update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        scheduleOfRates:
+          description: Used for create and update only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/ScheduleOfRate'
+
+  ScheduleOfRateResponse:
+      description: Contract class to send response. Array of Revision Estimate items are used in case of search results, also multiple  Revision Estimate item is used for create and update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        scheduleOfRates:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/ScheduleOfRate'
+
+tags:
+  - name: Schedule Of Rate
+    description: APIs required for Schedule Of Rate.
+
+

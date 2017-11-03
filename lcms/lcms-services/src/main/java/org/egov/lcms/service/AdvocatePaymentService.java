@@ -64,9 +64,9 @@ public class AdvocatePaymentService {
 	}
 
 	public AdvocatePaymentResponse searchAdvocatePayment(RequestInfo requestInfo,
-			AdvocatePaymentSearchCriteria advocatePaymentSearchCriteria) {
+			AdvocatePaymentSearchCriteria advocatePaymentSearchCriteria) throws Exception {
 		
-		List<AdvocatePayment> advocatePayments = advocatePaymentRepository.search(advocatePaymentSearchCriteria);
+		List<AdvocatePayment> advocatePayments = advocatePaymentRepository.search(advocatePaymentSearchCriteria, requestInfo);
 		
 		return new AdvocatePaymentResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), advocatePayments);
 

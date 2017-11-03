@@ -62,10 +62,11 @@ public class AdvocatePaymentController {
 	 * @param requestInfo
 	 * @param advocatePaymentSearchCriteria
 	 * @return
+	 * @throws Exception 
 	 */
 	@RequestMapping(path = "/_search", method = RequestMethod.POST)
 	public ResponseEntity<?> searchAdvocatePayment(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
-			@ModelAttribute @Valid AdvocatePaymentSearchCriteria advocatePaymentSearchCriteria) {
+			@ModelAttribute @Valid AdvocatePaymentSearchCriteria advocatePaymentSearchCriteria) throws Exception {
 		
 		if(advocatePaymentSearchCriteria.getTenantId() == null ){
 			throw new CustomException(propertiesManager.getTenantMandatoryCode(), propertiesManager.getTenantMandatoryMessage());

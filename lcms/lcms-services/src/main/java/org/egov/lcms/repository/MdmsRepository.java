@@ -11,6 +11,7 @@ import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.MdmsResponse;
 import org.egov.mdms.model.ModuleDetail;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -106,7 +107,7 @@ public class MdmsRepository {
 
 		} catch (Exception exception) {
 			log.info("Excpeption in getting the mdmsresponse " + exception.getMessage());
-			
+			throw new CustomException("MDMS_SERVICE_SEARCH_ERROR", "Failed to get master data");
 		}
 
 		return mdmsResponse;

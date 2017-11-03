@@ -143,13 +143,13 @@ public class AdvocatePaymentRepository {
 		}
 	}
 
-	private String getCommaSepratedValues(String[] code) {
+	private static  String getCommaSepratedValues(String[] code) {
 
 		if (code.length > 0) {
 			StringBuilder nameBuilder = new StringBuilder();
 
 			for (String n : code) {
-				nameBuilder.append("'").append(n.replace("'", "\\'")).append("',");
+				nameBuilder.append(n).append(",");
 			}
 
 			nameBuilder.deleteCharAt(nameBuilder.length() - 1);

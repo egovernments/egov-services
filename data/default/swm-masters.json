@@ -615,6 +615,24 @@
       "targetedGarbage": 3000
     }
   ],
+ "SwmProcess": [
+    {
+      "tenantId": "default",
+      "processName": "Collection"
+    },
+    {
+      "tenantId": "default",
+      "processName": "Segregation"
+    },
+    {
+     "tenantId": "default",
+      "processName": "Transportation"
+    },
+    {
+     "tenantId": "default",
+      "processName": "Disposal"
+    }
+  ],
   "SanitationStaffTarget": [
     {
       "id": 1,

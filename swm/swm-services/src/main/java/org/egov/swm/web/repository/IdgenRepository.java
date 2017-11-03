@@ -25,13 +25,10 @@ public class IdgenRepository {
 	@Value("${egov.services.egov_idgen.createpath}")
 	private String createPath;
 
-	@Value("${egov.swm.vehiclefuellingdetails.transaction.num.idgen.name}")
-	private String idGenNameForTrnNumPath;
-
 	@Autowired
 	private LogAwareRestTemplate restTemplate;
 
-	public String getIdGeneration(String tenantId, RequestInfo requestInfo) {
+	public String getIdGeneration(String tenantId, RequestInfo requestInfo, String name) {
 
 		StringBuffer idGenerationUrl = new StringBuffer();
 		idGenerationUrl.append(host);
@@ -40,7 +37,7 @@ public class IdgenRepository {
 		List<IdRequest> idRequests = new ArrayList<>();
 		IdRequest idrequest = new IdRequest();
 		idrequest.setFormat(null);
-		idrequest.setIdName(idGenNameForTrnNumPath);
+		idrequest.setIdName(name);
 		idrequest.setTenantId(tenantId);
 		IdGenerationRequest idGeneration = new IdGenerationRequest();
 		idRequests.add(idrequest);

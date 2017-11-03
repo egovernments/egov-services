@@ -25,19 +25,7 @@ public class VendorEntity {
 
 	private String registrationNo = null;
 
-	private String email = null;
-
-	private String tinNumber = null;
-
-	private String gst = null;
-
-	private String phoneNo = null;
-
-	private String contactNo = null;
-
-	private String faxNumber = null;
-
-	private String address = null;
+	private String contractor = null;
 
 	private String details = null;
 
@@ -56,9 +44,7 @@ public class VendorEntity {
 		vendor.setTenantId(tenantId);
 		vendor.setName(name);
 		vendor.setRegistrationNo(registrationNo);
-		vendor.setContractor(Contractor.builder().email(email).tinNumber(tinNumber).gst(gst).phoneNo(phoneNo)
-				.contactNo(contactNo).faxNumber(faxNumber).build());
-		vendor.setAddress(address);
+		vendor.setContractor(Contractor.builder().contactNo(contractor).build());
 		vendor.setDetails(details);
 		vendor.setAuditDetails(new AuditDetails());
 		vendor.getAuditDetails().setCreatedBy(createdBy);

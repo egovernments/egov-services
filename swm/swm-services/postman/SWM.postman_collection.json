@@ -14,7 +14,10 @@
 		"27f4bf24-9d34-5892-605d-608b49464574",
 		"4413f02e-d4c8-85d9-404c-96376836a135",
 		"da3b1c24-d957-6737-872f-852d6bc776db",
-		"f352eafc-6f1f-6112-b1a1-753bc0b1a3e2"
+		"f352eafc-6f1f-6112-b1a1-753bc0b1a3e2",
+		"88c75526-dbeb-5650-6d65-3d7e8e058860",
+		"a0db1612-c482-2b1d-a8f7-78ff7ee14f6b",
+		"92e4fc28-3dbf-0bd8-72f4-65476ab1db04"
 	],
 	"folders": [],
 	"folders_order": [],
@@ -317,6 +320,107 @@
 			"collectionId": "b07539a7-1d04-ee6c-a2d8-513349bccaa3",
 			"responses": [],
 			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24cc2960-0d9f-45b3-8c9b-c69ab7019abb\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vehicles\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"regNumber\":\"regNumber1\",\n\t\t\t\"vehicleType\" :{\n            \t\"code\":\"Fake Vehicle Type Code 1\"\n            },\n\t\t\t\"purchaseInfo\":{\n\t            \"purchaseDate\" : \"1508323548\",\n\t            \"price\" : 1000,\n\t            \"sourceOfPurchase\":\"sourceOfPurchase\"\n            },\n            \"fuelType\" :{\n            \t\"code\":\"Fake Fuel Type Code 1\"\n            },\n            \"operatorsReq\":10,\n            \"driver\":{\n            \t\"code\":\"vehicleDriverName\"\n            \t\n            },\n            \"vendor\" :{\n            \t\"vendorNo\":\"1\"\n            },\n            \t\"manufacturingDetails\":{\n\t\t\t\t\"engineSrNumber\":\"engineSrNumber\",\n\t            \"chassisSrNumber\" : \"chassisSrNumber\",\n\t            \"model\":\"model\",\n\t            \"vehicleCapacity\":100\n\t\t\t},\n           \"insuranceDetails\":{\n           \t\t\"insuranceNumber\":\"MH-SWM-IN-00001\",\n            \t\"insuranceValidityDate\":1508323548,\n            \t\"insuranceDocument\":{\n            \t\t\"fileStoreId\":\"fileStoreId\"\n            \t}\n           },\n           \"kilometers\":100,\n           \"endOfWarranty\":1508323548,\n           \"remarks\":\"remarks\"\n      }\n   ]\n } "
+		},
+		{
+			"id": "88c75526-dbeb-5650-6d65-3d7e8e058860",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8899/swm-services/vendors/_create",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "b07539a7-1d04-ee6c-a2d8-513349bccaa3",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Vendor Create",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1509742453638,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n  \"requestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"e65222de-8004-4ac1-9f72-14d41ccfea69\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vendors\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n            \"name\" : \"vendor name\",\n            \"registrationNo\":\"registrationNo\",\n            \"details\":\"detailsasdfghjkl\",\n             \"servicedLocations\" :\n             [\n             \t{\n            \t\t\"code\":\"servicedLocations Code 1\"\n            \t},\n            \t{\n            \t\t\"code\":\"servicedLocations Code 2\"\n            \t}\n            ],\n            \"contractor\" :{\n            \t\"email\":\"contractor email\",\n            \t\"tinNumber\":\"contractor tinNumber\",\n            \t\"gst\":\"contractor gst\",\n            \t\"mobileNo\":\"0000000000\",\n            \t\"contactNo\":\"1111111111\",\n            \t\"faxNumber\":\"2222222222\",\n            \t\"address\":\"contractor address\",\n            \t\"registrationNo\":\"contractor registrationNo\"\n            },\n            \"agreementDocument\":{\n            \t\"fileStoreId\":\"fileStoreId\"\n            \t\n            },\n            \"servicesOffered\":\n            [\n\t            {\n\t            \t\"name\": \"service 1\"\n\t            },\n\t            {\n            \t\t\"name\": \"service 2\"\n        \t\t}\n        \t]\n    \t}\n   ]\n } \n "
+		},
+		{
+			"id": "92e4fc28-3dbf-0bd8-72f4-65476ab1db04",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8899/swm-services/vendors/_search?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "b07539a7-1d04-ee6c-a2d8-513349bccaa3",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Vendor Search",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1509742474058,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"3d585dec-bd33-4cf2-88fb-36c48fcf3d78\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+		},
+		{
+			"id": "a0db1612-c482-2b1d-a8f7-78ff7ee14f6b",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8899/swm-services/vendors/_update",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "b07539a7-1d04-ee6c-a2d8-513349bccaa3",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Vendor Update",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1509742463920,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n  \"requestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"e65222de-8004-4ac1-9f72-14d41ccfea69\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vendors\":[\n      {\n      \t    \"vendorNo\":\"MH-SWM-VNDR-000006\",\n\t\t\t\"tenantId\":\"default\",\n            \"name\" : \"vendor name U\",\n            \"registrationNo\":\"registrationNo U\",\n            \"details\":\"detailsasdfghjkl U\",\n             \"servicedLocations\" :\n             [\n             \t{\n            \t\t\"code\":\"servicedLocations Code 3\"\n            \t},\n            \t{\n            \t\t\"code\":\"servicedLocations Code 4\"\n            \t}\n            ],\n            \"contractor\" :{\n            \t\"email\":\"contractor email U\",\n            \t\"tinNumber\":\"contractor tinNumber U\",\n            \t\"gst\":\"contractor gst U\",\n            \t\"mobileNo\":\"1000000000\",\n            \t\"contactNo\":\"2111111111\",\n            \t\"faxNumber\":\"3222222222\",\n            \t\"address\":\"contractor address U\",\n            \t\"registrationNo\":\"contractor registrationNo U\"\n            },\n            \"agreementDocument\":{\n            \t\"fileStoreId\":\"fileStoreId U\"\n            \t\n            },\n            \"servicesOffered\":\n            [\n\t            {\n\t            \t\"name\": \"service 3\"\n\t            },\n\t            {\n            \t\t\"name\": \"service 4\"\n        \t\t}\n        \t]\n    \t}\n   ]\n } \n "
 		},
 		{
 			"id": "da3b1c24-d957-6737-872f-852d6bc776db",

@@ -49,9 +49,6 @@ public class Route {
 	@JsonProperty("collectionPoints")
 	private List<CollectionPoint> collectionPoints = null;
 
-	@JsonProperty("routeCollectionPointMaps")
-	private List<RouteCollectionPointMap> routeCollectionPointMaps = null;
-
 	@NotNull
 	@JsonProperty("distance")
 	private Double distance = null;

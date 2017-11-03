@@ -23,6 +23,7 @@ import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.Error;
 import org.egov.tracer.model.ErrorRes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +48,9 @@ public class VehicleFuellingDetailsService {
 
 	@Autowired
 	private MdmsRepository mdmsRepository;
+	
+	@Value("${egov.swm.vehiclefuellingdetails.transaction.num.idgen.name}")
+	private String idGenNameForTrnNumPath;
 
 	@Transactional
 	public VehicleFuellingDetailsRequest create(VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
@@ -192,7 +196,7 @@ public class VehicleFuellingDetailsService {
 
 		String transactionNumber = null;
 		String response = null;
-		response = idgenRepository.getIdGeneration(tenantId, requestInfo);
+		response = idgenRepository.getIdGeneration(tenantId, requestInfo,idGenNameForTrnNumPath);
 		Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 		ErrorRes errorResponse = gson.fromJson(response, ErrorRes.class);
 		IdGenerationResponse idResponse = gson.fromJson(response, IdGenerationResponse.class);

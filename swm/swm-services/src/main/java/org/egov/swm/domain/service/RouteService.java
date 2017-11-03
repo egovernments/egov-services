@@ -1,6 +1,5 @@
 package org.egov.swm.domain.service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
@@ -10,7 +9,6 @@ import org.egov.swm.domain.model.CollectionPoint;
 import org.egov.swm.domain.model.CollectionPointSearch;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Route;
-import org.egov.swm.domain.model.RouteCollectionPointMap;
 import org.egov.swm.domain.model.RouteSearch;
 import org.egov.swm.domain.repository.CollectionPointRepository;
 import org.egov.swm.domain.repository.RouteRepository;
@@ -55,8 +53,6 @@ public class RouteService {
 			setAuditDetails(r, userId);
 			r.setCode(UUID.randomUUID().toString().replace("-", ""));
 
-			populateCollectionPointDetails(r);
-
 		}
 		return routeRepository.save(routeRequest);
 
@@ -77,27 +73,10 @@ public class RouteService {
 			}
 
 			setAuditDetails(r, userId);
-			populateCollectionPointDetails(r);
 		}
 
 		return routeRepository.update(routeRequest);
 
-	}
-
-	private void populateCollectionPointDetails(Route r) {
-
-		if (r.getCollectionPoints() != null) {
-			RouteCollectionPointMap map;
-			r.setRouteCollectionPointMaps(new ArrayList<RouteCollectionPointMap>());
-			for (CollectionPoint cp : r.getCollectionPoints()) {
-				map = new RouteCollectionPointMap();
-				map.setTenantId(r.getTenantId());
-				map.setRoute(r.getName());
-				map.setCollectionPoint(cp.getCode());
-				map.setAuditDetails(r.getAuditDetails());
-				r.getRouteCollectionPointMaps().add(map);
-			}
-		}
 	}
 
 	public Pagination<Route> search(RouteSearch routeSearch) {

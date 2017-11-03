@@ -49,11 +49,6 @@ public class Vendor {
 	@JsonProperty("contractor")
 	private Contractor contractor = null;
 
-	@NotNull
-	@Length(min = 10, max = 500)
-	@JsonProperty("address")
-	private String address = null;
-
 	@JsonProperty("agreementDocument")
 	private Document agreementDocument;
 

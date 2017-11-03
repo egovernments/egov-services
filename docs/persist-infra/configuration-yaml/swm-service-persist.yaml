@@ -491,6 +491,26 @@ serviceMaps:
        - jsonPath: $.routes.*.auditDetails.lastModifiedTime
          dbType: LONG
 
+    - query: INSERT INTO egswm_routecollectionpointmap(tenantid, route, collectionPoint, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?);
+      basePath: $.routes.*.collectionPoints.*
+      jsonMaps:
+       
+       - jsonPath: $.routes[?({code} in @.collectionPoints[*].code)].tenantId
+
+       - jsonPath: $.routes[?({code} in @.collectionPoints[*].code)].code
+         
+       - jsonPath: $.routes.*.collectionPoints.*.code
+
+       - jsonPath: $.routes[?({code} in @.collectionPoints[*].code)].auditDetails.createdBy
+
+       - jsonPath: $.routes[?({code} in @.collectionPoints[*].code)].auditDetails.lastModifiedBy
+
+       - jsonPath: $.routes[?({code} in @.collectionPoints[*].code)].auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.routes[?({code} in @.collectionPoints[*].code)].auditDetails.lastModifiedTime
+         dbType: LONG
+
 
  - version: 1.0
    name: route update
@@ -525,28 +545,235 @@ serviceMaps:
 
        - jsonPath: $.routes.*.tenantId
 
-
- - version: 1.0
-   name: route collection point map create
-   description: create route collection point map  in egswm_routecollectionpointmap 
-   fromTopic: swm-route-collectionpoint-map-save-topic
-   queryMaps: 
     - query: INSERT INTO egswm_routecollectionpointmap(tenantid, route, collectionPoint, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?);
-      basePath: $.routeCollectionPointMaps.*
+      basePath: $.routes.*.collectionPoints.*
       jsonMaps:
        
-       - jsonPath: $.routeCollectionPointMaps.*.tenantId
+       - jsonPath: $.routes[?({code} in @.collectionPoints[*].code)].tenantId
+
+       - jsonPath: $.routes[?({code} in @.collectionPoints[*].code)].code
          
-       - jsonPath: $.routeCollectionPointMaps.*.route
+       - jsonPath: $.routes.*.collectionPoints.*.code
 
-       - jsonPath: $.routeCollectionPointMaps.*.collectionPoint
+       - jsonPath: $.routes[?({code} in @.collectionPoints[*].code)].auditDetails.createdBy
 
-       - jsonPath: $.routeCollectionPointMaps.*.auditDetails.createdBy
+       - jsonPath: $.routes[?({code} in @.collectionPoints[*].code)].auditDetails.lastModifiedBy
 
-       - jsonPath: $.routeCollectionPointMaps.*.auditDetails.lastModifiedBy
-
-       - jsonPath: $.routeCollectionPointMaps.*.auditDetails.createdTime
+       - jsonPath: $.routes[?({code} in @.collectionPoints[*].code)].auditDetails.createdTime
          dbType: LONG
 
-       - jsonPath: $.routeCollectionPointMaps.*.auditDetails.lastModifiedTime
+       - jsonPath: $.routes[?({code} in @.collectionPoints[*].code)].auditDetails.lastModifiedTime
+         dbType: LONG
+
+ - version: 1.0
+   name: vendor create
+   description: create vendor in egswm_vendor
+   fromTopic: swm-vendor-save-topic
+   queryMaps: 
+    - query: INSERT INTO egswm_vendor(vendorNo, tenantid, name,registrationNo, contractor, details, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.vendors.*
+      jsonMaps:
+       
+       - jsonPath: $.vendors.*.vendorNo
+
+       - jsonPath: $.vendors.*.tenantId
+
+       - jsonPath: $.vendors.*.name
+         
+       - jsonPath: $.vendors.*.registrationNo
+
+       - jsonPath: $.vendors.*.contractor.contractorNo
+
+       - jsonPath: $.vendors.*.details
+
+       - jsonPath: $.vendors.*.auditDetails.createdBy
+
+       - jsonPath: $.vendors.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.vendors.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.vendors.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+    - query: INSERT INTO egswm_contractor(contractorNo, tenantid, name, agencyName, email, tinNumber, gst, mobileNo, contactNo, faxNumber, address, registrationNo, aadharNo, createdBy, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.vendors.*.contractor
+      jsonMaps:
+       
+       - jsonPath: $.vendors.*.contractor.contractorNo
+
+       - jsonPath: $.vendors.*.contractor.tenantId
+
+       - jsonPath: $.vendors.*.contractor.name
+         
+       - jsonPath: $.vendors.*.contractor.agencyName
+
+       - jsonPath: $.vendors.*.contractor.email
+
+       - jsonPath: $.vendors.*.contractor.tinNumber
+
+       - jsonPath: $.vendors.*.contractor.gst
+
+       - jsonPath: $.vendors.*.contractor.mobileNo
+
+       - jsonPath: $.vendors.*.contractor.contactNo
+         
+       - jsonPath: $.vendors.*.contractor.faxNumber
+
+       - jsonPath: $.vendors.*.contractor.address
+
+       - jsonPath: $.vendors.*.contractor.registrationNo
+
+       - jsonPath: $.vendors.*.contractor.aadharNo
+
+       - jsonPath: $.vendors.*.contractor.auditDetails.createdBy
+
+       - jsonPath: $.vendors.*.contractor.auditDetails.lastModifiedBy
+
+       - jsonPath: $.vendors.*.contractor.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.vendors.*.contractor.auditDetails.lastModifiedTime
+         dbType: LONG
+
+    - query: INSERT INTO egswm_vendorservicedlocations(tenantid, vendor, location, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?);
+      basePath: $.vendors.*.servicedLocations.*
+      jsonMaps:
+       
+       - jsonPath: $.vendors[?({code} in @.servicedLocations[*].code)].tenantId
+
+       - jsonPath: $.vendors[?({code} in @.servicedLocations[*].code)].vendorNo
+         
+       - jsonPath: $.vendors.*.servicedLocations.*.code
+
+       - jsonPath: $.vendors[?({code} in @.servicedLocations[*].code)].auditDetails.createdBy
+
+       - jsonPath: $.vendors[?({code} in @.servicedLocations[*].code)].auditDetails.lastModifiedBy
+
+       - jsonPath: $.vendors[?({code} in @.servicedLocations[*].code)].auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.vendors[?({code} in @.servicedLocations[*].code)].auditDetails.lastModifiedTime
+         dbType: LONG
+
+
+    - query: INSERT INTO egswm_vendorservicesOffered(tenantid, vendor, service, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?);
+      basePath: $.vendors.*.servicesOffered.*
+      jsonMaps:
+       
+       - jsonPath: $.vendors[?({name} in @.servicesOffered[*].name)].tenantId
+
+       - jsonPath: $.vendors[?({name} in @.servicesOffered[*].name)].vendorNo
+         
+       - jsonPath: $.vendors.*.servicesOffered.*.name
+
+       - jsonPath: $.vendors[?({name} in @.servicesOffered[*].name)].auditDetails.createdBy
+
+       - jsonPath: $.vendors[?({name} in @.servicesOffered[*].name)].auditDetails.lastModifiedBy
+
+       - jsonPath: $.vendors[?({name} in @.servicesOffered[*].name)].auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.vendors[?({name} in @.servicesOffered[*].name)].auditDetails.lastModifiedTime
+         dbType: LONG
+
+ - version: 1.0
+   name: vendor update
+   description: update vendor in egswm_vendor
+   fromTopic: swm-vendor-update-topic
+   queryMaps: 
+    - query: update egswm_vendor set name=?, registrationNo=?, details=?, lastmodifiedby=?, lastmodifiedtime=? where vendorNo=? and tenantId = ?;
+      basePath: $.vendors.*
+      jsonMaps:
+       
+       - jsonPath: $.vendors.*.name
+         
+       - jsonPath: $.vendors.*.registrationNo
+
+       - jsonPath: $.vendors.*.details
+
+       - jsonPath: $.vendors.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.vendors.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+       - jsonPath: $.vendors.*.vendorNo
+
+       - jsonPath: $.vendors.*.tenantId
+
+    - query: update egswm_contractor set name=?, agencyName=?, email=?, tinNumber=?, gst=?, mobileNo=?, contactNo=?, faxNumber=?, address=?, registrationNo=?, aadharNo=?, lastmodifiedby=?, lastmodifiedtime=? where contractorNo=? and tenantId=?;
+      basePath: $.vendors.*.contractor
+      jsonMaps:
+       
+       - jsonPath: $.vendors.*.contractor.name
+         
+       - jsonPath: $.vendors.*.contractor.agencyName
+
+       - jsonPath: $.vendors.*.contractor.email
+
+       - jsonPath: $.vendors.*.contractor.tinNumber
+
+       - jsonPath: $.vendors.*.contractor.gst
+
+       - jsonPath: $.vendors.*.contractor.mobileNo
+
+       - jsonPath: $.vendors.*.contractor.contactNo
+         
+       - jsonPath: $.vendors.*.contractor.faxNumber
+
+       - jsonPath: $.vendors.*.contractor.address
+
+       - jsonPath: $.vendors.*.contractor.registrationNo
+
+       - jsonPath: $.vendors.*.contractor.aadharNo
+
+       - jsonPath: $.vendors.*.contractor.auditDetails.lastModifiedBy
+
+       - jsonPath: $.vendors.*.contractor.auditDetails.lastModifiedTime
+         dbType: LONG
+
+       - jsonPath: $.vendors.*.contractor.contractorNo
+
+       - jsonPath: $.vendors.*.contractor.tenantId
+
+
+    - query: INSERT INTO egswm_vendorservicedlocations(tenantid, vendor, location, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?);
+      basePath: $.vendors.*.servicedLocations.*
+      jsonMaps:
+       
+       - jsonPath: $.vendors[?({code} in @.servicedLocations[*].code)].tenantId
+
+       - jsonPath: $.vendors[?({code} in @.servicedLocations[*].code)].vendorNo
+         
+       - jsonPath: $.vendors.*.servicedLocations.*.code
+
+       - jsonPath: $.vendors[?({code} in @.servicedLocations[*].code)].auditDetails.createdBy
+
+       - jsonPath: $.vendors[?({code} in @.servicedLocations[*].code)].auditDetails.lastModifiedBy
+
+       - jsonPath: $.vendors[?({code} in @.servicedLocations[*].code)].auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.vendors[?({code} in @.servicedLocations[*].code)].auditDetails.lastModifiedTime
+         dbType: LONG
+
+
+    - query: INSERT INTO egswm_vendorservicesOffered(tenantid, vendor, service, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?);
+      basePath: $.vendors.*.servicesOffered.*
+      jsonMaps:
+       
+       - jsonPath: $.vendors[?({name} in @.servicesOffered[*].name)].tenantId
+
+       - jsonPath: $.vendors[?({name} in @.servicesOffered[*].name)].vendorNo
+         
+       - jsonPath: $.vendors.*.servicesOffered.*.name
+
+       - jsonPath: $.vendors[?({name} in @.servicesOffered[*].name)].auditDetails.createdBy
+
+       - jsonPath: $.vendors[?({name} in @.servicesOffered[*].name)].auditDetails.lastModifiedBy
+
+       - jsonPath: $.vendors[?({name} in @.servicesOffered[*].name)].auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.vendors[?({name} in @.servicesOffered[*].name)].auditDetails.lastModifiedTime
          dbType: LONG

@@ -29,20 +29,12 @@ public class RouteRepository {
 	@Value("${egov.swm.route.update.topic}")
 	private String updateTopic;
 
-	@Value("${egov.swm.route.collectionpoint.map.save.topic}")
-	private String saveRouteCollectionPointMapTopic;
-
 	@Value("${egov.swm.route.indexer.topic}")
 	private String indexerTopic;
 
 	public RouteRequest save(RouteRequest routeRequest) {
 
 		kafkaTemplate.send(saveTopic, routeRequest);
-
-		for (Route r : routeRequest.getRoutes()) {
-
-			kafkaTemplate.send(saveRouteCollectionPointMapTopic, r);
-		}
 
 		kafkaTemplate.send(indexerTopic, routeRequest.getRoutes());
 
@@ -56,7 +48,6 @@ public class RouteRepository {
 
 			routeCollectionPointMapJdbcRepository.delete(r.getCode());
 			
-			kafkaTemplate.send(saveRouteCollectionPointMapTopic, r);
 		}
 
 		kafkaTemplate.send(updateTopic, routeRequest);

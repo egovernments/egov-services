@@ -10,7 +10,7 @@ ReportDefinitions:
     type: string
     source: lcms
     showColumn: true
-  - name: plantiffName
+  - name: plantiffname
     label: reports.lcms.NameOfPlaintiff
     type: string
     source: lcms
@@ -36,41 +36,20 @@ ReportDefinitions:
     type: string
     isMandatory: false
     source: lcms
-    searchClause : AND case.caseNo=$caseNo
-  - name: courtName
-    label: reports.lcms.courtName
-    type: singlevaluelist
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=lcms&masterName=court|$..code|$..name
-    source: lcms
-    isMandatory: false
-    searchClause : AND case.courtName = $courtName
+    searchClause : AND caseno=$caseNo
   - name: plantiffName
     label: reports.lcms.plantiffName
     type: string
     isMandatory: false
     source: lcms
-    searchClause : AND case.plantiffName = $plantiffName
+    searchClause : AND plantiffname = $plantiffName
   - name: defendant
     label: reports.lcms.defendant
     type: string
     isMandatory: false
     source: lcms
     searchClause : AND case.defendant = $defendant
-  - name: department
-    label: reports.lcms.department
-    type: singlevaluelist
-    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid&pageSize=500|$..code|$..name
-    source: lcms
-    isMandatory: false
-    searchClause : AND case.department = $department
-  - name: caseStatus
-    label: reports.lcms.caseStatus
-    type: singlevaluelist
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=lcms&masterName=caseStatus|$..code|$..name
-    source: lcms
-    isMandatory: false
-    searchClause : AND case.caseStatus = $caseStatus
-  query: select defendant,caseno,plantiffName from egov_lcms_case WHERE caseregistrationdate>=$fromDate and caseregistrationdate<=$toDate
+  query: select defendant,caseno,plantiffname from egov_lcms_case WHERE caseregistrationdate>=$fromDate and caseregistrationdate<=$toDate
 - reportName: CaseSummaryReport
   summary: Case Summary Report
   version: 1.0.0
@@ -108,27 +87,6 @@ ReportDefinitions:
     isMandatory: false
     source: lcms
     searchClause : AND case.caseNo=$caseNo
-  - name: department
-    label: reports.lcms.department
-    type: singlevaluelist
-    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid&pageSize=500|$..code|$..name
-    source: lcms
-    isMandatory: false
-    searchClause : AND case.department = $department
-  - name: advocate
-    label: reports.lcms.advocate
-    type: singlevaluelist
-    pattern: http://lcms-services:8080/lcms-services/legalcase/advocate/_search?tenantId=$tenantid&pageSize=500|$..code|$..name
-    source: lcms
-    isMandatory: false
-    searchClause : AND case.advocate = $advocate
-  - name: courtName
-    label: reports.lcms.courtName
-    type: singlevaluelist
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=lcms&masterName=court|$..code|$..name
-    source: lcms
-    isMandatory: false
-    searchClause : AND case.courtName = $courtName
   - name: plantiffName
     label: reports.lcms.plantiffName
     type: string

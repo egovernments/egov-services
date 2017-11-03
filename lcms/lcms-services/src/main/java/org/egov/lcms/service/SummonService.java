@@ -63,10 +63,23 @@ public class SummonService {
 		generateSummonReferenceNumber(summonRequest);
 
 		kafkaTemplate.send(propertiesManager.getCreateSummonvalidated(), summonRequest);
+		
+		pushSummonToIndexer(summonRequest);
 		return new SummonResponse(
 				responseInfoFactory.getResponseInfo(summonRequest.getRequestInfo(), HttpStatus.CREATED),
 				summonRequest.getSummons());
 
+	}
+
+	private void pushSummonToIndexer(SummonRequest summonRequest) {
+		
+		for(Summon summon : summonRequest.getSummons()){
+			Case caseobj = new Case();
+			caseobj.setCode(summon.getCode());
+			caseobj.setSummon(summon);
+			kafkaTemplate.send(propertiesManager.getPushSummonCreateToIndexer(), summonRequest);
+		}
+		
 	}
 
 	private void generateSummonReferenceNumber(SummonRequest summonRequest) throws Exception {
@@ -111,6 +124,7 @@ public class SummonService {
 		List<Case> cases = caseRequest.getCases();
 
 		for (Case caseObj : cases) {
+			caseObj.setCode(caseObj.getSummon().getCode());
 			for (AdvocateDetails advocatedetail : caseObj.getAdvocateDetails()) {
 				String advocateCode = uniqueCodeGeneration.getUniqueCode(caseObj.getTenantId(),
 						caseRequest.getRequestInfo(), propertiesManager.getAdvocateDetailsCodeFormat(),

@@ -141,7 +141,4 @@ ReportDefinitions:
     isMandatory: false
     source: lcms
     searchClause : AND case.defendant = $defendant
-  query: select case.caseno as caseNo, dept.name as department, case.casetype as caseType, case.plantiffname as plaintiff,
-case.defendant as defendant, advocate.name as advocateName, caseHearing.casestatus as caseStatus from 
-egov_lcms_case as case, eg_department as dept, egov_lcms_advocate as advocate, egov_lcms_case_advocate as caseAdvocate, egov_lcms_hearing_details as caseHearing 
-where caseregistrationdate>=$fromDate and case.caseregistrationdate<=$toDate and dept.code = case.departmentname
+  query: select case.caseno as caseNo, dept.name as department, case.casetype as caseType, case.plantiffname as plaintiff,case.defendant as defendant, advocate.name as advocateName, caseHearing.casestatus as caseStatus from egov_lcms_case as case, eg_department as dept, egov_lcms_advocate as advocate, egov_lcms_case_advocate as caseAdvocate, egov_lcms_hearing_details as caseHearing where caseregistrationdate>=$fromDate and case.caseregistrationdate<=$toDate and dept.code = case.departmentname

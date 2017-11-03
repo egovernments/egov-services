@@ -1,0 +1,115 @@
+{
+	"id": "4b242212-8ddb-e9e1-ee40-93b09de4b73a",
+	"name": "Works DocumentDetail",
+	"description": "",
+	"order": [
+		"860adc39-bdd8-d863-7014-36641058d3e7",
+		"cfabbe29-408b-ba42-29bb-69bd59e94062",
+		"78a86da2-509c-be48-3979-b1d0c09b28be"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1509711612636,
+	"owner": "3022735",
+	"public": false,
+	"requests": [
+		{
+			"id": "78a86da2-509c-be48-3979-b1d0c09b28be",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8081/works-services/documentdetails/_update",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1509713311724,
+			"name": "Update Documents",
+			"description": "Search Document",
+			"collectionId": "4b242212-8ddb-e9e1-ee40-93b09de4b73a",
+			"responses": [],
+			"rawModeData": "{\n\t\"requestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\" : \"12345678\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"019e4e9b-0605-43a3-8527-e3ff8181cb63\",\n    \"userInfo\":{\n    \t\"tenantId\" : \"default\",\n    \t\"userName\" : \"parvati\",\n    \t\"id\":1,\n        \"roles\" : []\n    }\n  }, \"documentDetails\" : [{\n  \t\"id\" : \"6599ef5b35d1415f8b1a1ed7619a98d6\",\n  \t\"tenantId\" : \"default\",\n  \t\"objectId\" : \"test123\",\n  \t\"objectType\" : \"AbstractEstimate\",\n  \t\"fileStore\" : \"123\"\n  },{\n    \"id\" : \"ae3610e4983d43deb2271d0f1e535738\",\n  \t\"tenantId\" : \"default\",\n  \t\"objectId\" : \"test2\",\n  \t\"objectType\" : \"AbstractEstimate\",\n  \t\"fileStore\" : \"1235\"\n  }]\n}"
+		},
+		{
+			"id": "860adc39-bdd8-d863-7014-36641058d3e7",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8081/works-services/documentdetails/_create",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1509713297092,
+			"name": "Create Documents",
+			"description": "Create Document",
+			"collectionId": "4b242212-8ddb-e9e1-ee40-93b09de4b73a",
+			"responses": [],
+			"rawModeData": "{\n\t\"requestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\" : \"12345678\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"019e4e9b-0605-43a3-8527-e3ff8181cb63\",\n    \"userInfo\":{\n    \t\"tenantId\" : \"default\",\n    \t\"userName\" : \"parvati\",\n    \t\"id\":1,\n        \"roles\" : []\n    }\n  }, \"documentDetails\" : [{\n  \t\"id\" : \"\",\n  \t\"tenantId\" : \"default\",\n  \t\"objectId\" : \"12341\",\n  \t\"objectType\" : \"AbstractEstimate\",\n  \t\"fileStore\" : \"123\"\n  },{\n    \n  \t\"tenantId\" : \"default\",\n  \t\"objectId\" : \"12345\",\n  \t\"objectType\" : \"AbstractEstimate\",\n  \t\"fileStore\" : \"1235\"\n  }]\n}"
+		},
+		{
+			"id": "cfabbe29-408b-ba42-29bb-69bd59e94062",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8081/works-services/documentdetails/_search?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1509713303816,
+			"name": "Search Documents",
+			"description": "Search Document",
+			"collectionId": "4b242212-8ddb-e9e1-ee40-93b09de4b73a",
+			"responses": [],
+			"rawModeData": "\n {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\" : \"12345678\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"019e4e9b-0605-43a3-8527-e3ff8181cb63\",\n    \"userInfo\":{\n    \t\"tenantId\" : \"default\",\n    \t\"userName\" : \"parvati\",\n    \t\"id\":1,\n        \"roles\" : []\n    }\n }"
+		}
+	]
+}

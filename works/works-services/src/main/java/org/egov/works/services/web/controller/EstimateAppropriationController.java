@@ -33,7 +33,7 @@ public class EstimateAppropriationController {
 		EstimateAppropriationResponse estimateAppropriationResponse = new EstimateAppropriationResponse();
 		AuditDetails auditDetails = new AuditDetails();
 		// auditDetails.setCreatedTime(new Date().getTime());
-		auditDetails.setCreatedBy(estimateAppropriationRequest.getRequestInfo().getUserInfo().getUsername());
+		auditDetails.setCreatedBy(estimateAppropriationRequest.getRequestInfo().getUserInfo().getUserName());
 		/*for (EstimateAppropriation estimateAppropriation : estimateAppropriationRequest.getEstimateAppropriations()) {
 			estimateAppropriation.setAuditDetails(auditDetails);
 			estimateAppropriationService.validateEstimateAppropriation(estimateAppropriation);

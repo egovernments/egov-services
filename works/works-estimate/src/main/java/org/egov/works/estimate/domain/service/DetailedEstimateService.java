@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.config.WorksEstimateServiceConstants;
 import org.egov.works.estimate.domain.repository.DetailedEstimateRepository;
@@ -46,6 +47,9 @@ public class DetailedEstimateService {
     @Autowired
     private EstimateUtils estimateUtils;
 
+    @Autowired
+    private CommonUtils commonUtils;
+
 	public List<DetailedEstimate> search(DetailedEstimateSearchContract detailedEstimateSearchContract) {
 		return detailedEstimateRepository.search(detailedEstimateSearchContract);
 	}
@@ -53,26 +57,26 @@ public class DetailedEstimateService {
     public List<DetailedEstimate> create(DetailedEstimateRequest detailedEstimateRequest) {
         AuditDetails auditDetails = setAuditDetails(detailedEstimateRequest.getRequestInfo().getUserInfo().getUsername(), false);
         for (final DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
-            detailedEstimate.setId(UUID.randomUUID().toString().replace("-", ""));
+            detailedEstimate.setId(commonUtils.getUUID());
             detailedEstimate.setAuditDetails(auditDetails);
 
             for(final AssetsForEstimate assetsForEstimate : detailedEstimate.getAssets()) {
-                assetsForEstimate.setId(UUID.randomUUID().toString().replace("-", ""));
+                assetsForEstimate.setId(commonUtils.getUUID());
                 detailedEstimate.setAuditDetails(auditDetails);
             }
 
             for(final MultiYearEstimate multiYearEstimate : detailedEstimate.getMultiYearEstimates()) {
-                multiYearEstimate.setId(UUID.randomUUID().toString().replace("-", ""));
+                multiYearEstimate.setId(commonUtils.getUUID());
                 multiYearEstimate.setAuditDetails(auditDetails);
             }
 
             for(final EstimateOverhead estimateOverhead : detailedEstimate.getEstimateOverheads()) {
-                estimateOverhead.setId(UUID.randomUUID().toString().replace("-", ""));
+                estimateOverhead.setId(commonUtils.getUUID());
                 estimateOverhead.setAuditDetails(auditDetails);
             }
 
             for(final DetailedEstimateDeduction detailedEstimateDeduction : detailedEstimate.getDetailedEstimateDeductions()) {
-                detailedEstimateDeduction.setId(UUID.randomUUID().toString().replace("-", ""));
+                detailedEstimateDeduction.setId(commonUtils.getUUID());
                 detailedEstimateDeduction.setAuditDetails(auditDetails);
             }
         }
@@ -180,6 +184,13 @@ public class DetailedEstimateService {
                     index++;
                 }
         }
+
+    public void validateDetailedEstimates(DetailedEstimateRequest detailedEstimateRequest, BindingResult errors) {
+        final RequestInfo requestInfo = detailedEstimateRequest.getRequestInfo();
+        for(DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
+            validateActivities(detailedEstimate,errors);
+        }
     }
+}
 	
 

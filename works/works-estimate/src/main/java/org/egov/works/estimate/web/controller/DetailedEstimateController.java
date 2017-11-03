@@ -57,6 +57,7 @@ public class DetailedEstimateController {
             throw new CustomBindException(errors);
         }
 
+        detailedEstimateService.validateDetailedEstimates(detailedEstimateRequest,errors);
         final List<DetailedEstimate> detailedEstimates = detailedEstimateService.create(detailedEstimateRequest);
         final DetailedEstimateResponse response = new DetailedEstimateResponse();
         response.setDetailedEstimates(detailedEstimates);

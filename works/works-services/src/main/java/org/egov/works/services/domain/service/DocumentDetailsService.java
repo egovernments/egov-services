@@ -77,21 +77,10 @@ public class DocumentDetailsService {
     public void validateDocuments(final DocumentDetailRequest documentDetailRequest) {
 
         for(DocumentDetail documentDetail : documentDetailRequest.getDocumentDetails()) {
-            if(StringUtils.isBlank(documentDetail.getTenantId())) {
-                throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), null);
-            }
-            if(StringUtils.isBlank(documentDetail.getFileStore())) {
-                throw new InvalidDataException("fileStore", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), null);
-            } else {
+            if(StringUtils.isNotBlank(documentDetail.getFileStore())) {
                 FileStoreResponse response = fileStoreRepository.searchFileStore(documentDetail.getTenantId(), documentDetail.getFileStore(), documentDetailRequest.getRequestInfo());
                 if(response == null)
                     throw new InvalidDataException("fileStore", ErrorCode.INVALID_REF_VALUE.getCode(), null);
-            }
-            if(StringUtils.isBlank(documentDetail.getObjectId())) {
-                throw new InvalidDataException("objectId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), null);
-            }
-            if(StringUtils.isBlank(documentDetail.getObjectType())) {
-                throw new InvalidDataException("objectType", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), null);
             }
         }
     }

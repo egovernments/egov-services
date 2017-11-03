@@ -44,8 +44,8 @@ public class ReportController {
 	@Autowired
 	private ReportService reportService;
 	
-	@Autowired
-	private ReportQueryBuilder reportQueryBuilder;
+	/*@Autowired
+	private ReportQueryBuilder reportQueryBuilder;*/
 	
 	@Autowired
     public static ResourceLoader resourceLoader;
@@ -132,7 +132,7 @@ public class ReportController {
 	}
 	
 	
-	@PostMapping("_test")
+	/*@PostMapping("_test")
 	@ResponseBody
 	public ResponseEntity<?> test(@RequestBody Object request) {
 		try {
@@ -145,6 +145,6 @@ public class ReportController {
 		return new ResponseEntity<>(request, HttpStatus.OK);
 
 	}
-	
+*/	
 	
 }

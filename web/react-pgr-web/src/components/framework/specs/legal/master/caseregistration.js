@@ -1,6 +1,7 @@
 var dat = {
   "legal.update": {
     numCols: 4,
+    title:"caseregistration.update.document.title",
     useTimestamp: true,
     objectName: "cases",
     searchUrl:
@@ -25,7 +26,7 @@ var dat = {
             label: "legal.create.summonDate",
             type: "datePicker",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -33,8 +34,8 @@ var dat = {
             jsonPath: "cases[0].summon.year",
             label: "legal.create.year",
             type: "singleValueList",
-            isRequired: true,
-            isDisabled: false,
+            isRequired: false,
+            isDisabled: true,
             url:
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=year|$..code|$..name",
             patternErrorMsg: ""
@@ -44,8 +45,8 @@ var dat = {
             jsonPath: "cases[0].summon.caseType.name",
             label: "legal.create.caseType",
             type: "singleValueList",
-            isRequired: true,
-            isDisabled: false,
+            isRequired: false,
+            isDisabled: true,
             patternErrorMsg: "",
             url:
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name"
@@ -55,8 +56,8 @@ var dat = {
             jsonPath: "cases[0].summon.plantiffName",
             label: "legal.create.plantiffName",
             type: "text",
-            isRequired: true,
-            isDisabled: false,
+            isRequired: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -64,8 +65,8 @@ var dat = {
             jsonPath: "cases[0].summon.caseNo",
             label: "legal.create.caseNo",
             type: "text",
-            isRequired: true,
-            isDisabled: false,
+            isRequired: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -73,8 +74,8 @@ var dat = {
             jsonPath: "cases[0].summon.plantiffAddress.addressLine1",
             label: "legal.create.plantiffAddress",
             type: "text",
-            isRequired: true,
-            isDisabled: false,
+            isRequired: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -82,8 +83,8 @@ var dat = {
             jsonPath: "cases[0].summon.caseDetails",
             label: "legal.create.caseDetails",
             type: "text",
-            isRequired: true,
-            isDisabled: false,
+            isRequired: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -92,24 +93,24 @@ var dat = {
             label: "legal.create.defendant",
             type: "text",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
             name: "departmentName",
-            jsonPath: "cases[0].summon.departmentName",
+            jsonPath: "cases[0].summon.departmentName.id",
             label: "legal.create.departmentName",
             type: "singleValueList",
-            isRequired: true,
-            isDisabled: false,
+            isRequired: false,
+            isDisabled: true,
             patternErrorMsg: "",
             url: "/egov-common-masters/departments/_search?|$..id|$..name",
             depedants: [
               {
-                jsonPath: "cases[0].summon.departmentPerson",
+                jsonPath: "cases[0].departmentPerson",
                 type: "dropDown",
                 pattern:
-                  "/hr-employee/employees/_search?tenantId=default&departmentId={cases[0].summon.departmentName}|$..id|$..name"
+                  "/hr-employee/employees/_search?tenantId=default&departmentId={cases[0].summon.departmentName.id}|$..name|$..name"
               }
             ]
           },
@@ -118,8 +119,8 @@ var dat = {
             jsonPath: "cases[0].summon.courtName.name",
             label: "legal.create.courtName",
             type: "singleValueList",
-            isRequired: true,
-            isDisabled: false,
+            isRequired: false,
+            isDisabled: true,
             patternErrorMsg: "",
             url:
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name"
@@ -130,7 +131,7 @@ var dat = {
             label: "legal.create.hearingTime",
             type: "text",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -138,8 +139,8 @@ var dat = {
             jsonPath: "cases[0].summon.hearingDate",
             label: "legal.create.hearingDate",
             type: "datePicker",
-            isRequired: true,
-            isDisabled: false,
+            isRequired: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -147,8 +148,8 @@ var dat = {
             jsonPath: "cases[0].summon.side.name",
             label: "legal.create.side",
             type: "singleValueList",
-            isRequired: true,
-            isDisabled: false,
+            isRequired: false,
+            isDisabled: true,
             patternErrorMsg: "",
             url:
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name"
@@ -158,8 +159,8 @@ var dat = {
             jsonPath: "cases[0].summon.ward",
             label: "legal.create.ward",
             type: "text",
-            isRequired: true,
-            isDisabled: false,
+            isRequired: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -167,8 +168,8 @@ var dat = {
             jsonPath: "cases[0].summon.stamp.name",
             label: "legal.create.stamp",
             type: "singleValueList",
-            isRequired: true,
-            isDisabled: false,
+            isRequired: false,
+            isDisabled: true,
             patternErrorMsg: "",
             url:
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=stamp|$..code|$..name"
@@ -178,8 +179,8 @@ var dat = {
             jsonPath: "cases[0].summon.bench.name",
             label: "legal.create.bench",
             type: "singleValueList",
-            isRequired: true,
-            isDisabled: false,
+            isRequired: false,
+            isDisabled: true,
             patternErrorMsg: "",
             url:
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bench|$..code|$..name"
@@ -190,7 +191,7 @@ var dat = {
             label: "legal.create.sectionApplied",
             type: "text",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           }
         ]
@@ -202,16 +203,16 @@ var dat = {
           {
             name: "File",
             jsonPath: "cases[0].summon.documents",
-            type: "documentList",
-            pathToArray: "documentTypes",
-            displayNameJsonPath: "name",
-            url: "/tl-masters/documenttype/v2/_search",
-            autoFillFields: [
-              {
-                name: "documentTypeId",
-                jsonPath: "id"
-              }
-            ]
+            type: "fileTable",
+            isRequired: false,
+            isDisabled: false,
+            patternErrMsg: "",
+            fileList:{
+                name:"documentName",
+                id:"fileStoreId"
+            },
+              fileCount:3
+            
           }
         ]
       },
@@ -221,7 +222,7 @@ var dat = {
         fields: [
           {
             name: "referenceCaseNo",
-            jsonPath: "cases[0].summon.caseRefernceNo",
+            jsonPath: "cases[0].caseRefernceNo",
             label: "caseRegistration.create.referenceCaseNo",
             type: "text",
             isRequired: false,
@@ -230,10 +231,10 @@ var dat = {
           },
           {
             name: "departmentConcernedPerson",
-            jsonPath: "cases[0].summon.departmentPerson",
+            jsonPath: "cases[0].departmentPerson",
             label: "caseRegistration.create.departmentConcernedPerson",
             type: "singleValueList",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             patternErrorMsg: "",
             defaultValue: [],
@@ -241,7 +242,7 @@ var dat = {
           },
           {
             name: "caseRegistrationDate",
-            jsonPath: "cases[0].summon.caseRegistrationDate",
+            jsonPath: "cases[0].caseRegistrationDate",
             label: "caseRegistration.create.caseRegistrationDate",
             type: "datePicker",
             isRequired: true,

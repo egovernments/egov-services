@@ -1,6 +1,7 @@
 var dat ={
   "legal.search": {
     "numCols": 4,
+    title:"summon.search.document.title",
     "useTimestamp": true,
     "objectName": "cases",
     "url": "/lcms-services/legalcase/case/_search",
@@ -11,7 +12,7 @@ var dat ={
         "fields": [
           {
             "name": "referenceNo",
-            "jsonPath": "cases[0].summon.summonReferenceNo",
+            "jsonPath": "summonReferenceNo",
             "label": "legal.create.referenceNo",
             "type": "text",
             "isRequired": false,
@@ -20,7 +21,7 @@ var dat ={
           },
           {
             "name": "referenceCaseNo",
-            "jsonPath": "cases[0].caseRefernceNo",
+            "jsonPath": "caseRefernceNo",
             "label": "caseRegistration.create.referenceCaseNo",
             "type": "text",
             "isRequired": false,
@@ -29,7 +30,7 @@ var dat ={
           },
           {
             "name": "caseStatus",
-            "jsonPath": "cases[0].hearingDetails.caseStatus",
+            "jsonPath": "caseStatus",
             "label": "advocatepayment.create.caseStatus",
             "type": "singleValueList",
             "isRequired": false,
@@ -40,7 +41,7 @@ var dat ={
           },
           {
             "name": "caseType",
-            "jsonPath": "cases[0].summon.caseType.name",
+            "jsonPath": "caseType",
             "label": "legal.create.caseType",
             "type": "singleValueList",
             "isRequired": false,
@@ -51,7 +52,7 @@ var dat ={
           },
           {
             "name": "departmentName",
-            "jsonPath": "cases[0].summon.departmentName.id",
+            "jsonPath": "departmentName",
             "label": "legal.create.departmentName",
             "type": "singleValueList",
             "isRequired": false,
@@ -63,7 +64,7 @@ var dat ={
             "name": "advocateName",
             "type": "singleValueList",
               "label": "legal.create.advocateName",
-            "jsonPath": "cases[0].advocateDetails[0].advocate.name",
+            "jsonPath": "advocateName",
             "isRequired": false,
             "isDisabled": false,
             "url":
@@ -73,7 +74,7 @@ var dat ={
             "name": "fromDate",
             "jsonPath": "fromDate",
             "label": "legal.create.fromDate",
-            "type": "number",
+            "type": "datePicker",
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": "legal.create.field.message.fromDate"
@@ -82,7 +83,7 @@ var dat ={
             "name": "toDate",
             "jsonPath": "toDate",
             "label": "legal.create.toDate",
-            "type": "number",
+            "type": "datePicker",
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": "legal.create.field.message.toDate"
@@ -126,6 +127,7 @@ var dat ={
   },
   "legal.create": {
     "numCols": 4,
+    title:"summon.create.document.title",
     "useTimestamp": true,
     "objectName": "summons",
     "groups": [
@@ -186,26 +188,37 @@ var dat ={
             "patternErrorMsg": ""
           }, {
             "name": "side",
-            "jsonPath": "summons[0].side.name",
+            "jsonPath": "summons[0].side.code",
             "label": "legal.create.side",
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name"
+            "url": "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name",
+            "depedants": [{
+                "jsonPath": "summons[0].caseType.code",
+                "type": "dropDown",
+                "pattern":"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name"
+                 // "pattern":"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType&filter=[?(@.side.code == {summons[0].side.name})]|$..code|$..name"
+                 // "pattern":"http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?tenantId=default&moduleName=lcms&masterName=caseType&filter=%5B%3F%28%40.side.code%3D%3D%22CVL%22%29%5D"
+
+                  // "pattern": "/swm-services/vehicles/_search?&vehicleTypeCode={vehicleFuellingDetails[0].vehicleType.code}|$..regNumber|$..regNumber"
+                  //"pattern": "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType&side.code={summons[0].side.name}|$.code|$.name"
+              }]
           },
           {
             "name": "caseType",
-            "jsonPath": "summons[0].caseType.name",
+            "jsonPath": "summons[0].caseType.code",
             "label": "legal.create.caseType",
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name"
+            "url":""
+           // "url": "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name"
           }, {
             "name": "caseCategory",
-            "jsonPath": "summons[0].caseCategory.name",
+            "jsonPath": "summons[0].caseCategory.code",
             "label": "legal.create.caseCategory",
             "type": "singleValueList",
             "isRequired": true,
@@ -254,7 +267,7 @@ var dat ={
             "jsonPath": "summons[0].defendant",
             "label": "legal.create.defendant",
             "type": "text",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "patternErrorMsg": ""
           },
@@ -298,7 +311,7 @@ var dat ={
           },
           {
             "name": "courtName",
-            "jsonPath": "summons[0].courtName.name",
+            "jsonPath": "summons[0].courtName.code",
             "label": "legal.create.courtName",
             "type": "singleValueList",
             "isRequired": true,
@@ -316,7 +329,7 @@ var dat ={
           },
           {
             "name": "bench",
-            "jsonPath": "summons[0].bench.name",
+            "jsonPath": "summons[0].bench.code",
             "label": "legal.create.bench",
             "type": "singleValueList",
             "isRequired": true,
@@ -326,13 +339,13 @@ var dat ={
           },   
           {
             "name": "stamp",
-            "jsonPath": "summons[0].stamp.name",
+            "jsonPath": "summons[0].stamp.code",
             "label": "legal.create.stamp",
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=stamp|$..code|$..name"
+            "url": "lcms-services/legalcase/register/_search?|$..code|$..register"
           },
           {
             "name": "sectionApplied",
@@ -536,7 +549,7 @@ var dat ={
           },
           {
             "name": "bench",
-            "jsonPath": "summons[0].bench",
+            "jsonPath": "summons[0].bench.code",
             "label": "legal.create.bench",
             "type": "singleValueList",
             "isRequired": true,
@@ -546,7 +559,7 @@ var dat ={
           },
           {
             "name": "side",
-            "jsonPath": "summons[0].side",
+            "jsonPath": "summons[0].side.code",
             "label": "legal.create.side",
             "type": "singleValueList",
             "isRequired": true,
@@ -556,7 +569,7 @@ var dat ={
           },
           {
             "name": "stamp",
-            "jsonPath": "summons[0].stamp",
+            "jsonPath": "summons[0].stamp.code",
             "label": "legal.create.stamp",
             "type": "singleValueList",
             "isRequired": true,
@@ -580,6 +593,7 @@ var dat ={
   },
   "legal.update": {
     "numCols": 4,
+    title:"summon.update.document.title",
     "useTimestamp": true,
     "objectName": "summons",
      "searchUrl": "legalcase/_search?id={id}",

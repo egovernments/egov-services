@@ -1,26 +1,193 @@
 var dat = {
-  "legal.create": {
-    numCols: 6,
+  "legal.update": {
+    numCols: 6,  
+    title:"parawisecomments.create.document.title",
+    searchUrl:
+      "/lcms-services/legalcase/case/_search?code={id}",
     url:
       "/lcms-services/legalcase/parawisecomment/_create",
     tenantIdRequired: true,
     useTimestamp: true,
-    objectName: "parawiseComments",
+    objectName: "cases",
     groups: [
-      {
-        label: "legal.parawisecomments.create.group.title.viewDetails",
-        name: "viewDetails",
+       {
+        name: "CaseTypeDetails",
+        label: "legal.create.group.title.CaseTypeDetails",
         fields: [
           {
-            name: "summonWarrantDetails",
-            jsonPath: "summonWarrantDetails",
-            label: "legal.parawisecomments.create.summonWarrantDetails",
-            pattern: "",
-            type: "button",
+            name: "referenceNo",
+            jsonPath: "cases[0].summon.summonReferenceNo",
+            label: "legal.create.referenceNo",
+            type: "text",
             isRequired: false,
-            isDisabled: false,
-            requiredErrMsg: "",
-            patternErrMsg: ""
+            isDisabled: true,
+            patternErrorMsg: ""
+          },
+          {
+            name: "summonDate",
+            jsonPath: "cases[0].summon.summonDate",
+            label: "legal.create.summonDate",
+            type: "datePicker",
+            isRequired: false,
+            isDisabled: true,
+            patternErrorMsg: ""
+          },
+          {
+            name: "year",
+            jsonPath: "cases[0].summon.year",
+            label: "legal.create.year",
+            type: "singleValueList",
+            isRequired: false,
+            isDisabled: true,
+            url:
+              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=year|$..code|$..name",
+            patternErrorMsg: ""
+          },
+          {
+            name: "caseType",
+            jsonPath: "cases[0].summon.caseType.name",
+            label: "legal.create.caseType",
+            type: "singleValueList",
+            isRequired: false,
+            isDisabled: true,
+            patternErrorMsg: "",
+            url:
+              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name"
+          },
+          {
+            name: "plantiffName",
+            jsonPath: "cases[0].summon.plantiffName",
+            label: "legal.create.plantiffName",
+            type: "text",
+            isRequired: false,
+            isDisabled: true,
+            patternErrorMsg: ""
+          },
+          {
+            name: "caseNo",
+            jsonPath: "cases[0].summon.caseNo",
+            label: "legal.create.caseNo",
+            type: "text",
+            isRequired: false,
+            isDisabled: true,
+            patternErrorMsg: ""
+          },
+          {
+            name: "plantiffAddress",
+            jsonPath: "cases[0].summon.plantiffAddress.addressLine1",
+            label: "legal.create.plantiffAddress",
+            type: "text",
+            isRequired: false,
+            isDisabled: true,
+            patternErrorMsg: ""
+          },
+          {
+            name: "caseDetails",
+            jsonPath: "cases[0].summon.caseDetails",
+            label: "legal.create.caseDetails",
+            type: "text",
+            isRequired: false,
+            isDisabled: true,
+            patternErrorMsg: ""
+          },
+          {
+            name: "defendant",
+            jsonPath: "cases[0].summon.defendant",
+            label: "legal.create.defendant",
+            type: "text",
+            isRequired: false,
+            isDisabled: true,
+            patternErrorMsg: ""
+          },
+          {
+            name: "departmentName",
+            jsonPath: "cases[0].summon.departmentName.code",
+            label: "legal.create.departmentName",
+            type: "singleValueList",
+            isRequired: false,
+            isDisabled: true,
+            patternErrorMsg: "",
+            url: "/egov-common-masters/departments/_search?|$..code|$..name"
+          },
+          {
+            name: "courtName",
+            jsonPath: "cases[0].summon.courtName.name",
+            label: "legal.create.courtName",
+            type: "singleValueList",
+            isRequired: false,
+            isDisabled: true,
+            patternErrorMsg: "",
+            url:
+              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name"
+          },
+          {
+            name: "hearingTime",
+            jsonPath: "cases[0].summon.hearingTime",
+            label: "legal.create.hearingTime",
+            type: "text",
+            isRequired: false,
+            isDisabled: true,
+            patternErrorMsg: ""
+          },
+          {
+            name: "hearingDate",
+            jsonPath: "cases[0].summon.hearingDate",
+            label: "legal.create.hearingDate",
+            type: "datePicker",
+            isRequired: false,
+            isDisabled: true,
+            patternErrorMsg: ""
+          },
+          {
+            name: "side",
+            jsonPath: "cases[0].summon.side.name",
+            label: "legal.create.side",
+            type: "singleValueList",
+            isRequired: false,
+            isDisabled: true,
+            patternErrorMsg: "",
+            url:
+              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name"
+          },
+          {
+            name: "ward",
+            jsonPath: "cases[0].summon.ward",
+            label: "legal.create.ward",
+            type: "text",
+            isRequired: false,
+            isDisabled: true,
+            patternErrorMsg: ""
+          },
+          {
+            name: "stamp",
+            jsonPath: "cases[0].summon.stamp.name",
+            label: "legal.create.stamp",
+            type: "singleValueList",
+            isRequired: false,
+            isDisabled: true,
+            patternErrorMsg: "",
+            url:
+              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=stamp|$..code|$..name"
+          },
+          {
+            name: "bench",
+            jsonPath: "cases[0].summon.bench.name",
+            label: "legal.create.bench",
+            type: "singleValueList",
+            isRequired: false,
+            isDisabled: true,
+            patternErrorMsg: "",
+            url:
+              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bench|$..code|$..name"
+          },
+          {
+            name: "sectionApplied",
+            jsonPath: "cases[0].summon.sectionApplied",
+            label: "legal.create.sectionApplied",
+            type: "text",
+            isRequired: false,
+            isDisabled: true,
+            patternErrorMsg: ""
           }
         ]
       },
@@ -34,7 +201,7 @@ var dat = {
             label: "legal.parawisecomments.create.dateOfCommentsAsked",
             pattern: "",
             type: "datePicker",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",
             patternErrMsg: ""
@@ -46,7 +213,7 @@ var dat = {
             label: "legal.parawisecomments.create.dateOfCommentsReceived",
             pattern: "",
             type: "datePicker",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",
             patternErrMsg: ""
@@ -57,7 +224,7 @@ var dat = {
             label: "legal.parawisecomments.create.dateOfInfoProvidedByHod",
             pattern: "",
             type: "datePicker",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",
             patternErrMsg: ""
@@ -68,7 +235,7 @@ var dat = {
             label: "legal.parawisecomments.create.resolutionDate",
             pattern: "",
             type: "datePicker",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",
             patternErrMsg: ""
@@ -79,7 +246,7 @@ var dat = {
             label: "legal.parawisecomments.create.referenceNo",
             pattern: "",
             type: "text",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",
             patternErrMsg: ""
@@ -90,7 +257,7 @@ var dat = {
             label: "legal.parawisecomments.create.group.parawiseComments",
             pattern: "",
             type: "textarea",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",
             patternErrMsg: ""
@@ -110,8 +277,8 @@ var dat = {
             isDisabled: false,
             patternErrMsg: "",
             fileList: {
-              name: "docName",
-              id: "fileStoreid"
+               name:"documentName",
+                id:"fileStoreId"
             },
             fileCount: 3
           }
@@ -120,6 +287,7 @@ var dat = {
       {
         name: "action",
         label: "legal.parawisecomments.create.group.title.action",
+        hide:true,
         fields: [
           {
             name: "approve",
@@ -151,7 +319,8 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: "",
             patternErrMsg: ""
-          }
+          },
+          
         ]
       }
     ]

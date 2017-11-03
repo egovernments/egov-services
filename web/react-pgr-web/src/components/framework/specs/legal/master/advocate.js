@@ -1,6 +1,7 @@
 var dat = {
   "legal.search": {
     numCols: 4,
+    title:"advocates.search.document.title",
     useTimestamp: true,
     objectName: "",
     url: "/lcms-services/legalcase/advocate/_search",
@@ -59,6 +60,7 @@ var dat = {
       }
     ],
     "result": {
+      "disableRowClick" : true,
       "header": [
         {
            "label": "legal.search.result.advocateName"
@@ -68,21 +70,33 @@ var dat = {
         },
         {
           "label": "legal.search.result.mobileNumber"
+        },{
+          "label" : "legal.search.result.actionLabels",
+          "isAction" : true,
+          "actionItems" : [{
+            label : 'Assign Advocate',
+            url : '/update/legal/assignadvocate/'
+          },{
+            label : 'Case Registration',
+            url : '/update/legal/caseregistration/'
+          }]
         }
       ],
       "values": [
         "name",
         "emailId",
-        "contactNo"
+        "contactNo",
+        "code"
       ],
       "resultPath": "advocates",
-      "rowClickUrlUpdate": "/update/legalcase/{id}",
-      "rowClickUrlView": "/view/legalcase/{id}"
+      //"rowClickUrlUpdate": "/update/legalcase/{id}",
+      //"rowClickUrlView": "/view/legalcase/{id}"
     }
   },
 
   "legal.create": {
     numCols: 4,
+    title:"advocates.create.document.title",
     useTimestamp: true,
     objectName: "advocates",
     groups: [
@@ -859,6 +873,7 @@ var dat = {
   },
   "legal.update": {
     numCols: 4,
+    title:"advocates.update.document.title",
     useTimestamp: true,
     objectName: "legleCases",
     groups: [

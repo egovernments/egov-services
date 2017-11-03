@@ -2130,7 +2130,7 @@ var localization_EN_Data = {
 "legal.create.ULBIntiated": "ULB Intiated",
 "legal.create.caseCategory": "Case Category",
 
-"advocates.create.group.title.applicantType": "Applicant Type",
+"advocates.create.group.title.applicantType": "Advocate Type",
 "advocates.create.primaryOwner": "Primary Owner",
 "advocates.create.individual": "Individual",
 "advocates.create.Agency_Organization": "Agency/Organization",
@@ -2196,7 +2196,7 @@ var localization_EN_Data = {
 "opinion.create.opinionRequestDate": "Opinion Request Date",
 "opinion.create.departmentName": "Department Name",
 "opinion.create.opinionOn": "Opinion On",
-"opinion.create.case": "Case",
+"opinion.create.case": "Case No",
 
 "legacylegal.search.title": "Search",
 "legacylegal.createundefined": " Create",
@@ -2356,7 +2356,48 @@ var localization_EN_Data = {
 "opinion.search.result.opinionOn":"Opinion On",
 "legal.search.result.emailId":"Email-id",
 "legal.search.result.mobileNumber":"Mobile Number",
-"framework.required.note": "Fields are mandatory"
+"framework.required.note": "Fields are mandatory",
+"legal.search.result.actionLabels":"Actions",
+"opinion.create.case": "Case",
+"opinion.create.case": "Case No.",
+"framework.required.note": "Fields are mandatory",
+"legal.search.result.actionLabels":"Actions",
+"opinion.create.document.title":"Opinion",
+"createstamp.create.createStampName":"Register/Stamp Name",
+"createstamp.create.isActive":"is Active",
+
+"advocates.create.document.title":"Advocate Create",
+"advocates.search.document.title":"Advocate Search",
+"advocates.update.document.title":"Advocate Update",
+
+"advocatepayment.create.document.title":"Advocate Payment Create", 
+"advocatepayment.search.document.title":"Advocate Payment Search",
+"advocatepayment.update.document.title":"Advocate Payment Update",
+
+"assignadvocate.update.document.title":"Assign Advocate Update",
+"caseregistration.update.document.title":"Case Registration Update",
+"hearingdetails.update.document.title":"Hearing Details Update",
+
+"legacylegal.create.document.title":"Legacy Legal Create",
+"legacylegal.search.document.title":"Legacy Legal Search",
+"legacylegal.update.document.title":"Legacy Legal Update",
+
+"opinion.create.document.title":"Opinion Create",
+"opinion.update.document.title":"Opinion Update",
+"opinion.search.document.title":"Opinion Search",
+
+"parawisecomments.create.document.title":"ParawiseComments Create",
+
+"register.create.document.title":"Register Create",
+"register.search.document.title":"Register Search",
+"register.update.document.title":"Register Update",
+
+"summon.create.document.title":"Summon Create",
+"summon.search.document.title":"Summon Search",
+"summon.update.document.title":"Summon Update",
+
+"vakalatnama.create.document.title":"Vakalatnama Create"
+
 
 
 
@@ -3903,7 +3944,7 @@ var localization_MR_Data = {
 "legal.create.ULBIntiated": "ULB Intiated-Marathi",
 "legal.create.caseCategory": "Case Category-marathi",
 
-"advocates.create.group.title.applicantType": "Applicant Type-Marathi",
+"advocates.create.group.title.applicantType": "Advocate Type-Marathi",
 "advocates.create.primaryOwner": "Primary Owner-Marathi",
 "advocates.create.individual": "Individual-Marathi",
 "advocates.create.Agency_Organization": "Agency/Organization-Marathi",
@@ -3953,7 +3994,7 @@ var localization_MR_Data = {
 "opinion.create.opinionRequestDate": "Opinion Request Date-Marathi",
 "opinion.create.departmentName": "Department Name-Marathi",
 "opinion.create.opinionOn": "Opinion On-Marathi",
-"opinion.create.case": "Case-Marathi",
+"opinion.create.case": "Case No.-Marathi",
 
 "advocatepayment.create.group.title.AdvocatePaymentDetails": "Advocate Request for Payment--Marathi",
 "advocatepayment.create.advocateName":"Advocate Name-Marathi",
@@ -4135,6 +4176,44 @@ var localization_MR_Data = {
 "legal.search.result.emailId":"Email-id-marathi",
 "legal.search.result.mobileNumber":"Mobile Number-marathi",
 "framework.required.note": "Fields are mandatory-marathi",
+
+"legal.search.result.actionLabels":"Actions-marathi",
+"opinion.create.document.title":"Opinion -marathi",
+"createstamp.create.createStampName":"Register/Stamp Name-marathi",
+"createstamp.create.isActive":"is Active-marathi",
+
+
+"advocates.create.document.title":"Advocate Create-marathi",
+"advocates.search.document.title":"Advocate Search-marathi",
+"advocates.update.document.title":"Advocate Update-marathi",
+
+"advocatepayment.create.document.title":"Advocate Payment Create-marathi",
+"advocatepayment.search.document.title":"Advocate Payment Search-marathi",
+"advocatepayment.update.document.title":"Advocate Payment Update-marathi",
+
+"assignadvocate.update.document.title":"Assign Advocate Update-marathi",
+"caseregistration.update.document.title":"Case Registration Update-marathi",
+"hearingdetails.update.document.title":"Hearing Details Update-marathi",
+
+"legacylegal.create.document.title":"Legacy Legal Create-marathi",
+"legacylegal.search.document.title":"Legacy Legal Search-marathi",
+"legacylegal.update.document.title":"Legacy Legal Update-marathi",
+
+"opinion.create.document.title":"Opinion Create-marathi",
+"opinion.update.document.title":"Opinion Update-marathi",
+"opinion.search.document.title":"Opinion Search-marathi",
+
+"parawisecomments.create.document.title":"ParawiseComments Create-marathi",
+
+"register.create.document.title":"Register Create-marathi",
+"register.search.document.title":"Register Search-marathi",
+"register.update.document.title":"Register Update-marathi",
+
+"summon.create.document.title":"Summon Create",
+"summon.search.document.title":"Summon Search",
+"summon.update.document.title":"Summon Update",
+
+"vakalatnama.create.document.title":"Vakalatnama Create",
 
 
 //SWM

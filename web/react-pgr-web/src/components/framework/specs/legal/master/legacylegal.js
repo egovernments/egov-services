@@ -1,6 +1,7 @@
 var dat = {
   "legal.search": {
     numCols: 4,
+    title:"legacylegal.search.document.title",
     useTimestamp: true,
     objectName: "",
     url: "/legalcase/_search",
@@ -171,6 +172,7 @@ var dat = {
   },
   "legal.create": {
     numCols: 4,
+    title:"legacylegal.create.document.title",
     useTimestamp: true,
     objectName: "cases",
     groups: [
@@ -846,6 +848,7 @@ var dat = {
   },
   "legal.update": {
     numCols: 4,
+    title:"legacylegal.update.document.title",
     useTimestamp: true,
     objectName: "summons",
     searchUrl: "legalcase/_search?id={id}",

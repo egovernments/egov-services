@@ -1,27 +1,32 @@
 var dat = {
   "legal.search": {
     numCols: 4,
+    title:"opinion.search.document.title",
     useTimestamp: true,
     objectName: "",
     url: "/lcms-services/legalcase/opinion/_search",
-    groups: [
+   groups: [
       {
         name: "search",
         label: "opinion.search.title",
         fields: [
           {
-            label: "opinion.createundefined",
-            type: "",
+            name: "opinionFromDate",
+            jsonPath: "opinionFromDate",
+            label: "opinion.createopinionFromDate",
+            type: "datePicker",
+            isRequired: false,
             isDisabled: false,
-            patternErrorMsg: "opinion.create.field.message.undefined"
+            patternErrorMsg: "opinion.create.field.message.opinionRequestDate"
           },
           {
-            name: "sortProperty",
-            jsonPath: "sort",
-            label: "opinion.createsortProperty",
-            type: "text",
+            name: "opinionToDate",
+            jsonPath: "opinionToDate",
+            label: "opinion.createopinionToDate",
+            type: "datePicker",
+            isRequired: false,
             isDisabled: false,
-            patternErrorMsg: "opinion.create.field.message.sortProperty"
+            patternErrorMsg: "opinion.create.field.message.opinionRequestDate"
           },
           {
             name: "ids",
@@ -32,13 +37,14 @@ var dat = {
             patternErrorMsg: "opinion.create.field.message.ids"
           },
           {
-            name: "opinionRequestDate",
-            jsonPath: "opinionRequestDate",
-            label: "opinion.createopinionRequestDate",
-            type: "number",
+            name: "departMentName",
+            jsonPath: "departMentName",
+            label: "opinion.createdepartMentName",
+            type: "singleValueList",
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: "opinion.create.field.message.opinionRequestDate"
+            patternErrorMsg: "opinion.create.field.message.departMentName",
+            url: "/egov-common-masters/departments/_search?|$..code|$..name"
           },
           {
             name: "opinionBy",
@@ -48,16 +54,8 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: "opinion.create.field.message.opinionBy"
-          },
-          {
-            name: "departMentName",
-            jsonPath: "departMentName",
-            label: "opinion.createdepartMentName",
-            type: "singleValueList",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: "opinion.create.field.message.departMentName"
           }
+          
         ]
       }
     ],
@@ -68,13 +66,15 @@ var dat = {
         { label: "opinion.search.result.opinionOn" }
       ],
       values: ["id", "departMentName", "opinionOn"],
-      resultPath: "legleCases",
+      resultPath: "opinions",
       rowClickUrlUpdate: "/update/opinion/{id}",
       rowClickUrlView: "/view/opinion/{id}"
     }
   },
   "legal.create": {
     numCols: 4,
+    title:"opinion.create.document.title",
+    title:"opinion.create.document.title",
     useTimestamp: true,
     objectName: "opinions",
     groups: [
@@ -93,7 +93,7 @@ var dat = {
           },
           {
             name: "departmentName",
-            jsonPath: "opinions[0].departmentName",
+            jsonPath: "opinions[0].departmentName.code",
             label: "opinion.create.departmentName",
             type: "singleValueList",
             isRequired: true,
@@ -108,7 +108,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: "",
-            url: "/lcms-services/legalcase/case/_search?|$..summon.summonReferenceNo|$..summon.caseNo"
+            url: "/lcms-services/legalcase/case/_search?|$..summon.caseNo|$..summon.summonReferenceNo|"
           },
           {
             name: "opinionOn",
@@ -145,6 +145,7 @@ var dat = {
   },
   "legal.view": {
     numCols: 4,
+    title:"opinion.view.document.title",
     useTimestamp: true,
     objectName: "opinions",
     groups: [
@@ -187,6 +188,7 @@ var dat = {
   },
   "legal.update": {
     numCols: 4,
+    title:"opinion.update.document.title",
     useTimestamp: true,
     objectName: "opinions",
     groups: [

@@ -1,6 +1,7 @@
 var dat = {
   "legal.update": {
     numCols: 4,
+    title:"assignadvocate.update.document.title",
     useTimestamp: true,
     objectName: "cases",
     searchUrl:
@@ -97,7 +98,7 @@ var dat = {
           },
           {
             name: "departmentName",
-            jsonPath: "cases[0].summon.departmentName.id",
+            jsonPath: "cases[0].summon.departmentName.code",
             label: "legal.create.departmentName",
             type: "singleValueList",
             isRequired: true,

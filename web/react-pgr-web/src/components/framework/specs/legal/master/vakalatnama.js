@@ -1,6 +1,7 @@
 var dat = {
   "legal.create": {
     numCols: 12 / 3,
+    title:"vakalatnama.create.document.title",
     url:
       "/lcms-services/legalcase/case/_vakalatnamageneration",
     tenantIdRequired: true,

@@ -26,7 +26,8 @@ class Search extends Component {
       showResult: false,
       resultList : {
         resultHeader: [],
-        resultValues: []
+        resultValues: [],
+        disableRowClick : false
       },
       values: []
     }
@@ -129,9 +130,12 @@ class Search extends Component {
 
     Api.commonApiPost(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, formData, {}, null, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].useTimestamp).then(function(res){
       self.props.setLoadingStatus('hide');
-      var resultList = {
-        resultHeader: [{label: "#"}, ...self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.header],
-        resultValues: []
+      var result = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result;
+     
+          var resultList = {
+        resultHeader: [{label: "#"}, ...result.header],
+        resultValues: [],
+        disableRowClick:result.disableRowClick || false
       };
       var specsValuesList = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.values;
       var values = _.get(res, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.resultPath);
@@ -451,6 +455,9 @@ class Search extends Component {
             }
       });
   }
+   rowButtonClickHandler = (buttonUrl, code) => {
+      this.props.setRoute(buttonUrl+code);
+ }  
 
   rowClickHandler = (index) => {
    var value = this.state.values[index];
@@ -503,7 +510,7 @@ class Search extends Component {
 
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
-    let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler} = this;
+    let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler,rowButtonClickHandler} = this;
     let {showResult, resultList} = this.state;
     // console.log(formData);
     // console.log(this.props.dropDownData);
@@ -526,7 +533,7 @@ class Search extends Component {
             <UiButton item={{"label": "Search", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>&nbsp;&nbsp;
             <UiButton item={{"label": "Reset", "uiType":"button", "primary": false}} ui="google" handler={this.resetForm}/>
             <br/>
-            {showResult && <UiTable resultList={resultList} rowClickHandler={rowClickHandler}/>}
+            {showResult && <UiTable resultList={resultList} rowClickHandler={rowClickHandler} rowButtonClickHandler={rowButtonClickHandler}/>}
           </div>
         </form>
       </div>

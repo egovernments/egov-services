@@ -40,7 +40,7 @@ class UiSelectField extends Component {
 				}
 			}
 
-			var response = Api.commonApiPost(context, id, {}, "", useTimestamp || false).then(function(response) {
+			var response = Api.commonApiPost(context, id, {}, "", useTimestamp || false, false, "", "", item.isStateLevel).then(function(response) {
 				if(response) {
 					let keys=jp.query(response,splitArray[1].split("|")[1]);
 					let values=jp.query(response,splitArray[1].split("|")[2]);

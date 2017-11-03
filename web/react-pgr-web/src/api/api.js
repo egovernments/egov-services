@@ -47,12 +47,12 @@ function extractErrorMsg(errorObj, localeCode, descriptionCode){
 
 
 module.exports = {
-    commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false, isTimeLong = false, noPageSize = false, authToken="", userInfo = "") => {
+    commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false, isTimeLong = false, noPageSize = false, authToken="", userInfo = "", isStateLevel = false) => {
         var url = context;
         if(url && url[url.length-1] === "/")
             url = url.substring(0, url.length-1);
         if (!doNotOverride)
-            url += "?tenantId=" + (localStorage.getItem("tenantId") || 'default');
+            url += "?tenantId=" + (localStorage.getItem("tenantId") ? (isStateLevel ? localStorage.getItem("tenantId").split(".")[0] : localStorage.getItem("tenantId")) : 'default');
         else
             url += "?"
         for (var variable in queryObject) {

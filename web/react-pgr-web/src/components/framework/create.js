@@ -804,7 +804,7 @@ class Report extends Component {
           				}
           			}
 
-                Api.commonApiPost(context,id).then(function(response) {
+                Api.commonApiPost(context, id, {}, false, false, false, "", "", value.isStateLevel).then(function(response) {
                   if(response) {
                     let keys=jp.query(response,splitArray[1].split("|")[1]);
                     let values=jp.query(response,splitArray[1].split("|")[2]);

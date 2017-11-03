@@ -340,8 +340,8 @@ const Main = () => {
       <Route exact path= {base + '/transactionTransfer/asset/generalAsset'} component={transactionGeneral}/>
       <Route exact path= {base + '/print/report/:templatePath'} component={TemplateParser}/>
 
-      {/*Assets*/}
-      <Route exact path= {base + '/non-framework/asset/master/assetImmovableCreate'} component={assetImmovableCreate}/>
+      //Assets
+      <Route exact path= {base + '/non-framework/asset/master/assetImmovableCreate/:id?'} component={assetImmovableCreate}/>
       <Route exact path= {base + '/non-framework/asset/master/assetMovableCreate'} component={assetMovableCreate}/>
       <Route exact path= {base + '/non-framework/asset/master/assetImmovableView/:id'} component={assetImmovableView}/>
 

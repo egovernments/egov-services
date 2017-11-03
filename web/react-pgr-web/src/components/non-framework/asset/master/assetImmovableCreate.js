@@ -188,49 +188,31 @@ class assetImmovableCreate extends Component {
     let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let hashLocation = window.location.hash;
     let self = this;
-
+    var action ="";
     specifications =typeof(results)=="string" ? JSON.parse(results) : results;
-    let obj = specifications[`asset.create`];
+    if (this.props.match.params.id) {
+      action = "update";
+    } else {
+      action = "create";
+    }
+
+    let obj = specifications[`asset.${action}`];
     reqRequired = [];
     self.setLabelAndReturnRequired(obj);
     initForm(reqRequired);
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName('asset');
-    setActionName('create');
+    setActionName(action);
 
-    if(hashLocation.split("/").indexOf("update") == 1) {
-      var url = specifications[`asset.create`].searchUrl.split("?")[0];
-      var id = self.props.match.params.id || self.props.match.params.master;
-      var query = {
-        [specifications[`asset.create`].searchUrl.split("?")[1].split("=")[0]]: id
-      };
-      if(window.location.href.indexOf("?") > -1) {
-       var qs =  window.location.href.split("?")[1];
-       if(qs && qs.indexOf("=") > -1) {
-         qs = qs.indexOf("&") > -1 ? qs.split("&") : [qs];
-         for(var i=0; i<qs.length; i++) {
-           query[qs[i].split("=")[0]] = qs[i].split("=")[1];
-         }
-       }
-     }
-      Api.commonApiPost(url, query, {}, false, specifications[`asset.create`].useTimestamp).then(function(res){
-          if(specifications[`asset.create`].isResponseArray) {
-            var obj = {};
-            _.set(obj, specifications[`asset.create`].objectName, jp.query(res, "$..[0]")[0]);
-            self.props.setFormData(obj);
-            self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), 'asset', 'create', specifications[`asset.create`].objectName);
-          } else {
-            self.props.setFormData(res);
-            self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), 'asset', 'create', specifications[`asset.create`].objectName);
-          }
-            let obj1 = specifications[`asset.create`];
+    if(self.props.match.params.id) {
+      Api.commonApiPost("asset-services-maha/assets/_search",{id:self.props.match.params.id}, {}, false, false, false, "", "", false).then(function(response){
+        console.log(response);
+        setFormData({Asset: response.Assets[0]});
 
-          self.depedantValue(obj1.groups);
-      }, function(err){
-
-      })
-
+      },function(err) {
+            console.log(err);
+        });
     } else {
       var formData = {};
       if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
@@ -272,7 +254,7 @@ class assetImmovableCreate extends Component {
       var depericiationValue = {};
     //  var customFieldsArray = [];
     //  var customArr;
-      Api.commonApiPost("/egov-mdms-service/v1/_get",{"moduleName":"ASSET", "masterName":"AssetCategory", "filter": "%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22IMMOVABLE%22)%5D%0A"}).then(function(response)
+      Api.commonApiPost("/egov-mdms-service/v1/_get",{"moduleName":"ASSET", "masterName":"AssetCategory", "filter": "%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22IMMOVABLE%22)%5D%0A"}, {}, false, false, false, "", "", true).then(function(response)
      {
 
        if(response) {
@@ -328,6 +310,12 @@ class assetImmovableCreate extends Component {
                           customTemp.type = 'table';
                           break;
               }
+              if (customTemp.type == 'table') {
+                if (response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values.length) {
+
+                }
+
+              }
               if(customTemp.type == 'singleValueList'){
                 if(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values.length){
                     var handleDropdown = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values;
@@ -355,7 +343,6 @@ class assetImmovableCreate extends Component {
           depericiationValue[catId] = response.MdmsRes.ASSET.AssetCategory[i].depreciationRate;
 
         }
-        console.log(depericiationValue);
         self.setState({
             customFieldsGen: customSpecs,
             depericiationValue
@@ -831,7 +818,7 @@ formData.Asset.assetAttributes = assetAttributes;
 
       if(property=="Asset.assetCategory.id"){
         if (self.state.depericiationValue[e.target.value]) {
-          console.log(self.state.depericiationValue[e.target.value]);
+
           var newVal = Math.round(100/self.state.depericiationValue[e.target.value]);
           this.props.handleChange({target:{value: newVal}},"Asset.anticipatedLife",true,"","","");
         }
@@ -850,7 +837,7 @@ formData.Asset.assetAttributes = assetAttributes;
             }
           ];
 
-console.log(fields);
+
 
           for(var x=0; x<fields.length; x++){
             var formFin = {};

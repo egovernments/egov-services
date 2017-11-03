@@ -59,7 +59,7 @@ import lombok.ToString;
 public class DepartmentResponse {
 
 	@JsonProperty("ResponseInfo")
-	private DemandResponseInfo responseInfo;
+	private DepartmentResponseInfo responseInfo;
 
 	@JsonProperty("Department")
 	private List<Department> department = new ArrayList<Department>();

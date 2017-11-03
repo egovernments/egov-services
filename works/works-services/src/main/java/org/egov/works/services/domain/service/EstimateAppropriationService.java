@@ -6,10 +6,10 @@ import java.util.UUID;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.services.config.PropertiesManager;
+import org.egov.works.services.web.contract.AuditDetails;
+import org.egov.works.services.web.contract.EstimateAppropriation;
 import org.egov.works.services.web.contract.EstimateAppropriationRequest;
 import org.egov.works.services.web.contract.RequestInfo;
-import org.egov.works.services.web.model.AuditDetails;
-import org.egov.works.services.web.model.EstimateAppropriation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

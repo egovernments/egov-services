@@ -1,13 +1,13 @@
 package org.egov.works.services.domain.repository.builder;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.egov.works.services.config.PropertiesManager;
-import org.egov.works.services.web.model.DocumentDetailSearchCriteria;
+import org.egov.works.services.web.contract.DocumentDetailSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class DocumentDetailQueryBuilder {

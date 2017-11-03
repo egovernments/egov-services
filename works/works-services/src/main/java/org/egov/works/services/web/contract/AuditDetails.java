@@ -1,4 +1,4 @@
-package org.egov.works.services.web.model;
+package org.egov.works.services.web.contract;
 
 import java.util.Objects;
 
@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
  * Collection of audit related fields used by most models
  */
 @ApiModel(description = "Collection of audit related fields used by most models")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-31T05:44:32.720Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T10:45:32.643Z")
 
 public class AuditDetails   {
   @JsonProperty("createdBy")

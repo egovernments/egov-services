@@ -3,13 +3,12 @@ package org.egov.lcms.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.factory.ResponseFactory;
-import org.egov.lcms.models.Advocate;
 import org.egov.lcms.models.AdvocateDetails;
-import org.egov.lcms.models.AdvocateSearchCriteria;
 import org.egov.lcms.models.Case;
 import org.egov.lcms.models.CaseRequest;
 import org.egov.lcms.models.CaseResponse;
@@ -311,7 +310,8 @@ public class CaseService {
 				}
 				kafkaTemplate.send(propertiesManager.getCreateLegacyHearing(), caseRequest);
 			}
-
+			
+			kafkaTemplate.send(propertiesManager.getCreateLegacyCaseIndexer(), caseRequest);
 		}
 
 		return new CaseResponse(responseFactory.getResponseInfo(caseRequest.getRequestInfo(), HttpStatus.CREATED),

@@ -142,10 +142,10 @@ public class PropertiesManager {
 	@Value("${case.mandatory.department.person.message}")
 	private String requiredDepartmentPersonMessage;
 
-	@Value("${case.mandatory.department.person.message}")
+	@Value("${vakalatnama.isgenerate.code}")
 	private String isVakalatNamaRequiredCode;
 
-	@Value("${case.mandatory.department.person.message}")
+	@Value("${vakalatnama.isgenerate.message}")
 	private String isVakalatNamaRequiredMessage;
 
 	@Value("${advocate.ulb.name}")
@@ -478,5 +478,11 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.mdms.searchpath}")
 	private String mdmsSearhPath;
+	
+	@Value("${egov.lcms.create.summon.indexer}")
+    private String pushSummonCreateToIndexer;
+	
+	@Value("${egov.lcms.legacy.case.create.indexer}")
+    private String createLegacyCaseIndexer;
 }
 

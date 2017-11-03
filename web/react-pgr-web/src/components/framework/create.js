@@ -266,9 +266,28 @@ class Report extends Component {
     if(!value) return;
     var url = autoObject.autoCompleteUrl.split("?")[0];
     var hashLocation = window.location.hash;
-    var query = {
-        [autoObject.autoCompleteUrl.split("?")[1].split("=")[0]]: value
-    };
+    var parameters = autoObject.autoCompleteUrl.substr(autoObject.autoCompleteUrl.indexOf("?")+1);
+    if(parameters.split('&').length>1) {
+      var params = parameters.split('&');
+      var query = {};
+      for(var i=0; i<params.length; i++) {
+        if(params[i].indexOf('{')>0) {
+          params[i]= params[i].replace(params[i].substr(params[i].indexOf("{"), params[i].indexOf("}")+1-params[i].indexOf("{")), value);
+        }
+        var index = params[i].indexOf("=");
+        var id = params[i].substr(0, index);
+        var val = params[i].substr(index+1);
+        query[id]= val;
+      }
+    }
+    else {
+      var param = parameters.replace(parameters.substr(parameters.indexOf("{"), parameters.indexOf("}")+1-parameters.indexOf("{")), value);
+      var index = param.indexOf("=");
+      var query = {
+        [param.substr(0,index)]: param.substr(index+1)
+      };
+    }
+    
     Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
         var formData = {...self.props.formData};
         for(var key in autoObject.autoFillFields) {

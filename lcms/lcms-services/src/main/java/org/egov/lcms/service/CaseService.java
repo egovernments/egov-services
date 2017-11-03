@@ -207,10 +207,13 @@ public class CaseService {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		for ( Case caseObj : cases){
+			
+			if ( caseObj.getSummon()!=null && caseObj.getSummon().getDepartmentName()!=null && caseObj.getSummon().getDepartmentName().getCode()!=null){
 			DepartmentResponse departmentResponse = departmentRepository.getDepartments(caseObj.getTenantId(), caseObj.getSummon().getDepartmentName().getCode(), requestInfoWrapper);
 			if ( departmentResponse.getDepartment()!=null && departmentResponse.getDepartment().size()>0){
 			caseObj.getSummon().setDepartmentName(departmentResponse.getDepartment().get(0));
 			}
+		}
 		}
 		
 	}

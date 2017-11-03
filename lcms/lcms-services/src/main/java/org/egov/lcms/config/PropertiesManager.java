@@ -432,6 +432,7 @@ public class PropertiesManager {
 	@Value("${lcms.casevoucher.error.code}")
 	private String caseVoucherResponseErrorCode;
 	
+
 	@Value("${lcms.advocatedetails.error.msg}")
 	private String advocateDetailsResponseErrorMsg;
 	
@@ -464,4 +465,18 @@ public class PropertiesManager {
 	
 	@Value("${lcms.register.error.msg}")
 	private String registerErrorMsg;
+
+
+	@Value("${egov.services.common-masters.hostname}")
+	private String commonServiceBasepath;
+	
+	@Value("${egov.services.common.masters.base.path}")
+	private String commonServiceSearchPath;
+	
+	@Value("${egov.services.mdms-services.hostname}")
+	private String mdmsBasePath;
+	
+	@Value("${egov.services.mdms.searchpath}")
+	private String mdmsSearhPath;
 }
+

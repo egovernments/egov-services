@@ -1,22 +1,31 @@
 package org.egov.lcms.service;
 
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.factory.ResponseFactory;
+import org.egov.lcms.models.Advocate;
 import org.egov.lcms.models.AdvocateDetails;
+import org.egov.lcms.models.AdvocateSearchCriteria;
 import org.egov.lcms.models.Case;
 import org.egov.lcms.models.CaseRequest;
 import org.egov.lcms.models.CaseResponse;
 import org.egov.lcms.models.CaseSearchCriteria;
+import org.egov.lcms.models.DepartmentResponse;
 import org.egov.lcms.models.HearingDetails;
 import org.egov.lcms.models.ParaWiseComment;
+import org.egov.lcms.models.RequestInfoWrapper;
+import org.egov.lcms.repository.AdvocateRepository;
 import org.egov.lcms.repository.CaseSearchRepository;
+import org.egov.lcms.repository.DepartmentRepository;
+import org.egov.lcms.repository.MdmsRepository;
 import org.egov.lcms.repository.OpinionRepository;
 import org.egov.lcms.util.UniqueCodeGeneration;
 import org.egov.lcms.utility.SummonValidator;
+import org.egov.mdms.model.MdmsResponse;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +55,15 @@ public class CaseService {
 
 	@Autowired
 	private SummonValidator summonValidator;
+	
+	@Autowired
+	DepartmentRepository departmentRepository;
+	
+	@Autowired
+	AdvocateRepository advocateRepository;
+	
+	@Autowired
+	MdmsRepository mdmsRepository;
 
 	public CaseResponse createParaWiseComment(CaseRequest caseRequest) throws Exception {
 		List<Case> cases = caseRequest.getCases();
@@ -144,12 +162,55 @@ public class CaseService {
 	 * @param requestInfo
 	 * @return {@link CaseResponse}
 	 */
-	public CaseResponse caseSearch(CaseSearchCriteria caseSearchCriteria, RequestInfo requestInfo) {
+	public CaseResponse caseSearch(CaseSearchCriteria caseSearchCriteria, RequestInfo requestInfo) throws Exception {
 
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
 		List<Case> cases = caseSearchRepository.searchCases(caseSearchCriteria);
+		addDepartmentDetails(cases,requestInfo);
+		//addMasterDetails(cases,requestInfo);
+		
 
 		return new CaseResponse(responseFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), cases);
 
+	}
+
+	/**
+	 * 
+	 * @param cases
+	 *//*
+	private void addMasterDetails(List<Case> cases,RequestInfo requestInfo) throws Exception {
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		Map<String, String> masterMap = new HashMap<>();
+		for (Case caseObj : cases){
+			masterMap.put("caseType", caseObj.getSummon().getCaseType().getCode());
+			masterMap.put("caseCategory", caseObj.getSummon().getCaseCategory().getCode());
+			MdmsResponse mdmsResponse = mdmsRepository.getMasterData(caseObj.getTenantId(), masterMap, requestInfoWrapper);
+			mdmsResponse.getMdmsRes().get("caseType");
+		}
+		
+		
+		
+		
+		
+	}*/
+
+	/**
+	 * This will Add the department details for the given cases 
+	 * @param cases
+	 * @param requestInfo
+	 * @throws Exception
+	 */
+	private void addDepartmentDetails(List<Case> cases,RequestInfo requestInfo)  throws Exception{
+		
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		for ( Case caseObj : cases){
+			DepartmentResponse departmentResponse = departmentRepository.getDepartments(caseObj.getTenantId(), caseObj.getSummon().getDepartmentName().getCode(), requestInfoWrapper);
+			caseObj.getSummon().setDepartmentName(departmentResponse.getDepartment().get(0));
+		}
+		
 	}
 
 	/**

@@ -103,7 +103,7 @@ public class HRConfigurationService {
         final HRConfigurationResponse hrConfigurationResponse = restTemplate.postForObject(url, request,
                 HRConfigurationResponse.class);
         if (hrConfigurationResponse != null && !hrConfigurationResponse.getHrConfiguration().isEmpty()) {
-            values = hrConfigurationResponse.getHrConfiguration().get("Compensatory leave validity");
+            values = hrConfigurationResponse.getHrConfiguration().get("Compensatory_leave_validity");
             leaveValidity = values.get(0);
         }
         return leaveValidity;

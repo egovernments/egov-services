@@ -13,6 +13,10 @@ public class DashboardResponse {
 
     private Integer count;
 
+    private Integer openComplaintsCount;
+
+    private Integer closedComplaintsCount;
+
     private String month;
 
     private String year;
@@ -32,8 +36,8 @@ public class DashboardResponse {
 
     public org.egov.pgrrest.read.web.contract.DashboardResponse toWeeklyContract(DashboardResponse response){
         return  org.egov.pgrrest.read.web.contract.DashboardResponse.builder()
-                .count(response.getStatus().equalsIgnoreCase("REGISTERED") ? response.getCount() : 0)
-                .closedCount(response.getStatus().equalsIgnoreCase("COMPLETED") ? response.getCount() : 0)
+                .count(response.getOpenComplaintsCount())
+                .closedCount(response.getClosedComplaintsCount())
                 .name(response.day.trim().concat("-").concat(response.date))
                 .build();
     }

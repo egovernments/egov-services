@@ -12,8 +12,8 @@ public class DailyCountRowMapper implements RowMapper<DashboardResponse> {
     @Override
     public DashboardResponse mapRow(ResultSet resultSet, int i) throws SQLException {
         return DashboardResponse.builder()
-            .count(resultSet.getInt("count"))
-            .status(resultSet.getString("status"))
+            .openComplaintsCount(resultSet.getInt("regcount"))
+            .closedComplaintsCount(resultSet.getInt("closedcount"))
             .day(resultSet.getString("day"))
             .date(resultSet.getString("date"))
             .build();

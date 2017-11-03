@@ -40,11 +40,20 @@ public class DashBoardRepository {
     }
 
     public List<DashboardResponse> getWeeklyRegisteredAndClosedComplaintsCount(String tenantId){
-        String query = "select count(*) as count, status, to_char(date_trunc('day',createddate), 'DAY') as day, to_char(date_trunc('day',createddate), 'dd') as date from submission " +
-            "where servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId and keyword = 'complaint')" +
-            "and status in ('REGISTERED', 'COMPLETED') and createddate > current_date - interval '6' day and tenantid = :tenantId" +
-            " group by date_trunc('day',createddate), status " +
-            " order by date_trunc('day',createddate), status";
+
+        String query = "select a.regcount, b.closedcount, a.day, a.date from" +
+            " (select count(*) as regcount, to_char(date_trunc('day',createddate), 'DAY') as day, to_char(date_trunc('day',createddate), 'dd') as date from submission" +
+            " where servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId and keyword in ('complaint', 'Complaint'))" +
+            " and createddate > current_date - interval '6' day and tenantid = :tenantId" +
+            " group by date_trunc('day',createddate)" +
+            " order by date_trunc('day',createddate) ASC ) as a," +
+            " (select count(*) as closedcount, to_char(date_trunc('day',createddate), 'DAY') as day, to_char(date_trunc('day',createddate), 'dd') as date from submission" +
+            " where servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId and keyword in ('complaint', 'Complaint'))" +
+            " and createddate > current_date - interval '6' day and tenantid = :tenantId" +
+            " and status not in ('COMPLETED', 'REJECTED', 'WITHDRAWN')" +
+            " group by date_trunc('day',createddate)" +
+            " order by date_trunc('day',createddate) ASC) as b" +
+            " where a.day = b.day";
 
         return namedParameterJdbcTemplate.query(query,getSearchMap(tenantId),dailyCountRowMapper);
     }

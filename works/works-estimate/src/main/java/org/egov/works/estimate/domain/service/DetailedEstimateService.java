@@ -5,22 +5,30 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import net.minidev.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.works.commons.domain.model.AuditDetails;
-import org.egov.works.commons.web.contract.RequestInfo;
 import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.config.WorksEstimateServiceConstants;
 import org.egov.works.estimate.domain.repository.DetailedEstimateRepository;
 import org.egov.works.estimate.utils.EstimateUtils;
+import org.egov.works.estimate.web.contract.Asset;
+import org.egov.works.estimate.web.contract.AssetsForEstimate;
+import org.egov.works.estimate.web.contract.AuditDetails;
+import org.egov.works.estimate.web.contract.DetailedEstimate;
+import org.egov.works.estimate.web.contract.DetailedEstimateDeduction;
 import org.egov.works.estimate.web.contract.DetailedEstimateRequest;
 import org.egov.works.estimate.web.contract.DetailedEstimateSearchContract;
-import org.egov.works.estimate.web.model.*;
+import org.egov.works.estimate.web.contract.EstimateActivity;
+import org.egov.works.estimate.web.contract.EstimateOverhead;
+import org.egov.works.estimate.web.contract.FinancialYear;
+import org.egov.works.estimate.web.contract.MultiYearEstimate;
+import org.egov.works.estimate.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
+
+import net.minidev.json.JSONArray;
 
 @Service
 @Transactional(readOnly= true)

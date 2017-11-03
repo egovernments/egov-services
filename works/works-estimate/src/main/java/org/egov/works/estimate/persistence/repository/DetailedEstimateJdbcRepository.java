@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.common.persistence.repository.JdbcRepository;
-import org.egov.works.estimate.web.contract.DetailedEstimateEntity;
+import org.egov.works.estimate.persistence.helper.DetailedEstimateHelper;
+import org.egov.works.estimate.web.contract.DetailedEstimate;
 import org.egov.works.estimate.web.contract.DetailedEstimateSearchContract;
-import org.egov.works.estimate.web.model.DetailedEstimate;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ public class DetailedEstimateJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egw_detailedestimate";
 
-	public List<DetailedEstimateEntity> search(DetailedEstimateSearchContract detailedEstimateSearchContract) {
+	public List<DetailedEstimateHelper> search(DetailedEstimateSearchContract detailedEstimateSearchContract) {
 		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
 		Map<String, Object> paramValues = new HashMap<>();
@@ -165,7 +165,7 @@ public class DetailedEstimateJdbcRepository extends JdbcRepository {
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(org.egov.works.estimate.web.contract.DetailedEstimateEntity.class);
+		BeanPropertyRowMapper row = new BeanPropertyRowMapper(DetailedEstimateHelper.class);
 
 		return namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
 	}

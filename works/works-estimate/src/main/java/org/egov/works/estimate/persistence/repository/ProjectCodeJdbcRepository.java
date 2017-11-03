@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.common.persistence.repository.JdbcRepository;
+import org.egov.works.estimate.web.contract.ProjectCode;
 import org.egov.works.estimate.web.contract.ProjectCodeSearchContract;
-import org.egov.works.estimate.web.model.ProjectCode;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 

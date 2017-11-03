@@ -1,24 +1,20 @@
 package org.egov.works.estimate.web.contract;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-
-import javax.validation.Valid;
-
-import org.egov.works.commons.web.contract.RequestInfo;
-import org.egov.works.estimate.web.model.ProjectCode;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.ArrayList;
+import java.util.List;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
  * Contract class to send response. Array of Project Code items are used in case of search results, also multiple Project Code item is used for create and update
  */
 @ApiModel(description = "Contract class to send response. Array of Project Code items are used in case of search results, also multiple Project Code item is used for create and update")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-26T10:16:48.326Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
 
 public class ProjectCodeRequest   {
   @JsonProperty("requestInfo")

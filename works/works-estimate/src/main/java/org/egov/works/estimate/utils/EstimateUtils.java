@@ -1,12 +1,13 @@
 package org.egov.works.estimate.utils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.egov.works.commons.web.contract.RequestInfo;
 import org.egov.works.estimate.web.contract.MasterDetails;
 import org.egov.works.estimate.web.contract.MdmsCriteria;
 import org.egov.works.estimate.web.contract.MdmsRequest;
 import org.egov.works.estimate.web.contract.MdmsResponse;
 import org.egov.works.estimate.web.contract.ModuleDetails;
+import org.egov.works.estimate.web.contract.RequestInfo;
+import org.egov.works.estimate.web.contract.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -67,5 +68,17 @@ public class EstimateUtils {
 		mdmsResponse = restTemplate.postForObject(mdmsBySearchCriteriaUrl, mdmsRequest, MdmsResponse.class);
 
 		return mdmsResponse.getMdmsRes().get(moduleName).get(objectName);
+	}
+	
+	/**
+	 * @param requestInfo
+	 * @return responseInfo
+	 */
+	public ResponseInfo getResponseInfo(RequestInfo requestInfo) {
+		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setApiId(requestInfo.getApiId());
+		responseInfo.setVer(requestInfo.getVer());
+		responseInfo.setResMsgId(requestInfo.getMsgId());
+		return responseInfo;
 	}
 }

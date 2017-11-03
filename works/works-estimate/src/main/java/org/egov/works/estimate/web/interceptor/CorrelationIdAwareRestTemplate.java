@@ -3,7 +3,7 @@ package org.egov.works.estimate.web.interceptor;
 import java.util.Collections;
 import java.util.List;
 
-import org.egov.works.estimate.web.contract.RequestContext;
+import org.egov.tracer.model.RequestContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.web.client.RestTemplate;

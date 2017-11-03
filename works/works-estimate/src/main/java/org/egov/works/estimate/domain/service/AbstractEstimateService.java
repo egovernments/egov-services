@@ -1,10 +1,13 @@
 package org.egov.works.estimate.domain.service;
 
-import net.minidev.json.JSONArray;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.works.commons.domain.model.AuditDetails;
-import org.egov.works.commons.web.contract.RequestInfo;
 import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.config.WorksEstimateServiceConstants;
 import org.egov.works.estimate.domain.exception.ErrorCode;
@@ -12,20 +15,18 @@ import org.egov.works.estimate.domain.exception.InvalidDataException;
 import org.egov.works.estimate.domain.repository.AbstractEstimateRepository;
 import org.egov.works.estimate.persistence.repository.IdGenerationRepository;
 import org.egov.works.estimate.utils.EstimateUtils;
+import org.egov.works.estimate.web.contract.AbstractEstimate;
+import org.egov.works.estimate.web.contract.AbstractEstimateDetails;
 import org.egov.works.estimate.web.contract.AbstractEstimateRequest;
 import org.egov.works.estimate.web.contract.AbstractEstimateSearchContract;
-import org.egov.works.estimate.web.model.AbstractEstimate;
-import org.egov.works.estimate.web.model.AbstractEstimateDetails;
+import org.egov.works.estimate.web.contract.AuditDetails;
+import org.egov.works.estimate.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import net.minidev.json.JSONArray;
 
 @Service
 @Transactional(readOnly = true)

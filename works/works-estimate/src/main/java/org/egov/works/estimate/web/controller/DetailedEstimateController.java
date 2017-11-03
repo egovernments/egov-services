@@ -4,14 +4,14 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.works.commons.web.contract.RequestInfo;
-import org.egov.works.commons.web.contract.ResponseInfo;
 import org.egov.works.estimate.domain.exception.CustomBindException;
 import org.egov.works.estimate.domain.service.DetailedEstimateService;
+import org.egov.works.estimate.utils.EstimateUtils;
+import org.egov.works.estimate.web.contract.DetailedEstimate;
 import org.egov.works.estimate.web.contract.DetailedEstimateRequest;
 import org.egov.works.estimate.web.contract.DetailedEstimateResponse;
 import org.egov.works.estimate.web.contract.DetailedEstimateSearchContract;
-import org.egov.works.estimate.web.model.DetailedEstimate;
+import org.egov.works.estimate.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -29,6 +29,9 @@ public class DetailedEstimateController {
 
 	@Autowired
 	private DetailedEstimateService detailedEstimateService;
+	
+	@Autowired
+	private EstimateUtils estimateUtils;
 
 	
 	@PostMapping("/_search")
@@ -41,7 +44,7 @@ public class DetailedEstimateController {
 		final List<DetailedEstimate> detailedEstimates = detailedEstimateService.search(detailedEstimateSearchContract);
 		final DetailedEstimateResponse response = new DetailedEstimateResponse();
 		response.setDetailedEstimates(detailedEstimates);
-		response.setResponseInfo(getResponseInfo(requestInfo));
+		response.setResponseInfo(estimateUtils.getResponseInfo(requestInfo));
 		return response;
 	}
 
@@ -57,14 +60,7 @@ public class DetailedEstimateController {
         final List<DetailedEstimate> detailedEstimates = detailedEstimateService.create(detailedEstimateRequest);
         final DetailedEstimateResponse response = new DetailedEstimateResponse();
         response.setDetailedEstimates(detailedEstimates);
-        response.setResponseInfo(getResponseInfo(detailedEstimateRequest.getRequestInfo()));
+        response.setResponseInfo(estimateUtils.getResponseInfo(detailedEstimateRequest.getRequestInfo()));
         return response;
     }
-	
-	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").build();
-	}
-	
-
 }

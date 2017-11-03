@@ -70,4 +70,4 @@ ReportDefinitions:
     source: lcms
     isMandatory: false
     searchClause : AND case.caseStatus = $caseStatus
-  query: select defendant,caseno,plantiffName from egov_lcms_case WHERE caseregistrationdate>=$fromDate and case.caseregistrationdate<=$toDate;
+  query: select defendant,caseno,plantiffName from egov_lcms_case WHERE caseregistrationdate>=$fromDate and caseregistrationdate<=$toDate

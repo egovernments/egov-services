@@ -594,7 +594,7 @@ class CustomMenu extends Component {
       return (
       <div className="custom-menu" style={style}  ref={this.setWrapperRef}>
           <Logo tenantInfo={this.props.tenantInfo}/>
-          <span style={{ fontSize:18, marginLeft:2}}>{getTitle(this.props.tenantInfo, this.props.tenantContext)}</span>
+          <span style={{ fontSize:15, position: "absolute",top: "24px"}}>{getTitle(this.props.tenantInfo, this.props.tenantContext)}</span>
           <h4 style={{padding:'0 15px', fontSize:15, paddingTop:10,fontWeight: 600}}>Quick Actions</h4>
           {
             <TextField

@@ -1,6 +1,7 @@
 package org.egov.inv.persistence.entity;
 
 import io.swagger.model.AuditDetails;
+import io.swagger.model.ChartofAccount;
 import io.swagger.model.MaterialStoreMapping;
 import lombok.*;
 
@@ -24,15 +25,17 @@ public class MaterialStoreMappingEntity {
 
     private Boolean active;
 
+    private String chartOfAccount;
+
     private String tenantId;
 
     private String createdBy;
 
     private Long createdTime;
 
-    private String lastmodifiedBy;
+    private String lastModifiedBy;
 
-    private Long lastmodifiedTime;
+    private Long lastModifiedTime;
 
 
     public MaterialStoreMapping toDomain() {
@@ -41,6 +44,7 @@ public class MaterialStoreMappingEntity {
                 .material(material)
                 .store(store)
                 .active(active)
+                .chartofAccount(buildChartOfAccount())
                 .auditDetails(buildAuditDetails())
                 .build();
     }
@@ -52,11 +56,18 @@ public class MaterialStoreMappingEntity {
                 .material(materialStoreMapping.getMaterial())
                 .store(materialStoreMapping.getStore())
                 .active(materialStoreMapping.isActive())
+                .chartOfAccount(materialStoreMapping.getChartofAccount().getGlCode())
                 .createdBy(auditDetails.getCreatedBy())
                 .createdTime(auditDetails.getCreatedTime())
-                .lastmodifiedBy(auditDetails.getLastModifiedBy())
-                .lastmodifiedTime(auditDetails.getLastModifiedTime())
+                .lastModifiedBy(auditDetails.getLastModifiedBy())
+                .lastModifiedTime(auditDetails.getLastModifiedTime())
                 .tenantId(auditDetails.getTenantId())
+                .build();
+    }
+
+    private ChartofAccount buildChartOfAccount() {
+        return ChartofAccount.builder()
+                .glCode(chartOfAccount)
                 .build();
     }
 
@@ -64,8 +75,8 @@ public class MaterialStoreMappingEntity {
         return AuditDetails.builder()
                 .createdBy(createdBy)
                 .createdTime(createdTime)
-                .lastModifiedBy(lastmodifiedBy)
-                .lastModifiedTime(lastmodifiedTime)
+                .lastModifiedBy(lastModifiedBy)
+                .lastModifiedTime(lastModifiedTime)
                 .tenantId(tenantId)
                 .build();
     }

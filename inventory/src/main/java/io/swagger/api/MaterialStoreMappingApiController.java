@@ -2,9 +2,7 @@ package io.swagger.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
-import io.swagger.model.MaterialStoreMapping;
-import io.swagger.model.MaterialStoreMappingRequest;
-import io.swagger.model.MaterialStoreMappingResponse;
+import io.swagger.model.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.inv.domain.service.InventoryUtilityService;
 import org.egov.inv.domain.service.MaterialStoreMappingService;
@@ -21,7 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.IOException;
 import java.util.List;
 
@@ -68,8 +69,39 @@ public class MaterialStoreMappingApiController implements MaterialStoreMappingAp
                 materialStoreMappingRequest.getRequestInfo()), HttpStatus.OK);
     }
 
-    public ResponseEntity<MaterialStoreMappingResponse> materialstoremappingUpdatePost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId, @ApiParam(value = "common Request info") @Valid @RequestBody MaterialStoreMappingRequest materialStoreMappingRequest) {
-        String accept = request.getHeader("Accept");
+    public ResponseEntity<MaterialStoreMappingResponse> materialstoremappingSearchPost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
+                                                                                       @ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody RequestInfo requestInfo,
+                                                                                       @Size(max = 50) @ApiParam(value = "comma seperated list of Ids") @RequestParam(value = "ids", required = false) List<String> ids,
+                                                                                       @ApiParam(value = "material code of material store mapping ") @RequestParam(value = "material", required = false) String material,
+                                                                                       @ApiParam(value = "store code of material store mapping ") @RequestParam(value = "store", required = false) String store,
+                                                                                       @ApiParam(value = "active flag of material store mapping ") @RequestParam(value = "active", required = false) Boolean active,
+                                                                                       @Min(0) @Max(100) @ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
+                                                                                       @ApiParam(value = "offset") @RequestParam(value = "offset", required = false) Integer offset,
+                                                                                       @ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
+                                                                                       @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false) String sortBy,
+                                                                                       @RequestHeader(value = "Accept", required = false) String accept, BindingResult errors) throws Exception {
+        MaterialStoreMappingSearchRequest materialStoreMappingSearchRequest = MaterialStoreMappingSearchRequest.builder()
+                .ids(ids)
+                .store(store)
+                .material(material)
+                .active(active)
+                .pageSize(pageSize)
+                .offset(offset)
+                .sortBy(sortBy)
+                .build();
+        Pagination<MaterialStoreMapping> materialStoreMappingPagination = materialStoreMappingService.search(materialStoreMappingSearchRequest);
+        MaterialStoreMappingResponse buildMaterialStoreMappingResponse = MaterialStoreMappingResponse.builder()
+                .responseInfo(inventoryUtilityService.getResponseInfo(requestInfo))
+                .materialStoreMappings(materialStoreMappingPagination.getPagedData())
+                .build();
+
+        return new ResponseEntity<MaterialStoreMappingResponse>(buildMaterialStoreMappingResponse, HttpStatus.OK);
+    }
+
+    public ResponseEntity<MaterialStoreMappingResponse> materialstoremappingUpdatePost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
+                                                                                       @ApiParam(value = "common Request info") @Valid @RequestBody MaterialStoreMappingRequest materialStoreMappingRequest,
+                                                                                       @RequestHeader(value = "Accept", required = false) String accept, BindingResult errors) throws Exception {
+
         if (accept != null && accept.contains("application/json")) {
             try {
                 return new ResponseEntity<MaterialStoreMappingResponse>(objectMapper.readValue("{  \"materialStoreMappings\" : [ {    \"material\" : \"material\",    \"chartofAccount\" : {      \"glCode\" : \"glCode\",      \"auditDetails\" : {        \"lastModifiedTime\" : 1,        \"createdBy\" : \"createdBy\",        \"lastModifiedBy\" : \"lastModifiedBy\",        \"createdTime\" : 6      },      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"id\" : \"id\"    },    \"auditDetails\" : {      \"lastModifiedTime\" : 1,      \"createdBy\" : \"createdBy\",      \"lastModifiedBy\" : \"lastModifiedBy\",      \"createdTime\" : 6    },    \"active\" : true,    \"id\" : \"id\",    \"store\" : \"store\"  }, {    \"material\" : \"material\",    \"chartofAccount\" : {      \"glCode\" : \"glCode\",      \"auditDetails\" : {        \"lastModifiedTime\" : 1,        \"createdBy\" : \"createdBy\",        \"lastModifiedBy\" : \"lastModifiedBy\",        \"createdTime\" : 6      },      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"id\" : \"id\"    },    \"auditDetails\" : {      \"lastModifiedTime\" : 1,      \"createdBy\" : \"createdBy\",      \"lastModifiedBy\" : \"lastModifiedBy\",      \"createdTime\" : 6    },    \"active\" : true,    \"id\" : \"id\",    \"store\" : \"store\"  } ],  \"page\" : {    \"totalResults\" : 1,    \"offSet\" : 1,    \"totalPages\" : 1,    \"pageSize\" : 6,    \"currentPage\" : 7  },  \"responseInfo\" : {    \"ver\" : \"ver\",    \"resMsgId\" : \"resMsgId\",    \"msgId\" : \"msgId\",    \"apiId\" : \"apiId\",    \"ts\" : 0,    \"status\" : \"SUCCESSFUL\"  }}", MaterialStoreMappingResponse.class), HttpStatus.NOT_IMPLEMENTED);
@@ -79,7 +111,9 @@ public class MaterialStoreMappingApiController implements MaterialStoreMappingAp
             }
         }
 
-        return new ResponseEntity<MaterialStoreMappingResponse>(HttpStatus.NOT_IMPLEMENTED);
+        List<MaterialStoreMapping> materialStoreMappings = materialStoreMappingService.update(materialStoreMappingRequest, tenantId, errors);
+        return new ResponseEntity<MaterialStoreMappingResponse>(buildMaterialStoreMappingResponse(materialStoreMappings,
+                materialStoreMappingRequest.getRequestInfo()), HttpStatus.OK);
     }
 
     private MaterialStoreMappingResponse buildMaterialStoreMappingResponse(List<MaterialStoreMapping> materialStoreMappings, RequestInfo requestInfo) {
@@ -88,4 +122,6 @@ public class MaterialStoreMappingApiController implements MaterialStoreMappingAp
                 .materialStoreMappings(materialStoreMappings)
                 .build();
     }
+
+
 }

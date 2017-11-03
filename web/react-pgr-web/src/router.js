@@ -166,9 +166,8 @@ import assetMovableCreate from './components/non-framework/asset/master/assetMov
 import assetImmovableView from './components/non-framework/asset/master/assetImmovableView';
 
 import NoMatch from './components/common/NoMatch';
-
-
-
+//inventory
+import SupplierSearch from './components/non-framework/inventory/master/supplier/SupplierSearch';
 
 const base = "";
 
@@ -348,7 +347,11 @@ const Main = () => {
       <Route exact path= {base + '/non-framework/asset/master/assetImmovableCreate/:id?'} component={assetImmovableCreate}/>
       <Route exact path= {base + '/non-framework/asset/master/assetMovableCreate'} component={assetMovableCreate}/>
       <Route exact path= {base + '/non-framework/asset/master/assetImmovableView/:id'} component={assetImmovableView}/>
-        <Route component={NoMatch}/>
+
+      {/* inventory */}
+      <Route exact path= {base + '/non-framework/inventory/master/supplier'} component={SupplierSearch}/>
+      <Route component={NoMatch}/>
+
     </Switch>
   </main>
 )}

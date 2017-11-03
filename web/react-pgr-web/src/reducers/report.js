@@ -5,7 +5,8 @@ const defaultState = {
   metaData:{},
   reportResult:{},
   flag:0,
-  searchParams:[]
+  searchParams:[],
+  tableSelectionData:[]
 };
 
 export default(state = defaultState, action) => {
@@ -42,6 +43,12 @@ export default(state = defaultState, action) => {
         return {
           ...state,
           flag: action.flag
+        }
+
+    case "SET_TABLE_SELECTION_DATA":
+        return {
+            ...state,
+            tableSelectionData: action.tableSelectionData
         }
 
     default:

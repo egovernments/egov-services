@@ -12,6 +12,9 @@ import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.MdmsResponse;
 import org.egov.mdms.model.ModuleDetail;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
@@ -70,11 +73,16 @@ public class MdmsRepository {
 		final StringBuffer commomServiceUrl = new StringBuffer();
 		commomServiceUrl.append(propertiesManager.getMdmsBasePath());
 		commomServiceUrl.append(propertiesManager.getMdmsSearhPath());
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		HttpEntity<String> entity = new HttpEntity<String>(objectMapper.writeValueAsString(mdmsCriteriaReq) ,headers);
 
 
 		try {
 			log.info("Mdms Request Object  is "+objectMapper.writeValueAsString(mdmsCriteriaReq));
-			mdmsResponse = restTemplate.postForObject(commomServiceUrl.toString(), objectMapper.writeValueAsString(mdmsCriteriaReq),
+			mdmsResponse = restTemplate.postForObject(commomServiceUrl.toString(), entity,
 					MdmsResponse.class);
 			log.info("Get mdms response is :" + mdmsResponse+" with body "+objectMapper.writeValueAsString(mdmsCriteriaReq));
 

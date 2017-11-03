@@ -126,14 +126,12 @@ public class CaseService {
 	private void generateCaseReferenceNumber(CaseRequest caseRequest) throws Exception {
 		for (Case caseobj : caseRequest.getCases()) {
 
-			String code = uniqueCodeGeneration.getUniqueCode(caseobj.getTenantId(), caseRequest.getRequestInfo(),
-					propertiesManager.getCaseCodeFormat(), propertiesManager.getCaseCodeName(), Boolean.FALSE, null);
 			String caseReferenceNumber = uniqueCodeGeneration.getUniqueCode(caseobj.getTenantId(),
 					caseRequest.getRequestInfo(), propertiesManager.getCaseReferenceFormat(),
 					propertiesManager.getCaseReferenceGenName(), Boolean.TRUE,
 					caseobj.getSummon().getDepartmentName().getCode());
-			caseobj.setCode(caseReferenceNumber);
-			caseobj.setCode(code);
+			caseobj.setCaseRefernceNo(caseReferenceNumber);
+			caseobj.setCode(caseobj.getSummon().getCode());
 
 		}
 

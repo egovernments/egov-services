@@ -6,7 +6,7 @@ serviceMaps:
     description: create summon
     fromTopic: lcms-create-summon-validated
     queryMaps: 
-    - query: INSERT INTO egov_lcms_case (code,isSummon,summonReferenceNo,caseNo,summonDate,year,caseType,plantiffName,defendant,caseCategory,courtName,departmentName,sectionApplied,hearingDate,hearingTime,ward,bench,side,stamp,caseDetails,plantiffAddress,createdBy,lastModifiedBy,createdTime,lastModifiedTime,tenantId,stateId,documents) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+    - query: INSERT INTO egov_lcms_case (code,isSummon,summonReferenceNo,caseNo,summonDate,year,caseType,plantiffName,defendant,caseCategory,courtName,departmentName,sectionApplied,hearingDate,hearingTime,ward,bench,side,register,caseDetails,plantiffAddress,createdBy,lastModifiedBy,createdTime,lastModifiedTime,tenantId,stateId,documents) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
       basePath: $.summons.*
       jsonMaps:       
       - jsonPath: $.summons.*.code
@@ -60,7 +60,7 @@ serviceMaps:
         type: JSON
         dbType: JSONB
         
-      - jsonPath: $.summons.*.stamp
+      - jsonPath: $.summons.*.register
         type: JSON
         dbType: JSONB
         
@@ -737,6 +737,8 @@ serviceMaps:
         - jsonPath: $.opinions.*.opinionRequestDate
           type: LONG
         - jsonPath: $.opinions.*.departmentName
+          type: JSON
+          dbType: JSONB
         - jsonPath: $.opinions.*.opinionOn
         - jsonPath: $.opinions.*.documents
           type: JSON
@@ -772,6 +774,8 @@ serviceMaps:
         - jsonPath: $.opinions.*.opinionRequestDate
           type: LONG
         - jsonPath: $.opinions.*.departmentName
+          type: JSON
+          dbType: JSONB
         - jsonPath: $.opinions.*.opinionOn
         - jsonPath: $.opinions.*.documents
           type: JSON
@@ -797,7 +801,7 @@ serviceMaps:
     description: legacy load case load
     fromTopic: legacy-case-create
     queryMaps: 
-    - query: INSERT INTO egov_lcms_case (code, isSummon, summonReferenceNo, amountReceived, caseCategory, caseRefernceNo, side, caseType, caseNo, summonDate, plantiffName, plantiffAddress, pleaderEngagementDetails, receiptDate, resloution, resloutiondate, advocateInfoDate, vakalatnamaGenerationDate, coName, age, address, remarks, caseDetails, defendant, hearingDate, hearingTime, departmentName, year, courtName, ward, bench, stamp, sectionApplied, lastModifiedBy,createdBy, createdTime, lastModifiedTime, tenantId, isUlbinitiated) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+    - query: INSERT INTO egov_lcms_case (code, isSummon, summonReferenceNo, amountReceived, caseCategory, caseRefernceNo, side, caseType, caseNo, summonDate, plantiffName, plantiffAddress, pleaderEngagementDetails, receiptDate, resloution, resloutiondate, advocateInfoDate, vakalatnamaGenerationDate, coName, age, address, remarks, caseDetails, defendant, hearingDate, hearingTime, departmentName, year, courtName, ward, bench, register, sectionApplied, lastModifiedBy,createdBy, createdTime, lastModifiedTime, tenantId, isUlbinitiated) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
       basePath: $.cases.*
       jsonMaps:       
       - jsonPath: $.cases.*.summon.code
@@ -886,7 +890,7 @@ serviceMaps:
         type: JSON
         dbType: JSONB
           
-      - jsonPath: $.cases.*.summon.stamp
+      - jsonPath: $.cases.*.summon.register
         type: JSON
         dbType: JSONB
     

@@ -31,7 +31,7 @@ public class Opinion {
 
 	@JsonProperty("departmentName")
 	@NotNull
-	private String departmentName = null;
+	private Department departmentName = null;
 
 	@JsonProperty("opinionOn")
 	@NotNull

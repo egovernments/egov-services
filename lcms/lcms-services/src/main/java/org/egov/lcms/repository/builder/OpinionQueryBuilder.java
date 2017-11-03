@@ -56,13 +56,23 @@ public class OpinionQueryBuilder {
 			preparedStatementValues.add(opinionSearchCriteria.getOpinionRequestDate());
 		}
 		if (opinionSearchCriteria.getDepartmentName() != null && !opinionSearchCriteria.getDepartmentName().isEmpty()) {
-			selectQuery.append(" AND departmentName=?");
+			selectQuery.append(" AND departmentName->>'code'=?");
 			preparedStatementValues.add(opinionSearchCriteria.getDepartmentName());
 		}
 
 		if (opinionSearchCriteria.getOpinionsBy() != null && !opinionSearchCriteria.getOpinionsBy().isEmpty()) {
-			selectQuery.append(" AND opinionsby->>'name'=?");
+			selectQuery.append(" AND opinionsby->>'code'=?");
 			preparedStatementValues.add(opinionSearchCriteria.getOpinionsBy());
+		}
+
+		if (opinionSearchCriteria.getFromDate() != null) {
+			selectQuery.append(" AND opinionRequestDate >= ?");
+			preparedStatementValues.add(opinionSearchCriteria.getFromDate());
+		}
+
+		if (opinionSearchCriteria.getToDate() != null) {
+			selectQuery.append(" AND opinionRequestDate <= ?");
+			preparedStatementValues.add(opinionSearchCriteria.getToDate());
 		}
 	}
 

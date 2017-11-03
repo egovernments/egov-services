@@ -10,6 +10,7 @@ import org.egov.lcms.models.Opinion;
 import org.egov.lcms.models.OpinionRequest;
 import org.egov.lcms.models.OpinionResponse;
 import org.egov.lcms.models.OpinionSearchCriteria;
+import org.egov.lcms.models.RequestInfoWrapper;
 import org.egov.lcms.repository.OpinionRepository;
 import org.egov.lcms.util.UniqueCodeGeneration;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -57,9 +58,9 @@ public class OpinionService {
 		return getResponseInfo(opinionRequest);
 	}
 
-	public OpinionResponse searchOpinion(RequestInfo requestInfo, OpinionSearchCriteria opinionRequest) throws Exception {
-		List<Opinion> opinions = opinionRepository.search(opinionRequest);
-		ResponseInfo responseInfo = responseFactory.getResponseInfo(requestInfo,
+	public OpinionResponse searchOpinion(RequestInfoWrapper requestInfoWrapper, OpinionSearchCriteria opinionRequest) throws Exception {
+		List<Opinion> opinions = opinionRepository.search(opinionRequest, requestInfoWrapper);
+		ResponseInfo responseInfo = responseFactory.getResponseInfo(requestInfoWrapper.getRequestInfo(),
 				HttpStatus.CREATED);
 		OpinionResponse response = new OpinionResponse(responseInfo,opinions);		
 		return response;

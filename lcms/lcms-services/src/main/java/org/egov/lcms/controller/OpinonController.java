@@ -2,9 +2,9 @@ package org.egov.lcms.controller;
 
 import javax.validation.Valid;
 
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.lcms.models.OpinionRequest;
 import org.egov.lcms.models.OpinionSearchCriteria;
+import org.egov.lcms.models.RequestInfoWrapper;
 import org.egov.lcms.service.OpinionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,14 +53,16 @@ public class OpinonController {
 	/**
 	 * Search method for opinion service.
 	 * 
-	 * @param requestInfo
+	 * @param requestInfoWrapper
 	 * @param opinionSearchCriteria
 	 * @return opinionResponse
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@RequestMapping(path = "/opinion/_search", method = RequestMethod.POST)
-	public ResponseEntity<?> searchOpinion(@RequestBody @Valid RequestInfo requestInfo,
+	public ResponseEntity<?> searchOpinion(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
 			@Valid @ModelAttribute OpinionSearchCriteria opinionSearchCriteria) throws Exception {
-		return new ResponseEntity<>(opinionService.searchOpinion(requestInfo, opinionSearchCriteria), HttpStatus.OK);
+		return new ResponseEntity<>(
+				opinionService.searchOpinion(requestInfoWrapper, opinionSearchCriteria),
+				HttpStatus.OK);
 	}
 }

@@ -3,12 +3,12 @@ package org.egov.lcms.repository.rowmapper;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.models.Advocate;
 import org.egov.lcms.models.AuditDetails;
+import org.egov.lcms.models.Department;
 import org.egov.lcms.models.Document;
 import org.egov.lcms.models.Opinion;
 import org.egov.tracer.model.CustomException;
@@ -35,7 +35,6 @@ public class OpinionRowMapper implements RowMapper<Opinion> {
 		opinion.setCode(rs.getString("code"));
 		opinion.setOpinionRequestDate(getLong(rs.getLong("opinionrequestdate")));
 
-		opinion.setDepartmentName(getString(rs.getString("departmentname")));
 		opinion.setOpinionOn(getString(rs.getString("opinionon")));
 		opinion.setOpinionDescription(getString(rs.getString("opinionDescription")));
 		opinion.setInWardDate(getLong(rs.getLong("inwarddate")));
@@ -48,25 +47,25 @@ public class OpinionRowMapper implements RowMapper<Opinion> {
 		auditDetails.setCreatedTime(rs.getBigDecimal("createdtime"));
 		auditDetails.setLastModifiedTime(rs.getBigDecimal("lastmodifiedtime"));
 		opinion.setAuditDetails(auditDetails);
-
-		List<Document> documents = new ArrayList<Document>();
-		Advocate opinionBy = new Advocate();
+		
 		TypeReference<List<Document>> documentReference = new TypeReference<List<Document>>() {
 		};
 		TypeReference<Advocate> advocateReference = new TypeReference<Advocate>() {
 		};
+		TypeReference<Department> departmentReference = new TypeReference<Department>() {
+		};
+		
 		try {
 			if (rs.getString("documents") != null)
-				documents = objectMapper.readValue(rs.getString("documents"), documentReference);
+				opinion.setDocuments(objectMapper.readValue(rs.getString("documents"), documentReference));
 			if (rs.getString("opinionsby") != null)
-				opinionBy = objectMapper.readValue(rs.getString("opinionsby"), advocateReference);
+				opinion.setOpinionsBy(objectMapper.readValue(rs.getString("opinionsby"), advocateReference));
+			if(rs.getString("departmentname") != null)
+				opinion.setDepartmentName(objectMapper.readValue(rs.getString("departmentname"), departmentReference));
 		} catch (IOException ex) {
 			throw new CustomException(propertiesManager.getOpinionSearchErrorCode(),
 					propertiesManager.getOpinionSearchErrorMsg());
 		}
-
-		opinion.setDocuments(documents);
-		opinion.setOpinionsBy(opinionBy);
 		return opinion;
 	}
 

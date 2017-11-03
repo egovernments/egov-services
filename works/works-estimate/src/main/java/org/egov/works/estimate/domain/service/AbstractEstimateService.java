@@ -54,7 +54,7 @@ public class AbstractEstimateService {
 					setAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUsername(), false));
 			String abstractEstimateNumber = idGenerationRepository
 					.generateAbstractEstimateNumber(estimate.getTenantId(), abstractEstimateRequest.getRequestInfo());
-			estimate.setAbstractEstimateNumber("AE/" + estimate.getDepartment().getCode() + abstractEstimateNumber);
+			estimate.setAbstractEstimateNumber(propertiesManager.getEstimateNumberPrefix() +"/" + estimate.getDepartment().getCode() + abstractEstimateNumber);
 			for (final AbstractEstimateDetails details : estimate.getAbstractEstimateDetails()) {
 				details.setId(UUID.randomUUID().toString().replace("-", ""));
 				details.setAuditDetails(

@@ -36,7 +36,7 @@ public class TokenServiceTest {
 	@Mock
 	private ActionRestRepository actionRestRepository;
 
-	@Test(expected = InvalidAccessTokenException.class)
+	@Test
 	public void test_should_get_user_details_for_given_token() {
 		OAuth2Authentication oAuth2Authentication = mock(OAuth2Authentication.class);
 		final String accessToken = "c80e0ade-f48d-4077-b0d2-4e58526a6bfd";

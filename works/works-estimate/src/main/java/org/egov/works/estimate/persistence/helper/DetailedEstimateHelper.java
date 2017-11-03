@@ -2,7 +2,6 @@ package org.egov.works.estimate.persistence.helper;
 
 import java.math.BigDecimal;
 
-import org.egov.works.commons.domain.enums.WorkCategory;
 import org.egov.works.estimate.web.contract.Beneficiary;
 import org.egov.works.estimate.web.contract.BudgetGroup;
 import org.egov.works.estimate.web.contract.Department;
@@ -14,6 +13,7 @@ import org.egov.works.estimate.web.contract.Scheme;
 import org.egov.works.estimate.web.contract.SubScheme;
 import org.egov.works.estimate.web.contract.TypeOfWork;
 import org.egov.works.estimate.web.contract.User;
+import org.egov.works.estimate.web.contract.WorkCategory;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

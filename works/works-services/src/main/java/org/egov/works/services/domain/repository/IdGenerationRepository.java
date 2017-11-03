@@ -3,11 +3,11 @@ package org.egov.works.services.domain.repository;
 import java.util.Arrays;
 
 import org.egov.works.commons.exception.ValidationException;
-import org.egov.works.commons.web.contract.RequestInfo;
 import org.egov.works.services.config.PropertiesManager;
 import org.egov.works.services.config.WorksServiceConstants;
 import org.egov.works.services.web.contract.IdGenerationRequest;
 import org.egov.works.services.web.contract.IdRequest;
+import org.egov.works.services.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

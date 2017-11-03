@@ -2,8 +2,6 @@ package org.egov.works.estimate.web.contract;
 
 import java.util.Map;
 
-import org.egov.works.commons.web.contract.ResponseInfo;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;

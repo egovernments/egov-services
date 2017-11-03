@@ -4,12 +4,12 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.works.commons.web.contract.ErrorRes;
-import org.egov.works.commons.web.contract.ResponseInfo;
 import org.egov.works.estimate.domain.exception.CustomBindException;
 import org.egov.works.estimate.domain.exception.ErrorCode;
 import org.egov.works.estimate.domain.exception.InvalidDataException;
 import org.egov.works.estimate.domain.exception.UnauthorizedAccessException;
+import org.egov.works.estimate.web.contract.ErrorRes;
+import org.egov.works.estimate.web.contract.ResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -39,7 +39,7 @@ public class CustomControllerAdvice {
 		BindingResult errors = ex.getErrors();
 		ResponseInfo responseInfo = new ResponseInfo();
 		errRes.setResponseInfo(responseInfo);
-		org.egov.works.commons.web.contract.Error error = new org.egov.works.commons.web.contract.Error();
+		org.egov.works.estimate.web.contract.Error error = new org.egov.works.estimate.web.contract.Error();
 		if (errors.getGlobalError() != null) {
 			if (errors.getGlobalError().getCode() != null) {
 				error.setCode(errors.getGlobalError().getCode());
@@ -63,7 +63,7 @@ public class CustomControllerAdvice {
 		if (errors.hasFieldErrors()) {
 			List<org.springframework.validation.FieldError> fieldErrors = errors.getFieldErrors();
 			for (org.springframework.validation.FieldError errs : fieldErrors) {
-				org.egov.works.commons.web.contract.Error err = new org.egov.works.commons.web.contract.Error();
+				org.egov.works.estimate.web.contract.Error err = new org.egov.works.estimate.web.contract.Error();
 				if (ErrorCode.getError(errs.getCode()) != null) {
 					err.setCode(errs.getCode());
 					String message = MessageFormat.format(ErrorCode.getError(errs.getCode()).getMessage(),
@@ -94,7 +94,7 @@ public class CustomControllerAdvice {
 
 		ResponseInfo responseInfo = new ResponseInfo();
 		errRes.setResponseInfo(responseInfo);
-		org.egov.works.commons.web.contract.Error error = new org.egov.works.commons.web.contract.Error();
+		org.egov.works.estimate.web.contract.Error error = new org.egov.works.estimate.web.contract.Error();
 		error.setCode(ex.getMessageKey());
 		System.out.println(ErrorCode.getError("non.unique.value"));
 		if (ErrorCode.getError(ex.getMessageKey()) != null) {
@@ -107,7 +107,7 @@ public class CustomControllerAdvice {
 		} else {
 			LOG.warn("error code is not defined for " + ex.getMessageKey());
 		}
-		List<org.egov.works.commons.web.contract.Error> errors = new ArrayList<org.egov.works.commons.web.contract.Error>();
+		List<org.egov.works.estimate.web.contract.Error> errors = new ArrayList<>();
 		errors.add(error);
 		errRes.setErrors(errors);
 		return errRes;
@@ -120,12 +120,12 @@ public class CustomControllerAdvice {
 		ex.printStackTrace();
 		ResponseInfo responseInfo = new ResponseInfo();
 		errRes.setResponseInfo(responseInfo);
-		org.egov.works.commons.web.contract.Error error = new org.egov.works.commons.web.contract.Error();
+		org.egov.works.estimate.web.contract.Error error = new org.egov.works.estimate.web.contract.Error();
 
 		error.setCode(ErrorCode.KAFKA_TIMEOUT_ERROR.getCode());
 		error.setMessage(ErrorCode.KAFKA_TIMEOUT_ERROR.getMessage());
 		error.setDescription(ErrorCode.KAFKA_TIMEOUT_ERROR.getDescription());
-		List<org.egov.works.commons.web.contract.Error> errors = new ArrayList<org.egov.works.commons.web.contract.Error>();
+		List<org.egov.works.estimate.web.contract.Error> errors = new ArrayList<>();
 		errors.add(error);
 		errRes.setErrors(errors);
 		return errRes;
@@ -138,7 +138,7 @@ public class CustomControllerAdvice {
 		ex.printStackTrace();
 		ResponseInfo responseInfo = new ResponseInfo();
 		errRes.setResponseInfo(responseInfo);
-		org.egov.works.commons.web.contract.Error error = new org.egov.works.commons.web.contract.Error();
+		org.egov.works.estimate.web.contract.Error error = new org.egov.works.estimate.web.contract.Error();
 
 		error.setCode("500");
 		error.setMessage("Internal Server Error");
@@ -154,7 +154,7 @@ public class CustomControllerAdvice {
 
 		ResponseInfo responseInfo = new ResponseInfo();
 		errRes.setResponseInfo(responseInfo);
-		org.egov.works.commons.web.contract.Error error = new org.egov.works.commons.web.contract.Error();
+		org.egov.works.estimate.web.contract.Error error = new org.egov.works.estimate.web.contract.Error();
 
 		error.setCode("500");
 		error.setMessage("Internal Server Error");
@@ -171,7 +171,7 @@ public class CustomControllerAdvice {
 
 		ResponseInfo responseInfo = new ResponseInfo();
 		errRes.setResponseInfo(responseInfo);
-		org.egov.works.commons.web.contract.Error error = new org.egov.works.commons.web.contract.Error();
+		org.egov.works.estimate.web.contract.Error error = new org.egov.works.estimate.web.contract.Error();
 
 		error.setCode("404");
 		error.setMessage("Un Authorized Access");

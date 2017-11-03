@@ -1,30 +1,30 @@
 {
-  "tenantId": "mh",
+  "tenantId": "default",
   "moduleName": "Works",
   "ScheduleCategory": [
     {
       "id": 1,
       "code": "EXV - FAKE",
-      "tenantId": "mh",
+      "tenantId": "default",
       "name": "EXCAVATION - FAKE"
     },
     {
       "id": 2,
       "code": "CCR - FAKE",
-      "tenantId": "mh",
+      "tenantId": "default",
       "name": "Concrete roads - FAKE"
     },
     {
       "id": 3,
       "code": "BTR - FAKE",
-      "tenantId": "mh",
+      "tenantId": "default",
       "name": "Black top roads - FAKE"
     }
   ],
   "ContractorClass": [
     {
       "id": 1,
-      "tenantId": "mh",
+      "tenantId": "default",
       "class": "001 - Fake",
       "description": "Class - 1 - Fake",
       "minimumAmount": 10,
@@ -32,7 +32,7 @@
     },
     {
       "id": 2,
-      "tenantId": "mh",
+      "tenantId": "default",
       "class": "002 - Fake",
       "description": "Class - 2 - Fake",
       "minimumAmount": 1000,
@@ -40,7 +40,7 @@
     },
     {
       "id": 3,
-      "tenantId": "mh",
+      "tenantId": "default",
       "class": "003 - Fake",
       "description": "Class - 3 - Fake",
       "minimumAmount": 100000,
@@ -50,7 +50,7 @@
   "TypeOfWork": [
     {
       "id": 1,
-      "tenantId": "mh",
+      "tenantId": "default",
       "code": "Roads - Fake",
       "name": "Roads - Fake",
       "description": "Roads - Fake",
@@ -59,7 +59,7 @@
     },
     {
       "id": 2,
-      "tenantId": "mh",
+      "tenantId": "default",
       "code": "Buildings - Fake",
       "name": "Buildings - Fake",
       "description": "Buildings - Fake",
@@ -70,7 +70,7 @@
   "SubTypeOfWork": [
     {
       "id": 3,
-      "tenantId": "mh",
+      "tenantId": "default",
       "code": "CC - Roads - Fake",
       "name": "CC - Roads - Fake",
       "description": "CC - Roads - Fake",
@@ -81,7 +81,7 @@
   "Overhead": [
     {
       "id": 1,
-      "tenantId": "mh",
+      "tenantId": "default",
       "code": "TAX - Fake",
       "name": "TAX - Fake",
       "description": "TAX - Fake",
@@ -89,7 +89,7 @@
       "overheadRates": [
         {
           "id": 1,
-          "tenantId": "mh",
+          "tenantId": "default",
           "lumpsumAmount": 0,
           "percentage": 100,
           "fromDate": 1546541452157,
@@ -99,7 +99,7 @@
     },
     {
       "id": 2,
-      "tenantId": "mh",
+      "tenantId": "default",
       "code": "TDS - Fake",
       "name": "TDS - Fake",
       "description": "TDS - Fake",
@@ -107,7 +107,7 @@
       "overheadRates": [
         {
           "id": 1,
-          "tenantId": "mh",
+          "tenantId": "default",
           "lumpsumAmount": 2548,
           "percentage": 0,
           "fromDate": 1546541452157,
@@ -119,13 +119,13 @@
   "Remarks": [
     {
       "id": 1,
-      "tenantId": "mh",
+      "tenantId": "default",
       "typeOfDocument": "Work Order - Fake",
       "type": "Approval Work Order - Fake",
       "remarksDetails": [
         {
           "id": 1,
-          "tenantId": "mh",
+          "tenantId": "default",
           "remarks": "Approve Work order",
           "editable": true
         }
@@ -133,13 +133,13 @@
     },
     {
       "id": 2,
-      "tenantId": "mh",
+      "tenantId": "default",
       "typeOfDocument": "LOA - Fake",
       "type": "Approval LOA - Fake",
       "remarkDetails": [
         {
           "id": 1,
-          "tenantId": "mh",
+          "tenantId": "default",
           "remarks": "Approve LOA",
           "editable": true
         }
@@ -149,7 +149,7 @@
   "MilestoneTemplate": [
     {
       "id": 1,
-      "tenantId": "mh",
+      "tenantId": "default",
       "templateCode": "CRROAD7W - Fake",
       "templateStaus": "MANRAYROAD - Fake",
       "templateName": "TWO LANE ROAD WITHOUT DIVIDER - Fake",
@@ -159,7 +159,7 @@
     },
     {
       "id": 2,
-      "tenantId": "mh",
+      "tenantId": "default",
       "templateCode": "NPNWS1 - Fake",
       "templateStaus": "Active",
       "templateName": "Water Supply Works for Nippani - Fake",
@@ -169,14 +169,14 @@
       "milestoneTemplateActivities": [
         {
           "id": 3,
-          "tenantId": "mh",
+          "tenantId": "default",
           "stageOrderNumber": 1,
           "percentage": 50,
           "description": "Laying of road - fake"
         },
         {
           "id": 4,
-          "tenantId": "mh",
+          "tenantId": "default",
           "stageOrderNumber": 1,
           "percentage": 50,
           "description": "Laying of road - fake"
@@ -187,7 +187,7 @@
   "EstimateTemplate": [
     {
       "id": 1,
-      "tenantId": "mh",
+      "tenantId": "default",
       "code": "NPNWS1 - Fake",
       "status": "Water Supply Works for Nippani - Fake",
       "templateName": "Water Supply Works for Nippani - Fake",
@@ -197,7 +197,7 @@
       "estimateTemplateActivities": [
         {
           "id": 3,
-          "tenantId": "mh",
+          "tenantId": "default",
           "scheduleOfRate": [
             {
               "id": 1
@@ -223,25 +223,25 @@
     {
       "id": 1,
       "code": "DemandfromMember",
-      "tenantId": "mh",
+      "tenantId": "default",
       "name": "Demand from Member"
     },
     {
       "id": 2,
       "code": "Demandfrompublic",
-      "tenantId": "mh",
+      "tenantId": "default",
       "name": "Demand from public"
     },
     {
       "id": 3,
       "code": "DepartmentalInitiative",
-      "tenantId": "mh",
+      "tenantId": "default",
       "name": "Departmental Initiative"
     },
     {
       "id": 4,
       "code": "Other",
-      "tenantId": "mh",
+      "tenantId": "default",
       "name": "Other"
     }
   ],
@@ -250,7 +250,7 @@
       "id": 1,
       "code" : "ASSET_MANDATORY",
       "keyName": "ASSET_MANDATORY",
-      "tenantId": "mh",
+      "tenantId": "default",
       "description": "To make Asset linking required or not in Estimate screen",
       "values": "Yes",
       "effectivefrom" : "2017-08-22",
@@ -272,7 +272,7 @@
     "lastmodifiedby": null,
     "lastmodifieddate": null,
     "version": 0,
-    "tenantid": "mh"
+    "tenantId": "default"
     }
   ],
   "Fund": [
@@ -289,7 +289,7 @@
       "lastmodifiedby": null,
       "lastmodifieddate": null,
       "version": 0,
-      "tenantid": "mh"
+      "tenantId": "default"
     },
     {
       "id": "3",
@@ -304,7 +304,7 @@
       "lastmodifiedby": null,
       "lastmodifieddate": null,
       "version": 0,
-      "tenantid": "mh"
+      "tenantId": "default"
     },
     {
       "id": "4",
@@ -319,7 +319,7 @@
       "lastmodifiedby": null,
       "lastmodifieddate": null,
       "version": 0,
-      "tenantid": "mh"
+      "tenantId": "default"
     },
     {
       "id": "1",
@@ -334,7 +334,7 @@
       "lastmodifiedby": null,
       "lastmodifieddate": null,
       "version": 0,
-      "tenantid": "mh"
+      "tenantId": "default"
     }
   ],
   "Function": [
@@ -350,7 +350,7 @@
     "lastmodifiedby": null,
     "lastmodifieddate": null,
     "version": 0,
-    "tenantid": "mh"
+    "tenantId": "default"
   },
   {
     "id": "2",
@@ -364,7 +364,7 @@
     "lastmodifiedby": null,
     "lastmodifieddate": null,
     "version": 0,
-    "tenantid": "mh"
+    "tenantId": "default"
   },
   {
     "id": "3",
@@ -378,7 +378,7 @@
     "lastmodifiedby": null,
     "lastmodifieddate": null,
     "version": 0,
-    "tenantid": "mh"
+    "tenantId": "default"
   },
   {
     "id": "4",
@@ -392,7 +392,7 @@
     "lastmodifiedby": null,
     "lastmodifieddate": null,
     "version": 0,
-    "tenantid": "mh"
+    "tenantId": "default"
   },
   {
     "id": "5",
@@ -406,7 +406,7 @@
     "lastmodifiedby": null,
     "lastmodifieddate": null,
     "version": 0,
-    "tenantid": "mh"
+    "tenantId": "default"
   }
 ],
   "BudgetGroup": [
@@ -425,7 +425,7 @@
     "lastmodifiedby": 1,
     "lastmodifieddate": "12345678912",
     "version": 0,
-    "tenantid": "mh"
+    "tenantId": "default"
   },
   {
     "id": 365,
@@ -442,7 +442,7 @@
     "lastmodifiedby": 1,
     "lastmodifieddate": "12345678912",
     "version": 0,
-    "tenantid": "mh"
+    "tenantId": "default"
   },
   {
     "id": 367,
@@ -459,7 +459,7 @@
     "lastmodifiedby": 1,
     "lastmodifieddate": "12345678912",
     "version": 0,
-    "tenantid": "mh"
+    "tenantId": "default"
   },
   {
     "id": 369,
@@ -476,7 +476,7 @@
     "lastmodifiedby": 1,
     "lastmodifieddate": "12345678912",
     "version": 0,
-    "tenantid": "mh"
+    "tenantId": "default"
   },
   {
     "id": 371,
@@ -493,7 +493,7 @@
     "lastmodifiedby": 1,
     "lastmodifieddate": "12345678912",
     "version": 0,
-    "tenantid": "mh"
+    "tenantId": "default"
   }
 ],
   "Scheme": [
@@ -513,7 +513,7 @@
     "lastmodifieddate": null,
     "createdby": 1,
     "lastmodifiedby": null,
-    "tenantid": "mh"
+    "tenantId": "default"
   },
   {
     "id": 35,
@@ -531,7 +531,7 @@
     "lastmodifieddate": null,
     "createdby": 1,
     "lastmodifiedby": null,
-    "tenantid": "mh"
+    "tenantId": "default"
   },
   {
     "id": 36,
@@ -549,7 +549,7 @@
     "lastmodifieddate": null,
     "createdby": 1,
     "lastmodifiedby": null,
-    "tenantid": "mh"
+    "tenantId": "default"
   }
 ],
   "SubScheme": [
@@ -566,7 +566,7 @@
     "createddate": "123151351",
     "createdby": 1,
     "lastmodifiedby": null,
-    "tenantid": "mh"
+    "tenantId": "default"
   },
   {
     "id": 2,
@@ -580,7 +580,7 @@
     "createddate": "2016-08-11T00:00:00",
     "createdby": 1,
     "lastmodifiedby": null,
-    "tenantid": "mh"
+    "tenantId": "default"
   },
   {
     "id": 3,
@@ -594,7 +594,7 @@
     "createddate": "2016-08-11T00:00:00",
     "createdby": 1,
     "lastmodifiedby": null,
-    "tenantid": "mh"
+    "tenantId": "default"
   },
   {
     "id": 4,
@@ -608,7 +608,7 @@
     "createddate": "2016-08-11T00:00:00",
     "createdby": 1,
     "lastmodifiedby": null,
-    "tenantid": "mh"
+    "tenantId": "default"
   },
   {
     "id": 5,
@@ -622,7 +622,7 @@
     "createddate": "2016-08-11T00:00:00",
     "createdby": 1,
     "lastmodifiedby": null,
-    "tenantid": "mh"
+    "tenantId": "default"
   }
 ]
 ]

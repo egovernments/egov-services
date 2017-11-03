@@ -24,9 +24,14 @@ public interface KpiValue {
     public ResponseEntity<?> update(@RequestBody @Valid final KPIValueRequest kpiValueRequest,
             final BindingResult errors); 
 	
+	@PostMapping(value = "/_comparesearch")
+    @ResponseBody
+    public ResponseEntity<?> compareAndSearch(@RequestBody @Valid final KPIValueSearchRequest kpiValueSearchReq,
+            final BindingResult errors);
+	
 	@PostMapping(value = "/_search")
     @ResponseBody
     public ResponseEntity<?> search(@RequestBody @Valid final KPIValueSearchRequest kpiValueSearchReq,
-            final BindingResult errors); 
+            final BindingResult errors);
 
 }

@@ -2,6 +2,7 @@ package org.egov.pa.service;
 
 import java.util.List;
 
+import org.egov.pa.model.KpiValue;
 import org.egov.pa.model.KpiValueList;
 import org.egov.pa.web.contract.KPIValueRequest;
 import org.egov.pa.web.contract.KPIValueSearchRequest;
@@ -30,7 +31,7 @@ public interface KpiValueService {
 	 * @param kpiValueRequest
 	 * @return
 	 */
-	public KPIValueRequest updateKpiValue(KPIValueRequest kpiValueRequest); 
+	public KPIValueRequest updateKpiValue(KPIValueRequest kpiValueRequest);
 	
 	/** 
 	 * This API is used to search the existing records of Actual Values
@@ -39,7 +40,18 @@ public interface KpiValueService {
 	 * @param kpiValueSearchReq
 	 * @return
 	 */
-	public List<KpiValueList> searchKpiValue(KPIValueSearchRequest kpiValueSearchReq); 
+	public List<KpiValue> searchKpiValue(KPIValueSearchRequest kpiValueSearchReq);
+	
+	/** 
+	 * This API is used to search the existing records of Actual Values
+	 * API has to receive the Get Request from Controller. 
+	 * Pass the request to repository for retrieval 
+	 * @param kpiValueSearchReq
+	 * @return
+	 */
+	public List<KpiValueList> compareSearchKpiValue(KPIValueSearchRequest kpiValueSearchReq);
+	
+	
 	
 	
 }

@@ -7,7 +7,7 @@ import java.util.Objects;
 import javax.validation.Valid;
 
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.pa.model.KpiValue;
+import org.egov.pa.model.KpiValueList;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -16,14 +16,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-02T05:16:16.756Z")
 
-public class KPIValueSearchResponse   {
+public class KPIValueCompareSearchResponse   {
   @JsonProperty("responseInfo")
   private ResponseInfo responseInfo = null;
 
   @JsonProperty("kpiValues")
-  private List<KpiValue> kpiValues = null;
+  private List<KpiValueList> kpiValues = null;
 
-  public KPIValueSearchResponse responseInfo(ResponseInfo responseInfo) {
+  public KPIValueCompareSearchResponse responseInfo(ResponseInfo responseInfo) {
     this.responseInfo = responseInfo;
     return this;
   }
@@ -43,14 +43,14 @@ public class KPIValueSearchResponse   {
     this.responseInfo = responseInfo;
   }
 
-  public KPIValueSearchResponse kpiValues(List<KpiValue> kpiValues) {
+  public KPIValueCompareSearchResponse kpiValues(List<KpiValueList> kpiValues) {
     this.kpiValues = kpiValues;
     return this;
   }
 
-  public KPIValueSearchResponse addKpiValuesItem(KpiValue kpiValuesItem) {
+  public KPIValueCompareSearchResponse addKpiValuesItem(KpiValueList kpiValuesItem) {
     if (this.kpiValues == null) {
-      this.kpiValues = new ArrayList<KpiValue>();
+      this.kpiValues = new ArrayList<KpiValueList>();
     }
     this.kpiValues.add(kpiValuesItem);
     return this;
@@ -63,16 +63,27 @@ public class KPIValueSearchResponse   {
 
   @Valid
 
-  public List<KpiValue> getKpiValues() {
+  public List<KpiValueList> getKpiValues() {
     return kpiValues;
   }
 
-  public void setKpiValues(List<KpiValue> kpiValues) {
+  public void setKpiValues(List<KpiValueList> kpiValues) {
     this.kpiValues = kpiValues;
   }
 
 
- 
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    KPIValueCompareSearchResponse kpIValueSearchResponse = (KPIValueCompareSearchResponse) o;
+    return Objects.equals(this.responseInfo, kpIValueSearchResponse.responseInfo) &&
+        Objects.equals(this.kpiValues, kpIValueSearchResponse.kpiValues);
+  }
 
   @Override
   public int hashCode() {

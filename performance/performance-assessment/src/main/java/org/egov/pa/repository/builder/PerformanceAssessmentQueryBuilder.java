@@ -57,12 +57,11 @@ public class PerformanceAssessmentQueryBuilder {
     		+ " master.tenantid as tenantId, master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, master.targetvalue as targetValue, master.instructions as instructions FROM egpa_kpi_master master "  
     		+ " LEFT JOIN egpa_kpi_master_document docs ON master.code = docs.kpicode WHERE master.active IS TRUE " ; 
     
-    public static final String SEARCH_VALUE_BASE_QUERY = "SELECT "  
-    		+ " value.tenantid as tenantId, master.code as kpiCode, master.finyear as finYear, target.id as targetId, target.kpicode as targetKpiCode, "  
-    		+ " target.targetvalue as targetValue, target.targetdescription as targetDescription, target.instructions,  "
-    		+ " value.id as valueId, value.kpicode as valueKpiCode, value.actualvalue as actualValue "
-    		+ " FROM egpa_kpi_value value LEFT JOIN egpa_kpi_master master ON value.kpicode = master.code "
-    		+ " LEFT JOIN egpa_kpi_master_targets target ON target.kpicode = master.code WHERE value.tenantid IS NOT NULL "; 
+    public static final String SEARCH_VALUE_BASE_QUERY = "SELECT value.tenantid as tenantId, master.code as kpiCode, master.finyear as finYear, "  
+    		+  " master.targetvalue as targetValue, master.instructions, "
+    		+  " value.id as valueId, value.kpicode as valueKpiCode, value.actualvalue as actualValue "  
+    		+  " FROM egpa_kpi_value value LEFT JOIN egpa_kpi_master master ON value.kpicode = master.code " 
+    		+  " WHERE value.tenantid IS NOT NULL "; 
     
     public static String persistKpiQuery() { 
     	return "INSERT INTO egpa_kpi_master (id, name, code, finyear, createdby, createddate) " 
@@ -112,7 +111,7 @@ public class PerformanceAssessmentQueryBuilder {
 		return selectQuery.toString();
     }
     
-    public String getValueSearchQuery(KPIValueSearchRequest kpiValueSearchReq, final List preparedStatementValues) { 
+    public String getValueCompareSearchQuery(KPIValueSearchRequest kpiValueSearchReq, final List preparedStatementValues) { 
     	final StringBuilder selectQuery = new StringBuilder(SEARCH_VALUE_BASE_QUERY); 
 		addKpiValueWhereClause(selectQuery, preparedStatementValues, kpiValueSearchReq);
 		LOGGER.info("Query : " + selectQuery);

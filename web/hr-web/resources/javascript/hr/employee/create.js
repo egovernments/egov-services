@@ -269,11 +269,11 @@ var commom_fields_rules = {
         phone: true
     },
     "user.pan": {
-        required: false,
+        required: true,
         panNo: true
     },
     "user.aadhaarNumber": {
-        required: false,
+        required: true,
         aadhar: true
     },
     "user.permanentAddress": {
@@ -660,10 +660,10 @@ var user = {
         required: false
     },
     pan: {
-        required: false
+        required: true
     },
     aadhaarNumber: {
-        required: false
+        required: true
 
     },
     permanentAddress: {

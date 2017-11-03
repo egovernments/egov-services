@@ -76,7 +76,7 @@ class EmployeeReport extends React.Component {
           $('#employeeTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
-                     'copy', 'csv', 'excel', 'pdf', 'print'
+                     'copy', 'csv', 'excel'
              ],
              ordering: false
           });
@@ -153,7 +153,7 @@ class EmployeeReport extends React.Component {
                 <tr key={ind}>
                       <td>{ind+1}</td>
                       <td>{item.code}</td>
-                      <td>{item.salutation?item.salutation:""+" "+item.name}</td>
+                      <td>{item.salutation? item.salutation+" "+item.name : item.name}</td>
                       <td>{getNameById(employeeTypes,item.employeeType)}</td>
                       <td>{getNameById(employeeStatusTypes,item.employeeStatus,"code")}</td>
                       <td>{getNameById(employeeGroups,item.group)}</td>

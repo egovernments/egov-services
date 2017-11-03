@@ -5,6 +5,7 @@ import java.util.List;
 import org.egov.inv.domain.exception.CustomBindException;
 import org.egov.inv.domain.exception.ErrorCode;
 import org.egov.inv.domain.exception.InvalidDataException;
+import org.egov.inv.domain.model.SupplierGetRequest;
 import org.egov.inv.persistence.entity.SupplierEntity;
 import org.egov.inv.persistence.repository.SupplierJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
+import io.swagger.model.Pagination;
 import io.swagger.model.Store;
 import io.swagger.model.StoreRequest;
 import io.swagger.model.Supplier;
@@ -95,6 +97,12 @@ public class SupplierService {
 	public List<Supplier> pushForUpdate(SupplierRequest supplierRequest) {
 		kafkaTemplate.send(updateTopic, supplierRequest);
 		return supplierRequest.getSuppliers();
+	}
+
+
+	public Pagination<Supplier> search(SupplierGetRequest supplierGetRequest) {
+	 return	supplierJdbcRepository.search(supplierGetRequest);
+		
 	}	
 
 

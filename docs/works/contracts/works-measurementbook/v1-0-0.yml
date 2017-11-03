@@ -48,7 +48,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: Measurement Book(s) created successfully
           schema:
             $ref: '#/definitions/MeasurementBookResponse'
@@ -79,7 +79,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: Measurement Book(s) updated successfully
           schema:
             $ref: '#/definitions/MeasurementBookResponse'
@@ -109,47 +109,74 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
         - name: ids
+          in: query
           type: array
           items:
             type: string
-          in: query
           maxItems: 50
-          description: Comma separated list of Ids of Measurement Book to get the Measurement Books.
-        - name: status
-          in: query
-          description: Status of the Measurement Book.
           required: false
-          type: string
-        - name: workOrderNumbers
+          allowEmptyValue: true
+          description: Comma separated list of Ids of Measurement Book to get the Measurement Books.
+        - name: statuses
+          in: query
           type: array
           items:
             type: string
+          format: multiValueList
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of the Measurement Book Status.
+        - name: workOrderNumbers
           in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
           description: Comma separated list of Work Order Numbers
         - name: mbRefNumbers
+          in: query
           type: array
           items:
             type: string
-          in: query
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
           description: Comma separated list of MB Reference Numbers          
         - name: loaNumbers
+          in: query
           type: array
           items:
             type: string
-          in: query
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
           description: Comma separated list of LOA Numbers
         - name: detailedEstimateNumbers
+          in: query
           type: array
           items:
             type: string
-          in: query
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
           description: Comma separated list of Detailed Estimate Numbers
         - name: workIdentificationNumbers
           in: query
-          description: Comma separated list of Work Identification Numbers
           type: array
           items:
             type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Work Identification Numbers
       responses:
         200:
           description: Measurement Book(s) Retrieved Successfully
@@ -177,69 +204,97 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
         - name: ids
+          in: query
           type: array
           items:
             type: string
-          in: query
           maxItems: 50
+          required: false
+          allowEmptyValue: true
           description: Comma separated list of Ids of Contractor Bills.
         - name: letterOfAcceptanceNumbers
           in: query
-          description: Comma separated list of Letter of Acceptance Numbers
-          required: false
           type: array
           items:
             type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
           allowEmptyValue: true
+          description: Comma separated list of Letter of Acceptance Numbers
         - name: billFromDate
           in: query
           description: Epoch time from when bill is created
           required: false
           type: integer
           format: int64
+          x-displayformat: 'dd/MM/yyyy'
           allowEmptyValue: true
         - name: billType
           in: query
-          description: Epoch time till when bill is created
-          required: false
-          type: integer
-          format: int64
-          allowEmptyValue: true
-        - name: billNumbers
           type: array
           items:
             type: string
-          in: query
-          description: Comma separated list of bill numbers
-        - name: status
-          in: query
+          format: multiValueList
+          maxItems: 50
           required: false
-          description: The status of the Contractor Bill
-          type: string
+          allowEmptyValue: true
+          description: Comma separated list of bill types
+        - name: billNumbers
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of bill numbers
+        - name: statuses
+          in: query
+          type: array
+          items:
+            type: string
+          format: multiValueList
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Contractor Bill Status
         - name: workIdentificationNumber
           in: query
-          required: false
-          description: Comma separated list of Work Identification Numbers
           type: array
           items:
             type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Work Identification Numbers
         - name: contractorNames
           in: query
-          required: false
-          description: Comma separated list of contractor names
           type: array
           items:
             type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of contractor names
         - name: department
           in: query
+          type: array
+          items:
+            type: string
+          format: multiValueList
+          maxItems: 50
           required: false
-          description: The department of the Contractor Bill
-          type: string
+          allowEmptyValue: true
+          description: Comma separated list of department of the Contractor Bill
         - name: spillOverFlag
           in: query
-          required: false
-          description: The spillover flag of the Contractor Bill
           type: boolean
+          required: false
+          description: Boolean value of the Contractor Bill  whether its Spill over or not
       responses:
         200:
           description: Contractor Bill(s) Retrieved Successfully
@@ -383,6 +438,7 @@ definitions:
         # $ref: '#/definitions/BillRegister'
       status:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/MeasurementBookStatus'
+        description: Status of the Measurement Book
       measurementBookDetails:
         type: array
         description: Array of Measurement Book Details
@@ -654,7 +710,7 @@ definitions:
         x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of when the Bill approved
       approvedBy:
-        type: string
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
         description: User name of the User who approved the Bill
       cancellationReason:
         type: string
@@ -700,11 +756,12 @@ definitions:
         minLength: 2
       assetCode:
         type: string
+        pattern: '[a-zA-Z0-9-\\]+'
         description: Asset code of the Contractor Bill
         maxLength: 50
         minLength: 1
       chartOfAccounts:
-        type: string
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/ChartOfAccount'
         description: Chart of Accounts for the Assets for Bill
       description:
         type: string

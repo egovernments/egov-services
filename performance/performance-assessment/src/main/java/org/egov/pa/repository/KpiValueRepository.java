@@ -13,8 +13,10 @@ public interface KpiValueRepository {
 	public void persistKpiValue(final KPIValueRequest kpiValueRequest);
     
     public void updateKpiValue(final KPIValueRequest kpiValueRequest);
+
+    public List<KpiValue> searchKpiValue(KPIValueSearchRequest kpiValueSearchReq);
     
-    public List<KpiValueList> searchKpiValue(KPIValueSearchRequest kpiValueSearchReq);
+    public List<KpiValueList> compareSearchKpiValue(KPIValueSearchRequest kpiValueSearchReq);
 
     public List<KPI> checkKpiExists(String kpiCode); 
     

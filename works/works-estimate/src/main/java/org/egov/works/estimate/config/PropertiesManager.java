@@ -55,4 +55,7 @@ public class PropertiesManager {
 
     @Value("${location.required}")
     private String locationRequiredForEstimate;
+
+    @Value("${estimateNumber.prefix}")
+    private String estimateNumberPrefix;
 }

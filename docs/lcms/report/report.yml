@@ -40,7 +40,7 @@ ReportDefinitions:
   - name: courtName
     label: reports.lcms.courtName
     type: singlevaluelist
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=lcms&masterName=court&pageSize=500|$..code|$..name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=lcms&masterName=court|$..code|$..name
     source: lcms
     isMandatory: false
     searchClause : AND case.courtName = $courtName
@@ -66,8 +66,79 @@ ReportDefinitions:
   - name: caseStatus
     label: reports.lcms.caseStatus
     type: singlevaluelist
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=lcms&masterName=caseStatus&pageSize=500|$..code|$..name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=lcms&masterName=caseStatus|$..code|$..name
     source: lcms
     isMandatory: false
     searchClause : AND case.caseStatus = $caseStatus
   query: select defendant,caseno,plantiffName from egov_lcms_case WHERE caseregistrationdate>=$fromDate and caseregistrationdate<=$toDate
+- reportName: CaseSummaryReport
+  summary: Case Summary Report
+  version: 1.0.0
+  moduleName: lcms
+  sourceColumns:
+  - name: caseNo
+    label: reports.lcms.caseRefNo
+    type: string
+    source: lcms
+    showColumn: true
+  - name: plaintiff
+    label: reports.lcms.NameOfPlaintiff
+    type: string
+    source: lcms
+    showColumn: true
+  - name: defendant
+    label: reports.lcms.NameOfDefendant
+    type: string
+    source: lcms
+    showColumn: true
+  searchParams:
+  - name: fromDate
+    label: reports.lcms.fromDate
+    type: epoch
+    source: lcms
+    isMandatory: true
+  - name: toDate
+    label: reports.lcms.toDate
+    type: epoch
+    source: lcms
+    isMandatory: true
+  - name: caseNo
+    label: reports.lcms.caseNo
+    type: string
+    isMandatory: false
+    source: lcms
+    searchClause : AND case.caseNo=$caseNo
+  - name: department
+    label: reports.lcms.department
+    type: singlevaluelist
+    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid&pageSize=500|$..code|$..name
+    source: lcms
+    isMandatory: false
+    searchClause : AND case.department = $department
+  - name: advocate
+    label: reports.lcms.advocate
+    type: singlevaluelist
+    pattern: http://lcms-services:8080/lcms-services/legalcase/advocate/_search?tenantId=$tenantid&pageSize=500|$..code|$..name
+    source: lcms
+    isMandatory: false
+    searchClause : AND case.advocate = $advocate
+  - name: courtName
+    label: reports.lcms.courtName
+    type: singlevaluelist
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=lcms&masterName=court|$..code|$..name
+    source: lcms
+    isMandatory: false
+    searchClause : AND case.courtName = $courtName
+  - name: plantiffName
+    label: reports.lcms.plantiffName
+    type: string
+    isMandatory: false
+    source: lcms
+    searchClause : AND case.plantiffName = $plantiffName
+  - name: defendant
+    label: reports.lcms.defendant
+    type: string
+    isMandatory: false
+    source: lcms
+    searchClause : AND case.defendant = $defendant
+  query: select case.caseno as caseNo, dept.name as department, case.casetype as caseType, case.plantiffname as plaintiff,case.defendant as defendant, advocate.name as advocateName, caseHearing.casestatus as caseStatus from egov_lcms_case as case, eg_department as dept, egov_lcms_advocate as advocate, egov_lcms_case_advocate as caseAdvocate, egov_lcms_hearing_details as caseHearing where caseregistrationdate>=$fromDate and case.caseregistrationdate<=$toDate and dept.code = case.departmentname

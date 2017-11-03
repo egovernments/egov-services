@@ -10,6 +10,7 @@ import org.egov.pa.model.KpiValueList;
 import org.egov.pa.repository.KpiValueRepository;
 import org.egov.pa.repository.builder.PerformanceAssessmentQueryBuilder;
 import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper;
+import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper.KPIValueListRowMapper;
 import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper.KPIValueRowMapper;
 import org.egov.pa.web.contract.KPIValueRequest;
 import org.egov.pa.web.contract.KPIValueSearchRequest;
@@ -59,12 +60,20 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 	}
 
 	@Override
-	public List<KpiValueList> searchKpiValue(KPIValueSearchRequest kpiValueSearchReq) {
+	public List<KpiValueList> compareSearchKpiValue(KPIValueSearchRequest kpiValueSearchReq) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
-    	String query = queryBuilder.getValueSearchQuery(kpiValueSearchReq,preparedStatementValues);
-    	KPIValueRowMapper mapper = new PerformanceAssessmentRowMapper().new KPIValueRowMapper(); 
+    	String query = queryBuilder.getValueCompareSearchQuery(kpiValueSearchReq,preparedStatementValues);
+    	KPIValueListRowMapper mapper = new PerformanceAssessmentRowMapper().new KPIValueListRowMapper(); 
     	List<KpiValueList> listOfValues = jdbcTemplate.query(query, preparedStatementValues.toArray(), mapper);
     	return listOfValues;
+	}
+	
+	@Override
+	public List<KpiValue> searchKpiValue(KPIValueSearchRequest kpiValueSearchReq) {final List<Object> preparedStatementValues = new ArrayList<>();
+		String query = queryBuilder.getValueCompareSearchQuery(kpiValueSearchReq,preparedStatementValues);
+		KPIValueRowMapper mapper = new PerformanceAssessmentRowMapper().new KPIValueRowMapper(); 
+		List<KpiValue> listOfValues = jdbcTemplate.query(query, preparedStatementValues.toArray(), mapper);
+		return listOfValues;
 	}
 
 	@Override

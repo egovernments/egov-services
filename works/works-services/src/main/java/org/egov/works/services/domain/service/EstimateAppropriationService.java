@@ -6,10 +6,10 @@ import java.util.UUID;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.services.config.PropertiesManager;
+import org.egov.works.services.web.contract.AuditDetails;
+import org.egov.works.services.web.contract.EstimateAppropriation;
 import org.egov.works.services.web.contract.EstimateAppropriationRequest;
 import org.egov.works.services.web.contract.RequestInfo;
-import org.egov.works.services.web.model.AuditDetails;
-import org.egov.works.services.web.model.EstimateAppropriation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -43,7 +43,7 @@ public class EstimateAppropriationService {
 		RequestInfo requestInfo = estimateAppropriationRequest.getRequestInfo();
 		AuditDetails auditDetails = new AuditDetails();
 		for(EstimateAppropriation estimateAppropriation: estimateAppropriationRequest.getEstimateAppropriations()) {
-            auditDetails.setCreatedBy(requestInfo.getUserInfo().getUsername());
+            auditDetails.setCreatedBy(requestInfo.getUserInfo().getUserName());
             auditDetails.setCreatedTime(new Date().getTime());
 			estimateAppropriation.setId(UUID.randomUUID().toString().replace("-", ""));
             estimateAppropriation.setAuditDetails(auditDetails);
@@ -59,7 +59,7 @@ public class EstimateAppropriationService {
 		AuditDetails auditDetails = new AuditDetails();
 		
 		for(EstimateAppropriation estimateAppropriation: estimateAppropriationRequest.getEstimateAppropriations()) {
-            auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getUsername());
+            auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getUserName());
             auditDetails.setLastModifiedTime(new Date().getTime());
             estimateAppropriation.setAuditDetails(auditDetails);
 		}

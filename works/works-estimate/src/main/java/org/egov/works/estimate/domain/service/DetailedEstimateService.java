@@ -5,22 +5,31 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import net.minidev.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.works.commons.domain.model.AuditDetails;
-import org.egov.works.commons.web.contract.RequestInfo;
+import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.config.WorksEstimateServiceConstants;
 import org.egov.works.estimate.domain.repository.DetailedEstimateRepository;
 import org.egov.works.estimate.utils.EstimateUtils;
+import org.egov.works.estimate.web.contract.Asset;
+import org.egov.works.estimate.web.contract.AssetsForEstimate;
+import org.egov.works.estimate.web.contract.AuditDetails;
+import org.egov.works.estimate.web.contract.DetailedEstimate;
+import org.egov.works.estimate.web.contract.DetailedEstimateDeduction;
 import org.egov.works.estimate.web.contract.DetailedEstimateRequest;
 import org.egov.works.estimate.web.contract.DetailedEstimateSearchContract;
-import org.egov.works.estimate.web.model.*;
+import org.egov.works.estimate.web.contract.EstimateActivity;
+import org.egov.works.estimate.web.contract.EstimateOverhead;
+import org.egov.works.estimate.web.contract.FinancialYear;
+import org.egov.works.estimate.web.contract.MultiYearEstimate;
+import org.egov.works.estimate.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
+
+import net.minidev.json.JSONArray;
 
 @Service
 @Transactional(readOnly= true)
@@ -38,6 +47,9 @@ public class DetailedEstimateService {
     @Autowired
     private EstimateUtils estimateUtils;
 
+    @Autowired
+    private CommonUtils commonUtils;
+
 	public List<DetailedEstimate> search(DetailedEstimateSearchContract detailedEstimateSearchContract) {
 		return detailedEstimateRepository.search(detailedEstimateSearchContract);
 	}
@@ -45,26 +57,26 @@ public class DetailedEstimateService {
     public List<DetailedEstimate> create(DetailedEstimateRequest detailedEstimateRequest) {
         AuditDetails auditDetails = setAuditDetails(detailedEstimateRequest.getRequestInfo().getUserInfo().getUsername(), false);
         for (final DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
-            detailedEstimate.setId(UUID.randomUUID().toString().replace("-", ""));
+            detailedEstimate.setId(commonUtils.getUUID());
             detailedEstimate.setAuditDetails(auditDetails);
 
             for(final AssetsForEstimate assetsForEstimate : detailedEstimate.getAssets()) {
-                assetsForEstimate.setId(UUID.randomUUID().toString().replace("-", ""));
+                assetsForEstimate.setId(commonUtils.getUUID());
                 detailedEstimate.setAuditDetails(auditDetails);
             }
 
             for(final MultiYearEstimate multiYearEstimate : detailedEstimate.getMultiYearEstimates()) {
-                multiYearEstimate.setId(UUID.randomUUID().toString().replace("-", ""));
+                multiYearEstimate.setId(commonUtils.getUUID());
                 multiYearEstimate.setAuditDetails(auditDetails);
             }
 
             for(final EstimateOverhead estimateOverhead : detailedEstimate.getEstimateOverheads()) {
-                estimateOverhead.setId(UUID.randomUUID().toString().replace("-", ""));
+                estimateOverhead.setId(commonUtils.getUUID());
                 estimateOverhead.setAuditDetails(auditDetails);
             }
 
             for(final DetailedEstimateDeduction detailedEstimateDeduction : detailedEstimate.getDetailedEstimateDeductions()) {
-                detailedEstimateDeduction.setId(UUID.randomUUID().toString().replace("-", ""));
+                detailedEstimateDeduction.setId(commonUtils.getUUID());
                 detailedEstimateDeduction.setAuditDetails(auditDetails);
             }
         }
@@ -172,6 +184,13 @@ public class DetailedEstimateService {
                     index++;
                 }
         }
+
+    public void validateDetailedEstimates(DetailedEstimateRequest detailedEstimateRequest, BindingResult errors) {
+        final RequestInfo requestInfo = detailedEstimateRequest.getRequestInfo();
+        for(DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
+            validateActivities(detailedEstimate,errors);
+        }
     }
+}
 	
 

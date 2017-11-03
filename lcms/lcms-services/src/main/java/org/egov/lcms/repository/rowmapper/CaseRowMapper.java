@@ -13,9 +13,11 @@ import org.egov.lcms.models.CaseCategory;
 import org.egov.lcms.models.CaseType;
 import org.egov.lcms.models.Court;
 import org.egov.lcms.models.Department;
+import org.egov.lcms.models.Document;
 import org.egov.lcms.models.Side;
 import org.egov.lcms.models.Stamp;
 import org.egov.lcms.models.Summon;
+import org.egov.lcms.repository.DepartmentRepository;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
@@ -37,7 +39,6 @@ public class CaseRowMapper implements RowMapper<Case> {
 	public Case mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 		Case caseObj = new Case();
-
 		caseObj.setCode(rs.getString("code"));
 		caseObj.setOldCaseNo(rs.getString("oldcaseno"));
 		caseObj.setSuitNo(rs.getString("suitNo"));
@@ -60,7 +61,6 @@ public class CaseRowMapper implements RowMapper<Case> {
 		summon.setSummonDate(getLong(rs.getObject("summonDate")));
 		summon.setYear(getString(rs.getObject("year")));
 		summon.setPlantiffName(getString(rs.getObject("plantiffName")));
-		summon.setDefendant(getString(rs.getObject("defendant")));
 		summon.setDefendant(getString(rs.getObject("defendant")));
 		summon.setSectionApplied(getString(rs.getObject("sectionApplied")));
 		summon.setHearingDate(getLong(rs.getObject("hearingDate")));
@@ -129,14 +129,14 @@ public class CaseRowMapper implements RowMapper<Case> {
 
 			}
 
-		/*	if (rs.getString("documents") != null) {
-				List<String> documents = new ArrayList<String>();
-				TypeReference<List<String>> documentRefType = new TypeReference<List<String>>() {
+			if (rs.getString("documents") != null) {
+				List<Document> documents = new ArrayList<Document>();
+				TypeReference<List<Document>> documentRefType = new TypeReference<List<Document>>() {
 				};
 				documents = objectMapper.readValue(rs.getString("documents"), documentRefType);
 				summon.setDocuments(documents);
 
-			}*/
+			}
 
 			if (rs.getString("witness") != null) {
 				List<String> witness = new ArrayList<String>();

@@ -48,8 +48,13 @@ public class KpiValueServiceImpl implements KpiValueService {
 	}
 
 	@Override
-	public List<KpiValueList> searchKpiValue(KPIValueSearchRequest kpiValueSearchReq) {
-		return kpiValueRepository.searchKpiValue(kpiValueSearchReq);
+	public List<KpiValueList> compareSearchKpiValue(KPIValueSearchRequest kpiValueSearchReq) {
+		return kpiValueRepository.compareSearchKpiValue(kpiValueSearchReq);
+	}
+	
+	@Override
+	public List<KpiValue> searchKpiValue(KPIValueSearchRequest kpiValueSearchReq) {
+		return kpiValueRepository.searchKpiValue(kpiValueSearchReq); 
 	}
 	
 	
@@ -117,5 +122,4 @@ public class KpiValueServiceImpl implements KpiValueService {
         final String finYear = Integer.toString(value) + "-" + Integer.toString(value + 1).substring(2, 4);
         return finYear;
     }
-
 }

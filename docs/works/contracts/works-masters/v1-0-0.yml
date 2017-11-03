@@ -17,7 +17,7 @@ info:
   # Path must be in small case.
   ######################################################
   
-  title: eGov Works Management System - MAsters.
+  title: eGov Works Management System - Masters.
   description: |
     APIs for Works Management module. This module handles search, create and update of Masters.
   contact:
@@ -159,7 +159,507 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - Schedule Of Rate
-
+        
+  /estimatetemplates/_search:
+    post:
+      summary: Get the list of Estimate Template(s) defined in the system.
+      description: |
+          Search and get Estimate Template(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Estimate Template(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of Notice as defined in EstimateTemplateResponse model.
+          
+          Search results will be sorted by the sortProperty Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageSize"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
+        - name: ids
+          in: query
+          type: array
+          items:
+            type: string
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Ids of Estimate Template to get the Estimate Templates.
+        - name: code
+          in: query
+          type: string
+          required: false
+          allowEmptyValue: true
+          description: Code of the Estimate Template
+        - name: name
+          in: query
+          type: string
+          required: false
+          allowEmptyValue: true
+          description: name of the Estimate Template
+        - name: active
+          in: query
+          type: boolean
+          description: If the value is True then get only active estimate templates. If boolean value is false then get inactive estimate templates.
+        - name: typeOfWork
+          in: query
+          type: string
+          format: multiValueList
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of the Type of work codes for which Estimate Template belongs to
+        - name: subTypeOfWork
+          in: query
+          type: string
+          format: multiValueList
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of the Sub Type of work codes for which Estimate Template belongs to
+      responses:
+        200:
+          description: Estimate Template(s) Retrieved Successfully
+          schema:
+            $ref: "#/definitions/EstimateTemplateResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Estimate Template
+        
+  /estimatetemplates/_create:
+    post:
+      summary: Create new Estimate Template(s).
+      description: |
+          To create new Estimate Template in the system. API supports bulk creation with max limit as defined in the Estimate Template Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Estimate Template, please pass array with one Estimate Template object.
+          
+      parameters:
+        - name: EstimateTemplateRequest
+          in: body
+          description: Details of new Estimate Template(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/EstimateTemplateRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        200:
+          description: Estimate Template(s) created successfully
+          schema:
+            $ref: '#/definitions/EstimateTemplateResponse'
+        400:
+          description: Estimate Template(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Estimate Template  
+        
+  /estimatetemplates/_update:
+    post:
+      summary: Update existing Estimate Template(s).
+      description: |
+          To update existing Estimate Template in the system. API supports bulk updation with max limit as defined in the Estimate Template Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Estimate Template, please pass array with one Estimate Template object.
+          In updade fields can be modified based on confguration defined in the system.
+          
+      parameters:
+        - name: EstimateTemplateRequest
+          in: body
+          description: Details of Estimate Template(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/EstimateTemplateRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        200:
+          description: Estimate Template(s) updated successfully
+          schema:
+            $ref: '#/definitions/EstimateTemplateResponse'
+        400:
+          description: Estimate Template(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Estimate Template
+        
+  /milestonetemplates/_search:
+    post:
+      summary: Get the list of Milestone Template(s) defined in the system.
+      description: |
+          Search and get Milestone Template(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Milestone Template(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of Notice as defined in MilestoneTemplateResponse model.
+          
+          Search results will be sorted by the sortProperty Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageSize"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
+        - name: ids
+          in: query
+          type: array
+          items:
+            type: string
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Ids of Milestone Template to get the Milestone Templates.
+        - name: templatecode
+          in: query
+          type: string
+          required: false
+          allowEmptyValue: true
+          description: Code of the Milestone Template
+        - name: templatename
+          in: query
+          type: string
+          required: false
+          allowEmptyValue: true
+          description: name of the Milestone Template
+        - name: active
+          in: query
+          type: boolean
+          description: If the value is True then get only active milestone templates. If boolean value is false then get inactive milestone templates.
+        - name: typeOfWork
+          in: query
+          type: string
+          format: multiValueList
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of the Type of work codes for which Milestone Template belongs to
+        - name: subTypeOfWork
+          in: query
+          type: string
+          format: multiValueList
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of the Sub Type of work codes for which Milestone Template belongs to
+      responses:
+        200:
+          description: Milestone Template(s) Retrieved Successfully
+          schema:
+            $ref: "#/definitions/MilestoneTemplateResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Milestone Template
+        
+  /milestonetemplates/_create:
+    post:
+      summary: Create new Milestone Template(s).
+      description: |
+          To create new Milestone Template in the system. API supports bulk creation with max limit as defined in the Milestone Template Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Milestone Template, please pass array with one Milestone Template object.
+          
+      parameters:
+        - name: MilestoneTemplateRequest
+          in: body
+          description: Details of new MileStone Template(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/MilestoneTemplateRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        200:
+          description: Milestone Template(s) created successfully
+          schema:
+            $ref: '#/definitions/MilestoneTemplateResponse'
+        400:
+          description: Milestone Template(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Milestone Template  
+        
+  /milestonetemplates/_update:
+    post:
+      summary: Update existing Milestone Template(s).
+      description: |
+          To update existing Milestone Template in the system. API supports bulk updation with max limit as defined in the Milestone Template Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Milestone Template, please pass array with one Milestone Template object.
+          In updade fields can be modified based on confguration defined in the system.
+          
+      parameters:
+        - name: MilestoneTemplateRequest
+          in: body
+          description: Details of Milestone Template(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/MilestoneTemplateRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        200:
+          description: Milestone Template(s) updated successfully
+          schema:
+            $ref: '#/definitions/MilestoneTemplateResponse'
+        400:
+          description: Milestone Template(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Milestone Template
+        
+  /contractors/_search:
+    post:
+      summary: Get the list of Contractor(s) defined in the system.
+      description: |
+          Search and get Milestone Template(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Milestone Template(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of Notice as defined in ContractorResponse model.
+          
+          Search results will be sorted by the sortProperty Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageSize"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
+        - name: ids
+          in: query
+          type: array
+          items:
+            type: string
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Ids of Contractor to get the Contractors
+        - name: name
+          in: query
+          required: false
+          description: The full name of the contractor.
+          type: string
+          allowEmptyValue: true
+        - name: code
+          in: query
+          required: false
+          description: code of the contractor.
+          type: string
+          allowEmptyValue: true
+        - name: contractorClass
+          in: query
+          type: array
+          items:
+            type: string
+          format: multiValueList
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Contractor Class for which Contractor belongs to
+        - name: statuses
+          in: query
+          type: array
+          items:
+            type: string
+          format: multiValueList
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of the Contractor Status    
+      responses:
+        200:
+          description: Contractor(s) Retrieved Successfully
+          schema:
+            $ref: "#/definitions/ContractorResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Contractor
+        
+  /contractors/_create:
+    post:
+      summary: Create new Contractor(s).
+      description: |
+          To create new Contractor in the system. API supports bulk creation with max limit as defined in the Contractor Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Contractor, please pass array with one Contractor object.
+          
+      parameters:
+        - name: ContractorRequest
+          in: body
+          description: Details of new Contractor(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/ContractorRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        200:
+          description: Contractor(s) created successfully
+          schema:
+            $ref: '#/definitions/ContractorResponse'
+        400:
+          description: Contractor(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Contractor  
+        
+  /contractors/_update:
+    post:
+      summary: Update existing Contractor(s).
+      description: |
+          To update existing Contractor in the system. API supports bulk updation with max limit as defined in the Contractor Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Contractor, please pass array with one Contractor object.
+          In updade fields can be modified based on confguration defined in the system.
+          
+      parameters:
+        - name: ContractorRequest
+          in: body
+          description: Details of Contractor(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/ContractorRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        200:
+          description: Contractor(s) updated successfully
+          schema:
+            $ref: '#/definitions/ContractorResponse'
+        400:
+          description: Contractor(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Contractor
+        
+  /remarks/_search:
+    post:
+      summary: Get the list of Remarks(s) defined in the system.
+      description: |
+          Search and get Remarks(s) based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Remarks(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of Notice as defined in RemarksResponse model.
+          
+          Search results will be sorted by the sortProperty Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageSize"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
+        - name: ids
+          in: query
+          type: array
+          items:
+            type: string
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Ids of Remarks to get the Remarks
+        - name: typeOfDocument
+          in: query
+          required: false
+          allowEmptyValue: true
+          description: The document type of the remarks.
+          type: string
+        - name: remarksType
+          in: query
+          required: false
+          allowEmptyValue: true
+          description: remarks type of the remarks.
+          type: string
+      responses:
+        200:
+          description: Remarks(s) Retrieved Successfully
+          schema:
+            $ref: "#/definitions/RemarksResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Remarks
+        
+  /remarks/_create:
+    post:
+      summary: Create new Remarks(s).
+      description: |
+          To create new Remarks in the system. API supports bulk creation with max limit as defined in the Remarks Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Remarks, please pass array with one Remarks object.
+          
+      parameters:
+        - name: RemarksRequest
+          in: body
+          description: Details of new Remarks(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/RemarksRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        200:
+          description: Remarks(s) created successfully
+          schema:
+            $ref: '#/definitions/RemarksResponse'
+        400:
+          description: Remarks(s) creation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Remarks  
+        
+  /remarks/_update:
+    post:
+      summary: Update existing Remarks(s).
+      description: |
+          To update existing Remarks in the system. API supports bulk updation with max limit as defined in the Remarks Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Remarks, please pass array with one Remarks object.
+          In updade fields can be modified based on confguration defined in the system.
+          
+      parameters:
+        - name: RemarksRequest
+          in: body
+          description: Details of Remarks(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/RemarksRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        200:
+          description: Remarks(s) updated successfully
+          schema:
+            $ref: '#/definitions/RemarksResponse'
+        400:
+          description: Remarks(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Remarks
+        
 definitions:      
   ScheduleOfRateRequest:
       description: Contract class to send response. Array of Revision Estimate items are used in case of search results, also multiple  Revision Estimate item is used for create and update
@@ -185,9 +685,116 @@ definitions:
           maximum: 500
           items:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/ScheduleOfRate'
+            
+  EstimateTemplateRequest:
+      description: Contract class to send response. Array of Estimate Template items are used in case of search results, also multiple Estimate Template item is used for create and update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        estimateTemplates:
+          description: Used for create and update only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/EstimateTemplate'
+            
+  EstimateTemplateResponse:
+    description: Contract class to send response. Array of Estimate Template items are used in case of search results, also multiple Estimate Template item is used for create and update
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      estimateTemplates:
+        description: Used for search result and create only
+        type: array
+        maximum: 500
+        items:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/EstimateTemplate'
+          
+  MilestoneTemplateRequest:
+      description: Contract class to send response. Array of Milestone Template items are used in case of search results, also multiple Milestone Template item is used for create and update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        milestoneTemplates:
+          description: Used for create and update only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/MilestoneTemplate'
+            
+  MilestoneTemplateResponse:
+    description: Contract class to send response. Array of Milestone Template items are used in case of search results, also multiple Milestone Template item is used for create and update
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      milestoneTemplates:
+        description: Used for search result and create only
+        type: array
+        maximum: 500
+        items:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/MilestoneTemplate'
+          
+  ContractorRequest:
+      description: Contract class to send response. Array of Contractor items are used in case of search results, also multiple Contractor item is used for create and update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        contractors:
+          description: Used for create and update only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/Contractor'
+            
+  ContractorResponse:
+    description: Contract class to send response. Array of Contractor items are used in case of search results, also multiple Contractor item is used for create and update
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      contractors:
+        description: Used for search result and create only
+        type: array
+        maximum: 500
+        items:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/Contractor'
+          
+  RemarksRequest:
+      description: Contract class to send response. Array of Remarks items are used in case of search results, also multiple Remarks item is used for create and update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        remarks:
+          description: Used for create and update only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/Remarks'
+            
+  RemarksResponse:
+    description: Contract class to send response. Array of Remarks items are used in case of search results, also multiple Remarks item is used for create and update
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      remarks:
+        description: Used for search result and create only
+        type: array
+        maximum: 500
+        items:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/Remarks'
 
 tags:
   - name: Schedule Of Rate
     description: APIs required for Schedule Of Rate.
-
+  - name: Estimate Template
+    description: APIs required for Estimate Template.
+  - name: Milestone Template
+    description: APIs required for Milestone Template.
+  - name: Contractor
+    description: APIs required for Contractor.
+  - name: Remarks
+    description: APIs required for Remarks.  
 

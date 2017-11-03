@@ -116,7 +116,7 @@ public class PerformanceAssessmentRowMapper {
 		}
 	}
 
-	public class KPIValueRowMapper implements RowMapper<KpiValueList> {
+	public class KPIValueListRowMapper implements RowMapper<KpiValueList> {
 		@Override
 		public KpiValueList mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 			KpiValueList valueList = new KpiValueList();
@@ -137,5 +137,22 @@ public class PerformanceAssessmentRowMapper {
 			return valueList;
 		}
 	}
+	
+	public class KPIValueRowMapper implements RowMapper<KpiValue> {
+		@Override
+		public KpiValue mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+			KpiValue value = new KpiValue(); 
+			KPI kpi = new KPI();
+			kpi.setCode(rs.getString("kpiCode"));
+			kpi.setTargetValue(rs.getLong("targetValue"));
+			kpi.setInstructions(rs.getString("instructions"));
+			value.setKpi(kpi);
+			value.setId(String.valueOf(rs.getString("valueId"))); 
+			value.setResultValue(rs.getLong("actualValue")); 
+			value.setTenantId(rs.getString("tenantId"));
+			return value; 
+		}
+	}
+
 }
 	

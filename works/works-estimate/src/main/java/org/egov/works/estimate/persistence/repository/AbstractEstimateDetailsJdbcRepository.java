@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.common.persistence.repository.JdbcRepository;
-import org.egov.works.estimate.persistence.entity.AbstractEstimateDetailsEntity;
+import org.egov.works.estimate.persistence.helper.AbstractEstimateDetailsHelper;
+import org.egov.works.estimate.web.contract.AbstractEstimateDetails;
 import org.egov.works.estimate.web.contract.AbstractEstimateDetailsSearchContract;
-import org.egov.works.estimate.web.model.AbstractEstimateDetails;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
@@ -88,14 +88,14 @@ public class AbstractEstimateDetailsJdbcRepository extends JdbcRepository {
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(AbstractEstimateDetailsEntity.class);
+		BeanPropertyRowMapper row = new BeanPropertyRowMapper(AbstractEstimateDetailsHelper.class);
 
-		List<AbstractEstimateDetailsEntity> abstractEstimateDetailsEntities = namedParameterJdbcTemplate
+		List<AbstractEstimateDetailsHelper> abstractEstimateDetailsEntities = namedParameterJdbcTemplate
 				.query(searchQuery.toString(), paramValues, row);
 
 		List<AbstractEstimateDetails> abstractEstimateDetails = new ArrayList<>();
 
-		for (AbstractEstimateDetailsEntity abstractEstimateDetailsEntity : abstractEstimateDetailsEntities) {
+		for (AbstractEstimateDetailsHelper abstractEstimateDetailsEntity : abstractEstimateDetailsEntities) {
 			abstractEstimateDetails.add(abstractEstimateDetailsEntity.toDomain());
 		}
 

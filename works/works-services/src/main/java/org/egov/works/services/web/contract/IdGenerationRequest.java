@@ -2,8 +2,6 @@ package org.egov.works.services.web.contract;
 
 import java.util.List;
 
-import org.egov.works.commons.web.contract.RequestInfo;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;

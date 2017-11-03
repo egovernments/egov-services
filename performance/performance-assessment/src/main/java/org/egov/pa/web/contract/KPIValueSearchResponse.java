@@ -7,7 +7,7 @@ import java.util.Objects;
 import javax.validation.Valid;
 
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.pa.model.KpiValueList;
+import org.egov.pa.model.KpiValue;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -21,7 +21,7 @@ public class KPIValueSearchResponse   {
   private ResponseInfo responseInfo = null;
 
   @JsonProperty("kpiValues")
-  private List<KpiValueList> kpiValues = null;
+  private List<KpiValue> kpiValues = null;
 
   public KPIValueSearchResponse responseInfo(ResponseInfo responseInfo) {
     this.responseInfo = responseInfo;
@@ -43,14 +43,14 @@ public class KPIValueSearchResponse   {
     this.responseInfo = responseInfo;
   }
 
-  public KPIValueSearchResponse kpiValues(List<KpiValueList> kpiValues) {
+  public KPIValueSearchResponse kpiValues(List<KpiValue> kpiValues) {
     this.kpiValues = kpiValues;
     return this;
   }
 
-  public KPIValueSearchResponse addKpiValuesItem(KpiValueList kpiValuesItem) {
+  public KPIValueSearchResponse addKpiValuesItem(KpiValue kpiValuesItem) {
     if (this.kpiValues == null) {
-      this.kpiValues = new ArrayList<KpiValueList>();
+      this.kpiValues = new ArrayList<KpiValue>();
     }
     this.kpiValues.add(kpiValuesItem);
     return this;
@@ -63,27 +63,16 @@ public class KPIValueSearchResponse   {
 
   @Valid
 
-  public List<KpiValueList> getKpiValues() {
+  public List<KpiValue> getKpiValues() {
     return kpiValues;
   }
 
-  public void setKpiValues(List<KpiValueList> kpiValues) {
+  public void setKpiValues(List<KpiValue> kpiValues) {
     this.kpiValues = kpiValues;
   }
 
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    KPIValueSearchResponse kpIValueSearchResponse = (KPIValueSearchResponse) o;
-    return Objects.equals(this.responseInfo, kpIValueSearchResponse.responseInfo) &&
-        Objects.equals(this.kpiValues, kpIValueSearchResponse.kpiValues);
-  }
+ 
 
   @Override
   public int hashCode() {

@@ -1094,7 +1094,7 @@ if (assetDetails && Object.keys(assetDetails).length) {
     }
 }
 
-$('#commencementDate').datepicker("option",{
+$('#commencementDate').datepicker({
                     format: 'dd/mm/yyyy',
                     autoclose:true
 

@@ -50,6 +50,7 @@ import org.egov.inv.domain.exception.InvalidDataException;
 import org.egov.inv.persistence.entity.StoreEntity;
 import org.egov.inv.persistence.repository.StoreJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -74,54 +75,35 @@ public class StoreService {
 	@Autowired
 	private InventoryUtilityService inventoryUtilityService;
 
-	
-
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	public List<Store> create(StoreRequest storeRequest, String tenantId, BindingResult errors) {
 
-		try {
-
-			for (Store store : storeRequest.getStores()) {
-				store.setAuditDetails(inventoryUtilityService.mapAuditDetails(storeRequest.getRequestInfo(), tenantId));
-				if (!storeJdbcRepository.uniqueCheck("code", new StoreEntity().toEntity(store))) {
-					errors.addError(new FieldError("store", "code", store.getCode(), false,
-							new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null,
-							ErrorCode.NON_UNIQUE_VALUE.getMessage() + " . " + ErrorCode.NON_UNIQUE_VALUE.getDescription()));
-				}
-				if (errors.hasErrors()) {
-					throw new CustomBindException(errors.getFieldError().getCode() + " : " + (errors.getFieldError().getDefaultMessage().replace("{0}", errors.getFieldError().getField())).replace("{1}", errors.getFieldError().getRejectedValue().toString()));
-				}
-				store.setId(storeJdbcRepository.getSequence(store));
+		for (Store store : storeRequest.getStores()) {
+			store.setAuditDetails(inventoryUtilityService.mapAuditDetails(storeRequest.getRequestInfo(), tenantId));
+			if (!storeJdbcRepository.uniqueCheck("code", new StoreEntity().toEntity(store))) {
+				throw new CustomException("inv.003", "Store code should be unique");
 			}
-		} catch (CustomBindException e) {
-			throw e;
+			store.setId(storeJdbcRepository.getSequence(store));
 		}
-			
-				
+
 		return push(storeRequest);
 	}
 
 	public List<Store> update(StoreRequest storeRequest, String tenantId, BindingResult errors) {
-		try {
 
-			for (Store store : storeRequest.getStores()) {
-				 if (store.getId() == null) {
-                     throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), store.getId());
-                 }
-				store.setAuditDetails(inventoryUtilityService.mapAuditDetailsForUpdate(storeRequest.getRequestInfo(), tenantId));
-				if (!storeJdbcRepository.uniqueCheck("code", new StoreEntity().toEntity(store))) {
-					errors.addError(new FieldError("store", "code", store.getCode(), false,
-							new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, ErrorCode.NON_UNIQUE_VALUE.getMessage() + " . " + ErrorCode.NON_UNIQUE_VALUE.getDescription()));
-				}
-				if (errors.hasErrors()) {
-					throw new CustomBindException(errors.getFieldError().getCode() + " : " + (errors.getFieldError().getDefaultMessage().replace("{0}", errors.getFieldError().getField())).replace("{1}", errors.getFieldError().getRejectedValue().toString()));
-				}
+		for (Store store : storeRequest.getStores()) {
+			if (store.getId() == null) {
+				throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), store.getId());
 			}
-		} catch (CustomBindException e) {
-			throw e;
+			store.setAuditDetails(
+					inventoryUtilityService.mapAuditDetailsForUpdate(storeRequest.getRequestInfo(), tenantId));
+			if (!storeJdbcRepository.uniqueCheck("code", new StoreEntity().toEntity(store))) {
+				throw new CustomException("inv.003", "Store code should be unique");
+			}
 		}
+
 		return pushForUpdate(storeRequest);
 	}
 

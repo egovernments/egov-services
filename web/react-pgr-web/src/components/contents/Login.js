@@ -82,6 +82,7 @@ const styles = {
 
 
 class Login extends Component {
+  static isPrivate = false
 
   constructor(props) {
        super(props);

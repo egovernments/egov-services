@@ -40,19 +40,21 @@
 
 package org.egov.works.estimate.web.contract.factory;
 
-import org.egov.works.commons.web.contract.RequestInfo;
-import org.egov.works.commons.web.contract.ResponseInfo;
+import org.egov.works.estimate.web.contract.RequestInfo;
+import org.egov.works.estimate.web.contract.ResponseInfo;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ResponseInfoFactory {
 
 	public ResponseInfo createResponseInfoFromRequestInfo(final RequestInfo requestInfo, final Boolean success) {
-        final String apiId = requestInfo != null ? requestInfo.getApiId() : "";
-        final String ver = requestInfo != null ? requestInfo.getVer() : "";
-        final Long ts = requestInfo != null ? requestInfo.getTs() : null;
-        final String resMsgId = "uief87324"; // FIXME : Hard-coded
-        final String msgId = requestInfo != null ? requestInfo.getMsgId() : "";
-        return new ResponseInfo(apiId, ver, ts, resMsgId, msgId, success ? ResponseInfo.StatusEnum.SUCCESSFUL : ResponseInfo.StatusEnum.FAILED);
+		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setApiId(requestInfo != null ? requestInfo.getApiId() : "");
+		responseInfo.setVer(requestInfo != null ? requestInfo.getVer() : "");
+		responseInfo.setTs(requestInfo != null ? requestInfo.getTs() : null);
+		responseInfo.setResMsgId("uief87324"); // FIXME : Hard-coded
+		responseInfo.setMsgId(requestInfo != null ? requestInfo.getMsgId() : "");
+		responseInfo.setStatus(success ? ResponseInfo.StatusEnum.SUCCESSFUL : ResponseInfo.StatusEnum.FAILED);
+        return responseInfo;
 	}
 }

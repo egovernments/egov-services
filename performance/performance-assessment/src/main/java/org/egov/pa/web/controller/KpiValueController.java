@@ -48,6 +48,7 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pa.model.KpiValueList;
 import org.egov.pa.service.KpiValueService;
 import org.egov.pa.validator.RequestValidator;
+import org.egov.pa.web.contract.KPIValueCompareSearchResponse;
 import org.egov.pa.web.contract.KPIValueRequest;
 import org.egov.pa.web.contract.KPIValueResponse;
 import org.egov.pa.web.contract.KPIValueSearchRequest;
@@ -81,7 +82,6 @@ public class KpiValueController implements KpiValue {
     private ResponseInfoFactory responseInfoFactory;
     
     @Override
-	@PostMapping(value = "/_create")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody @Valid final KPIValueRequest kpiValueRequest,
             final BindingResult errors) {
@@ -98,7 +98,6 @@ public class KpiValueController implements KpiValue {
     }
 
     @Override
-	@PostMapping(value = "/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final KPIValueRequest kpiValueRequest,
             final BindingResult errors) {
@@ -115,7 +114,23 @@ public class KpiValueController implements KpiValue {
     }
     
     @Override
-	@PostMapping(value = "/_comparesearch")
+    @ResponseBody
+    public ResponseEntity<?> compareAndSearch(@RequestBody @Valid final KPIValueSearchRequest kpiValueSearchReq,
+            final BindingResult errors) {
+    	log.info("KPI Master Search Request as recieved in Controller : " + kpiValueSearchReq);
+        if (errors.hasErrors()) {
+            final ErrorResponse errRes = requestValidator.populateErrors(errors); 
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+        }
+        final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiValueSearchReq);
+        if (!errorResponses.isEmpty())
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        List<KpiValueList> kpiValueList = kpiValueService.compareSearchKpiValue(kpiValueSearchReq); 
+        return getCompareSearchSuccessResponse(kpiValueList, kpiValueSearchReq.getRequestInfo()); 
+    }
+    
+    @Override
+	@PostMapping(value = "/_search")
     @ResponseBody
     public ResponseEntity<?> search(@RequestBody @Valid final KPIValueSearchRequest kpiValueSearchReq,
             final BindingResult errors) {
@@ -127,19 +142,28 @@ public class KpiValueController implements KpiValue {
         final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiValueSearchReq);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-        List<KpiValueList> kpiValueList = kpiValueService.searchKpiValue(kpiValueSearchReq); 
-        return getSuccessResponse(kpiValueList, kpiValueSearchReq.getRequestInfo()); 
+        List<org.egov.pa.model.KpiValue> kpiValueList = kpiValueService.searchKpiValue(kpiValueSearchReq); 
+        return getSearchSuccessResponse(kpiValueList, kpiValueSearchReq.getRequestInfo()); 
     }
     
-    public ResponseEntity<?> getSuccessResponse(final List<KpiValueList> kpiValueList,
+    public ResponseEntity<?> getSearchSuccessResponse(final List<org.egov.pa.model.KpiValue> kpiValues,
             final RequestInfo requestInfo) {
         final KPIValueSearchResponse kpiValueSearchResponse = new KPIValueSearchResponse();
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         kpiValueSearchResponse.setResponseInfo(responseInfo);
+        kpiValueSearchResponse.setKpiValues(kpiValues);
+        return new ResponseEntity<>(kpiValueSearchResponse, HttpStatus.OK);
+    }
+    
+    public ResponseEntity<?> getCompareSearchSuccessResponse(final List<KpiValueList> kpiValueList,
+            final RequestInfo requestInfo) {
+        final KPIValueCompareSearchResponse kpiValueSearchResponse = new KPIValueCompareSearchResponse();
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        kpiValueSearchResponse.setResponseInfo(responseInfo);
         kpiValueSearchResponse.setKpiValues(kpiValueList);
         return new ResponseEntity<>(kpiValueSearchResponse, HttpStatus.OK);
-
     }
     
     public ResponseEntity<?> getCreateUpdateSuccessResponse(final KPIValueRequest kpiValueRequest) {

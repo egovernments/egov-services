@@ -4,14 +4,15 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.works.commons.web.contract.RequestInfo;
-import org.egov.works.commons.web.contract.ResponseInfo;
 import org.egov.works.estimate.domain.exception.CustomBindException;
 import org.egov.works.estimate.domain.service.AbstractEstimateService;
+import org.egov.works.estimate.utils.EstimateUtils;
+import org.egov.works.estimate.web.contract.AbstractEstimate;
 import org.egov.works.estimate.web.contract.AbstractEstimateRequest;
 import org.egov.works.estimate.web.contract.AbstractEstimateResponse;
 import org.egov.works.estimate.web.contract.AbstractEstimateSearchContract;
-import org.egov.works.estimate.web.model.AbstractEstimate;
+import org.egov.works.estimate.web.contract.RequestInfo;
+import org.egov.works.estimate.web.contract.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -29,6 +30,9 @@ public class AbstractEstimateController {
 
 	@Autowired
 	private AbstractEstimateService abstractEstimateService;
+	
+	@Autowired
+	private EstimateUtils estimateUtils;
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -41,7 +45,7 @@ public class AbstractEstimateController {
 		final List<AbstractEstimate> abstractEstimates = abstractEstimateService.create(abstractEstimateRequest);
 		final AbstractEstimateResponse response = new AbstractEstimateResponse();
 		response.setAbstractEstimates(abstractEstimates);
-		response.setResponseInfo(getResponseInfo(abstractEstimateRequest.getRequestInfo()));
+		response.setResponseInfo(estimateUtils.getResponseInfo(abstractEstimateRequest.getRequestInfo()));
 		return response;
 	}
 
@@ -56,7 +60,7 @@ public class AbstractEstimateController {
 		final List<AbstractEstimate> abstractEstimates = abstractEstimateService.update(abstractEstimateRequest);
 		final AbstractEstimateResponse response = new AbstractEstimateResponse();
 		response.setAbstractEstimates(abstractEstimates);
-		response.setResponseInfo(getResponseInfo(abstractEstimateRequest.getRequestInfo()));
+		response.setResponseInfo(estimateUtils.getResponseInfo(abstractEstimateRequest.getRequestInfo()));
 		return response;
 	}
 
@@ -70,12 +74,7 @@ public class AbstractEstimateController {
 		final List<AbstractEstimate> abstractEstimates = abstractEstimateService.search(abstractEstimateSearchContract);
 		final AbstractEstimateResponse response = new AbstractEstimateResponse();
 		response.setAbstractEstimates(abstractEstimates);
-		response.setResponseInfo(getResponseInfo(requestInfo));
+		response.setResponseInfo(estimateUtils.getResponseInfo(requestInfo));
 		return response;
-	}
-
-	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").build();
 	}
 }

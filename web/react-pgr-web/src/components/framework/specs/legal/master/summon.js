@@ -339,7 +339,7 @@ var dat ={
           },   
           {
             "name": "stamp",
-            "jsonPath": "summons[0].stamp.code",
+            "jsonPath": "summons[0].register.code",
             "label": "legal.create.stamp",
             "type": "singleValueList",
             "isRequired": true,

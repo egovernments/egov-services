@@ -60,7 +60,6 @@ var dat = {
       }
     ],
     "result": {
-      "disableRowClick" : true,
       "header": [
         {
            "label": "legal.search.result.advocateName"
@@ -70,23 +69,12 @@ var dat = {
         },
         {
           "label": "legal.search.result.mobileNumber"
-        },{
-          "label" : "legal.search.result.actionLabels",
-          "isAction" : true,
-          "actionItems" : [{
-            label : 'Assign Advocate',
-            url : '/update/legal/assignadvocate/'
-          },{
-            label : 'Case Registration',
-            url : '/update/legal/caseregistration/'
-          }]
         }
       ],
       "values": [
         "name",
         "emailId",
-        "contactNo",
-        "code"
+        "contactNo"
       ],
       "resultPath": "advocates",
       //"rowClickUrlUpdate": "/update/legalcase/{id}",

@@ -133,7 +133,7 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
     	while(itr.hasNext()) { 
     		Entry<String, List<Document>> entry = itr.next();
     		for(KPI kpi : kpiList) { 
-    			if(kpi.getId() == entry.getKey()) { 
+    			if(kpi.getId().equals(entry.getKey())) { 
     				kpi.setDocuments(entry.getValue());
     			}
     		}

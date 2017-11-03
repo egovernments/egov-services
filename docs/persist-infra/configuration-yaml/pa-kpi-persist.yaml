@@ -128,17 +128,17 @@ serviceMaps:
       basePath: $.kpiValues.*
       jsonMaps:
        
-       - jsonPath: $.kpiValues.*.kpiCode
+       - jsonPath: $.kpiValues.*.kpi.code
          
        - jsonPath: $.kpiValues.*.tenantId
          
-       - jsonPath: $.kpiValues.*.actualValue
+       - jsonPath: $.kpiValues.*.resultValue
          type: LONG
          
-       - jsonPath: $.kpiValues.*.createdBy
+       - jsonPath: $.kpiValues.*.auditDetails.createdBy
          type: LONG
        
-       - jsonPath: $.kpiValues.*.createdDate
+       - jsonPath: $.kpiValues.*.auditDetails.createdTime
          type: LONG  
          
  - version: 1.0
@@ -150,16 +150,16 @@ serviceMaps:
       basePath: $.kpiValues.*
       jsonMaps:
        
-       - jsonPath: $.kpiValues.*.actualValue
+       - jsonPath: $.kpiValues.*.resultValue
          type: LONG  
          
-       - jsonPath: $.kpiValues.*.lastModifiedBy
+       - jsonPath: $.kpiValues.*.auditDetails.lastModifiedBy
          type: LONG  
          
-       - jsonPath: $.kpiValues.*.lastModifiedDate
+       - jsonPath: $.kpiValues.*.auditDetails.lastModifiedTime
          type: LONG
          
-       - jsonPath: $.kpiValues.*.kpiCode
+       - jsonPath: $.kpiValues.*.kpi.code
        
        - jsonPath: $.kpiValues.*.tenantId
          

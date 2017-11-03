@@ -53,10 +53,9 @@ import org.springframework.stereotype.Component;
 public class PerformanceAssessmentQueryBuilder {
 	public static final Logger LOGGER = LoggerFactory.getLogger(PerformanceAssessmentQueryBuilder.class);
 
-    public static final String SEARCH_KPI_BASE_QUERY = "SELECT docs.id as docid, docs.kpicode as dockpicode, docs.documentcode, docs.documentname, docs.mandatoryflag, master.id as id, master.name as name, master.code as code, master.finyear as finYear, master.createdby as createdBy, master.createddate as createdDate, " 
-    		+ " master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, targets.id as targetId, targets.targetvalue as targetValue, targets.targetdescription as targetDescription, " 
-    		+ " targets.instructions as instructions, targets.kpicode as targetkpicode FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_targets targets ON  master.code = targets.kpicode " 
-    		+ " LEFT JOIN egpa_kpi_master_document docs ON master.code = docs.kpicode WHERE master.active IS TRUE " ;
+    public static final String SEARCH_KPI_BASE_QUERY = "SELECT docs.id as docid, docs.kpicode as dockpicode, docs.documentcode, docs.documentname, docs.mandatoryflag, master.id as id, master.name as name, master.code as code, master.finyear as finYear, master.createdby as createdBy, master.createddate as createdDate, "  
+    		+ " master.tenantid as tenantId, master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, master.targetvalue as targetValue, master.instructions as instructions FROM egpa_kpi_master master "  
+    		+ " LEFT JOIN egpa_kpi_master_document docs ON master.code = docs.kpicode WHERE master.active IS TRUE " ; 
     
     public static final String SEARCH_VALUE_BASE_QUERY = "SELECT "  
     		+ " value.tenantid as tenantId, master.code as kpiCode, master.finyear as finYear, target.id as targetId, target.kpicode as targetKpiCode, "  
@@ -84,9 +83,7 @@ public class PerformanceAssessmentQueryBuilder {
     }
     
     public static String fetchTargetForKpi() { 
-    	return "SELECT targets.id, targets.kpicode as kpiCode, targets.targetvalue as targetValue, targets.targetdescription as targetDescription, " 
-    			+ " targets.instructions, targets.createdby as createdBy, targets.createddate as createdDate FROM egpa_kpi_master_targets targets " 
-    			+ " LEFT JOIN egpa_kpi_master master on targets.kpicode = master.code WHERE targets.kpicode = :kpiCode and master.finyear = :finYear " ; 
+    	return "SELECT * FROM egpa_kpi_master master where master.code = :kpiCode and master.finyear = :finYear and targetvalue IS NOT NULL " ;
     }
     
     public static String fetchKpiValueForCodeAndTenant() { 

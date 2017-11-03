@@ -186,7 +186,7 @@ public class RequestValidator {
 	                    PerformanceAssessmentConstants.KPICODE_MANDATORY_FIELD_NAME));
 			}
 			
-			if(StringUtils.isBlank(kpi.getTenantId())) { 
+			if(StringUtils.isBlank(kpiValue.getTenantId())) { 
 				errorFields.add(buildErrorField(PerformanceAssessmentConstants.TENANTID_MANDATORY_CODE, 
 	                    PerformanceAssessmentConstants.TENANTID_MANADATORY_ERROR_MESSAGE,
 	                    PerformanceAssessmentConstants.TENANTID_MANADATORY_FIELD_NAME));

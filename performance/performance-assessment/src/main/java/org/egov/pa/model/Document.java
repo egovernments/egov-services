@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Document   {
   @JsonProperty("id")
-  private Long id = null; 
+  private String id = null; 
 	
   @JsonProperty("name")
   private String name = null;
@@ -53,13 +53,13 @@ public Document name(String name) {
   
   
 
-   public Long getId() {
+   public String getId() {
 	return id;
 }
 
 
 
-public void setId(Long id) {
+public void setId(String id) {
 	this.id = id;
 }
 

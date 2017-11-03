@@ -64,15 +64,16 @@ import lombok.extern.slf4j.Slf4j;
 public class PerformanceAssessmentRowMapper {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(PerformanceAssessmentRowMapper.class);
-	
+
 	public class KPIMasterRowMapper implements RowMapper<KPI> {
 		public Map<String, KPI> kpiMap = new HashMap<>();
 		public Map<String, List<Document>> docMap = new HashMap<>();
+
 		@Override
 		public KPI mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-			if(!kpiMap.containsKey(rs.getLong("id"))) { 
-				KPI kpi = new KPI(); 
-				kpi.setId(String.valueOf(rs.getLong("id"))); 
+			if (!kpiMap.containsKey(rs.getLong("id"))) {
+				KPI kpi = new KPI();
+				kpi.setId(String.valueOf(rs.getLong("id")));
 				kpi.setName(rs.getString("name"));
 				kpi.setCode(rs.getString("code"));
 				kpi.setFinancialYear(rs.getString("finYear"));
@@ -82,61 +83,59 @@ public class PerformanceAssessmentRowMapper {
 				audit.setLastModifiedBy(rs.getLong("lastModifiedBy"));
 				audit.setLastModifiedTime(rs.getLong("lastModifiedDate"));
 				kpi.setTargetValue(rs.getLong("targetValue"));
+				kpi.setTenantId(rs.getString("tenantId"));
 				kpi.setInstructions(rs.getString("instructions"));
-				kpiMap.put(String.valueOf(rs.getLong("id")), kpi); 
+				kpiMap.put(String.valueOf(rs.getLong("id")), kpi);
 			}
-			
-			if(docMap.containsKey(rs.getLong("id"))) { 
-				List<Document> docList = docMap.get(rs.getLong("id")); 
-				if(StringUtils.isNotBlank(rs.getString("documentcode"))) { 
-					docList.add(prepareDocumentObject(rs));
+
+			if (docMap.containsKey(String.valueOf(rs.getLong("id")))) {
+				List<Document> docList = docMap.get(String.valueOf(rs.getLong("id")));
+				if (StringUtils.isNotBlank(rs.getString("documentcode"))) {
+					Document doc = new Document();
+					doc.setId(String.valueOf(rs.getLong("docid")));
+					doc.setKpiCode(rs.getString("dockpicode"));
+					doc.setCode(rs.getString("documentcode"));
+					doc.setName(rs.getString("documentname"));
+					doc.setActive(rs.getBoolean("mandatoryflag"));
+					docList.add(doc);
 				}
-			} else { 
-				List<Document> docList = new ArrayList<>(); 
-				docList.add(prepareDocumentObject(rs));
-				if(StringUtils.isNotBlank(rs.getString("documentcode"))) { 
-					docMap.put(String.valueOf(rs.getLong("id")), docList) ;
-				}
-			}
-			return null; 
-		}
-		
-		private Document prepareDocumentObject(ResultSet rs) {
-			Document doc = new Document();
-			try { 
-				doc.setId(rs.getLong("docid"));
+			} else {
+				List<Document> docList = new ArrayList<>();
+				Document doc = new Document();
+				doc.setId(String.valueOf(rs.getLong("docid")));
 				doc.setKpiCode(rs.getString("dockpicode"));
 				doc.setCode(rs.getString("documentcode"));
 				doc.setName(rs.getString("documentname"));
 				doc.setActive(rs.getBoolean("mandatoryflag"));
-			} catch (Exception e) { 
-				log.error("Exception encountered while preparing Document Object from RS : " + e);
+				docList.add(doc);
+				if (StringUtils.isNotBlank(rs.getString("documentcode"))) {
+					docMap.put(String.valueOf(rs.getLong("id")), docList);
+				}
 			}
-			return doc; 
+			return null;
 		}
 	}
-	
+
 	public class KPIValueRowMapper implements RowMapper<KpiValueList> {
 		@Override
 		public KpiValueList mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-			KpiValueList valueList = new KpiValueList(); 
-			valueList.setTenantId(rs.getString("tenantId")); 
+			KpiValueList valueList = new KpiValueList();
+			valueList.setTenantId(rs.getString("tenantId"));
 			KPI kpi = new KPI();
 			kpi.setCode(rs.getString("kpiCode"));
 			kpi.setTargetValue(rs.getLong("targetValue"));
 			kpi.setInstructions(rs.getString("instructions"));
 			valueList.setKpi(kpi);
-			valueList.setFinYear(rs.getString("finYear")); 
-			KpiValue value = new KpiValue(); 
+			valueList.setFinYear(rs.getString("finYear"));
+			KpiValue value = new KpiValue();
 			value.setId(String.valueOf(rs.getLong("valueId")));
 			value.setResultValue(rs.getLong("actualValue"));
 			value.setTenantId(rs.getString("tenantId"));
 			List<KpiValue> kpiValueList = new ArrayList<>();
-			kpiValueList.add(value); 
+			kpiValueList.add(value);
 			valueList.setKpiValue(kpiValueList);
-			return valueList; 
+			return valueList;
 		}
 	}
-	
-	
 }
+	

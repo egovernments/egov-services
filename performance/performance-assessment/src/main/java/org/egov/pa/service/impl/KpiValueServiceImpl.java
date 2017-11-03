@@ -8,7 +8,6 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.pa.model.AuditDetails;
 import org.egov.pa.model.KPI;
-import org.egov.pa.model.KpiTarget;
 import org.egov.pa.model.KpiValue;
 import org.egov.pa.model.KpiValueList;
 import org.egov.pa.repository.KpiValueRepository;
@@ -26,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class KpiValueServiceImpl implements KpiValueService {
 	
 	public static Map<String, KPI> kpiMap = new HashMap<>();
-	public static Map<String, KpiTarget> kpiTargetMap = new HashMap<>();
+	public static Map<String, KPI> kpiTargetMap = new HashMap<>();
 	
 	@Autowired 
 	@Qualifier("kpiValueRepo")
@@ -86,15 +85,14 @@ public class KpiValueServiceImpl implements KpiValueService {
     	if(kpiTargetMap.containsKey(kpiCode)) { 
     		return true;
     	}
-    	/*List<KpiTarget> kpiTargetList = kpiValueRepository.fetchTargetForKpi(kpiCode, finYear); 
-    	if(null != kpiTargetList && kpiTargetList.size() > 0) { 
-    		for(KpiTarget target : kpiTargetList) 
-    			kpiTargetMap.put(target.getKpiCode(), target); 
+    	List<KPI> kpiList = kpiValueRepository.fetchTargetForKpi(kpiCode, finYear); 
+    	if(null != kpiList && kpiList.size() > 0) { 
+    		for(KPI kpi : kpiList) 
+    			kpiTargetMap.put(kpi.getCode(), kpi); 
     		return true; 
     	} else { 
     		return false; 
-    	}*/
-    	return false; 
+    	} 
     }
 	
 	public boolean checkKpiValueExistsForTenant(String kpiCode, String tenantId) {

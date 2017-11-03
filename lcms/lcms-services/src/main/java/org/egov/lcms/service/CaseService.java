@@ -168,8 +168,7 @@ public class CaseService {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		List<Case> cases = caseSearchRepository.searchCases(caseSearchCriteria);
 		addDepartmentDetails(cases,requestInfo);
-		//addMasterDetails(cases,requestInfo);
-		
+		addMasterDetails(cases,requestInfo);
 
 		return new CaseResponse(responseFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), cases);
 
@@ -178,23 +177,30 @@ public class CaseService {
 	/**
 	 * 
 	 * @param cases
-	 *//*
+	 */
 	private void addMasterDetails(List<Case> cases,RequestInfo requestInfo) throws Exception {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		Map<String, String> masterMap = new HashMap<>();
 		for (Case caseObj : cases){
+			
+			if ( caseObj.getSummon()!=null && caseObj.getSummon().getCaseType()!=null && caseObj.getSummon().getCaseType().getCode()!=null){
 			masterMap.put("caseType", caseObj.getSummon().getCaseType().getCode());
+			}
+			if (  caseObj.getSummon()!=null && caseObj.getSummon().getCaseCategory()!=null && caseObj.getSummon().getCaseCategory().getCode()!=null ){
 			masterMap.put("caseCategory", caseObj.getSummon().getCaseCategory().getCode());
+			}
+			if (!masterMap.isEmpty()){
 			MdmsResponse mdmsResponse = mdmsRepository.getMasterData(caseObj.getTenantId(), masterMap, requestInfoWrapper);
 			mdmsResponse.getMdmsRes().get("caseType");
+			}
 		}
 		
 		
 		
 		
 		
-	}*/
+	}
 
 	/**
 	 * This will Add the department details for the given cases 

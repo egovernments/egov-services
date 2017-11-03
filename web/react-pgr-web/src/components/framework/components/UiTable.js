@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import Api from '../../../api/api';
 import _ from 'lodash';
 import jp from "jsonpath";
+import Button from './UiButton';
 // const $ = require('jquery');
 // $.DataTable = require('datatables.net');
 // const dt = require('datatables.net-bs');
@@ -174,15 +175,18 @@ class UiTable extends Component {
 	    		}
 	    	}
 	    }
-  	}
+		}
 
   	render() {
-  		let {resultList, rowClickHandler,showDataTable,showHeader} = this.props;
+  		let {resultList, rowClickHandler,showDataTable,showHeader,rowButtonClickHandler} = this.props;
   		let self = this;
 
   		const getNameById = function(item2, i2) {
-				console.log(resultList.resultHeader.label);
-  			if(resultList.resultHeader[i2].url) {
+				if(resultList.resultHeader[i2].isAction){
+					return resultList.resultHeader[i2].actionItems.map((actionitem,index) =>{
+							return 	(<span style={{"margin-right":"20px"}}><Button item={{"label": actionitem.label, "uiType":"primary"}} ui="google" handler={()=>{rowButtonClickHandler(actionitem.url,item2)}}/></span>)
+					}) 
+				}else if(resultList.resultHeader[i2].url) {
   				return self.state[resultList.resultHeader[i2].label] ? self.state[resultList.resultHeader[i2].label][item2] : (item2 + "");
   			} else if(resultList.resultHeader[i2].isDate) {
 					var _date = new Date(Number(item2));
@@ -221,8 +225,9 @@ class UiTable extends Component {
 		          <tbody>
 
 		                {resultList.hasOwnProperty("resultValues") && resultList.resultValues.map((item, i) => {
+											
 		                  return (
-		                    <tr key={i} onClick={() => {rowClickHandler(i)}}>
+		                    <tr key={i} onClick={() => { if(!resultList.disableRowClick){rowClickHandler(i)}}}>
 		                      {
 		                      	item.map((item2, i2)=>{
 			                        return (

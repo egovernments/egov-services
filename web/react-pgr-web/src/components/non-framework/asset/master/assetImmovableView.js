@@ -383,22 +383,33 @@ printer = () => {
                   <Card className="uiCard">
                       <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("as.assetAttributes")}</div>}/>
                       <CardText>
-
+                      <Row>
              { disArray.map(function(item, index) {
                 console.log(item);
 
                 return(
-                  <TextField
-                  floatingLabelText={item.label}
-                  floatingLabelFixed={true}
-                  defaultValue={item.value ? item.value : "NA"}
-                  />
+                  <Col xs={12} md={3}>
+                    <Col style={{textAlign:"left"}}>
+                      <label>
+                        <span style={{"fontWeight":500, "fontSize": "13px"}}>
+                          {item.label}
+                        </span>
+                      </label>
+                    </Col>
+                    <Col style={{textAlign:"left"}}>
+                      <label>
+                        <span style={{"fontWeight":500, "fontSize": "13px"}}>
+                          {item.value ? item.value : "NA"}
+                        </span>
+                      </label>
+                    </Col>
+                  </Col>
                 )
 
 
 
              })}
-
+             </Row>
              </CardText>
              </Card>
            </div>

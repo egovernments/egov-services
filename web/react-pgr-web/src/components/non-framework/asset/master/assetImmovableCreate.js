@@ -323,6 +323,10 @@ class assetImmovableCreate extends Component {
                     case null:
                           customTemp.type = 'text';
                           break;
+
+                    case 'table':
+                          customTemp.type = 'table';
+                          break;
               }
               if(customTemp.type == 'singleValueList'){
                 if(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values.length){
@@ -390,6 +394,14 @@ class assetImmovableCreate extends Component {
           _.set(formData, key, _.get(res, autoObject.autoFillFields[key]));
         }
         self.props.setFormData(formData);
+
+        if(formData.Asset.landDetails && formData.Asset.landDetails.length) {
+            let area = 0;
+            for(let i=0; i< formData.Asset.landDetails.length; i++) {
+              area += formData.Asset.landDetails[i].area || 0;
+            }
+            self.props.handleChange({target: {value: area}}, "Asset.totalArea", false, '', '', '');
+        }
     }, function(err){
       console.log(err);
     })
@@ -824,17 +836,7 @@ formData.Asset.assetAttributes = assetAttributes;
           this.props.handleChange({target:{value: newVal}},"Asset.anticipatedLife",true,"","","");
         }
 
-        // if (/Asset\.landDetails\[\d*\]\.area/.test(property)) {
-        //   console.log("HERE22")
-        //   // var landValue = this.props.getval('Asset.landDetails');
-        //   // if(landDetails && landDetails.length)
-        //   // { var area = 0 ; for(var i = 0 ; i < landDetails.length;i++)
-        //   //   {
-        //   //     area+=landDetails[i].area ; return area;
-        //   //   }
-        //   // }
-        //   // this.props.handleChange({target:{value: newVal}},"Asset.anticipatedLife",true,"","","");
-        // }
+
 
 
         if(self.state.customFieldsGen[e.target.value]) {

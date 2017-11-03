@@ -4,6 +4,7 @@ import { Redirect, Route } from 'react-router-dom';
 
 //Mock of an Auth method, can be replaced with an async call to the backend. Must return true or false
 const isAuthenticated = () => {
+  // call api to validate token
   return window.localStorage.getItem("token")?true:false;
 };
 

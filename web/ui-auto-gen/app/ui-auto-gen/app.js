@@ -1,5 +1,6 @@
 $(document).ready(function() {
-    $('#submitBtn').click(function() {
+    $("#genForm").submit(function(event) {
+        event.preventDefault();
         if ($("#yamlURL").val() && $("#module").val()) {
             $('.alert').show();
             $("#final-block").hide();
@@ -56,5 +57,5 @@ $(document).ready(function() {
                 module: $("#module").val()
             }));
         }
-    })
+    });
 })

@@ -19,7 +19,7 @@
             Working On It. Please Wait...
         </div>
         <div style="padding:20px; margin: 0 auto; margin-top: 50px; width: 70%; border: solid #eee; border-width: .2rem;">
-            <form>
+            <form id="genForm">
                 <div class="form-group">
                     <label style="font-weight: 100">Enter Url of your API specification YAML file</label> <span class="text-danger">*</span>
                     <input id="yamlURL" type="text" class="form-control" placeholder="YAML URL" autofocus required>
@@ -28,7 +28,7 @@
                     <label style="font-weight: 100">Enter module name</label> <span class="text-danger">*</span>
                     <input id="module" type="text" class="form-control" placeholder="Module" autofocus required>
                 </div>
-                <button id="submitBtn" type="button" class="btn btn-primary">Generate Specs!</button>
+                <button id="submitBtn" type="submit" class="btn btn-primary">Generate Specs!</button>
             </form>
         </div>
         <div id="final-block" style="display:none; padding:20px; margin: 0 auto; margin-top: 50px; width: 70%; height: 400px -webkit-box-shadow: 0px 0px 3px 1px rgba(107,106,107,1); -moz-box-shadow: 0px 0px 3px 1px rgba(107,106,107,1); box-shadow: 0px 0px 3px 1px rgba(107,106,107,1);">

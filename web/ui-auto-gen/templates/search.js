@@ -102,19 +102,6 @@ let searchTemplate = function (module, numCols, path, config, definition, basePa
         }
     }
 
-    if(uiInfoDef.checkboxes && uiInfoDef.checkboxes.length) {
-        for(var i=0; i<uiInfoDef.checkboxes.length; i++) {
-        	var splitArr = uiInfoDef.checkboxes[i].split(".");
-        	splitArr.shift();
-        	var paramKey = splitArr.join(".");
-            if(fields[paramKey]) {
-                fields[paramKey].type = "checkbox";
-            } else {
-                errors[paramKey] = "Field exists in x-ui-info checkboxes section but not present in API specifications. REFERENCE PATH: " + uiInfoDef.referencePath;   
-            }
-        }
-    }
-
     if(uiInfoDef.radios && uiInfoDef.radios.length) {
         for(var i=0; i<uiInfoDef.radios.length; i++) {
         	var splitArr = uiInfoDef.radios[i].jsonPath.split(".");

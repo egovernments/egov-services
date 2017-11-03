@@ -6,8 +6,10 @@ import org.egov.works.services.config.PropertiesManager;
 import org.egov.works.services.domain.exception.ErrorCode;
 import org.egov.works.services.domain.exception.InvalidDataException;
 import org.egov.works.services.domain.repository.DocumentDetailRepository;
+import org.egov.works.services.domain.repository.FileStoreRepository;
 import org.egov.works.services.web.contract.DocumentDetailRequest;
 import org.egov.works.services.web.contract.DocumentDetailSearchRequest;
+import org.egov.works.services.web.contract.FileStoreResponse;
 import org.egov.works.services.web.contract.RequestInfo;
 import org.egov.works.services.web.model.AuditDetails;
 import org.egov.works.services.web.model.DocumentDetail;
@@ -30,6 +32,9 @@ public class DocumentDetailsService {
 
     @Autowired
     private DocumentDetailRepository documentDetailRepository;
+
+    @Autowired
+    private FileStoreRepository fileStoreRepository;
 
     public List<DocumentDetail> createDocuments(final DocumentDetailRequest documentDetailRequest) {
         for (DocumentDetail document : documentDetailRequest.getDocumentDetails()) {
@@ -77,6 +82,10 @@ public class DocumentDetailsService {
             }
             if(StringUtils.isBlank(documentDetail.getFileStore())) {
                 throw new InvalidDataException("fileStore", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), null);
+            } else {
+                FileStoreResponse response = fileStoreRepository.searchFileStore(documentDetail.getTenantId(), documentDetail.getFileStore(), documentDetailRequest.getRequestInfo());
+                if(response == null)
+                    throw new InvalidDataException("fileStore", ErrorCode.INVALID_REF_VALUE.getCode(), null);
             }
             if(StringUtils.isBlank(documentDetail.getObjectId())) {
                 throw new InvalidDataException("objectId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), null);

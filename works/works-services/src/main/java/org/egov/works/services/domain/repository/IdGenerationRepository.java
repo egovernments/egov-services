@@ -1,4 +1,4 @@
-package org.egov.works.services.domain.repository.builder;
+package org.egov.works.services.domain.repository;
 
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;

@@ -88,16 +88,23 @@ public class AdvocatePaymentRepository {
 		RequestInfoWrapper requestWrapper = new RequestInfoWrapper();
 		requestWrapper.setRequestInfo(requestInfo);
 
-		String[] caseTypeCodes = (String[]) advocatePayments.stream()
-				.map(advocatePayment -> advocatePayment.getCaseType().getCode()).collect(Collectors.toList()).toArray();
+		
 
-		String[] caseStatusCodes = (String[]) advocatePayments.stream()
-				.map(advocatePayment -> advocatePayment.getCaseStatus().getCode()).collect(Collectors.toList())
-				.toArray();
+		List<String> caseTypeCodes = advocatePayments.stream()
+				.filter(advocateData -> advocateData.getCaseType() != null
+						&& advocateData.getCaseType().getCode() != null)
+				.map(advocateCode -> advocateCode.getCaseType().getCode()).collect(Collectors.toList());
+		
+		List<String> caseStatusCodes = advocatePayments.stream()
+				.filter(caseStatusData -> caseStatusData.getCaseStatus() != null
+						&& caseStatusData.getCaseStatus().getCode() != null)
+				.map(advocateCode -> advocateCode.getCaseStatus().getCode()).collect(Collectors.toList());
+		
+		
 
 		Map<String, String> masterCodeAndValue = new HashMap<String, String>();
-		String caseTypesCode = getCommaSepratedValues(caseTypeCodes);
-		String caseStatusesCode = getCommaSepratedValues(caseStatusCodes);
+		String caseTypesCode = getCommaSepratedValues(caseTypeCodes.toArray(new String[caseTypeCodes.size()]));
+		String caseStatusesCode = getCommaSepratedValues(caseStatusCodes.toArray(new String[caseStatusCodes.size()]));
 
 		if (!caseTypesCode.isEmpty()) {
 			masterCodeAndValue.put("caseType", caseTypesCode);
@@ -172,7 +179,7 @@ public class AdvocatePaymentRepository {
 			List<CaseStatus> caseStatusList = caseStatuses.stream().filter(
 					CaseStatus -> CaseStatus.getCode().equalsIgnoreCase(advocatePayment.getCaseStatus().getCode()))
 					.collect(Collectors.toList());
-			if (caseStatusList != null && caseStatuses.size() > 0)
+			if (caseStatusList != null && caseStatusList.size() > 0)
 				advocatePayment.setCaseStatus((caseStatusList.get(0)));
 			break;
 		}

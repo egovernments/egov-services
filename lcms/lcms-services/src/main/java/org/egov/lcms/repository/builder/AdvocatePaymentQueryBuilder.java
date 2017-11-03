@@ -44,7 +44,7 @@ public class AdvocatePaymentQueryBuilder {
         
 
         if (advocatePaymentSearchCriteria.getTenantId() != null && !advocatePaymentSearchCriteria.getTenantId().isEmpty()) {
-            selectQuery.append(" AND tenantid = ?");
+            selectQuery.append(" tenantid = ?");
             preparedStatementValues.add(advocatePaymentSearchCriteria.getTenantId());
         }
         

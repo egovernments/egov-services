@@ -13,6 +13,7 @@ Correlation id and logging support addons to Spring Web and Spring Kafka.
 
 ###### Format Validator & Error Queue
 - Format validator & ErrorQ are the part of new version of tracer library
+- Include Version 1.1.3 in pom.xml 
 ####### How to use it:
 - Do not keep the "bindingresult" as an argument in the controller eg. ``` throw new CustomBindingResultExceprion(bindingResult); ```
 

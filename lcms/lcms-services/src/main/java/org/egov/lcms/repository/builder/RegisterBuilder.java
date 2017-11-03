@@ -1,6 +1,7 @@
 package org.egov.lcms.repository.builder;
 
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -44,9 +45,11 @@ public class RegisterBuilder {
 		}
 
 		if (registerSearchCriteria.getRegister() != null) {
-
-			selectQuery.append(" AND LOWER(register) = LOWER(?)");
-			preparedStatementValues.add(registerSearchCriteria.getRegister());
+			
+			StringJoiner register = new StringJoiner("", "%", "%");
+			register.add(registerSearchCriteria.getRegister());
+            selectQuery.append(" AND LOWER(register) LIKE ? ");
+            preparedStatementValues.add(register.toString().toLowerCase());
 
 		}
 

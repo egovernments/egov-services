@@ -134,7 +134,7 @@ module.exports = {
                       localStorage.setItem('lang_response', lang_response);
                       alert("Session expired. Please login again.");
                       //localStorage.reload = true;
-                      window.location.href = window.location.origin+"/#/" + _tntId;
+                      window.location.href =window.location.href.split("#/")[0]+"#/" + _tntId;
 
                     counter++;
                   }

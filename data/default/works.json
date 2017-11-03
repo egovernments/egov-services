@@ -1,0 +1,629 @@
+{
+  "tenantId": "default",
+  "moduleName": "Works",
+  "ScheduleCategory": [
+    {
+      "id": 1,
+      "code": "EXV - FAKE",
+      "tenantId": "default",
+      "name": "EXCAVATION - FAKE"
+    },
+    {
+      "id": 2,
+      "code": "CCR - FAKE",
+      "tenantId": "default",
+      "name": "Concrete roads - FAKE"
+    },
+    {
+      "id": 3,
+      "code": "BTR - FAKE",
+      "tenantId": "default",
+      "name": "Black top roads - FAKE"
+    }
+  ],
+  "ContractorClass": [
+    {
+      "id": 1,
+      "tenantId": "default",
+      "class": "001 - Fake",
+      "description": "Class - 1 - Fake",
+      "minimumAmount": 10,
+      "maximumAmount": 1000
+    },
+    {
+      "id": 2,
+      "tenantId": "default",
+      "class": "002 - Fake",
+      "description": "Class - 2 - Fake",
+      "minimumAmount": 1000,
+      "maximumAmount": 100000
+    },
+    {
+      "id": 3,
+      "tenantId": "default",
+      "class": "003 - Fake",
+      "description": "Class - 3 - Fake",
+      "minimumAmount": 100000,
+      "maximumAmount": 10000000
+    }
+  ],
+  "TypeOfWork": [
+    {
+      "id": 1,
+      "tenantId": "default",
+      "code": "Roads - Fake",
+      "name": "Roads - Fake",
+      "description": "Roads - Fake",
+      "active": true,
+      "parent": null
+    },
+    {
+      "id": 2,
+      "tenantId": "default",
+      "code": "Buildings - Fake",
+      "name": "Buildings - Fake",
+      "description": "Buildings - Fake",
+      "active": true,
+      "parent": null
+    }
+  ],
+  "SubTypeOfWork": [
+    {
+      "id": 3,
+      "tenantId": "default",
+      "code": "CC - Roads - Fake",
+      "name": "CC - Roads - Fake",
+      "description": "CC - Roads - Fake",
+      "active": true,
+      "parent": "Roads - Fake"
+    }
+  ],
+  "Overhead": [
+    {
+      "id": 1,
+      "tenantId": "default",
+      "code": "TAX - Fake",
+      "name": "TAX - Fake",
+      "description": "TAX - Fake",
+      "accountCode": "41230041 - Bridges and flyover - Fake",
+      "overheadRates": [
+        {
+          "id": 1,
+          "tenantId": "default",
+          "lumpsumAmount": 0,
+          "percentage": 100,
+          "fromDate": 1546541452157,
+          "toDate": 1546541452157
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "tenantId": "default",
+      "code": "TDS - Fake",
+      "name": "TDS - Fake",
+      "description": "TDS - Fake",
+      "accountCode": "41230041 - Bridges and flyover - Fake",
+      "overheadRates": [
+        {
+          "id": 1,
+          "tenantId": "default",
+          "lumpsumAmount": 2548,
+          "percentage": 0,
+          "fromDate": 1546541452157,
+          "toDate": 1546541452157
+        }
+      ]
+    }
+  ],
+  "Remarks": [
+    {
+      "id": 1,
+      "tenantId": "default",
+      "typeOfDocument": "Work Order - Fake",
+      "type": "Approval Work Order - Fake",
+      "remarksDetails": [
+        {
+          "id": 1,
+          "tenantId": "default",
+          "remarks": "Approve Work order",
+          "editable": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "tenantId": "default",
+      "typeOfDocument": "LOA - Fake",
+      "type": "Approval LOA - Fake",
+      "remarkDetails": [
+        {
+          "id": 1,
+          "tenantId": "default",
+          "remarks": "Approve LOA",
+          "editable": true
+        }
+      ]
+    }
+  ],
+  "MilestoneTemplate": [
+    {
+      "id": 1,
+      "tenantId": "default",
+      "templateCode": "CRROAD7W - Fake",
+      "templateStaus": "MANRAYROAD - Fake",
+      "templateName": "TWO LANE ROAD WITHOUT DIVIDER - Fake",
+      "templateDescription": "Laying of road - fake",
+      "typeOfWork": "Roads - Fake",
+      "subTypeOfWork": "CC - Roads - Fake"
+    },
+    {
+      "id": 2,
+      "tenantId": "default",
+      "templateCode": "NPNWS1 - Fake",
+      "templateStaus": "Active",
+      "templateName": "Water Supply Works for Nippani - Fake",
+      "templateDescription": "Laying of pipe - fake",
+      "typeOfWork": "Roads - Fake",
+      "subTypeOfWork": null,
+      "milestoneTemplateActivities": [
+        {
+          "id": 3,
+          "tenantId": "default",
+          "stageOrderNumber": 1,
+          "percentage": 50,
+          "description": "Laying of road - fake"
+        },
+        {
+          "id": 4,
+          "tenantId": "default",
+          "stageOrderNumber": 1,
+          "percentage": 50,
+          "description": "Laying of road - fake"
+        }
+      ]
+    }
+  ],
+  "EstimateTemplate": [
+    {
+      "id": 1,
+      "tenantId": "default",
+      "code": "NPNWS1 - Fake",
+      "status": "Water Supply Works for Nippani - Fake",
+      "templateName": "Water Supply Works for Nippani - Fake",
+      "templateDescription": "Laying of pipe - fake",
+      "typeOfWork": "Roads - Fake",
+      "subTypeOfWork": null,
+      "estimateTemplateActivities": [
+        {
+          "id": 3,
+          "tenantId": "default",
+          "scheduleOfRate": [
+            {
+              "id": 1
+            }
+          ],
+          "categoryType": "EXV - FAKE",
+          "SORCode": "EARTH WORK - FAKE",
+          "SORDescription": "Earth work in surface excavation - FAKE",
+          "uom": "CM - FAKE",
+          "sorRates": [
+            {
+              "id": 1
+            }
+          ],
+          "rate": 10,
+          "fromDate": 1546541452157,
+          "toDate": 1546541452157
+        }
+      ]
+    }
+  ],
+  "ReferenceType": [
+    {
+      "id": 1,
+      "code": "DemandfromMember",
+      "tenantId": "default",
+      "name": "Demand from Member"
+    },
+    {
+      "id": 2,
+      "code": "Demandfrompublic",
+      "tenantId": "default",
+      "name": "Demand from public"
+    },
+    {
+      "id": 3,
+      "code": "DepartmentalInitiative",
+      "tenantId": "default",
+      "name": "Departmental Initiative"
+    },
+    {
+      "id": 4,
+      "code": "Other",
+      "tenantId": "default",
+      "name": "Other"
+    }
+  ],
+  "AppConfiguration": [
+    {
+      "id": 1,
+      "code" : "ASSET_MANDATORY",
+      "keyName": "ASSET_MANDATORY",
+      "tenantId": "default",
+      "description": "To make Asset linking required or not in Estimate screen",
+      "values": "Yes",
+      "effectivefrom" : "2017-08-22",
+      "createdby": null,
+      "createddate": null,
+      "lastmodifiedby": null,
+      "lastmodifieddate": null,
+      "version": 0
+    },
+    {
+    "id": "2",
+    "code" : "GIS_INTEGRATION",
+    "keyname": "GIS_INTEGRATION",
+    "value" : "No",
+    "description" : "Location details required or not for estimate",
+    "effectivefrom" : "2017-08-22",
+    "createdby": null,
+    "createddate": null,
+    "lastmodifiedby": null,
+    "lastmodifieddate": null,
+    "version": 0,
+    "tenantId": "default"
+    }
+  ],
+  "Fund": [
+    {
+      "id": "2",
+      "name": "Capital Fund",
+      "code": "02",
+      "identifier": "2",
+      "level": 1,
+      "parentid": null,
+      "active": false,
+      "createdby": null,
+      "createddate": "213123456456",
+      "lastmodifiedby": null,
+      "lastmodifieddate": null,
+      "version": 0,
+      "tenantId": "default"
+    },
+    {
+      "id": "3",
+      "name": "Elementary Education Fund",
+      "code": "03",
+      "identifier": "3",
+      "level": 1,
+      "parentid": null,
+      "active": false,
+      "createdby": null,
+      "createddate": "213123456456",
+      "lastmodifiedby": null,
+      "lastmodifieddate": null,
+      "version": 0,
+      "tenantId": "default"
+    },
+    {
+      "id": "4",
+      "name": "Earmarked Funds",
+      "code": "04",
+      "identifier": "4",
+      "level": 1,
+      "parentid": null,
+      "active": false,
+      "createdby": null,
+      "createddate": "213123456456",
+      "lastmodifiedby": null,
+      "lastmodifieddate": null,
+      "version": 0,
+      "tenantId": "default"
+    },
+    {
+      "id": "1",
+      "name": "Municipal Fund",
+      "code": "01",
+      "identifier": "1",
+      "level": 1,
+      "parentid": null,
+      "active": true,
+      "createdby": null,
+      "createddate": "213123456456",
+      "lastmodifiedby": null,
+      "lastmodifieddate": null,
+      "version": 0,
+      "tenantId": "default"
+    }
+  ],
+  "Function": [
+  {
+    "id": "1",
+    "name": "GENERAL ADMINISTRATION",
+    "code": "00",
+    "level": 0,
+    "active": false,
+    "parentid": null,
+    "createdby": null,
+    "createddate": null,
+    "lastmodifiedby": null,
+    "lastmodifieddate": null,
+    "version": 0,
+    "tenantId": "default"
+  },
+  {
+    "id": "2",
+    "name": "PUBLIC WORKS",
+    "code": "20",
+    "level": 0,
+    "active": false,
+    "parentid": null,
+    "createdby": null,
+    "createddate": null,
+    "lastmodifiedby": null,
+    "lastmodifieddate": null,
+    "version": 0,
+    "tenantId": "default"
+  },
+  {
+    "id": "3",
+    "name": "REVENUE",
+    "code": "90",
+    "level": 0,
+    "active": false,
+    "parentid": null,
+    "createdby": null,
+    "createddate": null,
+    "lastmodifiedby": null,
+    "lastmodifieddate": null,
+    "version": 0,
+    "tenantId": "default"
+  },
+  {
+    "id": "4",
+    "name": "PLANNING AND REGULATIONS",
+    "code": "10",
+    "level": 0,
+    "active": false,
+    "parentid": null,
+    "createdby": null,
+    "createddate": null,
+    "lastmodifiedby": null,
+    "lastmodifieddate": null,
+    "version": 0,
+    "tenantId": "default"
+  },
+  {
+    "id": "5",
+    "name": "CIVIC AMENITIES",
+    "code": "50",
+    "level": 0,
+    "active": false,
+    "parentid": null,
+    "createdby": null,
+    "createddate": null,
+    "lastmodifiedby": null,
+    "lastmodifieddate": null,
+    "version": 0,
+    "tenantId": "default"
+  }
+],
+  "BudgetGroup": [
+  {
+    "id": 363,
+    "majorcode": null,
+    "maxcode": 1978,
+    "mincode": 1978,
+    "name": "4122001-CWIP-Office Buildings",
+    "description": "CWIP-Office Buildings",
+    "budgetingtype": "DEBIT",
+    "accounttype": "CAPITAL_EXPENDITURE",
+    "isactive": true,
+    "createddate": "12345678912",
+    "createdby": 1,
+    "lastmodifiedby": 1,
+    "lastmodifieddate": "12345678912",
+    "version": 0,
+    "tenantId": "default"
+  },
+  {
+    "id": 365,
+    "majorcode": null,
+    "maxcode": 1979,
+    "mincode": 1979,
+    "name": "4122002-CWIP-Commercial Complex",
+    "description": "CWIP-Commercial Complex",
+    "budgetingtype": "DEBIT",
+    "accounttype": "CAPITAL_EXPENDITURE",
+    "isactive": true,
+    "createddate": "12345678912",
+    "createdby": 1,
+    "lastmodifiedby": 1,
+    "lastmodifieddate": "12345678912",
+    "version": 0,
+    "tenantId": "default"
+  },
+  {
+    "id": 367,
+    "majorcode": null,
+    "maxcode": 1981,
+    "mincode": 1981,
+    "name": "4122004-CWIP-Community Halls",
+    "description": "CWIP-Community Halls",
+    "budgetingtype": "DEBIT",
+    "accounttype": "CAPITAL_EXPENDITURE",
+    "isactive": true,
+    "createddate": "12345678912",
+    "createdby": 1,
+    "lastmodifiedby": 1,
+    "lastmodifieddate": "12345678912",
+    "version": 0,
+    "tenantId": "default"
+  },
+  {
+    "id": 369,
+    "majorcode": null,
+    "maxcode": 1985,
+    "mincode": 1985,
+    "name": "4122008-CWIP-School Buildings",
+    "description": "CWIP-School Buildings",
+    "budgetingtype": "DEBIT",
+    "accounttype": "CAPITAL_EXPENDITURE",
+    "isactive": true,
+    "createddate": "12345678912",
+    "createdby": 1,
+    "lastmodifiedby": 1,
+    "lastmodifieddate": "12345678912",
+    "version": 0,
+    "tenantId": "default"
+  },
+  {
+    "id": 371,
+    "majorcode": null,
+    "maxcode": 2002,
+    "mincode": 2002,
+    "name": "4122099-CWIP-Other Buildings",
+    "description": "CWIP-Other Buildings",
+    "budgetingtype": "DEBIT",
+    "accounttype": "CAPITAL_EXPENDITURE",
+    "isactive": true,
+    "createddate": "12345678912",
+    "createdby": 1,
+    "lastmodifiedby": 1,
+    "lastmodifieddate": "12345678912",
+    "version": 0,
+    "tenantId": "default"
+  }
+],
+  "Scheme": [
+  {
+    "id": 6,
+    "code": "2906",
+    "name": "JnNURM",
+    "validfrom": "1234564612",
+    "validto": "1234564612",
+    "isactive": true,
+    "description": "JnNURM",
+    "fundid": 1,
+    "sectorid": null,
+    "aaes": null,
+    "fieldid": null,
+    "createddate": "1234564612",
+    "lastmodifieddate": null,
+    "createdby": 1,
+    "lastmodifiedby": null,
+    "tenantId": "default"
+  },
+  {
+    "id": 35,
+    "code": "SP",
+    "name": "Sub Plan",
+    "validfrom": "1234564612",
+    "validto": "1234564612",
+    "isactive": true,
+    "description": "",
+    "fundid": 1,
+    "sectorid": null,
+    "aaes": null,
+    "fieldid": null,
+    "createddate": "1234564612",
+    "lastmodifieddate": null,
+    "createdby": 1,
+    "lastmodifiedby": null,
+    "tenantId": "default"
+  },
+  {
+    "id": 36,
+    "code": "SPG",
+    "name": "State Pushkaralu Grant",
+    "validfrom": "1234564612",
+    "validto": "1234564612",
+    "isactive": true,
+    "description": "",
+    "fundid": 1,
+    "sectorid": null,
+    "aaes": null,
+    "fieldid": null,
+    "createddate": "1234564612",
+    "lastmodifieddate": null,
+    "createdby": 1,
+    "lastmodifiedby": null,
+    "tenantId": "default"
+  }
+],
+  "SubScheme": [
+  [
+  {
+    "id": 1,
+    "code": "BSUP",
+    "name": "Basic Services for Urban Poor",
+    "validfrom": "123151351",
+    "validto": "123151351",
+    "isactive": true,
+    "schemeid": 6,
+    "lastmodifieddate": "123151351",
+    "createddate": "123151351",
+    "createdby": 1,
+    "lastmodifiedby": null,
+    "tenantId": "default"
+  },
+  {
+    "id": 2,
+    "code": "SPSC",
+    "name": "SC Sub Plan",
+    "validfrom": "123151351",
+    "validto": "123151351",
+    "isactive": true,
+    "schemeid": 35,
+    "lastmodifieddate": "123151351",
+    "createddate": "2016-08-11T00:00:00",
+    "createdby": 1,
+    "lastmodifiedby": null,
+    "tenantId": "default"
+  },
+  {
+    "id": 3,
+    "code": "SPST",
+    "name": "ST Sub Plan",
+    "validfrom": "123151351",
+    "validto": "123151351",
+    "isactive": true,
+    "schemeid": 35,
+    "lastmodifieddate": "2016-08-11T00:00:00",
+    "createddate": "2016-08-11T00:00:00",
+    "createdby": 1,
+    "lastmodifiedby": null,
+    "tenantId": "default"
+  },
+  {
+    "id": 4,
+    "code": "SPBC",
+    "name": "BC Sub Plan",
+    "validfrom": "123151351",
+    "validto": "2025-03-31T00:00:00",
+    "isactive": true,
+    "schemeid": 35,
+    "lastmodifieddate": "2016-08-11T00:00:00",
+    "createddate": "2016-08-11T00:00:00",
+    "createdby": 1,
+    "lastmodifiedby": null,
+    "tenantId": "default"
+  },
+  {
+    "id": 5,
+    "code": "SPM",
+    "name": "Minority Sub Plan",
+    "validfrom": "2016-04-01T00:00:00",
+    "validto": "2025-03-31T00:00:00",
+    "isactive": true,
+    "schemeid": 35,
+    "lastmodifieddate": "2016-08-11T00:00:00",
+    "createddate": "2016-08-11T00:00:00",
+    "createdby": 1,
+    "lastmodifiedby": null,
+    "tenantId": "default"
+  }
+]
+]
+}

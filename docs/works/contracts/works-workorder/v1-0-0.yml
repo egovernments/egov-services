@@ -34,9 +34,14 @@ paths:
       summary: Create new Letter Of Acceptance(s).
       description: |
           To create new Letter Of Acceptance in the system. API supports bulk creation with max limit as defined in the Letter Of Acceptance Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Letter Of Acceptance, please pass array with one Letter Of Acceptance object.
-          Letter Of Acceptance can be created for approved detailed estimate.
-          The sor selected while creating the detailed estimate will be populated in LOA as bill of quantity(BOQ)
-          In case of Spillover LOA Letter Of Acceptance Number will be allowed to edit.
+          
+          Letter Of Acceptance can be created for approved detailed estimate after L1 Tender finalized offline status set to Detailed Estimate.
+          
+          The Schedule A (SOR and Non SOR) selected while creating the detailed estimate will be populated in LOA as bill of quantity(BOQ).
+          
+          The the LOA number and Agreement date will be user entered in case of spillover work and auto generated in case of new work.
+          
+          Workflow will not be there for spillover work and new works will have workflow. So the spillover work will be created on approved status. Whether the LOA is spillover or not is decided based on the flag workOrderCreated from Abstract/Detailed Estimate. 
           
       parameters:
         - name: LetterOfAcceptanceRequest
@@ -50,7 +55,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: Letter Of Acceptance(s) created successfully
           schema:
             $ref: '#/definitions/LetterOfAcceptanceResponse'
@@ -66,7 +71,8 @@ paths:
       summary: Update existing Letter Of Acceptance(s).
       description: |
           To update existing Letter Of Acceptance in the system. API supports bulk updation with max limit as defined in the Letter Of Acceptance Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Letter Of Acceptance, please pass array with one Letter Of Acceptance object.
-          In update all the fields are disabled except the Work Flow Deatils and the fields which needs to be captured at different status are enabled.
+          
+           Only the creator can edit all the fields when the Letter Of Acceptance in creator inbox(in Rejected status) or in drafts. Update during workflow will have all the fields readonly except few fields which are allowed to modify during each stage of workflow including Workflow Details. The status and workflow state will be updated during each stage of workflow approval.
           
       parameters:
         - name: LetterOfAcceptanceRequest
@@ -80,7 +86,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: Letter Of Acceptance(s) updated successfully
           schema:
             $ref: '#/definitions/LetterOfAcceptanceResponse'
@@ -111,60 +117,92 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
         - name: loaNumbers
           in: query
-          description: Comma separated list of LOA Number to get Letter Of Acceptance(s)
-          required: false
-          type: array
-          allowEmptyValue: true
-          items:
-            type: string
-        - name: ids
           type: array
           items:
             type: string
-          in: query
+          format: autoComplete
           maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of LOA Number to get Letter Of Acceptance(s)
+        - name: ids
+          in: query
+          type: array
+          items:
+            type: string
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
           description: Comma separated list of Ids of Letter Of Acceptance to get the Letter Of Acceptance(s)
         - name: detailedEstimateNumbers
           in: query
-          required: false
-          description: Comma seperated list of Detailed Estimate Numbers to get the Letter Of Acceptance(s)
           type: array
           items:
             type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma seperated list of Detailed Estimate Numbers to get the Letter Of Acceptance(s)
         - name: fileNumber
           in: query
+          type: string
           required: false
           description: The file number for a Letter Of Acceptance
-          type: string
         - name: fromDate
           in: query
+          type: integer
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
           required: false
           description: Epoch time for Letter Of Acceptance when it is created in the system
-          type: integer
-          format: int64
         - name: toDate
           in: query
-          description: Epoch time for Letter Of Acceptance when it is created in the system.
-          required: false
           type: integer
           format: int64
+          x-displayformat: 'dd/MM/yyyy'
+          required: false
+          description: Epoch time for Letter Of Acceptance when it is created in the system
         - name: department
           in: query
-          required: false
-          description: The Department for which Letter Of Acceptance belongs to.
-          type: string
-        - name: status
-          in: query
-          description: Status of the Letter Of Acceptance.
-          required: false
-          type: string
-        - name: contractorNames
-          in: query
-          description: Comma separated list of Names of the contractor to which Letter Of Acceptance belongs to.
-          required: false
           type: array
           items:
             type: string
+          format: multiValueList
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of the Department for which Letter Of Acceptance belongs to.
+        - name: statuses
+          in: query
+          type: array
+          items:
+            type: string
+          format: multiValueList
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of the LOA Status
+        - name: contractorNames
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Names of the contractor to which Letter Of Acceptance belongs to.
+        - name: contractorCodes
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of codes of the contractor to which Letter Of Acceptance belongs to.
       responses:
         200:
           description: Letter Of Acceptance(s) Retrieved Successfully
@@ -182,7 +220,8 @@ paths:
       summary: Create new Work Order(s).
       description: |
           To create new Work Order in the system. API supports bulk creation with max limit as defined in the Work Order Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Work Order, please pass array with one Work Order object.
-          Only for Approved LOA workorder can be crated.
+          
+          The Work Order can be created only for Approved LOA. Workflow will not be there for spillover work and new works will have workflow. So the spillover work will be created on approved status. 
           
       parameters:
         - name: WorkOrderRequest
@@ -196,7 +235,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: Work Order(s) created successfully
           schema:
             $ref: '#/definitions/WorkOrderResponse'
@@ -213,6 +252,8 @@ paths:
       description: |
           To update existing Work Order in the system. API supports bulk updation with max limit as defined in the Work Order Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Work Order, please pass array with one Work Order object.
           
+           Only the creator can edit all the fields when the Work Order in creator inbox(in Rejected status). Update during workflow will have all the fields readonly except few fields which are allowed to modify during each stage of workflow including Workflow Details. The status and workflow state will be updated during each stage of workflow approval.
+          
       parameters:
         - name: WorkOrderRequest
           in: body
@@ -225,7 +266,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: Work Order(s) updated successfully
           schema:
             $ref: '#/definitions/WorkOrderResponse'
@@ -254,49 +295,109 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageSize"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
-        - name: workOrderNumbera
+        - name: workOrderNumbers
           in: query
-          description: Comma separated list of Work Order Numbers
-          required: false
-          type: array
-          allowEmptyValue: true
-          items:
-            type: string
-        - name: ids
           type: array
           items:
             type: string
-          in: query
+          format: autoComplete
           maxItems: 50
-          description: Comma separated list of Ids of Work Order to get the Work Orders
-        - name: status
-          in: query
-          description: Status of the Work Order.
           required: false
-          type: string
-        - name: loaNumbers
-          pattern: '[a-zA-Z0-9-\\]'
+          allowEmptyValue: true
+          description: Comma separated list of Work Order Numbers
+        - name: ids
           in: query
-          description: Comma separated list of LOA Numbers
-          required: false
           type: array
           items:
             type: string
+          maxItems: 50
+          required: false
           allowEmptyValue: true
+          description: Comma separated list of Ids of Work Order to get the Work Orders
+        - name: loaNumbers
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of LOA Numbers
         - name: detailedEstimateNumbers
           in: query
-          required: false
-          description: Comma separated list of Detailed Estimate Numbers
           type: array
           items:
             type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Detailed Estimate Numbers
         - name: workIdentificationNumbers
           in: query
-          required: false
-          description: Comma separated list of Work Identification Numbers.
           type: array
           items:
             type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Work Identification Numbers
+        - name: fromDate
+          in: query
+          type: integer
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
+          required: false
+          description: Epoch time for Work Order when it is created in the system
+        - name: toDate
+          in: query
+          type: integer
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
+          required: false
+          description: Epoch time for Work Order when it is created in the system
+        - name: department
+          in: query
+          type: array
+          items:
+            type: string
+          format: multiValueList
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of the Department for which Work Order belongs to.
+        - name: statuses
+          in: query
+          type: array
+          items:
+            type: string
+          format: multiValueList
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of the Work Order Status
+        - name: contractorNames
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Names of the contractor to which Work Order belongs to.
+        - name: contractorCodes
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of codes of the contractor to which Work Order belongs to.
       responses:
         200:
           description: Work Order(s) Retrieved Successfully
@@ -315,7 +416,7 @@ paths:
       description: |
           To create new Notice in the system. API supports bulk creation with max limit as defined in the Notice Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Notice, please pass array with one Notice object.
           
-          Notice can only created for approved workorder and after seeting offline status to Agreement order signed.
+          Notice can only created for approved Work Order and after setting offline status to Letter of Acceptance.
           
       parameters:
         - name: NoticeRequest
@@ -329,7 +430,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: Notice(s) created successfully
           schema:
             $ref: '#/definitions/NoticeResponse'
@@ -358,7 +459,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: Notice(s) updated successfully
           schema:
             $ref: '#/definitions/NoticeResponse'
@@ -388,43 +489,74 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
         - name: workOrderNumbers
+          in: query
           type: array
           items:
             type: string
-          in: query
+          format: autoComplete
           maxItems: 50
-          allowEmptyValue: true
           required: false
+          allowEmptyValue: true
           description: Comma separated list of Work Order Numbers
         - name: ids
+          in: query
           type: array
           items:
             type: string
-          in: query
           maxItems: 50
+          required: false
+          allowEmptyValue: true
           description: Comma separated list of Ids of Notice(s)        
         - name: loaNumbers
           in: query
-          description: Comma separated list of LOA Numbers
-          required: false
           type: array
           items:
             type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
           allowEmptyValue: true
+          description: Comma separated list of LOA Numbers
         - name: detailedEstimateNumbers
           in: query
-          required: false
-          description: Comma separated list of Detailed Estimate Numbers
           type: array
           items:
             type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Detailed Estimate Numbers
         - name: workIdentificationNumbers
           in: query
-          required: false
-          description: Comma separated list of Work Identification Numbers
           type: array
           items:
             type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Work Identification Numbers
+        - name: contractorNames
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Names of the contractor to whom Notice is issued
+        - name: contractorCodes
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of codes of the contractor to whom Notice is issued
       responses:
         200:
           description: Notice(s) Retrieved Successfully
@@ -443,6 +575,8 @@ paths:
       description: |
           To create new Milestone in the system. API supports bulk creation with max limit as defined in the Milestone Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Milestone, please pass array with one Milestone object.
           
+          Milestone can be created for Approved Letter of Acceptance/Work Order.
+          
       parameters:
         - name: MilestoneRequest
           in: body
@@ -455,7 +589,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: Milestone(s) created successfully
           schema:
             $ref: '#/definitions/NoticeResponse'
@@ -484,7 +618,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: Milestone(s) updated successfully
           schema:
             $ref: '#/definitions/NoticeResponse'
@@ -514,44 +648,94 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
         - name: ids
+          in: query
           type: array
           items:
             type: string
-          in: query
           maxItems: 50
-          description: Comma separated list of Ids of Milestone to get the Milestones
-        - name: status
-          in: query
-          description: Status of the Milestone.
           required: false
-          type: string
-        - name: workOrderNumbers
+          allowEmptyValue: true
+          description: Comma separated list of Ids of Milestone to get the Milestones
+        - name: statuses
+          in: query
           type: array
           items:
             type: string
+          format: multiValueList
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Status of the Milestone
+        - name: workOrderNumbers
           in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
           description: Comma separated list of Work Order Numbers
         - name: loaNumbers
-          pattern: '[a-zA-Z0-9-\\]'
+          in: query
           type: array
           items:
             type: string
-          in: query
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
           description: Comma separated list of LOA Numbers
         - name: detailedEstimateNumbers
           in: query
-          required: false
-          description: Comma separated list of Detailed Estimate Numbers
           type: array
           items:
             type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Detailed Estimate Numbers
         - name: workIdentificationNumbers
           in: query
-          required: false
-          description: Comma separated list of Work Identification Numbers
           type: array
           items:
             type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Work Identification Numbers
+        - name: department
+          in: query
+          type: array
+          items:
+            type: string
+          format: multiValueList
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of the Department for which the Milestone belongs to
+        - name: contractorNames
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Names of the contractor to which Milestone belongs to
+        - name: contractorCodes
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of codes of the contractor to which Milestone belongs to
       responses:
         200:
           description: Milestone(s) Retrieved Successfully
@@ -564,11 +748,13 @@ paths:
       tags:
        - Milestone
        
-  /trackMilestones/_create:
+  /trackmilestones/_create:
     post:
       summary: Create new Track Milestone(s).
       description: |
           To create new Track Milestone in the system. API supports bulk creation with max limit as defined in the Track Milestone Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Track Milestone, please pass array with one Track Milestone object.
+          
+          Track milestone can be used to capture the physical progress of the work for the milestone set for an LOA/Work Order. The user can update the Track Milestone multiple times till the work completion percentage reaches 100%.
           
       parameters:
         - name: TrackMilestoneRequest
@@ -582,7 +768,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: Track Milestone(s) created successfully
           schema:
             $ref: '#/definitions/TrackMilestoneResponse'
@@ -593,7 +779,7 @@ paths:
       tags:
         - Track Milestone  
         
-  /trackMilestones/_update:
+  /trackmilestones/_update:
     post:
       summary: Update existing Track Milestone(s).
       description: |
@@ -611,7 +797,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: Track Milestone(s) updated successfully
           schema:
             $ref: '#/definitions/TrackMilestoneResponse'
@@ -622,7 +808,7 @@ paths:
       tags:
         - Track Milestone
         
-  /trackMilestones/_search:
+  /trackmilestones/_search:
     post:
       summary: Get the list of Track Milestone(s) defined in the system.
       description: |
@@ -640,46 +826,95 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageSize"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
-        - name: workOrderNumbers
-          type: array
-          items:
-            type: string
-          in: query
-          description: Comma separated list of Work Order Numbers         
         - name: ids
+          in: query
           type: array
           items:
             type: string
-          in: query
           maxItems: 50
-          description: Comma separated list of Ids of Track Milestone to get the Track Milestones
-        - name: status
-          in: query
-          description: Status of the Track Milestone.
           required: false
-          type: string
+          allowEmptyValue: true
+          description: Comma separated list of Ids of Track Milestone to get the Track Milestones
+        - name: statuses
+          in: query
+          type: array
+          items:
+            type: string
+          format: multiValueList
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Status of the Track Milestone
+        - name: workOrderNumbers
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Work Order Numbers
         - name: loaNumbers
           in: query
-          description: Comma separated list of LOA Numbers
-          required: false
           type: array
           items:
             type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
           allowEmptyValue: true
+          description: Comma separated list of LOA Numbers
         - name: detailedEstimateNumbers
           in: query
-          required: false
-          description: Comma separated list of Detailed Estimate Numbers
           type: array
           items:
             type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Detailed Estimate Numbers
         - name: workIdentificationNumbers
           in: query
-          required: false
-          description: Comma separated list of Work Identification Numbers
           type: array
           items:
             type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Work Identification Numbers
+        - name: department
+          in: query
+          type: array
+          items:
+            type: string
+          format: multiValueList
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of the Department for which the Track Milestone belongs to
+        - name: contractorNames
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Names of the contractor to which Track Milestone belongs to
+        - name: contractorCodes
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of codes of the contractor to which Track Milestone belongs to
       responses:
         200:
           description: Track Milestone(s) Retrieved Successfully
@@ -711,56 +946,91 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
         - name: ids
+          in: query
           type: array
           items:
             type: string
-          in: query
           maxItems: 50
+          required: false
+          allowEmptyValue: true
           description: Comma separated list of Ids of Contractor Advance Requistion to get the Contractor Advance Requistions
         - name: advanceRequisitionNumbers
+          in: query
           type: array
           items:
             type: string
-          in: query
-          description: Comma separated list of Contractor Advance Requistion Numbers of  Contractor Advance Requistion to get the Contractor Advance Requistions
+          format: autoComplete
+          maxItems: 50
           required: false
+          allowEmptyValue: true
+          description: Comma separated list of Contractor Advance Requistion Numbers of  Contractor Advance Requistion to get the Contractor Advance Requistions
         - name: loaNumbers
+          in: query
           type: array
           items:
             type: string
-          in: query
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
           description: Comma separated list of Letter of Acceptance Numbers
         - name: fromDate
           in: query
+          type: integer
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
           required: false
           description: Epoch time from Advance Requisition Created Date
-          type: integer
-          format: int64
         - name: toDate
           in: query
-          description: Epoch time till the Advance Requisition Created Date
-          required: false
           type: integer
           format: int64
-        - name: status
-          in: query
-          description: Status of the Advance Requisition
+          x-displayformat: 'dd/MM/yyyy'
           required: false
-          type: string
-        - name: contractorName
+          description: Epoch time till the Advance Requisition Created Date
+        - name: statuses
           in: query
+          type: array
+          items:
+            type: string
+          format: multiValueList
+          maxItems: 50
           required: false
-          description: Name of the contractor 
-          type: string
-        - name: advanceBillNumber
+          allowEmptyValue: true
+          description: Comma separated list of Status of the Advance Requisition
+        - name: advanceBillNumbers
           in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
           required: false
-          description: Advance Requisition Bill Number
-          type: string
-      
+          allowEmptyValue: true
+          description: Comma separated list of Advance Requisition Bill Numbers
+        - name: contractorNames
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Names of the contractor to which Advance Requisition belongs to
+        - name: contractorCodes
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of codes of the contractor to which Advance Requisition belongs to
       responses:
         200:
-          description: Advance Requisition(s) Retrived Successfully
+          description: Advance Requisition(s) Retrieved Successfully
           schema:
             $ref: "#/definitions/ContractorAdvanceRequisitionResponse"
         '400':
@@ -788,7 +1058,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: ReponseInfo with Contractor Advance Requisition Form(s) created successfully
           schema:
             $ref: '#/definitions/ContractorAdvanceRequisitionResponse'
@@ -817,7 +1087,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: ReponseInfo with Contractor Advance Requisition Form(s) updated sudcessfully
           schema:
             $ref: '#/definitions/ContractorAdvanceRequisitionResponse'
@@ -837,7 +1107,7 @@ definitions:
     
   LetterOfAcceptance:
     type: object
-    description: An Object holds the basic data for a Letter Of Acceptance
+    description: An Object holds the basic data of Letter Of Acceptance
     properties:
       id:
         type: string
@@ -849,6 +1119,8 @@ definitions:
         minLength: 2
       contractor:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/Contractor'
+        description: L1 Tender Finalized Contractor
+        format: autoComplete
       loaDate:
         type: integer
         format: int64
@@ -857,7 +1129,7 @@ definitions:
       loaNumber:
         type: string
         pattern: '[a-zA-Z0-9-\\]+'
-        description: LOA Number of the Letter Of Acceptance
+        description: LOA Number of the Letter Of Acceptance. Manually enetered in case of Spillover LOA and autogenerated in case of regular LOA.
         maxLength: 50
         minLength: 1
       contractPeriod:
@@ -870,17 +1142,17 @@ definitions:
         type: number
         format: BigDecimal
         description: EMD Amount Deposited for the Letter Of Acceptance
-        maxLength: 50
+        maxLength: 20
         minLength: 1
       securityDeposit:
         type: array
         description: Array to hold the Security Deposit details
-        minItems: 1
         items:
           $ref: '#/definitions/SecurityDeposit'
       engineerIncharge:
-        type: string
-        description: Employee Code for the Letter Of Acceptance.
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
+        description: User who is incharge of the work
+        format: singleValueList
       defectLiabilityPeriod:
         type: number
         format: double
@@ -888,9 +1160,8 @@ definitions:
       loaAmount:
         type: number
         format: BigDecimal
-        pattern: "[0-9]+"
         description: LOA Amount for the Letter Of Acceptance
-        maxLength: 12
+        maxLength: 20
         minLength: 1
       documentDetails:
         type: array
@@ -920,8 +1191,8 @@ definitions:
       #parent:
       #  $ref: '#/definitions/LetterOfAcceptance'
       parent:
-        type: string
-        description: Parent of Letter Of Acceptance.  
+        $ref: '#/definitions/LetterOfAcceptance'
+        description: Parent of Letter Of Acceptance. This is required in case of Revision Work Order. 
       workFlowDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
       stateId:
@@ -931,29 +1202,44 @@ definitions:
         type: string
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Reason for cancellation of the LOA, Required only while cancelling LOA
-        maxLength: 1024
-        minLength: 1
+        maxLength: 100
       cancellationRemarks:
         type: string
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: remarks for cancellation of the LOA, Required only while cancelling LOA
-        maxLength: 1024
-        minLength: 1
+        maxLength: 512
+      letterOfAcceptanceEstimates:
+        type: array
+        description: Array of Letter Of Acceptance Estimate Details
+        minItems: 1
+        items:
+          $ref: '#/definitions/LetterOfAcceptanceEstimate'
+      securityDeposits:
+        type: array
+        description: Array of Security Deposit collection details
+        items:
+          $ref: '#/definitions/SecurityDeposit'
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+        
     required:
       - tenantId
+      - loaNumber
+      - loaDate
       - contractor
       - contractPeriod
       - engineerIncharge
       - loaAmount
       - status
       - tenderFinalizedPercentage
-      - loaNumber
+      - defectLiabilityPeriod
+      - fileNumber
+      - fileDate
+      
     
   AssetsForLOA:
       type: object
-      description: An Object holds the basic data of Assets for LOA
+      description: An Object that holds the basic data of Assets for LOA
       properties:
         id:
           type: string
@@ -963,24 +1249,23 @@ definitions:
           description: Tenant id of the Assets for LOA
           maxLength: 128
           minLength: 2
-        assetCode:
-          type: string
-          description: Code of the Asset
-          pattern: '[a-zA-Z0-9-\\]+'
-          minLength: 1
-          maxLength: 100
+        asset:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/Asset'
+          description: Asset for which this LOA is created
+          format: singleValueList
         letterOfAcceptanceEstimate:
           $ref: '#/definitions/LetterOfAcceptanceEstimate'
+          description: LOA Estimate reference
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
         - tenantId
-        - assetCode
+        - asset
         - letterOfAcceptanceEstimate
     
   LetterOfAcceptanceEstimate:
     type: object
-    description: A Object holds the basic data for a Letter Of Acceptance
+    description: An Object that holds the basic data of Letter Of Acceptance Estimate
     properties:
       id:
         type: string
@@ -992,8 +1277,10 @@ definitions:
         minLength: 2
       letterOfAcceptance:
         $ref: '#/definitions/LetterOfAcceptance'
-      #detailedEstimate:
-        #$ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/DetailedEstimate'
+        description: LOA reference
+      detailedEstimate:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/DetailedEstimate'
+        description: Detailed Estimate reference
       workCompletionDate:
         type: integer
         format: int64
@@ -1002,23 +1289,32 @@ definitions:
       estimateLOAAmount:
         type: number
         format: BigDecimal
-        pattern: "[0-9]+"
         description: Estimate wise LOA amount of the Letter Of Acceptance
-      assetForLOA:
-        $ref: '#/definitions/AssetsForLOA'
+      assetForLOAs:
+        type: array
+        description: Array of Asset for LOA Details
+        items:
+          $ref: '#/definitions/AssetsForLOA'
+      #loaActivities:
+        #type: array
+        #description: Array of LOA Activity Details
+        #minItems: 1
+        #$items:
+         # $ref: '#/definitions/LOAActivity'
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - tenantId
-     # - detailedEstimate
+      - detailedEstimate
       - letterOfAcceptance
     
   SecurityDeposit:
     type: object
-    description: An Object that hold Rate Details for the given LOA. At least one data should be given to create an LOA
+    description: An Object that holds Security deposit collection Details for the given LOA.
     properties:
       letterOfAcceptance:
         $ref: '#/definitions/LetterOfAcceptance'
+        description: LOA reference
       tenantId:
         type: string
         description: Tenant id of the Security Deposit
@@ -1029,20 +1325,19 @@ definitions:
       percentage:
         type: string
         description: Percentage for the given mode
-        pattern: "[0-9]+"
         maxLength: 10
         minLength: 1
       amount:
         type: number
         format: BigDecimal
         description: Amount of Security Deposit should be calculated as per percentage
-        pattern: "[0-9]+"
-        maxLength: 50
+        maxLength: 20
         minLength: 1
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - tenantId
+      - letterOfAcceptance
       - mode
       - percentage
       - amount
@@ -1074,7 +1369,7 @@ definitions:
           
   WorkOrder:
     type: object
-    description: An Object holds the basic data for a Work Order
+    description: An Object that holds the basic data for a Work Order
     properties:
       id:
         type: string
@@ -1086,8 +1381,7 @@ definitions:
         minLength: 2
       letterOfAcceptance:
         $ref: '#/definitions/LetterOfAcceptance'
-      loaActivity:
-        $ref: '#/definitions/LOAActivity'  
+        description: LOA reference
       workOrderDetails:
         type: array
         description: Array of Work Order Details
@@ -1102,9 +1396,16 @@ definitions:
       workOrderNumber:
         type: string
         pattern: '[a-zA-Z0-9-\\]+'
-        description: Work Order Number
-        maxLength: 10
+        description: Work Order Number. Auto generated.
+        maxLength: 50
         minLength: 1
+      documentDetails:
+        type: array
+        description: Array of document details
+        items:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DocumentDetail'
+      workFlowDetails:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -1115,7 +1416,7 @@ definitions:
     
   WorkOrderDetail:
     type: object
-    description: An Object holds the basic data for a Work Order Details
+    description: An Object that holds the basic data of Work Order Details
     properties:
       id:
         type: string
@@ -1127,9 +1428,10 @@ definitions:
         minLength: 2
       workOrder:
         $ref: '#/definitions/WorkOrder'
+        description: Reference of Work Order
       remarks:
         type: string
-        description: Remarks for the Work Order.
+        description: Remarks for the Work Order
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
         minLength: 1
@@ -1138,6 +1440,7 @@ definitions:
     required:
       - tenantId
       - workOrder
+      - remarks
             
   WorkOrderRequest:
       description: Contract class to send response. Array of Wor kOrder items are used in case of search results, also multiple  Work Order item is used for create and update
@@ -1178,6 +1481,7 @@ definitions:
         minLength: 2
       letterOfAcceptance:
         $ref: '#/definitions/LetterOfAcceptance'
+        description: Reference of LOA
       noticeDetails:
         type: array
         description: Array of Notice Detail
@@ -1186,9 +1490,11 @@ definitions:
           $ref: '#/definitions/NoticeDetail'
       closingLine:
         type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Closing Line for the work
       daysOfReply:
         type: integer
+        pattern: "[0-9]+"
         description: The number of Days for reply to Notice
       documentDetails:
         type: array
@@ -1640,4 +1946,5 @@ tags:
     description: APIs required for Track Milestone.
   - name: Contractor Advance Requisition
     description: APIs required for Contractor Advance Requisition.
+
 

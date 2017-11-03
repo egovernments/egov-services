@@ -49,6 +49,13 @@ ReportDefinitions:
     isMandatory: false
     source: lcms
     searchClause : AND case.defendant = $defendant
+  - name: courtName   
+    label: reports.lcms.courtName   
+    type: singlevaluelist   
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=lcms&masterName=court|$..code|$..name    
+    source: lcms    
+    isMandatory: false    
+    searchClause : AND case.courtName = $courtName
   query: select defendant,caseno,plantiffname from egov_lcms_case WHERE caseregistrationdate>=$fromDate and caseregistrationdate<=$toDate
 - reportName: CaseSummaryReport
   summary: Case Summary Report

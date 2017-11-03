@@ -75,7 +75,7 @@ public class MdmsRepository {
 		try {
 			mdmsResponse = restTemplate.postForObject(commomServiceUrl.toString(), objectMapper.writeValueAsString(mdmsCriteriaReq),
 					MdmsResponse.class);
-			log.info("Get mdms response is :" + mdmsResponse);
+			log.info("Get mdms response is :" + mdmsResponse+" with body "+objectMapper.writeValueAsString(mdmsCriteriaReq));
 
 		} catch (Exception exception) {
 			log.info("Excpeption in getting the mdmsresponse "+exception.getMessage());

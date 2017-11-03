@@ -1034,7 +1034,7 @@ ReportDefinitions:
     label: reports.pgr.status.completed
     type: number
     source: reopened
-  - name: rejected
+  - name: reopened
     label: reports.pgr.status.reopened
     type: number
     source: seva

@@ -49,7 +49,7 @@ public class SummonValidator {
 				throw new CustomException(propertiesManager.getWardCode(), propertiesManager.getWardMessage());
 			} else if (summon.getBench() == null) {
 				throw new CustomException(propertiesManager.getBenchCode(), propertiesManager.getBenchMessage());
-			} else if (summon.getRegister() == null) {
+			} else if (summon.getStamp() == null) {
 				throw new CustomException(propertiesManager.getStampCode(), propertiesManager.getStampMessage());
 			} else if (summon.getSummonDate() == null) {
 				throw new CustomException(propertiesManager.getSummondateCode(),

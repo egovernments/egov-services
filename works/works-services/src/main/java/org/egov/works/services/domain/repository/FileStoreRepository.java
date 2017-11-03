@@ -25,13 +25,13 @@ public class FileStoreRepository {
         this.url = fileStoreHostName + url;
     }
 
-    public FileStoreResponse searchFileStore(final String tenantId, final String fileStoreId, final RequestInfo requestInfo) {
-        FileStoreResponse response = null;
+    public boolean searchFileStore(final String tenantId, final String fileStoreId, final RequestInfo requestInfo) {
         try {
-            response = restTemplate.getForObject(url, FileStoreResponse.class, fileStoreId, tenantId);
+            restTemplate.getForObject(url, FileStoreResponse.class, fileStoreId, tenantId);
         } catch (Exception e) {
             log.error("Error while validating filestore id", e);
+            return false;
         }
-        return response;
+        return true;
     }
 }

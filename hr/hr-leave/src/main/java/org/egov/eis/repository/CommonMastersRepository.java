@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -32,7 +33,10 @@ public class CommonMastersRepository {
     public List<Holiday> getHolidayByDate(RequestInfo requestInfo, Date applicableOn, String tenantId) {
         final String url = commonMastersServiceHost + "/egov-common-masters/holidays/_search?tenantId=" + tenantId;
         final StringBuilder searchURL = new StringBuilder(url);
-        searchURL.append("&applicableOn=" + applicableOn);
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String fromDate = simpleDateFormat.format(applicableOn);
+        searchURL.append("&applicableOn=" + fromDate);
         final HolidayResponse holidayResponse = restTemplate.postForObject(searchURL.toString(), requestInfo, HolidayResponse.class);
 
         return holidayResponse.getHoliday();

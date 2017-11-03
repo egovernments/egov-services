@@ -1,6 +1,7 @@
 package org.egov.swm.persistence.entity;
 
 import org.egov.swm.domain.model.AuditDetails;
+import org.egov.swm.domain.model.Contractor;
 import org.egov.swm.domain.model.Vendor;
 
 import lombok.AllArgsConstructor;
@@ -55,12 +56,8 @@ public class VendorEntity {
 		vendor.setTenantId(tenantId);
 		vendor.setName(name);
 		vendor.setRegistrationNo(registrationNo);
-		vendor.setEmail(email);
-		vendor.setTinNumber(tinNumber);
-		vendor.setGst(gst);
-		vendor.setPhoneNo(phoneNo);
-		vendor.setContactNo(contactNo);
-		vendor.setFaxNumber(faxNumber);
+		vendor.setContractor(Contractor.builder().email(email).tinNumber(tinNumber).gst(gst).phoneNo(phoneNo)
+				.contactNo(contactNo).faxNumber(faxNumber).build());
 		vendor.setAddress(address);
 		vendor.setDetails(details);
 		vendor.setAuditDetails(new AuditDetails());

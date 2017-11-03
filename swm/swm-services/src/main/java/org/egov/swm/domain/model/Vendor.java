@@ -2,6 +2,7 @@ package org.egov.swm.domain.model;
 
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -44,33 +45,9 @@ public class Vendor {
 	@JsonProperty("registrationNo")
 	private String registrationNo = null;
 
-	@NotNull
-	@Length(min = 7, max = 256)
-	@JsonProperty("email")
-	private String email = null;
-
-	@NotNull
-	@Length(min = 1, max = 256)
-	@JsonProperty("tinNumber")
-	private String tinNumber = null;
-
-	@NotNull
-	@Length(min = 1, max = 256)
-	@JsonProperty("gst")
-	private String gst = null;
-
-	@Length(min = 10, max = 10)
-	@JsonProperty("phoneNo")
-	private String phoneNo = null;
-
-	@NotNull
-	@Length(min = 10, max = 10)
-	@JsonProperty("contactNo")
-	private String contactNo = null;
-
-	@Length(min = 10, max = 10)
-	@JsonProperty("faxNumber")
-	private String faxNumber = null;
+	@Valid
+	@JsonProperty("contractor")
+	private Contractor contractor = null;
 
 	@NotNull
 	@Length(min = 10, max = 500)

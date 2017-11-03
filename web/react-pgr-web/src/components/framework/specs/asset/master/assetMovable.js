@@ -49,7 +49,7 @@ var dat = {
   						"jsonPath": "Asset.wipReferenceNo",
   						"label": "ac.create.Ref.WIP.Register",
   						"pattern": "",
-  						"type": "singleValueList",
+  						"type": "text",
   						"url": "",
   						"isRequired": true,
   						"isDisabled": false,
@@ -80,11 +80,7 @@ var dat = {
   						"requiredErrMsg": "",
   						"patternErrMsg": "",
 							"defaultValue": "MOVABLE",
-					// "depedants": [{
-					// 	"jsonPath": "Asset.assetCategory",
-					// 	"type": "dropDown",
-					// 	"pattern": "/asset-services/assetCategories/_search?tenantId=default&assetCategoryType={Asset.assetCategory[0].assetCategoryType}|$..name|$..name"
-					// }]
+							"isHidden": true
   					},
 						{
   						"name": "AssetSubType",
@@ -92,7 +88,6 @@ var dat = {
   						"label": "ac.create.Asset.SubCategory.Name",
   						"pattern": "",
   						"type": "singleValueList",
-  						//"url": "/egov-mdms-service/v1/_get?&masterName=AssetCategory&moduleName=ASSET|$..id|$..name",
 							"url": "",
 							"isRequired": true,
   						"isDisabled": false,
@@ -105,31 +100,23 @@ var dat = {
 							"label": "ac.create.Department",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "",
+							"url": "/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "",
-							"defaultValue": [	{
-									"key": "1",
-									"value": "REVENUE"
-								},  {
-							"key": "2",
-							"value": "ADMINISTARTION"
-						}
-					]
+							"patternErrMsg": ""
   					},
             {
   						"name": "NoOfOrder",
   						"jsonPath": "Asset.orderNumber",
   						"label": "ac.create.No.Of.Order",
-  						"pattern": "",
+  						"pattern": "^[a-zA-Z0-9_]*$",
   						"type": "number",
   						"url": "",
   						"isRequired": false,
   						"isDisabled": false,
   						"requiredErrMsg": "",
-  						"patternErrMsg": ""
+  						"patternErrMsg": "Please enter valid No of Order (Alpha/Numeric)"
   					},
             {
               "name": "DateOfOrder",
@@ -172,42 +159,56 @@ var dat = {
         "multiple":false,
         "jsonPath":"",
 				"fields": [
-          // {
-          //   "name": "Location",
-          //   "jsonPath": "Asset.locationDetails",
-          //   "label": "ac.create.Location",
-          //   "pattern": "",
-          //   "type": "singleValueList",
-          //   "url": "",
-          //   "isRequired": false,
-          //   "isDisabled": false,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
-          // {
-          //   "name": "Longitude",
-          //   "jsonPath": "Asset.longitude",
-          //   "label": "ac.create.Longitude",
-          //   "pattern": "",
-          //   "type": "text",
-          //   "url": "",
-          //   "isRequired": false,
-          //   "isDisabled": true,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
-          // {
-          //   "name": "Latitude",
-          //   "jsonPath": "Asset.latitude",
-          //   "label": "ac.create.Latitude",
-          //   "pattern": "",
-          //   "type": "text",
-          //   "url": "",
-          //   "isRequired": false,
-          //   "isDisabled": true,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
+					{
+            "name": "searchLocation",
+						"jsonPathAddress": "Asset.location",
+            "jsonPathLng": "Asset.longitude",
+						"jsonPathLat": "Asset.latitude",
+            "label": "search",
+            "pattern": "",
+            "type": "googleMaps",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "Location",
+            "jsonPath": "Asset.location",
+            "label": "ac.create.Location",
+            "pattern": "",
+            "type": "text",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "Longitude",
+            "jsonPath": "Asset.longitude",
+            "label": "ac.create.Longitude",
+            "pattern": "",
+            "type": "text",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "Latitude",
+            "jsonPath": "Asset.latitude",
+            "label": "ac.create.Latitude",
+            "pattern": "",
+            "type": "text",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
           {
             "name": "Address",
             "jsonPath": "Asset.address",
@@ -219,8 +220,16 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          },
-          {
+          }
+				]
+			},
+      {
+				"label": "ac.create.Asset.Details",
+				"name": "AssetField",
+        "multiple":false,
+        "jsonPath":"",
+				"fields": [
+					{
             "name": "NoofQuantity",
             "jsonPath": "Asset.quantity",
             "label": "ac.create.No.of.Quantity",
@@ -231,14 +240,7 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          }]
-			},
-      {
-				"label": "ac.create.Asset.Details",
-				"name": "AssetField",
-        "multiple":false,
-        "jsonPath":"",
-				"fields": [
+          },
           {
             "name": "AnticipatedLifeOfAsset",
             "jsonPath": "Asset.anticipatedLife",
@@ -251,18 +253,29 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
-          {
-            "name": "ModeofAcquisition",
-            "jsonPath": "Asset.modeOfAcquisition",
-            "label": "ac.create.Mode.of.Acquisition",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
+					{
+						"name": "ModeofAcquisition",
+						"jsonPath": "Asset.modeOfAcquisition",
+						"label": "ac.create.Mode.of.Acquisition",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue": [  {
+						"key": "ACQUIRED",
+						"value": "ACQUIRED"
+					},  {
+						"key": "CONSTRUCTION",
+						"value": "CONSTRUCTION"
+					},  {
+						"key": "PURCHASE",
+						"value": "PURCHASE"
+					}
+				]
+			},
           {
             "name": "FromWhomAcquired",
             "jsonPath": "Asset.acquiredFrom",
@@ -270,7 +283,7 @@ var dat = {
             "pattern": "",
             "type": "text",
             "url": "",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -289,7 +302,7 @@ var dat = {
           },
           {
             "name": "SourceOfFunds",
-            "jsonPath": "Asset.fund",
+            "jsonPath": "Asset.funSource",
             "label": "ac.create.Source.of.funds",
             "pattern": "",
             "type": "singleValueList",
@@ -330,78 +343,36 @@ var dat = {
             "jsonPath": "Asset.defectLiabilityPeriod.year",
             "label": "ac.create.Defect.liability.Period",
             "pattern": "",
-            "type": "singleValueList",
+            "type": "number",
             "url": "",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "",
-						"defaultValue": [	{
-								"key": null,
-								"value": "Years"
-							},  {
-            "key": "1",
-            "value": "1"
-          },  {
-            "key": "2",
-            "value": "2"
-          },  {
-            "key": "3",
-            "value": "3"
-          }
-				]
+            "patternErrMsg": ""
           },
 					{
             "name": "DefectLiabilityPeriod",
             "jsonPath": "Asset.defectLiabilityPeriod.month",
             "label": "ac.create.Defect.liability.Period.month",
             "pattern": "",
-            "type": "singleValueList",
+            "type": "number",
             "url": "",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "",
-						"defaultValue": [	{
-								"key": null,
-								"value": "Months"
-							},  {
-            "key": "1",
-            "value": "1"
-          },  {
-            "key": "2",
-            "value": "2"
-          },  {
-            "key": "3",
-            "value": "3"
-          }
-				]
+            "patternErrMsg": ""
           },
 					{
             "name": "DefectLiabilityPeriod",
             "jsonPath": "Asset.defectLiabilityPeriod.day",
             "label": "ac.create.Defect.liability.Period.day",
             "pattern": "",
-            "type": "singleValueList",
+            "type": "number",
             "url": "",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "",
-						"defaultValue": [	{
-								"key": null,
-								"value": "Days"
-							},  {
-            "key": "1",
-            "value": "1"
-          },  {
-            "key": "2",
-            "value": "2"
-          },  {
-            "key": "3",
-            "value": "3"
-          }
-				]
+            "patternErrMsg": ""
           },
 
           {

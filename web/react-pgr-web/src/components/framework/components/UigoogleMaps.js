@@ -198,7 +198,7 @@ export default class UigoogleMaps extends Component {
     ];
 				return (
 					<div>
-					<FlatButton style={{width: '10%'}} id={item.label.split(".").join("-")} type={item.uiType || "button"} label={item.label} primary={typeof item.primary != 'undefined' ? item.primary : true} secondary={item.secondary || false} onClick={this.handleOpen} disabled={item.isDisabled ? true : false}/>
+					<FlatButton id={item.label.split(".").join("-")} type={item.uiType || "button"} label={item.label} primary={typeof item.primary != 'undefined' ? item.primary : true} secondary={item.secondary || false} onClick={this.handleOpen} disabled={item.isDisabled ? true : false}/>
           <Dialog
           title="Google Maps"
 					style={{width: '90%', height: '90%'}}

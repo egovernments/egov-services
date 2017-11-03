@@ -1192,9 +1192,7 @@ definitions:
       #  $ref: '#/definitions/LetterOfAcceptance'
       parent:
         $ref: '#/definitions/LetterOfAcceptance'
-        description: Parent of Letter Of Acceptance. This is required in case of Revision Work Order. 
-      workFlowDetails:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
+        description: Parent of Letter Of Acceptance. This is required in case of Revision Work Order 
       stateId:
         type: string
         description: State id of the workflow
@@ -1219,9 +1217,10 @@ definitions:
         description: Array of Security Deposit collection details
         items:
           $ref: '#/definitions/SecurityDeposit'
+      workFlowDetails:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-        
     required:
       - tenantId
       - loaNumber
@@ -1235,7 +1234,6 @@ definitions:
       - defectLiabilityPeriod
       - fileNumber
       - fileDate
-      
     
   AssetsForLOA:
       type: object
@@ -1341,6 +1339,118 @@ definitions:
       - mode
       - percentage
       - amount
+      
+  LOAActivity:
+    type: object
+    description: An Object that holds the basic data for Letter Of Acceptance Activity
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Letter Of Acceptance Activity
+      tenantId:
+        type: string
+        description: Tenant id of the Letter Of Acceptance Activity
+        maxLength: 128
+        minLength: 2
+      letterOfAcceptanceEstimate:
+        $ref: '#/definitions/LetterOfAcceptanceEstimate'
+        description: Letter of acceptance reference
+      estimateActivity:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/EstimateActivity'
+        description: Reference of Estimate Activity
+      parent:
+        $ref: '#/definitions/LOAActivity'
+        description: Parent of the Letter Of Acceptance Activity. This is required for Revision Workrder parent activity.
+      approvedRate:
+        type: number
+        format: BigDecimal
+        description: Approved Rate for the LOA activity.
+        maxLength: 12
+        minLength: 1
+      approvedQuantity:
+        type: number
+        format: BigDecimal
+        description: Approved Quantity for the LOA activity.
+        maxLength: 12
+        minLength: 1
+      approvedAmount:
+        type: number
+        format: BigDecimal
+        description: Approved Amount for the LOA activity.       
+        maxLength: 20
+        minLength: 1
+      remarks:
+        type: string
+        description: Remarks for the LOA Activity
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
+        maxLength: 1024
+      loaMeasurements:
+        type: array
+        description: Array of LOA measurement sheet
+        items:
+          $ref: '#/definitions/LOAMeasurementSheet'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - tenantId
+      - letterOfAcceptanceEstimate
+      - estimateActivity
+      - approvedRate
+      - approvedQuantity
+      - approvedAmount
+      
+  LOAMeasurementSheet:
+      type: object
+      description: An Object that holds the basic data for LOA Measurement Sheet
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Measurement Sheet
+        tenantId:
+          type: string
+          description: Tenant id of the Measurement Sheet
+          maxLength: 128
+          minLength: 2
+        no:
+          type: number
+          format: BigDecimal
+          description: No. of the Measurement sheet
+          maxLength: 20
+        length:
+          type: number
+          format: BigDecimal
+          description: Length of the Measurement sheet
+          maxLength: 20
+        width:
+          type: number
+          format: BigDecimal
+          description: Width of the Measurement sheet
+        depthOrHeight:
+          type: number
+          format: BigDecimal
+          description: Depth or Height of the Measurement sheet
+          maxLength: 20
+        quantity:
+          type: number
+          format: BigDecimal
+          description: Quantity of the Measurement sheet
+          maxLength: 20
+          minLength: 1
+        loaActivity:
+          $ref: '#/definitions/LOAActivity'
+          description: LOA activity reference
+        estimateMeasurementSheet:
+          type: string
+          description: Estimate Measurement sheet reference
+        #estimateMeasurementSheet:
+          #$ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/EstimateMeasurementSheet'
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - tenantId
+        - quantity
+        - estimateMeasurementSheet
+        - loaActivity
 
   LetterOfAcceptanceRequest:
       description: Contract class to send response. Array of LetterOfAcceptance items are used in case of search results, also multiple  Letter Of Acceptance item is used for create and update
@@ -1469,7 +1579,7 @@ definitions:
   
   Notice:
     type: object
-    description: An Object holds the basic data for a Notice
+    description: An Object that holds the basic data of Notice
     properties:
       id:
         type: string
@@ -1506,6 +1616,7 @@ definitions:
     required:
       - tenantId
       - letterOfAcceptance
+      - noticeDetails
     
   NoticeDetail:
     type: object
@@ -1560,7 +1671,7 @@ definitions:
           
   Milestone: 
     type: object
-    description: An Object holds the basic data for a Milestone
+    description: An Object taht holds the basic data for a Milestone
     properties:
       id:
         type: string
@@ -1572,6 +1683,7 @@ definitions:
         minLength: 2
       letterOfAcceptanceEstimate:
         $ref: '#/definitions/LetterOfAcceptanceEstimate'
+        description: Reference of Letter of Acceptance
       status:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/MilestoneStatus'
       milestoneActivities:
@@ -1595,7 +1707,7 @@ definitions:
         type: string
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Remarks for cancellation of the Milestone, Required only while cancelling Milestone
-        maxLength: 1024
+        maxLength: 512
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -1606,7 +1718,7 @@ definitions:
     
   MilestoneActivity:
     type: object
-    description: An Object that hold Activity for the given Milestone. At least one data should be given to create an Milestone
+    description: An Object that holds Activity for the given Milestone. At least one data should be given to create an Milestone
     properties:
       id:
         type: string
@@ -1632,12 +1744,14 @@ definitions:
         type: number
         format: BigDecimal
         description: Percentage for the given Milestone Activity.
+        minLength: 1
         maxLength: 6
       description:
         type: string
         description: Descritpion for Milestone Activity.
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
-        maxLength: 1024
+        minLength: 1
+        maxLength: 512
       stageOrderNumber:
         type: string
         pattern: '[a-zA-Z0-9-\\]+'
@@ -1649,6 +1763,7 @@ definitions:
       - percentage
       - stageOrderNumber
       - milestone
+      - description
 
   MilestoneRequest:
       description: Contract class to send response. Array of Milestone items are used in case of search results, also multiple  Milestone item is used for create and update
@@ -1677,7 +1792,7 @@ definitions:
     
   TrackMilestone:
     type: object
-    description: An Object holds the basic data for a Track Milestone
+    description: An Object that holds the basic data for a Track Milestone
     properties:
       id:
         type: string
@@ -1689,8 +1804,10 @@ definitions:
         minLength: 2
       milestone:
         $ref: '#/definitions/Milestone'
+        description: Reference of Milestone
       status:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/TrackMilestoneStatus'
+        description: Track Milestone status
       totalPercentage:
         type: number
         format: BigDecimal
@@ -1715,7 +1832,7 @@ definitions:
     
   TrackMilestoneActivity:
     type: object
-    description: An Object that hold Activity for the given Track  Milestone. At least one data should be given to create an Track Milestone
+    description: An Object that holds Activity for the given Track  Milestone. At least one data should be given to create an Track Milestone
     properties:
       id:
         type: string
@@ -1727,12 +1844,10 @@ definitions:
         minLength: 2
       trackMilestone:
         $ref: '#/definitions/TrackMilestone'
-      milestoneActivities:
-        type: array
-        description: Array of Milestone Activity
-        minItems: 1
-        items:
-          $ref: '#/definitions/MilestoneActivity'
+        description: Track Milestone reference
+      milestoneActivity:
+        $ref: '#/definitions/MilestoneActivity'
+        description: Milestone Activity reference
       remarks:
         type: string
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
@@ -1755,7 +1870,7 @@ definitions:
       - tenantId
       - percentage
       - trackMilestone
-      - milestoneActivities
+      - milestoneActivity
 
   TrackMilestoneRequest:
       description: Contract class to send response. Array of Track Milestone items are used in case of search results, also multiple  Track Milestone item is used for create and update
@@ -1808,9 +1923,10 @@ definitions:
     
   ContractorAdvanceRequisition:
     type: object
-    description: A Object holds the basic data for a ContractorAdvanceRequisition
+    description: An Object that holds the basic data for Contractor Advance Requisition
     allOf:
     - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-advancerequisition/v1-0-0.yaml#/definitions/AdvanceRequisition'
+      description: Contractor Advance extends AdvanceRequisition object
     properties:
       id:
         type: integer
@@ -1821,9 +1937,9 @@ definitions:
         description: tenant id of the Contractor Advance Requisition Form
         maxLength: 128
         minLength: 2
-      
       letterOfAcceptanceEstimate:
         $ref: '#/definitions/LetterOfAcceptanceEstimate'
+        description: Letter of acceptance reference
       workFlowDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
       stateId:
@@ -1834,104 +1950,7 @@ definitions:
     required:
       - tenantId
       - letterOfAcceptanceEstimate
-      
-  LOAActivity:
-    type: object
-    description: An Object holds the basic data for Letter Of Acceptance Activity
-    properties:
-      id:
-        type: string
-        description: Unique Identifier of the Letter Of Acceptance Activity
-      tenantId:
-        type: string
-        description: Tenant id of the Letter Of Acceptance Activity
-        maxLength: 128
-        minLength: 2
-      estimateActivity:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/EstimateActivity'
-      #parent:
-      #  $ref: '#/definitions/LOAActivity'
-      parent:
-        type: string
-        description: Parent of the Letter Of Acceptance Activity
-      approvedRate:
-        type: number
-        format: BigDecimal
-        description: Approved Rate for the work order.
-        maxLength: 12
-        minLength: 1
-      approvedAmount:
-        type: number
-        format: BigDecimal
-        description: Approved Amount for the work order.       
-        maxLength: 12
-        minLength: 1
-      remarks:
-        type: string
-        description: Remarks for the work order.
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
-        maxLength: 1024
-      loaMeasurements:
-        type: array
-        description: Array of work order measurement sheet
-        items:
-          $ref: '#/definitions/LOAMeasurementSheet'
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-    required:
-      - tenantId
-      - estimateActivity
-      - approvedAmount
-      - approvedRate
-      
-  LOAMeasurementSheet:
-      type: object
-      description: An Object holds the basic data for a LOA Measurement Sheet
-      properties:
-        id:
-          type: string
-          description: Unique Identifier of the Measurement Sheet
-        tenantId:
-          type: string
-          description: Tenant id of the Measurement Sheet
-          maxLength: 128
-          minLength: 2
-        no:
-          type: number
-          format: BigDecimal
-          description: No. of the Measurement sheet
-          maxLength: 20
-        length:
-          type: number
-          format: BigDecimal
-          description: Length of the Measurement sheet
-          maxLength: 20
-        width:
-          type: number
-          format: BigDecimal
-          description: Width of the Measurement sheet
-        depthOrHeight:
-          type: number
-          format: BigDecimal
-          description: Depth or Height of the Measurement sheet
-          maxLength: 20
-        quantity:
-          type: number
-          format: BigDecimal
-          description: Quantity of the Measurement sheet
-          maxLength: 20
-          minLength: 1
-        loaActivity:
-          $ref: '#/definitions/LOAActivity'
-        #measurementSheet:
-          #$ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/MeasurementSheet'
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      required:
-        - tenantId
-        - quantity
-        #- measurementSheet
-        - loaActivity
+  
           
 tags:
   - name: Letter Of Acceptance
@@ -1946,5 +1965,4 @@ tags:
     description: APIs required for Track Milestone.
   - name: Contractor Advance Requisition
     description: APIs required for Contractor Advance Requisition.
-
 

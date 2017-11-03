@@ -192,7 +192,7 @@ public class CaseService {
 			}
 			if (!masterMap.isEmpty()){
 			MdmsResponse mdmsResponse = mdmsRepository.getMasterData(caseObj.getTenantId(), masterMap, requestInfoWrapper);
-			mdmsResponse.getMdmsRes().get("caseType");
+	
 			}
 		}
 		

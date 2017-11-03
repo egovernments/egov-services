@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import org.egov.works.commons.domain.enums.Beneficiary;
 import org.egov.works.commons.domain.enums.WorkCategory;
 import org.egov.works.commons.domain.model.TypeOfWork;
+import org.egov.works.estimate.persistence.entity.AbstractEstimateDetailsEntity;
+import org.egov.works.estimate.web.model.AbstractEstimateDetails;
 import org.egov.works.estimate.web.model.BudgetGroup;
 import org.egov.works.estimate.web.model.Department;
 import org.egov.works.estimate.web.model.Function;
@@ -17,6 +19,9 @@ import org.egov.works.estimate.web.model.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.annotations.ApiModel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * An Object holds the basic data for a Detailed Estimate
@@ -24,7 +29,10 @@ import io.swagger.annotations.ApiModel;
 @ApiModel(description = "An Object holds the basic data for a Detailed Estimate")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-30T10:26:20.111Z")
 
-public class DetailedEstimate   {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class DetailedEstimateEntity   {
     @JsonProperty("id")
     private String id = null;
 
@@ -154,382 +162,6 @@ public class DetailedEstimate   {
     @JsonProperty("function")
     private String function = null;
 
-    public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getTenantId() {
-		return tenantId;
-	}
-
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
-
-	public String getEstimateNumber() {
-		return estimateNumber;
-	}
-
-	public void setEstimateNumber(String estimateNumber) {
-		this.estimateNumber = estimateNumber;
-	}
-
-	public Long getEstimateDate() {
-		return estimateDate;
-	}
-
-	public void setEstimateDate(Long estimateDate) {
-		this.estimateDate = estimateDate;
-	}
-
-	public String getNameOfWork() {
-		return nameOfWork;
-	}
-
-	public void setNameOfWork(String nameOfWork) {
-		this.nameOfWork = nameOfWork;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getDepartment() {
-		return department;
-	}
-
-	public void setDepartment(String department) {
-		this.department = department;
-	}
-
-	public String getAdminSanctionNumber() {
-		return adminSanctionNumber;
-	}
-
-	public void setAdminSanctionNumber(String adminSanctionNumber) {
-		this.adminSanctionNumber = adminSanctionNumber;
-	}
-
-	public Long getAdminSanctionDate() {
-		return adminSanctionDate;
-	}
-
-	public void setAdminSanctionDate(Long adminSanctionDate) {
-		this.adminSanctionDate = adminSanctionDate;
-	}
-
-	public String getAdminSanctionBy() {
-		return adminSanctionBy;
-	}
-
-	public void setAdminSanctionBy(String adminSanctionBy) {
-		this.adminSanctionBy = adminSanctionBy;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public BigDecimal getWorkValue() {
-		return workValue;
-	}
-
-	public void setWorkValue(BigDecimal workValue) {
-		this.workValue = workValue;
-	}
-
-	public BigDecimal getEstimateValue() {
-		return estimateValue;
-	}
-
-	public void setEstimateValue(BigDecimal estimateValue) {
-		this.estimateValue = estimateValue;
-	}
-
-	public String getProjectCode() {
-		return projectCode;
-	}
-
-	public void setProjectCode(String projectCode) {
-		this.projectCode = projectCode;
-	}
-
-	public String getParent() {
-		return parent;
-	}
-
-	public void setParent(String parent) {
-		this.parent = parent;
-	}
-
-	public String getCopiedFrom() {
-		return copiedFrom;
-	}
-
-	public void setCopiedFrom(String copiedFrom) {
-		this.copiedFrom = copiedFrom;
-	}
-
-	public Long getApprovedDate() {
-		return approvedDate;
-	}
-
-	public void setApprovedDate(Long approvedDate) {
-		this.approvedDate = approvedDate;
-	}
-
-	public String getApprovedBy() {
-		return approvedBy;
-	}
-
-	public void setApprovedBy(String approvedBy) {
-		this.approvedBy = approvedBy;
-	}
-
-	public Boolean getCopiedEstimate() {
-		return copiedEstimate;
-	}
-
-	public void setCopiedEstimate(Boolean copiedEstimate) {
-		this.copiedEstimate = copiedEstimate;
-	}
-
-	public String getBeneficiary() {
-		return beneficiary;
-	}
-
-	public void setBeneficiary(String beneficiary) {
-		this.beneficiary = beneficiary;
-	}
-
-	public String getModeOfAllotment() {
-		return modeOfAllotment;
-	}
-
-	public void setModeOfAllotment(String modeOfAllotment) {
-		this.modeOfAllotment = modeOfAllotment;
-	}
-
-	public String getWorksType() {
-		return worksType;
-	}
-
-	public void setWorksType(String worksType) {
-		this.worksType = worksType;
-	}
-
-	public String getWorksSubtype() {
-		return worksSubtype;
-	}
-
-	public void setWorksSubtype(String worksSubtype) {
-		this.worksSubtype = worksSubtype;
-	}
-
-	public String getNatureOfWork() {
-		return natureOfWork;
-	}
-
-	public void setNatureOfWork(String natureOfWork) {
-		this.natureOfWork = natureOfWork;
-	}
-
-	public String getWard() {
-		return ward;
-	}
-
-	public void setWard(String ward) {
-		this.ward = ward;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-	public Double getLatitude() {
-		return latitude;
-	}
-
-	public void setLatitude(Double latitude) {
-		this.latitude = latitude;
-	}
-
-	public Double getLongitude() {
-		return longitude;
-	}
-
-	public void setLongitude(Double longitude) {
-		this.longitude = longitude;
-	}
-
-	public WorkCategory getWorkCategory() {
-		return workCategory;
-	}
-
-	public void setWorkCategory(WorkCategory workCategory) {
-		this.workCategory = workCategory;
-	}
-
-	public String getLocality() {
-		return locality;
-	}
-
-	public void setLocality(String locality) {
-		this.locality = locality;
-	}
-
-	public String getCouncilResolutionNumber() {
-		return councilResolutionNumber;
-	}
-
-	public void setCouncilResolutionNumber(String councilResolutionNumber) {
-		this.councilResolutionNumber = councilResolutionNumber;
-	}
-
-	public Long getCouncilResolutionDate() {
-		return councilResolutionDate;
-	}
-
-	public void setCouncilResolutionDate(Long councilResolutionDate) {
-		this.councilResolutionDate = councilResolutionDate;
-	}
-
-	public Boolean getWorkOrderCreated() {
-		return workOrderCreated;
-	}
-
-	public void setWorkOrderCreated(Boolean workOrderCreated) {
-		this.workOrderCreated = workOrderCreated;
-	}
-
-	public Boolean getBillsCreated() {
-		return billsCreated;
-	}
-
-	public void setBillsCreated(Boolean billsCreated) {
-		this.billsCreated = billsCreated;
-	}
-
-	public Boolean getSpillOverFlag() {
-		return spillOverFlag;
-	}
-
-	public void setSpillOverFlag(Boolean spillOverFlag) {
-		this.spillOverFlag = spillOverFlag;
-	}
-
-	public BigDecimal getGrossAmountBilled() {
-		return grossAmountBilled;
-	}
-
-	public void setGrossAmountBilled(BigDecimal grossAmountBilled) {
-		this.grossAmountBilled = grossAmountBilled;
-	}
-
-	public String getCancellationReason() {
-		return cancellationReason;
-	}
-
-	public void setCancellationReason(String cancellationReason) {
-		this.cancellationReason = cancellationReason;
-	}
-
-	public String getCancellationRemarks() {
-		return cancellationRemarks;
-	}
-
-	public void setCancellationRemarks(String cancellationRemarks) {
-		this.cancellationRemarks = cancellationRemarks;
-	}
-
-	public BigDecimal getTotalIncludingRE() {
-		return totalIncludingRE;
-	}
-
-	public void setTotalIncludingRE(BigDecimal totalIncludingRE) {
-		this.totalIncludingRE = totalIncludingRE;
-	}
-
-	public String getAbstractEstimateDetail() {
-		return abstractEstimateDetail;
-	}
-
-	public void setAbstractEstimateDetail(String abstractEstimateDetail) {
-		this.abstractEstimateDetail = abstractEstimateDetail;
-	}
-
-	public String getStateId() {
-		return stateId;
-	}
-
-	public void setStateId(String stateId) {
-		this.stateId = stateId;
-	}
-
-	public String getFund() {
-		return fund;
-	}
-
-	public void setFund(String fund) {
-		this.fund = fund;
-	}
-
-	public String getFunction() {
-		return function;
-	}
-
-	public void setFunction(String function) {
-		this.function = function;
-	}
-
-	public String getFunctionary() {
-		return functionary;
-	}
-
-	public void setFunctionary(String functionary) {
-		this.functionary = functionary;
-	}
-
-	public String getScheme() {
-		return scheme;
-	}
-
-	public void setScheme(String scheme) {
-		this.scheme = scheme;
-	}
-
-	public String getSubScheme() {
-		return subScheme;
-	}
-
-	public void setSubScheme(String subScheme) {
-		this.subScheme = subScheme;
-	}
-
-	public String getBudgetGroup() {
-		return budgetGroup;
-	}
-
-	public void setBudgetGroup(String budgetGroup) {
-		this.budgetGroup = budgetGroup;
-	}
-
 	@JsonProperty("functionary")
     private String functionary = null;
 
@@ -542,7 +174,7 @@ public class DetailedEstimate   {
     @JsonProperty("budgetGroup")
     private String budgetGroup = null;
     
-    public org.egov.works.estimate.web.model.DetailedEstimate toDomain(final DetailedEstimate estimate) {
+    public org.egov.works.estimate.web.model.DetailedEstimate toDomain(final DetailedEstimateEntity estimate) {
 
 		org.egov.works.estimate.web.model.DetailedEstimate detailedEstimate = new org.egov.works.estimate.web.model.DetailedEstimate();
 		detailedEstimate.setAdminSanctionDate(estimate.getAdminSanctionDate());

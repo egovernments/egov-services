@@ -80,7 +80,7 @@ public class AdvocatePaymentQueryBuilder {
 
 
         if (advocatePaymentSearchCriteria.getAdvocateName() != null && !advocatePaymentSearchCriteria.getAdvocateName().isEmpty()) {
-            selectQuery.append(" AND advocate->>'name'= ?");
+            selectQuery.append(" AND advocate->>'code'= ?");
             preparedStatementValues.add(advocatePaymentSearchCriteria.getAdvocateName());
         }
 

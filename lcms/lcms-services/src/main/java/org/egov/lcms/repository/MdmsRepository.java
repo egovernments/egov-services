@@ -37,7 +37,7 @@ public class MdmsRepository {
 
 	@Autowired
 	PropertiesManager propertiesManager;
-	
+
 	@Autowired
 	ObjectMapper objectMapper;
 
@@ -51,7 +51,26 @@ public class MdmsRepository {
 			MasterDetail masterDetail = new MasterDetail();
 
 			masterDetail.setName(key);
-			masterDetail.setFilter("[?(@.code==\"" + masterCodeAndValue.get(key) + "\")]");
+			String[] codes = masterCodeAndValue.get(key).split(",");
+
+			if (codes.length == 1) {
+				masterDetail.setFilter("[?(@.code==\"" + masterCodeAndValue.get(key) + "\")]");
+			} else if (codes.length > 1) {
+				StringBuffer code = new StringBuffer();
+				for (int i = 0; i <= codes.length - 1; i++) {
+					if (i == 0) {
+						code.append("[?(@.code==\"" + codes[i] + "\"");
+					} else {
+						if (i == codes.length - 1) {
+							code.append("|| @.code==" + "\"" + codes[i] + "\")]");
+						} else {
+							code.append("|| @.code==" + "\"" + codes[i] + "\"");
+						}
+					}
+				}
+				masterDetail.setFilter(code.toString());
+			}
+
 			masterDetails.add(masterDetail);
 		}
 
@@ -73,21 +92,21 @@ public class MdmsRepository {
 		final StringBuffer commomServiceUrl = new StringBuffer();
 		commomServiceUrl.append(propertiesManager.getMdmsBasePath());
 		commomServiceUrl.append(propertiesManager.getMdmsSearhPath());
-		
+
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
-		HttpEntity<String> entity = new HttpEntity<String>(objectMapper.writeValueAsString(mdmsCriteriaReq) ,headers);
-
+		HttpEntity<String> entity = new HttpEntity<String>(objectMapper.writeValueAsString(mdmsCriteriaReq), headers);
 
 		try {
-			log.info("Mdms Request Object  is "+objectMapper.writeValueAsString(mdmsCriteriaReq));
-			mdmsResponse = restTemplate.postForObject(commomServiceUrl.toString(), entity,
-					MdmsResponse.class);
-			log.info("Get mdms response is :" + mdmsResponse+" with body "+objectMapper.writeValueAsString(mdmsCriteriaReq));
+			log.info("Mdms Request Object  is " + objectMapper.writeValueAsString(mdmsCriteriaReq));
+			mdmsResponse = restTemplate.postForObject(commomServiceUrl.toString(), entity, MdmsResponse.class);
+			log.info("Get mdms response is :" + mdmsResponse + " with body "
+					+ objectMapper.writeValueAsString(mdmsCriteriaReq));
 
 		} catch (Exception exception) {
-			log.info("Excpeption in getting the mdmsresponse "+exception.getMessage());
+			log.info("Excpeption in getting the mdmsresponse " + exception.getMessage());
+			
 		}
 
 		return mdmsResponse;

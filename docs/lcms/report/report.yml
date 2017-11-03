@@ -20,6 +20,21 @@ ReportDefinitions:
     type: string
     source: lcms
     showColumn: true
+  - name: sectionapplied
+    label: reports.lcms.sectionApplied
+    type: string
+    source: lcms
+    showColumn: true
+  - name: summondate
+    label: reports.lcms.summonDate
+    type: string
+    source: lcms
+    showColumn: true
+  - name: courtname
+    label: reports.lcms.courtName
+    type: string
+    source: lcms
+    showColumn: true
   searchParams:
   - name: fromDate
     label: reports.lcms.fromDate
@@ -37,6 +52,14 @@ ReportDefinitions:
     isMandatory: false
     source: lcms
     searchClause : AND caseno=$caseNo
+  - name: courtName
+    label: reports.lcms.courtName
+    type: singlevaluelist
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=lcms&masterName=court|$..code|$..name
+    source: lcms
+    wrapper: true
+    isMandatory: false
+    searchClause : AND courtname ->> 'code' = $courtName
   - name: plantiffName
     label: reports.lcms.plantiffName
     type: string
@@ -48,16 +71,15 @@ ReportDefinitions:
     type: string
     isMandatory: false
     source: lcms
-    searchClause : AND case.defendant = $defendant
-  - name: courtName   
-    label: reports.lcms.courtName   
-    type: singlevaluelist   
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=lcms&masterName=court|$..code|$..name    
+    searchClause : AND defendant = $defendant
+  - name: department
+    label: reports.lcms.department
+    type: singlevaluelist
+    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid&pageSize=500|$..code|$..name
     source: lcms
-    wrapper: true   
-    isMandatory: false    
-    searchClause : AND case.courtName = $courtName
-  query: select defendant,caseno,plantiffname from egov_lcms_case WHERE caseregistrationdate>=$fromDate and caseregistrationdate<=$toDate
+    isMandatory: false
+    searchClause : AND departmentname ->> 'code' = $department
+  query: select defendant,caseno,plantiffname,sectionapplied,summondate,courtname -> 'code' as courtname from egov_lcms_case WHERE caseregistrationdate>=$fromDate and caseregistrationdate<=$toDate
 - reportName: CaseSummaryReport
   summary: Case Summary Report
   version: 1.0.0

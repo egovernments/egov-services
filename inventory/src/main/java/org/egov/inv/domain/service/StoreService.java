@@ -83,8 +83,7 @@ public class StoreService {
 		for (Store store : storeRequest.getStores()) {
 			store.setAuditDetails(inventoryUtilityService.mapAuditDetails(storeRequest.getRequestInfo(), tenantId));
 			if (!storeJdbcRepository.uniqueCheck("code", new StoreEntity().toEntity(store))) {
-				throw new CustomException(
-					"inv.003","Store code should be unique");
+				throw new CustomException("inv.003", "Store code should be unique");
 			}
 			store.setId(storeJdbcRepository.getSequence(store));
 		}
@@ -96,18 +95,12 @@ public class StoreService {
 
 		for (Store store : storeRequest.getStores()) {
 			if (store.getId() == null) {
-				throw new CustomException(
-						"inv.003","Store code should be unique");
+				throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), store.getId());
 			}
 			store.setAuditDetails(
 					inventoryUtilityService.mapAuditDetailsForUpdate(storeRequest.getRequestInfo(), tenantId));
 			if (!storeJdbcRepository.uniqueCheck("code", new StoreEntity().toEntity(store))) {
-
-				throw new CustomBindException(
-						errors.getFieldError().getCode() + " : "
-								+ (errors.getFieldError().getDefaultMessage().replace("{0}",
-										errors.getFieldError().getField())).replace("{1}",
-												errors.getFieldError().getRejectedValue().toString()));
+				throw new CustomException("inv.003", "Store code should be unique");
 			}
 		}
 

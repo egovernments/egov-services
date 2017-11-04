@@ -50,7 +50,7 @@ public class EstimateUtils {
 		MdmsResponse mdmsResponse;
         String filter = "";
 
-        if(StringUtils.isNotBlank(codeFilter))
+        if(!codeFilter.equals("") && StringUtils.isNotBlank(codeFilter))
             filter = "[?(@.code == '" + codeFilter + "')]";
         else if(StringUtils.isNotBlank(codeFilter))
         filter = "[?(@.name == '" + nameFilter + "')]";

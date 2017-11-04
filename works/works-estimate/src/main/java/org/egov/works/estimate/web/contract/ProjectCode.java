@@ -1,19 +1,23 @@
 package org.egov.works.estimate.web.contract;
 
+import java.math.BigDecimal;
 import java.util.Objects;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.math.BigDecimal;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * An Object that holds the basic data for a Project Code
  */
 @ApiModel(description = "An Object that holds the basic data for a Project Code")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-04T11:10:27.426Z")
 
 public class ProjectCode   {
   @JsonProperty("id")
@@ -96,10 +100,9 @@ public class ProjectCode   {
    * Code of the Project
    * @return code
   **/
-  @ApiModelProperty(required = true, value = "Code of the Project")
-  @NotNull
+  @ApiModelProperty(value = "Code of the Project")
 
- @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(min=1,max=100)
+ @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(max=100)
   public String getCode() {
     return code;
   }

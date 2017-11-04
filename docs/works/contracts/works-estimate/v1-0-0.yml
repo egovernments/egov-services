@@ -1693,7 +1693,6 @@ definitions:
           description: Code of the Project 
           pattern: '[a-zA-Z0-9-\\]+'
           maxLength: 100
-          minLength: 1
         name:
           type: string
           pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
@@ -1725,7 +1724,6 @@ definitions:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
         - tenantId
-        - code
         - name
         - status
         

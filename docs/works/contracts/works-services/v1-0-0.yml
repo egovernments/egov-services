@@ -531,15 +531,15 @@ definitions:
         description: Object type for the Estimate Appropriation.
         pattern: '[a-zA-Z0-9-\\]+'
         maxLength: 100
-      budgetUsage:
+      budgetRefNumber:
         type: string
-        description: Refrernce of Budget Usage of the Estimate Appropriation
+        description: Refrernce of Budget Referance Number of the Estimate Appropriation
         maxLength: 100
         minLength: 3
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
-      - budgetUsage
+      - budgetRefNumber
       - tenantId
       - objectNumber
       - objectType

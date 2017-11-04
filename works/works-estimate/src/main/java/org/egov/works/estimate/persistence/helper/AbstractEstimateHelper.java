@@ -247,6 +247,10 @@ public class AbstractEstimateHelper {
 		abstractEstimate.getWard().setCode(this.ward);
 		abstractEstimate.setWorkCategory(WorkCategory.valueOf(this.workCategory));
 		abstractEstimate.setWorkOrderCreated(this.workOrderCreated);
+		
+		BudgetGroup budgetGroup = new BudgetGroup();
+		budgetGroup.setName(this.budgetHead);
+		abstractEstimate.setBudgetGroup(budgetGroup);
 		return abstractEstimate;
 	}
 }

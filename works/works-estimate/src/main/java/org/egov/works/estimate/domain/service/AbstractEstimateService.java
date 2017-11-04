@@ -241,15 +241,12 @@ public class AbstractEstimateService {
 
 	public AuditDetails setAuditDetails(final String userName, final Boolean isUpdate) {
 		AuditDetails auditDetails = new AuditDetails();
-		if (isUpdate) {
-			auditDetails.setLastModifiedBy(userName);
-			auditDetails.setLastModifiedTime(new Date().getTime());
-		} else {
+		if (!isUpdate) {
 			auditDetails.setCreatedBy(userName);
 			auditDetails.setCreatedTime(new Date().getTime());
-			auditDetails.setLastModifiedBy(userName);
-			auditDetails.setLastModifiedTime(new Date().getTime());
 		}
+		auditDetails.setLastModifiedBy(userName);
+		auditDetails.setLastModifiedTime(new Date().getTime());
 
 		return auditDetails;
 	}

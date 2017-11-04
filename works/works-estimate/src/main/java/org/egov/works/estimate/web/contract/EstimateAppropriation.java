@@ -1,18 +1,22 @@
 package org.egov.works.estimate.web.contract;
 
 import java.util.Objects;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * An Object that hold Estimate Appropriation for a given Abstract Estimate Details
  */
 @ApiModel(description = "An Object that hold Estimate Appropriation for a given Abstract Estimate Details")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-04T10:17:36.890Z")
 
 public class EstimateAppropriation   {
   @JsonProperty("id")
@@ -27,8 +31,8 @@ public class EstimateAppropriation   {
   @JsonProperty("objectType")
   private String objectType = null;
 
-  @JsonProperty("budgetUsage")
-  private String budgetUsage = null;
+  @JsonProperty("budgetRefNumber")
+  private String budgetRefNumber = null;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -116,25 +120,25 @@ public class EstimateAppropriation   {
     this.objectType = objectType;
   }
 
-  public EstimateAppropriation budgetUsage(String budgetUsage) {
-    this.budgetUsage = budgetUsage;
+  public EstimateAppropriation budgetRefNumber(String budgetRefNumber) {
+    this.budgetRefNumber = budgetRefNumber;
     return this;
   }
 
    /**
-   * Refrernce of Budget Usage of the Estimate Appropriation
-   * @return budgetUsage
+   * Refrernce of Budget Referance Number of the Estimate Appropriation
+   * @return budgetRefNumber
   **/
-  @ApiModelProperty(required = true, value = "Refrernce of Budget Usage of the Estimate Appropriation")
+  @ApiModelProperty(required = true, value = "Refrernce of Budget Referance Number of the Estimate Appropriation")
   @NotNull
 
  @Size(min=3,max=100)
-  public String getBudgetUsage() {
-    return budgetUsage;
+  public String getBudgetRefNumber() {
+    return budgetRefNumber;
   }
 
-  public void setBudgetUsage(String budgetUsage) {
-    this.budgetUsage = budgetUsage;
+  public void setBudgetRefNumber(String budgetRefNumber) {
+    this.budgetRefNumber = budgetRefNumber;
   }
 
   public EstimateAppropriation auditDetails(AuditDetails auditDetails) {
@@ -172,13 +176,13 @@ public class EstimateAppropriation   {
         Objects.equals(this.tenantId, estimateAppropriation.tenantId) &&
         Objects.equals(this.objectNumber, estimateAppropriation.objectNumber) &&
         Objects.equals(this.objectType, estimateAppropriation.objectType) &&
-        Objects.equals(this.budgetUsage, estimateAppropriation.budgetUsage) &&
+        Objects.equals(this.budgetRefNumber, estimateAppropriation.budgetRefNumber) &&
         Objects.equals(this.auditDetails, estimateAppropriation.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, objectNumber, objectType, budgetUsage, auditDetails);
+    return Objects.hash(id, tenantId, objectNumber, objectType, budgetRefNumber, auditDetails);
   }
 
   @Override
@@ -190,7 +194,7 @@ public class EstimateAppropriation   {
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    objectNumber: ").append(toIndentedString(objectNumber)).append("\n");
     sb.append("    objectType: ").append(toIndentedString(objectType)).append("\n");
-    sb.append("    budgetUsage: ").append(toIndentedString(budgetUsage)).append("\n");
+    sb.append("    budgetRefNumber: ").append(toIndentedString(budgetRefNumber)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();

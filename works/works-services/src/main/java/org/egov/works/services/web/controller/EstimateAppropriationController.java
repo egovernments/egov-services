@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.egov.works.services.domain.exception.CustomBindException;
 import org.egov.works.services.domain.service.EstimateAppropriationService;
-import org.egov.works.services.web.contract.AuditDetails;
 import org.egov.works.services.web.contract.EstimateAppropriation;
 import org.egov.works.services.web.contract.EstimateAppropriationRequest;
 import org.egov.works.services.web.contract.EstimateAppropriationResponse;
@@ -33,9 +32,6 @@ public class EstimateAppropriationController {
 			throw new CustomBindException(errors);
 		}
 		EstimateAppropriationResponse estimateAppropriationResponse = new EstimateAppropriationResponse();
-		AuditDetails auditDetails = new AuditDetails();
-		// auditDetails.setCreatedTime(new Date().getTime());
-		auditDetails.setCreatedBy(estimateAppropriationRequest.getRequestInfo().getUserInfo().getUserName());
 		/*
 		 * for (EstimateAppropriation estimateAppropriation :
 		 * estimateAppropriationRequest.getEstimateAppropriations()) {

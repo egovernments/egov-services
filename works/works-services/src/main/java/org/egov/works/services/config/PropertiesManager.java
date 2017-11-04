@@ -31,5 +31,8 @@ public class PropertiesManager {
 
     @Value("${works.appropriationnumber.format}")
     private String worksAppropriationNumberFormat;
+    
+    @Value("${appropriationNumber.prefix}")
+    private String appropriationNumberPrefix;
 
 }

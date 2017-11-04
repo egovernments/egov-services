@@ -36,7 +36,7 @@ public class IdGenerationRepository {
 		this.url = idGenHostName + url;
 	}
 
-	public String generateAppropriationNumberNumber(final String tenantId, final RequestInfo requestInfo) {
+	public String generateAppropriationNumber(final String tenantId, final RequestInfo requestInfo) {
 		Object response = null;
 		IdGenerationRequest idGenerationRequest = new IdGenerationRequest();
 		IdRequest idRequest = new IdRequest();

@@ -1,26 +1,31 @@
 package org.egov.inv.domain.service;
 
-import io.swagger.model.MaterialStoreMapping;
-import io.swagger.model.MaterialStoreMappingRequest;
-import io.swagger.model.MaterialStoreMappingSearchRequest;
-import io.swagger.model.Pagination;
+import io.swagger.model.*;
 import org.egov.inv.persistence.entity.MaterialStoreMappingEntity;
 import org.egov.inv.persistence.repository.MaterialStoreMappingJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
 
 import java.util.List;
+
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
 public class MaterialStoreMappingService {
 
+    public static final String INV_001 = "inv.001";
+    public static final String STORE = "store";
+    public static final String MATERIAL = "material";
+    public static final String INV_005 = "inv.005";
     private LogAwareKafkaTemplate logAwareKafkaTemplate;
 
     private MaterialStoreMappingJdbcRepository materialStoreMappingJdbcRepository;
 
     private InventoryUtilityService inventoryUtilityService;
+
+    private StoreService storeService;
 
     private String createTopicName;
 
@@ -29,39 +34,45 @@ public class MaterialStoreMappingService {
     public MaterialStoreMappingService(LogAwareKafkaTemplate logAwareKafkaTemplate,
                                        MaterialStoreMappingJdbcRepository materialStoreMappingJdbcRepository,
                                        InventoryUtilityService inventoryUtilityService,
+                                       StoreService storeService,
                                        @Value("${inv.materialstore.save.topic}") String createTopicName,
                                        @Value("${inv.materialstore.update.topic}") String updateTopicName) {
         this.logAwareKafkaTemplate = logAwareKafkaTemplate;
         this.materialStoreMappingJdbcRepository = materialStoreMappingJdbcRepository;
         this.inventoryUtilityService = inventoryUtilityService;
+        this.storeService = storeService;
         this.createTopicName = createTopicName;
         this.updateTopicName = updateTopicName;
     }
 
 
-    public List<MaterialStoreMapping> create(MaterialStoreMappingRequest materialStoreMappingRequest, String tenantId, BindingResult errors) {
+    public List<MaterialStoreMapping> create(MaterialStoreMappingRequest materialStoreMappingRequest, String tenantId) {
         materialStoreMappingRequest.getMaterialStoreMappings().stream()
                 .forEach(materialStoreMapping -> {
                     materialStoreMapping.setAuditDetails(inventoryUtilityService.mapAuditDetails(materialStoreMappingRequest.getRequestInfo(), tenantId));
-                    if (!materialStoreMappingJdbcRepository.uniqueCheck("material", "store", new MaterialStoreMappingEntity().toEntity(materialStoreMapping))) {
-                        throw new RuntimeException("material and store combination already exists");
-                    }
+                    uniqueCheck(materialStoreMapping);
                     materialStoreMapping.setId(materialStoreMappingJdbcRepository.getSequence(materialStoreMapping));
                 });
+
         return push(createTopicName, materialStoreMappingRequest);
 
     }
 
-    public List<MaterialStoreMapping> update(MaterialStoreMappingRequest materialStoreMappingRequest, String tenantId, BindingResult errors) {
+    public List<MaterialStoreMapping> update(MaterialStoreMappingRequest materialStoreMappingRequest, String tenantId) {
         materialStoreMappingRequest.getMaterialStoreMappings().stream()
                 .forEach(materialStoreMapping -> {
                     materialStoreMapping.setAuditDetails(inventoryUtilityService.mapAuditDetails(materialStoreMappingRequest.getRequestInfo(), tenantId));
-                    if (!materialStoreMappingJdbcRepository.uniqueCheck("material", "store", new MaterialStoreMappingEntity().toEntity(materialStoreMapping))) {
-                        throw new RuntimeException("material and store combination already exists");
-                    }
+                    validateUpdateRequest(tenantId, materialStoreMapping);
+
                 });
         return push(updateTopicName, materialStoreMappingRequest);
 
+    }
+
+    public Pagination<MaterialStoreMapping> search(MaterialStoreMappingSearchRequest materialStoreMappingSearchRequest) {
+        Pagination<MaterialStoreMapping> materialStoreMappings = materialStoreMappingJdbcRepository.search(materialStoreMappingSearchRequest);
+
+        return materialStoreMappings;
     }
 
     private List<MaterialStoreMapping> push(String topicName, MaterialStoreMappingRequest
@@ -72,8 +83,58 @@ public class MaterialStoreMappingService {
         return materialStoreMappingRequest.getMaterialStoreMappings();
     }
 
-    public Pagination<MaterialStoreMapping> search(MaterialStoreMappingSearchRequest materialStoreMappingSearchRequest) {
-        return materialStoreMappingJdbcRepository.search(materialStoreMappingSearchRequest);
+
+    private void validateUpdateRequest(String tenantId, MaterialStoreMapping materialStoreMapping) {
+        if (isEmpty(materialStoreMapping.getId())) {
+            throw new CustomException("id", "Id is not present");
+        }
+
+        int size = findMaterialStore(tenantId, materialStoreMapping).size();
+
+        if (size > 0) {
+            uniqueCheck(materialStoreMapping);
+        } else
+            throw new CustomException("INV.003", "Material Store Mapping Not Found");
     }
 
+
+    private List<MaterialStoreMapping> findMaterialStore(String tenantId, MaterialStoreMapping materialStoreMapping) {
+        MaterialStoreMappingSearchRequest materialStoreMappingSearchRequest = new MaterialStoreMappingSearchRequest();
+        materialStoreMappingSearchRequest.setMaterial(materialStoreMapping.getMaterial());
+        materialStoreMappingSearchRequest.setStore(materialStoreMapping.getStore());
+        materialStoreMappingSearchRequest.setTenantId(tenantId);
+        return materialStoreMappingJdbcRepository.search(materialStoreMappingSearchRequest).getPagedData();
+    }
+
+
+    private void buildStoreMapping(String tenantId, MaterialStoreMapping materialStoreMapping) {
+        Store store = getStore(materialStoreMapping.getStore(), tenantId);
+        materialStoreMapping.setStore(store.getCode());
+    }
+
+    private Store getStore(String storeCode, String tenantId) {
+
+        StoreGetRequest storeGetRequest = getStoreGetRequest(storeCode, tenantId);
+
+        Pagination<Store> store = storeService.search(storeGetRequest);
+
+        if (store.getPagedData().size() > 0) {
+            return store.getPagedData().get(0);
+        } else {
+            throw new CustomException(INV_005, "Store Not Found");
+        }
+    }
+
+    private void uniqueCheck(MaterialStoreMapping materialStoreMapping) {
+        if (!materialStoreMappingJdbcRepository.uniqueCheck(MATERIAL, STORE, new MaterialStoreMappingEntity().toEntity(materialStoreMapping))) {
+            throw new CustomException(INV_001, "Combination of Code and Name Already Exists ");
+        }
+    }
+
+    private StoreGetRequest getStoreGetRequest(String storeCode, String tenantId) {
+        return StoreGetRequest.builder()
+                .code(storeCode)
+                .tenantId(tenantId)
+                .build();
+    }
 }

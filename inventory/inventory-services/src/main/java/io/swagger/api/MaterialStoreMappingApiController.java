@@ -64,7 +64,7 @@ public class MaterialStoreMappingApiController implements MaterialStoreMappingAp
             }
         }
 
-        List<MaterialStoreMapping> materialStoreMappings = materialStoreMappingService.create(materialStoreMappingRequest, tenantId, errors);
+        List<MaterialStoreMapping> materialStoreMappings = materialStoreMappingService.create(materialStoreMappingRequest, tenantId);
         return new ResponseEntity<MaterialStoreMappingResponse>(buildMaterialStoreMappingResponse(materialStoreMappings,
                 materialStoreMappingRequest.getRequestInfo()), HttpStatus.OK);
     }
@@ -111,7 +111,7 @@ public class MaterialStoreMappingApiController implements MaterialStoreMappingAp
             }
         }
 
-        List<MaterialStoreMapping> materialStoreMappings = materialStoreMappingService.update(materialStoreMappingRequest, tenantId, errors);
+        List<MaterialStoreMapping> materialStoreMappings = materialStoreMappingService.update(materialStoreMappingRequest, tenantId);
         return new ResponseEntity<MaterialStoreMappingResponse>(buildMaterialStoreMappingResponse(materialStoreMappings,
                 materialStoreMappingRequest.getRequestInfo()), HttpStatus.OK);
     }

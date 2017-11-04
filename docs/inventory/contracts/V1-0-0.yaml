@@ -3980,6 +3980,10 @@ definitions:
           maxLength: 10
           description: |
             vat number of supplier  
+        gstNo:
+          type: string
+          description: |
+            gst number of supplier 
         contactPerson:
           type: string
           pattern: ^[a-zA-Z ]+$
@@ -4015,11 +4019,17 @@ definitions:
           description: Tenant id of the Enum
           maxLength: 128
           minLength: 4
+        code:
+          type: string
+          description: |
+            code of the bank     
         name:
           type: string
           pattern: ^[a-zA-Z ]$
           description: |
-            name of the Employee
+            name of the bank
+        bankBranchInfo:
+          $ref: "#/definitions/BankBranch"
         acctNo:
           type: string
           pattern: ^[0-9]+$
@@ -4036,9 +4046,25 @@ definitions:
           description: |
             micr of the bank   
       required:
-      - name
+      - code
       - acctNo
       - ifsc 
+
+    BankBranch:
+      type: object
+      description: |
+        This object holds the bank information.  
+      properties:
+        code:
+          type: string
+          description: |
+            code of the bankbranch    
+        name:
+          type: string
+          description: |
+            name of the bankbranch
+      required:
+      - code
       
     CommonEnum:
       type: object

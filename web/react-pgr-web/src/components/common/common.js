@@ -379,7 +379,7 @@ var localization_EN_Data = {
       "reports.lcms.caseStatus": "Case Status",
       "reports.lcms.sectionApplied" : "Section of the act applied",
       "reports.lcms.summonDate" : "Date of service of Summon on the municipal body",
-      "reports.lcms.courtName" : "Name of court where suit is been filed",
+      "reports.lcms.SuitFiledCourtName" : "Name of court where suit is been filed",
 
       //Water Connection
       "reports.wcms.fromdate":"From Date",
@@ -3348,7 +3348,7 @@ var localization_MR_Data = {
       "reports.lcms.caseStatus": "Case Status - Marathi",
       "reports.lcms.sectionApplied" : "Section of the act applied - Marathi",
       "reports.lcms.summonDate" : "Date of service of Summon on the municipal body - Marathi",
-      "reports.lcms.courtName" : "Name of court where suit is been filed - Marathi",
+      "reports.lcms.SuitFiledCourtName" : "Name of court where suit is been filed - Marathi",
 
   //Water Connection
   "reports.wcms.fromdate":"From Date - Marathi",

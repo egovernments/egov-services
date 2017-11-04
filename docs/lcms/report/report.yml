@@ -27,12 +27,7 @@ ReportDefinitions:
     showColumn: true
   - name: summondate
     label: reports.lcms.summonDate
-    type: string
-    source: lcms
-    showColumn: true
-  - name: courtname
-    label: reports.lcms.courtName
-    type: string
+    type: number
     source: lcms
     showColumn: true
   searchParams:

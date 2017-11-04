@@ -1,101 +1,163 @@
 package org.egov.service;
 
-import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.config.ApplicationProperties;
+import org.egov.contract.AssetCurrentValueRequest;
+import org.egov.contract.DepreciationResponse;
 import org.egov.model.AssetCategory;
 import org.egov.model.CurrentValue;
 import org.egov.model.Depreciation;
 import org.egov.model.DepreciationDetail;
 import org.egov.model.DepreciationInputs;
 import org.egov.model.criteria.DepreciationCriteria;
+import org.egov.model.enums.TransactionType;
 import org.egov.repository.DepreciationRepository;
-import org.egov.repository.MasterDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import net.minidev.json.JSONArray;
 
 @Service
 public class DepreciationService {
 
 	@Autowired
 	private AssetService assetService;
+
+	@Autowired
+	private AssetCommonService assetCommonService;
 	
 	@Autowired
 	private DepreciationRepository depreciationRepository;
 	
-	@Autowired
-	private ApplicationProperties appProps;
+	@Autowired 
+	private CurrentValueService currentValueService;
 	
 	@Autowired
-	private MasterDataRepository mDRepo;
+	private MasterDataService masterDataService;
 	
 	
+	public DepreciationResponse saveDepreciationAsync(DepreciationCriteria depreciationCriteria,RequestInfo requestInfo) {
+		
+		//TODO financial year validations
+		
+		Depreciation depreciation = depreciateAssets(depreciationCriteria, requestInfo);
+		
+		depreciation.setAuditDetails(assetCommonService.getAuditDetails(requestInfo));
+		
+		//TODO put depreciation in kafka topic
+		
+		return DepreciationResponse.builder().depreciation(depreciation).responseInfo(null).build();
+	}
+	
+	/***
+	 * Calculates the Depreciation and returns , Calculates the CurrentValue request and sends it to currentValue Service
+	 * 
+	 * @param depreciationCriteria
+	 * @param requestInfo
+	 * @return
+	 */
 	public Depreciation depreciateAssets(DepreciationCriteria depreciationCriteria,RequestInfo requestInfo) {
 		
 		//TODO validation and filling financila year data in criteria
 		List<DepreciationInputs> depreciationInputsList = depreciationRepository.getDepreciationInputs(depreciationCriteria);
-		enrichDepreciationCriteria(depreciationInputsList,requestInfo,depreciationCriteria.getTenantId());
+		enrichDepreciationInputs(depreciationInputsList,requestInfo,depreciationCriteria.getTenantId());
 		
-		List<DepreciationDetail> depreciationDetailList = new ArrayList<>();
+		List<DepreciationDetail> depreciationDetailsList = new ArrayList<>();
 		List<CurrentValue> currentValues = new ArrayList<>();
 		
-		//TODO find depreciation value per day and depreciate assets based on it
-		//TODO loop through the input list, find depreciation and current vlaue for each asset , put them in  respective list,
-		// put both current value and depreciation in respective topics
+		// calculating the depreciation and adding the currenVal and DepDetail to the lists
+		calculateDepreciationAndCurrentValue(depreciationInputsList,depreciationDetailsList,currentValues,depreciationCriteria.getFromDate(),
+				depreciationCriteria.getToDate());
 		
-		return null;
+		// FIXME TODO voucher integration
+		
+		
+		// TODO FIXME send dep/currval objects to respective create async methods
+		Depreciation depreciation = Depreciation.builder().depreciationCriteria(depreciationCriteria)
+				.depreciationDetails(depreciationDetailsList).build();
+		
+		currentValueService.createCurrentValueAsync(AssetCurrentValueRequest.builder()
+				.assetCurrentValue(currentValues).requestInfo(requestInfo).build());
+		
+		
+		return depreciation;
+	}
+
+	/***
+	 * Calculate the Depreciation value and the current and populate the respective lists for the values
+	 * @param depreciationInputsList
+	 * @param depDetList
+	 * @param currValList
+	 * @param fromDate
+	 * @param toDate
+	 */
+	private void calculateDepreciationAndCurrentValue(List<DepreciationInputs> depreciationInputsList,
+			List<DepreciationDetail> depDetList, List<CurrentValue> currValList, Long fromDate, Long toDate) {
+
+		depreciationInputsList.forEach(a -> {
+			// getting the amt to be depreciated
+			BigDecimal amtToBeDepreciated = getAmountToBeDepreciated(a, fromDate, toDate);
+
+			// calculating the valueAfterDepreciation
+			BigDecimal valueAfterDep = a.getCurrentValue().subtract(amtToBeDepreciated);
+
+			// adding the depreciation detail object to list
+			depDetList.add(DepreciationDetail.builder().assetId(a.getAssetId())
+					.depreciationRate(a.getDepreciationRate()).depreciationValue(amtToBeDepreciated)
+					.valueAfterDepreciation(valueAfterDep).valueBeforeDepreciation(a.getCurrentValue()).build());
+
+			// adding currval to the currval list
+			currValList.add(CurrentValue.builder().assetId(a.getAssetId()).assetTranType(TransactionType.DEPRECIATION)
+					.currentAmount(valueAfterDep).build());
+		});
+	}
+
+	/***
+	 * to find the Amount to be depreciated for every Asset from the DepreciationInput Object
+	 * @param depInputs
+	 * @param fromDate
+	 * @param toDate
+	 * @return
+	 */
+	private BigDecimal getAmountToBeDepreciated(DepreciationInputs depInputs,Long fromDate,Long toDate) {
+		
+		// deciding the from date for the current depreciation from the last depreciation date
+		if(depInputs.getLastDepreciationDate().compareTo(toDate) >= 0)
+			fromDate = depInputs.getLastDepreciationDate();
+		
+		// getting the no of days betweeen the from and todate using ChronoUnit
+		LocalDate fromEpoch = LocalDate.ofEpochDay(fromDate);
+		LocalDate toEpoch = LocalDate.ofEpochDay(toDate);
+		Long noOfDays = ChronoUnit.DAYS.between(fromEpoch, toEpoch);
+
+		// deprate for the no of days = no of days * calculated dep rate per day
+		Double depRateForGivenPeriod = noOfDays * depInputs.getDepreciationRate()/365;
+		
+		// returning the calculated amt to be depreciated using the currentvalue from dep inputs and depreciation rate for given period
+		return BigDecimal.valueOf(depInputs.getCurrentValue().doubleValue()*(depRateForGivenPeriod/100));
 	}
 
 
-	private void enrichDepreciationCriteria(List<DepreciationInputs> depreciationInputsList,RequestInfo requestInfo,String tenantId) {
-		//TODO getAssetCategories list
+	/***
+	 * Enrich DepreciationInputs using the masterDataService
+	 * 
+	 * @param depreciationInputsList
+	 * @param requestInfo
+	 * @param tenantId
+	 */
+	private void enrichDepreciationInputs(List<DepreciationInputs> depreciationInputsList,RequestInfo requestInfo,String tenantId) {
+		
 		Set<Long> assetCategoryIds = depreciationInputsList.stream().map(dil -> dil.getAssetCategory()).collect(Collectors.toSet());
 		
-		Map<String, String> argsMap = new HashMap<>();
-		argsMap.put(appProps.getMdMsMasterAssetCategory(), getIdQuery(assetCategoryIds));
-
-		JSONArray jsonArray = mDRepo.getAssetMastersById(argsMap, requestInfo,tenantId).get(appProps.getMdMsMasterAssetCategory());
-		List<AssetCategory> assetCategorys = new ArrayList<>();
-		try {
-			assetCategorys = Arrays
-					.asList(new ObjectMapper().readValue(jsonArray.toJSONString(), AssetCategory[].class));
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
-		Map<Long, AssetCategory> assetCatMap = assetCategorys.stream()
-				.collect(Collectors.toMap(AssetCategory::getId, Function.identity()));
+		Map<Long, AssetCategory> assetCatMap = masterDataService.getAssetCategoryMap(assetCategoryIds, requestInfo, tenantId);
+		
 		depreciationInputsList.forEach(a -> a.setDepreciationRate(assetCatMap.get(a.getAssetCategory()).getDepreciationRate()));
 	}
 	
-	private static String getIdQuery(final Set<Long> idSet) {
-		StringBuilder query = null;
-		Long[] arr = new Long[idSet.size()];
-		arr = idSet.toArray(arr);
-		query = new StringBuilder(arr[0].toString());
-		for (int i = 1; i < arr.length; i++)
-			query.append("," + arr[i]);
-		return query.toString();
-	}	
 }

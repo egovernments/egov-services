@@ -8,22 +8,22 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class BoundaryRepository {
-    private final String boundaryServiceHost;
-    private RestTemplate restTemplate;
+	private final String boundaryServiceHost;
+	private RestTemplate restTemplate;
 
-    public BoundaryRepository(RestTemplate restTemplate,
-                              @Value("${egov.services.boundary.host}") String boundaryServiceHost,
-                              @Value("${egov.services.boundary.searchpath}") String boundaryServicePath) {
-        this.restTemplate = restTemplate;
-        this.boundaryServiceHost = boundaryServiceHost.concat(boundaryServicePath);
-    }
+	public BoundaryRepository(RestTemplate restTemplate,
+			@Value("${egov.services.boundary.host}") String boundaryServiceHost,
+			@Value("${egov.services.boundary.searchpath}") String boundaryServicePath) {
+		this.restTemplate = restTemplate;
+		this.boundaryServiceHost = boundaryServiceHost.concat(boundaryServicePath);
+	}
 
-    public Boundary fetchBoundaryById(Long id, String tenantId) {
-        return getBoundaryServiceResponse(this.boundaryServiceHost, id, tenantId).getBoundaries().get(0);
-    }
+	public Boundary fetchBoundaryByCode(String code, String tenantId) {
+		return getBoundaryServiceResponse(this.boundaryServiceHost, code, tenantId).getBoundaries().get(0);
+	}
 
-    private BoundaryResponse getBoundaryServiceResponse(final String url, Long id, String tenantId) {
-        return restTemplate.getForObject(url, BoundaryResponse.class, id, tenantId);
-    }
+	private BoundaryResponse getBoundaryServiceResponse(final String url, String code, String tenantId) {
+		return restTemplate.getForObject(url, BoundaryResponse.class, code, tenantId);
+	}
 
 }

@@ -10,6 +10,8 @@ import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleSearch;
 import org.egov.swm.domain.model.VehicleType;
+import org.egov.swm.domain.model.Vendor;
+import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.domain.repository.VehicleRepository;
 import org.egov.swm.persistence.entity.VendorEntity;
 import org.egov.swm.web.contract.DesignationResponse;
@@ -42,6 +44,9 @@ public class VehicleService {
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
+
+	@Autowired
+	private VendorService vendorService;
 
 	@Transactional
 	public VehicleRequest create(VehicleRequest vehicleRequest) {
@@ -108,6 +113,8 @@ public class VehicleService {
 		DesignationResponse designationResponse = null;
 		String designationId = null;
 		EmployeeResponse employeeResponse = null;
+		VendorSearch vendorSearch;
+		Pagination<Vendor> vendors;
 		for (Vehicle vehicle : vehicleRequest.getVehicles()) {
 
 			// Validate vehicle Type
@@ -127,6 +134,19 @@ public class VehicleService {
 
 			// Validate vendor
 			if (vehicle.getVendor() != null) {
+
+				if (vehicle.getVendor() != null && vehicle.getVendor().getVendorNo() != null) {
+					vendorSearch = new VendorSearch();
+					vendorSearch.setTenantId(vehicle.getTenantId());
+					vendorSearch.setVendorNo(vehicle.getVendor().getVendorNo());
+					vendors = vendorService.search(vendorSearch);
+					if (vendors != null && vendors.getPagedData() != null && !vendors.getPagedData().isEmpty()) {
+						vehicle.setVendor(vendors.getPagedData().get(0));
+					} else {
+						throw new CustomException("Vendor",
+								"Given Vendor is invalid: " + vehicle.getVendor().getVendorNo());
+					}
+				}
 
 				responseJSONArray = mdmsRepository.getByCriteria(vehicle.getTenantId(), Constants.MODULE_CODE,
 						Constants.VENDOR_MASTER_NAME, "vendorNo", vehicle.getVendor().getVendorNo(),

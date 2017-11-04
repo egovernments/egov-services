@@ -67,6 +67,7 @@ paths:
           - name: indentDate
             type: integer
             format: int64
+            x-displayformat: 'dd/MM/yyyy'
             in: query
             description: |
               indent date of the Indent
@@ -390,6 +391,7 @@ paths:
           - name: purchaseOrderDate
             type: integer
             format: int64
+            x-displayformat: 'dd/MM/yyyy'
             in: query
             description: |
               purchase order date of the PurchaseOrder
@@ -423,6 +425,7 @@ paths:
           - name: expectedDeliveryDate
             type: integer
             format: int64
+            x-displayformat: 'dd/MM/yyyy'
             in: query
             description: |
               expected delivery date of the PurchaseOrder
@@ -849,6 +852,7 @@ paths:
           - name: issueDate
             type: integer
             format: int64
+            x-displayformat: 'dd/MM/yyyy'
             in: query
             description: |
               issue date of the MaterialIssue
@@ -2130,11 +2134,6 @@ paths:
             in: query
             description: |
               vatNo   
-          - name: gstNo
-            type: string
-            in: query
-            description: |
-              gstNo   
           - name: contactPerson
             type: string
             in: query
@@ -2145,16 +2144,11 @@ paths:
             in: query
             description: |
               contactPersonNo     
-          - name: bankCode
+          - name: bankName
             type: string
             in: query
             description: |
-              code of the bank
-          - name: bankBranchCode
-            type: string
-            in: query
-            description: |
-              code of the bankBranch
+              name of the bank
           - name: bankAccNo
             type: string
             in: query
@@ -2234,7 +2228,7 @@ paths:
 definitions:
     Indent:
       type: object
-      description: |
+      description: | 
          This object holds common information required by indent materail and transfer indent. 
       properties:
         id:
@@ -2248,14 +2242,18 @@ definitions:
           minLength: 4
         issueStore:
           $ref: "#/definitions/Store"
+          format: singleValueList
+        indentStore:
+          $ref: "#/definitions/Store"  
+          format : singleValueList
         indentDate:
           type: integer
           format: int64
-          description: |
-            indent date of the Indent
+          description: indent requisition date
+          x-displayformat: 'dd/MM/yyyy'
         indentNumber:
           type: string
-          maxLength: 100
+          maxLength: 64
           readOnly: true
           description: |
             indentNumber  Auto generated number, read only <ULB short code><Store
@@ -2269,7 +2267,23 @@ definitions:
             - MaterialTransferNote
           description: |
             indent purpose of the Indent
-        description:
+        inventoryType:
+          type: string
+          enum:
+            - Asset
+            - Consumable
+        expectedDeliveryDate:
+          type: integer
+          format: int64
+          description: |
+            expected delivery date for Indent Note  
+          x-displayformat: 'dd/MM/yyyy'  
+        materialHandOverTo:
+          type: string
+          maxLength: 128
+          description: |
+            Material Handovered to person name
+        narration:
           type: string
           maxLength: 1000
           description: |
@@ -2281,14 +2295,19 @@ definitions:
             - APPROVED
             - REJECTED
             - CANCELED
+            - ISSUED
           description: |
-            indent status of the Indent
+            status of the Indent 
         indentMaterials:
           type:  array
           minItems: 1
           maxItems: 50
           items:
             $ref: "#/definitions/IndentDetail"
+        department:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/Department'
+          description: department of indenting store or direct department request for material. If store is selected then autopopulate department information and readonly field.
+          format: singleValueList
         totalIndentValue:
           type: number
           format: BigDecimal
@@ -2298,14 +2317,24 @@ definitions:
           type: string
           description: |
             fileStoreId  File Store id of the Indent Note/Transfer Indent Generated
+        indentCreatedBy:
+          type: string
+          maxLength: 128
+          description: |
+            indent requested user information. If store incharge registering request on behalf of some one, enter indent request user name. Autopopulate login user name by default. Linking with employee master also possible.
         designation:
           type: string
-          description: Designation of the employee at the time of Indent Note/Transfer Indent creation
+          description: Designation of the employee at the time of Indent Note/Transfer Indent creation. Autopopulate login user designation by default.
           format: varchar
+        stateId:
+          type: integer
+          format: int64
+          description: |
+            State id of the Material indent
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
-      - issueStore
+      - indentStore
       - indentDate
       - indentPurpose
       - indentMaterials
@@ -2328,6 +2357,11 @@ definitions:
           $ref: "#/definitions/Material"
         uom:
           $ref: "#/definitions/Uom"
+          format: singleValueList
+        orderNumber:
+          type: number
+          format: int32
+          description: Order of items selected.
         projectCode:
           type: string
           description: |
@@ -2335,27 +2369,39 @@ definitions:
         assetCode:
           type: string
           description: |
-            assetCode  If the purpose is Repair and Maintenance
+            Mandatory if the purpose is Repair and Maintenance. 
         indentQantity:
           type: number
           format: BigDecimal
           description: |
-            indent qantity of the IndentDetail
-        issuedQantity:
+            indent qantity of the IndentDetail. Quantity requested by indentor.
+        totalProcessedQuantity:
           type: number
           format: BigDecimal
           description: |
-            issuedQantity  Applicable for Material Issue and Material Transfer
-            Indent
-        receivedQuantity:
+            Quantity issued from indent issue.
+        indentIssuedQantity:
           type: number
           format: BigDecimal
           description: |
-            receivedQuantity  Applicable for Material Receipt Note and Material
-            Transfer Inward Note
-        description:
+            Quantity issued from material indent screen.
+        poOrderedQuantity:
+          type: number
+          format: BigDecimal
+          description: |
+            How many quantities ordered for purchase order.
+        interstoreRequestQuantity:
+          type: number
+          format: BigDecimal
+          description: Quantity requsted via inter store indent.  
+        deliveryTerms:
           type: string
-          maxLength: 1000
+          maxLength: 512
+          description: |
+            Delivery conditions if any
+        remarks:
+          type: string
+          maxLength: 512
           description: |
             remarks of the IndentDetail
       required:
@@ -2387,46 +2433,6 @@ definitions:
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
           
-    IndentNote:
-      type: object
-      description: |
-        This object holds the indent note information.  
-      properties:
-        id:
-          type: string
-          description: |
-            Unique Identifier of the Indent Note
-        tenantId:
-          type: string
-          description: Tenant id of the Indent Note
-          maxLength: 128
-          minLength: 4    
-        indent:
-          $ref: "#/definitions/Indent"
-        inventoryType:
-          type: string
-          enum:
-            - Asset
-            - Consumable
-        expectedDeliveryDate:
-          type: integer
-          format: int64
-          description: |
-            expected delivery date for Indent Note
-        workFlowDetails:
-          $ref: "#/definitions/WorkFlowDetails"    
-        stateId:
-          type: integer
-          format: int64
-          description: |
-            state id of the Indent Note
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
-      required:
-      - indent
-      - inventoryType
-      - expectedDeliveryDate
-      
     IndentNoteRequest:
       description: Contract class for web request. Array of Indent Note items are used in case of create or update
       properties:
@@ -2436,7 +2442,7 @@ definitions:
           description: Used for search result and create only
           type:  array
           items:
-            $ref: '#/definitions/IndentNote'
+            $ref: '#/definitions/Indent'
             
     IndentNoteResponse:
       description: Contract class for web response. Array of Indent Note items  are used in case of search ,create or update request. 
@@ -2447,43 +2453,13 @@ definitions:
           description: Used for search result and create only
           type:  array
           items:
-            $ref: '#/definitions/IndentNote'
+            $ref: '#/definitions/Indent'
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
           
-    TransferIndentNote:
-      type: object
-      description: |
-        This object holds the transfer indent note information.  
-      properties:
-        id:
-          type: string
-          description: |
-            Unique Identifier of the Transfer Indent Note
-        tenantId:
-          type: string
-          description: Tenant id of the Transfer Indent Note
-          maxLength: 128
-          minLength: 4    
-        indent:
-          $ref: "#/definitions/Indent"
-        indentStore:
-          $ref: "#/definitions/Store"
-        workFlowDetails:
-          $ref: "#/definitions/WorkFlowDetails"   
-        stateId:
-          type: integer
-          format: int64
-          description: |
-            state id of the TransferIndentNote
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
-      required:
-      - indent
-      - indentStore
-      
+    
     TransferIndentNoteRequest:
-      description: Contract class for web request. Array of TransferIndentNote items  are used in case of create or update
+      description: Contract class for web request. Array of Indent items  are used in case of create or update
       properties:
         requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
@@ -2491,10 +2467,10 @@ definitions:
           description: Used for search result and create only
           type:  array
           items:
-            $ref: '#/definitions/TransferIndentNote'
+            $ref: '#/definitions/Indent'
             
     TransferIndentNoteResponse:
-      description: Contract class for web response. Array of TransferIndentNote items  are used in case of search ,create or update request. 
+      description: Contract class for web response. Array of Indent items  are used in case of search ,create or update request. 
       properties:
         responseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
@@ -2502,7 +2478,7 @@ definitions:
           description: Used for search result and create only
           type:  array
           items:
-            $ref: '#/definitions/TransferIndentNote'
+            $ref: '#/definitions/Indent'
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'      
           
@@ -2530,6 +2506,7 @@ definitions:
         purchaseOrderDate:
           type: integer
           format: int64
+          x-displayformat: 'dd/MM/yyyy'
           description: |
             purchase order date of the PurchaseOrder
         rateType:
@@ -2558,6 +2535,7 @@ definitions:
         expectedDeliveryDate:
           type: integer
           format: int64
+          x-displayformat: 'dd/MM/yyyy'
           description: |
             expected delivery date of the PurchaseOrder
         deliveryTerms:
@@ -2766,6 +2744,7 @@ definitions:
           type: integer
           description: The date on which the receipt was made.
           format: int64
+          x-displayformat: 'dd/MM/yyyy'
         receiptType:
           type: string
           description: >-
@@ -2799,6 +2778,7 @@ definitions:
         challanDate:
           type: integer
           format: int64
+          x-displayformat: 'dd/MM/yyyy'
           description: Date on which the challan was made.
         description:
           type: string
@@ -2830,6 +2810,7 @@ definitions:
         inspectionDate:
           type: integer
           format: int64
+          x-displayformat: 'dd/MM/yyyy'
           description: Date on which the inspection was done.
         inspectionRemarks:
           type: string
@@ -2936,6 +2917,7 @@ definitions:
             materials that are of type shelf life control. Date must be greater
             than the receipt date.
           format: int64
+          x-displayformat: 'dd/MM/yyyy'
       required:
         - mrnNumber
         - id
@@ -2991,6 +2973,7 @@ definitions:
         issueDate:
           type: integer
           format: int64
+          x-displayformat: 'dd/MM/yyyy'
           description: |
             issue date of the MaterialIssue
         materialIssueStatus:
@@ -3256,6 +3239,7 @@ definitions:
         receiptDate:
           type: integer
           format: int64
+          x-displayformat: 'dd/MM/yyyy'
           description: |
             receipt date of the TransferInward
         transferOutWard:
@@ -3346,6 +3330,7 @@ definitions:
         issueDate:
           type: integer
           format: int64
+          x-displayformat: 'dd/MM/yyyy'
           description: |
             issue date of the TransferOutward.
         issuedToEmployee:
@@ -3940,6 +3925,7 @@ definitions:
         inActiveDate:
           type: integer
           format: int64
+          x-displayformat: 'dd/MM/yyyy'
           description: |
             inactive date of the Supplier
         supplierContactNo:
@@ -4038,15 +4024,8 @@ definitions:
           pattern: ^[a-zA-Z ]$
           description: |
             name of the bank
-        bankBranchCode:
-          type: string
-          description: |
-            code of the bank     
-        bankBranchName:
-          type: string
-          pattern: ^[a-zA-Z ]$
-          description: |
-            name of the bank            
+        bankBranchInfo:
+          $ref: "#/definitions/BankBranch"
         acctNo:
           type: string
           pattern: ^[0-9]+$
@@ -4066,7 +4045,23 @@ definitions:
       - code
       - acctNo
       - ifsc 
-      - bankBranchCode
+
+    BankBranch:
+      type: object
+      description: |
+        This object holds the bank information.  
+      properties:
+        code:
+          type: string
+          description: |
+            code of the bankbranch    
+        name:
+          type: string
+          description: |
+            name of the bankbranch
+      required:
+      - code
+      
     CommonEnum:
       type: object
       description: |
@@ -4160,6 +4155,7 @@ definitions:
         scrapDate:
           type: integer
           format: int64
+          x-displayformat: 'dd/MM/yyyy'
           description: |
             scrap date of the Scrap
         description:
@@ -4289,6 +4285,7 @@ definitions:
         disposalDate:
           type: integer
           format: int64
+          x-displayformat: 'dd/MM/yyyy'
           description: |
             disposal date of the Disposal
         handOverTo:
@@ -4462,3 +4459,4 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
+  

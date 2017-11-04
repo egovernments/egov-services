@@ -2,11 +2,11 @@ package org.egov.works.estimate.persistence.repository;
 
 import java.util.Arrays;
 
+import org.egov.works.commons.web.contract.IdRequest;
 import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.config.WorksEstimateServiceConstants;
 import org.egov.works.estimate.domain.exception.ValidationException;
 import org.egov.works.estimate.web.contract.IdGenerationRequest;
-import org.egov.works.estimate.web.contract.IdRequest;
 import org.egov.works.estimate.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

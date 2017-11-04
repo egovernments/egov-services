@@ -2,6 +2,8 @@ package org.egov.works.estimate.web.contract;
 
 import java.util.List;
 
+import org.egov.works.commons.web.contract.IdRequest;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;

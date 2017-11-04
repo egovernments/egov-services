@@ -1,4 +1,4 @@
-package org.egov.works.estimate.web.contract;
+package org.egov.works.commons.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

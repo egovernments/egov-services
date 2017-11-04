@@ -1,11 +1,11 @@
 package org.egov.works.estimate.utils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.egov.works.estimate.web.contract.MasterDetails;
-import org.egov.works.estimate.web.contract.MdmsCriteria;
+import org.egov.works.commons.web.contract.MasterDetails;
+import org.egov.works.commons.web.contract.MdmsCriteria;
+import org.egov.works.commons.web.contract.ModuleDetails;
 import org.egov.works.estimate.web.contract.MdmsRequest;
 import org.egov.works.estimate.web.contract.MdmsResponse;
-import org.egov.works.estimate.web.contract.ModuleDetails;
 import org.egov.works.estimate.web.contract.RequestInfo;
 import org.egov.works.estimate.web.contract.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;

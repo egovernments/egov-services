@@ -1,5 +1,7 @@
 package org.egov.works.estimate.web.contract;
 
+import org.egov.works.commons.web.contract.MdmsCriteria;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;

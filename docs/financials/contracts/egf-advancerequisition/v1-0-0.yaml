@@ -48,36 +48,48 @@ paths:
         - $ref: "#/parameters/pageNumber"
         - $ref: "#/parameters/sortProperty"
         - name: ids
+          in: query
           type: array
           items:
             type: string
-          in: query
           maxItems: 50
+          required: false
+          allowEmptyValue: true
           description: Comma separated list of Ids of Advance Requistion to get the Advance Requistions
         - name: advanceRequisitionNumbers
+          in: query
           type: array
           items:
             type: string
-          in: query
-          description: Comma separated list of Advance Requistion Numbers of Advance Requistion to get the Advance Requistions
+          format: autoComplete
+          maxItems: 50
           required: false
+          allowEmptyValue: true
+          description: Comma separated list of Advance Requistion Numbers of Advance Requistion to get the Advance Requistions
         - name: advanceRequisitionFromDate
           in: query
           required: false
           description: Epoch time from Advance Requisition Created Date
           type: integer
           format: int64
+          x-displayformat: 'dd/MM/yyyy'
         - name: advanceRequisitionToDate
           in: query
           description: Epoch time till the Advance Requisition Created Date
           required: false
           type: integer
           format: int64
-        - name: status
+          x-displayformat: 'dd/MM/yyyy'
+        - name: statuses
           in: query
-          description: Status of the Advance Requisition
+          type: array
+          items:
+            type: string
+          format: multiValueList
+          maxItems: 50
           required: false
-          type: string
+          allowEmptyValue: true
+          description: Comma separated list of the Advance Requisition status
         - name: arfType
           in: query
           required: false
@@ -114,7 +126,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: ReponseInfo with Advance Requisition(s) created successfully
           schema:
             $ref: '#/definitions/AdvanceRequisitionResponse'
@@ -143,7 +155,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: ReponseInfo with Advance Requisition(s) updated sudcessfully
           schema:
             $ref: '#/definitions/AdvanceRequisitionResponse'
@@ -198,16 +210,17 @@ definitions:
         type: string
         description: Tenant id of the Advance Requisition
         maxLength: 128
-        minLength: 4
+        minLength: 2
       advanceRequisitionNumber:
         type: string
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         description: Unique number for the Advance Requisition
         maxLength: 20
         minLength: 1
       advanceRequisitionDate: 
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of when Advance Requisition Created
       arfType:
         $ref: '#/definitions/AdvanceRequisitionType'
@@ -215,46 +228,55 @@ definitions:
         type: number
         format: BigDecimal
         description: Advance Requisition amount
+        maxLength: 20
       narration:
         type: string
         description: Descritpion for Advance Requisition.
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
       status:
         $ref: '#/definitions/AdvanceRequisitionStatus'
       field:
-        type: string
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        format: singleValueList
         description: Field(boundary) of the Advance Requisition
       subField:
-        type: string
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
         description: Sub Field(boundary) of the Advance Requisition
       department:
-        type: string
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/Department"
+        format: singleValueList
         description: Department for which Advance Requisition belongs to
       scheme:
-        type: string
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Scheme"
+        format: singleValueList
         description: Scheme of the Advance Requisition
       subScheme:
-        type: string
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/SubScheme"
+        format: singleValueList
         description: Sub scheme of the Advance Requisition
       fund:
-        type: string
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Fund"
+        format: singleValueList
         description: Fund of the Advance Requisition
       fundSource:
-        type: string
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Fundsource"
+        format: singleValueList
         description: Fund Source of the Advance Requisition
       functionary:
-        type: string
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Functionary"
+        format: singleValueList
         description: Functionary of the Advance Requisition
       voucherHeader:
         type: string
         description: Voucher of the Advance Requisition
       payTo:
-        type: string
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User"
         description: Payee Name of the Advance Requisition
       payByDate: 
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of Pay By Date 
       referenceNumber:
         type: string
@@ -266,16 +288,18 @@ definitions:
         description: Source Path to view the Advance requisition
       partyBillNumber:
         type: string
-        pattern: '[a-zA-Z0-9-\\]'
+        pattern: '[a-zA-Z0-9-\\]+'
         description: Party Bill Number of Advance Requisition
         maxLength: 50
         minLength: 3
       partyBillDate:
         type: integer
         format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description:  Epoch time of Party Bill
       function:
-        type: string
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Function"
+        format: singleValueList
         description: Function of the Advance Requisition
       advanceRequisitionDetails:
         type: array
@@ -326,25 +350,28 @@ definitions:
         type: string
         description: Tenant id of the Advance Requisition Details
         maxLength: 128
-        minLength: 4
+        minLength: 2
       chartOfAccounts:
-          type: string
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/ChartOfAccount"
           description: Chart Of Accounts of the Advance Requisition Details
       function:
-        type: string
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Function"
+        format: singleValueList
         description: Function of the Advance Requisition
       creditAmount:
         type: number
         format: BigDecimal
         description: Advance Requisition credit amount
+        maxLength: 20
       debitAmount:
         type: number
         format: BigDecimal
         description: Advance Requisition debit amount
+        maxLength: 20
       narration:
         type: string
         description: Descritpion for Advance Requisition.
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
         minLength: 3
       advanceRequisitionPayeeDetails:
@@ -369,25 +396,27 @@ definitions:
         type: string
         description: Tenant id of the Advance Requisition Payee Details
         maxLength: 128
-        minLength: 4
+        minLength: 2
       accountDetailType:
-        type: string
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/AccountDetailType"
         description: Account Detail Type of the Advance Requisition
       accountdetailKey:
-        type: string
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/AccountDetailKey"
         description: Account Detail Key Unique Identifier
       creditAmount:
         type: number
         format: BigDecimal
         description: Advance Requisition Payee Details credit amount
+        maxLength: 20
       debitAmount:
         type: number
         format: BigDecimal
         description: Advance Requisition Payee Details debit amount
+        maxLength: 20
       narration:
         type: string
         description: Descritpion for Advance Requisition Payee Details.
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
         minLength: 3
       auditDetails:
@@ -466,3 +495,4 @@ parameters:
 tags:
   - name: Advance Requisition
     description: APIs required for Advance Requisition.
+

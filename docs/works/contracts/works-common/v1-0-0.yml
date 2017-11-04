@@ -193,9 +193,17 @@ definitions:
   ContractorExemption:
     type: string
     enum:
-      - INCOME_TAX,
+      - INCOME_TAX
       - EARNEST_MONEY_DEPOSIT
       - VAT
+      
+  ContractorStatus:
+    type: string
+    enum:
+      - ACTIVE
+      - INACTIVE
+      - BLACK_LISTED
+      - DEBARRED
       
 ##### MASTERS #######
       
@@ -393,6 +401,9 @@ definitions:
         description: Maximum Amount of the Contractor Class.
         maxLength: 20
         minLength: 1
+      status:
+        $ref: '#/definitions/ContractorStatus'
+        description: Status of the Contractor
     required:
       - tenantId
       - class
@@ -420,7 +431,7 @@ definitions:
         minLength: 1
       code:
         type: string
-        description: Name of the Contractor.
+        description: Code of the Contractor.
         pattern: '[a-zA-Z0-9-\\]+'
         maxLength: 100
         minLength: 1

@@ -45,41 +45,54 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
         - name: workOrderNumbers
           in: query
-          pattern: '[a-zA-Z0-9-\\]'
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
           description: Comma separated list of Work Order Numbers
-          required: false
-          type: array
-          items:
-            type: string
-          allowEmptyValue: true
         - name: loaNumbers
-          pattern: '[a-zA-Z0-9-\\]'
           in: query
-          description: Comma Seaprated List of LOA Number
-          required: false
           type: array
           items:
             type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
           allowEmptyValue: true
+          description: Comma Seaprated List of LOA Number
         - name: detailedEstimateNumber
           in: query
-          required: false
-          description: Comma separated list of Detailed Estimate Numbers
           type: array
           items:
             type: string
-        - name: status
-          in: query
+          format: autoComplete
+          maxItems: 50
           required: false
-          description: The different status for the object
-          type: string
+          allowEmptyValue: true
+          description: Comma separated list of Detailed Estimate Numbers
+        - name: statuses
+          in: query
+          type: array
+          items:
+            type: string
+          format: multiValueList
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of status for the object
         - name: workIdentificationNumbers
           in: query
-          required: false
-          description: Comma separated list of Work Identification Numbers
           type: array
           items:
             type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Work Identification Numbers
       responses:
         200:
           description: Offline Status(s) Retrieved Successfully
@@ -125,7 +138,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: Offline Status(s) created successfully.
           schema:
             $ref: '#/definitions/OfflineStatusResponse'
@@ -170,7 +183,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: Offline Status(s) updated successfully
           schema:
             $ref: '#/definitions/OfflineStatusResponse'
@@ -199,7 +212,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: Document Detail(s) created successfully
           schema:
             $ref: '#/definitions/DocumentDetailResponse'
@@ -228,7 +241,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: Document Detail(s) updated successfully
           schema:
             $ref: '#/definitions/DocumentDetailResponse'
@@ -258,20 +271,22 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
         - name: objectIds
+          in: query
           type: array
           items:
             type: string
-          in: query
           maxItems: 50
-          allowEmptyValue: true
           required: false
+          allowEmptyValue: true
           description: Comma separated list Object Ids.
         - name: ids
+          in: query
           type: array
           items:
             type: string
-          in: query
           maxItems: 50
+          required: false
+          allowEmptyValue: true
           description: Comma separated list of Ids of Document Detail(s)
       responses:
         200:
@@ -304,27 +319,31 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
         - name: ids
+          in: query
           type: array
           items:
             type: string
-          in: query
           maxItems: 50
+          required: false
+          allowEmptyValue: true
           description: Comma separated list of Ids of Estimate Appropriation to get the Estimate Appropriations
-          
         - name: detailedEstimates
+          in: query
           type: array
           items:
             type: string
-          in: query
           maxItems: 50
+          required: false
+          allowEmptyValue: true
           description: Comma separated list of Detailed Estimates of Estimate Appropriation to get the Estimate Appropriations
-          
         - name: abstractEstimateDetails
+          in: query
           type: array
           items:
             type: string
-          in: query
           maxItems: 50
+          required: false
+          allowEmptyValue: true
           description: Comma separated list of Abstract Estimate Details of Estimate Appropriation to get the Estimate Appropriations
       responses:
         200:
@@ -356,7 +375,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: Estimate Appropriation(s) created successfully
           schema:
             $ref: '#/definitions/EstimateAppropriationResponse'
@@ -385,7 +404,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: Estimate Appropriation(s) updated successfully
           schema:
             $ref: '#/definitions/EstimateAppropriationResponse'
@@ -557,3 +576,4 @@ tags:
     description: APIs required for Estimate Appropriation.
   - name: Document Detail
     description: APIs required for Document Detail
+

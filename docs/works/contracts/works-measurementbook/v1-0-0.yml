@@ -325,7 +325,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: Contractor Bill(s) created successfully
           schema:
             $ref: '#/definitions/ContractorBillResponse'
@@ -355,7 +355,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: Contractor Bill(s) updated successfully
           schema:
             $ref: '#/definitions/ContractorBillResponse'
@@ -451,7 +451,6 @@ definitions:
       mbAmount:
         type: number
         format: BigDecimal
-        pattern: "[0-9]+"
         description: Amount for the Measurement book.
         maxLength: 50
         minLength: 1
@@ -530,7 +529,6 @@ definitions:
       #  $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LOAActivity"        
       quantity:
         type: number
-        pattern: "[0-9]+"
         format: double
         description: Quantity for the Measurement book details
         maxLength: 20
@@ -538,7 +536,6 @@ definitions:
       rate:
         type: number
         format: double
-        pattern: "[0-9]+"
         description: Rate for the Measurement book details
         maxLength: 20
         minLength: 1
@@ -551,9 +548,8 @@ definitions:
       amount:
         type: number
         format: BigDecimal
-        pattern: "[0-9]+"
         description: Amount for the Measurement book details
-        maxLength: 12
+        maxLength: 20
         minLength: 1
       measurementSheets:
         type: array
@@ -621,7 +617,6 @@ definitions:
         quantity:
           type: number
           format: BigDecimal
-          pattern: "[0-9]+"
           description: Quantity of the Measurement sheet
           maxLength: 20
         measurementBookDetails:
@@ -731,7 +726,7 @@ definitions:
           $ref: '#/definitions/AssetForBill'
       letterOfAcceptanceEstimate:
         description: LOA and Estimate reference for the Bill
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LetterOfAcceptanceEstimate"
+       # $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LetterOfAcceptanceEstimate"
       workFlowDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
       stateId:

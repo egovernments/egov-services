@@ -49,7 +49,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: Quality Testing(s) created successfully
           schema:
             $ref: '#/definitions/QualityTestingResponse'
@@ -78,7 +78,7 @@ paths:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
-        201:
+        200:
           description: Quality Testing(s) updated successfully
           schema:
             $ref: '#/definitions/QualityTestingResponse'
@@ -108,49 +108,60 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
         - name: workOrderNumbers
+          in: query
           type: array
           items:
             type: string
-          in: query
+          format: autoComplete
           maxItems: 50
-          allowEmptyValue: true
           required: false
+          allowEmptyValue: true
           description: Comma separated list of Work Order Numbers
         - name: ids
+          in: query
           type: array
           items:
             type: string
-          in: query
           maxItems: 50
+          required: false
+          allowEmptyValue: true
           description: Comma separated list of Ids of Quality Testing(s)
         - name: loaNumbers
           in: query
-          description: Comma separated list of LOA Numbers
-          required: false
           type: array
           items:
             type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
           allowEmptyValue: true
+          description: Comma separated list of LOA Numbers
         - name: detailedEstimateNumbers
           in: query
-          required: false
-          description: Comma separated list of Detailed Estimate Numbers
           type: array
           items:
             type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Detailed Estimate Numbers
         - name: workIdentificationNumbers
           in: query
-          required: false
-          description: Comma separated list of Work Identification Numbers
           type: array
           items:
             type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Work Identification Numbers
       responses:
         200:
           description: Quality Testing(s) Retrieved Successfully
           schema:
             $ref: "#/definitions/QualityTestingResponse"
-        '400':
+        400:
           description: Invalid input.
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
@@ -186,7 +197,7 @@ definitions:
           $ref: '#/definitions/QualityTestingDetail'
       remarks:
         type: string
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Remarks for the Quality Testing
         maxLength: 1024
       testReports:

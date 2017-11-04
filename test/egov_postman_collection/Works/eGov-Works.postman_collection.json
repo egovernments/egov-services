@@ -1,0 +1,659 @@
+{
+	"info": {
+		"name": "eGov-Works",
+		"_postman_id": "cb6728b3-55d4-5c4c-2095-372502e6bf33",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Common",
+			"description": "",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "HOD",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "read",
+									"type": "text"
+								},
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/user/oauth/token",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"oauth",
+								"token"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"13-04-2017 12:13:30\",\n    \"action\": \"POST\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/user/_logout?access_token={{access_token}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"_logout"
+							],
+							"query": [
+								{
+									"key": "access_token",
+									"value": "{{access_token}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Format Test",
+			"description": "",
+			"item": [
+				{
+					"name": "Masters",
+					"description": "Works related Masters",
+					"item": [
+						{
+							"name": "Create DocumentDetails",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"requestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\" : \"12345678\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\",\n    \"userInfo\":{\n    \t\"tenantId\" : \"{{tenantId}}\"\n    }\n  },\n  \"documentDetails\" : [\n  \t{\n\t  \t\"objectId\" : \"0001\",\n\t  \t\"objectType\" : \"AbstractEstimate\",\n\t  \t\"fileStore\" : \"01234\",\n\t  \t\"tenantId\" : \"{{tenantId}}\"\n\t}\n  ]\n}"
+								},
+								"url": {
+									"raw": "{{url}}/works-services/documentdetails/_create",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"works-services",
+										"documentdetails",
+										"_create"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Search DocumentDetails",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"requestInfo\":{\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\" : \"12345678\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n    }\n }"
+								},
+								"url": {
+									"raw": "{{url}}/works-services/documentdetails/_search?tenantId={{tenantId}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"works-services",
+										"documentdetails",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Update DocumentDetails",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"requestInfo\": {\n    \"apiId\": \"update\",\n    \"ver\": \"1.0\",\n    \"ts\" : \"12345678\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  },\n  \"documentDetails\" : [\n  \t{\n  \t\t\"id\": \"a50e69b18c594b2385b71fcda85cd9e2\",\n  \t\t\"tenantId\" : \"{{tenantId}}\",\n\t  \t\"objectId\" : \"14321\",\n\t  \t\"objectType\" : \"AbstractEstimate\",\n\t  \t\"fileStore\": \"01235\"\n\t}\n  ]\n\t}\n}"
+								},
+								"url": {
+									"raw": "{{url}}/works-services/documentdetails/_update",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"works-services",
+										"documentdetails",
+										"_update"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": " Create Project Code",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"requestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\" : \"12345678\",\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\",\n    \"userInfo\":{\n    \t\"tenantId\" : \"{{tenantId}}\"\n    }\n  },\n   \"projectCodes\": [\n     {\n       \"id\":\"1d5145cf571946f2a287c97acd60e594\",\n       \"name\":\"Road Project\",\n       \"code\": \"Road\",\n       \"description\":\"Construction of Road\",\n       \"active\": true,\n       \"projectValue\":1000,\n       \"completionDate\":1234568794,\n       \"status\":\"CLOSED\",\n       \"tenantId\":\"{{tenantId}}\"\n     }]\n}"
+								},
+								"url": {
+									"raw": "{{url}}/works-estimate/projectcodes/_create",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"works-estimate",
+										"projectcodes",
+										"_create"
+									]
+								},
+								"description": "Project code create"
+							},
+							"response": []
+						},
+						{
+							"name": "Search Project Code",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"requestInfo\":{\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\" : \"12345678\",\n    \"action\": \"search\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n    }\n }"
+								},
+								"url": {
+									"raw": "{{url}}/works-estimate/projectcodes/_search?tenantId={{tenantId}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"works-estimate",
+										"projectcodes",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Update Project Code",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"requestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\" : \"12345678\",\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\",\n    \"userInfo\":{\n    \t\"tenantId\" : \"{{tenantId}}\"\n    }\n  },\n   \"projectCodes\": [\n     {\n       \"id\":\"1d5145cf571946f2a287c97acd60e594\",\n       \"name\":\"Road Project\",\n       \"code\": \"Road\",\n       \"description\":\"Construction of Road\",\n       \"active\": false,\n       \"projectValue\":1000,\n       \"completionDate\":1234568794,\n       \"status\":\"CREATED\",\n       \"tenantId\":\"{{tenantId}}\"\n     }]\n}"
+								},
+								"url": {
+									"raw": "{{url}}/works-estimate/projectcodes/_update",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"works-estimate",
+										"projectcodes",
+										"_update"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "SubScheme-MDMS",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"works-services\",\n    \"ver\": null,\n    \"ts\": null,\n    \"action\": \"Search\",\n    \"did\": null,\n    \"key\": null,\n    \"msgId\": \"search with from and to values\",\n    \"authToken\": \"{{access_token}}\",\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": \"1\",\n      \"userName\": null,\n      \"name\": null,\n      \"type\": null,\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": null\n    }\n  },\n  \"MdmsCriteria\": {\n    \"tenantId\": \"{{tenantId}}\",\n    \"moduleDetails\": [\n      {\n        \"moduleName\": \"Works\",\n        \"masterDetails\": [\n          {\n            \"name\": \"SubScheme\"\n          }\n        ]\n      }\n    ]\n  }\n}"
+								},
+								"url": {
+									"raw": "{{url}}/egov-mdms-service/v1/_search",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"egov-mdms-service",
+										"v1",
+										"_search"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "ScheduleCategory-MDMS",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"works-services\",\n    \"ver\": null,\n    \"ts\": null,\n    \"action\": \"Search\",\n    \"did\": null,\n    \"key\": null,\n    \"msgId\": \"search with from and to values\",\n    \"authToken\": \"{{access_token}}\",\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": \"1\",\n      \"userName\": null,\n      \"name\": null,\n      \"type\": null,\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": null\n    }\n  },\n  \"MdmsCriteria\": {\n    \"tenantId\": \"{{tenantId}}\",\n    \"moduleDetails\": [\n      {\n        \"moduleName\": \"Works\",\n        \"masterDetails\": [\n          {\n            \"name\": \"ScheduleCategory\"\n          }\n        ]\n      }\n    ]\n  }\n}"
+								},
+								"url": {
+									"raw": "{{url}}/egov-mdms-service/v1/_search",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"egov-mdms-service",
+										"v1",
+										"_search"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Works MDMS",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"works-services\",\n    \"ver\": null,\n    \"ts\": null,\n    \"action\": \"Search\",\n    \"did\": null,\n    \"key\": null,\n    \"msgId\": \"search with from and to values\",\n    \"authToken\": \"{{access_token}}\",\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": \"1\",\n      \"userName\": null,\n      \"name\": null,\n      \"type\": null,\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": null\n    }\n  },\n  \"MdmsCriteria\": {\n    \"tenantId\": \"{{tenantId}}\",\n    \"moduleDetails\": [\n      {\n        \"moduleName\": \"Works\",\n        \"masterDetails\": [\n          {\n            \"name\": \"BudgetGroup\"\n          }\n        ]\n      }\n    ]\n  }\n}"
+								},
+								"url": {
+									"raw": "{{url}}/egov-mdms-service/v1/_search",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"egov-mdms-service",
+										"v1",
+										"_search"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Create Estimate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"var today = new Date();",
+									"var epoch = Math.round(today.getTime()/1000);",
+									"var year = today.getFullYear();",
+									"",
+									"pm.environment.set(\"referenceNumber\", \"Ref.Num.\"+num1);",
+									"pm.environment.set(\"dateOfProposal\", epoch);",
+									"pm.environment.set(\"adminSanctionNumber\", \"ADN/\"+year+\"/\"+num1);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"yosadhara\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"userInfo\": {\n     \"tenantId\": \"{{tenantId}}\"\n    }\n  },\n  \"abstractEstimates\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"abstractEstimateNumber\": \"\",\n      \"fund\": {\n        \"code\": \"02\"\n      },\n      \"subject\": \"Project Cost Estimation Subject\",\n      \"referenceType\": \"type\",\n      \"referenceNumber\": \"{{referenceNumber}}\",\n      \"function\": {\n        \"code\": \"00\"\n      },\n      \"description\": \"abcd\",\n      \"budgetGroup\": {\n        \"code\": \"00\"\n      },\n      \"scheme\": {\n        \"code\": \"2906\"\n      },\n      \"subScheme\": {\n        \"code\": \"BSUP\"\n      },\n      \"dateOfProposal\": \"{{epochDate}}\",\n      \"department\": {\n        \"code\": \"ED\"\n      },\n      \"adminSanctionNumber\": \"{{adminSanctionNumber}}\",\n      \"adminSanctionDate\": \"{{epochDate}}\",\n      \"adminSanctionBy\": {\n        \"userName\": \"abcd\"\n      },\n      \"status\": \"APPROVED\",\n      \"beneficiary\": \"GENERAL\",\n      \"modeOfAllotment\": {\n        \"code\": \"mode_1\"\n      },\n      \"typeOfWork\": {\n        \"code\": \"Roads - Fake\"\n      },\n      \"subTypeOfWork\": {\n        \"code\": \"CC - Roads - Fake\"\n      },\n      \"natureOfWork\": {\n        \"code\": \"nature_1\"\n      },\n      \"ward\": {\n        \"code\": \"ward_1\"\n      },\n      \"technicalSanctionNumber\": \"1234\",\n      \"technicalSanctionDate\": \"{{epochDate}}\",\n      \"technicalSanctionBy\": {\n        \"userName\": \"abcd\"\n      },\n      \"locality\": {\n        \"code\": \"locality_1\"\n      },\n      \"workCategory\": \"NON_SLUM\",\n      \"councilResolutionNumber\": 1234,\n      \"councilResolutionDate\": \"{{epochDate}}\",\n      \"workOrderCreated\": \"false\",\n      \"billsCreated\": \"false\",\n      \"spillOverFlag\": \"false\",\n      \"detailedEstimateCreated\": \"false\",\n      \"abstractEstimateDetails\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"nameOfWork\": \"Road Construction\",\n          \"estimateAmount\": \"110000\",\n          \"estimateNumber\": \"{{estimateNumber}}\",\n          \"grossAmountBilled\": \"100000\"\n        }\n      ],\n      \"workFlowDetails\": {\n      \t\"department\": \"ED\",\n      \t\"designation\": \"JE\",\n      \t\"assignee\": 509,\n        \"action\": \"Forward\"\n      }\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/abstractestimates/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"abstractestimates",
+								"_create"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create Spill over Estimate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"var today = new Date();",
+									"var epoch = Math.round(today.getTime()/1000);",
+									"var year = today.getFullYear();",
+									"",
+									"pm.environment.set(\"abstractEstimateNumber\", \"AE/\"+year+\"/\"+num1);",
+									"pm.environment.set(\"referenceNumber\", \"Ref.Num.\"+num1);",
+									"pm.environment.set(\"epochDate\", epoch);",
+									"pm.environment.set(\"adminSanctionNumber\", \"ADN/\"+year+\"/\"+num1);",
+									"pm.environment.set(\"estimateNumber\", \"LE/ENG/\"+year+\"/\"+num1);",
+									"pm.environment.set(\"technicalSanctionNumber\", \"TS/ENG/NS/\"+year+\"/\"+num1);",
+									"pm.environment.set(\"councilResolutionNumber\", \"CRN/\"+year+\"/\"+num1);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"requestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"userInfo\": {\n      \"userName\": \"HOD\",\n      \"tenantId\": \"{{tenantId}}\"\n    }\n  },\n  \"abstractEstimates\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"abstractEstimateNumber\": \"{{abstractEstimateNumber}}\",\n      \"fund\": {\n        \"code\": \"02\"\n      },\n      \"subject\": \"Spill Over Estimation\",\n      \"referenceType\": \"Demandfrompublic\",\n      \"referenceNumber\": \"{{referenceNumber}}\",\n      \"function\": {\n        \"code\": \"00\"\n      },\n      \"description\": \"Spill Over Estimation for Projects already initiated\",\n      \"budgetGroup\": {\n        \"code\": \"00\"\n      },\n      \"scheme\": {\n        \"code\": \"2906\"\n      },\n      \"subScheme\": {\n        \"code\": \"BSUP\"\n      },\n      \"dateOfProposal\": \"{{epochDate}}\",\n      \"department\": {\n        \"code\": \"ED\"\n      },\n      \"adminSanctionNumber\": \"{{adminSanctionNumber}}\",\n      \"adminSanctionDate\": \"{{epochDate}}\",\n      \"adminSanctionBy\": {\n        \"userName\": \"HOD\"\n      },\n      \"status\": \"APPROVED\",\n      \"beneficiary\": \"GENERAL\",\n      \"modeOfAllotment\": {\n        \"code\": \"NOMINATION\"\n      },\n      \"typeOfWork\": {\n        \"code\": \"Roads - Fake\"\n      },\n      \"subTypeOfWork\": {\n        \"code\": \"CC - Roads - Fake\"\n      },\n      \"natureOfWork\": {\n        \"code\": \"CAPITAL\"\n      },\n      \"ward\": {\n        \"code\": \"ward_1\"\n      },\n      \"technicalSanctionNumber\": \"{{technicalSanctionNumber}}\",\n      \"technicalSanctionDate\": \"{{epochDate}}\",\n      \"technicalSanctionBy\": {\n        \"userName\": \"HOD\"\n      },\n      \"locality\": {\n        \"code\": \"locality_1\"\n      },\n      \"workCategory\": \"NON_SLUM\",\n      \"councilResolutionNumber\": \"{{councilResolutionNumber}}\",\n      \"councilResolutionDate\": \"{{epochDate}}\",\n      \"workOrderCreated\": \"true\",\n      \"billsCreated\": \"false\",\n      \"spillOverFlag\": \"true\",\n      \"detailedEstimateCreated\": \"true\",\n      \"abstractEstimateDetails\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"nameOfWork\": \"Road Construction\",\n          \"estimateAmount\": \"110000\",\n          \"estimateNumber\": \"{{estimateNumber}}\",\n          \"grossAmountBilled\": \"100000\"\n        }\n      ]\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/abstractestimates/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"abstractestimates",
+								"_create"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Search Estimate",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"requestInfo\": {\n    \"action\": \"update\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"yosadhara\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\"\n\t}\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/abstractestimates/_search?tenantId={{tenantId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"abstractestimates",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update Estimate",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"yosadhara\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"userInfo\": {\n     \"tenantId\": \"{{tenantId}}\"\n    }\n  },\n  \"abstractEstimates\": [\n    {\n    \"id\":\"8da607f536144006aa456256e63ad427\",\n      \"tenantId\": \"{{tenantId}}\",\n      \"abstractEstimateNumber\": \"\",\n      \"fund\": {\n        \"code\": \"02\"\n      },\n      \"subject\": \"Project Cost Estimation Subject\",\n      \"referenceType\": \"type\",\n      \"referenceNumber\": \"{{referenceNumber}}\",\n      \"function\": {\n        \"code\": \"00\"\n      },\n      \"description\": \"abcd\",\n      \"budgetGroup\": {\n        \"code\": \"00\"\n      },\n      \"scheme\": {\n        \"code\": \"2906\"\n      },\n      \"subScheme\": {\n        \"code\": \"BSUP\"\n      },\n      \"dateOfProposal\": \"{{epochDate}}\",\n      \"department\": {\n        \"code\": \"ED\"\n      },\n      \"adminSanctionNumber\": \"{{adminSanctionNumber}}\",\n      \"adminSanctionDate\": \"{{epochDate}}\",\n      \"adminSanctionBy\": {\n        \"userName\": \"abcd\"\n      },\n      \"status\": \"APPROVED\",\n      \"beneficiary\": \"GENERAL\",\n      \"modeOfAllotment\": {\n        \"code\": \"mode_1\"\n      },\n      \"typeOfWork\": {\n        \"code\": \"Roads - Fake\"\n      },\n      \"subTypeOfWork\": {\n        \"code\": \"CC - Roads - Fake\"\n      },\n      \"natureOfWork\": {\n        \"code\": \"nature_1\"\n      },\n      \"ward\": {\n        \"code\": \"ward_1\"\n      },\n      \"technicalSanctionNumber\": \"1234\",\n      \"technicalSanctionDate\": \"{{epochDate}}\",\n      \"technicalSanctionBy\": {\n        \"userName\": \"abcd\"\n      },\n      \"locality\": {\n        \"code\": \"locality_1\"\n      },\n      \"workCategory\": \"NON_SLUM\",\n      \"councilResolutionNumber\": 1234,\n      \"councilResolutionDate\": \"{{epochDate}}\",\n      \"workOrderCreated\": \"false\",\n      \"billsCreated\": \"false\",\n      \"spillOverFlag\": \"false\",\n      \"detailedEstimateCreated\": \"false\",\n      \"abstractEstimateDetails\": [\n        {\n        \"id\": \"cd3d0fdbfe224224baeb6450d71495d2\",\n          \"tenantId\": \"{{tenantId}}\",\n          \"nameOfWork\": \"Road Construction\",\n          \"estimateAmount\": \"110000\",\n          \"estimateNumber\": \"{{estimateNumber}}\",\n          \"grossAmountBilled\": \"100000\"\n        }\n      ],\n      \"workFlowDetails\": {\n      \t\"department\": \"ED\",\n      \t\"designation\": \"JE\",\n      \t\"assignee\": 509,\n        \"action\": \"Forward\"\n      }\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/abstractestimates/_update",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"abstractestimates",
+								"_update"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Estimate Appropriation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"requestInfo\": {\n    \"resMsgId\": \"placeholder\",\n    \"status\": \"200\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"ts\": \"123456789456\",\n    \"key\": null,\n    \"action\":\"create\",\n    \"userInfo\":{\n   \t\"tenantId\" : \"{{tenantId}}\",\n   \t\"username\" : \"ritesh\",\n   \t\"id\":1,\n       \"roles\" : []\n   }\n    },\n   \"estimateAppropriations\": [\n     {\n     \t\"id\":\"233e85b41ef8483b8192d80f69893cea\",\n       \"budgetUsage\":\"final1\",\n       \"objectNumber\":\"OBN1/c\",\n       \"tenantId\":\"{{tenantId}}\",\n       \"objectType\":\"AbstractEstimate\"\n     }\n     \n     ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-services/estimateappropriations/_create?tenantId={{tenantId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-services",
+								"estimateappropriations",
+								"_create"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Functional Test",
+			"description": "",
+			"item": []
+		}
+	]
+}

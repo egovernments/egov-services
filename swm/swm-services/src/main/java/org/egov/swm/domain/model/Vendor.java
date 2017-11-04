@@ -41,7 +41,6 @@ public class Vendor {
 	private List<Boundary> servicedLocations = null;
 
 	@NotNull
-	@Length(min = 1, max = 256)
 	@JsonProperty("registrationNo")
 	private String registrationNo = null;
 

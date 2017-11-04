@@ -267,9 +267,9 @@ definitions:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Functionary"
         format: singleValueList
         description: Functionary of the Advance Requisition
-      voucherHeader:
+      voucherNumber:
         type: string
-        description: Voucher of the Advance Requisition
+        description: Voucher Number of the Advance Requisition
       payTo:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User"
         description: Payee Name of the Advance Requisition

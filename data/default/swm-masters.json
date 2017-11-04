@@ -120,6 +120,18 @@
       "code": "Fake Fuel Type Code 3"
     }
   ],
+  "OilCompany":[
+    {
+      "tenantId": "default",
+      "name": "ONGC Corporation",
+      "code": "ONGC"
+    },
+    {
+      "tenantId": "default",
+      "name": "Reliance Industries",
+      "code": "RIO"
+    }
+  ],
   "Vehicle": [
     {
       "id": 1,

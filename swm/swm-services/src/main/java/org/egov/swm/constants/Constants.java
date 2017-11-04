@@ -19,6 +19,7 @@ public class Constants {
 	public static final String FUELTYPE_MASTER_NAME = "FuelType";
 	public static final String COLLECTIONTYPE_MASTER_NAME = "CollectionType";
 	public static final String DUMPINGGROUND_MASTER_NAME = "DumpingGround";
+	public static final String OILCOMPANY_MASTER_NAME = "OilCompany";
 	
 }
 

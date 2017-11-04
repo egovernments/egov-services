@@ -52,8 +52,10 @@ public class RefillingPumpStation {
 	@JsonProperty("typeOfFuel")
 	private FuelType typeOfFuel = null;
 
-	@NotNull
 	@JsonProperty("quantity")
 	private Long quantity = null;
+
+	@JsonProperty("auditDetails")
+	private AuditDetails auditDetails = null;
 
 }

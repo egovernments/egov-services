@@ -4,13 +4,16 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.SwmProcess;
 import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.domain.repository.VendorRepository;
 import org.egov.swm.web.contract.IdGenerationResponse;
 import org.egov.swm.web.repository.IdgenRepository;
+import org.egov.swm.web.repository.MdmsRepository;
 import org.egov.swm.web.requests.VendorRequest;
 import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.Error;
@@ -20,8 +23,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import net.minidev.json.JSONArray;
 
 @Service
 @Transactional(readOnly = true)
@@ -39,8 +45,13 @@ public class VendorService {
 	@Value("${egov.swm.contractor.num.idgen.name}")
 	private String idGenNameForContractorNumPath;
 
+	@Autowired
+	private MdmsRepository mdmsRepository;
+
 	@Transactional
 	public VendorRequest create(VendorRequest vendorRequest) {
+
+		validate(vendorRequest);
 
 		Long userId = null;
 
@@ -73,6 +84,8 @@ public class VendorService {
 	@Transactional
 	public VendorRequest update(VendorRequest vendorRequest) {
 
+		validate(vendorRequest);
+
 		Long userId = null;
 
 		for (Vendor v : vendorRequest.getVendors()) {
@@ -92,13 +105,53 @@ public class VendorService {
 			if (vendorSearchResult != null && vendorSearchResult.getPagedData() != null
 					&& !vendorSearchResult.getPagedData().isEmpty()) {
 				v.getContractor().setTenantId(v.getTenantId());
-				v.getContractor().setContractorNo(vendorSearchResult.getPagedData().get(0).getContractor().getContractorNo());
+				v.getContractor()
+						.setContractorNo(vendorSearchResult.getPagedData().get(0).getContractor().getContractorNo());
+			}
+
+			if (v.getAgreementDocument() != null && v.getAgreementDocument().getFileStoreId() != null) {
+
+				v.getAgreementDocument().setTenantId(v.getTenantId());
+				v.getAgreementDocument().setRefCode(v.getVendorNo());
+
 			}
 
 		}
 
 		return vendorRepository.update(vendorRequest);
 
+	}
+
+	private void validate(VendorRequest vendorRequest) {
+
+		JSONArray responseJSONArray = null;
+		ObjectMapper mapper = new ObjectMapper();
+		SwmProcess p ;
+		for (Vendor vendor : vendorRequest.getVendors()) {
+
+			if (vendor.getServicesOffered() != null)
+				for (SwmProcess process : vendor.getServicesOffered()) {
+
+					// Validate Swm Process
+					if (process.getCode() != null) {
+
+						responseJSONArray = mdmsRepository.getByCriteria(vendor.getTenantId(), Constants.MODULE_CODE,
+								Constants.SWMPROCESS_MASTER_NAME, "code", process.getCode(),
+								vendorRequest.getRequestInfo());
+
+						if (responseJSONArray != null && responseJSONArray.size() > 0){
+							p = mapper.convertValue(responseJSONArray.get(0), SwmProcess.class);
+							process.setTenantId(p.getTenantId());
+							process.setName(p.getName());
+						}
+						else
+							throw new CustomException("ServicesOffered",
+									"Given ServicesOffered is invalid: " + process.getCode());
+
+					}
+				}
+
+		}
 	}
 
 	private void prepareAgreementDocument(Vendor v) {

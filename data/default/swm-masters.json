@@ -630,19 +630,23 @@
  "SwmProcess": [
     {
       "tenantId": "default",
-      "processName": "Collection"
+      "code": "Collection",
+      "name": "Collection"
     },
     {
       "tenantId": "default",
-      "processName": "Segregation"
+      "code": "Segregation",
+      "name": "Segregation"
     },
     {
      "tenantId": "default",
-      "processName": "Transportation"
+      "code": "Transportation",
+      "name": "Transportation"
     },
     {
      "tenantId": "default",
-      "processName": "Disposal"
+      "code": "Disposal",
+      "name": "Disposal"
     }
   ],
   "SanitationStaffTarget": [

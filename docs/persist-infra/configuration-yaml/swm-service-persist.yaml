@@ -661,21 +661,44 @@ serviceMaps:
       basePath: $.vendors.*.servicesOffered.*
       jsonMaps:
        
-       - jsonPath: $.vendors[?({name} in @.servicesOffered[*].name)].tenantId
+       - jsonPath: $.vendors[?({code} in @.servicesOffered[*].code)].tenantId
 
-       - jsonPath: $.vendors[?({name} in @.servicesOffered[*].name)].vendorNo
+       - jsonPath: $.vendors[?({code} in @.servicesOffered[*].code)].vendorNo
          
-       - jsonPath: $.vendors.*.servicesOffered.*.name
+       - jsonPath: $.vendors.*.servicesOffered.*.code
 
-       - jsonPath: $.vendors[?({name} in @.servicesOffered[*].name)].auditDetails.createdBy
+       - jsonPath: $.vendors[?({code} in @.servicesOffered[*].code)].auditDetails.createdBy
 
-       - jsonPath: $.vendors[?({name} in @.servicesOffered[*].name)].auditDetails.lastModifiedBy
+       - jsonPath: $.vendors[?({code} in @.servicesOffered[*].code)].auditDetails.lastModifiedBy
 
-       - jsonPath: $.vendors[?({name} in @.servicesOffered[*].name)].auditDetails.createdTime
+       - jsonPath: $.vendors[?({code} in @.servicesOffered[*].code)].auditDetails.createdTime
          dbType: LONG
 
-       - jsonPath: $.vendors[?({name} in @.servicesOffered[*].name)].auditDetails.lastModifiedTime
+       - jsonPath: $.vendors[?({code} in @.servicesOffered[*].code)].auditDetails.lastModifiedTime
          dbType: LONG
+
+    - query: INSERT INTO egswm_document(id, tenantid, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.vendors.*.agreementDocument
+      jsonMaps:
+       
+       - jsonPath: $.vendors.*.agreementDocument.id
+
+       - jsonPath: $.vendors.*.agreementDocument.tenantId
+         
+       - jsonPath: $.vendors.*.agreementDocument.refCode
+
+       - jsonPath: $.vendors.*.agreementDocument.fileStoreId
+
+       - jsonPath: $.vendors.*.agreementDocument.auditDetails.createdBy
+
+       - jsonPath: $.vendors.*.agreementDocument.auditDetails.lastModifiedBy
+
+       - jsonPath: $.vendors.*.agreementDocument.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.vendors.*.agreementDocument.auditDetails.lastModifiedTime
+         dbType: LONG
+
 
  - version: 1.0
    name: vendor update
@@ -762,18 +785,102 @@ serviceMaps:
       basePath: $.vendors.*.servicesOffered.*
       jsonMaps:
        
-       - jsonPath: $.vendors[?({name} in @.servicesOffered[*].name)].tenantId
+       - jsonPath: $.vendors[?({code} in @.servicesOffered[*].code)].tenantId
 
-       - jsonPath: $.vendors[?({name} in @.servicesOffered[*].name)].vendorNo
+       - jsonPath: $.vendors[?({code} in @.servicesOffered[*].code)].vendorNo
          
-       - jsonPath: $.vendors.*.servicesOffered.*.name
+       - jsonPath: $.vendors.*.servicesOffered.*.code
 
-       - jsonPath: $.vendors[?({name} in @.servicesOffered[*].name)].auditDetails.createdBy
+       - jsonPath: $.vendors[?({code} in @.servicesOffered[*].code)].auditDetails.createdBy
 
-       - jsonPath: $.vendors[?({name} in @.servicesOffered[*].name)].auditDetails.lastModifiedBy
+       - jsonPath: $.vendors[?({code} in @.servicesOffered[*].code)].auditDetails.lastModifiedBy
 
-       - jsonPath: $.vendors[?({name} in @.servicesOffered[*].name)].auditDetails.createdTime
+       - jsonPath: $.vendors[?({code} in @.servicesOffered[*].code)].auditDetails.createdTime
          dbType: LONG
 
-       - jsonPath: $.vendors[?({name} in @.servicesOffered[*].name)].auditDetails.lastModifiedTime
+       - jsonPath: $.vendors[?({code} in @.servicesOffered[*].code)].auditDetails.lastModifiedTime
          dbType: LONG
+
+    - query: update egswm_document set fileStoreId=?, lastmodifiedby=?, lastmodifiedtime=? where refCode=? and tenantId=?;
+      basePath: $.vendors.*.agreementDocument
+      jsonMaps:
+
+       - jsonPath: $.vendors.*.agreementDocument.fileStoreId
+
+       - jsonPath: $.vendors.*.agreementDocument.auditDetails.lastModifiedBy
+
+       - jsonPath: $.vendors.*.agreementDocument.auditDetails.lastModifiedTime
+         dbType: LONG
+
+       - jsonPath: $.vendors.*.agreementDocument.refCode
+
+       - jsonPath: $.vendors.*.agreementDocument.tenantId
+
+ - version: 1.0
+   name: vendorcontract create
+   description: create vendorcontract in egswm_vendorcontract
+   fromTopic: swm-vendorcontract-save-topic
+   queryMaps: 
+    - query: INSERT INTO egswm_vendorcontract(tenantid, vendor, contractNo, contractDate, contractPeriodFrom, contractPeriodTo, securityDeposit, paymentTerms, remarks, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.vendorContracts.*
+      jsonMaps:
+       
+       - jsonPath: $.vendorContracts.*.tenantId
+
+       - jsonPath: $.vendorContracts.*.vendor.vendorNo
+
+       - jsonPath: $.vendorContracts.*.contractNo
+
+       - jsonPath: $.vendorContracts.*.contractDate
+       
+       - jsonPath: $.vendorContracts.*.contractPeriodFrom
+       
+       - jsonPath: $.vendorContracts.*.contractPeriodTo
+       
+       - jsonPath: $.vendorContracts.*.securityDeposit
+       
+       - jsonPath: $.vendorContracts.*.paymentTerms.label
+       
+       - jsonPath: $.vendorContracts.*.remarks
+
+       - jsonPath: $.vendorContracts.*.auditDetails.createdBy
+
+       - jsonPath: $.vendorContracts.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.vendorContracts.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.vendorContracts.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+ - version: 1.0
+   name: vendorcontract update
+   description: update vendorcontract in egswm_vendorcontract
+   fromTopic: swm-vendorcontract-update-topic
+   queryMaps: 
+    - query: update egswm_vendorcontract set vendor=?, contractDate=?, contractPeriodFrom=?, contractPeriodTo=?, securityDeposit=?, paymentTerms=?, remarks=?, lastmodifiedby=?, lastmodifiedtime=? where contractNo=? and tenantId=?;
+      basePath: $.vendorContracts.*
+      jsonMaps:
+
+       - jsonPath: $.vendorContracts.*.vendor.vendorNo
+
+       - jsonPath: $.vendorContracts.*.contractDate
+       
+       - jsonPath: $.vendorContracts.*.contractPeriodFrom
+       
+       - jsonPath: $.vendorContracts.*.contractPeriodTo
+       
+       - jsonPath: $.vendorContracts.*.securityDeposit
+       
+       - jsonPath: $.vendorContracts.*.paymentTerms.label
+       
+       - jsonPath: $.vendorContracts.*.remarks
+
+       - jsonPath: $.vendorContracts.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.vendorContracts.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+       - jsonPath: $.vendorContracts.*.contractNo
+
+       - jsonPath: $.vendorContracts.*.tenantId

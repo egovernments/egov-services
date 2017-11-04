@@ -6,15 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.swm.domain.model.Boundary;
-import org.egov.swm.domain.model.Contractor;
 import org.egov.swm.domain.model.Pagination;
-import org.egov.swm.domain.model.ServicedLocations;
-import org.egov.swm.domain.model.ServicesOffered;
-import org.egov.swm.domain.model.SwmProcess;
-import org.egov.swm.domain.model.Vendor;
-import org.egov.swm.domain.model.VendorSearch;
-import org.egov.swm.persistence.entity.VendorEntity;
+import org.egov.swm.domain.model.VendorContract;
+import org.egov.swm.domain.model.VendorContractSearch;
+import org.egov.swm.persistence.entity.VendorContractEntity;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -23,7 +18,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class VendorJdbcRepository {
+public class VendorContractJdbcRepository {
 
 	@Autowired
 	public JdbcTemplate jdbcTemplate;
@@ -31,47 +26,23 @@ public class VendorJdbcRepository {
 	@Autowired
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	@Autowired
-	public ContractorJdbcRepository contractorJdbcRepository;
+	public Pagination<VendorContract> search(VendorContractSearch searchRequest) {
 
-	@Autowired
-	public ServicedLocationsJdbcRepository servicedLocationsJdbcRepository;
-
-	@Autowired
-	public ServicesOfferedJdbcRepository servicesOfferedJdbcRepository;
-
-	public Pagination<Vendor> search(VendorSearch searchRequest) {
-
-		String searchQuery = "select * from egswm_vendor :condition  :orderby ";
+		String searchQuery = "select * from egswm_vendorcontract :condition  :orderby ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
 
 		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
 			validateSortByOrder(searchRequest.getSortBy());
-			validateEntityFieldName(searchRequest.getSortBy(), VendorSearch.class);
+			validateEntityFieldName(searchRequest.getSortBy(), VendorContractSearch.class);
 		}
 
-		String orderBy = "order by name";
+		String orderBy = "order by code";
 		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
 			orderBy = "order by " + searchRequest.getSortBy();
 		}
 
-		if (searchRequest.getVendorNo() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("vendorNo in (:vendorNo)");
-			paramValues.put("vendorNo", searchRequest.getVendorNo());
-		}
-
-		if (searchRequest.getVendorNos() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("vendorNo in (:vendorNos)");
-			paramValues.put("vendorNos", new ArrayList<String>(Arrays.asList(searchRequest.getVendorNos().split(","))));
-		}
 		if (searchRequest.getTenantId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
@@ -80,31 +51,64 @@ public class VendorJdbcRepository {
 			paramValues.put("tenantId", searchRequest.getTenantId());
 		}
 
-		if (searchRequest.getName() != null) {
+		if (searchRequest.getContractNos() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("name =:name");
-			paramValues.put("name", searchRequest.getName());
+			params.append("contractNo in(:contractNos) ");
+			paramValues.put("contractNos",
+					new ArrayList<String>(Arrays.asList(searchRequest.getContractNos().split(","))));
 		}
 
-		if (searchRequest.getRegistrationNo() != null) {
+		if (searchRequest.getVendorNo() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("registrationNo =:registrationNo");
-			paramValues.put("registrationNo", searchRequest.getRegistrationNo());
+			params.append("vendor =:vendor");
+			paramValues.put("vendor", searchRequest.getVendorNo());
 		}
 
-		if (searchRequest.getContractorNo() != null) {
+		if (searchRequest.getContractNo() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("contractor =:contractor");
-			paramValues.put("contractor", searchRequest.getContractorNo());
+			params.append("contractNo =:contractNo");
+			paramValues.put("contractNo", searchRequest.getContractNo());
 		}
 
-		Pagination<Vendor> page = new Pagination<>();
+		if (searchRequest.getContractDate() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("contractDate =:contractDate");
+			paramValues.put("contractDate", searchRequest.getContractDate());
+		}
+
+		if (searchRequest.getContractPeriodFrom() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("contractPeriodFrom =:contractPeriodFrom");
+			paramValues.put("contractPeriodFrom", searchRequest.getContractPeriodFrom());
+		}
+
+		if (searchRequest.getContractPeriodTo() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("contractPeriodTo =:contractPeriodTo");
+			paramValues.put("contractPeriodTo", searchRequest.getContractPeriodTo());
+		}
+
+		if (searchRequest.getSecurityDeposit() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("securityDeposit =:securityDeposit");
+			paramValues.put("securityDeposit", searchRequest.getSecurityDeposit());
+		}
+
+		Pagination<VendorContract> page = new Pagination<>();
 		if (searchRequest.getOffset() != null) {
 			page.setOffset(searchRequest.getOffset());
 		}
@@ -122,68 +126,22 @@ public class VendorJdbcRepository {
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
-		page = (Pagination<Vendor>) getPagination(searchQuery, page, paramValues);
+		page = (Pagination<VendorContract>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination",
 				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(VendorEntity.class);
+		BeanPropertyRowMapper row = new BeanPropertyRowMapper(VendorContractEntity.class);
 
-		List<Vendor> vendorList = new ArrayList<>();
+		List<VendorContract> vendorContractList = new ArrayList<>();
 
-		List<VendorEntity> vendorEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
-		Vendor v;
-		Contractor cs;
-		ServicedLocations servicedLocations;
-		ServicesOffered servicesOffered;
-		List<Contractor> contractors;
-		List<ServicedLocations> sls;
-		List<ServicesOffered> sos;
-		for (VendorEntity vendorEntity : vendorEntities) {
+		List<VendorContractEntity> vendorContractEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
+				paramValues, row);
 
-			v = vendorEntity.toDomain();
-			cs = Contractor.builder().tenantId(v.getTenantId()).contractorNo(vendorEntity.getContractor()).build();
+		page.setTotalResults(vendorContractList.size());
 
-			contractors = contractorJdbcRepository.search(cs);
-
-			if (contractors != null && !contractors.isEmpty()) {
-				v.setContractor(contractors.get(0));
-			}
-
-			servicedLocations = ServicedLocations.builder().tenantId(v.getTenantId()).vendor(v.getVendorNo()).build();
-
-			sls = servicedLocationsJdbcRepository.search(servicedLocations);
-
-			if (sls != null && !sls.isEmpty()) {
-
-				v.setServicedLocations(new ArrayList<>());
-
-				for (ServicedLocations sl : sls) {
-					v.getServicedLocations().add(Boundary.builder().code(sl.getLocation()).build());
-				}
-			}
-
-			servicesOffered = ServicesOffered.builder().tenantId(v.getTenantId()).vendor(v.getVendorNo()).build();
-
-			sos = servicesOfferedJdbcRepository.search(servicesOffered);
-
-			if (sos != null && !sos.isEmpty()) {
-
-				v.setServicesOffered(new ArrayList<>());
-
-				for (ServicesOffered so : sos) {
-					v.getServicesOffered().add(SwmProcess.builder().name(so.getService()).build());
-				}
-			}
-
-			vendorList.add(v);
-
-		}
-
-		page.setTotalResults(vendorList.size());
-
-		page.setPagedData(vendorList);
+		page.setPagedData(vendorContractList);
 
 		return page;
 	}

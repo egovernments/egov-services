@@ -4,10 +4,10 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.config.WorksEstimateServiceConstants;
 import org.egov.works.estimate.domain.exception.ErrorCode;
@@ -46,11 +46,14 @@ public class AbstractEstimateService {
 
 	@Autowired
 	private EstimateUtils estimateUtils;
+	
+	@Autowired
+	private CommonUtils commonUtils;
 
 	@Transactional
 	public List<AbstractEstimate> create(AbstractEstimateRequest abstractEstimateRequest) {
 		for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
-			estimate.setId(UUID.randomUUID().toString().replace("-", ""));
+			estimate.setId(commonUtils.getUUID());
 			estimate.setAuditDetails(
 					setAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUsername(), false));
 			String abstractEstimateNumber = idGenerationRepository
@@ -58,7 +61,7 @@ public class AbstractEstimateService {
 			estimate.setAbstractEstimateNumber(propertiesManager.getEstimateNumberPrefix() + "/"
 					+ estimate.getDepartment().getCode() + abstractEstimateNumber);
 			for (final AbstractEstimateDetails details : estimate.getAbstractEstimateDetails()) {
-				details.setId(UUID.randomUUID().toString().replace("-", ""));
+				details.setId(commonUtils.getUUID());
 				details.setAuditDetails(
 						setAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUsername(), false));
 			}

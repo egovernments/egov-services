@@ -39,12 +39,16 @@ public class SupplierGetRequest {
 	private String cstNo;
 
 	private String vatNo;
+	
+	private String bankCode;
+	
+	private String bankBranchCode;
+	
+	private String gstNo;
 
 	private String contactPerson;
 
 	private String contactPersonNo;
-
-	private String bankName;
 
 	private String bankAccNo;
 

@@ -52,12 +52,16 @@ public class SupplierEntity {
 	private String cstNo = null;
 
 	private String vatNo = null;
+	
+	private String gstNo = null;
 
 	private String contactPerson = null;
 
 	private String contactPersonNo = null;
 
-	private String bankName = null;
+	private String bank = null;
+	
+	private String bankBranch = null;
 
 	private String bankAcctNo = null;
 
@@ -92,9 +96,11 @@ public class SupplierEntity {
 		this.tinNo = supplier.getTinNo();
 		this.cstNo = supplier.getCstNo();
 		this.vatNo = supplier.getVatNo();
+		this.gstNo = supplier.getGstNo();
 		this.contactPerson = supplier.getContactPerson();
 		this.contactPersonNo = supplier.getContactPersonNo();
-		this.bankName = supplier.getBankInfo().getName();
+		this.bank = supplier.getBankInfo().getCode();
+		this.bankBranch = supplier.getBankInfo().getBankBranchCode();
 		this.bankAcctNo = supplier.getBankInfo().getAcctNo();
 		this.bankIfsc = supplier.getBankInfo().getIfsc();
 		this.bankMicr = supplier.getBankInfo().getMicr();
@@ -128,14 +134,16 @@ public class SupplierEntity {
 		supplier.setPanNo(panNo);
 		supplier.setTinNo(tinNo);
 		supplier.setVatNo(vatNo);
+		supplier.setGstNo(gstNo);
 		supplier.setContactPerson(contactPerson);
 		supplier.setContactPersonNo(contactPersonNo);
-		Bank bank = new Bank();
-		bank.setName(bankName);
-		bank.setAcctNo(bankAcctNo);
-		bank.setIfsc(bankIfsc);
-		bank.setMicr(bankMicr);
-		supplier.setBankInfo(bank);
+		Bank banker = new Bank();
+		banker.setCode(bank);
+		banker.setAcctNo(bankAcctNo);
+		banker.setIfsc(bankIfsc);
+		banker.setMicr(bankMicr);
+		banker.setBankBranchCode(bankBranch);
+		supplier.setBankInfo(banker);
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(createdBy);
 		auditDetails.setCreatedTime(createdTime);

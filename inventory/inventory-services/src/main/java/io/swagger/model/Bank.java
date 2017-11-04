@@ -2,24 +2,31 @@ package io.swagger.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
  * This object holds the bank information.   
  */
 @ApiModel(description = "This object holds the bank information.   ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-01T09:47:46.371Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-04T09:31:08.128Z")
 
 public class Bank   {
   @JsonProperty("tenantId")
   private String tenantId = null;
 
+  @JsonProperty("code")
+  private String code = null;
+
   @JsonProperty("name")
   private String name = null;
+
+  @JsonProperty("bankBranchCode")
+  private String bankBranchCode = null;
+
+  @JsonProperty("bankBranchName")
+  private String bankBranchName = null;
 
   @JsonProperty("acctNo")
   private String acctNo = null;
@@ -50,25 +57,86 @@ public class Bank   {
     this.tenantId = tenantId;
   }
 
+  public Bank code(String code) {
+    this.code = code;
+    return this;
+  }
+
+   /**
+   * code of the bank      
+   * @return code
+  **/
+  @ApiModelProperty(required = true, value = "code of the bank      ")
+  @NotNull
+
+
+  public String getCode() {
+    return code;
+  }
+
+  public void setCode(String code) {
+    this.code = code;
+  }
+
   public Bank name(String name) {
     this.name = name;
     return this;
   }
 
    /**
-   * name of the Employee 
+   * name of the bank 
    * @return name
   **/
-  @ApiModelProperty(required = true, value = "name of the Employee ")
-  @NotNull
+  @ApiModelProperty(value = "name of the bank ")
 
- @Pattern(regexp="^[a-zA-Z ]+$")
+ @Pattern(regexp="^[a-zA-Z ]$")
   public String getName() {
     return name;
   }
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public Bank bankBranchCode(String bankBranchCode) {
+    this.bankBranchCode = bankBranchCode;
+    return this;
+  }
+
+   /**
+   * code of the bank      
+   * @return bankBranchcode
+  **/
+  @ApiModelProperty(required = true, value = "code of the bank      ")
+  @NotNull
+
+
+  public String getBankBranchCode() {
+    return bankBranchCode;
+  }
+
+  public void setBankBranchCode(String bankBranchcode) {
+    this.bankBranchCode = bankBranchcode;
+  }
+
+  public Bank bankBranchName(String bankBranchName) {
+    this.bankBranchName = bankBranchName;
+    return this;
+  }
+
+   /**
+   * name of the bank             
+   * @return bankBranchname
+  **/
+  @ApiModelProperty(value = "name of the bank             ")
+
+ @Pattern(regexp="^[a-zA-Z ]$")
+  public String getBankBranchName() {
+    return bankBranchName;
+  }
+
+  public void setBankBranchname(String bankBranchName) {
+    this.bankBranchName = bankBranchName;
   }
 
   public Bank acctNo(String acctNo) {
@@ -144,7 +212,10 @@ public class Bank   {
     }
     Bank bank = (Bank) o;
     return Objects.equals(this.tenantId, bank.tenantId) &&
+        Objects.equals(this.code, bank.code) &&
         Objects.equals(this.name, bank.name) &&
+        Objects.equals(this.bankBranchCode, bank.bankBranchCode) &&
+        Objects.equals(this.bankBranchName, bank.bankBranchName) &&
         Objects.equals(this.acctNo, bank.acctNo) &&
         Objects.equals(this.ifsc, bank.ifsc) &&
         Objects.equals(this.micr, bank.micr);
@@ -152,7 +223,7 @@ public class Bank   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(tenantId, name, acctNo, ifsc, micr);
+    return Objects.hash(tenantId, code, name, bankBranchCode, bankBranchName, acctNo, ifsc, micr);
   }
 
   @Override
@@ -161,7 +232,10 @@ public class Bank   {
     sb.append("class Bank {\n");
     
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+    sb.append("    code: ").append(toIndentedString(code)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    bankBranchcode: ").append(toIndentedString(bankBranchCode)).append("\n");
+    sb.append("    bankBranchname: ").append(toIndentedString(bankBranchName)).append("\n");
     sb.append("    acctNo: ").append(toIndentedString(acctNo)).append("\n");
     sb.append("    ifsc: ").append(toIndentedString(ifsc)).append("\n");
     sb.append("    micr: ").append(toIndentedString(micr)).append("\n");
@@ -180,4 +254,3 @@ public class Bank   {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

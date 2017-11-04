@@ -39,10 +39,8 @@
  */
 package io.swagger.api;
 
-import io.swagger.model.ErrorRes;
+
 import io.swagger.model.Pagination;
-import io.swagger.model.Store;
-import io.swagger.model.StoreResponse;
 import io.swagger.model.Supplier;
 import io.swagger.model.SupplierRequest;
 import io.swagger.model.SupplierResponse;
@@ -121,10 +119,12 @@ public class SuppliersApiController implements SuppliersApi {
 			@ApiParam(value = "tinNo of the Supplier ") @RequestParam(value = "tinNo", required = false) String tinNo,
 			@ApiParam(value = "cstNo of the Supplier ") @RequestParam(value = "cstNo", required = false) String cstNo,
 			@ApiParam(value = "vatNo    ") @RequestParam(value = "vatNo", required = false) String vatNo,
+	        @ApiParam(value = "gstNo    ") @RequestParam(value = "gstNo", required = false) String gstNo,
 			@ApiParam(value = "contactPerson      ") @RequestParam(value = "contactPerson", required = false) String contactPerson,
 			@ApiParam(value = "contactPersonNo      ") @RequestParam(value = "contactPersonNo", required = false) String contactPersonNo,
-			@ApiParam(value = "name of the bank ") @RequestParam(value = "bankName", required = false) String bankName,
-			@ApiParam(value = "account number of the bank account ") @RequestParam(value = "bankAccNo", required = false) String bankAccNo,
+	        @ApiParam(value = "code of the bank ") @RequestParam(value = "bankCode", required = false) String bankCode,
+	        @ApiParam(value = "code of the bankBranch ") @RequestParam(value = "bankBranchCode", required = false) String bankBranchCode,
+	        @ApiParam(value = "account number of the bank account ") @RequestParam(value = "bankAccNo", required = false) String bankAccNo,
 			@ApiParam(value = "ifsc code of the bank account ") @RequestParam(value = "bankIfsc", required = false) String bankIfsc,
 			@Min(0) @Max(100) @ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
 			@ApiParam(value = "offset") @RequestParam(value = "offset", required = false) Integer offset,
@@ -133,8 +133,8 @@ public class SuppliersApiController implements SuppliersApi {
 		SupplierGetRequest supplierGetRequest = SupplierGetRequest.builder().ids(ids).code(code).name(name)
 				.supplyType(supplyType).address(address).status(status).inActiveDate(inActiveDate)
 				.supplierContactNo(supplierContactNo).faxNo(faxNo).website(website).email(email).panNo(panNo)
-				.tinNo(tinNo).cstNo(cstNo).vatNo(vatNo).contactPerson(contactPerson).contactPersonNo(contactPersonNo)
-				.bankName(bankName).bankAccNo(bankAccNo).bankIfsc(bankIfsc).pageSize(pageSize).offset(offset)
+				.tinNo(tinNo).cstNo(cstNo).vatNo(vatNo).gstNo(gstNo).contactPerson(contactPerson).contactPersonNo(contactPersonNo)
+				.bankCode(bankCode).bankBranchCode(bankBranchCode).bankAccNo(bankAccNo).bankIfsc(bankIfsc).pageSize(pageSize).offset(offset)
 				.pageNumber(pageNumber).sortBy(sortBy).build();
 		Pagination<Supplier> suppliers = supplierService.search(supplierGetRequest);
 		SupplierResponse response = new SupplierResponse();

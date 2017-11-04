@@ -52,8 +52,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
 import io.swagger.model.Pagination;
-import io.swagger.model.Store;
-import io.swagger.model.StoreGetRequest;
 import io.swagger.model.Supplier;
 
 @Service
@@ -173,6 +171,12 @@ public class SupplierJdbcRepository extends JdbcRepository {
 			params.append("vatno = :vatno");
 			paramValues.put("vatno", supplierGetRequest.getVatNo());
 		}
+		if (supplierGetRequest.getGstNo() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("gstno = :gstno");
+			paramValues.put("gstno", supplierGetRequest.getGstNo());
+		}
 		if (supplierGetRequest.getContactPerson() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
@@ -185,11 +189,17 @@ public class SupplierJdbcRepository extends JdbcRepository {
 			params.append("contactpersonno = :contactpersonno");
 			paramValues.put("contactpersonno", supplierGetRequest.getContactPersonNo());
 		}
-		if (supplierGetRequest.getBankName() != null) {
+		if (supplierGetRequest.getBankCode() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("bankname = :bankname");
-			paramValues.put("bankname", supplierGetRequest.getBankName());
+			params.append("bank = :bank");
+			paramValues.put("bank", supplierGetRequest.getBankCode());
+		}
+		if (supplierGetRequest.getBankBranchCode() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("bankbranch = :bankbranch");
+			paramValues.put("bankbranch", supplierGetRequest.getBankBranchCode());
 		}
 		if (supplierGetRequest.getBankAccNo() != null) {
 			if (params.length() > 0)

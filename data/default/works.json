@@ -553,7 +553,6 @@
   }
 ],
   "SubScheme": [
-  [
   {
     "id": 1,
     "code": "BSUP",
@@ -624,6 +623,5 @@
     "lastmodifiedby": null,
     "tenantId": "default"
   }
-]
 ]
 }

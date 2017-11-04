@@ -2133,7 +2133,12 @@ paths:
             type: string
             in: query
             description: |
-              vatNo   
+              vatNo 
+          - name: gstNo
+            type: string
+            in: query
+            description: |
+              gstNo    
           - name: contactPerson
             type: string
             in: query
@@ -2144,11 +2149,16 @@ paths:
             in: query
             description: |
               contactPersonNo     
-          - name: bankName
+          - name: bankCode
             type: string
             in: query
             description: |
-              name of the bank
+              code of the bank
+          - name: bankBranchCode
+            type: string
+            in: query
+            description: |
+              code of the bankBranch
           - name: bankAccNo
             type: string
             in: query
@@ -4024,8 +4034,15 @@ definitions:
           pattern: ^[a-zA-Z ]$
           description: |
             name of the bank
-        bankBranchInfo:
-          $ref: "#/definitions/BankBranch"
+        bankBranchCode:
+          type: string
+          description: |
+            code of the bank     
+        bankBranchName:
+          type: string
+          pattern: ^[a-zA-Z ]$
+          description: |
+            name of the bank  branch
         acctNo:
           type: string
           pattern: ^[0-9]+$
@@ -4045,23 +4062,7 @@ definitions:
       - code
       - acctNo
       - ifsc 
-
-    BankBranch:
-      type: object
-      description: |
-        This object holds the bank information.  
-      properties:
-        code:
-          type: string
-          description: |
-            code of the bankbranch    
-        name:
-          type: string
-          description: |
-            name of the bankbranch
-      required:
-      - code
-      
+      - bankBranchCode
     CommonEnum:
       type: object
       description: |

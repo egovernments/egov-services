@@ -39,7 +39,7 @@ public class ProjectCodeController {
 		projectCodeResponse.setProjectCodes(projectCodes);
 		return projectCodeResponse;
 	}
-	
+
 	@PostMapping("/_update")
 	public ProjectCodeResponse update(@Valid @RequestBody ProjectCodeRequest projectCodeRequest, BindingResult errors,
 			@RequestParam String tenantId) {
@@ -52,11 +52,11 @@ public class ProjectCodeController {
 		projectCodeResponse.setProjectCodes(projectCodes);
 		return projectCodeResponse;
 	}
-	
 
 	@PostMapping("/_search")
 	public ProjectCodeResponse search(@ModelAttribute ProjectCodeSearchContract projectCodeSearchContract,
-			@RequestBody RequestInfo requestInfo, BindingResult errors, @RequestParam String tenantId) {
+			@RequestBody RequestInfo requestInfo, BindingResult errors,
+			@RequestParam(required = true) String tenantId) {
 		List<ProjectCode> projectCodes = projectCodeService.search(projectCodeSearchContract);
 		ProjectCodeResponse projectCodeResponse = new ProjectCodeResponse();
 		projectCodeResponse.setProjectCodes(projectCodes);

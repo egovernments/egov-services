@@ -12,7 +12,6 @@ import org.egov.works.estimate.web.contract.AbstractEstimateRequest;
 import org.egov.works.estimate.web.contract.AbstractEstimateResponse;
 import org.egov.works.estimate.web.contract.AbstractEstimateSearchContract;
 import org.egov.works.estimate.web.contract.RequestInfo;
-import org.egov.works.estimate.web.contract.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -68,7 +67,8 @@ public class AbstractEstimateController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public AbstractEstimateResponse search(
 			@ModelAttribute @Valid AbstractEstimateSearchContract abstractEstimateSearchContract,
-			@RequestBody RequestInfo requestInfo, BindingResult errors, @RequestParam String tenantId) {
+			@RequestBody RequestInfo requestInfo, BindingResult errors,
+			@RequestParam(required = true) String tenantId) {
 		if (errors.hasErrors())
 			throw new CustomBindException(errors);
 		final List<AbstractEstimate> abstractEstimates = abstractEstimateService.search(abstractEstimateSearchContract);

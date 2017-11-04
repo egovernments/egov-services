@@ -17,6 +17,7 @@ public class WorksEstimateServiceConstants {
     public static final String BUDGETGROUP_OBJECT = "BudgetGroup";
     public static final String DEPARTMENT_OBJECT = "Department";
     public static final String WORKS_MODULE_CODE = "Works";
+    public static final String COMMON_MASTERS_MODULE_CODE = "common-masters";
 
     public static final String BOUNDARY_OBJECT = "Boundary";
     public static final String APPCONFIGURATION_OBJECT = "AppConfiguration";

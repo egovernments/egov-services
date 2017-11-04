@@ -38,7 +38,7 @@ public class DetailedEstimateController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public DetailedEstimateResponse search(
 			@ModelAttribute @Valid DetailedEstimateSearchContract detailedEstimateSearchContract,
-			@RequestBody RequestInfo requestInfo, BindingResult errors, @RequestParam String tenantId) {
+			@RequestBody RequestInfo requestInfo, BindingResult errors, @RequestParam(required = true) String tenantId) {
 		if (errors.hasErrors())
 			throw new CustomBindException(errors);
 		final List<DetailedEstimate> detailedEstimates = detailedEstimateService.search(detailedEstimateSearchContract);

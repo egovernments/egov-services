@@ -55,7 +55,8 @@ public class AbstractEstimateService {
 					setAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUsername(), false));
 			String abstractEstimateNumber = idGenerationRepository
 					.generateAbstractEstimateNumber(estimate.getTenantId(), abstractEstimateRequest.getRequestInfo());
-			estimate.setAbstractEstimateNumber(propertiesManager.getEstimateNumberPrefix() +"/" + estimate.getDepartment().getCode() + abstractEstimateNumber);
+			estimate.setAbstractEstimateNumber(propertiesManager.getEstimateNumberPrefix() + "/"
+					+ estimate.getDepartment().getCode() + abstractEstimateNumber);
 			for (final AbstractEstimateDetails details : estimate.getAbstractEstimateDetails()) {
 				details.setId(UUID.randomUUID().toString().replace("-", ""));
 				details.setAuditDetails(
@@ -75,7 +76,8 @@ public class AbstractEstimateService {
 		return abstractEstimateRepository.search(abstractEstimateSearchContract);
 	}
 
-	public void validateEstimates(AbstractEstimateRequest abstractEstimateRequest, BindingResult errors, Boolean isNew) {
+	public void validateEstimates(AbstractEstimateRequest abstractEstimateRequest, BindingResult errors,
+			Boolean isNew) {
 		for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
 			if (estimate.getDateOfProposal() == null)
 				throw new InvalidDataException("dateOfProposal", ErrorCode.NOT_NULL.getCode(), null);
@@ -87,7 +89,7 @@ public class AbstractEstimateService {
 				throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
 						estimate.getTenantId());
 			validateMasterData(estimate, errors, abstractEstimateRequest.getRequestInfo());
-			
+
 			AbstractEstimateSearchContract searchContract = new AbstractEstimateSearchContract();
 			searchContract.setIds(Arrays.asList(estimate.getId()));
 			searchContract.setAbstractEstimateNumbers(Arrays.asList(estimate.getAbstractEstimateNumber()));
@@ -117,38 +119,44 @@ public class AbstractEstimateService {
 			validateEstimateDetails(estimate, errors);
 		}
 	}
-	
+
 	private void validateEstimateDetails(AbstractEstimate estimate, BindingResult errors) {
 		BigDecimal estimateAmount = BigDecimal.ZERO;
-        for (final AbstractEstimateDetails aed : estimate.getAbstractEstimateDetails())
-            estimateAmount = estimateAmount.add(aed.getEstimateAmount());
-        if (Double.parseDouble(estimateAmount.toString()) <= 0)
-        	throw new InvalidDataException("estimateAmount", "estimateamount.notvalid",
-					estimateAmount.toString());
+		for (final AbstractEstimateDetails aed : estimate.getAbstractEstimateDetails())
+			estimateAmount = estimateAmount.add(aed.getEstimateAmount());
+		if (Double.parseDouble(estimateAmount.toString()) <= 0)
+			throw new InvalidDataException("estimateAmount", "estimateamount.notvalid", estimateAmount.toString());
 	}
 
 	public void validateMasterData(AbstractEstimate abstractEstimate, BindingResult errors, RequestInfo requestInfo) {
 
-     JSONArray responseJSONArray = null;
+		JSONArray responseJSONArray = null;
 
-     if(abstractEstimate.getFund() != null && StringUtils.isNotBlank(abstractEstimate.getFund().getCode())) {
-      responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.FUND_OBJECT, abstractEstimate.getFund().getCode(),null, abstractEstimate.
-              getTenantId(), requestInfo, WorksEstimateServiceConstants.WORKS_MODULE_CODE);
-         if(responseJSONArray != null && responseJSONArray.isEmpty()) {
-             throw new InvalidDataException("Fund","Invalid data for fund code", abstractEstimate.getFund().getCode());
-      }  }
-      if(abstractEstimate.getFunction() != null && StringUtils.isNotBlank(abstractEstimate.getFunction().getCode())) {
-        responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.FUNCTION_OBJECT,abstractEstimate.getFunction().getCode(),null,
-       abstractEstimate.getTenantId(),requestInfo, WorksEstimateServiceConstants.WORKS_MODULE_CODE);
-          if(responseJSONArray != null && responseJSONArray.isEmpty()) {
-              throw new InvalidDataException("Function", "Invalid data for function code", abstractEstimate.getFunction().getCode());
-      } }
+		if (abstractEstimate.getFund() != null && StringUtils.isNotBlank(abstractEstimate.getFund().getCode())) {
+			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.FUND_OBJECT,
+					abstractEstimate.getFund().getCode(), null, abstractEstimate.getTenantId(), requestInfo,
+					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
+			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+				throw new InvalidDataException("Fund", "Invalid data for fund code",
+						abstractEstimate.getFund().getCode());
+			}
+		}
+		if (abstractEstimate.getFunction() != null
+				&& StringUtils.isNotBlank(abstractEstimate.getFunction().getCode())) {
+			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.FUNCTION_OBJECT,
+					abstractEstimate.getFunction().getCode(), null, abstractEstimate.getTenantId(), requestInfo,
+					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
+			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+				throw new InvalidDataException("Function", "Invalid data for function code",
+						abstractEstimate.getFunction().getCode());
+			}
+		}
 
 		if (abstractEstimate.getTypeOfWork() != null
 				&& StringUtils.isNotBlank(abstractEstimate.getTypeOfWork().getCode())) {
 			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.TYPEOFWORK_OBJECT,
-                    abstractEstimate.getTypeOfWork().getCode(), null,abstractEstimate.getTenantId(), requestInfo,
-                    WorksEstimateServiceConstants.WORKS_MODULE_CODE);
+					abstractEstimate.getTypeOfWork().getCode(), null, abstractEstimate.getTenantId(), requestInfo,
+					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
 				throw new InvalidDataException("TypeOfWork", "Invalid data for estimate type of work",
 						abstractEstimate.getTypeOfWork().getCode());
@@ -157,8 +165,8 @@ public class AbstractEstimateService {
 		if (abstractEstimate.getSubTypeOfWork() != null
 				&& StringUtils.isNotBlank(abstractEstimate.getSubTypeOfWork().getCode())) {
 			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.SUBTYPEOFWORK_OBJECT,
-                    abstractEstimate.getSubTypeOfWork().getCode(),null, abstractEstimate.getTenantId(), requestInfo,
-                    WorksEstimateServiceConstants.WORKS_MODULE_CODE);
+					abstractEstimate.getSubTypeOfWork().getCode(), null, abstractEstimate.getTenantId(), requestInfo,
+					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
 				throw new InvalidDataException("SubTypeOfWork", "Invalid data for estimate subtype of work",
 						abstractEstimate.getSubTypeOfWork().getCode());
@@ -167,37 +175,47 @@ public class AbstractEstimateService {
 		if (abstractEstimate.getDepartment() != null
 				& StringUtils.isNotBlank(abstractEstimate.getDepartment().getCode())) {
 			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.DEPARTMENT_OBJECT,
-                    abstractEstimate.getDepartment().getCode(),null, abstractEstimate.getTenantId(), requestInfo,
-                    WorksEstimateServiceConstants.WORKS_MODULE_CODE);
+					abstractEstimate.getDepartment().getCode(), null, abstractEstimate.getTenantId(), requestInfo,
+					WorksEstimateServiceConstants.COMMON_MASTERS_MODULE_CODE);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
 				throw new InvalidDataException("Department", "Invalid data for estimate Department",
 						abstractEstimate.getDepartment().getCode());
 			}
 		}
-		if(abstractEstimate.getScheme() != null & StringUtils.isNotBlank(abstractEstimate.getScheme().getCode())) {
-		   responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.
-                 SCHEME_OBJECT, abstractEstimate.getScheme().getCode(), null,abstractEstimate
-                 .getTenantId(), requestInfo, WorksEstimateServiceConstants.WORKS_MODULE_CODE);
-            if(responseJSONArray != null && responseJSONArray.isEmpty()) {
-                throw new InvalidDataException("Scheme", "Invalid data for estimate scheme", abstractEstimate.getScheme().getCode());
-         } }
+		if (abstractEstimate.getScheme() != null & StringUtils.isNotBlank(abstractEstimate.getScheme().getCode())) {
+			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.SCHEME_OBJECT,
+					abstractEstimate.getScheme().getCode(), null, abstractEstimate.getTenantId(), requestInfo,
+					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
+			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+				throw new InvalidDataException("Scheme", "Invalid data for estimate scheme",
+						abstractEstimate.getScheme().getCode());
+			}
+		}
 
-		 if(abstractEstimate.getSubScheme() != null & StringUtils.isNotBlank(abstractEstimate.getSubScheme().getCode())) {
-		 responseJSONArray =  estimateUtils.getMDMSData(WorksEstimateServiceConstants.
-                         SUBSCHEME_OBJECT, abstractEstimate.getSubScheme().getCode(), null,abstractEstimate.getTenantId(), requestInfo, WorksEstimateServiceConstants.WORKS_MODULE_CODE);
-         if(responseJSONArray != null && responseJSONArray.isEmpty()) {
-                 throw new InvalidDataException("SubScheme",  "Invalid data for estimate SubScheme",
-		  abstractEstimate.getSubScheme().getCode());
-         } }
+		if (abstractEstimate.getSubScheme() != null
+				& StringUtils.isNotBlank(abstractEstimate.getSubScheme().getCode())) {
+			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.SUBSCHEME_OBJECT,
+					abstractEstimate.getSubScheme().getCode(), null, abstractEstimate.getTenantId(), requestInfo,
+					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
+			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+				throw new InvalidDataException("SubScheme", "Invalid data for estimate SubScheme",
+						abstractEstimate.getSubScheme().getCode());
+			}
+		}
 
-        if(abstractEstimate.getBudgetGroup() != null & StringUtils.isNotBlank(abstractEstimate.getBudgetGroup().getName())) {
-          responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.BUDGETGROUP_OBJECT, null,abstractEstimate.getBudgetGroup().getName(),
-                  abstractEstimate.getTenantId(), requestInfo, WorksEstimateServiceConstants.WORKS_MODULE_CODE);
-          if(responseJSONArray != null && responseJSONArray.isEmpty()) {
-              throw new InvalidDataException("BudgetGroup", "Invalid data for estimate Budget Group",abstractEstimate.getBudgetGroup().getName());
-          } }
+		if (abstractEstimate.getBudgetGroup() != null
+				& StringUtils.isNotBlank(abstractEstimate.getBudgetGroup().getName())) {
+			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.BUDGETGROUP_OBJECT, null,
+					abstractEstimate.getBudgetGroup().getName(), abstractEstimate.getTenantId(), requestInfo,
+					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
+			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+				throw new InvalidDataException("BudgetGroup", "Invalid data for estimate Budget Group",
+						abstractEstimate.getBudgetGroup().getName());
+			}
+		}
 
-	/*	 * if(abstractEstimate.getWard() != null &
+		/*
+		 * * if(abstractEstimate.getWard() != null &
 		 * StringUtils.isNotBlank(abstractEstimate.getWard().getCode())) {
 		 * responseJSONArray =
 		 * estimateUtils.getAppConfigurationData(WorksEstimateServiceConstants.
@@ -216,7 +234,8 @@ public class AbstractEstimateService {
 		 * null && responseJSONArray.isEmpty()) { throw new
 		 * InvalidDataException("Boundary",
 		 * "Invalid data for estimate locality boundary",
-		 * abstractEstimate.getLocality().getCode()); } }*/
+		 * abstractEstimate.getLocality().getCode()); } }
+		 */
 
 	}
 
@@ -234,6 +253,5 @@ public class AbstractEstimateService {
 
 		return auditDetails;
 	}
-
 
 }

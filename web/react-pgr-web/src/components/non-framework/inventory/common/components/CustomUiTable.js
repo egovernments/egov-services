@@ -41,104 +41,64 @@ class CustomUiTable extends Component {
        this.state = {};
    	}
 
-   	componentWillMount() {
+  componentWillUnmount() {
+			if($.fn.DataTable.isDataTable('#searchTable')) {
+    		$('#searchTable').DataTable().destroy(true);
+		  }
+  }
 
-	    $('#searchTable').DataTable({
-	       dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
-	       buttons: [ 'excel', {
-                extend: 'pdf',
-                orientation: 'landscape',
-                pageSize: 'LEGAL',
+  // componentWillUpdate() {
+	// 		if (!$.fn.DataTable.isDataTable('#searchTable')) {
+	// 		  this.initializeDataTable();
+	// 		}
+	// }
+
+	initializeDataTable(){
+		$('#searchTable').DataTable({
+				 dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
+				 buttons: [ 'excel', {
+								extend: 'pdf',
+								orientation: 'landscape',
+								pageSize: 'LEGAL',
 								exportOptions: {
-							      modifier: {
-							         page: 'current'
-							      		}
-							   },
+										modifier: {
+											 page: 'current'
+												}
+								 },
 								 customize: function(doc) {
-								      doc.defaultStyle.fontSize = 10; //<-- set fontsize to 16 instead of 10
-											// doc.style.tableBorder=5;
-
-								   },
-									text: 'Pdf/Print',
-            },'copy', 'csv'
-						// , {
-            //     extend: 'print',
-            //     customize: function ( win ) {
-            //         $(win.document.body)
-            //             .css( 'font-size', '6pt' )
-            //             // .prepend(
-            //             //     '<img src="http://datatables.net/media/images/logo-fade.png" style="position:absolute; top:0; left:0;" />'
-            //             // );
-						//
-            //         // $(win.document.body).find( 'table' )
-            //         //     .addClass( 'compact' )
-            //         //     .css( 'font-size', 'inherit' );
-            //     }
-            // }
-					],
-	       bDestroy: true,
-	       language: {
-	           "emptyTable": "No Records"
-	       }
-	    });
-   	}
-
-   	componentWillUnmount() {
-    	$('#searchTable').DataTable().destroy(true);
-  	}
-
-  	componentWillUpdate() {
-  		// let {flag} = this.props;
-	    // if(flag == 1) {
-	    //   flag = 0;
-	    //   $('#searchTable').dataTable().fnDestroy();
-	    // }
+											doc.defaultStyle.fontSize = 10; //<-- set fontsize to 16 instead of 10
+											// var myTable = document.getElementById('searchTable');
+											// myTable.style.border="1px solid black";
+									 }
+									 ,
+									 text: 'Pdf/Print',
+						},'copy', 'csv'
+						// ,  {
+						//   extend: 'print',
+						//   customize: function ( win ) {
+						//       $(win.document.body)
+						//           .css( 'font-size', '8pt' )
+						//       //     .prepend(
+						//       //         '<img src="http://datatables.net/media/images/logo-fade.png" style="position:absolute; top:0; left:0;" />'
+						//       //     );
+						// 			//
+						//       // $(win.document.body).find( 'table' )
+						//       //     .addClass( 'compact' )
+						//       //     .css( 'font-size', 'inherit' );
+						//   }
+					// }
+				],
+					ordering: false,
+					bDestroy: true,
+					language: {
+						 "emptyTable": "No Records"
+					}
+		});
 	}
 
-	componentDidUpdate() {
-	    $('#searchTable').DataTable({
-	         dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
-	         buttons: [ 'excel', {
-	                extend: 'pdf',
-	                orientation: 'landscape',
-	                pageSize: 'LEGAL',
-									exportOptions: {
-								      modifier: {
-								         page: 'current'
-								      		}
-								   },
-									 customize: function(doc) {
-									      doc.defaultStyle.fontSize = 10; //<-- set fontsize to 16 instead of 10
-												// var myTable = document.getElementById('searchTable');
-												// myTable.style.border="1px solid black";
-									   }
-										 ,
-										 text: 'Pdf/Print',
-	            },'copy', 'csv'
-							// ,  {
-              //   extend: 'print',
-              //   customize: function ( win ) {
-              //       $(win.document.body)
-              //           .css( 'font-size', '8pt' )
-              //       //     .prepend(
-              //       //         '<img src="http://datatables.net/media/images/logo-fade.png" style="position:absolute; top:0; left:0;" />'
-              //       //     );
-							// 			//
-              //       // $(win.document.body).find( 'table' )
-              //       //     .addClass( 'compact' )
-              //       //     .css( 'font-size', 'inherit' );
-              //   }
-            // }
-					],
-	          ordering: false,
-	          bDestroy: true,
-	          language: {
-	             "emptyTable": "No Records"
-	          }
-	    });
-  	}
 
-  	componentDidMount() {
+  componentDidMount() {
+			console.log('Didmount called@@@')
   		let self = this;
   		if(this.props.resultList.resultHeader && this.props.resultList.resultHeader.length) {
 	    	for(let m=0; m<this.props.resultList.resultHeader.length; m++) {
@@ -177,6 +137,9 @@ class CustomUiTable extends Component {
 	    		}
 	    	}
 	    }
+
+			this.initializeDataTable();
+
   	}
 
   	render() {
@@ -184,7 +147,6 @@ class CustomUiTable extends Component {
   		let self = this;
 
   		const getNameById = function(item2, i2) {
-				console.log(resultList.resultHeader.label);
   			if(resultList.resultHeader[i2].url) {
   				return self.state[resultList.resultHeader[i2].label] ? self.state[resultList.resultHeader[i2].label][item2] : (item2 + "");
   			} else if(resultList.resultHeader[i2].isDate) {
@@ -245,6 +207,11 @@ class CustomUiTable extends Component {
 																return (<td  key={i2}><Checkbox checked={tableSelectionData.indexOf(item2) > -1}
 																	 onCheck={onChangeSelectionCheckbox.bind(this, item2)}/></td>);
 															}
+															else if(typeof item2 === 'object'){
+																return(<td  key={i2}><Checkbox checked={item2.value}/></td>)
+															}
+
+															console.log('retrieving default!!!!')
 
 			                        return (
 			                          <td  key={i2}>{typeof item2 != "undefined" ? getNameById(item2, i2) : ""}</td>

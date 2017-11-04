@@ -31,12 +31,16 @@ var dat = {
           },
           {
             "name": "isActive",
-            "jsonPath": "isActive",
+            "jsonPath": "status",
             "label": "supplier.search.isactive",
             "type": "checkbox",
             "isRequired": false,
             "isDisabled": false,
-            "patternErrorMsg": ""
+            "patternErrorMsg": "",
+            "mappingValues":{
+              "true":"Active",
+              "false":"InActive"
+            }
           }
         ]
       }
@@ -52,11 +56,16 @@ var dat = {
         }
       ],
       "values": [
-        "code", "name", "status.name"
+        "code", "name", {valuePath:"status.name", type:"checkbox", mappingValues:{
+            "active":true,
+            "suspended":false,
+            "barred":false,
+            "inactive":false
+         }}
       ],
       "resultPath": "suppliers",
-      "rowClickUrlUpdate": "/update/suppliers/{code}",
-      "rowClickUrlView": "/view/suppliers/{code}",
+      "rowClickUrlUpdate": "/update/inventory/supplier/{code}",
+      "rowClickUrlView": "/view/supplier/{code}",
       "rowClickUrlAdd" : "/create/inventory/supplier",
       "rowClickUrlDelete" : ""
     }

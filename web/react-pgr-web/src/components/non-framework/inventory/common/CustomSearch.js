@@ -133,10 +133,12 @@ export default class CustomSearch extends Component {
   }
 
   update=()=> {
-    let {moduleName, actionName, metaData, setRoute} = this.props;
+    let {moduleName, actionName, metaData, setRoute, tableSelectionData} = this.props;
     let obj = metaData[`${moduleName}.${actionName}`];
-    //setRoute(obj.result[urlKeyFromMockData]);
-    console.log('view url ---->', obj.result['rowClickUrlUpdate']);
+    if(tableSelectionData && tableSelectionData.length === 1){
+      let url = obj.result['rowClickUrlUpdate'].replace(REGEXP_MATCH_PARAM, tableSelectionData[0])
+      setRoute(url);
+    }
   }
 
   search = (e) => {
@@ -162,11 +164,14 @@ export default class CustomSearch extends Component {
         for(var i=0; i<values.length; i++) {
           var tmp = [_.get(values[i], self.props.resultIdKey), i+1];
           for(var j=0; j<specsValuesList.length; j++) {
-            // if ((resultList.resultHeader[j].label.search("Date")>-1 || resultList.resultHeader[j].label.search("date")>-1)  && !(specsValuesList[j].search("-")>-1)) {
-            //   tmp.push(new Date(_.get(values[i],specsValuesList[j])).getDate()+"/"+new Date(_.get(values[i],specsValuesList[j])).getMonth()+"/"+new Date(_.get(values[i],specsValuesList[j])).getFullYear());
-            // } else {
-              tmp.push(_.get(values[i], specsValuesList[j]));
-            // }
+            let valuePath = specsValuesList[j];
+            if(typeof valuePath === 'object' && valuePath.type === "checkbox"){
+              let val = _.get(values[i], valuePath.valuePath);
+              tmp.push({...valuePath, value:valuePath.mappingValues[val] || false});
+              continue;
+            }
+
+            tmp.push(_.get(values[i], specsValuesList[j]));
           }
           resultList.resultValues.push(tmp);
         }
@@ -404,8 +409,9 @@ export default class CustomSearch extends Component {
       let {handleChange,mockData,setDropDownData} = this.props;
       let hashLocation = window.location.hash;
       let obj = specifications[this.props.actionKey];
-      // console.log(obj);
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
+      let fieldObj=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")]`);
+
       this.checkIfHasShowHideFields(property, e.target.value);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 

@@ -40,39 +40,43 @@
 package org.egov.works.masters.web.repository;
 
 import net.minidev.json.JSONArray;
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.mdms.model.*;
-import org.egov.works.masters.config.PropertiesManager;
+import org.egov.works.masters.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class MdmsRepository {
 
-	@Autowired
-	private RestTemplate restTemplate;
+	private final RestTemplate restTemplate;
+
+	private final String mdmsBySearchCriteriaUrl;
 
 	@Autowired
-	private PropertiesManager propertiesManager;
+	public MdmsRepository(final RestTemplate restTemplate,
+                          @Value("${egov.services.egov_mdms.hostname}") final String mdmsServiceHostname,
+                          @Value("${egov.services.egov_mdms.searchpath}") final String mdmsBySearchCriteriaUrl) {
+
+		this.restTemplate = restTemplate;
+		this.mdmsBySearchCriteriaUrl = mdmsServiceHostname + mdmsBySearchCriteriaUrl;
+	}
 
 	public JSONArray getByCriteria(String tenantId, String moduleName, String masterName, String filterFieldName,
 			String filterFieldValue, RequestInfo requestInfo) {
 
-		String mdmsBySearchCriteriaUrl = propertiesManager.getMdmsServiceHostname() + propertiesManager.getMdmsSearchPath();
-		List<MasterDetail> masterDetails = new ArrayList<MasterDetail>();
-		List<ModuleDetail> moduleDetails = new ArrayList<ModuleDetail>();
-		MdmsCriteriaReq request = null;
+		MasterDetails[] masterDetails;
+		ModuleDetails[] moduleDetails;
+		MdmsRequest request = null;
 		MdmsResponse response = null;
+		masterDetails = new MasterDetails[1];
+		moduleDetails = new ModuleDetails[1];
 
-		masterDetails.add(MasterDetail.builder().name(masterName)
-				.filter("[?(@." + filterFieldName + " == '" + filterFieldValue + "')]").build());
-		moduleDetails.add(ModuleDetail.builder().moduleName(moduleName).masterDetails(masterDetails).build());
+		masterDetails[0] = MasterDetails.builder().name(masterName)
+				.filter("[?(@." + filterFieldName + " == '" + filterFieldValue + "')]").build();
+		moduleDetails[0] = ModuleDetails.builder().moduleName(moduleName).masterDetails(masterDetails).build();
 
-		request = MdmsCriteriaReq.builder()
+		request = MdmsRequest.builder()
 				.mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetails).tenantId(tenantId).build())
 				.requestInfo(requestInfo).build();
 		response = restTemplate.postForObject(mdmsBySearchCriteriaUrl, request, MdmsResponse.class);

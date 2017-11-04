@@ -1,4 +1,4 @@
-package org.egov.works.estimate.persistence.entity;
+package org.egov.works.estimate.persistence.helper;
 
 import org.egov.works.estimate.web.contract.AuditDetails;
 import org.egov.works.estimate.web.contract.DetailedEstimate;
@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class MultiYearEstimateEntity   {
+public class MultiYearEstimateHelper   {
     @JsonProperty("id")
     private String id = null;
 

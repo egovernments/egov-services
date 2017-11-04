@@ -79,7 +79,7 @@ public class DocumentDetailsService {
         for(DocumentDetail documentDetail : documentDetailRequest.getDocumentDetails()) {
             if(StringUtils.isNotBlank(documentDetail.getFileStore())) {
                 boolean fileExists = fileStoreRepository.searchFileStore(documentDetail.getTenantId(), documentDetail.getFileStore(), documentDetailRequest.getRequestInfo());
-                if(!fileExists)
+                if(fileExists)
                     throw new InvalidDataException("fileStore", ErrorCode.INVALID_REF_VALUE.getCode(), null);
             }
         }

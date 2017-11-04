@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.common.persistence.repository.JdbcRepository;
-import org.egov.works.estimate.persistence.entity.DetailedEstimateDeductionEntity;
+import org.egov.works.estimate.persistence.helper.DetailedEstimateDeductionHelper;
 import org.egov.works.estimate.web.contract.DetailedEstimateDeduction;
 import org.egov.works.estimate.web.contract.DetailedEstimateDeductionSearchContract;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -73,14 +73,14 @@ public class DetailedEstimateDeductionJdbcRepository extends JdbcRepository {
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(DetailedEstimateDeductionEntity.class);
+		BeanPropertyRowMapper row = new BeanPropertyRowMapper(DetailedEstimateDeductionHelper.class);
 
-		List<DetailedEstimateDeductionEntity> detailedEstimateDeductionEntities = namedParameterJdbcTemplate
+		List<DetailedEstimateDeductionHelper> detailedEstimateDeductionEntities = namedParameterJdbcTemplate
 				.query(searchQuery.toString(), paramValues, row);
 
 		List<DetailedEstimateDeduction> detailedEstimateDeductions = new ArrayList<>();
 
-		for (DetailedEstimateDeductionEntity detailedEstimateDeductionEntity : detailedEstimateDeductionEntities) {
+		for (DetailedEstimateDeductionHelper detailedEstimateDeductionEntity : detailedEstimateDeductionEntities) {
 			detailedEstimateDeductions.add(detailedEstimateDeductionEntity.toDomain());
 		}
 

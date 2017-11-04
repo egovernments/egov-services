@@ -12,12 +12,14 @@ import org.egov.works.estimate.web.contract.ProjectCodeResponse;
 import org.egov.works.estimate.web.contract.ProjectCodeSearchContract;
 import org.egov.works.estimate.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,8 +30,8 @@ public class ProjectCodeController {
 	private ProjectCodeService projectCodeService;
 
 	@PostMapping("/_create")
-	public ProjectCodeResponse create(@Valid @RequestBody ProjectCodeRequest projectCodeRequest, BindingResult errors,
-			@RequestParam String tenantId) {
+	@ResponseStatus(HttpStatus.OK)
+	public ProjectCodeResponse create(@Valid @RequestBody ProjectCodeRequest projectCodeRequest, BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -41,8 +43,8 @@ public class ProjectCodeController {
 	}
 
 	@PostMapping("/_update")
-	public ProjectCodeResponse update(@Valid @RequestBody ProjectCodeRequest projectCodeRequest, BindingResult errors,
-			@RequestParam String tenantId) {
+	@ResponseStatus(HttpStatus.OK)
+	public ProjectCodeResponse update(@Valid @RequestBody ProjectCodeRequest projectCodeRequest, BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -54,6 +56,7 @@ public class ProjectCodeController {
 	}
 
 	@PostMapping("/_search")
+	@ResponseStatus(HttpStatus.OK)
 	public ProjectCodeResponse search(@ModelAttribute ProjectCodeSearchContract projectCodeSearchContract,
 			@RequestBody RequestInfo requestInfo, BindingResult errors,
 			@RequestParam(required = true) String tenantId) {

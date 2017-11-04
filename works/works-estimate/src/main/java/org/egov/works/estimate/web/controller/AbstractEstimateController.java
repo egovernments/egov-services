@@ -34,9 +34,9 @@ public class AbstractEstimateController {
 	private EstimateUtils estimateUtils;
 
 	@PostMapping("/_create")
-	@ResponseStatus(HttpStatus.CREATED)
+	@ResponseStatus(HttpStatus.OK)
 	public AbstractEstimateResponse create(@RequestBody AbstractEstimateRequest abstractEstimateRequest,
-			BindingResult errors, @RequestParam String tenantId) {
+			BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -49,9 +49,9 @@ public class AbstractEstimateController {
 	}
 
 	@PostMapping("/_update")
-	@ResponseStatus(HttpStatus.CREATED)
+	@ResponseStatus(HttpStatus.OK)
 	public AbstractEstimateResponse update(@RequestBody AbstractEstimateRequest abstractEstimateRequest,
-			BindingResult errors, @RequestParam String tenantId) {
+			BindingResult errors) {
 		abstractEstimateService.validateEstimates(abstractEstimateRequest, errors, false);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
@@ -64,7 +64,7 @@ public class AbstractEstimateController {
 	}
 
 	@PostMapping("/_search")
-	@ResponseStatus(HttpStatus.CREATED)
+	@ResponseStatus(HttpStatus.OK)
 	public AbstractEstimateResponse search(
 			@ModelAttribute @Valid AbstractEstimateSearchContract abstractEstimateSearchContract,
 			@RequestBody RequestInfo requestInfo, BindingResult errors,

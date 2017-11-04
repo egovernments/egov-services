@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.common.persistence.repository.JdbcRepository;
-import org.egov.works.estimate.persistence.entity.EstimateMeasurementSheetEntity;
+import org.egov.works.estimate.persistence.helper.EstimateMeasurementSheetHelper;
 import org.egov.works.estimate.web.contract.EstimateMeasurementSheet;
 import org.egov.works.estimate.web.contract.EstimateMeasurementSheetSearchContract;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -73,14 +73,14 @@ public class EstimateMeasurementSheetJdbcRepository extends JdbcRepository {
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(EstimateMeasurementSheetEntity.class);
+		BeanPropertyRowMapper row = new BeanPropertyRowMapper(EstimateMeasurementSheetHelper.class);
 
-		List<EstimateMeasurementSheetEntity> estimateMeasurementSheetEntities = namedParameterJdbcTemplate
+		List<EstimateMeasurementSheetHelper> estimateMeasurementSheetEntities = namedParameterJdbcTemplate
 				.query(searchQuery.toString(), paramValues, row);
 
 		List<EstimateMeasurementSheet> estimateMeasurementSheets = new ArrayList<>();
 
-		for (EstimateMeasurementSheetEntity estimateMeasurementSheetEntity : estimateMeasurementSheetEntities) {
+		for (EstimateMeasurementSheetHelper estimateMeasurementSheetEntity : estimateMeasurementSheetEntities) {
 			estimateMeasurementSheets.add(estimateMeasurementSheetEntity.toDomain());
 		}
 

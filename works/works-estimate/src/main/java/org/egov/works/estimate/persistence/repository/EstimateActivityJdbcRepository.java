@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.common.persistence.repository.JdbcRepository;
-import org.egov.works.estimate.persistence.entity.EstimateActivityEntity;
+import org.egov.works.estimate.persistence.helper.EstimateActivityHelper;
 import org.egov.works.estimate.web.contract.EstimateActivity;
 import org.egov.works.estimate.web.contract.EstimateActivitySearchContract;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -73,14 +73,14 @@ public class EstimateActivityJdbcRepository extends JdbcRepository {
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(EstimateActivityEntity.class);
+		BeanPropertyRowMapper row = new BeanPropertyRowMapper(EstimateActivityHelper.class);
 
-		List<EstimateActivityEntity> estimateActivityEntities = namedParameterJdbcTemplate
+		List<EstimateActivityHelper> estimateActivityEntities = namedParameterJdbcTemplate
 				.query(searchQuery.toString(), paramValues, row);
 
 		List<EstimateActivity> estimateActivities = new ArrayList<>();
 
-		for (EstimateActivityEntity estimateOverheadEntity : estimateActivityEntities) {
+		for (EstimateActivityHelper estimateOverheadEntity : estimateActivityEntities) {
 			estimateActivities.add(estimateOverheadEntity.toDomain());
 		}
 

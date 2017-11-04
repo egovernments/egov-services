@@ -6,10 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.common.persistence.repository.JdbcRepository;
-import org.egov.works.estimate.persistence.entity.EstimateOverheadEntity;
+import org.egov.works.estimate.persistence.helper.EstimateOverheadHelper;
 import org.egov.works.estimate.web.contract.EstimateOverhead;
 import org.egov.works.estimate.web.contract.EstimateOverheadSearchContract;
-import org.egov.works.estimate.web.contract.MultiYearEstimateSearchContract;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
@@ -74,14 +73,14 @@ public class EstimateOverheadJdbcRepository extends JdbcRepository {
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(EstimateOverheadEntity.class);
+		BeanPropertyRowMapper row = new BeanPropertyRowMapper(EstimateOverheadHelper.class);
 
-		List<EstimateOverheadEntity> estimateOverheadEntities = namedParameterJdbcTemplate
+		List<EstimateOverheadHelper> estimateOverheadEntities = namedParameterJdbcTemplate
 				.query(searchQuery.toString(), paramValues, row);
 
 		List<EstimateOverhead> estimateOverheads = new ArrayList<>();
 
-		for (EstimateOverheadEntity estimateOverheadEntity : estimateOverheadEntities) {
+		for (EstimateOverheadHelper estimateOverheadEntity : estimateOverheadEntities) {
 			estimateOverheads.add(estimateOverheadEntity.toDomain());
 		}
 

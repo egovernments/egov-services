@@ -1,4 +1,4 @@
-package org.egov.works.estimate.persistence.entity;
+package org.egov.works.estimate.persistence.helper;
 
 import org.egov.works.estimate.web.contract.Asset;
 import org.egov.works.estimate.web.contract.AssetsForEstimate;
@@ -22,7 +22,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class AssetsForEstimateEntity {
+public class AssetsForEstimateHelper {
 	@JsonProperty("id")
 	private String id = null;
 

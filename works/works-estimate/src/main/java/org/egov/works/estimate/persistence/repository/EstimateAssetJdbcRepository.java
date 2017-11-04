@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.common.persistence.repository.JdbcRepository;
-import org.egov.works.estimate.persistence.entity.AssetsForEstimateEntity;
+import org.egov.works.estimate.persistence.helper.AssetsForEstimateHelper;
 import org.egov.works.estimate.web.contract.AssetsForEstimate;
 import org.egov.works.estimate.web.contract.EstimateAssetSearchContract;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -73,14 +73,14 @@ public class EstimateAssetJdbcRepository extends JdbcRepository {
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(AssetsForEstimateEntity.class);
+		BeanPropertyRowMapper row = new BeanPropertyRowMapper(AssetsForEstimateHelper.class);
 
-		List<AssetsForEstimateEntity> assetsForEstimateEntities = namedParameterJdbcTemplate
+		List<AssetsForEstimateHelper> assetsForEstimateEntities = namedParameterJdbcTemplate
 				.query(searchQuery.toString(), paramValues, row);
 
 		List<AssetsForEstimate> assetsForEstimates = new ArrayList<>();
 
-		for (AssetsForEstimateEntity assetsForEstimateEntity : assetsForEstimateEntities) {
+		for (AssetsForEstimateHelper assetsForEstimateEntity : assetsForEstimateEntities) {
 			assetsForEstimates.add(assetsForEstimateEntity.toDomain());
 		}
 

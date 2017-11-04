@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.common.persistence.repository.JdbcRepository;
-import org.egov.works.estimate.persistence.entity.MultiYearEstimateEntity;
+import org.egov.works.estimate.persistence.helper.MultiYearEstimateHelper;
 import org.egov.works.estimate.web.contract.MultiYearEstimate;
 import org.egov.works.estimate.web.contract.MultiYearEstimateSearchContract;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -73,14 +73,14 @@ public class MultiYearEstimateJdbcRepository extends JdbcRepository {
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(MultiYearEstimateEntity.class);
+		BeanPropertyRowMapper row = new BeanPropertyRowMapper(MultiYearEstimateHelper.class);
 
-		List<MultiYearEstimateEntity> multiYearEstimateEntities = namedParameterJdbcTemplate
+		List<MultiYearEstimateHelper> multiYearEstimateEntities = namedParameterJdbcTemplate
 				.query(searchQuery.toString(), paramValues, row);
 
 		List<MultiYearEstimate> multiYearEstimates = new ArrayList<>();
 
-		for (MultiYearEstimateEntity multiYearEstimateEntity : multiYearEstimateEntities) {
+		for (MultiYearEstimateHelper multiYearEstimateEntity : multiYearEstimateEntities) {
 			multiYearEstimates.add(multiYearEstimateEntity.toDomain());
 		}
 

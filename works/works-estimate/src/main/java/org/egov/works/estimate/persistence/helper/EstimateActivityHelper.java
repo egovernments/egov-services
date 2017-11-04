@@ -1,4 +1,4 @@
-package org.egov.works.estimate.persistence.entity;
+package org.egov.works.estimate.persistence.helper;
 
 import java.math.BigDecimal;
 
@@ -29,7 +29,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class EstimateActivityEntity {
+public class EstimateActivityHelper {
 	@JsonProperty("id")
 	private String id = null;
 

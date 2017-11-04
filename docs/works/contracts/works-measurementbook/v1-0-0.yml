@@ -19,7 +19,7 @@ info:
   
   title: eGov Works Management System - Measurement Book.
   description: |
-    APIs for Works Management module. This module handles creation of Measurement Book, Contractor Bill.
+    APIs for Works Management module. This module handles creation of Measurement Book and Contractor Bill.
   contact:
     name: eGovernments Foundation
     email : contacts@egovernments.org
@@ -34,7 +34,12 @@ paths:
       summary: Create new Measurement Book(s).
       description: |
           To create new Measurement Book in the system. API supports bulk creation with max limit as defined in the Measurement Book Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Measurement Book, please pass array with one Measurement Book object.
-          To create Measurement book Notice must be genrated and its offlice status should be Work commenced.
+          
+          To create Measurement Book, the Letter of Acceptance/Work Order must be genarated and its offline status should be Work Commenced. There can be multiple measurement books for single Letter Of acceptance Estimate. Measurement books are not allowed to create once the Final bill is generated for Letter of Acceptance Estimate.
+          
+          The workflow will be there for measurement book. Save as drafts also required. Atleast one item Tendered Item or Non Tendered or Lump sum item is mandatory before submitting the Measurememnt Book. 
+          
+          Detailed Measurements needs to be captured for Measurement Book activities if there exists detailed measurements in estimate for the same activity.If Detailed Measurements are captured then the Cureent Entry Quantity at activity level will be defaulted from the computed value from measurements and not allowed to edit. Cureent Entry Quantity at activity can be directly entered if no measurements exists for the the Estimate/LOA activity.
           
       parameters:
         - name: MeasurementBookRequest
@@ -64,8 +69,14 @@ paths:
       summary: Update existing Measurement Book(s).
       description: |
           To update existing Measurement Book in the system. API supports bulk updation with max limit as defined in the Measurement Book Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Measurement Book, please pass array with one Measurement Book object.
-          In update all the fields are disabled except the Work Flow Deatils and the fields which needs to be captured at different status are enabled.
-          In updade fields can be modified based on confguration defined in the system.
+          
+          In update fields can be modified based on confguration defined in the system i.e., configuration for allowing the workflow users to edit the Measurement Book details. 
+          
+          If configuration says not allowed to edit during the workflow then all the fields are disabled except the Workflow details and the fields which needs to be captured at different status are enabled. Only the creator can edit all the fields when the Measurement Book in creator inbox(in Rejected status) or in drafts. 
+          
+          Auditing should be in place to keep track of the changes edited during the workflow.  
+          
+          
           
       parameters:
         - name: MeasurementBookRequest
@@ -116,7 +127,7 @@ paths:
           maxItems: 50
           required: false
           allowEmptyValue: true
-          description: Comma separated list of Ids of Measurement Book to get the Measurement Books.
+          description: Comma separated list of Ids of Measurement Book to get the Measurement Books
         - name: statuses
           in: query
           type: array
@@ -126,7 +137,7 @@ paths:
           maxItems: 50
           required: false
           allowEmptyValue: true
-          description: Comma separated list of the Measurement Book Status.
+          description: Comma separated list of the Measurement Book Status
         - name: workOrderNumbers
           in: query
           type: array
@@ -177,6 +188,56 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Work Identification Numbers
+        - name: fromDate
+          in: query
+          type: integer
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
+          required: false
+          description: Epoch time from when the Measurement Book is created
+        - name: toDate
+          in: query
+          type: integer
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
+          required: false
+          description: Epoch time till when the Measurement Book is created
+        - name: department
+          in: query
+          type: array
+          items:
+            type: string
+          format: multiValueList
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of the Department for which Measurement Book belongs to
+        - name: createdBy
+          in: query
+          type: string
+          format: singleValueList
+          required: false
+          description: The user who created the Measurement Book
+        - name: contractorNames
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Names of the contractor to which Measurement Book belongs to
+        - name: contractorCodes
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of codes of the contractor to which Measurement Book belongs to
       responses:
         200:
           description: Measurement Book(s) Retrieved Successfully
@@ -211,7 +272,7 @@ paths:
           maxItems: 50
           required: false
           allowEmptyValue: true
-          description: Comma separated list of Ids of Contractor Bills.
+          description: Comma separated list of Ids of Contractor Bills
         - name: letterOfAcceptanceNumbers
           in: query
           type: array
@@ -224,12 +285,20 @@ paths:
           description: Comma separated list of Letter of Acceptance Numbers
         - name: billFromDate
           in: query
-          description: Epoch time from when bill is created
-          required: false
           type: integer
           format: int64
           x-displayformat: 'dd/MM/yyyy'
+          required: false
           allowEmptyValue: true
+          description: Epoch time from when bill is created
+        - name: billToDate
+          in: query
+          type: integer
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
+          required: false
+          allowEmptyValue: true
+          description: Epoch time till when bill is created
         - name: billType
           in: query
           type: array
@@ -294,7 +363,7 @@ paths:
           in: query
           type: boolean
           required: false
-          description: Boolean value of the Contractor Bill  whether its Spill over or not
+          description: Boolean value to check whether its Spillover or not
       responses:
         200:
           description: Contractor Bill(s) Retrieved Successfully
@@ -312,6 +381,14 @@ paths:
       summary: Create new Contractor Bill(s).
       description: |
           To create new Contractor Bill in the system. API supports bulk creation with max limit as defined in the Contractor Bill Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Contractor Bill, please pass array with one Contractor Bill object.
+          
+          To create Contractor Bill, there should be one or more MB's in approved status where Bills are not created already for the same MB. There can be multiple Contractor Bills for the same MB in case of MB's having Part Rate flagged activities. Contractor Bills are not allowed to create once the Final bill is generated for Letter of Acceptance Estimate/Work Order.
+          
+          There can be more than one Part Bill for single Letter of Acceptance Estimate/Work Order. Only one Final bill will be there for single Letter of Acceptance Estimate/Work Order. Completion Date needs to be captured and Completion Certificate needs to be generated on Final Bill approval
+          
+          The workflow will be there for Contractor Bill. Save as drafts also required.
+          
+          The Debit account code is fetched from the Budget head of the correspodning Estimate. The Debit amount is the sum of the MB amount for which bill is created. The sum of debit and credit amount should be equal. There can be Statutory/Standard/Custom deductions along with Advance Adjustments and Retention Money deductions in contractor bill. The contractor net payeble account code will be fetched based on the purpose.
           
       parameters:
         - name: ContractorBillRequest
@@ -341,7 +418,8 @@ paths:
       summary: Update Contractor Bill(s).
       description: |
           To update Contractor Bill in the system. API supports bulk updation with max limit as defined in the Contractor Bill Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Contractor Bill, please pass array with one Contractor Bill object.
-          In update all the fields are disabled except the Work Flow Deatils and the fields which needs to be captured at different status are enabled.
+          
+            Only the creator can edit all the fields when the Contractor Bill in creator inbox(in Rejected status) or in drafts. Update during workflow will have all the fields readonly except few fields which are allowed to modify during each stage of workflow including Workflow Details. The status and workflow state will be updated during each stage of workflow approval.
           
       parameters:
         - name: ContractorBillRequest
@@ -375,7 +453,7 @@ definitions:
 
   MeasurementBook:
     type: object
-    description: A Object holds the basic data for a Measurement Book data
+    description: An Object that holds the basic data for Measurement Book
     properties:
       id:
         type: string
@@ -385,12 +463,10 @@ definitions:
         description: Tenant id of the Measurement Book
         maxLength: 128
         minLength: 2
-      letterOfAcceptance:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LetterOfAcceptance"
       mbRefNo:
         type: string
-        pattern: "[0-9]+"
-        description: Referance number for the measurement book. 
+        pattern: '[a-zA-Z0-9-\\]+'
+        description: Reference number for the Measurement book. 
         maxLength: 50
         minLength: 1
       contractorComments:
@@ -417,20 +493,19 @@ definitions:
         minLength: 1
       fromPageNo:
         type: integer
-        pattern: "[0-9]+"
         description: From page number for the measurement book
         maxLength: 10
         minLength: 1
       toPageNo:
         type: integer
-        pattern: "[0-9]+"
         description: To page number for the measurement book
         maxLength: 10
       letterOfAcceptanceEstimate:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LetterOfAcceptanceEstimate"
+        description: Reference of Letter of Acceptance Estimate
       mbContractorBills:
         type: array
-        description: Array of Contractor bills
+        description: Array of MB and Contractor bill mapping
         minItems: 1
         items:
          $ref: '#/definitions/MBContractorBills'
@@ -444,15 +519,15 @@ definitions:
         description: Array of Measurement Book Details
         minItems: 1
         items:
-          $ref: '#/definitions/MeasurementBookDetails'
+          $ref: '#/definitions/MeasurementBookDetail'
       isLegacyMB:
         type: boolean
-        description: True if Measurement Book is legacy
+        description: True if Measurement Book is legacy record
       mbAmount:
         type: number
         format: BigDecimal
         description: Amount for the Measurement book.
-        maxLength: 50
+        maxLength: 20
         minLength: 1
       approvedDate:
         type: integer
@@ -473,29 +548,31 @@ definitions:
         type: string
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Reason for cancellation of the Measurement book, Required only while cancelling Measurement book
-        maxLength: 1024
-        minLength: 1
+        maxLength: 100
       cancellationRemarks:
         type: string
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Remarks for cancellation of the Measurement book, Required only while cancelling Measurement book
-        maxLength: 1024
-        minLength: 1
+        maxLength: 512
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - tenantId
-      - letterOfAcceptance
+      - letterOfAcceptanceEstimate
       - mbRefNo
       - mbDate
       - mbAbstract
       - fromPageNo
       - mbAmount
+      - status
       
   MBContractorBills:
     type: object
-    description: An Object holds the basic data for a Measurement book and contractor bill
+    description: An Object that holds the basic data for a Measurement book and contractor bill mapping
     properties:
+      id:
+        type: string
+        description: Unique Identifier 
       tenantId:
         type: string
         description: Tenant id of the BillMB
@@ -503,17 +580,21 @@ definitions:
         minLength: 2
       measurementBook:
         $ref: '#/definitions/MeasurementBook'
+        description: Measurement book reference
       contractorBill:
         $ref: '#/definitions/ContractorBill'
+        description: Contractor Bill reference
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
 
     required:
       - tenantId
       - measurementBook
       - contractorBill
       
-  MeasurementBookDetails:
+  MeasurementBookDetail:
     type: object
-    description: An Object that hold Details for the given Measuremnet book. At least one data should be given to create an Measurement book
+    description: An Object that hold details for the given Measuremnet book. At least one data should be given to create an Measurement book
     properties:
       id:
         type: string
@@ -525,18 +606,19 @@ definitions:
         minLength: 2
       measurementBook:
         $ref: '#/definitions/MeasurementBook'
+        description: Measurement book reference
      # loaActivity:
       #  $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LOAActivity"        
       quantity:
         type: number
         format: double
-        description: Quantity for the Measurement book details
+        description: Current entry Quantity for the Measurement book details
         maxLength: 20
         minLength: 1
       rate:
         type: number
         format: double
-        description: Rate for the Measurement book details
+        description: The Approved Rate for the Measurement book details
         maxLength: 20
         minLength: 1
       remarks:
@@ -544,7 +626,6 @@ definitions:
         description: Remarks for the Measurement book details
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
         maxLength: 1024
-        minLength: 1
       amount:
         type: number
         format: BigDecimal
@@ -553,8 +634,7 @@ definitions:
         minLength: 1
       measurementSheets:
         type: array
-        description: Array of Measurement Book Measurement Sheet
-        minItems: 1
+        description: Array of Measurement Book Measurement Sheets
         items:
           $ref: '#/definitions/MBMeasurementSheet'
       partRate:
@@ -562,11 +642,11 @@ definitions:
         format: BigDecimal
         maxLength: 20
         description: Part Rate of the Measurement sheet
-      revisedRate:
+      reducedRate:
         type: number
         format: BigDecimal
         maxLength: 20
-        description: Revised Rate of the Measurement sheet
+        description: Reduced Rate of the Measurement sheet
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -579,7 +659,7 @@ definitions:
         
   MBMeasurementSheet:
       type: object
-      description: An Object holds the basic data for a MB Measurement Sheet
+      description: An Object that holds the basic data for a MB Measurement Sheet
       properties:
         id:
           type: string
@@ -594,7 +674,6 @@ definitions:
           description: Remarks of the Measurement sheet
           pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
           maxLength: 1024
-          minLength: 1
         no:
           type: number
           format: BigDecimal
@@ -609,6 +688,7 @@ definitions:
           type: number
           format: BigDecimal
           description: Width of the Measurement sheet
+          maxLength: 20
         depthOrHeight:
           type: number
           format: BigDecimal
@@ -618,9 +698,11 @@ definitions:
           type: number
           format: BigDecimal
           description: Quantity of the Measurement sheet
+          minLength: 1
           maxLength: 20
-        measurementBookDetails:
-          $ref: '#/definitions/MeasurementBookDetails'
+        measurementBookDetail:
+          $ref: '#/definitions/MeasurementBookDetail'
+          description: Measurement Book Details reference
         #loaMeasurementSheet:
          # $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LOAMeasurementSheet"
         auditDetails:
@@ -628,7 +710,7 @@ definitions:
       required:
         - tenantId
         - quantity
-        - measurementBookDetails
+        - measurementBookDetail
         #- loaMeasurementSheet
         
   MeasurementBookRequest:
@@ -683,9 +765,10 @@ definitions:
           
   ContractorBill:
     type: object
-    description: Object holds the basic data for a Contractor Bill
+    description: An Object that holds the basic data for a Contractor Bill
     allOf:
     - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-bill/v1-0-0.yml#/definitions/BillRegister'
+      description: Contractor Bill object extends Bill Register object
     properties:
       id:
         type: string
@@ -712,21 +795,19 @@ definitions:
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Reason for cancellation of the Bill, Required only while cancelling Contractor Bill
         maxLength: 100
-        minLength: 1
       cancellationRemarks:
         type: string
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Remarks for cancellation of the Bill, Required only while cancelling Bill
-        maxLength: 1024
-        minLength: 1
-      assetDetailsList:
+        maxLength: 512
+      assets:
         type: array
         description: Array of Asset details for the Bill
         items:
           $ref: '#/definitions/AssetForBill'
       letterOfAcceptanceEstimate:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LetterOfAcceptanceEstimate"
         description: LOA and Estimate reference for the Bill
-       # $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LetterOfAcceptanceEstimate"
       workFlowDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
       stateId:
@@ -736,6 +817,7 @@ definitions:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - tenantId
+      - letterOfAcceptanceEstimate
       
   AssetForBill:
     type: object
@@ -749,12 +831,10 @@ definitions:
         description: Tenant id of the Asset for Contractor Bill
         maxLength: 128
         minLength: 2
-      assetCode:
-        type: string
-        pattern: '[a-zA-Z0-9-\\]+'
-        description: Asset code of the Contractor Bill
-        maxLength: 50
-        minLength: 1
+      asset:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/Asset'
+        description: Asset Reference from Asset module
+        format: singleValueList
       chartOfAccounts:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/ChartOfAccount'
         description: Chart of Accounts for the Assets for Bill
@@ -774,7 +854,7 @@ definitions:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - tenantId
-      - assetCode
+      - asset
       - contractorBill
       
 tags:

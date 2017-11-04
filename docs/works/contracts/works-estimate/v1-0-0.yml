@@ -1421,7 +1421,7 @@ definitions:
           minLength: 4
         asset:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/Asset'
-          description: Asset Referenvce from Asset module
+          description: Asset Reference from Asset module
           format: singleValueList
         detailedEstimate:
           $ref: '#/definitions/DetailedEstimate'

@@ -1,0 +1,31 @@
+CREATE TABLE egw_contractor
+(
+  id character varying(256),
+  tenantId character varying(128) NOT NULL,
+  name character varying(100) NOT NULL,
+  code character varying(100) NOT NULL,
+  correspondenceaddress character varying(512),
+  paymentaddress character varying(512),
+  contactperson character varying(100),
+  email character varying(100),
+  narration character varying(1024),
+  mobilenumber character varying(10),
+  pannumber character varying(10),
+  tinnumber character varying(12),
+  bank character varying(100),
+  bankaccountnumber character varying(20),
+  pwdapprovalcode character varying(20),
+  exemptedfrom character varying(20),
+  pwdapprovalvalidtill bigint,
+  epfRegistrationNumber character varying(50),
+  accountcode character varying(100),
+  ifsccode character varying(20),
+  contractorclass character varying(100),
+  createdby character varying(256) NOT NULL,
+  createdtime bigint NOT NULL,
+  lastmodifiedby character varying(256),
+  lastmodifiedtime bigint,
+  constraint pk_egw_contractor PRIMARY  KEY(id,tenantId),
+  constraint uk_egw_contractor_code_tenantId UNIQUE (tenantId, code)
+);
+CREATE SEQUENCE SEQ_egw_contractor;

@@ -157,4 +157,131 @@ serviceMaps:
        - jsonPath: $.scheduleOfRates.*.marketRates.*.auditDetails.lastModifiedBy
        
        - jsonPath: $.scheduleOfRates.*.marketRates.*.auditDetails.lastModifiedTime
-
+       
+- version: 1.0
+   name: Contractor Create
+   description: Persists Contractor in egw_contractor table
+   fromTopic: works-contractor-create
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO egw_contractor(
+            id, tenantid, name, code, correspondenceaddress, paymentaddress, 
+            contactperson, email, narration, mobilenumber, pannumber, tinnumber, 
+            bank, bankaccountnumber, pwdapprovalcode, exemptedfrom, pwdapprovalvalidtill, 
+            epfregistrationnumber, accountcode, ifsccode, contractorclass, 
+            createdby, createdtime, lastmodifiedby, lastmodifiedtime)
+    VALUES (?, ?, ?, ?, ?, ?, 
+            ?, ?, ?, ?, ?, ?, 
+            ?, ?, ?, ?, ?, 
+            ?, ?, ?, ?, 
+            ?, ?, ?, ?);
+      basePath: $.contractors.*
+      jsonMaps:
+         
+       - jsonPath: $.contractors.*.id
+       
+       - jsonPath: $.contractors.*.tenantId
+       
+       - jsonPath: $.contractors.*.name
+         
+       - jsonPath: $.contractors.*.code
+         
+       - jsonPath: $.contractors.*.correspondenceAddress
+       
+       - jsonPath: $.contractors.*.paymentAddress
+       
+       - jsonPath: $.contractors.*.contactPerson
+       
+       - jsonPath: $.contractors.*.email
+       
+       - jsonPath: $.contractors.*.narration
+       
+       - jsonPath: $.contractors.*.mobileNumber
+       
+       - jsonPath: $.contractors.*.panNumber
+       
+       - jsonPath: $.contractors.*.tinNumber
+       
+       - jsonPath: $.contractors.*.bank.code
+       
+       - jsonPath: $.contractors.*.bankAccountNumber
+       
+       - jsonPath: $.contractors.*.pwdApprovalCode
+       
+       - jsonPath: $.contractors.*.exemptedFrom
+       
+       - jsonPath: $.contractors.*.pwdApprovalValidTill
+         dbType: LONG
+       
+       - jsonPath: $.contractors.*.epfRegistrationNumber
+       
+       - jsonPath: $.contractors.*.accountCode
+       
+       - jsonPath: $.contractors.*.ifscCode
+       
+       - jsonPath: $.contractors.*.contractorClass
+       
+       - jsonPath: $.contractors.*.auditDetails.createdBy
+ 
+       - jsonPath: $.contractors.*.auditDetails.createdTime
+       
+       - jsonPath: $.contractors.*.auditDetails.lastModifiedBy
+  
+       - jsonPath: $.scheduleOfRates.*.auditDetails.lastModifiedTime 
+       
+- version: 1.0
+   name: Contractor Update
+   description: Update Contractor in egw_contractor table
+   fromTopic: works-contractor-update
+   isTransaction: true
+   queryMaps:
+    - query: UPDATE egw_contractor SET name=?, code=?, correspondenceaddress=?, paymentaddress=?, contactperson=?, email=?, narration=?, mobilenumber=?, pannumber=?, tinnumber=?, bank=?, bankaccountnumber=?, pwdapprovalcode=?, exemptedfrom=?, pwdapprovalvalidtill=?, epfregistrationnumber=?, accountcode=?, ifsccode=?, contractorclass=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+      basePath: $.contractors.*
+      jsonMaps:
+         
+       - jsonPath: $.contractors.*.name
+         
+       - jsonPath: $.contractors.*.code
+         
+       - jsonPath: $.contractors.*.correspondenceAddress
+       
+       - jsonPath: $.contractors.*.paymentAddress
+       
+       - jsonPath: $.contractors.*.contactPerson
+       
+       - jsonPath: $.contractors.*.email
+       
+       - jsonPath: $.contractors.*.narration
+       
+       - jsonPath: $.contractors.*.mobileNumber
+       
+       - jsonPath: $.contractors.*.panNumber
+       
+       - jsonPath: $.contractors.*.tinNumber
+       
+       - jsonPath: $.contractors.*.bank.code
+       
+       - jsonPath: $.contractors.*.bankAccountNumber
+       
+       - jsonPath: $.contractors.*.pwdApprovalCode
+       
+       - jsonPath: $.contractors.*.exemptedFrom
+       
+       - jsonPath: $.contractors.*.pwdApprovalValidTill
+         dbType: LONG
+       
+       - jsonPath: $.contractors.*.epfRegistrationNumber
+       
+       - jsonPath: $.contractors.*.accountCode
+       
+       - jsonPath: $.contractors.*.ifscCode
+       
+       - jsonPath: $.contractors.*.contractorClass
+       
+       - jsonPath: $.contractors.*.auditDetails.lastModifiedBy
+  
+       - jsonPath: $.scheduleOfRates.*.auditDetails.lastModifiedTime
+       
+       - jsonPath: $.contractors.*.id
+       
+       - jsonPath: $.contractors.*.tenantId

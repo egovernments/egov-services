@@ -480,10 +480,9 @@ definitions:
         description: TIN Number of the Contractor
         maxLength: 12
       bank:
-        type: string
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Bank"
         description: Bank of the Contractor
         format: singleValueList
-        maxLength: 100
       bankAccountNumber:
         type: number
         description: Bank Account Number of the Contractor
@@ -499,7 +498,9 @@ definitions:
         description: Excemption allowed for of the Contractor
         format: singleValueList
       pwdApprovalValidTill:
-        type: string
+        type: integer
+        format: int64
+        x-displayformat: 'dd/MM/yyyy'
         description: PWD Approval Valid Till
       epfRegistrationNumber:
         type: string

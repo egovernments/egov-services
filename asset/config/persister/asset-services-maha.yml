@@ -167,19 +167,15 @@ serviceMaps:
    fromTopic: update-asset-maha
    isTransaction: true
    queryMaps:
-    - query: UPDATE egasset_asset SET id=?, name=?, code=?, oldcode=?, departmentcode=?, assetcategory=?,modeofacquisition=?, status=?, grossvalue=?, accumulateddepreciation=?,description=?, dateofcreation=?, remarks=?, version=?, assetreference=?,enableyearwisedepreciation=?, assetattributes=?, depreciationrate=?,anticipatedlife=?, ordernumber=?, orderdate=?, wipreferenceno=?,acquiredfrom=?, warrantyavailable=?, warrantyexpirydate=?, defectliabilityyear=?,defectliabilitymonth=?, defectliabilityday=?, securitydepositretained=?,securitydepositrealized=?, acquisitiondate=?, originalvalue=?,assetaccount=?, accumulateddepreciationaccount=?, revaluationreserveaccount=?,depreciationexpenseaccount=?, titledocumentsavalable=?, usage=?,length=?, width=?, height=?, totalarea=?, plintharea=?, address=?,longitude=?, latitude=?, floors=?, landsurveyno=?, cubiccontents=?,quantity=?, tenantid=?, zone=?, revenueward=?, street=?, electionward=?,doorno=?, pincode=?, locality=?, block=? , createdby=?, createddate=?, lastmodifiedby=?, lastmodifieddate=? fundsource=?, openingdate=?, location=? WHERE id = ? AND tenantId = ?;
+    - query: UPDATE egasset_asset SET name=?, oldcode=?, departmentcode=?, assetcategory=?,modeofacquisition=?, status=?, grossvalue=?, accumulateddepreciation=?,description=?, dateofcreation=?, remarks=?, version=?, assetreference=?,enableyearwisedepreciation=?, assetattributes=?, depreciationrate=?,anticipatedlife=?, ordernumber=?, orderdate=?, wipreferenceno=?,acquiredfrom=?, warrantyavailable=?, warrantyexpirydate=?, defectliabilityyear=?,defectliabilitymonth=?, defectliabilityday=?, securitydepositretained=?,securitydepositrealized=?, acquisitiondate=?, originalvalue=?,assetaccount=?, accumulateddepreciationaccount=?, revaluationreserveaccount=?,depreciationexpenseaccount=?, titledocumentsavalable=?, usage=?,length=?, width=?, height=?, totalarea=?, plintharea=?, address=?,longitude=?, latitude=?, floors=?, landsurveyno=?, cubiccontents=?,quantity=?, tenantid=?, zone=?, revenueward=?, street=?, electionward=?,doorno=?, pincode=?, locality=?, block=? , lastmodifiedby=?, lastmodifieddate=? fundsource=?, openingdate=?, location=? WHERE id = ? AND tenantId = ?;
       basePath: Asset
       jsonMaps:
          
-       - jsonPath: $.Asset.id
-         
        - jsonPath: $.Asset.name
          
-       - jsonPath: $.Asset.code
-       
        - jsonPath: $.Asset.oldCode
        
-       - jsonPath: $.Asset.departmentcode
+       - jsonPath: $.Asset.departmentCode
        
        - jsonPath: $.Asset.assetCategory.id
        
@@ -292,10 +288,6 @@ serviceMaps:
        - jsonPath: $.Asset.locationDetails.locality
          
        - jsonPath: $.Asset.locationDetails.block
-       
-       - jsonPath: $.Asset.auditDetails.createdBy
-       
-       - jsonPath: $.Asset.auditDetails.createdDate
        
        - jsonPath: $.Asset.auditDetails.lastModifiedBy
        

@@ -159,6 +159,40 @@ class assetImmovableCreate extends Component {
     }
   }
 
+  customFieldDataFun(val){
+    var  self = this;
+    let  _value = "";
+    _value = val;
+    if(_value) {
+      fields = _value
+      groups = [
+        {
+          "label": "Asset Attributes",
+          "name": "assetAttributes",
+          "jsonPath": "Asset.assetAttributes",
+          fields
+        }
+      ];
+
+
+
+      for(var x=0; x<fields.length; x++){
+        var formFin = {};
+        formFin.key = fields[x].name;
+        formFin.type = fields[x].type;
+        finArr.push(formFin);
+      }
+      console.log(groups);
+      this.setState({
+        hide: false
+      })
+    } else {
+      this.setState({
+        hide: true
+      })
+    }
+  }
+
   setInitialUpdateData(form, specs, moduleName, actionName, objectName) {
     let {setMockData} = this.props;
     let _form = JSON.parse(JSON.stringify(form));
@@ -184,6 +218,24 @@ class assetImmovableCreate extends Component {
     setMockData(specs);
   }
 
+  modifyData(urlId) {
+    let self = this;
+    let assetCheck ={};
+    Api.commonApiPost("asset-services-maha/assets/_search",{id:urlId}, {}, false, false, false, "", "", false).then(function(response){
+
+      for (var i = 0; i < response.Assets[0].assetAttributes.length; i++) {
+          assetCheck[response.Assets[0].assetAttributes[i].key]={[response.Assets[0].assetAttributes[i].type]:response.Assets[0].assetAttributes[i].value};
+
+      }
+      response.Assets[0].assetAttributesCheck = assetCheck;
+      self.props.setFormData({Asset: response.Assets[0]});
+      self.customFieldDataFun(self.state.customFieldsGen[response.Assets[0].assetCategory.id]);
+
+    },function(err) {
+          console.log(err);
+      });
+  }
+
   displayUI(results) {
     let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let hashLocation = window.location.hash;
@@ -206,13 +258,7 @@ class assetImmovableCreate extends Component {
     setActionName(action);
 
     if(self.props.match.params.id) {
-      Api.commonApiPost("asset-services-maha/assets/_search",{id:self.props.match.params.id}, {}, false, false, false, "", "", false).then(function(response){
-        console.log(response);
-        setFormData({Asset: response.Assets[0]});
-
-      },function(err) {
-            console.log(err);
-        });
+      // self.modifyData(self.props.match.params.id);
     } else {
       var formData = {};
       if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
@@ -347,6 +393,9 @@ class assetImmovableCreate extends Component {
             customFieldsGen: customSpecs,
             depericiationValue
           }, () => {
+            if(self.props.match.params.id) {
+              self.modifyData(self.props.match.params.id);
+            }
           })
       }
 
@@ -356,6 +405,9 @@ class assetImmovableCreate extends Component {
 
       },function(err) {
             console.log(err);
+            if(self.props.match.params.id) {
+              self.modifyData(self.props.match.params.id);
+            }
         });
 
   }
@@ -483,8 +535,9 @@ class assetImmovableCreate extends Component {
     });
     assetAttributes.push(tempFinObj);
   });
-console.log(assetAttributes);
+
 formData.Asset.assetAttributes = assetAttributes;
+delete formData.Asset.assetAttributesCheck;
 
     //Check if documents, upload and get fileStoreId
     if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"].length) {
@@ -823,37 +876,9 @@ formData.Asset.assetAttributes = assetAttributes;
           this.props.handleChange({target:{value: newVal}},"Asset.anticipatedLife",true,"","","");
         }
 
+        self.customFieldDataFun(self.state.customFieldsGen[e.target.value]);
 
 
-
-        if(self.state.customFieldsGen[e.target.value]) {
-          fields = self.state.customFieldsGen[e.target.value]
-          groups = [
-            {
-              "label": "Asset Attributes",
-              "name": "assetAttributes",
-              "jsonPath": "Asset.assetAttributes",
-              fields
-            }
-          ];
-
-
-
-          for(var x=0; x<fields.length; x++){
-            var formFin = {};
-            formFin.key = fields[x].name;
-            formFin.type = fields[x].type;
-            finArr.push(formFin);
-          }
-          console.log(finArr);
-          this.setState({
-            hide: false
-          })
-        } else {
-          this.setState({
-            hide: true
-          })
-        }
        }
 
       if(expression && e.target.value){

@@ -1910,7 +1910,7 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-						"convertToString":true
+						"convertToNumber": true
           }
 
 				]

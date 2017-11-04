@@ -303,7 +303,7 @@ serviceMaps:
        
        
     - query: UPDATE egasset_asset_landdetails SET surveynumber=?, area=?, WHERE assetid=? AND code=? AND tenantid=?;
-      basePath: Asset
+      basePath: Asset.landDetails.*
       jsonMaps:
          
        - jsonPath: $.Asset.landDetails.*.surveyNo

@@ -47,9 +47,9 @@ public class CaseSearchCriteria {
 	
 	private String caseCategory;
 	
-	private Integer fromDate;
+	private Long fromDate;
 	
-	private Integer toDate;
+	private Long toDate;
 	
 
 }

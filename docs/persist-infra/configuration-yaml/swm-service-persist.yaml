@@ -948,3 +948,114 @@ serviceMaps:
        
        - jsonPath: $.vehicleMaintenances.*.tenantId
 
+ - version: 1.0
+   name: sanitationstafftarget create
+   description: create sanitationstafftarget in egswm_sanitationstafftarget
+   fromTopic: swm-sanitationstafftarget-save-topic
+   queryMaps: 
+    - query: INSERT INTO egswm_sanitationstafftarget(targetNo, tenantid, swmProcess, route, employee, targetFrom, targetTo, targetedGarbage, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.sanitationStaffTargets.*
+      jsonMaps:
+       
+       - jsonPath: $.sanitationStaffTargets.*.targetNo
+
+       - jsonPath: $.sanitationStaffTargets.*.tenantId
+
+       - jsonPath: $.sanitationStaffTargets.*.swmProcess.code
+         
+       - jsonPath: $.sanitationStaffTargets.*.route.code
+
+       - jsonPath: $.sanitationStaffTargets.*.employee.code
+
+       - jsonPath: $.sanitationStaffTargets.*.targetFrom
+         dbType: LONG
+
+       - jsonPath: $.sanitationStaffTargets.*.targetTo
+         dbType: LONG
+         
+       - jsonPath: $.sanitationStaffTargets.*.targetedGarbage
+         dbType: DOUBLE
+
+       - jsonPath: $.sanitationStaffTargets.*.auditDetails.createdBy
+
+       - jsonPath: $.sanitationStaffTargets.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.sanitationStaffTargets.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.sanitationStaffTargets.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+    - query: INSERT INTO egswm_sst_collectionpoints(tenantid, sanitationstafftarget, collectionpoint, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?);
+      basePath: $.sanitationStaffTargets.*.collectionPoints.*
+      jsonMaps:
+       
+       - jsonPath: $.sanitationStaffTargets[?({code} in @.collectionPoints[*].code)].tenantId
+
+       - jsonPath: $.sanitationStaffTargets[?({code} in @.collectionPoints[*].code)].targetNo
+         
+       - jsonPath: $.sanitationStaffTargets.*.collectionPoints.*.code
+
+       - jsonPath: $.sanitationStaffTargets[?({code} in @.collectionPoints[*].code)].auditDetails.createdBy
+
+       - jsonPath: $.sanitationStaffTargets[?({code} in @.collectionPoints[*].code)].auditDetails.lastModifiedBy
+
+       - jsonPath: $.sanitationStaffTargets[?({code} in @.collectionPoints[*].code)].auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.sanitationStaffTargets[?({code} in @.collectionPoints[*].code)].auditDetails.lastModifiedTime
+         dbType: LONG
+
+ - version: 1.0
+   name: sanitationstafftarget update
+   description: update sanitationstafftarget in egswm_sanitationstafftarget
+   fromTopic: swm-sanitationstafftarget-update-topic
+   queryMaps: 
+    - query: update egswm_sanitationstafftarget set swmProcess=?, route=?, employee=?, targetFrom=?, targetTo=?, targetedGarbage=?,lastmodifiedby=?, lastmodifiedtime=? where targetNo=? and tenantId=?;
+      basePath: $.sanitationStaffTargets.*
+      jsonMaps:
+       
+       - jsonPath: $.sanitationStaffTargets.*.swmProcess.code
+         
+       - jsonPath: $.sanitationStaffTargets.*.route.code
+
+       - jsonPath: $.sanitationStaffTargets.*.employee.code
+
+       - jsonPath: $.sanitationStaffTargets.*.targetFrom
+         dbType: LONG
+
+       - jsonPath: $.sanitationStaffTargets.*.targetTo
+         dbType: LONG
+         
+       - jsonPath: $.sanitationStaffTargets.*.targetedGarbage
+         dbType: DOUBLE
+
+       - jsonPath: $.sanitationStaffTargets.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.sanitationStaffTargets.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+       - jsonPath: $.sanitationStaffTargets.*.targetNo
+
+       - jsonPath: $.sanitationStaffTargets.*.tenantId
+
+
+    - query: INSERT INTO egswm_sst_collectionpoints(tenantid, sanitationstafftarget, collectionpoint, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?);
+      basePath: $.sanitationStaffTargets.*.collectionPoints.*
+      jsonMaps:
+       
+       - jsonPath: $.sanitationStaffTargets[?({code} in @.collectionPoints[*].code)].tenantId
+
+       - jsonPath: $.sanitationStaffTargets[?({code} in @.collectionPoints[*].code)].targetNo
+         
+       - jsonPath: $.sanitationStaffTargets.*.collectionPoints.*.code
+
+       - jsonPath: $.sanitationStaffTargets[?({code} in @.collectionPoints[*].code)].auditDetails.createdBy
+
+       - jsonPath: $.sanitationStaffTargets[?({code} in @.collectionPoints[*].code)].auditDetails.lastModifiedBy
+
+       - jsonPath: $.sanitationStaffTargets[?({code} in @.collectionPoints[*].code)].auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.sanitationStaffTargets[?({code} in @.collectionPoints[*].code)].auditDetails.lastModifiedTime
+         dbType: LONG

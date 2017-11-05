@@ -1738,11 +1738,6 @@ definitions:
     SanitationStaffTarget:
       type: object
       properties:
-        code:
-          type: string
-          description: Unique Identifier of the SanitationStaffTarget
-          maxLength: 256
-          minLength: 1
         tenantId:
           type: string
           description: tenant id of the SanitationStaffTarget
@@ -1768,16 +1763,14 @@ definitions:
           $ref: "#/definitions/Route"
           format: singleValueList
           description: route contains the location information too with associated collection points. Ward / Zone etc shall be displayed on the screen
-        employeeName:
+        employee:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/hr/contracts/hr-employee/v1-0-0.yml#/definitions/Employee'
           description: sanitary staff name based on dept. and designation. # We might have to integrate with HRMS
-          maxLength: 256
-          minLength: 1
-        locationName:
-          type: string
-          description: Collection point location based on the route selected
-          maxLength: 256
-          minLength: 1
+        collectionPoints:
+          type: array
+          items:
+            $ref: '#/definitions/CollectionPoint'
+          description: List of Collection point locations based on the route selected.
         targetedGarbage: 
           type: number
           format: double
@@ -1790,8 +1783,9 @@ definitions:
       - targetTo
       - swmProcess
       - route
-      - employeeName
-      - locationName
+      - employee
+      - collectionPoints
+      - targetedGarbage
       
     VehicleFuellingDetails:
       type: object

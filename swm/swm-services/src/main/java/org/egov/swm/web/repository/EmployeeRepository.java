@@ -55,15 +55,19 @@ public class EmployeeRepository {
 
 	private final RestTemplate restTemplate;
 
-	private final String employeeByDesgIdUrl;
+	private final String employeeByDesgAndCodeUrl;
+
+	private final String employeeByCodeUrl;
 
 	@Autowired
 	public EmployeeRepository(final RestTemplate restTemplate,
 			@Value("${egov.services.hr_employee.hostname}") final String hrMasterServiceHostname,
-			@Value("${egov.services.hr_employee.employees.by.desg.id.and.code}") final String employeeByDesgIdUrl) {
+			@Value("${egov.services.hr_employee.employees.by.desg.id.and.code}") final String employeeByDesgAndCodeUrl,
+			@Value("${egov.services.hr_employee.employees.by.code}") final String employeeByCodeUrl) {
 
 		this.restTemplate = restTemplate;
-		this.employeeByDesgIdUrl = hrMasterServiceHostname + employeeByDesgIdUrl;
+		this.employeeByDesgAndCodeUrl = hrMasterServiceHostname + employeeByDesgAndCodeUrl;
+		this.employeeByCodeUrl = hrMasterServiceHostname + employeeByCodeUrl;
 	}
 
 	public EmployeeResponse getEmployeeByDesgIdAndCode(final String designationId, final String code,
@@ -74,8 +78,20 @@ public class EmployeeRepository {
 		final RequestInfoWrapper wrapper = new RequestInfoWrapper();
 		wrapper.setRequestInfo(requestInfo);
 
-		return restTemplate.postForObject(employeeByDesgIdUrl, wrapper, EmployeeResponse.class, tenantId, designationId,
-				code, sdf.format(new Date()));
+		return restTemplate.postForObject(employeeByDesgAndCodeUrl, wrapper, EmployeeResponse.class, tenantId,
+				designationId, code, sdf.format(new Date()));
+
+	}
+
+	public EmployeeResponse getEmployeeByCode(final String code, final String tenantId, final RequestInfo requestInfo) {
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+		final RequestInfoWrapper wrapper = new RequestInfoWrapper();
+		wrapper.setRequestInfo(requestInfo);
+
+		return restTemplate.postForObject(employeeByCodeUrl, wrapper, EmployeeResponse.class, tenantId, code,
+				sdf.format(new Date()));
 
 	}
 }

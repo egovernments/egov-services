@@ -43,6 +43,44 @@
 				"description": ""
 			},
 			"response": []
+		},
+		{
+			"name": "SOR Search",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"c816a14f-7386-4e85-a73b-6e96a0901aa4\"\n    }\n}\n"
+				},
+				"url": {
+					"raw": "http://localhost:8280/works-masters/scheduleofrates/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8280",
+					"path": [
+						"works-masters",
+						"scheduleofrates",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
 		}
 	]
 }

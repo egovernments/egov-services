@@ -8,6 +8,8 @@ import org.egov.contract.AssetCurrentValueRequest;
 import org.egov.contract.AssetCurrentValueResponse;
 import org.egov.contract.AssetRequest;
 import org.egov.contract.AssetResponse;
+import org.egov.contract.DepreciationRequest;
+import org.egov.contract.DepreciationResponse;
 import org.egov.contract.DisposalRequest;
 import org.egov.contract.DisposalResponse;
 import org.egov.contract.RequestInfoWrapper;
@@ -18,6 +20,7 @@ import org.egov.model.criteria.DisposalCriteria;
 import org.egov.model.criteria.RevaluationCriteria;
 import org.egov.service.AssetService;
 import org.egov.service.CurrentValueService;
+import org.egov.service.DepreciationService;
 import org.egov.service.DisposalService;
 import org.egov.service.RevaluationService;
 import org.egov.web.validator.AssetValidator;
@@ -47,6 +50,9 @@ public class AssetController {
 
 	@Autowired
 	private RevaluationService revaluationService;
+	
+	@Autowired
+	private DepreciationService depreciationService;
 	
 	@Autowired
 	private DisposalService  disposalService;
@@ -150,6 +156,14 @@ public class AssetController {
 		final AssetCurrentValueResponse assetCurrentValueResponse = currentValueService
 				.createCurrentValueAsync(assetCurrentValueRequest);
 		return new ResponseEntity<>(assetCurrentValueResponse, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("depreciations/_create")
+	@ResponseBody
+	public ResponseEntity<?> saveDepreciation(@RequestBody @Valid final DepreciationRequest depreciationRequest) {
+
+		final DepreciationResponse depreciationResponse = depreciationService.createDepreciationAsync(depreciationRequest);
+		return new ResponseEntity<>(depreciationResponse, HttpStatus.CREATED);
 	}
 
 }

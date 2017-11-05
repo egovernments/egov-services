@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.contract.AssetCurrentValueRequest;
+import org.egov.contract.DepreciationRequest;
 import org.egov.contract.DepreciationResponse;
 import org.egov.model.AssetCategory;
 import org.egov.model.CurrentValue;
@@ -42,11 +43,13 @@ public class DepreciationService {
 	private MasterDataService masterDataService;
 	
 	
-	public DepreciationResponse saveDepreciationAsync(DepreciationCriteria depreciationCriteria,RequestInfo requestInfo) {
+	public DepreciationResponse createDepreciationAsync(DepreciationRequest depreciationRequest) {
+		
+		RequestInfo requestInfo = depreciationRequest.getRequestInfo();
 		
 		//TODO financial year validations
 		
-		Depreciation depreciation = depreciateAssets(depreciationCriteria, requestInfo);
+		Depreciation depreciation = depreciateAssets(depreciationRequest);
 		
 		depreciation.setAuditDetails(assetCommonService.getAuditDetails(requestInfo));
 		
@@ -62,7 +65,10 @@ public class DepreciationService {
 	 * @param requestInfo
 	 * @return
 	 */
-	public Depreciation depreciateAssets(DepreciationCriteria depreciationCriteria,RequestInfo requestInfo) {
+	public Depreciation depreciateAssets(DepreciationRequest depreciationRequest) {
+		
+		DepreciationCriteria depreciationCriteria = depreciationRequest.getDepreciationCriteria();
+		RequestInfo requestInfo = depreciationRequest.getRequestInfo();
 		
 		//TODO validation and filling financila year data in criteria
 		List<DepreciationInputs> depreciationInputsList = depreciationRepository.getDepreciationInputs(depreciationCriteria);

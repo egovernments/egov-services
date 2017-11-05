@@ -50,10 +50,10 @@ public class EstimateUtils {
 		MdmsResponse mdmsResponse;
         String filter = "";
 
-        if(!codeFilter.equals("") && StringUtils.isNotBlank(codeFilter))
+        if(StringUtils.isNotBlank(codeFilter))
             filter = "[?(@.code == '" + codeFilter + "')]";
-        else if(StringUtils.isNotBlank(codeFilter))
-        filter = "[?(@.name == '" + nameFilter + "')]";
+        else if(StringUtils.isNotBlank(nameFilter))
+           filter = "[?(@.name == '" + nameFilter + "')]";
 
 		masterDetailsArray = new MasterDetails[1];
 		masterDetailsArray[0] = MasterDetails.builder().name(objectName).filter(filter).build();

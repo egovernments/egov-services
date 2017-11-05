@@ -58,4 +58,7 @@ public class PropertiesManager {
 
     @Value("${estimateNumber.prefix}")
     private String estimateNumberPrefix;
+
+    @Value("${detailedEstimateNumber.prefix}")
+    private String detailedEstimateNumberPrefix;
 }

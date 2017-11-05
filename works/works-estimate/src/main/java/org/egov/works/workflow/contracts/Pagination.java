@@ -1,10 +1,9 @@
 package org.egov.works.workflow.contracts;
 
-import javax.validation.constraints.Max;
-
-import org.springframework.data.domain.Page;
-
 import lombok.Data;
+//import org.springframework.data.domain.Page;
+
+import javax.validation.constraints.Max;
 
 @Data
 public class Pagination {
@@ -23,11 +22,11 @@ public class Pagination {
 
 	private Integer offSet = Integer.valueOf(DEFAULT_PAGE_OFFSET);
 
-	public void map(final Page page) {
+	/*public void map(final Page page) {
 		setCurrentPage(page.getNumber());
 		setTotalPages(page.getTotalPages());
 		setPageSize(page.getSize());
 		setTotalResults(page.getNumberOfElements());
-	}
+	}*/
 
 }

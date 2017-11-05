@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.works.estimate.domain.exception.CustomBindException;
+import org.egov.works.commons.exception.CustomBindException;
 import org.egov.works.estimate.domain.service.DetailedEstimateService;
 import org.egov.works.estimate.utils.EstimateUtils;
 import org.egov.works.estimate.web.contract.DetailedEstimate;
@@ -50,14 +50,9 @@ public class DetailedEstimateController {
 
 
     @PostMapping("/_create")
-    @ResponseStatus(HttpStatus.OK)
-    public DetailedEstimateResponse create(@RequestBody DetailedEstimateRequest detailedEstimateRequest,
-                                           BindingResult errors) {
-        if (errors.hasErrors()) {
-            throw new CustomBindException(errors);
-        }
-
-        detailedEstimateService.validateDetailedEstimates(detailedEstimateRequest,errors);
+    @ResponseStatus(HttpStatus.CREATED)
+    public DetailedEstimateResponse create(@Valid @RequestBody DetailedEstimateRequest detailedEstimateRequest) {
+        detailedEstimateService.validateDetailedEstimates(detailedEstimateRequest);
         final List<DetailedEstimate> detailedEstimates = detailedEstimateService.create(detailedEstimateRequest);
         final DetailedEstimateResponse response = new DetailedEstimateResponse();
         response.setDetailedEstimates(detailedEstimates);

@@ -1,35 +1,24 @@
 package org.egov.works.estimate.domain.service;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
+import com.google.gson.JsonObject;
+import net.minidev.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.works.commons.exception.InvalidDataException;
 import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.config.WorksEstimateServiceConstants;
 import org.egov.works.estimate.domain.repository.DetailedEstimateRepository;
+import org.egov.works.estimate.persistence.repository.IdGenerationRepository;
 import org.egov.works.estimate.utils.EstimateUtils;
-import org.egov.works.estimate.web.contract.Asset;
-import org.egov.works.estimate.web.contract.AssetsForEstimate;
-import org.egov.works.estimate.web.contract.AuditDetails;
-import org.egov.works.estimate.web.contract.DetailedEstimate;
-import org.egov.works.estimate.web.contract.DetailedEstimateDeduction;
-import org.egov.works.estimate.web.contract.DetailedEstimateRequest;
-import org.egov.works.estimate.web.contract.DetailedEstimateSearchContract;
-import org.egov.works.estimate.web.contract.EstimateActivity;
-import org.egov.works.estimate.web.contract.EstimateOverhead;
-import org.egov.works.estimate.web.contract.FinancialYear;
-import org.egov.works.estimate.web.contract.MultiYearEstimate;
-import org.egov.works.estimate.web.contract.RequestInfo;
+import org.egov.works.estimate.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
 
-import net.minidev.json.JSONArray;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 @Service
 @Transactional(readOnly= true)
@@ -50,6 +39,9 @@ public class DetailedEstimateService {
     @Autowired
     private CommonUtils commonUtils;
 
+    @Autowired
+    private IdGenerationRepository idGenerationRepository;
+
 	public List<DetailedEstimate> search(DetailedEstimateSearchContract detailedEstimateSearchContract) {
 		return detailedEstimateRepository.search(detailedEstimateSearchContract);
 	}
@@ -59,6 +51,10 @@ public class DetailedEstimateService {
         for (final DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
             detailedEstimate.setId(commonUtils.getUUID());
             detailedEstimate.setAuditDetails(auditDetails);
+            detailedEstimate.setTotalIncludingRE(detailedEstimate.getWorkValue());
+            String estimateNumber = idGenerationRepository
+                    .generateAbstractEstimateNumber(detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());
+            detailedEstimate.setEstimateNumber(propertiesManager.getDetailedEstimateNumberPrefix() + "/" + estimateNumber);
 
             for(final AssetsForEstimate assetsForEstimate : detailedEstimate.getAssets()) {
                 assetsForEstimate.setId(commonUtils.getUUID());
@@ -78,6 +74,17 @@ public class DetailedEstimateService {
             for(final DetailedEstimateDeduction detailedEstimateDeduction : detailedEstimate.getDetailedEstimateDeductions()) {
                 detailedEstimateDeduction.setId(commonUtils.getUUID());
                 detailedEstimateDeduction.setAuditDetails(auditDetails);
+            }
+
+            for(final EstimateActivity estimateActivity : detailedEstimate.getEstimateActivities()) {
+                estimateActivity.setId(commonUtils.getUUID());
+                estimateActivity.setAuditDetails(auditDetails);
+                if(estimateActivity.getEstimateMeasurementSheets() != null) {
+                    for (final EstimateMeasurementSheet estimateMeasurementSheet : estimateActivity.getEstimateMeasurementSheets()) {
+                        estimateMeasurementSheet.setId(commonUtils.getUUID());
+                        estimateMeasurementSheet.setAuditDetails(auditDetails);
+                    }
+                }
             }
         }
         kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateCreateTopic(), detailedEstimateRequest);
@@ -99,20 +106,20 @@ public class DetailedEstimateService {
         return auditDetails;
     }
 
-    public void validateOverheads(final DetailedEstimate detailedEstimate, final BindingResult errors) {
-        for (final EstimateOverhead value : detailedEstimate.getEstimateOverheads())
-            if (value.getOverhead().getId() == null) {
-                errors.reject("error.overhead.null", "error.overhead.null");
-                break;
+    public void validateOverheads(final DetailedEstimate detailedEstimate) {
+        for (final EstimateOverhead estimateOverhead : detailedEstimate.getEstimateOverheads()){
+            if (estimateOverhead.getOverhead().getId() == null) {
+                throw new InvalidDataException("OverHead", "Activity overhead is required",
+                        estimateOverhead.getOverhead().getId());
             }
-        for (final EstimateOverhead value : detailedEstimate.getEstimateOverheads())
-            if (value.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
-                errors.reject("error.overhead.amount", "error.overhead.amount");
-                break;
-            }
+        if (estimateOverhead.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new InvalidDataException("OverHead", "Activity overhead amount required",
+                    estimateOverhead.getOverhead().getId());
+        }
+      }
     }
 
-    public void validateMultiYearEstimates(final DetailedEstimate detailedEstimate, final BindingResult bindErrors) {
+    public void validateMultiYearEstimates(final DetailedEstimate detailedEstimate) {
         FinancialYear financialYear = null;
         Double totalPercentage = 0d;
         Integer index = 0;
@@ -120,75 +127,178 @@ public class DetailedEstimateService {
             totalPercentage = totalPercentage + multiYearEstimate.getPercentage();
 
             if (multiYearEstimate.getFinancialYear() == null)
-                bindErrors.rejectValue("multiYearEstimates[" + index + "].financialYear", "error.finyear.required");
+                throw new InvalidDataException("multiYearEstimates[" + index + "].financialYear", "Financial year is required",
+                    multiYearEstimate.getFinancialYear().getFinYearRange());
             if (multiYearEstimate.getPercentage() == 0)
-                bindErrors.rejectValue("multiYearEstimates[" + index + "].percentage", "error.percentage.required");
+                throw new InvalidDataException("multiYearEstimates[" + index + "].percentage", "Percentage is required",
+                    multiYearEstimate.getFinancialYear().getFinYearRange());
             if (financialYear != null && financialYear.equals(multiYearEstimate.getFinancialYear()))
-                bindErrors.rejectValue("multiYearEstimates[" + index + "].financialYear", "error.financialYear.unique");
+                throw new InvalidDataException("multiYearEstimates[" + index + "].financialYear", "Duplicate financial year",
+                    multiYearEstimate.getFinancialYear().getFinYearRange());
             if (totalPercentage > 100)
-                bindErrors.rejectValue("multiYearEstimates[" + index + "].percentage", "error.percentage.greater");
+                  throw new InvalidDataException("multiYearEstimates[" + index + "].percentage", "Percentage should not  be greater than 100",
+                    multiYearEstimate.getFinancialYear().getFinYearRange());
             financialYear = multiYearEstimate.getFinancialYear();
             index++;
         }
 
     }
 
-    public void validateActivities(final DetailedEstimate detailedEstimate, final BindingResult errors) {
+    public void validateActivities(final DetailedEstimate detailedEstimate) {
         for (int i = 0; i < detailedEstimate.getEstimateActivities().size() - 1; i++)
             for (int j = i + 1; j < detailedEstimate.getEstimateActivities().size(); j++)
                 if (detailedEstimate.getEstimateActivities().get(i).getScheduleOfRate() != null
                         && detailedEstimate.getEstimateActivities().get(i).getScheduleOfRate().getId()
                         .equals(detailedEstimate.getEstimateActivities().get(j).getScheduleOfRate().getId())) {
-                    errors.reject("error.sor.duplicate", "error.sor.duplicate");
-                    break;
+                    throw new InvalidDataException("ScheduleOfRate", "Duplicate data for activity schedule of rates",
+                            detailedEstimate.getEstimateActivities().get(i).getScheduleOfRate().getCode());
                 }
 
         for (final EstimateActivity activity : detailedEstimate.getEstimateActivities()) {
             if (activity.getQuantity() <= 0)
-                errors.reject("error.quantity.zero", "error.quantity.zero");
+            throw new InvalidDataException("Quantity", "Activity quantity should be greater than zero",
+                    activity.getScheduleOfRate().getCode());
             if (activity.getEstimateRate().compareTo(BigDecimal.ZERO) <= 0)
-                errors.reject("error.rates.zero", "error.rates.zero");
+                throw new InvalidDataException("EstimateRate", "Activity estimate rate should be greater than zero",
+                        activity.getEstimateRate().toString());
         }
 
     }
 
-    public void validateLocationDetails(final DetailedEstimate detailedEstimate, final BindingResult bindErrors, final RequestInfo requestInfo) {
+    public void validateLocationDetails(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo) {
         if (propertiesManager.getLocationRequiredForEstimate().toString().equalsIgnoreCase("Yes")) {
             JSONArray mdmsArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.APPCONFIGURATION_OBJECT, WorksEstimateServiceConstants.GIS_INTEGRATION_APPCONFIG, null,
                     detailedEstimate.getTenantId(), requestInfo, WorksEstimateServiceConstants.WORKS_MODULE_CODE);
             if (mdmsArray != null && !mdmsArray.isEmpty() && mdmsArray.get(0).equals("Yes") && (StringUtils.isBlank(detailedEstimate.getLocation())
                     || detailedEstimate.getLatitude() == null || detailedEstimate.getLongitude() == null))
-                bindErrors.reject("error.locationdetails.required", "error.locationdetails.required");
+            throw new InvalidDataException("Location", "Estimate location detailed required",
+                    detailedEstimate.getLocation());
         }
     }
 
-    public void validateAssetDetails(final DetailedEstimate detailedEstimate, final BindingResult bindErrors, final RequestInfo requestInfo) {
+    public void validateAssetDetails(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo) {
 
         JSONArray mdmsArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.APPCONFIGURATION_OBJECT, WorksEstimateServiceConstants.ASSET_DETAILES_REQUIRED_APPCONFIG, null,
                 detailedEstimate.getTenantId(), requestInfo, WorksEstimateServiceConstants.WORKS_MODULE_CODE);
             if (mdmsArray != null && !mdmsArray.isEmpty() && mdmsArray.get(0).equals("Yes") && detailedEstimate.getAssets() != null
                     && detailedEstimate.getAssets().isEmpty())
-                bindErrors.reject("error.assetdetails.required", "error.assetdetails.required");
+                throw new InvalidDataException("Asset detailes", "Asset detailes required for estimate",
+                        null);
 
             Asset asset = null;
             Integer index = 0;
             for (final AssetsForEstimate assetsForEstimate : detailedEstimate.getAssets())
                 if (assetsForEstimate != null) {
                     if (StringUtils.isBlank(assetsForEstimate.getAsset().getCode()))
-                        bindErrors.rejectValue("tempAssetValues[" + index + "].asset.code", "error.assetcode.required");
+                        throw new InvalidDataException("assets[" + index + "].asset.code", "Asset code is required",
+                              assetsForEstimate.getAsset().getCode());
                     if (StringUtils.isBlank(assetsForEstimate.getAsset().getName()))
-                        bindErrors.rejectValue("tempAssetValues[" + index + "].asset.name", "error.assetname.required");
+                        throw new InvalidDataException("assets[" + index + "].asset.name", "Asset code is required",
+                            assetsForEstimate.getAsset().getName());
                     if (asset != null && asset.getCode().equals(assetsForEstimate.getAsset().getCode()))
-                        bindErrors.rejectValue("tempAssetValues[" + index + "].asset.code", "error.asset.not.unique");
+                        throw new InvalidDataException("assets[" + index + "].asset.code", "Duplicate asset code",
+                            assetsForEstimate.getAsset().getCode());
                     asset = assetsForEstimate.getAsset();
                     index++;
                 }
         }
 
-    public void validateDetailedEstimates(DetailedEstimateRequest detailedEstimateRequest, BindingResult errors) {
+    public void validateDetailedEstimates(DetailedEstimateRequest detailedEstimateRequest) {
         final RequestInfo requestInfo = detailedEstimateRequest.getRequestInfo();
         for(DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
-            validateActivities(detailedEstimate,errors);
+            validateActivities(detailedEstimate);
+           // validateLocationDetails(detailedEstimate,requestInfo);
+           // validateAssetDetails(detailedEstimate, requestInfo);
+            validateMultiYearEstimates(detailedEstimate);
+            validateOverheads(detailedEstimate);
+            validateMasterData(detailedEstimate, requestInfo);
+        }
+    }
+
+    private void validateMasterData(DetailedEstimate detailedEstimate, RequestInfo requestInfo) {
+        JSONArray responseJSONArray = null;
+
+        if (detailedEstimate.getFund() != null && StringUtils.isNotBlank(detailedEstimate.getFund().getCode())) {
+            responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.FUND_OBJECT,
+                    detailedEstimate.getFund().getCode(), null, detailedEstimate.getTenantId(), requestInfo,
+                    WorksEstimateServiceConstants.WORKS_MODULE_CODE);
+            if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+                throw new InvalidDataException("Fund", "Invalid data for fund code",
+                        detailedEstimate.getFund().getCode());
+            }
+        }
+        if (detailedEstimate.getFunction() != null
+                && StringUtils.isNotBlank(detailedEstimate.getFunction().getCode())) {
+            responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.FUNCTION_OBJECT,
+                    detailedEstimate.getFunction().getCode(), null, detailedEstimate.getTenantId(), requestInfo,
+                    WorksEstimateServiceConstants.WORKS_MODULE_CODE);
+            if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+                throw new InvalidDataException("Function", "Invalid data for function code",
+                        detailedEstimate.getFunction().getCode());
+            }
+        }
+
+        if (detailedEstimate.getWorksType() != null
+                && StringUtils.isNotBlank(detailedEstimate.getWorksType().getCode())) {
+            responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.TYPEOFWORK_OBJECT,
+                    detailedEstimate.getWorksType().getCode(), null, detailedEstimate.getTenantId(), requestInfo,
+                    WorksEstimateServiceConstants.WORKS_MODULE_CODE);
+            if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+                throw new InvalidDataException("TypeOfWork", "Invalid data for estimate type of work",
+                        detailedEstimate.getWorksType().getCode());
+            }
+        }
+        if (detailedEstimate.getWorksSubtype() != null
+                && StringUtils.isNotBlank(detailedEstimate.getWorksSubtype().getCode())) {
+            responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.SUBTYPEOFWORK_OBJECT,
+                    detailedEstimate.getWorksSubtype().getCode(), null, detailedEstimate.getTenantId(), requestInfo,
+                    WorksEstimateServiceConstants.WORKS_MODULE_CODE);
+            if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+                throw new InvalidDataException("SubTypeOfWork", "Invalid data for estimate subtype of work",
+                        detailedEstimate.getWorksType().getCode());
+            }
+        }
+
+        if (detailedEstimate.getDepartment() != null
+                & StringUtils.isNotBlank(detailedEstimate.getDepartment().getCode())) {
+            responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.DEPARTMENT_OBJECT,
+                    detailedEstimate.getDepartment().getCode(), null, detailedEstimate.getTenantId(), requestInfo,
+                    WorksEstimateServiceConstants.COMMON_MASTERS_MODULE_CODE);
+            if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+                throw new InvalidDataException("Department", "Invalid data for estimate Department",
+                        detailedEstimate.getDepartment().getCode());
+            }
+        }
+        if (detailedEstimate.getScheme() != null & StringUtils.isNotBlank(detailedEstimate.getScheme().getCode())) {
+            responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.SCHEME_OBJECT,
+                    detailedEstimate.getScheme().getCode(), null, detailedEstimate.getTenantId(), requestInfo,
+                    WorksEstimateServiceConstants.WORKS_MODULE_CODE);
+            if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+                throw new InvalidDataException("Scheme", "Invalid data for estimate scheme",
+                        detailedEstimate.getScheme().getCode());
+            }
+        }
+
+        if (detailedEstimate.getSubScheme() != null
+                & StringUtils.isNotBlank(detailedEstimate.getSubScheme().getCode())) {
+            responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.SUBSCHEME_OBJECT,
+                    detailedEstimate.getSubScheme().getCode(), null, detailedEstimate.getTenantId(), requestInfo,
+                    WorksEstimateServiceConstants.WORKS_MODULE_CODE);
+            if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+                throw new InvalidDataException("SubScheme", "Invalid data for estimate SubScheme",
+                        detailedEstimate.getSubScheme().getCode());
+            }
+        }
+
+        if (detailedEstimate.getBudgetGroup() != null
+                & StringUtils.isNotBlank(detailedEstimate.getBudgetGroup().getName())) {
+            responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.BUDGETGROUP_OBJECT, null,
+                    detailedEstimate.getBudgetGroup().getName(), detailedEstimate.getTenantId(), requestInfo,
+                    WorksEstimateServiceConstants.WORKS_MODULE_CODE);
+            if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+                throw new InvalidDataException("BudgetGroup", "Invalid data for estimate Budget Group",
+                        detailedEstimate.getBudgetGroup().getName());
+            }
         }
     }
 }

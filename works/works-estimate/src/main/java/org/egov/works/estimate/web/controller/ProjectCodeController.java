@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.works.estimate.domain.exception.CustomBindException;
+import org.egov.works.commons.exception.CustomBindException;
 import org.egov.works.estimate.domain.service.ProjectCodeService;
 import org.egov.works.estimate.web.contract.ProjectCode;
 import org.egov.works.estimate.web.contract.ProjectCodeRequest;

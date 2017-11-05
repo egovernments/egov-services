@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.egov.works.estimate.domain.exception.InvalidDataException;
+import org.egov.works.commons.exception.InvalidDataException;
 import org.egov.works.estimate.web.contract.AuditDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

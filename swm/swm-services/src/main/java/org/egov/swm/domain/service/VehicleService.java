@@ -13,7 +13,6 @@ import org.egov.swm.domain.model.VehicleType;
 import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.domain.repository.VehicleRepository;
-import org.egov.swm.persistence.entity.VendorEntity;
 import org.egov.swm.web.contract.DesignationResponse;
 import org.egov.swm.web.contract.EmployeeResponse;
 import org.egov.swm.web.repository.DesignationRepository;

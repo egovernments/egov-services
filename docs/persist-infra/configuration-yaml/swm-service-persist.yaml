@@ -884,3 +884,67 @@ serviceMaps:
        - jsonPath: $.vendorContracts.*.contractNo
 
        - jsonPath: $.vendorContracts.*.tenantId
+
+ - version: 1.0
+   name: vehiclemaintenance create
+   description: create vehiclemaintenance in egswm_vehiclemaintenance
+   fromTopic: swm-vehiclemaintenance-save-topic
+   queryMaps: 
+    - query: INSERT INTO egswm_vehiclemaintenance(code, tenantid, vehicle, maintenanceAfterDays, maintenanceAfterKm, downtimeforMaintenance, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.vehicleMaintenances.*
+      jsonMaps:
+
+       - jsonPath: $.vehicleMaintenances.*.code
+       
+       - jsonPath: $.vehicleMaintenances.*.tenantId
+
+       - jsonPath: $.vehicleMaintenances.*.vehicle.regNumber
+
+       - jsonPath: $.vehicleMaintenances.*.maintenanceAfterDays
+         dbType: LONG
+
+       - jsonPath: $.vehicleMaintenances.*.maintenanceAfterKm
+         dbType: LONG
+       
+       - jsonPath: $.vehicleMaintenances.*.downtimeforMaintenance
+         dbType: DOUBLE
+       
+       - jsonPath: $.vehicleMaintenances.*.auditDetails.createdBy
+
+       - jsonPath: $.vehicleMaintenances.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.vehicleMaintenances.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.vehicleMaintenances.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+ - version: 1.0
+   name: vehiclemaintenance update
+   description: update vehiclemaintenance in egswm_vehiclemaintenance
+   fromTopic: swm-vehiclemaintenance-update-topic
+   queryMaps: 
+    - query: update egswm_vehiclemaintenance set vehicle=?, maintenanceAfterDays=?, maintenanceAfterKm=?, downtimeforMaintenance=?, lastmodifiedby=?, lastmodifiedtime=? where code=? and tenantId=?;
+      basePath: $.vehicleMaintenances.*
+      jsonMaps:
+
+       - jsonPath: $.vehicleMaintenances.*.vehicle.regNumber
+
+       - jsonPath: $.vehicleMaintenances.*.maintenanceAfterDays
+         dbType: LONG
+
+       - jsonPath: $.vehicleMaintenances.*.maintenanceAfterKm
+         dbType: LONG
+       
+       - jsonPath: $.vehicleMaintenances.*.downtimeforMaintenance
+         dbType: DOUBLE
+       
+       - jsonPath: $.vehicleMaintenances.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.vehicleMaintenances.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+       - jsonPath: $.vehicleMaintenances.*.code
+       
+       - jsonPath: $.vehicleMaintenances.*.tenantId
+

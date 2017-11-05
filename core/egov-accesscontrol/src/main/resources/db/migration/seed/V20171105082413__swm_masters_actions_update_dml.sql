@@ -1,0 +1,12 @@
+ update eg_action set url ='/swm-services/routes/_create'  where name ='Route Create';
+ update eg_action set url ='/swm-services/routes/_update'  where name ='Route Update';
+ update eg_action set url ='/swm-services/routes/_search'  where name ='Route Search';
+ update eg_action set url ='/swm-services/refillinpumpstations/_create'  where name ='RefillinPumpStation Create';
+ update eg_action set url ='/swm-services/refillinpumpstations/_update'  where name ='RefillinPumpStation Update';
+ update eg_action set url ='/swm-services/refillinpumpstations/_search'  where name ='RefillinPumpStation Search';
+ update eg_action set url ='/swm-services/vendorcontracts/_create'  where name ='VendorContract Create';
+ update eg_action set url ='/swm-services/vendorcontracts/_update'  where name ='VendorContract Update';
+ update eg_action set url ='/swm-services/vendorcontracts/_search'  where name ='VendorContract Search';
+ update eg_action set url ='/swm-services/vendors/_create'  where name ='Vendor Create';
+ update eg_action set url ='/swm-services/vendors/_update'  where name ='Vendor Update';
+ update eg_action set url ='/swm-services/vendors/_search'  where name ='Vendor Search';

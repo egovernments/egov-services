@@ -35,7 +35,7 @@ public class DetailedEstimateController {
 
 	
 	@PostMapping("/_search")
-	@ResponseStatus(HttpStatus.CREATED)
+	@ResponseStatus(HttpStatus.OK)
 	public DetailedEstimateResponse search(
 			@ModelAttribute @Valid DetailedEstimateSearchContract detailedEstimateSearchContract,
 			@RequestBody RequestInfo requestInfo, BindingResult errors, @RequestParam(required = true) String tenantId) {
@@ -50,7 +50,7 @@ public class DetailedEstimateController {
 
 
     @PostMapping("/_create")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public DetailedEstimateResponse create(@RequestBody DetailedEstimateRequest detailedEstimateRequest,
                                            BindingResult errors) {
         if (errors.hasErrors()) {

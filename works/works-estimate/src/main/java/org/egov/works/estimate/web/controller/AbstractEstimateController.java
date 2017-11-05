@@ -37,9 +37,6 @@ public class AbstractEstimateController {
 	@ResponseStatus(HttpStatus.OK)
 	public AbstractEstimateResponse create(@RequestBody AbstractEstimateRequest abstractEstimateRequest,
 			BindingResult errors) {
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
 		abstractEstimateService.validateEstimates(abstractEstimateRequest, errors, true);
 		final List<AbstractEstimate> abstractEstimates = abstractEstimateService.create(abstractEstimateRequest);
 		final AbstractEstimateResponse response = new AbstractEstimateResponse();
@@ -53,9 +50,6 @@ public class AbstractEstimateController {
 	public AbstractEstimateResponse update(@RequestBody AbstractEstimateRequest abstractEstimateRequest,
 			BindingResult errors) {
 		abstractEstimateService.validateEstimates(abstractEstimateRequest, errors, false);
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
 		final List<AbstractEstimate> abstractEstimates = abstractEstimateService.update(abstractEstimateRequest);
 		final AbstractEstimateResponse response = new AbstractEstimateResponse();
 		response.setAbstractEstimates(abstractEstimates);
@@ -66,11 +60,9 @@ public class AbstractEstimateController {
 	@PostMapping("/_search")
 	@ResponseStatus(HttpStatus.OK)
 	public AbstractEstimateResponse search(
-			@ModelAttribute @Valid AbstractEstimateSearchContract abstractEstimateSearchContract,
+			@ModelAttribute AbstractEstimateSearchContract abstractEstimateSearchContract,
 			@RequestBody RequestInfo requestInfo, BindingResult errors,
 			@RequestParam(required = true) String tenantId) {
-		if (errors.hasErrors())
-			throw new CustomBindException(errors);
 		final List<AbstractEstimate> abstractEstimates = abstractEstimateService.search(abstractEstimateSearchContract);
 		final AbstractEstimateResponse response = new AbstractEstimateResponse();
 		response.setAbstractEstimates(abstractEstimates);

@@ -19,8 +19,11 @@ import org.egov.works.estimate.web.contract.AbstractEstimate;
 import org.egov.works.estimate.web.contract.AbstractEstimateDetails;
 import org.egov.works.estimate.web.contract.AbstractEstimateRequest;
 import org.egov.works.estimate.web.contract.AbstractEstimateSearchContract;
+import org.egov.works.estimate.web.contract.AbstractEstimateStatus;
 import org.egov.works.estimate.web.contract.AuditDetails;
 import org.egov.works.estimate.web.contract.RequestInfo;
+import org.egov.works.estimate.web.contract.WorkFlowDetails;
+import org.egov.works.workflow.service.WorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +34,10 @@ import net.minidev.json.JSONArray;
 @Service
 @Transactional(readOnly = true)
 public class AbstractEstimateService {
+	
+	public static final String ABSTRACT_ESTIMATE_WF_TYPE = "AbstractEstimate";
+
+	public static final String ABSTRACT_ESTIMATE_BUSINESSKEY = "AbstractEstimate";
 
 	@Autowired
 	private AbstractEstimateRepository abstractEstimateRepository;
@@ -50,6 +57,9 @@ public class AbstractEstimateService {
 	@Autowired
 	private CommonUtils commonUtils;
 
+	@Autowired
+	private WorkflowService workflowService;
+
 	@Transactional
 	public List<AbstractEstimate> create(AbstractEstimateRequest abstractEstimateRequest) {
 		for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
@@ -65,14 +75,88 @@ public class AbstractEstimateService {
 				details.setAuditDetails(
 						setAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUsername(), false));
 			}
+			populateWorkFlowDetails(estimate, abstractEstimateRequest.getRequestInfo());
+			estimate.setStateId(workflowService.enrichWorkflow(estimate.getWorkFlowDetails(), estimate.getTenantId(),
+					abstractEstimateRequest.getRequestInfo()));
+			estimate.setStatus(AbstractEstimateStatus.CREATED);
 		}
 		kafkaTemplate.send(propertiesManager.getWorksAbstractEstimateCreateTopic(), abstractEstimateRequest);
 		return abstractEstimateRequest.getAbstractEstimates();
 	}
 
 	public List<AbstractEstimate> update(AbstractEstimateRequest abstractEstimateRequest) {
+		for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
+			populateWorkFlowDetails(estimate, abstractEstimateRequest.getRequestInfo());
+			estimate.setAuditDetails(
+					setAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUsername(), true));
+			estimate.setStateId(workflowService.enrichWorkflow(estimate.getWorkFlowDetails(), estimate.getTenantId(),
+					abstractEstimateRequest.getRequestInfo()));
+			populateNextStatus(estimate);
+		}
 		kafkaTemplate.send(propertiesManager.getWorksAbstractEstimateUpdateTopic(), abstractEstimateRequest);
 		return abstractEstimateRequest.getAbstractEstimates();
+	}
+	
+	private void populateWorkFlowDetails(AbstractEstimate abstractEstimate, RequestInfo requestInfo) {
+
+		if (null != abstractEstimate && null != abstractEstimate.getWorkFlowDetails()) {
+
+			WorkFlowDetails workFlowDetails = abstractEstimate.getWorkFlowDetails();
+
+			workFlowDetails.setType(ABSTRACT_ESTIMATE_WF_TYPE);
+			workFlowDetails.setBusinessKey(ABSTRACT_ESTIMATE_BUSINESSKEY);
+			workFlowDetails.setStateId(abstractEstimate.getStateId());
+			if (abstractEstimate.getStatus() != null)
+				workFlowDetails.setStatus(abstractEstimate.getStatus().toString());
+
+			if (null != requestInfo && null != requestInfo.getUserInfo()) {
+				workFlowDetails.setSenderName(requestInfo.getUserInfo().getUsername());
+			}
+
+			if (abstractEstimate.getStateId() != null) {
+				workFlowDetails.setStateId(abstractEstimate.getStateId());
+			}
+		}
+	}
+	
+	private void populateNextStatus(AbstractEstimate abstractEstimate) {
+		WorkFlowDetails workFlowDetails = null;
+		String currentStatus = null;
+
+		if (null != abstractEstimate && null != abstractEstimate.getStatus()) {
+			workFlowDetails = abstractEstimate.getWorkFlowDetails();
+			currentStatus = abstractEstimate.getStatus().toString();
+		}
+
+		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
+				&& workFlowDetails.getAction().equalsIgnoreCase("Submit")
+				&& (currentStatus.equalsIgnoreCase(AbstractEstimateStatus.CREATED.toString())
+				|| currentStatus.equalsIgnoreCase(AbstractEstimateStatus.RESUBMITTED.toString()))) {
+			abstractEstimate.setStatus(AbstractEstimateStatus.CHECKED);
+		}
+
+		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
+				&& workFlowDetails.getAction().equalsIgnoreCase("Approve")
+				&& currentStatus.equalsIgnoreCase(AbstractEstimateStatus.CHECKED.toString())) {
+			abstractEstimate.setStatus(AbstractEstimateStatus.APPROVED);
+		}
+
+		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
+				&& workFlowDetails.getAction().equalsIgnoreCase("Reject")) {
+			abstractEstimate.setStatus(AbstractEstimateStatus.REJECTED);
+		}
+		
+		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
+				&& workFlowDetails.getAction().equalsIgnoreCase("Forward")
+				&& currentStatus.equalsIgnoreCase(AbstractEstimateStatus.REJECTED.toString())) {
+			abstractEstimate.setStatus(AbstractEstimateStatus.RESUBMITTED);
+		}
+		
+		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
+				&& workFlowDetails.getAction().equalsIgnoreCase("Cancel")
+				&& currentStatus.equalsIgnoreCase(AbstractEstimateStatus.REJECTED.toString())) {
+			abstractEstimate.setStatus(AbstractEstimateStatus.CANCELLED);
+		}
 	}
 
 	public List<AbstractEstimate> search(AbstractEstimateSearchContract abstractEstimateSearchContract) {
@@ -94,7 +178,8 @@ public class AbstractEstimateService {
 			validateMasterData(estimate, errors, abstractEstimateRequest.getRequestInfo());
 
 			AbstractEstimateSearchContract searchContract = new AbstractEstimateSearchContract();
-			searchContract.setIds(Arrays.asList(estimate.getId()));
+			if (estimate.getId() != null)
+				searchContract.setIds(Arrays.asList(estimate.getId()));
 			searchContract.setAbstractEstimateNumbers(Arrays.asList(estimate.getAbstractEstimateNumber()));
 			searchContract.setTenantId(estimate.getTenantId());
 			List<AbstractEstimate> oldEstimates = search(searchContract);
@@ -119,14 +204,24 @@ public class AbstractEstimateService {
 					throw new InvalidDataException("adminSanctionNumber", ErrorCode.NOT_NULL.getCode(),
 							estimate.getAdminSanctionNumber());
 			}
-			validateEstimateDetails(estimate, errors);
+			validateEstimateDetails(estimate, errors, isNew);
 		}
 	}
 
-	private void validateEstimateDetails(AbstractEstimate estimate, BindingResult errors) {
+	private void validateEstimateDetails(AbstractEstimate estimate, BindingResult errors, Boolean isNew) {
 		BigDecimal estimateAmount = BigDecimal.ZERO;
-		for (final AbstractEstimateDetails aed : estimate.getAbstractEstimateDetails())
+		for (final AbstractEstimateDetails aed : estimate.getAbstractEstimateDetails()) {
 			estimateAmount = estimateAmount.add(aed.getEstimateAmount());
+			AbstractEstimateSearchContract searchContract = new AbstractEstimateSearchContract();
+			if (estimate.getId() != null)
+				searchContract.setIds(Arrays.asList(estimate.getId()));
+			searchContract.setEstimateNumbers(Arrays.asList(aed.getEstimateNumber()));
+			searchContract.setTenantId(estimate.getTenantId());
+			List<AbstractEstimate> oldEstimates = search(searchContract);
+			if (isNew && !oldEstimates.isEmpty())
+				throw new InvalidDataException("estimateNumber", ErrorCode.NON_UNIQUE_VALUE.getCode(),
+						aed.getEstimateNumber());
+		}
 		if (Double.parseDouble(estimateAmount.toString()) <= 0)
 			throw new InvalidDataException("estimateAmount", "estimateamount.notvalid", estimateAmount.toString());
 	}

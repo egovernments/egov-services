@@ -10,6 +10,8 @@ public enum AbstractEstimateStatus {
   
   NEW("NEW"),
   
+  SAVED("SAVED"),
+  
   CREATED("CREATED"),
   
   ADMIN_SANCTIONED("ADMIN_SANCTIONED"),

@@ -148,16 +148,6 @@ public class VehicleService {
 					}
 				}
 
-				responseJSONArray = mdmsRepository.getByCriteria(vehicle.getTenantId(), Constants.MODULE_CODE,
-						Constants.VENDOR_MASTER_NAME, "vendorNo", vehicle.getVendor().getVendorNo(),
-						vehicleRequest.getRequestInfo());
-
-				if (responseJSONArray != null && responseJSONArray.size() > 0)
-					vehicle.setVendor(mapper.convertValue(responseJSONArray.get(0), VendorEntity.class).toDomain());
-				else
-					throw new CustomException("Vendor",
-							"Given Vendor is invalid: " + vehicle.getVendor().getVendorNo());
-
 			}
 
 			// Validate Fuel Type

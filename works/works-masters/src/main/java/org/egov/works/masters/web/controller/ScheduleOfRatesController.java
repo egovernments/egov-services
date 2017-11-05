@@ -3,12 +3,11 @@ package org.egov.works.masters.web.controller;
 import org.egov.works.masters.domain.service.ScheduleOfRateService;
 import org.egov.works.masters.domain.validator.ScheduleOfRateValidator;
 import org.egov.works.masters.utils.MasterUtils;
-import org.egov.works.masters.web.contract.ScheduleOfRate;
-import org.egov.works.masters.web.contract.ScheduleOfRateRequest;
-import org.egov.works.masters.web.contract.ScheduleOfRateResponse;
+import org.egov.works.masters.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -38,7 +37,18 @@ public class ScheduleOfRatesController {
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
-	/*@PostMapping("/_update")
+	@PostMapping("/_search")
+	public ResponseEntity<?> search(
+			@ModelAttribute @Valid ScheduleOfRateSearchCriteria scheduleOfRateSearchCriteria,
+			@RequestBody RequestInfo requestInfo, BindingResult errors, @RequestParam String tenantId) {
+		final List<ScheduleOfRate> scheduleOfRates = scheduleOfRatesService.search(scheduleOfRateSearchCriteria);
+		final ScheduleOfRateResponse response = new ScheduleOfRateResponse();
+		response.setScheduleOfRates(scheduleOfRates);
+		response.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(requestInfo, true));
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+		/*@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ScheduleOfRateResponse update(@RequestBody ScheduleOfRateRequest scheduleOfRateRequest,
 			BindingResult errors, @RequestParam String tenantId) {
@@ -50,20 +60,6 @@ public class ScheduleOfRatesController {
 		final ScheduleOfRateResponse response = new ScheduleOfRateResponse();
 		response.setScheduleOfRates(scheduleOfRates);
 		response.setResponseInfo(getResponseInfo(scheduleOfRateRequest.getRequestInfo()));
-		return response;
-	}*/
-
-	/*@PostMapping("/_search")
-	@ResponseStatus(HttpStatus.CREATED)
-	public ScheduleOfRateResponse search(
-			@ModelAttribute @Valid ScheduleOfRatesSearchContract scheduleOfRatesSearchContract,
-			@RequestBody RequestInfo requestInfo, BindingResult errors, @RequestParam String tenantId) {
-		if (errors.hasErrors())
-			throw new CustomBindException(errors);
-		final List<ScheduleOfRate> scheduleOfRatess = scheduleOfRatesService.search(scheduleOfRatesSearchContract);
-		final ScheduleOfRateResponse response = new ScheduleOfRatesResponse();
-		response.setScheduleOfRates(scheduleOfRatess);
-		response.setResponseInfo(getResponseInfo(requestInfo));
 		return response;
 	}*/
 }

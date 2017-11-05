@@ -3,11 +3,9 @@ package org.egov.works.masters.domain.service;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.masters.config.PropertiesManager;
+import org.egov.works.masters.domain.repository.ScheduleOfRateRepository;
 import org.egov.works.masters.utils.MasterUtils;
-import org.egov.works.masters.web.contract.MarketRate;
-import org.egov.works.masters.web.contract.SORRate;
-import org.egov.works.masters.web.contract.ScheduleOfRate;
-import org.egov.works.masters.web.contract.ScheduleOfRateRequest;
+import org.egov.works.masters.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +19,8 @@ import java.util.List;
 @Service
 public class ScheduleOfRateService {
 
-    /*@Autowired
-    private ScheduleOfRateRepository scheduleOfRateRepository;*/
+    @Autowired
+    private ScheduleOfRateRepository scheduleOfRateRepository;
 
     @Autowired
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
@@ -59,8 +57,8 @@ public class ScheduleOfRateService {
         return scheduleOfRateRequest.getScheduleOfRates();
     }
 
-    /*public List<ScheduleOfRate> search(ScheduleOfRateSearchContract abstractEstimateSearchContract) {
-        return scheduleOfRateRepository.search(abstractEstimateSearchContract);
-    }*/
+    public List<ScheduleOfRate> search(ScheduleOfRateSearchCriteria scheduleOfRateSearchCriteria) {
+        return scheduleOfRateRepository.getScheduleOfRateByCriteria(scheduleOfRateSearchCriteria);
+    }
 
 }

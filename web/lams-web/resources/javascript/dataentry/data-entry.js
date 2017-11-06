@@ -182,7 +182,8 @@ var commomFieldsRules = {
 
     },
     tenderNumber: {
-        required: true
+        required: true,
+        alphaNumer: true
     },
     tenderDate: {
         required: true
@@ -191,7 +192,8 @@ var commomFieldsRules = {
         required: false
     },
     tradeLicenseNumber: {
-        required: false
+        required: false,
+        alphaNumer: true
     },
     caseNo: {
         required: true
@@ -227,7 +229,8 @@ var commomFieldsRules = {
         required: true
     },
     securityDeposit: {
-        required: true
+        required: true,
+        integerOnly:true
     },
     commencementDate: {
         required: true
@@ -236,7 +239,11 @@ var commomFieldsRules = {
         required: true
     },
     rent: {
-        required: true
+        required: true,
+        integerOnly:true
+    },
+    goodWillAmount:{
+      integerOnly:true
     },
     paymentCycle: {
         required: true
@@ -251,7 +258,8 @@ var commomFieldsRules = {
         required: false
     },
     solvencyCertificateNo: {
-        required: true
+        required: true,
+        alphaNumer: true
     },
     solvencyCertificateDate: {
         required: true
@@ -836,6 +844,15 @@ $.validator.addMethod('panNo', function(value) {
 $.validator.addMethod('alloName', function(value) {
     return /^[a-zA-Z ]*$/.test(value);
 }, 'Please enter a valid name.');
+
+$.validator.addMethod('alphaNumer', function(value) {
+  return value ? /^([0-9]+[a-zA-Z]+|[a-zA-Z]+[0-9]+|[0-9])[0-9a-zA-Z]*$/i.test(value) : true;
+}, 'Please enter only Alpha/Numeric Value');
+
+$.validator.addMethod('integerOnly',function(value){
+  return /^[0-9]{9}$/.test(value);
+},'please check the value/enter integer numbers only.')
+
 
 finalValidatinRules["messages"] = {
     "allottee.name": {

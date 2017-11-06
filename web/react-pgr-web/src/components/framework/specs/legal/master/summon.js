@@ -117,12 +117,21 @@ var dat = {
           isAction: true,
           actionItems: [
             {
-              label: "Assign Advocate",
+              label: "Assign ADV",
               url: "/update/legal/assignadvocate/"
             },
             {
-              label: "Case Registration",
+              label: "Case Reg",
               url: "/update/legal/caseregistration/"
+            }, {
+              label: "Vakalat",
+              url: "/update/legal/vakalatnama/"
+            }, {
+              label: "Hearing",
+              url: "/update/legal/hearingdetails/"
+            }, {
+              label: "ParaWise",
+              url: "/update/legal/parawisecomments/"
             }
           ]
         }

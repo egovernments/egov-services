@@ -2196,6 +2196,8 @@ var localization_EN_Data = {
 "advocatepayment.create.isPartialPayment":"Payment",
 "advocatepayment.create.PartialPayment":"Partial Payment",
 "advocatepayment.create.FullPayment":"Full Payment",
+"advocatepayment.create.instrumentNumber":"Instrument Number",
+"advocatepayment.create.InstrumentDate":"Instrument Date",
 
 "opinion.create.group.title.OpinionRequest": "Opinion Request",
 "opinion.create.opinionRequestDate": "Opinion Request Date",
@@ -2378,6 +2380,7 @@ var localization_EN_Data = {
 "advocatepayment.create.document.title":"Advocate Payment Create",
 "advocatepayment.search.document.title":"Advocate Payment Search",
 "advocatepayment.update.document.title":"Advocate Payment Update",
+
 
 "assignadvocate.update.document.title":"Assign Advocate Update",
 "caseregistration.update.document.title":"Case Registration Update",
@@ -4198,6 +4201,8 @@ var localization_MR_Data = {
 "advocatepayment.create.document.title":"Advocate Payment Create-marathi",
 "advocatepayment.search.document.title":"Advocate Payment Search-marathi",
 "advocatepayment.update.document.title":"Advocate Payment Update-marathi",
+"advocatepayment.create.instrumentNumber":"Instrument Number-marathi",
+"advocatepayment.create.InstrumentDate":"Instrument Date-marathi",
 
 "assignadvocate.update.document.title":"Assign Advocate Update-marathi",
 "caseregistration.update.document.title":"Case Registration Update-marathi",
@@ -4305,7 +4310,7 @@ var localization_MR_Data = {
 "vehicles.create.group.title.InsuranceDetails": "Insurance Details for Contracted Vehicle-Marathi",
 "vehicles.create.group.title.PurchaseDetails": "Purchase Details-Marathi",
 "vehicles.create.group.title.WarrantyDetails": "Warranty Details - Marathi",
-"error.license.feeDetailYearNotFound ": "Financial Does not exists for Current/Future Year-Marathi",
+"error.license.feeDetailYearNotFound ": "Financial Does not exists for Current/Future Year-Marathi"
 
 }
 

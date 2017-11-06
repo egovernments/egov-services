@@ -96,7 +96,7 @@ public class AgreementQueryBuilder {
 
         if (agreementsModel.getAllottee() != null) {
             selectQuery.append(" and AGREEMENT.ALLOTTEE IN (:allottee)");
-            params.put("allotee", agreementsModel.getAllottee());
+            params.put("allottee", agreementsModel.getAllottee());
         }
 
         if (agreementsModel.getFromDate() != null && agreementsModel.getToDate() != null) {

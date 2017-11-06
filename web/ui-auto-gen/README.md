@@ -26,10 +26,11 @@
    This will start node server on port 4002.
    - go to http://localhost:4002/ui-auto-gen
    - put yml url, module code & click "generate specs".
-   - You will get a zipped folder containing 2 files.
+   - You will get a zipped folder containing 2 files (_autoui.js & default.json). Give a intuitive name to _autoui.js.
+   - Go to react-pgr-web -> src -> components -> framework -> specs, create a folder with module name and put renamed _autoui.js file in module folder.
+   - copy default.json (formatted one) and paste it in react-pgr-web -> src -> components -> common -> common.js
    
    TODO - Sourabh please add remainging items.
-
 
 #### Hosted:
 - URL : http://egov-micro-dev.egovernments.org/ui-auto-gen

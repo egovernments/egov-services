@@ -42,7 +42,7 @@ var dat = {
           },
           {
             name: "caseType",
-            jsonPath: "cases[0].summon.caseType.name",
+            jsonPath: "cases[0].summon.caseType.code",
             label: "legal.create.caseType",
             type: "singleValueList",
             isRequired: true,
@@ -108,7 +108,7 @@ var dat = {
           },
           {
             name: "courtName",
-            jsonPath: "cases[0].summon.courtName.name",
+            jsonPath: "cases[0].summon.courtName.code",
             label: "legal.create.courtName",
             type: "singleValueList",
             isRequired: true,
@@ -137,7 +137,7 @@ var dat = {
           },
           {
             name: "side",
-            jsonPath: "cases[0].summon.side.name",
+            jsonPath: "cases[0].summon.side.code",
             label: "legal.create.side",
             type: "singleValueList",
             isRequired: true,
@@ -157,18 +157,18 @@ var dat = {
           },
           {
             name: "stamp",
-            jsonPath: "cases[0].summon.stamp.name",
+            jsonPath: "cases[0].summon.register.code",
             label: "legal.create.stamp",
             type: "singleValueList",
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: "",
             url:
-              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=stamp|$..code|$..name"
+              "/lcms-services/legalcase/register/_search?|$..code|$..name"
           },
           {
             name: "bench",
-            jsonPath: "cases[0].summon.bench.name",
+            jsonPath: "cases[0].summon.bench.code",
             label: "legal.create.bench",
             type: "singleValueList",
             isRequired: true,

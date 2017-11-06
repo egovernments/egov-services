@@ -68,8 +68,8 @@ UIInfo:
     resultObjectName: vehicleFuellingDetails
 
 
-- referencePath: "/collectionpointdetails"
-  url: "/collectionpointdetails/_search?transactionNo={transactionNo}"
+- referencePath: "/collectionpoints"
+  searchUrl: "/collectionpoints/_search?code={code}"
   
   groups:
     LocationSelection:
@@ -114,3 +114,13 @@ UIInfo:
     url: "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=REVENUE"
     keyPath: "$..id"
     valPath: "$..name"
+searchResult:
+    rowClickUrlUpdate: /update/collectionpoints/{code}
+    rowClickUrlView: /view/collectionpoints/{code}
+    columns:
+    - code
+    - name
+    values:
+    - code
+    - name
+    resultObjectName: collectionpoints

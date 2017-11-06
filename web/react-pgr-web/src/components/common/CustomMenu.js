@@ -220,9 +220,9 @@ const menuConvention={
 
 "Asset Management.Asset Reports.AssetImmovableRegister":"/report/asset/AssetImmovableRegister",
 //SWM
-"Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Create": "/create/vehiclefuellingdetails",
-"Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Search": "/search/vehiclefuellingdetails/view",
-"Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Update": "/search/vehiclefuellingdetails/update",
+"Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Create": "/create/swm/vehiclefuellingdetails",
+"Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Search": "/search/swm/vehiclefuellingdetails/view",
+"Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Update": "/search/swm/vehiclefuellingdetails/update",
 "Solid Waste Management.SWM Masters.Vehicle.Vehicle Create": "/create/vehicles",
 "Solid Waste Management.SWM Masters.Vehicle.Vehicle Search": "/search/vehicles/view",
 "Solid Waste Management.SWM Masters.Vehicle.Vehicle Update": "/search/vehicles/update",

@@ -150,26 +150,27 @@ serviceMaps:
       fromTopic: inv-supplier-save-topic
       queryMaps:
         - query: >-
-            INSERT INTO supplier(id, code, name, address, suppliertype,
-            status, inactivedate, suppliercontactno, faxno,
-            website, email, narration, panno,
-            tinno, cstno, vatno, gstno, contactperson,contactpersonno, bank, bankbranch,
-            bankifsc,bankAcctNo, bankmicr, createdby, createdtime, lastmodifiedby, lastmodifiedtime,tenantid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+            INSERT INTO supplier(id, code, name, address, type,
+            status, inactivedate, contactno,active, faxno,
+            website, email, description, panno,
+            tinno, cstno, vatno, gstno, contactperson,contactpersonno, bankcode, bankbranch,
+            bankifsc,bankAcctNo, bankmicr, createdby, createdtime, lastmodifiedby, lastmodifiedtime,tenantid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: $.suppliers.*
           jsonMaps:
             - jsonPath: $.suppliers.*.id
             - jsonPath: $.suppliers.*.code
             - jsonPath: $.suppliers.*.name
             - jsonPath: $.suppliers.*.address
-            - jsonPath: $.suppliers.*.supplierType.name
-            - jsonPath: $.suppliers.*.status.name
+            - jsonPath: $.suppliers.*.type
+            - jsonPath: $.suppliers.*.status
             - jsonPath: $.suppliers.*.inActiveDate
               dbType: LONG
-            - jsonPath: $.suppliers.*.supplierContactNo
+            - jsonPath: $.suppliers.*.contactNo
+            - jsonPath: $.suppliers.*.active
             - jsonPath: $.suppliers.*.faxNo
             - jsonPath: $.suppliers.*.website
             - jsonPath: $.suppliers.*.email
-            - jsonPath: $.suppliers.*.narration
+            - jsonPath: $.suppliers.*.description
             - jsonPath: $.suppliers.*.panNo
             - jsonPath: $.suppliers.*.tinNo
             - jsonPath: $.suppliers.*.cstNo
@@ -177,11 +178,11 @@ serviceMaps:
             - jsonPath: $.suppliers.*.gstNo
             - jsonPath: $.suppliers.*.contactPerson
             - jsonPath: $.suppliers.*.contactPersonNo
-            - jsonPath: $.suppliers.*.bankInfo.code
-            - jsonPath: $.suppliers.*.bankInfo.bankBranchCode
-            - jsonPath: $.suppliers.*.bankInfo.ifsc
-            - jsonPath: $.suppliers.*.bankInfo.acctNo
-            - jsonPath: $.suppliers.*.bankInfo.micr
+            - jsonPath: $.suppliers.*.bankCode
+            - jsonPath: $.suppliers.*.bankBranch
+            - jsonPath: $.suppliers.*.ifsc
+            - jsonPath: $.suppliers.*.acctNo
+            - jsonPath: $.suppliers.*.micr
             - jsonPath: $.suppliers.*.auditDetails.createdBy
             - jsonPath: $.suppliers.*.auditDetails.createdTime
               dbType: LONG
@@ -195,24 +196,25 @@ serviceMaps:
       fromTopic: inv-supplier-update-topic
       queryMaps:
         - query: >-
-            Update supplier set  name = ?, address = ?, suppliertype = ?,
-            status = ?, inactivedate = ?, suppliercontactno = ?, faxno = ?,
-            website = ?, email = ?, narration = ?, panno = ?,
+            Update supplier set  name = ?, address = ?, type = ?,
+            status = ?, inactivedate = ?, active = ?, contactno = ?, faxno = ?,
+            website = ?, email = ?, description = ?, panno = ?,
             tinno = ?, cstno = ?, vatno = ?, gstNo = ?, contactperson = ?,contactpersonno = ?,
-            bank = ?,bankbranch = ?, bankifsc = ?,bankAcctNo = ?, bankmicr = ?, lastmodifiedby = ?, lastmodifiedtime = ? where code = ? and tenantid = ?
+            bankcode = ?,bankbranch = ?, bankifsc = ?,bankAcctNo = ?, bankmicr = ?, lastmodifiedby = ?, lastmodifiedtime = ? where code = ? and tenantid = ?
           basePath: $.suppliers.*
           jsonMaps:
             - jsonPath: $.suppliers.*.name
             - jsonPath: $.suppliers.*.address
-            - jsonPath: $.suppliers.*.supplierType.name
-            - jsonPath: $.suppliers.*.status.name
+            - jsonPath: $.suppliers.*.type
+            - jsonPath: $.suppliers.*.status
             - jsonPath: $.suppliers.*.inActiveDate
               dbType: LONG
-            - jsonPath: $.suppliers.*.supplierContactNo
+            - jsonPath: $.suppliers.*.active 
+            - jsonPath: $.suppliers.*.contactNo
             - jsonPath: $.suppliers.*.faxNo
             - jsonPath: $.suppliers.*.website
             - jsonPath: $.suppliers.*.email
-            - jsonPath: $.suppliers.*.narration
+            - jsonPath: $.suppliers.*.description
             - jsonPath: $.suppliers.*.panNo
             - jsonPath: $.suppliers.*.tinNo
             - jsonPath: $.suppliers.*.cstNo
@@ -220,11 +222,11 @@ serviceMaps:
             - jsonPath: $.suppliers.*.gstNo
             - jsonPath: $.suppliers.*.contactPerson
             - jsonPath: $.suppliers.*.contactPersonNo
-            - jsonPath: $.suppliers.*.bankInfo.code
-            - jsonPath: $.suppliers.*.bankInfo.bankBranchCode
-            - jsonPath: $.suppliers.*.bankInfo.ifsc
-            - jsonPath: $.suppliers.*.bankInfo.acctNo
-            - jsonPath: $.suppliers.*.bankInfo.micr
+            - jsonPath: $.suppliers.*.bankCode
+            - jsonPath: $.suppliers.*.bankBranch
+            - jsonPath: $.suppliers.*.ifsc
+            - jsonPath: $.suppliers.*.acctNo
+            - jsonPath: $.suppliers.*.micr
             - jsonPath: $.suppliers.*.auditDetails.lastModifiedBy
             - jsonPath: $.suppliers.*.auditDetails.lastModifiedTime
               dbType: LONG
@@ -270,6 +272,7 @@ serviceMaps:
             - jsonPath: $.materialStoreMappings.*.material
             - jsonPath: $.materialStoreMappings.*.store
             - jsonPath: $.materialStoreMappings.*.auditDetails.tenantId
+
 
 
 

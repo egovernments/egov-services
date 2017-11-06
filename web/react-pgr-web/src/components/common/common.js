@@ -2404,7 +2404,8 @@ var localization_EN_Data = {
 "summon.search.document.title":"Summon Search",
 "summon.update.document.title":"Summon Update",
 
-"vakalatnama.create.document.title":"Vakalatnama Create"
+"vakalatnama.create.document.title":"Vakalatnama Create",
+"reports.print.details": "Print Details"
 
 
 
@@ -4310,7 +4311,8 @@ var localization_MR_Data = {
 "vehicles.create.group.title.InsuranceDetails": "Insurance Details for Contracted Vehicle-Marathi",
 "vehicles.create.group.title.PurchaseDetails": "Purchase Details-Marathi",
 "vehicles.create.group.title.WarrantyDetails": "Warranty Details - Marathi",
-"error.license.feeDetailYearNotFound ": "Financial Does not exists for Current/Future Year-Marathi"
+"error.license.feeDetailYearNotFound ": "Financial Does not exists for Current/Future Year-Marathi",
+"reports.print.details": "Print Details-Marathi"
 
 }
 

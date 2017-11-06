@@ -4,6 +4,7 @@ import io.swagger.model.AuditDetails;
 import io.swagger.model.Bank;
 import io.swagger.model.CommonEnum;
 import io.swagger.model.Supplier;
+import io.swagger.model.Supplier.TypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class SupplierEntity {
 
 	private String id = null;
 
-	private String supplierType = null;
+	private String type = null;
 
 	private String code = null;
 
@@ -32,6 +33,8 @@ public class SupplierEntity {
 	private String address = null;
 
 	private String status = null;
+	
+	private Boolean active = null;
 
 	private Long inactivedate = null;
 
@@ -43,7 +46,7 @@ public class SupplierEntity {
 
 	private String email = null;
 
-	private String narration = null;
+	private String description = null;
 
 	private String panNo = null;
 
@@ -59,7 +62,7 @@ public class SupplierEntity {
 
 	private String contactPersonNo = null;
 
-	private String bank = null;
+	private String bankCode = null;
 	
 	private String bankBranch = null;
 
@@ -83,15 +86,16 @@ public class SupplierEntity {
 		this.id = supplier.getId();
 		this.name = supplier.getName();
 		this.code = supplier.getCode();
-		this.supplierType = supplier.getSupplierType().getName();
+		this.type = supplier.getType().name();
 		this.address = supplier.getAddress();
-		this.status = supplier.getStatus().getName();
+		this.status = supplier.getStatus().name();
 		this.inactivedate = supplier.getInActiveDate();
-		this.supplierContactNo = supplier.getSupplierContactNo();
+		this.supplierContactNo = supplier.getContactNo();
 		this.faxNo = supplier.getFaxNo();
 		this.website = supplier.getWebsite();
+		this.active = supplier.getActive();
 		this.email = supplier.getEmail();
-		this.narration = supplier.getNarration();
+		this.description = supplier.getDescription();
 		this.panNo = supplier.getPanNo();
 		this.tinNo = supplier.getTinNo();
 		this.cstNo = supplier.getCstNo();
@@ -99,11 +103,11 @@ public class SupplierEntity {
 		this.gstNo = supplier.getGstNo();
 		this.contactPerson = supplier.getContactPerson();
 		this.contactPersonNo = supplier.getContactPersonNo();
-		this.bank = supplier.getBankInfo().getCode();
-		this.bankBranch = supplier.getBankInfo().getBankBranchCode();
-		this.bankAcctNo = supplier.getBankInfo().getAcctNo();
-		this.bankIfsc = supplier.getBankInfo().getIfsc();
-		this.bankMicr = supplier.getBankInfo().getMicr();
+		this.bankCode = supplier.getBankCode();
+		this.bankBranch = supplier.getBankBranch();
+		this.bankAcctNo = supplier.getAcctNo();
+		this.bankIfsc = supplier.getIfsc();
+		this.bankMicr = supplier.getMicr();
 		this.createdBy = supplier.getAuditDetails().getCreatedBy();
 		this.createdTime = supplier.getAuditDetails().getCreatedTime();
 		this.lastmodifiedBy = supplier.getAuditDetails().getLastModifiedBy();
@@ -118,33 +122,33 @@ public class SupplierEntity {
 		supplier.setId(id);
 		supplier.setCode(code);
 		supplier.setName(name);
-		CommonEnum suppType = new CommonEnum();
+/*		CommonEnum suppType = new CommonEnum();
 		suppType.setName(supplierType);
-		supplier.setSupplierType(suppType);
+		supplier.setSupplierType(suppType);*/
 		supplier.setAddress(address);
 		CommonEnum states = new CommonEnum();
 		states.setName(status);
-		supplier.setStatus(states);
+	/*	supplier.setStatus(states);*/
 		supplier.setInActiveDate(inactivedate);
-		supplier.setSupplierContactNo(supplierContactNo);
-		supplier.setFaxNo(faxNo);
+/*		supplier.setSupplierContactNo(supplierContactNo);
+*/		supplier.setFaxNo(faxNo);
 		supplier.setWebsite(website);
 		supplier.setEmail(email);
-		supplier.setNarration(narration);
-		supplier.setPanNo(panNo);
+/*		supplier.setNarration(narration);
+*/		supplier.setPanNo(panNo);
 		supplier.setTinNo(tinNo);
 		supplier.setVatNo(vatNo);
 		supplier.setGstNo(gstNo);
 		supplier.setContactPerson(contactPerson);
 		supplier.setContactPersonNo(contactPersonNo);
 		Bank banker = new Bank();
-		banker.setCode(bank);
-		banker.setAcctNo(bankAcctNo);
+/*		banker.setCode(bank);
+*/		banker.setAcctNo(bankAcctNo);
 		banker.setIfsc(bankIfsc);
 		banker.setMicr(bankMicr);
 		banker.setBankBranchCode(bankBranch);
-		supplier.setBankInfo(banker);
-		AuditDetails auditDetails = new AuditDetails();
+/*		supplier.setBankInfo(banker);
+*/		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(createdBy);
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedBy(lastmodifiedBy);

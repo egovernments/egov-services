@@ -40,6 +40,8 @@
 package org.egov.inv.domain.service;
 
 import java.util.List;
+
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.inv.domain.exception.ErrorCode;
 import org.egov.inv.domain.exception.InvalidDataException;
 import org.egov.inv.domain.model.SupplierGetRequest;
@@ -72,6 +74,12 @@ public class SupplierService {
 
 	@Value("${inv.supplier.update.topic}")
 	private String updateTopic;
+	
+	@Value("${inv.egf.masters.hostname}")
+	private String urlHostName;
+	
+	@Value("${inv.egf.masters.bank.searchpath}")
+	private String urlBankSearchPath;
 
 	public List<Supplier> create(SupplierRequest supplierRequest, String tenantId, BindingResult errors) {
 
@@ -95,7 +103,7 @@ public class SupplierService {
 
 		for (Supplier supplier : supplierRequest.getSuppliers()) {
 			if (supplier.getId() == null) {
-				throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), supplier.getId());
+				throw new CustomException("inv.005","Id is mandatory during updation");
 			}
 			supplier.setAuditDetails(
 					inventoryUtilityService.mapAuditDetailsForUpdate(supplierRequest.getRequestInfo(), tenantId));
@@ -116,5 +124,6 @@ public class SupplierService {
 		return supplierJdbcRepository.search(supplierGetRequest);
 
 	}
+
 
 }

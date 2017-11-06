@@ -4,6 +4,8 @@ ReportDefinitions:
   summary: Immovable Asset Register Report
   version: 1.0.0
   moduleName: asset
+  viewPath: assetImmovableReport
+  selectiveDownload: true
   sourceColumns:
   - name: name
     label: reports.asset.name
@@ -90,6 +92,7 @@ ReportDefinitions:
   version: 1.0.0
   moduleName: asset
   viewPath: assetImmovableReport
+  selectiveDownload: true
   sourceColumns:
   - name: id
     label: reports.asset.id

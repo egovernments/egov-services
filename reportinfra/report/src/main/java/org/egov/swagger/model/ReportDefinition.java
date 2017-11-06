@@ -60,6 +60,16 @@ public class ReportDefinition   {
 	@JsonProperty("viewPath")
 	private String viewPath = null;
 	
+	@JsonProperty("selectiveDownload")
+	private boolean selectiveDownload = false;
+	
+	
+	public boolean isSelectiveDownload() {
+		return selectiveDownload;
+	}
+	public void setSelectiveDownload(boolean selectiveDownload) {
+		this.selectiveDownload = selectiveDownload;
+	}
 	public String getViewPath() {
 		return viewPath;
 	}

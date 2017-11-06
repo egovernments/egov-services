@@ -8,9 +8,7 @@ import java.util.Map;
 
 import org.egov.swm.domain.model.CollectionPointDetails;
 import org.egov.swm.domain.model.CollectionPointDetailsSearch;
-import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.persistence.entity.CollectionPointDetailsEntity;
-import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,7 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class CollectionPointDetailsJdbcRepository {
+public class CollectionPointDetailsJdbcRepository extends JdbcRepository {
 
 	@Autowired
 	public JdbcTemplate jdbcTemplate;
@@ -28,9 +26,8 @@ public class CollectionPointDetailsJdbcRepository {
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Transactional
-	public void delete(String collectionPoint) {
-		String delQuery = "delete from  egswm_collectionpointdetails where collectionPoint = '" + collectionPoint + "'";
-		jdbcTemplate.execute(delQuery);
+	public void delete(String tenantId, String collectionPoint) {
+		delete("egswm_collectionpointdetails", tenantId, "collectionPoint", collectionPoint);
 	}
 
 	public List<CollectionPointDetails> search(CollectionPointDetailsSearch searchRequest) {
@@ -43,11 +40,6 @@ public class CollectionPointDetailsJdbcRepository {
 		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
 			validateSortByOrder(searchRequest.getSortBy());
 			validateEntityFieldName(searchRequest.getSortBy(), CollectionPointDetailsSearch.class);
-		}
-
-		String orderBy = "order by collectionPoint";
-		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
-			orderBy = "order by " + searchRequest.getSortBy();
 		}
 
 		if (searchRequest.getIds() != null) {
@@ -117,58 +109,6 @@ public class CollectionPointDetailsJdbcRepository {
 		}
 
 		return collectionPointDetailsList;
-	}
-
-	public Pagination<?> getPagination(String searchQuery, Pagination<?> page, Map<String, Object> paramValues) {
-		String countQuery = "select count(*) from (" + searchQuery + ") as x";
-		Long count = namedParameterJdbcTemplate.queryForObject(countQuery.toString(), paramValues, Long.class);
-		Integer totalpages = (int) Math.ceil((double) count / page.getPageSize());
-		page.setTotalPages(totalpages);
-		page.setCurrentPage(page.getOffset());
-		return page;
-	}
-
-	public void validateSortByOrder(final String sortBy) {
-		List<String> sortByList = new ArrayList<String>();
-		if (sortBy.contains(",")) {
-			sortByList = Arrays.asList(sortBy.split(","));
-		} else {
-			sortByList = Arrays.asList(sortBy);
-		}
-		for (String s : sortByList) {
-			if (s.contains(" ")
-					&& (!s.toLowerCase().trim().endsWith("asc") && !s.toLowerCase().trim().endsWith("desc"))) {
-
-				throw new CustomException(s.split(" ")[0],
-						"Please send the proper sortBy order for the field " + s.split(" ")[0]);
-			}
-		}
-
-	}
-
-	public void validateEntityFieldName(String sortBy, final Class<?> object) {
-		List<String> sortByList = new ArrayList<String>();
-		if (sortBy.contains(",")) {
-			sortByList = Arrays.asList(sortBy.split(","));
-		} else {
-			sortByList = Arrays.asList(sortBy);
-		}
-		Boolean isFieldExist = Boolean.FALSE;
-		for (String s : sortByList) {
-			for (int i = 0; i < object.getDeclaredFields().length; i++) {
-				if (object.getDeclaredFields()[i].getName().equals(s.contains(" ") ? s.split(" ")[0] : s)) {
-					isFieldExist = Boolean.TRUE;
-					break;
-				} else {
-					isFieldExist = Boolean.FALSE;
-				}
-			}
-			if (!isFieldExist) {
-				throw new CustomException(s.contains(" ") ? s.split(" ")[0] : s, "Please send the proper Field Names ");
-
-			}
-		}
-
 	}
 
 }

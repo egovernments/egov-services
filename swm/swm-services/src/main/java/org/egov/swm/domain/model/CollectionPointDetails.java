@@ -1,6 +1,5 @@
 package org.egov.swm.domain.model;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -39,9 +38,5 @@ public class CollectionPointDetails {
 	@Length(min = 0, max = 300)
 	@JsonProperty("description")
 	private String description = null;
-
-	@Valid
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
 
 }

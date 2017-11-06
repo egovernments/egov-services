@@ -1,6 +1,5 @@
 package org.egov.swm.persistence.entity;
 
-import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.CollectionPointDetails;
 import org.egov.swm.domain.model.CollectionType;
 
@@ -29,14 +28,6 @@ public class CollectionPointDetailsEntity {
 
 	private String description = null;
 
-	private String createdBy = null;
-
-	private String lastModifiedBy = null;
-
-	private Long createdTime = null;
-
-	private Long lastModifiedTime = null;
-
 	public CollectionPointDetails toDomain() {
 
 		CollectionPointDetails collectionPointDetails = new CollectionPointDetails();
@@ -45,11 +36,6 @@ public class CollectionPointDetailsEntity {
 		collectionPointDetails.setCollectionType(CollectionType.builder().code(collectionType).build());
 		collectionPointDetails.setGarbageEstimate(garbageEstimate);
 		collectionPointDetails.setDescription(description);
-		collectionPointDetails.setAuditDetails(new AuditDetails());
-		collectionPointDetails.getAuditDetails().setCreatedBy(createdBy);
-		collectionPointDetails.getAuditDetails().setCreatedTime(createdTime);
-		collectionPointDetails.getAuditDetails().setLastModifiedBy(lastModifiedBy);
-		collectionPointDetails.getAuditDetails().setLastModifiedTime(lastModifiedTime);
 
 		return collectionPointDetails;
 

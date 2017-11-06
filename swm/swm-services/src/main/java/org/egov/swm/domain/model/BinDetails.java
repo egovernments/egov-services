@@ -39,4 +39,10 @@ public class BinDetails {
 	@JsonProperty("rfid")
 	private String rfid = null;
 
+	@JsonProperty("latitude")
+	private Double latitude = null;
+
+	@JsonProperty("longitude")
+	private Double longitude = null;
+
 }

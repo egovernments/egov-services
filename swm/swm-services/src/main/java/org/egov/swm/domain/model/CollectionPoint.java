@@ -39,12 +39,6 @@ public class CollectionPoint {
 	@JsonProperty("location")
 	private Boundary location = null;
 
-	@JsonProperty("latitude")
-	private Double latitude = null;
-
-	@JsonProperty("longitude")
-	private Double longitude = null;
-
 	@JsonProperty("binDetails")
 	private List<BinDetails> binDetails = null;
 	

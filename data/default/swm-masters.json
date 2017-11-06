@@ -408,19 +408,16 @@
   ],
   "CollectionType": [
     {
-      "id": 1,
       "tenantId": "default",
       "name": "Fake Collection Type Name 1",
       "code": "Fake Collection Type Code 1"
     },
     {
-      "id": 2,
       "tenantId": "default",
       "name": "Fake Collection Type Name 2",
       "code": "Fake Collection Type Code 2"
     },
     {
-      "id": 3,
       "tenantId": "default",
       "name": "Fake Collection Type Name 3",
       "code": "Fake Collection Type Code 3"

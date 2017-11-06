@@ -12,7 +12,6 @@ import org.egov.swm.domain.model.CollectionPointDetailsSearch;
 import org.egov.swm.domain.model.CollectionPointSearch;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.persistence.entity.CollectionPointEntity;
-import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,7 +19,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CollectionPointJdbcRepository {
+public class CollectionPointJdbcRepository extends JdbcRepository {
 
 	@Autowired
 	public JdbcTemplate jdbcTemplate;
@@ -33,6 +32,11 @@ public class CollectionPointJdbcRepository {
 
 	@Autowired
 	public CollectionPointDetailsJdbcRepository collectionPointDetailsJdbcRepository;
+
+	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue) {
+
+		return uniqueCheck("egswm_collectionpoint", tenantId, fieldName, fieldValue);
+	}
 
 	public Pagination<CollectionPoint> search(CollectionPointSearch searchRequest) {
 
@@ -82,12 +86,12 @@ public class CollectionPointJdbcRepository {
 			paramValues.put("name", searchRequest.getName());
 		}
 
-		if (searchRequest.getLocation() != null) {
+		if (searchRequest.getLocationCode() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
 			params.append("location =:location");
-			paramValues.put("location", searchRequest.getLocation());
+			paramValues.put("location", searchRequest.getLocationCode());
 		}
 
 		Pagination<CollectionPoint> page = new Pagination<>();
@@ -145,58 +149,6 @@ public class CollectionPointJdbcRepository {
 		page.setPagedData(collectionPointList);
 
 		return page;
-	}
-
-	public Pagination<?> getPagination(String searchQuery, Pagination<?> page, Map<String, Object> paramValues) {
-		String countQuery = "select count(*) from (" + searchQuery + ") as x";
-		Long count = namedParameterJdbcTemplate.queryForObject(countQuery.toString(), paramValues, Long.class);
-		Integer totalpages = (int) Math.ceil((double) count / page.getPageSize());
-		page.setTotalPages(totalpages);
-		page.setCurrentPage(page.getOffset());
-		return page;
-	}
-
-	public void validateSortByOrder(final String sortBy) {
-		List<String> sortByList = new ArrayList<String>();
-		if (sortBy.contains(",")) {
-			sortByList = Arrays.asList(sortBy.split(","));
-		} else {
-			sortByList = Arrays.asList(sortBy);
-		}
-		for (String s : sortByList) {
-			if (s.contains(" ")
-					&& (!s.toLowerCase().trim().endsWith("asc") && !s.toLowerCase().trim().endsWith("desc"))) {
-
-				throw new CustomException(s.split(" ")[0],
-						"Please send the proper sortBy order for the field " + s.split(" ")[0]);
-			}
-		}
-
-	}
-
-	public void validateEntityFieldName(String sortBy, final Class<?> object) {
-		List<String> sortByList = new ArrayList<String>();
-		if (sortBy.contains(",")) {
-			sortByList = Arrays.asList(sortBy.split(","));
-		} else {
-			sortByList = Arrays.asList(sortBy);
-		}
-		Boolean isFieldExist = Boolean.FALSE;
-		for (String s : sortByList) {
-			for (int i = 0; i < object.getDeclaredFields().length; i++) {
-				if (object.getDeclaredFields()[i].getName().equals(s.contains(" ") ? s.split(" ")[0] : s)) {
-					isFieldExist = Boolean.TRUE;
-					break;
-				} else {
-					isFieldExist = Boolean.FALSE;
-				}
-			}
-			if (!isFieldExist) {
-				throw new CustomException(s.contains(" ") ? s.split(" ")[0] : s, "Please send the proper Field Names ");
-
-			}
-		}
-
 	}
 
 }

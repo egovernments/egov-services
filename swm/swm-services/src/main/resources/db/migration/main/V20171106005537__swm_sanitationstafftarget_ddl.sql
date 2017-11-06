@@ -26,6 +26,6 @@ Create table egswm_sst_collectionpoints(
 );
 
 
-alter table egswm_sanitationstafftarget add constraint pk_egswm_sanitationstafftarget primary key (code);
+alter table egswm_sanitationstafftarget add constraint pk_egswm_sanitationstafftarget primary key (targetNo);
 create sequence seq_egswm_sanitationstafftarget;
 create sequence seq_egswm_sst_collectionpoints;

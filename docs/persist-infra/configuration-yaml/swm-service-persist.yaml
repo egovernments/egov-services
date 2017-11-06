@@ -306,7 +306,7 @@ serviceMaps:
    description: create collectionpoint in egswm_collectionpoint
    fromTopic: swm-collectionpoint-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_collectionpoint(code, tenantid, name, location, latitude, longitude, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_collectionpoint(code, tenantid, name, location, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.collectionPoints.*
       jsonMaps:
        
@@ -318,12 +318,6 @@ serviceMaps:
 
        - jsonPath: $.collectionPoints.*.location.code
 
-       - jsonPath: $.collectionPoints.*.latitude
-         dbType: DOUBLE
-
-       - jsonPath: $.collectionPoints.*.longitude
-         dbType: DOUBLE
-       
        - jsonPath: $.collectionPoints.*.auditDetails.createdBy
 
        - jsonPath: $.collectionPoints.*.auditDetails.lastModifiedBy
@@ -334,7 +328,7 @@ serviceMaps:
        - jsonPath: $.collectionPoints.*.auditDetails.lastModifiedTime
          dbType: LONG
 
-    - query: INSERT INTO egswm_bindetails(id, tenantid, collectionpoint, assetorbinid, rfidassigned, rfid) VALUES (?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_bindetails(id, tenantid, collectionpoint, assetorbinid, rfidassigned, rfid,latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.collectionPoints.*.binDetails.*
       jsonMaps:
        
@@ -350,6 +344,12 @@ serviceMaps:
          dbType: BOOLEAN
 
        - jsonPath: $.collectionPoints.*.binDetails.*.rfid
+
+       - jsonPath: $.collectionPoints.*.binDetails.*.latitude
+         dbType: DOUBLE
+
+       - jsonPath: $.collectionPoints.*.binDetails.*.longitude
+         dbType: DOUBLE
 
 
     - query: INSERT INTO egswm_collectionpointdetails(id, tenantid, collectionType, collectionPoint, garbageEstimate, description, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
@@ -386,19 +386,13 @@ serviceMaps:
    fromTopic: swm-collectionpoint-update-topic
    queryMaps: 
 
-    - query: UPDATE egswm_collectionpoint SET name=?, location=?, latitude=?, longitude=?, lastmodifiedby=?, lastmodifiedtime=? WHERE code=? AND tenantid=?;
+    - query: UPDATE egswm_collectionpoint SET name=?, location=?, lastmodifiedby=?, lastmodifiedtime=? WHERE code=? AND tenantid=?;
       basePath: $.collectionPoints.*
       jsonMaps:
 
        - jsonPath: $.collectionPoints.*.name
 
        - jsonPath: $.collectionPoints.*.location.code
-         
-       - jsonPath: $.collectionPoints.*.latitude
-         dbType: DOUBLE
-
-       - jsonPath: $.collectionPoints.*.longitude
-         dbType: DOUBLE
          
        - jsonPath: $.collectionPoints.*.auditDetails.lastModifiedBy
 
@@ -409,7 +403,8 @@ serviceMaps:
 
        - jsonPath: $.collectionPoints.*.tenantId
 
-    - query: INSERT INTO egswm_bindetails(id, tenantid, collectionpoint, assetorbinid, rfidassigned, rfid) VALUES (?, ?, ?, ?, ?, ?);
+
+    - query: INSERT INTO egswm_bindetails(id, tenantid, collectionpoint, assetorbinid, rfidassigned, rfid,latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.collectionPoints.*.binDetails.*
       jsonMaps:
        
@@ -425,6 +420,12 @@ serviceMaps:
          dbType: BOOLEAN
 
        - jsonPath: $.collectionPoints.*.binDetails.*.rfid
+
+       - jsonPath: $.collectionPoints.*.binDetails.*.latitude
+         dbType: DOUBLE
+
+       - jsonPath: $.collectionPoints.*.binDetails.*.longitude
+         dbType: DOUBLE
 
 
     - query: INSERT INTO egswm_collectionpointdetails(id, tenantid, collectionType, collectionPoint, garbageEstimate, description, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);

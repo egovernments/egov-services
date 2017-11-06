@@ -1,6 +1,8 @@
 package org.egov.swm.domain.service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.egov.swm.constants.Constants;
@@ -11,6 +13,7 @@ import org.egov.swm.domain.model.CollectionPointDetails;
 import org.egov.swm.domain.model.CollectionPointSearch;
 import org.egov.swm.domain.model.CollectionType;
 import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.repository.BinDetailsRepository;
 import org.egov.swm.domain.repository.CollectionPointRepository;
 import org.egov.swm.web.contract.Boundary;
 import org.egov.swm.web.repository.BoundaryRepository;
@@ -31,6 +34,9 @@ public class CollectionPointService {
 
 	@Autowired
 	private CollectionPointRepository collectionPointRepository;
+
+	@Autowired
+	private BinDetailsRepository binDetailsRepository;
 
 	@Autowired
 	private MdmsRepository mdmsRepository;
@@ -113,11 +119,14 @@ public class CollectionPointService {
 
 		JSONArray responseJSONArray;
 		ObjectMapper mapper = new ObjectMapper();
+		Map<String, String> assetOrBinIdsMap = new HashMap<>();
+		Map<String, String> rfidsMap = new HashMap<>();
 
 		for (CollectionPoint collectionPoint : collectionPointRequest.getCollectionPoints()) {
 
 			// Validate Boundary
-			if (collectionPoint.getLocation() != null && collectionPoint.getLocation().getBndryId() != null) {
+
+			if (collectionPoint.getLocation() != null && collectionPoint.getLocation().getCode() != null) {
 
 				Boundary boundary = boundaryRepository.fetchBoundaryByCode(collectionPoint.getLocation().getCode(),
 						collectionPoint.getTenantId());
@@ -127,8 +136,8 @@ public class CollectionPointService {
 							.id(String.valueOf(boundary.getId())).name(boundary.getName())
 							.boundaryNum(String.valueOf(boundary.getBoundaryNum())).code(boundary.getCode()).build());
 				else
-					throw new CustomException("Boundary",
-							"Given Boundary is Invalid: " + collectionPoint.getLocation().getCode());
+					throw new CustomException("Location",
+							"Given Location is Invalid: " + collectionPoint.getLocation().getCode());
 			}
 
 			if (collectionPoint.getCollectionPointDetails() != null) {
@@ -136,7 +145,7 @@ public class CollectionPointService {
 				for (CollectionPointDetails cpd : collectionPoint.getCollectionPointDetails()) {
 
 					// Validate Collection Type
-					if (cpd.getCollectionType() != null) {
+					if (cpd.getCollectionType() != null && cpd.getCollectionType().getCode() != null) {
 
 						responseJSONArray = mdmsRepository.getByCriteria(collectionPoint.getTenantId(),
 								Constants.MODULE_CODE, Constants.COLLECTIONTYPE_MASTER_NAME, "code",
@@ -148,8 +157,60 @@ public class CollectionPointService {
 							throw new CustomException("CollectionType",
 									"Given CollectionType is invalid: " + cpd.getCollectionType().getCode());
 
-					}
+					} else
+						throw new CustomException("CollectionType", "CollectionType is required");
 				}
+			}
+
+			if (collectionPoint.getName() != null) {
+				if (!collectionPointRepository.uniqueCheck(collectionPoint.getTenantId(), "name",
+						collectionPoint.getName())) {
+
+					throw new CustomException("Name", "Already Collection point is exists in system with given name: "
+							+ collectionPoint.getName());
+
+				}
+			}
+
+			for (BinDetails bd : collectionPoint.getBinDetails()) {
+
+				if (bd.getAssetOrBinId() != null) {
+
+					if (assetOrBinIdsMap.get(bd.getAssetOrBinId()) != null)
+						throw new CustomException("BinId",
+								"Duplicate BinIds in given Bin details: " + bd.getAssetOrBinId());
+
+					assetOrBinIdsMap.put(bd.getAssetOrBinId(), bd.getAssetOrBinId());
+
+					if (bd.getAssetOrBinId() != null) {
+						if (!binDetailsRepository.uniqueCheck(collectionPoint.getTenantId(), "assetOrBinId",
+								bd.getAssetOrBinId())) {
+
+							throw new CustomException("BinId",
+									"Already Collection point is exists in system with given BinId: "
+											+ bd.getAssetOrBinId());
+
+						}
+					}
+
+				}
+				if (bd.getRfid() != null) {
+					if (rfidsMap.get(bd.getRfid()) != null)
+						throw new CustomException("Rfid", "Duplicate RFIDs in given Bin details: " + bd.getRfid());
+
+					rfidsMap.put(bd.getRfid(), bd.getRfid());
+
+					if (bd.getRfidAssigned() && bd.getRfidAssigned() != null) {
+						if (!binDetailsRepository.uniqueCheck(collectionPoint.getTenantId(), "rfid", bd.getRfid())) {
+
+							throw new CustomException("RFID",
+									"Already Collection point is exists in system with given RFID: " + bd.getRfid());
+
+						}
+					}
+
+				}
+
 			}
 
 		}

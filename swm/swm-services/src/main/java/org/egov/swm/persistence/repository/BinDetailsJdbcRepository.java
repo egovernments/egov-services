@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class BinDetailsJdbcRepository {
+public class BinDetailsJdbcRepository extends JdbcRepository {
 
 	@Autowired
 	public JdbcTemplate jdbcTemplate;
@@ -22,10 +22,14 @@ public class BinDetailsJdbcRepository {
 	@Autowired
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue) {
+
+		return uniqueCheck("egswm_bindetails", tenantId, fieldName, fieldValue);
+	}
+
 	@Transactional
-	public void delete(String collectionPoint) {
-		String delQuery = "delete from  egswm_bindetails where collectionPoint = '" + collectionPoint + "'";
-		jdbcTemplate.execute(delQuery);
+	public void delete(String tenantId, String collectionPoint) {
+		delete("egswm_bindetails", tenantId, "collectionPoint", collectionPoint);
 	}
 
 	public List<BinDetails> search(BinDetailsSearch searchRequest) {
@@ -65,6 +69,30 @@ public class BinDetailsJdbcRepository {
 			}
 			params.append("assetOrBinId =:assetOrBinId");
 			paramValues.put("assetOrBinId", searchRequest.getAssetOrBinId());
+		}
+
+		if (searchRequest.getCollectionPoint() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("collectionPoint =:collectionPoint");
+			paramValues.put("collectionPoint", searchRequest.getCollectionPoint());
+		}
+
+		if (searchRequest.getLongitude() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("longitude =:longitude");
+			paramValues.put("longitude", searchRequest.getLongitude());
+		}
+
+		if (searchRequest.getLatitude() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("latitude =:latitude");
+			paramValues.put("latitude", searchRequest.getLatitude());
 		}
 
 		if (searchRequest.getCollectionPoint() != null) {

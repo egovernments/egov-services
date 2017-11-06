@@ -44,8 +44,6 @@ public class CollectionPointEntity {
 		collectionPoint.setTenantId(tenantId);
 		collectionPoint.setName(name);
 		collectionPoint.setLocation(Boundary.builder().code(location).build());
-		collectionPoint.setLatitude(latitude);
-		collectionPoint.setLongitude(longitude);
 		collectionPoint.setAuditDetails(new AuditDetails());
 		collectionPoint.getAuditDetails().setCreatedBy(createdBy);
 		collectionPoint.getAuditDetails().setCreatedTime(createdTime);

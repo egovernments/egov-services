@@ -35,8 +35,15 @@ export default class TemplateParser extends Component {
 		return(
 			<div>
 				<div id="printTemplate">
-					<Template data={localStorage.reportData ? JSON.parse(localStorage.reportData) : {}}/>
-					<br/>
+					{localStorage.reportData ? JSON.parse(localStorage.reportData).map((v, i) => {
+						return (
+							<div>
+								<Template data={v}/>
+								<br/>
+								<div style={{"page-break-after": "always"}}></div>
+							</div>
+						)
+					}) : ""}
 				</div>
 				<div style={{"textAlign": "center"}}>
 					<RaisedButton label={"Print"} primary={true} onClick={this.printTemplate}/>

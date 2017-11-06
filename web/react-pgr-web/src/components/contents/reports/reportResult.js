@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
+import RaisedButton from 'material-ui/RaisedButton';
 import Api from '../../../api/api';
 import {translate, epochToDate} from '../../common/common';
 import _ from 'lodash';
@@ -23,7 +24,11 @@ var footerexist = false;
 class ShowField extends Component {
   constructor(props) {
        super(props);
-       this.state = {};
+       this.state = {
+        ck: {},
+        rows: {},
+        showPrintBtn: false
+       };
    }
 
   componentWillUnmount()
@@ -62,22 +67,75 @@ class ShowField extends Component {
     // }
   }
 
-  componentDidUpdate() {
-    // console.log('did update');
-    $('#reportTable').DataTable({
-      dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
-      order: [],
-      buttons: [
-         'copy', 'csv', 'excel',
+  getExportOptions () {
+    let flag = false;
+    for(let key in this.state.ck) {
+      if(this.state.ck[key]) {
+        flag = true;
+        break;
+      }
+    }
+
+    if(flag) {
+      return [
+         {
+            extend: 'copy',
+            exportOptions: {
+              rows: '.selected'
+            }
+         },
+         {
+            extend: 'csv',
+            exportOptions: {
+              rows: '.selected'
+            }
+         },
+         {
+            extend: 'excel',
+            exportOptions: {
+              rows: '.selected'
+            }
+         },
          {
             extend: 'pdf',
+            exportOptions: {
+              rows: { selected: true }
+            },
             filename : this.state.reportName,
             title : this.state.reportSubTitle,
             orientation: 'landscape',
             pageSize: 'TABLOID',
             footer : true
-          }, 'print'
-       ],
+          }, {
+            extend: 'print',
+            exportOptions: {
+              rows: '.selected'
+            }
+          }
+       ];
+    } else {
+      return [
+        'copy', 'csv', 'excel',
+        {
+           extend: 'pdf',
+           filename : this.state.reportName,
+           title : this.state.reportSubTitle,
+           orientation: 'landscape',
+           pageSize: 'TABLOID',
+           footer : true
+         }, 'print'
+      ];
+    }
+  }
+
+  componentDidUpdate() {
+    let self = this;
+    // console.log('did update');
+    $('#reportTable').DataTable({
+      dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
+      order: [],
+      select: true,
+      buttons: self.getExportOptions(),
       //  ordering: false,
        bDestroy: true,
        footerCallback: function ( row, data, start, end, display ) {
@@ -161,7 +219,7 @@ class ShowField extends Component {
 
         let response=Api.commonApiPost("/report/"+match.params.moduleName+"/_get",{},{tenantId:tenantId,reportName:splitArray[0].split("=")[1],searchParams}).then(function(response) {
           if(response.viewPath && response.reportData && response.reportData[0]) {
-            localStorage.reportData = JSON.stringify(response.reportData[0]);
+            localStorage.reportData = JSON.stringify(response.reportData);
             setRoute("/print/report/" + response.viewPath);
           } else {
             setReportResult(response);
@@ -196,10 +254,11 @@ class ShowField extends Component {
   }
 
   renderHeader = () => {
-    let { reportResult } = this.props;
+    let { reportResult, metaData } = this.props;
     return(
       <thead style={{backgroundColor:"#f2851f",color:"white"}}>
         <tr>
+          { metaData && metaData.reportDetails && metaData.reportDetails.selectiveDownload ? <th key={"testKey"}></th> : "" }
           {reportResult.hasOwnProperty("reportHeader") && reportResult.reportHeader.map((item,i)=>
           {
             if(item.showColumn){
@@ -216,9 +275,61 @@ class ShowField extends Component {
     )
   }
 
+  printSelectedDetails() {
+    let rows = {...this.state.rows};
+    let { reportResult, searchForm, setReportResult, setFlag, toggleSnackbarAndSetText, searchParams, setRoute, match, metaData } = this.props;
+    let header = this.props.reportResult.reportHeader;
+    let defaultValue = '';
+    for(let key in header) {
+      if(header[key].defaultValue && header[key].defaultValue.search("_parent") > -1) {
+        defaultValue = header[key].defaultValue;
+      }
+    }
+
+    if(defaultValue) {
+      let splitArray = defaultValue.split("&");
+      let values = [], key;
+      for(var k in rows) {
+        for (var i = 1; i < splitArray.length; i++) {
+          let value;
+          if(splitArray[i].search("{")>-1) {
+            key = splitArray[i].split("=")[0];
+            let inputparam = splitArray[i].split("{")[1].split("}")[0];
+            for (var j = 0; j < reportResult.reportHeader.length; j++) {
+                if (reportResult.reportHeader[j].name==inputparam) {
+                    value = rows[k][j];
+                }
+            }
+          }
+          else {
+            key=splitArray[i].split("=")[0];
+            if (key == "status") {
+                value = splitArray[i].split("=")[1].toUpperCase();
+            }
+            else {
+                value = splitArray[i].split("=")[1];
+            }
+          }
+          values.push(value);
+        }
+      }
+      
+      searchParams.push({"name":key, "input": values});
+      var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : '';
+      let response=Api.commonApiPost("/report/"+match.params.moduleName+"/_get",{},{tenantId:tenantId,reportName:splitArray[0].split("=")[1],searchParams}).then(function(response) {
+        if(response.viewPath && response.reportData) {
+          localStorage.reportData = JSON.stringify(response.reportData);
+          setRoute("/print/report/" + response.viewPath);
+        }
+      },function(err) {
+          console.log(err);
+      }); 
+    }
+  }
+
   renderBody = () => {
     sumColumn = [];
-    let { reportResult } = this.props;
+    let { reportResult, metaData } = this.props;
     let {drillDown, checkIfDate} = this;
     return (
       <tbody>
@@ -227,7 +338,28 @@ class ShowField extends Component {
           //array of array
           let reportHeaderObj = reportResult.reportHeader;
           return(
-            <tr key={dataIndex}>
+            <tr key={dataIndex} className={this.state.ck[dataIndex] ? "selected": ""}>
+              {metaData && metaData.reportDetails && metaData.reportDetails.selectiveDownload ? <td>
+                <input type="checkbox" onClick={(e) => {
+                  let ck = {...this.state.ck};
+                  ck[dataIndex] = e.target.checked;
+                  let rows = this.state.rows;
+                  if(e.target.checked) {
+                    rows[dataIndex] = dataItem;
+                  } else {
+                    delete rows[dataIndex];
+                  }
+
+                  let showPrintBtn;
+                  if(Object.keys(rows).length) showPrintBtn = true
+                  else showPrintBtn = false;
+                  this.setState({
+                    ck,
+                    rows,
+                    showPrintBtn
+                  });
+                }}/>
+              </td> : ""}
               {dataItem.map((item,itemIndex)=>{
                 var columnObj = {};
                 //array for particular row
@@ -339,8 +471,7 @@ class ShowField extends Component {
     } = this.props;
     let self = this;
 
-    const viewTabel=()=>
-    {
+    const viewTabel = () => {
       return (
         <div>
         <Card>
@@ -350,7 +481,10 @@ class ShowField extends Component {
             {self.renderHeader()}
             {self.renderBody()}
             {self.renderFooter()}
-        </Table>
+          </Table>
+          {metaData.reportDetails && metaData.reportDetails.viewPath && metaData.reportDetails.selectiveDownload && self.state.showPrintBtn ? <div style={{"textAlign": "center"}}>
+            <RaisedButton style={{"marginTop": "10px"}} label={translate("reports.print.details")} onClick={() => {self.printSelectedDetails()}} primary={true}/>
+          </div> : ""}
       </CardText>
       </Card>
       <br/>

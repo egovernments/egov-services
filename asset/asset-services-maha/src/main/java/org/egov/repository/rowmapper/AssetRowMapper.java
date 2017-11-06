@@ -42,7 +42,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
         final Map<Long, Asset> map = new TreeMap<Long, Asset>();
 
         while (rs.next()) {
-            final Long assetId = (Long) rs.getObject("id");
+            final Long assetId = rs.getLong("id");
 
             log.debug("agreementid in row mapper" + assetId);
 
@@ -150,17 +150,17 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 map.put(assetId, asset);
             }
             
-            LandDetail landDetail = LandDetail.builder()
-            		.surveyNo(rs.getString("surveynumber"))
-            		.area(getDoubleFromBigDecimal(rs.getBigDecimal("area"))).code(rs.getString("landcode")).build();
-            if(asset.getLandDetails() != null)
-            	asset.getLandDetails().add(landDetail);
-            else {
-            	List<LandDetail> landDetails = new ArrayList<>();
-            	landDetails.add(landDetail);
-            	asset.setLandDetails(landDetails);
-            }
-            	
+			if (assetId.equals(rs.getLong("assetid"))) {
+				LandDetail landDetail = LandDetail.builder().surveyNo(rs.getString("surveynumber"))
+						.area(getDoubleFromBigDecimal(rs.getBigDecimal("area"))).code(rs.getString("landcode")).build();
+				if (asset.getLandDetails() != null)
+					asset.getLandDetails().add(landDetail);
+				else {
+					List<LandDetail> landDetails = new ArrayList<>();
+					landDetails.add(landDetail);
+					asset.setLandDetails(landDetails);
+				}
+			}	
           }
         return new ArrayList<Asset>(map.values());
         

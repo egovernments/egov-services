@@ -647,12 +647,7 @@ class ServiceTypeCreate extends Component {
                                     style={styles.setTopMargin}
                                     checked = {createServiceType.hasFinancialImpact || false}
                                     onCheck = {(e, i, v) => {
-                                      var e = {
-                                        target: {
-                                          value:i
-                                        }
-                                      }
-                                      handleChange(e, "hasFinancialImpact", false, '')
+                                      handleChange(i, "hasFinancialImpact", false, '')
                                     }}
                                     id="hasFinancialImpact"
                                   />
@@ -704,7 +699,7 @@ class ServiceTypeCreate extends Component {
 }
 
 const mapStateToProps = state => {
-
+  console.log(state.form.form);
   return ({createServiceType : state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
 }
 

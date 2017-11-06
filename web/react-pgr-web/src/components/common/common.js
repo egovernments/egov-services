@@ -1473,6 +1473,7 @@ var localization_EN_Data = {
     "pgr.lbl.registercomplaint.easy": "  We have made connecting with us easier than ever before. Once you raise ticket",
     "pgr.lbl.registered.date": " Registered Date",
     "pgr.lbl.register.grievance": " Register Grievance",
+    "pgr.lbl.log.grievance": " Log Grievance",
     "pgr.lbl.apply.service": "Apply For a Service",
     "pgr.lbl.apply.servicetag": "Apply Service",
     "pgr.lbl.result": " Search Result",

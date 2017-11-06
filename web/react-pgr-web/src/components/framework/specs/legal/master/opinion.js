@@ -13,7 +13,7 @@ var dat = {
           {
             name: "opinionFromDate",
             jsonPath: "opinionFromDate",
-            label: "opinion.createopinionFromDate",
+            label: "opinion.create.opinionFromDate",
             type: "datePicker",
             isRequired: false,
             isDisabled: false,
@@ -22,7 +22,7 @@ var dat = {
           {
             name: "opinionToDate",
             jsonPath: "opinionToDate",
-            label: "opinion.createopinionToDate",
+            label: "opinion.create.opinionToDate",
             type: "datePicker",
             isRequired: false,
             isDisabled: false,
@@ -38,7 +38,7 @@ var dat = {
           },
           {
             name: "departMentName",
-            jsonPath: "departMentName",
+            jsonPath: "departmentName",
             label: "opinion.createdepartMentName",
             type: "singleValueList",
             isRequired: false,
@@ -60,12 +60,23 @@ var dat = {
       }
     ],
     result: {
+      "disableRowClick" : true,
       header: [
         { label: "opinion.search.result.id" },
         { label: "opinion.search.result.departmentName" },
-        { label: "opinion.search.result.opinionOn" }
+        { label: "opinion.search.result.opinionOn" },
+         {
+          label: "legal.search.result.actionLabels",
+          isAction: true,
+          actionItems: [
+            {
+              label: "Update Opinion",
+              url: "/update/legal/updateopinion/"
+            }
+          ]
+        }
       ],
-      values: ["id", "departMentName", "opinionOn"],
+      values: ["code", "departmentName.name", "opinionOn","code"],
       resultPath: "opinions",
       rowClickUrlUpdate: "/update/opinion/{id}",
       rowClickUrlView: "/view/opinion/{id}"
@@ -108,7 +119,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: "",
-            url: "/lcms-services/legalcase/case/_search?|$..summon.caseNo|$..summon.summonReferenceNo|"
+            url: "/lcms-services/legalcase/case/_search?|$..summon.caseNo|$..summon.caseNo|"
           },
           {
             name: "opinionOn",

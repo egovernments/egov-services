@@ -601,26 +601,27 @@ var dat = {
                 },{
                   "label": "legacylegal.create.fee"
                 }],
+                "autoIndexing": true,
                 "values": [{
-                  "name": "advocateName",
+                  "name": "advocateName-index",
                   "pattern": "",
                   "type": "singleValueList",
-                  "jsonPath": "cases[0].advocateDetails[0].advocate.name",
+                  "jsonPath": "cases[0].advocateDetails[index].advocate.name",
                   "isRequired": true,
                   "isDisabled": false,
                   "url": "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
                 }, {
-                  "name": "advocateAssignDate",
+                  "name": "advocateAssignDate-index",
                   "pattern": "",
                   "type": "datePicker",
-                  "jsonPath": "cases[0].advocateDetails[0].assignedDate",
+                  "jsonPath": "cases[0].advocateDetails[index].assignedDate",
                   "isRequired": true,
                   "isDisabled": false
                 },{
-                  "name": "fee",
+                  "name": "fee-index",
                   "pattern": "",
                   "type": "text",
-                  "jsonPath": "cases[0].advocateDetails[0].fee",
+                  "jsonPath": "cases[0].advocateDetails[index].fee",
                   "isRequired": true,
                   "isDisabled": false
                 }]

@@ -27,6 +27,14 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: "legal.create.field.message.referenceCaseNo"
+          },{
+            name: "caseNo",
+            jsonPath: "caseNo",
+            label: "caseRegistration.create.caseNo",
+            type: "text",
+            isRequired: false,
+            isDisabled: false,
+            patternErrorMsg: "legal.create.field.message.referenceCaseNo"
           },
           {
             name: "caseStatus",
@@ -140,9 +148,9 @@ var dat = {
         "summon.summonReferenceNo",
         "caseRefernceNo",
         "hearingDetails.caseStatus",
-        "departmentName",
-        "caseType",
-        "advocateName",
+        "summon.departmentName.name",
+        "summon.caseType.name",
+        "advocateDetails[0].advocate.name",
          "code"
       ],
       resultPath: "cases",

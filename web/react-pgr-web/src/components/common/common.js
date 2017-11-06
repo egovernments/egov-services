@@ -2413,7 +2413,24 @@ var localization_EN_Data = {
 "summon.update.document.title":"Summon Update",
 
 "vakalatnama.create.document.title":"Vakalatnama Create",
-"reports.print.details": "Print Details"
+"reports.print.details": "Print Details",
+"caseRegistration.create.caseNo":"Case No",
+"opinion.create.opinionFromDate":"Opinion From Date",
+"opinion.create.opinionToDate":"Opinion To Date",
+ "opinionrequest.update.group.title.OpinionRequest":"Opinion Request",
+"opinionrequest.update.opinionRequestDate":"Opinion Request Date",
+"opinionrequest.update.departmentName":"Department Name",
+"opinionrequest.update.opinionOn":"Opinion On",
+"opinionrequest.update.scruitny":"Scrultny",
+"opinionrequest.update.approve":"Approve",
+"opinionrequest.update.reject":"Reject",
+"opinionrequest.update.ForwardTo":"Forward To",
+"opinionrequest.update.opinionby":"Opinion By",
+ "opinionrequest.update.opinionDescription":"Opinion Description",
+  "opinionrequest.update.additionalAdvocate":"Additional Advocate",
+  "advocatepayment.create.instrumentNumber":"Instrument Number",
+"advocatepayment.create.InstrumentDate":"Instrument Date",
+"legal.create.uploadInvoice":"Upload Invoice"
 
 
 
@@ -4326,7 +4343,24 @@ var localization_MR_Data = {
 "vehicles.create.group.title.PurchaseDetails": "Purchase Details-Marathi",
 "vehicles.create.group.title.WarrantyDetails": "Warranty Details - Marathi",
 "error.license.feeDetailYearNotFound ": "Financial Does not exists for Current/Future Year-Marathi",
-"reports.print.details": "Print Details-Marathi"
+"reports.print.details": "Print Details-Marathi",
+"caseRegistration.create.caseNo":"Case No-Marathi",
+"opinion.create.opinionFromDate":"Opinion From Date-Marathi",
+"opinion.create.opinionToDate":"Opinion To Date-Marathi",
+ "opinionrequest.update.group.title.OpinionRequest":"Opinion Request-Marathi",
+"opinionrequest.update.opinionRequestDate":"Opinion Request Date-Marathi",
+"opinionrequest.update.departmentName":"Department Name-Marathi",
+"opinionrequest.update.opinionOn":"Opinion On-Marathi",
+"opinionrequest.update.scruitny":"Scrultny-Marathi",
+"opinionrequest.update.approve":"Approve-Marathi",
+"opinionrequest.update.reject":"Reject-Marathi",
+"opinionrequest.update.ForwardTo":"Forward To-Marathi",
+"opinionrequest.update.opinionby":"Opinion By-Marathi",
+ "opinionrequest.update.opinionDescription":"Opinion Description-Marathi",
+ "opinionrequest.update.additionalAdvocate":"Additional Advocate-marathi",
+ "advocatepayment.create.instrumentNumber":"Instrument Number-marathi",
+"advocatepayment.create.InstrumentDate":"Instrument Date-marathi",
+"legal.create.uploadInvoice":"Upload Invoice-marathi"
 
 }
 

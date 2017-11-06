@@ -54,7 +54,7 @@ var dat ={
             "name": "caseDate",
             "jsonPath": "cases[0].caseRegistrationDate",
             "label": "legal.create.caseRegistrationDate",
-            "type": "text",
+            "type": "datePicker",
             "isRequired": true,
             "isDisabled": false,
             "patternErrorMsg": ""
@@ -222,7 +222,7 @@ var dat ={
                 {
                   "name": "address",
                   "pattern": "",
-                  "type": "textarea",
+                  "type": "text",
                   "jsonPath": "cases[0].hearingDetails.attendees[0].address",
                   "isRequired": true,
                   "isDisabled": false
@@ -238,6 +238,7 @@ var dat ={
         "fields": [
           {
             "type": "tableList",
+            "autoIndexing": true,
             "jsonPath": "cases[0].hearingDetails.judges",
             "tableList": {
               "header": [
@@ -256,17 +257,17 @@ var dat ={
               ],
               "values": [
                 {
-                  "name": "attendeeName",
+                  "name": "attendeeName-index",
                   "pattern": "",
                   "type": "text",
-                  "jsonPath": "cases[0].hearingDetails.judges.name",
+                  "jsonPath": "cases[0].hearingDetails[index].judges.name",
                   "isRequired": true,
                   "isDisabled": false,
                   "url": ""
                 },
                 {
-                  "name": "gender",
-                  "jsonPath": "cases[0].hearingDetails.judges.gender",
+                  "name": "gender-index",
+                  "jsonPath": "cases[0].hearingDetails[index].judges.gender",
                   "type": "radio",
                   "isRequired": true,
                   "isDisabled": false,
@@ -283,18 +284,18 @@ var dat ={
                   ]
                 },
                 {
-                  "name": "mobileNo",
+                  "name": "mobileNo-index",
                   "pattern": "",
                   "type": "text",
-                  "jsonPath": "cases[0].hearingDetails.judges.mobileNumber",
+                  "jsonPath": "cases[0].hearingDetails[index].judges.mobileNumber",
                   "isRequired": true,
                   "isDisabled": false
                 },
                 {
-                  "name": "address",
+                  "name": "address-index",
                   "pattern": "",
-                  "type": "textarea",
-                  "jsonPath": "cases[0].hearingDetails.judges.address",
+                  "type": "text",
+                  "jsonPath": "cases[0].hearingDetails[index].judges.address",
                   "isRequired": true,
                   "isDisabled": false
                 }

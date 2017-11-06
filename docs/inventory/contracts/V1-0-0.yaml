@@ -937,7 +937,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /indentissues/_search:
+    /materailIssues/_search:
       post:
         summary: Get the list of indent issues.
         description: This API is used to search the issues incurred for the indents raised in the system.
@@ -978,13 +978,13 @@ paths:
           200:
             description: IndentIssue retrieved Successfully
             schema:
-              $ref: '#/definitions/IndentIssueResponse'
+              $ref: '#/definitions/MaterialIssueResponse'
           400:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /indentissues/_create:
+    /materailIssues/_create:
       post:
         summary: Create new indent issues.
         description: This API is invoked when the issuing store issues materials against the indent raised in the system.
@@ -996,18 +996,18 @@ paths:
             in: body
             description: Create  new 
             schema:
-              $ref: '#/definitions/IndentIssueRequest'
+              $ref: '#/definitions/MaterialIssueRequest'
         responses:
           200:
             description: IndentIssue created Successfully
             schema:
-              $ref: '#/definitions/IndentIssueResponse'
+              $ref: '#/definitions/MaterialIssueResponse'
           400:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /indentissues/_update:
+    /materailIssues/_update:
       post:
         summary: Update any of the indent issues.
         description: This API is invoked to update the indent material issue information and during the workflow as well.
@@ -1019,113 +1019,17 @@ paths:
             in: body
             description: common Request info
             schema:
-              $ref: '#/definitions/IndentIssueRequest'
+              $ref: '#/definitions/MaterialIssueRequest'
         responses:
           200:
             description: IndentIssue updated Successfully
             schema:
-              $ref: '#/definitions/IndentIssueResponse'
+              $ref: '#/definitions/MaterialIssueResponse'
           400:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /nonindentissues/_search:
-      post:
-        summary: Get the list of non indent issues.
-        description: Issue of material can take place even without indent as well. This API is invoked to search the non indent issue incured in the system.
-        tags: 
-          - Non Indent Issue
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: ids
-            type: array
-            items: 
-             type: string
-            in: query
-            maxItems: 50
-            description: comma seperated list of Ids 
-          - name: materialIssue
-            type: integer
-            format: int64
-            in: query
-            description: |
-              material issue of the Non Indent Issue
-          - name: issuePurpose
-            type: string
-            in: query
-            description: |
-              issue purpose of the Non Indent Issue
-            enum:
-              - WriteOffORScrap
-              - ReturnToSupplier
-          - name: stateId
-            type: integer
-            format: int64
-            in: query
-            description: |
-              state id of the Non Indent Issue
-          - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/offset"
-          - $ref: "#/parameters/pageNumber"
-          - $ref: "#/parameters/sortProperty" 
-        responses:
-          200:
-            description: NonIndentIssue retrieved Successfully
-            schema:
-              $ref: '#/definitions/NonIndentIssueResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    
-    /nonindentissues/_create:
-      post:
-        summary: Create  new  non indent issues
-        description: Issue of material can take place even without indent as well. This API is invoked to records the non indent issue takes place in the system.
-        tags: 
-          - Non Indent Issue
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: nonIndentIssueRequest
-            in: body
-            description: Create  new 
-            schema:
-              $ref: '#/definitions/NonIndentIssueRequest'
-        responses:
-          200:
-            description: NonIndentIssue created Successfully
-            schema:
-              $ref: '#/definitions/NonIndentIssueResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    
-    /nonindentissues/_update:
-      post:
-        summary: Update any of the non indent issues
-        description: This API is invoked to update the non indent issue information and during the workflow.
-        tags: 
-          - Non Indent Issue
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: nonIndentIssueRequest
-            in: body
-            description: common Request info
-            schema:
-              $ref: '#/definitions/NonIndentIssueRequest'
-        responses:
-          200:
-            description: NonIndentIssue updated Successfully
-            schema:
-              $ref: '#/definitions/NonIndentIssueResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
     /materials/_search:
       post:
         summary: Get the list of materials
@@ -2236,7 +2140,7 @@ definitions:
     Indent:
       type: object
       description: | 
-         This object holds common information required by indent materail and transfer indent. 
+         This object holds information required for indent note and transfer indent.
       properties:
         id:
           type: string
@@ -2250,9 +2154,13 @@ definitions:
         issueStore:
           format: singleValueList
           $ref: "#/definitions/Store"
+          description: |
+            Applicable for both Indent Note and Transfer Indent. This field holds information of the intended issuing store. 
         indentStore:
           $ref: "#/definitions/Store"  
           format : singleValueList
+          description: |
+            Applicable for Tranfer Indent Only.This field holds the value of store raising the indent in case of Transfer Indent. 
         indentDate:
           type: integer
           format: int64
@@ -2265,6 +2173,13 @@ definitions:
           description: |
             indentNumber  Auto generated number, read only <ULB short code><Store
             Code><fin. Year><serial No.>
+        indentType:
+          type: string
+          enum:
+            - IndentNote
+            - TransferIndent
+          description: |
+            There are 2 types of indent namely Indent Note and Transfer Indent
         indentPurpose:
           type: string
           enum:
@@ -2283,7 +2198,7 @@ definitions:
           type: integer
           format: int64
           description: |
-            expected delivery date for Indent Note  
+            Applicable only for Indent Note. Expected delivery date for Indent Note
           x-displayformat: 'dd/MM/yyyy'  
         materialHandOverTo:
           type: string
@@ -2346,6 +2261,7 @@ definitions:
       - indentDate
       - indentPurpose
       - indentMaterials
+      - indentType
       
     IndentDetail:
       type: object
@@ -2959,7 +2875,7 @@ definitions:
     MaterialIssue:
       type: object
       description: |
-        This object holds the common set of information for both Indent Issue and Non Indent Issue.  
+        This object holds information for both Indent Issue and Non Indent Issue.  
       properties:
         id:
           type: string
@@ -2969,7 +2885,12 @@ definitions:
           type: string
           description: Tenant id of the Material Issue
           maxLength: 128
-          minLength: 4    
+          minLength: 4
+        issueType:
+          type: string
+          enum:
+            - IndentIssue
+            - NonIndentIssue
         issuingStore:
           $ref: "#/definitions/Store"
         issueNoteNumber:
@@ -3013,11 +2934,39 @@ definitions:
           type: string
           description: Designation of the created by user at the time of Indent Issue/Non Indent Issue created.
           format: varchar
+        indent:
+          $ref: "#/definitions/Indent"
+          description: |
+            Applicable for Indent Issue. This object holds the indent information for which the material is being issued.
+        issuedToEmployee:
+          type:  string
+          description: |
+            Applicable for Indent Issue. Indent Issued To Employee. 
+        issuedToDesignation:
+          type: string
+          description: |
+            Applicable for Indent Issue. Designation of the employee to whom the indent is issued.  
+        issuePurpose:
+          type: string
+          enum:
+            - WriteOffORScrap
+            - ReturnToSupplier
+          description: |
+            Applicable in case of None Indent Issue. This field holds information about Issuing purpose of the Non Indent Issue
+        materialIssueDetails:
+          type: array
+          description: >-
+            List of materials issued for indent and non indent items.
+          items:
+            $ref: '#/definitions/MaterialIssueDetails'    
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
       - issuingStore
       - issueDate
+      - materialIssueStatus
+      - totalIssueValue
+      - issueType
       
     MaterialIssueRequest:
       description: Contract class for web request. Array of MaterialIssue items  are used in case of create or update
@@ -3043,195 +2992,54 @@ definitions:
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'      
 
-    IndentIssue:
+    MaterialIssueDetails:
       type: object
       description: |
-        This object holds the indent issue information.  
+        This object holds the materail issue detail information for both indent and non indent.
       properties:
         id:
           type: string
           description: |
-            Unique Identifier of the Indent Issue
+            Unique Identifier of the Material Issue Details
         tenantId:
           type: string
-          description: Tenant id of the Indent Issue
-          maxLength: 128
-          minLength: 4    
-        materialIssue:
-          $ref: "#/definitions/MaterialIssue"
-        workFlowDetails:
-          $ref: "#/definitions/WorkFlowDetails"
-        indent:
-          $ref: "#/definitions/Indent"  
-        stateId:
-          type: integer
-          format: int64
-          description: |
-            state id of the IndentIssue
-        indentIssueDetails:
-          type:  array
-          minItems: 1
-          maxItems: 50
-          description:  |
-            indent issue details of the IndentIssue
-          items:
-            $ref: "#/definitions/IndentIssueDetail"
-        issuedToEmployee:
-          type:  string
-          description: |
-            Indent Issued To Employee    
-        issuedToDesignation:
-          type: string
-          description: Designation of the employee to whom the indent is issued.    
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-    
-    IndentIssueRequest:
-      description: Contract class for web request. Array of IndentIssue items  are used in case of create or update.
-      properties:
-        requestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        indentIssues:
-          description: Used for search result and create only
-          type:  array
-          items:
-            $ref: '#/definitions/IndentIssue'
-            
-    IndentIssueResponse:
-      description: Contract class for web response. Array of IndentIssue items  are used in case of search, create or update request. 
-      properties:
-        responseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        indentIssues:
-          description: Used for search result and create only
-          type:  array
-          items:
-            $ref: '#/definitions/IndentIssue'
-        page:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'      
-
-    IndentIssueDetail:
-      type: object
-      description: |
-        This object holds the indent issue detail information.
-      properties:
-        id:
-          type: string
-          description: |
-            Unique Identifier of the Indent Issue Details
-        tenantId:
-          type: string
-          description: Tenant id of the Indent Issue Details
+          description: Tenant id of the Material Issue Details
           maxLength: 128
           minLength: 4
-        indentIssue:
-          $ref: "#/definitions/IndentIssue"
+        materialIssue:
+          $ref: "#/definitions/MaterialIssue"
         indentDetail:
+          description: >-
+            Applicable for Indent Issue. Balance quantity to be issued of the IndentDetails. 
           $ref: "#/definitions/IndentDetail"
         quantityToBeIssued:
           type: number
           format: BigDecimal
           description: |
-            Balance quantity to be issued of the IndentDetails  
+            Balance quantity to be issued of the IndentDetails.
+        materialReceiptHeader:
+          description: >-
+            Applicable for Non Indent Issue.
+          $ref: "#/definitions/MaterialReceiptHeader"  
+        material:
+          $ref: "#/definitions/Material"
+          description: |
+            Applicable for Non Indent Issue.
         quantityIssued:
           type: number
           format: BigDecimal
           description: |
-            quantity issued of the IndentIssueDetail
+            Quantity issued of the Material Issue Detail.
         description:
           type: string
           maxLength: 1000
           description: |
-            description of the IndentIssueDetail
+            description of the Material Issue Detail.
       required:
-      - indentIssue
+      - materialIssue
       - indentDetail
       - quantityIssued
       
-    NonIndentIssue:
-      type: object
-      description: |
-        This object holds the non indent issue information.  
-      properties:
-        id:
-          type: string
-          description: |
-            Unique Identifier of the Non Indent Issue
-        materialIssue:
-          $ref: "#/definitions/MaterialIssue"
-        issuePurpose:
-          type: string
-          enum:
-            - WriteOffORScrap
-            - ReturnToSupplier
-          description: |
-            issue purpose of the Non Indent Issue
-        workFlowDetails:
-          $ref: "#/definitions/WorkFlowDetails"     
-        stateId:
-          type: integer
-          format: int64
-          description: |
-            state id of the Non Indent Issue
-        nonIndentIssueDetails:
-          type:  array
-          description:  |
-            non indent issue details of the NonIndentIssue
-          items:
-            $ref: "#/definitions/NonIndentIssueDetails"
-      required:
-      - issuePurpose
-      
-    NonIndentIssueDetails:
-      type: object
-      description: |
-        This object holds the non indent issue detail information.
-      properties:
-        nonIndentIssue:
-          $ref: "#/definitions/NonIndentIssue"
-        materialReceiptHeader:
-          $ref: "#/definitions/MaterialReceiptHeader"
-        material:
-          $ref: "#/definitions/Material"
-        quantityIssued:
-          type: integer
-          format: int32
-          description: |
-            quantity issued of the NonIndentIssueDetails
-        description:
-          type: string
-          maxLength: 500
-          description: |
-            description of the NonIndentIssueDetails
-      required:
-      - nonIndentIssue
-      - material
-      - quantityIssued
-      
-    NonIndentIssueRequest:
-      description: Contract class for web request. Array of NonIndentIssue items  are used in case of create or update
-      properties:
-        requestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        nonIndentIssues:
-          description: Used for search result and create only
-          type:  array
-          items:
-            $ref: '#/definitions/NonIndentIssue'
-            
-    NonIndentIssueResponse:
-      description: Contract class for web response. Array of NonIndentIssue items  are used in case of search ,create or update request. 
-      properties:
-        responseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        nonIndentIssues:
-          description: Used for search result and create only
-          type:  array
-          items:
-            $ref: '#/definitions/NonIndentIssue'
-        page:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
-    
     TransferInward:
       type: object
       description: |
@@ -4464,4 +4272,3 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
-  

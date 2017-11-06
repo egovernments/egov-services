@@ -397,17 +397,17 @@ serviceMaps:
             workordercreated, billscreated, spilloverflag, grossamountbilled, 
             cancellationreason, cancellationremarks, totalincludingre, abstractestimatedetail, 
             stateid, fund, function, functionary, scheme, subscheme, budgetgroup, 
-            createdby, createdtime, lastmodifiedby, lastmodifiedtime) 
-            VALUES (?, ?, ?, ?, ?, ?, 
-            ?, ?, ?, ?, 
-            ?, ?, ?, ?, ?, ?, 
+            createdby, createdtime) 
+            VALUES (?, ?, ?, ?, ?, 
             ?, ?, ?, ?, ?, 
-            ?, ?, ?, ?, ?, ?, 
             ?, ?, ?, ?, ?, 
-            ?, ?, ?, ?, 
-            ?, ?, ?, ?, 
-            ?, ?, ?, ?, ?, ?, ?, 
-            ?, ?, ?);
+            ?, ?, ?, ?, ?, 
+            ?, ?, ?, ?, ?, 
+            ?, ?, ?, ?, ?, 
+            ?, ?, ?, ?, ?, 
+            ?, ?, ?, ?, ?, 
+            ?, ?, ?, ?, ?, 
+            ?, ?, ?, ?);
       basePath: $.detailedEstimates.*
       jsonMaps:
          

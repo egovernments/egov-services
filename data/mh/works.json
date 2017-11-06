@@ -51,8 +51,8 @@
     {
       "id": 1,
       "tenantId": "mh",
-      "code": "Roads - Fake",
-      "name": "Roads - Fake",
+      "code": "RoadsFake",
+      "name": "RoadsFake",
       "description": "Roads - Fake",
       "active": true,
       "parent": null
@@ -71,8 +71,8 @@
     {
       "id": 3,
       "tenantId": "mh",
-      "code": "CC - Roads - Fake",
-      "name": "CC - Roads - Fake",
+      "code": "CCRoadsFake",
+      "name": "CCRoadsFake",
       "description": "CC - Roads - Fake",
       "active": true,
       "parent": "Roads - Fake"

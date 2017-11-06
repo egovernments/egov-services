@@ -74,12 +74,6 @@ public class SupplierService {
 
 	@Value("${inv.supplier.update.topic}")
 	private String updateTopic;
-	
-	@Value("${inv.egf.masters.hostname}")
-	private String urlHostName;
-	
-	@Value("${inv.egf.masters.bank.searchpath}")
-	private String urlBankSearchPath;
 
 	public List<Supplier> create(SupplierRequest supplierRequest, String tenantId, BindingResult errors) {
 

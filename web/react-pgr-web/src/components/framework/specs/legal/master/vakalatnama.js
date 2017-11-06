@@ -1,7 +1,9 @@
 var dat = {
-  "legal.create": {
+  "legal.update": {
     numCols: 12 / 3,
     title:"vakalatnama.create.document.title",
+     searchUrl:
+      "/lcms-services/legalcase/case/_search?code={id}",
     url:
       "/lcms-services/legalcase/case/_vakalatnamageneration",
     tenantIdRequired: true,
@@ -56,21 +58,27 @@ var dat = {
             requiredErrMsg: "",
             patternErrMsg: ""
           },
-          {
-            name: "department",
-            jsonPath: "cases[0].summon.workFlowDetails.department",
-            label: "legal.vakalatnama.create.department",
-            pattern: "",
+           {
+            name: "departmentName",
+            jsonPath: "cases[0].summon.departmentName.id",
+            label: "legal.create.departmentName",
             type: "singleValueList",
-            url: "/lcms-services/legalcase/advocate/_search?|$..code|$..name",
-            isRequired: true,
-            isDisabled: false,
-            requiredErrMsg: "",
-            patternErrMsg: ""
+            isRequired: false,
+            isDisabled: true,
+            patternErrorMsg: "",
+            url: "/egov-common-masters/departments/_search?|$..id|$..name",
+            depedants: [
+              {
+                jsonPath: "cases[0].departmentPerson",
+                type: "dropDown",
+                pattern:
+                  "/hr-employee/employees/_search?tenantId=default&departmentId={cases[0].summon.departmentName.id}|$..name|$..name"
+              }
+            ]
           },
           {
             name: "chiefOfficerDetails",
-            jsonPath: "ChiefOfficerDetails",
+            jsonPath: "cases[0].coName",
             label: "legal.vakalatnama.create.chiefOfficerDetails",
             pattern: "",
             type: "text",
@@ -81,21 +89,10 @@ var dat = {
           },
           {
             name: "vakalatnamDate",
-            jsonPath: "cases[0].days",
+            jsonPath: "cases[0].vakalatnamaGenerationDate",
             label: "legal.vakalatnama.create.vakalatnamaDate",
             pattern: "",
-            type: "text",
-            isRequired: true,
-            isDisabled: false,
-            requiredErrMsg: "",
-            patternErrMsg: ""
-          },
-          {
-            name: "departmentName",
-            jsonPath: "cases[0].summon.departmentName",
-            label: "legal.vakalatnama.create.departmentName",
-            pattern: "",
-            type: "text",
+            type: "datePicker",
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",
@@ -103,25 +100,14 @@ var dat = {
           },
           {
             name: "courtName",
-            jsonPath: "CourtName",
-            label: "legal.vakalatnama.create.courtName",
-            pattern: "",
-            type: "text",
-            isRequired: true,
-            isDisabled: false,
-            requiredErrMsg: "",
-            patternErrMsg: ""
-          },
-          {
-            name: "hearingTime",
-            jsonPath: "HearingTime",
-            label: "legal.vakalatnama.create.hearingTime",
-            pattern: "",
-            type: "datePicker",
-            isRequired: true,
-            isDisabled: false,
-            requiredErrMsg: "",
-            patternErrMsg: ""
+            jsonPath: "cases[0].summon.courtName.code",
+            label: "legal.create.courtName",
+            type: "singleValueList",
+            isRequired: false,
+            isDisabled: true,
+            patternErrorMsg: "",
+            url:
+              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name"
           },
           {
             name: "witness",

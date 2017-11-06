@@ -227,7 +227,7 @@ var dat =  {
           },
           {
             name: "voucherNumber",
-            jsonPath: "advocatepayments[0].voucherNumber",
+            jsonPath: "advocatepayments[0].voucherNo",
             label: "advocatepayment.create.voucherNumber",
             type: "number",
             isRequired: false,
@@ -254,9 +254,18 @@ var dat =  {
             }]
             }, 
             {
-            name: "instrumentNumber_InstrumentDate.",
-            jsonPath: "advocatepayments[0].instrumentNumber_InstrumentDate",
-            label: "advocatepayment.create.instrumentNumber_InstrumentDate",
+            name: "instrumentNumber",
+            jsonPath: "advocatepayments[0].instrumentNumber",
+            label: "advocatepayment.create.instrumentNumber",
+            type: "datePicker",
+            isRequired: false,
+            isDisabled: false,
+            patternErrorMsg: ""
+          }, 
+            {
+            name: "InstrumentDate",
+            jsonPath: "advocatepayments[0].instrumentDate",
+            label: "advocatepayment.create.InstrumentDate",
             type: "datePicker",
             isRequired: false,
             isDisabled: false,
@@ -268,7 +277,8 @@ var dat =  {
             type: "number",
             jsonPath: "advocatepayments[0].advocateCharges[0].amount",
             isRequired: false,
-            isDisabled: false
+            isDisabled: true,
+            defaultValue: "advocatepayments[0].advocateCharges[0].amount"
           }, 
           {
                 type: "tableList",
@@ -460,7 +470,7 @@ var dat =  {
           },
           {
             name: "voucherNumber",
-            jsonPath: "advocatepayments[0].voucherNumber",
+            jsonPath: "advocatepayments[0].voucherNo",
             label: "advocatepayment.create.voucherNumber",
             type: "number",
             isRequired: false,
@@ -487,9 +497,18 @@ var dat =  {
             }]
             }, 
             {
-            name: "instrumentNumber_InstrumentDate.",
-            jsonPath: "advocatepayments[0].instrumentNumber_InstrumentDate",
-            label: "advocatepayment.create.instrumentNumber_InstrumentDate",
+            name: "instrumentNumber",
+            jsonPath: "advocatepayments[0].instrumentNumber",
+            label: "advocatepayment.create.instrumentNumber",
+            type: "number",
+            isRequired: false,
+            isDisabled: false,
+            patternErrorMsg: ""
+          }, 
+            {
+            name: "InstrumentDate",
+            jsonPath: "advocatepayments[0].instrumentDate",
+            label: "advocatepayment.create.InstrumentDate",
             type: "datePicker",
             isRequired: false,
             isDisabled: false,
@@ -501,7 +520,8 @@ var dat =  {
             type: "number",
             jsonPath: "advocatepayments[0].advocateCharges[0].amount",
             isRequired: false,
-            isDisabled: false
+            isDisabled: true,
+            defaultValue: "sum"//sum(advocatepayments[0].advocateCharges[0].amount)"
           }, 
           {
                 type: "tableList",
@@ -575,7 +595,7 @@ var dat =  {
   },
   "legal.update": {
     numCols: 4,
-    title:"advocatepayment.update.document.title",
+    title:"advocatepayment.create.document.title",
     useTimestamp: true,
     objectName: "advocatepayments",
    groups: [
@@ -692,7 +712,7 @@ var dat =  {
           },
           {
             name: "voucherNumber",
-            jsonPath: "advocatepayments[0].voucherNumber",
+            jsonPath: "advocatepayments[0].voucherNo",
             label: "advocatepayment.create.voucherNumber",
             type: "number",
             isRequired: false,
@@ -803,7 +823,7 @@ var dat =  {
         ]
       }
     ],
-    url: "/legalcase/advocatepayment/_update",
+    url: "/lcms-services/legalcase/advocatepayment/_update",
     tenantIdRequired: true
   }
 };

@@ -50,7 +50,7 @@ public class DashBoardRepository {
             " (select count(*) as closedcount, to_char(date_trunc('day',createddate), 'DAY') as day, to_char(date_trunc('day',createddate), 'dd') as date from submission" +
             " where servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId and keyword in ('complaint', 'Complaint'))" +
             " and createddate > current_date - interval '6' day and tenantid = :tenantId" +
-            " and status not in ('COMPLETED', 'REJECTED', 'WITHDRAWN')" +
+            " and status in ('COMPLETED', 'REJECTED', 'WITHDRAWN')" +
             " group by date_trunc('day',createddate)" +
             " order by date_trunc('day',createddate) ASC) as b" +
             " where a.day = b.day";

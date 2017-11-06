@@ -4,6 +4,7 @@
 	"funds":[
 		{
 			"id":"1",
+			"tenantId":"default",
 			"name":"FAKE FUND 1",
 			"code":"01",
 			"identifier":"1",
@@ -13,6 +14,7 @@
 		},
 		{
 			"id":"2",
+			"tenantId":"default",
 			"name":"FAKE FUND 2",
 			"code":"02",
 			"identifier":"2",
@@ -22,6 +24,7 @@
 		},
 		{
 			"id":"3",
+			"tenantId":"default",
 			"name":"FAKE FUND 3",
 			"code":"03",
 			"identifier":"3",
@@ -31,6 +34,7 @@
 		},
 		{
 			"id":"4",
+			"tenantId":"default",
 			"name":"FAKE FUND 4",
 			"code":"04",
 			"identifier":"4",
@@ -42,6 +46,7 @@
 	"financialYears":[
 		{
 			"id":"2",
+			"tenantId":"default",
 			"finYearRange":"2019-20",
 			"startingDate":"2019-04-01",
 			"endingDate":"2020-03-31",
@@ -52,6 +57,7 @@
 		},
 		{
 			"id":"3",
+			"tenantId":"default",
 			"finYearRange":"2018-19",
 			"startingDate":"2018-04-01",
 			"endingDate":"2019-03-31",
@@ -62,6 +68,7 @@
 		},
 		{
 			"id":"4",
+			"tenantId":"default",
 			"finYearRange":"2017-18",
 			"startingDate":"2017-04-01",
 			"endingDate":"2018-03-31",
@@ -72,6 +79,7 @@
 		},
 		{
 			"id":"5",
+			"tenantId":"default",
 			"finYearRange":"2016-17",
 			"startingDate":"2016-04-01",
 			"endingDate":"2017-03-31",
@@ -82,6 +90,7 @@
 		},
 		{
 			"id":"6",
+			"tenantId":"default",
 			"finYearRange":"2015-16",
 			"startingDate":"2015-04-01",
 			"endingDate":"2016-03-31",
@@ -92,6 +101,7 @@
 		},
 		{
 			"id":"7",
+			"tenantId":"default",
 			"finYearRange":"2014-15",
 			"startingDate":"2014-04-01",
 			"endingDate":"2015-03-31",
@@ -102,6 +112,7 @@
 		},
 		{
 			"id":"8",
+			"tenantId":"default",
 			"finYearRange":"2013-14",
 			"startingDate":"2013-04-01",
 			"endingDate":"2014-03-31",

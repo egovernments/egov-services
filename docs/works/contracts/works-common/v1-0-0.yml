@@ -711,6 +711,8 @@ definitions:
         description: Array of Estimate Template Activities
         items:
           $ref: '#/definitions/EstimateTemplateActivities'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       
     required:
       - tenantId
@@ -749,7 +751,6 @@ definitions:
         type: number
         format: BigDecimal
         description: Unit Rate for Estimate Template Activitie
-
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -1165,4 +1166,5 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
+
 

@@ -51,6 +51,7 @@ const AsyncGettingStartedExampleGoogleMap = _.flowRight(
     bounds={props.bounds}
     controlPosition={google.maps.ControlPosition.TOP_LEFT}
     onPlacesChanged={props.onPlacesChanged}
+
     inputPlaceholder="Search"
     inputStyle={INPUT_STYLE}
   />
@@ -193,12 +194,14 @@ export default class UigoogleMaps extends Component {
         label="Select"
         primary={true}
         onClick={this.handleClose}
-      />,
-      ,
+      />
+
     ];
 				return (
 					<div>
-					<FlatButton id={item.label.split(".").join("-")} type={item.uiType || "button"} label={item.label} primary={typeof item.primary != 'undefined' ? item.primary : true} secondary={item.secondary || false} onClick={this.handleOpen} disabled={item.isDisabled ? true : false}/>
+					<FlatButton id={item.label.split(".").join("-")}
+          icon={<img src="./temp/images/mapicon.png" height="50" width="70" />}
+          type={item.uiType || "button"} primary={typeof item.primary != 'undefined' ? item.primary : true} secondary={item.secondary || false} onClick={this.handleOpen} disabled={item.isDisabled ? true : false}/>
           <Dialog
           title="Google Maps"
 					style={{width: '90%', height: '90%'}}

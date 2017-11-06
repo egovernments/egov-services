@@ -20,13 +20,15 @@ var dat ={
             "patternErrorMsg": ""
           },
           {
-            "name": "caseType",
-            "jsonPath": "cases[0].summon.caseType",
-            "label": "legal.create.caseType",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "patternErrorMsg": ""
+            name: "caseType",
+            jsonPath: "cases[0].summon.caseType.code",
+            label: "legal.create.caseType",
+            type: "singleValueList",
+            isRequired: true,
+            isDisabled: false,
+            patternErrorMsg: "",
+            url:
+              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name"
           },
           {
             "name": "caseCategory",
@@ -37,14 +39,16 @@ var dat ={
             "isDisabled": false,
             "patternErrorMsg": ""
           },
-          {
-            "name": "courtName",
-            "jsonPath": "cases[0].summon.courtName.name",
-            "label": "legal.create.courtName",
-            "type": "singleValueList",
-            "isRequired": false,
-            "isDisabled": false,
-            "patternErrorMsg": ""
+         {
+            name: "courtName",
+            jsonPath: "cases[0].summon.courtName.code",
+            label: "legal.create.courtName",
+            type: "singleValueList",
+            isRequired: true,
+            isDisabled: false,
+            patternErrorMsg: "",
+            url:
+              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name"
           },
           {
             "name": "caseDate",
@@ -56,22 +60,33 @@ var dat ={
             "patternErrorMsg": ""
           },
           {
-            "name": "departmentName",
-            "jsonPath": "cases[0].summon.departmentName",
-            "label": "legal.create.departmentName",
-            "type": "singleValueList",
-            "isRequired": true,
-            "isDisabled": false,
-            "patternErrorMsg": ""
+            name: "departmentName",
+            jsonPath: "cases[0].summon.departmentName.id",
+            label: "legal.create.departmentName",
+            type: "singleValueList",
+            isRequired: false,
+            isDisabled: true,
+            patternErrorMsg: "",
+            url: "/egov-common-masters/departments/_search?|$..id|$..name",
+             depedants: [
+              {
+                jsonPath: "cases[0].departmentPerson",
+                type: "dropDown",
+                pattern:
+                  "/hr-employee/employees/_search?tenantId=default&departmentId={cases[0].summon.departmentName.id}|$..name|$..name"
+              }
+            ]
           },
           {
-            "name": "departmentConcernedPerson",
-            "jsonPath": "cases[0].summon.departmentPerson",
-            "label": "caseRegistration.create.departmentConcernedPerson",
-            "type": "singleValueList",
-            "isRequired": false,
-            "isDisabled": false,
-            "patternErrorMsg": ""
+            name: "departmentConcernedPerson",
+            jsonPath: "cases[0].departmentPerson",
+            label: "caseRegistration.create.departmentConcernedPerson",
+            type: "singleValueList",
+            isRequired: true,
+            isDisabled: false,
+            patternErrorMsg: "",
+            defaultValue: [],
+            url: ""
           },
           {
             "name": "hearingTime",
@@ -104,7 +119,8 @@ var dat ={
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
-            "patternErrorMsg": ""
+            "patternErrorMsg": "",
+            url:"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseStatus|$..code|$..name"
           },
           {
             "name": "caseFinalDecision",
@@ -135,9 +151,9 @@ var dat ={
           },
           {
             "name": "nextHearingDate",
-            "jsonPath": "cases[0].hearingDetails.nextHearingDate",
+            "jsonPath": "cases[0].hearingDetails.nextHearingTime",
             "label": "legal.create.nextHearingTime",
-            "type": "datePicker",
+            "type": "text",
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": ""
@@ -171,7 +187,7 @@ var dat ={
                 {
                   "name": "attendeeName",
                   "pattern": "",
-                  "type": "singleValueList",
+                  "type": "text",
                   "jsonPath": "cases[0].hearingDetails.attendees[0].name",
                   "isRequired": true,
                   "isDisabled": false,
@@ -242,7 +258,7 @@ var dat ={
                 {
                   "name": "attendeeName",
                   "pattern": "",
-                  "type": "singleValueList",
+                  "type": "text",
                   "jsonPath": "cases[0].hearingDetails.judges.name",
                   "isRequired": true,
                   "isDisabled": false,

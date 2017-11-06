@@ -48,7 +48,6 @@ public class AdvocatePayment {
 	@JsonProperty("allowance")
 	private Double allowance = null;
 
-	@NonNull
 	@JsonProperty("isPartialPayment")
 	private Boolean isPartialPayment = null;
 

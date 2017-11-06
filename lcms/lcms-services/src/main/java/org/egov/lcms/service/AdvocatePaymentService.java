@@ -45,9 +45,10 @@ public class AdvocatePaymentService {
 
 	public AdvocatePaymentResponse createAdvocatePayment(AdvocatePaymentRequest advocatePaymentRequest) throws Exception {
 		
-	
-		
 		for(AdvocatePayment advocatePayment : advocatePaymentRequest.getAdvocatePayments()){
+			if(advocatePayment.getIsPartialPayment() == null){
+				advocatePayment.setIsPartialPayment(Boolean.FALSE);
+			}
 			String code = uniqueCodeGeneration.getUniqueCode(advocatePayment.getTenantId(), advocatePaymentRequest.getRequestInfo(),
 					propertiesManager.getAdvocatePaymentUlbFormat(), propertiesManager.getAdvocatePaymentUlbName(),Boolean.FALSE,null);
 			       advocatePayment.setCode(code);
@@ -59,6 +60,13 @@ public class AdvocatePaymentService {
 	}
 
 	public AdvocatePaymentResponse updateAdvocatePayment(AdvocatePaymentRequest advocatePaymentRequest) {
+		
+		for(AdvocatePayment advocatePayment : advocatePaymentRequest.getAdvocatePayments()){
+			if(advocatePayment.getIsPartialPayment() == null){
+				advocatePayment.setIsPartialPayment(Boolean.FALSE);
+			}
+		
+		}
 		kafkaTemplate.send(propertiesManager.getAdvocatePaymentUpdate(), advocatePaymentRequest);
 		return new AdvocatePaymentResponse(responseInfoFactory.getResponseInfo(advocatePaymentRequest.getRequestInfo(), HttpStatus.CREATED), advocatePaymentRequest.getAdvocatePayments());
 	}

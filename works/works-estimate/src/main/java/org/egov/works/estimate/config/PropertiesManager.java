@@ -46,6 +46,12 @@ public class PropertiesManager {
 
     @Value("${works.abstractestimatenumber.format}")
     private String worksAbstractEstimateNumberFormat;
+
+    @Value("${works.detailedestimatenumber}")
+    private String worksDetailedEstimateNumber;
+
+    @Value("${works.detailedestimatenumber.format}")
+    private String worksDetailedEstimateNumberFormat;
     
     @Value("${works.projectcode}")
     private String worksWorkIdentificationNumber;

@@ -54,6 +54,28 @@ public class IdGenerationRepository {
 
         return JsonPath.read(response, "$.idResponses[0].id");
     }
+
+    public String generateDetailedEstimateNumber(final String tenantId, final RequestInfo requestInfo) {
+        Object response = null;
+        IdGenerationRequest idGenerationRequest = new IdGenerationRequest();
+        IdRequest idRequest = new IdRequest();
+        idRequest.setTenantId(tenantId);
+        idRequest.setFormat(propertiesManager.getWorksDetailedEstimateNumberFormat());
+        idRequest.setIdName(propertiesManager.getWorksDetailedEstimateNumber());
+        idGenerationRequest.setIdRequests(Arrays.asList(idRequest));
+        idGenerationRequest.setRequestInfo(requestInfo);
+        try {
+            response = restTemplate.postForObject(url,
+                    idGenerationRequest, Object.class);
+        } catch (Exception e) {
+            throw new ValidationException(null,
+                    WorksEstimateServiceConstants.DETAILED_ESTIMATE_NUMBER_GENERATION_ERROR, WorksEstimateServiceConstants.DETAILED_ESTIMATE_NUMBER_GENERATION_ERROR);
+
+        }
+        log.info("Response from id gen service: " + response.toString());
+
+        return JsonPath.read(response, "$.idResponses[0].id");
+    }
     
     public String generateWorkIdentificationNumber(final String tenantId, final RequestInfo requestInfo) {
         Object response = null;

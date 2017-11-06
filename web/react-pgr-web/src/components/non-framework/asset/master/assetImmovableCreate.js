@@ -2,13 +2,15 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
-import {Card, CardHeader, CardText} from 'material-ui/Card';
+import {Card, CardHeader, CardText,CardTitle} from 'material-ui/Card';
 import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import _ from "lodash";
 import ShowFields from "../../../framework/showFields";
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 
 import {translate} from '../../../common/common';
 import Api from '../../../../api/api';
@@ -305,6 +307,101 @@ class assetImmovableCreate extends Component {
       var depericiationValue = {};
     //  var customFieldsArray = [];
     //  var customArr;
+
+    Api.commonApiPost("/egf-masters/accountcodepurposes/_search",{"name":"Fixed Assets"},{}, false, false, false, "", "", false).then(function(response)
+   {
+     if(response) {
+       let keys=jp.query(response, "$..name");
+       let values=jp.query(response, "$..name");
+       let dropDownData=[];
+       for (var k = 0; k < keys.length; k++) {
+           let obj={};
+           obj["key"]=keys[k];
+           obj["value"]=values[k];
+           dropDownData.push(obj);
+       }
+
+       dropDownData.sort(function(s1, s2) {
+         return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+       });
+       dropDownData.unshift({key: null, value: "-- Please Select --"});
+       self.props.setDropDownData("Asset.assetAccount", dropDownData);
+     }
+   },function(err) {
+         console.log(err);
+    });
+
+    Api.commonApiPost("/egf-masters/accountcodepurposes/_search",{"name":"Accumulated Depreciation"},{}, false, false, false, "", "", false).then(function(response)
+   {
+     if(response) {
+       let keys=jp.query(response, "$..name");
+       let values=jp.query(response, "$..name");
+       let dropDownData=[];
+       for (var k = 0; k < keys.length; k++) {
+           let obj={};
+           obj["key"]=keys[k];
+           obj["value"]=values[k];
+           dropDownData.push(obj);
+       }
+
+       dropDownData.sort(function(s1, s2) {
+         return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+       });
+       dropDownData.unshift({key: null, value: "-- Please Select --"});
+       self.props.setDropDownData("Asset.accumulatedDepreciationAccount", dropDownData);
+     }
+   },function(err) {
+         console.log(err);
+    });
+
+    Api.commonApiPost("/egf-masters/accountcodepurposes/_search",{"name":"Revaluation Reserve Account"},{}, false, false, false, "", "", false).then(function(response)
+   {
+     if(response) {
+       let keys=jp.query(response, "$..name");
+       let values=jp.query(response, "$..name");
+       let dropDownData=[];
+       for (var k = 0; k < keys.length; k++) {
+           let obj={};
+           obj["key"]=keys[k];
+           obj["value"]=values[k];
+           dropDownData.push(obj);
+       }
+
+       dropDownData.sort(function(s1, s2) {
+         return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+       });
+       dropDownData.unshift({key: null, value: "-- Please Select --"});
+       self.props.setDropDownData("Asset.revaluationReserveAccount", dropDownData);
+     }
+   },function(err) {
+         console.log(err);
+    });
+
+    Api.commonApiPost("/egf-masters/accountcodepurposes/_search",{"name":"Depreciation Expense Account"},{}, false, false, false, "", "", false).then(function(response)
+   {
+     if(response) {
+       let keys=jp.query(response, "$..name");
+       let values=jp.query(response, "$..name");
+       let dropDownData=[];
+       for (var k = 0; k < keys.length; k++) {
+           let obj={};
+           obj["key"]=keys[k];
+           obj["value"]=values[k];
+           dropDownData.push(obj);
+       }
+
+       dropDownData.sort(function(s1, s2) {
+         return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+       });
+       dropDownData.unshift({key: null, value: "-- Please Select --"});
+       self.props.setDropDownData("Asset.depreciationExpenseAccount", dropDownData);
+     }
+   },function(err) {
+         console.log(err);
+    });
+
+
+
       Api.commonApiPost("/egov-mdms-service/v1/_get",{"moduleName":"ASSET", "masterName":"AssetCategory", "filter": "%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22IMMOVABLE%22)%5D%0A"}, {}, false, false, false, "", "", true).then(function(response)
      {
 
@@ -1192,8 +1289,9 @@ delete formData.Asset.assetAttributesCheck;
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
+    let self = this;
   //  {formData && formData.hasOwnProperty("Asset") && formData.Asset.hasOwnProperty("assetAttributes") && formData.Asset.assetAttributes.map((item,index)=>{
-      console.log(mockData);
+      console.log(this.props.dropDownData);
     // })}
 
 
@@ -1227,8 +1325,105 @@ delete formData.Asset.assetAttributesCheck;
                                     addNewCard={addNewCard}
                                     removeCard={removeCard}
                                     autoComHandler={autoComHandler}/> : ""}
-                            </div>
-                                  }
+
+
+                  <Card className="uiCard">
+                      <CardText>
+              					<Grid fluid>
+                        <SelectField
+            							className="custom-form-control-for-select"
+            							floatingLabelStyle={{"color": "#696969", "fontSize": "20px", "white-space": "nowrap"}}
+            							labelStyle={{"color": "#5F5C57"}}
+            							floatingLabelFixed={true}
+            							dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+            							style={{"display": ( 'inline-block')}}
+            							errorStyle={{"float":"left"}}
+            							fullWidth={true}
+            							hintText="Please Select"
+            							floatingLabelText={<span>{translate("ac.create.Asset.account.code")} <span style={{"color": "#FF0000"}}>{ " *" }</span></span>}
+                          value={this.getVal('Asset.assetAccount')}
+            							onChange={(event, key, value) =>{
+            								this.handleChange({target: {value: value}},'Asset.assetAccount', true ? true : false, '', false, false, false, false)
+            							}}
+
+            							maxHeight={200}>
+                          {self.props.dropDownData && self.props.dropDownData.hasOwnProperty('Asset.assetAccount') && self.props.dropDownData['Asset.assetAccount'].map((dd, index) => (
+    					                <MenuItem value={dd.key} key={index} primaryText={dd.value} />
+    					            ))}
+            			            </SelectField>
+
+                        <SelectField
+            							className="custom-form-control-for-select"
+            							floatingLabelStyle={{"color": "#696969", "fontSize": "20px", "white-space": "nowrap"}}
+            							labelStyle={{"color": "#5F5C57"}}
+            							floatingLabelFixed={true}
+            							dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+            							style={{"display": ( 'inline-block')}}
+            							errorStyle={{"float":"left"}}
+            							fullWidth={true}
+            							hintText="Please Select"
+            							floatingLabelText={<span>{translate("ac.create.Accumulated.Depreciation.Account")} <span style={{"color": "#FF0000"}}>{ " *" }</span></span>}
+                          value={this.getVal('Asset.accumulatedDepreciationAccount')}
+            							onChange={(event, key, value) =>{
+            								this.handleChange({target: {value: value}},'Asset.accumulatedDepreciationAccount', true ? true : false, '', false, false, false, false)
+            							}}
+
+            							maxHeight={200}>
+                          {self.props.dropDownData && self.props.dropDownData.hasOwnProperty('Asset.accumulatedDepreciationAccount') && self.props.dropDownData['Asset.accumulatedDepreciationAccount'].map((dd, index) => (
+    					                <MenuItem value={dd.key} key={index} primaryText={dd.value} />
+    					            ))}
+            			            </SelectField>
+
+                          <SelectField
+                            className="custom-form-control-for-select"
+                            floatingLabelStyle={{"color": "#696969", "fontSize": "20px", "white-space": "nowrap"}}
+                            labelStyle={{"color": "#5F5C57"}}
+                            floatingLabelFixed={true}
+                            dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+                            style={{"display": ( 'inline-block')}}
+                            errorStyle={{"float":"left"}}
+                            fullWidth={true}
+                            hintText="Please Select"
+                            floatingLabelText={<span>{translate("ac.create.Revaluation.Reserve.Account")} <span style={{"color": "#FF0000"}}>{ " *" }</span></span>}
+                            value={this.getVal('Asset.revaluationReserveAccount')}
+                            onChange={(event, key, value) =>{
+                              this.handleChange({target: {value: value}},'Asset.revaluationReserveAccount', true ? true : false, '', false, false, false, false)
+                            }}
+
+                            maxHeight={200}>
+                            {self.props.dropDownData && self.props.dropDownData.hasOwnProperty('Asset.revaluationReserveAccount') && self.props.dropDownData['Asset.revaluationReserveAccount'].map((dd, index) => (
+                                <MenuItem value={dd.key} key={index} primaryText={dd.value} />
+                            ))}
+                        </SelectField>
+
+                        <SelectField
+                          className="custom-form-control-for-select"
+                          floatingLabelStyle={{"color": "#696969", "fontSize": "20px", "white-space": "nowrap"}}
+                          labelStyle={{"color": "#5F5C57"}}
+                          floatingLabelFixed={true}
+                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+                          style={{"display": ( 'inline-block')}}
+                          errorStyle={{"float":"left"}}
+                          fullWidth={true}
+                          hintText="Please Select"
+                          floatingLabelText={<span>{translate("ac.create.Depreciation.Expenses.Account")} <span style={{"color": "#FF0000"}}>{ " *" }</span></span>}
+                          value={this.getVal('Asset.depreciationExpenseAccount')}
+                          onChange={(event, key, value) =>{
+                            this.handleChange({target: {value: value}},'Asset.depreciationExpenseAccount', true ? true : false, '', false, false, false, false)
+                          }}
+
+                          maxHeight={200}>
+                          {self.props.dropDownData && self.props.dropDownData.hasOwnProperty('Asset.depreciationExpenseAccount') && self.props.dropDownData['Asset.depreciationExpenseAccount'].map((dd, index) => (
+                              <MenuItem value={dd.key} key={index} primaryText={dd.value} />
+                          ))}
+                  </SelectField>
+
+              					</Grid>
+              				</CardText>
+
+              			</Card>
+                    </div>
+                }
           <div style={{"textAlign": "center"}}>
             <br/>
             {actionName == "create" && <UiButton item={{"label": "Create", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
@@ -1249,7 +1444,8 @@ const mapStateToProps = state => ({
   formData:state.frameworkForm.form,
   fieldErrors: state.frameworkForm.fieldErrors,
   isFormValid: state.frameworkForm.isFormValid,
-  requiredFields: state.frameworkForm.requiredFields
+  requiredFields: state.frameworkForm.requiredFields,
+  dropDownData: state.framework.dropDownData
 });
 
 const mapDispatchToProps = dispatch => ({

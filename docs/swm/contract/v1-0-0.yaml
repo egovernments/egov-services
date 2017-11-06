@@ -816,7 +816,6 @@ definitions:
           minLength: 1
         regNumber:
           type: string
-          format: singleValueList
           description: registration Number of the Vehicle. Should be unique across the platform. Special characters are not allowed. Space not allowed. 
           maxLength: 12
           minLength: 6
@@ -830,8 +829,8 @@ definitions:
         operatorsReq:
           type: integer
           format: int64
-          description: number Of Persons Required to operate the Vehicle. Shall be > 0
-          minimum: 1
+          description: number Of Persons Required to operate the Vehicle. Shall be >= 0
+          minimum: 0
           example: 3
         vendor:
           $ref: "#/definitions/Vendor"

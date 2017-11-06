@@ -2188,7 +2188,8 @@ definitions:
             - Capital
             - MaterialTransferNote
           description: |
-            indent purpose of the Indent
+            Consumption, RepairsAndMaintenance, Capital - applicable for Indent Note.
+            MaterialTransferNote - applicable for Transfer Indent.
         inventoryType:
           type: string
           enum:
@@ -2281,7 +2282,9 @@ definitions:
           $ref: "#/definitions/Material"
         uom:
           $ref: "#/definitions/Uom"
-          format: singleValueList
+        parentIndentLine:
+          $ref: "#/definitions/IndentDetail"  
+          description: In case of interstore transfer indent, this field is used to link with initial indent(if required)
         orderNumber:
           type: number
           format: int32
@@ -4272,3 +4275,4 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
+

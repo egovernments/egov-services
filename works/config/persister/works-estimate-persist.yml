@@ -461,8 +461,6 @@ serviceMaps:
        
        - jsonPath: $.detailedEstimates.*.worksSubtype.code
        
-       - jsonPath: $.detailedEstimates.*.subTypeOfWork.code
-       
        - jsonPath: $.detailedEstimates.*.natureOfWork.code
        
        - jsonPath: $.detailedEstimates.*.ward.code

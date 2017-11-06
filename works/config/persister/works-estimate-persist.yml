@@ -467,7 +467,7 @@ serviceMaps:
        
        - jsonPath: $.detailedEstimates.*.ward.code
        
-       - jsonPath: $.detailedEstimates.*.location.code
+       - jsonPath: $.detailedEstimates.*.location
        
        - jsonPath: $.detailedEstimates.*.longitude
        

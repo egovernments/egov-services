@@ -39,6 +39,7 @@ class Nominee extends React.Component{
           relationList: [],
           bankList: [],
           branchList: [],
+          allBankBranchList: [],
           employList: [],
           showMsg: false,
           id: ""
@@ -49,7 +50,6 @@ class Nominee extends React.Component{
       this.showCustomFieldForm = this.showCustomFieldForm.bind(this);
       this.setInitialState = this.setInitialState.bind(this);
       this.addNominee = this.addNominee.bind(this);
-      this.renderDelEvent = this.renderDelEvent.bind(this);
       this.handleChangeThreeLevel = this.handleChangeThreeLevel.bind(this);
     }
 
@@ -217,15 +217,6 @@ class Nominee extends React.Component{
     }
   }
 
-  renderDelEvent(index) {
-
-    var nomineeFieldsDefination = this.state.allNomineeValue.nomineeFieldsDefination;
-    nomineeFieldsDefination.splice(index, 1);
-    this.setState({
-      nomineeFieldsDefination
-    });
-}
-
     showCustomFieldForm(isShow,index) {
       if(typeof(index)!="undefined") {
         var nomineeFieldsDefination = this.state.allNomineeValue.nomineeFieldsDefination;
@@ -268,7 +259,7 @@ class Nominee extends React.Component{
           })
        });
 
-      var count = 4, _state = {}, _this = this;
+      var count = 5, _state = {}, _this = this;
 
       const checkCountAndCall = function(key, res) {
         _state[key] = res;
@@ -293,6 +284,10 @@ class Nominee extends React.Component{
         checkCountAndCall("relationList", res);
       })
 
+      getDropdown("bankbranches", function(res) {
+        checkCountAndCall("allBankBranchList", res);
+      })
+
       getCommonMasterById("hr-employee","employees", id, function(err, res) {
         if(res && res.Employee && res.Employee[0]) {
           var obj = res.Employee[0];
@@ -305,6 +300,29 @@ class Nominee extends React.Component{
                  code: obj.code
                }
             }
+          })
+        }
+      })
+
+      commonApiPost("hr-employee","nominees","_search",{"employeeId" : id,"tenantId":tenantId}, function(err, res) {
+        if(res && res.Nominee) {
+
+          res.Nominee.forEach(function(item){
+                var date = new Date(item.dateOfBirth);
+                var dd = date.getDate();
+                var mm = date.getMonth()+1; //January is 0!
+                var yyyy = date.getFullYear();
+                if(dd<10) { dd = '0'+dd }
+                if(mm<10) { mm = '0'+mm }
+                date = dd + '/' + mm + '/' + yyyy;
+                item.dateOfBirth = date;
+          });
+
+          _this.setState({
+            allNomineeValue: {
+             ..._this.state.allNomineeValue,
+             nomineeFieldsDefination:res.Nominee
+             }
           })
         }
       })
@@ -326,7 +344,21 @@ class Nominee extends React.Component{
         e.preventDefault();
 
         var _this = this;
-        var _fieldDate = Object.assign([], this.state.allNomineeValue.nomineeFieldsDefination);
+        var nomineeFieldsDefination = Object.assign([], _this.state.allNomineeValue.nomineeFieldsDefination);
+        var nominees = [];
+        for(var i=0; i<nomineeFieldsDefination.length; i++) {
+          var _tempInfo=Object.assign({}, _this.state.allNomineeValue);
+          delete _tempInfo.nomineeFieldsDefination;
+          //not adding previously saved nominees in create
+          console.log("TYPE", getUrlVars()["type"]);
+
+          if(getUrlVars()["type"] === "update" || !nomineeFieldsDefination[i].id){
+          nominees.push({..._tempInfo, ...nomineeFieldsDefination[i]});
+          }
+          console.log(nominees);
+        }
+
+        var _fieldDate = Object.assign([], nominees);
         for (var i = 0; i < _fieldDate.length; i++) {
           var _date = _fieldDate[i].dateOfBirth;
           var dateParts1 = _date.split("/");
@@ -335,20 +367,55 @@ class Nominee extends React.Component{
           var _final = date1.getTime();
           _fieldDate[i].dateOfBirth = _final;
         }
-        var nomineeFieldsDefination = Object.assign([], _this.state.allNomineeValue.nomineeFieldsDefination);
-        var nominees = [];
-        for(var i=0; i<nomineeFieldsDefination.length; i++) {
-          var _tempInfo=Object.assign({}, _this.state.allNomineeValue);
-          delete _tempInfo.nomineeFieldsDefination;
-          nominees.push({..._tempInfo, ...nomineeFieldsDefination[i]});
-        }
 
+        if(getUrlVars()["type"] != "update" && nominees.length === 0)
+        return(showError("No new nominees to add. Please use Add Nominee button to add Nominee"));
 
         var body = {
             "RequestInfo":requestInfo,
             "Nominee":nominees
         };
-        
+
+        if(getUrlVars()["type"]==="update"){
+          console.log("Inside update");
+          $.ajax({
+              url:baseUrl+"/hr-employee/nominees/_update?tenantId=" + tenantId,
+              type: 'POST',
+              dataType: 'json',
+              data:JSON.stringify(body),
+              contentType: 'application/json',
+              headers:{
+                'auth-token': authToken
+              },
+              success: function(res) {
+                showSuccess("Nominee Created successfully.");
+                _this.setState({allNomineeValue: {
+                    "tenantId": tenantId,
+                    "employee": {
+                        id: "",
+                        name: "",
+                        code: ""
+                    },
+                    nomineeFieldsDefination: []
+                },
+              })
+              },
+              error: function(err) {
+                var _err = err["responseJSON"].Error.message || "";
+                if(err["responseJSON"].Error.fields && Object.keys(err["responseJSON"].Error.fields).length) {
+                  for(var key in err["responseJSON"].Error.fields) {
+                    _err += "\n " + key + "- " + err["responseJSON"].Error.fields[key] + " "; //HERE
+                  }
+                  showError(_err);
+                } else if(_err) {
+                  showError(_err);
+                } else {
+                  showError(err["statusText"]);
+                }
+              }
+          })
+
+      }else {
         $.ajax({
             url:baseUrl+"/hr-employee/nominees/_create?tenantId=" + tenantId,
             type: 'POST',
@@ -386,11 +453,7 @@ class Nominee extends React.Component{
             }
         })
   }
-
-
-
-
-
+}
   addNewRow(e, name) {
     e.preventDefault();
     if(!this.state.newRows[name])
@@ -409,12 +472,10 @@ class Nominee extends React.Component{
       })
   }
 
-
-
   render(){
 
-    let {handleChange,addOrUpdate,addNewRow,showCustomFieldForm,addNominee,renderDelEvent,handleChangeThreeLevel}=this;
-    let {MaritalList,bankList,list,branchList,genderList,relationList,isEdit,index,isCustomFormVisible, readonly, showMsg,allNomineeValue}=this.state;
+    let {handleChange,addOrUpdate,addNewRow,showCustomFieldForm,addNominee,handleChangeThreeLevel}=this;
+    let {MaritalList,bankList,list,branchList,allBankBranchList,genderList,relationList,isEdit,index,isCustomFormVisible, readonly, showMsg,allNomineeValue}=this.state;
     let {nomineeFieldsDefination}=this.state.allNomineeValue;
     let mode=getUrlVars()["type"];
     let {name,gender,dateOfBirth,code,maritalStatus,relationship,bank,bankBranch,bankAccount,nominated,employed}=this.state.nomineeSet;
@@ -435,7 +496,7 @@ class Nominee extends React.Component{
         <div className="form-section">
           <h3 className="categoryType">Nominee Details</h3>
           <div className="row" style={{"padding-right": "18px"}}>
-            {showAddNewBtn()}
+            {showAddNomineeBtn()}
           </div>
           <div className="land-table table-responsive">
               <table className="table table-bordered">
@@ -452,7 +513,7 @@ class Nominee extends React.Component{
                      <th>Account Number</th>
                      <th>Is nominee</th>
                      <th>Is employed</th>
-                     <th>Action</th>
+                     {renderActionHeader(getUrlVars()["type"])}
                    </tr>
                   </thead>
                   <tbody>
@@ -465,6 +526,7 @@ class Nominee extends React.Component{
 
       )
     }
+
     const showCustomFieldAddForm=function()
     {
         if(isCustomFormVisible)
@@ -630,6 +692,8 @@ class Nominee extends React.Component{
       } else
         return "";
     }
+
+
     const renderBody=function() {
     if(nomineeFieldsDefination.length>0) {
             return nomineeFieldsDefination.map((item,index)=> {
@@ -651,10 +715,10 @@ class Nominee extends React.Component{
                 {item.relationship}
                   </td>
                   <td  >
-                {item.bank}
+                {getNameById(bankList,item.bank)}
                   </td>
                   <td  >
-                {item.bankBranch}
+                {getNameById(allBankBranchList,item.bankBranch)}
                   </td>
                   <td  >
                 {item.bankAccount}
@@ -665,14 +729,27 @@ class Nominee extends React.Component{
                   </td>
 
                   <td  >
-                {item.employed}
+                {item.employed?"true":"false"}
                   </td>
-                  <td data-label="Action">
-                  <button type="button" className="btn btn-default btn-action" onClick={(e)=>{renderDelEvent(index)}} disabled={getUrlVars()["type"] == "view"}><span className="glyphicon glyphicon-trash"></span></button>
-                  <button type="button" className="btn btn-default btn-action" onClick={(e)=>{showCustomFieldForm(true,index)}} disabled={getUrlVars()["type"] == "view"}><span className="glyphicon glyphicon-pencil"></span></button>
-                </td></tr>)
+                  {renderActionFeilds(mode,index)}
+                </tr>)
             })
         }
+      }
+
+
+      const renderActionHeader = function(mode){
+          if(mode==="update") {
+              return(<th>Action</th>);
+          }
+      }
+      const renderActionFeilds = function(mode,index){
+          if(mode==="update") {
+              return (<td data-label="Action">
+                <button type="button" className="btn btn-default btn-action" onClick={(e)=>{showCustomFieldForm(true,index)}}><span className="glyphicon glyphicon-pencil"></span></button>
+              </td>);
+          }
+          console.log("leaving renderActionFeilds" );
       }
 
       const showActionButton = function() {
@@ -681,10 +758,10 @@ class Nominee extends React.Component{
         }
     };
 
-    const showAddNewBtn = function() {
-      if(getUrlVars()["type"] != "view") {
+    const showAddNomineeBtn = function() {
+      if(getUrlVars()["type"] != "view" && getUrlVars()["type"]!="update") {
         return (
-            <button type="button" className="btn btn-primary  pull-right" onClick={()=>{showCustomFieldForm(true)}}>Add New</button>
+            <button type="button" className="btn btn-primary  pull-right" onClick={()=>{showCustomFieldForm(true)}}>Add Nominee</button>
           )
       }
     }

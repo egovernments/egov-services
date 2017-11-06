@@ -41,7 +41,6 @@ class AgreementSearch extends React.Component {
       e.target.setCustomValidity("");
     }
   }
-  
   search(e) {
     e.preventDefault();
     var _this = this;
@@ -49,7 +48,7 @@ class AgreementSearch extends React.Component {
       var searchSet = Object.assign({}, this.state.searchSet);
       if(searchSet.allottee)
         delete searchSet.allotteeName;
-      else 
+      else
         delete searchSet.allottee;
 
       //call api call
@@ -63,7 +62,7 @@ class AgreementSearch extends React.Component {
             return -1;
           } else if(new Date(date1[2], date1[1]-1, date1[0]).getTime() < new Date(date2[2], date2[1]-1, date2[0]).getTime()) {
             return 1;
-          } else 
+          } else
             return 0;
         })
       }
@@ -197,9 +196,9 @@ class AgreementSearch extends React.Component {
                 if(_this.state.users[i].name == ui.item.value) {
                   id = _this.state.users[i].id;
                 }
-              }  
+              }
             }
-            
+
             _this.setState({
                 searchSet:{
                     ..._this.state.searchSet,
@@ -223,6 +222,14 @@ class AgreementSearch extends React.Component {
             [e.target.id]: e.target.value
           }
       })
+      if(_this.state.searchSet.fromDate!="" && _this.state.searchSet.toDate==""){
+        $('#toDate').prop("required",true);
+      }else if(_this.state.searchSet.fromDate=="" && _this.state.searchSet.toDate!=""){
+       $('#fromDate').prop("required",true);
+     }else{
+       $('#toDate').prop("required",false);
+       $('#fromDate').prop("required",false);
+     }
     })
   }
 

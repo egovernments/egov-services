@@ -14,7 +14,98 @@ x-ui-info:
   $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/vfd-ui-info.yaml
 
 paths:
-
+    /collectionpoints/_search:
+      post:
+        summary: Get the list of collectionPoint
+        description: collectionPoint
+        tags: 
+          - CollectionPoint
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: codes
+            type: array
+            items: 
+              type: integer
+              format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of codes
+          - name: name
+            type: string
+            format: singleValueList
+            in: query
+            description: name of the CollectionPoint
+            maxLength: 256
+          - name: locationCode
+            type: string
+            format: singleValueList
+            in: query
+            description: location code of the CollectionPoint
+            maxLength: 256  
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+          - name: sortBy
+            type: string
+            in: query
+            description: |
+              This takes any field from the Object seperated by comma and asc,desc keywords.  
+              example name asc,code desc or name,code or name,code desc 
+        responses:
+          200:
+            description: CollectionPoint(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/CollectionPointResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /collectionpoints/_create:
+      post:
+        summary: Create new collectionPoint(s)
+        description: Create new collectionPoint(s)
+        tags: 
+          - CollectionPoint
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: collectionPointRequest
+            in: body
+            description: CollectionPoint Request
+            schema:
+              $ref: '#/definitions/CollectionPointRequest'
+        responses:
+          201:
+            description: CollectionPoint(s) created Successfully
+            schema:
+              $ref: '#/definitions/CollectionPointResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /collectionpoints/_update:
+      post:
+        summary: Update any of the collectionPoint
+        description: Update any of the collectionPoint
+        tags: 
+          - CollectionPoint
+        parameters:
+          - name: collectionPointRequest
+            in: body
+            description: CollectionPoint Request
+            schema:
+              $ref: '#/definitions/CollectionPointRequest'
+        responses:
+          200:
+            description: CollectionPoint updated Successfully
+            schema:
+              $ref: '#/definitions/CollectionPointResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /vehicles/_search:
       post:
         summary: Get the list of vehicle
@@ -596,6 +687,7 @@ definitions:
 
     CollectionPoint:
       type: object
+      description: Captures location of collection point and expected garbage collection against one or more collection types. Identities of bins associated with respective collection points are also maintained in this object 
       properties:
         code:
           type: string
@@ -614,16 +706,6 @@ definitions:
           minLength: 1
         location:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-        latitude:
-          type: number 
-          format: double
-          description: latitude of the Collection Point. e.g. 12.9716. Latitudes range from -90 to 90. Positive latitude is above the equator (N), and negative latitude is below the equator (S).
-          example: 38.544907
-        longitude:
-          type: number 
-          format: double
-          description: longitude of the Collection Point. e.g. 77.5946. Longitudes range from -180 to 180. Positive longitude is east of the prime meridian, while negative longitude is west of the prime meridian
-          example: -121.740517
         binDetails:
           type: array
           items:
@@ -632,12 +714,35 @@ definitions:
           type: array
           items:
             $ref: "#/definitions/CollectionPointDetails"
+          minItems: 1
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - tenantId
       - name
       - location
+      
+    CollectionPointRequest:
+      description: Contract class to receive request. Array of CollectionPoint items are used in case of create, whereas single CollectionPoint item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        collectionPoints:
+          description: Used for search result and create only
+          type: array
+          items:
+            $ref: '#/definitions/CollectionPoint'
+    CollectionPointResponse:
+      description: Contract class to send response. Array of CollectionPoint items are used in case of search results or response for create, whereas single CollectionPoint item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        collectionPoints:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/CollectionPoint'
 
     BinDetails:
       type: object
@@ -666,12 +771,22 @@ definitions:
           description: rfid of the Collection Point. If rfidAssigned is TRUE, this field is mandatory
           maxLength: 256
           minLength: 1
+        latitude:
+          type: number 
+          format: double
+          description: latitude of the Collection Point. e.g. 12.9716. Latitudes range from -90 to 90. Positive latitude is above the equator (N), and negative latitude is below the equator (S).
+          example: 38.544907
+        longitude:
+          type: number 
+          format: double
+          description: longitude of the Collection Point. e.g. 77.5946. Longitudes range from -180 to 180. Positive longitude is east of the prime meridian, while negative longitude is west of the prime meridian
+          example: -121.740517
       required:
       - tenantId
       
     CollectionPointDetails:
       type: object
-      description: Creates a mapping between collection types and collection points. Also captures the expected garbage collection at collection points. Display the list of bins associated with respective collection points
+      description: Sub-object under collection point. Creates a mapping between collection types, expected garbage collection and collection points.
       properties:
         id:
           type: string
@@ -695,8 +810,6 @@ definitions:
           description: ULB Admin can enter the remarkks, if any
           maxLength: 300
           minLength: 15
-        auditDetails:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - tenantId
       - collectionType
@@ -831,13 +944,11 @@ definitions:
           format: int64
           description: number Of Persons Required to operate the Vehicle. Shall be >= 0
           minimum: 0
+          maximum: 15
           example: 3
         vendor:
           $ref: "#/definitions/Vendor"
-          description: name of the vendor who supplied the Vehicle. If name is not provided, vehicle is considered as ULB vehicle
-        driver:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/hr/contracts/hr-employee/v1-0-0.yml#/definitions/Employee'
-          description: name of the driver who will drive the Vehicle. Driver name shall be fetched from HRMS. Assumption-> One driver shall be assigned to one vehicle only. Raise an visual alert if driver is being assigned to more than 1 vehicle but allow the assignment.
+          description: name of the vendor who supplied the Vehicle. If name is not provide, vehicle is considered as ULB vehicle
         manufacturingDetails:
           $ref: '#/definitions/ManufacturingDetails'
         insuranceDetail:
@@ -871,7 +982,6 @@ definitions:
       - manufacturingDetails
       - operatorsReq
       - insuranceDetail
-      - driver 
  
     PurchaseInfo:
       type: object
@@ -1692,8 +1802,6 @@ definitions:
       - tenantId
       - name
       - location
-      - latitude
-      - longitude
       - seatCount
       
     VehicleSchedule:
@@ -1786,6 +1894,33 @@ definitions:
       - collectionPoints
       - targetedGarbage
       
+    SanitationStaffSchedule:
+      type: object
+      description: Captures the schedule details of sanitary staff
+      properties:
+        tenantId:
+          type: string
+          description: tenant id of the SanitationStaffSchedule
+          maxLength: 128
+          minLength: 1
+        transactionNo:
+          type: string
+          description: System generated unique transaction number for every schedule
+          maxLength: 256
+          minLength: 1
+        sanitationStaffTarget:
+          $ref: '#/definitions/SanitationStaffTarget'
+          description: Staff target number shall be entered by admin. This will populate location details, collection points assigned to individual employee and also the period for which schedule is being prepared.   
+        shift:
+          $ref: '#/definitions/Shift'
+          format: singleValueList
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - tenantId
+      - sanitationStaffTarget
+      - shift
+    
     VehicleFuellingDetails:
       type: object
       properties:
@@ -2242,6 +2377,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

@@ -1,0 +1,1 @@
+ALTER TABLE egw_documentdetail DROP CONSTRAINT tenantid_document_objectid_unique;

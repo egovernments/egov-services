@@ -114,7 +114,7 @@ public class Fund   {
    * @return identifier
   **/
   @ApiModelProperty(required = true, value = "identifier of the Fund ")
-  @NotNull
+  //@NotNull
 
 
   public String getIdentifier() {
@@ -196,7 +196,7 @@ public class Fund   {
    * @return level
   **/
   @ApiModelProperty(required = true, value = "level identifies what is the level of the fund in the tree structure. Top most parent will have level 0 and its child will have level as 1 ")
-  @NotNull
+  //@NotNull
 
 
   public Long getLevel() {

@@ -137,7 +137,7 @@ public class Scheme   {
    * @return validFrom
   **/
   @ApiModelProperty(required = true, value = "valid from of the Scheme ")
-  @NotNull
+  //@NotNull
 
   @Valid
 
@@ -159,7 +159,7 @@ public class Scheme   {
    * @return validTo
   **/
   @ApiModelProperty(required = true, value = "valid to of the Scheme ")
-  @NotNull
+  //@NotNull
 
   @Valid
 

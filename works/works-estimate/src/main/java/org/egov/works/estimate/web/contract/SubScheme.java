@@ -73,7 +73,7 @@ public class SubScheme   {
    * @return scheme
   **/
   @ApiModelProperty(required = true, value = "scheme of the SubScheme ")
-  @NotNull
+  //@NotNull
 
   @Valid
 
@@ -137,7 +137,7 @@ public class SubScheme   {
    * @return validFrom
   **/
   @ApiModelProperty(required = true, value = "valid from of the SubScheme ")
-  @NotNull
+ // @NotNull
 
   @Valid
 
@@ -159,7 +159,7 @@ public class SubScheme   {
    * @return validTo
   **/
   @ApiModelProperty(required = true, value = "valid to of the SubScheme ")
-  @NotNull
+  //@NotNull
 
   @Valid
 

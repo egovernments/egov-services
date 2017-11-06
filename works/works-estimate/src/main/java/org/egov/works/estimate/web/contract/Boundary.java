@@ -179,7 +179,7 @@ public class Boundary   {
    * @return boundaryNum
   **/
   @ApiModelProperty(required = true, value = "boundary number of the boundary.")
-  @NotNull
+  //@NotNull
 
 
   public String getBoundaryNum() {

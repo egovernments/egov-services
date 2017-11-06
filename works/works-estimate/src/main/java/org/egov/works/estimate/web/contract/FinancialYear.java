@@ -94,7 +94,7 @@ public class FinancialYear   {
    * @return startingDate
   **/
   @ApiModelProperty(required = true, value = "startingDate is the date on which Accounting Year starts. Usually it is 1st April of that year. ")
-  @NotNull
+  //@NotNull
 
   @Valid
 
@@ -116,7 +116,7 @@ public class FinancialYear   {
    * @return endingDate
   **/
   @ApiModelProperty(required = true, value = "endingDate is the date on which Financial Year ends. Usually it is 31st march of next year ")
-  @NotNull
+  //@NotNull
 
   @Valid
 

@@ -134,7 +134,7 @@ public class BoundaryType   {
    * @return hierarchy
   **/
   @ApiModelProperty(required = true, value = "hierarchy of the BoundaryType.")
-  @NotNull
+ // @NotNull
 
 
   public Integer getHierarchy() {
@@ -216,7 +216,7 @@ public class BoundaryType   {
    * @return hierarchyType
   **/
   @ApiModelProperty(required = true, value = "")
-  @NotNull
+  //@NotNull
 
   @Valid
 

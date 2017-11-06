@@ -108,7 +108,7 @@ public class Function   {
    * @return level
   **/
   @ApiModelProperty(required = true, value = "level identifies what is the level of the function in the tree structure. Top most parent will have level 0 and its child will have level as 1 ")
-  @NotNull
+  //@NotNull
 
 
   public Integer getLevel() {

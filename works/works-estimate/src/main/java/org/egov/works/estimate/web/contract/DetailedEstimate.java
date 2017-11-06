@@ -238,7 +238,7 @@ public class DetailedEstimate   {
    * @return estimateNumber
   **/
   @ApiModelProperty(required = true, value = "Unique number for the Detailed Estimate")
-  @NotNull
+  //@NotNull
 
  @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(min=1,max=50)
   public String getEstimateNumber() {
@@ -1162,6 +1162,7 @@ public class DetailedEstimate   {
     this.estimateOverheads = estimateOverheads;
   }
 
+  @NotNull
   public List<EstimateActivity> getEstimateActivities() {
 	return estimateActivities;
 }

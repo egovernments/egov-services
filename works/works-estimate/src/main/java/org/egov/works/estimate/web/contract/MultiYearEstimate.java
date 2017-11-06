@@ -106,7 +106,7 @@ public class MultiYearEstimate   {
    * @return detailedEstimate
   **/
   @ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for Multi Year Estimate")
-  @NotNull
+  //@NotNull
 
   @Valid
 

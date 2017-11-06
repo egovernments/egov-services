@@ -1,13 +1,14 @@
 package org.egov.swm.domain.service;
 
 import java.util.Date;
+import java.util.UUID;
 
 import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.FuelType;
 import org.egov.swm.domain.model.OilCompanyName;
 import org.egov.swm.domain.model.RefillingPumpStation;
-import org.egov.swm.domain.repository.RefillingPumpStationMessageQueueRepository;
+import org.egov.swm.domain.repository.RefillingPumpStationRepository;
 import org.egov.swm.web.contract.Boundary;
 import org.egov.swm.web.repository.BoundaryRepository;
 import org.egov.swm.web.repository.MdmsRepository;
@@ -26,13 +27,13 @@ public class RefillingPumpStationService {
 
 	private BoundaryRepository boundaryRepository;
 
-	private RefillingPumpStationMessageQueueRepository refillingPumpStationMessageQueueRepository;
+	private RefillingPumpStationRepository refillingPumpStationRepository;
 
 	public RefillingPumpStationService(MdmsRepository mdmsRepository, BoundaryRepository boundaryRepository,
-			RefillingPumpStationMessageQueueRepository refillingPumpStationMessageQueueRepository) {
+									   RefillingPumpStationRepository refillingPumpStationRepository) {
 		this.mdmsRepository = mdmsRepository;
 		this.boundaryRepository = boundaryRepository;
-		this.refillingPumpStationMessageQueueRepository = refillingPumpStationMessageQueueRepository;
+		this.refillingPumpStationRepository = refillingPumpStationRepository;
 	}
 
 	public RefillingPumpStationRequest create(RefillingPumpStationRequest refillingPumpStationRequest) {
@@ -47,9 +48,10 @@ public class RefillingPumpStationService {
 
 		for (RefillingPumpStation refillingPumpStation : refillingPumpStationRequest.getRefillingPumpStations()) {
 			setAuditDetails(refillingPumpStation, userId);
+			refillingPumpStation.setCode(UUID.randomUUID().toString().replace("-", ""));
 		}
 
-		return refillingPumpStationMessageQueueRepository.save(refillingPumpStationRequest);
+		return refillingPumpStationRepository.save(refillingPumpStationRequest);
 	}
 
 	private void validate(RefillingPumpStationRequest refillingPumpStationRequest) {
@@ -60,6 +62,10 @@ public class RefillingPumpStationService {
 		for (RefillingPumpStation refillingPumpStation : refillingPumpStationRequest.getRefillingPumpStations()) {
 
 			// Validate Fuel Type
+			if(refillingPumpStation.getTypeOfFuel() != null && refillingPumpStation.getTypeOfFuel().getCode() == null)
+				throw new CustomException("FuelType",
+						"typeOfFuel code is mandatory: ");
+
 			if (refillingPumpStation.getTypeOfFuel() != null) {
 
 				responseJSONArray = mdmsRepository.getByCriteria(refillingPumpStation.getTenantId(),
@@ -75,6 +81,10 @@ public class RefillingPumpStationService {
 			}
 
 			// validate Oil Company
+			if(refillingPumpStation.getTypeOfPump() != null && refillingPumpStation.getTypeOfPump().getCode() == null)
+				throw new CustomException("OilCompany",
+						"typeOfPump code is mandatory ");
+
 			if (refillingPumpStation.getTypeOfPump() != null) {
 
 				responseJSONArray = mdmsRepository.getByCriteria(refillingPumpStation.getTenantId(),
@@ -90,7 +100,11 @@ public class RefillingPumpStationService {
 			}
 
 			// Validate Boundary
-			if (refillingPumpStation.getLocation() != null && refillingPumpStation.getLocation().getBndryId() != null) {
+			if(refillingPumpStation.getLocation() != null && refillingPumpStation.getLocation().getCode() == null)
+				throw new CustomException("Boundary",
+						"Boundary code is Mandatory");
+
+			if (refillingPumpStation.getLocation() != null && refillingPumpStation.getLocation().getCode() != null) {
 
 				Boundary boundary = boundaryRepository.fetchBoundaryByCode(refillingPumpStation.getLocation().getCode(),
 						refillingPumpStation.getTenantId());
@@ -113,7 +127,7 @@ public class RefillingPumpStationService {
 		if (contract.getAuditDetails() == null)
 			contract.setAuditDetails(new AuditDetails());
 
-		if (null == contract.getName() || contract.getName().isEmpty()) {
+		if (null == contract.getCode() || contract.getCode().isEmpty()) {
 			contract.getAuditDetails().setCreatedBy(null != userId ? userId.toString() : null);
 			contract.getAuditDetails().setCreatedTime(new Date().getTime());
 		}

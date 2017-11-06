@@ -28,7 +28,6 @@ public class RefillingPumpStation {
 	@JsonProperty("tenantId")
 	private String tenantId = null;
 
-	@Valid
 	@NotNull
 	@JsonProperty("location")
 	private Boundary location = null;
@@ -39,7 +38,6 @@ public class RefillingPumpStation {
 	private String name = null;
 
 	@NotNull
-	@Size(min = 1, max = 256)
 	@JsonProperty("typeOfPump")
 	private OilCompanyName typeOfPump = null;
 
@@ -48,7 +46,6 @@ public class RefillingPumpStation {
 	private String remarks = null;
 
 	@NotNull
-	@Size(min = 1, max = 256)
 	@JsonProperty("typeOfFuel")
 	private FuelType typeOfFuel = null;
 

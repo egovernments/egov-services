@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RefillingPumpStationMessageQueueRepository {
+public class RefillingPumpStationRepository {
 
     private LogAwareKafkaTemplate kafkaTemplate;
 
@@ -15,17 +15,20 @@ public class RefillingPumpStationMessageQueueRepository {
 
     private String indexTopic;
 
-    public RefillingPumpStationMessageQueueRepository(LogAwareKafkaTemplate kafkaTemplate,
-                                                      @Value("${egov.swm.refillingpumpstation.save.topic}") String createTopic,
-                                                      @Value("${egov.swm.refillingpumpstation.indexer.topic}") String indexTopic) {
+    public RefillingPumpStationRepository(LogAwareKafkaTemplate kafkaTemplate,
+                                          @Value("${egov.swm.refillingpumpstation.save.topic}") String createTopic,
+                                          @Value("${egov.swm.refillingpumpstation.indexer.topic}") String indexTopic) {
         this.kafkaTemplate = kafkaTemplate;
         this.createTopic = createTopic;
         this.indexTopic = indexTopic;
     }
 
     public RefillingPumpStationRequest save(RefillingPumpStationRequest refillingPumpStationRequest){
-        refillingPumpStationRequest.getRefillingPumpStations()
-                .forEach(this::pushToCreateAndIndexTopic);
+
+        kafkaTemplate.send(createTopic, refillingPumpStationRequest);
+
+//        refillingPumpStationRequest.getRefillingPumpStations()
+//                .forEach(this::pushToCreateAndIndexTopic);
 
         return refillingPumpStationRequest;
     }

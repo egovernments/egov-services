@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/refillinpumpstation")
+@RequestMapping("/refillingpumpstations")
 public class RefillingPumpStationController {
 
     private RefillingPumpStationService refillingPumpStationService;

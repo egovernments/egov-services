@@ -58,7 +58,7 @@ public class MasterDataService {
 		return assetCategorys.stream().collect(Collectors.toMap(AssetCategory::getId, Function.identity()));
 	}
 	
-	private static String getIdQuery(final Set<Long> idSet) {
+	private String getIdQuery(final Set<Long> idSet) {
 		StringBuilder query = null;
 		Long[] arr = new Long[idSet.size()];
 		arr = idSet.toArray(arr);

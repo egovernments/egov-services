@@ -1,6 +1,7 @@
 package org.egov.web.validator;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,8 +36,14 @@ public class AssetValidator implements Validator {
 		
 		addMissingPathForPersister(asset);
 		validateAnticipatedLife(asset.getAnticipatedLife(),asset.getOriginalValue(),assetCategory.getDepreciationRate(),errorMap);
-		
-		
+
+		if(asset.getWarrantyAvailable()) {
+			if(asset.getWarrantyExpiryDate() == null)
+				errorMap.put("Asset_warranty", "warrantyExpiryDate is Mandatory if Warranty is available");
+			else if(asset.getWarrantyExpiryDate().compareTo(asset.getDateOfCreation()) <= 0)
+				errorMap.put("Asset_warranty", "warrantyExpiryDate should be greater than asset date");
+		}
+			
 		if(!errorMap.isEmpty())
 		throw new CustomException(errorMap);
 	}
@@ -50,7 +57,7 @@ public class AssetValidator implements Validator {
 		Long expectedLife =  new Double(originalValue.doubleValue()/depAmtPerYear).longValue();
 		if (!anticipatedLife.equals(expectedLife))
 			errorMap.put("Asset_anticipatedLife", "anticipatedLife Value is wrong");
-
+		
 	}
 
 	public void addMissingPathForPersister(Asset asset) {

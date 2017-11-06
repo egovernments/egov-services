@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -18,6 +17,7 @@ import org.egov.model.AuditDetails;
 import org.egov.model.DefectLiability;
 import org.egov.model.LandDetail;
 import org.egov.model.Location;
+import org.egov.model.enums.AssetCategoryType;
 import org.egov.model.enums.ModeOfAcquisitionEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -85,18 +85,11 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
               //  List<String> titleDocumentsAvalable= new ArrayList<>();
                // titleDocumentsAvalable.add(titleDocument);
                 asset.setTitleDocumentsAvalable(rs.getString("titledocumentsavalable"));
-                asset.setUsage(rs.getString("usage"));
-                asset.setLength(getDoubleFromBigDecimal(rs.getBigDecimal("length")));
-                asset.setWidth(getDoubleFromBigDecimal(rs.getBigDecimal("width")));
-                asset.setHeight(getDoubleFromBigDecimal(rs.getBigDecimal("height")));
                 asset.setTotalArea(getDoubleFromBigDecimal(rs.getBigDecimal("totalArea")));
-                asset.setPlinthArea(getDoubleFromBigDecimal(rs.getBigDecimal("plintHarea")));
                 asset.setAddress(rs.getString("address"));
                 asset.setLongitude(getDoubleFromBigDecimal(rs.getBigDecimal("longitude")));
                 asset.setLatitude(getDoubleFromBigDecimal(rs.getBigDecimal("latitude")));
-                asset.setFloors((Long) rs.getObject("floors"));
                 asset.setLandSurveyNo(rs.getString("landsurveyno"));
-                asset.setCubicContents(rs.getString("cubiccontents"));
                 asset.setQuantity((Long) rs.getObject("quantity"));
                 asset.setAssetReference((Long) rs.getObject("assetreference"));
                 asset.setOpeningDate(rs.getLong("openingDate"));
@@ -137,6 +130,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
 
                 final AssetCategory assetCategory = new AssetCategory();
                 assetCategory.setId((Long) rs.getObject("assetcategory"));
+                assetCategory.setAssetCategoryType(AssetCategoryType.fromValue(rs.getString("assetcategorytype")));
                 asset.setAssetCategory(assetCategory);
                 
                 final AuditDetails auditDetails=new AuditDetails();
@@ -150,7 +144,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 map.put(assetId, asset);
             }
             
-			if (assetId.equals(rs.getLong("assetid"))) {
+			if (assetId.equals(rs.getLong("landassetid"))) {
 				LandDetail landDetail = LandDetail.builder().surveyNo(rs.getString("surveynumber"))
 						.area(getDoubleFromBigDecimal(rs.getBigDecimal("area"))).code(rs.getString("landcode")).build();
 				if (asset.getLandDetails() != null)

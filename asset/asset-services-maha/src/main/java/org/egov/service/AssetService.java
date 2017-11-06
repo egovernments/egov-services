@@ -1,6 +1,7 @@
 package org.egov.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -48,8 +49,9 @@ public class AssetService {
 	public AssetResponse createAsync(final AssetRequest assetRequest) {
 		final Asset asset = assetRequest.getAsset();
 
-		// FIXME put asset code seq per ulb
-		asset.setCode(assetCommonService.getCode("%06d", Sequence.ASSETCODESEQUENCE));
+		// FIXME put asset code seq per ulb Ghanshyam will update
+		asset.setCode(asset.getTenantId() + asset.getDepartmentCode() + asset.getAssetCategory().getCode()
+				+ assetCommonService.getCode(Sequence.ASSETCODESEQUENCE));
 
 		asset.setId(assetCommonService.getNextId(Sequence.ASSETSEQUENCE));
 
@@ -89,7 +91,7 @@ public class AssetService {
 	}
 
 	public Asset getAsset(final String tenantId, final Long assetId, final RequestInfo requestInfo) {
-		final List<Long> assetIds = new ArrayList<>();
+		final Set<Long> assetIds = new HashSet<>();
 		assetIds.add(assetId);
 		final AssetCriteria assetCriteria = AssetCriteria.builder().tenantId(tenantId).id(assetIds).build();
 		final List<Asset> assets = getAssets(assetCriteria, requestInfo).getAssets();

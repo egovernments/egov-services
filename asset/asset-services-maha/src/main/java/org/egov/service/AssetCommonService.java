@@ -63,15 +63,10 @@ public class AssetCommonService {
         return AuditDetails.builder().createdBy(id).lastModifiedBy(id).createdDate(time).lastModifiedDate(time).build();
     }
 
-    public String getCode(final String codeFormat, final Sequence sequence) {
-        final List<Long> codeSequence = sequenceGenService.getIds(1, sequence.toString());
-        log.debug("code sequence result :: " + codeSequence);
-        if (codeSequence != null && !codeSequence.isEmpty()) {
-            final StringBuilder code = new StringBuilder(String.format(codeFormat, codeSequence.get(0)));
-            log.debug("Generated code :: " + code);
-            return code.toString();
-        } else
-            throw new RuntimeException("Code is not generated.");
+    public String getCode(final Sequence sequence) {
+    
+            return sequenceGenService.getIds(1, sequence.toString()).get(0).toString();
+       
     }
 
     public Long getNextId(final Sequence sequence) {

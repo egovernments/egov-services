@@ -84,26 +84,11 @@ public class Asset   {
 	  @JsonProperty("titleDocumentsAvalable")
 	  private String titleDocumentsAvalable = null;
 
-	  @JsonProperty("usage")
-	  private String usage = null;
-
 	  @JsonProperty("locationDetails")
 	  private Location locationDetails = null;
 
-	  @JsonProperty("length")
-	  private Double length = null;
-
-	  @JsonProperty("width")
-	  private Double width = null;
-
-	  @JsonProperty("height")
-	  private Double height = null;
-
 	  @JsonProperty("totalArea")
 	  private Double totalArea = null;
-
-	  @JsonProperty("plinthArea")
-	  private Double plinthArea = null;
 
 	  @NotNull
 	  @JsonProperty("address")
@@ -115,14 +100,8 @@ public class Asset   {
 	  @JsonProperty("latitude")
 	  private Double latitude = null;
 
-	  @JsonProperty("floors")
-	  private Long floors = null;
-
 	  @JsonProperty("landSurveyNo")
 	  private String landSurveyNo = null;
-
-	  @JsonProperty("cubicContents")
-	  private String cubicContents = null;
 
 	  @JsonProperty("quantity")
 	  private Long quantity = null;

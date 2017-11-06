@@ -2135,6 +2135,132 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+                            
+    /pricelists/_search:
+      post:
+        summary: Get the list of common pricelist information
+        description: PriceList is parent object that holds the common information for both.
+        tags: 
+          - PriceList
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: supplierName
+            type: array
+            items: 
+             type: string
+            in: query
+            description: |
+              Name of the vendor supplying materials required
+          - name: rateContractNumber
+            type: string
+            in: query
+            description: |
+              reference no of the material contract from the supplier
+          - name: agreementNumber
+            type: array
+            items: 
+             type: string
+            in: query
+            description: |
+              Agreement no with the supplier of materials
+          - name: rateContractDate
+            type: integer
+            format: int64
+            x-displayformat: 'dd/MM/yyyy'
+            in: query
+            description: |
+              contract date of the rate for item with the supplier.Date in epoc format.
+          - name: agreementDate
+            type: integer
+            format: int64
+            x-displayformat: 'dd/MM/yyyy'
+            in: query
+            description: |
+              Date on which agreement done with supplier
+          - name: agreementStartDate
+            type: integer
+            format: int64
+            x-displayformat: 'dd/MM/yyyy'
+            in: query
+            description: |
+              Date from which the agreement is valid with supplier
+          - name: agreementEndDate
+            type: integer
+            format: int64
+            x-displayformat: 'dd/MM/yyyy'
+            in: query
+            description: |
+              Date on which the agreement expires with the supplier
+          - name: rateType
+            type: string
+            in: query
+            description: |
+              type of the information about the material we are getting from the supplier
+            enum:
+              - DGSC_RATECONTRACT
+              - ULB_RATE_CONTRACT
+              - ONE_TIME_TENDER
+              - QUOTATION
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/offset"
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
+        responses:
+          200:
+            description: PriceList retrieved Successfully
+            schema:
+              $ref: '#/definitions/PriceListResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /pricelists/_create:
+      post:
+        summary: Create new pricelist
+        description: Whenever a pricelist is created, this API will hold the common set of information. This API will be invoked intenrally during pricelist creation.
+        tags: 
+          - PriceList
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: priceListRequest
+            in: body
+            description: Create new pricelist
+            schema:
+              $ref: '#/definitions/PriceListRequest'
+        responses:
+          200:
+            description: pricelist created Successfully
+            schema:
+              $ref: '#/definitions/PriceListResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /pricelists/_update:
+      post:
+        summary: Update any of the pricelists
+        description: The common set of information shared by pricelists will be updated upon invoking this API.
+        tags: 
+          - PriceList
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: pricelistRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/PriceListRequest'
+        responses:
+          200:
+            description: pricelist updated Successfully
+            schema:
+              $ref: '#/definitions/PriceListResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
 definitions:
     Indent:
@@ -4244,6 +4370,158 @@ definitions:
         stateId:
           type: string
           description: State id of the workflow
+          
+    PriceList:
+      type: object
+      description: |
+        This object holds the pricelist information of different materials from various suppliers  
+      properties:
+        code:
+          type: string
+          description: |
+            Unique Identifier of the PriceList record.
+        tenantId:
+          type: string
+          description: Tenant id of the PriceList
+          maxLength: 128
+          minLength: 2
+        supplierName:
+          type: string
+          description: |
+            Name of the vendor supplying materials required
+          $ref: "#/definitions/Supplier"
+        rateType:
+          type: string
+          description: |
+            type of the information about the material we are getting from the supplier
+          enum:
+            - DGSC_RATECONTRACT
+            - ULB_RATE_CONTRACT
+            - ONE_TIME_TENDER
+            - QUOTATION
+        rateContractNumber:
+          type: string
+          description: |
+            reference no of the material contract from the supplier
+        rateContractDate:
+          type: integer
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
+          description: |
+            contract date of the rate for item with the supplier.Date in epoc format.
+        agreementNumber:
+          type: string
+          description: |
+            Agreement no with the supplier of materials
+        agreementDate:
+          type: integer
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
+          description: |
+            Date on which agreement done with supplier
+        agreementStartDate:
+          type: integer
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
+          description: |
+            Date from which the agreement is valid with supplier
+        agreementEndDate:
+          type: integer
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
+          description: |
+            Date on which the agreement expires with the supplier
+        active:
+          type: boolean
+          description: |
+            active or inactive flag of the supplier price detail
+          default: true
+        fileStoreId:
+          type: string
+          description: |
+            File Store id of the rate contract with the supplier
+        priceListMaterialDetails:
+          type: array
+          minItems: 1
+          $ref: "#/definitions/PriceListMaterialDetails"
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"   
+      required:
+      - supplierName
+      - rateType
+      - rateContractNumber
+      - rateContractDate
+      - agreementNumber
+      - agreementDate
+      - agreementStartDate
+      - agreementEndDate
+      - active
+      
+    PriceListRequest:
+      description: Contract class for web request. Array of PriceList items  are used in case of create or update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        transferInwards:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/PriceList'
+            
+    PriceListResponse:
+      description: Contract class for web response. Array of PriceList items  are used in case of search ,create or update request. 
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        transferInwards:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/PriceList'
+        page:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
+          
+    PriceListMaterialDetails:
+      type: object
+      description: |
+        This object holds information about materials from different suppliers.
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the material.
+        tenantId:
+          type: string
+          description: Tenant id of the material
+          maxLength: 128
+          minLength: 2
+        materialName:
+          type: string
+          description: name of a material stored in the system
+        fromDate:
+          type: integer
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
+          description: |
+            date from which the material becomes active in the system
+        toDate:
+          type: integer
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
+          description: |
+            date upto which the material will be active in the system
+        ratePerUnit:
+          type: integer
+          format: BigDecimal
+        quantity:
+          type: integer
+        uom:
+          $ref: "#/definitions/Uom"
+        active:
+          type: boolean
+          description: Active or inactive flag of the material in the system
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
         
 parameters:
   offset:

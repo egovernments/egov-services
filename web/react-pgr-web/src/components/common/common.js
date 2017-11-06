@@ -380,6 +380,12 @@ var localization_EN_Data = {
       "reports.lcms.sectionApplied" : "Section of the act applied",
       "reports.lcms.summonDate" : "Date of service of Summon on the municipal body",
       "reports.lcms.SuitFiledCourtName" : "Name of court where suit is been filed",
+      "reports.lcms.dateOfJudgment" : "Date of Judgment",
+      "reports.lcms.judgmentDetails" : "Particulars of judgment containing  details",
+      "reports.lcms.OpinionOfPleader" : "Opinion of Pleader or Officer on the result of case",
+      "reports.lcms.furtherProcessDetails" : "Particulars of further process of recovery, due date of darkhast",
+      "reports.lcms.caseCategory" : "Case Category",
+      "reports.lcms.advocate": "Advocate Name",
 
       //Water Connection
       "reports.wcms.fromdate":"From Date",
@@ -3355,6 +3361,12 @@ var localization_MR_Data = {
       "reports.lcms.sectionApplied" : "Section of the act applied - Marathi",
       "reports.lcms.summonDate" : "Date of service of Summon on the municipal body - Marathi",
       "reports.lcms.SuitFiledCourtName" : "Name of court where suit is been filed - Marathi",
+      "reports.lcms.dateOfJudgment" : "Date of Judgment - Marathi",
+      "reports.lcms.judgmentDetails" : "Particulars of judgment containing  details - Marathi",
+      "reports.lcms.OpinionOfPleader" : "Opinion of Pleader or Officer on the result of case - Marathi",
+      "reports.lcms.furtherProcessDetails" : "Particulars of further process of recovery, due date of darkhast - Marathi",
+      "reports.lcms.caseCategory" : "Case Category - Marathi",
+      "reports.lcms.advocate": "Advocate Name - Marathi"
 
   //Water Connection
   "reports.wcms.fromdate":"From Date - Marathi",

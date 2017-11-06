@@ -516,10 +516,7 @@ serviceMaps:
        - jsonPath: $.detailedEstimates.*.auditDetails.createdBy
  
        - jsonPath: $.detailedEstimates.*.auditDetails.createdTime
-       
-       - jsonPath: $.detailedEstimates.*.auditDetails.lastModifiedBy
-  
-       - jsonPath: $.detailedEstimates.*.auditDetails.lastModifiedTime
+         dbType: LONG
 
     - query: INSERT INTO egw_estimate_assets(id, tenantid, asset, detailedestimate, createdby, createdtime,lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.detailedEstimates.*.assets.*

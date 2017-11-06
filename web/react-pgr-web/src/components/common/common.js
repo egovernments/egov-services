@@ -379,7 +379,7 @@ var localization_EN_Data = {
       "reports.lcms.caseCategory" : "Case Category",
       "reports.lcms.caseType" : "Case Type",
       "reports.lcms.organization" : "Organization",
-      "reports.lcms.departmentConcernedPerson" : "Department Concerned Person"
+      "reports.lcms.departmentConcernedPerson" : "Department Concerned Person",
       "reports.lcms.nameOfPlaintiff": "Name Of Plaintiff",
       "reports.lcms.nameOfDefendant" : "Name Of Defendant",
       "reports.lcms.sectionApplied" : "Section of the act applied",
@@ -3385,7 +3385,7 @@ var localization_MR_Data = {
       "reports.lcms.caseCategory" : "Case Category - Marathi",
       "reports.lcms.caseType" : "Case Type - Marathi",
       "reports.lcms.organization" : "Organization - Marathi",
-      "reports.lcms.departmentConcernedPerson" : "Department Concerned Person - Marathi"
+      "reports.lcms.departmentConcernedPerson" : "Department Concerned Person - Marathi",
       "reports.lcms.nameOfPlaintiff": "Name Of Plaintiff - Marathi",
       "reports.lcms.nameOfDefendant" : "Name Of Defendant - Marathi",
       "reports.lcms.sectionApplied" : "Section of the act applied - Marathi",

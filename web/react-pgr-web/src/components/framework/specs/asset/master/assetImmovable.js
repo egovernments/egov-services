@@ -1041,50 +1041,58 @@ var dat = {
 				]
 			},
 			{
-			"label": "ac.create.Land.Details",
-			"name": "landDetails",
-			"jsonPath": "Asset",
-			"multiple":true,
-			"fields": [
-				{
-					"name": "LandAssetID",
-					"jsonPath": "Assets[0].landDetails[0].code",
-					"label": "ac.create.Land.Asset.ID",
-					"pattern": "",
-					"type": "text",
-					"url": "",
-					"isRequired": false,
-					"isDisabled": false,
-					"requiredErrMsg": "",
-					"patternErrMsg": ""
-				},
-				{
-					"name": "SurveyNoOfLandOnWhichStructureIsLocated ",
-					"jsonPath": "Assets[0].landDetails[0].surveyNo",
-					"label": "ac.create.Survey.no.of.land",
-					"pattern": "",
-					"type": "text",
-					"url": "",
-					"isRequired": false,
-					"isDisabled": true,
-					"requiredErrMsg": "",
-					"patternErrMsg": ""
-				},
+				"label": "ac.create.Land.Details",
+				"name": "landDetails",
+				"multiple":true,
+        "jsonPath":"Assets[0].landDetails",
+				"fields": [
+					{
+						"name": "LandAssetID",
+						"jsonPath": "Assets[0].landDetails[0].code",
+						"label": "ac.create.Land.Asset.ID",
+						"pattern": "",
+						"type": "autoCompelete",
+						"url": "asset-services-maha/assets/_search?&id=55,56,57,58,59,60,61,62,63,64,65|$..name|$..name",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"autoCompleteDependancy": {
+							"autoCompleteUrl": "asset-services-maha/assets/_search?name={value}",
+							"autoFillFields": {
+								"Assets[0].landDetails[0].surveyNo": "Assets[0].landSurveyNo",
+								"Assets[0].landDetails[0].area": "Assets[0].totalArea"
+							 }
+						 }
+					},
+					{
+						"name": "SurveyNoOfLandOnWhichStructureIsLocated ",
+						"jsonPath": "Assets[0].landDetails[0].surveyNo",
+						"label": "ac.create.Survey.no.of.land",
+						"pattern": "",
+						"type": "text",
+						"url": "",
+						"isRequired": false,
+						"isDisabled": true,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
 
-				{
-					"name": "AreaofLandonwhichconstructed",
-					"jsonPath": "Assets[0].landDetails[0].area",
-					"label": "ac.create.areaOfLand",
-					"pattern": "",
-					"type": "text",
-					"url": "",
-					"isRequired": false,
-					"isDisabled": true,
-					"requiredErrMsg": "",
-					"patternErrMsg": ""
-				}
-				]
-			},
+					{
+            "name": "AreaofLandonwhichconstructed",
+            "jsonPath": "Assets[0].landDetails[0].area",
+            "label": "ac.create.areaOfLand",
+            "pattern": "",
+            "type": "number",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+
+          }
+					]
+				},
       {
 				"label": "ac.create.Location.Details",
 				"name": "LocationField",

@@ -837,31 +837,11 @@ definitions:
           type: string
           format: string
         description: names of the title documents available for the particular asset.
-      usage:
-        type: string
-        format: string
-        description: usage.
       locationDetails:
         $ref: '#/definitions/Location'
-      length:
-        type: number
-        description: Length of the Land and Shop assets.
-        format: double
-      width:
-        type: number
-        description: Width of the Land and Shop assets.
-        format: double
-      height:
-        type: number
-        description: Height of the Land and Shop assets.
-        format: double
       totalArea:
         type: number
         description: Total area of Land on which the asset is located.
-        format: double
-      plinthArea:
-        type: number
-        description: area of Land on which the asset is constructed.
         format: double
       address:
         type: string
@@ -874,18 +854,10 @@ definitions:
         type: number
         description: latitude coordinate of asset.
         format: double
-      floors:
-        type: integer
-        description: No of floors available in the building.
-        format: int64
       landSurveyNo:
         type: string
         format: string
         description: Survey No of land on which structure is located.
-      cubicContents:
-        type: string
-        format: string
-        description: cubic contents.
       quantity:
         type: integer
         format: int64

@@ -10,17 +10,6 @@ var dat = {
 				"label": "ac.create.movable.Header.Details",
 				"name": "createAsset",
 				"fields": [
-						// {
-						// 	"name": "NewReferenceNumber",
-						// 	"jsonPath": "Asset.code",
-						// 	"label": "ac.create.Asset.Id.No",
-						// 	"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
-						// 	"type": "text",
-						// 	"isRequired": false,
-						// 	"isDisabled": true,
-						// 	"requiredErrMsg": "",
-						// 	"patternErrMsg": ""
-						// },
             {
   						"name": "OldReferenceNumber",
   						"jsonPath": "Asset.oldCode",
@@ -249,7 +238,7 @@ var dat = {
             "type": "text",
             "url": "",
             "isRequired": true,
-            "isDisabled": false,
+            "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -604,7 +593,7 @@ var dat = {
 	},
 	"asset.search": {
 		"numCols": 12/3,
-		"url": "/asset-services/assets/_search",
+		"url": "/asset-services-maha/assets/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "Asset",
@@ -677,15 +666,15 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "ac.create.Asset.account.code"},{label: "ac.create.Asset.Name"}, {label: "ac.create.asset.asset.category.type"}, {label: "ac.create.Department"}, {label: "ac.search.status"}],
-			"values": ["code","name", "category", "department", "status"],
-			"resultPath": "Asset",
-			// "rowClickUrlUpdate": "/update/asset/assetMovable/{id}",
-			// "rowClickUrlView": "/view/asset/assetMovable/{id}"
+			"header": [{label: "Asset Code"},{label: "ac.create.Asset.Name"},  {label: "ac.create.Asset.SubCategory.Name"},{label: "ac.create.Original.Value.of.Asset"}, {label: "Date of Creation", "isDate": true}],
+			"values": ["code","name", "assetCategory.name", "originalValue", "dateOfCreation"],
+			"resultPath": "Assets",
+			"rowClickUrlUpdate": "/non-framework/asset/master/assetMovableCreate/{id}",
+			"rowClickUrlView": "/non-framework/asset/master/assetMovableView/{id}"
 			}
 	},
 	"asset.view": {
-		"numCols": 12/2,
+		"numCols": 12/3,
 		"url": "/asset-services-maha/assets/_search?id={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
@@ -706,7 +695,7 @@ var dat = {
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
-            {
+						{
   						"name": "OldReferenceNumber",
   						"jsonPath": "Assets[0].oldCode",
   						"label": "ac.create.Old.Asset.Id.No",
@@ -847,8 +836,8 @@ var dat = {
 					{
             "name": "searchLocation",
 						"jsonPathAddress": "Assets[0].location",
-            "jsonPathLng": "Asset.longitude",
-						"jsonPathLat": "Asset.latitude",
+            "jsonPathLng": "Assets[0].longitude",
+						"jsonPathLat": "Assets[0].latitude",
             "label": "search",
             "pattern": "",
             "type": "googleMaps",
@@ -1024,6 +1013,18 @@ var dat = {
             "patternErrMsg": ""
           },
 					{
+            "name": "AssetDescription",
+            "jsonPath": "Assets[0].description",
+            "label": "ac.create.Asset.description",
+            "pattern": "",
+            "type": "text",
+            "url": "",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+					{
             "name": "DefectLiabilityPeriod",
             "jsonPath": "Assets[0].defectLiabilityPeriod.year",
             "label": "ac.create.Defect.liability.Period",
@@ -1080,18 +1081,6 @@ var dat = {
             "type": "number",
             "url": "",
             "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "AssetDescription",
-            "jsonPath": "Assets[0].description",
-            "label": "ac.create.Asset.description",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -1188,7 +1177,7 @@ var dat = {
           },
           // {
           //   "name": "AdditionDate",
-          //   "jsonPath": "Assets[0]",
+          //   "jsonPath": "",
           //   "label": "ac.create.Addition.Date",
           //   "pattern": "",
           //   "type": "datePicker",
@@ -1200,7 +1189,7 @@ var dat = {
           // },
           // {
           //   "name": "AdditionValue",
-          //   "jsonPath": "Assets[0]",
+          //   "jsonPath": "",
           //   "label": "ac.create.Addition.Value",
           //   "pattern": "",
           //   "type": "text",
@@ -1212,7 +1201,7 @@ var dat = {
           // },
           // {
           //   "name": "RevaluationDate",
-          //   "jsonPath": "Assets[0]",
+          //   "jsonPath": "",
           //   "label": "ac.create.Revaluation.date",
           //   "pattern": "",
           //   "type": "datePicker",
@@ -1224,7 +1213,7 @@ var dat = {
           // },
           // {
           //   "name": "RevaluationValue",
-          //   "jsonPath": "Assets[0]",
+          //   "jsonPath": "",
           //   "label": "ac.create.Revaluation.Value",
           //   "pattern": "",
           //   "type": "text",
@@ -1236,7 +1225,7 @@ var dat = {
           // },
           // {
           //   "name": "DepreciationDate",
-          //   "jsonPath": "Assets[0]",
+          //   "jsonPath": "",
           //   "label": "ac.create.Depreciation.Date",
           //   "pattern": "",
           //   "type": "datePicker",
@@ -1248,7 +1237,7 @@ var dat = {
           // },
           // {
           //   "name": "DepreciationValue",
-          //   "jsonPath": "Assets[0]",
+          //   "jsonPath": "",
           //   "label": "ac.create.Depreciation.Value",
           //   "pattern": "",
           //   "type": "text",
@@ -1260,7 +1249,7 @@ var dat = {
           // },
           // {
           //   "name": "Closing date",
-          //   "jsonPath": "Assets[0]",
+          //   "jsonPath": "",
           //   "label": "ac.create.Closing.Date",
           //   "pattern": "",
           //   "type": "datePicker",
@@ -1272,7 +1261,7 @@ var dat = {
           // },
           // {
           //   "name": "ClosingValue",
-          //   "jsonPath": "Assets[0]",
+          //   "jsonPath": "",
           //   "label": "ac.create.Closing.written.Down.Value",
           //   "pattern": "",
           //   "type": "datePicker",
@@ -1288,31 +1277,31 @@ var dat = {
 		]
 	},
 	"asset.update": {
-		"numCols": 12/2,
-		"searchUrl": "/asset-services/assets/_search?ids={id}",
-		"url": "",
+		"numCols": 12/3,
+		"searchUrl": "/asset-services-maha/assets/_search?ids={id}",
+		"url": "asset-services-maha/assets/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "Asset[0]",
+		"objectName": "Asset",
 		"groups": [
 			{
 				"label": "ac.create.movable.Header.Details",
 				"name": "createAsset",
 				"fields": [
 						{
-							"name": "NewReferenceNumber",
-							"jsonPath": "",
+							"name": "AssetIdNo",
+							"jsonPath": "Asset.code",
 							"label": "ac.create.Asset.Id.No",
-							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
+							"pattern": "",
 							"type": "text",
 							"isRequired": false,
-							"isDisabled": false,
+							"isDisabled": true,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
             {
   						"name": "OldReferenceNumber",
-  						"jsonPath": "",
+  						"jsonPath": "Asset.oldCode",
   						"label": "ac.create.Old.Asset.Id.No",
   						"pattern": "",
   						"type": "text",
@@ -1324,7 +1313,7 @@ var dat = {
   					},
             {
               "name": "Date",
-              "jsonPath": "",
+              "jsonPath": "Asset.dateOfCreation",
               "label": "ac.create.Date",
               "pattern": "",
               "type": "datePicker",
@@ -1335,20 +1324,8 @@ var dat = {
             },
             {
   						"name": "RefNoOfWIP",
-  						"jsonPath": "",
+  						"jsonPath": "Asset.wipReferenceNo",
   						"label": "ac.create.Ref.WIP.Register",
-  						"pattern": "",
-  						"type": "singleValueList",
-  						"url": "",
-  						"isRequired": true,
-  						"isDisabled": false,
-  						"requiredErrMsg": "",
-  						"patternErrMsg": ""
-  					},
-            {
-  						"name": "AssetName",
-  						"jsonPath": "",
-  						"label": "ac.create.Asset.Name",
   						"pattern": "",
   						"type": "text",
   						"url": "",
@@ -1358,44 +1335,57 @@ var dat = {
   						"patternErrMsg": ""
   					},
             {
-  						"name": "AssetCategoryType",
-  						"jsonPath": "",
-  						"label": "ac.create.Asset.Category",
+  						"name": "AssetName",
+  						"jsonPath": "Asset.name",
+  						"label": "ac.create.Asset.Name",
   						"pattern": "",
-  						"type": "singleValueList",
+  						"type": "text",
   						"url": "",
   						"isRequired": true,
   						"isDisabled": false,
   						"requiredErrMsg": "",
   						"patternErrMsg": ""
   					},
-            {
-  						"name": "Department",
-  						"jsonPath": "",
-  						"label": "ac.create.Department",
+						{
+  						"name": "AssetSubType",
+  						"jsonPath": "Asset.assetCategory.id",
+  						"label": "ac.create.Asset.SubCategory.Name",
   						"pattern": "",
   						"type": "singleValueList",
-  						"url": "",
-  						"isRequired": true,
+  						//"url": "/egov-mdms-service/v1/_get?&masterName=AssetCategory&moduleName=ASSET|$..id|$..name",
+							"url": "",
+							"isRequired": true,
   						"isDisabled": false,
   						"requiredErrMsg": "",
-  						"patternErrMsg": ""
+  						"patternErrMsg": "",
+  					},
+            {
+							"name": "Department",
+							"jsonPath": "Asset.departmentCode",
+							"label": "ac.create.Department",
+							"pattern": "",
+							"type": "singleValueList",
+							"url": "/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
   					},
             {
   						"name": "NoOfOrder",
-  						"jsonPath": "",
+  						"jsonPath": "Asset.orderNumber",
   						"label": "ac.create.No.Of.Order",
-  						"pattern": "",
+  						"pattern": "^[a-zA-Z0-9_]*$",
   						"type": "number",
   						"url": "",
   						"isRequired": false,
   						"isDisabled": false,
   						"requiredErrMsg": "",
-  						"patternErrMsg": ""
+  						"patternErrMsg": "Please enter valid No of Order (Alpha/Numeric)"
   					},
             {
               "name": "DateOfOrder",
-              "jsonPath": "",
+              "jsonPath": "Asset.orderDate",
               "label": "ac.create.Date.Of.Order",
               "pattern": "",
               "type": "datePicker",
@@ -1406,7 +1396,7 @@ var dat = {
             },
             {
               "name": "DateOfAcquisition",
-              "jsonPath": "",
+              "jsonPath": "Asset.acquisitionDate",
               "label": "ac.create.Date.Of.Acquisition",
               "pattern": "",
               "type": "datePicker",
@@ -1417,7 +1407,7 @@ var dat = {
             },
             {
   						"name": "OriginalValueofAsset",
-  						"jsonPath": "",
+  						"jsonPath": "Asset.originalValue",
   						"label": "ac.create.Original.Value.of.Asset",
   						"pattern": "",
   						"type": "text",
@@ -1427,6 +1417,20 @@ var dat = {
   						"requiredErrMsg": "",
   						"patternErrMsg": ""
   					},
+						{
+  						"name": "AssetCategoryType",
+  						"jsonPath": "Asset.assetCategory.assetCategoryType",
+  						"label": "Asset Category Type",
+  						"pattern": "",
+  						"type": "text",
+  						"url": "",
+  						"isRequired": true,
+  						"isDisabled": true,
+  						"requiredErrMsg": "",
+  						"patternErrMsg": "",
+							"defaultValue": "MOVABLE",
+							"isHidden": true
+  					}
 				]},
       {
 				"label": "ac.create.Location.Details",
@@ -1434,12 +1438,14 @@ var dat = {
         "multiple":false,
         "jsonPath":"",
 				"fields": [
-          {
-            "name": "Location",
-            "jsonPath": "",
-            "label": "ac.create.Location",
+					{
+            "name": "searchLocation",
+						"jsonPathAddress": "Asset.location",
+            "jsonPathLng": "Asset.longitude",
+						"jsonPathLat": "Asset.latitude",
+            "label": "search",
             "pattern": "",
-            "type": "singleValueList",
+            "type": "googleMaps",
             "url": "",
             "isRequired": false,
             "isDisabled": false,
@@ -1447,8 +1453,20 @@ var dat = {
             "patternErrMsg": ""
           },
           {
+            "name": "Location",
+            "jsonPath": "Asset.location",
+            "label": "ac.create.Location",
+            "pattern": "",
+            "type": "text",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
             "name": "Longitude",
-            "jsonPath": "",
+            "jsonPath": "Asset.longitude",
             "label": "ac.create.Longitude",
             "pattern": "",
             "type": "text",
@@ -1460,7 +1478,7 @@ var dat = {
           },
           {
             "name": "Latitude",
-            "jsonPath": "",
+            "jsonPath": "Asset.latitude",
             "label": "ac.create.Latitude",
             "pattern": "",
             "type": "text",
@@ -1472,7 +1490,7 @@ var dat = {
           },
           {
             "name": "Address",
-            "jsonPath": "",
+            "jsonPath": "Asset.address",
             "label": "ac.create.Address",
             "pattern": "",
             "type": "text",
@@ -1481,10 +1499,18 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          },
-          {
+          }
+				]
+			},
+      {
+				"label": "ac.create.Asset.Details",
+				"name": "AssetField",
+        "multiple":false,
+        "jsonPath":"",
+				"fields": [
+					{
             "name": "NoofQuantity",
-            "jsonPath": "",
+            "jsonPath": "Asset.quantity",
             "label": "ac.create.No.of.Quantity",
             "pattern": "",
             "type": "number",
@@ -1493,53 +1519,57 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          }]
-			},
-      {
-				"label": "ac.create.Asset.Details",
-				"name": "AssetField",
-        "multiple":false,
-        "jsonPath":"",
-				"fields": [
+          },
           {
             "name": "AnticipatedLifeOfAsset",
-            "jsonPath": "",
+            "jsonPath": "Asset.anticipatedLife",
             "label": "ac.create.Anticipated.life.of.Asset",
             "pattern": "",
             "type": "text",
             "url": "",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
-          {
-            "name": "ModeofAcquisition",
-            "jsonPath": "",
-            "label": "ac.create.Mode.of.Acquisition",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
+					{
+						"name": "ModeofAcquisition",
+						"jsonPath": "Asset.modeOfAcquisition",
+						"label": "ac.create.Mode.of.Acquisition",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue": [  {
+						"key": "ACQUIRED",
+						"value": "ACQUIRED"
+					},  {
+						"key": "CONSTRUCTION",
+						"value": "CONSTRUCTION"
+					},  {
+						"key": "PURCHASE",
+						"value": "PURCHASE"
+					}
+				]
+			},
           {
             "name": "FromWhomAcquired",
-            "jsonPath": "",
+            "jsonPath": "Asset.acquiredFrom",
             "label": "ac.create.From.whom.acquired",
             "pattern": "",
             "type": "text",
             "url": "",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
           {
             "name": "TitleDocumentsAvailable",
-            "jsonPath": "",
+            "jsonPath": "Asset.titleDocumentsAvalable",
             "label": "ac.create.Title.documents.available",
             "pattern": "",
             "type": "text",
@@ -1551,7 +1581,7 @@ var dat = {
           },
           {
             "name": "SourceOfFunds",
-            "jsonPath": "",
+            "jsonPath": "Asset.funSource",
             "label": "ac.create.Source.of.funds",
             "pattern": "",
             "type": "singleValueList",
@@ -1563,7 +1593,7 @@ var dat = {
           },
           {
             "name": "Warranty",
-            "jsonPath": "",
+            "jsonPath": "Asset.warrantyAvailable",
             "label": "ac.create.Warranty",
             "pattern": "",
             "type": "radio",
@@ -1577,7 +1607,7 @@ var dat = {
           },
           {
             "name": "WarrantyExpiryDate",
-            "jsonPath": "",
+            "jsonPath": "Asset.warrantyExpiryDate",
             "label": "ac.create.Warranty.expiry.date",
             "pattern": "",
             "type": "datePicker",
@@ -1587,45 +1617,9 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
-          {
-            "name": "DefectLiabilityPeriod",
-            "jsonPath": "",
-            "label": "ac.create.Defect.liability.Period",
-            "pattern": "",
-            "type": "number",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "SecurityDepositRetained",
-            "jsonPath": "",
-            "label": "ac.create.Security.deposit.retained",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "SecurityDepositRealized",
-            "jsonPath": "",
-            "label": "ac.create.Security.deposit.realized",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
+					{
             "name": "AssetDescription",
-            "jsonPath": "",
+            "jsonPath": "Asset.description",
             "label": "ac.create.Asset.description",
             "pattern": "",
             "type": "text",
@@ -1635,13 +1629,74 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
+					{
+            "name": "DefectLiabilityPeriod",
+            "jsonPath": "Asset.defectLiabilityPeriod.year",
+            "label": "ac.create.Defect.liability.Period",
+            "pattern": "",
+            "type": "number",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+					{
+            "name": "DefectLiabilityPeriod",
+            "jsonPath": "Asset.defectLiabilityPeriod.month",
+            "label": "ac.create.Defect.liability.Period.month",
+            "pattern": "",
+            "type": "number",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+					{
+            "name": "DefectLiabilityPeriod",
+            "jsonPath": "Asset.defectLiabilityPeriod.day",
+            "label": "ac.create.Defect.liability.Period.day",
+            "pattern": "",
+            "type": "number",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+
+          {
+            "name": "SecurityDepositRetained",
+            "jsonPath": "Asset.securityDepositRetained",
+            "label": "ac.create.Security.deposit.retained",
+            "pattern": "",
+            "type": "number",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "SecurityDepositRealized",
+            "jsonPath": "Asset.securityDepositRealized",
+            "label": "ac.create.Security.deposit.realized",
+            "pattern": "",
+            "type": "number",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
           {
             "name": "AssetAcountCode",
-            "jsonPath": "",
+            "jsonPath": "Asset.assetAccount",
             "label": "ac.create.Asset.account.code",
             "pattern": "",
             "type": "singleValueList",
-            "url": "",
+            "url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Fixed Assets|$..name|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -1649,11 +1704,11 @@ var dat = {
           },
           {
             "name": "AccumulatedDepreciationAccount",
-            "jsonPath": "",
+            "jsonPath": "Asset.accumulatedDepreciationAccount",
             "label": "ac.create.Accumulated.Depreciation.Account",
             "pattern": "",
             "type": "singleValueList",
-            "url": "",
+            "url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Accumulated Depreciation|$..name|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -1661,11 +1716,11 @@ var dat = {
           },
           {
             "name": "RevaluationReserveAccount",
-            "jsonPath": "",
+            "jsonPath": "Asset.revaluationReserveAccount",
             "label": "ac.create.Revaluation.Reserve.Account",
             "pattern": "",
             "type": "singleValueList",
-            "url": "",
+            "url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Revaluation Reserve Account|$..name|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -1673,11 +1728,11 @@ var dat = {
           },
           {
             "name": "DepreciationExpensesAccount ",
-            "jsonPath": "",
+            "jsonPath": "Asset.depreciationExpenseAccount",
             "label": "ac.create.Depreciation.Expenses.Account",
             "pattern": "",
             "type": "singleValueList",
-            "url": "",
+            "url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Depreciation Expense Account|$..name|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -1699,9 +1754,11 @@ var dat = {
           //     "resultValues": [[{}, ], [], []]
           //   }
           // },
-          {
+
+
+					{
             "name": "OpeningDate",
-            "jsonPath": "",
+            "jsonPath": "Asset.openingDate",
             "label": "ac.create.Opening.date",
             "pattern": "",
             "type": "datePicker",
@@ -1713,7 +1770,7 @@ var dat = {
           },
           {
             "name": "OpeningWrittenDownValue",
-            "jsonPath": "",
+            "jsonPath": "Asset.grossValue",
             "label": "ac.create.Opening.Written.down.Value",
             "pattern": "",
             "type": "number",
@@ -1723,102 +1780,102 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
-          {
-            "name": "AdditionDate",
-            "jsonPath": "",
-            "label": "ac.create.Addition.Date",
-            "pattern": "",
-            "type": "datePicker",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "AdditionValue",
-            "jsonPath": "",
-            "label": "ac.create.Addition.Value",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "RevaluationDate",
-            "jsonPath": "",
-            "label": "ac.create.Revaluation.date",
-            "pattern": "",
-            "type": "datePicker",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "RevaluationValue",
-            "jsonPath": "",
-            "label": "ac.create.Revaluation.Value",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "DepreciationDate",
-            "jsonPath": "",
-            "label": "ac.create.Depreciation.Date",
-            "pattern": "",
-            "type": "datePicker",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "DepreciationValue",
-            "jsonPath": "",
-            "label": "ac.create.Depreciation.Value",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "Closing date",
-            "jsonPath": "",
-            "label": "ac.create.Closing.Date",
-            "pattern": "",
-            "type": "datePicker",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "ClosingValue",
-            "jsonPath": "",
-            "label": "ac.create.Closing.written.Down.Value",
-            "pattern": "",
-            "type": "datePicker",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          }
+          // {
+          //   "name": "AdditionDate",
+          //   "jsonPath": "",
+          //   "label": "ac.create.Addition.Date",
+          //   "pattern": "",
+          //   "type": "datePicker",
+          //   "url": "",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
+          // {
+          //   "name": "AdditionValue",
+          //   "jsonPath": "",
+          //   "label": "ac.create.Addition.Value",
+          //   "pattern": "",
+          //   "type": "text",
+          //   "url": "",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
+          // {
+          //   "name": "RevaluationDate",
+          //   "jsonPath": "",
+          //   "label": "ac.create.Revaluation.date",
+          //   "pattern": "",
+          //   "type": "datePicker",
+          //   "url": "",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
+          // {
+          //   "name": "RevaluationValue",
+          //   "jsonPath": "",
+          //   "label": "ac.create.Revaluation.Value",
+          //   "pattern": "",
+          //   "type": "text",
+          //   "url": "",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
+          // {
+          //   "name": "DepreciationDate",
+          //   "jsonPath": "",
+          //   "label": "ac.create.Depreciation.Date",
+          //   "pattern": "",
+          //   "type": "datePicker",
+          //   "url": "",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
+          // {
+          //   "name": "DepreciationValue",
+          //   "jsonPath": "",
+          //   "label": "ac.create.Depreciation.Value",
+          //   "pattern": "",
+          //   "type": "text",
+          //   "url": "",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
+          // {
+          //   "name": "Closing date",
+          //   "jsonPath": "",
+          //   "label": "ac.create.Closing.Date",
+          //   "pattern": "",
+          //   "type": "datePicker",
+          //   "url": "",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
+          // {
+          //   "name": "ClosingValue",
+          //   "jsonPath": "",
+          //   "label": "ac.create.Closing.written.Down.Value",
+          //   "pattern": "",
+          //   "type": "datePicker",
+          //   "url": "",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // }
 
 				]
 			}

@@ -164,6 +164,7 @@ import TemplateParser from './components/framework/templates/templateParser/temp
 import assetImmovableCreate from './components/non-framework/asset/master/assetImmovableCreate';
 import assetMovableCreate from './components/non-framework/asset/master/assetMovableCreate';
 import assetImmovableView from './components/non-framework/asset/master/assetImmovableView';
+import assetMovableView from './components/non-framework/asset/master/assetMovableView';
 
 import NoMatch from './components/common/NoMatch';
 //inventory
@@ -345,8 +346,9 @@ const Main = () => {
 
       //Assets
       <Route exact path= {base + '/non-framework/asset/master/assetImmovableCreate/:id?'} component={assetImmovableCreate}/>
-      <Route exact path= {base + '/non-framework/asset/master/assetMovableCreate'} component={assetMovableCreate}/>
+      <Route exact path= {base + '/non-framework/asset/master/assetMovableCreate/:id?'} component={assetMovableCreate}/>
       <Route exact path= {base + '/non-framework/asset/master/assetImmovableView/:id'} component={assetImmovableView}/>
+      <Route exact path= {base + '/non-framework/asset/master/assetMovableView/:id'} component={assetMovableView}/>
 
       {/* inventory */}
       <Route exact path= {base + '/non-framework/inventory/master/supplier'} component={SupplierSearch}/>

@@ -159,6 +159,40 @@ class assetMovableCreate extends Component {
     }
   }
 
+  customFieldDataFun(val){
+    var  self = this;
+    let  _value = "";
+    _value = val;
+    if(_value) {
+      fields = _value
+      groups = [
+        {
+          "label": "Asset Attributes",
+          "name": "assetAttributes",
+          "jsonPath": "Asset.assetAttributes",
+          fields
+        }
+      ];
+
+
+
+      for(var x=0; x<fields.length; x++){
+        var formFin = {};
+        formFin.key = fields[x].name;
+        formFin.type = fields[x].type;
+        finArr.push(formFin);
+      }
+      console.log(groups);
+      this.setState({
+        hide: false
+      })
+    } else {
+      this.setState({
+        hide: true
+      })
+    }
+  }
+
   setInitialUpdateData(form, specs, moduleName, actionName, objectName) {
     let {setMockData} = this.props;
     let _form = JSON.parse(JSON.stringify(form));
@@ -184,53 +218,47 @@ class assetMovableCreate extends Component {
     setMockData(specs);
   }
 
+  modifyData(urlId) {
+    let self = this;
+    let assetCheck ={};
+    Api.commonApiPost("asset-services-maha/assets/_search",{id:urlId}, {}, false, false, false, "", "", false).then(function(response){
+
+      for (var i = 0; i < response.Assets[0].assetAttributes.length; i++) {
+          assetCheck[response.Assets[0].assetAttributes[i].key]={[response.Assets[0].assetAttributes[i].type]:response.Assets[0].assetAttributes[i].value};
+
+      }
+      response.Assets[0].assetAttributesCheck = assetCheck;
+      self.props.setFormData({Asset: response.Assets[0]});
+      self.customFieldDataFun(self.state.customFieldsGen[response.Assets[0].assetCategory.id]);
+
+    },function(err) {
+          console.log(err);
+      });
+  }
+
   displayUI(results) {
     let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let hashLocation = window.location.hash;
     let self = this;
-
+    var action ="";
     specifications =typeof(results)=="string" ? JSON.parse(results) : results;
-    let obj = specifications[`asset.create`];
+    if (this.props.match.params.id) {
+      action = "update";
+    } else {
+      action = "create";
+    }
+
+    let obj = specifications[`asset.${action}`];
     reqRequired = [];
     self.setLabelAndReturnRequired(obj);
     initForm(reqRequired);
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName('asset');
-    setActionName('create');
+    setActionName(action);
 
-    if(hashLocation.split("/").indexOf("update") == 1) {
-      var url = specifications[`asset.create`].searchUrl.split("?")[0];
-      var id = self.props.match.params.id || self.props.match.params.master;
-      var query = {
-        [specifications[`asset.create`].searchUrl.split("?")[1].split("=")[0]]: id
-      };
-      if(window.location.href.indexOf("?") > -1) {
-       var qs =  window.location.href.split("?")[1];
-       if(qs && qs.indexOf("=") > -1) {
-         qs = qs.indexOf("&") > -1 ? qs.split("&") : [qs];
-         for(var i=0; i<qs.length; i++) {
-           query[qs[i].split("=")[0]] = qs[i].split("=")[1];
-         }
-       }
-     }
-      Api.commonApiPost(url, query, {}, false, specifications[`asset.create`].useTimestamp).then(function(res){
-          if(specifications[`asset.create`].isResponseArray) {
-            var obj = {};
-            _.set(obj, specifications[`asset.create`].objectName, jp.query(res, "$..[0]")[0]);
-            self.props.setFormData(obj);
-            self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), 'asset', 'create', specifications[`asset.create`].objectName);
-          } else {
-            self.props.setFormData(res);
-            self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), 'asset', 'create', specifications[`asset.create`].objectName);
-          }
-            let obj1 = specifications[`asset.create`];
-
-          self.depedantValue(obj1.groups);
-      }, function(err){
-
-      })
-
+    if(self.props.match.params.id) {
+      // self.modifyData(self.props.match.params.id);
     } else {
       var formData = {};
       if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
@@ -269,9 +297,10 @@ class assetMovableCreate extends Component {
       var catId;
       var name, jsonPath, label, type, isRequired, isDisabled;
       var customSpecs = {};
+      var depericiationValue = {};
     //  var customFieldsArray = [];
     //  var customArr;
-      Api.commonApiPost("/egov-mdms-service/v1/_get",{"moduleName":"ASSET", "masterName":"AssetCategory", "filter": "%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22IMMOVABLE%22)%5D%0A"}).then(function(response)
+      Api.commonApiPost("/egov-mdms-service/v1/_get",{"moduleName":"ASSET", "masterName":"AssetCategory", "filter": "%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22MOVABLE%22)%5D"}, {}, false, false, false, "", "", true).then(function(response)
      {
 
        if(response) {
@@ -293,9 +322,11 @@ class assetMovableCreate extends Component {
        }
 
       for(var i=0; i < response.MdmsRes.ASSET.AssetCategory.length; i++ ){
+        catId = response.MdmsRes.ASSET.AssetCategory[i].id;
         if(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination != null){
           var  customFieldsArray = [];
-          catId = response.MdmsRes.ASSET.AssetCategory[i].id;
+
+
           for(var j=0; j< response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination.length; j++){
 
             var customTemp = {};
@@ -321,6 +352,16 @@ class assetMovableCreate extends Component {
                     case null:
                           customTemp.type = 'text';
                           break;
+
+                    case 'table':
+                          customTemp.type = 'table';
+                          break;
+              }
+              if (customTemp.type == 'table') {
+                if (response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values.length) {
+
+                }
+
               }
               if(customTemp.type == 'singleValueList'){
                 if(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values.length){
@@ -346,12 +387,17 @@ class assetMovableCreate extends Component {
 
           }
           customSpecs[catId] = customFieldsArray;
-
         }
+        depericiationValue[catId] = response.MdmsRes.ASSET.AssetCategory[i].depreciationRate;
         self.setState({
-            customFieldsGen: customSpecs
+            customFieldsGen: customSpecs,
+            depericiationValue
           }, () => {
+            if(self.props.match.params.id) {
+              self.modifyData(self.props.match.params.id);
+            }
           })
+          console.log(self.state.depericiationValue);
       }
 
 
@@ -360,6 +406,9 @@ class assetMovableCreate extends Component {
 
       },function(err) {
             console.log(err);
+            if(self.props.match.params.id) {
+              self.modifyData(self.props.match.params.id);
+            }
         });
 
   }
@@ -385,6 +434,14 @@ class assetMovableCreate extends Component {
           _.set(formData, key, _.get(res, autoObject.autoFillFields[key]));
         }
         self.props.setFormData(formData);
+
+        if(formData.Asset.landDetails && formData.Asset.landDetails.length) {
+            let area = 0;
+            for(let i=0; i< formData.Asset.landDetails.length; i++) {
+              area += formData.Asset.landDetails[i].area || 0;
+            }
+            self.props.handleChange({target: {value: area}}, "Asset.totalArea", false, '', '', '');
+        }
     }, function(err){
       console.log(err);
     })
@@ -479,8 +536,9 @@ class assetMovableCreate extends Component {
     });
     assetAttributes.push(tempFinObj);
   });
-console.log(assetAttributes);
+
 formData.Asset.assetAttributes = assetAttributes;
+delete formData.Asset.assetAttributesCheck;
 
     //Check if documents, upload and get fileStoreId
     if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"].length) {
@@ -813,34 +871,18 @@ formData.Asset.assetAttributes = assetAttributes;
       let obj = specifications[`asset.create`];
 
       if(property=="Asset.assetCategory.id"){
-        if(self.state.customFieldsGen[e.target.value]) {
-          fields = self.state.customFieldsGen[e.target.value]
-          groups = [
-            {
-              "label": "Asset Attributes",
-              "name": "assetAttributes",
-              "jsonPath": "Asset.assetAttributes",
-              fields
-            }
-          ];
-
-console.log(fields);
-
-          for(var x=0; x<fields.length; x++){
-            var formFin = {};
-            formFin.key = fields[x].name;
-            formFin.type = fields[x].type;
-            finArr.push(formFin);
-          }
-          console.log(finArr);
-          this.setState({
-            hide: false
-          })
-        } else {
-          this.setState({
-            hide: true
-          })
+        console.log("hi");
+        console.log(e.target.value);
+        console.log(self.state.depericiationValue);
+        if (self.state.depericiationValue[e.target.value]) {
+          console.log("hello");
+          var newVal = Math.round(100/self.state.depericiationValue[e.target.value]);
+          this.props.handleChange({target:{value: newVal}},"Asset.anticipatedLife",true,"","","");
         }
+
+        self.customFieldDataFun(self.state.customFieldsGen[e.target.value]);
+
+
        }
 
       if(expression && e.target.value){
@@ -1135,7 +1177,7 @@ console.log(fields);
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
   //  {formData && formData.hasOwnProperty("Asset") && formData.Asset.hasOwnProperty("assetAttributes") && formData.Asset.assetAttributes.map((item,index)=>{
-      console.log(formData);
+      console.log(mockData);
     // })}
 
 

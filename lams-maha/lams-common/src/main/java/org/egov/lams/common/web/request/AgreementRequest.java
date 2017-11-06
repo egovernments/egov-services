@@ -6,7 +6,9 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.lams.common.web.contract.Agreement;
 import org.egov.lams.common.web.contract.EstateRegister;
+import org.egov.lams.common.web.request.EstateRegisterRequest.EstateRegisterRequestBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -15,18 +17,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Created by ramki on 23/10/17.
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EstateRegisterRequest {
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo = null;
+public class AgreementRequest {
+	  @JsonProperty("RequestInfo")
+	    private RequestInfo requestInfo = null;
 
-    @JsonProperty("LandRegisters")
-    @Valid
-    private List<EstateRegister> landRegisters = new ArrayList<EstateRegister>();
+	    @JsonProperty("Agreements")
+	    @Valid
+	    private List<Agreement> agreements = new ArrayList<Agreement>();
 }

@@ -20,47 +20,45 @@ import org.springframework.stereotype.Service;
 public class LandPossessionService {
 	@Autowired
 	private ResponseFactory responseInfoFactory;
-	
+
 	@Autowired
 	private PropertiesManager propertiesManager;
-	
+
 	@Autowired
 	private SequenceGenUtil sequenceGenService;
-	
+
 	@Autowired
 	private LandPossessionRepository landPossessionRepository;
-	
+
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-	
-	public LandPossessionResponse  create(LandPossessionRequest landPossessionRequest) {
-		
+
+	public LandPossessionResponse create(LandPossessionRequest landPossessionRequest) {
+
 		landPossessionRequest.getLandPossession().stream().forEach(landPossession -> {
 			landPossession.setId(sequenceGenService.getIds(1, "seq_eg_lams_landpossession").get(0));
 		});
 		landPossessionRequest.getLandPossession().stream().forEach(landPossession -> {
 			landPossession.setPossessionNumber(sequenceGen());
 		});
-		
+
 		kafkaTemplate.send(propertiesManager.getCreateLandPossessionKafkaTopic(), landPossessionRequest);
 		return getLandPossessionResponse(landPossessionRequest.getLandPossession(),
-				landPossessionRequest.getRequestInfo());	
-		}
-	
-	public LandPossessionResponse  update(LandPossessionRequest landPossessionRequest) {
+				landPossessionRequest.getRequestInfo());
+	}
+
+	public LandPossessionResponse update(LandPossessionRequest landPossessionRequest) {
 		kafkaTemplate.send(propertiesManager.getUpdateLandPossessionKafkaTopic(), landPossessionRequest);
 		return getLandPossessionResponse(landPossessionRequest.getLandPossession(),
-				landPossessionRequest.getRequestInfo());	
-		}
-	
-	public LandPossessionResponse search(LandPossessionSearchCriteria landPossessionSearchCriteria, RequestInfo requestInfo) {
-
-		LandPossessionResponse landPossessionList = landPossessionRepository.search(landPossessionSearchCriteria);
-
-		return landPossessionList;
+				landPossessionRequest.getRequestInfo());
 	}
-	
-	
+
+	public LandPossessionResponse search(LandPossessionSearchCriteria landPossessionSearchCriteria,
+			RequestInfo requestInfo) {
+
+		return landPossessionRepository.search(landPossessionSearchCriteria);
+	}
+
 	private LandPossessionResponse getLandPossessionResponse(List<LandPossession> landPossession,
 			RequestInfo requestInfo) {
 		LandPossessionResponse landPossessionResponse = new LandPossessionResponse();
@@ -68,16 +66,12 @@ public class LandPossessionService {
 		landPossessionResponse.setResponseInfo(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK));
 		return landPossessionResponse;
 	}
-	
-	private String sequenceGen()
-	{  
-	    Calendar cal = Calendar.getInstance();
+
+	private String sequenceGen() {
 		long id = sequenceGenService.getIds(1, "seq_eg_lams_landpossession").get(0);
-		int year= cal.get(Calendar.YEAR);
-		String idgen =String.format("%05d", id);
-		String seqId =year +idgen;
+		int year = Calendar.getInstance().get(Calendar.YEAR);
+		String idgen = String.format("%05d", id);
+		String seqId = year + idgen;
 		return seqId;
 	}
-	
-	
 }

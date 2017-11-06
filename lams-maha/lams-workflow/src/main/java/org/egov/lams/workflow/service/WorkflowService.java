@@ -1,7 +1,6 @@
 package org.egov.lams.workflow.service;
 
-import org.egov.lams.common.web.contract.ProcessInstance;
-import org.egov.lams.common.web.contract.TaskResponse;
+import org.egov.lams.common.web.request.AgreementRequest;
 import org.egov.lams.common.web.request.EstateRegisterRequest;
 import org.egov.lams.workflow.repository.WorkflowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +14,19 @@ public class WorkflowService {
 
 	public void startWorkflow(EstateRegisterRequest estateRegisterRequest) {
 
-		ProcessInstance processInstanceResponse = workflowRepository.startWorkflow(estateRegisterRequest);
+	workflowRepository.startWorkflow(estateRegisterRequest);
 	}
 
 	public void updateWorkflow(EstateRegisterRequest estateRegisterRequest) {
-		TaskResponse taskResponse = workflowRepository.updateWorkflow(estateRegisterRequest);
+	 workflowRepository.updateWorkflow(estateRegisterRequest);
+	}
+	
+	public void startAgreementWorkflow(AgreementRequest agreementRequest) {
+
+	workflowRepository.startAgreementWorkflow(agreementRequest);
+	}
+
+	public void updateAgreementWorkflow(AgreementRequest agreementRequest) {
+	workflowRepository.updateAgreementWorkflow(agreementRequest);
 	}
 }

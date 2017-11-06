@@ -24,34 +24,19 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/acquisition")
-@Slf4j
 public class LandAcquisitionController {
+	
 	@Autowired
 	private LandAcquisitionService landAcquisitionService;
 
-	@Autowired
-	private ResponseFactory responseFactory;
-
 	@PostMapping("_create")
-	public ResponseEntity<?> create(@RequestBody @Valid final LandAcquisitionRequest landAcquisitionRequest,
-			final BindingResult bindingResult) {
-
-		if (bindingResult.hasErrors())
-			return new ResponseEntity<>(
-					responseFactory.getErrorResponse(bindingResult, landAcquisitionRequest.getRequestInfo()),
-					HttpStatus.BAD_REQUEST);
+	public ResponseEntity<?> create(@RequestBody @Valid final LandAcquisitionRequest landAcquisitionRequest) {
 
 		return new ResponseEntity<>(landAcquisitionService.create(landAcquisitionRequest), HttpStatus.CREATED);
 	}
 
 	@PostMapping("_update")
-	public ResponseEntity<?> update(@RequestBody @Valid final LandAcquisitionRequest landAcquisitionRequest,
-			final BindingResult bindingResult) {
-
-		if (bindingResult.hasErrors())
-			return new ResponseEntity<>(
-					responseFactory.getErrorResponse(bindingResult, landAcquisitionRequest.getRequestInfo()),
-					HttpStatus.BAD_REQUEST);
+	public ResponseEntity<?> update(@RequestBody @Valid final LandAcquisitionRequest landAcquisitionRequest) {
 
 		return new ResponseEntity<>(landAcquisitionService.update(landAcquisitionRequest), HttpStatus.OK);
 	}
@@ -59,16 +44,9 @@ public class LandAcquisitionController {
 	@PostMapping("_search")
 	@ResponseBody
 	public ResponseEntity<?> search(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-			@ModelAttribute @Valid final LandAcquisitionSearchCriteria landAcquisitionSearchCriteria,
-			final BindingResult bindingResult) {
+			@ModelAttribute @Valid final LandAcquisitionSearchCriteria landAcquisitionSearchCriteria) {
 
-		if (bindingResult.hasErrors()) {
-			final ErrorResponse errorResponse = responseFactory.getErrorResponse(bindingResult,
-					requestInfoWrapper.getRequestInfo());
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
-		final LandAcquisitionResponse landAcquisitionResponse = landAcquisitionService
-				.search(landAcquisitionSearchCriteria, requestInfoWrapper.getRequestInfo());
-		return new ResponseEntity<>(landAcquisitionResponse, HttpStatus.OK);
+		return new ResponseEntity<>(landAcquisitionService
+				.search(landAcquisitionSearchCriteria, requestInfoWrapper.getRequestInfo()), HttpStatus.OK);
 	}
 }

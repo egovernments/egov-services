@@ -16,6 +16,7 @@ import lombok.Setter;
 public class LandTransfer {
 	@NotNull
 	private Long id;
+	@NotNull
 	private String tenantId;
 	private String landTransferNumber;
 	private String landAcquisition;

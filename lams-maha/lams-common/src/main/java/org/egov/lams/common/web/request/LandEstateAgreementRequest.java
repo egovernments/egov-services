@@ -1,32 +1,29 @@
 package org.egov.lams.common.web.request;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.lams.common.web.contract.LandAcquisition;
+import org.egov.lams.common.web.contract.Agreement;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Setter
-@Getter
-public class LandAcquisitionRequest {
-
+public class LandEstateAgreementRequest {
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo = null;
-	
-	@Valid
-	@JsonProperty("LandAcquisition")
-	private List<LandAcquisition> landAcquisition;
 
+	@JsonProperty("Agreements")
+	@Valid
+	private List<Agreement> agreements = new ArrayList<Agreement>();
 }

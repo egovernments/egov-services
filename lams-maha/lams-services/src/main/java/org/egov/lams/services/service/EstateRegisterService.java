@@ -1,12 +1,11 @@
 package org.egov.lams.services.service;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.lams.common.web.contract.EstateRegister;
 import org.egov.lams.common.web.contract.EstateSearchCriteria;
-import org.egov.lams.common.web.contract.FloorDetail;
-import org.egov.lams.common.web.contract.UnitDetail;
 import org.egov.lams.common.web.request.EstateRegisterRequest;
 import org.egov.lams.common.web.response.EstateRegisterResponse;
 import org.egov.lams.services.config.PropertiesManager;
@@ -24,6 +23,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EstateRegisterService {
 
+	public static final String WF_ACTION_APPROVE = "Approve";
+	public static final String WF_ACTION_REJECT = "Reject";
+	public static final String WF_ACTION_CANCEL = "Cancel";
+	
 	@Autowired
 	private ResponseFactory responseInfoFactory;
 
@@ -46,9 +49,20 @@ public class EstateRegisterService {
 
 	public EstateRegisterResponse createAsync(EstateRegisterRequest estateRegisterRequest) {
 		
-		List<Long> registerIds = sequenceGenService.getIds(estateRegisterRequest.getLandRegisters().size(),
-				propertiesManager.getCreateEstateSequence());
-		int index = 0;
+		/*List<Long> registerIds = sequenceGenService.getIds(estateRegisterRequest.getLandRegisters().size(),
+				propertiesManager.getCreateEstateSequence());*/
+		
+		estateRegisterRequest.getLandRegisters().stream().forEach(landRegister -> {
+			landRegister.setId(sequenceGenService.getIds(1, propertiesManager.getCreateEstateSequence()).get(0));
+			landRegister.getFloors().stream().forEach(floor -> {
+				floor.setId(sequenceGenService.getIds(1, propertiesManager.getCreateEstateFloorsSequence()).get(0));
+				floor.getUnits().stream().forEach(unit -> {
+					unit.setId(sequenceGenService.getIds(1, propertiesManager.getCreateEstateUnitsSequence()).get(0));
+				});
+			});
+		});
+		
+		/*int index = 0;
 		int floorIndex;
 		int unitIndex;
 		for (EstateRegister estateRegister : estateRegisterRequest.getLandRegisters()) {
@@ -63,14 +77,19 @@ public class EstateRegisterService {
 				for (UnitDetail unit : floor.getUnits())
 					unit.setId(unitsIds.get(unitIndex++));
 			}
-		}
+		}*/
 		kafkaTemplate.send(propertiesManager.getStartEstateWorkflowTopic(), estateRegisterRequest);
 		return getEstateRegisterResponse(estateRegisterRequest.getLandRegisters(),
 				estateRegisterRequest.getRequestInfo());
 	}
 	
-	public EstateRegisterResponse updateAsync(EstateRegisterRequest estateRegisterRequest){
-		
+	public EstateRegisterResponse updateAsync(EstateRegisterRequest estateRegisterRequest) {
+		int year = Calendar.getInstance().get(Calendar.YEAR);
+		estateRegisterRequest.getLandRegisters().stream().forEach(landRegister -> {
+			if (landRegister.getWorkFlowDetails().getAction().equals(WF_ACTION_APPROVE))
+				landRegister.setEstateNumber("E" + year + String.format("%05d",
+						sequenceGenService.getIds(1, propertiesManager.getCreateEstateSequence()).get(0)));
+		});
 		kafkaTemplate.send(propertiesManager.getUpdateEstateWorkflowTopic(), estateRegisterRequest);
 		return getEstateRegisterResponse(estateRegisterRequest.getLandRegisters(),
 				estateRegisterRequest.getRequestInfo());

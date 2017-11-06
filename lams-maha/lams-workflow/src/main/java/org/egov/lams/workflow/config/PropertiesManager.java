@@ -24,6 +24,18 @@ public class PropertiesManager {
 	@Autowired
 	Environment environment;
 	
+	@Value("${kafka.topic.start.workflow.agreement}")
+	public String startAgreementWorkflowTopic;
+	
+	@Value("${kafka.topic.update.workflow.agreement}")
+	public String updateAgreementWorkflowTopic;
+	
+	@Value("${kafka.topic.create.agreement}")
+	public String createAgreementKafkaTopic;
+	
+	@Value("${kafka.topic.update.agreement}")
+	public String updateAgreementKafkaTopic;
+	
 	@Value("${kafka.topic.save.estate}")
 	public String createEstateKafkaTopic;
 	

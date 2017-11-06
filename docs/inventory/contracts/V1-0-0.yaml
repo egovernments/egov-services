@@ -766,7 +766,7 @@ paths:
           '200':
             description: 'Successful response, returns list of Material Receipt Note(s).'
             schema:
-              $ref: '#/definitions/MaterialReceiptHeaderResponse'
+              $ref: '#/definitions/MaterialReceiptResponse'
           '400':
             description: Invalid input.
             schema:
@@ -785,14 +785,14 @@ paths:
             description: Details for the new material receipt.
             required: true
             schema:
-              $ref: '#/definitions/MaterialReceiptHeaderRequest'
+              $ref: '#/definitions/MaterialReceiptRequest'
         tags:
           - MRN
         responses:
           '200':
             description: Material Receipt created
             schema:
-              $ref: '#/definitions/MaterialReceiptHeaderResponse'
+              $ref: '#/definitions/MaterialReceiptResponse'
           '400':
             description: Invalid input.
             schema:
@@ -809,14 +809,14 @@ paths:
             description: Details for the new material receipts.
             required: true
             schema:
-              $ref: '#/definitions/MaterialReceiptHeaderRequest'
+              $ref: '#/definitions/MaterialReceiptRequest'
         tags:
           - MRN
         responses:
           '200':
             description: Material Receipt(s) Updated Successfully.
             schema:
-              $ref: '#/definitions/MaterialReceiptHeaderResponse'
+              $ref: '#/definitions/MaterialReceiptResponse'
           400:
             description: Invalid Input
             schema:
@@ -2776,7 +2776,7 @@ definitions:
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
     
-    MaterialReceiptHeader:
+    MaterialReceipt:
       description: Hold the material receipt specific information.
       type: object
       properties:
@@ -2805,15 +2805,26 @@ definitions:
             "PURCHASE RECEIPT".
           enum:
             - PURCHASE RECEIPT
+            - MISCELLANEOUS RECEIPT
+            - INWARD RECEIPT
+        receiptPurpose:
+          type: string
+          enum:
             - RETURN OF MATERIALS
             - SCRAP
+          description: |
+            Applicable if receipt type is MISCELLANEOUS RECEIPT
         receivingStore:
-          type: string
+          $ref: "#/definitions/Store"  
+          format : singleValueList
           description: The unique code of the store that is receiving the materials.
-        supplierCode:
-          type: string
-          description: Code of the supplier from whom the receipt is made.
-          format: varchar
+        issueingStore:
+          format: singleValueList
+          $ref: "#/definitions/Store"
+          description: The unique code of the store that is Issued the materials.  Useful in case of inter store transfer inward receipt.
+        supplier:
+          $ref: '#/definitions/Supplier'
+          description: Supplier from whom the receipt is made.
         supplierBillNo:
           type: string
           description: The bill number what is mentioned in the bill given by the supplier.
@@ -2835,7 +2846,7 @@ definitions:
           description: Date on which the challan was made.
         description:
           type: string
-          maxLength: 1000
+          maxLength: 512
           description: Any general description pertaining to the material receipt.
           format: varchar
         receivedBy:
@@ -2854,6 +2865,9 @@ definitions:
             - CREATED
             - APPROVED
             - CANCELED
+        bill:
+          type: string
+          description: Bill number reference, if bill is generatd in systemm for receipt. 
         inspectedBy:
           type: string
           description: >-
@@ -2894,8 +2908,6 @@ definitions:
         - receiptType
         - receivingStore
         - mrnStatus
-        - totalReceiptValue
-        
     MaterialReceiptDetail:
       description: >-
         Hold the material receipt note material level information. This will show
@@ -2911,16 +2923,21 @@ definitions:
           maxLength: 128
           minLength: 4  
         mrnNumber:
-          type: string
+          $ref: '#/definitions/MaterialReceipt'
           description: Unique number to identify the maretial receipt note.
+        material:
+          $ref: "#/definitions/Material"
+        uom:
+          $ref: "#/definitions/Uom"  
         poline:
           $ref: "#/definitions/PurchaseOrder"
+          description: po line mandatory if receipt type is purchase receipt.
         receivedQty:
           type: number
           format: BigDecimal
           description: >-
             The quantity of the material received for this particular purchase
-            order. All the quantity needs to be saved in the database in the based
+            order or inter store  transfer. All the quantity needs to be saved in the database in the based
             UOM.
         acceptedQty:
           type: number
@@ -2930,22 +2947,52 @@ definitions:
             materials received. All the quantity needs to be saved in the database
             in the based UOM. Accepted quantity cannot be greater than the
             received quantity.
-        challanQty:
-          type: number
-          format: BigDecimal         
-          description: The quantity of the material as per the challan in the supplier bill.
-        challanRate:
-          type: number
-          description: Rate per unit as mentioned in the challan in the supplier bill.
-          format: BigDecimal
         unitRate:
           type: number
           description: Per unit rate of the material as per the Purchase Order.
-          format: BigDecimal
+          format: BigDecimal    
+        assetCode:
+          type: string
+          description: |
+            asset code if accept received.
+        voucherHeader:
+          type: string
+          description: financial voucher passed id map     
         rejectionRemark:
           type: string
           description: The reason why certain quantities of materials were rejected.
           format: varchar
+        remarks:
+          type: string
+          maxLength: 512
+          description: General description about the materials.
+          format: varchar
+        receiptDetailsAddnInfo:
+          type: array
+          description: >-
+            Material detail additional information referred
+          items:
+            $ref: '#/definitions/MaterialReceiptDetailAddnlinfo'  
+      required:
+        - mrnNumber
+        - id
+        - receivedQty
+        
+    MaterialReceiptDetailAddnlinfo:
+      description: >-
+        Hold the material receipt note material level  additional information. This will helpful to maintain/issue material in lot number,expiry date wise, serial number wise and manufacture number wise. This object will be useful in legacy data collection also.
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for the receipt details additional information.
+        tenantId:
+          type: string
+          description: Tenant id of the Material Receipt Header
+          maxLength: 128
+          minLength: 4  
+        materialReceiptDetail:
+          $ref: "#/definitions/MaterialReceiptDetail"
         lotNo:
           type: string
           description: LOT number for the materials that are of LOT control.
@@ -2954,15 +3001,20 @@ definitions:
           type: string
           description: Serial number of the materials that are received.
           format: varchar
-        description:
-          type: string
-          maxLength: 1000
-          description: General description about the materials.
-          format: varchar
         manufactureDate:
           type: integer
-          description: The date on which the materials are manufactured.
+          description: The date on which the materials are received into system. 
           format: int64
+          x-displayformat: 'dd/MM/yyyy'
+        oldReceiptNumber:
+          type: string
+          description: old receipt number. Field used in opening balance screen.
+          format: varchar
+        receivedDate:
+          type: integer
+          description: The date on which the materials are manufactured. Useful in case of opening balance screen
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'  
         expiryDate:
           type: integer
           description: >-
@@ -2970,14 +3022,8 @@ definitions:
             materials that are of type shelf life control. Date must be greater
             than the receipt date.
           format: int64
-          x-displayformat: 'dd/MM/yyyy'
-      required:
-        - mrnNumber
-        - id
-        - receivedQty
-        - manufactureDate
-        
-    MaterialReceiptHeaderRequest:
+          x-displayformat: 'dd/MM/yyyy'  
+    MaterialReceiptRequest:
       type: object
       description: Hold the Material Receipt Note request information.
       properties:
@@ -2987,9 +3033,9 @@ definitions:
         MaterialReceipt:
           type: array
           items:
-            $ref: '#/definitions/MaterialReceiptHeader'
+            $ref: '#/definitions/MaterialReceipt'
             
-    MaterialReceiptHeaderResponse:
+    MaterialReceiptResponse:
       type: object
       description: Hold the Material Receipt Note Response information
       properties:
@@ -2999,7 +3045,7 @@ definitions:
         MaterialReceipt:
           type: array
           items:
-            $ref: '#/definitions/MaterialReceiptHeader'      
+            $ref: '#/definitions/MaterialReceipt'      
           
     MaterialIssue:
       type: object
@@ -3146,10 +3192,10 @@ definitions:
           format: BigDecimal
           description: |
             Balance quantity to be issued of the IndentDetails.
-        materialReceiptHeader:
+        materialReceipt:
           description: >-
             Applicable for Non Indent Issue.
-          $ref: "#/definitions/MaterialReceiptHeader"  
+          $ref: "#/definitions/MaterialReceipt"  
         material:
           $ref: "#/definitions/Material"
           description: |
@@ -3169,73 +3215,8 @@ definitions:
       - indentDetail
       - quantityIssued
       
-    TransferInward:
-      type: object
-      description: |
-        This object holds the transfer inward note information.  
-      properties:
-        id:
-          type: string
-          description: |
-            Unique Identifier of the Transfer Inward
-        tenantId:
-          type: string
-          description: Tenant id of the Transfer Inward
-          maxLength: 128
-          minLength: 4    
-        receiptDate:
-          type: integer
-          format: int64
-          x-displayformat: 'dd/MM/yyyy'
-          description: |
-            receipt date of the TransferInward
-        transferOutWard:
-          $ref: "#/definitions/TransferOutward"
-        description:
-          type: string
-          maxLength: 1000
-          description: |
-            description of the TransferInward
-        inwardNoteNumber:
-          type: string
-          maxLength: 100
-          readOnly: true
-          description: |
-            Auto generated number, read only
-        inwardNoteStatus:
-          type: string
-          enum:
-            - CREATED
-            - APPROVED
-            - REJECTED
-            - CANCELED
-          maxLength: 50
-          minLength: 5
-          description: |
-            inward note status of the TransferInward
-        workFlowDetails:
-          $ref: "#/definitions/WorkFlowDetails"     
-        stateId:
-          type: integer
-          format: int64
-          description: |
-            state id of the TransferInward
-        fileStoreId:
-          type: string
-          description: |
-            fileStoreId  File Store id of the Transfer Inward Note
-        designation:
-          type: string
-          description: Designation of the created by user at the time of Transfer Inward creation.
-          format: varchar
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"   
-      required:
-      - receiptDate
-      - transferOutWard
-      
     TransferInwardRequest:
-      description: Contract class for web request. Array of TransferInward items  are used in case of create or update
+      description: Contract class for material receipt inward request. Array of MaterialReceipt items  are used in case of create or update
       properties:
         requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
@@ -3243,10 +3224,10 @@ definitions:
           description: Used for search result and create only
           type:  array
           items:
-            $ref: '#/definitions/TransferInward'
+            $ref: '#/definitions/MaterialReceipt'
             
     TransferInwardResponse:
-      description: Contract class for web response. Array of TransferInward items  are used in case of search ,create or update request. 
+      description: Contract class for material receipt inward web response. Array of MaterialReceipt items  are used in case of search ,create or update request. 
       properties:
         responseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
@@ -3254,7 +3235,7 @@ definitions:
           description: Used for search result and create only
           type:  array
           items:
-            $ref: '#/definitions/TransferInward'
+            $ref: '#/definitions/MaterialReceipt'
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
     
@@ -3576,7 +3557,7 @@ definitions:
           $ref: "#/definitions/Material"
         store:
           $ref: "#/definitions/Store"
-        chartOfAccount:
+        chartofAccount:
           $ref: "#/definitions/ChartofAccount"
         active:
           type: boolean
@@ -4550,4 +4531,5 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
+
 

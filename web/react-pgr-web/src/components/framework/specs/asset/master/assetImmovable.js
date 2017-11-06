@@ -865,8 +865,8 @@ var dat = {
 		"objectName": "Assets",
 		"groups": [
 			{
-				"label": "ac.create.Header.Details",
-				"name": "createAsset",
+				"label": "ac.View.Header.Details",
+				"name": "viewAsset",
 				"fields": [
 						{
 							"name": "AssetIdNo",
@@ -1620,8 +1620,8 @@ var dat = {
 		"objectName": "Asset",
 		"groups": [
 			{
-				"label": "ac.create.Header.Details",
-				"name": "createAsset",
+				"label": "ac.Modify.Header.Details",
+				"name": "updateAsset",
 				"fields": [
 						// {
 						// 	"name": "AssetIdNo",

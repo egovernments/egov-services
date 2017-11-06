@@ -1936,6 +1936,8 @@ var localization_EN_Data = {
     "ac.create.areaOfLand": "Area of Land (sq.ft.)",
     "ac.create.areaOfLandWhichConstructed": "Area of Land on which constructed (sq.ft.)",
     "as.assetAttributes":"Asset Attributes",
+    "ac.View.Header.Details": "View Assset Details",
+    "ac.Modify.Header.Details": "Update Assset Details",
 
 
 
@@ -2373,7 +2375,7 @@ var localization_EN_Data = {
 "advocates.search.document.title":"Advocate Search",
 "advocates.update.document.title":"Advocate Update",
 
-"advocatepayment.create.document.title":"Advocate Payment Create", 
+"advocatepayment.create.document.title":"Advocate Payment Create",
 "advocatepayment.search.document.title":"Advocate Payment Search",
 "advocatepayment.update.document.title":"Advocate Payment Update",
 

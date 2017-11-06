@@ -16,8 +16,7 @@ public class ScheduleOfRateQueryBuilder {
     public static final String GETSORRATE_BY_SCHEDULEOFRATE="select * from egw_sorrate where tenantid = :tenantId and scheduleofrate=:scheduleOfRate;";
     public static final String GETMARKETRATE_BY_SCHEDULEOFRATE="select * from egw_marketrate where tenantid = :tenantId and scheduleofrate=:scheduleOfRate;";
 
-    public String getSearchQuery(ScheduleOfRateSearchCriteria scheduleOfRateSearchCriteria,
-                                                 @SuppressWarnings("rawtypes") Map params) {
+    public String getSearchQuery(ScheduleOfRateSearchCriteria scheduleOfRateSearchCriteria, Map params) {
         StringBuilder selectQuery = new StringBuilder(BASE_SEARCH_QUERY);
         appendParams(scheduleOfRateSearchCriteria, params, selectQuery);
         appendLimitAndOffset(scheduleOfRateSearchCriteria, params, selectQuery);

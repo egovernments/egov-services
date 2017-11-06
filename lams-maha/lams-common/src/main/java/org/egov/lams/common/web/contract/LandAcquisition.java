@@ -45,6 +45,7 @@ public class LandAcquisition {
 	private Long panelAppoIntegermentDate;
 	private String status;
 	private WorkFlowDetails workFlowDetails;
+	private String stateId;
 	private AuditDetails auditDetails;
 	private List<LandPossession> possessionOfLand;
 	private List<LandTransfer> landTransfer;

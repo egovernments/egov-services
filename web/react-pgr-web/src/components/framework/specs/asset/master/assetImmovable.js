@@ -506,7 +506,7 @@ var dat = {
             "pattern": "",
             "type": "datePicker",
             "url": "",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""

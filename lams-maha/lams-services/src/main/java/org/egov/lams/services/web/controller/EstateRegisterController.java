@@ -10,6 +10,7 @@ import org.egov.lams.common.web.request.RequestInfoWrapper;
 import org.egov.lams.common.web.response.EstateRegisterResponse;
 import org.egov.lams.services.factory.ResponseFactory;
 import org.egov.lams.services.service.EstateRegisterService;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,43 +32,27 @@ public class EstateRegisterController {
 	@Autowired
 	private EstateRegisterService estateRegisterService;
 	
-	@Autowired
-	private ResponseFactory responseFactory;
-	
-	
-	@PostMapping("_search")
-	@ResponseBody
-	public ResponseEntity<?> search(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-			@ModelAttribute @Valid final EstateSearchCriteria estateRegisterCriteria,
-			final BindingResult bindingResult) {
-		
-		if (bindingResult.hasErrors()) {
-			final ErrorResponse errorResponse = responseFactory.getErrorResponse(bindingResult, requestInfoWrapper.getRequestInfo());
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
-		final EstateRegisterResponse estateResponse = estateRegisterService.getEstates(estateRegisterCriteria,
-				requestInfoWrapper.getRequestInfo());
-		return new ResponseEntity<>(estateResponse, HttpStatus.OK);
-	}
-	
 	@PostMapping("_create")
 	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody @Valid final EstateRegisterRequest estateRegisterRequest,
-			final BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) 
-			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, estateRegisterRequest.getRequestInfo()), HttpStatus.BAD_REQUEST);
-
+	public ResponseEntity<?> create(@RequestBody @Valid final EstateRegisterRequest estateRegisterRequest) {
+		
 		return new ResponseEntity<>(estateRegisterService.createAsync(estateRegisterRequest),HttpStatus.CREATED);
 	}
 	
 	@PostMapping("_update")
 	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody @Valid final EstateRegisterRequest estateRegisterRequest,
-			final BindingResult bindingResult) {
+	public ResponseEntity<?> update(@RequestBody @Valid final EstateRegisterRequest estateRegisterRequest) {
 		
-		if (bindingResult.hasErrors()) 
-			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, estateRegisterRequest.getRequestInfo()), HttpStatus.BAD_REQUEST);
-
 		return new ResponseEntity<>(estateRegisterService.updateAsync(estateRegisterRequest),HttpStatus.CREATED);
+	}
+	
+	@PostMapping("_search")
+	@ResponseBody
+	public ResponseEntity<?> search(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+			@ModelAttribute @Valid final EstateSearchCriteria estateRegisterCriteria) {
+		
+		final EstateRegisterResponse estateResponse = estateRegisterService.getEstates(estateRegisterCriteria,
+				requestInfoWrapper.getRequestInfo());
+		return new ResponseEntity<>(estateResponse, HttpStatus.OK);
 	}
 }

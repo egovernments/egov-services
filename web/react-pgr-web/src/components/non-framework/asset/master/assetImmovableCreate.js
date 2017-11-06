@@ -197,7 +197,9 @@ class assetImmovableCreate extends Component {
     let {setMockData} = this.props;
     let _form = JSON.parse(JSON.stringify(form));
     var ind;
+    console.log("hit");
     for(var i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
+
       if(specs[moduleName + "." + actionName].groups[i].multiple) {
         var arr = _.get(_form, specs[moduleName + "." + actionName].groups[i].jsonPath);
         ind = i;
@@ -221,6 +223,8 @@ class assetImmovableCreate extends Component {
   modifyData(urlId) {
     let self = this;
     let assetCheck ={};
+    let specifications = require(`../../../framework/specs/asset/master/assetImmovable`).default;
+
     Api.commonApiPost("asset-services-maha/assets/_search",{id:urlId}, {}, false, false, false, "", "", false).then(function(response){
 
       for (var i = 0; i < response.Assets[0].assetAttributes.length; i++) {
@@ -229,6 +233,7 @@ class assetImmovableCreate extends Component {
       }
       response.Assets[0].assetAttributesCheck = assetCheck;
       self.props.setFormData({Asset: response.Assets[0]});
+      self.setInitialUpdateData({Asset: response.Assets[0]}, JSON.parse(JSON.stringify(specifications)), 'asset', 'update', specifications[`asset.update`].objectName);
       self.customFieldDataFun(self.state.customFieldsGen[response.Assets[0].assetCategory.id]);
 
     },function(err) {
@@ -879,6 +884,21 @@ delete formData.Asset.assetAttributesCheck;
         self.customFieldDataFun(self.state.customFieldsGen[e.target.value]);
 
 
+       }
+
+       if (property=="Asset.warrantyAvailable") {
+         let spec = self.props.mockData;
+         if(e.target.value==false) {
+           spec["asset.create"].groups[3].fields[14].isRequired = false;
+           self.props.setMockData(JSON.parse(JSON.stringify(spec)));
+           spec["asset.update"].groups[3].fields[14].isRequired = false;
+           self.props.setMockData(JSON.parse(JSON.stringify(spec)));
+         } else {
+           spec["asset.create"].groups[3].fields[14].isRequired = true;
+           self.props.setMockData(JSON.parse(JSON.stringify(spec)));
+           spec["asset.update"].groups[3].fields[14].isRequired = true;
+           self.props.setMockData(JSON.parse(JSON.stringify(spec)));
+         }
        }
 
       if(expression && e.target.value){

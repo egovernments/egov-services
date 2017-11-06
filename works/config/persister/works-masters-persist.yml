@@ -7,8 +7,7 @@ serviceMaps:
    fromTopic: works-sorrate-create-validated
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO egw_scheduleofrate(id, tenantid, code, description, schedulecategory, uom, createdby, createdtime, lastmodifiedby, lastmodifiedtime) 
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egw_scheduleofrate(id, tenantid, code, description, schedulecategory, uom, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.scheduleOfRates.*
       jsonMaps:
          
@@ -30,10 +29,9 @@ serviceMaps:
        
        - jsonPath: $.scheduleOfRates.*.auditDetails.lastModifiedBy
   
-       - jsonPath: $.scheduleOfRates.*.auditDetails.lastModifiedTime 
+       - jsonPath: $.scheduleOfRates.*.auditDetails.lastModifiedTime
        
-    - query: INSERT INTO egw_sorrate(id, tenantid, schedulerofrate, fromdate, todate, rate,  createdby, createdtime, lastmodifiedby, lastmodifiedtime) 
-		VALUES(?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egw_sorrate(id, tenantid, scheduleofrate, fromdate, todate, rate,  createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.scheduleOfRates.*.sorRates.*
       jsonMaps:
          
@@ -57,8 +55,7 @@ serviceMaps:
        
        - jsonPath: $.scheduleOfRates.*.sorRates.*.auditDetails.lastModifiedTime
 
-    - query: INSERT INTO egw_marketrate(id, tenantid, schedulerofrate, fromdate, todate, rate,  createdby, createdtime, lastmodifiedby, lastmodifiedtime) 
-		VALUES(?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egw_marketrate(id, tenantid, scheduleofrate, fromdate, todate, rate,  createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.scheduleOfRates.*.marketRates.*
       jsonMaps:
          
@@ -83,7 +80,7 @@ serviceMaps:
        - jsonPath: $.scheduleOfRates.*.marketRates.*.auditDetails.lastModifiedTime
 
  - version: 1.0
-   name: ScheduleOfRate Create
+   name: ScheduleOfRate Update
    description: Persists Schedule Of Rate in egw_scheduleofrate table
    fromTopic: works-sorrate-update-validated
    isTransaction: true
@@ -91,90 +88,70 @@ serviceMaps:
     - query: update egw_scheduleofrate set code=?, description=?, schedulecategory=?, uom=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
       basePath: $.scheduleOfRates.*
       jsonMaps:
-         
+
        - jsonPath: $.scheduleOfRates.*.code
-         
+
        - jsonPath: $.scheduleOfRates.*.description
-       
+
        - jsonPath: $.scheduleOfRates.*.scheduleCategory.code
-       
+
        - jsonPath: $.scheduleOfRates.*.uom.code
-       
+
        - jsonPath: $.scheduleOfRates.*.auditDetails.lastModifiedBy
-  
+
        - jsonPath: $.scheduleOfRates.*.auditDetails.lastModifiedTime
 
        - jsonPath: $.scheduleOfRates.*.id
-       
+
        - jsonPath: $.scheduleOfRates.*.tenantId
-       
-    - query: INSERT INTO egw_sorrate(id, tenantid, schedulerofrate, fromdate, todate, rate,  createdby, createdtime, lastmodifiedby, lastmodifiedtime) 
-		VALUES(?, ?, ?, ?, ?, ?);
+
+    - query: update egw_sorrate set fromdate=?, todate=?, rate=?, lastmodifiedby=?, lastmodifiedtime=? where scheduleofrate=? and id=? and tenantid=?;
       basePath: $.scheduleOfRates.*.sorRates.*
       jsonMaps:
-         
-       - jsonPath: $.scheduleOfRates.*.sorRates.*.id
-         
-       - jsonPath: $.scheduleOfRates.*.sorRates.*.tenantId
-         
-       - jsonPath: $.scheduleOfRates[?({id} in @.sorRates[*].id)].id
-       
+
        - jsonPath: $.scheduleOfRates.*.sorRates.*.fromDate
-       
+
        - jsonPath: $.scheduleOfRates.*.sorRates.*.toDate
-       
+
        - jsonPath: $.scheduleOfRates.*.sorRates.*.rate
-       
-       - jsonPath: $.scheduleOfRates.*.sorRates.*.auditDetails.createdBy
-       
-       - jsonPath: $.scheduleOfRates.*.sorRates.*.auditDetails.createdTime
 
        - jsonPath: $.scheduleOfRates.*.sorRates.*.auditDetails.lastModifiedBy
-       
+
        - jsonPath: $.scheduleOfRates.*.sorRates.*.auditDetails.lastModifiedTime
 
-    - query: INSERT INTO egw_marketrate(id, tenantid, schedulerofrate, fromdate, todate, rate,  createdby, createdtime, lastmodifiedby, lastmodifiedtime) 
-		VALUES(?, ?, ?, ?, ?, ?);
+       - jsonPath: $.scheduleOfRates.*.id
+
+       - jsonPath: $.scheduleOfRates.*.sorRates.*.id
+
+       - jsonPath: $.scheduleOfRates.*.sorRates.*.tenantId
+
+    - query: update egw_marketrate set fromdate=?, todate=?, rate=?, lastmodifiedby=?, lastmodifiedtime=? where scheduleofrate=? and id=? and tenantid=?;
       basePath: $.scheduleOfRates.*.marketRates.*
       jsonMaps:
-         
-       - jsonPath: $.scheduleOfRates.*.marketRates.*.id
-         
-       - jsonPath: $.scheduleOfRates.*.marketRates.*.tenantId
-         
-       - jsonPath: $.scheduleOfRates[?({id} in @.marketRates[*].id)].id
-       
+
        - jsonPath: $.scheduleOfRates.*.marketRates.*.fromDate
-       
+
        - jsonPath: $.scheduleOfRates.*.marketRates.*.toDate
-       
+
        - jsonPath: $.scheduleOfRates.*.marketRates.*.rate
-       
-       - jsonPath: $.scheduleOfRates.*.marketRates.*.auditDetails.createdBy
-       
-       - jsonPath: $.scheduleOfRates.*.marketRates.*.auditDetails.createdTime
 
        - jsonPath: $.scheduleOfRates.*.marketRates.*.auditDetails.lastModifiedBy
-       
+
        - jsonPath: $.scheduleOfRates.*.marketRates.*.auditDetails.lastModifiedTime
-       
-- version: 1.0
+
+       - jsonPath: $.scheduleOfRates.*.id
+
+       - jsonPath: $.scheduleOfRates.*.marketRates.*.id
+
+       - jsonPath: $.scheduleOfRates.*.marketRates.*.tenantId
+
+ - version: 1.0
    name: Contractor Create
    description: Persists Contractor in egw_contractor table
    fromTopic: works-contractor-create
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO egw_contractor(
-            id, tenantid, name, code, correspondenceaddress, paymentaddress, 
-            contactperson, email, narration, mobilenumber, pannumber, tinnumber, 
-            bank, bankaccountnumber, pwdapprovalcode, exemptedfrom, pwdapprovalvalidtill, 
-            epfregistrationnumber, accountcode, ifsccode, contractorclass, 
-            createdby, createdtime, lastmodifiedby, lastmodifiedtime)
-    VALUES (?, ?, ?, ?, ?, ?, 
-            ?, ?, ?, ?, ?, ?, 
-            ?, ?, ?, ?, ?, 
-            ?, ?, ?, ?, 
-            ?, ?, ?, ?);
+    - query: INSERT INTO egw_contractor(id, tenantid, name, code, correspondenceaddress, paymentaddress, contactperson, email, narration, mobilenumber, pannumber, tinnumber, bank, bankaccountnumber, pwdapprovalcode, exemptedfrom, pwdapprovalvalidtill, epfregistrationnumber, accountcode, ifsccode, contractorclass, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.contractors.*
       jsonMaps:
          
@@ -229,7 +206,7 @@ serviceMaps:
   
        - jsonPath: $.scheduleOfRates.*.auditDetails.lastModifiedTime 
        
-- version: 1.0
+ - version: 1.0
    name: Contractor Update
    description: Update Contractor in egw_contractor table
    fromTopic: works-contractor-update
@@ -285,3 +262,4 @@ serviceMaps:
        - jsonPath: $.contractors.*.id
        
        - jsonPath: $.contractors.*.tenantId
+

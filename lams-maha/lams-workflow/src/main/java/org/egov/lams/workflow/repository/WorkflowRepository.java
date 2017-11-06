@@ -3,6 +3,7 @@ package org.egov.lams.workflow.repository;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.lams.common.web.contract.Agreement;
 import org.egov.lams.common.web.contract.EstateRegister;
 import org.egov.lams.common.web.contract.Position;
 import org.egov.lams.common.web.contract.ProcessInstance;
@@ -10,6 +11,7 @@ import org.egov.lams.common.web.contract.Task;
 import org.egov.lams.common.web.contract.TaskRequest;
 import org.egov.lams.common.web.contract.TaskResponse;
 import org.egov.lams.common.web.contract.WorkFlowDetails;
+import org.egov.lams.common.web.request.AgreementRequest;
 import org.egov.lams.common.web.request.EstateRegisterRequest;
 import org.egov.lams.common.web.request.ProcessInstanceRequest;
 import org.egov.lams.common.web.request.ProcessInstanceResponse;
@@ -37,7 +39,7 @@ public class WorkflowRepository {
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 	
-	public ProcessInstance startWorkflow(EstateRegisterRequest estateRegisterRequest) {
+	public void startWorkflow(EstateRegisterRequest estateRegisterRequest) {
 		
 		ProcessInstanceResponse processInstanceRes = null;
 		
@@ -55,29 +57,41 @@ public class WorkflowRepository {
 			estateRegister.setStateId(processInstanceRes.getProcessInstance().getId());
 		}
 		
-		saveEstateRegistration(estateRegisterRequest, processInstanceRes.getProcessInstances());
-		return processInstanceRes.getProcessInstance();
+		kafkaTemplate.send(propertiesManager.getCreateEstateKafkaTopic(), estateRegisterRequest);
 	}
 	
-	private void saveEstateRegistration(EstateRegisterRequest estateRegisterRequest, List<ProcessInstance> processInstances){
-		log.info("WorkflowRepository estateRegisterRequest"+estateRegisterRequest);
-		try {
-			kafkaTemplate.send(propertiesManager.getCreateEstateKafkaTopic(), estateRegisterRequest);
-		} catch (Exception exception) {
-			log.info("Workflow repo : " + exception.getMessage(), exception);
-			throw exception;
+	public void startAgreementWorkflow(AgreementRequest agreementRequest) {
+		
+		ProcessInstanceResponse processInstanceRes = null;
+		
+		String url = propertiesManager.getWorkflowServiceHostName() + propertiesManager.getWorkflowServiceStartPath();
+		
+		for (Agreement agreement : agreementRequest.getAgreements()) {
+			ProcessInstanceRequest processInstanceRequest = getAgreementProcessInstanceRequest(agreement.getWorkFlowDetails(),agreement.getTenantId(),agreement.getAgreementNumber(),
+					agreementRequest.getRequestInfo());
+			try {
+				processInstanceRes = restTemplate.postForObject(url, processInstanceRequest,
+						ProcessInstanceResponse.class);
+			} catch (Exception e) {
+				throw e;
+			}
+			agreement.setStateId(processInstanceRes.getProcessInstance().getId());
+			agreement.setWorkflowStatus(processInstanceRes.getProcessInstance().getStatus());
 		}
+		
+		kafkaTemplate.send(propertiesManager.getCreateAgreementKafkaTopic(), agreementRequest);
 	}
 	
-	public TaskResponse updateWorkflow(EstateRegisterRequest estateRegisterRequest) {
+	public void updateWorkflow(EstateRegisterRequest estateRegisterRequest) {
 
 		TaskResponse taskResponse = null;
 		for (EstateRegister estateRegister : estateRegisterRequest.getLandRegisters()) {
 			
-			TaskRequest taskRequest = getTaskRequest(estateRegister,estateRegisterRequest.getRequestInfo());
+			TaskRequest taskRequest = getTaskRequest(estateRegister.getWorkFlowDetails(),estateRegister.getTenantId(),estateRegister.getStateId(),estateRegisterRequest.getRequestInfo());
 
 			String url = propertiesManager.getWorkflowServiceHostName() + propertiesManager.getWorkflowServiceTaskPAth()
-					+ "/" + estateRegister.getStateId() + propertiesManager.getWorkflowServiceUpdatePath();
+					+ "/" + estateRegister.getStateId() 
+					+ propertiesManager.getWorkflowServiceUpdatePath();
 
 			log.info("task request to update workflow ::: " + taskRequest + " ::url:: " + url);
 			try {
@@ -88,18 +102,34 @@ public class WorkflowRepository {
 			}
 			log.info("the response from workflow update : " + taskResponse.getTask());
 			if (estateRegister.getWorkFlowDetails() != null) {
-				updateEstateRegister(estateRegisterRequest);
+				kafkaTemplate.send(propertiesManager.getUpdateEstateKafkaTopic(), estateRegisterRequest);
 			}
 		}
-		return taskResponse;
 	}
 	
-	public void updateEstateRegister(EstateRegisterRequest estateRegisterRequest){
-		try {
-			kafkaTemplate.send(propertiesManager.getUpdateEstateKafkaTopic(), estateRegisterRequest);
-		} catch (Exception exception) {
-			log.info("Workflow Service : " + exception.getMessage(), exception);
-			throw exception;
+	public void updateAgreementWorkflow(AgreementRequest agreementRequest) {
+
+		TaskResponse taskResponse = null;
+		for (Agreement agreement : agreementRequest.getAgreements()) {
+
+			TaskRequest taskRequest = getTaskRequest(agreement.getWorkFlowDetails(), agreement.getTenantId(),
+					agreement.getStateId(), agreementRequest.getRequestInfo());
+
+			String url = propertiesManager.getWorkflowServiceHostName() + propertiesManager.getWorkflowServiceTaskPAth()
+					+ "/" + agreement.getStateId() + propertiesManager.getWorkflowServiceUpdatePath();
+
+			log.info("task request to update workflow ::: " + taskRequest + " ::url:: " + url);
+			try {
+				taskResponse = restTemplate.postForObject(url, taskRequest, TaskResponse.class);
+			} catch (Exception e) {
+				log.error(e.toString());
+				throw e;
+			}
+			agreement.setWorkflowStatus(taskResponse.getTask().getAction());
+			log.info("the response from workflow update : " + taskResponse.getTask());
+			if (agreement.getWorkFlowDetails() != null) {
+				kafkaTemplate.send(propertiesManager.getUpdateAgreementKafkaTopic(), agreementRequest);
+			}
 		}
 	}
 	
@@ -125,12 +155,32 @@ public class WorkflowRepository {
 		return processInstanceRequest;
 	}
 	
-	private TaskRequest getTaskRequest(EstateRegister estateRegister, RequestInfo requestInfo) {
+	private ProcessInstanceRequest getAgreementProcessInstanceRequest(WorkFlowDetails workFlowDetails,String tenantId,String number, RequestInfo requestInfo) {
+
+		ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
+		ProcessInstance processInstance = new ProcessInstance();
+
+		Position assignee = new Position();
+		assignee.setId(workFlowDetails.getAssignee());
+		processInstance.setBusinessKey(propertiesManager.getWorkflowBusinessKey());
+		processInstance.setType(propertiesManager.getWorkflowBusinessKey());
+		log.info("process businesskey :" + processInstance.getBusinessKey());
+		log.info("process type: " + processInstance.getType());
+		processInstance.setAssignee(assignee);
+		processInstance.setComments(workFlowDetails.getComments());
+		processInstance.setInitiatorPosition(workFlowDetails.getInitiatorPosition());
+		processInstance.setTenantId(tenantId);
+		processInstance.setDetails("Acknowledgement Number : " +number);
+		processInstanceRequest.setProcessInstance(processInstance);
+		processInstanceRequest.setRequestInfo(requestInfo);
+		return processInstanceRequest;
+	}
+	
+	private TaskRequest getTaskRequest(WorkFlowDetails workflowDetails,String tenantId,String stateId, RequestInfo requestInfo) {
 		TaskRequest taskRequest = new TaskRequest();
 		Task task = new Task();
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
-		WorkFlowDetails workflowDetails = estateRegister.getWorkFlowDetails();
 		Position assignee = new Position();
 		// Boolean isCorporation = isCorporation(agreement.getTenantId());
 		taskRequest.setRequestInfo(requestInfo);
@@ -138,7 +188,8 @@ public class WorkflowRepository {
 		task.setType(propertiesManager.getWorkflowBusinessKey());
 		log.info("task businesskey :" + task.getBusinessKey());
 		log.info("task type: " + task.getType());
-		task.setId(estateRegister.getStateId());
+		task.setTenantId(tenantId);
+		task.setId(stateId);
 		if (workflowDetails != null) {
 			log.info("workflowDetails::"+workflowDetails.getAction());
 			task.setAction(workflowDetails.getAction());
@@ -153,10 +204,10 @@ public class WorkflowRepository {
 			task.setComments(workflowDetails.getComments());
 		} else {
 
-			log.info("The workflow object before collection update ::: " + estateRegister.getWorkFlowDetails());
+			log.info("The workflow object before collection update ::: " + workflowDetails);
 			String url = propertiesManager.getWorkflowServiceHostName()
-					+ propertiesManager.getWorkflowServiceSearchPath() + "?id=" + estateRegister.getStateId()
-					+ "&tenantId=" + estateRegister.getTenantId();
+					+ propertiesManager.getWorkflowServiceSearchPath() + "?id=" + stateId
+					+ "&tenantId=" + tenantId;
 
 			ProcessInstanceResponse processInstanceResponse = null;
 			try {

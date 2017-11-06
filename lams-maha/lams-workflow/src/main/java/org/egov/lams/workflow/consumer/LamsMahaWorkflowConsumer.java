@@ -2,6 +2,7 @@ package org.egov.lams.workflow.consumer;
 
 import java.util.Map;
 
+import org.egov.lams.common.web.request.AgreementRequest;
 import org.egov.lams.common.web.request.EstateRegisterRequest;
 import org.egov.lams.workflow.config.PropertiesManager;
 import org.egov.lams.workflow.service.WorkflowService;
@@ -29,7 +30,7 @@ public class LamsMahaWorkflowConsumer {
 	@Autowired
 	private ObjectMapper objectMapper;
 	
-	@KafkaListener(topics = {"${kafka.topic.start.workflow.estate}","${kafka.topic.update.workflow.estate}"})
+	@KafkaListener(topics = {"${kafka.topic.update.workflow.agreement}","${kafka.topic.start.workflow.agreement}","${kafka.topic.start.workflow.estate}","${kafka.topic.update.workflow.estate}"})
 	public void processMessage(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic){
 
 		log.info("::::inside workflow consumer:::::"+topic);
@@ -38,5 +39,9 @@ public class LamsMahaWorkflowConsumer {
 			workflowService.startWorkflow(objectMapper.convertValue(consumerRecord, EstateRegisterRequest.class));
 		else if (propertiesManager.getUpdateEstateWorkflowTopic().equals(topic))
 			workflowService.updateWorkflow(objectMapper.convertValue(consumerRecord, EstateRegisterRequest.class));
+		else if (propertiesManager.getStartAgreementWorkflowTopic().equals(topic))
+			workflowService.startAgreementWorkflow(objectMapper.convertValue(consumerRecord, AgreementRequest.class));
+		else if (propertiesManager.getUpdateAgreementWorkflowTopic().equals(topic))
+			workflowService.updateAgreementWorkflow(objectMapper.convertValue(consumerRecord, AgreementRequest.class));
 	}
 }

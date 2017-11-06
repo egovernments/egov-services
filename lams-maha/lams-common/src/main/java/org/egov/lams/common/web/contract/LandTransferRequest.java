@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.validation.Valid;
+
 import org.egov.common.contract.request.RequestInfo;
 
 import com.google.gson.annotations.SerializedName;
@@ -33,6 +35,7 @@ public class LandTransferRequest {
   @SerializedName("requestInfo")
   private RequestInfo requestInfo = null;
 
+  @Valid
   @SerializedName("landTransfer")
   private List<LandTransfer> landTransfer = null;
 

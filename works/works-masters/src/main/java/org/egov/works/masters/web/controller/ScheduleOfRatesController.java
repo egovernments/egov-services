@@ -28,12 +28,12 @@ public class ScheduleOfRatesController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> create(@Valid @RequestBody ScheduleOfRateRequest scheduleOfRatesRequest, @RequestParam String tenantId) {
-		scheduleOfRateValidator.validateSorRates(scheduleOfRatesRequest);
-		final List<ScheduleOfRate> scheduleOfRates = scheduleOfRatesService.create(scheduleOfRatesRequest);
+	public ResponseEntity<?> create(@Valid @RequestBody ScheduleOfRateRequest scheduleOfRateRequest) {
+		scheduleOfRateValidator.validateSorRates(scheduleOfRateRequest);
+		final List<ScheduleOfRate> scheduleOfRates = scheduleOfRatesService.create(scheduleOfRateRequest);
 		final ScheduleOfRateResponse response = new ScheduleOfRateResponse();
 		response.setScheduleOfRates(scheduleOfRates);
-		response.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(scheduleOfRatesRequest.getRequestInfo(), true));
+		response.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(scheduleOfRateRequest.getRequestInfo(), true));
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
@@ -48,18 +48,13 @@ public class ScheduleOfRatesController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-		/*@PostMapping("/_update")
-	@ResponseStatus(HttpStatus.CREATED)
-	public ScheduleOfRateResponse update(@RequestBody ScheduleOfRateRequest scheduleOfRateRequest,
-			BindingResult errors, @RequestParam String tenantId) {
-		//scheduleOfRatesService.validateEstimates(scheduleOfRateRequest, errors);
-		if (errors.hasErrors()) {
-			throw new CustomBindExceptio(errors);
-		}
+	@PostMapping("/_update")
+	public ResponseEntity<?> update(@RequestBody ScheduleOfRateRequest scheduleOfRateRequest) {
+		scheduleOfRateValidator.validateSorRates(scheduleOfRateRequest);
 		final List<ScheduleOfRate> scheduleOfRates = scheduleOfRatesService.update(scheduleOfRateRequest);
 		final ScheduleOfRateResponse response = new ScheduleOfRateResponse();
 		response.setScheduleOfRates(scheduleOfRates);
-		response.setResponseInfo(getResponseInfo(scheduleOfRateRequest.getRequestInfo()));
-		return response;
-	}*/
+		response.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(scheduleOfRateRequest.getRequestInfo(), true));
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 }

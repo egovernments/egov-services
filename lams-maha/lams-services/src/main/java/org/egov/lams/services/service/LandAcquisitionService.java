@@ -51,10 +51,13 @@ public class LandAcquisitionService {
 			landAcquisition.getValuationDetails().setId(sequenceGenService.getIds(1, "seq_eg_lams_valuationdetail").get(0));
 			
 			landAcquisition.getProposalDetails().setId(sequenceGenService.getIds(1, "seq_eg_lams_proposaldetails").get(0));
+			landAcquisition.getProposalDetails().setProposalNumber("P"+Calendar.getInstance().get(Calendar.YEAR)+String.format("%05d",landAcquisition.getProposalDetails().getId()));
 			
 			landAcquisition.getSupportDocuments().stream().forEach(suportDocument -> {
 			suportDocument.setId(sequenceGenService.getIds(1,"seq_eg_lams_supportdocuments").get(0));
 			});
+			
+			
 			
 		});
 		landAcquisitionRequest.getLandAcquisition().stream().forEach(landAcquisition -> {

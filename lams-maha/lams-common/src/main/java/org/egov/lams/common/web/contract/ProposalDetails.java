@@ -20,6 +20,9 @@ public class ProposalDetails {
 	private String adhaarNumber;
 	@NotNull
 	private Integer proposalDate;
+	
+	private String proposalNumber;
+	
 	@NotNull
 	private String proposerName;
 	@NotNull

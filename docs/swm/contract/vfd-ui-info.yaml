@@ -114,7 +114,7 @@ UIInfo:
     url: "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=REVENUE"
     keyPath: "$..id"
     valPath: "$..name"
-searchResult:
+  searchResult:
     rowClickUrlUpdate: /update/collectionpoints/{code}
     rowClickUrlView: /view/collectionpoints/{code}
     columns:

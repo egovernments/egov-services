@@ -623,7 +623,7 @@ class grievanceCreate extends Component {
 
     return (
       <div className="grievanceCreate">
-        <h2 className="application-title">{translate('pgr.lbl.log.grievance')}</h2>
+        <h2 className="application-title">{translate('pgr.lbl.register.grievance')}</h2>
         <form autoComplete="off">
           {this.state.type === 'EMPLOYEE' || this.state.type === null ?
             <Card style={styles.marginStyle}>

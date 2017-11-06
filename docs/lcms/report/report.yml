@@ -84,6 +84,7 @@ ReportDefinitions:
     type: singlevaluelist
     pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=lcms&masterName=caseStatus|$..code|$..name
     source: lcms
+    wrapper: true
     isMandatory: false
     searchClause : AND lhd.casestatus ->> 'code'= $caseStatus
   query: select lc.defendant, lc.caseno, lc.plantiffName, lc.sectionapplied, lc.summondate, lc.courtname -> 'code' as courtname from egov_lcms_case lc INNER JOIN egov_lcms_hearing_details as lhd ON lc.code = lhd.casecode WHERE lc.caseregistrationdate>=$fromDate and lc.caseregistrationdate<=$toDate

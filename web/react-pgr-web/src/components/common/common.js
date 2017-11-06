@@ -3366,7 +3366,7 @@ var localization_MR_Data = {
       "reports.lcms.OpinionOfPleader" : "Opinion of Pleader or Officer on the result of case - Marathi",
       "reports.lcms.furtherProcessDetails" : "Particulars of further process of recovery, due date of darkhast - Marathi",
       "reports.lcms.caseCategory" : "Case Category - Marathi",
-      "reports.lcms.advocate": "Advocate Name - Marathi"
+      "reports.lcms.advocate": "Advocate Name - Marathi",
 
   //Water Connection
   "reports.wcms.fromdate":"From Date - Marathi",

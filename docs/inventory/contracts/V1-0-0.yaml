@@ -2059,25 +2059,22 @@ paths:
             maxItems: 50
             description: comma seperated list of Ids 
           - name: code
-            type: string
+            type: array
+            items: 
+             type: string
             in: query
             description: |
-              code of the Supplier
+              list of codes  of the Supplier
           - name: name
             type: string
             in: query
             description: |
               name of the Supplier
-          - name: supplyType
+          - name: type
             type: string
             in: query
             description: |
               type of the Supplier
-          - name: address
-            type: string
-            in: query
-            description: |
-              address of the Supplier
           - name: status
             type: string
             in: query
@@ -2109,7 +2106,7 @@ paths:
             in: query
             description: |
               email of the Supplier
-          - name: narration
+          - name: description
             type: string
             in: query
             description: |
@@ -2154,11 +2151,11 @@ paths:
             in: query
             description: |
               code of the bank
-          - name: bankBranchCode
+          - name: bankBranch
             type: string
             in: query
             description: |
-              code of the bankBranch
+              name of the bankBranch
           - name: bankAccNo
             type: string
             in: query
@@ -3937,11 +3934,19 @@ definitions:
             Unique Identifier of the Supplier
         tenantId:
           type: string
-          description: Tenant id of the Transfer Indent Note
+          description: Tenant id of the Supplier
           maxLength: 128
           minLength: 4
-        supplierType:
-          $ref: "#/definitions/CommonEnum"          
+        type:
+          type: string
+          description: type of the Supplier
+          enum:
+            - INDIVISUAL
+            - FIRM
+            - COMPANY
+            - REGISTERED SOCIETY
+            - GOVERNMENT DEPARTMENT
+            - OTHERS
         code:
           type: string
           maxLength: 50
@@ -3963,14 +3968,20 @@ definitions:
           description: |
             address of the Supplier  
         status:
-          $ref: "#/definitions/CommonEnum"
+          type: string
+          description: status of the Supplier
+          enum:
+            - ACTIVE
+            - SUSPENDED
+            - BARRED
+            - INACTIVE
         inActiveDate:
           type: integer
           format: int64
           x-displayformat: 'dd/MM/yyyy'
           description: |
             inactive date of the Supplier
-        supplierContactNo:
+        contactNo:
           type: string
           pattern: ^[0-9]+$
           maxLength: 10
@@ -3992,7 +4003,7 @@ definitions:
           maxLength: 100
           description: |
             email of the Supplier
-        narration:
+        description:
           type: string
           pattern: ^[0-9a-zA-Z ]+$
           maxLength: 1000
@@ -4035,46 +4046,19 @@ definitions:
           maxLength: 10
           description: |
             contact number of the contact person  
-        bankInfo:
-          $ref: "#/definitions/Bank"
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
-      required:
-      - code
-      - name
-      - address
-      - supplierContactNo
-      - bankInfo
-      - supplierType
-
-    Bank:
-      type: object
-      description: |
-        This object holds the bank information.  
-      properties:
-        tenantId:
-          type: string
-          description: Tenant id of the Enum
-          maxLength: 128
-          minLength: 4
-        code:
+        bankCode:
           type: string
           description: |
-            code of the bank     
-        name:
+            code of the bank 
+        bankName:
           type: string
           pattern: ^[a-zA-Z ]$
           description: |
             name of the bank
-        bankBranchCode:
+        bankBranch: 
           type: string
           description: |
-            code of the bank     
-        bankBranchName:
-          type: string
-          pattern: ^[a-zA-Z ]$
-          description: |
-            name of the bank  branch
+            name of the bank branch
         acctNo:
           type: string
           pattern: ^[0-9]+$
@@ -4089,31 +4073,19 @@ definitions:
           type: string
           pattern: ^[a-zA-Z0-9]+$
           description: |
-            micr of the bank   
+            micr of the bank               
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
       - code
+      - name
+      - address
+      - contactNo
+      - type
+      - bankCode
       - acctNo
-      - ifsc 
-      - bankBranchCode
-    CommonEnum:
-      type: object
-      description: |
-        This object holds the Enum information.  
-      properties:
-        tenantId:
-          type: string
-          description: Tenant id of the Enum
-          maxLength: 128
-          minLength: 4
-        name:
-          type: string
-          description: |
-            name of the Enum 
-        code:
-          type: string
-          description: |
-            code of Enum  
-            
+      - ifsc
+
     Employee:
       type: object
       description: |

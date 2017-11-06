@@ -1944,6 +1944,8 @@ var localization_EN_Data = {
     "as.assetAttributes":"Asset Attributes",
     "ac.View.Header.Details": "View Assset Immovable",
     "ac.Modify.Header.Details": "Update Assset Immovable",
+    "ac.update.movable.Header.Details": "Update Assset Movable",
+    "ac.view.movable.Header.Details": "View Assset Movable",
 
 
 

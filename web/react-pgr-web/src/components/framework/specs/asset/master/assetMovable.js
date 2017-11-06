@@ -282,7 +282,7 @@ var dat = {
             "jsonPath": "Asset.titleDocumentsAvalable",
             "label": "ac.create.Title.documents.available",
             "pattern": "",
-            "type": "text",
+            "type": "textarea",
             "url": "",
             "isRequired": false,
             "isDisabled": false,
@@ -332,7 +332,7 @@ var dat = {
             "jsonPath": "Asset.description",
             "label": "ac.create.Asset.description",
             "pattern": "",
-            "type": "text",
+            "type": "textarea",
             "url": "",
             "isRequired": true,
             "isDisabled": false,
@@ -400,54 +400,54 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
-          {
-            "name": "AssetAcountCode",
-            "jsonPath": "Asset.assetAccount",
-            "label": "ac.create.Asset.account.code",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Fixed Assets|$..name|$..name",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "AccumulatedDepreciationAccount",
-            "jsonPath": "Asset.accumulatedDepreciationAccount",
-            "label": "ac.create.Accumulated.Depreciation.Account",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Accumulated Depreciation|$..name|$..name",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "RevaluationReserveAccount",
-            "jsonPath": "Asset.revaluationReserveAccount",
-            "label": "ac.create.Revaluation.Reserve.Account",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Revaluation Reserve Account|$..name|$..name",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "DepreciationExpensesAccount ",
-            "jsonPath": "Asset.depreciationExpenseAccount",
-            "label": "ac.create.Depreciation.Expenses.Account",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Depreciation Expense Account|$..name|$..name",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
+          // {
+          //   "name": "AssetAcountCode",
+          //   "jsonPath": "Asset.assetAccount",
+          //   "label": "ac.create.Asset.account.code",
+          //   "pattern": "",
+          //   "type": "singleValueList",
+          //   "url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Fixed Assets|$..name|$..name",
+          //   "isRequired": true,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
+          // {
+          //   "name": "AccumulatedDepreciationAccount",
+          //   "jsonPath": "Asset.accumulatedDepreciationAccount",
+          //   "label": "ac.create.Accumulated.Depreciation.Account",
+          //   "pattern": "",
+          //   "type": "singleValueList",
+          //   "url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Accumulated Depreciation|$..name|$..name",
+          //   "isRequired": true,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
+          // {
+          //   "name": "RevaluationReserveAccount",
+          //   "jsonPath": "Asset.revaluationReserveAccount",
+          //   "label": "ac.create.Revaluation.Reserve.Account",
+          //   "pattern": "",
+          //   "type": "singleValueList",
+          //   "url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Revaluation Reserve Account|$..name|$..name",
+          //   "isRequired": true,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
+          // {
+          //   "name": "DepreciationExpensesAccount ",
+          //   "jsonPath": "Asset.depreciationExpenseAccount",
+          //   "label": "ac.create.Depreciation.Expenses.Account",
+          //   "pattern": "",
+          //   "type": "singleValueList",
+          //   "url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Depreciation Expense Account|$..name|$..name",
+          //   "isRequired": true,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // }
 
 				]
 			},
@@ -662,6 +662,20 @@ var dat = {
 					// 	"requiredErrMsg": "",
 					// 	"patternErrMsg": ""
 					// }
+					// {
+					// 	"name": "AssetCategoryType",
+					// 	"jsonPath": "Asset.assetCategory.assetCategoryType",
+					// 	"label": "Asset Category Type",
+					// 	"pattern": "",
+					// 	"type": "text",
+					// 	"url": "",
+					// 	"isRequired": true,
+					// 	"isDisabled": true,
+					// 	"requiredErrMsg": "",
+					// 	"patternErrMsg": "",
+					// 	"defaultValue": "MOVABLE",
+					// 	"isHidden": true
+					// }
 				]
 			}
 		],
@@ -681,7 +695,7 @@ var dat = {
 		"objectName": "Assets",
 		"groups": [
 			{
-				"label": "ac.create.movable.Header.Details",
+				"label": "ac.view.movable.Header.Details",
 				"name": "createAsset",
 				"fields": [
 						{
@@ -833,20 +847,6 @@ var dat = {
         "multiple":false,
         "jsonPath":"",
 				"fields": [
-					{
-            "name": "searchLocation",
-						"jsonPathAddress": "Assets[0].location",
-            "jsonPathLng": "Assets[0].longitude",
-						"jsonPathLat": "Assets[0].latitude",
-            "label": "search",
-            "pattern": "",
-            "type": "googleMaps",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
           {
             "name": "Location",
             "jsonPath": "Assets[0].location",
@@ -967,7 +967,7 @@ var dat = {
             "jsonPath": "Assets[0].titleDocumentsAvalable",
             "label": "ac.create.Title.documents.available",
             "pattern": "",
-            "type": "text",
+            "type": "textarea",
             "url": "",
             "isRequired": false,
             "isDisabled": false,
@@ -1017,7 +1017,7 @@ var dat = {
             "jsonPath": "Assets[0].description",
             "label": "ac.create.Asset.description",
             "pattern": "",
-            "type": "text",
+            "type": "textarea",
             "url": "",
             "isRequired": true,
             "isDisabled": false,
@@ -1285,7 +1285,7 @@ var dat = {
 		"objectName": "Asset",
 		"groups": [
 			{
-				"label": "ac.create.movable.Header.Details",
+				"label": "ac.update.movable.Header.Details",
 				"name": "createAsset",
 				"fields": [
 						{
@@ -1572,7 +1572,7 @@ var dat = {
             "jsonPath": "Asset.titleDocumentsAvalable",
             "label": "ac.create.Title.documents.available",
             "pattern": "",
-            "type": "text",
+            "type": "textarea",
             "url": "",
             "isRequired": false,
             "isDisabled": false,
@@ -1622,7 +1622,7 @@ var dat = {
             "jsonPath": "Asset.description",
             "label": "ac.create.Asset.description",
             "pattern": "",
-            "type": "text",
+            "type": "textarea",
             "url": "",
             "isRequired": true,
             "isDisabled": false,

@@ -2251,8 +2251,8 @@ definitions:
           maxLength: 128
           minLength: 4
         issueStore:
-          $ref: "#/definitions/Store"
           format: singleValueList
+          $ref: "#/definitions/Store"
         indentStore:
           $ref: "#/definitions/Store"  
           format : singleValueList
@@ -2315,9 +2315,10 @@ definitions:
           items:
             $ref: "#/definitions/IndentDetail"
         department:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/Department'
-          description: department of indenting store or direct department request for material. If store is selected then autopopulate department information and readonly field.
+          description: >-
+            department of indenting store or direct department request for material. If store is selected then autopopulate department information and readonly field.
           format: singleValueList
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/Department'
         totalIndentValue:
           type: number
           format: BigDecimal
@@ -3062,7 +3063,9 @@ definitions:
         materialIssue:
           $ref: "#/definitions/MaterialIssue"
         workFlowDetails:
-          $ref: "#/definitions/WorkFlowDetails"   
+          $ref: "#/definitions/WorkFlowDetails"
+        indent:
+          $ref: "#/definitions/Indent"  
         stateId:
           type: integer
           format: int64

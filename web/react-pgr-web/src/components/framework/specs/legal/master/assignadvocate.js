@@ -164,7 +164,7 @@ var dat = {
             isDisabled: false,
             patternErrorMsg: "",
             url:
-              "/lcms-services/legalcase/register/_search?|$..code|$..name"
+              "/lcms-services/legalcase/register/_search?|$..code|$..register"
           },
           {
             name: "bench",
@@ -236,7 +236,7 @@ var dat = {
                   name: "advocateName",
                   pattern: "",
                   type: "singleValueList",
-                  jsonPath: "cases[0].advocateDetails[0].advocate.name",
+                  jsonPath: "cases[0].advocateDetails[0].advocate.code",
                   isRequired: true,
                   isDisabled: false,
                   url:
@@ -246,7 +246,7 @@ var dat = {
                   name: "advocateAssignDate",
                   pattern: "",
                   type: "datePicker",
-                  jsonPath: "cases[0].advocateDetails[0].advocateAssignDate",
+                  jsonPath: "cases[0].advocateDetails[0].assignedDate",
                   isRequired: true,
                   isDisabled: false
                 },
@@ -254,7 +254,7 @@ var dat = {
                   name: "advocateFee",
                   pattern: "",
                   type: "text",
-                  jsonPath: "assignAdvocate[0].advocateFee",
+                  jsonPath: "cases[0].advocateDetails[0].fee",
                   isRequired: true,
                   isDisabled: false
                 }

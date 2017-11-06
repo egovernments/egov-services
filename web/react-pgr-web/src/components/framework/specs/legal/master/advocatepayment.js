@@ -4,7 +4,7 @@ var dat =  {
     title:"advocatepayment.search.document.title",
     useTimestamp: true,
     objectName: "advocatepayments",
-    url: "/legalcase/advocatepayment/_search",
+    url: "/lcms-services/legalcase/advocatepayment/_search",
     groups: [
       {
         name: "search",
@@ -266,7 +266,7 @@ var dat =  {
             pattern: "",
             label: "legal.create.amount",
             type: "number",
-            jsonPath: "assignAdvocate[0].totalAmount",
+            jsonPath: "advocatepayments[0].advocateCharges[0].amount",
             isRequired: false,
             isDisabled: false
           }, 
@@ -326,7 +326,8 @@ var dat =  {
                     }
                   ]
                 }
-              },{
+              },
+              {
             name: "advocateLabel",
             jsonPath: "advocatepayments[0].bankAccountNo",
             label: "Note: Total amount is window is valid and it is not necessarily same with amount mentioned in invoice document that is attached",
@@ -338,7 +339,7 @@ var dat =  {
         ]
       }
     ],
-    url: "/legalcase/advocatepayment/_create",
+    url: "/lcms-services/legalcase/advocatepayment/_create",
     tenantIdRequired: true
   },
   "legal.view": {
@@ -498,7 +499,7 @@ var dat =  {
             pattern: "",
             label: "legal.create.amount",
             type: "number",
-            jsonPath: "assignAdvocate[0].totalAmount",
+            jsonPath: "advocatepayments[0].advocateCharges[0].amount",
             isRequired: false,
             isDisabled: false
           }, 

@@ -3789,6 +3789,8 @@ definitions:
             description of the Store
         department:
           $ref: "#/definitions/Department"
+        officeLocation:
+          $ref: "#/definitions/Location"
         billingAddress:
           type: string
           pattern: ^[a-zA-Z0-9 ]+$
@@ -3839,6 +3841,33 @@ definitions:
       - deliveryAddress
       - contactNo1
       - email
+      
+    Location:
+      type: object
+      description: |
+        This object holds the boundary information.  
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the Location
+        tenantId:
+          type: string
+          description: Tenantid of the Location
+          maxLength: 128
+          minLength: 4    
+        code:
+          type: string
+          description: |
+            code of the Location
+        name:
+          type: string
+          pattern: ^[a-zA-Z ]$
+          description: |
+            name of the Location
+      required:
+      - code            
+            
       
     Department:
       type: object

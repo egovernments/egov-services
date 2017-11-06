@@ -2078,5 +2078,165 @@
       "name": "Donation",
       "isActive": true
     }
+  ],
+  "Assetconfiguration": [
+    {
+      "id": 1,
+      "keyname": "EnableVoucherGeneration",
+      "description": "Enable or Disable voucher generation for asset revaluation,disposal and depreciation",
+      "tenantid": "mh"
+    },
+    {
+      "id": 2,
+      "keyname": "AssetRevaluationVoucherName",
+      "description": "Voucher Name for Asset Revaluation",
+      "tenantid": "mh"
+    },
+    {
+      "id": 3,
+      "keyname": "AssetRevaluationVoucherDescription",
+      "description": "Voucher Description for Asset Revaluation",
+      "tenantid": "mh"
+    },
+    {
+      "id": 4,
+      "keyname": "AssetDisposalVoucherName",
+      "description": "Voucher Name for Asset Disposal or Sale",
+      "tenantid": "mh"
+    },
+    {
+      "id": 5,
+      "keyname": "AssetDisposalVoucherDescription",
+      "description": "Voucher Description for Asset Disposal or Sale",
+      "tenantid": "mh"
+    },
+    {
+      "id": 6,
+      "keyname": "AssetDefaultCapitalizedValue",
+      "description": "Asset Default Capitalized Value",
+      "tenantid": "mh"
+    },
+    {
+      "id": 7,
+      "keyname": "AssetMinimumValue",
+      "description": "Asset Minimum Value",
+      "tenantid": "mh"
+    },
+    {
+      "id": 8,
+      "keyname": "DepreciationSeparationDate",
+      "description": "Asset Depreciation Separation Date",
+      "tenantid": "mh"
+    },
+    {
+      "id": 9,
+      "keyname": "AssetDepreciationVoucherName",
+      "description": "Voucher Name for Asset Depreciation",
+      "tenantid": "mh"
+    },
+    {
+      "id": 10,
+      "keyname": "AssetDepreciationVoucherDescription",
+      "description": "Voucher Description for Asset Depreciation",
+      "tenantid": "mh"
+    },
+    {
+      "id": 11,
+      "keyname": "AssetBatchSize",
+      "description": "Asset Batch Size",
+      "tenantid": "mh"
+    },
+    {
+      "id": 12,
+      "keyname": "DepreciationCFactor",
+      "description": "Depreciation Multiple Factor For Half Financial Year",
+      "tenantid": "mh"
+    }
+  ],
+  "Assetconfigurationvalues": [
+    {
+      "id": 1,
+      "keyid": 1,
+      "value": "false",
+      "effectivefrom": 1509950058,
+      "tenantid": "mh"
+    },
+    {
+      "id": 2,
+      "keyid": 2,
+      "value": "Asset Revaluation",
+      "effectivefrom": 1509950058,
+      "tenantid": "mh"
+    },
+    {
+      "id": 3,
+      "keyid": 3,
+      "value": "Asset Revaluation Journal Voucher",
+      "effectivefrom": 1509950058,
+      "tenantid": "mh"
+    },
+    {
+      "id": 4,
+      "keyid": 4,
+      "value": "Asset Disposal or Sale",
+      "effectivefrom": 1509950058,
+      "tenantid": "mh"
+    },
+    {
+      "id": 5,
+      "keyid": 5,
+      "value": "Asset Disposal or Sale Journal Voucher",
+      "effectivefrom": 1509950058,
+      "tenantid": "mh"
+    },
+    {
+      "id": 6,
+      "keyid": 6,
+      "value": "1",
+      "effectivefrom": 1509950058,
+      "tenantid": "mh"
+    },
+    {
+      "id": 7,
+      "keyid": 7,
+      "value": "5000",
+      "effectivefrom": 1509950058,
+      "tenantid": "mh"
+    },
+    {
+      "id": 8,
+      "keyid": 8,
+      "value": "9/30/23/59/59",
+      "effectivefrom": 1509950058,
+      "tenantid": "mh"
+    },
+    {
+      "id": 9,
+      "keyid": 9,
+      "value": "Asset Depreciation",
+      "effectivefrom": 1509950058,
+      "tenantid": "mh"
+    },
+    {
+      "id": 10,
+      "keyid": 10,
+      "value": "Asset Depreciation Journal Voucher",
+      "effectivefrom": 1509950058,
+      "tenantid": "mh"
+    },
+    {
+      "id": 11,
+      "keyid": 11,
+      "value": "500",
+      "effectivefrom": 1509950058,
+      "tenantid": "mh"
+    },
+    {
+      "id": 12,
+      "keyid": 12,
+      "value": "0.5",
+      "effectivefrom": 1509950058,
+      "tenantid": "mh"
+    }
   ]
 }

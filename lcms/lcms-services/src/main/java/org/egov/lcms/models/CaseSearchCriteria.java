@@ -51,5 +51,7 @@ public class CaseSearchCriteria {
 	
 	private Long toDate;
 	
+	private String caseNo;
+	
 
 }

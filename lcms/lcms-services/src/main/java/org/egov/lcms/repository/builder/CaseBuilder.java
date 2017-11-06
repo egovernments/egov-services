@@ -118,6 +118,12 @@ public class CaseBuilder {
 			selectQuery.append(" caseRegistrationDate<=? ");
 			preparedStatementValues.add(caseSearchCriteria.getToDate());
 		}
+		
+		if ( caseSearchCriteria.getCaseNo()!=null && !caseSearchCriteria.getCaseNo().isEmpty() ){
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" caseno=? ");
+			preparedStatementValues.add(caseSearchCriteria.getCaseNo());
+		}
 
 	}
 

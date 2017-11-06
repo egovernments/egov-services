@@ -52,14 +52,14 @@ public class CaseController {
 	}
 
 	@RequestMapping(path = "/case/_registration", method = RequestMethod.POST)
-	public ResponseEntity<?> updateSummon(@RequestBody @Valid CaseRequest caseRequest) throws Exception {
+	public ResponseEntity<?> caseRegistration(@RequestBody @Valid CaseRequest caseRequest) throws Exception {
 		CaseResponse summonResponse = caseService.createCase(caseRequest);
 		return new ResponseEntity<>(summonResponse, HttpStatus.CREATED);
 
 	}
 
 	@RequestMapping(path = "/case/_search", method = RequestMethod.POST)
-	public ResponseEntity<?> assignAdvocate(@ModelAttribute @Valid CaseSearchCriteria caseSearchCriteria,
+	public ResponseEntity<?> searchCase(@ModelAttribute @Valid CaseSearchCriteria caseSearchCriteria,
 			@RequestBody RequestInfoWrapper requestInfoWrapper) throws Exception {
 		CaseResponse caseResponse = caseService.caseSearch(caseSearchCriteria, requestInfoWrapper.getRequestInfo());
 		return new ResponseEntity<>(caseResponse, HttpStatus.CREATED);

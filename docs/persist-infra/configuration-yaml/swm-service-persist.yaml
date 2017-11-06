@@ -352,7 +352,7 @@ serviceMaps:
          dbType: DOUBLE
 
 
-    - query: INSERT INTO egswm_collectionpointdetails(id, tenantid, collectionType, collectionPoint, garbageEstimate, description, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_collectionpointdetails(id, tenantid, collectionType, collectionPoint, garbageEstimate, description) VALUES (?, ?, ?, ?, ?, ?);
       basePath: $.collectionPoints.*.collectionPointDetails.*
       jsonMaps:
        
@@ -417,7 +417,7 @@ serviceMaps:
          dbType: DOUBLE
 
 
-    - query: INSERT INTO egswm_collectionpointdetails(id, tenantid, collectionType, collectionPoint, garbageEstimate, description, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_collectionpointdetails(id, tenantid, collectionType, collectionPoint, garbageEstimate, description) VALUES (?, ?, ?, ?, ?, ?);
       basePath: $.collectionPoints.*.collectionPointDetails.*
       jsonMaps:
        

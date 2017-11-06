@@ -352,7 +352,7 @@ serviceMaps:
          dbType: DOUBLE
 
 
-    - query: INSERT INTO egswm_collectionpointdetails(id, tenantid, collectionType, collectionPoint, garbageEstimate, description, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_collectionpointdetails(id, tenantid, collectionType, collectionPoint, garbageEstimate, description, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?);
       basePath: $.collectionPoints.*.collectionPointDetails.*
       jsonMaps:
        
@@ -368,17 +368,6 @@ serviceMaps:
          dbType: DOUBLE
 
        - jsonPath: $.collectionPoints.*.collectionPointDetails.*.description
-         
-       - jsonPath: $.collectionPoints.*.collectionPointDetails.*.auditDetails.createdBy
-
-       - jsonPath: $.collectionPoints.*.collectionPointDetails.*.auditDetails.lastModifiedBy
-
-       - jsonPath: $.collectionPoints.*.collectionPointDetails.*.auditDetails.createdTime
-         dbType: LONG
-
-       - jsonPath: $.collectionPoints.*.collectionPointDetails.*.auditDetails.lastModifiedTime
-         dbType: LONG
-
 
  - version: 1.0
    name: collectionpoint update
@@ -428,7 +417,7 @@ serviceMaps:
          dbType: DOUBLE
 
 
-    - query: INSERT INTO egswm_collectionpointdetails(id, tenantid, collectionType, collectionPoint, garbageEstimate, description, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_collectionpointdetails(id, tenantid, collectionType, collectionPoint, garbageEstimate, description, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?);
       basePath: $.collectionPoints.*.collectionPointDetails.*
       jsonMaps:
        
@@ -445,16 +434,6 @@ serviceMaps:
 
        - jsonPath: $.collectionPoints.*.collectionPointDetails.*.description
          
-       - jsonPath: $.collectionPoints.*.collectionPointDetails.*.auditDetails.createdBy
-
-       - jsonPath: $.collectionPoints.*.collectionPointDetails.*.auditDetails.lastModifiedBy
-
-       - jsonPath: $.collectionPoints.*.collectionPointDetails.*.auditDetails.createdTime
-         dbType: LONG
-
-       - jsonPath: $.collectionPoints.*.collectionPointDetails.*.auditDetails.lastModifiedTime
-         dbType: LONG
-
  - version: 1.0
    name: route create
    description: create route in egswm_route

@@ -7,6 +7,7 @@ import org.egov.works.estimate.web.contract.AbstractEstimateDetails;
 import org.egov.works.estimate.web.contract.AuditDetails;
 import org.egov.works.estimate.web.contract.ProjectCode;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -27,6 +28,7 @@ public class AbstractEstimateDetailsHelper {
 	@JsonProperty("tenantId")
 	private String tenantId = null;
 
+	@JsonIgnore
 	@JsonProperty("abstractEstimate")
 	private String abstractEstimate = null;
 
@@ -60,7 +62,7 @@ public class AbstractEstimateDetailsHelper {
 	public AbstractEstimateDetails toDomain() {
 		AbstractEstimateDetails estimateDetails = new AbstractEstimateDetails();
 		estimateDetails.setAbstractEstimate(new AbstractEstimate());
-		estimateDetails.getAbstractEstimate().setId(this.abstractEstimate);
+//		estimateDetails.getAbstractEstimate().setId(this.abstractEstimate);
 		estimateDetails.setAuditDetails(new AuditDetails());
 		estimateDetails.getAuditDetails().setCreatedBy(this.createdBy);
 		estimateDetails.getAuditDetails().setCreatedTime(this.createdTime);
@@ -71,8 +73,10 @@ public class AbstractEstimateDetailsHelper {
 		estimateDetails.setGrossAmountBilled(this.grossAmountBilled);
 		estimateDetails.setId(this.id);
 		estimateDetails.setNameOfWork(this.nameOfWork);
-		estimateDetails.setProjectCode(new ProjectCode());
-		estimateDetails.getProjectCode().setCode(this.projectCode);
+		if(this.projectCode != null) {
+			estimateDetails.setProjectCode(new ProjectCode());
+			estimateDetails.getProjectCode().setCode(this.projectCode);
+		}
 		estimateDetails.setTenantId(this.tenantId);
 		return estimateDetails;
 	}

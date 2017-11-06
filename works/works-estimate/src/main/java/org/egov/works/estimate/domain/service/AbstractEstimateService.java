@@ -1,6 +1,7 @@
 package org.egov.works.estimate.domain.service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +22,11 @@ import org.egov.works.estimate.web.contract.AbstractEstimateRequest;
 import org.egov.works.estimate.web.contract.AbstractEstimateSearchContract;
 import org.egov.works.estimate.web.contract.AbstractEstimateStatus;
 import org.egov.works.estimate.web.contract.AuditDetails;
+import org.egov.works.estimate.web.contract.EstimateAppropriation;
+import org.egov.works.estimate.web.contract.EstimateAppropriationRequest;
+import org.egov.works.estimate.web.contract.EstimateAppropriationResponse;
+import org.egov.works.estimate.web.contract.ProjectCode;
+import org.egov.works.estimate.web.contract.ProjectCodeStatus;
 import org.egov.works.estimate.web.contract.RequestInfo;
 import org.egov.works.estimate.web.contract.WorkFlowDetails;
 import org.egov.works.workflow.service.WorkflowService;
@@ -28,13 +34,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.client.RestTemplate;
 
 import net.minidev.json.JSONArray;
 
 @Service
 @Transactional(readOnly = true)
 public class AbstractEstimateService {
-	
+
 	public static final String ABSTRACT_ESTIMATE_WF_TYPE = "AbstractEstimate";
 
 	public static final String ABSTRACT_ESTIMATE_BUSINESSKEY = "AbstractEstimate";
@@ -53,12 +60,15 @@ public class AbstractEstimateService {
 
 	@Autowired
 	private EstimateUtils estimateUtils;
-	
+
 	@Autowired
 	private CommonUtils commonUtils;
 
 	@Autowired
 	private WorkflowService workflowService;
+
+	@Autowired
+	private RestTemplate restTemplate;
 
 	@Transactional
 	public List<AbstractEstimate> create(AbstractEstimateRequest abstractEstimateRequest) {
@@ -79,8 +89,8 @@ public class AbstractEstimateService {
 				estimate.setStatus(AbstractEstimateStatus.APPROVED);
 			else {
 				populateWorkFlowDetails(estimate, abstractEstimateRequest.getRequestInfo());
-				estimate.setStateId(workflowService.enrichWorkflow(estimate.getWorkFlowDetails(), estimate.getTenantId(),
-						abstractEstimateRequest.getRequestInfo()));
+				estimate.setStateId(workflowService.enrichWorkflow(estimate.getWorkFlowDetails(),
+						estimate.getTenantId(), abstractEstimateRequest.getRequestInfo()));
 				estimate.setStatus(AbstractEstimateStatus.CREATED);
 			}
 		}
@@ -95,12 +105,21 @@ public class AbstractEstimateService {
 					setAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUsername(), true));
 			estimate.setStateId(workflowService.enrichWorkflow(estimate.getWorkFlowDetails(), estimate.getTenantId(),
 					abstractEstimateRequest.getRequestInfo()));
+
 			populateNextStatus(estimate);
+
+			if (estimate.getStatus().toString().equalsIgnoreCase(AbstractEstimateStatus.APPROVED.toString())) {
+				for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
+					setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag());
+					setEstimateAppropriation(abstractEstimateDetails, abstractEstimateRequest.getRequestInfo());
+
+				}
+			}
 		}
 		kafkaTemplate.send(propertiesManager.getWorksAbstractEstimateUpdateTopic(), abstractEstimateRequest);
 		return abstractEstimateRequest.getAbstractEstimates();
 	}
-	
+
 	private void populateWorkFlowDetails(AbstractEstimate abstractEstimate, RequestInfo requestInfo) {
 
 		if (null != abstractEstimate && null != abstractEstimate.getWorkFlowDetails()) {
@@ -122,7 +141,7 @@ public class AbstractEstimateService {
 			}
 		}
 	}
-	
+
 	private void populateNextStatus(AbstractEstimate abstractEstimate) {
 		WorkFlowDetails workFlowDetails = null;
 		String currentStatus = null;
@@ -135,7 +154,7 @@ public class AbstractEstimateService {
 		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
 				&& workFlowDetails.getAction().equalsIgnoreCase("Submit")
 				&& (currentStatus.equalsIgnoreCase(AbstractEstimateStatus.CREATED.toString())
-				|| currentStatus.equalsIgnoreCase(AbstractEstimateStatus.RESUBMITTED.toString()))) {
+						|| currentStatus.equalsIgnoreCase(AbstractEstimateStatus.RESUBMITTED.toString()))) {
 			abstractEstimate.setStatus(AbstractEstimateStatus.CHECKED);
 		}
 
@@ -149,13 +168,13 @@ public class AbstractEstimateService {
 				&& workFlowDetails.getAction().equalsIgnoreCase("Reject")) {
 			abstractEstimate.setStatus(AbstractEstimateStatus.REJECTED);
 		}
-		
+
 		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
 				&& workFlowDetails.getAction().equalsIgnoreCase("Forward")
 				&& currentStatus.equalsIgnoreCase(AbstractEstimateStatus.REJECTED.toString())) {
 			abstractEstimate.setStatus(AbstractEstimateStatus.RESUBMITTED);
 		}
-		
+
 		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
 				&& workFlowDetails.getAction().equalsIgnoreCase("Cancel")
 				&& currentStatus.equalsIgnoreCase(AbstractEstimateStatus.REJECTED.toString())) {
@@ -351,6 +370,35 @@ public class AbstractEstimateService {
 		auditDetails.setLastModifiedTime(new Date().getTime());
 
 		return auditDetails;
+	}
+
+	public void setProjectCode(final AbstractEstimateDetails abstractEstimateDetails, boolean spillOverFlag) {
+		ProjectCode projectCode = new ProjectCode();
+		if (spillOverFlag) {
+			projectCode.setCode(abstractEstimateDetails.getProjectCode().getCode());
+		}
+		projectCode.setName(abstractEstimateDetails.getNameOfWork());
+		projectCode.setDescription(abstractEstimateDetails.getNameOfWork());
+		projectCode.setActive(true);
+		projectCode.setStatus(ProjectCodeStatus.CREATED);
+		// TODO: Need to create account detail key whenever project code
+		// genrated
+	}
+
+	private void setEstimateAppropriation(AbstractEstimateDetails abstractEstimateDetails,
+			final RequestInfo requestInfo) {
+		EstimateAppropriationRequest estimateAppropriationRequest = new EstimateAppropriationRequest();
+		EstimateAppropriation estimateAppropriation = new EstimateAppropriation();
+		List<EstimateAppropriation> appropriations = new ArrayList<>();
+		estimateAppropriation
+				.setObjectNumber(abstractEstimateDetails.getAbstractEstimate().getAbstractEstimateNumber());
+		estimateAppropriation.setObjectType(ABSTRACT_ESTIMATE_BUSINESSKEY);
+		estimateAppropriation.setTenantId(abstractEstimateDetails.getAbstractEstimate().getTenantId());
+		estimateAppropriationRequest.setEstimateAppropriations(appropriations);
+		estimateAppropriationRequest.setRequestInfo(requestInfo);
+
+		final String url = "";
+		restTemplate.postForObject(url, estimateAppropriationRequest, EstimateAppropriationResponse.class);
 	}
 
 }

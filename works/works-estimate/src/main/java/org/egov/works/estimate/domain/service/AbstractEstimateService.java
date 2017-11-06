@@ -75,10 +75,14 @@ public class AbstractEstimateService {
 				details.setAuditDetails(
 						setAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUsername(), false));
 			}
-			populateWorkFlowDetails(estimate, abstractEstimateRequest.getRequestInfo());
-			estimate.setStateId(workflowService.enrichWorkflow(estimate.getWorkFlowDetails(), estimate.getTenantId(),
-					abstractEstimateRequest.getRequestInfo()));
-			estimate.setStatus(AbstractEstimateStatus.CREATED);
+			if (estimate.getSpillOverFlag())
+				estimate.setStatus(AbstractEstimateStatus.APPROVED);
+			else {
+				populateWorkFlowDetails(estimate, abstractEstimateRequest.getRequestInfo());
+				estimate.setStateId(workflowService.enrichWorkflow(estimate.getWorkFlowDetails(), estimate.getTenantId(),
+						abstractEstimateRequest.getRequestInfo()));
+				estimate.setStatus(AbstractEstimateStatus.CREATED);
+			}
 		}
 		kafkaTemplate.send(propertiesManager.getWorksAbstractEstimateCreateTopic(), abstractEstimateRequest);
 		return abstractEstimateRequest.getAbstractEstimates();

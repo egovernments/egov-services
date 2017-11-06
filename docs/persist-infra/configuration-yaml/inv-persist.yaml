@@ -232,7 +232,6 @@ serviceMaps:
               dbType: LONG
             - jsonPath: $.suppliers.*.code
             - jsonPath: $.suppliers.*.auditDetails.tenantId
-
     - version: 1.0
       name: material store mapping create
       description: create material store mapping in inventory
@@ -242,8 +241,8 @@ serviceMaps:
           basePath: $.materialStoreMappings.*
           jsonMaps:
             - jsonPath: $.materialStoreMappings.*.id
-            - jsonPath: $.materialStoreMappings.*.material
-            - jsonPath: $.materialStoreMappings.*.store
+            - jsonPath: $.materialStoreMappings.*.material.code
+            - jsonPath: $.materialStoreMappings.*.store.code
             - jsonPath: $.materialStoreMappings.*.chartofAccount.glCode
             - jsonPath: $.materialStoreMappings.*.active
             - jsonPath: $.materialStoreMappings.*.auditDetails.tenantId
@@ -262,17 +261,16 @@ serviceMaps:
         - query: UPDATE materialstoremapping SET material=?,  store=?,  chartofaccount=?,  active=?, lastmodifiedby=?,  lastmodifiedtime=? WHERE material=? AND store=? AND tenantid=?;
           basePath: $.materialStoreMappings.*
           jsonMaps:
-            - jsonPath: $.materialStoreMappings.*.material
-            - jsonPath: $.materialStoreMappings.*.store
+            - jsonPath: $.materialStoreMappings.*.material.code
+            - jsonPath: $.materialStoreMappings.*.store.code
             - jsonPath: $.materialStoreMappings.*.chartofAccount.glCode
             - jsonPath: $.materialStoreMappings.*.active
             - jsonPath: $.materialStoreMappings.*.auditDetails.lastModifiedBy
             - jsonPath: $.materialStoreMappings.*.auditDetails.lastModifiedTime
               dbType: LONG
-            - jsonPath: $.materialStoreMappings.*.material
-            - jsonPath: $.materialStoreMappings.*.store
+            - jsonPath: $.materialStoreMappings.*.material.code
+            - jsonPath: $.materialStoreMappings.*.store.code
             - jsonPath: $.materialStoreMappings.*.auditDetails.tenantId
-
 
 
 

@@ -19,6 +19,7 @@ public class MaterialStoreMappingService {
     public static final String STORE = "store";
     public static final String MATERIAL = "material";
     public static final String INV_005 = "inv.005";
+    public static final String INV_003 = "INV.003";
     private LogAwareKafkaTemplate logAwareKafkaTemplate;
 
     private MaterialStoreMappingJdbcRepository materialStoreMappingJdbcRepository;
@@ -63,7 +64,6 @@ public class MaterialStoreMappingService {
                 .forEach(materialStoreMapping -> {
                     materialStoreMapping.setAuditDetails(inventoryUtilityService.mapAuditDetails(materialStoreMappingRequest.getRequestInfo(), tenantId));
                     validateUpdateRequest(tenantId, materialStoreMapping);
-
                 });
         return push(updateTopicName, materialStoreMappingRequest);
 
@@ -94,22 +94,22 @@ public class MaterialStoreMappingService {
         if (size > 0) {
             uniqueCheck(materialStoreMapping);
         } else
-            throw new CustomException("INV.003", "Material Store Mapping Not Found");
+            throw new CustomException(INV_003, "Material Store Mapping Not Found");
     }
 
 
     private List<MaterialStoreMapping> findMaterialStore(String tenantId, MaterialStoreMapping materialStoreMapping) {
         MaterialStoreMappingSearchRequest materialStoreMappingSearchRequest = new MaterialStoreMappingSearchRequest();
-        materialStoreMappingSearchRequest.setMaterial(materialStoreMapping.getMaterial());
-        materialStoreMappingSearchRequest.setStore(materialStoreMapping.getStore());
+        materialStoreMappingSearchRequest.setMaterial(materialStoreMapping.getMaterial().getCode());
+        materialStoreMappingSearchRequest.setStore(materialStoreMapping.getStore().getCode());
         materialStoreMappingSearchRequest.setTenantId(tenantId);
         return materialStoreMappingJdbcRepository.search(materialStoreMappingSearchRequest).getPagedData();
     }
 
-
     private void buildStoreMapping(String tenantId, MaterialStoreMapping materialStoreMapping) {
-        Store store = getStore(materialStoreMapping.getStore(), tenantId);
-        materialStoreMapping.setStore(store.getCode());
+        Store store = getStore(materialStoreMapping.getStore().getCode(), tenantId);
+        materialStoreMapping.getStore().setCode(store.getCode());
+        materialStoreMapping.getStore().setDepartment(store.getDepartment());
     }
 
     private Store getStore(String storeCode, String tenantId) {

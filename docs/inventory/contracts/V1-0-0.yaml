@@ -3573,14 +3573,10 @@ definitions:
           description: |
             Unique Identifier of the Material Store Mapping      
         material:
-          type: string
-          description: |
-            code of material
+          $ref: "#/definitions/Material"
         store:
-          type: string
-          description: |
-            code of store
-        chartofAccount:
+          $ref: "#/definitions/Store"
+        chartOfAccount:
           $ref: "#/definitions/ChartofAccount"
         active:
           type: boolean
@@ -3590,6 +3586,7 @@ definitions:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"             
       required:
       - store
+      - material
 
     Uom:
       type: object

@@ -1,8 +1,6 @@
 package org.egov.inv.persistence.entity;
 
-import io.swagger.model.AuditDetails;
-import io.swagger.model.ChartofAccount;
-import io.swagger.model.MaterialStoreMapping;
+import io.swagger.model.*;
 import lombok.*;
 
 @Builder
@@ -39,22 +37,24 @@ public class MaterialStoreMappingEntity {
 
 
     public MaterialStoreMapping toDomain() {
+
         return MaterialStoreMapping.builder()
                 .id(id)
-                .material(material)
-                .store(store)
+                .material(buildMaterial())
+                .store(buildStore())
                 .active(active)
                 .chartofAccount(buildChartOfAccount())
                 .auditDetails(buildAuditDetails())
                 .build();
     }
 
+
     public MaterialStoreMappingEntity toEntity(MaterialStoreMapping materialStoreMapping) {
         AuditDetails auditDetails = materialStoreMapping.getAuditDetails();
         return MaterialStoreMappingEntity.builder()
                 .id(materialStoreMapping.getId())
-                .material(materialStoreMapping.getMaterial())
-                .store(materialStoreMapping.getStore())
+                .material(materialStoreMapping.getMaterial().getCode())
+                .store(materialStoreMapping.getStore().getCode())
                 .active(materialStoreMapping.isActive())
                 .chartOfAccount(materialStoreMapping.getChartofAccount().getGlCode())
                 .createdBy(auditDetails.getCreatedBy())
@@ -63,6 +63,19 @@ public class MaterialStoreMappingEntity {
                 .lastModifiedTime(auditDetails.getLastModifiedTime())
                 .tenantId(auditDetails.getTenantId())
                 .build();
+    }
+
+
+    private Material buildMaterial() {
+        return Material.builder()
+                .code(material)
+                .build();
+    }
+
+    private Store buildStore() {
+        Store store = new Store();
+        store.setCode(this.store);
+        return store;
     }
 
     private ChartofAccount buildChartOfAccount() {

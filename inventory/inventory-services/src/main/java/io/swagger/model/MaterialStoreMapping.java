@@ -26,10 +26,10 @@ public class MaterialStoreMapping {
     private String id = null;
 
     @JsonProperty("material")
-    private String material = null;
+    private Material material = null;
 
     @JsonProperty("store")
-    private String store = null;
+    private Store store = null;
 
     @JsonProperty("chartofAccount")
     private ChartofAccount chartofAccount = null;
@@ -61,7 +61,7 @@ public class MaterialStoreMapping {
         this.id = id;
     }
 
-    public MaterialStoreMapping material(String material) {
+    public MaterialStoreMapping material(Material material) {
         this.material = material;
         return this;
     }
@@ -74,15 +74,15 @@ public class MaterialStoreMapping {
     @ApiModelProperty(value = "code of material ")
 
 
-    public String getMaterial() {
+    public Material getMaterial() {
         return material;
     }
 
-    public void setMaterial(String material) {
+    public void setMaterial(Material material) {
         this.material = material;
     }
 
-    public MaterialStoreMapping store(String store) {
+    public MaterialStoreMapping store(Store store) {
         this.store = store;
         return this;
     }
@@ -95,12 +95,11 @@ public class MaterialStoreMapping {
     @ApiModelProperty(required = true, value = "code of store ")
     @NotNull
 
-
-    public String getStore() {
+    public Store getStore() {
         return store;
     }
 
-    public void setStore(String store) {
+    public void setStore(Store store) {
         this.store = store;
     }
 

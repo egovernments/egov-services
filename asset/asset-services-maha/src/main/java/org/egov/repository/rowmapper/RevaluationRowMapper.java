@@ -33,7 +33,6 @@ public class RevaluationRowMapper implements RowMapper<Revaluation> {
             revaluation.setFund(rs.getString("fund"));
             revaluation.setScheme(rs.getString("scheme"));
             revaluation.setSubScheme(rs.getString("subscheme"));
-            revaluation.setComments(rs.getString("comments"));
             revaluation.setStatus(rs.getString("status"));
             revaluation.setRemarks(rs.getString("remarks"));
 

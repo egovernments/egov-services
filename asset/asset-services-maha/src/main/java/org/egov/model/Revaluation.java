@@ -74,14 +74,10 @@ public class Revaluation   {
   @JsonProperty("subScheme")
   private String subScheme;
 
-  @JsonProperty("comments")
-  private String comments;
-
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails;
 
   @JsonProperty("status")
   private String status;
-
 }
 

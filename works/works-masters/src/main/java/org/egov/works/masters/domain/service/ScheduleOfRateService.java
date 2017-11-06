@@ -53,7 +53,7 @@ public class ScheduleOfRateService {
     }
 
     public List<ScheduleOfRate> update(ScheduleOfRateRequest scheduleOfRateRequest) {
-        //kafkaTemplate.send(propertiesManager.getWorksMasterSorrateUpdateValidatedTopic(), scheduleOfRateRequest);
+        kafkaTemplate.send(propertiesManager.getWorksMasterSorrateUpdateValidatedTopic(), scheduleOfRateRequest);
         return scheduleOfRateRequest.getScheduleOfRates();
     }
 

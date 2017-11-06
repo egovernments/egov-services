@@ -3,7 +3,7 @@ var dat = {
     "numCols": 4,
     "useTimestamp": true,
     "objectName": "",
-    "url": "http://www.mocky.io/v2/59fae53f3700005b4066bb34",
+    "url": "inventory-services/suppliers/_search",
     "groups": [
       {
         "name": "search",
@@ -23,7 +23,32 @@ var dat = {
             "name": "supplierType",
             "jsonPath": "type",
             "label": "supplier.search.type",
-            "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=SuplierType|$..name|$..code",
+            "defaultValue":[
+              {
+                 "key":"INDIVIDUAL",
+                 "value":"Individual"
+              },
+              {
+                 "key":"FIRM",
+                 "value":"Firm"
+              },
+              {
+                 "key":"COMPANY",
+                 "value":"Company"
+              },
+              {
+                 "key":"REGISTERED SOCIETY",
+                 "value":"Registered society"
+              },
+              {
+                 "key":"GOVERNMENT DEPARTMENT",
+                 "value":"Government Department"
+              },
+              {
+                 "key":"OTHERS",
+                 "value":"Others"
+              }
+            ],
             "type": "singleValueList",
             "isRequired": false,
             "isDisabled": false,
@@ -65,7 +90,7 @@ var dat = {
       ],
       "resultPath": "suppliers",
       "rowClickUrlUpdate": "/update/inventory/supplier/{code}",
-      "rowClickUrlView": "/view/supplier/{code}",
+      "rowClickUrlView": "/view/inventory/supplier/{code}",
       "rowClickUrlAdd" : "/create/inventory/supplier",
       "rowClickUrlDelete" : ""
     }
@@ -81,10 +106,36 @@ var dat = {
         "fields": [
           {
             "name": "name",
-            "jsonPath": "suppliers[0].supplierType.name",
+            "jsonPath": "suppliers[0].type",
             "label": "inventory.create.name",
             "type": "singleValueList",
-            "isRequired": false,
+            "defaultValue":[
+              {
+                 "key":"INDIVIDUAL",
+                 "value":"Individual"
+              },
+              {
+                 "key":"FIRM",
+                 "value":"Firm"
+              },
+              {
+                 "key":"COMPANY",
+                 "value":"Company"
+              },
+              {
+                 "key":"REGISTERED SOCIETY",
+                 "value":"Registered society"
+              },
+              {
+                 "key":"GOVERNMENT DEPARTMENT",
+                 "value":"Government Department"
+              },
+              {
+                 "key":"OTHERS",
+                 "value":"Others"
+              }
+            ],
+            "isRequired": true,
             "isDisabled": false,
             "patternErrorMsg": ""
           }, {
@@ -119,18 +170,18 @@ var dat = {
             "maxLength": 1000,
             "patternErrorMsg": "inventory.create.field.message.address"
           }, {
-            "name": "narration",
-            "jsonPath": "suppliers[0].narration",
-            "label": "inventory.create.narration",
+            "name": "description",
+            "jsonPath": "suppliers[0].description",
+            "label": "inventory.create.description",
             "type": "textarea",
             "isRequired": false,
             "isDisabled": false,
             "maxLength": 1000,
             "patternErrorMsg": ""
           }, {
-            "name": "supplierContactNo",
-            "jsonPath": "suppliers[0].supplierContactNo",
-            "label": "inventory.create.supplierContactNo",
+            "name": "contactNo",
+            "jsonPath": "suppliers[0].contactNo",
+            "label": "inventory.create.contactNo",
             "pattern": "^[0-9]+$",
             "type": "text",
             "isRequired": true,
@@ -164,15 +215,6 @@ var dat = {
             "isDisabled": false,
             "maxLength": 100,
             "patternErrorMsg": "inventory.create.field.message.email"
-          }, {
-            "name": "narration",
-            "jsonPath": "suppliers[0].narration",
-            "label": "inventory.create.narration",
-            "type": "textarea",
-            "isRequired": false,
-            "isDisabled": false,
-            "maxLength": 1000,
-            "patternErrorMsg": ""
           }, {
             "name": "panNo",
             "jsonPath": "suppliers[0].panNo",
@@ -210,6 +252,15 @@ var dat = {
             "maxLength": 10,
             "patternErrorMsg": ""
           }, {
+            "name": "gstNo",
+            "jsonPath": "suppliers[0].gstNo",
+            "label": "inventory.create.gstNo",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "maxLength": 10,
+            "patternErrorMsg": ""
+          }, {
             "name": "contactPerson",
             "jsonPath": "suppliers[0].contactPerson",
             "label": "inventory.create.contactPerson",
@@ -229,6 +280,15 @@ var dat = {
             "isDisabled": false,
             "maxLength": 10,
             "patternErrorMsg": "inventory.create.field.message.contactPersonNo"
+          }, {
+            "name": "active",
+            "jsonPath": "suppliers[0].active",
+            "label": "inventory.create.active",
+            "type": "checkbox",
+            "defaultValue":true,
+            "isRequired": true,
+            "isDisabled": false,
+            "patternErrorMsg": ""
           }
         ]
       }, {
@@ -237,7 +297,7 @@ var dat = {
         "fields": [
           {
             "name": "name",
-            "jsonPath": "suppliers[0].bank.name",
+            "jsonPath": "suppliers[0].bankCode",
             "label": "inventory.create.name",
             "pattern": "^[a-zA-Z ]$",
             "type": "singleValueList",
@@ -246,8 +306,17 @@ var dat = {
             "patternErrorMsg": "inventory.create.field.message.name",
             "url": "/egf-master/banks/_search?|$..code|$..name"
           }, {
+            "name": "bankBranch",
+            "jsonPath": "suppliers[0].bankBranch",
+            "label": "inventory.create.bankBranch",
+            "pattern": "",
+            "type": "text",
+            "isRequired": true,
+            "isDisabled": false,
+            "patternErrorMsg": "inventory.create.field.message.bankBranch"
+          },{
             "name": "acctNo",
-            "jsonPath": "suppliers[0].bank.acctNo",
+            "jsonPath": "suppliers[0].acctNo",
             "label": "inventory.create.acctNo",
             "pattern": "^[0-9]+$",
             "type": "text",
@@ -256,7 +325,7 @@ var dat = {
             "patternErrorMsg": "inventory.create.field.message.acctNo"
           }, {
             "name": "ifsc",
-            "jsonPath": "suppliers[0].bank.ifsc",
+            "jsonPath": "suppliers[0].ifsc",
             "label": "inventory.create.ifsc",
             "pattern": "^[a-zA-Z0-9]+$",
             "type": "text",
@@ -265,7 +334,7 @@ var dat = {
             "patternErrorMsg": "inventory.create.field.message.ifsc"
           }, {
             "name": "micr",
-            "jsonPath": "suppliers[0].bank.micr",
+            "jsonPath": "suppliers[0].micr",
             "label": "inventory.create.micr",
             "type": "text",
             "isRequired": false,
@@ -275,7 +344,7 @@ var dat = {
         ]
       }
     ],
-    "url": "/inventory-inventory/v110/suppliers/_create",
+    "url": "/inventory-services/suppliers/_create",
     "tenantIdRequired": true
   },
   "inventory.view": {
@@ -289,10 +358,36 @@ var dat = {
         "fields": [
           {
             "name": "name",
-            "jsonPath": "suppliers[0].supplierType.name",
+            "jsonPath": "suppliers[0].type",
             "label": "inventory.create.name",
             "type": "singleValueList",
-            "isRequired": false,
+            "defaultValue":[
+              {
+                 "key":"INDIVIDUAL",
+                 "value":"Individual"
+              },
+              {
+                 "key":"FIRM",
+                 "value":"Firm"
+              },
+              {
+                 "key":"COMPANY",
+                 "value":"Company"
+              },
+              {
+                 "key":"REGISTERED SOCIETY",
+                 "value":"Registered society"
+              },
+              {
+                 "key":"GOVERNMENT DEPARTMENT",
+                 "value":"Government Department"
+              },
+              {
+                 "key":"OTHERS",
+                 "value":"Others"
+              }
+            ],
+            "isRequired": true,
             "isDisabled": false,
             "patternErrorMsg": ""
           }, {
@@ -327,18 +422,18 @@ var dat = {
             "maxLength": 1000,
             "patternErrorMsg": "inventory.create.field.message.address"
           }, {
-            "name": "narration",
-            "jsonPath": "suppliers[0].narration",
-            "label": "inventory.create.narration",
+            "name": "description",
+            "jsonPath": "suppliers[0].description",
+            "label": "inventory.create.description",
             "type": "textarea",
             "isRequired": false,
             "isDisabled": false,
             "maxLength": 1000,
             "patternErrorMsg": ""
           }, {
-            "name": "supplierContactNo",
-            "jsonPath": "suppliers[0].supplierContactNo",
-            "label": "inventory.create.supplierContactNo",
+            "name": "contactNo",
+            "jsonPath": "suppliers[0].contactNo",
+            "label": "inventory.create.contactNo",
             "pattern": "^[0-9]+$",
             "type": "text",
             "isRequired": true,
@@ -372,15 +467,6 @@ var dat = {
             "isDisabled": false,
             "maxLength": 100,
             "patternErrorMsg": "inventory.create.field.message.email"
-          }, {
-            "name": "narration",
-            "jsonPath": "suppliers[0].narration",
-            "label": "inventory.create.narration",
-            "type": "textarea",
-            "isRequired": false,
-            "isDisabled": false,
-            "maxLength": 1000,
-            "patternErrorMsg": ""
           }, {
             "name": "panNo",
             "jsonPath": "suppliers[0].panNo",
@@ -418,6 +504,15 @@ var dat = {
             "maxLength": 10,
             "patternErrorMsg": ""
           }, {
+            "name": "gstNo",
+            "jsonPath": "suppliers[0].gstNo",
+            "label": "inventory.create.gstNo",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "maxLength": 10,
+            "patternErrorMsg": ""
+          }, {
             "name": "contactPerson",
             "jsonPath": "suppliers[0].contactPerson",
             "label": "inventory.create.contactPerson",
@@ -437,6 +532,15 @@ var dat = {
             "isDisabled": false,
             "maxLength": 10,
             "patternErrorMsg": "inventory.create.field.message.contactPersonNo"
+          }, {
+            "name": "active",
+            "jsonPath": "suppliers[0].active",
+            "label": "inventory.create.active",
+            "type": "checkbox",
+            "defaultValue":true,
+            "isRequired": true,
+            "isDisabled": false,
+            "patternErrorMsg": ""
           }
         ]
       }, {
@@ -445,17 +549,26 @@ var dat = {
         "fields": [
           {
             "name": "name",
-            "jsonPath": "suppliers[0].bank.name",
+            "jsonPath": "suppliers[0].bankCode",
             "label": "inventory.create.name",
             "pattern": "^[a-zA-Z ]$",
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
             "patternErrorMsg": "inventory.create.field.message.name",
-            "url": "/egf-master/banks/_search?tenantId={tenantId}|$..code|$..name"
+            "url": "/egf-master/banks/_search?|$..code|$..name"
           }, {
+            "name": "bankBranch",
+            "jsonPath": "suppliers[0].bankBranch",
+            "label": "inventory.create.bankBranch",
+            "pattern": "",
+            "type": "text",
+            "isRequired": true,
+            "isDisabled": false,
+            "patternErrorMsg": "inventory.create.field.message.bankBranch"
+          },{
             "name": "acctNo",
-            "jsonPath": "suppliers[0].bank.acctNo",
+            "jsonPath": "suppliers[0].acctNo",
             "label": "inventory.create.acctNo",
             "pattern": "^[0-9]+$",
             "type": "text",
@@ -464,7 +577,7 @@ var dat = {
             "patternErrorMsg": "inventory.create.field.message.acctNo"
           }, {
             "name": "ifsc",
-            "jsonPath": "suppliers[0].bank.ifsc",
+            "jsonPath": "suppliers[0].ifsc",
             "label": "inventory.create.ifsc",
             "pattern": "^[a-zA-Z0-9]+$",
             "type": "text",
@@ -473,7 +586,7 @@ var dat = {
             "patternErrorMsg": "inventory.create.field.message.ifsc"
           }, {
             "name": "micr",
-            "jsonPath": "suppliers[0].bank.micr",
+            "jsonPath": "suppliers[0].micr",
             "label": "inventory.create.micr",
             "type": "text",
             "isRequired": false,
@@ -484,7 +597,7 @@ var dat = {
       }
     ],
     "tenantIdRequired": true,
-    "url": "http://www.mocky.io/v2/59fae53f3700005b4066bb34"
+    "url": "http://www.mocky.io/v2/5a0015362e0000b12bca5a89?code={code}"
   },
   "inventory.update": {
     "numCols": 4,
@@ -497,10 +610,36 @@ var dat = {
         "fields": [
           {
             "name": "name",
-            "jsonPath": "suppliers[0].supplierType.name",
+            "jsonPath": "suppliers[0].type",
             "label": "inventory.create.name",
             "type": "singleValueList",
-            "isRequired": false,
+            "defaultValue":[
+              {
+                 "key":"INDIVIDUAL",
+                 "value":"Individual"
+              },
+              {
+                 "key":"FIRM",
+                 "value":"Firm"
+              },
+              {
+                 "key":"COMPANY",
+                 "value":"Company"
+              },
+              {
+                 "key":"REGISTERED SOCIETY",
+                 "value":"Registered society"
+              },
+              {
+                 "key":"GOVERNMENT DEPARTMENT",
+                 "value":"Government Department"
+              },
+              {
+                 "key":"OTHERS",
+                 "value":"Others"
+              }
+            ],
+            "isRequired": true,
             "isDisabled": false,
             "patternErrorMsg": ""
           }, {
@@ -535,18 +674,18 @@ var dat = {
             "maxLength": 1000,
             "patternErrorMsg": "inventory.create.field.message.address"
           }, {
-            "name": "narration",
-            "jsonPath": "suppliers[0].narration",
-            "label": "inventory.create.narration",
+            "name": "description",
+            "jsonPath": "suppliers[0].description",
+            "label": "inventory.create.description",
             "type": "textarea",
             "isRequired": false,
             "isDisabled": false,
             "maxLength": 1000,
             "patternErrorMsg": ""
           }, {
-            "name": "supplierContactNo",
-            "jsonPath": "suppliers[0].supplierContactNo",
-            "label": "inventory.create.supplierContactNo",
+            "name": "contactNo",
+            "jsonPath": "suppliers[0].contactNo",
+            "label": "inventory.create.contactNo",
             "pattern": "^[0-9]+$",
             "type": "text",
             "isRequired": true,
@@ -580,15 +719,6 @@ var dat = {
             "isDisabled": false,
             "maxLength": 100,
             "patternErrorMsg": "inventory.create.field.message.email"
-          }, {
-            "name": "narration",
-            "jsonPath": "suppliers[0].narration",
-            "label": "inventory.create.narration",
-            "type": "textarea",
-            "isRequired": false,
-            "isDisabled": false,
-            "maxLength": 1000,
-            "patternErrorMsg": ""
           }, {
             "name": "panNo",
             "jsonPath": "suppliers[0].panNo",
@@ -626,6 +756,15 @@ var dat = {
             "maxLength": 10,
             "patternErrorMsg": ""
           }, {
+            "name": "gstNo",
+            "jsonPath": "suppliers[0].gstNo",
+            "label": "inventory.create.gstNo",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "maxLength": 10,
+            "patternErrorMsg": ""
+          }, {
             "name": "contactPerson",
             "jsonPath": "suppliers[0].contactPerson",
             "label": "inventory.create.contactPerson",
@@ -645,6 +784,15 @@ var dat = {
             "isDisabled": false,
             "maxLength": 10,
             "patternErrorMsg": "inventory.create.field.message.contactPersonNo"
+          }, {
+            "name": "active",
+            "jsonPath": "suppliers[0].active",
+            "label": "inventory.create.active",
+            "type": "checkbox",
+            "defaultValue":true,
+            "isRequired": true,
+            "isDisabled": false,
+            "patternErrorMsg": ""
           }
         ]
       }, {
@@ -653,17 +801,26 @@ var dat = {
         "fields": [
           {
             "name": "name",
-            "jsonPath": "suppliers[0].bank.name",
+            "jsonPath": "suppliers[0].bankCode",
             "label": "inventory.create.name",
             "pattern": "^[a-zA-Z ]$",
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
             "patternErrorMsg": "inventory.create.field.message.name",
-            "url": "/egf-master/banks/_search?tenantId={tenantId}|$..code|$..name"
+            "url": "/egf-master/banks/_search?|$..code|$..name"
           }, {
+            "name": "bankBranch",
+            "jsonPath": "suppliers[0].bankBranch",
+            "label": "inventory.create.bankBranch",
+            "pattern": "",
+            "type": "text",
+            "isRequired": true,
+            "isDisabled": false,
+            "patternErrorMsg": "inventory.create.field.message.bankBranch"
+          },{
             "name": "acctNo",
-            "jsonPath": "suppliers[0].bank.acctNo",
+            "jsonPath": "suppliers[0].acctNo",
             "label": "inventory.create.acctNo",
             "pattern": "^[0-9]+$",
             "type": "text",
@@ -672,7 +829,7 @@ var dat = {
             "patternErrorMsg": "inventory.create.field.message.acctNo"
           }, {
             "name": "ifsc",
-            "jsonPath": "suppliers[0].bank.ifsc",
+            "jsonPath": "suppliers[0].ifsc",
             "label": "inventory.create.ifsc",
             "pattern": "^[a-zA-Z0-9]+$",
             "type": "text",
@@ -681,7 +838,7 @@ var dat = {
             "patternErrorMsg": "inventory.create.field.message.ifsc"
           }, {
             "name": "micr",
-            "jsonPath": "suppliers[0].bank.micr",
+            "jsonPath": "suppliers[0].micr",
             "label": "inventory.create.micr",
             "type": "text",
             "isRequired": false,
@@ -693,7 +850,7 @@ var dat = {
     ],
     "url": "/inventory-inventory/v110/suppliers/_update",
     "tenantIdRequired": true,
-    "searchUrl": "/inventory-inventory/v110/suppliers/_search?tenantId={tenantId}"
+    "searchUrl": "http://www.mocky.io/v2/5a0015362e0000b12bca5a89?code={code}"
   }
 }
 

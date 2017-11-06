@@ -92,7 +92,7 @@ export default class CustomSearch extends Component {
     // } catch(e) {}
 
     specifications = this.props.templateObj;
-    let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
+    let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData, setTableSelectionData } = this.props;
     let obj = specifications[this.props.actionKey];
     reqRequired = [];
     this.setLabelAndReturnRequired(obj);
@@ -104,6 +104,7 @@ export default class CustomSearch extends Component {
     var formData = {};
     if(obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
     setFormData(formData);
+    setTableSelectionData([]);
 
     this.setState({
       pathname:this.props.history.location.pathname,
@@ -558,7 +559,7 @@ export default class CustomSearch extends Component {
             <UiButton item={{"label": "Reset", "uiType":"button", "primary": false}} ui="google" handler={this.resetForm}/>&nbsp;&nbsp;
             <UiButton item={{"label": "View", "uiType":"button", "primary": true, "isDisabled":!isEnableUpdateViewBtn}} ui="google" handler={this.view}/>&nbsp;&nbsp;
             <UiButton item={{"label": "Update", "uiType":"button", "primary": true, "isDisabled":!isEnableUpdateViewBtn}} ui="google" handler={this.update}/>&nbsp;&nbsp;
-            <UiButton item={{"label": "Delete", "uiType":"button", "primary": true, "isDisabled":!isEnableDeleteBtn}} ui="google" handler={this.resetForm}/>&nbsp;&nbsp;
+            <UiButton item={{"label": "Delete", "uiType":"button", "primary": true, "isDisabled":!isEnableDeleteBtn}} ui="google" />&nbsp;&nbsp;
             <UiButton item={{"label": "Add", "uiType":"button", "primary": true}} ui="google" handler={this.redirectToUrl.bind(this, "rowClickUrlAdd")}/>
             <br/>
             {showResult && <CustomUiTable resultList={resultList} rowClickHandler={rowClickHandler}/>}

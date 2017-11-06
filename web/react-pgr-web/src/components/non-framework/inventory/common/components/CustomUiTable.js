@@ -98,7 +98,6 @@ class CustomUiTable extends Component {
 
 
   componentDidMount() {
-			console.log('Didmount called@@@')
   		let self = this;
   		if(this.props.resultList.resultHeader && this.props.resultList.resultHeader.length) {
 	    	for(let m=0; m<this.props.resultList.resultHeader.length; m++) {
@@ -210,8 +209,6 @@ class CustomUiTable extends Component {
 															else if(typeof item2 === 'object'){
 																return(<td  key={i2}><Checkbox checked={item2.value}/></td>)
 															}
-
-															console.log('retrieving default!!!!')
 
 			                        return (
 			                          <td  key={i2}>{typeof item2 != "undefined" ? getNameById(item2, i2) : ""}</td>

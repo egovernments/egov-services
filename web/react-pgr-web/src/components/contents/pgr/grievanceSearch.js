@@ -429,7 +429,7 @@ class grievanceSearch extends Component {
                       		</SelectField>
 	                			</Col>
 	                			<Col xs={12} sm={4} md={3} lg={3}>
-	                				<DatePicker
+	                				<DatePicker autoOk={true}
                           className="custom-form-control-for-textfield"
                           fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("core.lbl.date.fromdate")} container="inline" value={grievanceSearchSet.startDate}
                           formatDate={(date)=>{
@@ -448,7 +448,7 @@ class grievanceSearch extends Component {
                           />
 	                			</Col>
 	                			<Col xs={12} sm={4} md={3} lg={3}>
-	                				<DatePicker className="custom-form-control-for-textfield" fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("core.lbl.date.todate")} container="inline" value={grievanceSearchSet.endDate}
+	                				<DatePicker autoOk={true} className="custom-form-control-for-textfield" fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("core.lbl.date.todate")} container="inline" value={grievanceSearchSet.endDate}
                           formatDate={(date)=>{
                             let dateObj = new Date(date);
                             let year = dateObj.getFullYear();

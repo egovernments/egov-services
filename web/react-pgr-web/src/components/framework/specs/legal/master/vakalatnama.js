@@ -110,17 +110,6 @@ var dat = {
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name"
           },
           {
-            name: "witness",
-            jsonPath: "witness",
-            label: "legal.vakalatnama.create.witness",
-            pattern: "",
-            type: "text",
-            isRequired: true,
-            isDisabled: false,
-            requiredErrMsg: "",
-            patternErrMsg: ""
-          },
-          {
             name: "addWitness",
             jsonPath: "cases[0].witness",
             label: "legal.vakalatnama.create.addWitness",

@@ -397,7 +397,7 @@ public class AbstractEstimateService {
 		estimateAppropriationRequest.setEstimateAppropriations(appropriations);
 		estimateAppropriationRequest.setRequestInfo(requestInfo);
 
-		final String url = "";
+		final String url = propertiesManager.getWorksSeviceHostName() + propertiesManager.getEstimateAppropriationURL();
 		restTemplate.postForObject(url, estimateAppropriationRequest, EstimateAppropriationResponse.class);
 	}
 

@@ -67,4 +67,10 @@ public class PropertiesManager {
 
     @Value("${detailedEstimateNumber.prefix}")
     private String detailedEstimateNumberPrefix;
+    
+    @Value("${egov.works.services.estimateappropriation.hostname}")
+    private String worksSeviceHostName;
+    
+    @Value("${egov.works.services.estimateappropriation.create}")
+    private String estimateAppropriationURL;
 }

@@ -38,5 +38,61 @@ public class WorksEstimateServiceConstants {
     public static final String KEY_PERCENTAGE_MULTIYEAR_ESTIMATE = "INVALID_PERCANTAGE_MULTIYEAR_ESTIMATE";
     public static final String MESSAGE_PERCENTAGE_MULTIYEAR_ESTIMATE = "Percentage should not  be greater than 100 for multiyear estimates";
 
+    public static final String KEY_NULL_DATEOFPROPOSAL = "INVALID_DATEOFPROPOSAL";
+    public static final String MESSAGE_NULL_DATEOFPROPOSAL = "Date of proposal should be entered";
+
+    public static final String KEY_FUTUREDATE_DATEOFPROPOSAL = "INVALID_DATEOFPROPOSAL";
+    public static final String MESSAGE_FUTUREDATE_DATEOFPROPOSAL = "Date of proposal cannot be future date";
+    
+    public static final String KEY_NULL_TENANTID = "INVALID_TENANTID";
+    public static final String MESSAGE_NULL_TENANTID = "Tenantid of should be entered";
+
+    public static final String KEY_FUND_INVALID = "INVALID_FUND";
+    public static final String MESSAGE_FUND_INVALID = "Plese provide valid data for fund";
+    
+    public static final String KEY_FUNCTION_INVALID = "INVALID_FUNCTION";
+    public static final String MESSAGE_FUNCTION_INVALID = "Plese provide valid data for function";
+    
+    public static final String KEY_TYPEOFWORK_INVALID = "INVALID_TYPEOFWORK";
+    public static final String MESSAGE_TYPEOFWORK_INVALID = "Plese provide valid data for Type Of Work";
+    
+    public static final String KEY_SUBTYPEOFWORK_INVALID = "INVALID_SUBTYPEOFWORK";
+    public static final String MESSAGE_SUBTYPEOFWORK_INVALID = "Plese provide valid data for Sub Type Of Work";
+
+    public static final String KEY_DEPARTMENT_INVALID = "INVALID_DEPARTMENT";
+    public static final String MESSAGE_DEPARTMENT_INVALID = "Plese provide valid data for Department";
+    
+    public static final String KEY_SCHEME_INVALID = "INVALID_SCHEME";
+    public static final String MESSAGE_SCHEME_INVALID = "Plese provide valid data for Scheme";
+
+    public static final String KEY_SUBSCHEME_INVALID = "INVALID_SUBSCHEME";
+    public static final String MESSAGE_SUBSCHEME_INVALID = "Plese provide valid data for Sub Scheme";
+
+    public static final String KEY_BUDGETGROUP_INVALID = "INVALID_BUDGETGROUP";
+    public static final String MESSAGE_BUDGETGROUP_INVALID = "Plese provide valid data for Budget Group";
+
+    public static final String KEY_UNIQUE_ABSTRACTESTIMATENUMBER = "UNIQUE_ABSTRACTESTIMATENUMBER";
+    public static final String MESSAGE_UNIQUE_ABSTRACTESTIMATENUMBER = "Abstract Estimate Number should be Unique";
+    
+    public static final String KEY_UNIQUE_ADMINSANCTIONNUMBER = "UNIQUE_ADMINSANCTIONNUMBER";
+    public static final String MESSAGE_UNIQUE_ADMINSANCTIONNUMBER = "Admin Sanction Number should be Unique";
+
+    public static final String KEY_UNIQUE_COUNCILRESOLUTIONNUMBER = "UNIQUE_COUNCILRESOLUTIONNUMBER";
+    public static final String MESSAGE_UNIQUE_COUNCILRESOLUTIONNUMBER = "Council Resolution Number should be Unique";
+
+    public static final String KEY_NULL_COUNCILRESOLUTIONDATE = "INVALID_COUNCILRESOLUTIONDATE";
+    public static final String MESSAGE_NULL_COUNCILRESOLUTIONDATE = "Council Resolution Date should be entered";
+    
+    public static final String KEY_NULL_ADMINSANCTIONNUMBER = "UNIQUE_ADMINSANCTIONNUMBER";
+    public static final String MESSAGE_NULL_ADMINSANCTIONNUMBER = "Admin Sanction Number should be entered";
+
+    public static final String KEY_UNIQUE_ESTIMATENUMBER = "UNIQUE_ESTIMATENUMBER";
+    public static final String MESSAGE_UNIQUE_ESTIMATENUMBER = "Estimate Number should be Unique";
+
+    public static final String KEY_INVALID_ESTIMATEAMOUNT = "UNIQUE_ESTIMATEAMOUNT";
+    public static final String MESSAGE_INVALID_ESTIMATEAMOUNT = "Estimate Amount should be greater then 0";
+    
+    public static final String KEY_UNIQUE_WORKIDENTIFICATIONNUMBER = "UNIQUE_WORKIDENTIFICATIONNUMBER";
+    public static final String MESSAGE_UNIQUE_WORKIDENTIFICATIONNUMBER = "Work Identification Number should be entered";
 
 }

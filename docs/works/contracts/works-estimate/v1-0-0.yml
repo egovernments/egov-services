@@ -852,7 +852,7 @@ definitions:
       abstractEstimateNumber:
         type: string
         pattern: '[a-zA-Z0-9-\\]+'
-        description: Unique number for the Abstract Estimate
+        description: Unique number for the Abstract Estimate. If the work is spillover then the Abstract Estimate number is user entered. Otherwise it is auto generated.
         maxLength: 50
         minLength: 1
       subject:
@@ -1091,7 +1091,7 @@ definitions:
         type: string
         description: Tenant id of the Abstract Estimate Details
         maxLength: 128
-        minLength: 4
+        minLength: 2
       abstractEstimate:
         $ref: '#/definitions/AbstractEstimate'
         description: Reference to Abstract Estimate Object 
@@ -1117,7 +1117,7 @@ definitions:
         description: Gross Billed amount of the Abstract Estimate Details. This attribute is required only if billsCreated flag is true for Abstract Estimate.
       projectCode:
         $ref: '#/definitions/ProjectCode'
-        description: Project code object refernce for the Abstract Estimate
+        description: Project code object refernce for the Abstract Estimate. If the work is spillover then the project code/Work Identification number is user entered. Otherwise it is auto generated at the time of Admin Sanction.
       abstractEstimateAppropriations:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-services/v1-0-0.yml#/definitions/EstimateAppropriation'
         description: This object holds Budget Appropriation details for the Abstract Estimate
@@ -1258,7 +1258,7 @@ definitions:
         type: string
         description: Tenant id of the Detailed Estimate
         maxLength: 128
-        minLength: 4
+        minLength: 2
       estimateNumber:
         type: string
         pattern: '[a-zA-Z0-9-\\]+'
@@ -1511,7 +1511,7 @@ definitions:
           type: string
           description: Tenant id of the Estimate Overheads
           maxLength: 128
-          minLength: 4
+          minLength: 2
         overhead:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/Overhead'
         amount:
@@ -1541,7 +1541,7 @@ definitions:
           type: string
           description: Tenant id of the Assets For Estimate
           maxLength: 128
-          minLength: 4
+          minLength: 2
         asset:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/Asset'
           description: Asset Reference from Asset module
@@ -1567,7 +1567,7 @@ definitions:
           type: string
           description: Tenant id of the Estimate Activity
           maxLength: 128
-          minLength: 4
+          minLength: 2
         scheduleOfRate:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/ScheduleOfRate'
           description: Schedule Of Rate reference of the Estimate Activity. Either Schedule Of Rate or Non SOR is mandatory for any activity.
@@ -1636,7 +1636,7 @@ definitions:
           type: string
           description: Tenant id of the Estimate Measurement Sheet
           maxLength: 128
-          minLength: 4
+          minLength: 2
         slNo:
           type: integer
           description: Sl No of the Estimate Measurement sheet
@@ -1703,7 +1703,7 @@ definitions:
           type: string
           description: Tenant id of the Multi Year Estimate
           maxLength: 128
-          minLength: 4
+          minLength: 2
         financialYear:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/FinancialYear'
           description: Financial Year of the Multi Year Estimate
@@ -1735,7 +1735,7 @@ definitions:
           type: string
           description: Tenant id of the Estimate Technical Sanction
           maxLength: 128
-          minLength: 4
+          minLength: 2
         technicalSanctionNumber:
           type: string
           pattern: '[a-zA-Z0-9-\\]+'
@@ -1773,7 +1773,7 @@ definitions:
           type: string
           description: Tenant id of the Detailed Estimate Deduction
           maxLength: 128
-          minLength: 4
+          minLength: 2
         chartOfAccounts:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/ChartOfAccount'
           description: Chart Of Accounts of the Detailed Estimate Deduction from Financials
@@ -1810,7 +1810,7 @@ definitions:
           type: string
           description: Tenant id of the Project Code
           maxLength: 128
-          minLength: 4
+          minLength: 2
         code:
           type: string
           description: Code of the Project 
@@ -1885,7 +1885,7 @@ definitions:
         type: string
         description: Tenant id of the Mode Of Allotment
         maxLength: 128
-        minLength: 4
+        minLength: 2
       name:
         type: string
         description: Unique name of the Mode Of Allotment
@@ -1916,7 +1916,7 @@ definitions:
         type: string
         description: Tenant id of the Revision Estimate
         maxLength: 128
-        minLength: 4
+        minLength: 2
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:

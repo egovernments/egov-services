@@ -614,7 +614,7 @@ serviceMaps:
          
        - jsonPath: $.detailedEstimates.*.estimateActivities.*.tenantId
          
-       - jsonPath: $.detailedEstimates.*.estimateActivities.*.scheduleOfRate.code
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.scheduleOfRate.id
        
        - jsonPath: $.detailedEstimates.*.estimateActivities.*.nonSor.id
        

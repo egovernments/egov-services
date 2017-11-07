@@ -156,7 +156,7 @@ var dat = {
 				{
 					"name": "AssetCategoryType",
 					"jsonPath": "Asset.assetCategory.assetCategoryType",
-					"label": "Asset Category Type",
+					"label": "ac.create.asset.asset.category.type",
 					"pattern": "",
 					"type": "text",
 					"url": "",
@@ -779,6 +779,36 @@ var dat = {
 				"label": "ac.search.asset.title",
 				"name": "createCategoryType",
 				"fields": [
+					{
+						"name": "AssetSearchCode",
+						"jsonPath": "assetCategoryType",
+						"label": "ac.create.asset.asset.category.type",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue": [  {
+						"key": "IMMOVABLE",
+						"value": "IMMOVABLE"
+					}]
+					},
+					{
+						"name": "AssetCategoryType",
+						"jsonPath": "assetCategoryType",
+						"label": "ac.create.asset.asset.category.type",
+						"pattern": "",
+						"type": "text",
+						"url": "",
+						"isRequired": true,
+						"isDisabled": true,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue":"IMMOVABLE",
+						"isHidden": "true"
+					},
 					{
 						"name": "AssetSearchCode",
 						"jsonPath": "code",
@@ -1782,7 +1812,7 @@ var dat = {
 				{
 					"name": "AssetCategoryType",
 					"jsonPath": "Asset.assetCategory.assetCategoryType",
-					"label": "Asset Category Type",
+					"label": "ac.create.asset.asset.category.type",
 					"pattern": "",
 					"type": "text",
 					"url": "",

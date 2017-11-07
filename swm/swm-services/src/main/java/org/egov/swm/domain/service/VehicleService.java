@@ -128,7 +128,7 @@ public class VehicleService {
 
 			}
 
-			// Validate vendor
+			/*// Validate vendor
 			if (vehicle.getVendor() != null) {
 
 				if (vehicle.getVendor() != null && vehicle.getVendor().getVendorNo() != null) {
@@ -144,7 +144,7 @@ public class VehicleService {
 					}
 				}
 
-			}
+			}*/
 
 			// Validate Fuel Type
 			if (vehicle.getFuelType() != null) {

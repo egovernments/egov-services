@@ -114,7 +114,7 @@ public class AbstractEstimateService {
 				for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
 					setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
 							abstractEstimateRequest.getRequestInfo());
-					setEstimateAppropriation(abstractEstimateDetails, abstractEstimateRequest.getRequestInfo());
+					setEstimateAppropriation(estimate, abstractEstimateRequest.getRequestInfo());
 
 				}
 			}
@@ -406,15 +406,15 @@ public class AbstractEstimateService {
 		projectCodeService.create(projectCodeRequest);
 	}
 
-	private void setEstimateAppropriation(AbstractEstimateDetails abstractEstimateDetails,
+	private void setEstimateAppropriation(AbstractEstimate abstractEstimate,
 			final RequestInfo requestInfo) {
 		EstimateAppropriationRequest estimateAppropriationRequest = new EstimateAppropriationRequest();
 		EstimateAppropriation estimateAppropriation = new EstimateAppropriation();
 		List<EstimateAppropriation> appropriations = new ArrayList<>();
 		estimateAppropriation
-				.setObjectNumber(abstractEstimateDetails.getAbstractEstimate().getAbstractEstimateNumber());
+				.setObjectNumber(abstractEstimate.getAbstractEstimateNumber());
 		estimateAppropriation.setObjectType(CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY);
-		estimateAppropriation.setTenantId(abstractEstimateDetails.getAbstractEstimate().getTenantId());
+		estimateAppropriation.setTenantId(abstractEstimate.getTenantId());
 		estimateAppropriationRequest.setEstimateAppropriations(appropriations);
 		estimateAppropriationRequest.setRequestInfo(requestInfo);
 

@@ -2471,7 +2471,7 @@ definitions:
     IndentResponse:
       description: Contract class for web response. Array of Indent items  are used in case of search ,create or update request. 
       properties:
-        responseInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         indents:
           description: Used for search result and create only
@@ -2495,7 +2495,7 @@ definitions:
     IndentNoteResponse:
       description: Contract class for web response. Array of Indent Note items  are used in case of search ,create or update request. 
       properties:
-        responseInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         indentNotes:
           description: Used for search result and create only
@@ -2520,7 +2520,7 @@ definitions:
     TransferIndentNoteResponse:
       description: Contract class for web response. Array of Indent items  are used in case of search ,create or update request. 
       properties:
-        responseInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         transferIndentNotes:
           description: Used for search result and create only
@@ -2656,7 +2656,7 @@ definitions:
     PurchaseOrderResponse:
       description: Contract class for web response. Array of PurchaseOrder items  are used in case of search ,create or update request. 
       properties:
-        responseInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         purchaseOrders:
           description: Used for search result and create only
@@ -2704,7 +2704,7 @@ definitions:
     PurchaseIndentResponse:
       description: Contract class for web response. Array of PurchaseIndent items  are used in case of search ,create or update request. 
       properties:
-        responseInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         purchaseIndents:
           description: Used for search result and create only
@@ -2761,7 +2761,7 @@ definitions:
     PurchaseMaterialResponse:
       description: Contract class for web response. Array of PurchaseMaterial items  are used in case of search ,create or update request. 
       properties:
-        responseInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         purchaseMaterials:
           description: Used for search result and create only
@@ -3155,7 +3155,7 @@ definitions:
     MaterialIssueResponse:
       description: Contract class for web response. Array of MaterialIssue items  are used in case of search ,create or update request. 
       properties:
-        responseInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         materialIssues:
           description: Used for search result and create only
@@ -3227,7 +3227,7 @@ definitions:
     TransferInwardResponse:
       description: Contract class for material receipt inward web response. Array of MaterialReceipt items  are used in case of search ,create or update request. 
       properties:
-        responseInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         transferInwards:
           description: Used for search result and create only
@@ -3251,7 +3251,7 @@ definitions:
     TransferOutwardResponse:
       description: Contract class for web response. Array of TransferOutward items  are used in case of search ,create or update request. 
       properties:
-        responseInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         transferOutwards:
           description: Used for search result and create only
@@ -3512,7 +3512,7 @@ definitions:
     MaterialResponse:
       description: Contract class for web response. Array of Material items  are used in case of search ,create or update request. 
       properties:
-        responseInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         materials:
           description: Used for search result and create only
@@ -3536,7 +3536,7 @@ definitions:
     MaterialStoreMappingResponse:
       description: Contract class for web response. Array of Material Store Mapping items  are used in case of search ,create or update request. 
       properties:
-        responseInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         materialStoreMappings:
           description: Used for search result and create only
@@ -3707,7 +3707,7 @@ definitions:
     StoreResponse:
       description: Contract class for web response. Array of Store items  are used in case of search ,create or update request. 
       properties:
-        responseInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         stores:
           description: Used for search result and create only
@@ -3924,7 +3924,7 @@ definitions:
     SupplierResponse:
       description: Contract class for web response. Array of Supplier items  are used in case of search ,create or update request. 
       properties:
-        responseInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         suppliers:
           description: Used for search result and create only
@@ -4058,7 +4058,7 @@ definitions:
     ScrapResponse:
       description: Contract class for web response. Array of Scrap items  are used in case of search ,create or update request. 
       properties:
-        responseInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         scraps:
           description: Used for search result and create only
@@ -4179,7 +4179,7 @@ definitions:
     DisposalResponse:
       description: Contract class for web response. Array of Disposal items  are used in case of search ,create or update request. 
       properties:
-        responseInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         disposals:
           description: Used for search result and create only
@@ -4332,7 +4332,7 @@ definitions:
     PriceListResponse:
       description: Contract class for web response. Array of PriceList items  are used in case of search ,create or update request. 
       properties:
-        responseInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         transferInwards:
           description: Used for search result and create only

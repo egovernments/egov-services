@@ -399,6 +399,7 @@ public class AbstractEstimateService {
 		projectCode.setStatus(ProjectCodeStatus.CREATED);
 
 		ProjectCodeRequest projectCodeRequest = new ProjectCodeRequest();
+		projectCodeRequest.setRequestInfo(requestInfo);
 		List<ProjectCode> projectCodes = new ArrayList<>();
 		projectCodes.add(projectCode);
 		projectCodeRequest.setProjectCodes(projectCodes);

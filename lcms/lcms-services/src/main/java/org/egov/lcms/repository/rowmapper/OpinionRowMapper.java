@@ -36,10 +36,11 @@ public class OpinionRowMapper implements RowMapper<Opinion> {
 		opinion.setOpinionRequestDate(getLong(rs.getLong("opinionrequestdate")));
 
 		opinion.setOpinionOn(getString(rs.getString("opinionon")));
-		opinion.setOpinionDescription(getString(rs.getString("opinionDescription")));
+		opinion.setOpinionDescription(getString(rs.getString("opiniondescription")));
 		opinion.setInWardDate(getLong(rs.getLong("inwarddate")));
 		opinion.setTenantId(getString(rs.getString("tenantid")));
 		opinion.setStateId(getString(rs.getString("stateid")));
+		opinion.setAdditionalAdvocate(getString(rs.getString("additionaladvocate")));
 
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(rs.getString("createdby"));
@@ -47,20 +48,20 @@ public class OpinionRowMapper implements RowMapper<Opinion> {
 		auditDetails.setCreatedTime(rs.getBigDecimal("createdtime"));
 		auditDetails.setLastModifiedTime(rs.getBigDecimal("lastmodifiedtime"));
 		opinion.setAuditDetails(auditDetails);
-		
+
 		TypeReference<List<Document>> documentReference = new TypeReference<List<Document>>() {
 		};
 		TypeReference<Advocate> advocateReference = new TypeReference<Advocate>() {
 		};
 		TypeReference<Department> departmentReference = new TypeReference<Department>() {
 		};
-		
+
 		try {
 			if (rs.getString("documents") != null)
 				opinion.setDocuments(objectMapper.readValue(rs.getString("documents"), documentReference));
 			if (rs.getString("opinionsby") != null)
 				opinion.setOpinionsBy(objectMapper.readValue(rs.getString("opinionsby"), advocateReference));
-			if(rs.getString("departmentname") != null)
+			if (rs.getString("departmentname") != null)
 				opinion.setDepartmentName(objectMapper.readValue(rs.getString("departmentname"), departmentReference));
 		} catch (IOException ex) {
 			throw new CustomException(propertiesManager.getOpinionSearchErrorCode(),

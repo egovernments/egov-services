@@ -3,6 +3,7 @@ package org.egov.model;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.egov.model.enums.ModeOfAcquisitionEnum;
@@ -123,6 +124,7 @@ public class Asset   {
 	  private String departmentCode = null;
 
 	  @NotNull
+	  @Valid
 	  @JsonProperty("assetCategory")
 	  private AssetCategory assetCategory = null;
 

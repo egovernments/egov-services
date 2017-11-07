@@ -36,7 +36,7 @@ let createTemplate = function(module, numCols, path, config, definition, basePat
     let properties = definition[splitArr[splitArr.length - 1]].properties;
     let reference;
     for (let key in properties) {
-        if (key != "requestInfo" && key != "RequestInfo") {
+        if (key != "requestInfo" && key != "RequestInfo") {//Added case insensitive check
             //IF ARRAY
             if (properties[key].type == "array") {
                 let propertiesArr = properties[key].items.$ref.split("/");
@@ -51,7 +51,7 @@ let createTemplate = function(module, numCols, path, config, definition, basePat
             break;
         }
     }
-    
+
     let fieldsData = getFieldsFromInnerObject(reference, fields, definition, module, isArr ? (specifications.objectName + "[0]") : specifications.objectName);
     fields = fieldsData.fields;
     errors = Object.assign({}, errors, fieldsData.errors);

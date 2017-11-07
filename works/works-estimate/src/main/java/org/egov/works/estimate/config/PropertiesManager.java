@@ -73,4 +73,7 @@ public class PropertiesManager {
     
     @Value("${egov.works.services.estimateappropriation.create}")
     private String estimateAppropriationURL;
+    
+	@Value("${egov.services.works.accountdetailkey.create.topic}")
+	private String createAccountDetailKeyTopic;
 }

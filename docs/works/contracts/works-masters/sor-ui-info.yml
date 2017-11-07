@@ -14,7 +14,7 @@ UIInfo:
     url: "/egov-mdms-service/v1/_get?&moduleName=Works&masterName=ScheduleCategory"
     keyPath: "$..code"
     valPath: "$..code"
-  - fieldName: scheduleOfRates[0].rom.code
+  - fieldName: scheduleOfRates[0].uom.code
     url: "/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom"
     keyPath: "$..code"
     valPath: "$..code"

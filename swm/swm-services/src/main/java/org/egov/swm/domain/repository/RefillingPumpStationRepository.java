@@ -1,43 +1,28 @@
 package org.egov.swm.domain.repository;
 
-import org.egov.swm.domain.model.RefillingPumpStation;
+import org.egov.swm.persistence.queue.repository.RefillingPumpStationQueueRepository;
+import org.egov.swm.persistence.repository.RefillingPumpStationJdbcRepository;
 import org.egov.swm.web.requests.RefillingPumpStationRequest;
-import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RefillingPumpStationRepository {
 
-    private LogAwareKafkaTemplate kafkaTemplate;
+    private RefillingPumpStationQueueRepository refillingPumpStationQueueRepository;
 
-    private String createTopic;
+    private RefillingPumpStationJdbcRepository refillingPumpStationJdbcRepository;
 
-    private String indexTopic;
-
-    public RefillingPumpStationRepository(LogAwareKafkaTemplate kafkaTemplate,
-                                          @Value("${egov.swm.refillingpumpstation.save.topic}") String createTopic,
-                                          @Value("${egov.swm.refillingpumpstation.indexer.topic}") String indexTopic) {
-        this.kafkaTemplate = kafkaTemplate;
-        this.createTopic = createTopic;
-        this.indexTopic = indexTopic;
+    public RefillingPumpStationRepository(RefillingPumpStationQueueRepository refillingPumpStationQueueRepository) {
+        this.refillingPumpStationQueueRepository = refillingPumpStationQueueRepository;
     }
 
     public RefillingPumpStationRequest save(RefillingPumpStationRequest refillingPumpStationRequest){
 
-        kafkaTemplate.send(createTopic, refillingPumpStationRequest);
-
-//        refillingPumpStationRequest.getRefillingPumpStations()
-//                .forEach(this::pushToCreateAndIndexTopic);
-
-        return refillingPumpStationRequest;
+        return refillingPumpStationQueueRepository.save(refillingPumpStationRequest);
     }
 
-    private void pushToCreateAndIndexTopic(RefillingPumpStation refillingPumpStation){
+    public RefillingPumpStationRequest update(RefillingPumpStationRequest refillingPumpStationRequest){
 
-        kafkaTemplate.send(createTopic, refillingPumpStation);
-
-        kafkaTemplate.send(indexTopic, refillingPumpStation);
+        return refillingPumpStationQueueRepository.update(refillingPumpStationRequest);
     }
-
 }

@@ -1,6 +1,8 @@
 package org.egov.swm.domain.model;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -50,7 +52,9 @@ public class RefillingPumpStation {
 	private FuelType typeOfFuel = null;
 
 	@JsonProperty("quantity")
-	private Long quantity = null;
+	@Min(value = 0)
+	@Max(value = 10000)
+	private Double quantity = null;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;

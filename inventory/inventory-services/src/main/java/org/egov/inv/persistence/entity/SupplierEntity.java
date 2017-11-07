@@ -141,12 +141,12 @@ public class SupplierEntity {
 		supplier.setId(id);
 		supplier.setCode(code);
 		supplier.setName(name);
+		if(type != null)
 		supplier.setType(TypeEnum.valueOf(type));
 		supplier.setAddress(address);
 		supplier.setTenantId(tenantId);
-		CommonEnum states = new CommonEnum();
-		states.setName(status);
 		supplier.setActive(active);
+		if(status != null)
 		supplier.setStatus(StatusEnum.valueOf(status));
 		supplier.setInActiveDate(inactivedate);
 	    supplier.setContactNo(contactno);

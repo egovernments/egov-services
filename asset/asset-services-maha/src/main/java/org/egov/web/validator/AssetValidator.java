@@ -54,7 +54,9 @@ public class AssetValidator implements Validator {
 	private void validateAnticipatedLife(Long anticipatedLife, BigDecimal originalValue, Double depreciationRate,
 			Map<String, String> errorMap) {
 
-		
+		  long newVal = new Double(100/depreciationRate).longValue();
+		  if (!anticipatedLife.equals(newVal))
+		  errorMap.put("Asset_anticipatedLife", "anticipatedLife Value is wrong");
 	}
 
 	public void addMissingPathForPersister(Asset asset) {

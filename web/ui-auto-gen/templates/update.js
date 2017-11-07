@@ -25,6 +25,7 @@ let updateTemplate = function(module, numCols, path, config, definition, basePat
         searchUrl: basePath + uiInfoDef.searchUrl
     };
     let fields = {};
+    let isArr = false;
     let ind = 0;
     for(var i=0; i<config["post"].parameters.length; i++) {
         if(config["post"].parameters[i].schema) {

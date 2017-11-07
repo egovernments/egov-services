@@ -54,7 +54,7 @@ public class AssetQueryBuilder {
 		}
 
 		if (searchAsset.getDepartment() != null) {
-			selectQuery.append(" AND ASSET.department = ?");
+			selectQuery.append(" AND ASSET.departmentcode = ?");
 			preparedStatementValues.add(searchAsset.getDepartment());
 		}
 

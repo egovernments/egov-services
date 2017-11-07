@@ -294,6 +294,7 @@ var dat = {
             jsonPath: "parawiseComments[0].approve",
             label: "",
             type: "radio",
+            styleObj:{"display": "-webkit-box"},
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: "",

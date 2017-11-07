@@ -121,11 +121,10 @@ var dat = {
                  url: "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
             },{
                 "name": "OtherLawyer",
-                "jsonPath": "opinions[0].additionalAdvocate.code",
+                "jsonPath": "opinions[0].additionalAdvocate",
                 "label": "opinionrequest.update.additionalAdvocate",
                 "pattern": "",
-                "type": "singleValueList",
-                "type":"text",
+                "type": "text",
                 "isRequired": false,
                 "isDisabled": false,
                 "requiredErrMsg": "",

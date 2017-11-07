@@ -114,7 +114,7 @@ var dat ={
         "fields": [
           {
             "name": "caseStatus",
-            "jsonPath": "cases[0].hearingDetails.caseStatus",
+            "jsonPath": "cases[0].hearingDetails[0].caseStatus.code",
             "label": "legal.create.caseStatus",
             "type": "singleValueList",
             "isRequired": true,
@@ -124,7 +124,7 @@ var dat ={
           },
           {
             "name": "caseFinalDecision",
-            "jsonPath": "cases[0].hearingDetails.caseFinalDecision",
+            "jsonPath": "cases[0].hearingDetails[0].caseFinalDecision",
             "label": "legal.create.caseFinalDecision",
             "type": "text",
             "isRequired": true,
@@ -133,7 +133,7 @@ var dat ={
           },
           {
             "name": "caseJudgeMent",
-            "jsonPath": "cases[0].hearingDetails.caseJudgeMent",
+            "jsonPath": "cases[0].hearingDetails[0].caseJudgeMent",
             "label": "legal.create.caseJudgement",
             "type": "text",
             "isRequired": true,
@@ -142,7 +142,7 @@ var dat ={
           },
           {
             "name": "nextHearingDate",
-            "jsonPath": "cases[0].hearingDetails.nextHearingDate",
+            "jsonPath": "cases[0].hearingDetails[0].nextHearingDate",
             "label": "legal.create.nextHearingDate",
             "type": "datePicker",
             "isRequired": false,
@@ -167,7 +167,7 @@ var dat ={
           {
             "name": "attendeeDetails",
             "type": "tableList",
-            "jsonPath": "cases[0].hearingDetails.attendees",
+            "jsonPath": "cases[0].hearingDetails[0].attendees",
             "tableList": {
               "header": [
                 {
@@ -188,15 +188,16 @@ var dat ={
                   "name": "attendeeName",
                   "pattern": "",
                   "type": "text",
-                  "jsonPath": "cases[0].hearingDetails.attendees[0].name",
+                  "jsonPath": "cases[0].hearingDetails[0].attendees[0].name",
                   "isRequired": true,
                   "isDisabled": false,
                   "url": ""
                 },
                 {
                   "name": "gender",
-                  "jsonPath": "cases[0].hearingDetails.attendees[0].gender",
-                  "type": "radio",
+                  "jsonPath": "cases[0].hearingDetails[0].attendees[0].gender",
+                   "type": "radio",
+                   styleObj:{"display": "-webkit-box"},
                   "isRequired": true,
                   "isDisabled": false,
                   "patternErrorMsg": "",
@@ -215,7 +216,7 @@ var dat ={
                   "name": "mobileNo",
                   "pattern": "",
                   "type": "text",
-                  "jsonPath": "cases[0].hearingDetails.attendees[0].mobileNumber",
+                  "jsonPath": "cases[0].hearingDetails[0].attendees[0].mobileNumber",
                   "isRequired": true,
                   "isDisabled": false
                 },
@@ -223,7 +224,7 @@ var dat ={
                   "name": "address",
                   "pattern": "",
                   "type": "text",
-                  "jsonPath": "cases[0].hearingDetails.attendees[0].address",
+                  "jsonPath": "cases[0].hearingDetails[0].attendees[0].address.addressLine1",
                   "isRequired": true,
                   "isDisabled": false
                 }
@@ -238,9 +239,9 @@ var dat ={
         "fields": [
           {
             "type": "tableList",
-            "autoIndexing": true,
-            "jsonPath": "cases[0].hearingDetails.judges",
+            "jsonPath": "cases[0].hearingDetails[0].judges",
             "tableList": {
+             "autoIndexing": true,
               "header": [
                 {
                   "label": "legal.create.judgeName"
@@ -260,15 +261,16 @@ var dat ={
                   "name": "attendeeName-index",
                   "pattern": "",
                   "type": "text",
-                  "jsonPath": "cases[0].hearingDetails[index].judges.name",
+                  "jsonPath": "cases[0].hearingDetails[0].judges[index].name",
                   "isRequired": true,
                   "isDisabled": false,
                   "url": ""
                 },
                 {
                   "name": "gender-index",
-                  "jsonPath": "cases[0].hearingDetails[index].judges.gender",
+                  "jsonPath": "cases[0].hearingDetails[0].judges[index].gender",
                   "type": "radio",
+                  styleObj:{"display": "-webkit-box"},
                   "isRequired": true,
                   "isDisabled": false,
                   "patternErrorMsg": "",
@@ -287,7 +289,7 @@ var dat ={
                   "name": "mobileNo-index",
                   "pattern": "",
                   "type": "text",
-                  "jsonPath": "cases[0].hearingDetails[index].judges.mobileNumber",
+                  "jsonPath": "cases[0].hearingDetails[0].judges[index].mobileNumber",
                   "isRequired": true,
                   "isDisabled": false
                 },
@@ -295,7 +297,7 @@ var dat ={
                   "name": "address-index",
                   "pattern": "",
                   "type": "text",
-                  "jsonPath": "cases[0].hearingDetails[index].judges.address",
+                  "jsonPath": "cases[0].hearingDetails[0].judges[index].address.addressLine1",
                   "isRequired": true,
                   "isDisabled": false
                 }

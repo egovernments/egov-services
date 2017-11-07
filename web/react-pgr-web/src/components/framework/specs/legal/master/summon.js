@@ -10,7 +10,24 @@ var dat = {
         name: "search",
         label: "legal.search.case.title",
         fields: [
+           {
+            name: "fromDate",
+            jsonPath: "fromDate",
+            label: "legal.create.fromDate",
+            type: "datePicker",
+            isRequired: false,
+            isDisabled: false,
+            patternErrorMsg: "legal.create.field.message.fromDate"
+          },
           {
+            name: "toDate",
+            jsonPath: "toDate",
+            label: "legal.create.toDate",
+            type: "datePicker",
+            isRequired: false,
+            isDisabled: false,
+            patternErrorMsg: "legal.create.field.message.toDate"
+          },{
             name: "referenceNo",
             jsonPath: "summonReferenceNo",
             label: "legal.create.referenceNo",
@@ -77,24 +94,6 @@ var dat = {
             isDisabled: false,
             url:
               "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
-          },
-          {
-            name: "fromDate",
-            jsonPath: "fromDate",
-            label: "legal.create.fromDate",
-            type: "datePicker",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: "legal.create.field.message.fromDate"
-          },
-          {
-            name: "toDate",
-            jsonPath: "toDate",
-            label: "legal.create.toDate",
-            type: "datePicker",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: "legal.create.field.message.toDate"
           }
         ]
       }
@@ -173,6 +172,7 @@ var dat = {
             jsonPath: "summons[0].isSummon",
             label: "legal.create.isSummon",
             type: "radio",
+            styleObj:{"display": "-webkit-box"},
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: "",
@@ -209,6 +209,16 @@ var dat = {
             type: "text",
             isRequired: false,
             isDisabled: false,
+            patternErrorMsg: ""
+          }, {
+            name: "year",
+            jsonPath: "summons[0].year",
+            label: "legal.create.year",
+            type: "singleValueList",
+            isRequired: true,
+            isDisabled: false,
+            url:
+              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=year|$..code|$..name",
             patternErrorMsg: ""
           },
           {
@@ -321,17 +331,6 @@ var dat = {
             isDisabled: false,
             patternErrorMsg: "",
             url: "/egov-common-masters/departments/_search?|$..code|$..name"
-          },
-          {
-            name: "year",
-            jsonPath: "summons[0].year",
-            label: "legal.create.year",
-            type: "singleValueList",
-            isRequired: true,
-            isDisabled: false,
-            url:
-              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=year|$..code|$..name",
-            patternErrorMsg: ""
           },
           {
             name: "hearingDate",

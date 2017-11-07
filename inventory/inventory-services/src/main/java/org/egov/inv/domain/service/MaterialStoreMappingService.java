@@ -1,10 +1,12 @@
 package org.egov.inv.domain.service;
 
 import io.swagger.model.*;
+import org.egov.inv.domain.repository.MaterialStoreESRepository;
 import org.egov.inv.persistence.entity.MaterialStoreMappingEntity;
 import org.egov.inv.persistence.repository.MaterialStoreMappingJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +22,12 @@ public class MaterialStoreMappingService {
     public static final String MATERIAL = "material";
     public static final String INV_005 = "inv.005";
     public static final String INV_003 = "INV.003";
+
     private LogAwareKafkaTemplate logAwareKafkaTemplate;
 
     private MaterialStoreMappingJdbcRepository materialStoreMappingJdbcRepository;
+
+    private MaterialStoreESRepository materialESRepository;
 
     private InventoryUtilityService inventoryUtilityService;
 
@@ -32,18 +37,26 @@ public class MaterialStoreMappingService {
 
     private String updateTopicName;
 
+    private boolean isESEnabled;
+
+
+    @Autowired
     public MaterialStoreMappingService(LogAwareKafkaTemplate logAwareKafkaTemplate,
                                        MaterialStoreMappingJdbcRepository materialStoreMappingJdbcRepository,
                                        InventoryUtilityService inventoryUtilityService,
                                        StoreService storeService,
+                                       MaterialStoreESRepository materialESRepository,
                                        @Value("${inv.materialstore.save.topic}") String createTopicName,
-                                       @Value("${inv.materialstore.update.topic}") String updateTopicName) {
+                                       @Value("${inv.materialstore.update.topic}") String updateTopicName,
+                                       @Value("${es.enabled}") boolean isESEnabled) {
         this.logAwareKafkaTemplate = logAwareKafkaTemplate;
         this.materialStoreMappingJdbcRepository = materialStoreMappingJdbcRepository;
+        this.materialESRepository = materialESRepository;
         this.inventoryUtilityService = inventoryUtilityService;
         this.storeService = storeService;
         this.createTopicName = createTopicName;
         this.updateTopicName = updateTopicName;
+        this.isESEnabled = isESEnabled;
     }
 
 
@@ -70,9 +83,8 @@ public class MaterialStoreMappingService {
     }
 
     public Pagination<MaterialStoreMapping> search(MaterialStoreMappingSearchRequest materialStoreMappingSearchRequest) {
-        Pagination<MaterialStoreMapping> materialStoreMappings = materialStoreMappingJdbcRepository.search(materialStoreMappingSearchRequest);
-
-        return materialStoreMappings;
+        return isESEnabled ? materialESRepository.search(materialStoreMappingSearchRequest) :
+                materialStoreMappingJdbcRepository.search(materialStoreMappingSearchRequest);
     }
 
     private List<MaterialStoreMapping> push(String topicName, MaterialStoreMappingRequest

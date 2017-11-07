@@ -88,6 +88,7 @@ public class MaterialStoreMappingApiController implements MaterialStoreMappingAp
                 .pageSize(pageSize)
                 .offset(offset)
                 .sortBy(sortBy)
+                .tenantId(tenantId)
                 .build();
         Pagination<MaterialStoreMapping> materialStoreMappingPagination = materialStoreMappingService.search(materialStoreMappingSearchRequest);
         MaterialStoreMappingResponse buildMaterialStoreMappingResponse = MaterialStoreMappingResponse.builder()

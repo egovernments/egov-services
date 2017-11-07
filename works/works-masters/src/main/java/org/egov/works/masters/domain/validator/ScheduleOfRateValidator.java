@@ -2,6 +2,7 @@ package org.egov.works.masters.domain.validator;
 
 import net.minidev.json.JSONArray;
 import org.egov.tracer.model.CustomException;
+import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.masters.utils.Constants;
 import org.egov.works.masters.web.contract.SORRate;
 import org.egov.works.masters.web.contract.ScheduleOfRate;
@@ -32,8 +33,8 @@ public class ScheduleOfRateValidator {
 
         for (final ScheduleOfRate scheduleOfRate : scheduleOfRateRequest.getScheduleOfRates()) {
             if (scheduleOfRate.getScheduleCategory() != null && scheduleOfRate.getScheduleCategory().getCode() != null) {
-                mdmsResponse = mdmsRepository.getByCriteria(scheduleOfRate.getTenantId(), Constants.MODULENAME_WORKS,
-                        Constants.MASTERNAME_SCHEDULE_CATEGORY, "code", scheduleOfRate.getScheduleCategory().getCode(),
+                mdmsResponse = mdmsRepository.getByCriteria(scheduleOfRate.getTenantId(), CommonConstants.MODULENAME_WORKS,
+                        CommonConstants.MASTERNAME_SCHEDULE_CATEGORY, "code", scheduleOfRate.getScheduleCategory().getCode(),
                         scheduleOfRateRequest.getRequestInfo());
                 if (mdmsResponse == null || mdmsResponse.size() == 0) {
                     messages.put(Constants.KEY_SOR_SCHEDULERCATEGORY_CODE_INVALID, Constants.MESSAGE_SOR_SCHEDULERCATEGORY_CODE_INVALID + scheduleOfRate.getScheduleCategory().getCode());
@@ -41,8 +42,8 @@ public class ScheduleOfRateValidator {
                 }
             }
             if (scheduleOfRate.getScheduleCategory() != null && scheduleOfRate.getScheduleCategory().getCode() != null) {
-                mdmsResponse = mdmsRepository.getByCriteria(scheduleOfRate.getTenantId(), Constants.MODULENAME_COMMON,
-                        Constants.MASTERNAME_UOM, "code", scheduleOfRate.getUom().getCode(),
+                mdmsResponse = mdmsRepository.getByCriteria(scheduleOfRate.getTenantId(), CommonConstants.MODULENAME_COMMON,
+                        CommonConstants.MASTERNAME_UOM, "code", scheduleOfRate.getUom().getCode(),
                         scheduleOfRateRequest.getRequestInfo());
                 if (mdmsResponse == null || mdmsResponse.size() == 0) {
                     messages.put(Constants.KEY_SOR_UOM_CODE_INVALID, Constants.MESSAGE_SOR_UOM_CODE_INVALID + scheduleOfRate.getUom().getCode());

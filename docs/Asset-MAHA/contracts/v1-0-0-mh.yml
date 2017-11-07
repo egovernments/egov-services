@@ -12,8 +12,8 @@ info:
     asset. </br>10. Get Configuration Values. </br>11. Depreciation of existing
     assets.</br>12.Get Depreciated Assets Report.</b></h2>
   contact:
-    name: Ghanshyam rawat
-    email: ghanshyam.rawat@riflexions.com
+    name: kaviyarasan
+    email: kaviyarasan.p@riflexions.com
   version: 1.0.0
 basePath: /asset-services-maha/
 paths:
@@ -761,7 +761,7 @@ definitions:
     properties:
       anticipatedLife:
         type: integer
-        description: Anticipated life of asset.
+        description: Anticipated life of asset, This value is being calculated by diving 100 by the depreciation rate. for eg if the depreciation rate is 10%, then the anticiapted life will be 100/10 which equals 10years.
         format: int64
       orderNumber:
         type: string
@@ -788,6 +788,7 @@ definitions:
         format: int64
         description: Date of the expiry of warranty.
       defectLiabilityPeriod:
+        description: This field contains year,month an day counts of the defect liability period in round figures.
         $ref: '#/definitions/DefectLiability'
       securityDepositRetained:
         type: number
@@ -812,31 +813,31 @@ definitions:
         format: string
         description: >-
           Options are from the  chart of account master for the account code
-          purpose "Fixed Asset".
+          purpose "Fixed Asset", this account field is mandatory only when the voucher enabled is true, the voucher enabled flag can be accesed from the mdms(master data service).
       accumulatedDepreciationAccount:
         type: string
         format: string
         description: >-
           Options are from the  chart of account master for the account code
-          purpose "Accumulated Depreciation".
+          purpose "Accumulated Depreciation", this account field is mandatory only when the voucher enabled is true, the voucher enabled flag can be accesed from the mdms(master data service).
       revaluationReserveAccount:
         type: string
         format: string
         description: >-
           Options are from the  chart of account master for the account code
-          purpose "Revaluation Reserve Account".
+          purpose "Revaluation Reserve Account", this account field is mandatory only when the voucher enabled is true, the voucher enabled flag can be accesed from the mdms(master data service).
       depreciationExpenseAccount:
         type: string
         format: string
         description: >-
           Options are from the  chart of account master for the account code
-          purpose "Depreciation Expense Account".
+          purpose "Depreciation Expense Account", this account field is mandatory only when the voucher enabled is true, the voucher enabled flag can be accesed from the mdms(master data service).
       titleDocumentsAvalable:
         type: array
         items:
           type: string
           format: string
-        description: names of the title documents available for the particular asset.
+        description: names of the title documents available for the particular asset, values will be entered in comma separated format.
       locationDetails:
         $ref: '#/definitions/Location'
       totalArea:
@@ -879,7 +880,7 @@ definitions:
         description: >-
           Unique code for the asset. This will be auto generated. The format for
           the asset code will be given by the client in case of auto generation
-          of asset code.
+          of asset code, The format of the code will be <ULB_NAME>/<Deprartmentcode>/<assetCategoryCode>/running sequence (for eg- mh.rohaRevenueBuilding12).
         format: varchar
       oldCode:
         type: string
@@ -894,7 +895,7 @@ definitions:
         $ref: '#/definitions/AssetCategory'
       modeOfAcquisition:
         type: string
-        description: asset mode of acquistion enumeration.
+        description: asset mode of acquistion enumeration .
         enum:
           - ACQUIRED
           - CONSTRUCTION

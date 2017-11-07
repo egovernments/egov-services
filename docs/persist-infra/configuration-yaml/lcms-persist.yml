@@ -534,7 +534,7 @@ serviceMaps:
     fromTopic: advocate-payment-create
     isTransaction: true
     queryMaps: 
-    - query: INSERT INTO egov_lcms_advocate_payment(code, advocate, demandDate, year, caseType, caseNo, caseStatus, amountClaimed, amountRecived, allowance, isPartialPayment, invoiceDoucment, tenantId, createdBy, lastmodifiedby, createdTime, lastModifiedTime, resolutionDate, resolutionNo, resolutionRemarks, resolution, advocateCharges, modeOfPayment, instrumentNumber, instrumentDate, stateId, voucherNo, voucherDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egov_lcms_advocate_payment(code, advocate, demandDate, year, caseType, caseStatus, amountClaimed, amountRecived, allowance, isPartialPayment, invoiceDoucment, tenantId, createdBy, lastmodifiedby, createdTime, lastModifiedTime, resolutionDate, resolutionNo, resolutionRemarks, resolution, advocateCharges, modeOfPayment, instrumentNumber, instrumentDate, stateId, voucherNo, voucherDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.advocatePayments.*
       jsonMaps:
        - jsonPath: $.advocatePayments.*.code
@@ -553,14 +553,11 @@ serviceMaps:
        - jsonPath: $.advocatePayments.*.caseType
          type: JSON
          dbType: JSONB
-       
-       - jsonPath: $.advocatePayments.*.caseNo
-         type: STRING
-
+                            
        - jsonPath: $.advocatePayments.*.caseStatus
          type: JSON
          dbType: JSONB
-
+                              
        - jsonPath: $.advocatePayments.*.amountClaimed
          type: Double
 
@@ -580,17 +577,19 @@ serviceMaps:
        - jsonPath: $.advocatePayments.*.tenantId
          type: STRING
 
-       - jsonPath: $.advocatePayments.*.auditDetails.createdBy
+       - jsonPath: $.RequestInfo.userInfo.id
          type: STRING
-       
-       - jsonPath: $.advocatePayments.*.auditDetails.lastModifiedBy
-         type: STRING  
-
-       - jsonPath: $.advocatePayments.*.auditDetails.createdTime
-         type: LONG
-
-       - jsonPath: $.advocatePayments.*.auditDetails.lastModifiedTime
-         type: LONG
+                      
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING
+                    
+       - jsonPath: createdTime
+         type: CURRENTDATE
+         dbType: LONG
+                    
+       - jsonPath: lastModifiedTime
+         type: CURRENTDATE
+         dbType: LONG
 
        - jsonPath: $.advocatePayments.*.resolutionDate
          type: LONG
@@ -632,7 +631,7 @@ serviceMaps:
     fromTopic: advocate-payment-update
     isTransaction: true
     queryMaps: 
-    - query: UPDATE egov_lcms_advocate_payment SET advocate=?, demandDate=?, year=?, caseType=?, caseNo=?, caseStatus=?, amountClaimed=?, amountRecived=?, allowance=?, isPartialPayment=?, invoiceDoucment=?, createdBy=?, lastmodifiedby=?, createdTime=?, lastModifiedTime=?, resolutionDate=?, resolutionNo=?, resolutionRemarks=?, resolution=?, advocateCharges=?, modeOfPayment=?, instrumentNumber=?, instrumentDate=?, stateId=?, voucherNo=?, voucherDate=? WHERE code=? AND tenantid=?;
+    - query: UPDATE egov_lcms_advocate_payment SET advocate=?, demandDate=?, year=?, caseType=?, caseStatus=?, amountClaimed=?, amountRecived=?, allowance=?, isPartialPayment=?, invoiceDoucment=?, createdBy=?, lastmodifiedby=?, createdTime=?, lastModifiedTime=?, resolutionDate=?, resolutionNo=?, resolutionRemarks=?, resolution=?, advocateCharges=?, modeOfPayment=?, instrumentNumber=?, instrumentDate=?, stateId=?, voucherNo=?, voucherDate=? WHERE code=? AND tenantid=?;
       basePath: $.advocatePayments.*
       jsonMaps:
        - jsonPath: $.advocatePayments.*.advocate
@@ -648,9 +647,6 @@ serviceMaps:
        - jsonPath: $.advocatePayments.*.caseType
          type: JSON
          dbType: JSONB
-       
-       - jsonPath: $.advocatePayments.*.caseNo
-         type: STRING
 
        - jsonPath: $.advocatePayments.*.caseStatus
          type: JSON
@@ -671,19 +667,21 @@ serviceMaps:
        - jsonPath: $.advocatePayments.*.invoiceDoucment
          type: JSON
          dbType: JSONB
-     
-       - jsonPath: $.advocatePayments.*.auditDetails.createdBy
+                         
+       - jsonPath: $.RequestInfo.userInfo.id
          type: STRING
-       
-       - jsonPath: $.advocatePayments.*.auditDetails.lastModifiedBy
-         type: STRING  
-
-       - jsonPath: $.advocatePayments.*.auditDetails.createdTime
-         type: LONG
-
-       - jsonPath: $.advocatePayments.*.auditDetails.lastModifiedTime
-         type: LONG
-
+  
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING
+    
+       - jsonPath: createdTime
+         type: CURRENTDATE
+         dbType: LONG
+                          
+       - jsonPath: lastModifiedTime
+         type: CURRENTDATE
+         dbType: LONG
+                            
        - jsonPath: $.advocatePayments.*.resolutionDate
          type: LONG
 

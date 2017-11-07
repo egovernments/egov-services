@@ -42,7 +42,6 @@ public class AdvocatePaymentRowMapper implements RowMapper<AdvocatePayment> {
 		advocatePayment.setCode(rs.getString("code"));
 		advocatePayment.setDemandDate((Long) rs.getObject("demanddate"));
 		advocatePayment.setYear(rs.getString("year"));
-		advocatePayment.setCaseNo(rs.getString("caseno"));
 		advocatePayment.setAmountClaimed(rs.getDouble("amountclaimed"));
 		advocatePayment.setAmountRecived(rs.getDouble("amountrecived"));
 		advocatePayment.setAllowance(rs.getDouble("allowance"));

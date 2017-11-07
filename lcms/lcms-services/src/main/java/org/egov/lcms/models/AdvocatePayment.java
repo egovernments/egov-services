@@ -32,10 +32,6 @@ public class AdvocatePayment {
 	@JsonProperty("caseType")
 	private CaseType caseType = null;
 
-	@NonNull
-	@JsonProperty("caseNo")
-	private String caseNo = null;
-
 	@JsonProperty("caseStatus")
 	private CaseStatus caseStatus = null;
 

@@ -979,10 +979,6 @@ definitions:
       stateId:
         type: string
         description: State id of the workflow
-      asset:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/Asset'
-        description: Asset for which this Abstract Estimate is created
-        format: singleValueList
       implementationPeriod:
         type: integer
         description: Approximate period of implementation of the work
@@ -1050,9 +1046,14 @@ definitions:
           $ref: '#/definitions/AbstractEstimateDetails'
       sanctionDetails:
         type: array
-        description: Array of Sanction details
+        description: Array of Abstract Estimate Sanction Details
         items:
           $ref: '#/definitions/AbstractEstimateSanctionDetail'
+      assetDetails:
+        type: array
+        description: Array of Asset/Land details
+        items:
+          $ref: '#/definitions/AbstractEstimateAssetDetail'
       documentDetails:
         type: array
         description: Array of document details
@@ -1129,6 +1130,67 @@ definitions:
       - nameOfWork
       - estimateAmount
       - estimateNumber
+      - tenantId
+      
+  AbstractEstimateAssetDetail:
+    type: object
+    description: An Object that holds Asset/Land Details of Abstract Estimate 
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Asset/Land Details of Abstract Estimate 
+      tenantId:
+        type: string
+        description: Tenant id of the Asset/Land Details of Abstract Estimate 
+        maxLength: 128
+        minLength: 2
+      abstractEstimate:
+        $ref: '#/definitions/AbstractEstimate'
+        description: Reference to Sanction Asset/Land of Abstract Estimate Object 
+      assetCondition:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/AssetPresentCondition'
+        description: Present condition of the asset
+        format: singleValueList
+      assetRemarks:
+        type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
+        description: Remarks of the asset
+        maxLength: 1024
+      asset:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/Asset'
+        description: Asset for which the Abstract Estimate is created
+        format: singleValueList
+      landAssetRequired:
+        type: boolean
+        description: Boolean value to capture whether the Land Asset required. True if Land Asset required. False if the Land Asset value is not required. The values should be shown in UI are Yes and No.
+      noOfLands:
+          type: integer
+          description: No of Lands. If Is Land Asset required=Yes then this field is mandatory.
+          maxLength: 10
+          minLength: 1
+      landAssetCondition:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/LandAssetPresentCondition'
+        description: Present condition of the asset. If Is Land Asset required=Yes then this field is mandatory.
+        format: singleValueList
+      constructionArea:
+          type: number
+          format: double
+          maxLength: 12
+          description: Construction area. If Is Land Asset required=Yes then this field is mandatory.
+      landAsset:
+        type: string
+        pattern: '[a-zA-Z0-9-\\]+'
+        description: Land Asset ID
+        format: singleValueList. If Is Land Asset required=Yes then this field is mandatory.
+      remarks:
+        type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
+        description:  Other Specifications Remarks
+        maxLength: 1024
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - abstractEstimate
       - tenantId
       
   AbstractEstimateSanctionDetail:

@@ -1,5 +1,8 @@
 package org.egov.report.service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,8 +19,13 @@ import org.egov.swagger.model.MetadataResponse;
 import org.egov.swagger.model.ReportDefinition;
 import org.egov.swagger.model.SearchColumn;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriTemplate;
 
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
@@ -62,14 +70,22 @@ public class IntegrationService {
 					}
 					columnDetail.setDefaultValue(map);
 				}else{
+					
 					String res = "";
+				
+					
 					try{
 					if(searchColumn.getWrapper()){
 						RequestInfoWrapper riw = generateRequestInfoWrapper(requestInfo);
-					 res = restTemplate.postForObject(url,riw, String.class);
+						URI uri = URI.create(url);
+					    res = restTemplate.postForObject(uri,riw, String.class);
+						
 					} else {
+						
 						res = restTemplate.postForObject(url,requestInfo, String.class);
 					}
+					
+					
 					Object document = Configuration.defaultConfiguration().jsonProvider().parse(res);
 					LOGGER.info("document:"+document);
 					List<Object> keys = JsonPath.read(document, patterns[1]);

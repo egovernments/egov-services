@@ -85,7 +85,7 @@ var dat = {
       "rowClickUrlUpdate": "/update/inventory/supplier/{code}",
       "rowClickUrlView": "/view/inventory/supplier/{code}",
       "rowClickUrlAdd" : "/create/inventory/supplier",
-      "rowClickUrlDelete" : ""
+      "rowClickUrlDelete" : "inventory-services/suppliers/_update"
     }
   },
   "inventory.create": {

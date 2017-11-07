@@ -29,7 +29,7 @@ let searchTemplate = function (module, numCols, path, config, definition, basePa
 	let fields = {};
 	let parameterConfig = config["post"].parameters;
 	for(let i=0; i<parameterConfig.length; i++) {
-		if(parameterConfig[i].$ref && !/requestInfo|tenantId|pageSize|pageNumber|sortResult/.test(parameterConfig[i].$ref)) {
+		if(parameterConfig[i].$ref && !/requestInfo|RequestInfo|tenantId|pageSize|pageNumber|sortResult/.test(parameterConfig[i].$ref)) {
 			let splitArr = parameterConfig[i].$ref.split("/");
 			let paramKey = splitArr[splitArr.length-1];
 			localeFields[module + ".create." + paramKey] = getTitleCase(paramKey);

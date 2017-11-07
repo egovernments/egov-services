@@ -36,7 +36,7 @@ let createTemplate = function(module, numCols, path, config, definition, basePat
     let properties = definition[splitArr[splitArr.length - 1]].properties;
     let reference;
     for (let key in properties) {
-        if (key != "requestInfo") {
+        if (key != "requestInfo" && key != "RequestInfo") {
             //IF ARRAY
             if (properties[key].type == "array") {
                 let propertiesArr = properties[key].items.$ref.split("/");
@@ -51,12 +51,11 @@ let createTemplate = function(module, numCols, path, config, definition, basePat
             break;
         }
     }
-
+    
     let fieldsData = getFieldsFromInnerObject(reference, fields, definition, module, isArr ? (specifications.objectName + "[0]") : specifications.objectName);
     fields = fieldsData.fields;
     errors = Object.assign({}, errors, fieldsData.errors);
     localeFields = Object.assign({}, localeFields, fieldsData.localeFields);
-
     //=======================CUSTOM FILE LOGIC==========================>>
     if (uiInfoDef.externalData && typeof uiInfoDef.externalData == "object" && uiInfoDef.externalData.length) {
         fieldsData = addUrls(fields, uiInfoDef);

@@ -35,7 +35,7 @@ let viewTemplate = function(module, numCols, path, config, definition, basePath,
     let splitArr = config["post"].parameters[ind].schema.$ref.split("/");
     let properties = definition[splitArr[splitArr.length - 1]].properties;
     for (let key in properties) {
-        if (key != "requestInfo") {
+        if (key != "requestInfo" && key != "RequestInfo") {
             //IF ARRAY
             if(properties[key].type == "array") {
                 let propertiesArr = properties[key].items.$ref.split("/");

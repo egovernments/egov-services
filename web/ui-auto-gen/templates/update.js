@@ -37,7 +37,7 @@ let updateTemplate = function(module, numCols, path, config, definition, basePat
     let properties = definition[splitArr[splitArr.length - 1]].properties;
     let reference;
     for (let key in properties) {
-        if (key != "requestInfo") {
+        if (key != "requestInfo" && key != "RequestInfo") {
             //IF ARRAY
             if(properties[key].type == "array") {
                 let propertiesArr = properties[key].items.$ref.split("/");

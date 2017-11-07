@@ -92,7 +92,8 @@ public class EstimateActivityHelper {
 		estimateActivity.getDetailedEstimate().setId(this.detailedEstimate);
 		estimateActivity.setEstimateRate(this.estimateRate);
 		NonSOR nonSOR = new NonSOR();
-		nonSOR.setId(this.nonSor);
+		if(this.nonSor != null)
+			nonSOR.setId(this.nonSor);
 		estimateActivity.setNonSor(nonSOR);
 		ScheduleOfRate scheduleOfRate = new ScheduleOfRate();
 		scheduleOfRate.setCode(this.scheduleOfRate);
@@ -100,7 +101,8 @@ public class EstimateActivityHelper {
 		uom.setCode(this.uom);
 		estimateActivity.setUom(uom);
 		estimateActivity.setQuantity(this.quantity);
-		estimateActivity.setRevisionType(RevisionType.valueOf(this.revisionType));
+		if(this.revisionType != null)
+			estimateActivity.setRevisionType(RevisionType.valueOf(this.revisionType));
 		estimateActivity.setServiceTaxPerc(this.serviceTaxPerc);
 		estimateActivity.setUnitRate(this.unitRate);
 		return estimateActivity;

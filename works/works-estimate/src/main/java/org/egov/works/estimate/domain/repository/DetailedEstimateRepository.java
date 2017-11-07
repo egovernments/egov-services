@@ -13,6 +13,7 @@ import org.egov.works.estimate.persistence.repository.EstimateAssetJdbcRepositor
 import org.egov.works.estimate.persistence.repository.EstimateMeasurementSheetJdbcRepository;
 import org.egov.works.estimate.persistence.repository.EstimateOverheadJdbcRepository;
 import org.egov.works.estimate.persistence.repository.MultiYearEstimateJdbcRepository;
+import org.egov.works.estimate.web.contract.AbstractEstimateDetails;
 import org.egov.works.estimate.web.contract.AbstractEstimateDetailsSearchContract;
 import org.egov.works.estimate.web.contract.DetailedEstimate;
 import org.egov.works.estimate.web.contract.DetailedEstimateDeductionSearchContract;
@@ -103,10 +104,11 @@ public class DetailedEstimateRepository {
 				estimateActivity.setEstimateMeasurementSheets(estimateMeasurementSheetJdbcRepository.search(estimateMeasurementSheetSearchContract));
 			}
 			
-			
-			detailedEstimate.setAbstractEstimateDetail(
-					abstractEstimateDetailsJdbcRepository.search(abstractEstimateDetailsSearchContract).get(0));
+			List<AbstractEstimateDetails> abstractEstimateDetails = abstractEstimateDetailsJdbcRepository.search(abstractEstimateDetailsSearchContract);
+			if(!abstractEstimateDetails.isEmpty() && abstractEstimateDetails != null)
+				detailedEstimate.setAbstractEstimateDetail(abstractEstimateDetails.get(0));
 			detailedEstimate.setMultiYearEstimates(multiYearEstimateJdbcRepository.search(multiYearEstimateSearchContract));
+			
 			detailedEstimate.setDetailedEstimateDeductions(detailedEstimateDeductionJdbcRepository.search(detailedEstimateDeductionSearchContract));
 			detailedEstimate.setEstimateOverheads(estimateOverheadJdbcRepository.search(estimateOverheadSearchContract));
 			detailedEstimate.setAssets(estimateAssetJdbcRepository.search(estimateAssetSearchContract));

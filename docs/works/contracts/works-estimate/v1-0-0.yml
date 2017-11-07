@@ -197,6 +197,8 @@ paths:
           
           Asset details will not be shown on the screen. Instead hyperlink will be provided to the Asset code which will redirect to the view screen from Asset module.
           
+          There will be financial sanction during the workflow before Admin sanction. The financial details such as fund, function, budgethead, scheme, sub scheme, is fund available and fund sanction authority details will be captured during this stage. Whether budget appropriation required/not required during this stage is based on configuration.
+          
           The final approver who does Administrative sanction will enter the Administrative sanction no./date and Council sanction no./date.
           
       parameters:
@@ -229,6 +231,10 @@ paths:
           To update existing Abstract Estimate in the system. API supports bulk updation with max limit as defined in the Abstract Estimate Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Abstract Estimate, please pass array with one Abstract Estimate object.
           
           Only the creator can edit all the fields when the Abstract Estimate in creator inbox(in Rejected status) or in drafts. Update during workflow will have all the fields readonly except few fields which are allowed to modify during each stage of workflow including Workflow Details. The status and workflow state will be updated during each stage of workflow approval.
+          
+          There will be financial sanction during the workflow before Admin sanction. The financial details such as fund, function, budgethead, scheme, sub scheme, is fund available and fund sanction authority details will be captured during this stage. Whether budget appropriation required/not required during this stage is based on configuration.
+          
+          The final approver who does Administrative sanction will enter the Administrative sanction no./date and Council sanction no./date.
           
       parameters:
         - name: AbstractEstimateRequest
@@ -837,7 +843,12 @@ definitions:
         type: string
         description: Tenant id of the Abstract Estimate
         maxLength: 128
-        minLength: 4
+        minLength: 2
+      dateOfProposal:
+        type: integer
+        format: int64
+        x-displayformat: 'dd/MM/yyyy'
+        description: Epoch time of the Date of Proposal
       abstractEstimateNumber:
         type: string
         pattern: '[a-zA-Z0-9-\\]+'
@@ -847,16 +858,18 @@ definitions:
       subject:
         type: string
         description: Subject of Abstract Estimate
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 256
         minLength: 1
       referenceType:
         type: string
-        #$ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/ReferenceType'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/ReferenceType'
         description: Reference Type of the Abstract Estimate
         format: singleValueList
       referenceNumber:
         type: string
         description: Letter Reference Number of the Abstract Estimate
+        pattern: '[a-zA-Z0-9-\\]+'
         maxLength: 100
         minLength: 1
       description:
@@ -865,60 +878,11 @@ definitions:
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
         minLength: 1
-      fund:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Fund'
-        description: Fund of the Abstract Estimate
-        format: singleValueList
-      function:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Function'
-        description: Function of the Abstract Estimate
-        format: singleValueList
-      budgetGroup:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/BudgetGroup'
-        description: Budget head of the Abstract Estimate
-        format: singleValueList
-      scheme:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Scheme'
-        description: Scheme of the Abstract Estimate
-        format: singleValueList
-      subScheme:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/SubScheme'
-        description: Sub scheme of the Abstract Estimate
-        format: singleValueList
-      dateOfProposal:
-        type: integer
-        format: int64
-        x-displayformat: 'dd/MM/yyyy'
-        description: Epoch time of the Date of Proposal
       department:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/Department'
         description: Department for which Abstract Estimate belongs to
         format: singleValueList
-      adminSanctionNumber:
-        type: string
-        pattern: '[a-zA-Z0-9-\\]+'
-        description: Unique number after admin sanction for the Abstract Estimate
-        maxLength: 50
-        minLength: 1
-      adminSanctionDate:
-        type: integer
-        format: int64
-        description:  Epoch time of when the admin santion done
-      adminSanctionBy:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
-        description: User who admin sanctioned
-      abstractEstimateDetails:
-        type: array
-        description: Array of Abstract Estimate Details
-        minItems: 1
-        items:
-          $ref: '#/definitions/AbstractEstimateDetails'
-      documentDetails:
-        type: array
-        description: Array of document details
-        items:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DocumentDetail'
-      status:
+      status:       
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/AbstractEstimateStatus'
         description: Status of the Abstract Estimate
       beneficiary:
@@ -945,19 +909,6 @@ definitions:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
         description: The Admin Ward for which this Abstract Estimate belongs to
         format: singleValueList
-      technicalSanctionNumber: 
-        type: string
-        pattern: '[a-zA-Z0-9-\\]+'
-        description: Technical sanction number of the Abstract Estimate
-        maxLength: 50   
-      technicalSanctionDate: 
-        type: integer
-        format: int64
-        x-displayformat: 'dd/MM/yyyy'
-        description: Epoch time of when technical sanctioned
-      technicalSanctionBy:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
-        description: The user who technical sanctioned the Abstract Estimate
       locality: 
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
         description: The Locality in which the Abstract Estimate belongs to
@@ -997,6 +948,32 @@ definitions:
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Remarks for cancellation of the Abstract Estimate, Required only while cancelling Abstract Estimate
         maxLength: 512
+      adminSanctionNumber:
+        type: string
+        pattern: '[a-zA-Z0-9-\\]+'
+        description: Unique number after admin sanction for the Abstract Estimate
+        maxLength: 50
+        minLength: 1
+      adminSanctionDate:
+        type: integer
+        format: int64
+        description:  Epoch time of when the admin santion done
+      adminSanctionBy:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
+        description: User who admin sanctioned
+      financialSanctionNumber: 
+        type: string
+        pattern: '[a-zA-Z0-9-\\]+'
+        description: Financial sanction number of the Abstract Estimate
+        maxLength: 50   
+      financialSanctionDate: 
+        type: integer
+        format: int64
+        x-displayformat: 'dd/MM/yyyy'
+        description: Epoch time of when Financial sanctioned
+      financialSanctionBy:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
+        description: The user who Financial sanctioned the Abstract Estimate
       workFlowDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
       stateId:
@@ -1008,44 +985,99 @@ definitions:
         format: singleValueList
       implementationPeriod:
         type: integer
-        description: Approximate period of implementation of the work.
+        description: Approximate period of implementation of the work
         maxLength: 5
+      fund:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Fund'
+        description: Fund of the Abstract Estimate
+        format: singleValueList
+      function:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Function'
+        description: Function of the Abstract Estimate
+        format: singleValueList
+      budgetGroup:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/BudgetGroup'
+        description: Budget head of the Abstract Estimate
+        format: singleValueList
+      scheme:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Scheme'
+        description: Scheme of the Abstract Estimate
+        format: singleValueList
+      subScheme:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/SubScheme'
+        description: Sub scheme of the Abstract Estimate
+        format: singleValueList
       fundAvailable:
         type: boolean
-        description: Boolean vlaue to capture whether the fund available to execute this work.
+        description: Boolean value to capture whether the fund available to execute this work. True if Fund available. False if fund not available.
       fundSanctioningAuthority:
         type: string
         pattern: '[a-zA-Z0-9\s\.,]+'
         description: The sanctioning Authority for fund to carry out the work
+        maxLength: 100
       pmcRequired:
         type: boolean
-        description: Boolean vlaue to capture whether the PMC need to appoint or not.
+        description: Boolean vlaue to capture whether the PMC need to appoint or not. True if PMC needs to be appointed. Otherwise the value will be false.
       pmcType:
         type: string
         description: If PMC required is yes then to capture PMC is from Panel or New Appointment.
         format: singleValueList
+        maxLength: 100
       pmcName:
         type: string
         pattern: '[a-zA-Z0-9\s\.,]+'
-        description: Name of the PMC Panel/New Appointment.
+        description: Name of the PMC for PMC type Panel/New Appointment. The PMC(Project Management Consultant) data will fetch from Contractor master based on the boolean flag pmc=true.
         format: singleValueList
+        maxLength: 100
+      workProposedAsPerDP:
+        type: string
+        pattern: '[a-zA-Z0-9\s\.,]+'
+        description: Work proposed as per DP. The valid values are 'Yes' and 'No'
+        format: singleValueList
+        maxLength: 100
+      dpRemarks:
+        type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
+        description: DP Remarks
+        maxLength: 512
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      abstractEstimateDetails:
+        type: array
+        description: Array of Abstract Estimate Details
+        minItems: 1
+        items:
+          $ref: '#/definitions/AbstractEstimateDetails'
+      sanctionDetails:
+        type: array
+        description: Array of Sanction details
+        items:
+          $ref: '#/definitions/AbstractEstimateSanctionDetail'
+      documentDetails:
+        type: array
+        description: Array of document details
+        items:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DocumentDetail'
     required:
       - tenantId
       - dateOfProposal
-      - referenceNumber
+      - abstractEstimateNumber
       - department
       - subject
+      - referenceType
+      - referenceNumber
       - description
-      - abstractEstimateDetails
-      - modeOfAllotment
-      - typeOfWork
-      - beneficiary
       - natureOfWork
-      - ward
+      - typeOfWork
+      - subTypeOfWork
+      - beneficiary
       - workCategory
+      - modeOfAllotment
+      - ward
       - status
+      - workProposedAsPerDP
+      - dpRemarks
+      - abstractEstimateDetails
   
   AbstractEstimateDetails:
     type: object
@@ -1098,7 +1130,36 @@ definitions:
       - estimateAmount
       - estimateNumber
       - tenantId
-             
+      
+  AbstractEstimateSanctionDetail:
+    type: object
+    description: An Object that holds Sanction Details of Abstract Estimate 
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Sanction Details of Abstract Estimate 
+      tenantId:
+        type: string
+        description: Tenant id of the Sanction Details of Abstract Estimate 
+        maxLength: 128
+        minLength: 2
+      abstractEstimate:
+        $ref: '#/definitions/AbstractEstimate'
+        description: Reference to Sanction Details of Abstract Estimate Object 
+      sanctionType:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/EstimateSanctionType'
+        description: Reference to Estimate Sanction Type enum 
+        format: singleValueList
+      sanctionAuthority:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/EstimateSanctionAuthority'
+        description: Reference to Estimate Sanction Authority object 
+        format: singleValueList
+    required:
+      - abstractEstimate
+      - tenantId
+      - sanctionType
+      - sanctionAuthority
+      
   DetailedEstimateRequest:
       description: Contract class to send response. Array of Detailed Estimate items are used in case of search results, also multiple  Detailed Estimate item is used for create and update
       properties:
@@ -1833,4 +1894,5 @@ tags:
     description: APIs required for Revision Estimate.
   - name: Project Code
     description: APIs required for Project Code.
+
 

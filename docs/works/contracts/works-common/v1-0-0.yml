@@ -528,6 +528,10 @@ definitions:
         $ref: '#/definitions/ContractorClass'
         description: Contractor Class for which Contractor belongs to
         format: singleValueList
+      pmc:
+        type: boolean
+        description: The boolean value to indicate whether the contractor is PMC(Project Management Consultant). The default value is false.
+	format: checkbox
     required:
       - tenantId
       - name

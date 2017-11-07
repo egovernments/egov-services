@@ -392,6 +392,8 @@ var localization_EN_Data = {
       "reports.lcms.advocateName": "Advocate Name",
       "reports.lcms.status": "Status",
       "reports.lcms.plaintiffName": "Plaintiff Name",
+      "reports.lcms.hearingDetails" : "Hearing Details",
+      "reports.lcms.departmentPerson" : "Department Concerned Person",
 
       //Water Connection
       "reports.wcms.fromdate":"From Date",
@@ -3399,6 +3401,8 @@ var localization_MR_Data = {
       "reports.lcms.advocateName": "Advocate Name - Marathi",
       "reports.lcms.status": "Status - Marathi",
       "reports.lcms.plaintiffName": "Plaintiff Name - Marathi",
+      "reports.lcms.hearingDetails" : "Hearing Details - Marathi",
+      "reports.lcms.departmentPerson" : "Department Concerned Person - Marathi",
 
   //Water Connection
   "reports.wcms.fromdate":"From Date - Marathi",

@@ -6,16 +6,9 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.egov.swm.constants.Constants;
-import org.egov.swm.domain.model.AuditDetails;
-import org.egov.swm.domain.model.BinDetails;
-import org.egov.swm.domain.model.CollectionPoint;
-import org.egov.swm.domain.model.CollectionPointDetails;
-import org.egov.swm.domain.model.CollectionPointSearch;
-import org.egov.swm.domain.model.CollectionType;
-import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.*;
 import org.egov.swm.domain.repository.BinDetailsRepository;
 import org.egov.swm.domain.repository.CollectionPointRepository;
-import org.egov.swm.web.contract.Boundary;
 import org.egov.swm.web.repository.BoundaryRepository;
 import org.egov.swm.web.repository.MdmsRepository;
 import org.egov.swm.web.requests.CollectionPointRequest;
@@ -132,9 +125,7 @@ public class CollectionPointService {
 						collectionPoint.getTenantId());
 
 				if (boundary != null)
-					collectionPoint.setLocation(org.egov.swm.domain.model.Boundary.builder()
-							.id(String.valueOf(boundary.getId())).name(boundary.getName())
-							.boundaryNum(String.valueOf(boundary.getBoundaryNum())).code(boundary.getCode()).build());
+					collectionPoint.setLocation(boundary);
 				else
 					throw new CustomException("Location",
 							"Given Location is Invalid: " + collectionPoint.getLocation().getCode());

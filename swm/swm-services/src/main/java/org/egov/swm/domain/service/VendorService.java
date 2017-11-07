@@ -140,7 +140,7 @@ public class VendorService {
 		JSONArray responseJSONArray = null;
 		ObjectMapper mapper = new ObjectMapper();
 		SwmProcess p;
-		org.egov.swm.web.contract.Boundary boundary;
+		Boundary boundary;
 		findDuplicatesInUniqueFields(vendorRequest);
 
 		for (Vendor vendor : vendorRequest.getVendors()) {

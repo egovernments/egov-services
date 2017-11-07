@@ -1,6 +1,6 @@
 package org.egov.swm.web.repository;
 
-import org.egov.swm.web.contract.Boundary;
+import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.web.contract.BoundaryResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

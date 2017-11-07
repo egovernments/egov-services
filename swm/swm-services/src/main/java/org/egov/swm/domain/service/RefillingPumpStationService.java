@@ -12,7 +12,6 @@ import org.egov.swm.domain.model.OilCompanyName;
 import org.egov.swm.domain.model.RefillingPumpStation;
 import org.egov.swm.domain.repository.RefillingPumpStationRepository;
 import org.egov.swm.persistence.repository.RefillingPumpStationJdbcRepository;
-import org.egov.swm.web.contract.Boundary;
 import org.egov.swm.web.repository.BoundaryRepository;
 import org.egov.swm.web.repository.MdmsRepository;
 import org.egov.swm.web.requests.RefillingPumpStationRequest;
@@ -140,13 +139,11 @@ public class RefillingPumpStationService {
 
 			if (refillingPumpStation.getLocation() != null && refillingPumpStation.getLocation().getCode() != null) {
 
-				Boundary boundary = boundaryRepository.fetchBoundaryByCode(refillingPumpStation.getLocation().getCode(),
+				org.egov.swm.domain.model.Boundary boundary = boundaryRepository.fetchBoundaryByCode(refillingPumpStation.getLocation().getCode(),
 						refillingPumpStation.getTenantId());
 
 				if (boundary != null)
-					refillingPumpStation.setLocation(org.egov.swm.domain.model.Boundary.builder()
-							.id(String.valueOf(boundary.getId())).name(boundary.getName())
-							.boundaryNum(String.valueOf(boundary.getBoundaryNum())).code(boundary.getCode()).build());
+					refillingPumpStation.setLocation(boundary);
 				else
 					throw new CustomException("Boundary",
 							"Given Boundary is Invalid: " + refillingPumpStation.getLocation().getCode());

@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.math.DoubleRange;
 import org.egov.contract.AssetRequest;
 import org.egov.model.Asset;
 import org.egov.model.AssetCategory;
@@ -53,10 +54,6 @@ public class AssetValidator implements Validator {
 	private void validateAnticipatedLife(Long anticipatedLife, BigDecimal originalValue, Double depreciationRate,
 			Map<String, String> errorMap) {
 
-		double depAmtPerYear = originalValue.doubleValue() * (depreciationRate / 100);
-		Long expectedLife =  new Double(originalValue.doubleValue()/depAmtPerYear).longValue();
-		if (!anticipatedLife.equals(expectedLife))
-			errorMap.put("Asset_anticipatedLife", "anticipatedLife Value is wrong");
 		
 	}
 

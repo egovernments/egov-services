@@ -65,19 +65,15 @@ public class Asset   {
 	  @JsonProperty("originalValue")
 	  private BigDecimal originalValue = null;
 
-	  @NotNull
 	  @JsonProperty("assetAccount")
 	  private String assetAccount = null;
-
-	  @NotNull
+	  
 	  @JsonProperty("accumulatedDepreciationAccount")
 	  private String accumulatedDepreciationAccount = null;
 
-	  @NotNull
 	  @JsonProperty("revaluationReserveAccount")
 	  private String revaluationReserveAccount = null;
 	  
-	  @NotNull
 	  @JsonProperty("depreciationExpenseAccount")
 	  private String depreciationExpenseAccount = null;
 

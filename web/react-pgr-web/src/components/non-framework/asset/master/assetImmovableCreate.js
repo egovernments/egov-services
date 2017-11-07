@@ -254,7 +254,9 @@ class assetImmovableCreate extends Component {
     } else {
       action = "create";
     }
-
+    self.setState({
+      action
+    })
     let obj = specifications[`asset.${action}`];
     reqRequired = [];
     self.setLabelAndReturnRequired(obj);
@@ -305,10 +307,14 @@ class assetImmovableCreate extends Component {
       var name, jsonPath, label, type, isRequired, isDisabled;
       var customSpecs = {};
       var depericiationValue = {};
+      let cateoryObject = [];
     //  var customFieldsArray = [];
     //  var customArr;
 
-
+    // self.props.addRequiredFields("Asset.assetAccount");
+    // self.props.addRequiredFields("Asset.accumulatedDepreciationAccount");
+    // self.props.addRequiredFields("Asset.revaluationReserveAccount");
+    // self.props.addRequiredFields("Asset.depreciationExpenseAccount");
 
     Api.commonApiPost("/egf-masters/accountcodepurposes/_search",{"name":"Fixed Assets"},{}, false, false, false, "", "", false).then(function(response)
    {
@@ -460,12 +466,12 @@ class assetImmovableCreate extends Component {
                           customTemp.type = 'table';
                           break;
               }
-              if (customTemp.type == 'table') {
-                if (response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values.length) {
-
-                }
-
-              }
+              // if (customTemp.type == 'table') {
+              //   if (response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values.length) {
+              //
+              //   }
+              //
+              // }
               if(customTemp.type == 'singleValueList'){
                 if(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values.length){
                     var handleDropdown = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values;
@@ -491,11 +497,13 @@ class assetImmovableCreate extends Component {
           }
           customSpecs[catId] = customFieldsArray;
           depericiationValue[catId] = response.MdmsRes.ASSET.AssetCategory[i].depreciationRate;
+          cateoryObject[catId] = response.MdmsRes.ASSET.AssetCategory[i];
 
         }
         self.setState({
             customFieldsGen: customSpecs,
-            depericiationValue
+            depericiationValue,
+            cateoryObject
           }, () => {
             if(self.props.match.params.id) {
               self.modifyData(self.props.match.params.id);
@@ -603,9 +611,14 @@ class assetImmovableCreate extends Component {
     e.preventDefault();
     self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
-    if (formData["Assets.titleDocumentsAvalable"]) {
-      formData["Assets[0].titleDocumentsAvalable"] = formData["Assets[0].titleDocumentsAvalable"].split(",");
+    if (formData.Asset.titleDocumentsAvalable) {
+      console.log(formData.Asset.titleDocumentsAvalable);
+      formData.Asset.titleDocumentsAvalable = formData.Asset.titleDocumentsAvalable.split(",");
     }
+    if (formData.Asset.assetCategory.id) {
+    formData.Asset.assetCategory = self.state.cateoryObject[formData.Asset.assetCategory.id];
+    }
+
     if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
       if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
         formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
@@ -1025,23 +1038,23 @@ delete formData.Asset.assetAttributesCheck;
 
        if (property=="Asset.warrantyAvailable") {
          let spec = self.props.mockData;
-         console.log(spec);
-         if(e.target.value==false) {
-           spec["asset.create"].groups[3].fields[7].isRequired = false;
-           self.props.delRequiredFields("Asset.warrantyExpiryDate");
-           self.props.setMockData(JSON.parse(JSON.stringify(spec)));
-           spec["asset.update"].groups[3].fields[7].isRequired = false;
-           self.props.delRequiredFields("Asset.warrantyExpiryDate");
-           self.props.setMockData(JSON.parse(JSON.stringify(spec)));
-         } else {
-           spec["asset.create"].groups[3].fields[7].isRequired = true;
-           self.props.addRequiredFields("Asset.warrantyExpiryDate");
-           self.props.setMockData(JSON.parse(JSON.stringify(spec)));
-           spec["asset.update"].groups[3].fields[7].isRequired = true;
-           self.props.addRequiredFields("Asset.warrantyExpiryDate");
-           self.props.setMockData(JSON.parse(JSON.stringify(spec)));
-         }
+
+           for (var q = 0; q < spec[`asset.${self.state.action}`].groups.length; q++) {
+             if (spec[`asset.${self.state.action}`].groups[q].name == "AssetField") {
+               for (var l = 0; l < spec[`asset.${self.state.action}`].groups[q].fields.length; l++) {
+                 if (e.target.value==false) {
+                   spec[`asset.${self.state.action}`].groups[q].fields[l].isRequired = false;
+                   self.props.delRequiredFields("Asset.warrantyExpiryDate");
+                   self.props.setMockData(JSON.parse(JSON.stringify(spec)));
+                 } else {
+                   spec[`asset.${self.state.action}`].groups[q].fields[l].isRequired = true;
+                   self.props.addRequiredFields("Asset.warrantyExpiryDate");
+                   self.props.setMockData(JSON.parse(JSON.stringify(spec)));
+                 }
+             }
+           }
        }
+     }
 
       if(expression && e.target.value){
         let str = expression;

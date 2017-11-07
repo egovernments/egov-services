@@ -399,7 +399,7 @@ printer = () => {
                     <Col style={{textAlign:"left"}}>
                       <label>
                         <span style={{"fontWeight":500, "fontSize": "13px"}}>
-                          {item.value ? item.value : "NA"}
+                          {item.value ? (typeof item.value == "object" ? (item.value[Object.keys(item.value)[0]]) : item.value) : "NA"}
                         </span>
                       </label>
                     </Col>
@@ -422,7 +422,6 @@ printer = () => {
       <div className="Report">
         <form id="printable">
         {!_.isEmpty(mockData) && mockData["asset.view"] && <ShowFields groups={mockData["asset.view"].groups} noCols={mockData["asset.view"].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["asset.view"].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
-
 
             {renderBody()}
 

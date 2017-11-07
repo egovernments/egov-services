@@ -126,7 +126,7 @@ public class CollectionPointService {
 
 			// Validate Boundary
 
-			/*if (collectionPoint.getLocation() != null && collectionPoint.getLocation().getCode() != null) {
+			if (collectionPoint.getLocation() != null && collectionPoint.getLocation().getCode() != null) {
 
 				Boundary boundary = boundaryRepository.fetchBoundaryByCode(collectionPoint.getLocation().getCode(),
 						collectionPoint.getTenantId());
@@ -138,7 +138,7 @@ public class CollectionPointService {
 				else
 					throw new CustomException("Location",
 							"Given Location is Invalid: " + collectionPoint.getLocation().getCode());
-			}*/
+			}
 
 			if (collectionPoint.getCollectionPointDetails() != null) {
 

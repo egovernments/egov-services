@@ -51,10 +51,6 @@ public class Vehicle {
 	private Vendor vendor = null;
 
 	@NotNull
-	@JsonProperty("driver")
-	private Employee driver = null;
-
-	@NotNull
 	@JsonProperty("manufacturingDetails")
 	private ManufacturingDetails manufacturingDetails = null;
 

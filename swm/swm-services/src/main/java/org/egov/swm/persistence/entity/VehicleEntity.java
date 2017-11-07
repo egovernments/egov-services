@@ -45,8 +45,6 @@ public class VehicleEntity {
 
 	private String vendor = null;
 
-	private String driver = null;
-
 	private Long purchaseDate = null;
 
 	private Double price = null;
@@ -85,7 +83,6 @@ public class VehicleEntity {
 		vehicle.setOperatorsReq(operatorsReq);
 		vehicle.getManufacturingDetails().setModel(model);
 		vehicle.setVendor(Vendor.builder().name(vendor).build());
-		vehicle.setDriver(Employee.builder().code(driver).build());
 		vehicle.setPurchaseInfo(new PurchaseInfo());
 		vehicle.getPurchaseInfo().setPurchaseDate(purchaseDate);
 		vehicle.getPurchaseInfo().setPrice(price);

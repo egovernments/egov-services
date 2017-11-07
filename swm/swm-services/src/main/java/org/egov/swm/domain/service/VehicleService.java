@@ -1,6 +1,8 @@
 package org.egov.swm.domain.service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.egov.swm.constants.Constants;
@@ -13,10 +15,6 @@ import org.egov.swm.domain.model.VehicleType;
 import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.domain.repository.VehicleRepository;
-import org.egov.swm.web.contract.DesignationResponse;
-import org.egov.swm.web.contract.EmployeeResponse;
-import org.egov.swm.web.repository.DesignationRepository;
-import org.egov.swm.web.repository.EmployeeRepository;
 import org.egov.swm.web.repository.MdmsRepository;
 import org.egov.swm.web.requests.VehicleRequest;
 import org.egov.tracer.model.CustomException;
@@ -38,11 +36,11 @@ public class VehicleService {
 	@Autowired
 	private MdmsRepository mdmsRepository;
 
-	@Autowired
-	private DesignationRepository designationRepository;
-
-	@Autowired
-	private EmployeeRepository employeeRepository;
+	/*
+	 * @Autowired private DesignationRepository designationRepository;
+	 * 
+	 * @Autowired private EmployeeRepository employeeRepository;
+	 */
 
 	@Autowired
 	private VendorService vendorService;
@@ -50,7 +48,7 @@ public class VehicleService {
 	@Transactional
 	public VehicleRequest create(VehicleRequest vehicleRequest) {
 
-		validate(vehicleRequest);
+		validate(Constants.ACTION_CREATE, vehicleRequest);
 		Long userId = null;
 		for (Vehicle v : vehicleRequest.getVehicles()) {
 
@@ -81,7 +79,8 @@ public class VehicleService {
 	@Transactional
 	public VehicleRequest update(VehicleRequest vehicleRequest) {
 
-		validate(vehicleRequest);
+		validate(Constants.ACTION_UPDATE, vehicleRequest);
+
 		Long userId = null;
 		for (Vehicle v : vehicleRequest.getVehicles()) {
 
@@ -105,15 +104,19 @@ public class VehicleService {
 		return vehicleRepository.search(vehicleSearch);
 	}
 
-	private void validate(VehicleRequest vehicleRequest) {
+	private void validate(String action, VehicleRequest vehicleRequest) {
 
 		JSONArray responseJSONArray = null;
 		ObjectMapper mapper = new ObjectMapper();
-		DesignationResponse designationResponse = null;
-		String designationId = null;
-		EmployeeResponse employeeResponse = null;
+		/*
+		 * DesignationResponse designationResponse = null; String designationId
+		 * = null; EmployeeResponse employeeResponse = null;
+		 */
 		VendorSearch vendorSearch;
 		Pagination<Vendor> vendors;
+
+		findDuplicatesInUniqueFields(vehicleRequest);
+
 		for (Vehicle vehicle : vehicleRequest.getVehicles()) {
 
 			// Validate vehicle Type
@@ -164,32 +167,137 @@ public class VehicleService {
 
 			}
 
-			// Validate Driver
-			if (vehicle.getDriver() != null && vehicle.getDriver().getCode() != null) {
+			validateUniqueFields(action, vehicle);
+		}
 
-				designationResponse = designationRepository.getDesignationByName("Driver", vehicle.getTenantId(),
-						vehicleRequest.getRequestInfo());
-				if (designationResponse != null && designationResponse.getDesignation() != null
-						&& !designationResponse.getDesignation().isEmpty()) {
-					designationId = designationResponse.getDesignation().get(0).getId().toString();
-				} else {
-					throw new CustomException("Driver", "Given Driver is invalid: " + vehicle.getDriver().getCode());
+	}
+
+	private void findDuplicatesInUniqueFields(VehicleRequest vehicleRequest) {
+
+		Map<String, String> regNumberMap = new HashMap<>();
+		Map<String, String> engineSrNumberMap = new HashMap<>();
+		Map<String, String> chassisSrNumberMap = new HashMap<>();
+		Map<String, String> insuranceNumberMap = new HashMap<>();
+
+		for (Vehicle vehicle : vehicleRequest.getVehicles()) {
+
+			if (vehicle.getRegNumber() != null) {
+				if (regNumberMap.get(vehicle.getRegNumber()) != null)
+					throw new CustomException("Name",
+							"Duplicate registration numbers in given Vehicles : " + vehicle.getRegNumber());
+
+				regNumberMap.put(vehicle.getRegNumber(), vehicle.getRegNumber());
+			}
+
+			if (vehicle.getManufacturingDetails() != null) {
+
+				if (vehicle.getManufacturingDetails().getEngineSrNumber() != null
+						&& !vehicle.getManufacturingDetails().getEngineSrNumber().isEmpty()) {
+
+					if (engineSrNumberMap.get(vehicle.getManufacturingDetails().getEngineSrNumber()) != null)
+						throw new CustomException("engineSrNumber", "Duplicate engineSrNumbers in given Vehicles : "
+								+ vehicle.getManufacturingDetails().getEngineSrNumber());
+
+					engineSrNumberMap.put(vehicle.getManufacturingDetails().getEngineSrNumber(),
+							vehicle.getManufacturingDetails().getEngineSrNumber());
 				}
 
-				if (designationId != null) {
-					employeeResponse = employeeRepository.getEmployeeByDesgIdAndCode(designationId,
-							vehicle.getDriver().getCode(), vehicle.getTenantId(), vehicleRequest.getRequestInfo());
-				} else {
-					throw new CustomException("Driver", "Given Driver is invalid: " + vehicle.getDriver().getCode());
-				}
+				if (vehicle.getManufacturingDetails().getChassisSrNumber() != null
+						&& !vehicle.getManufacturingDetails().getChassisSrNumber().isEmpty()) {
 
-				if (employeeResponse == null || employeeResponse.getEmployees() == null
-						|| employeeResponse.getEmployees().isEmpty()) {
-					throw new CustomException("Driver", "Given Driver is invalid: " + vehicle.getDriver().getCode());
-				} else {
-					vehicle.setDriver(employeeResponse.getEmployees().get(0));
-				}
+					if (chassisSrNumberMap.get(vehicle.getManufacturingDetails().getChassisSrNumber()) != null)
+						throw new CustomException("chassisSrNumber", "Duplicate chassisSrNumbers in given Vehicles : "
+								+ vehicle.getManufacturingDetails().getChassisSrNumber());
 
+					chassisSrNumberMap.put(vehicle.getManufacturingDetails().getChassisSrNumber(),
+							vehicle.getManufacturingDetails().getChassisSrNumber());
+				}
+			}
+
+			if (vehicle.getInsuranceDetails() != null) {
+
+				if (vehicle.getInsuranceDetails().getInsuranceNumber() != null
+						&& !vehicle.getInsuranceDetails().getInsuranceNumber().isEmpty()) {
+
+					if (insuranceNumberMap.get(vehicle.getInsuranceDetails().getInsuranceNumber()) != null)
+						throw new CustomException("insuranceNumber", "Duplicate insuranceNumbers in given Vehicles : "
+								+ vehicle.getInsuranceDetails().getInsuranceNumber());
+
+					insuranceNumberMap.put(vehicle.getInsuranceDetails().getInsuranceNumber(),
+							vehicle.getInsuranceDetails().getInsuranceNumber());
+				}
+			}
+
+		}
+
+	}
+
+	private void validateUniqueFields(String action, Vehicle vehicle) {
+
+		String regNumber;
+
+		if (action.equalsIgnoreCase(Constants.ACTION_CREATE)) {
+			regNumber = null;
+		} else {
+			regNumber = vehicle.getRegNumber();
+		}
+
+		if (vehicle.getRegNumber() != null) {
+			if (!vehicleRepository.uniqueCheck(vehicle.getTenantId(), "regNumber", vehicle.getRegNumber(), "regNumber",
+					regNumber)) {
+
+				throw new CustomException("regNumber", "The field regNumber must be unique in the system The  value "
+						+ vehicle.getRegNumber()
+						+ " for the field regNumber already exists in the system. Please provide different value ");
+
+			}
+		}
+
+		if (vehicle.getManufacturingDetails() != null) {
+
+			if (vehicle.getManufacturingDetails().getEngineSrNumber() != null
+					&& !vehicle.getManufacturingDetails().getEngineSrNumber().isEmpty()) {
+
+				if (!vehicleRepository.uniqueCheck(vehicle.getTenantId(), "engineSrNumber",
+						vehicle.getManufacturingDetails().getEngineSrNumber(), "regNumber", regNumber)) {
+
+					throw new CustomException("engineSrNumber",
+							"The field engineSrNumber must be unique in the system The  value "
+									+ vehicle.getManufacturingDetails().getEngineSrNumber()
+									+ " for the field engineSrNumber already exists in the system. Please provide different value ");
+
+				}
+			}
+
+			if (vehicle.getManufacturingDetails().getChassisSrNumber() != null
+					&& !vehicle.getManufacturingDetails().getChassisSrNumber().isEmpty()) {
+
+				if (!vehicleRepository.uniqueCheck(vehicle.getTenantId(), "chassisSrNumber",
+						vehicle.getManufacturingDetails().getChassisSrNumber(), "regNumber", regNumber)) {
+
+					throw new CustomException("chassisSrNumber",
+							"The field chassisSrNumber must be unique in the system The  value "
+									+ vehicle.getManufacturingDetails().getChassisSrNumber()
+									+ " for the field chassisSrNumber already exists in the system. Please provide different value ");
+
+				}
+			}
+		}
+
+		if (vehicle.getInsuranceDetails() != null) {
+
+			if (vehicle.getInsuranceDetails().getInsuranceNumber() != null
+					&& !vehicle.getInsuranceDetails().getInsuranceNumber().isEmpty()) {
+
+				if (!vehicleRepository.uniqueCheck(vehicle.getTenantId(), "insuranceNumber",
+						vehicle.getInsuranceDetails().getInsuranceNumber(), "regNumber", regNumber)) {
+
+					throw new CustomException("insuranceNumber",
+							"The field insuranceNumber must be unique in the system The  value "
+									+ vehicle.getInsuranceDetails().getInsuranceNumber()
+									+ " for the field insuranceNumber already exists in the system. Please provide different value ");
+
+				}
 			}
 
 		}

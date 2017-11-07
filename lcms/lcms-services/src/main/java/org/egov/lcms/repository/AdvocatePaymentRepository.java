@@ -110,16 +110,21 @@ public class AdvocatePaymentRepository {
 		if (caseStatusesCode != null && !caseStatusesCode.isEmpty()) {
 			masterCodeAndValue.put("caseStatus", caseStatusesCode);
 		}
+		if ((caseTypesCode != null && !caseTypesCode.isEmpty())
+				|| (caseStatusesCode != null && !caseStatusesCode.isEmpty())) {
+			MdmsResponse mdmsResponse = mdmsRepository.getMasterData(tenantId, masterCodeAndValue, requestWrapper);
+			Map<String, Map<String, JSONArray>> response = mdmsResponse.getMdmsRes();
+			Map<String, JSONArray> mastersmap = response.get("lcms");
 
-		MdmsResponse mdmsResponse = mdmsRepository.getMasterData(tenantId, masterCodeAndValue, requestWrapper);
-		Map<String, Map<String, JSONArray>> response = mdmsResponse.getMdmsRes();
-		Map<String, JSONArray> mastersmap = response.get("lcms");
-
-		for (AdvocatePayment advocatePayment : advocatePayments) {
-			addParticularMastervalues("caseType", advocatePayment, mastersmap);
-			addParticularMastervalues("caseStatus", advocatePayment, mastersmap);
+			for (AdvocatePayment advocatePayment : advocatePayments) {
+				if (advocatePayment.getCaseType() != null) {
+					addParticularMastervalues("caseType", advocatePayment, mastersmap);
+				}
+				if (advocatePayment.getCaseStatus() != null) {
+					addParticularMastervalues("caseStatus", advocatePayment, mastersmap);
+				}
+			}
 		}
-
 	}
 
 	private void setAdvocate(List<AdvocatePayment> advocatePayments, String tenantId) {
@@ -168,33 +173,37 @@ public class AdvocatePaymentRepository {
 		switch (masterName) {
 
 		case "caseStatus": {
-			List<CaseStatus> caseStatuses = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
-					new TypeReference<List<CaseStatus>>() {
-					});
-			if (caseStatuses != null) {
-				List<CaseStatus> caseStatusList = caseStatuses.stream()
-						.filter(CaseStatus -> CaseStatus.getCode()
-								.equalsIgnoreCase(advocatePayment.getCaseStatus().getCode()))
-						.collect(Collectors.toList());
-				if (caseStatusList != null && caseStatusList.size() > 0)
-					advocatePayment.setCaseStatus((caseStatusList.get(0)));
+			if (mastersmap.get(masterName) != null) {
+				List<CaseStatus> caseStatuses = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
+						new TypeReference<List<CaseStatus>>() {
+						});
+				if (caseStatuses != null) {
+					List<CaseStatus> caseStatusList = caseStatuses.stream()
+							.filter(CaseStatus -> CaseStatus.getCode()
+									.equalsIgnoreCase(advocatePayment.getCaseStatus().getCode()))
+							.collect(Collectors.toList());
+					if (caseStatusList != null && caseStatusList.size() > 0)
+						advocatePayment.setCaseStatus((caseStatusList.get(0)));
+				}
 			}
 			break;
 		}
 
 		case "caseType": {
-			List<CaseType> caseTypes = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
-					new TypeReference<List<CaseType>>() {
-					});
+			if (mastersmap.get(masterName) != null) {
+				List<CaseType> caseTypes = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
+						new TypeReference<List<CaseType>>() {
+						});
 
-			if (caseTypes != null) {
+				if (caseTypes != null) {
 
-				List<CaseType> caseTypesList = caseTypes.stream()
-						.filter(CaseType -> CaseType.getCode()
-								.equalsIgnoreCase(advocatePayment.getCaseType().getCode()))
-						.collect(Collectors.toList());
-				if (caseTypesList != null && caseTypesList.size() > 0)
-					advocatePayment.setCaseType(caseTypesList.get(0));
+					List<CaseType> caseTypesList = caseTypes.stream()
+							.filter(CaseType -> CaseType.getCode()
+									.equalsIgnoreCase(advocatePayment.getCaseType().getCode()))
+							.collect(Collectors.toList());
+					if (caseTypesList != null && caseTypesList.size() > 0)
+						advocatePayment.setCaseType(caseTypesList.get(0));
+				}
 			}
 			break;
 		}

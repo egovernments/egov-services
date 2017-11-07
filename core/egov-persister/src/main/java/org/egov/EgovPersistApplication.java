@@ -30,74 +30,74 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EgovPersistApplication {
 
-	@Autowired
-	public ResourceLoader resourceLoader;
-	
-	/*@Value("egov.persist.yaml.path")
-	public String yamlPath;*/
-	
-	@Value("${egov.persist.yml.repo.path}")
-	public String ymlRepoPaths;
-	
-	
-	public static void main(String[] args) {
-		SpringApplication.run(EgovPersistApplication.class, args);
-	}
-	
-	@PostConstruct
-	@Bean
-	public TopicMap loadYaml() {
-		TopicMap topicMap = new TopicMap();
-		Map<String, Mapping> mappingsMap = new HashMap<>();
+   @Autowired
+   public ResourceLoader resourceLoader;
 
-		log.info("EgovPersistApplication loadYaml");
-		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-		Service service = null;
-		
-			try{
-				List<String> ymlUrlS = Arrays.asList(ymlRepoPaths.split(","));
-				for(String yamlLocation : ymlUrlS){
-					if(yamlLocation.startsWith("https://") || yamlLocation.startsWith("http://")) {
-						log.info("Reading....: "+yamlLocation);
-						URL yamlFile = new URL(yamlLocation);
-						try{
-						    service = mapper.readValue(new InputStreamReader(yamlFile.openStream()), Service.class);
-						} catch(Exception e) {
-							log.error("Exception while fetching service map for: "+yamlLocation+" = ",e);
-							continue;
-						}
-						log.info("Parsed to object: "+service);
-						int i=0;
-						for(Mapping mapping: (service.getServiceMaps().getMappings())){
-							
-							mappingsMap.put(mapping.getFromTopic(),service.getServiceMaps().getMappings().get(i++));
-						}
-						
-					} else if(yamlLocation.startsWith("file://")){
-						log.info("Reading....: "+yamlLocation);
-							Resource resource = resourceLoader.getResource(yamlLocation);
-							File file = resource.getFile();
-							try{
-								service = mapper.readValue(file, Service.class);
-							 } catch(Exception e) {
-									log.error("Exception while fetching service map for: "+yamlLocation);
-									continue;
-							}
-							log.info("Parsed to object: "+service);
-							int i=0;
-							for(Mapping mapping: (service.getServiceMaps().getMappings())){
-								mappingsMap.put(mapping.getFromTopic(),service.getServiceMaps().getMappings().get(i++));
-							}
-					}
-				}
-			}catch(Exception e){
-				log.error("Exception while loading yaml files: ",e);
-			}
-		
-		topicMap.setTopicMap(mappingsMap);
-		log.info("topicMap:"+topicMap);
-		log.info("mappingsMap.size():"+mappingsMap.size());
-		
-		return topicMap;
-	}
+   /*@Value("egov.persist.yaml.path")
+   public String yamlPath;*/
+
+   @Value("${egov.persist.yml.repo.path}")
+   public String ymlRepoPaths;
+
+
+   public static void main(String[] args) {
+      SpringApplication.run(EgovPersistApplication.class, args);
+   }
+
+   @PostConstruct
+   @Bean
+   public TopicMap loadYaml() {
+      TopicMap topicMap = new TopicMap();
+      Map<String, Mapping> mappingsMap = new HashMap<>();
+
+      log.info("EgovPersistApplication loadYaml");
+      ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+      Service service = null;
+
+      try{
+         List<String> ymlUrlS = Arrays.asList(ymlRepoPaths.split(","));
+         for(String yamlLocation : ymlUrlS){
+            if(yamlLocation.startsWith("https://") || yamlLocation.startsWith("http://")) {
+               log.info("Reading....: "+yamlLocation);
+               URL yamlFile = new URL(yamlLocation);
+               try{
+                  service = mapper.readValue(new InputStreamReader(yamlFile.openStream()), Service.class);
+               } catch(Exception e) {
+                  log.error("Exception while fetching service map for: "+yamlLocation+" = ",e);
+                  continue;
+               }
+               log.info("Parsed to object: "+service);
+               int i=0;
+               for(Mapping mapping: (service.getServiceMaps().getMappings())){
+
+                  mappingsMap.put(mapping.getFromTopic(),service.getServiceMaps().getMappings().get(i++));
+               }
+
+            } //else if(yamlLocation.startsWith("file://")){
+            log.info("Reading....: "+yamlLocation);
+            Resource resource = resourceLoader.getResource("classpath:"+ "inventory_ddl.yml");
+            File file = resource.getFile();
+            try{
+               service = mapper.readValue(file, Service.class);
+            } catch(Exception e) {
+               log.error("Exception while fetching service map for: "+yamlLocation);
+               continue;
+            }
+            log.info("Parsed to object: "+service);
+            int i=0;
+            for(Mapping mapping: (service.getServiceMaps().getMappings())){
+               mappingsMap.put(mapping.getFromTopic(),service.getServiceMaps().getMappings().get(i++));
+            }
+            //}
+         }
+      }catch(Exception e){
+         log.error("Exception while loading yaml files: ",e);
+      }
+
+      topicMap.setTopicMap(mappingsMap);
+      log.info("topicMap:"+topicMap);
+      log.info("mappingsMap.size():"+mappingsMap.size());
+
+      return topicMap;
+   }
 }

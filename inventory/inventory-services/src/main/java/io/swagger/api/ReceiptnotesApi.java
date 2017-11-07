@@ -23,6 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 import java.util.List;
+
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.*;
 import javax.validation.Valid;
@@ -31,36 +33,58 @@ import javax.validation.Valid;
 @Api(value = "receiptnotes", description = "the receiptnotes API")
 public interface ReceiptnotesApi {
 
-    @ApiOperation(value = "Create New Material Receipt Note.", nickname = "receiptnotesCreatePost", notes = "Create a new material receipt note. This will handle both purchase receipt as well as miscellaneous material receipts.", response = MaterialReceiptHeaderResponse.class, tags={ "MRN", })
-    @ApiResponses(value = { 
+        @ApiOperation(value = "Create New Material Receipt Note.", nickname = "receiptnotesCreatePost", notes = "Create a new material receipt note. This will handle both purchase receipt as well as miscellaneous material receipts.", response = MaterialReceiptHeaderResponse.class, tags={ "MRN", })
+        @ApiResponses(value = { 
         @ApiResponse(code = 201, message = "Material Receipt created", response = MaterialReceiptHeaderResponse.class),
         @ApiResponse(code = 400, message = "Invalid input.", response = ErrorRes.class) })
-    @RequestMapping(value = "/receiptnotes/_create",
+    	@RequestMapping(value = "/receiptnotes/_create",
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<MaterialReceiptHeaderResponse> receiptnotesCreatePost(@ApiParam(value = "Details for the new material receipt." ,required=true )  @Valid @RequestBody MaterialReceiptHeaderRequest materialReceipt, @RequestHeader(value = "Accept", required = false) String accept) throws Exception;
-
-
-    @ApiOperation(value = "Get list of material receipt notes based on below search parameter(s).", nickname = "receiptnotesSearchPost", notes = "Provides the list of material receipt note information based on the search paramaters. Both purchase order receipts as well as miscallaneous receipt are coveredf here. ", response = MaterialReceiptHeaderResponse.class, tags={ "MRN", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Successful response, returns list of Material Receipt Note(s).", response = MaterialReceiptHeaderResponse.class),
-        @ApiResponse(code = 400, message = "Invalid input.", response = ErrorRes.class) })
-    @RequestMapping(value = "/receiptnotes/_search",
-        produces = { "application/json" }, 
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
-    ResponseEntity<MaterialReceiptHeaderResponse> receiptnotesSearchPost(@ApiParam(value = "Request header for the service request details." ,required=true )  @Valid @RequestBody RequestInfo requestInfo, @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId, @Size(max=100)@ApiParam(value = "Pass List of unique mrn number(s) then the API will returns list of receipts.") @Valid @RequestParam(value = "mrnNumber", required = false) List<String> mrnNumber, @Size(max=3)@ApiParam(value = "Mention the type of the receipt.") @Valid @RequestParam(value = "receiptType", required = false) List<String> receiptType,@ApiParam(value = "Unique status code of the receipt.") @Valid @RequestParam(value = "mrnStatus", required = false) String mrnStatus,@ApiParam(value = "The store code from which the receipt was received.") @Valid @RequestParam(value = "receivingStore", required = false) String receivingStore,@ApiParam(value = "Unique Supplier code from which the receipt was made.") @Valid @RequestParam(value = "supplierCode", required = false) String supplierCode,@ApiParam(value = "From which receipt date onwards the data needs to be fetched.") @Valid @RequestParam(value = "receiptDateFrom", required = false) Long receiptDateFrom,@ApiParam(value = "Till which receipt date the data needs to be fetched.") @Valid @RequestParam(value = "receiptDateT0", required = false) Long receiptDateT0, @RequestHeader(value = "Accept", required = false) String accept) throws Exception;
-
-
-    @ApiOperation(value = "Update existing Material Receipts.", nickname = "receiptnotesUpdatePost", notes = "Existing material receipt notes can be updated except the mrn number.", response = MaterialReceiptHeaderResponse.class, tags={ "MRN", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 201, message = "Material Receipt(s) Updated Successfully.", response = MaterialReceiptHeaderResponse.class),
-        @ApiResponse(code = 400, message = "Invalid input.", response = ErrorRes.class) })
-    @RequestMapping(value = "/receiptnotes/_update",
-        produces = { "application/json" }, 
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
-    ResponseEntity<MaterialReceiptHeaderResponse> receiptnotesUpdatePost(@ApiParam(value = "Details for the new material receipts." ,required=true )  @Valid @RequestBody MaterialReceiptHeaderRequest materialReceipt, @RequestHeader(value = "Accept", required = false) String accept) throws Exception;
+    ResponseEntity<MaterialReceiptHeaderResponse> receiptnotesCreatePost(
+    		@ApiParam(value = "Details for the new material receipt." ,required=true ) 
+    		@Valid @RequestParam(value = "tenantId", required = true) String tenantId,
+    		@Valid @RequestBody MaterialReceiptHeaderRequest materialReceipt,
+    		@RequestHeader(value = "Accept", required = false) String accept,BindingResult errors) throws Exception;
+    		@ApiOperation(value = "Get list of material receipt notes based on below search parameter(s).", nickname = "receiptnotesSearchPost", notes = "Provides the list of material receipt note information based on the search paramaters. Both purchase order receipts as well as miscallaneous receipt are coveredf here. ", response = MaterialReceiptHeaderResponse.class, tags={ "MRN", })
+    		@ApiResponses(value = { 
+    		@ApiResponse(code = 200, message = "Successful response, returns list of Material Receipt Note(s).", response = MaterialReceiptHeaderResponse.class),
+            @ApiResponse(code = 400, message = "Invalid input.", response = ErrorRes.class) })
+    	    @RequestMapping(value = "/receiptnotes/_search",
+            produces = { "application/json" }, 
+            consumes = { "application/json" },
+            method = RequestMethod.POST)
+    ResponseEntity<MaterialReceiptHeaderResponse> receiptnotesSearchPost(
+    		@ApiParam(value = "Request header for the service request details." ,required=true ) 
+    		@Valid @RequestBody org.egov.common.contract.request.RequestInfo requestInfo,
+    		@NotNull@ApiParam(value = "Unique id for a tenant.", required = true)
+    		@Valid @RequestParam(value = "tenantId", required = true) String tenantId, @Size(max=100)
+    		@ApiParam(value = "Pass List of unique mrn number(s) then the API will returns list of receipts.") 
+    		@Valid @RequestParam(value = "mrnNumber", required = false) List<String> mrnNumber, @Size(max=3)
+    		@ApiParam(value = "Mention the type of the receipt.") @Valid @RequestParam(value = "receiptType", required = false) List<String> receiptType,
+    		@ApiParam(value = "Unique status code of the receipt.") @Valid @RequestParam(value = "mrnStatus", required = false) String mrnStatus,
+    		@ApiParam(value = "The store code from which the receipt was received.") @Valid @RequestParam(value = "receivingStore", required = false) String receivingStore,
+    		@ApiParam(value = "Unique Supplier code from which the receipt was made.") @Valid @RequestParam(value = "supplierCode", required = false) String supplierCode,
+    		@ApiParam(value = "From which receipt date onwards the data needs to be fetched.") @Valid @RequestParam(value = "receiptDateFrom", required = false) Long receiptDateFrom,
+            @ApiParam(value = "Till which receipt date the data needs to be fetched.") @Valid @RequestParam(value = "receiptDateT0", required = false) Long receiptDateT0,
+    		@Size(max = 50) @ApiParam(value = "comma seperated list of Ids") @RequestParam(value = "ids", required = false) List<String> ids,
+            @Min(0) @Max(100) @ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
+ 		    @ApiParam(value = "offset") @RequestParam(value = "offset", required = false) Integer offset,
+ 		    @ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
+   		    @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc") @RequestParam(value = "sortBy", required = false) String sortBy,
+    		@RequestHeader(value = "Accept", required = false) String accept) throws Exception;
+    	    @ApiOperation(value = "Update existing Material Receipts.", nickname = "receiptnotesUpdatePost", notes = "Existing material receipt notes can be updated except the mrn number.", response = MaterialReceiptHeaderResponse.class, tags={ "MRN", })
+    	    @ApiResponses(value = { 
+            @ApiResponse(code = 201, message = "Material Receipt(s) Updated Successfully.", response = MaterialReceiptHeaderResponse.class),
+            @ApiResponse(code = 400, message = "Invalid input.", response = ErrorRes.class) })
+    	    @RequestMapping(value = "/receiptnotes/_update",
+            produces = { "application/json" }, 
+            consumes = { "application/json" },
+            method = RequestMethod.POST)
+    ResponseEntity<MaterialReceiptHeaderResponse> receiptnotesUpdatePost(
+    		@ApiParam(value = "Details for the new material receipts." ,required=true ) 
+    		@Valid @RequestParam(value = "tenantId", required = true) String tenantId,
+    		@Valid @RequestBody MaterialReceiptHeaderRequest materialReceipt,
+    		@RequestHeader(value = "Accept", required = false) String accept,BindingResult errors) throws Exception ;
 
 }

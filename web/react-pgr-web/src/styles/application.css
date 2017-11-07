@@ -25,7 +25,7 @@ html, body{
 }
 
 .custom-form-control-for-select > div > div:nth-child(1){
-	border: 1px solid #E5E5E5 !important;
+	border: 1px solid #ccc !important;
 	border-radius: 5px !important;
 	box-shadow: 0px !important;
 	position: relative !important;
@@ -55,7 +55,7 @@ html, body{
 .custom-form-control-for-textfield input, .custom-form-control-for-textarea textarea{
 	border-right: 0 !important;
 	border-radius: 5px !important;
-	border: 1px solid #E5E5E5 !important;
+	border: 1px solid #ccc !important;
 	position: relative !important;
 	background-color: #FBFBFB !important;
 	box-shadow: 0px !important;

@@ -1,5 +1,7 @@
 package org.egov.swm.domain.model;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -37,6 +39,8 @@ public class VehicleFuellingDetails {
 	private Vehicle vehicle = null;
 
 	@NotNull
+	@Min(value = 1)
+	@Max(value = 300000)
 	@JsonProperty("vehicleReadingDuringFuelling")
 	private Long vehicleReadingDuringFuelling = null;
 
@@ -45,6 +49,8 @@ public class VehicleFuellingDetails {
 	private RefillingPumpStation refuellingStation = null;
 
 	@NotNull
+	@Min(value = 1)
+	@Max(value = 100)
 	@JsonProperty("fuelFilled")
 	private Double fuelFilled = null;
 

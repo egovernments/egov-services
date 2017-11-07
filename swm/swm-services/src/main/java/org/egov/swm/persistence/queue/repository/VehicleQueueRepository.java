@@ -1,7 +1,5 @@
 package org.egov.swm.persistence.queue.repository;
 
-import org.egov.swm.domain.model.Vehicle;
-import org.egov.swm.persistence.repository.DocumentJdbcRepository;
 import org.egov.swm.web.requests.VehicleRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,9 +11,6 @@ public class VehicleQueueRepository {
 
 	@Autowired
 	private KafkaTemplate<String, Object> kafkaTemplate;
-
-	@Autowired
-	private DocumentJdbcRepository documentJdbcRepository;
 
 	@Value("${egov.swm.vehicle.save.topic}")
 	private String saveTopic;
@@ -37,10 +32,6 @@ public class VehicleQueueRepository {
 	}
 
 	public VehicleRequest update(VehicleRequest vehicleRequest) {
-
-		for (Vehicle v : vehicleRequest.getVehicles()) {
-			documentJdbcRepository.delete(v.getRegNumber());
-		}
 
 		kafkaTemplate.send(updateTopic, vehicleRequest);
 

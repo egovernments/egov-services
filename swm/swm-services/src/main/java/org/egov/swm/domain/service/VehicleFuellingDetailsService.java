@@ -1,6 +1,8 @@
 package org.egov.swm.domain.service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -48,7 +50,7 @@ public class VehicleFuellingDetailsService {
 
 	@Autowired
 	private MdmsRepository mdmsRepository;
-	
+
 	@Value("${egov.swm.vehiclefuellingdetails.transaction.num.idgen.name}")
 	private String idGenNameForTrnNumPath;
 
@@ -125,6 +127,8 @@ public class VehicleFuellingDetailsService {
 		JSONArray responseJSONArray = null;
 		ObjectMapper mapper = new ObjectMapper();
 
+		findDuplicatesInUniqueFields(vehicleFuellingDetailsRequest);
+
 		for (VehicleFuellingDetails details : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
 
 			// Validate Fuel Type
@@ -175,7 +179,50 @@ public class VehicleFuellingDetailsService {
 
 			}
 
+			if (details.getReceiptDate() != null && details.getTransactionDate() != null) {
+
+				if (new Date(details.getReceiptDate()).compareTo(new Date(details.getTransactionDate())) > 0) {
+					throw new CustomException("ReceiptDate",
+							"Given ReceiptDate is invalid: " + new Date(details.getReceiptDate())
+									+ " Receipt date should not be after transaction Date");
+				}
+			}
+
+			validateUniqueFields(details);
 		}
+	}
+
+	private void findDuplicatesInUniqueFields(VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
+
+		Map<String, String> receiptNoMap = new HashMap<>();
+
+		for (VehicleFuellingDetails details : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
+
+			if (details.getReceiptNo() != null) {
+				if (receiptNoMap.get(details.getReceiptNo()) != null)
+					throw new CustomException("name",
+							"Duplicate ReceiptNos in given Vehicle Fuelling Details : " + details.getReceiptNo());
+
+				receiptNoMap.put(details.getReceiptNo(), details.getReceiptNo());
+			}
+
+		}
+
+	}
+
+	private void validateUniqueFields(VehicleFuellingDetails details) {
+
+		if (details.getReceiptNo() != null) {
+			if (!vehicleFuellingDetailsRepository.uniqueCheck(details.getTenantId(), "receiptNo",
+					details.getReceiptNo(), "transactionNo", details.getTransactionNo())) {
+
+				throw new CustomException("receiptNo", "The field receiptNo must be unique in the system The  value "
+						+ details.getReceiptNo()
+						+ " for the field receiptNo already exists in the system. Please provide different value ");
+
+			}
+		}
+
 	}
 
 	private void setAuditDetails(VehicleFuellingDetails contract, Long userId) {
@@ -196,7 +243,7 @@ public class VehicleFuellingDetailsService {
 
 		String transactionNumber = null;
 		String response = null;
-		response = idgenRepository.getIdGeneration(tenantId, requestInfo,idGenNameForTrnNumPath);
+		response = idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForTrnNumPath);
 		Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 		ErrorRes errorResponse = gson.fromJson(response, ErrorRes.class);
 		IdGenerationResponse idResponse = gson.fromJson(response, IdGenerationResponse.class);

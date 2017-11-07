@@ -621,7 +621,7 @@
       "depreciationRate": 6.66,
       "isDepreciationApplicable": true,
       "assetFieldsDefination": [
-        {
+         {
           "name": "Location",
           "type": "Text",
           "isActive": true,
@@ -634,7 +634,31 @@
           "columns": []
         },
         {
-          "name": "Width",
+          "name": "Length",
+          "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "MinimumWidth",
+          "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "MaximumWidth",
           "type": "Number",
           "isActive": true,
           "isMandatory": false,
@@ -670,8 +694,8 @@
           "columns": []
         },
         {
-          "name": "No Of Layers",
-          "type": "Text",
+          "name": "No. Of Layers",
+          "type": "Number",
           "isActive": true,
           "isMandatory": false,
           "values": null,
@@ -695,6 +719,18 @@
         },
         {
           "name": "Layer Size",
+          "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Area",
           "type": "Number",
           "isActive": true,
           "isMandatory": false,

@@ -93,7 +93,8 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"isStateLevel": true
   					},
             {
   						"name": "NoOfOrder",
@@ -134,7 +135,7 @@ var dat = {
   						"jsonPath": "Asset.originalValue",
   						"label": "ac.create.Original.Value.of.Asset",
   						"pattern": "",
-  						"type": "text",
+  						"type": "number",
   						"url": "",
   						"isRequired": true,
   						"isDisabled": false,
@@ -630,6 +631,62 @@ var dat = {
 				"fields": [
 					{
 						"name": "AssetSearchCode",
+						"jsonPath": "assetCategoryType",
+						"label": "ac.create.asset.asset.category.type",
+						"pattern": "",
+						"type": "text",
+						"url": "",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue": "MOVABLE"
+					},
+					{
+						"name": "AssetCategoryType",
+						"jsonPath": "assetCategoryType",
+						"label": "ac.create.asset.asset.category.type",
+						"pattern": "",
+						"type": "text",
+						"url": "",
+						"isRequired": true,
+						"isDisabled": true,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue":"IMMOVABLE",
+						"isHidden": "true"
+					},
+					{
+						"name": "AssetCategory",
+						"jsonPath": "assetParentCategory",
+						"label": "Asset Category",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22MOVABLE%22)%5D|$..id|$..name",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"depedants": [{
+							"jsonPath": "assetCategory.id",
+							"type": "dropDown",
+							"pattern": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22MOVABLE%22)%5D|$..id|$..name"
+						}]
+					},
+					{
+						"name": "AssetSearchAssetSubCategory",
+						"jsonPath": "assetCategory.id",
+						"label": "ac.create.Asset.SubCategory.Name",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "AssetSearchCode",
 						"jsonPath": "code",
 						"label": "ac.search.asset.code",
 						"pattern": "",
@@ -652,62 +709,69 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
-					// {
-					// 	"name": "AssetSearchAssetSubCategory",
-					// 	"jsonPath": "assetCategory.id",
-					// 	"label": "ac.create.Asset.SubCategory.Name",
-					// 	"pattern": "/egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&tenantId=mh&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22MOVABLE%22)%5D|$..id|$..name",
-					// 	"type": "singleValueList",
-					// 	"url": "",
-					// 	"isRequired": false,
-					// 	"isDisabled": false,
-					// 	"requiredErrMsg": "",
-					// 	"patternErrMsg": ""
-					// },
 					{
-						"name": "AssetSearchDepartment",
+						"name": "Department",
 						"jsonPath": "department",
-						"label": "ac.search.department",
+						"label": "ac.create.Department",
 						"pattern": "",
 						"type": "singleValueList",
 						"url": "/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"isStateLevel":true
+					},
+					{
+						"name": "fromOriginalDate",
+						"jsonPath": "originalValueFrom",
+						"label": "ac.create.OriginalFromDate",
+						"pattern": "",
+						"type": "datePicker",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
-					// {
-					// 	"name": "AssetSearchStatus",
-					// 	"jsonPath": "status",
-					// 	"label": "ac.search.status",
-					// 	"pattern": "",
-					// 	"type": "singleValueList",
-					// 	"url": "",
-					// 	"isRequired": false,
-					// 	"isDisabled": false,
-					// 	"requiredErrMsg": "",
-					// 	"patternErrMsg": ""
-					// }
-					// {
-					// 	"name": "AssetCategoryType",
-					// 	"jsonPath": "Asset.assetCategory.assetCategoryType",
-					// 	"label": "Asset Category Type",
-					// 	"pattern": "",
-					// 	"type": "text",
-					// 	"url": "",
-					// 	"isRequired": true,
-					// 	"isDisabled": true,
-					// 	"requiredErrMsg": "",
-					// 	"patternErrMsg": "",
-					// 	"defaultValue": "MOVABLE",
-					// 	"isHidden": true
-					// }
+					{
+						"name": "toOriginalDate",
+						"jsonPath": "originalValueTo",
+						"label": "ac.create.OriginalToDate",
+						"pattern": "",
+						"type": "datePicker",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "fromDate",
+						"jsonPath": "assetCreatedFrom",
+						"label": "ac.create.createFromDate",
+						"pattern": "",
+						"type": "datePicker",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "toDate",
+						"jsonPath": "assetCreatedTo",
+						"label": "ac.create.createToDate",
+						"pattern": "",
+						"type": "datePicker",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					}
 				]
 			}
 		],
 		"result": {
-			"header": [{label: "Asset Code"},{label: "ac.create.Asset.Name"},  {label: "ac.create.Asset.SubCategory.Name"},{label: "ac.create.Original.Value.of.Asset"}, {label: "Date of Creation", "isDate": true}],
-			"values": ["code","name", "assetCategory.name", "originalValue", "dateOfCreation"],
+			"header": [{label: "Asset Code"},{label: "ac.create.Asset.Name"}, {label:"ac.create.asset.asset.category.type"}, {label: "ac.create.Asset.SubCategory.Name"},{label: "ac.create.Department"},{label: "ac.create.Original.Value.of.Asset"}, {label: "ac.create.Opening.Written.down.Value"}],
+			"values": ["code","name","assetCategory.assetCategoryType", "assetCategory.name", "departmentCode","originalValue", "grossValue"],
 			"resultPath": "Assets",
 			"rowClickUrlUpdate": "/non-framework/asset/master/assetMovableCreate/{id}",
 			"rowClickUrlView": "/non-framework/asset/master/assetMovableView/{id}"
@@ -818,7 +882,8 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"isStateLevel": true
   					},
             {
   						"name": "NoOfOrder",
@@ -859,7 +924,7 @@ var dat = {
   						"jsonPath": "Assets[0].originalValue",
   						"label": "ac.create.Original.Value.of.Asset",
   						"pattern": "",
-  						"type": "text",
+  						"type": "number",
   						"url": "",
   						"isRequired": true,
   						"isDisabled": false,
@@ -1395,7 +1460,8 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"isStateLevel": true
   					},
             {
   						"name": "NoOfOrder",
@@ -1436,7 +1502,7 @@ var dat = {
   						"jsonPath": "Asset.originalValue",
   						"label": "ac.create.Original.Value.of.Asset",
   						"pattern": "",
-  						"type": "text",
+  						"type": "number",
   						"url": "",
   						"isRequired": true,
   						"isDisabled": false,

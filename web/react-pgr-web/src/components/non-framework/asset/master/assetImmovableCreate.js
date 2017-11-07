@@ -603,6 +603,9 @@ class assetImmovableCreate extends Component {
     e.preventDefault();
     self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
+    if (formData["Assets.titleDocumentsAvalable"]) {
+      formData["Assets[0].titleDocumentsAvalable"] = formData["Assets[0].titleDocumentsAvalable"].split(",");
+    }
     if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
       if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
         formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
@@ -1022,15 +1025,16 @@ delete formData.Asset.assetAttributesCheck;
 
        if (property=="Asset.warrantyAvailable") {
          let spec = self.props.mockData;
+         console.log(spec);
          if(e.target.value==false) {
-           spec["asset.create"].groups[3].fields[14].isRequired = false;
+           spec["asset.create"].groups[3].fields[7].isRequired = false;
            self.props.setMockData(JSON.parse(JSON.stringify(spec)));
-           spec["asset.update"].groups[3].fields[14].isRequired = false;
+           spec["asset.update"].groups[3].fields[7].isRequired = false;
            self.props.setMockData(JSON.parse(JSON.stringify(spec)));
          } else {
-           spec["asset.create"].groups[3].fields[14].isRequired = true;
+           spec["asset.create"].groups[3].fields[7].isRequired = true;
            self.props.setMockData(JSON.parse(JSON.stringify(spec)));
-           spec["asset.update"].groups[3].fields[14].isRequired = true;
+           spec["asset.update"].groups[3].fields[7].isRequired = true;
            self.props.setMockData(JSON.parse(JSON.stringify(spec)));
          }
        }

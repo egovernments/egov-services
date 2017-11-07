@@ -447,59 +447,20 @@ paths:
             description: |
               rate type of the PurchaseOrder
             enum:
-            - DGSC_RATECONTRACT
-            - ULB_RATE_CONTRACT
-            - ONE_TIME_TENDER
-            - QUOTATION
+            - DGSC Rate Contract
+            - ULB Rate Contract
+            - One Time Tender
+            - Quotation
           - name: supplierCode
             type: string
             in: query
             description: |
               supplier code of the PurchaseOrder
-          - name: advanceAmount
-            type: number
-            format: BigDecimal
-            in: query
-            description: |
-              advance amount of the PurchaseOrder
-          - name: advancePercentage
-            type: number
-            format: BigDecimal
-            in: query
-            description: |
-              advance percentage of the PurchaseOrder
-          - name: expectedDeliveryDate
-            type: integer
-            format: int64
-            x-displayformat: 'dd/MM/yyyy'
-            in: query
-            description: |
-              expected delivery date of the PurchaseOrder
-          - name: deliveryTerms
-            type: string
-            in: query
-            description: |
-              delivery terms of the PurchaseOrder
-          - name: paymentTerms
-            type: string
-            in: query
-            description: |
-              payment terms of the PurchaseOrder
-          - name: description
-            type: string
-            in: query
-            description: |
-              description of the PurchaseOrder
           - name: status
             type: string
             in: query
             description: |
               status of the PurchaseOrder
-          - name: stateId
-            type: string
-            in: query
-            description: |
-              state id of the PurchaseOrder
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
@@ -2429,6 +2390,8 @@ definitions:
           minLength: 4
         store:
           $ref: "#/definitions/Store"
+          format: singleValueList
+          description: Store which orders item for purchase order
         purchaseOrderNumber:
           type: string
           readOnly: true
@@ -2440,19 +2403,26 @@ definitions:
           x-displayformat: 'dd/MM/yyyy'
           description: |
             purchase order date of the PurchaseOrder
+        purchaseType:
+          type: string
+          enum:
+            - Indent
+            - Non Indent
+          description: |
+            rate type of the PurchaseOrder
         rateType:
           type: string
           enum:
-            - DGSC_RATECONTRACT
-            - ULB_RATE_CONTRACT
-            - ONE_TIME_TENDER
-            - QUOTATION
+            - DGSC Rate Contract
+            - ULB Rate Contract
+            - One Time Tender
+            - Quotation
           description: |
             rate type of the PurchaseOrder
-        supplierCode:
+        supplier:
           $ref: "#/definitions/Supplier"
           description: |
-            supplier code of the PurchaseOrder
+            supplier code of the purchase order
         advanceAmount:
           type: number
           format: BigDecimal
@@ -2471,26 +2441,29 @@ definitions:
             expected delivery date of the PurchaseOrder
         deliveryTerms:
           type: string
-          maxLength: 500
-          minLength: 1
+          maxLength: 512
           description: |
             delivery terms of the PurchaseOrder
         paymentTerms:
           type: string
-          maxLength: 500
+          maxLength: 512
           description: |
             payment terms of the PurchaseOrder
-        description:
+        remarks:
           type: string
           maxLength: 1000
           description: |
             description of the PurchaseOrder
         status:
           type: string
-          maxLength: 50
-          minLength: 5
+          enum:
+            - Created
+            - Approved
+            - Rejected
+            - Fulfilled and Paid
+            - Fulfilled and Unpaid
           description: |
-            status of the PurchaseOrder
+            status of the Ind PurchaseOrder
         workFlowDetails:
           $ref: "#/definitions/WorkFlowDetails"     
         stateId:
@@ -2517,9 +2490,7 @@ definitions:
       - purchaseOrderNumber
       - purchaseOrderDate
       - rateType
-      - supplierCode
-      - expectedDeliveryDate
-      - deliveryTerms
+      - supplier
       - purchaseOrderDetails
       
     PurchaseOrderRequest:
@@ -2545,7 +2516,6 @@ definitions:
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
           
-    
     PurchaseOrderDetails:
       type: object
       description: |
@@ -2562,27 +2532,51 @@ definitions:
           minLength: 4    
         material:
           $ref: "#/definitions/Material"
+          format: autoComplete
+        orderNumber:
+          type: number
+          format: int32
+          description: Order of items selected.
         uom:
           $ref: "#/definitions/Uom"
+          format: singleValueList
+        priceList:  
+          $ref: "#/definitions/PriceList"
+          format: singleValueList
         orderQuantity:
           type: number
           format: BigDecimal
           description: |
             order quantity of the PurchaseMaterial
+        receivedQuantity:
+          type: number
+          format: BigDecimal
+          description: |
+            order quantity of the PurchaseMaterial
+        unitPrice:
+          type: number
+          format: BigDecimal
+          description: |
+            unit price of  PurchaseMaterial    
         description:
           type: string
-          maxLength: 1000
+          maxLength: 512
           description: |
-            remarks of the PurchaseMaterial
+            remarks of the Purchase material details
+        purchaseIndentDetails:
+          type:  array
+          items:
+            $ref: "#/definitions/PurchaseIndentDetails"    
       required:
       - material
       - uom
       - orderQuantity
+      - unitPrice
 
     PurchaseIndentDetails:
       type: object
       description: |
-          Purchase Indent object holds purchase order and associated indent mapping.
+          Purchase order and associated indent Detail mapping.
       properties:
         id:
           type: string
@@ -2593,15 +2587,17 @@ definitions:
           description: Tenant id of the Purchase Indent
           maxLength: 128
           minLength: 4
-        purchaseOrderDetail:
-          $ref: "#/definitions/PurchaseOrderDetails"
-        indent:
-          $ref: "#/definitions/Indent"
+        indentDetail:
+          $ref: "#/definitions/IndentDetail"
+        quantity:
+          type: number
+          format: BigDecimal
+          description: |
+            quantity used in each indent.  
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
-      - purchaseOrderDetail
-      - indent
+      - indentDetail
       
     MaterialReceipt:
       description: Hold the material receipt specific information.
@@ -4073,7 +4069,7 @@ definitions:
       description: |
         This object holds the pricelist information of different materials from various suppliers  
       properties:
-        id:
+        code:
           type: string
           description: |
             Unique Identifier of the PriceList record.
@@ -4092,10 +4088,10 @@ definitions:
           description: |
             type of the information about the material we are getting from the supplier
           enum:
-            - DGSC_RATECONTRACT
-            - ULB_RATE_CONTRACT
-            - ONE_TIME_TENDER
-            - QUOTATION
+            - DGSC Rate Contract
+            - ULB Rate Contract
+            - One Time Tender
+            - Quotation
         rateContractNumber:
           type: string
           description: |
@@ -4138,10 +4134,9 @@ definitions:
           description: |
             File Store id of the rate contract with the supplier
         priceListDetails:
-          type:  array
-          items:
-            $ref: '#/definitions/PriceList'
+          type: array
           minItems: 1
+          $ref: "#/definitions/PriceListDetails"
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"   
       required:

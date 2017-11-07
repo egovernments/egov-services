@@ -877,7 +877,7 @@ $.validator.addMethod('alphaNumer', function(value) {
 }, 'Please enter only Alpha/Numeric Value');
 
 $.validator.addMethod('integerOnly',function(value){
-  return /^[0-9]{9}$/.test(value);
+  return /^[0-9]*$/.test(value);
 },'please check the value/enter integer numbers only.');
 
 

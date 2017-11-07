@@ -85,7 +85,7 @@ paths:
         200: 
           description: Successful response
           schema:
-            $ref: "#/definitions/KPIResponse"
+            $ref: "#/definitions/DepartmentKpiResponse"
         400:
           description: Invalid input
           schema:
@@ -310,6 +310,18 @@ definitions:
         maximum: 500
         items:
           $ref: '#/definitions/KpiValue'
+          
+  DepartmentKpiList:
+    type: object
+    description: Object which holds the list of KPI Values against each Department 
+    properties:
+      department:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/Department'
+      kpiList:
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/KPI'
       
   FinancialYear:
     type: object
@@ -381,6 +393,17 @@ definitions:
         maximum: 500
         items:
           $ref: '#/definitions/KPI'
+          
+  DepartmentKpiResponse:
+    type: object
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      KPIs:
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/DepartmentKpiList'
       
   KPIValueRequest:
     type: object

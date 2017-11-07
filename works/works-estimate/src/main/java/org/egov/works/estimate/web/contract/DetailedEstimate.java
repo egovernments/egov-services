@@ -240,7 +240,7 @@ public class DetailedEstimate   {
   @ApiModelProperty(required = true, value = "Unique number for the Detailed Estimate")
   //@NotNull
 
- @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(min=1,max=50)
+ @Pattern(regexp="[a-zA-Z0-9-\\/\\\\]+") @Size(min=1,max=50)
   public String getEstimateNumber() {
     return estimateNumber;
   }

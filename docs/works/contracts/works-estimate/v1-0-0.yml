@@ -1036,6 +1036,19 @@ definitions:
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: DP Remarks
         maxLength: 512
+      landAssetRequired:
+        type: boolean
+        description: Boolean value to capture whether the Land Asset required. True if Land Asset required. False if the Land Asset value is not required. The values should be shown in UI are Yes and No. This field needs to be shown if Nature of work is 'Capital Works'.
+      noOfLands:
+          type: integer
+          description: No of Lands. This field needs to be shown if Nature of work is 'Capital Works'. If landAssetRequired=Yes then this field is mandatory.
+          maxLength: 10
+          minLength: 1
+      otherAssetSpecificationRemarks:
+        type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
+        description:  Other Specifications Remarks. This field needs to be shown if Nature of work is 'Capital Works'.
+        maxLength: 1024
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       abstractEstimateDetails:
@@ -1147,46 +1160,33 @@ definitions:
       abstractEstimate:
         $ref: '#/definitions/AbstractEstimate'
         description: Reference to Sanction Asset/Land of Abstract Estimate Object 
+      asset:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/Asset'
+        description: Asset for which the Abstract Estimate is created. This field is required and to be shown if Nature of work is 'Repairs and Maintenance, Improvement Works'
+        format: singleValueList
       assetCondition:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/AssetPresentCondition'
-        description: Present condition of the asset
+        description: Present condition of the asset. This field is required and to be shown if Nature of work is 'Repairs and Maintenance, Improvement Works'
         format: singleValueList
       assetRemarks:
         type: string
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
-        description: Remarks of the asset
+        description: Remarks of the asset. This field is required and to be shown if Nature of work is 'Repairs and Maintenance, Improvement Works'
         maxLength: 1024
-      asset:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/Asset'
-        description: Asset for which the Abstract Estimate is created
-        format: singleValueList
-      landAssetRequired:
-        type: boolean
-        description: Boolean value to capture whether the Land Asset required. True if Land Asset required. False if the Land Asset value is not required. The values should be shown in UI are Yes and No.
-      noOfLands:
-          type: integer
-          description: No of Lands. If Is Land Asset required=Yes then this field is mandatory.
-          maxLength: 10
-          minLength: 1
+      landAsset:
+        type: string
+        pattern: '[a-zA-Z0-9-\\]+'
+        description: Land Asset ID
+        format: singleValueList. If Is Land Asset required=Yes then this field is mandatory. This field needs to be shown if Nature of work is 'Capital Works'.
       landAssetCondition:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/LandAssetPresentCondition'
-        description: Present condition of the asset. If Is Land Asset required=Yes then this field is mandatory.
+        description: Present condition of the asset. If Is Land Asset required=Yes then this field is mandatory. This field needs to be shown if Nature of work is 'Capital Works'.
         format: singleValueList
       constructionArea:
           type: number
           format: double
           maxLength: 12
-          description: Construction area. If Is Land Asset required=Yes then this field is mandatory.
-      landAsset:
-        type: string
-        pattern: '[a-zA-Z0-9-\\]+'
-        description: Land Asset ID
-        format: singleValueList. If Is Land Asset required=Yes then this field is mandatory.
-      remarks:
-        type: string
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
-        description:  Other Specifications Remarks
-        maxLength: 1024
+          description: Construction area. If Is Land Asset required=Yes then this field is mandatory. This field needs to be shown if Nature of work is 'Capital Works'.
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:

@@ -760,13 +760,11 @@ serviceMaps:
        
        - jsonPath: $.detailedEstimates.*.worksSubtype.code
        
-       - jsonPath: $.detailedEstimates.*.subTypeOfWork.code
-       
        - jsonPath: $.detailedEstimates.*.natureOfWork.code
        
        - jsonPath: $.detailedEstimates.*.ward.code
        
-       - jsonPath: $.detailedEstimates.*.location.code
+       - jsonPath: $.detailedEstimates.*.location
        
        - jsonPath: $.detailedEstimates.*.longitude
        

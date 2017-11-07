@@ -108,7 +108,6 @@ public class RequestValidator {
 		List<KPI> kpis = kpiRequest.getKpIs();
 		
 		for(KPI kpi : kpis) { 
-			// Check whether the KPI Name, Code and Financial Year is null or empty
 			if(StringUtils.isBlank(kpi.getName())) { 
 				errorFields.add(buildErrorField(PerformanceAssessmentConstants.KPINAME_MANDATORY_CODE, 
 	                    PerformanceAssessmentConstants.KPINAME_MANDATORY_ERROR_MESSAGE,
@@ -125,6 +124,24 @@ public class RequestValidator {
 				errorFields.add(buildErrorField(PerformanceAssessmentConstants.FINYEAR_MANDATORY_CODE, 
 	                    PerformanceAssessmentConstants.FINYEAR_MANDATORY_ERROR_MESSAGE,
 	                    PerformanceAssessmentConstants.FINYEAR_MANDATORY_FIELD_NAME));
+			}
+			
+			if(null == kpi.getDepartment()) { 
+				errorFields.add(buildErrorField(PerformanceAssessmentConstants.DEPARTMENT_MANDATORY_CODE, 
+	                    PerformanceAssessmentConstants.DEPARTMENT_MANDATORY_ERROR_MESSAGE,
+	                    PerformanceAssessmentConstants.DEPARTMENT_MANDATORY_FIELD_NAME));
+			} else { 
+				if(StringUtils.isBlank(kpi.getDepartment().getCode())) { 
+					errorFields.add(buildErrorField(PerformanceAssessmentConstants.DEPARTMENT_CODE_MANDATORY_CODE, 
+		                    PerformanceAssessmentConstants.DEPARTMENT_CODE_MANDATORY_ERROR_MESSAGE,
+		                    PerformanceAssessmentConstants.DEPARTMENT_CODE_MANDATORY_FIELD_NAME));
+				}
+				
+				if(kpi.getDepartment().getId() <= 0) { 
+					errorFields.add(buildErrorField(PerformanceAssessmentConstants.DEPARTMENT_ID_MANDATORY_CODE, 
+		                    PerformanceAssessmentConstants.DEPARTMENT_ID_MANDATORY_ERROR_MESSAGE,
+		                    PerformanceAssessmentConstants.DEPARTMENT_ID_MANDATORY_FIELD_NAME));
+				}
 			}
 			
 			/*// Check whether KPI Name and Code already exists

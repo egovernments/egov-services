@@ -6,7 +6,7 @@ serviceMaps:
    description: Create a new KPI Master Record
    fromTopic: egov.pa.newkpi-create
    queryMaps: 
-    - query: INSERT INTO egpa_kpi_master (id, name, code, finyear, targetvalue, instructions, tenantid, createdby, createddate) values (?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egpa_kpi_master (id, name, code, finyear, targetvalue, instructions, tenantid, createdby, createddate, department) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.KPIs.*
       jsonMaps:
 
@@ -29,6 +29,9 @@ serviceMaps:
          type: LONG
        
        - jsonPath: $.KPIs.*.auditDetails.createdTime
+         type: LONG
+         
+       - jsonPath: $.KPIs.*.department.id
          type: LONG
          
     - query: INSERT INTO egpa_kpi_master_document (id, kpicode, documentcode, documentname, mandatoryflag, createdby, createddate)  values (nextval('seq_egpa_kpi_master_document'), ?, ?, ?, ?, ?, ?);
@@ -55,7 +58,7 @@ serviceMaps:
    description: Update an existing KPI Master Record
    fromTopic: egov.pa.newkpi-update
    queryMaps: 
-    - query: UPDATE egpa_kpi_master SET name = ?, finyear = ?, targetvalue = ?, instructions =?, lastmodifiedby = ?, lastmodifieddate = ? WHERE code = ? AND id = ? ;
+    - query: UPDATE egpa_kpi_master SET name = ?, finyear = ?, targetvalue = ?, instructions =?, lastmodifiedby = ?, lastmodifieddate = ?, department = ? WHERE code = ? AND id = ? ;
       basePath: $.KPIs.*
       jsonMaps:
 
@@ -73,10 +76,13 @@ serviceMaps:
        - jsonPath: $.KPIs.*.auditDetails.lastModifiedTime
          type: LONG
        
+       - jsonPath: $.KPIs.*.department.id
+         type: LONG
+       
        - jsonPath: $.KPIs.*.code
        
        - jsonPath: $.KPIs.*.id
-      
+       
     - query: DELETE FROM egpa_kpi_master_document WHERE kpicode = ?;
       basePath: $.KPIs.*
       jsonMaps:

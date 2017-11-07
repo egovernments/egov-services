@@ -48,6 +48,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.pa.model.AuditDetails;
+import org.egov.pa.model.Department;
 import org.egov.pa.model.Document;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiValue;
@@ -68,6 +69,8 @@ public class PerformanceAssessmentRowMapper {
 	public class KPIMasterRowMapper implements RowMapper<KPI> {
 		public Map<String, KPI> kpiMap = new HashMap<>();
 		public Map<String, List<Document>> docMap = new HashMap<>();
+		public Map<Long, Department> deptMap = new HashMap<>();
+		public List<Long> docIdList = new ArrayList<>();
 
 		@Override
 		public KPI mapRow(final ResultSet rs, final int rowNum) throws SQLException {
@@ -85,19 +88,31 @@ public class PerformanceAssessmentRowMapper {
 				kpi.setTargetValue(rs.getLong("targetValue"));
 				kpi.setTenantId(rs.getString("tenantId"));
 				kpi.setInstructions(rs.getString("instructions"));
+				Department department= new Department(); 
+				department.setId(rs.getLong("departmentId"));
+				kpi.setDepartment(department);
+				if(!deptMap.containsKey(rs.getLong("departmentId"))) {
+					Department dept = new Department(); 
+					dept.setId(rs.getLong("departmentId"));
+					dept.setCode(rs.getString("deptCode"));
+					dept.setName(rs.getString("deptName"));
+					dept.setActive(rs.getBoolean("deptActive"));
+					deptMap.put(rs.getLong("departmentId"), dept); 
+				}
 				kpiMap.put(String.valueOf(rs.getLong("id")), kpi);
 			}
 
 			if (docMap.containsKey(String.valueOf(rs.getLong("id")))) {
 				List<Document> docList = docMap.get(String.valueOf(rs.getLong("id")));
-				if (StringUtils.isNotBlank(rs.getString("documentcode"))) {
-					Document doc = new Document();
-					doc.setId(String.valueOf(rs.getLong("docid")));
-					doc.setKpiCode(rs.getString("dockpicode"));
-					doc.setCode(rs.getString("documentcode"));
-					doc.setName(rs.getString("documentname"));
-					doc.setActive(rs.getBoolean("mandatoryflag"));
-					docList.add(doc);
+				if (StringUtils.isNotBlank(rs.getString("documentcode")) && !docIdList.contains(rs.getLong("docid"))) { 
+						Document doc = new Document();
+						doc.setId(String.valueOf(rs.getLong("docid")));
+						doc.setKpiCode(rs.getString("dockpicode"));
+						doc.setCode(rs.getString("documentcode"));
+						doc.setName(rs.getString("documentname"));
+						doc.setActive(rs.getBoolean("mandatoryflag"));
+						docList.add(doc);	
+						docIdList.add(rs.getLong("docid"));
 				}
 			} else {
 				List<Document> docList = new ArrayList<>();
@@ -108,6 +123,7 @@ public class PerformanceAssessmentRowMapper {
 				doc.setName(rs.getString("documentname"));
 				doc.setActive(rs.getBoolean("mandatoryflag"));
 				docList.add(doc);
+				docIdList.add(rs.getLong("docid"));
 				if (StringUtils.isNotBlank(rs.getString("documentcode"))) {
 					docMap.put(String.valueOf(rs.getLong("id")), docList);
 				}

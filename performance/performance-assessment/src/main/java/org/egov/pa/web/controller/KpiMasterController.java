@@ -45,9 +45,10 @@ import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.pa.model.KPI;
+import org.egov.pa.model.DepartmentKpiList;
 import org.egov.pa.service.KpiMasterService;
 import org.egov.pa.validator.RequestValidator;
+import org.egov.pa.web.contract.DepartmentKpiResponse;
 import org.egov.pa.web.contract.KPIGetRequest;
 import org.egov.pa.web.contract.KPIRequest;
 import org.egov.pa.web.contract.KPIResponse;
@@ -147,18 +148,18 @@ public class KpiMasterController implements KpiMaster {
             final ErrorResponse errRes = requestValidator.populateErrors(errors); 
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        List<KPI> kpiList = kpiMasterService.searchKpi(kpiGetRequest); 
-        return getSuccessResponse(kpiList, requestInfo); 
+        List<DepartmentKpiList> departmentKpiList = kpiMasterService.searchKpi(kpiGetRequest); 
+        return getSuccessResponse(departmentKpiList, requestInfo); 
     }
     
-    public ResponseEntity<?> getSuccessResponse(final List<KPI> kpiList,
+    public ResponseEntity<?> getSuccessResponse(final List<DepartmentKpiList> departmentKpiList,
             final RequestInfo requestInfo) {
-        final KPIResponse kpiResponse = new KPIResponse();
+        final DepartmentKpiResponse departmentKpiResponse = new DepartmentKpiResponse();
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
-        kpiResponse.setResponseInfo(responseInfo);
-        kpiResponse.setKpIs(kpiList);
-        return new ResponseEntity<>(kpiResponse, HttpStatus.OK);
+        departmentKpiResponse.setResponseInfo(responseInfo);
+        departmentKpiResponse.setKpIs(departmentKpiList);
+        return new ResponseEntity<>(departmentKpiResponse, HttpStatus.OK);
     }
     
     public ResponseEntity<?> getCreateUpdateSuccessResponse(final KPIRequest kpiRequest) {

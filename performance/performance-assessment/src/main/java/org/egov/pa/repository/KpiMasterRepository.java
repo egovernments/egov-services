@@ -2,6 +2,7 @@ package org.egov.pa.repository;
 
 import java.util.List;
 
+import org.egov.pa.model.DepartmentKpiList;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiTargetList;
 import org.egov.pa.web.contract.KPIGetRequest;
@@ -21,7 +22,7 @@ public interface KpiMasterRepository {
     
     public List<Long> getNewKpiIds(int numberOfIds); 
     
-    public List<KPI> searchKpi(final KPIGetRequest kpiGetRequest); 
+    public List<DepartmentKpiList> searchKpi(final KPIGetRequest kpiGetRequest); 
     
     public List<KPI> checkNameOrCodeExists(KPIRequest kpiRequest);
     

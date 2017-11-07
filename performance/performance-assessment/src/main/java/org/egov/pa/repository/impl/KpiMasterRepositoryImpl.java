@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.egov.pa.model.Department;
+import org.egov.pa.model.DepartmentKpiList;
 import org.egov.pa.model.Document;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiTargetList;
@@ -106,16 +108,18 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 	}
 
 	@Override
-	public List<KPI> searchKpi(KPIGetRequest kpiGetRequest) {
+	public List<DepartmentKpiList> searchKpi(KPIGetRequest kpiGetRequest) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
     	String query = queryBuilder.getKpiSearchQuery(kpiGetRequest, preparedStatementValues); 
     	KPIMasterRowMapper mapper = new PerformanceAssessmentRowMapper().new KPIMasterRowMapper(); 
     	jdbcTemplate.query(query, preparedStatementValues.toArray(), mapper);
     	List<KPI> kpiList = getListFromMapper(mapper.kpiMap);
+    	List<DepartmentKpiList> deptWiseList = new ArrayList<>();
     	if(null != kpiList && kpiList.size() > 0) { 
     		arrangeDocsToKpiList(kpiList, mapper.docMap);
+    		arrangeListDepartmentWise(kpiList, mapper.deptMap, deptWiseList);
     	}
-    	return kpiList; 
+    	return deptWiseList; 
 	}
 	
 	private List<KPI> getListFromMapper(Map<String, KPI> kpiMap) { 
@@ -138,6 +142,24 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
     			}
     		}
     	}
+    }
+	
+	private void arrangeListDepartmentWise(List<KPI> kpiList, Map<Long, Department> map, List<DepartmentKpiList> deptWiseList) { 
+    	Iterator<Entry<Long, Department>> itr = map.entrySet().iterator();
+    	while(itr.hasNext()) { 
+    		Entry<Long, Department> entry = itr.next();
+    		List<KPI> tempList = new ArrayList<>();
+    		for(KPI kpi : kpiList) {
+    			if(kpi.getDepartment().getId() == entry.getKey()) {
+    				tempList.add(kpi); 
+    			}
+    		}
+    		DepartmentKpiList deptKpi = new DepartmentKpiList(); 
+    		deptKpi.setDepartment(entry.getValue());
+    		deptKpi.setKpiList(tempList);
+    		deptWiseList.add(deptKpi);
+    	}
+    	for(KPI kpi : kpiList) kpi.setDepartment(null); 
     }
 
 	@Override

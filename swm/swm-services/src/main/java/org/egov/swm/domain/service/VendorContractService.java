@@ -131,6 +131,15 @@ public class VendorContractService {
 				}
 			}
 
+			if (vendorContract.getContractPeriodFrom() != null && vendorContract.getContractPeriodTo() != null) {
+
+				if (new Date(vendorContract.getContractPeriodTo())
+						.before(new Date(vendorContract.getContractPeriodFrom()))) {
+					throw new CustomException("ContractPeriodToDate ", "Given Contract Period To Date is invalid: "
+							+ new Date(vendorContract.getContractPeriodTo()));
+				}
+			}
+
 		}
 
 	}

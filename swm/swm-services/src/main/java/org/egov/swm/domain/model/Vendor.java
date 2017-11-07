@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -37,6 +38,7 @@ public class Vendor {
 	private String name = null;
 
 	@NotNull
+	@Size(min = 1)
 	@JsonProperty("servicedLocations")
 	private List<Boundary> servicedLocations = null;
 
@@ -52,6 +54,7 @@ public class Vendor {
 	private Document agreementDocument;
 
 	@NotNull
+	@Size(min = 1)
 	@JsonProperty("servicesOffered")
 	private List<SwmProcess> servicesOffered = null;
 

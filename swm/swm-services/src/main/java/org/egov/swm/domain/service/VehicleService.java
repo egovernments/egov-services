@@ -128,7 +128,7 @@ public class VehicleService {
 
 			}
 
-			/*// Validate vendor
+			// Validate vendor
 			if (vehicle.getVendor() != null) {
 
 				if (vehicle.getVendor() != null && vehicle.getVendor().getVendorNo() != null) {
@@ -144,7 +144,7 @@ public class VehicleService {
 					}
 				}
 
-			}*/
+			}
 
 			// Validate Fuel Type
 			if (vehicle.getFuelType() != null) {
@@ -166,8 +166,10 @@ public class VehicleService {
 
 				if (!utils.isFutureDate(new Date(vehicle.getInsuranceDetails().getInsuranceValidityDate()))) {
 
-					throw new CustomException("InsuranceValidityDate", "Given InsuranceValidityDate is invalid: "
-							+ vehicle.getInsuranceDetails().getInsuranceValidityDate() + " It is not a future date");
+					throw new CustomException("InsuranceValidityDate",
+							"Given InsuranceValidityDate is invalid: "
+									+ new Date(vehicle.getInsuranceDetails().getInsuranceValidityDate())
+									+ " It is not a future date");
 				}
 			}
 
@@ -176,7 +178,8 @@ public class VehicleService {
 				if (utils.isFutureDate(new Date(vehicle.getPurchaseInfo().getPurchaseDate()))) {
 
 					throw new CustomException("PurchaseDate",
-							"Given PurchaseDate is invalid: " + vehicle.getInsuranceDetails().getInsuranceValidityDate()
+							"Given PurchaseDate is invalid: "
+									+ new Date(vehicle.getInsuranceDetails().getInsuranceValidityDate())
 									+ " It should not be a future date");
 				}
 			}

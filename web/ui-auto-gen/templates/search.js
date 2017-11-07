@@ -6,7 +6,7 @@ const getQuery = utilities.getQuery;
 
 let localeFields = {};
 let errors = {};
-let searchTemplate = function (module, numCols, path, config, definition, basePath, uiInfoDef) {
+let searchTemplate = function (module, numCols, path, config, basePath, uiInfoDef) {
 	localeFields[module + ".search.title"] = getTitleCase("search");
 	let specifications = {
 		numCols: numCols,
@@ -29,33 +29,12 @@ let searchTemplate = function (module, numCols, path, config, definition, basePa
 	let fields = {};
 	let parameterConfig = config["post"].parameters;
 	for(let i=0; i<parameterConfig.length; i++) {
-		if(parameterConfig[i].$ref && !/requestInfo|RequestInfo|tenantId|pageSize|pageNumber|sortResult/.test(parameterConfig[i].$ref)) {
-			let splitArr = parameterConfig[i].$ref.split("/");
-			let paramKey = splitArr[splitArr.length-1];
-			localeFields[module + ".create." + paramKey] = getTitleCase(paramKey);
-			fields[paramKey] = {
-				"name": paramKey,
-				"jsonPath": paramKey,
-				"label": module + ".create." + paramKey,
-				"pattern": definition[paramKey].pattern,
-				"type": definition[paramKey].enum ? "singleValueList" : definition[paramKey].format && ["number", "integer", "double", "long", "float"].indexOf(definition[paramKey].type) == -1 ? getType(definition[paramKey].format) : getType(definition[paramKey].type),
-				"isRequired": definition[paramKey].required,
-				"isDisabled": definition[paramKey].readOnly ? true : false,
-				"defaultValue": definition[paramKey].default,
-				"maxLength": definition[paramKey].maxLength,
-				"minLength": definition[paramKey].minLength,
-				"patternErrorMsg": module + ".create.field.message." + paramKey
-			};
-
-			if(fields[paramKey].type == "text" && definition[paramKey].maxLength && definition[paramKey].maxLength > 256)
-				fields[paramKey].type = "textarea";
-		} else {
-			let paramKey = parameterConfig[i].name;
-			localeFields[module + ".create." + paramKey] = getTitleCase(paramKey);
-			fields[paramKey] = {
-				"name": paramKey,
-				"jsonPath": paramKey,
-				"label": module + ".create." + paramKey,
+		if(!/requestInfo|RequestInfo|sortProperty|tenantId|pageSize|pageNumber|sortResult/.test(parameterConfig[i].name)) {
+			localeFields[module + ".create." + parameterConfig[i].name] = getTitleCase(parameterConfig[i].name);
+			fields[parameterConfig[i].name] = {
+				"name": parameterConfig[i].name,
+				"jsonPath": parameterConfig[i].name,
+				"label": module + ".create." + parameterConfig[i].name,
 				"pattern": parameterConfig[i].pattern,
 				"type": parameterConfig[i].enum ? "singleValueList" : parameterConfig[i].format && ["number", "integer", "double", "long", "float"].indexOf(parameterConfig[i].type) == -1 ? getType(parameterConfig[i].format) : getType(parameterConfig[i].type),
 				"isRequired": parameterConfig[i].required,
@@ -63,9 +42,12 @@ let searchTemplate = function (module, numCols, path, config, definition, basePa
 				"defaultValue": parameterConfig[i].default,
 				"maxLength": parameterConfig[i].maxLength,
 				"minLength": parameterConfig[i].minLength,
-				"patternErrorMsg": module + ".create.field.message." + paramKey
+				"patternErrorMsg": module + ".create.field.message." + parameterConfig[i].name
 			};
-		} 
+
+			if(fields[parameterConfig[i].name].type == "text" && parameterConfig[i].maxLength && parameterConfig[i].maxLength > 256)
+				fields[parameterConfig[i].name].type = "textarea";
+		}
 	}
 
 	if (uiInfoDef.externalData && typeof uiInfoDef.externalData == "object" && uiInfoDef.externalData.length) {
@@ -148,7 +130,7 @@ let searchTemplate = function (module, numCols, path, config, definition, basePa
 	};
 
 	setLabels(localeFields, "./output/" + module);
-
+	
 	if(Object.keys(errors).length) {
 		return {specifications: specifications, errors: errors};	
 	}

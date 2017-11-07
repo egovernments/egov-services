@@ -3,39 +3,38 @@ const getTitleCase = utilities.getTitleCase;
 const getType = utilities.getType;
 const getQuery = utilities.getQuery;
 
-let getFieldsFromInnerObject = function(reference, fields, definition, module, jPath, isArray) {
+let getFieldsFromInnerObject = function(fields, properties, module, jPath, isArray, required) {
     let errors = {};
     let localeFields = {};
-    if (definition[reference])
-        for (let key in definition[reference].properties) {
-            if (["id", "tenantId", "auditDetails", "assigner"].indexOf(key) > -1) continue;
 
-            if (definition[reference].properties[key].type == "array") {
-                let refSplitArr = definition[reference].properties[key].items.$ref.split("/");
-                getFieldsFromInnerObject(refSplitArr[refSplitArr.length - 1], fields, definition, module, (isArray ? (jPath + "[0]") : jPath) + "." + key, true);
-            } else if (definition[reference].properties[key].$ref) {
-                let refSplitArr = definition[reference].properties[key].$ref.split("/");
-                getFieldsFromInnerObject(refSplitArr[refSplitArr.length - 1], fields, definition, module, (isArray ? (jPath + "[0]") : jPath) + "." + key);
-            } else {
-                localeFields[module + ".create." + key] = getTitleCase(key);
-                fields[(isArray ? (jPath + "[0]") : jPath) + "." + key] = {
-                    "name": key,
-                    "jsonPath": (isArray ? (jPath + "[0]") : jPath) + "." + key,
-                    "label": module + ".create." + key,
-                    "pattern": definition[reference].properties[key].pattern,
-                    "type": definition[reference].properties[key].enum ? "singleValueList" : definition[reference].properties[key].format && ["number", "integer", "double", "long", "float"].indexOf(definition[reference].properties[key].type) == -1 ? getType(definition[reference].properties[key].format) : getType(definition[reference].properties[key].type),
-                    "isRequired": (definition[reference].properties[key].required || (definition[reference].required && definition[reference].required.constructor == Array && definition[reference].required.indexOf(key) > -1) ? true : false),
-                    "isDisabled": definition[reference].properties[key].readOnly ? true : false,
-                    "defaultValue": definition[reference].properties[key].default,
-                    "maxLength": definition[reference].properties[key].maxLength,
-                    "minLength": definition[reference].properties[key].minLength,
-                    "patternErrorMsg": definition[reference].properties[key].pattern ? (module + ".create.field.message." + key) : ""
-                };
+    for (let key in properties) {
+        if (["id", "tenantId", "auditDetails", "assigner"].indexOf(key) > -1) continue;
 
-                if (fields[(isArray ? (jPath + "[0]") : jPath) + "." + key].type == "text" && definition[reference].properties[key].maxLength && definition[reference].properties[key].maxLength > 256)
-                    fields[(isArray ? (jPath + "[0]") : jPath) + "." + key].type = "textarea";
-            }
+        if(properties[key].properties) {
+            getFieldsFromInnerObject(fields, properties[key].properties, module, (isArray ? (jPath + "[0]") : jPath) + "." + key, false, (properties[key].properties.required || []));
+        } else if(properties[key].item && properties[key].item.properties) {
+            getFieldsFromInnerObject(fields, properties[key].item.properties, module, (isArray ? (jPath + "[0]") : jPath) + "." + key, true, (properties[key].properties.required || []));
+        } else {
+            localeFields[module + ".create." + key] = getTitleCase(key);
+            fields[(isArray ? (jPath + "[0]") : jPath) + "." + key] = {
+                "name": key,
+                "jsonPath": (isArray ? (jPath + "[0]") : jPath) + "." + key,
+                "label": module + ".create." + key,
+                "pattern": properties[key].pattern || "",
+                "type": properties[key].enum ? "singleValueList" : properties[key].format && ["number", "integer", "double", "long", "float"].indexOf(properties[key].type) == -1 ? getType(properties[key].format) : getType(properties[key].type),
+                "isRequired": (properties[key].required || (required && required.constructor == Array && required.indexOf(key) > -1) ? true : false),
+                "isDisabled": properties[key].readOnly ? true : false,
+                "defaultValue": properties[key].default || "",
+                "maxLength": properties[key].maxLength,
+                "minLength": properties[key].minLength,
+                "patternErrorMsg": properties[key].pattern ? (module + ".create.field.message." + key) : ""
+            };
+
+            if (fields[(isArray ? (jPath + "[0]") : jPath) + "." + key].type == "text" && properties[key].maxLength && properties[key].maxLength > 256)
+                fields[(isArray ? (jPath + "[0]") : jPath) + "." + key].type = "textarea";
+
         }
+    }
     return {
         fields,
         errors,

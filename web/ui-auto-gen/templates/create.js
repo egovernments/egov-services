@@ -14,7 +14,7 @@ const addGroups = uiUtilities.addGroups;
 let localeFields = {};
 let errors = {};
 
-let createTemplate = function(module, numCols, path, config, definition, basePath, uiInfoDef) {
+let createTemplate = function(module, numCols, path, config, basePath, uiInfoDef) {
     let specifications = {
         numCols: numCols,
         useTimestamp: true,
@@ -32,30 +32,32 @@ let createTemplate = function(module, numCols, path, config, definition, basePat
             break;
         }
     }
-    let splitArr = config["post"].parameters[ind].schema.$ref.split("/");
-    let properties = definition[splitArr[splitArr.length - 1]].properties;
-    let reference;
+
+    let properties = config["post"].parameters[ind].schema.properties;
+    let innerDef;
+    let reqfields = [];
+
     for (let key in properties) {
         if (key != "requestInfo" && key != "RequestInfo") {//Added case insensitive check
             //IF ARRAY
             if (properties[key].type == "array") {
-                let propertiesArr = properties[key].items.$ref.split("/");
-                specifications.objectName = key;
-                reference = propertiesArr[propertiesArr.length - 1];
                 isArr = true;
+                innerDef = properties[key].items.properties;
+                reqfields = properties[key].items.required || [];
             } else {
-                let propertiesArr = properties[key].$ref.split("/");
-                reference = propertiesArr[propertiesArr.length - 1];
-                specifications.objectName = key;
+                innerDef = properties[key].properties;
+                reqfields = properties[key].required || [];
             }
+            specifications.objectName = key;
             break;
         }
     }
 
-    let fieldsData = getFieldsFromInnerObject(reference, fields, definition, module, isArr ? (specifications.objectName + "[0]") : specifications.objectName);
+    let fieldsData = getFieldsFromInnerObject(fields, innerDef, module, isArr ? (specifications.objectName + "[0]") : specifications.objectName, false, reqfields);
     fields = fieldsData.fields;
     errors = Object.assign({}, errors, fieldsData.errors);
     localeFields = Object.assign({}, localeFields, fieldsData.localeFields);
+
     //=======================CUSTOM FILE LOGIC==========================>>
     if (uiInfoDef.externalData && typeof uiInfoDef.externalData == "object" && uiInfoDef.externalData.length) {
         fieldsData = addUrls(fields, uiInfoDef);
@@ -85,7 +87,7 @@ let createTemplate = function(module, numCols, path, config, definition, basePat
     specifications = fieldsData.specifications;
     errors = Object.assign({}, errors, fieldsData.errors);
     localeFields = Object.assign({}, localeFields, fieldsData.localeFields);
-
+    
     setLabels(localeFields, "./output/" + module);
     if(Object.keys(errors).length) {
         return {specifications: specifications, errors: errors};

@@ -92,14 +92,20 @@ public abstract class JdbcRepository {
 
 	}
 
-	public Boolean uniqueCheck(String tableName, String tenantId, String fieldName, String fieldValue) {
+	public Boolean uniqueCheck(String tableName, String tenantId, String fieldName, String fieldValue,
+			String uniqueFieldName, String uniqueFieldValue) {
 
 		LOG.info("Unique Checking for combination of fields tenantId & " + fieldValue);
 
 		Map<String, Object> paramValues = new HashMap<>();
 
 		StringBuffer uniqueQuery = new StringBuffer("select count(*) as count from " + tableName
-				+ " where tenantId=:tenantId" + " and " + fieldName + "=:fieldValue");
+				+ " where tenantId=:tenantId and " + fieldName + "=:fieldValue ");
+
+		if (uniqueFieldValue != null) {
+			uniqueQuery.append(" and " + uniqueFieldName + ":=uniqueFieldValue ");
+			paramValues.put("uniqueFieldValue", uniqueFieldValue);
+		}
 
 		paramValues.put("tenantId", tenantId);
 		paramValues.put("fieldValue", fieldValue);

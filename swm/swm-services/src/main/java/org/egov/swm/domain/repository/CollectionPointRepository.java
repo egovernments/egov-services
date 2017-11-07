@@ -35,9 +35,11 @@ public class CollectionPointRepository {
 
 	}
 
-	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue) {
+	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
+			String uniqueFieldValue) {
 
-		return collectionPointJdbcRepository.uniqueCheck(tenantId, fieldName, fieldValue);
+		return collectionPointJdbcRepository.uniqueCheck(tenantId, fieldName, fieldValue, uniqueFieldName,
+				uniqueFieldValue);
 	}
 
 }

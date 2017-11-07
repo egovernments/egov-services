@@ -33,9 +33,10 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
 	@Autowired
 	public CollectionPointDetailsJdbcRepository collectionPointDetailsJdbcRepository;
 
-	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue) {
+	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
+			String uniqueFieldValue) {
 
-		return uniqueCheck("egswm_collectionpoint", tenantId, fieldName, fieldValue);
+		return uniqueCheck("egswm_collectionpoint", tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
 	}
 
 	public Pagination<CollectionPoint> search(CollectionPointSearch searchRequest) {

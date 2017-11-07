@@ -19,9 +19,10 @@ public class BinDetailsRepository {
 
 	}
 
-	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue) {
+	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
+			String uniqueFieldValue) {
 
-		return binDetailsJdbcRepository.uniqueCheck(tenantId, fieldName, fieldValue);
+		return binDetailsJdbcRepository.uniqueCheck(tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
 	}
 
 }

@@ -22,9 +22,10 @@ public class BinDetailsJdbcRepository extends JdbcRepository {
 	@Autowired
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue) {
+	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
+			String uniqueFieldValue) {
 
-		return uniqueCheck("egswm_bindetails", tenantId, fieldName, fieldValue);
+		return uniqueCheck("egswm_bindetails", tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
 	}
 
 	@Transactional

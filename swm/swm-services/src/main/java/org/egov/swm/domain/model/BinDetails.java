@@ -23,11 +23,11 @@ public class BinDetails {
 	@JsonProperty("id")
 	private String id = null;
 
-	@NotNull
 	@Length(min = 1, max = 128)
 	@JsonProperty("tenantId")
 	private String tenantId = null;
 
+	@NotNull
 	@Size(min = 5, max = 256)
 	@JsonProperty("assetOrBinId")
 	private String assetOrBinId = null;
@@ -35,7 +35,7 @@ public class BinDetails {
 	@JsonProperty("rfidAssigned")
 	private Boolean rfidAssigned = null;
 
-	@Size(min = 1, max = 256)
+	@Size(min = 0, max = 256)
 	@JsonProperty("rfid")
 	private String rfid = null;
 

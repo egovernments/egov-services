@@ -39,9 +39,11 @@ public class CollectionPoint {
 	@JsonProperty("location")
 	private Boundary location = null;
 
+	@Valid
 	@JsonProperty("binDetails")
 	private List<BinDetails> binDetails = null;
 	
+	@Valid
 	@JsonProperty("collectionPointDetails")
 	private List<CollectionPointDetails> collectionPointDetails = null;
 

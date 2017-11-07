@@ -76,8 +76,6 @@ public class CollectionPointService {
 	@Transactional
 	public CollectionPointRequest update(CollectionPointRequest collectionPointRequest) {
 
-		validate(collectionPointRequest);
-
 		Long userId = null;
 
 		for (CollectionPoint cp : collectionPointRequest.getCollectionPoints()) {
@@ -94,6 +92,8 @@ public class CollectionPointService {
 
 			populateCollectionPointDetails(cp);
 		}
+
+		validate(collectionPointRequest);
 
 		return collectionPointRepository.update(collectionPointRequest);
 
@@ -119,14 +119,14 @@ public class CollectionPointService {
 
 		JSONArray responseJSONArray;
 		ObjectMapper mapper = new ObjectMapper();
-		Map<String, String> assetOrBinIdsMap = new HashMap<>();
-		Map<String, String> rfidsMap = new HashMap<>();
+
+		findDuplicatesInUniqueFields(collectionPointRequest);
 
 		for (CollectionPoint collectionPoint : collectionPointRequest.getCollectionPoints()) {
 
 			// Validate Boundary
 
-			if (collectionPoint.getLocation() != null && collectionPoint.getLocation().getCode() != null) {
+			/*if (collectionPoint.getLocation() != null && collectionPoint.getLocation().getCode() != null) {
 
 				Boundary boundary = boundaryRepository.fetchBoundaryByCode(collectionPoint.getLocation().getCode(),
 						collectionPoint.getTenantId());
@@ -138,7 +138,7 @@ public class CollectionPointService {
 				else
 					throw new CustomException("Location",
 							"Given Location is Invalid: " + collectionPoint.getLocation().getCode());
-			}
+			}*/
 
 			if (collectionPoint.getCollectionPointDetails() != null) {
 
@@ -162,14 +162,27 @@ public class CollectionPointService {
 				}
 			}
 
+			validateUniqueFields(collectionPoint);
+
+		}
+
+	}
+
+	private void findDuplicatesInUniqueFields(CollectionPointRequest collectionPointRequest) {
+
+		Map<String, String> assetOrBinIdsMap = new HashMap<>();
+		Map<String, String> rfidsMap = new HashMap<>();
+		Map<String, String> nameMap = new HashMap<>();
+
+		for (CollectionPoint collectionPoint : collectionPointRequest.getCollectionPoints()) {
 			if (collectionPoint.getName() != null) {
-				if (!collectionPointRepository.uniqueCheck(collectionPoint.getTenantId(), "name",
-						collectionPoint.getName())) {
 
-					throw new CustomException("Name", "Already Collection point is exists in system with given name: "
-							+ collectionPoint.getName());
+				if (nameMap.get(collectionPoint.getName()) != null)
+					throw new CustomException("Name",
+							"Duplicate names in given collection Points: " + collectionPoint.getName());
 
-				}
+				nameMap.put(collectionPoint.getName(), collectionPoint.getName());
+
 			}
 
 			for (BinDetails bd : collectionPoint.getBinDetails()) {
@@ -182,39 +195,74 @@ public class CollectionPointService {
 
 					assetOrBinIdsMap.put(bd.getAssetOrBinId(), bd.getAssetOrBinId());
 
-					if (bd.getAssetOrBinId() != null) {
-						if (!binDetailsRepository.uniqueCheck(collectionPoint.getTenantId(), "assetOrBinId",
-								bd.getAssetOrBinId())) {
-
-							throw new CustomException("BinId",
-									"Already Collection point is exists in system with given BinId: "
-											+ bd.getAssetOrBinId());
-
-						}
-					}
-
 				}
+
 				if (bd.getRfid() != null) {
 					if (rfidsMap.get(bd.getRfid()) != null)
 						throw new CustomException("Rfid", "Duplicate RFIDs in given Bin details: " + bd.getRfid());
 
 					rfidsMap.put(bd.getRfid(), bd.getRfid());
 
-					if (bd.getRfidAssigned() && bd.getRfidAssigned() != null) {
-						if (!binDetailsRepository.uniqueCheck(collectionPoint.getTenantId(), "rfid", bd.getRfid())) {
+				}
 
-							throw new CustomException("RFID",
-									"Already Collection point is exists in system with given RFID: " + bd.getRfid());
+			}
+		}
 
-						}
-					}
+	}
+
+	private void validateUniqueFields(CollectionPoint collectionPoint) {
+
+		if (collectionPoint.getName() != null) {
+			if (!collectionPointRepository.uniqueCheck(collectionPoint.getTenantId(), "name", collectionPoint.getName(),
+					"code", collectionPoint.getCode())) {
+
+				throw new CustomException("Name",
+						"The field name must be unique in the system The  value " + collectionPoint.getName()
+								+ " for the field name already exists in the system. Please provide different value ");
+
+			}
+		}
+
+		for (BinDetails bd : collectionPoint.getBinDetails()) {
+
+			if (bd.getAssetOrBinId() != null) {
+				if (!binDetailsRepository.uniqueCheck(collectionPoint.getTenantId(), "assetOrBinId",
+						bd.getAssetOrBinId(), "id", bd.getId())) {
+
+					throw new CustomException("BinId", "The field BinId must be unique in the system The  value "
+							+ bd.getAssetOrBinId()
+							+ " for the field BinId already exists in the system. Please provide different value ");
+
+				}
+			}
+
+			if (bd.getRfidAssigned() != null && bd.getRfidAssigned()) {
+
+				if (bd.getRfid() == null || bd.getRfid().isEmpty()) {
+
+					throw new CustomException("RFID",
+							"The field RFID must be not be null or empty , the field RFID is Mandatory. "
+									+ "It cannot be not be null or empty.Please provide correct value");
 
 				}
 
 			}
 
-		}
+			if (bd.getRfid() != null) {
 
+				if (bd.getRfidAssigned() && bd.getRfidAssigned() != null) {
+					if (!binDetailsRepository.uniqueCheck(collectionPoint.getTenantId(), "rfid", bd.getRfid(), "id",
+							bd.getId())) {
+
+						throw new CustomException("RFID", "The field RFID must be unique in the system The  value "
+								+ bd.getRfid()
+								+ " for the field RFID already exists in the system. Please provide different value ");
+
+					}
+				}
+			}
+
+		}
 	}
 
 	public Pagination<CollectionPoint> search(CollectionPointSearch collectionPointSearch) {

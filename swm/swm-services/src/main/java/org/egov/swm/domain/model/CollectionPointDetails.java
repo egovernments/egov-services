@@ -22,7 +22,6 @@ public class CollectionPointDetails {
 	@JsonProperty("id")
 	private String id = null;
 
-	@NotNull
 	@Length(min = 1, max = 128)
 	@JsonProperty("tenantId")
 	private String tenantId = null;

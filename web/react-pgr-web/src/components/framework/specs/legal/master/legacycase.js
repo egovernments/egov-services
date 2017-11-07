@@ -90,7 +90,8 @@ var dat = {
             name: "caseDetails",
             jsonPath: "cases[0].summon.caseDetails",
             label: "legal.create.caseDetails",
-            type: "text",
+            type: "textarea",
+            fullWidth:true,
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: ""

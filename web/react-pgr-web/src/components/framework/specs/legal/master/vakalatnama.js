@@ -137,6 +137,56 @@ var dat = {
 							}]
           }
         ]
+      }, {
+        name: "assignAdvocate",
+        label: "legal.create.group.title.assignAdvocate",
+        fields: [
+          {
+            type: "tableList",
+            jsonPath: "cases[0].summon.advocateDetails",
+            tableList: {
+              header: [
+                {
+                  label: "legal.create.advocateName"
+                },
+                {
+                  label: "legal.create.advocateAssignDate"
+                },
+                {
+                  label: "legal.create.advocateFee"
+                }
+              ],
+              values: [
+                {
+                  name: "advocateName",
+                  pattern: "",
+                  type: "singleValueList",
+                  jsonPath: "cases[0].advocateDetails[0].advocate.code",
+                  isRequired: true,
+                  isDisabled: false,
+                  url:
+                    "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
+                },
+                {
+                  name: "advocateAssignDate",
+                  pattern: "",
+                  type: "datePicker",
+                  jsonPath: "cases[0].advocateDetails[0].assignedDate",
+                  isRequired: true,
+                  isDisabled: false
+                },
+                {
+                  name: "advocateFee",
+                  pattern: "",
+                  type: "text",
+                  jsonPath: "cases[0].advocateDetails[0].fee",
+                  isRequired: true,
+                  isDisabled: false
+                }
+              ]
+            }
+          }
+        ]
       }
     ]
   }

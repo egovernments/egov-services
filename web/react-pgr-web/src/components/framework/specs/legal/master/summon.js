@@ -122,6 +122,13 @@ var dat = {
           ],
       header: [
         {
+          label: "legal.search.result.actionLabels",
+          isChecked:true,
+          checkedItem:{
+            jsonPath:"checkedRow",
+            label:"",
+          }
+        },{
           label: "legal.create.referenceNo"
         },
         {
@@ -140,25 +147,17 @@ var dat = {
         },
         {
           label: "legal.create.advocateName"
-        },
-        {
-          label: "legal.search.result.actionLabels",
-          isChecked:true,
-          checkedItem:{
-            jsonPath:"checkedRow",
-            label:"",
-          }
         }
       ],
       values: [
+         "code",
         "summon.summonReferenceNo",
         "caseRefernceNo",
         "hearingDetails.caseStatus",
         "summon.caseNo",
         "summon.departmentName.name",
         "summon.caseType.name",
-        "advocateDetails[0].advocate.name",
-         "code"
+        "advocateDetails[0].advocate.name"
       ],
       resultPath: "cases",
       rowClickUrlUpdate: "/update/legalcase/case/{id}",
@@ -306,7 +305,8 @@ var dat = {
             name: "plantiffAddress",
             jsonPath: "summons[0].plantiffAddress.addressLine1",
             label: "legal.create.plantiffAddress",
-            type: "text",
+            type: "textarea",
+            fullWidth: true,
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: ""

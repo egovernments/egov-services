@@ -1,17 +1,22 @@
 package org.egov.swm.domain.service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.AuditDetails;
+import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.SwmProcess;
 import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorSearch;
+import org.egov.swm.domain.repository.ContractorRepository;
 import org.egov.swm.domain.repository.VendorRepository;
 import org.egov.swm.web.contract.IdGenerationResponse;
+import org.egov.swm.web.repository.BoundaryRepository;
 import org.egov.swm.web.repository.IdgenRepository;
 import org.egov.swm.web.repository.MdmsRepository;
 import org.egov.swm.web.requests.VendorRequest;
@@ -37,6 +42,9 @@ public class VendorService {
 	private VendorRepository vendorRepository;
 
 	@Autowired
+	private ContractorRepository contractorRepository;
+
+	@Autowired
 	private IdgenRepository idgenRepository;
 
 	@Value("${egov.swm.vendor.num.idgen.name}")
@@ -47,6 +55,9 @@ public class VendorService {
 
 	@Autowired
 	private MdmsRepository mdmsRepository;
+
+	@Autowired
+	private BoundaryRepository boundaryRepository;
 
 	@Transactional
 	public VendorRequest create(VendorRequest vendorRequest) {
@@ -116,6 +127,8 @@ public class VendorService {
 
 			}
 
+			validate(vendorRequest);
+
 		}
 
 		return vendorRepository.update(vendorRequest);
@@ -126,7 +139,10 @@ public class VendorService {
 
 		JSONArray responseJSONArray = null;
 		ObjectMapper mapper = new ObjectMapper();
-		SwmProcess p ;
+		SwmProcess p;
+		Boundary boundary;
+		findDuplicatesInUniqueFields(vendorRequest);
+
 		for (Vendor vendor : vendorRequest.getVendors()) {
 
 			if (vendor.getServicesOffered() != null)
@@ -139,19 +155,101 @@ public class VendorService {
 								Constants.SWMPROCESS_MASTER_NAME, "code", process.getCode(),
 								vendorRequest.getRequestInfo());
 
-						if (responseJSONArray != null && responseJSONArray.size() > 0){
+						if (responseJSONArray != null && responseJSONArray.size() > 0) {
 							p = mapper.convertValue(responseJSONArray.get(0), SwmProcess.class);
 							process.setTenantId(p.getTenantId());
 							process.setName(p.getName());
-						}
-						else
+						} else
 							throw new CustomException("ServicesOffered",
 									"Given ServicesOffered is invalid: " + process.getCode());
 
 					}
 				}
 
+			if (vendor.getServicedLocations() != null)
+				for (Boundary location : vendor.getServicedLocations()) {
+
+					// Validate Location
+					if (location.getCode() != null) {
+
+						boundary = boundaryRepository.fetchBoundaryByCode(location.getCode(), vendor.getTenantId());
+
+						if (boundary != null)
+							location.builder().id(String.valueOf(boundary.getId())).name(boundary.getName())
+									.boundaryNum(String.valueOf(boundary.getBoundaryNum())).code(boundary.getCode())
+									.build();
+						else
+							throw new CustomException("Location", "Given Location is Invalid: " + location.getCode());
+
+					}
+				}
+
+			validateUniqueFields(vendor);
+
 		}
+	}
+
+	private void findDuplicatesInUniqueFields(VendorRequest vendorRequest) {
+
+		Map<String, String> regNumberMap = new HashMap<>();
+		Map<String, String> gstMap = new HashMap<>();
+
+		for (Vendor vendor : vendorRequest.getVendors()) {
+
+			if (vendor.getRegistrationNo() != null) {
+				if (regNumberMap.get(vendor.getRegistrationNo()) != null)
+					throw new CustomException("registrationNo",
+							"Duplicate registration numbers in given vendors : " + vendor.getRegistrationNo());
+
+				regNumberMap.put(vendor.getRegistrationNo(), vendor.getRegistrationNo());
+			}
+
+			if (vendor.getContractor() != null) {
+
+				if (vendor.getContractor().getGst() != null && !vendor.getContractor().getGst().isEmpty()) {
+
+					if (gstMap.get(vendor.getContractor().getGst()) != null)
+						throw new CustomException("gst",
+								"Duplicate gst's in given vendors : " + vendor.getContractor().getGst());
+
+					gstMap.put(vendor.getContractor().getGst(), vendor.getContractor().getGst());
+				}
+
+			}
+
+		}
+
+	}
+
+	private void validateUniqueFields(Vendor vendor) {
+
+		if (vendor.getRegistrationNo() != null) {
+			if (!vendorRepository.uniqueCheck(vendor.getTenantId(), "registrationNo", vendor.getRegistrationNo(),
+					"vendorNo", vendor.getVendorNo())) {
+
+				throw new CustomException("registrationNo",
+						"The field registrationNo must be unique in the system The  value " + vendor.getRegistrationNo()
+								+ " for the field registrationNo already exists in the system. Please provide different value ");
+
+			}
+		}
+
+		if (vendor.getContractor() != null) {
+
+			if (vendor.getContractor().getGst() != null && !vendor.getContractor().getGst().isEmpty()) {
+
+				if (!contractorRepository.uniqueCheck(vendor.getTenantId(), "gst", vendor.getContractor().getGst(),
+						"vendorNo", vendor.getVendorNo())) {
+
+					throw new CustomException("gst", "The field gst must be unique in the system The  value "
+							+ vendor.getContractor().getGst()
+							+ " for the field gst already exists in the system. Please provide different value ");
+
+				}
+			}
+
+		}
+
 	}
 
 	private void prepareAgreementDocument(Vendor v) {

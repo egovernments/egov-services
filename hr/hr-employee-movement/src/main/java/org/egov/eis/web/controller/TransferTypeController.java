@@ -54,6 +54,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/transfertypes")
@@ -94,10 +95,10 @@ public class TransferTypeController {
         }
 
         // Call service
-        List<String> transferTypes = null;
+        List<Map<String, String>> transferTypes = null;
         try {
             if (transferTypeGetRequest.getTypeOfMovement().equalsIgnoreCase("TRANSFER") || transferTypeGetRequest.getTypeOfMovement().equalsIgnoreCase("TRANSFER_CUM_PROMOTION"))
-                transferTypes = TransferType.getAllObjectValues();
+                transferTypes = TransferType.getTransferTypes();
         } catch (Exception exception) {
             logger.error("Error while processing request " + transferTypeGetRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
@@ -115,7 +116,7 @@ public class TransferTypeController {
      * @param requestInfo
      * @return ResponseEntity<?>
      */
-    private ResponseEntity<?> getSuccessResponse(List<String> transferTypes,
+    private ResponseEntity<?> getSuccessResponse(List<Map<String, String>> transferTypes,
                                                  RequestInfo requestInfo) {
         TransferTypeResponse transferTypeResponse = new TransferTypeResponse();
         transferTypeResponse.setTransferTypes(transferTypes);

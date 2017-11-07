@@ -26,7 +26,6 @@ public class VehicleMaintenance {
 	private String code = null;
 
 	@NotNull
-
 	@Size(min = 1, max = 128)
 	@JsonProperty("tenantId")
 	private String tenantId = null;
@@ -36,19 +35,27 @@ public class VehicleMaintenance {
 	@JsonProperty("vehicle")
 	private Vehicle vehicle = null;
 
-	@Min(1)
-	@Max(500)
-	@JsonProperty("maintenanceAfterDays")
-	private Long maintenanceAfterDays = null;
-
-	@Min(1)
-	@Max(20000)
-	@JsonProperty("maintenanceAfterKm")
-	private Long maintenanceAfterKm = null;
+	@NotNull
+	@Size(min = 2, max = 5)
+	@JsonProperty("maintenanceUom")
+	private String maintenanceUom = null;
 
 	@NotNull
+	@Min(1)
+	@Max(20000)
+	@JsonProperty("maintenanceAfter")
+	private Long maintenanceAfter = null;
+
+	@NotNull
+	@Size(min = 3, max = 5)
+	@JsonProperty("downtimeforMaintenanceUom")
+	private String downtimeforMaintenanceUom = null;
+
+	@NotNull
+	@Min(1)
+	@Max(720)
 	@JsonProperty("downtimeforMaintenance")
-	private Double downtimeforMaintenance = null;
+	private Long downtimeforMaintenance = null;
 
 	@Valid
 	@JsonProperty("auditDetails")

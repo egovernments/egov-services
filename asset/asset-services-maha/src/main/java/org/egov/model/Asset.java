@@ -3,6 +3,7 @@ package org.egov.model;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.egov.model.enums.ModeOfAcquisitionEnum;
@@ -65,19 +66,15 @@ public class Asset   {
 	  @JsonProperty("originalValue")
 	  private BigDecimal originalValue = null;
 
-	  @NotNull
 	  @JsonProperty("assetAccount")
 	  private String assetAccount = null;
-
-	  @NotNull
+	  
 	  @JsonProperty("accumulatedDepreciationAccount")
 	  private String accumulatedDepreciationAccount = null;
 
-	  @NotNull
 	  @JsonProperty("revaluationReserveAccount")
 	  private String revaluationReserveAccount = null;
 	  
-	  @NotNull
 	  @JsonProperty("depreciationExpenseAccount")
 	  private String depreciationExpenseAccount = null;
 
@@ -127,6 +124,7 @@ public class Asset   {
 	  private String departmentCode = null;
 
 	  @NotNull
+	  @Valid
 	  @JsonProperty("assetCategory")
 	  private AssetCategory assetCategory = null;
 

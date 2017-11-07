@@ -1,35 +1,17 @@
 package org.egov.works.estimate.domain.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
+import net.minidev.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.works.commons.exception.ErrorCode;
-import org.egov.works.commons.exception.InvalidDataException;
+import org.egov.tracer.model.CustomException;
+import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.config.WorksEstimateServiceConstants;
 import org.egov.works.estimate.domain.repository.AbstractEstimateRepository;
 import org.egov.works.estimate.persistence.repository.IdGenerationRepository;
 import org.egov.works.estimate.utils.EstimateUtils;
-import org.egov.works.estimate.web.contract.AbstractEstimate;
-import org.egov.works.estimate.web.contract.AbstractEstimateDetails;
-import org.egov.works.estimate.web.contract.AbstractEstimateRequest;
-import org.egov.works.estimate.web.contract.AbstractEstimateSearchContract;
-import org.egov.works.estimate.web.contract.AbstractEstimateStatus;
-import org.egov.works.estimate.web.contract.AuditDetails;
-import org.egov.works.estimate.web.contract.EstimateAppropriation;
-import org.egov.works.estimate.web.contract.EstimateAppropriationRequest;
-import org.egov.works.estimate.web.contract.EstimateAppropriationResponse;
-import org.egov.works.estimate.web.contract.ProjectCode;
-import org.egov.works.estimate.web.contract.ProjectCodeRequest;
-import org.egov.works.estimate.web.contract.ProjectCodeStatus;
-import org.egov.works.estimate.web.contract.RequestInfo;
-import org.egov.works.estimate.web.contract.WorkFlowDetails;
+import org.egov.works.estimate.web.contract.*;
 import org.egov.works.workflow.service.WorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,15 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.client.RestTemplate;
 
-import net.minidev.json.JSONArray;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
 public class AbstractEstimateService {
-
-	public static final String ABSTRACT_ESTIMATE_WF_TYPE = "AbstractEstimate";
-
-	public static final String ABSTRACT_ESTIMATE_BUSINESSKEY = "AbstractEstimate";
 
 	@Autowired
 	private AbstractEstimateRepository abstractEstimateRepository;
@@ -112,11 +91,13 @@ public class AbstractEstimateService {
 
 			populateNextStatus(estimate);
 
+			ProjectCode projectCode = new ProjectCode();
 			if (estimate.getStatus().toString().equalsIgnoreCase(AbstractEstimateStatus.APPROVED.toString())) {
 				for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
-					setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
-							abstractEstimateRequest.getRequestInfo());
-					setEstimateAppropriation(abstractEstimateDetails, abstractEstimateRequest.getRequestInfo());
+					projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
+							abstractEstimateRequest.getRequestInfo()));
+					abstractEstimateDetails.setProjectCode(projectCode);
+					setEstimateAppropriation(estimate, abstractEstimateRequest.getRequestInfo());
 
 				}
 			}
@@ -131,8 +112,8 @@ public class AbstractEstimateService {
 
 			WorkFlowDetails workFlowDetails = abstractEstimate.getWorkFlowDetails();
 
-			workFlowDetails.setType(ABSTRACT_ESTIMATE_WF_TYPE);
-			workFlowDetails.setBusinessKey(ABSTRACT_ESTIMATE_BUSINESSKEY);
+			workFlowDetails.setType(CommonConstants.ABSTRACT_ESTIMATE_WF_TYPE);
+			workFlowDetails.setBusinessKey(CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY);
 			workFlowDetails.setStateId(abstractEstimate.getStateId());
 			if (abstractEstimate.getStatus() != null)
 				workFlowDetails.setStatus(abstractEstimate.getStatus().toString());
@@ -193,17 +174,19 @@ public class AbstractEstimateService {
 
 	public void validateEstimates(AbstractEstimateRequest abstractEstimateRequest, BindingResult errors,
 			Boolean isNew) {
+		Map<String, String> messages = new HashMap<>();
 		for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
 			if (estimate.getDateOfProposal() == null)
-				throw new InvalidDataException("dateOfProposal", ErrorCode.NOT_NULL.getCode(), null);
+				messages.put(WorksEstimateServiceConstants.KEY_NULL_DATEOFPROPOSAL,
+						WorksEstimateServiceConstants.MESSAGE_NULL_DATEOFPROPOSAL);
 			if (!estimate.getSpillOverFlag() && estimate.getDateOfProposal() != null
 					&& new Date(estimate.getDateOfProposal()).after(new Date()))
-				throw new InvalidDataException("dateOfProposal", "dateofproposal.future.date",
-						estimate.getDateOfProposal().toString());
+				messages.put(WorksEstimateServiceConstants.KEY_FUTUREDATE_DATEOFPROPOSAL,
+						WorksEstimateServiceConstants.MESSAGE_FUTUREDATE_DATEOFPROPOSAL);
 			if (estimate.getTenantId() == null)
-				throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
-						estimate.getTenantId());
-			validateMasterData(estimate, errors, abstractEstimateRequest.getRequestInfo());
+				messages.put(WorksEstimateServiceConstants.KEY_NULL_TENANTID,
+						WorksEstimateServiceConstants.MESSAGE_NULL_TENANTID);
+			validateMasterData(estimate, errors, abstractEstimateRequest.getRequestInfo(), messages);
 
 			AbstractEstimateSearchContract searchContract = new AbstractEstimateSearchContract();
 			if (estimate.getId() != null)
@@ -212,31 +195,29 @@ public class AbstractEstimateService {
 			searchContract.setTenantId(estimate.getTenantId());
 			List<AbstractEstimate> oldEstimates = search(searchContract);
 			if (isNew && !oldEstimates.isEmpty())
-				throw new InvalidDataException("abstractEstimateNumber", ErrorCode.NON_UNIQUE_VALUE.getCode(),
-						estimate.getAbstractEstimateNumber());
+				messages.put(WorksEstimateServiceConstants.KEY_UNIQUE_ABSTRACTESTIMATENUMBER,
+						WorksEstimateServiceConstants.MESSAGE_UNIQUE_ABSTRACTESTIMATENUMBER);
 			searchContract.setAbstractEstimateNumbers(null);
 			if (!isNew && estimate.getWorkFlowDetails() != null
 					&& "Approve".equalsIgnoreCase(estimate.getWorkFlowDetails().getAction())) {
 				if (StringUtils.isBlank(estimate.getAdminSanctionNumber()))
-					throw new InvalidDataException("adminSanctionNumber", ErrorCode.NON_UNIQUE_VALUE.getCode(),
-							estimate.getAdminSanctionNumber());
-				if (StringUtils.isBlank(estimate.getCouncilResolutionNumber()))
-					throw new InvalidDataException("councilResolutionNumber", ErrorCode.NON_UNIQUE_VALUE.getCode(),
-							estimate.getCouncilResolutionNumber());
-				if (estimate.getCouncilResolutionDate() == null)
-					throw new InvalidDataException("councilResolutionDate", ErrorCode.NON_UNIQUE_VALUE.getCode(),
-							estimate.getCouncilResolutionDate().toString());
+					messages.put(WorksEstimateServiceConstants.KEY_NULL_ADMINSANCTIONNUMBER,
+							WorksEstimateServiceConstants.MESSAGE_NULL_ADMINSANCTIONNUMBER);
 				searchContract.setAdminSanctionNumbers(Arrays.asList(estimate.getAdminSanctionNumber()));
 				oldEstimates = search(searchContract);
 				if (!oldEstimates.isEmpty() && !estimate.getId().equalsIgnoreCase(oldEstimates.get(0).getId()))
-					throw new InvalidDataException("adminSanctionNumber", ErrorCode.NOT_NULL.getCode(),
-							estimate.getAdminSanctionNumber());
+					messages.put(WorksEstimateServiceConstants.KEY_UNIQUE_ADMINSANCTIONNUMBER,
+							WorksEstimateServiceConstants.MESSAGE_UNIQUE_ADMINSANCTIONNUMBER);
 			}
-			validateEstimateDetails(estimate, errors, isNew);
+			validateEstimateDetails(estimate, errors, isNew, messages);
+
+			if (messages != null && !messages.isEmpty())
+				throw new CustomException(messages);
 		}
 	}
 
-	private void validateEstimateDetails(AbstractEstimate estimate, BindingResult errors, Boolean isNew) {
+	private void validateEstimateDetails(AbstractEstimate estimate, BindingResult errors, Boolean isNew,
+			Map<String, String> messages) {
 		BigDecimal estimateAmount = BigDecimal.ZERO;
 		for (final AbstractEstimateDetails aed : estimate.getAbstractEstimateDetails()) {
 			estimateAmount = estimateAmount.add(aed.getEstimateAmount());
@@ -247,14 +228,16 @@ public class AbstractEstimateService {
 			searchContract.setTenantId(estimate.getTenantId());
 			List<AbstractEstimate> oldEstimates = search(searchContract);
 			if (isNew && !oldEstimates.isEmpty())
-				throw new InvalidDataException("estimateNumber", ErrorCode.NON_UNIQUE_VALUE.getCode(),
-						aed.getEstimateNumber());
+				messages.put(WorksEstimateServiceConstants.KEY_UNIQUE_ESTIMATENUMBER,
+						WorksEstimateServiceConstants.MESSAGE_UNIQUE_ESTIMATENUMBER);
 		}
 		if (Double.parseDouble(estimateAmount.toString()) <= 0)
-			throw new InvalidDataException("estimateAmount", "estimateamount.notvalid", estimateAmount.toString());
+			messages.put(WorksEstimateServiceConstants.KEY_INVALID_ESTIMATEAMOUNT,
+					WorksEstimateServiceConstants.MESSAGE_INVALID_ESTIMATEAMOUNT);
 	}
 
-	public void validateMasterData(AbstractEstimate abstractEstimate, BindingResult errors, RequestInfo requestInfo) {
+	public void validateMasterData(AbstractEstimate abstractEstimate, BindingResult errors, RequestInfo requestInfo,
+			Map<String, String> messages) {
 
 		JSONArray responseJSONArray = null;
 
@@ -263,8 +246,8 @@ public class AbstractEstimateService {
 					abstractEstimate.getFund().getCode(), null, abstractEstimate.getTenantId(), requestInfo,
 					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
-				throw new InvalidDataException("Fund", "Invalid data for fund code",
-						abstractEstimate.getFund().getCode());
+				messages.put(WorksEstimateServiceConstants.KEY_FUND_INVALID,
+						WorksEstimateServiceConstants.MESSAGE_FUND_INVALID);
 			}
 		}
 		if (abstractEstimate.getFunction() != null
@@ -273,8 +256,8 @@ public class AbstractEstimateService {
 					abstractEstimate.getFunction().getCode(), null, abstractEstimate.getTenantId(), requestInfo,
 					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
-				throw new InvalidDataException("Function", "Invalid data for function code",
-						abstractEstimate.getFunction().getCode());
+				messages.put(WorksEstimateServiceConstants.KEY_FUNCTION_INVALID,
+						WorksEstimateServiceConstants.MESSAGE_FUNCTION_INVALID);
 			}
 		}
 
@@ -284,18 +267,18 @@ public class AbstractEstimateService {
 					abstractEstimate.getTypeOfWork().getCode(), null, abstractEstimate.getTenantId(), requestInfo,
 					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
-				throw new InvalidDataException("TypeOfWork", "Invalid data for estimate type of work",
-						abstractEstimate.getTypeOfWork().getCode());
+				messages.put(WorksEstimateServiceConstants.KEY_TYPEOFWORK_INVALID,
+						WorksEstimateServiceConstants.MESSAGE_TYPEOFWORK_INVALID);
 			}
 		}
 		if (abstractEstimate.getSubTypeOfWork() != null
 				&& StringUtils.isNotBlank(abstractEstimate.getSubTypeOfWork().getCode())) {
-			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.SUBTYPEOFWORK_OBJECT,
+			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.TYPEOFWORK_OBJECT,
 					abstractEstimate.getSubTypeOfWork().getCode(), null, abstractEstimate.getTenantId(), requestInfo,
 					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
-				throw new InvalidDataException("SubTypeOfWork", "Invalid data for estimate subtype of work",
-						abstractEstimate.getSubTypeOfWork().getCode());
+				messages.put(WorksEstimateServiceConstants.KEY_SUBTYPEOFWORK_INVALID,
+						WorksEstimateServiceConstants.MESSAGE_SUBTYPEOFWORK_INVALID);
 			}
 		}
 		if (abstractEstimate.getDepartment() != null
@@ -304,8 +287,8 @@ public class AbstractEstimateService {
 					abstractEstimate.getDepartment().getCode(), null, abstractEstimate.getTenantId(), requestInfo,
 					WorksEstimateServiceConstants.COMMON_MASTERS_MODULE_CODE);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
-				throw new InvalidDataException("Department", "Invalid data for estimate Department",
-						abstractEstimate.getDepartment().getCode());
+				messages.put(WorksEstimateServiceConstants.KEY_DEPARTMENT_INVALID,
+						WorksEstimateServiceConstants.MESSAGE_DEPARTMENT_INVALID);
 			}
 		}
 		if (abstractEstimate.getScheme() != null & StringUtils.isNotBlank(abstractEstimate.getScheme().getCode())) {
@@ -313,8 +296,8 @@ public class AbstractEstimateService {
 					abstractEstimate.getScheme().getCode(), null, abstractEstimate.getTenantId(), requestInfo,
 					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
-				throw new InvalidDataException("Scheme", "Invalid data for estimate scheme",
-						abstractEstimate.getScheme().getCode());
+				messages.put(WorksEstimateServiceConstants.KEY_SCHEME_INVALID,
+						WorksEstimateServiceConstants.MESSAGE_SCHEME_INVALID);
 			}
 		}
 
@@ -324,8 +307,8 @@ public class AbstractEstimateService {
 					abstractEstimate.getSubScheme().getCode(), null, abstractEstimate.getTenantId(), requestInfo,
 					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
-				throw new InvalidDataException("SubScheme", "Invalid data for estimate SubScheme",
-						abstractEstimate.getSubScheme().getCode());
+				messages.put(WorksEstimateServiceConstants.KEY_SUBSCHEME_INVALID,
+						WorksEstimateServiceConstants.MESSAGE_SUBSCHEME_INVALID);
 			}
 		}
 
@@ -335,8 +318,8 @@ public class AbstractEstimateService {
 					abstractEstimate.getBudgetGroup().getName(), abstractEstimate.getTenantId(), requestInfo,
 					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
-				throw new InvalidDataException("BudgetGroup", "Invalid data for estimate Budget Group",
-						abstractEstimate.getBudgetGroup().getName());
+				messages.put(WorksEstimateServiceConstants.KEY_BUDGETGROUP_INVALID,
+						WorksEstimateServiceConstants.MESSAGE_BUDGETGROUP_INVALID);
 			}
 		}
 
@@ -377,37 +360,46 @@ public class AbstractEstimateService {
 		return auditDetails;
 	}
 
-	public void setProjectCode(final AbstractEstimateDetails abstractEstimateDetails, boolean spillOverFlag,
+	public String setProjectCode(final AbstractEstimateDetails abstractEstimateDetails, boolean spillOverFlag,
 			final RequestInfo requestInfo) {
+		Map<String, String> messages = new HashMap<>();
 		ProjectCode projectCode = new ProjectCode();
 		if (spillOverFlag) {
 			if (abstractEstimateDetails.getProjectCode() != null
 					&& abstractEstimateDetails.getProjectCode().getCode() != null)
 				projectCode.setCode(abstractEstimateDetails.getProjectCode().getCode());
 			else
-				throw new InvalidDataException("WorkIdentificationNumber", ErrorCode.NOT_NULL.getCode(), null);
+				messages.put(WorksEstimateServiceConstants.KEY_UNIQUE_WORKIDENTIFICATIONNUMBER,
+						WorksEstimateServiceConstants.MESSAGE_UNIQUE_WORKIDENTIFICATIONNUMBER);
 		}
+
+		if (messages != null && !messages.isEmpty())
+			throw new CustomException(messages);
+
 		projectCode.setName(abstractEstimateDetails.getNameOfWork());
 		projectCode.setDescription(abstractEstimateDetails.getNameOfWork());
 		projectCode.setActive(true);
 		projectCode.setStatus(ProjectCodeStatus.CREATED);
+		projectCode.setTenantId(abstractEstimateDetails.getTenantId());
 
 		ProjectCodeRequest projectCodeRequest = new ProjectCodeRequest();
+		projectCodeRequest.setRequestInfo(requestInfo);
 		List<ProjectCode> projectCodes = new ArrayList<>();
 		projectCodes.add(projectCode);
 		projectCodeRequest.setProjectCodes(projectCodes);
-		projectCodeService.create(projectCodeRequest);
+		List<ProjectCode> savedCodes = projectCodeService.create(projectCodeRequest);
+		return savedCodes.get(0).getCode();
 	}
 
-	private void setEstimateAppropriation(AbstractEstimateDetails abstractEstimateDetails,
+	private void setEstimateAppropriation(AbstractEstimate abstractEstimate,
 			final RequestInfo requestInfo) {
 		EstimateAppropriationRequest estimateAppropriationRequest = new EstimateAppropriationRequest();
 		EstimateAppropriation estimateAppropriation = new EstimateAppropriation();
 		List<EstimateAppropriation> appropriations = new ArrayList<>();
 		estimateAppropriation
-				.setObjectNumber(abstractEstimateDetails.getAbstractEstimate().getAbstractEstimateNumber());
-		estimateAppropriation.setObjectType(ABSTRACT_ESTIMATE_BUSINESSKEY);
-		estimateAppropriation.setTenantId(abstractEstimateDetails.getAbstractEstimate().getTenantId());
+				.setObjectNumber(abstractEstimate.getAbstractEstimateNumber());
+		estimateAppropriation.setObjectType(CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY);
+		estimateAppropriation.setTenantId(abstractEstimate.getTenantId());
 		estimateAppropriationRequest.setEstimateAppropriations(appropriations);
 		estimateAppropriationRequest.setRequestInfo(requestInfo);
 

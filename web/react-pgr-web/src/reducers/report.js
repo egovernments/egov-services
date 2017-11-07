@@ -1,4 +1,4 @@
-// import _ from 'lodash';
+import _ from 'lodash';
 
 const defaultState = {
   showTable: false,
@@ -6,7 +6,9 @@ const defaultState = {
   reportResult:{},
   flag:0,
   searchParams:[],
-  tableSelectionData:[]
+  tableSelectionData:[],
+  reportHistory:[],
+  reportIndex:0
 };
 
 export default(state = defaultState, action) => {
@@ -16,6 +18,38 @@ export default(state = defaultState, action) => {
         ...state,
         searchParams:action.searchParams
       }
+
+    case "PUSH_REPORT_HISTORY":
+      var current={...state};
+        if (_.findIndex(current.reportHistory,{ 'reportName': action.reportData.reportName})!=-1) {
+          let index=_.findIndex(current.reportHistory,{ 'reportName': action.reportData.reportName});
+          current.reportHistory[index]=action.reportData;
+          current.reportIndex=current.reportHistory.length;
+        }
+        else {
+          current.reportHistory.push(action.reportData)
+          current.reportIndex=current.reportIndex+1;
+        }
+        return current;
+
+    case "CLEAR_REPORT_HISTORY":
+      return {
+        ...state,
+        reportHistory:[],
+        reportIndex:0
+      }
+
+    case "INCREASE_REPORT_INDEX":
+      return {
+        ...state,
+        reportIndex:state.reportIndex+1
+      }
+
+    case "DECREASE_REPORT_INDEX":
+        return {
+          ...state,
+          reportIndex:state.reportIndex-1
+        }
 
     case "SET_META_DATA":
       return {

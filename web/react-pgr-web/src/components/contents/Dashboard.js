@@ -686,7 +686,7 @@ class Dashboard extends Component {
     let {handleRowClick, checkIfDate} = this;
 	  const renderBody=()=> {
 		 return this.state.localArray.map((e,i)=> {
-				var triColor = "#fff";
+				var triColor = "#000";
 				e.attribValues.map((item,index)=>{
 				  if(item.key =="PRIORITY"){
             switch(item.name) {

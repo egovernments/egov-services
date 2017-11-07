@@ -250,7 +250,7 @@
       "keyName": "ASSET_MANDATORY",
       "tenantId": "default",
       "description": "To make Asset linking required or not in Estimate screen",
-      "values": "Yes",
+      "value": "No",
       "effectivefrom" : "2017-08-22",
       "createdby": null,
       "createddate": null,

@@ -40,29 +40,52 @@
 
 package org.egov.eis.web.contract;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
-@Data
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+import java.util.List;
+
+
+@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class ResponseInfo {
+public class AttendanceReportRequest {
 
-    private String apiId;
+    private List<Long> id;
 
-    private String ver;
+    private List<Long> employeeIds;
 
-    private String ts;
+    @NotNull
+    private Integer month;
 
-    private String resMsgId;
+    @NotNull
+    private String year;
 
-    private String msgId;
+    private String code;
 
-    private String status;
+    private Long departmentId;
+
+    private Long designationId;
+
+    private Long employeeType;
+
+    private String sortBy;
+
+    private String sortOrder;
+
+    @NotNull
+    private String tenantId;
+
+    @Min(1)
+    private Short pageSize;
+
+    private Short pageNumber;
 
 }

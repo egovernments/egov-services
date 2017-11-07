@@ -76,6 +76,14 @@ public class Attendance {
 
     private String remarks;
 
+    private Long presentDays;
+
+    private Long absentDays;
+
+    private Long leaveDays;
+
+    private Long noOfOts;
+
     private Long createdBy;
 
     @JsonFormat(pattern = "dd/MM/yyyy")

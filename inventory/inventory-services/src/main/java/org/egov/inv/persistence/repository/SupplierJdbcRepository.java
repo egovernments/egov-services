@@ -77,17 +77,17 @@ public class SupplierJdbcRepository extends JdbcRepository {
 		if (supplierGetRequest.getSortBy() != null && !supplierGetRequest.getSortBy().isEmpty()) {
 			orderBy = "order by " + supplierGetRequest.getSortBy();
 		}
-		if (supplierGetRequest.getIds() != null) {
+		if (supplierGetRequest.getId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
 			params.append("id in (:ids)");
-			paramValues.put("ids", supplierGetRequest.getIds());
+			paramValues.put("ids", supplierGetRequest.getId());
 		}
 		if (supplierGetRequest.getCode() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("code = :code");
-			paramValues.put("code", supplierGetRequest.getCode());
+			params.append("code in (:codes)");
+			paramValues.put("codes", supplierGetRequest.getCode());
 		}
 		if (supplierGetRequest.getName() != null) {
 			if (params.length() > 0)
@@ -95,17 +95,11 @@ public class SupplierJdbcRepository extends JdbcRepository {
 			params.append("name = :name");
 			paramValues.put("name", supplierGetRequest.getName());
 		}
-		if (supplierGetRequest.getSupplyType() != null) {
+		if (supplierGetRequest.getType() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("supplytype = :supplytype");
-			paramValues.put("supplytype", supplierGetRequest.getSupplyType());
-		}
-		if (supplierGetRequest.getAddress() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("department = :department");
-			paramValues.put("department", supplierGetRequest.getAddress());
+			params.append("type = :type");
+			paramValues.put("type", supplierGetRequest.getType());
 		}
 		if (supplierGetRequest.getStatus() != null) {
 			if (params.length() > 0)
@@ -113,18 +107,17 @@ public class SupplierJdbcRepository extends JdbcRepository {
 			params.append("status = :status");
 			paramValues.put("status", supplierGetRequest.getStatus());
 		}
-
 		if (supplierGetRequest.getInActiveDate() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
 			params.append("inactivedate = :inactivedate");
 			paramValues.put("inactivedate", supplierGetRequest.getInActiveDate());
 		}
-		if (supplierGetRequest.getSupplierContactNo() != null) {
+		if (supplierGetRequest.getContactNo() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("suppliercontactno = :suppliercontactno");
-			paramValues.put("suppliercontactno", supplierGetRequest.getSupplierContactNo());
+			params.append("contactno = :contactno");
+			paramValues.put("contactno", supplierGetRequest.getContactNo());
 		}
 
 		if (supplierGetRequest.getFaxNo() != null) {
@@ -192,14 +185,14 @@ public class SupplierJdbcRepository extends JdbcRepository {
 		if (supplierGetRequest.getBankCode() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("bank = :bank");
-			paramValues.put("bank", supplierGetRequest.getBankCode());
+			params.append("bankcode = :bankcode");
+			paramValues.put("bankcode", supplierGetRequest.getBankCode());
 		}
-		if (supplierGetRequest.getBankBranchCode() != null) {
+		if (supplierGetRequest.getBankBranch() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
 			params.append("bankbranch = :bankbranch");
-			paramValues.put("bankbranch", supplierGetRequest.getBankBranchCode());
+			paramValues.put("bankbranch", supplierGetRequest.getBankBranch());
 		}
 		if (supplierGetRequest.getBankAccNo() != null) {
 			if (params.length() > 0)
@@ -213,6 +206,13 @@ public class SupplierJdbcRepository extends JdbcRepository {
 			params.append("bankifsc = :bankifsc");
 			paramValues.put("bankifsc", supplierGetRequest.getBankIfsc());
 		}
+		if (supplierGetRequest.getActive() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("active = :active");
+			paramValues.put("active", supplierGetRequest.getActive());
+		}
+
 		if (supplierGetRequest.getTenantId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");

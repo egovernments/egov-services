@@ -1,12 +1,11 @@
 package org.egov.eis.web.errorhandlers;
 
-import org.egov.eis.web.contract.ResponseInfo;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.egov.common.contract.response.ResponseInfo;
 
 @Setter
 @Getter

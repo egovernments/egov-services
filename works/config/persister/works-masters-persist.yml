@@ -257,9 +257,81 @@ serviceMaps:
        
        - jsonPath: $.contractors.*.auditDetails.lastModifiedBy
   
-       - jsonPath: $.scheduleOfRates.*.auditDetails.lastModifiedTime
-       
+       - jsonPath: $.contractors.*.auditDetails.lastModifiedTime
+
        - jsonPath: $.contractors.*.id
-       
+
        - jsonPath: $.contractors.*.tenantId
+
+ - version: 1.0
+   name: Estimate Template Create
+   description: Persists Estimate Template in egw_estimatetemplate table
+   fromTopic: works-estimatetemplate-create-validated
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO egw_estimatetemplate(id, tenantid, code, name, active, description, typeofwork, subtypeofwork, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.estimateTemplates.*
+      jsonMaps:
+
+       - jsonPath: $.estimateTemplates.*.id
+
+       - jsonPath: $.estimateTemplates.*.tenantId
+
+       - jsonPath: $.estimateTemplates.*.code
+
+       - jsonPath: $.estimateTemplates.*.name
+
+       - jsonPath: $.estimateTemplates.*.active
+
+       - jsonPath: $.estimateTemplates.*.description
+
+       - jsonPath: $.estimateTemplates.*.typeOfWork.code
+
+       - jsonPath: $.estimateTemplates.*.subTypeOfWork.code
+
+       - jsonPath: $.estimateTemplates.*.auditDetails.createdBy
+
+       - jsonPath: $.estimateTemplates.*.auditDetails.createdTime
+
+       - jsonPath: $.estimateTemplates.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.estimateTemplates.*.auditDetails.lastModifiedTime
+
+    - query: INSERT INTO egw_estimatetemplateactivities(id, tenantid, estimatetemplate, schedulerofrate, uom, nonsor,  unitrate, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.estimateTemplates.*.estimateTemplateActivities.*
+      jsonMaps:
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.id
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.tenantId
+
+       - jsonPath: $.estimateTemplates[?({id} in @.estimateTemplateActivities[*].id)].id
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.scheduleOfRate.id
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.uom.code
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.id
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.unitRate
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.auditDetails.createdBy
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.auditDetails.createdTime
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.auditDetails.lastModifiedTime
+
+    - query: INSERT INTO egw_nonsor(id, tenantid, description, uom) VALUES(?, ?, ?, ?);
+      basePath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR
+      jsonMaps:
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.id
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.tenantId
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.description
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.uom.code
 

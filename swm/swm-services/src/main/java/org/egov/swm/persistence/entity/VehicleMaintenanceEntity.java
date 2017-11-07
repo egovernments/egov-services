@@ -23,11 +23,13 @@ public class VehicleMaintenanceEntity {
 
 	private String vehicle = null;
 
-	private Long maintenanceAfterDays = null;
+	private String maintenanceUom = null;
 
-	private Long maintenanceAfterKm = null;
+	private Long maintenanceAfter = null;
 
-	private Double downtimeforMaintenance = null;
+	private String downtimeforMaintenanceUom = null;
+
+	private Long downtimeforMaintenance = null;
 
 	private String createdBy = null;
 
@@ -43,9 +45,10 @@ public class VehicleMaintenanceEntity {
 		vehicleMaintenance.setCode(code);
 		vehicleMaintenance.setTenantId(tenantId);
 		vehicleMaintenance.setVehicle(Vehicle.builder().regNumber(vehicle).build());
+		vehicleMaintenance.setMaintenanceUom(maintenanceUom);
+		vehicleMaintenance.setMaintenanceAfter(maintenanceAfter);
+		vehicleMaintenance.setDowntimeforMaintenanceUom(downtimeforMaintenanceUom);
 		vehicleMaintenance.setDowntimeforMaintenance(downtimeforMaintenance);
-		vehicleMaintenance.setMaintenanceAfterDays(maintenanceAfterDays);
-		vehicleMaintenance.setMaintenanceAfterKm(maintenanceAfterKm);
 		vehicleMaintenance.setAuditDetails(new AuditDetails());
 		vehicleMaintenance.getAuditDetails().setCreatedBy(createdBy);
 		vehicleMaintenance.getAuditDetails().setCreatedTime(createdTime);

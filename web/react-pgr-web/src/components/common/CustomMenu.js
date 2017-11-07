@@ -52,6 +52,7 @@ const menuConvention={
   "Collection.Collection Reports.ReceiptRegister":"/report/collection/ReceiptRegister",
   "Collection.Collection Reports.CollectionSummaryAccountHead":"/report/collection/CollectionSummaryAccountHeadWise",
   "Collection.Collection Reports.ChequeCollection":"/report/collection/ChequeCollection",
+  "Collection.Collection Reports.OnlineTransaction":"/report/collection/OnlineTransaction",
 
   "Collection.Collection Transactions.LegacySearchReceipt":"/report/collection/LegacyReceipt",
 
@@ -220,18 +221,19 @@ const menuConvention={
 "Asset Management.Asset Masters.Asset.Asset Movable.ModifyAssetMovable": "/search/asset/assetMovable/update",
 "Asset Management.Asset Masters.Asset.Asset Movable.SearchAssetMovable": "/search/asset/assetMovable/view",
 
+
 "Asset Management.Asset Reports.AssetImmovableRegister":"/report/asset/AssetImmovableRegister",
 //SWM
-"Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Create": "/create/swm/vehiclefuellingdetails",
-"Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Search": "/search/swm/vehiclefuellingdetails/view",
-"Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Update": "/search/swm/vehiclefuellingdetails/update",
+"Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Create": "/create/vehiclefuellingdetails",
+"Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Search": "/search/vehiclefuellingdetails/view",
+"Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Update": "/search/vehiclefuellingdetails/update",
 "Solid Waste Management.SWM Masters.Vehicle.Vehicle Create": "/create/vehicles",
 "Solid Waste Management.SWM Masters.Vehicle.Vehicle Search": "/search/vehicles/view",
 "Solid Waste Management.SWM Masters.Vehicle.Vehicle Update": "/search/vehicles/update",
 "Solid Waste Management.SWM Masters.Collection Point.CollectionPoint Create": "/create/collectionpoints",
 "Solid Waste Management.SWM Masters.Collection Point.CollectionPoint Search": "/search/collectionpoints/view",
 "Solid Waste Management.SWM Masters.Collection Point.CollectionPoint Update": "/search/collectionpoints/update",
-"Legal Case Management.Legal Case Transactions.Case.Legacy Case Create":"/create/legal/legacylegal",
+"Legal Case Management.Legal Case Transactions.Case.Legacy Case Create":"/create/legal/legacycase",
 "Legal Case Management.Legal Case Transactions.Case.New Case Create":"/create/legal/summon",
 "Legal Case Management.Legal Case Transactions.Case.Case Search":"/search/legal/summon/view",
 "Legal Case Management.Legal Case Transactions.Opinion.Opinion Create":"/create/legal/opinion",

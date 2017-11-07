@@ -25,7 +25,7 @@ import lombok.ToString;
 @ToString
 public class AssetCategory {
 
-	@NotNull
+
 	private String tenantId;
 
 	private Long id;
@@ -33,8 +33,10 @@ public class AssetCategory {
 	@NotNull
 	private String name;
 
+	@NotNull
 	private String code;
-
+    
+	@NotNull
 	private AssetCategoryType assetCategoryType;
 
 	private Long parent;
@@ -57,6 +59,7 @@ public class AssetCategory {
 	
 	private Boolean isDepreciationApplicable;
 
+	@NotNull
 	private Double depreciationRate;
 
 	private List<AttributeDefinition> assetFieldsDefination;

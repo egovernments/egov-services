@@ -135,6 +135,18 @@ public class PerformanceAssessmentConstants {
     public static final String SEARCH_PARAMETERS_INVALID_CODE = "pa.0019";
     public static final String SEARCH_PARAMETERS_INVALID_FIELD_NAME = "parameters";
     public static final String SEARCH_PARAMETERS_INVALID_ERROR_MESSAGE = "Search cannot be performed with these parameter range";
+    
+    public static final String DEPARTMENT_MANDATORY_CODE = "pa.0020";
+    public static final String DEPARTMENT_MANDATORY_FIELD_NAME = "department";
+    public static final String DEPARTMENT_MANDATORY_ERROR_MESSAGE = "Department is Mandatory!";
+    
+    public static final String DEPARTMENT_CODE_MANDATORY_CODE = "pa.0021";
+    public static final String DEPARTMENT_CODE_MANDATORY_FIELD_NAME = "code";
+    public static final String DEPARTMENT_CODE_MANDATORY_ERROR_MESSAGE = "Department Code is Mandatory!";
+    
+    public static final String DEPARTMENT_ID_MANDATORY_CODE = "pa.0022";
+    public static final String DEPARTMENT_ID_MANDATORY_FIELD_NAME = "id";
+    public static final String DEPARTMENT_ID_MANDATORY_ERROR_MESSAGE = "Department ID is Mandatory!";
         
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);

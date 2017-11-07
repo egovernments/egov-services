@@ -4,6 +4,7 @@ import io.swagger.model.AuditDetails;
 import io.swagger.model.Bank;
 import io.swagger.model.CommonEnum;
 import io.swagger.model.Supplier;
+import io.swagger.model.Supplier.StatusEnum;
 import io.swagger.model.Supplier.TypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -140,37 +141,37 @@ public class SupplierEntity {
 		supplier.setId(id);
 		supplier.setCode(code);
 		supplier.setName(name);
-/*		CommonEnum suppType = new CommonEnum();
-		suppType.setName(supplierType);
-		supplier.setSupplierType(suppType);*/
+		if(type != null)
+		supplier.setType(TypeEnum.valueOf(type));
 		supplier.setAddress(address);
-		CommonEnum states = new CommonEnum();
-		states.setName(status);
-	/*	supplier.setStatus(states);*/
+		supplier.setTenantId(tenantId);
+		supplier.setActive(active);
+		if(status != null)
+		supplier.setStatus(StatusEnum.valueOf(status));
 		supplier.setInActiveDate(inactivedate);
-/*		supplier.setSupplierContactNo(supplierContactNo);
-*/		supplier.setFaxNo(faxNo);
+	    supplier.setContactNo(contactno);
+    	supplier.setFaxNo(faxNo);
 		supplier.setWebsite(website);
 		supplier.setEmail(email);
-/*		supplier.setNarration(narration);
-*/		supplier.setPanNo(panNo);
+	    supplier.setDescription(description);
+		supplier.setPanNo(panNo);
 		supplier.setTinNo(tinNo);
 		supplier.setVatNo(vatNo);
 		supplier.setGstNo(gstNo);
+		supplier.setCstNo(cstNo);
 		supplier.setContactPerson(contactPerson);
 		supplier.setContactPersonNo(contactPersonNo);
-		Bank banker = new Bank();
-/*		banker.setCode(bank);
-*/		banker.setAcctNo(bankAcctNo);
-		banker.setIfsc(bankIfsc);
-		banker.setMicr(bankMicr);
-		banker.setBankBranchCode(bankBranch);
-/*		supplier.setBankInfo(banker);
-*/		AuditDetails auditDetails = new AuditDetails();
+	    supplier.setBankCode(bankCode);
+	    supplier.setBankBranch(bankBranch);
+	    supplier.setAcctNo(bankAcctNo);
+	    supplier.setIfsc(bankIfsc);
+	    supplier.setMicr(bankMicr);
+    	AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(createdBy);
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedBy(lastmodifiedBy);
 		auditDetails.setLastModifiedTime(lastmodifiedTime);
+		auditDetails.setTenantId(tenantId);
 		supplier.setAuditDetails(auditDetails);
 		return supplier;
 

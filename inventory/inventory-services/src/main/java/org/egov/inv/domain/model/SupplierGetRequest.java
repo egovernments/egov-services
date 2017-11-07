@@ -2,6 +2,7 @@ package org.egov.inv.domain.model;
 
 import java.util.List;
 
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,22 +10,22 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class SupplierGetRequest {
-	private List<String> ids;
+public class SupplierGetRequest  {
+	private List<String> id;
 
-	private String code;
+	private List<String> code;
 
 	private String name;
 
-	private String supplyType;
-
-	private String address;
+	private String type;
 
 	private String status;
+	
+	private Boolean active;
 
 	private Long inActiveDate;
 
-	private String supplierContactNo;
+	private String contactNo;
 
 	private String faxNo;
 
@@ -42,7 +43,7 @@ public class SupplierGetRequest {
 	
 	private String bankCode;
 	
-	private String bankBranchCode;
+	private String bankBranch;
 	
 	private String gstNo;
 

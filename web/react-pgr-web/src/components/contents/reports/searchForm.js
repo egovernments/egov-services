@@ -148,7 +148,7 @@ class ShowForm extends Component {
   }
 
   componentWillReceiveProps(nextProps){
-    let {changeButtonText} = this.props;
+    let {changeButtonText,clearReportHistory} = this.props;
     if(nextProps.metaData.reportDetails && (nextProps.metaData.reportDetails !== this.props.metaData.reportDetails)){
       changeButtonText("Generate Report");
       this.setState({reportName : nextProps.metaData.reportDetails.reportName});
@@ -162,12 +162,14 @@ class ShowForm extends Component {
         }
       }
       setForm(required);
+      clearReportHistory();
+
     }
   }
 
   componentDidMount()
   {
-    let {initForm,metaData,setForm, changeButtonText} = this.props;
+    let {initForm,metaData,setForm, changeButtonText,clearReportHistory} = this.props;
     changeButtonText("Generate Report");
     let {searchParams}=!_.isEmpty(metaData)?metaData.reportDetails:{searchParams:[]};
     let required=[];
@@ -179,83 +181,107 @@ class ShowForm extends Component {
       }
     }
     setForm(required);
+    clearReportHistory();
     //setForm(required);
   }
 
-  search(e)
+  search(e,isDrilldown=false)
   {
     e.preventDefault();
-      let {showTable,changeButtonText,setReportResult,searchForm,metaData,setFlag,setSearchParams}=this.props;
-      let searchParams=[]
+      let {showTable,changeButtonText,setReportResult,searchForm,metaData,setFlag,setSearchParams,reportHistory,reportIndex,pushReportHistory,clearReportHistory,decreaseReportIndex}=this.props;
+      let searchParams=[];
+      var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : '';
+      let self=this;
 
-      // (variable=="fromDate"?new Date(Date(searchForm[variable]).getFullYear()+"-"+Date(searchForm[variable]).getMonth()+"-"+Date(searchForm[variable]).getDate()+" "+"00:00:00").getTime():new Date(Date(searchForm[variable]).getFullYear()+"-"+Date(searchForm[variable]).getMonth()+"-"+Date(searchForm[variable]).getDate()+" "+"23:59:00").getTime())
+      if (!isDrilldown) {
+        // (variable=="fromDate"?new Date(Date(searchForm[variable]).getFullYear()+"-"+Date(searchForm[variable]).getMonth()+"-"+Date(searchForm[variable]).getDate()+" "+"00:00:00").getTime():new Date(Date(searchForm[variable]).getFullYear()+"-"+Date(searchForm[variable]).getMonth()+"-"+Date(searchForm[variable]).getDate()+" "+"23:59:00").getTime())
 
-      for (var variable in searchForm) {
-        // console.log(variable);
-        let input;
-        //  = this.state.moduleName=="pgr"
-        //       ?
-        // (((typeof(searchForm[variable])=="object") && (variable=="fromDate" || variable=="toDate"))?variable=="fromDate"?(new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>8?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate())+" "+"00:00:00"):(new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>8?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate())+" "+"23:59:59")
-        //       :
-        // searchForm[variable]):(((typeof(searchForm[variable])=="object")&& (variable=="fromDate" || variable=="toDate"))?new Date(searchForm[variable]).getTime():searchForm[variable])
+        for (var variable in searchForm) {
+          // console.log(variable);
+          let input;
+          //  = this.state.moduleName=="pgr"
+          //       ?
+          // (((typeof(searchForm[variable])=="object") && (variable=="fromDate" || variable=="toDate"))?variable=="fromDate"?(new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>8?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate())+" "+"00:00:00"):(new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>8?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate())+" "+"23:59:59")
+          //       :
+          // searchForm[variable]):(((typeof(searchForm[variable])=="object")&& (variable=="fromDate" || variable=="toDate"))?new Date(searchForm[variable]).getTime():searchForm[variable])
 
-        // console.log(variable , input);
+          // console.log(variable , input);
 
-        if (this.state.moduleName=="pgr") {
-          if (variable=="fromDate") {
-              input=searchForm[variable].getFullYear()+"-"+(searchForm[variable].getMonth()>8?(searchForm[variable].getMonth()+1):("0"+parseInt(searchForm[variable].getMonth()+1)))+"-"+(searchForm[variable].getDate()>9?(searchForm[variable].getDate()):("0"+searchForm[variable].getDate()))+" 00:00:00";
-          } else if(variable=="toDate") {
-              input=searchForm[variable].getFullYear()+"-"+(searchForm[variable].getMonth()>8?(searchForm[variable].getMonth()+1):("0"+parseInt(searchForm[variable].getMonth()+1)))+"-"+(searchForm[variable].getDate()>9?(searchForm[variable].getDate()):("0"+searchForm[variable].getDate()))+" 23:59:59";
+          if (this.state.moduleName=="pgr") {
+            if (variable=="fromDate") {
+                input=searchForm[variable].getFullYear()+"-"+(searchForm[variable].getMonth()>8?(searchForm[variable].getMonth()+1):("0"+parseInt(searchForm[variable].getMonth()+1)))+"-"+(searchForm[variable].getDate()>9?(searchForm[variable].getDate()):("0"+searchForm[variable].getDate()))+" 00:00:00";
+            } else if(variable=="toDate") {
+                input=searchForm[variable].getFullYear()+"-"+(searchForm[variable].getMonth()>8?(searchForm[variable].getMonth()+1):("0"+parseInt(searchForm[variable].getMonth()+1)))+"-"+(searchForm[variable].getDate()>9?(searchForm[variable].getDate()):("0"+searchForm[variable].getDate()))+" 23:59:59";
+            } else {
+              input=searchForm[variable];
+            }
           } else {
-            input=searchForm[variable];
+            if (variable=="fromDate") {
+                input=searchForm[variable].setHours(0);
+                input=searchForm[variable].setMinutes(0);
+                input=searchForm[variable].setSeconds(0);
+
+            } else if(variable=="toDate") {
+              input=searchForm[variable].setHours(23);
+              input=searchForm[variable].setMinutes(59);
+              input=searchForm[variable].setSeconds(59);
+            } else {
+              input=searchForm[variable];
+            }
           }
-        } else {
-          if (variable=="fromDate") {
-              input=searchForm[variable].setHours(0);
-              input=searchForm[variable].setMinutes(0);
-              input=searchForm[variable].setSeconds(0);
 
-          } else if(variable=="toDate") {
-            input=searchForm[variable].setHours(23);
-            input=searchForm[variable].setMinutes(59);
-            input=searchForm[variable].setSeconds(59);
-          } else {
-            input=searchForm[variable];
+          if(input){
+            searchParams.push({
+              name:variable,
+              input
+            });
           }
         }
 
-        if(input){
-          searchParams.push({
-            name:variable,
-            input
-          });
-        }
+        // searchParams.push(
+        //   {
+        //       "name": "complainttype",
+        //       "value": "BRKNB"
+        //   })
+
+        setSearchParams(searchParams);
+
+
+        clearReportHistory();
+        let response=Api.commonApiPost("/report/"+this.state.moduleName+"/_get",{},{tenantId:tenantId,reportName:this.state.reportName,searchParams}).then(function(response)
+        {
+          // console.log(response)
+          pushReportHistory({tenantId:tenantId,reportName:self.state.reportName,searchParams})
+          setReportResult(response);
+          // console.log("Show Table");
+          showTable(true);
+          setFlag(1);
+
+        },function(err) {
+            // console.log(err);
+            showTable(false);
+            alert("Something went wrong or try again later");
+
+        });
+
+      } else {
+        let reportData=reportHistory[(reportIndex-1)-1];
+        let response=Api.commonApiPost("/report/"+this.state.moduleName+"/_get",{},{...reportData}).then(function(response)
+        {
+          // console.log(response)
+          decreaseReportIndex();
+          setReportResult(response);
+          // console.log("Show Table");
+          showTable(true);
+          setFlag(1);
+        },function(err) {
+            // console.log(err);
+            showTable(false);
+            alert("Something went wrong or try again later");
+
+        });
       }
 
-      // searchParams.push(
-      //   {
-      //       "name": "complainttype",
-      //       "value": "BRKNB"
-      //   })
-
-      setSearchParams(searchParams);
-
-    var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : '';
-
-
-      let response=Api.commonApiPost("/report/"+this.state.moduleName+"/_get",{},{tenantId:tenantId,reportName:this.state.reportName,searchParams}).then(function(response)
-      {
-        // console.log(response)
-        setReportResult(response);
-        // console.log("Show Table");
-        showTable(true);
-        setFlag(1);
-      },function(err) {
-          // console.log(err);
-          showTable(false);
-          alert("Something went wrong or try again later");
-
-      });
 
       changeButtonText("Generate Report");
       // this.setState({searchBtnText:'Search Again'})
@@ -275,11 +301,15 @@ class ShowForm extends Component {
       handleChangeNextOne,
       handleChangeNextTwo,
       buttonText,
-      metaData
+      metaData,
+      reportHistory,
+      reportIndex
     } = this.props;
     let {search} = this;
     //console.log(metaData);
     // console.log(searchForm);
+    console.log(reportHistory);
+    console.log(reportIndex);
     return (
       <div className="">
         <form onSubmit={(e) => {
@@ -304,7 +334,15 @@ class ShowForm extends Component {
           <br/>
         </div>
         </form>
-
+        {reportIndex>1 && <div style={{"textAlign": "right",
+    "paddingRight": "15px"}}>
+          <br/>
+            <RaisedButton type="button" onClick={(e)=>{
+              search(e,true)
+            }} primary={true} label={"Back"} />
+          <br/>
+          <br/>
+        </div>}
       </div>
     );
   }
@@ -312,7 +350,7 @@ class ShowForm extends Component {
 
 const mapStateToProps = state => {
   // console.log(state.form.buttonText);
-  return ({searchForm: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText,metaData:state.report.metaData});
+  return ({searchForm: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText,metaData:state.report.metaData,reportHistory:state.report.reportHistory,reportIndex:state.report.reportIndex});
 }
 
 const mapDispatchToProps = dispatch => ({
@@ -395,6 +433,15 @@ const mapDispatchToProps = dispatch => ({
   },
   setSearchParams:(searchParams)=>{
     dispatch({type:"SET_SEARCH_PARAMS",searchParams})
+  },
+  pushReportHistory:(history)=>{
+    dispatch({type:"PUSH_REPORT_HISTORY",reportData:history})
+  },
+  clearReportHistory:()=>{
+    dispatch({type:"CLEAR_REPORT_HISTORY"})
+  },
+  decreaseReportIndex:()=>{
+    dispatch({type:"DECREASE_REPORT_INDEX"})
   }
 });
 

@@ -394,6 +394,7 @@ var localization_EN_Data = {
       "reports.lcms.plaintiffName": "Plaintiff Name",
       "reports.lcms.hearingDetails" : "Hearing Details",
       "reports.lcms.departmentPerson" : "Department Concerned Person",
+      "reports.lcms.courtType" : "Court Type",
 
       //Water Connection
       "reports.wcms.fromdate":"From Date",
@@ -1631,6 +1632,8 @@ var localization_EN_Data = {
 "reports.collection.status.description":"Status Description",
 "reports.collection.todate":"To Date",
 "reports.collection.total.count":"Total Receipt Count",
+"reports.collection.referenceno":"Bill ID",
+
 
     "noDues.citizenService.assessmentNumber":"Assessment Number",
 
@@ -1954,8 +1957,13 @@ var localization_EN_Data = {
     "ac.Modify.Header.Details": "Update Assset Immovable",
     "ac.update.movable.Header.Details": "Update Assset Movable",
     "ac.view.movable.Header.Details": "View Assset Movable",
-
-
+    "ac.create.createDate":"Date of Creation",
+    "ac.create.createFromDate":"Asset Created Date From",
+    "ac.create.createToDate":"Asset Created Date To",
+    "ac.create.OriginalFromDate":"Original Value of Asset From",
+    "ac.create.OriginalToDate":"Original Value of Asset To",
+"reports.collection.receipt.transactionno":"Transaction ID",
+"reports.collection.transaction.date":"Transaction Date",
 
 //auto gen swm
 "vehiclefuellingdetails.create.transactionId": "Transaction No",
@@ -2429,7 +2437,12 @@ var localization_EN_Data = {
   "advocatepayment.create.instrumentNumber":"Instrument Number",
 "advocatepayment.create.InstrumentDate":"Instrument Date",
 "legal.create.uploadInvoice":"Upload Invoice",
-"framework.date.error.message": "Please enter date in DD/MM/YYYY format"
+"framework.date.error.message": "Please enter date in DD/MM/YYYY format",
+"legal.create.code":"Code",
+"legal.create.paymentNote":"Note: Total amount is window is valid and it is not necessarily same with amount mentioned in invoice document that is attached",
+"advocatepayment.update.document.title":"Advocate Payment Update",
+
+
 
 
 
@@ -3393,6 +3406,7 @@ var localization_MR_Data = {
       "reports.lcms.plaintiffName": "Plaintiff Name - Marathi",
       "reports.lcms.hearingDetails" : "Hearing Details - Marathi",
       "reports.lcms.departmentPerson" : "Department Concerned Person - Marathi",
+      "reports.lcms.courtType" : "Court Type - Marathi",
 
   //Water Connection
   "reports.wcms.fromdate":"From Date - Marathi",
@@ -4357,7 +4371,13 @@ var localization_MR_Data = {
  "advocatepayment.create.instrumentNumber":"Instrument Number-marathi",
 "advocatepayment.create.InstrumentDate":"Instrument Date-marathi",
 "legal.create.uploadInvoice":"Upload Invoice-marathi",
-"framework.date.error.message": "Please enter date in DD/MM/YYYY format-Marathi"
+"framework.date.error.message": "Please enter date in DD/MM/YYYY format-Marathi",
+
+"legal.create.code":"Code-Marathi ",
+"legal.create.paymentNote":"Note: Total amount is window is valid and it is not necessarily same with amount mentioned in invoice document that is attached-Marathi",
+"advocatepayment.update.document.title":"Advocate Payment Update-Marathi",
+
+
 
 }
 

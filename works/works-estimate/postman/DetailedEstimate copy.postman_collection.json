@@ -1,0 +1,45 @@
+{
+	"id": "14d76a6c-91bf-6e98-6337-5e5acbcfb7e6",
+	"name": "DetailedEstimate copy",
+	"description": "",
+	"order": [
+		"04df0f38-32bb-b34e-9a6a-3c3a4533fbe3"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1509706326922,
+	"owner": "3022735",
+	"public": false,
+	"hasRequests": true,
+	"requests": [
+		{
+			"id": "04df0f38-32bb-b34e-9a6a-3c3a4533fbe3",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8089/works-estimate/detailedestimates/_create",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510059590409,
+			"name": "Create detailed estimate",
+			"description": "Create Detailed Estimate",
+			"collectionId": "14d76a6c-91bf-6e98-6337-5e5acbcfb7e6",
+			"responses": [],
+			"rawModeData": "{\n  \"requestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"yosadhara\",\n    \"authToken\": \"1dc2c663-ab91-4180-a17e-d94e600e10b5\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"mh\",\n    \"userInfo\": {\n      \"id\": 73,\n      \"userName\": \"abc\",\n      \"tenantId\" : \"default\"\n    }\n  },\n  \"detailedEstimates\": [\n    {\n      \"id\" : \"\",\n      \"tenantId\": \"default\",\n      \"estimateDate\" : \"234421122323\",\n     \"nameOfWork\" : \"Name of work for detailed estimate\",\n     \"description\" :  \"Detailed estimate create testing\",\n     \"department\" : {\n        \"code\" : \"AS\",\n        \"name\" : \"testtessks\",\n        \"tenantId\" : \"default\",\n     \t\"active\" : true\n     },\n     \"status\" : \"CREATED\",\n     \"workValue\" : 100,\n     \"estimateValue\" : 90,\n     \"beneficiary\" : \"SC\",\n     \"modeOfAllotment\" : { \n     \t\"code\" : \"Capital\",\n     \t\"name\" : \"Capital\",\n     \t\"tenantId\" : \"default\"\n     } ,\n     \"worksType\" : { \n     \t\"code\" : \"RoadsFake\" ,\n     \t\"name\" : \"RoadsFake\",\n     \t\"tenantId\" : \"default\",\n     \t\"active\" : true\n     }, \n     \"worksSubtype\" : { \n     \t\"code\" : \"CCRoadsFake\",\n     \t\"name\" : \"CC\",\n     \t\"tenantId\" : \"default\",\n     \t\"active\" : true\n     },\n     \"natureOfWork\" : { \n     \t\"tenantId\" : \"default\",\n     \t \"name\" : \"natureOfWork\",\n     \t\"code\" : \"natureOfWork\",\n     \t \"expenditureType\" : \"CAPITAL\"}\n     \t ,\n     \"ward\" : { \"code\" : \"Ward1\",\n     \t\"tenantId\" : \"default\",\n     \t\"name\" : \"02\",\n     \t \"boundaryType\" : {\n     \t \t\"code\" : \"Ward1\",\n         \t\"tenantId\" : \"default\",\n        \t\"name\" : \"02\"\n     \t }\n     },\n     \"location\" : \"Sarjapur Road\",\n     \"workCategory\" : \"NON_SLUM\",\n     \"workOrderCreated\" : false,\n     \"multiYearEstimates\" : [\n      {\n        \"tenantId\" : \"default\",\n        \"percentage\" : 40,\n         \"financialYear\" : { \"finYearRange\" : \"2017-18\",\n                \"id\" : 1 ,\n         \t    \"isActiveForPosting\" : true,\n         \t    \"active\" : true\n         \t     \n         }\n       },\n         {\n        \"tenantId\" : \"default\",\n        \"percentage\" : 10,\n         \"financialYear\" : { \"finYearRange\" : \"2015-16\",\n                \"id\" : 1 ,\n         \t    \"isActiveForPosting\" : true,\n         \t    \"active\" : true\n         \t     \n         }\n       }\n       ],\n    \"detailedEstimateDeductions\" : [{\n    \t\"tenantId\" : \"default\",\n    \t\"chartOfAccounts\" : {\n    \t\t\"tenantId\" : \"default\",\n    \t\t\"glcode\" : \"0193\"\n    \t},\n    \t\"amount\" : 100\n    }],\n    \"documentDetails\" : [],\n    \"assets\" : [{\n    \t\"tenantId\" : \"default\",\n    \t\"asset\" : {\n    \t\t\"tenantId\" : \"default\",\n    \t\t\"code\" : \"test\"\n    \t\t\n    \t }\n    \t}\n    \t],\n    \"estimateOverheads\" : \n       [{\n       \t\"tenantId\" : \"default\",\n    \t\"overhead\" : {\n    \t\t\"id\" : 1,\n    \t\t\"code\" : \"TAXFake\",\n    \t\t\"tenantId\" : \"default\",\n    \t\t\"name\" : \"test\",\n    \t\t\"accountCode\" : \"test\"\n    \t},\n    \t\"amount\" : 100\n    \t\n    \t}], \n    \"estimateActivities\" : [\n    \t{\n    \t\t\"tenantId\" : \"default\",\n    \t\t\"unitRate\" : 20,\n    \t\t\"estimateRate\" : 2,\n    \t\t\"uom\" : {\"code\" : \"testuom\"},\n    \t\t\"scheduleOfRate\" : {\"id\" : 1, \"tenantId\" : \"default\"},\n    \t\t\"nonSor\" : {\n    \t\t\t\"id\" : 2,\n    \t\t\t \"uom\" : {\"code\" : \"testuom\"}\n    \t\t},\n    \t\t\"estimateMeasurementSheets\" : [{\n    \t\t\t\"tenantId\" : \"default\",\n    \t\t\t\"slNo\" : 1,\n    \t\t\t\"no\" : 2,\n    \t\t\t \"length\" : 0.2,\n    \t\t\t \"width\" : 0.3,\n    \t\t\t \"quantity\" : 10\n    \t\t}]\n    \t}\n    ],\n    \"fund\" : { \"code\" : \"02\" , \"name\" : \"02\", \"active\" :  true},\n    \"function\" : { \"code\" : \"00\", \"name\" : \"02\" ,\"active\" :  true},\n    \"scheme\" :  { \"code\" : \"2906\" , \"name\" : \"02\", \"active\" :  true},\n    \"subScheme\" :  { \n    \t\"code\" : \"BSUP\",\n    \t\"name\" : \"BSUP\",\n    \t\"active\" :  true\n    },\n    \"budgetGroup\" : { \"name\" : \"4122001-CWIP-Office Buildings\"}\n    \n     \n   }]\n}"
+		}
+	]
+}

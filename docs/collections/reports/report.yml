@@ -459,3 +459,88 @@ ReportDefinitions:
     searchClause: AND receiptDate <= $toDate
   query: select receiptNo,receiptDate,totalAmount,servicename,payeeName,consumerAddress,'print' as print from egcl_legacy_receipt_header where tenantid = $tenantid
 
+- reportName: OnlineTransaction
+  summary: Online Transaction Report
+  version: 1.0.0
+  moduleName: collection
+  searchFilter: true
+  sourceColumns:
+  - name: SERIALNUMBER
+    label: reports.collection.serialno
+    type: number
+    source: collection
+    showColumn: false
+  - name: REFERENCE_NUMBER
+    label: reports.collection.referenceno
+    type: string
+    source: completed
+  - name: CONSUMER_CODE
+    label: collection.create.consumerCode
+    type: string
+    source: collection
+  - name: RECEIPT_NUMBER
+    label: reports.collection.receipt.number
+    type: string
+    source: collection
+  - name: RECEIPT_DATE
+    label: reports.collection.receipt.date
+    type: epoch
+    source: collection
+  - name: RECEIPT_AMOUNT
+    label: reports.collection.amount
+    type: number
+    source: collection
+    total: true
+  - name: TRANSACTION_NUMBER
+    label: reports.collection.receipt.transactionno
+    type: string
+    source: collection
+  - name: TRANSACTION_DATE
+    label: reports.collection.transaction.date
+    type: epoch
+    source: collection
+  - name: SERVICE_NAME
+    label: reports.collection.service.name
+    type: string
+    source: collection
+  - name: CREATED_BY
+    label: reports.collection.created.by
+    type: string
+    source: collection 
+  searchParams:
+  - name: fromDate
+    label: reports.collection.fromdate
+    type: epoch
+    source: collection
+    isMandatory: false
+    searchClause: AND EGCL_RECEIPTHEADER.RECEIPTDATE >= $fromDate
+  - name: toDate
+    label: reports.collection.todate
+    type: epoch
+    source: collection
+    isMandatory: false
+    searchClause: AND EGCL_RECEIPTHEADER.RECEIPTDATE <= $toDate
+  - name: status
+    label: reports.collection.status
+    type: singlevaluelist
+    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=$tenantid|$..key|$..object
+    isMandatory: false
+    searchClause: AND EGCL_RECEIPTHEADER.STATUS = $status
+    source: collection
+  - name: servicename
+    label: reports.collection.service.name
+    type: singlevaluelist
+    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctBusinessDetails?tenantId=$tenantid|$..code|$..name
+    isMandatory: false
+    searchClause: AND EGCL_RECEIPTHEADER.businessdetails = $servicename
+  - name: collectedby
+    label: reports.collection.collectedby
+    type: singlevaluelist
+    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctCollectedBy?tenantId=$tenantid|$..userName|$..user[*].name
+    source: collection
+    isMandatory: false
+    searchClause: AND EGUSER.NAME = $collectedby
+  query: SELECT ROW_NUMBER() OVER (ORDER BY EGCL_RECEIPTHEADER.RECEIPTNUMBER) AS SERIALNUMBER, EGCL_RECEIPTHEADER.REFERENCENUMBER as REFERENCE_NUMBER, EGCL_RECEIPTHEADER.CONSUMERCODE as CONSUMER_CODE, EGCL_RECEIPTHEADER.RECEIPTNUMBER as RECEIPT_NUMBER, EGCL_RECEIPTHEADER.RECEIPTDATE as RECEIPT_DATE, EGCL_RECEIPTHEADER.TOTALAMOUNT as RECEIPT_AMOUNT, EG_BUSINESSDETAILS.NAME as SERVICE_NAME, EGCL_RECEIPTHEADER.status as STATUS, EGCL_ONLINEPAYMENTS.transactionnumber as TRANSACTION_NUMBER, EGCL_ONLINEPAYMENTS.transactiondate as TRANSACTION_DATE, (CASE WHEN EG_USER.name  in ('Anonymous','999999999') THEN 'NA' ELSE (select name from EG_USER where id=EGCL_ONLINEPAYMENTS.CREATEDBY and tenantid=$tenantid ) END) AS CREATED_BY FROM EGCL_RECEIPTHEADER EGCL_RECEIPTHEADER INNER JOIN EGCL_ONLINEPAYMENTS EGCL_ONLINEPAYMENTS ON EGCL_ONLINEPAYMENTS.RECEIPTHEADER =EGCL_RECEIPTHEADER.ID INNER JOIN EG_BUSINESSDETAILS EG_BUSINESSDETAILS ON EGCL_RECEIPTHEADER.BUSINESSDETAILS = EG_BUSINESSDETAILS.CODE INNER JOIN EG_USER EG_USER ON EGCL_ONLINEPAYMENTS.CREATEDBY =EG_USER.ID and EG_BUSINESSDETAILS.tenantid=$tenantid and EG_USER.tenantid=$tenantid 
+  orderBy: ORDER BY RECEIPT_NUMBER;
+  
+

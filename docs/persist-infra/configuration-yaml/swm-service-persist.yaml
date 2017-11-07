@@ -111,27 +111,21 @@ serviceMaps:
 
        - jsonPath: $.vehicleFuellingDetails.*.tenantId
 
-    - query: INSERT INTO egswm_document(id, tenantid, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+    - query: update egswm_document set fileStoreId=?, lastmodifiedby=?, lastmodifiedtime=? where refCode=? and tenantId=?;
       basePath: $.vehicleFuellingDetails.*.receiptCopy
       jsonMaps:
-       
-       - jsonPath: $.vehicleFuellingDetails.*.receiptCopy.id
-
-       - jsonPath: $.vehicleFuellingDetails.*.receiptCopy.tenantId
-         
-       - jsonPath: $.vehicleFuellingDetails.*.receiptCopy.refCode
 
        - jsonPath: $.vehicleFuellingDetails.*.receiptCopy.fileStoreId
 
-       - jsonPath: $.vehicleFuellingDetails.*.receiptCopy.auditDetails.createdBy
-
        - jsonPath: $.vehicleFuellingDetails.*.receiptCopy.auditDetails.lastModifiedBy
-
-       - jsonPath: $.vehicleFuellingDetails.*.receiptCopy.auditDetails.createdTime
-         dbType: LONG
 
        - jsonPath: $.vehicleFuellingDetails.*.receiptCopy.auditDetails.lastModifiedTime
          dbType: LONG
+
+       - jsonPath: $.vehicleFuellingDetails.*.receiptCopy.refCode
+
+       - jsonPath: $.vehicleFuellingDetails.*.receiptCopy.tenantId
+
 
  - version: 1.0
    name: vehicle create
@@ -274,27 +268,20 @@ serviceMaps:
        - jsonPath: $.vehicles.*.tenantId
 
 
-    - query: INSERT INTO egswm_document(id, tenantid, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+    - query: update egswm_document set fileStoreId=?, lastmodifiedby=?, lastmodifiedtime=? where refCode=? and tenantId=?;
       basePath: $.vehicles.*.insuranceDetails.insuranceDocument
       jsonMaps:
-       
-       - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.id
-
-       - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.tenantId
-         
-       - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.refCode
 
        - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.fileStoreId
 
-       - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.auditDetails.createdBy
-
        - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.auditDetails.lastModifiedBy
-
-       - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.auditDetails.createdTime
-         dbType: LONG
 
        - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.auditDetails.lastModifiedTime
          dbType: LONG
+
+       - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.refCode
+
+       - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.tenantId
 
 
  - version: 1.0
@@ -866,7 +853,7 @@ serviceMaps:
    description: create vehiclemaintenance in egswm_vehiclemaintenance
    fromTopic: swm-vehiclemaintenance-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_vehiclemaintenance(code, tenantid, vehicle, maintenanceAfterDays, maintenanceAfterKm, downtimeforMaintenance, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_vehiclemaintenance(code, tenantid, vehicle, maintenanceUom, maintenanceAfter, downtimeforMaintenanceUom, downtimeforMaintenance, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vehicleMaintenances.*
       jsonMaps:
 
@@ -876,14 +863,15 @@ serviceMaps:
 
        - jsonPath: $.vehicleMaintenances.*.vehicle.regNumber
 
-       - jsonPath: $.vehicleMaintenances.*.maintenanceAfterDays
-         dbType: LONG
+       - jsonPath: $.vehicleMaintenances.*.maintenanceUom
 
-       - jsonPath: $.vehicleMaintenances.*.maintenanceAfterKm
+       - jsonPath: $.vehicleMaintenances.*.maintenanceAfter
          dbType: LONG
        
+       - jsonPath: $.vehicleMaintenances.*.downtimeforMaintenanceUom
+
        - jsonPath: $.vehicleMaintenances.*.downtimeforMaintenance
-         dbType: DOUBLE
+         dbType: LONG
        
        - jsonPath: $.vehicleMaintenances.*.auditDetails.createdBy
 
@@ -900,20 +888,21 @@ serviceMaps:
    description: update vehiclemaintenance in egswm_vehiclemaintenance
    fromTopic: swm-vehiclemaintenance-update-topic
    queryMaps: 
-    - query: update egswm_vehiclemaintenance set vehicle=?, maintenanceAfterDays=?, maintenanceAfterKm=?, downtimeforMaintenance=?, lastmodifiedby=?, lastmodifiedtime=? where code=? and tenantId=?;
+    - query: update egswm_vehiclemaintenance set vehicle=?, maintenanceUom=?, maintenanceAfter=?, downtimeforMaintenanceUom=?, downtimeforMaintenance=?, lastmodifiedby=?, lastmodifiedtime=? where code=? and tenantId=?;
       basePath: $.vehicleMaintenances.*
       jsonMaps:
 
        - jsonPath: $.vehicleMaintenances.*.vehicle.regNumber
 
-       - jsonPath: $.vehicleMaintenances.*.maintenanceAfterDays
-         dbType: LONG
+       - jsonPath: $.vehicleMaintenances.*.maintenanceUom
 
-       - jsonPath: $.vehicleMaintenances.*.maintenanceAfterKm
+       - jsonPath: $.vehicleMaintenances.*.maintenanceAfter
          dbType: LONG
        
+       - jsonPath: $.vehicleMaintenances.*.downtimeforMaintenanceUom
+
        - jsonPath: $.vehicleMaintenances.*.downtimeforMaintenance
-         dbType: DOUBLE
+         dbType: LONG
        
        - jsonPath: $.vehicleMaintenances.*.auditDetails.lastModifiedBy
 

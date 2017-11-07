@@ -994,7 +994,7 @@ delete formData.Asset.assetAttributesCheck;
          SubProperty = SubProperty.join(".");
          console.log(SubProperty);
          var _val = e.target.value;
-         Api.commonApiPost("/asset-services-maha/assets/_search",{"name":_val},{}, false, false, false, "", "", false).then(function(response)
+         Api.commonApiPost("/asset-services-maha/assets/_search",{name:_val},{}, false, false, false, "", "", false).then(function(response)
         {
 
           if (response && response.Assets && response.Assets[0] && response.Assets[0].assetAttributes) {
@@ -1028,13 +1028,17 @@ delete formData.Asset.assetAttributesCheck;
          console.log(spec);
          if(e.target.value==false) {
            spec["asset.create"].groups[3].fields[7].isRequired = false;
+           self.props.delRequiredFields("Asset.warrantyExpiryDate");
            self.props.setMockData(JSON.parse(JSON.stringify(spec)));
            spec["asset.update"].groups[3].fields[7].isRequired = false;
+           self.props.delRequiredFields("Asset.warrantyExpiryDate");
            self.props.setMockData(JSON.parse(JSON.stringify(spec)));
          } else {
            spec["asset.create"].groups[3].fields[7].isRequired = true;
+           self.props.addRequiredFields("Asset.warrantyExpiryDate");
            self.props.setMockData(JSON.parse(JSON.stringify(spec)));
            spec["asset.update"].groups[3].fields[7].isRequired = true;
+           self.props.addRequiredFields("Asset.warrantyExpiryDate");
            self.props.setMockData(JSON.parse(JSON.stringify(spec)));
          }
        }

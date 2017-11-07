@@ -40,6 +40,8 @@
 
 package org.egov.eis.web.controller;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.Attendance;
 import org.egov.eis.model.AttendanceType;
@@ -169,6 +171,36 @@ public class AttendanceController {
         }
 
         return getSuccessResponse(attendancesList, requestInfo);
+    }
+
+    @PostMapping(value = "_attendancereport")
+    @ResponseBody
+    public ResponseEntity<?> getAttendanceReport(@ModelAttribute @Valid final AttendanceReportRequest attendanceReportRequest,
+                                                 final BindingResult bindingResult, @RequestBody final RequestInfoWrapper requestInfoWrapper) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+
+        // validate header
+        if (requestInfo.getApiId() == null || requestInfo.getVer() == null || requestInfo.getTs() == null)
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestInfo);
+
+        // validate input params
+        if (bindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingParameters(bindingResult, requestInfo);
+
+        // Call service
+        List<Attendance> attendancesList = null;
+        Long noOfDaysInMonth = null;
+        Long noOfWorkingDays = null;
+        try {
+            attendancesList = attendanceService.getAttendanceReport(attendanceReportRequest, requestInfo);
+            noOfDaysInMonth = attendanceService.getNoOfDaysInMonth(attendanceReportRequest.getMonth(), attendanceReportRequest.getYear());
+            noOfWorkingDays = attendanceService.getNoOfWorkingDays(attendanceReportRequest, requestInfo);
+        } catch (final Exception exception) {
+            logger.error("Error while processing request " + attendanceReportRequest, exception);
+            return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+        }
+
+        return getSuccessResponseForReport(attendancesList, noOfDaysInMonth, noOfWorkingDays, requestInfo);
     }
 
     @SuppressWarnings("deprecation")
@@ -312,6 +344,25 @@ public class AttendanceController {
         responseInfo.setStatus(HttpStatus.OK.toString());
         attendanceRes.setResponseInfo(responseInfo);
         return new ResponseEntity<>(attendanceRes, HttpStatus.OK);
+
+    }
+
+
+    /**
+     * Populate Response object and return attendancesList
+     *
+     * @param attendancesList
+     * @return
+     */
+    private ResponseEntity<?> getSuccessResponseForReport(final List<Attendance> attendancesList, Long noOfDaysInMonth, Long noOfWorkingDays, final RequestInfo requestInfo) {
+        final AttendanceReportResponse attendanceReportResponse = new AttendanceReportResponse();
+        attendanceReportResponse.setAttendances(attendancesList);
+        attendanceReportResponse.setNoOfDaysInMonth(noOfDaysInMonth);
+        attendanceReportResponse.setNoOfWorkingDays(noOfWorkingDays);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        attendanceReportResponse.setResponseInfo(responseInfo);
+        return new ResponseEntity<>(attendanceReportResponse, HttpStatus.OK);
 
     }
 

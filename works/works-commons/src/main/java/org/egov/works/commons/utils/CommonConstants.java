@@ -13,6 +13,10 @@ public class CommonConstants {
     public static final String MASTERNAME_CONTRACTORCLASS="ContractorClass";
     public static final String MASTERNAME_TYPEOFWORK="TypeOfWork";
     public static final String MASTERNAME_REFERENCETYPE="ReferenceType";
+    
+	public static final String ABSTRACT_ESTIMATE_WF_TYPE = "AbstractEstimate";
+
+	public static final String ABSTRACT_ESTIMATE_BUSINESSKEY = "AbstractEstimate";
 
     //Common master names
     public static final String MASTERNAME_UOM="Uom";

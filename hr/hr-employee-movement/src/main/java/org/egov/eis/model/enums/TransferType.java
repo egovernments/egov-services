@@ -45,24 +45,20 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public enum TransferType {
 
     TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB(
             "Transfer within department/Corporation/ULB"), TRANSFER_OUTSIDE_CORPORATION_OR_ULB(
-                    "Transfer outside Corporation/ULB");
+            "Transfer outside Corporation/ULB");
 
     private String value;
 
     TransferType(String value) {
         this.value = value;
-    }
-
-    @Override
-    @JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
     }
 
     @JsonCreator
@@ -74,6 +70,17 @@ public enum TransferType {
         return allObjectValues;
     }
 
+    public static List<Map<String, String>> getTransferTypes() {
+        List<Map<String, String>> transferTypes = new ArrayList<>();
+        for (TransferType obj : TransferType.values()) {
+            Map<String, String> transferType = new HashMap<>();
+            transferType.put("id", obj.toString());
+            transferType.put("name", obj.value);
+            transferTypes.add(transferType);
+        }
+        return transferTypes;
+    }
+
     @JsonCreator
     public static TransferType fromValue(String passedValue) {
         for (TransferType obj : TransferType.values()) {
@@ -82,5 +89,11 @@ public enum TransferType {
             }
         }
         return null;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+        return StringUtils.capitalize(name());
     }
 }

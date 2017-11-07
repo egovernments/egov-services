@@ -40,18 +40,19 @@
 
 package org.egov.eis.service;
 
-import java.util.List;
-
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.service.helper.EmployeeSearchURLHelper;
+import org.egov.eis.web.contract.AttendanceReportRequest;
 import org.egov.eis.web.contract.EmployeeInfoResponse;
-import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 @Service
 public class EmployeeService {
@@ -60,6 +61,22 @@ public class EmployeeService {
 
     public List<EmployeeInfo> getEmployee(final Long id, final String tenantId, final RequestInfo requestInfo) {
         final String url = employeeSearchURLHelper.searchURL(id, tenantId);
+
+        final RestTemplate restTemplate = new RestTemplate();
+        final RequestInfoWrapper wrapper = new RequestInfoWrapper();
+        wrapper.setRequestInfo(requestInfo);
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+
+        final EmployeeInfoResponse employeeInfoResponse = restTemplate.postForObject(url, request,
+                EmployeeInfoResponse.class);
+
+        return employeeInfoResponse.getEmployees();
+    }
+
+    public List<EmployeeInfo> getEmployees(AttendanceReportRequest attendanceReportRequest, final RequestInfo requestInfo) {
+        final String url = employeeSearchURLHelper.searchURLForReport(attendanceReportRequest);
 
         final RestTemplate restTemplate = new RestTemplate();
         final RequestInfoWrapper wrapper = new RequestInfoWrapper();

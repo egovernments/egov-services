@@ -1,7 +1,9 @@
 package org.egov.swm.domain.service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.AuditDetails;
@@ -9,7 +11,7 @@ import org.egov.swm.domain.model.FuelType;
 import org.egov.swm.domain.model.OilCompanyName;
 import org.egov.swm.domain.model.RefillingPumpStation;
 import org.egov.swm.domain.repository.RefillingPumpStationRepository;
-import org.egov.swm.web.contract.Boundary;
+import org.egov.swm.persistence.repository.RefillingPumpStationJdbcRepository;
 import org.egov.swm.web.repository.BoundaryRepository;
 import org.egov.swm.web.repository.MdmsRepository;
 import org.egov.swm.web.requests.RefillingPumpStationRequest;
@@ -52,6 +54,37 @@ public class RefillingPumpStationService {
 		}
 
 		return refillingPumpStationRepository.save(refillingPumpStationRequest);
+	}
+
+	public RefillingPumpStationRequest update(RefillingPumpStationRequest refillingPumpStationRequest) {
+		Long userId = null;
+		if (refillingPumpStationRequest.getRequestInfo() != null
+				&& refillingPumpStationRequest.getRequestInfo().getUserInfo() != null
+				&& null != refillingPumpStationRequest.getRequestInfo().getUserInfo().getId()) {
+			userId = refillingPumpStationRequest.getRequestInfo().getUserInfo().getId();
+		}
+
+		for(RefillingPumpStation refillingPumpStation : refillingPumpStationRequest.getRefillingPumpStations()) {
+			setAuditDetails(refillingPumpStation, userId);
+		}
+
+		validateForUniqueCodesInRequest(refillingPumpStationRequest);
+		validate(refillingPumpStationRequest);
+
+		refillingPumpStationRepository.update(refillingPumpStationRequest);
+
+		return refillingPumpStationRequest;
+	}
+
+	private void validateForUniqueCodesInRequest(RefillingPumpStationRequest refillingPumpStationRequest){
+
+		List<String> codesList = refillingPumpStationRequest.getRefillingPumpStations()
+				.stream().map(RefillingPumpStation::getCode)
+				.collect(Collectors.toList());
+
+		if(codesList.size() != codesList.stream().distinct().count())
+			throw new CustomException("Code",
+					"Duplicate codes in given Refilling Pump Stations:");
 	}
 
 	private void validate(RefillingPumpStationRequest refillingPumpStationRequest) {
@@ -106,13 +139,11 @@ public class RefillingPumpStationService {
 
 			if (refillingPumpStation.getLocation() != null && refillingPumpStation.getLocation().getCode() != null) {
 
-				Boundary boundary = boundaryRepository.fetchBoundaryByCode(refillingPumpStation.getLocation().getCode(),
+				org.egov.swm.domain.model.Boundary boundary = boundaryRepository.fetchBoundaryByCode(refillingPumpStation.getLocation().getCode(),
 						refillingPumpStation.getTenantId());
 
 				if (boundary != null)
-					refillingPumpStation.setLocation(org.egov.swm.domain.model.Boundary.builder()
-							.id(String.valueOf(boundary.getId())).name(boundary.getName())
-							.boundaryNum(String.valueOf(boundary.getBoundaryNum())).code(boundary.getCode()).build());
+					refillingPumpStation.setLocation(boundary);
 				else
 					throw new CustomException("Boundary",
 							"Given Boundary is Invalid: " + refillingPumpStation.getLocation().getCode());

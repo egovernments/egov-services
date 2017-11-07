@@ -3,69 +3,42 @@ package org.egov.swm.domain.repository;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorSearch;
-import org.egov.swm.persistence.repository.ServicedLocationsJdbcRepository;
-import org.egov.swm.persistence.repository.ServicesOfferedJdbcRepository;
+import org.egov.swm.persistence.queue.repository.VendorQueueRepository;
 import org.egov.swm.persistence.repository.VendorJdbcRepository;
 import org.egov.swm.web.requests.VendorRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class VendorRepository {
 
 	@Autowired
-	private KafkaTemplate<String, Object> kafkaTemplate;
-
-	@Autowired
 	private VendorJdbcRepository vendorJdbcRepository;
 
 	@Autowired
-	private ServicedLocationsJdbcRepository servicedLocationsJdbcRepository;
-
-	@Autowired
-	private ServicesOfferedJdbcRepository servicesOfferedJdbcRepository;
-
-	@Value("${egov.swm.vendor.save.topic}")
-	private String saveTopic;
-
-	@Value("${egov.swm.vendor.update.topic}")
-	private String updateTopic;
-
-	@Value("${egov.swm.vendor.indexer.topic}")
-	private String indexerTopic;
+	private VendorQueueRepository vendorQueueRepository;
 
 	public VendorRequest save(VendorRequest vendorRequest) {
 
-		kafkaTemplate.send(saveTopic, vendorRequest);
-
-		kafkaTemplate.send(indexerTopic, vendorRequest.getVendors());
-
-		return vendorRequest;
+		return vendorQueueRepository.save(vendorRequest);
 
 	}
 
 	public VendorRequest update(VendorRequest vendorRequest) {
 
-		for (Vendor cp : vendorRequest.getVendors()) {
-
-			servicedLocationsJdbcRepository.delete(cp.getVendorNo());
-
-			servicesOfferedJdbcRepository.delete(cp.getVendorNo());
-		}
-
-		kafkaTemplate.send(updateTopic, vendorRequest);
-
-		kafkaTemplate.send(indexerTopic, vendorRequest.getVendors());
-
-		return vendorRequest;
+		return vendorQueueRepository.update(vendorRequest);
 
 	}
 
 	public Pagination<Vendor> search(VendorSearch vendorSearch) {
 		return vendorJdbcRepository.search(vendorSearch);
 
+	}
+
+	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
+			String uniqueFieldValue) {
+
+		return vendorJdbcRepository.uniqueCheck(tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
 	}
 
 }

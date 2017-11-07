@@ -34,6 +34,20 @@ public class RefillingPumpStationController {
         return refillingPumpStationResponse;
     }
 
+    @PostMapping("/_update")
+    @ResponseStatus(HttpStatus.CREATED)
+    public RefillingPumpStationResponse update(@RequestBody @Valid RefillingPumpStationRequest refillingPumpStationRequest){
+
+        RefillingPumpStationResponse refillingPumpStationResponse = new RefillingPumpStationResponse();
+        refillingPumpStationResponse.setResponseInfo(getResponseInfo(refillingPumpStationRequest.getRequestInfo()));
+
+        refillingPumpStationRequest = refillingPumpStationService.update(refillingPumpStationRequest);
+
+        refillingPumpStationResponse.setRefillingPumpStations(refillingPumpStationRequest.getRefillingPumpStations());
+
+        return refillingPumpStationResponse;
+    }
+
     private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
         return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
                 .resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();

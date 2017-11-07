@@ -71,6 +71,8 @@ public class AttendanceGetRequest {
 
     private Long designationId;
 
+    private Long employeeType;
+
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date fromDate;
 

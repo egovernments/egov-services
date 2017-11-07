@@ -32,6 +32,7 @@ import UiMultiFieldTable from './components/UiMultiFieldTable';
 import UiDialogBox from './components/UiDialogBox'
 import UigoogleMaps from './components/UigoogleMaps'
 import UiWorkflow from './components/UiWorkflow';
+import UiTimeField from './components/UiTimeField';
 
 let styles={
   reducePadding: {
@@ -66,7 +67,7 @@ export default class ShowFields extends Component {
                   if(!field.isHidden) {
                     return (
                       <Col key={fieldIndex} xs={12} sm={field.type === "documentList" || field.type === "fileTable" || field.type === "tableList" || (field.type === "textarea" && field.fullWidth === true) || field.type === "workflow" ? 12 : noCols} md={field.type === "documentList" || field.type === "fileTable" || field.type === "tableList" || (field.type === "textarea" && field.fullWidth === true) || field.type === "workflow" ? 12 : noCols}>
-                          {renderField(field, self.props.screen,fieldIndex)}
+                          {renderField(field, self.props.screen,fieldIndex,field.screenView)}
                       </Col>
                     )
                   }
@@ -146,7 +147,7 @@ export default class ShowFields extends Component {
   }
 
 
-  renderField=(item, screen, index)=> {
+  renderField=(item, screen, index,screenView)=> {
     if(screen == "view" && ["documentList", "fileTable", "arrayText", "arrayNumber", "tableList", "workflow"].indexOf(item.type) == -1 ) {
       if (item.type == "datePicker") {
         item.isDate = true;
@@ -202,11 +203,15 @@ export default class ShowFields extends Component {
       case 'arrayNumber':
         return <UiArrayField tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} readonly={screen === "view" ? "true" : ""}/>
       case 'fileTable':
-        return <UiFileTable tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} readonly={screen === "view" ? "true" : ""}/>
+        return <UiFileTable tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} readonly={screen === "view" ? "true" : (screenView?true:"")}/>
       case 'tableList':
         return <UiMultiFieldTable tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} screen={screen}/>
       case 'workflow':
         return <UiWorkflow tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} initiateWF={this.props.initiateWF} workflowId={this.props.workflowId || ""}/>
+      case 'timePicker':
+        return <UiTimeField tabIndex={index} ui={this.props.ui}
+        getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors}
+        handler={this.props.handler} screen={screen}/>;
       case 'customComponent':
         // console.log(item.path);
         // {

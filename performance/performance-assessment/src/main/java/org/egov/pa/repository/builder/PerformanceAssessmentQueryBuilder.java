@@ -54,7 +54,9 @@ public class PerformanceAssessmentQueryBuilder {
 	public static final Logger LOGGER = LoggerFactory.getLogger(PerformanceAssessmentQueryBuilder.class);
 
     public static final String SEARCH_KPI_BASE_QUERY = "SELECT docs.id as docid, docs.kpicode as dockpicode, docs.documentcode, docs.documentname, docs.mandatoryflag, master.id as id, master.name as name, master.code as code, master.finyear as finYear, master.createdby as createdBy, master.createddate as createdDate, "  
-    		+ " master.tenantid as tenantId, master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, master.targetvalue as targetValue, master.instructions as instructions FROM egpa_kpi_master master "  
+    		+ " master.tenantid as tenantId, master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, master.targetvalue as targetValue, master.instructions as instructions, master.department as departmentId, " 
+    		+ " dept.name as deptName, dept.code as deptCode, dept.active as deptActive "
+    		+ " FROM egpa_kpi_master master LEFT JOIN eg_department dept ON dept.id = master.department " 
     		+ " LEFT JOIN egpa_kpi_master_document docs ON master.code = docs.kpicode WHERE master.active IS TRUE " ; 
     
     public static final String SEARCH_VALUE_BASE_QUERY = "SELECT value.tenantid as tenantId, master.code as kpiCode, master.finyear as finYear, "  
@@ -82,7 +84,7 @@ public class PerformanceAssessmentQueryBuilder {
     }
     
     public static String fetchTargetForKpi() { 
-    	return "SELECT * FROM egpa_kpi_master master where master.code = :kpiCode and master.finyear = :finYear and targetvalue IS NOT NULL " ;
+    	return "SELECT id, name, code, finyear as financialYear, targetvalue as targetValue FROM egpa_kpi_master master where master.code = :kpiCode and master.finyear = :finYear and targetvalue IS NOT NULL " ;
     }
     
     public static String fetchKpiValueForCodeAndTenant() { 
@@ -95,7 +97,7 @@ public class PerformanceAssessmentQueryBuilder {
     }
     
     public static String fetchKpiByCode() { 
-    	return "SELECT * FROM egpa_kpi_master where code = :code ";  
+    	return "SELECT id, name, code, finyear as financialYear, targetvalue as targetValue FROM egpa_kpi_master where code = :code ";  
     }
     
     

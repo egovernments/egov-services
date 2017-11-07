@@ -986,14 +986,18 @@ delete formData.Asset.assetAttributesCheck;
          if(e.target.value==false) {
            console.log(spec);
            spec["asset.create"].groups[2].fields[7].isRequired = false;
+           self.props.delRequiredFields("Asset.warrantyExpiryDate");
            self.props.setMockData(JSON.parse(JSON.stringify(spec)));
            spec["asset.update"].groups[2].fields[7].isRequired = false;
+           self.props.delRequiredFields("Asset.warrantyExpiryDate");
            self.props.setMockData(JSON.parse(JSON.stringify(spec)));
          } else {
            console.log(spec);
            spec["asset.create"].groups[2].fields[7].isRequired = true;
+           self.props.addRequiredFields("Asset.warrantyExpiryDate");
            self.props.setMockData(JSON.parse(JSON.stringify(spec)));
            spec["asset.update"].groups[2].fields[7].isRequired = true;
+           self.props.addRequiredFields("Asset.warrantyExpiryDate");
            self.props.setMockData(JSON.parse(JSON.stringify(spec)));
          }
        }

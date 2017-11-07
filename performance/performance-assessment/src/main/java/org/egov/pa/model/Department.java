@@ -56,8 +56,6 @@ public class Department   {
    * Unique Department name.
    * @return name
   **/
-  @NotNull
-
  @Size(min=8,max=64)
   public String getName() {
     return name;
@@ -96,7 +94,6 @@ public class Department   {
    * TRUE for active departments and FALSE for inactive departments.
    * @return active
   **/
-  @NotNull
 
 
   public Boolean getActive() {

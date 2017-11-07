@@ -267,7 +267,7 @@ public class Supplier   {
   @ApiModelProperty(required = true, value = "code of the Supplier ")
   @NotNull
 
- @Pattern(regexp="^[a-zA-Z0-9]+$") @Size(min=5,max=50)
+ @Pattern(regexp="^[a-zA-Z0-9]*$") @Size(min=5,max=50)
   public String getCode() {
     return code;
   }
@@ -288,7 +288,7 @@ public class Supplier   {
   @ApiModelProperty(required = true, value = "name of the Material ")
   @NotNull
 
- @Pattern(regexp="^[a-zA-Z ]+$") @Size(min=5,max=50)
+ @Pattern(regexp="^[a-zA-Z ]*$") @Size(min=5,max=50)
   public String getName() {
     return name;
   }
@@ -309,7 +309,7 @@ public class Supplier   {
   @ApiModelProperty(required = true, value = "address of the Supplier   ")
   @NotNull
 
- @Pattern(regexp="^[a-zA-Z0-9 ]+$") @Size(max=1000)
+ @Pattern(regexp="^[a-zA-Z0-9 ]*$") @Size(max=1000)
   public String getAddress() {
     return address;
   }
@@ -370,7 +370,7 @@ public class Supplier   {
   @ApiModelProperty(required = true, value = "contact no of the Supplier    ")
   @NotNull
 
- @Pattern(regexp="^[0-9]+$") @Size(max=10)
+ @Pattern(regexp="^[0-9]*$") @Size(max=10)
   public String getContactNo() {
     return contactNo;
   }
@@ -390,7 +390,7 @@ public class Supplier   {
   **/
   @ApiModelProperty(value = "fax number of Supplier  ")
 
- @Pattern(regexp="^[0-9]+$")
+ @Pattern(regexp="^[0-9]*$")
   public String getFaxNo() {
     return faxNo;
   }
@@ -450,7 +450,7 @@ public class Supplier   {
   **/
   @ApiModelProperty(value = "description of the Supplier ")
 
- @Pattern(regexp="^[0-9a-zA-Z ]+$") @Size(max=1000)
+ @Pattern(regexp="^[0-9a-zA-Z ]*$") @Size(max=1000)
   public String getDescription() {
     return description;
   }
@@ -570,7 +570,7 @@ public class Supplier   {
   **/
   @ApiModelProperty(value = "name of the contact person    ")
 
- @Pattern(regexp="^[a-zA-Z ]+$") @Size(min=5,max=50)
+ @Pattern(regexp="^[a-zA-Z ]*$") @Size(min=5,max=50)
   public String getContactPerson() {
     return contactPerson;
   }
@@ -590,7 +590,7 @@ public class Supplier   {
   **/
   @ApiModelProperty(value = "contact number of the contact person   ")
 
- @Pattern(regexp="^[0-9]+$") @Size(max=10)
+ @Pattern(regexp="^[0-9]*$") @Size(max=10)
   public String getContactPersonNo() {
     return contactPersonNo;
   }
@@ -672,7 +672,7 @@ public class Supplier   {
   @ApiModelProperty(required = true, value = "account number in the bank  ")
   @NotNull
 
- @Pattern(regexp="^[0-9]+$")
+ @Pattern(regexp="^[0-9]*$")
   public String getAcctNo() {
     return acctNo;
   }
@@ -693,7 +693,7 @@ public class Supplier   {
   @ApiModelProperty(required = true, value = "ifsc of the bank ")
   @NotNull
 
- @Pattern(regexp="^[a-zA-Z0-9]+$")
+ @Pattern(regexp="^[a-zA-Z0-9]*$")
   public String getIfsc() {
     return ifsc;
   }
@@ -713,7 +713,7 @@ public class Supplier   {
   **/
   @ApiModelProperty(value = "micr of the bank                ")
 
- @Pattern(regexp="^[a-zA-Z0-9]+$")
+ @Pattern(regexp="^[a-zA-Z0-9]*$")
   public String getMicr() {
     return micr;
   }

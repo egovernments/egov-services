@@ -12,13 +12,19 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ContractorJdbcRepository {
+public class ContractorJdbcRepository extends JdbcRepository {
 
 	@Autowired
 	public JdbcTemplate jdbcTemplate;
 
 	@Autowired
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
+			String uniqueFieldValue) {
+
+		return uniqueCheck("egswm_contractor", tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
+	}
 
 	public List<Contractor> search(Contractor searchRequest) {
 

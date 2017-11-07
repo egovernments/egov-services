@@ -1,6 +1,8 @@
 package org.egov.swm.domain.service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.egov.swm.constants.Constants;
@@ -63,8 +65,6 @@ public class RouteService {
 
 		Long userId = null;
 
-		validate(routeRequest);
-
 		for (Route r : routeRequest.getRoutes()) {
 
 			if (routeRequest.getRequestInfo() != null && routeRequest.getRequestInfo().getUserInfo() != null
@@ -74,6 +74,8 @@ public class RouteService {
 
 			setAuditDetails(r, userId);
 		}
+
+		validate(routeRequest);
 
 		return routeRepository.update(routeRequest);
 
@@ -88,6 +90,8 @@ public class RouteService {
 
 		JSONArray responseJSONArray = null;
 		ObjectMapper mapper = new ObjectMapper();
+
+		findDuplicatesInUniqueFields(routeRequest);
 
 		for (Route route : routeRequest.getRoutes()) {
 
@@ -161,7 +165,41 @@ public class RouteService {
 							cp = collectionPoints.getPagedData().get(0);
 					}
 				}
+
+			validateUniqueFields(route);
+
 		}
+	}
+
+	private void findDuplicatesInUniqueFields(RouteRequest routeRequest) {
+
+		Map<String, String> nameMap = new HashMap<>();
+
+		for (Route route : routeRequest.getRoutes()) {
+
+			if (route.getName() != null) {
+				if (nameMap.get(route.getName()) != null)
+					throw new CustomException("name", "Duplicate names in given vendors : " + route.getName());
+
+				nameMap.put(route.getName(), route.getName());
+			}
+
+		}
+
+	}
+
+	private void validateUniqueFields(Route route) {
+
+		if (route.getName() != null) {
+			if (!routeRepository.uniqueCheck(route.getTenantId(), "name", route.getName(), "code", route.getCode())) {
+
+				throw new CustomException("name",
+						"The field name must be unique in the system The  value " + route.getName()
+								+ " for the field name already exists in the system. Please provide different value ");
+
+			}
+		}
+
 	}
 
 	private void setAuditDetails(Route contract, Long userId) {

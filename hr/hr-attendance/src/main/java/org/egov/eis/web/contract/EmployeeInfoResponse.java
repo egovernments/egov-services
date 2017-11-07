@@ -43,6 +43,7 @@ package org.egov.eis.web.contract;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.EmployeeInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;

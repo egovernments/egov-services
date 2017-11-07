@@ -43,9 +43,11 @@ package org.egov.eis.repository;
 import org.egov.eis.model.Attendance;
 import org.egov.eis.model.AttendanceType;
 import org.egov.eis.repository.builder.AttendanceQueryBuilder;
+import org.egov.eis.repository.rowmapper.AttendanceReportRowMapper;
 import org.egov.eis.repository.rowmapper.AttendanceRowMapper;
 import org.egov.eis.repository.rowmapper.AttendanceTypeRowMapper;
 import org.egov.eis.web.contract.AttendanceGetRequest;
+import org.egov.eis.web.contract.AttendanceReportRequest;
 import org.egov.eis.web.contract.AttendanceRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,6 +80,9 @@ public class AttendanceRepository {
     private AttendanceTypeRowMapper attendanceTypeRowMapper;
 
     @Autowired
+    private AttendanceReportRowMapper attendanceReportRowMapper;
+
+    @Autowired
     private AttendanceQueryBuilder attendanceQueryBuilder;
 
     public List<Attendance> findForCriteria(final AttendanceGetRequest attendanceGetRequest) throws ParseException {
@@ -87,6 +92,16 @@ public class AttendanceRepository {
 
         final List<Attendance> attendances = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
                 attendanceRowMapper);
+        return attendances;
+    }
+
+    public List<Attendance> findReportQuery(final AttendanceReportRequest attendanceReportRequest, Long noofdays) throws ParseException {
+        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final String queryStr = attendanceQueryBuilder.getAttendanceReportQuery(attendanceReportRequest, noofdays, preparedStatementValues);
+        LOGGER.info("search attendance Query ::" + queryStr);
+
+        final List<Attendance> attendances = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+                attendanceReportRowMapper);
         return attendances;
     }
 

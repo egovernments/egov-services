@@ -28,6 +28,8 @@ schemes:
 basePath: '/works-masters/v1'
 x-api-id: 'org.egov.works.masters'
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
+x-ui-info:
+  $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-masters/sor-ui-info.yml
 paths:
   /scheduleofrates/_search:
     post:

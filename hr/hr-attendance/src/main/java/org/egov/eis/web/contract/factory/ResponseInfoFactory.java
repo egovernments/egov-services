@@ -40,21 +40,29 @@
 
 package org.egov.eis.web.contract.factory;
 
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class ResponseInfoFactory {
 
     public ResponseInfo createResponseInfoFromRequestInfo(@RequestBody final RequestInfo requestInfo, final Boolean success) {
-        final String apiId = requestInfo.getApiId();
-        final String ver = requestInfo.getVer();
-        final String ts = requestInfo.getTs();
-        final String resMsgId = "uief87324"; // FIXME : Hard-coded
-        final String msgId = requestInfo.getMsgId();
-        final String responseStatus = success ? "successful" : "failed";
+        String apiId = null;
+        String ver = null;
+        String ts = null;
+        String resMsgId = "uief87324"; // FIXME : Hard-coded
+        String msgId = null;
+        if (requestInfo != null) {
+            apiId = requestInfo.getApiId();
+            ver = requestInfo.getVer();
+            ts = isEmpty(requestInfo.getTs()) ? null : requestInfo.getTs().toString();
+            msgId = requestInfo.getMsgId();
+        }
+        String responseStatus = success ? "successful" : "failed";
 
         return new ResponseInfo(apiId, ver, ts, resMsgId, msgId, responseStatus);
     }

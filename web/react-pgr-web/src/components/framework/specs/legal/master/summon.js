@@ -100,28 +100,7 @@ var dat = {
     ],
     result: {
       "disableRowClick" : true,
-      header: [
-        {
-          label: "legal.create.referenceNo"
-        },
-        {
-          label: "caseRegistration.create.referenceCaseNo"
-        },
-        {
-          label: "advocatepayment.create.caseStatus"
-        },
-        {
-          label: "legal.create.departmentName"
-        },
-        {
-          label: "legal.create.caseType"
-        },
-        {
-          label: "legal.create.advocateName"
-        },
-        {
-          label: "legal.search.result.actionLabels",
-          isAction: true,
+       isAction: true,
           actionItems: [
             {
               label: "Assign ADV",
@@ -140,13 +119,42 @@ var dat = {
               label: "ParaWise",
               url: "/update/legal/parawisecomments/"
             }
-          ]
+          ],
+      header: [
+        {
+          label: "legal.create.referenceNo"
+        },
+        {
+          label: "caseRegistration.create.referenceCaseNo"
+        },
+        {
+          label: "advocatepayment.create.caseStatus"
+        }, {
+          label: "legal.create.caseNo"
+        },
+        {
+          label: "legal.create.departmentName"
+        },
+        {
+          label: "legal.create.caseType"
+        },
+        {
+          label: "legal.create.advocateName"
+        },
+        {
+          label: "legal.search.result.actionLabels",
+          isChecked:true,
+          checkedItem:{
+            jsonPath:"checkedRow",
+            label:"",
+          }
         }
       ],
       values: [
         "summon.summonReferenceNo",
         "caseRefernceNo",
         "hearingDetails.caseStatus",
+        "summon.caseNo",
         "summon.departmentName.name",
         "summon.caseType.name",
         "advocateDetails[0].advocate.name",
@@ -341,15 +349,26 @@ var dat = {
             isDisabled: false,
             patternErrorMsg: ""
           },
+          // {
+          //   name: "hearingTime",
+          //   jsonPath: "summons[0].hearingTime",
+          //   label: "legal.create.hearingTime",
+          //   type: "text",
+          //   isNumber: true,
+          //   isRequired: false,
+          //   isDisabled: false,
+          //   patternErrorMsg: ""
+          // }, 
           {
             name: "hearingTime",
             jsonPath: "summons[0].hearingTime",
             label: "legal.create.hearingTime",
-            type: "text",
+            type: "timePicker",
             isNumber: true,
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: "",
+            defaultValue:"00:00"
           },
           {
             name: "courtName",

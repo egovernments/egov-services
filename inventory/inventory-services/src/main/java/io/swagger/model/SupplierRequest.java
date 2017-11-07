@@ -59,7 +59,7 @@ import javax.validation.constraints.*;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-02T13:59:35.200+05:30")
 
 public class SupplierRequest {
-	@JsonProperty("requestInfo")
+	@JsonProperty("RequestInfo")
 	private org.egov.common.contract.request.RequestInfo requestInfo = null;
 
 	@JsonProperty("suppliers")

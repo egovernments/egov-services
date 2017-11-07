@@ -181,7 +181,7 @@ class ShowField extends Component {
   }
 
   drillDown=(e,i,i2,item,item1)=>{
-     let { reportResult ,searchForm ,setReportResult,setFlag,toggleSnackbarAndSetText,searchParams,setRoute,match, metaData} = this.props;
+     let { reportResult ,searchForm ,setReportResult,setFlag,toggleSnackbarAndSetText,searchParams,setRoute,match, metaData,pushReportHistory} = this.props;
      let object=reportResult.reportHeader[i2];
 
     if (object.defaultValue && object.defaultValue.search("_parent")>-1) {
@@ -222,6 +222,7 @@ class ShowField extends Component {
             localStorage.reportData = JSON.stringify(response.reportData);
             setRoute("/print/report/" + response.viewPath);
           } else {
+            pushReportHistory({tenantId:tenantId,reportName:splitArray[0].split("=")[1],searchParams})
             setReportResult(response);
             setFlag(1);
           }
@@ -313,7 +314,7 @@ class ShowField extends Component {
           values.push(value);
         }
       }
-      
+
       searchParams.push({"name":key, "input": values});
       var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : '';
       let response=Api.commonApiPost("/report/"+match.params.moduleName+"/_get",{},{tenantId:tenantId,reportName:splitArray[0].split("=")[1],searchParams}).then(function(response) {
@@ -323,7 +324,7 @@ class ShowField extends Component {
         }
       },function(err) {
           console.log(err);
-      }); 
+      });
     }
   }
 
@@ -597,7 +598,10 @@ const mapDispatchToProps = dispatch => ({
   toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
   },
-  setRoute: (route) => dispatch({type: "SET_ROUTE", route})
+  setRoute: (route) => dispatch({type: "SET_ROUTE", route}),
+  pushReportHistory:(history)=>{
+    dispatch({type:"PUSH_REPORT_HISTORY",reportData:history})
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShowField);

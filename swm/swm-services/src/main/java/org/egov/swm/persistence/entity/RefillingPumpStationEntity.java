@@ -32,7 +32,7 @@ public class RefillingPumpStationEntity {
 
 	private String typeOfFuel = null;
 
-	private Long quantity = null;
+	private Double quantity = null;
 
 	public RefillingPumpStation toDomain() {
 

@@ -2,6 +2,7 @@ package org.egov.swm.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import org.egov.swm.domain.model.*;
 
 import java.util.List;
 
@@ -9,6 +10,6 @@ import java.util.List;
 public class BoundaryResponse {
 
     @JsonProperty("Boundary")
-    private List<Boundary> boundaries;
+    private List<org.egov.swm.domain.model.Boundary> boundaries;
 
 }

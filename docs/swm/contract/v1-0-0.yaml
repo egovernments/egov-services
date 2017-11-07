@@ -1627,26 +1627,36 @@ definitions:
           $ref: "#/definitions/Vehicle"
           format: autoComplete
         # At least one of the maintenance parameter has to provided
-        maintenanceAfterDays:
-          type: integer
-          format: int64
-          minimum: 1
-          maximum: 500
-          description: Expected days after which regular maintenance is due
-        maintenanceAfterKm:
+        maintenanceUom:
+          type: string
+          maxLength: 5
+          minLength: 2
+          description: Service interval period definition in either KMs or Days
+        maintenanceAfter:
           type: integer
           format: int64
           minimum: 1
           maximum: 20000
-          description: Expected KMs after which regular maintenance is due
+          description: Expected Days or KMs after which regular maintenance is due
+        downtimeforMaintenanceUom:
+          type: string
+          maxLength: 5
+          minLength: 3
+          description: Downtime definition in either days or hours
         downtimeforMaintenance:
-          type: number
-          format: double
-          description: Expected downtime of Vehicle due to regular maintenance. It can be in Hours or Days
+          type: integer
+          format: int64
+          minimum: 0
+          maximum: 720
+          exclusiveMinimum: true
+          description: Expected downtime of Vehicle in days or hours due to regular maintenance.
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - tenantId
+      - maintenanceUom
+      - maintenanceAfter
+      - downtimeforMaintenanceUom
       - downtimeforMaintenance
       - vehicle
       
@@ -2377,6 +2387,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

@@ -108,7 +108,7 @@ public class ChartOfAccount   {
    * @return name
   **/
   @ApiModelProperty(required = true, value = "name is the name of the account code . for example 110 glcode has the name \"Tax Revenue\" ")
-  @NotNull
+  //@NotNull
 
  @Size(min=5,max=128)
   public String getName() {
@@ -170,7 +170,7 @@ public class ChartOfAccount   {
    * @return isActiveForPosting
   **/
   @ApiModelProperty(required = true, value = "isActiveForPosting true will be considered for transactions. All major,minor codes will be false and only detailed code will be true . Further any account code can be disabled for transaction by making this field false ")
-  @NotNull
+  //@NotNull
 
 
   public Boolean getIsActiveForPosting() {
@@ -211,7 +211,7 @@ public class ChartOfAccount   {
    * @return type
   **/
   @ApiModelProperty(required = true, value = "type is a single character representation of account code type I: Income E: Expenditure L: Liability A: Asset Account code for all I start with 1 Account code for all E start with 2 Account code for all L start with 3 Account code for all A start with 4 ")
-  @NotNull
+  //@NotNull
 
 
   public String getType() {
@@ -232,7 +232,7 @@ public class ChartOfAccount   {
    * @return classification
   **/
   @ApiModelProperty(required = true, value = "classification is internal to the system. This tells whether the code is Major ,Minor,Subminor or detailed. Major code classification value is 1 Minor code is 2 Subminor code is 3 Detailed code is 4. Only classification 4 and is activeforposting=true will be used in transactions. Reports can be generated at any level. ")
-  @NotNull
+  //@NotNull
 
 
   public Long getClassification() {
@@ -253,7 +253,7 @@ public class ChartOfAccount   {
    * @return functionRequired
   **/
   @ApiModelProperty(required = true, value = "functionRequired field specifies while transacting with this accountcode is the function is mandatory or not . For any account code this field is set to true then all transactions expect a fun=ction code to be passed along with account code ")
-  @NotNull
+  //@NotNull
 
 
   public Boolean getFunctionRequired() {
@@ -274,7 +274,7 @@ public class ChartOfAccount   {
    * @return budgetCheckRequired
   **/
   @ApiModelProperty(required = true, value = "budgetCheckRequired field specifies whether budgeting check required for this account code. Apart from global Budgetcheck configuration this is where glcode wise budget check decision is made. ")
-  @NotNull
+  //@NotNull
 
 
   public Boolean getBudgetCheckRequired() {

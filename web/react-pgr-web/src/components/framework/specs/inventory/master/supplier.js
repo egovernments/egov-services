@@ -11,19 +11,21 @@ var dat = {
         "fields": [
           {
             "name": "supplierName",
-            "jsonPath": "ids",
+            "jsonPath": "codes",
             "label": "supplier.search.name",
             "type": "singleValueList",
-            "url":"http://www.mocky.io/v2/59fae53f3700005b4066bb34?|$..name|$..code",
+            "url":"inventory-services/suppliers/_search?|$..code|$..name",
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": ""
           },
           {
-            "name": "supplierType",
+            "name": "supplier.type",
             "jsonPath": "type",
             "label": "supplier.search.type",
+            "type": "singleValueList",
             "defaultValue":[
+              {key: null, value: "-- Please Select --"},
               {
                  "key":"INDIVIDUAL",
                  "value":"Individual"
@@ -49,23 +51,19 @@ var dat = {
                  "value":"Others"
               }
             ],
-            "type": "singleValueList",
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": ""
           },
           {
             "name": "isActive",
-            "jsonPath": "status",
+            "jsonPath": "active",
             "label": "supplier.search.isactive",
             "type": "checkbox",
+            "defaultValue":true,
             "isRequired": false,
             "isDisabled": false,
-            "patternErrorMsg": "",
-            "mappingValues":{
-              "true":"Active",
-              "false":"InActive"
-            }
+            "patternErrorMsg": ""
           }
         ]
       }
@@ -81,12 +79,7 @@ var dat = {
         }
       ],
       "values": [
-        "code", "name", {valuePath:"status.name", type:"checkbox", mappingValues:{
-            "active":true,
-            "suspended":false,
-            "barred":false,
-            "inactive":false
-         }}
+        "code", "name", {valuePath:"active", type:"checkbox"}
       ],
       "resultPath": "suppliers",
       "rowClickUrlUpdate": "/update/inventory/supplier/{code}",
@@ -105,11 +98,12 @@ var dat = {
         "label": "inventory.create.group.title.Add Supplie",
         "fields": [
           {
-            "name": "name",
+            "name": "supplierType",
             "jsonPath": "suppliers[0].type",
-            "label": "inventory.create.name",
+            "label": "inventory.create.supplierType",
             "type": "singleValueList",
             "defaultValue":[
+              {key: null, value: "-- Please Select --"},
               {
                  "key":"INDIVIDUAL",
                  "value":"Individual"
@@ -288,7 +282,19 @@ var dat = {
             "defaultValue":true,
             "isRequired": true,
             "isDisabled": false,
-            "patternErrorMsg": ""
+            "patternErrorMsg": "",
+            "depedants": [
+                {
+									"jsonPath":"suppliers[0].inActiveDate",
+									"type":"textField",
+                  "isHidden":true,
+									"pattern":"`${!getVal('suppliers[0].active') ? new Date().getTime():undefined}`",
+									"rg":"",
+									"isRequired": false,
+									"requiredErrMsg": "",
+									"patternErrMsg": ""
+							 }
+            ]
           }
         ]
       }, {
@@ -362,6 +368,7 @@ var dat = {
             "label": "inventory.create.name",
             "type": "singleValueList",
             "defaultValue":[
+              {key: null, value: "-- Please Select --"},
               {
                  "key":"INDIVIDUAL",
                  "value":"Individual"
@@ -597,7 +604,7 @@ var dat = {
       }
     ],
     "tenantIdRequired": true,
-    "url": "http://www.mocky.io/v2/5a0015362e0000b12bca5a89?code={code}"
+    "url": "inventory-services/suppliers/_search?codes={codes}"
   },
   "inventory.update": {
     "numCols": 4,
@@ -609,11 +616,12 @@ var dat = {
         "label": "inventory.create.group.title.Add Supplie",
         "fields": [
           {
-            "name": "name",
+            "name": "supplierType",
             "jsonPath": "suppliers[0].type",
-            "label": "inventory.create.name",
+            "label": "inventory.create.supplierType",
             "type": "singleValueList",
             "defaultValue":[
+              {key: null, value: "-- Please Select --"},
               {
                  "key":"INDIVIDUAL",
                  "value":"Individual"
@@ -792,7 +800,19 @@ var dat = {
             "defaultValue":true,
             "isRequired": true,
             "isDisabled": false,
-            "patternErrorMsg": ""
+            "patternErrorMsg": "",
+            "depedants": [
+                {
+									"jsonPath":"suppliers[0].inActiveDate",
+									"type":"textField",
+                  "isHidden":true,
+									"pattern":"`${!getVal('suppliers[0].active') ? new Date().getTime():undefined}`",
+									"rg":"",
+									"isRequired": false,
+									"requiredErrMsg": "",
+									"patternErrMsg": ""
+							 }
+            ]
           }
         ]
       }, {
@@ -848,9 +868,9 @@ var dat = {
         ]
       }
     ],
-    "url": "/inventory-inventory/v110/suppliers/_update",
+    "url": "inventory-services/suppliers/_update",
     "tenantIdRequired": true,
-    "searchUrl": "http://www.mocky.io/v2/5a0015362e0000b12bca5a89?code={code}"
+    "searchUrl": "inventory-services/suppliers/_search?codes={codes}"
   }
 }
 

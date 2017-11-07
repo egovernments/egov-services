@@ -204,6 +204,14 @@ definitions:
       - INACTIVE
       - BLACK_LISTED
       - DEBARRED
+
+  EstimateSanctionType:
+    type: string
+    enum:
+      - FINANCIAL_SANCTION
+      - ADMINISTRATIVE_SANCTION
+      - TECHNICAL_SANCTION
+
       
 ##### MASTERS #######
       
@@ -218,7 +226,7 @@ definitions:
         type: string
         description: Tenant id of the Schedule Category
         maxLength: 128
-        minLength: 4
+        minLength: 2
       name:
         type: string
         description: Unique name of the Schedule Category
@@ -247,7 +255,7 @@ definitions:
         type: string
         description: Tenant id of the Schedule Of Rate
         maxLength: 128
-        minLength: 4
+        minLength: 2
       code:
         type: string
         description: Unique code of the Schedule Of Rate
@@ -302,7 +310,7 @@ definitions:
         type: string
         description: Tenant id of the Rate Detail
         maxLength: 128
-        minLength: 4
+        minLength: 2
       scheduleOfRate:
         $ref: '#/definitions/ScheduleOfRate'
       fromDate:
@@ -339,7 +347,7 @@ definitions:
         type: string
         description: Tenant id of the Market Rate Details
         maxLength: 128
-        minLength: 4
+        minLength: 2
       scheduleOfRate:
         $ref: '#/definitions/ScheduleOfRate'
       fromDate:
@@ -376,7 +384,7 @@ definitions:
         type: string
         description: Tenant id of the Contractor Class.
         maxLength: 128
-        minLength: 4
+        minLength: 2
       class:
         type: string
         description: Class of the Contractor
@@ -422,7 +430,7 @@ definitions:
         type: string
         description: Tenant id of the Contractor.
         maxLength: 128
-        minLength: 4
+        minLength: 2
       name:
         type: string
         description: Name of the Contractor.
@@ -520,14 +528,29 @@ definitions:
         $ref: '#/definitions/ContractorClass'
         description: Contractor Class for which Contractor belongs to
         format: singleValueList
+      pmc:
+        type: boolean
+        description: The boolean value to indicate whether the contractor is PMC(Project Management Consultant). The default value is false.
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails" 
     required:
       - tenantId
       - name
       - code
       - correspondenceAddress
+      - paymentAddress
+      - contactPerson
       - email
       - mobileNumber
       - panNumber
+      - tinNumber
+      - bank
+      - bankAccountNumber
+      - pwdApprovalCode
+      - pwdApprovalValidTill
+      - epfRegistrationNumber
+      - accountCode
+      - ifscCode
       - contractorClass
       
   MilestoneTemplate:
@@ -541,7 +564,7 @@ definitions:
         type: string
         description: Tenant id of the Milestone Template
         maxLength: 128
-        minLength: 4
+        minLength: 2
       templateName:
         type: string
         description: Name of the Milestone Template
@@ -596,7 +619,7 @@ definitions:
         type: string
         description: Tenant id of the Milestone Template Activitie
         maxLength: 128
-        minLength: 4
+        minLength: 2
       milestoneTemplate:
         $ref: '#/definitions/MilestoneTemplate'
       stageOrderNumber:
@@ -633,7 +656,7 @@ definitions:
         type: string
         description: Tenant id of the Type Of Work
         maxLength: 128
-        minLength: 4
+        minLength: 2
       name:
         type: string
         pattern: '[a-zA-Z0-9\s\.,]+'
@@ -676,7 +699,7 @@ definitions:
         type: string
         description: Tenant id of the Estimate Template
         maxLength: 128
-        minLength: 4
+        minLength: 2
       name:
         type: string
         description: Name of the Estimate Template
@@ -733,7 +756,7 @@ definitions:
         type: string
         description: Tenant id of the Estimate Template Activitie
         maxLength: 128
-        minLength: 4
+        minLength: 2
       estimateTemplate:
         $ref: '#/definitions/EstimateTemplate'
         description: The estimate template of the Template activity
@@ -769,7 +792,7 @@ definitions:
         type: string
         description: Tenant id of the Non SOR
         maxLength: 128
-        minLength: 4
+        minLength: 2
       description:
         type: string
         description: Description of the Non SOR
@@ -796,7 +819,7 @@ definitions:
         type: string
         description: Tenant id of the Overhead
         maxLength: 128
-        minLength: 4
+        minLength: 2
       name:
         type: string
         description: Name of the Overhead
@@ -843,7 +866,7 @@ definitions:
         type: string
         description: Tenant id of the Overhead Rate
         maxLength: 128
-        minLength: 4
+        minLength: 2
       overhead:
         $ref: '#/definitions/Overhead'
       startDate:
@@ -882,7 +905,7 @@ definitions:
         type: string
         description: Tenant id of the Remarks Master
         maxLength: 128
-        minLength: 4
+        minLength: 2
       typeOfDocument:
         type: string
         description: Type Of Document of the Remarks Master
@@ -917,7 +940,7 @@ definitions:
         type: string
         description: Tenant id of the Remarks Detail
         maxLength: 128
-        minLength: 4
+        minLength: 2
       remarks:
         $ref: '#/definitions/Remarks'
       remarksDescription:
@@ -948,7 +971,7 @@ definitions:
         type: string
         description: Tenant id of the Nature Of Work
         maxLength: 128
-        minLength: 4
+        minLength: 2
       name:
         type: string
         description: Name of the Nature Of Work
@@ -982,7 +1005,7 @@ definitions:
         type: string
         description: Tenant id of the Reference Type
         maxLength: 128
-        minLength: 4
+        minLength: 2
       name:
         type: string
         description: Name of the Reference Type
@@ -1070,7 +1093,7 @@ definitions:
         type: string
         description: Tenant Id of the Document detail
         maxLength: 128
-        minLength: 4
+        minLength: 2
       latitude:
         type: integer
         format: double
@@ -1111,7 +1134,7 @@ definitions:
           type: string
           description: tenant id of the App Configuration
           maxLength: 128
-          minLength: 4
+          minLength: 2
         keyName:
           type: string
           description: name of the key
@@ -1138,6 +1161,75 @@ definitions:
       - keyName
       - effectiveFrom
       - values
+
+  EstimateSanctionAuthority:
+    type: object
+    description: An Object that holds Sanction Authority details for Estimate
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Estimate Sanction Authority
+      tenantId:
+        type: string
+        description: Tenant id of the Estimate Sanction Authority
+        maxLength: 128
+        minLength: 2
+      name:
+        type: string
+        description: Name of the Estimate Sanction Authority
+        pattern: '[a-zA-Z0-9\s\.,]+'
+        maxLength: 100
+        minLength: 1
+
+    required:
+      - tenantId
+      - name
+
+  AssetPresentCondition:
+    type: object
+    description: An Object that holds Present condition of the asset
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Present condition of the asset
+      tenantId:
+        type: string
+        description: Tenant id of the Present condition of the asset
+        maxLength: 128
+        minLength: 2
+      name:
+        type: string
+        description: Present condition of the asset
+        pattern: '[a-zA-Z0-9\s\.,]+'
+        maxLength: 256
+        minLength: 1
+
+    required:
+      - tenantId
+      - name
+
+  LandAssetPresentCondition:
+    type: object
+    description: An Object that holds Present condition of the Land asset
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Present condition of the Land asset
+      tenantId:
+        type: string
+        description: Tenant id of the Present condition of the Land asset
+        maxLength: 128
+        minLength: 2
+      name:
+        type: string
+        description: Present condition of the Land asset
+        pattern: '[a-zA-Z0-9\s\.,]+'
+        maxLength: 256
+        minLength: 1
+
+    required:
+      - tenantId
+      - name
 
 parameters:
 ##########################################################
@@ -1166,5 +1258,4 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
-
 

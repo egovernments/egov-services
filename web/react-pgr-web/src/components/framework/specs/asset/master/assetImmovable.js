@@ -156,7 +156,7 @@ var dat = {
 				{
 					"name": "AssetCategoryType",
 					"jsonPath": "Asset.assetCategory.assetCategoryType",
-					"label": "Asset Category Type",
+					"label": "ac.create.asset.asset.category.type",
 					"pattern": "",
 					"type": "text",
 					"url": "",
@@ -183,7 +183,7 @@ var dat = {
 						"label": "ac.create.Land.Asset.ID",
 						"pattern": "",
 						"type": "autoCompelete",
-						"url": "asset-services-maha/assets/_search?&assetCategoryType='LAND'|$..name|$..name",
+						"url": "asset-services-maha/assets/_search?&assetCategoryType=LAND|$..name|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -781,6 +781,36 @@ var dat = {
 				"fields": [
 					{
 						"name": "AssetSearchCode",
+						"jsonPath": "assetCategoryType",
+						"label": "ac.create.asset.asset.category.type",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue": [  {
+						"key": "IMMOVABLE",
+						"value": "IMMOVABLE"
+					}]
+					},
+					{
+						"name": "AssetCategoryType",
+						"jsonPath": "assetCategoryType",
+						"label": "ac.create.asset.asset.category.type",
+						"pattern": "",
+						"type": "text",
+						"url": "",
+						"isRequired": true,
+						"isDisabled": true,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue":"IMMOVABLE",
+						"isHidden": "true"
+					},
+					{
+						"name": "AssetSearchCode",
 						"jsonPath": "code",
 						"label": "ac.search.asset.code",
 						"pattern": "",
@@ -803,48 +833,69 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
-					// {
-					// 	"name": "AssetSearchAssetCategory",
-					// 	"jsonPath": "assetCategory",
-					// 	"label": "ac.search.category",
-					// 	"pattern": "",
-					// 	"type": "singleValueList",
-					// 	"url": "",
-					// 	"isRequired": false,
-					// 	"isDisabled": false,
-					// 	"requiredErrMsg": "",
-					// 	"patternErrMsg": ""
-					// },
-					// {
-					// 	"name": "AssetSearchDepartment",
-					// 	"jsonPath": "department",
-					// 	"label": "ac.search.department",
-					// 	"pattern": "",
-					// 	"type": "singleValueList",
-					// 	"url": "",
-					// 	"isRequired": false,
-					// 	"isDisabled": false,
-					// 	"requiredErrMsg": "",
-					// 	"patternErrMsg": ""
-					// },
-					// {
-					// 	"name": "AssetSearchStatus",
-					// 	"jsonPath": "status",
-					// 	"label": "ac.search.status",
-					// 	"pattern": "",
-					// 	"type": "singleValueList",
-					// 	"url": "",
-					// 	"isRequired": false,
-					// 	"isDisabled": false,
-					// 	"requiredErrMsg": "",
-					// 	"patternErrMsg": ""
-					// }
+					{
+						"name": "Department",
+						"jsonPath": "department",
+						"label": "ac.create.Department",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"isStateLevel":true
+					},
+					{
+						"name": "fromOriginalDate",
+						"jsonPath": "originalValueFrom",
+						"label": "ac.create.OriginalFromDate",
+						"pattern": "",
+						"type": "datePicker",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "toOriginalDate",
+						"jsonPath": "originalValueTo",
+						"label": "ac.create.OriginalToDate",
+						"pattern": "",
+						"type": "datePicker",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "fromDate",
+						"jsonPath": "assetCreatedFrom",
+						"label": "ac.create.createFromDate",
+						"pattern": "",
+						"type": "datePicker",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "toDate",
+						"jsonPath": "assetCreatedTo",
+						"label": "ac.create.createToDate",
+						"pattern": "",
+						"type": "datePicker",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
 				]
 			}
 		],
 		"result": {
-			"header": [{label: "Asset Code"},{label: "ac.create.Asset.Name"},  {label: "ac.create.Asset.SubCategory.Name"},{label: "ac.create.Original.Value.of.Asset"}, {label: "Date of Creation", "isDate": true}],
-			"values": ["code","name", "assetCategory.name", "originalValue", "dateOfCreation"],
+			"header": [{label: "Asset Code"},{label: "ac.create.Asset.Name"}, {label:"ac.create.asset.asset.category.type"}, {label: "ac.create.Asset.SubCategory.Name"},{label: "ac.create.Department"},{label: "ac.create.Original.Value.of.Asset"}, {label: "ac.create.Opening.Written.down.Value"}],
+			"values": ["code","name","assetCategory.assetCategoryType", "assetCategory.name", "departmentCode","originalValue", "grossValue"],
 			"resultPath": "Assets",
 			 "rowClickUrlUpdate": "/non-framework/asset/master/assetImmovableCreate/{id}",
 			 "rowClickUrlView": "/non-framework/asset/master/assetImmovableView/{id}"
@@ -1045,7 +1096,7 @@ var dat = {
 						"label": "ac.create.Land.Asset.ID",
 						"pattern": "",
 						"type": "autoCompelete",
-						"url": "asset-services-maha/assets/_search?assetCategoryType='LAND'|$..name|$..name",
+						"url": "asset-services-maha/assets/_search?assetCategoryType=LAND|$..name|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -1761,7 +1812,7 @@ var dat = {
 				{
 					"name": "AssetCategoryType",
 					"jsonPath": "Asset.assetCategory.assetCategoryType",
-					"label": "Asset Category Type",
+					"label": "ac.create.asset.asset.category.type",
 					"pattern": "",
 					"type": "text",
 					"url": "",
@@ -1788,7 +1839,7 @@ var dat = {
 						"label": "ac.create.Land.Asset.ID",
 						"pattern": "",
 						"type": "autoCompelete",
-						"url": "asset-services-maha/assets/_search?assetCategoryType='LAND'|$..name|$..name",
+						"url": "asset-services-maha/assets/_search?assetCategoryType=LAND|$..name|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",

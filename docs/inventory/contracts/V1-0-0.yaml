@@ -1946,7 +1946,7 @@ paths:
             in: query
             maxItems: 50
             description: comma seperated list of Ids 
-          - name: code
+          - name: codes
             type: array
             items: 
              type: string
@@ -1979,7 +1979,7 @@ paths:
             in: query
             description: |
               active or inactive status of the supplier
-          - name: supplierContactNo
+          - name: contactNo
             type: string
             in: query
             description: |
@@ -1999,11 +1999,6 @@ paths:
             in: query
             description: |
               email of the Supplier
-          - name: description
-            type: string
-            in: query
-            description: |
-              description
           - name: panNo
             type: string
             in: query
@@ -2059,12 +2054,6 @@ paths:
             in: query
             description: |
               ifsc code of the bank account
-          - name: bankMicr
-            type: string
-            in: query
-            description: |
-              micr code of the bank account
-              
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
@@ -3739,7 +3728,7 @@ definitions:
           type: string
           description: type of the Supplier
           enum:
-            - INDIVISUAL
+            - INDIVIDUAL
             - FIRM
             - COMPANY
             - REGISTERED SOCIETY

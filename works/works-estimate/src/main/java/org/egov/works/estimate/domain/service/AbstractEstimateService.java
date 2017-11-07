@@ -26,6 +26,7 @@ import org.egov.works.estimate.web.contract.EstimateAppropriation;
 import org.egov.works.estimate.web.contract.EstimateAppropriationRequest;
 import org.egov.works.estimate.web.contract.EstimateAppropriationResponse;
 import org.egov.works.estimate.web.contract.ProjectCode;
+import org.egov.works.estimate.web.contract.ProjectCodeRequest;
 import org.egov.works.estimate.web.contract.ProjectCodeStatus;
 import org.egov.works.estimate.web.contract.RequestInfo;
 import org.egov.works.estimate.web.contract.WorkFlowDetails;
@@ -70,6 +71,9 @@ public class AbstractEstimateService {
 	@Autowired
 	private RestTemplate restTemplate;
 
+	@Autowired
+	private ProjectCodeService projectCodeService;
+
 	@Transactional
 	public List<AbstractEstimate> create(AbstractEstimateRequest abstractEstimateRequest) {
 		for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
@@ -110,7 +114,8 @@ public class AbstractEstimateService {
 
 			if (estimate.getStatus().toString().equalsIgnoreCase(AbstractEstimateStatus.APPROVED.toString())) {
 				for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
-					setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag());
+					setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
+							abstractEstimateRequest.getRequestInfo());
 					setEstimateAppropriation(abstractEstimateDetails, abstractEstimateRequest.getRequestInfo());
 
 				}
@@ -372,17 +377,26 @@ public class AbstractEstimateService {
 		return auditDetails;
 	}
 
-	public void setProjectCode(final AbstractEstimateDetails abstractEstimateDetails, boolean spillOverFlag) {
+	public void setProjectCode(final AbstractEstimateDetails abstractEstimateDetails, boolean spillOverFlag,
+			final RequestInfo requestInfo) {
 		ProjectCode projectCode = new ProjectCode();
 		if (spillOverFlag) {
-			projectCode.setCode(abstractEstimateDetails.getProjectCode().getCode());
+			if (abstractEstimateDetails.getProjectCode() != null
+					&& abstractEstimateDetails.getProjectCode().getCode() != null)
+				projectCode.setCode(abstractEstimateDetails.getProjectCode().getCode());
+			else
+				throw new InvalidDataException("WorkIdentificationNumber", ErrorCode.NOT_NULL.getCode(), null);
 		}
 		projectCode.setName(abstractEstimateDetails.getNameOfWork());
 		projectCode.setDescription(abstractEstimateDetails.getNameOfWork());
 		projectCode.setActive(true);
 		projectCode.setStatus(ProjectCodeStatus.CREATED);
-		// TODO: Need to create account detail key whenever project code
-		// genrated
+
+		ProjectCodeRequest projectCodeRequest = new ProjectCodeRequest();
+		List<ProjectCode> projectCodes = new ArrayList<>();
+		projectCodes.add(projectCode);
+		projectCodeRequest.setProjectCodes(projectCodes);
+		projectCodeService.create(projectCodeRequest);
 	}
 
 	private void setEstimateAppropriation(AbstractEstimateDetails abstractEstimateDetails,

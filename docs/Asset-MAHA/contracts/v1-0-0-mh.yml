@@ -15,7 +15,7 @@ info:
     name: Ghanshyam rawat
     email: ghanshyam.rawat@riflexions.com
   version: 1.0.0
-basePath: /asset-services/
+basePath: /asset-services-maha/
 paths:
   /assets/_search:
     post:
@@ -963,6 +963,24 @@ definitions:
           depreciationRate of asset.
         items:
           $ref: '#/definitions/YearWiseDepreciation'
+      fundSource:
+        type: string
+        format: varchar
+        description: 'Source of fund'
+      location:
+        type: string
+        format: varchar
+        description: 'location of asset'
+      openingDate:
+        type: integer
+        format: int64
+        description: The date asset is been registered
+      landDetails:
+        type: array
+        description: multiple rows can be specified for each asset 
+        items:
+          $ref: '#/definitions/LandDetails'
+       
     required:
       - name
       - departmentCode
@@ -975,11 +993,7 @@ definitions:
       - anticipatedLife
       - acquisitionDate
       - address
-      - assetAccount
-      - accumulatedDepreciationAccount
-      - revaluationReserveAccount
-      - depreciationExpenseAccount
-      
+    
       
   Attributes:
     type: object
@@ -1003,6 +1017,22 @@ definitions:
           data type is multivaluelist then value will be list, if datatype is
           table then value will be the key value pair where key is  column name
           and value is column value).
+        format: varchar
+  LandDetails:
+    type: object
+    description: Categories defined under asset category type are shown in the drop down.
+    properties:
+      surveyNo:
+        type: string
+        format: varchar
+        description: land survey number
+      area:
+        type: number
+        description: Area of the land.
+        format: double
+      code:
+        type: string
+        description: code of the landdetails
         format: varchar
   AssetCategory:
     type: object

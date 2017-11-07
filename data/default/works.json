@@ -60,14 +60,12 @@
     {
       "id": 2,
       "tenantId": "default",
-      "code": "Buildings - Fake",
-      "name": "Buildings - Fake",
+      "code": "BuildingsFake",
+      "name": "BuildingsFake",
       "description": "Buildings - Fake",
       "active": true,
       "parent": null
-    }
-  ],
-  "SubTypeOfWork": [
+    },
     {
       "id": 3,
       "tenantId": "default",
@@ -75,15 +73,15 @@
       "name": "CCRoadsFake",
       "description": "CC - Roads - Fake",
       "active": true,
-      "parent": "Roads - Fake"
+      "parent": "RoadsFake"
     }
   ],
   "Overhead": [
     {
       "id": 1,
       "tenantId": "default",
-      "code": "TAX - Fake",
-      "name": "TAX - Fake",
+      "code": "TAXFake",
+      "name": "TAXFake",
       "description": "TAX - Fake",
       "accountCode": "41230041 - Bridges and flyover - Fake",
       "overheadRates": [
@@ -100,8 +98,8 @@
     {
       "id": 2,
       "tenantId": "default",
-      "code": "TDS - Fake",
-      "name": "TDS - Fake",
+      "code": "TDSFake",
+      "name": "TDSFake",
       "description": "TDS - Fake",
       "accountCode": "41230041 - Bridges and flyover - Fake",
       "overheadRates": [
@@ -154,8 +152,8 @@
       "templateStaus": "MANRAYROAD - Fake",
       "templateName": "TWO LANE ROAD WITHOUT DIVIDER - Fake",
       "templateDescription": "Laying of road - fake",
-      "typeOfWork": "Roads - Fake",
-      "subTypeOfWork": "CC - Roads - Fake"
+      "typeOfWork": "RoadsFake",
+      "subTypeOfWork": "CCRoadsFake"
     },
     {
       "id": 2,
@@ -164,7 +162,7 @@
       "templateStaus": "Active",
       "templateName": "Water Supply Works for Nippani - Fake",
       "templateDescription": "Laying of pipe - fake",
-      "typeOfWork": "Roads - Fake",
+      "typeOfWork": "RoadsFake",
       "subTypeOfWork": null,
       "milestoneTemplateActivities": [
         {
@@ -192,7 +190,7 @@
       "status": "Water Supply Works for Nippani - Fake",
       "templateName": "Water Supply Works for Nippani - Fake",
       "templateDescription": "Laying of pipe - fake",
-      "typeOfWork": "Roads - Fake",
+      "typeOfWork": "RoadsFake",
       "subTypeOfWork": null,
       "estimateTemplateActivities": [
         {

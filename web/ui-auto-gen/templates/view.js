@@ -24,7 +24,7 @@ let viewTemplate = function(module, numCols, path, config, definition, basePath,
         url: basePath + uiInfoDef.searchUrl
     };
     let fields = {};
-    let isArr = false;
+    let isArr = false; //Declaration
     let ind = 0;
     for(var i=0; i<config["post"].parameters.length; i++) {
         if(config["post"].parameters[i].schema) {

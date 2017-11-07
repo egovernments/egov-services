@@ -21,32 +21,32 @@ import javax.validation.constraints.*;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-28T13:21:55.964+05:30")
 
 public class MaterialReceiptHeaderRequest   {
-  @JsonProperty("ResposneInfo")
-  private RequestInfo resposneInfo = null;
+  @JsonProperty("requestInfo")
+  private org.egov.common.contract.request.RequestInfo requestInfo = null;
 
   @JsonProperty("MaterialReceipt")
   @Valid
   private List<MaterialReceiptHeader> materialReceipt = null;
 
-  public MaterialReceiptHeaderRequest resposneInfo(RequestInfo resposneInfo) {
-    this.resposneInfo = resposneInfo;
+  public MaterialReceiptHeaderRequest requestInfo(org.egov.common.contract.request.RequestInfo requestInfo) {
+    this.requestInfo = requestInfo;
     return this;
   }
 
    /**
-   * Get resposneInfo
-   * @return resposneInfo
+   * Get requestInfo
+   * @return requestInfo
   **/
   @ApiModelProperty(value = "")
 
   @Valid
 
-  public RequestInfo getResposneInfo() {
-    return resposneInfo;
+  public org.egov.common.contract.request.RequestInfo getRequestInfo() {
+    return requestInfo;
   }
 
-  public void setResposneInfo(RequestInfo resposneInfo) {
-    this.resposneInfo = resposneInfo;
+  public void setrequestInfo(org.egov.common.contract.request.RequestInfo requestInfo) {
+    this.requestInfo = requestInfo;
   }
 
   public MaterialReceiptHeaderRequest materialReceipt(List<MaterialReceiptHeader> materialReceipt) {
@@ -88,13 +88,13 @@ public class MaterialReceiptHeaderRequest   {
       return false;
     }
     MaterialReceiptHeaderRequest materialReceiptHeaderRequest = (MaterialReceiptHeaderRequest) o;
-    return Objects.equals(this.resposneInfo, materialReceiptHeaderRequest.resposneInfo) &&
+    return Objects.equals(this.requestInfo, materialReceiptHeaderRequest.requestInfo) &&
         Objects.equals(this.materialReceipt, materialReceiptHeaderRequest.materialReceipt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(resposneInfo, materialReceipt);
+    return Objects.hash(requestInfo, materialReceipt);
   }
 
   @Override
@@ -102,7 +102,7 @@ public class MaterialReceiptHeaderRequest   {
     StringBuilder sb = new StringBuilder();
     sb.append("class MaterialReceiptHeaderRequest {\n");
     
-    sb.append("    resposneInfo: ").append(toIndentedString(resposneInfo)).append("\n");
+    sb.append("    requestInfo: ").append(toIndentedString(requestInfo)).append("\n");
     sb.append("    materialReceipt: ").append(toIndentedString(materialReceipt)).append("\n");
     sb.append("}");
     return sb.toString();

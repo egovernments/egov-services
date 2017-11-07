@@ -7,6 +7,11 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.model.MaterialReceiptHeader;
 import io.swagger.model.ResponseInfo;
+import io.swagger.model.SupplierResponse.SupplierResponseBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.validation.annotation.Validated;
@@ -19,16 +24,18 @@ import javax.validation.constraints.*;
 @ApiModel(description = "Hold the Material Receipt Note Response information")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-28T13:21:55.964+05:30")
-
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class MaterialReceiptHeaderResponse   {
   @JsonProperty("ResposneInfo")
-  private ResponseInfo resposneInfo = null;
+  private org.egov.common.contract.response.ResponseInfo resposneInfo = null;
 
   @JsonProperty("MaterialReceipt")
   @Valid
   private List<MaterialReceiptHeader> materialReceipt = null;
 
-  public MaterialReceiptHeaderResponse resposneInfo(ResponseInfo resposneInfo) {
+  public MaterialReceiptHeaderResponse resposneInfo(org.egov.common.contract.response.ResponseInfo resposneInfo) {
     this.resposneInfo = resposneInfo;
     return this;
   }
@@ -41,11 +48,11 @@ public class MaterialReceiptHeaderResponse   {
 
   @Valid
 
-  public ResponseInfo getResposneInfo() {
+  public org.egov.common.contract.response.ResponseInfo getResposneInfo() {
     return resposneInfo;
   }
 
-  public void setResposneInfo(ResponseInfo resposneInfo) {
+  public void setResponseInfo(org.egov.common.contract.response.ResponseInfo resposneInfo) {
     this.resposneInfo = resposneInfo;
   }
 

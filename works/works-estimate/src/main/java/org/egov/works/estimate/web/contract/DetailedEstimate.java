@@ -1162,7 +1162,12 @@ public class DetailedEstimate   {
     this.estimateOverheads = estimateOverheads;
   }
 
-  @NotNull
+    /**
+     * Array of Detailed Estimate Activities
+     * @return estimateActivities
+     **/
+    @ApiModelProperty(required = true, value = "Array of Detailed Estimate Activities")
+    @NotNull
   public List<EstimateActivity> getEstimateActivities() {
 	return estimateActivities;
 }

@@ -25,6 +25,18 @@ public class WorksEstimateServiceConstants {
     public static final String GIS_INTEGRATION_APPCONFIG = "GIS_INTEGRATION";
     public static final String ASSET_DETAILES_REQUIRED_APPCONFIG = "ASSET_MANDATORY";
 
+    //Error messages
+    public static final String KEY_ESIMATE_OVERHEAD_ID = "ESIMATE OVERHEAD_ID";
+    public static final String MESSAGE_ESIMATE_OVERHEAD_ID = "Overhead id is reqired for estimate";
+
+    public static final String KEY_ESIMATE_OVERHEAD_AMOUNT = "ESIMATE_OVERHEAD_AMOUNT";
+    public static final String MESSAGE_ESIMATE_OVERHEAD_AMOUNT = "Overhead amount is required for estimate";
+
+    public static final String KEY_DUPLICATE_MULTIYEAR_ESTIMATE = "DUPLICATE_MULTIYEAR_ESTIMATE";
+    public static final String MESSAGE_DUPLICATE_MULTIYEAR_ESTIMATE = "Duplicate multiyear estimates";
+
+    public static final String KEY_PERCENTAGE_MULTIYEAR_ESTIMATE = "INVALID_PERCANTAGE_MULTIYEAR_ESTIMATE";
+    public static final String MESSAGE_PERCENTAGE_MULTIYEAR_ESTIMATE = "Percentage should not  be greater than 100 for multiyear estimates";
 
 
 }

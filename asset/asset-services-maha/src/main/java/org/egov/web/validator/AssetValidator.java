@@ -1,11 +1,9 @@
 package org.egov.web.validator;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang.math.DoubleRange;
 import org.egov.contract.AssetRequest;
 import org.egov.model.Asset;
 import org.egov.model.AssetCategory;

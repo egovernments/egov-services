@@ -2,9 +2,6 @@ package org.egov.works.estimate.web.controller;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
-import org.egov.works.commons.exception.CustomBindException;
 import org.egov.works.estimate.domain.service.ProjectCodeService;
 import org.egov.works.estimate.web.contract.ProjectCode;
 import org.egov.works.estimate.web.contract.ProjectCodeRequest;
@@ -31,10 +28,7 @@ public class ProjectCodeController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.OK)
-	public ProjectCodeResponse create(@Valid @RequestBody ProjectCodeRequest projectCodeRequest, BindingResult errors) {
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
+	public ProjectCodeResponse create(@RequestBody ProjectCodeRequest projectCodeRequest, BindingResult errors) {
 		List<ProjectCode> projectCodes = projectCodeService.create(projectCodeRequest);
 
 		ProjectCodeResponse projectCodeResponse = new ProjectCodeResponse();
@@ -44,10 +38,7 @@ public class ProjectCodeController {
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.OK)
-	public ProjectCodeResponse update(@Valid @RequestBody ProjectCodeRequest projectCodeRequest, BindingResult errors) {
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
+	public ProjectCodeResponse update(@RequestBody ProjectCodeRequest projectCodeRequest, BindingResult errors) {
 		List<ProjectCode> projectCodes = projectCodeService.update(projectCodeRequest);
 
 		ProjectCodeResponse projectCodeResponse = new ProjectCodeResponse();

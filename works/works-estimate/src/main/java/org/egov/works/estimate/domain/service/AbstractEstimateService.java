@@ -91,10 +91,12 @@ public class AbstractEstimateService {
 
 			populateNextStatus(estimate);
 
+			ProjectCode projectCode = new ProjectCode();
 			if (estimate.getStatus().toString().equalsIgnoreCase(AbstractEstimateStatus.APPROVED.toString())) {
 				for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
-					setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
-							abstractEstimateRequest.getRequestInfo());
+					projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
+							abstractEstimateRequest.getRequestInfo()));
+					abstractEstimateDetails.setProjectCode(projectCode);
 					setEstimateAppropriation(estimate, abstractEstimateRequest.getRequestInfo());
 
 				}
@@ -358,7 +360,7 @@ public class AbstractEstimateService {
 		return auditDetails;
 	}
 
-	public void setProjectCode(final AbstractEstimateDetails abstractEstimateDetails, boolean spillOverFlag,
+	public String setProjectCode(final AbstractEstimateDetails abstractEstimateDetails, boolean spillOverFlag,
 			final RequestInfo requestInfo) {
 		Map<String, String> messages = new HashMap<>();
 		ProjectCode projectCode = new ProjectCode();
@@ -378,13 +380,15 @@ public class AbstractEstimateService {
 		projectCode.setDescription(abstractEstimateDetails.getNameOfWork());
 		projectCode.setActive(true);
 		projectCode.setStatus(ProjectCodeStatus.CREATED);
+		projectCode.setTenantId(abstractEstimateDetails.getTenantId());
 
 		ProjectCodeRequest projectCodeRequest = new ProjectCodeRequest();
 		projectCodeRequest.setRequestInfo(requestInfo);
 		List<ProjectCode> projectCodes = new ArrayList<>();
 		projectCodes.add(projectCode);
 		projectCodeRequest.setProjectCodes(projectCodes);
-		projectCodeService.create(projectCodeRequest);
+		List<ProjectCode> savedCodes = projectCodeService.create(projectCodeRequest);
+		return savedCodes.get(0).getCode();
 	}
 
 	private void setEstimateAppropriation(AbstractEstimate abstractEstimate,

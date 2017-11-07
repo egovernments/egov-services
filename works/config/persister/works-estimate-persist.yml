@@ -170,7 +170,7 @@ serviceMaps:
 
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.grossAmountBilled
        
-       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectcode
+       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.code
        
  - version: 1.0
    name: AbstractEstimate Update

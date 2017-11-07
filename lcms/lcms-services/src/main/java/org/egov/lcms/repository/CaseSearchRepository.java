@@ -106,15 +106,16 @@ public class CaseSearchRepository {
 		return paraWiseComments;
 	}
 
-	private List<HearingDetails> searchHearingDetails(Case casee) {
+	private List<HearingDetails> searchHearingDetails(Case caseObj) {
 		List<HearingDetails> hearingDetails = new ArrayList<HearingDetails>();
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
-		final String queryStr = caseBuilder.searchByCaseCodeQuery(casee, ConstantUtility.HEARING_DETAILS_TABLE_NAME,
+		final String queryStr = caseBuilder.searchByCaseCodeQuery(caseObj, ConstantUtility.HEARING_DETAILS_TABLE_NAME,
 				Boolean.TRUE, preparedStatementValues);
 
 		try {
 			hearingDetails = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), hearingDetailsRowMapper);
 		} catch (Exception ex) {
+			log.info("Error occured in getting hearing details "+ex.getMessage());
 			throw new CustomException(propertiesManager.getHearingDetailsResponseErrorCode(), ex.getMessage());
 		}
 		return hearingDetails;

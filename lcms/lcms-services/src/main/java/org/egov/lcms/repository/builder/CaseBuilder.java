@@ -18,7 +18,7 @@ public class CaseBuilder {
 
 	@Autowired
 	AdvocateRepository AdvocateRepository;
-	
+
 	@Autowired
 	HearingRepository hearingRepository;
 
@@ -83,9 +83,9 @@ public class CaseBuilder {
 			String code = "";
 			for (String caseCode : caseCodes) {
 				if (count < caseCodes.size())
-					code = code +"'"+ caseCode + "',";
+					code = code + "'" + caseCode + "',";
 				else
-					code = code + "'"+caseCode+"'";
+					code = code + "'" + caseCode + "'";
 				count++;
 
 			}
@@ -102,8 +102,7 @@ public class CaseBuilder {
 		}
 
 		if (caseSearchCriteria.getAdvocateName() != null && !caseSearchCriteria.getAdvocateName().isEmpty()) {
-			String caseCode = AdvocateRepository
-					.getcaseCodeByAdvocateCode(caseSearchCriteria.getAdvocateName());
+			String caseCode = AdvocateRepository.getcaseCodeByAdvocateCode(caseSearchCriteria.getAdvocateName());
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" code IN('" + caseCode + "')");
 
@@ -118,8 +117,8 @@ public class CaseBuilder {
 			selectQuery.append(" caseRegistrationDate<=? ");
 			preparedStatementValues.add(caseSearchCriteria.getToDate());
 		}
-		
-		if ( caseSearchCriteria.getCaseNo()!=null && !caseSearchCriteria.getCaseNo().isEmpty() ){
+
+		if (caseSearchCriteria.getCaseNo() != null && !caseSearchCriteria.getCaseNo().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" caseno=? ");
 			preparedStatementValues.add(caseSearchCriteria.getCaseNo());
@@ -166,17 +165,17 @@ public class CaseBuilder {
 		}
 	}
 
-	public String searchByCaseCodeQuery(Case casee, String tableName, Boolean isTenantIdExixts,
+	public String searchByCaseCodeQuery(Case caseObj, String tableName, Boolean isTenantIdExixts,
 			final List<Object> preparedStatementValues) {
 		StringBuilder paraWiseSearchQuery = new StringBuilder();
 		paraWiseSearchQuery.append("SELECT * FROM " + tableName);
-
+		log.info("case code for getting hearing details is" + caseObj.getCode());
 		paraWiseSearchQuery.append(" WHERE casecode=?");
-		preparedStatementValues.add(casee.getCode());
+		preparedStatementValues.add(caseObj.getCode());
 
 		if (isTenantIdExixts) {
 			paraWiseSearchQuery.append(" AND tenantid=?");
-			preparedStatementValues.add(casee.getTenantId());
+			preparedStatementValues.add(caseObj.getTenantId());
 		}
 
 		return paraWiseSearchQuery.toString();

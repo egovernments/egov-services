@@ -314,19 +314,19 @@ var dat = {
             "patternErrMsg": "",
             "values": [{"label":"Yes", "value":true},{"label":"No", "value":false}],
             "defaultValue":true,
-						"showHideFields": [{
-	               "ifValue": false,
-	               "hide": [{
-	                "name": "WarrantyExpiryDateMandatory",
-	                "isGroup": false,
-	                "isField": true
-	               }],
-	               "show": [{
-	                "name": "WarrantyExpiryDateNonMandatory",
-	                "isGroup": false,
-	                "isField": true
-	              }]
-	              }]
+						// "showHideFields": [{
+	          //      "ifValue": false,
+	          //      "hide": [{
+	          //       "name": "WarrantyExpiryDateMandatory",
+	          //       "isGroup": false,
+	          //       "isField": true
+	          //      }],
+	          //      "show": [{
+	          //       "name": "WarrantyExpiryDateNonMandatory",
+	          //       "isGroup": false,
+	          //       "isField": true
+	          //     }]
+	          //     }]
           },
           {
             "name": "WarrantyExpiryDateMandatory",
@@ -335,24 +335,24 @@ var dat = {
             "pattern": "",
             "type": "datePicker",
             "url": "",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
-					{
-            "name": "WarrantyExpiryDateNonMandatory",
-            "jsonPath": "Asset.warrantyExpiryDate",
-            "label": "ac.create.Warranty.expiry.date",
-            "pattern": "",
-            "type": "datePicker",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-						"hide":true
-          },
+					// {
+          //   "name": "WarrantyExpiryDateNonMandatory",
+          //   "jsonPath": "Asset.warrantyExpiryDate",
+          //   "label": "ac.create.Warranty.expiry.date",
+          //   "pattern": "",
+          //   "type": "datePicker",
+          //   "url": "",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": "",
+					// 	"hide":true
+          // },
 					{
             "name": "AssetDescription",
             "jsonPath": "Asset.description",

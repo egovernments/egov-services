@@ -994,7 +994,7 @@ delete formData.Asset.assetAttributesCheck;
          SubProperty = SubProperty.join(".");
          console.log(SubProperty);
          var _val = e.target.value;
-         Api.commonApiPost("/asset-services-maha/assets/_search",{"name":_val},{}, false, false, false, "", "", false).then(function(response)
+         Api.commonApiPost("/asset-services-maha/assets/_search",{name:_val},{}, false, false, false, "", "", false).then(function(response)
         {
 
           if (response && response.Assets && response.Assets[0] && response.Assets[0].assetAttributes) {

@@ -447,10 +447,10 @@ paths:
             description: |
               rate type of the PurchaseOrder
             enum:
-              - DIT
-              - DGSD
-              - Tender
-              - Quotation
+            - DGSC_RATECONTRACT
+            - ULB_RATE_CONTRACT
+            - ONE_TIME_TENDER
+            - QUOTATION
           - name: supplierCode
             type: string
             in: query
@@ -2443,14 +2443,14 @@ definitions:
         rateType:
           type: string
           enum:
-            - DIT
-            - DGSD
-            - Tender
-            - Quotation
+            - DGSC_RATECONTRACT
+            - ULB_RATE_CONTRACT
+            - ONE_TIME_TENDER
+            - QUOTATION
           description: |
             rate type of the PurchaseOrder
         supplierCode:
-          type: string
+          $ref: "#/definitions/Supplier"
           description: |
             supplier code of the PurchaseOrder
         advanceAmount:
@@ -2502,10 +2502,6 @@ definitions:
           type:  array
           items:
             $ref: "#/definitions/PurchaseOrderDetails"
-        purchaseIndents:
-          type:  array
-          items:
-            $ref: '#/definitions/PurchaseIndentDetails'    
         fileStoreId:
           type: string
           description: |

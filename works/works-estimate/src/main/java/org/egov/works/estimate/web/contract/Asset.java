@@ -219,7 +219,7 @@ public class Asset   {
    * @return anticipatedLife
   **/
   @ApiModelProperty(required = true, value = "Anticipated life of asset.")
-  @NotNull
+  //@NotNull
 
 
   public Long getAnticipatedLife() {
@@ -280,7 +280,7 @@ public class Asset   {
    * @return wipReferenceNo
   **/
   @ApiModelProperty(required = true, value = "Ref No of WIP(work in progress) Register.")
-  @NotNull
+  //@NotNull
 
 
   public String getWipReferenceNo() {
@@ -424,7 +424,7 @@ public class Asset   {
    * @return acquisitionDate
   **/
   @ApiModelProperty(required = true, value = "Date of the Acquisition.")
-  @NotNull
+  //@NotNull
 
 
   public Long getAcquisitionDate() {
@@ -445,7 +445,7 @@ public class Asset   {
    * @return originalValue
   **/
   @ApiModelProperty(required = true, value = "value of the asset when it was created originally, will be same as gross value if the asset is being created from the system.")
-  @NotNull
+  //@NotNull
 
   @Valid
 
@@ -467,7 +467,7 @@ public class Asset   {
    * @return assetAccount
   **/
   @ApiModelProperty(required = true, value = "Options are from the  chart of account master for the account code purpose \"Fixed Asset\".")
-  @NotNull
+  //@NotNull
 
 
   public String getAssetAccount() {
@@ -488,7 +488,7 @@ public class Asset   {
    * @return accumulatedDepreciationAccount
   **/
   @ApiModelProperty(required = true, value = "Options are from the  chart of account master for the account code purpose \"Accumulated Depreciation\".")
-  @NotNull
+ // @NotNull
 
 
   public String getAccumulatedDepreciationAccount() {
@@ -509,7 +509,7 @@ public class Asset   {
    * @return revaluationReserveAccount
   **/
   @ApiModelProperty(required = true, value = "Options are from the  chart of account master for the account code purpose \"Revaluation Reserve Account\".")
-  @NotNull
+  //@NotNull
 
 
   public String getRevaluationReserveAccount() {
@@ -530,7 +530,7 @@ public class Asset   {
    * @return depreciationExpenseAccount
   **/
   @ApiModelProperty(required = true, value = "Options are from the  chart of account master for the account code purpose \"Depreciation Expense Account\".")
-  @NotNull
+ // @NotNull
 
 
   public String getDepreciationExpenseAccount() {
@@ -720,7 +720,7 @@ public class Asset   {
    * @return address
   **/
   @ApiModelProperty(required = true, value = "address as entered by the user.")
-  @NotNull
+  //@NotNull
 
 
   public String getAddress() {
@@ -901,7 +901,7 @@ public class Asset   {
    * @return name
   **/
   @ApiModelProperty(required = true, value = "Name of the Asset.")
-  @NotNull
+  //@NotNull
 
 
   public String getName() {
@@ -962,7 +962,7 @@ public class Asset   {
    * @return departmentCode
   **/
   @ApiModelProperty(required = true, value = "code of the department to which the asset belongs")
-  @NotNull
+  //@NotNull
 
 
   public String getDepartmentCode() {
@@ -983,7 +983,7 @@ public class Asset   {
    * @return assetCategory
   **/
   @ApiModelProperty(required = true, value = "")
-  @NotNull
+  //@NotNull
 
   @Valid
 
@@ -1045,7 +1045,7 @@ public class Asset   {
    * @return grossValue
   **/
   @ApiModelProperty(required = true, value = "current written down value of the asset when being created or brought in to the system. This will be same as the original value for the newly created assets.")
-  @NotNull
+  //@NotNull
 
   @Valid
 
@@ -1088,7 +1088,7 @@ public class Asset   {
    * @return description
   **/
   @ApiModelProperty(required = true, value = "description of asset")
-  @NotNull
+  //@NotNull
 
 
   public String getDescription() {
@@ -1109,7 +1109,7 @@ public class Asset   {
    * @return dateOfCreation
   **/
   @ApiModelProperty(required = true, value = "Date of asset creation.")
-  @NotNull
+  //@NotNull
 
 
   public Long getDateOfCreation() {

@@ -110,7 +110,7 @@ public class DetailedEstimateDeduction   {
    * @return detailedEstimate
   **/
   @ApiModelProperty(required = true, value = "")
-  @NotNull
+  //@NotNull
 
   @Valid
 

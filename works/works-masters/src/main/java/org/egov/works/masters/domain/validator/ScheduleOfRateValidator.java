@@ -37,7 +37,7 @@ public class ScheduleOfRateValidator {
                         CommonConstants.MASTERNAME_SCHEDULE_CATEGORY, "code", scheduleOfRate.getScheduleCategory().getCode(),
                         scheduleOfRateRequest.getRequestInfo());
                 if (mdmsResponse == null || mdmsResponse.size() == 0) {
-                    messages.put(Constants.KEY_SOR_SCHEDULERCATEGORY_CODE_INVALID, Constants.MESSAGE_SOR_SCHEDULERCATEGORY_CODE_INVALID + scheduleOfRate.getScheduleCategory().getCode());
+                    messages.put(Constants.KEY_SCHEDULERCATEGORY_CODE_INVALID, Constants.MESSAGE_SCHEDULERCATEGORY_CODE_INVALID + scheduleOfRate.getScheduleCategory().getCode());
                     isDataValid=Boolean.TRUE;
                 }
             }
@@ -46,7 +46,7 @@ public class ScheduleOfRateValidator {
                         CommonConstants.MASTERNAME_UOM, "code", scheduleOfRate.getUom().getCode(),
                         scheduleOfRateRequest.getRequestInfo());
                 if (mdmsResponse == null || mdmsResponse.size() == 0) {
-                    messages.put(Constants.KEY_SOR_UOM_CODE_INVALID, Constants.MESSAGE_SOR_UOM_CODE_INVALID + scheduleOfRate.getUom().getCode());
+                    messages.put(Constants.KEY_UOM_CODE_INVALID, Constants.MESSAGE_UOM_CODE_INVALID + scheduleOfRate.getUom().getCode());
                     isDataValid = Boolean.TRUE;
                 }
             }

@@ -75,4 +75,13 @@ public class ScheduleOfRateRepository {
         }
         return marketRates;
     }
+
+    public ScheduleOfRate getbyCode(String code, String tenantId){
+        ScheduleOfRateSearchCriteria scheduleOfRateSearchCriteria = new ScheduleOfRateSearchCriteria();
+        List<String> codes = new ArrayList<>();
+        codes.add(code);
+        scheduleOfRateSearchCriteria.setSorCodes(codes);
+        scheduleOfRateSearchCriteria.setTenantId(tenantId);
+        return getScheduleOfRateByCriteria(scheduleOfRateSearchCriteria).get(0);
+    }
 }

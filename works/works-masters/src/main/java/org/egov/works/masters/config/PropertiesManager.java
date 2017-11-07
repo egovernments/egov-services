@@ -31,6 +31,12 @@ public class PropertiesManager {
     @Value("${egov.services.works.masters.sorrate.update.validated}")
     private String worksMasterSorrateUpdateValidatedTopic;
 
+    @Value("${egov.services.works.masters.estimatetemplate.create.validated}")
+    private String worksMasterEstimateTemplateCreateValidatedTopic;
+
+    @Value("${egov.services.works.masters.estimatetemplate.update.validated}")
+    private String worksMasterEstimateTemplateUpdateValidatedTopic;
+
     @Value("${egov.services.egov_mdms.hostname}")
     private String mdmsServiceHostname;
 

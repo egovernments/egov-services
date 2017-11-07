@@ -2313,6 +2313,7 @@ definitions:
             There are 2 types of indent namely Indent Note and Transfer Indent
         indentPurpose:
           type: string
+          format: singleValueList
           enum:
             - Consumption
             - RepairsAndMaintenance
@@ -2323,6 +2324,7 @@ definitions:
             MaterialTransferNote - applicable for Transfer Indent.
         inventoryType:
           type: string
+          format: singleValueList
           enum:
             - Asset
             - Consumable
@@ -2411,8 +2413,10 @@ definitions:
           minLength: 4
         material:
           $ref: "#/definitions/Material"
+          format: autoComplete
         uom:
           $ref: "#/definitions/Uom"
+          format: singleValueList
         parentIndentLine:
           $ref: "#/definitions/IndentDetail"  
           description: In case of interstore transfer indent, this field is used to link with initial indent(if required)
@@ -2421,13 +2425,17 @@ definitions:
           format: int32
           description: Order of items selected.
         projectCode:
-          type: string
+          $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/ProjectCode
           description: |
             projectCode  If case the purpose is Capital
-        assetCode:
-          type: string
+          format: autoComplete
+        asset:
+          $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/Asset
           description: |
-            Mandatory if the purpose is Repair and Maintenance. 
+            Mandatory if the purpose is Repair and Maintenance.Refer asset code
+            format: autoComplete
         indentQantity:
           type: number
           format: BigDecimal
@@ -2812,6 +2820,7 @@ definitions:
             - PURCHASE RECEIPT
             - MISCELLANEOUS RECEIPT
             - INWARD RECEIPT
+            - OPENING BALANCE
         receiptPurpose:
           type: string
           enum:
@@ -2934,6 +2943,7 @@ definitions:
           $ref: "#/definitions/Material"
         uom:
           $ref: "#/definitions/Uom"  
+          description: Auto populate stocking unit of measure of selected material.
         poline:
           $ref: "#/definitions/PurchaseOrder"
           description: po line mandatory if receipt type is purchase receipt.
@@ -2956,10 +2966,10 @@ definitions:
           type: number
           description: Per unit rate of the material as per the Purchase Order.
           format: BigDecimal    
-        assetCode:
-          type: string
-          description: |
-            asset code if accept received.
+        asset:
+          $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/Asset
+          description: asset code if asset received. Create asset in asset module and save the reference.  
         voucherHeader:
           type: string
           description: financial voucher passed id map     
@@ -4540,5 +4550,6 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
+
 
 

@@ -38,7 +38,7 @@ public class SupplierEntity {
 
 	private Long inactivedate = null;
 
-	private String supplierContactNo = null;
+	private String contactno = null;
 
 	private String faxNo = null;
 
@@ -83,30 +83,48 @@ public class SupplierEntity {
 	private String tenantId;
 
 	public Object toEntity(Supplier supplier) {
+		if(supplier.getId() !=null)
 		this.id = supplier.getId();
 		this.name = supplier.getName();
 		this.code = supplier.getCode();
+		if(supplier.getType() != null)
 		this.type = supplier.getType().name();
 		this.address = supplier.getAddress();
+		if(supplier.getStatus() != null)
 		this.status = supplier.getStatus().name();
+		if(supplier.getInActiveDate() != null)
 		this.inactivedate = supplier.getInActiveDate();
-		this.supplierContactNo = supplier.getContactNo();
+		this.contactno = supplier.getContactNo();
+		if(supplier.getFaxNo() != null)
 		this.faxNo = supplier.getFaxNo();
+		if(supplier.getWebsite() != null)
 		this.website = supplier.getWebsite();
+		if(supplier.getActive() !=null)
 		this.active = supplier.getActive();
+		if(supplier.getEmail() !=null)
 		this.email = supplier.getEmail();
+		if(supplier.getDescription() != null)
 		this.description = supplier.getDescription();
+		if(supplier.getPanNo() != null)
 		this.panNo = supplier.getPanNo();
+		if(supplier.getTinNo() != null)
 		this.tinNo = supplier.getTinNo();
+		if(supplier.getCstNo() != null)
 		this.cstNo = supplier.getCstNo();
+		if(supplier.getVatNo() != null)
 		this.vatNo = supplier.getVatNo();
+		if(supplier.getGstNo() != null)
 		this.gstNo = supplier.getGstNo();
+		if(supplier.getContactPerson() != null)
 		this.contactPerson = supplier.getContactPerson();
+		if(supplier.getContactPersonNo() != null)
 		this.contactPersonNo = supplier.getContactPersonNo();
 		this.bankCode = supplier.getBankCode();
+		if(supplier.getBankBranch() != null)
 		this.bankBranch = supplier.getBankBranch();
 		this.bankAcctNo = supplier.getAcctNo();
 		this.bankIfsc = supplier.getIfsc();
+		if(supplier.getMicr() != null)
 		this.bankMicr = supplier.getMicr();
 		this.createdBy = supplier.getAuditDetails().getCreatedBy();
 		this.createdTime = supplier.getAuditDetails().getCreatedTime();

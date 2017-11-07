@@ -27,7 +27,7 @@ public class Supplier   {
    * type of the Supplier
    */
   public enum TypeEnum {
-    INDIVISUAL("INDIVISUAL"),
+    INDIVIDUAL("INDIVIDUAL"),
     
     FIRM("FIRM"),
     

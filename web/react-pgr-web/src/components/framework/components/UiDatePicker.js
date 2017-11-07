@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import TextField from 'material-ui/TextField';
+import {translate} from '../../common/common';
+
 const datePat = /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g;
 export default class UiEmailField extends Component {
 	constructor(props) {
@@ -55,7 +57,6 @@ export default class UiEmailField extends Component {
 						errorText={this.props.fieldErrors[item.jsonPath]}
 						value={this.getDateFormat(this.props.getVal(item.jsonPath))}
 						onChange={(e) => {
-
 							var val = e.target.value;
 							if(e.target.value.length == 2 && !e.target.value.match('/')){
 								val+='/';
@@ -85,7 +86,7 @@ export default class UiEmailField extends Component {
 							//if() put and expression
 							//if true overide item.isRequired=true and item.requiredErrMsg=""
 							//if false
-                            this.props.handler({target: {value: val}}, item.jsonPath, item.isRequired ? true : false, /\d{12,13}/, item.requiredErrMsg, item.patternErrMsg, item.expression, item.expressionMsg, true)
+                            this.props.handler({target: {value: val}}, item.jsonPath, item.isRequired ? true : false, /\d{12,13}/, item.requiredErrMsg, (item.patternErrMsg || translate("framework.date.error.message")), item.expression, item.expressionMsg, true)
                         }}/>
 				);
 		}

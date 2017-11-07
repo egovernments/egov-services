@@ -43,6 +43,7 @@ package org.egov.eis.repository.builder;
 import org.egov.eis.config.ApplicationProperties;
 import org.egov.eis.model.Attendance;
 import org.egov.eis.web.contract.AttendanceGetRequest;
+import org.egov.eis.web.contract.AttendanceReportRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,6 +111,18 @@ public class AttendanceQueryBuilder {
         return "SELECT id FROM egeis_attendance where employee = ? and attendancedate = ? and tenantId = ?";
     }
 
+    private static String getCommaSeperatedIds(List<Long> idList) {
+        if (idList.isEmpty())
+            return "";
+
+        StringBuilder query = new StringBuilder(idList.get(0).toString());
+        for (int i = 1; i < idList.size(); i++) {
+            query.append("," + idList.get(i));
+        }
+
+        return query.toString();
+    }
+
     @SuppressWarnings("rawtypes")
     public String getQuery(final AttendanceGetRequest attendanceGetRequest, final List preparedStatementValues)
             throws ParseException {
@@ -170,6 +183,33 @@ public class AttendanceQueryBuilder {
 
         return namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
 
+    }
+
+    public String getAttendanceReportQuery(final AttendanceReportRequest attendanceReportRequest, Long noofdays, final List preparedStatementValues) {
+        String searchQuery = "select a.employee AS a_employee , a.presentdays AS a_presentdays, sum(30-(a.PresentDays+a.LeaveDays+a.Holidays) ) AS a_absentdays,"
+                + " a.leavedays AS a_leavedays,  0 as a_noofots from ( select employee, sum(case when type =(select id from egeis_attendance_type  where code  ='P' )"
+                + "and month=:month and year=':year' and tenantid=':tenantid' then 1 else 0 end) PresentDays, sum(case when type =(select id from egeis_attendance_type "
+                + "where code  ='L' ) and month=:month and year=':year' and tenantid=':tenantid' then 1 else 0 end) LeaveDays,"
+                + "sum(case when type =(select id from egeis_attendance_type  where code  ='H' ) and month=:month and year=':year' and "
+                + "tenantid=':tenantid' then 1 else 0 end) Holidays from egeis_attendance where month=:month and year=':year' and tenantid=':tenantid' ";
+
+        Map<String, Object> paramValues = new HashMap<>();
+        StringBuffer params = new StringBuffer();
+
+        searchQuery = searchQuery.replace(":noofdays", noofdays.toString());
+        searchQuery = searchQuery.replace(":month", attendanceReportRequest.getMonth().toString());
+        searchQuery = searchQuery.replace(":year", attendanceReportRequest.getYear());
+        searchQuery = searchQuery.replace(":tenantid", attendanceReportRequest.getTenantId());
+
+
+        final StringBuilder selectQuery = new StringBuilder(searchQuery);
+
+        if (attendanceReportRequest.getEmployeeIds() != null && !attendanceReportRequest.getEmployeeIds().isEmpty()) {
+
+            selectQuery.append(" and employee in ( " + getCommaSeperatedIds(attendanceReportRequest.getEmployeeIds()) + " )");
+        }
+        selectQuery.append(" group by employee) a group by a.employee , a.presentdays, a.leavedays");
+        return selectQuery.toString();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

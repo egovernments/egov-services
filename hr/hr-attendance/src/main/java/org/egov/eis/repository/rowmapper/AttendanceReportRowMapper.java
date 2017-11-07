@@ -38,34 +38,27 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.contract;
+package org.egov.eis.repository.rowmapper;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.egov.eis.model.Attendance;
+import org.egov.eis.model.AttendanceType;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import org.egov.common.contract.response.ResponseInfo;
+@Component
+public class AttendanceReportRowMapper implements RowMapper<Attendance> {
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class HRConfigurationResponse {
-
-    @JsonProperty("ResponseInfo")
-    private ResponseInfo responseInfo;
-
-    @JsonProperty("HRConfiguration")
-    private Map<String, List<String>> hrConfiguration = new HashMap<>();
-
+    @Override
+    public Attendance mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        final Attendance attendance = new Attendance();
+        attendance.setEmployee(rs.getLong("a_employee"));
+        attendance.setPresentDays(rs.getLong("a_presentdays"));
+        attendance.setAbsentDays(rs.getLong("a_absentdays"));
+        attendance.setLeaveDays(rs.getLong("a_leavedays"));
+        attendance.setNoOfOts(rs.getLong("a_noofots"));
+        return attendance;
+    }
 }

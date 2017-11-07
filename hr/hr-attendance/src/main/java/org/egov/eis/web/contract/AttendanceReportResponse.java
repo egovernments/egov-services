@@ -40,45 +40,31 @@
 
 package org.egov.eis.web.contract;
 
-import javax.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.eis.model.Attendance;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @EqualsAndHashCode
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class RequestInfo {
+@NoArgsConstructor
+@ToString
+public class AttendanceReportResponse {
 
-    @NotNull
-    private String apiId;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-    @NotNull
-    private String ver;
+    @JsonProperty("NoOfWorkingDays")
+    private Long noOfWorkingDays;
 
-    @NotNull
-    private String ts;
+    @JsonProperty("NoOfDaysInMonth")
+    private Long noOfDaysInMonth;
 
-    private String action;
-
-    private String did;
-
-    private String key;
-
-    private String msgId;
-
-    private String requesterId;
-
-    private String authToken;
-    
-    private UserInfo userInfo;
+    @JsonProperty("Attendance")
+    private List<Attendance> attendances = new ArrayList<>();
 
 }

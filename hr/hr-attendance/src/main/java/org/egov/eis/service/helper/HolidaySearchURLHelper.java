@@ -33,7 +33,7 @@ public class HolidaySearchURLHelper {
         return searchURL.toString();
     }
 
-    public String searchByDateURL(final String tenantId, Date validFromdate) {
+/*    public String searchByDateURL(final String tenantId, Date validFromdate) {
         String url = searchURL(tenantId);
         final StringBuilder searchURL = new StringBuilder(url);
 
@@ -44,20 +44,20 @@ public class HolidaySearchURLHelper {
         searchURL.append("&toDate=" + toDate);
 
         return searchURL.toString();
-    }
-
-   /* private Date getToDate() {
-        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-
-        Date toDate = null;
-
-        try {
-            toDate = formatter.parse(formatter.format(new Date()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return toDate;
     }*/
+
+    public String getHolidaysBetweenDatesUrl(final String tenantId, Date fromdate, Date todate) {
+        String url = searchURL(tenantId);
+        final StringBuilder searchURL = new StringBuilder(url);
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String fromDate = simpleDateFormat.format(fromdate);
+        searchURL.append("&fromDate=" + fromDate);
+        String toDate = simpleDateFormat.format(todate);
+        searchURL.append("&toDate=" + toDate);
+
+        return searchURL.toString();
+    }
 
 
 }

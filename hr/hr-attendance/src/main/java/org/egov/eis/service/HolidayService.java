@@ -40,10 +40,10 @@
 
 package org.egov.eis.service;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.model.Holiday;
 import org.egov.eis.service.helper.HolidaySearchURLHelper;
 import org.egov.eis.web.contract.HolidayResponse;
-import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -78,9 +78,9 @@ public class HolidayService {
         return holidayResponse.getHoliday();
     }
 
-    public List<Date> getHolidaysForDate(final String tenantId, final RequestInfo requestInfo, Date fromDate) {
+    public List<Date> getHolidaysBetweenDates(final String tenantId, final RequestInfo requestInfo, Date fromDate, Date toDate) {
 
-        final String url = holidaySearchURLHelper.searchByDateURL(tenantId, fromDate);
+        final String url = holidaySearchURLHelper.getHolidaysBetweenDatesUrl(tenantId, fromDate, toDate);
 
         final RequestInfoWrapper wrapper = new RequestInfoWrapper();
         wrapper.setRequestInfo(requestInfo);

@@ -109,7 +109,6 @@ paths:
             description: |
               totalIndentValue  denormalized value from Indent Material
           - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/offset"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
         responses:
@@ -209,7 +208,6 @@ paths:
             description: |
               state id of the Indent Note
           - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/offset"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
         responses:
@@ -302,7 +300,6 @@ paths:
             description: |
               state id of the TransferIndentNote
           - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/offset"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
         responses:
@@ -455,7 +452,6 @@ paths:
             description: |
               state id of the PurchaseOrder
           - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/offset"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
         responses:
@@ -536,7 +532,6 @@ paths:
             description: |
               indent of the PurchaseIndent
           - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/offset"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
         responses:
@@ -635,7 +630,6 @@ paths:
             description: |
               remarks of the PurchaseMaterial
           - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/offset"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
         responses:
@@ -757,7 +751,6 @@ paths:
             type: integer
             format: int64
           - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/offset"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"  
         tags:
@@ -878,7 +871,6 @@ paths:
             description: |
               total issue value of the MaterialIssue
           - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/offset"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
         responses:
@@ -971,7 +963,6 @@ paths:
             description: |
               state id of the IndentIssue
           - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/offset"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
         responses:
@@ -1180,7 +1171,6 @@ paths:
             description: |
               override material control type of the Material
           - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/offset"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
         responses:
@@ -1317,7 +1307,6 @@ paths:
             description: |
               active flag of material store mapping
           - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/offset"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
         responses:
@@ -1409,7 +1398,6 @@ paths:
             description: |
               Whether Store is Active or not. If the value is TRUE, then Store is active,If the value is FALSE then Store is inactive,Default value is TRUE
           - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/offset"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
         responses:
@@ -1534,7 +1522,6 @@ paths:
             description: |
               state id of the TransferOutward
           - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/offset"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
         responses:
@@ -1648,7 +1635,6 @@ paths:
             description: |
               state id of the TransferInward
           - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/offset"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
         responses:
@@ -1762,7 +1748,6 @@ paths:
             description: |
               state id of the Scrap
           - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/offset"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
         responses:
@@ -1886,7 +1871,6 @@ paths:
             description: |
               totalDisposalValue  denormalized value from Disposal Details
           - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/offset"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
         responses:
@@ -2082,7 +2066,6 @@ paths:
               micr code of the bank account
               
           - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/offset"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
         responses:
@@ -2208,7 +2191,6 @@ paths:
               - ONE_TIME_TENDER
               - QUOTATION
           - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/offset"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
         responses:
@@ -2478,7 +2460,7 @@ definitions:
     IndentRequest:
       description: Contract class for web request. Array of Indent items  are used in case of create or update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         indents:
           description: Used for search result and create only
@@ -2502,7 +2484,7 @@ definitions:
     IndentNoteRequest:
       description: Contract class for web request. Array of Indent Note items are used in case of create or update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         indentNotes:
           description: Used for search result and create only
@@ -2527,7 +2509,7 @@ definitions:
     TransferIndentNoteRequest:
       description: Contract class for web request. Array of Indent items  are used in case of create or update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         transferIndentNotes:
           description: Used for search result and create only
@@ -2663,7 +2645,7 @@ definitions:
       
     PurchaseOrderRequest:
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         purchaseOrders:
           description: Used for search result and create only
@@ -2711,7 +2693,7 @@ definitions:
     PurchaseIndentRequest:
       description: Contract class for web request. Array of PurchaseIndent items  are used in case of create or update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         purchaseIndents:
           description: Used for search result and create only
@@ -2768,7 +2750,7 @@ definitions:
     PurchaseMaterialRequest:
       description: Contract class for web request. Array of PurchaseMaterial items  are used in case of create or update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         purchaseMaterials:
           description: Used for search result and create only
@@ -3162,7 +3144,7 @@ definitions:
     MaterialIssueRequest:
       description: Contract class for web request. Array of MaterialIssue items  are used in case of create or update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         materialIssues:
           description: Used for search result and create only
@@ -3234,7 +3216,7 @@ definitions:
     TransferInwardRequest:
       description: Contract class for material receipt inward request. Array of MaterialReceipt items  are used in case of create or update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         transferInwards:
           description: Used for search result and create only
@@ -3258,7 +3240,7 @@ definitions:
     TransferOutwardRequest:
       description: Contract class for web request. Array of TransferOutward items  are used in case of create or update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         transferOutwards:
           description: Used for search result and create only
@@ -3519,7 +3501,7 @@ definitions:
     MaterialRequest:
       description: Contract class for web request. Array of Material items  are used in case of create or update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         materials:
           description: Used for search result and create only
@@ -3543,7 +3525,7 @@ definitions:
     MaterialStoreMappingRequest:
       description: Contract class for web request. Array of Material items  are used in case of create or update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         materialStoreMappings:
           description: Used for search result and create only
@@ -3714,7 +3696,7 @@ definitions:
     StoreRequest:
       description: Contract class for web request. Array of Store items  are used in case of create or update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         stores:
           description: Used for search result and create only
@@ -3931,7 +3913,7 @@ definitions:
     SupplierRequest:
       description: Contract class for web request. Array of Supplier items  are used in case of create or update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         suppliers:
           description: Used for search result and create only
@@ -4065,7 +4047,7 @@ definitions:
     ScrapRequest:
       description: Contract class for web request. Array of Scrap items  are used in case of create or update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         scraps:
           description: Used for search result and create only
@@ -4186,7 +4168,7 @@ definitions:
     DisposalRequest:
       description: Contract class for web request. Array of Disposal items  are used in case of create or update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         disposals:
           description: Used for search result and create only
@@ -4339,7 +4321,7 @@ definitions:
     PriceListRequest:
       description: Contract class for web request. Array of PriceList items  are used in case of create or update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         transferInwards:
           description: Used for search result and create only
@@ -4403,12 +4385,6 @@ definitions:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
         
 parameters:
-  offset:
-    name: offset
-    type: integer
-    format: int32
-    in: query
-    description: offset
   pageSize:
     name: pageSize
     in: query

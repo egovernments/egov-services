@@ -1632,6 +1632,8 @@ var localization_EN_Data = {
 "reports.collection.status.description":"Status Description",
 "reports.collection.todate":"To Date",
 "reports.collection.total.count":"Total Receipt Count",
+"reports.collection.referenceno":"Bill ID",
+
 
     "noDues.citizenService.assessmentNumber":"Assessment Number",
 
@@ -1960,8 +1962,8 @@ var localization_EN_Data = {
     "ac.create.createToDate":"Asset Created Date To",
     "ac.create.OriginalFromDate":"Original Value of Asset From",
     "ac.create.OriginalToDate":"Original Value of Asset To",
-
-
+"reports.collection.receipt.transactionno":"Transaction ID",
+"reports.collection.transaction.date":"Transaction Date",
 
 //auto gen swm
 "vehiclefuellingdetails.create.transactionId": "Transaction No",

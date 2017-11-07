@@ -546,7 +546,7 @@ class Search extends Component {
             <br/>
             <UiButton item={{"label": "Search", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>&nbsp;&nbsp;
             <UiButton item={{"label": "Reset", "uiType":"button", "primary": false}} ui="google" handler={this.resetForm}/>&nbsp;&nbsp;
-            {	showResult && resultList.actionItems.map((actionitem,index) =>{
+            {	showResult && resultList.actionItems &&  resultList.actionItems.map((actionitem,index) =>{
 							return 	(<span style={{"margin-right":"20px"}}><UiButton item={{"label": actionitem.label, "uiType":"primary"}} ui="google" handler={()=>{rowButtonClickHandler(actionitem.url)}}/></span>)
 					}) }
             <br/>

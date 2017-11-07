@@ -1,6 +1,6 @@
 var dat = {
   "legal.update": {
-    numCols: 6,  
+    numCols: 12 / 3,
     title:"parawisecomments.create.document.title",
     searchUrl:
       "/lcms-services/legalcase/case/_search?code={id}",
@@ -124,7 +124,6 @@ var dat = {
             name: "hearingTime",
             jsonPath: "cases[0].summon.hearingTime",
             label: "legal.create.hearingTime",
-            type: "text",
             isRequired: false,
             isDisabled: true,
             patternErrorMsg: ""

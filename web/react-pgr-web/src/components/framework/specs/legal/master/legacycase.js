@@ -1,7 +1,7 @@
 var dat = {
   "legal.create": {
     numCols: 4,
-    title:"assignadvocate.update.document.title",
+    title:"legacycase.update.document.title",
     useTimestamp: true,
     objectName: "cases",
     groups: [
@@ -37,6 +37,16 @@ var dat = {
             url:
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=year|$..code|$..name",
             patternErrorMsg: ""
+          },  {
+            name: "side",
+            jsonPath: "cases[0].summon.side.code",
+            label: "legal.create.side",
+            type: "singleValueList",
+            isRequired: true,
+            isDisabled: false,
+            patternErrorMsg: "",
+            url:
+              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name"
           },
           {
             name: "caseType",
@@ -141,17 +151,6 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: ""
-          },
-          {
-            name: "side",
-            jsonPath: "cases[0].summon.side.code",
-            label: "legal.create.side",
-            type: "singleValueList",
-            isRequired: true,
-            isDisabled: false,
-            patternErrorMsg: "",
-            url:
-              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name"
           },
           {
             name: "ward",

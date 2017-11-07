@@ -48,13 +48,13 @@ var dat = {
             patternErrMsg: ""
           },
           {
-            name: "Exhibit Number",
+            name: "exhibitNumber",
             jsonPath: "exhibitNumber",
             label: "legal.vakalatnama.create.exhibitNumber",
             pattern: "",
             type: "text",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             requiredErrMsg: "",
             patternErrMsg: ""
           },
@@ -129,7 +129,12 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",
-            patternErrMsg: ""
+            patternErrMsg: "",
+            "enableDisableFields": [{
+								"ifValue": true,
+								"disable": [],
+								"enable": ["exhibitNumber"]
+							}]
           }
         ]
       }

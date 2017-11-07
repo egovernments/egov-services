@@ -15,6 +15,7 @@ import org.egov.swm.domain.model.VehicleType;
 import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.domain.repository.VehicleRepository;
+import org.egov.swm.utils.Utils;
 import org.egov.swm.web.repository.MdmsRepository;
 import org.egov.swm.web.requests.VehicleRequest;
 import org.egov.tracer.model.CustomException;
@@ -36,14 +37,11 @@ public class VehicleService {
 	@Autowired
 	private MdmsRepository mdmsRepository;
 
-	/*
-	 * @Autowired private DesignationRepository designationRepository;
-	 * 
-	 * @Autowired private EmployeeRepository employeeRepository;
-	 */
-
 	@Autowired
 	private VendorService vendorService;
+
+	@Autowired
+	private Utils utils;
 
 	@Transactional
 	public VehicleRequest create(VehicleRequest vehicleRequest) {
@@ -108,10 +106,6 @@ public class VehicleService {
 
 		JSONArray responseJSONArray = null;
 		ObjectMapper mapper = new ObjectMapper();
-		/*
-		 * DesignationResponse designationResponse = null; String designationId
-		 * = null; EmployeeResponse employeeResponse = null;
-		 */
 		VendorSearch vendorSearch;
 		Pagination<Vendor> vendors;
 
@@ -165,6 +159,26 @@ public class VehicleService {
 					throw new CustomException("FuelType",
 							"Given FuelType is invalid: " + vehicle.getFuelType().getCode());
 
+			}
+
+			if (vehicle.getInsuranceDetails() != null
+					&& vehicle.getInsuranceDetails().getInsuranceValidityDate() != null) {
+
+				if (!utils.isFutureDate(new Date(vehicle.getInsuranceDetails().getInsuranceValidityDate()))) {
+
+					throw new CustomException("InsuranceValidityDate", "Given InsuranceValidityDate is invalid: "
+							+ vehicle.getInsuranceDetails().getInsuranceValidityDate() + " It is not a future date");
+				}
+			}
+
+			if (vehicle.getPurchaseInfo() != null && vehicle.getPurchaseInfo().getPurchaseDate() != null) {
+
+				if (utils.isFutureDate(new Date(vehicle.getPurchaseInfo().getPurchaseDate()))) {
+
+					throw new CustomException("PurchaseDate",
+							"Given PurchaseDate is invalid: " + vehicle.getInsuranceDetails().getInsuranceValidityDate()
+									+ " It should not be a future date");
+				}
 			}
 
 			validateUniqueFields(action, vehicle);

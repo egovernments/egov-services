@@ -1,6 +1,9 @@
 package org.egov.swm.domain.model;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -29,6 +32,8 @@ public class ManufacturingDetails {
 	private String chassisSrNumber = null;
 
 	@NotNull
+	@Min(value = 0)
+	@Max(value = 100)
 	@JsonProperty("vehicleCapacity")
 	private Double vehicleCapacity = null;
 

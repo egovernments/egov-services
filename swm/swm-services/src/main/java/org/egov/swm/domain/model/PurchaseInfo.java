@@ -1,6 +1,8 @@
 package org.egov.swm.domain.model;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -24,6 +26,8 @@ public class PurchaseInfo {
 	private Long purchaseDate = null;
 
 	@JsonProperty("price")
+	@Min(value = 0)
+	@Max(value = 10000000)
 	private Double price = null;
 
 	@Length(min = 0, max = 256)

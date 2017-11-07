@@ -4073,7 +4073,7 @@ definitions:
       description: |
         This object holds the pricelist information of different materials from various suppliers  
       properties:
-        code:
+        id:
           type: string
           description: |
             Unique Identifier of the PriceList record.
@@ -4138,9 +4138,10 @@ definitions:
           description: |
             File Store id of the rate contract with the supplier
         priceListDetails:
-          type: array
+          type:  array
+          items:
+            $ref: '#/definitions/PriceList'
           minItems: 1
-          $ref: "#/definitions/PriceListDetails"
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"   
       required:

@@ -995,7 +995,7 @@ delete formData.Asset.assetAttributesCheck;
            self.props.setMockData(JSON.parse(JSON.stringify(spec)));
            spec["asset.update"].groups[2].fields[7].isRequired = true;
            self.props.setMockData(JSON.parse(JSON.stringify(spec)));
-         } 
+         }  
        }
 
       if(expression && e.target.value){

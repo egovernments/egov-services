@@ -1990,6 +1990,11 @@ paths:
             in: query
             description: |
               inActiveDate
+          - name: active
+            type: boolean
+            in: query
+            description: |
+              active or inactive status of the supplier
           - name: supplierContactNo
             type: string
             in: query
@@ -3896,6 +3901,10 @@ definitions:
           x-displayformat: 'dd/MM/yyyy'
           description: |
             inactive date of the Supplier
+        active:
+          type: boolean
+          description: |
+            active or inactive flag of the supplier
         contactNo:
           type: string
           pattern: ^[0-9]+$

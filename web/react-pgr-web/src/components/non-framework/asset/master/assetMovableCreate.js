@@ -402,7 +402,7 @@ class assetMovableCreate extends Component {
 
 
 
-      Api.commonApiPost("/egov-mdms-service/v1/_get",{"moduleName":"ASSET", "masterName":"AssetCategory", "filter": "%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22IMMOVABLE%22)%5D%0A"}, {}, false, false, false, "", "", true).then(function(response)
+      Api.commonApiPost("/egov-mdms-service/v1/_get",{"moduleName":"ASSET", "masterName":"AssetCategory", "filter": "%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22MOVABLE%22)%5D%0A"}, {}, false, false, false, "", "", true).then(function(response)
      {
 
        if(response) {
@@ -995,7 +995,7 @@ delete formData.Asset.assetAttributesCheck;
            self.props.setMockData(JSON.parse(JSON.stringify(spec)));
            spec["asset.update"].groups[2].fields[7].isRequired = true;
            self.props.setMockData(JSON.parse(JSON.stringify(spec)));
-         }  
+         }
        }
 
       if(expression && e.target.value){

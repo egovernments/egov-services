@@ -230,7 +230,7 @@ const menuConvention={
 "Solid Waste Management.SWM Masters.Collection Point.CollectionPoint Create": "/create/collectionpoints",
 "Solid Waste Management.SWM Masters.Collection Point.CollectionPoint Search": "/search/collectionpoints/view",
 "Solid Waste Management.SWM Masters.Collection Point.CollectionPoint Update": "/search/collectionpoints/update",
-"Legal Case Management.Legal Case Transactions.Case.Legacy Case Create":"/create/legal/legacylegal",
+"Legal Case Management.Legal Case Transactions.Case.Legacy Case Create":"/create/legal/legacycase",
 "Legal Case Management.Legal Case Transactions.Case.New Case Create":"/create/legal/summon",
 "Legal Case Management.Legal Case Transactions.Case.Case Search":"/search/legal/summon/view",
 "Legal Case Management.Legal Case Transactions.Opinion.Opinion Create":"/create/legal/opinion",

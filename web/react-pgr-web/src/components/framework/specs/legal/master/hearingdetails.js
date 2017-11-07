@@ -31,8 +31,8 @@ var dat ={
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name"
           },
           {
-            "name": "caseCategory",
-            "jsonPath": "cases[0].summon.caseCategory.name",
+            "name": "year",
+            "jsonPath": "cases[0].summon.year",
             "label": "legal.create.year",
             "type": "text",
             "isRequired": false,
@@ -241,7 +241,6 @@ var dat ={
             "type": "tableList",
             "jsonPath": "cases[0].hearingDetails[0].judges",
             "tableList": {
-             "autoIndexing": true,
               "header": [
                 {
                   "label": "legal.create.judgeName"
@@ -258,17 +257,17 @@ var dat ={
               ],
               "values": [
                 {
-                  "name": "attendeeName-index",
+                  "name": "attendeeName",
                   "pattern": "",
                   "type": "text",
-                  "jsonPath": "cases[0].hearingDetails[0].judges[index].name",
+                  "jsonPath": "cases[0].hearingDetails[0].judges[0].name",
                   "isRequired": true,
                   "isDisabled": false,
                   "url": ""
                 },
                 {
-                  "name": "gender-index",
-                  "jsonPath": "cases[0].hearingDetails[0].judges[index].gender",
+                  "name": "gender",
+                  "jsonPath": "cases[0].hearingDetails[0].judges[0].gender",
                   "type": "radio",
                   styleObj:{"display": "-webkit-box"},
                   "isRequired": true,
@@ -286,18 +285,18 @@ var dat ={
                   ]
                 },
                 {
-                  "name": "mobileNo-index",
+                  "name": "mobileNo",
                   "pattern": "",
                   "type": "text",
-                  "jsonPath": "cases[0].hearingDetails[0].judges[index].mobileNumber",
+                  "jsonPath": "cases[0].hearingDetails[0].judges[0].mobileNumber",
                   "isRequired": true,
                   "isDisabled": false
                 },
                 {
-                  "name": "address-index",
+                  "name": "address",
                   "pattern": "",
                   "type": "text",
-                  "jsonPath": "cases[0].hearingDetails[0].judges[index].address.addressLine1",
+                  "jsonPath": "cases[0].hearingDetails[0].judges[0].address.addressLine1",
                   "isRequired": true,
                   "isDisabled": false
                 }

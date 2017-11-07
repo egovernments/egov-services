@@ -7,6 +7,7 @@ import Api from '../../../api/api';
 import _ from 'lodash';
 import jp from "jsonpath";
 import Button from './UiButton';
+import UiCheckBox from './UiCheckBox';
 // const $ = require('jquery');
 // $.DataTable = require('datatables.net');
 // const dt = require('datatables.net-bs');
@@ -178,11 +179,18 @@ class UiTable extends Component {
 		}
 
   	render() {
-  		let {resultList, rowClickHandler,showDataTable,showHeader,rowButtonClickHandler} = this.props;
+  		let {resultList, rowClickHandler,showDataTable,showHeader,rowButtonClickHandler,rowCheckboxClickHandler,selectedValue} = this.props;
   		let self = this;
 
   		const getNameById = function(item2, i2) {
-				if(resultList.resultHeader[i2].isAction){
+				if(resultList.resultHeader[i2].isChecked){
+									var selected=false;
+									if(selectedValue == item2){
+										selected=true;
+									}
+							return 	(<span style={{"margin-right":"20px"}}><UiCheckBox item={resultList.resultHeader[i2].checkedItem}ui="google" handler={()=>{rowCheckboxClickHandler(item2)}} isSelected={selected}/></span>)
+			
+				}else if(resultList.resultHeader[i2].isAction){
 					return resultList.resultHeader[i2].actionItems.map((actionitem,index) =>{
 							return 	(<span style={{"margin-right":"20px"}}><Button item={{"label": actionitem.label, "uiType":"primary"}} ui="google" handler={()=>{rowButtonClickHandler(actionitem.url,item2)}}/></span>)
 					}) 

@@ -6,7 +6,7 @@ export default class UiCheckBox extends Component {
        super(props);
    	}
 
-	renderCheckBox = (item) => {
+	renderCheckBox = (item,isSelected) => {
 		switch (this.props.ui) {
 			case 'google':
 				return (
@@ -14,9 +14,9 @@ export default class UiCheckBox extends Component {
 						id={item.jsonPath.split(".").join("-")}		
 						style={{"display": (item.hide ? 'none' : 'inline-block'), "marginTop": "43px", "marginLeft": "-5px"}}
 						label={item.label + (item.isRequired ? " *" : "")}
-						checked={this.props.getVal(item.jsonPath)}
+						checked={this.props.getVal?this.props.getVal(item.jsonPath):isSelected}
 						disabled={item.isDisabled}
-						errorText={this.props.fieldErrors[item.jsonPath]}
+						errorText={this.props.fieldErrors?this.props.fieldErrors[item.jsonPath]:"Empty"}
 						onCheck={(e) => this.props.handler({target: {value: e.target.checked}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg, item.expression, item.expressionMsg)} />
 				);
 		}
@@ -25,7 +25,7 @@ export default class UiCheckBox extends Component {
 	render () {
 		return (
 	      <div>
-	        {this.renderCheckBox(this.props.item)}
+	        {this.renderCheckBox(this.props.item,this.props.isSelected)}
 	      </div>
 	    );
 	}

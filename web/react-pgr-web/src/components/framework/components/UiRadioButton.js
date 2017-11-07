@@ -20,7 +20,8 @@ export default class UiAadharCard extends Component {
    	}
 
    	renderRadioButtonGroup = (item) => {
-         //console.log(item.name + "-" + );
+		 //console.log(item.name + "-" + );
+		 var styleObj = item.styleObj || {};
    		switch (this.props.ui) {
 			case 'google':
 				return (
@@ -28,7 +29,7 @@ export default class UiAadharCard extends Component {
 						<label style={{"fontSize": "13px"}}>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></label>
 						<RadioButtonGroup id={item.jsonPath.split(".").join("-")}	 name="shipSpeed" valueSelected={this.props.getVal(item.jsonPath)} defaultSelected={item.defaultSelected} onChange={(e, val) => {
 							this.props.handler({target:{value: val}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg, item.expression, item.expressionMsg)
-						}}>
+						}} style={styleObj}>
 							{this.renderRadioButtons(item)}
 						</RadioButtonGroup>
 					</div>

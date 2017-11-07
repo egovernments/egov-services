@@ -29,7 +29,8 @@ class Search extends Component {
         resultValues: [],
         disableRowClick : false
       },
-      values: []
+      values: [],
+      selectedRecordId:""
     }
   }
 
@@ -151,6 +152,9 @@ class Search extends Component {
           }
           resultList.resultValues.push(tmp);
         }
+      }
+      if(result.isAction){
+        resultList.actionItems = result.actionItems; 
       }
       self.setState({
         resultList,
@@ -455,9 +459,19 @@ class Search extends Component {
             }
       });
   }
-   rowButtonClickHandler = (buttonUrl, code) => {
-      this.props.setRoute(buttonUrl+code);
- }  
+   rowButtonClickHandler = (buttonUrl) => {
+     let {selectedRecordId} =this.state;
+      if(selectedRecordId){
+       this.props.setRoute(buttonUrl+selectedRecordId);
+      }
+     
+ } 
+  rowCheckboxClickHandler=(code)=>{
+    this.setState({
+      selectedRecordId:code
+    })
+
+  } 
 
   rowClickHandler = (index) => {
    var value = this.state.values[index];
@@ -510,8 +524,8 @@ class Search extends Component {
 
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
-    let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler,rowButtonClickHandler} = this;
-    let {showResult, resultList} = this.state;
+    let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler,rowButtonClickHandler,rowCheckboxClickHandler} = this;
+    let {showResult, resultList,selectedRecordId} = this.state;
     // console.log(formData);
     // console.log(this.props.dropDownData);
     return (
@@ -531,9 +545,12 @@ class Search extends Component {
           <div style={{"textAlign": "center"}}>
             <br/>
             <UiButton item={{"label": "Search", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>&nbsp;&nbsp;
-            <UiButton item={{"label": "Reset", "uiType":"button", "primary": false}} ui="google" handler={this.resetForm}/>
+            <UiButton item={{"label": "Reset", "uiType":"button", "primary": false}} ui="google" handler={this.resetForm}/>&nbsp;&nbsp;
+            {	showResult && resultList.actionItems.map((actionitem,index) =>{
+							return 	(<span style={{"margin-right":"20px"}}><UiButton item={{"label": actionitem.label, "uiType":"primary"}} ui="google" handler={()=>{rowButtonClickHandler(actionitem.url)}}/></span>)
+					}) }
             <br/>
-            {showResult && <UiTable resultList={resultList} rowClickHandler={rowClickHandler} rowButtonClickHandler={rowButtonClickHandler}/>}
+            {showResult && <UiTable resultList={resultList} rowClickHandler={rowClickHandler} rowButtonClickHandler={rowButtonClickHandler} rowCheckboxClickHandler={rowCheckboxClickHandler} selectedValue={selectedRecordId}/>}
           </div>
         </form>
       </div>

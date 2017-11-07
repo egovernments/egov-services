@@ -20,4 +20,5 @@ public class CommonConstants {
 
     //Common master names
     public static final String MASTERNAME_UOM="Uom";
+    public static final String MASTERNAME_BANK="Bank";
 }

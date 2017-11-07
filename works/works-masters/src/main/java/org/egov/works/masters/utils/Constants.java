@@ -19,4 +19,52 @@ public class Constants {
 
     public static final String KEY_SUBTYPEOFWORK_CODE_INVALID="WMS.SUBTYPEOFWORK.CODE.INVALID";
     public static final String MESSAGE_SUBTYPEOFWORK_CODE_INVALID="Given Type Of Work is invalid: ";
+
+    public static final String KEY_CONTRACTOR_CONTRACTORCLASS_CLASS_INVALID="CONTRACTOR.CONTRACTORCLASS.CLASS.INVALID";
+    public static final String MESSAGE_CONTRACTOR_CONTRACTORCLASS_CLASS_INVALID="Given ContractorClass is invalid: ";
+    
+    public static final String KEY_CONTRACTOR_BANK_CODE_INVALID="CONTRACTOR.BANK.CODE.INVALID";
+    public static final String MESSAGE_CONTRACTOR_BANK_CODE_INVALID="Given Bank is invalid: ";
+    
+    public static final String KEY_CONTRACTOR_NAME_INVALID="CONTRACTOR.NAME.INVALID";
+    public static final String MESSAGE_CONTRACTOR_NAME_INVALID="Name cannot be null. Please provide correct value";
+    
+    public static final String KEY_CONTRACTOR_CODE_INVALID="CONTRACTOR.CODE.INVALID";
+    public static final String MESSAGE_CONTRACTOR_CODE_INVALID="Code cannot be null. Please provide correct value";
+    
+    public static final String KEY_CONTRACTOR_CORRESPONDENCEADDRESS_INVALID="CONTRACTOR.CORRESPONDENCEADDRESS.INVALID";
+    public static final String MESSAGE_CONTRACTOR_CORRESPONDENCEADDRESS_INVALID="CorrespondenseAddress cannot be null. Please provide correct value";
+    
+    public static final String KEY_CONTRACTOR_PAYMENTADDRESS_INVALID="CONTRACTOR.PAYMENTADDRESS.INVALID";
+    public static final String MESSAGE_CONTRACTOR_PAYMENTADDRESS_INVALID="PaymentAddress cannot be null. Please provide correct value";
+    
+    public static final String KEY_CONTRACTOR_EMAIL_INVALID="CONTRACTOR.EMAIL.INVALID";
+    public static final String MESSAGE_CONTRACTOR_EMAIL_INVALID="Email cannot be null. Please provide correct value";
+    
+    public static final String KEY_CONTRACTOR_MOBILENUMBER_INVALID="CONTRACTOR.MOBILENUMBER.INVALID";
+    public static final String MESSAGE_CONTRACTOR_MOBILENUMBER_INVALID="MobileNumber cannot be null. Please provide correct value";
+    
+    public static final String KEY_CONTRACTOR_PANNUMBER_INVALID="CONTRACTOR.PANNUMBER.INVALID";
+    public static final String MESSAGE_CONTRACTOR_PANNUMBER_INVALID="PanNumber cannot be null. Please provide correct value";
+    
+    public static final String KEY_CONTRACTOR_TINNUMBER_INVALID="CONTRACTOR.TINNUMBER.INVALID";
+    public static final String MESSAGE_CONTRACTOR_TINNUMBER_INVALID="TinNumber cannot be null. Please provide correct value";
+    
+    public static final String KEY_CONTRACTOR_BANKACCOUNTNUMBER_INVALID="CONTRACTOR.BANKACCOUNTNUMBER.INVALID";
+    public static final String MESSAGE_CONTRACTOR_BANKACCOUNTNUMBER_INVALID="BankAccountNumber cannot be null. Please provide correct value";
+    
+    public static final String KEY_CONTRACTOR_PWDAPPROVALCODE_INVALID="CONTRACTOR.PWDAPPROVALCODE.INVALID";
+    public static final String MESSAGE_CONTRACTOR_PWDAPPROVALCODE_INVALID="PwdApprovalCode cannot be null. Please provide correct value";
+    
+    public static final String KEY_CONTRACTOR_PWDAPPROVALVALIDTILL_INVALID="CONTRACTOR.PWDAPPROVALVALIDTILL.INVALID";
+    public static final String MESSAGE_CONTRACTOR_PWDAPPROVALVALIDTILL_INVALID="PwdApprovalValidTill cannot be null. Please provide correct value";
+    
+    public static final String KEY_CONTRACTOR_REGISTRATIONNUMBER_INVALID="CONTRACTOR.REGISTRATIONNUMBER.INVALID";
+    public static final String MESSAGE_CONTRACTOR_REGISTRATIONNUMBER_INVALID="RegistrationNumber cannot be null. Please provide correct value";
+    
+    public static final String KEY_CONTRACTOR_ACCOUNTCODE_INVALID="CONTRACTOR.ACCOUNTCODE.INVALID";
+    public static final String MESSAGE_CONTRACTOR_ACCOUNTCODE_INVALID="AccountCode cannot be null. Please provide correct value";
+    
+    public static final String KEY_CONTRACTOR_IFSCCODE_INVALID="CONTRACTOR.IFSCCODE.INVALID";
+    public static final String MESSAGE_CONTRACTOR_IFSCCODE_INVALID="IfscCode cannot be null. Please provide correct value";
 }

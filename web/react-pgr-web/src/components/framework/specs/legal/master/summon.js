@@ -129,6 +129,8 @@ var dat = {
         },
         {
           label: "advocatepayment.create.caseStatus"
+        }, {
+          label: "legal.create.caseNo"
         },
         {
           label: "legal.create.departmentName"
@@ -152,6 +154,7 @@ var dat = {
         "summon.summonReferenceNo",
         "caseRefernceNo",
         "hearingDetails.caseStatus",
+        "summon.caseNo",
         "summon.departmentName.name",
         "summon.caseType.name",
         "advocateDetails[0].advocate.name",

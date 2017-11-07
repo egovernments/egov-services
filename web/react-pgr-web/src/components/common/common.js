@@ -2437,7 +2437,12 @@ var localization_EN_Data = {
   "advocatepayment.create.instrumentNumber":"Instrument Number",
 "advocatepayment.create.InstrumentDate":"Instrument Date",
 "legal.create.uploadInvoice":"Upload Invoice",
-"framework.date.error.message": "Please enter date in DD/MM/YYYY format"
+"framework.date.error.message": "Please enter date in DD/MM/YYYY format",
+"legal.create.code":"Code",
+"legal.create.paymentNote":"Note: Total amount is window is valid and it is not necessarily same with amount mentioned in invoice document that is attached",
+"advocatepayment.update.document.title":"Advocate Payment Update",
+
+
 
 
 
@@ -4366,7 +4371,13 @@ var localization_MR_Data = {
  "advocatepayment.create.instrumentNumber":"Instrument Number-marathi",
 "advocatepayment.create.InstrumentDate":"Instrument Date-marathi",
 "legal.create.uploadInvoice":"Upload Invoice-marathi",
-"framework.date.error.message": "Please enter date in DD/MM/YYYY format-Marathi"
+"framework.date.error.message": "Please enter date in DD/MM/YYYY format-Marathi",
+
+"legal.create.code":"Code-Marathi ",
+"legal.create.paymentNote":"Note: Total amount is window is valid and it is not necessarily same with amount mentioned in invoice document that is attached-Marathi",
+"advocatepayment.update.document.title":"Advocate Payment Update-Marathi",
+
+
 
 }
 

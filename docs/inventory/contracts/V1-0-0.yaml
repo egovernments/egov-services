@@ -17,6 +17,7 @@ info:
   description: |
     APIs available for Inventory: 
       - Create, Search, Update for Store Master.
+      - Create, Search, Update for Opening Balance Master.
       - Create, Search, Update for Supplier Master.
       - Create, Search, Update for Material -  Store Mapping Master.
       - Create, Search, Update for Indent Note.
@@ -41,6 +42,54 @@ basePath: "/inventory-inventory/v110"
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/inventory-inventory/contracts/v1-0-0.yml'
 x-api-id: 'org.egov.inventory.inventory'
 paths:
+    /openingbalance/_create:
+      post:
+        summary: Create New Opening Balanace.
+        description: >-
+          Create a new  Opening Balanace. This will handle  Opening Balanace detail.
+        parameters:
+          - name: openingBalance
+            in: body
+            description: Details for the new Oening Balance request.
+            required: true
+            schema:
+              $ref: '#/definitions/OpeningBalanceRequest'
+        tags:
+          - Opening Balance
+        responses:
+          '200':
+            description: Opening Balance Created
+            schema:
+              $ref: '#/definitions/OpeningBalanceResponse'
+          '400':
+            description: Invalid input.
+            schema:
+              $ref: >-
+                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+                
+    /openingbalance/_update:
+      post:
+        summary: Update existing  Opening Balanace. This will handle  Opening Balanace detail.
+        description: Existing Opening Balanace can be updated.
+        parameters:
+          - name: openingBalanace
+            in: body
+            description: Details for the new opening balance.
+            required: true
+            schema:
+              $ref: '#/definitions/OpeningBalanceRequest'
+        tags:
+          - Opening Balance
+        responses:
+          '200':
+            description: Opening Balance  Updated Successfully.
+            schema:
+              $ref: '#/definitions/OpeningBalanceResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    
     /indents/_search:
       post:
         summary: Get the list of common indent information
@@ -2445,6 +2494,30 @@ definitions:
       - uom
       - material
       - indentQantity
+      
+    OpeningBalanceRequest:
+      type: object
+      description: Hold the Opening Balance request information.
+      properties:
+        RequestInfo:
+          $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+        MaterialReceipt:
+          type: array
+          items:
+            $ref: '#/definitions/MaterialReceipt'
+            
+    OpeningBalanceResponse:
+      type: object
+      description: Hold the Opening Balance Response information
+      properties:
+        ResposneInfo:
+          $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+        MaterialReceipt:
+          type: array
+          items:
+            $ref: '#/definitions/MaterialReceipt'  
       
     IndentRequest:
       description: Contract class for web request. Array of Indent items  are used in case of create or update

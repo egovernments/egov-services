@@ -141,7 +141,7 @@ public class AdvocatePaymentRepository {
 		List<Advocate> advocates = advocateRepository.search(advocateSearch);
 
 		for (AdvocatePayment advocatePayment : advocatePayments) {
-			if (advocatePayment.getAdvocate() != null) {
+			if (advocatePayment.getAdvocate() != null && advocatePayment.getAdvocate().getCode() != null) {
 				Advocate advocate = advocates.stream()
 						.filter(adv -> adv.getCode().equalsIgnoreCase(advocatePayment.getAdvocate().getCode()))
 						.collect(Collectors.toList()).get(0);

@@ -186,7 +186,6 @@ export default class UigoogleMaps extends Component {
 		}
 
 	renderMaps = (item) => {
-		console.log(item.captLocationDetails);
 		switch (this.props.ui) {
 			case 'google':
 			const actions = [
@@ -235,7 +234,6 @@ export default class UigoogleMaps extends Component {
   	}
 
 	render () {
-		console.log("dialog");
 		return this.renderMaps(this.props.item)
 	}
 

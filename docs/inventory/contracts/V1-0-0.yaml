@@ -559,184 +559,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
     
-    /purchaseindents/_search:
-      post:
-        summary: Get the list of indents associated with purchase order(if any).
-        description: This API hold the purchase order and associated indents(if any).
-        tags: 
-          - Purchase Order
-        parameters:
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: purchaseOrder
-            type: integer
-            format: int64
-            in: query
-            description: |
-              purchase order of the PurchaseIndent
-          - name: indent
-            type: integer
-            format: int64
-            in: query
-            description: |
-              indent of the PurchaseIndent
-          - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/pageNumber"
-          - $ref: "#/parameters/sortProperty"
-        responses:
-          200:
-            description: PurchaseIndent retrieved Successfully
-            schema:
-              $ref: '#/definitions/PurchaseIndentResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /purchaseindents/_create:
-      post:
-        summary: Create  new  purchase indents.
-        description: If the purchase order is created for Indent, then this API holds the information regarding the indents associated with the purchase order.
-        tags: 
-          - Purchase Order
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: purchaseIndentRequest
-            in: body
-            description: Create  new 
-            schema:
-              $ref: '#/definitions/PurchaseIndentRequest'
-        responses:
-          200:
-            description: PurchaseIndent created Successfully
-            schema:
-              $ref: '#/definitions/PurchaseIndentResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /purchaseindents/_update:
-      post:
-        summary: Update any of the purchase indents.
-        description: This API is used to update the indent(s) associated with purchase order.
-        tags: 
-          - Purchase Order
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: purchaseIndentRequest
-            in: body
-            description: common Request info
-            schema:
-              $ref: '#/definitions/PurchaseIndentRequest'
-        responses:
-          200:
-            description: Purchase Indent updated Successfully
-            schema:
-              $ref: '#/definitions/PurchaseIndentResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    /purchasematerials/_search:
-      post:
-        summary: Get the list of purchase materials
-        description: This API returns the list of materials associated with purchase order for both  Indent 
-        tags: 
-          - Purchase Order
-        parameters:
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: ids
-            type: array
-            items: 
-             type: string
-            in: query
-            maxItems: 50
-            description: comma seperated list of Ids 
-          - name: material
-            type: integer
-            format: int64
-            in: query
-            description: |
-              material of the PurchaseMaterial
-          - name: uom
-            type: integer
-            format: int64
-            in: query
-            description: |
-              uom of the PurchaseMaterial
-          - name: orderQuantity
-            type: integer
-            format: int32
-            in: query
-            description: |
-              order quantity of the PurchaseMaterial
-          - name: remarks
-            type: string
-            in: query
-            description: |
-              remarks of the PurchaseMaterial
-          - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/pageNumber"
-          - $ref: "#/parameters/sortProperty"
-        responses:
-          200:
-            description: PurchaseMaterial retrieved Successfully
-            schema:
-              $ref: '#/definitions/PurchaseMaterialResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /purchasematerials/_create:
-      post:
-        summary: Create new purchase materials.
-        description: This API holds the list of materails specified in the purchase order.
-        tags: 
-          - Purchase Order
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: purchaseMaterialRequest
-            in: body
-            description: Create new 
-            schema:
-              $ref: '#/definitions/PurchaseMaterialRequest'
-        responses:
-          200:
-            description: PurchaseMaterial created Successfully
-            schema:
-              $ref: '#/definitions/PurchaseMaterialResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /purchasematerials/_update:
-      post:
-        summary: Update any of the purchase materials
-        description: This API is invoked to update the purchase material information.
-        tags: 
-          - Purchase Order
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: purchaseMaterialRequest
-            in: body
-            description: common Request info
-            schema:
-              $ref: '#/definitions/PurchaseMaterialRequest'
-        responses:
-          200:
-            description: PurchaseMaterial updated Successfully
-            schema:
-              $ref: '#/definitions/PurchaseMaterialResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    
+     
     /receiptnotes/_search:
       post:
         summary: Get list of material receipt notes based on below search parameter(s).
@@ -2445,14 +2268,12 @@ definitions:
           format: int32
           description: Order of items selected.
         projectCode:
-          $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/ProjectCode
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/ProjectCode"
           description: |
             projectCode  If case the purpose is Capital
           format: autoComplete
         asset:
-          $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/Asset
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/Asset"
           description: |
             Mandatory if the purpose is Repair and Maintenance.Refer asset code
             format: autoComplete
@@ -2677,14 +2498,14 @@ definitions:
           format: int64
           description: |
             state id of the PurchaseOrder
-        purchaseMaterials:
+        purchaseOrderDetails:
           type:  array
           items:
-            $ref: "#/definitions/PurchaseMaterial"
+            $ref: "#/definitions/PurchaseOrderDetails"
         purchaseIndents:
           type:  array
           items:
-            $ref: '#/definitions/PurchaseIndent'    
+            $ref: '#/definitions/PurchaseIndentDetails'    
         fileStoreId:
           type: string
           description: |
@@ -2703,7 +2524,7 @@ definitions:
       - supplierCode
       - expectedDeliveryDate
       - deliveryTerms
-      - purchaseMaterials
+      - purchaseOrderDetails
       
     PurchaseOrderRequest:
       properties:
@@ -2728,55 +2549,8 @@ definitions:
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
           
-    PurchaseIndent:
-      type: object
-      description: |
-          Purchase Indent object holds purchase order and associated indent mapping.
-      properties:
-        id:
-          type: string
-          description: |
-            Unique Identifier of the Purchase Indent
-        tenantId:
-          type: string
-          description: Tenant id of the Purchase Indent
-          maxLength: 128
-          minLength: 4
-        purchaseOrder:
-          $ref: "#/definitions/PurchaseOrder"
-        indent:
-          $ref: "#/definitions/Indent"
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
-      required:
-      - purchaseOrder
-      - indent
-      
-    PurchaseIndentRequest:
-      description: Contract class for web request. Array of PurchaseIndent items  are used in case of create or update
-      properties:
-        RequestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        purchaseIndents:
-          description: Used for search result and create only
-          type:  array
-          items:
-            $ref: '#/definitions/PurchaseIndent'
-            
-    PurchaseIndentResponse:
-      description: Contract class for web response. Array of PurchaseIndent items  are used in case of search ,create or update request. 
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        purchaseIndents:
-          description: Used for search result and create only
-          type:  array
-          items:
-            $ref: '#/definitions/PurchaseIndent'
-        page:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'      
     
-    PurchaseMaterial:
+    PurchaseOrderDetails:
       type: object
       description: |
         This object holds the purchase material information.  
@@ -2808,31 +2582,31 @@ definitions:
       - material
       - uom
       - orderQuantity
+
+    PurchaseIndentDetails:
+      type: object
+      description: |
+          Purchase Indent object holds purchase order and associated indent mapping.
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the Purchase Indent
+        tenantId:
+          type: string
+          description: Tenant id of the Purchase Indent
+          maxLength: 128
+          minLength: 4
+        purchaseOrderDetail:
+          $ref: "#/definitions/PurchaseOrderDetails"
+        indent:
+          $ref: "#/definitions/Indent"
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
+      required:
+      - purchaseOrderDetail
+      - indent
       
-    PurchaseMaterialRequest:
-      description: Contract class for web request. Array of PurchaseMaterial items  are used in case of create or update
-      properties:
-        RequestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        purchaseMaterials:
-          description: Used for search result and create only
-          type:  array
-          items:
-            $ref: '#/definitions/PurchaseMaterial'
-            
-    PurchaseMaterialResponse:
-      description: Contract class for web response. Array of PurchaseMaterial items  are used in case of search ,create or update request. 
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        purchaseMaterials:
-          description: Used for search result and create only
-          type:  array
-          items:
-            $ref: '#/definitions/PurchaseMaterial'
-        page:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
-    
     MaterialReceipt:
       description: Hold the material receipt specific information.
       type: object
@@ -4476,3 +4250,4 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
+

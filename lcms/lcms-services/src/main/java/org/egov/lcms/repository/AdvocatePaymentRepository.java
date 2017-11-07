@@ -83,47 +83,42 @@ public class AdvocatePaymentRepository {
 		return advocatePayments;
 	}
 
-	private void setCaseDetails(List<AdvocatePayment> advocatePayments, String tenantId, RequestInfo requestInfo) throws Exception {
+	private void setCaseDetails(List<AdvocatePayment> advocatePayments, String tenantId, RequestInfo requestInfo)
+			throws Exception {
 
 		RequestInfoWrapper requestWrapper = new RequestInfoWrapper();
 		requestWrapper.setRequestInfo(requestInfo);
-
-		
 
 		List<String> caseTypeCodes = advocatePayments.stream()
 				.filter(advocateData -> advocateData.getCaseType() != null
 						&& advocateData.getCaseType().getCode() != null)
 				.map(advocateCode -> advocateCode.getCaseType().getCode()).collect(Collectors.toList());
-		
+
 		List<String> caseStatusCodes = advocatePayments.stream()
 				.filter(caseStatusData -> caseStatusData.getCaseStatus() != null
 						&& caseStatusData.getCaseStatus().getCode() != null)
 				.map(advocateCode -> advocateCode.getCaseStatus().getCode()).collect(Collectors.toList());
-		
-		
 
 		Map<String, String> masterCodeAndValue = new HashMap<String, String>();
 		String caseTypesCode = getCommaSepratedValues(caseTypeCodes.toArray(new String[caseTypeCodes.size()]));
 		String caseStatusesCode = getCommaSepratedValues(caseStatusCodes.toArray(new String[caseStatusCodes.size()]));
 
-		if (!caseTypesCode.isEmpty()) {
+		if (caseTypesCode != null && !caseTypesCode.isEmpty()) {
 			masterCodeAndValue.put("caseType", caseTypesCode);
 		}
 
-		if (!caseStatusesCode.isEmpty()) {
+		if (caseStatusesCode != null && !caseStatusesCode.isEmpty()) {
 			masterCodeAndValue.put("caseStatus", caseStatusesCode);
 		}
-		
+
 		MdmsResponse mdmsResponse = mdmsRepository.getMasterData(tenantId, masterCodeAndValue, requestWrapper);
 		Map<String, Map<String, JSONArray>> response = mdmsResponse.getMdmsRes();
 		Map<String, JSONArray> mastersmap = response.get("lcms");
-		
-		for(AdvocatePayment advocatePayment : advocatePayments){
+
+		for (AdvocatePayment advocatePayment : advocatePayments) {
 			addParticularMastervalues("caseType", advocatePayment, mastersmap);
 			addParticularMastervalues("caseStatus", advocatePayment, mastersmap);
 		}
-		
-		
 
 	}
 
@@ -150,7 +145,7 @@ public class AdvocatePaymentRepository {
 		}
 	}
 
-	private static  String getCommaSepratedValues(String[] code) {
+	private static String getCommaSepratedValues(String[] code) {
 
 		if (code.length > 0) {
 			StringBuilder nameBuilder = new StringBuilder();
@@ -176,11 +171,14 @@ public class AdvocatePaymentRepository {
 			List<CaseStatus> caseStatuses = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
 					new TypeReference<List<CaseStatus>>() {
 					});
-			List<CaseStatus> caseStatusList = caseStatuses.stream().filter(
-					CaseStatus -> CaseStatus.getCode().equalsIgnoreCase(advocatePayment.getCaseStatus().getCode()))
-					.collect(Collectors.toList());
-			if (caseStatusList != null && caseStatusList.size() > 0)
-				advocatePayment.setCaseStatus((caseStatusList.get(0)));
+			if (caseStatuses != null) {
+				List<CaseStatus> caseStatusList = caseStatuses.stream()
+						.filter(CaseStatus -> CaseStatus.getCode()
+								.equalsIgnoreCase(advocatePayment.getCaseStatus().getCode()))
+						.collect(Collectors.toList());
+				if (caseStatusList != null && caseStatusList.size() > 0)
+					advocatePayment.setCaseStatus((caseStatusList.get(0)));
+			}
 			break;
 		}
 
@@ -188,12 +186,16 @@ public class AdvocatePaymentRepository {
 			List<CaseType> caseTypes = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
 					new TypeReference<List<CaseType>>() {
 					});
-	
-		List<CaseType> caseTypesList = caseTypes.stream().filter(
-				CaseType -> CaseType.getCode().equalsIgnoreCase(advocatePayment.getCaseType().getCode()))
-				.collect(Collectors.toList());
-		if (caseTypesList != null && caseTypesList.size() > 0)
-			advocatePayment.setCaseType(caseTypesList.get(0));
+
+			if (caseTypes != null) {
+
+				List<CaseType> caseTypesList = caseTypes.stream()
+						.filter(CaseType -> CaseType.getCode()
+								.equalsIgnoreCase(advocatePayment.getCaseType().getCode()))
+						.collect(Collectors.toList());
+				if (caseTypesList != null && caseTypesList.size() > 0)
+					advocatePayment.setCaseType(caseTypesList.get(0));
+			}
 			break;
 		}
 		default:

@@ -276,6 +276,7 @@ public class CaseService {
 			List<Court> courts = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
 					new TypeReference<List<Court>>() {
 					});
+			if ( courts!=null && courts.size()>0 )
 			caseObj.getSummon().setCourtName(courts.get(0));
 			break;
 		}
@@ -302,7 +303,7 @@ public class CaseService {
 			List<CaseCategory> caseCategories = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
 					new TypeReference<List<CaseCategory>>() {
 					});
-			if (caseCategories != null && caseCategories.size() > 0)
+			if (caseCategories != null &&  caseCategories.size() > 0)
 				caseObj.getSummon().setCaseCategory(caseCategories.get(0));
 			break;
 		}
@@ -320,12 +321,15 @@ public class CaseService {
 			List<CaseStatus> caseStatus = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
 					new TypeReference<List<CaseStatus>>() {
 					});
+			
+			if ( caseStatus!=null && caseStatus.size()>0){
 
 			List<HearingDetails> hearingDetails = caseObj.getHearingDetails();
 
 			for (HearingDetails hearingDetail : hearingDetails) {
 
 				addHearingDetail(hearingDetail, caseStatus);
+			}
 			}
 
 			break;

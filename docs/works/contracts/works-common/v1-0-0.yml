@@ -1169,17 +1169,56 @@ definitions:
         pattern: '[a-zA-Z0-9\s\.,]+'
         maxLength: 100
         minLength: 1
-      code:
+
+    required:
+      - tenantId
+      - name
+
+  AssetPresentCondition:
+    type: object
+    description: An Object that holds Present condition of the asset
+    properties:
+      id:
         type: string
-        description: Code of the Estimate Sanction Authority
-        pattern: '[a-zA-Z0-9-\\]+'
-        maxLength: 100
+        description: Unique Identifier of the Present condition of the asset
+      tenantId:
+        type: string
+        description: Tenant id of the Present condition of the asset
+        maxLength: 128
+        minLength: 2
+      name:
+        type: string
+        description: Present condition of the asset
+        pattern: '[a-zA-Z0-9\s\.,]+'
+        maxLength: 256
         minLength: 1
 
     required:
       - tenantId
       - name
-      - code
+
+  LandAssetPresentCondition:
+    type: object
+    description: An Object that holds Present condition of the Land asset
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the Present condition of the Land asset
+      tenantId:
+        type: string
+        description: Tenant id of the Present condition of the Land asset
+        maxLength: 128
+        minLength: 2
+      name:
+        type: string
+        description: Present condition of the Land asset
+        pattern: '[a-zA-Z0-9\s\.,]+'
+        maxLength: 256
+        minLength: 1
+
+    required:
+      - tenantId
+      - name
 
 parameters:
 ##########################################################

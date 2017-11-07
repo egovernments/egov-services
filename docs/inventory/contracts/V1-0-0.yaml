@@ -2827,10 +2827,11 @@ definitions:
           format: varchar
         supplierBillDate:
           type: integer
+          format: int64
           description: >-
             The date on which the supplier has raised the bill for the delivered
             materials.
-          format: int64
+          x-displayformat: 'dd/MM/yyyy'
         challanNo:
           type: boolean
           description: The challan number associated with this receipt.
@@ -3019,7 +3020,8 @@ definitions:
             materials that are of type shelf life control. Date must be greater
             than the receipt date.
           format: int64
-          x-displayformat: 'dd/MM/yyyy'  
+          x-displayformat: 'dd/MM/yyyy'
+          
     MaterialReceiptRequest:
       type: object
       description: Hold the Material Receipt Note request information.

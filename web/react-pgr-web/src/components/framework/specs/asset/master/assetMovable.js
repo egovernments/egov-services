@@ -313,10 +313,35 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
             "values": [{"label":"Yes", "value":true},{"label":"No", "value":false}],
-            "defaultValue":true
+            "defaultValue":true,
+						"showHideFields": [{
+	               "ifValue": false,
+	               "hide": [{
+	                "name": "WarrantyExpiryDateMandatory",
+	                "isGroup": false,
+	                "isField": true
+	               }],
+	               "show": [{
+	                "name": "WarrantyExpiryDateNonMandatory",
+	                "isGroup": false,
+	                "isField": true
+	              }]
+	              }]
           },
           {
-            "name": "WarrantyExpiryDate",
+            "name": "WarrantyExpiryDateMandatory",
+            "jsonPath": "Asset.warrantyExpiryDate",
+            "label": "ac.create.Warranty.expiry.date",
+            "pattern": "",
+            "type": "datePicker",
+            "url": "",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+					{
+            "name": "WarrantyExpiryDateNonMandatory",
             "jsonPath": "Asset.warrantyExpiryDate",
             "label": "ac.create.Warranty.expiry.date",
             "pattern": "",
@@ -325,7 +350,8 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+						"hide":true
           },
 					{
             "name": "AssetDescription",

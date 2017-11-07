@@ -531,15 +531,26 @@ definitions:
       pmc:
         type: boolean
         description: The boolean value to indicate whether the contractor is PMC(Project Management Consultant). The default value is false.
-      	
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails" 
     required:
       - tenantId
       - name
       - code
       - correspondenceAddress
+      - paymentAddress
+      - contactPerson
       - email
       - mobileNumber
       - panNumber
+      - tinNumber
+      - bank
+      - bankAccountNumber
+      - pwdApprovalCode
+      - pwdApprovalValidTill
+      - epfRegistrationNumber
+      - accountCode
+      - ifscCode
       - contractorClass
       
   MilestoneTemplate:
@@ -1247,6 +1258,4 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
-
-
 

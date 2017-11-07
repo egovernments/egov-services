@@ -1955,6 +1955,11 @@ var localization_EN_Data = {
     "ac.Modify.Header.Details": "Update Assset Immovable",
     "ac.update.movable.Header.Details": "Update Assset Movable",
     "ac.view.movable.Header.Details": "View Assset Movable",
+    "ac.create.createDate":"Date of Creation",
+    "ac.create.createFromDate":"Asset Created Date From",
+    "ac.create.createToDate":"Asset Created Date To",
+    "ac.create.OriginalFromDate":"Original Value of Asset From",
+    "ac.create.OriginalToDate":"Original Value of Asset To",
 
 
 

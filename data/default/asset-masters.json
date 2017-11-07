@@ -1393,7 +1393,32 @@
       "version": "1.0",
       "depreciationRate": 15,
       "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
+      "assetFieldsDefination":[
+        {
+          "name": "Type",
+          "type": "Select",
+          "isActive": true,
+          "isMandatory": false,
+          "values": "wood,plastic,steel",
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Color",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        }
+      ]
     },
     {
       "tenantId": "default",
@@ -1412,7 +1437,7 @@
       "version": "1.0",
       "depreciationRate": 15,
       "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
+      "assetFieldsDefination":null
     },
     {
       "tenantId": "default",
@@ -1450,7 +1475,32 @@
       "version": "1.0",
       "depreciationRate": 15,
       "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
+      "assetFieldsDefination": [
+      {
+          "name": "Type",
+          "type": "Select",
+          "isActive": true,
+          "isMandatory": false,
+          "values": "wood,plastic,steel",
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Color",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        }
+      ]
     },
     {
       "tenantId": "default",

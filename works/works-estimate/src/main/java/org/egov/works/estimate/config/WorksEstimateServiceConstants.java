@@ -150,5 +150,32 @@ public class WorksEstimateServiceConstants {
     public static final String KEY_ESTIMATE_ASSET_REQUIRED= "ESTIMATE_ASSET_CODE_REQUIRED";
     public static final String MESSAGE_ESTIMATE_ASSET_REQUIRED= "Invalid data for esimate asset code";
 
+    public static final String KEY_ESTIMATE_ACTIVITY_ESTIMATE_RATE_REQUIRED= "ESTIMATE_ACTIVITY_ESTIMATE_RATE_REQUIRED";
+    public static final String MESSAGE_ESTIMATE_ACTIVITY_ESTIMATE_RATE_REQUIRED= "Estimate rate is required for activity";
+
+    public static final String KEY_ESTIMATE_ACTIVITY_UOM_REQUIRED= "ESTIMATE_ACTIVITY_UOM_REQUIRED";
+    public static final String MESSAGE_ESTIMATE_ACTIVITY_UOM_REQUIRED= "UOM is required for activity";
+
+    public static final String KEY_ESTIMATE_ACTIVITY_UOM_CODE_INVALID= "ESTIMATE_ACTIVITY_UOM_REQUIRED";
+    public static final String MESSAGE_ESTIMATE_ACTIVITY_UOM_CODE_INVALID= "Invalid data for UOM code";
+
+    public static final String KEY_ESTIMATE_ACTIVITY_UNIT_RATE_REQUIRED= "ESTIMATE_ACTIVITY_UNIT_RATE_REQUIRED";
+    public static final String MESSAGE_ESTIMATE_ACTIVITY_UNIT_RATE_REQUIRED= "Unit rate is required for an estimate";
+
+    public static final String KEY_ESTIMATE_ACTIVITY_UNIT_RATE_INVALID= "ESTIMATE_ACTIVITY_UNIT_RATE_INVALID";
+    public static final String MESSAGE_ESTIMATE_ACTIVITY_UNIT_RATE_INVALID= "Unit rate should be grater than zero";
+
+    public static final String KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_REQUIRED= "ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_REQUIRED";
+    public static final String MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_REQUIRED= "Estimate measurement sheet quantity is required";
+
+    public static final String KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID= "ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID";
+    public static final String MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID= "Estimate measurement sheet quantity should be greater than zero";
+
+
+
+
+
+
+
 
 }

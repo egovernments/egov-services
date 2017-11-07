@@ -177,9 +177,28 @@ public class DetailedEstimateService {
             if (activity.getQuantity() != null && activity.getQuantity() <= 0)
                messages.put(KEY_ESTIMATE_ACTIVITY_QUANTITY, MESSAGE_ESTIMATE_ACTIVITY_QUANTITY);
 
-            if (activity.getEstimateRate() != null && activity.getEstimateRate().compareTo(BigDecimal.ZERO) <= 0)
+            if (activity.getEstimateRate() == null)
+                messages.put(KEY_ESTIMATE_ACTIVITY_ESTIMATE_RATE_REQUIRED, MESSAGE_ESTIMATE_ACTIVITY_ESTIMATE_RATE_REQUIRED);
+            else if(activity.getEstimateRate().compareTo(BigDecimal.ZERO) <= 0)
                messages.put(KEY_ESTIMATE_ACTIVITY_ESTIMATE_RATE, MESSAGE_ESTIMATE_ACTIVITY_ESTIMATE_RATE);
 
+            if(activity.getUom() == null)
+                messages.put(KEY_ESTIMATE_ACTIVITY_UOM_REQUIRED, MESSAGE_ESTIMATE_ACTIVITY_UOM_REQUIRED);
+            else if(StringUtils.isBlank(activity.getUom().getCode()))
+                messages.put(KEY_ESTIMATE_ACTIVITY_UOM_CODE_INVALID, MESSAGE_ESTIMATE_ACTIVITY_UOM_CODE_INVALID);
+
+            if(activity.getUnitRate() == null)
+                messages.put(KEY_ESTIMATE_ACTIVITY_UNIT_RATE_REQUIRED, MESSAGE_ESTIMATE_ACTIVITY_UNIT_RATE_REQUIRED);
+            else if(activity.getUnitRate().compareTo(BigDecimal.ZERO) <= 0)
+                messages.put(KEY_ESTIMATE_ACTIVITY_UNIT_RATE_INVALID, MESSAGE_ESTIMATE_ACTIVITY_UNIT_RATE_INVALID);
+
+            if(activity.getEstimateMeasurementSheets() != null)
+                for(final EstimateMeasurementSheet estimateMeasurementSheet : activity.getEstimateMeasurementSheets()) {
+                    if(estimateMeasurementSheet.getQuantity() == null)
+                        messages.put(KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_REQUIRED, MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_REQUIRED);
+                    else if(estimateMeasurementSheet.getQuantity().compareTo(BigDecimal.ZERO) <= 0)
+                        messages.put(KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID, MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID);
+                }
 
         }
 

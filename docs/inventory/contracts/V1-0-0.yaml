@@ -3065,7 +3065,7 @@ definitions:
     MaterialIssue:
       type: object
       description: |
-        This object holds information for both Indent Issue and Non Indent Issue.  
+        This object holds information for Indent Issue, Non Indent Issue and Transfer Outward Note.
       properties:
         id:
           type: string
@@ -3083,12 +3083,14 @@ definitions:
             - NonIndentIssue
         issuingStore:
           $ref: "#/definitions/Store"
+          description: |
+            This field holds the issuing store information.
         issueNoteNumber:
           type: string
           maxLength: 100
           readOnly: true
           description: |
-            issueNoteNumber  Auto generated number, read only
+            issue note number/outward note number.Auto generated number, read only.
         issueDate:
           type: integer
           format: int64
@@ -3109,46 +3111,45 @@ definitions:
         description:
           type: string
           maxLength: 1000
-          description: |
-            description of the MaterialIssue
+          description: description of the MaterialIssue
         totalIssueValue:
           type: number
           format: BigDecimal
-          description: |
-            total issue value of the MaterialIssue
+          description: total issue value of the MaterialIssue
         fileStoreId:
           type: string
-          description: |
-            fileStoreId  File Store id of the Indent Issue.    
+          description: fileStoreId  File Store id of the Indent Issue.    
         designation:
           type: string
           description: Designation of the created by user at the time of Indent Issue/Non Indent Issue created.
           format: varchar
         indent:
           $ref: "#/definitions/Indent"
-          description: |
-            Applicable for Indent Issue. This object holds the indent information for which the material is being issued.
+          description: Applicable for Indent Issue. This object holds the indent information for which the material is being issued. There could be multiple issues against an indent.
         issuedToEmployee:
           type:  string
-          description: |
-            Applicable for Indent Issue. Indent Issued To Employee. 
+          description: Applicable for Indent Issue and Transfer Outward Issue. Indent/Transfer Issued To Employee. 
         issuedToDesignation:
           type: string
-          description: |
-            Applicable for Indent Issue. Designation of the employee to whom the indent is issued.  
+          description: Applicable for Indent Issue. Designation of the employee to whom the indent is issued.  
         issuePurpose:
           type: string
           enum:
             - WriteOffORScrap
             - ReturnToSupplier
-          description: |
-            Applicable in case of None Indent Issue. This field holds information about Issuing purpose of the Non Indent Issue
+          description: Applicable in case of None Indent Issue. This field holds information about Issuing purpose of the Non Indent Issue
         materialIssueDetails:
           type: array
-          description: >-
-            List of materials issued for indent and non indent items.
+          description: List of materials issued for indent and non indent items.
           items:
-            $ref: '#/definitions/MaterialIssueDetails'    
+            $ref: '#/definitions/MaterialIssueDetails'
+        workFlowDetails:
+          $ref: "#/definitions/WorkFlowDetails"
+        stateId:
+          type: integer
+          format: int64
+          description: |
+            State id of the Material Issue.    
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
@@ -3254,87 +3255,6 @@ definitions:
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
     
-    TransferOutward:
-      type: object
-      description: |
-          This object holds the transfer outward information.
-      properties:
-        id:
-          type: string
-          description: |
-            Unique Identifier of the Transfer Outward.
-        tenantId:
-          type: string
-          description: Tenant id of the Transfer Indent Note.
-          maxLength: 128
-          minLength: 4    
-        issuingStore:
-          $ref: "#/definitions/Store"
-        issueDate:
-          type: integer
-          format: int64
-          x-displayformat: 'dd/MM/yyyy'
-          description: |
-            issue date of the TransferOutward.
-        issuedToEmployee:
-          type: string
-          description: |
-            issued to employee of the Transfer Outward.
-        issuedToDesignation:
-          type: string
-          description: Designation of the issuedToEmployee user.
-          format: varchar
-        description:
-          type: string
-          maxLength: 1000
-          description: |
-            description of the TransferOutward
-        outwardNoteNumber:
-          type: string
-          maxLength: 100
-          readOnly: true
-          description: |
-            Auto generated number, read only.
-        outwardNoteStatus:
-          type: string
-          enum:
-            - CREATED
-            - APPROVED
-            - REJECTED
-            - CANCELED
-          maxLength: 50
-          minLength: 5
-          description: |
-            outward note status of the Transfer Outward.
-        indent:
-          $ref: "#/definitions/Indent"
-        workFlowDetails:
-          $ref: "#/definitions/WorkFlowDetails"
-        stateId:
-          type: integer
-          format: int64
-          description: |
-            state id of the Transfer Outward.
-        fileStoreId:
-          type: string
-          description: |
-            fileStoreId  File Store id of the Transfer Outward Note.
-        designation:
-          type: string
-          description: Designation of the created by user at the time of Purchase Order creation.
-          format: varchar
-        transferOutwardDetail:
-          type: array
-          description: >-
-            List of materials to be issued in the outward note.
-          items:
-            $ref: '#/definitions/TransferOutwardDetail'  
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
-      required:
-      - issuingStore
-      - issueDate
-      
     TransferOutwardRequest:
       description: Contract class for web request. Array of TransferOutward items  are used in case of create or update
       properties:
@@ -3344,7 +3264,7 @@ definitions:
           description: Used for search result and create only
           type:  array
           items:
-            $ref: '#/definitions/TransferOutward'
+            $ref: '#/definitions/MaterialIssue'
             
     TransferOutwardResponse:
       description: Contract class for web response. Array of TransferOutward items  are used in case of search ,create or update request. 
@@ -3355,47 +3275,9 @@ definitions:
           description: Used for search result and create only
           type:  array
           items:
-            $ref: '#/definitions/TransferOutward'
+            $ref: '#/definitions/MaterialIssue'
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
-          
-    TransferOutwardDetail:
-      type: object
-      description: |
-        This object holds the material issue information for transfer outward i.e., material issued in indent.  
-      properties:
-        id:
-          type: string
-          description: |
-            Unique Identifier of the Transfer Outward Detail
-        tenantId:
-          type: string
-          description: Tenant id of the Transfer Outward Detail
-          maxLength: 128
-          minLength: 4
-        transferOutward:
-          $ref: "#/definitions/TransferOutward"  
-        indentDetail:
-          $ref: "#/definitions/IndentDetail"
-        qantityToBeIssued:
-          type: number
-          format: BigDecimal
-          description: |
-            Quantity/Balance Quantity to be issued for transfer indent.
-        issuedQantity:
-          type: number
-          format: BigDecimal
-          description: |
-            Quantity issued for the transfer indent.
-        description:
-          type: string
-          maxLength: 1000
-          description: |
-            remarks of the IndentDetail
-      required:
-      - indentDetail
-      - qantityToBeIssued
-      - issuedQantity      
           
     Material:
       type: object
@@ -4550,6 +4432,3 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
-
-
-

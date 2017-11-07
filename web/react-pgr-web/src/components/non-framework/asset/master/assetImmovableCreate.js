@@ -308,6 +308,8 @@ class assetImmovableCreate extends Component {
     //  var customFieldsArray = [];
     //  var customArr;
 
+
+
     Api.commonApiPost("/egf-masters/accountcodepurposes/_search",{"name":"Fixed Assets"},{}, false, false, false, "", "", false).then(function(response)
    {
      if(response) {
@@ -983,6 +985,41 @@ delete formData.Asset.assetAttributesCheck;
 
        }
 
+       if (/Asset\.landDetails\[\d{1,2}\]\.code/.test(property)) {
+         let SubProperty = property.split(".");
+         SubProperty.pop();
+         SubProperty = SubProperty.join(".");
+         console.log(SubProperty);
+         var _val = e.target.value;
+         Api.commonApiPost("/asset-services-maha/assets/_search",{"name":_val},{}, false, false, false, "", "", false).then(function(response)
+        {
+
+          if (response && response.Assets && response.Assets[0] && response.Assets[0].assetAttributes) {
+            for (var i = 0; i < response.Assets[0].assetAttributes.length; i++) {
+                if (response.Assets[0].assetAttributes[i].key=="surveyNo") {
+                  var _surveyNo = response.Assets[0].assetAttributes[i].value;
+                  self.props.handleChange({target:{value: _surveyNo}},SubProperty+".surveyNo",false,"","","");
+                } else if (response.Assets[0].assetAttributes[i].key=="area") {
+                  var _area = response.Assets[0].assetAttributes[i].value;
+                  self.props.handleChange({target:{value: _area}},SubProperty+".area",false,"","","");
+                }
+            }
+
+            setTimeout(function(){
+              if(self.props.formData.Asset.landDetails && self.props.formData.Asset.landDetails.length) {
+                  let area = 0;
+                  for(let i=0; i< self.props.formData.Asset.landDetails.length; i++) {
+                    area += self.props.formData.Asset.landDetails[i].area || 0;
+                  }
+                  self.props.handleChange({target: {value: area}}, "Asset.totalArea", false, '', '', '');
+              }
+            }, 500);
+          }
+        },function(err) {
+              console.log(err);
+         });
+       }
+
        if (property=="Asset.warrantyAvailable") {
          let spec = self.props.mockData;
          if(e.target.value==false) {
@@ -1291,7 +1328,6 @@ delete formData.Asset.assetAttributesCheck;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
     let self = this;
   //  {formData && formData.hasOwnProperty("Asset") && formData.Asset.hasOwnProperty("assetAttributes") && formData.Asset.assetAttributes.map((item,index)=>{
-      console.log(this.props.dropDownData);
     // })}
 
 

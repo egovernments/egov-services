@@ -188,13 +188,6 @@ var dat = {
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
-						"autoCompleteDependancy": {
-							"autoCompleteUrl": "asset-services-maha/assets/_search?name={value}",
-							"autoFillFields": {
-								"Asset.landDetails[0].surveyNo": "Assets[0].landSurveyNo",
-								"Asset.landDetails[0].area": "Assets[0].totalArea"
-							 }
-						 }
 					},
 					{
 						"name": "SurveyNoOfLandOnWhichStructureIsLocated ",
@@ -317,42 +310,42 @@ var dat = {
         "multiple":false,
         "jsonPath":"Asset",
 				"fields": [
-					{
-            "name": "No of Floors",
-            "jsonPath": "Asset.floors",
-            "label": "ac.create.No.of.Floors",
-            "pattern": "",
-            "type": "number",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "PlinthArea",
-            "jsonPath": "Asset.plinthArea",
-            "label": "ac.create.Plinth.Area",
-            "pattern": "",
-            "type": "number",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "CubicContents",
-            "jsonPath": "Asset.cubicContents",
-            "label": "ac.create.Cubic.Contents",
-            "pattern": "",
-            "type": "number",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
+					// {
+          //   "name": "No of Floors",
+          //   "jsonPath": "Asset.floors",
+          //   "label": "ac.create.No.of.Floors",
+          //   "pattern": "",
+          //   "type": "number",
+          //   "url": "",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
+          // {
+          //   "name": "PlinthArea",
+          //   "jsonPath": "Asset.plinthArea",
+          //   "label": "ac.create.Plinth.Area",
+          //   "pattern": "",
+          //   "type": "number",
+          //   "url": "",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
+          // {
+          //   "name": "CubicContents",
+          //   "jsonPath": "Asset.cubicContents",
+          //   "label": "ac.create.Cubic.Contents",
+          //   "pattern": "",
+          //   "type": "number",
+          //   "url": "",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
 					// {
           //   "name": "floorWise",
           //   "jsonPath": "Asset.floorWise",
@@ -365,54 +358,54 @@ var dat = {
           //   "requiredErrMsg": "",
           //   "patternErrMsg": ""
           // },
-          {
-            "name": "DimensionOfStructure(L,B,H)",
-            "jsonPath": "Asset.length",
-            "label": "ac.create.Dimension.of.Structure",
-            "pattern": "",
-            "type": "number",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-					{
-            "name": "DimensionOfStructure(L,B,H)",
-            "jsonPath": "Asset.width",
-            "label": "ac.create.Dimension.breadth",
-            "pattern": "",
-            "type": "number",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-					{
-            "name": "DimensionOfStructure(L,B,H)",
-            "jsonPath": "Asset.height",
-            "label": "ac.create.Dimension.height",
-            "pattern": "",
-            "type": "number",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-					{
-            "name": "Usage",
-            "jsonPath": "Asset.usage",
-            "label": "ac.create.Usage",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
+          // {
+          //   "name": "DimensionOfStructure(L,B,H)",
+          //   "jsonPath": "Asset.length",
+          //   "label": "ac.create.Dimension.of.Structure",
+          //   "pattern": "",
+          //   "type": "number",
+          //   "url": "",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
+					// {
+          //   "name": "DimensionOfStructure(L,B,H)",
+          //   "jsonPath": "Asset.width",
+          //   "label": "ac.create.Dimension.breadth",
+          //   "pattern": "",
+          //   "type": "number",
+          //   "url": "",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
+					// {
+          //   "name": "DimensionOfStructure(L,B,H)",
+          //   "jsonPath": "Asset.height",
+          //   "label": "ac.create.Dimension.height",
+          //   "pattern": "",
+          //   "type": "number",
+          //   "url": "",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
+					// {
+          //   "name": "Usage",
+          //   "jsonPath": "Asset.usage",
+          //   "label": "ac.create.Usage",
+          //   "pattern": "",
+          //   "type": "text",
+          //   "url": "",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
           {
             "name": "AnticipatedLifeOfAsset",
             "jsonPath": "Asset.anticipatedLife",

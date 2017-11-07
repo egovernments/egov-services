@@ -391,7 +391,7 @@ printer = () => {
                   <Col xs={12} md={3}>
                     <Col style={{textAlign:"left"}}>
                       <label>
-                        <span style={{"fontWeight":500, "fontSize": "13px"}}>
+                        <span style={{"fontWeight":600, "fontSize": "13px"}}>
                           {item.label}
                         </span>
                       </label>

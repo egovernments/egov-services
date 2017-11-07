@@ -1400,6 +1400,18 @@
           "url": null,
           "order": null,
           "columns": []
+        },
+        {
+          "name": "Area",
+          "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
         }
       ]
     },

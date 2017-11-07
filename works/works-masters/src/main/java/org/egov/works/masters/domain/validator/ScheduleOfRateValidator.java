@@ -25,7 +25,7 @@ public class ScheduleOfRateValidator {
     @Autowired
     private MdmsRepository mdmsRepository;
 
-    public void validateSorRates(ScheduleOfRateRequest scheduleOfRateRequest) {
+    public void validate(ScheduleOfRateRequest scheduleOfRateRequest) {
         JSONArray mdmsResponse = null;
         Map<String, String> messages = new HashMap<>();
         Boolean isDataValid = Boolean.FALSE;

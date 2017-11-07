@@ -29,7 +29,7 @@ public class ScheduleOfRatesController {
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@Valid @RequestBody ScheduleOfRateRequest scheduleOfRateRequest) {
-		scheduleOfRateValidator.validateSorRates(scheduleOfRateRequest);
+		scheduleOfRateValidator.validate(scheduleOfRateRequest);
 		final List<ScheduleOfRate> scheduleOfRates = scheduleOfRatesService.create(scheduleOfRateRequest);
 		final ScheduleOfRateResponse response = new ScheduleOfRateResponse();
 		response.setScheduleOfRates(scheduleOfRates);
@@ -50,7 +50,7 @@ public class ScheduleOfRatesController {
 
 	@PostMapping("/_update")
 	public ResponseEntity<?> update(@RequestBody ScheduleOfRateRequest scheduleOfRateRequest) {
-		scheduleOfRateValidator.validateSorRates(scheduleOfRateRequest);
+		scheduleOfRateValidator.validate(scheduleOfRateRequest);
 		final List<ScheduleOfRate> scheduleOfRates = scheduleOfRatesService.update(scheduleOfRateRequest);
 		final ScheduleOfRateResponse response = new ScheduleOfRateResponse();
 		response.setScheduleOfRates(scheduleOfRates);

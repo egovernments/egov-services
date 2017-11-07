@@ -186,7 +186,7 @@ serviceMaps:
           type: JSON
           dbType: JSONB
           
-        - jsonPath: $.parawiseComments.*.tenantId
+        - jsonPath: $.cases[?({code} in @.paraWiseComments[*].code)].tenantId
         
         - jsonPath: $.cases[?({code} in @.parawiseComments[*].code)].code
         
@@ -231,7 +231,7 @@ serviceMaps:
           type: JSON
           dbType: JSONB
           
-        - jsonPath: $.parawiseComments.*.tenantId
+        - jsonPath: $.cases[?({code} in @.paraWiseComments[*].code)].tenantId
         
         - jsonPath: $.cases[?({code} in @.parawiseComments[*].code)].code
         
@@ -1050,7 +1050,7 @@ serviceMaps:
       - jsonPath: $.hearingDetails.*.judges
         type: JSON
         dbType: JSONB
-      - jsonPath: $.hearingDetails.*.tenantId
+      - jsonPath: $.cases[?({code} in @.hearingDetails[*].code)].tenantId
       
       - jsonPath: $.cases[?({code} in @.hearingDetails[*].code)].code
         
@@ -1106,7 +1106,7 @@ serviceMaps:
         type: JSON
         dbType: JSONB          
         
-      - jsonPath: $.hearingDetails.*.tenantId
+      - jsonPath: $.cases[?({code} in @.hearingDetails[*].code)].tenantId
       
       - jsonPath: $.cases[?({code} in @.hearingDetails[*].code)].code
         

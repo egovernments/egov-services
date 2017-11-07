@@ -148,7 +148,7 @@ export default class UiLabel extends Component {
       <div>
    			<Row>
             {!item.hasOwnProperty("isLabel")?<Col id={item.jsonPath.split(".").join("-")}		 style={item.hasOwnProperty("textAlign")?{textAlign:item.textAlign}:{textAlign:"left"}} xs={12}>
-              <label><span style={{"fontWeight":500, "fontSize": "13px"}}>{translate(item.label)}</span></label>
+              <label><span style={{"fontWeight":600, "fontSize": "13px"}}>{translate(item.label)}</span></label>
             </Col>:""}
             {item.hyperLink && (this.state.value || this.props.getVal(item.jsonPath,item.isDate)) ?
               (<Col style={{textAlign:"left"}} xs={12}>

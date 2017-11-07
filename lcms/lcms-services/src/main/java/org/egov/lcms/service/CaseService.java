@@ -93,7 +93,7 @@ public class CaseService {
 		for (Case casee : cases) {
 			if (casee.getParawiseComments() != null && casee.getParawiseComments().size() > 0) {
 				for (ParaWiseComment parawiseComment : casee.getParawiseComments()) {
-					String code = uniqueCodeGeneration.getUniqueCode(parawiseComment.getTenantId(), requestInfo,
+					String code = uniqueCodeGeneration.getUniqueCode(casee.getTenantId(), requestInfo,
 							propertiesManager.getParaWiseCommentsUlbFormat(),
 							propertiesManager.getParaWiseCommentsUlbName(), Boolean.FALSE, null);
 					parawiseComment.setCode(code);
@@ -497,7 +497,7 @@ public class CaseService {
 		for (Case casee : cases) {
 			if (casee.getHearingDetails() != null && casee.getHearingDetails().size() > 0) {
 				for (HearingDetails hearingDetails : casee.getHearingDetails()) {
-					String code = uniqueCodeGeneration.getUniqueCode(hearingDetails.getTenantId(), requestInfo,
+					String code = uniqueCodeGeneration.getUniqueCode(casee.getTenantId(), requestInfo,
 							propertiesManager.getHearingDetailsUlbFormat(),
 							propertiesManager.getHearingDetailsUlbName(), Boolean.FALSE, null);
 					hearingDetails.setCode(code);

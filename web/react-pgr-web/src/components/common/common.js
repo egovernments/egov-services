@@ -2436,7 +2436,8 @@ var localization_EN_Data = {
   "opinionrequest.update.additionalAdvocate":"Additional Advocate",
   "advocatepayment.create.instrumentNumber":"Instrument Number",
 "advocatepayment.create.InstrumentDate":"Instrument Date",
-"legal.create.uploadInvoice":"Upload Invoice"
+"legal.create.uploadInvoice":"Upload Invoice",
+"framework.date.error.message": "Please enter date in DD/MM/YYYY format"
 
 
 
@@ -4372,7 +4373,8 @@ var localization_MR_Data = {
  "opinionrequest.update.additionalAdvocate":"Additional Advocate-marathi",
  "advocatepayment.create.instrumentNumber":"Instrument Number-marathi",
 "advocatepayment.create.InstrumentDate":"Instrument Date-marathi",
-"legal.create.uploadInvoice":"Upload Invoice-marathi"
+"legal.create.uploadInvoice":"Upload Invoice-marathi",
+"framework.date.error.message": "Please enter date in DD/MM/YYYY format-Marathi"
 
 }
 

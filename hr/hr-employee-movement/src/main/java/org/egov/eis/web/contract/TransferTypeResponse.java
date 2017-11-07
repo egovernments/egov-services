@@ -45,6 +45,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -58,6 +59,6 @@ public class TransferTypeResponse {
     private ResponseInfo responseInfo;
 
     @JsonProperty("TransferType")
-    private List<String> transferTypes = new ArrayList<String>();
+    private List<Map<String, String>> transferTypes = new ArrayList<>();
 
 }

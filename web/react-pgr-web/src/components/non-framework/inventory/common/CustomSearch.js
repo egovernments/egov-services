@@ -75,8 +75,6 @@ export default class CustomSearch extends Component {
     return typeof _.get(this.props.formData, path) != "undefined" ? _.get(this.props.formData, path) : "";
   }
 
-
-
   initData() {
 
     //let hashLocation = window.location.hash;
@@ -168,7 +166,8 @@ export default class CustomSearch extends Component {
             let valuePath = specsValuesList[j];
             if(typeof valuePath === 'object' && valuePath.type === "checkbox"){
               let val = _.get(values[i], valuePath.valuePath);
-              tmp.push({...valuePath, value:valuePath.mappingValues[val] || false});
+              tmp.push({...valuePath,
+                value:valuePath.mappingValues && valuePath.mappingValues[val] || val});
               continue;
             }
 

@@ -511,4 +511,7 @@ public class PropertiesManager {
 	
 	@Value("${egov.lcms.lastmodifiedtime}")
 	private String lastModifiedTime;
+	
+	@Value("${egov.lcms.update.assign.advocate}")
+	private String updateAssignAdvocate;
 }

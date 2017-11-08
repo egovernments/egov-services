@@ -285,6 +285,37 @@ serviceMaps:
         dbType: LONG        
 
   - version: 1.0
+    name: lcms-assign-advocate
+    description: create assign advocate in lcms
+    fromTopic: lcms-update-assign-advocate
+    queryMaps:     
+    - query: UPDATE egov_lcms_case_advocate SET assigneddate=?,advocate=?,fee=?, tenantid=?,lastModifiedBy=?,lastModifiedTime=? WHERE code=?;
+      basePath: $.cases.*.advocateDetails.*
+      jsonMaps:
+         
+      - jsonPath: $.cases.*.advocateDetails.*.assignedDate
+        type: LONG
+  
+      - jsonPath: $.advocateDetails.*.advocate
+        type: JSON
+        dbType: JSONB
+  
+      - jsonPath: $.advocateDetails.*.fee
+        type: DOUBLE
+       
+      - jsonPath: $.cases[?({code} in @.advocateDetails[*].code)].tenantId
+        
+      - jsonPath: $.RequestInfo.userInfo.id
+        type: STRING      
+
+      - jsonPath: lastModifiedTime
+        type: CURRENTDATE
+        dbType: LONG
+
+      - jsonPath: $.advocateDetails.*.code
+  
+
+  - version: 1.0
     name: advocates_create
     description: Persists advocates service details egov_lcms_advocate table
     fromTopic: lcms-advocate-create

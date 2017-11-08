@@ -1,5 +1,6 @@
 package org.egov.lcms.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -15,6 +16,7 @@ import org.egov.lcms.models.SummonRequest;
 import org.egov.lcms.models.SummonResponse;
 import org.egov.lcms.repository.CaseSearchRepository;
 import org.egov.lcms.repository.IdGenerationRepository;
+import org.egov.lcms.repository.SummonRepository;
 import org.egov.lcms.util.UniqueCodeGeneration;
 import org.egov.lcms.utility.SummonValidator;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -46,6 +48,10 @@ public class SummonService {
 	
 	@Autowired
 	private SummonValidator summonValidator;
+	
+	
+	@Autowired
+    private SummonRepository summonRepository;
 
 	/**
 	 * This API will create the summon
@@ -109,10 +115,66 @@ public class SummonService {
 	public CaseResponse assignAdvocate(CaseRequest caseRequest) throws Exception {
 		summonValidator.validateSummon(caseRequest);
 		validateAssignAdvocate(caseRequest);
-		generateAdvocateCode(caseRequest);
-		kafkaTemplate.send(propertiesManager.getAssignAdvocate(), caseRequest);
+		updateAdvocateDetails(caseRequest);
 		return new CaseResponse(responseInfoFactory.getResponseInfo(caseRequest.getRequestInfo(), HttpStatus.CREATED),
 				caseRequest.getCases());
+	}
+	
+	
+
+/**
+	 * 
+	 * @param caseRequest
+	 * @throws Exception
+	 */
+	private void updateAdvocateDetails(CaseRequest caseRequest) throws Exception {
+
+		for (Case caseObj : caseRequest.getCases()) {
+			List<AdvocateDetails> insertAdvocate = new ArrayList<AdvocateDetails>();
+			List<AdvocateDetails> updateAdvocate = new ArrayList<AdvocateDetails>();
+
+			List<String> advocateCodes = summonRepository.getAdvocateCodes(caseObj);
+
+			List<AdvocateDetails> advocateDetails = caseObj.getAdvocateDetails();
+
+			for (AdvocateDetails advocateDetail : advocateDetails) {
+				
+
+				if (advocateDetail.getCode() == null) {
+
+					String advocateCode = uniqueCodeGeneration.getUniqueCode(caseObj.getTenantId(),
+							caseRequest.getRequestInfo(), propertiesManager.getAdvocateDetailsCodeFormat(),
+							propertiesManager.getAdvocateDetailsCodeName(), Boolean.FALSE, null, Boolean.FALSE);
+
+					advocateDetail.setCode(advocateCode);
+					insertAdvocate.add(advocateDetail);
+				}
+
+				else {
+					if (advocateCodes.contains(advocateDetail.getCode().trim())) {
+
+						updateAdvocate.add(advocateDetail);
+
+						advocateCodes.remove(advocateDetail.getCode().trim());
+					}
+				}
+
+			}
+
+			if (insertAdvocate.size() > 0) {
+				caseObj.setAdvocateDetails(insertAdvocate);
+				kafkaTemplate.send(propertiesManager.getAssignAdvocate(), caseRequest);
+			}
+
+			if (updateAdvocate.size() > 0) {
+				caseObj.setAdvocateDetails(updateAdvocate);
+				kafkaTemplate.send(propertiesManager.getUpdateAssignAdvocate(), caseRequest);
+			}
+
+			
+			if ( advocateCodes.size()>0 )
+			summonRepository.deleteAdvocateDetails(advocateCodes);
+		}
 	}
 
 	/**

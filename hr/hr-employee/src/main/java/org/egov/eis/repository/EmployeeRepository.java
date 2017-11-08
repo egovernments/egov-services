@@ -130,6 +130,9 @@ public class EmployeeRepository {
     @Autowired
     private BaseRegisterReportRowMapper baseRegisterReportRowMapper;
 
+    @Autowired
+    private EmployeeWithoutAssignmentRowMapper employeeWithoutAssignmentRowMapper;
+
     @SuppressWarnings("unchecked")
     public List<EmployeeInfo> findForCriteria(EmployeeCriteria employeeCriteria) {
         Map<String, Object> namedParametersForListOfEmployeeIds = new HashMap<>();
@@ -152,12 +155,22 @@ public class EmployeeRepository {
     }
 
     public List<EmployeeInfo> findForReportRequest(BaseRegisterReportRequest baseRegisterReportRequest) {
-        Map<String, Object> namedParametersForListOfEmployeeIds = new HashMap<>();
 
         Map<String, Object> namedParameters = new HashMap<>();
         String queryStr = employeeQueryBuilder.getQueryForEmployeeReport(baseRegisterReportRequest, namedParameters);
 
         List<EmployeeInfo> employeesInfo = namedParameterJdbcTemplate.query(queryStr, namedParameters, baseRegisterReportRowMapper);
+
+        return employeesInfo;
+
+    }
+
+    public List<EmployeeInfo> getEmployeesWithoutAssignment(EmployeeCriteria employeeCriteria) {
+
+        Map<String, Object> namedParameters = new HashMap<>();
+        String queryStr = employeeQueryBuilder.getQueryForEmployeewithoutAssignmentReport(employeeCriteria, namedParameters);
+
+        List<EmployeeInfo> employeesInfo = namedParameterJdbcTemplate.query(queryStr, namedParameters, employeeWithoutAssignmentRowMapper);
 
         return employeesInfo;
 

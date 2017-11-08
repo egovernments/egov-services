@@ -165,6 +165,31 @@ public class EmployeeController {
         return getSuccessResponseForSearch(employeesList, requestInfo);
     }
 
+    @PostMapping("_employeewithoutassignmentreport")
+    @ResponseBody
+    public ResponseEntity<?> employeeWithoutAssignment(@ModelAttribute @Valid EmployeeCriteria employeeCriteria,
+                                                       BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+                                                       BindingResult requestBodyBindingResult) {
+        RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+
+        ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo,
+                modelAttributeBindingResult, requestBodyBindingResult);
+
+        if (errorResponseEntity != null)
+            return errorResponseEntity;
+
+        // Call service
+        List<EmployeeInfo> employeesList;
+        try {
+            employeesList = employeeService.getEmployeeWithoutAssignmentInfo(employeeCriteria, requestInfo);
+        } catch (Exception exception) {
+            log.error("Error while processing request " + employeeCriteria, exception);
+            return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+        }
+
+        return getSuccessResponseForSearch(employeesList, requestInfo);
+    }
+
     /**
      * Maps Post Requests for _loggedinemployee & returns ResponseEntity of either
      * EmployeeResponse type or ErrorResponse type

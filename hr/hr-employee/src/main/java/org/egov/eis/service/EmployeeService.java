@@ -235,6 +235,23 @@ public class EmployeeService {
         return empInfoList;
     }
 
+    public List<EmployeeInfo> getEmployeeWithoutAssignmentInfo(EmployeeCriteria employeeCriteria, RequestInfo requestInfo) throws CloneNotSupportedException {
+
+        List<EmployeeInfo> empInfoList = employeeRepository.getEmployeesWithoutAssignment(employeeCriteria);
+
+        if (isEmpty(empInfoList)) {
+            return Collections.EMPTY_LIST;
+        }
+        List<Long> ids = empInfoList.stream().map(employeeInfo -> employeeInfo.getId()).collect(Collectors.toList());
+        log.debug("Employee ids are :: " + ids);
+        employeeCriteria.setId(ids);
+        List<User> usersList = userService.getUsers(employeeCriteria, requestInfo);
+        log.debug("usersList returned by UsersService is :: " + usersList);
+        empInfoList = employeeUserMapper.mapUsersWithEmployeesForReport(empInfoList, usersList);
+
+        return empInfoList;
+    }
+
     public List<EmployeeInfo> getEmployeeUserInfo(BaseRegisterReportRequest baseRegisterReportRequest, RequestInfo requestInfo) throws CloneNotSupportedException {
         List<User> usersList = null;
         List<Long> ids = null;

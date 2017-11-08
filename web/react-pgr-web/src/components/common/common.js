@@ -2071,7 +2071,30 @@ var localization_EN_Data = {
 "vehicles.create.group.title.InsuranceDetails": "Insurance Details for Contracted Vehicle",
 "vehicles.create.group.title.PurchaseDetails": "Purchase Details",
 "vehicles.create.group.title.WarrantyDetails": "Warranty Details",
-
+"swm.collectionpoints.search.title":"Search",
+"swm.collectionpoints.create.undefined":"",
+"swm.collectionpoints.create.codes":"Codes",
+"swm.collectionpoints.create.name":"Name",
+"swm.collectionpoints.create.locationCode":"Locationcode",
+"swm.collectionpoints.create.group.title.LocationDetails":"Location Selection",
+"swm.collectionpoints.create.offSet":"Offset",
+"swm.collectionpoints.create.sortBy":"Sortby",
+"swm.collectionpoints.create.code":"Code",
+"swm.collectionpoints.create.location":"Location",
+"swm.collectionpoints.create.ward":"Ward",
+"swm.collectionpoints.create.zone":"Zone",
+"swm.collectionpoints.create.block":"Road / Street",
+"swm.collectionpoints.create.colony":"Colony / Society / Complex",
+"swm.collectionpoints.create.title":"Collection Point Entry Master",
+"swm.collectionpoints.create.group.title.LocationSelection":"Locationselection",
+"swm.collectionpoints.create.group.title.CollectionPointDetails":"Collection Point Details",
+"swm.collectionpoints.create.group.title.CollectionPoints":"Collection Points",
+"swm.collectionpoints.create.group.title.BinDetails":"Bin Details",
+"swm.collectionpoints.create.assetOrBinId":"Asset / Bin ID",
+"swm.collectionpoints.create.rfidAssigned":"RFID Assigned ?",
+"swm.collectionpoints.create.rfid":"RFID",
+"swm.collectionpoints.create.garbageEstimate":"Garbage Estimate",
+"swm.collectionpoints.create.description":"Description",
 "error.license.feeDetailYearNotFound ": "Financial Does not exists for Current/Future Year",
 
 
@@ -4393,10 +4416,30 @@ var localization_MR_Data = {
 "legal.create.code":"Code-Marathi ",
 "legal.create.paymentNote":"Note: Total amount is window is valid and it is not necessarily same with amount mentioned in invoice document that is attached-Marathi",
 "advocatepayment.update.document.title":"Advocate Payment Update-Marathi",
-"legacycase.update.document.title":"Create Legacy Case-marathi"
+"legacycase.update.document.title":"Create Legacy Case-marathi",
 
 
 
+"swm.collectionpoints.search.title":"Search",
+"swm.collectionpoints.create.undefined":"",
+"swm.collectionpoints.create.codes":"Codes",
+"swm.collectionpoints.create.name":"Collection Point Name",
+"swm.collectionpoints.create.locationCode":"Locationcode",
+"swm.collectionpoints.create.offSet":"Offset",
+"swm.collectionpoints.create.sortBy":"Sortby",
+"swm.collectionpoints.create.code":"Code",
+"swm.collectionpoints.create.location":"Location",
+"swm.collectionpoints.create.ward":"Ward",
+"swm.collectionpoints.create.zone":"Zone",
+"swm.collectionpoints.create.block":"Road / Street",
+"swm.collectionpoints.create.colony":"Colony / Society / Complex",
+"swm.collectionpoints.create.title":"Collection Point Entry Master",
+"swm.collectionpoints.create.group.title.LocationSelection":"Locationselection",
+"swm.collectionpoints.create.group.title.CollectionPointDetails":"Collectionpointdetails",
+"swm.collectionpoints.create.group.title.CollectionPoints":"Collectionpoints",
+"swm.collectionpoints.create.group.title.BinDetails":"Bindetails",
+"swm.collectionpoints.create.garbageEstimate":"Garbage Estimate",
+"swm.collectionpoints.create.description":"Description"
 }
 
 export function translate(locale_text) {

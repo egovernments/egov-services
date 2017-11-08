@@ -3,42 +3,131 @@ class EmployeePromotion extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-  promotionSet:{
-    "employeeid": {
-      id:"",
-      name:"",
-      code:"",
-      departmentId:"",
-      designationId:"",
-      positionId:""
-    },
-    departmentId:"",
-    designationId:"",
-    employeeType:"",
-    pName:"",
-    promotionType:"",
-    reason:"",
-    district:"",
-    positionId:"",
-    fund:"",
-    functionary:"",
-    effectiveDate:"",
-    remark:"",
-    documents:"",
-    promotionDate:"",
-    accepted:""},
-    positionList:[],departmentList:[],designationList:[],employees:[],
-    fundList:[],functionaryList:[],districtList:[],promotionList:[],reasonList:[],pNameList:[]
+      movement:
+      	{
+            employee: "",
+            typeOfMovement: "PROMOTION",
+            currentAssignment: "",
+            transferType: "",
+            promotionBasis: {
+              id: ""
+            },
+            remarks: "",
+            reason: {
+            	id: ""
+            },
+            effectiveFrom: "",
+            enquiryPassedDate: "",
+            transferedLocation: "",
+            departmentAssigned: "",
+            designationAssigned: "",
+            positionAssigned: "",
+            fundAssigned: "",
+            functionAssigned: "",
+            employeeAcceptance: "",
+            workflowDetails: {
+            	assignee: ""
+            },
+            tenantId: tenantId
+          },
+          employee: {
+            id:"",
+            name:"",
+            code:"",
+            departmentId:"",
+            designationId:"",
+            positionId:""
+          },
+          accepted:"",
+    positionList:[],departmentList:[],designationList:[],employees:[],promotionList:[],
+    fundList:[],functionaryList:[],districtList:[],transferList:[],reasonList:[],pNameList:[],userList:[]
   }
     this.handleChange=this.handleChange.bind(this);
     this.addOrUpdate=this.addOrUpdate.bind(this);
-    this.handleChangeTwoLevel=this.handleChangeTwoLevel.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
     this.vacantPositionFun = this.vacantPositionFun.bind(this);
+    this.getUsersFun = this.getUsersFun.bind(this);
   }
 
-addOrUpdate(){
-  console.log("created");
+addOrUpdate(e){
+
+    e.preventDefault();
+
+    var _this = this;
+    var movement =Object.assign({}, _this.state.movement);
+
+        var body = {
+            "RequestInfo":requestInfo,
+            "Movement":[movement]
+        };
+
+            $.ajax({
+                url:baseUrl+"/hr-employee-movement/movements/_create?tenantId=" + tenantId,
+                type: 'POST',
+                dataType: 'json',
+                data:JSON.stringify(body),
+                contentType: 'application/json',
+                headers:{
+                  'auth-token': authToken
+                },
+                success: function(res) {
+
+                                  _this.setState({movement:
+                                        	{
+                                              employeeId: "",
+                                              typeOfMovement: "TRANSFER",
+                                              currentAssignment: "",
+                                              transferType: "",
+                                              promotionBasis: {
+                                                id: ""
+                                              },
+                                              remarks: "",
+                                              reason: {
+                                              	id: ""
+                                              },
+                                              effectiveFrom: "",
+                                              enquiryPassedDate: "",
+                                              transferedLocation: "",
+                                              departmentAssigned: "",
+                                              designationAssigned: "",
+                                              positionAssigned: "",
+                                              fundAssigned: "",
+                                              functionAssigned: "",
+                                              employeeAcceptance: "",
+                                              workflowDetails: {
+                                              	assignee: "",
+                                                department:"",
+                                                designation:""
+                                              },
+                                              tenantId: tenantId
+                                            },
+                                            employee: {
+                                              id:"",
+                                              name:"",
+                                              code:"",
+                                              departmentId:"",
+                                              designationId:"",
+                                              positionId:""
+                                            },
+                                            transferWithPromotion:false,
+                                      positionList:[],departmentList:[],designationList:[],employees:[],promotionList:[],wfDesignationList:[],
+                                      fundList:[],functionaryList:[],districtList:[],transferList:[],reasonList:[],pNameList:[],userList:[]
+                                    });
+
+                                  showSuccess("Promotion application is forwarded");
+
+                },
+                error: function(err) {
+                  if(err["responseJSON"].message)
+                    showError(err["responseJSON"].message);
+                  else if (err["responseJSON"].Movement[0]) {
+                    showError(err["responseJSON"].Movement[0].errorMsg)
+                  }else{
+                    showError("Something went wrong. Please contact Administrator");
+                  }
+                }
+            })
+
 }
 
 setInitialState(initState) {
@@ -51,18 +140,6 @@ componentWillUpdate() {
     $('#employeeTable').dataTable().fnDestroy();
   }
 }
-
-  handleChangeTwoLevel() {
-    this.setState({
-        promotionSet:{
-            ...this.state.promotionSet,
-            [pName]:{
-                ...this.state.promotionSet[pName],
-                [name]:e.target.value
-            }
-        }
-    })
-  }
 
   componentDidUpdate(prevProps, prevState) {
       if (prevState.employees.length!=this.state.employees.length) {
@@ -90,13 +167,14 @@ componentWillUpdate() {
     }
     $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee Promotion");
 
-    var _state = {}, _this = this, count = 5;
+    var _state = {}, _this = this, count = 9;
     const checkCountAndCall = function(key, res) {
       _state[key] = res;
       count--;
       if(count == 0)
         _this.setInitialState(_state);
     }
+
 
     getDropdown("assignments_designation", function(res) {
       checkCountAndCall("designationList", res);
@@ -113,30 +191,41 @@ componentWillUpdate() {
     getDropdown("assignments_functionary", function(res) {
       checkCountAndCall("functionaryList", res);
     });
+    getDropdown("transferReason", function(res) {
+      checkCountAndCall("reasonList", res);
+    });
+    getDropdown("promotionBasis", function(res) {
+      checkCountAndCall("promotionList", res);
+    });
+    getDropdown("transferType", function(res) {
+      checkCountAndCall("transferList", res);
+    });
+    getDropdown("districtList", function(res) {
+      checkCountAndCall("districtList", res);
+    });
 
-
-    $('#effectiveDate, #promotionDate').datepicker({
+    $('#enquiryPassedDate, #effectiveFrom').datepicker({
         format: 'dd/mm/yyyy',
         autoclose:true,
         defaultDate: ""
     });
-    $('#effectiveDate').val("");
-    $('#promotionDate').val("");
-    $('#effectiveDate,#promotionDate ').on('changeDate', function(e) {
+    $('#enquiryPassedDate').val("");
+    $('#effectiveFrom').val("");
+    $('#enquiryPassedDate,#effectiveFrom ').on('changeDate', function(e) {
 
 
           _this.setState({
-                promotionSet: {
-                    ..._this.state.promotionSet,
-                    "effectiveDate":$("#effectiveDate").val(),
-                    "promotionDate":$("#promotionDate").val()
+                movement: {
+                    ..._this.state.movement,
+                    "enquiryPassedDate":$("#enquiryPassedDate").val(),
+                    "effectiveFrom":$("#effectiveFrom").val()
                 }
           });
-          if(_this.state.promotionSet.designationId&&_this.state.promotionSet.departmentId){
-            var _designation = _this.state.promotionSet.designationId;
-            var _department = _this.state.promotionSet.departmentId;
-            var _promotionDate = _this.state.promotionSet.promotionDate;
-              _this.vacantPositionFun(_department,_designation,_promotionDate);
+          if(_this.state.movement.designationAssigned&&_this.state.movement.departmentAssigned){
+            var _designation = _this.state.movement.designationAssigned;
+            var _department = _this.state.movement.departmentAssigned;
+            var _effectiveFrom = _this.state.movement.effectiveFrom;
+              _this.vacantPositionFun(_department,_designation,_effectiveFrom);
           }
 
     });
@@ -158,33 +247,49 @@ componentWillUpdate() {
           });
         }
         _this.setState({
-          promotionSet:{
-            ..._this.state.promotionSet,
-            employeeid: {
+          ..._this.state,
+            employee: {
               name: obj.name,
               code: obj.code,
               departmentId:obj.assignments[ind].department,
               designationId:obj.assignments[ind].designation,
               positionId:obj.assignments[ind].position
+            },
+            movement:{
+              ..._this.state.movement,
+              employeeId : obj.id,
+              currentAssignment:obj.assignments[ind].position
             }
-          }
+
         })
       }
     });
   }
 
-  vacantPositionFun(departmentId,designationId,promotionDate){
+  getUsersFun(departmentId,designationId){
+    var _this = this;
+    commonApiPost("hr-employee","employees","_search", {tenantId,departmentId, designationId}, function(err, res) {
+        if(res) {
+          _this.setState({
+              ..._this.state,
+              userList:res.Employee
+          })
+        }
+  })
+}
+
+  vacantPositionFun(departmentId,designationId,effectiveFrom){
     var _this = this;
     commonApiPost("hr-masters", "vacantpositions", "_search", {
         tenantId,
         departmentId: departmentId,
         designationId: designationId,
-        asOnDate: promotionDate
+        asOnDate: effectiveFrom
     }, function(err, res) {
         if (res) {
           _this.setState({
-              promotionSet:{
-                  ..._this.state.promotionSet,
+              movement:{
+                  ..._this.state.movement,
               },pNameList:res.Position
           })
         }
@@ -195,28 +300,96 @@ componentWillUpdate() {
   handleChange(e,name) {
     var _this = this;
     switch (name) {
-      case "designationId":
-        if(this.state.promotionSet.departmentId&&this.state.promotionSet.promotionDate){
-          var _department = this.state.promotionSet.departmentId;
-          var _date = this.state.promotionSet.promotionDate;
+      case "designationAssigned":
+        if(this.state.movement.departmentAssigned&&this.state.movement.effectiveFrom){
+          var _department = this.state.movement.departmentAssigned;
+          var _date = this.state.movement.effectiveFrom;
           _this.vacantPositionFun(_department,e.target.value,_date);
         }
         break;
-        case "departmentId":
-        if(this.state.promotionSet.designationId&&this.state.promotionSet.promotionDate){
-          var _designation = this.state.promotionSet.designationId;
-          var _date = this.state.promotionSet.promotionDate;
+        case "departmentAssigned":
+        if(this.state.movement.designationAssigned&&this.state.movement.effectiveFrom){
+          var _designation = this.state.movement.designationAssigned;
+          var _date = this.state.movement.effectiveFrom;
             _this.vacantPositionFun(e.target.value,_designation,_date);
         }
-          break;
+        break;
+        case "department":
+        if(this.state.movement.workflowDetails.designation){
+          var _designation = this.state.movement.workflowDetails.designation;
+          _this.getUsersFun(e.target.value,_designation);
+        }
+        break;
+        case "designation":
+        if(this.state.movement.workflowDetails.department){
+          var _department = this.state.movement.workflowDetails.department;
+          _this.getUsersFun(_department,e.target.value);
+        }
+        break;
+
     }
 
-        this.setState({
-            promotionSet:{
-                ...this.state.promotionSet,
-                [name]:e.target.value
-            }
-        })
+    if(name === "promotionBasis"){
+      this.setState({
+          movement:{
+              ...this.state.movement,
+              promotionBasis:{id:e.target.value}
+          }
+      })
+    }else if (name === "department") {
+
+      this.setState({
+          movement:{
+              ...this.state.movement,
+              workflowDetails:{
+                ...this.state.movement.workflowDetails,
+                department : e.target.value
+              }
+          }
+      })
+
+      // getCommonMasterById("hr-employee","employees", e.target.value, function(err, res) {
+      //           if(res && res.Employee && res.Employee[0] && res.Employee[0].userName) {
+      //             _this.setState({
+      //               revaluationSet: {
+      //                 ..._this.state.revaluationSet,
+      //                 reevaluatedBy: res.Employee[0].userName
+      //               }
+      //             })
+      //           }
+      //         })
+
+    }else if (name === "designation") {
+      this.setState({
+          movement:{
+              ...this.state.movement,
+              workflowDetails:{
+                ...this.state.movement.workflowDetails,
+                designation : e.target.value
+              }
+          }
+      })
+
+    }else if (name === "assignee") {
+      this.setState({
+          movement:{
+              ...this.state.movement,
+              workflowDetails:{
+                ...this.state.movement.workflowDetails,
+                assignee : e.target.value
+              }
+          }
+      })
+
+    }else {
+      this.setState({
+          movement:{
+              ...this.state.movement,
+              [name]:e.target.value
+          }
+      })
+    }
+
   }
 
   close() {
@@ -224,10 +397,12 @@ componentWillUpdate() {
   }
 
   render() {
-    let {handleChange,addOrUpdate,handleChangeTwoLevel,vacantPositionFun}=this;
-    let{ code,departmentId,designationId,name,promotionType,reason,district,positionId,
-        fund,functionary,effectiveDate,promotionDate,remark ,documents,employeeid,accepted,pName}=this.state.promotionSet;
-    let {isSearchClicked,employees,assignments_designation,assignments_department,assignments_position}=this.state;
+    let {handleChange,addOrUpdate}=this;
+    let _this = this;
+
+    let {employeeId, typeOfMovement, currentAssignment, transferType, promotionBasis, remarks, reason, effectiveFrom, enquiryPassedDate, transferedLocation,
+          departmentAssigned, designationAssigned, positionAssigned, fundAssigned, functionAssigned, employeeAcceptance, workflowDetails, tenantId} = this.state.movement
+    let {isSearchClicked,employee,assignments_designation,assignments_department,assignments_position,accepted}=this.state;
 
     const renderOption=function(list) {
         if(list)
@@ -240,6 +415,45 @@ componentWillUpdate() {
             })
         }
     }
+
+    const renderOptionForDesc=function(list) {
+        if(list)
+        {
+            return list.map((item, ind)=>
+            {
+                return (<option key={ind} value={typeof item == "object" ? item.id : item}>
+                        {typeof item == "object" ? item.description : item}
+                  </option>)
+            })
+        }
+    }
+    const renderOptionForUser=function(list) {
+        if(list)
+        {
+            return list.map((item, ind)=>
+            {
+              var positionId;
+              item.assignments.forEach(function(item) {
+                                  if(item.isPrimary)
+                                  {
+                                    positionId = item.position;
+                                  }
+                              });
+
+                return (<option key={ind} value={positionId}>
+                        {item.name}
+                  </option>)
+            })
+        }
+    }
+
+
+
+
+
+
+
+
 
 
     return (
@@ -258,8 +472,8 @@ componentWillUpdate() {
                         <label htmlFor="code">Employee Code  </label>
                       </div>
                       <div className="col-sm-6">
-                          <input type="text" name="code" id="code" value={employeeid.code}
-                          onChange={(e)=>{handleChange(e,"employeeid","code")}} disabled/>
+                          <input type="text" name="code" id="code" value={employee.code}
+                          onChange={(e)=>{handleChange(e,"employee","code")}} disabled/>
                       </div>
                   </div>
                 </div>
@@ -269,8 +483,8 @@ componentWillUpdate() {
                           <label htmlFor=""> Employee Name  </label>
                         </div>
                         <div className="col-sm-6">
-                            <input type="text" name="name" id="name" value= {employeeid.name}
-                                onChange={(e)=>{handleChangeTwoLevel(e,"employeeid","name")}} disabled/>
+                            <input type="text" name="name" id="name" value= {employee.name}
+                                onChange={(e)=>{handleChange(e,"employee","name")}} disabled/>
                         </div>
                     </div>
                   </div>
@@ -283,8 +497,8 @@ componentWillUpdate() {
                     </div>
                     <div className="col-sm-6">
                       <div className="styled-select">
-                        <select name="departmentId" value={employeeid.departmentId}
-                          onChange={(e)=>{  handleChangeTwoLevel(e,"employeeid","departmentId")}} disabled>
+                        <select name="departmentId" value={employee.departmentId}
+                          onChange={(e)=>{  handleChange(e,"employee","departmentId")}} disabled>
                           <option value="">Select department</option>
                           {renderOption(this.state.departmentList)}
                        </select>
@@ -299,8 +513,8 @@ componentWillUpdate() {
                       </div>
                       <div className="col-sm-6">
                         <div className="styled-select">
-                            <select name="designationId" value={employeeid.designationId}
-                              onChange={(e)=>{ handleChange(e,"employeeid","designationId")}} disabled>
+                            <select name="designationId" value={employee.designationId}
+                              onChange={(e)=>{ handleChange(e,"employee","designationId")}} disabled>
                             <option value="">Select Designation</option>
                             {renderOption(this.state.designationList)}
                            </select>
@@ -317,7 +531,7 @@ componentWillUpdate() {
                       </div>
                       <div className="col-sm-6">
                         <div className="styled-select">
-                            <select name="positionId" value={employeeid.positionId}
+                            <select name="positionId" value={employee.positionId}
                               onChange={(e)=>{ handleChange(e,"employeeid","positionId")}} disabled>
                             <option value="">Select Position</option>
                             {renderOption(this.state.positionList)}
@@ -343,8 +557,8 @@ componentWillUpdate() {
                           </div>
                           <div className="col-sm-6">
                             <div className="styled-select">
-                              <select id="department" name="departmentId" value={departmentId}
-                                onChange={(e)=>{  handleChange(e,"departmentId")}}required>
+                              <select id="department" name="departmentAssigned" value={departmentAssigned}
+                                onChange={(e)=>{  handleChange(e,"departmentAssigned")}}required>
                                 <option value="">Select department</option>
                                 {renderOption(this.state.departmentList)}
                              </select>
@@ -359,8 +573,8 @@ componentWillUpdate() {
                             </div>
                             <div className="col-sm-6">
                               <div className="styled-select">
-                                  <select id="designation" name="designationId" value={designationId}
-                                      onChange={(e)=>{handleChange(e,"designationId")}} required>
+                                  <select id="designation" name="designationAssigned" value={designationAssigned}
+                                      onChange={(e)=>{handleChange(e,"designationAssigned")}} required>
                                   <option value="">Select Designation</option>
                                   {renderOption(this.state.designationList)}
                                  </select>
@@ -378,8 +592,8 @@ componentWillUpdate() {
                             <div className="col-sm-6">
                             <div className="text-no-ui">
                             <span><i className="glyphicon glyphicon-calendar"></i></span>
-                            <input type="text" id="promotionDate" name="promotionDate" value="promotionDate" value={promotionDate}
-                            onChange={(e)=>{handleChange(e,"promotionDate")}} required/>
+                            <input type="text" id="effectiveFrom" name="effectiveFrom" value="effectiveFrom" value={effectiveFrom}
+                            onChange={(e)=>{handleChange(e,"effectiveFrom")}} required/>
 
                             </div>
                         </div>
@@ -392,8 +606,8 @@ componentWillUpdate() {
                           </div>
                           <div className="col-sm-6">
                           <div className="styled-select">
-                            <select id="pName" name="pName" value={pName}
-                            onChange={(e)=>{handleChange(e,"pName")}} required>
+                            <select id="positionAssigned" name="positionAssigned" value={positionAssigned}
+                            onChange={(e)=>{handleChange(e,"positionAssigned")}} required>
                               <option value="">Select Promotion Position</option>
                               {renderOption(this.state.pNameList)}
                            </select>
@@ -411,8 +625,8 @@ componentWillUpdate() {
                       <div className="col-sm-6">
                       <div className="text-no-ui">
                       <span><i className="glyphicon glyphicon-calendar"></i></span>
-                      <input type="text" id="effectiveDate" name="effectiveDate" value="effectiveDate" value={effectiveDate}
-                      onChange={(e)=>{handleChange(e,"effectiveDate")}} />
+                      <input type="text" id="enquiryPassedDate" name="enquiryPassedDate" value="enquiryPassedDate" value={enquiryPassedDate}
+                      onChange={(e)=>{handleChange(e,"enquiryPassedDate")}} />
 
                       </div>
                   </div>
@@ -425,10 +639,10 @@ componentWillUpdate() {
                       </div>
                       <div className="col-sm-6">
                         <div className="styled-select">
-                          <select id="promotionType" name="promotionType" value={promotionType}
-                          onChange={(e)=>{handleChange(e,"promotionType")}} required>
+                          <select id="promotionBasis" name="promotionBasis" value={promotionBasis.id}
+                          onChange={(e)=>{handleChange(e,"promotionBasis")}} required>
                             <option value="">Select Promotion Basis</option>
-                            {renderOption(this.state.promotionList)}
+                            {renderOptionForDesc(this.state.promotionList)}
                          </select>
                          </div>
                       </div>
@@ -443,8 +657,8 @@ componentWillUpdate() {
                             </div>
                             <div className="col-sm-6">
                               <div className="styled-select">
-                                <select id="fund" name="fund" value={fund}
-                                    onChange={(e)=>{handleChange(e,"fund")}}>
+                                <select id="fundAssigned" name="fundAssigned" value={fundAssigned}
+                                    onChange={(e)=>{handleChange(e,"fundAssigned")}}>
                                   <option value="">Select Fund</option>
                                   {renderOption(this.state.fundList)}
                                </select>
@@ -459,8 +673,8 @@ componentWillUpdate() {
                               </div>
                               <div className="col-sm-6">
                                 <div className="styled-select">
-                                    <select id="functionary" name="functionary" value={functionary}
-                                      onChange={(e)=>{  handleChange(e,"functionary") }}>
+                                    <select id="functionAssigned" name="functionAssigned" value={functionAssigned}
+                                      onChange={(e)=>{  handleChange(e,"functionAssigned") }}>
                                     <option value="">Select functionary</option>
                                     {renderOption(this.state.functionaryList)}
                                    </select>
@@ -478,8 +692,8 @@ componentWillUpdate() {
                             <label htmlFor="remark">Remark <span>*</span></label>
                         </div>
                         <div className="col-sm-6">
-                        <textarea rows="4" cols="50" id="remark" name="remark" value={remark}
-                        onChange={(e)=>{handleChange(e,"remark")}}required></textarea>
+                        <textarea rows="4" cols="50" id="remarks" name="remarks" value={remarks}
+                        onChange={(e)=>{handleChange(e,"remarks")}}required></textarea>
                         </div>
                     </div>
                 </div>
@@ -516,6 +730,73 @@ componentWillUpdate() {
                   </div>
               </div>*/}
           </div>
+
+          <br/>
+          <div className="form-section">
+              <div className="row">
+                <div className="col-md-8 col-sm-8">
+                  <h3 className="categoryType">Workflow Details </h3>
+                </div>
+              </div>
+          <div className="row">
+            <div className="col-sm-6">
+                <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label htmlFor="">Department <span>*</span></label>
+                    </div>
+                    <div className="col-sm-6">
+                      <div className="styled-select">
+                          <select id="department" name="department" value={workflowDetails.department}
+                               onChange={(e)=>{  handleChange(e,"department") }}>
+                               <option value="">Select Department</option>
+                               {renderOption(this.state.departmentList)}
+                          </select>
+                       </div>
+                    </div>
+                </div>
+              </div>
+              <div className="col-sm-6">
+                  <div className="row">
+                      <div className="col-sm-6 label-text">
+                        <label htmlFor="">Designation <span>*</span></label>
+                      </div>
+                      <div className="col-sm-6">
+                        <div className="styled-select">
+                            <select id="designation" name="designation" value={workflowDetails.designation}
+                                onChange={(e)=>{  handleChange(e,"designation") }}>
+                                <option value="">Select Designation</option>
+                                {renderOption(this.state.designationList)}//TODO: get designation based on departments
+                           </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-sm-6">
+                    <div className="row">
+                        <div className="col-sm-6 label-text">
+                          <label htmlFor="">User Name <span>*</span></label>
+                        </div>
+                        <div className="col-sm-6">
+                          <div className="styled-select">
+                            <select id="assignee" name="assignee" value={workflowDetails.assignee}
+                              onChange={(e)=>{  handleChange(e,"assignee") }}required>
+                              <option value="">Select User</option>
+                              {renderOptionForUser(this.state.userList)}
+                           </select>
+                           </div>
+                        </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+
+
+
+
+
+
           <br/>
             <div className="text-center">
               <button id="sub" type="submit"  className="btn btn-submit">Create</button>&nbsp;&nbsp;

@@ -99,10 +99,11 @@ class EmployeeReport extends React.Component {
 
   searchEmployee (e) {
     e.preventDefault();
+    $('#employeeTable').DataTable().destroy();
     var _this = this
     var result;
     try {
-        result = commonApiPost("hr-employee", "employees", "_baseregisterreport", {..._this.state.searchSet, tenantId,pageSize:500},function(err, res) {
+        result = commonApiPost("hr-employee", "employees", "_baseregisterreport", {..._this.state.searchSet, tenantId,pageSize:500,objectName:'Employee Master'},function(err, res) {
           if(res && res.Employee) {
             _this.setState({
               ..._this.state,
@@ -302,7 +303,7 @@ class EmployeeReport extends React.Component {
                                 </div>
                                 <div className="col-sm-6">
                                   <div className="styled-select">
-                                    <select id="recruitmentTypes" value={recruitmentType} onChange={(e) => {handleChange(e, "recruitmentTypes")}}>
+                                    <select id="recruitmentType" value={recruitmentType} onChange={(e) => {handleChange(e, "recruitmentType")}}>
                                       <option value="">Select Recruitment Types</option>
                                         {renderOptions(recruitmentTypes)}
                                     </select>
@@ -320,6 +321,7 @@ class EmployeeReport extends React.Component {
                     </fieldset>
                 </form>
             </div>
+            <br/>
             {showTable()}
         </div>
     );

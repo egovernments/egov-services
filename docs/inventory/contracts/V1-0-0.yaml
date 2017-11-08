@@ -4155,7 +4155,7 @@ definitions:
       properties:
         RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        transferInwards:
+        priceLists:
           description: Used for search result and create only
           type:  array
           items:
@@ -4166,7 +4166,7 @@ definitions:
       properties:
         ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        transferInwards:
+        priceLists:
           description: Used for search result and create only
           type:  array
           items:

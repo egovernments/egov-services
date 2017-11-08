@@ -218,103 +218,6 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /indentnotes/_search:
-      post:
-        summary: Get the list of Indent Notes.
-        description: This API is used to search the indent notes raised in the system. There are 2 types of indents i.e., Indent Note (that is )raised by individual to request material(s) from store) and Transfer Indent(raised by store to request material(s) from other store).
-        tags: 
-          - Indent Note
-        parameters:
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: ids
-            type: array
-            items: 
-             type: string
-            in: query
-            maxItems: 50
-            description: comma seperated list of Ids.
-          - name: indentNumber
-            type: string
-            in: query
-            description: |
-              indent number of the Indent Note.
-          - name: indentStore
-            type: integer
-            format: int64
-            in: query
-            description: |
-              indent store of the Indent Note.
-          - name: inventoryType
-            type: string
-            in: query
-            description: |
-              inventory Type of the Indent Note.
-          - name: stateId
-            type: integer
-            format: int64
-            in: query
-            description: |
-              state id of the Indent Note
-          - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/pageNumber"
-          - $ref: "#/parameters/sortProperty"
-        responses:
-          200:
-            description: Indent Note retrieved Successfully
-            schema:
-              $ref: '#/definitions/IndentNoteResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /indentnotes/_create:
-      post:
-        summary: Create new Indent Note.
-        description: This API is invoked when a Indent Note is raised by an individual.
-        tags: 
-          - Indent Note
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: indentNoteRequest
-            in: body
-            description: Create new Indent Notes
-            schema:
-              $ref: '#/definitions/IndentNoteRequest'
-        responses:
-          200:
-            description: Indent Note created Successfully
-            schema:
-              $ref: '#/definitions/IndentNoteResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /indentnotes/_update:
-      post:
-        summary: Update Indent Notes.
-        description: This API is invoked during workflow approval/rejection and modify the indent note details.
-        tags: 
-          - Indent Note
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: indentNoteRequest
-            in: body
-            description: common Request info
-            schema:
-              $ref: '#/definitions/IndentNoteRequest'
-        responses:
-          200:
-            description: Indent Note updated Successfully.
-            schema:
-              $ref: '#/definitions/IndentNoteResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    
     /transferindentnotes/_search:
       post:
         summary: Get the list of transfer indent notes.
@@ -2325,31 +2228,6 @@ definitions:
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
           
-    IndentNoteRequest:
-      description: Contract class for web request. Array of Indent Note items are used in case of create or update
-      properties:
-        RequestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        indentNotes:
-          description: Used for search result and create only
-          type:  array
-          items:
-            $ref: '#/definitions/Indent'
-            
-    IndentNoteResponse:
-      description: Contract class for web response. Array of Indent Note items  are used in case of search ,create or update request. 
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        indentNotes:
-          description: Used for search result and create only
-          type:  array
-          items:
-            $ref: '#/definitions/Indent'
-        page:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
-          
-    
     TransferIndentNoteRequest:
       description: Contract class for web request. Array of Indent items  are used in case of create or update
       properties:
@@ -2474,7 +2352,7 @@ definitions:
         purchaseOrderDetails:
           type:  array
           items:
-            $ref: "#/definitions/PurchaseOrderDetails"
+            $ref: "#/definitions/PurchaseOrderDetail"
         fileStoreId:
           type: string
           description: |
@@ -2516,7 +2394,7 @@ definitions:
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
           
-    PurchaseOrderDetails:
+    PurchaseOrderDetail:
       type: object
       description: |
         This object holds the purchase material information.  
@@ -2566,14 +2444,14 @@ definitions:
         purchaseIndentDetails:
           type:  array
           items:
-            $ref: "#/definitions/PurchaseIndentDetails"    
+            $ref: "#/definitions/PurchaseIndentDetail"    
       required:
       - material
       - uom
       - orderQuantity
       - unitPrice
 
-    PurchaseIndentDetails:
+    PurchaseIndentDetail:
       type: object
       description: |
           Purchase order and associated indent Detail mapping.
@@ -2747,9 +2625,6 @@ definitions:
           description: Tenant id of the Material Receipt Header
           maxLength: 128
           minLength: 4  
-        mrnNumber:
-          $ref: '#/definitions/MaterialReceipt'
-          description: Unique number to identify the maretial receipt note.
         material:
           $ref: "#/definitions/Material"
         uom:
@@ -2800,7 +2675,6 @@ definitions:
           items:
             $ref: '#/definitions/MaterialReceiptDetailAddnlinfo'  
       required:
-        - mrnNumber
         - id
         - receivedQty
         
@@ -2817,8 +2691,6 @@ definitions:
           description: Tenant id of the Material Receipt Header
           maxLength: 128
           minLength: 4  
-        materialReceiptDetail:
-          $ref: "#/definitions/MaterialReceiptDetail"
         lotNo:
           type: string
           description: LOT number for the materials that are of LOT control.
@@ -3009,8 +2881,6 @@ definitions:
           description: Tenant id of the Material Issue Details
           maxLength: 128
           minLength: 4
-        materialIssue:
-          $ref: "#/definitions/MaterialIssue"
         indentDetail:
           description: >-
             Applicable for Indent Issue. Balance quantity to be issued of the IndentDetails. 
@@ -3039,8 +2909,6 @@ definitions:
           description: |
             description of the Material Issue Detail.
       required:
-      - materialIssue
-      - indentDetail
       - quantityIssued
       
     TransferInwardRequest:
@@ -4242,4 +4110,5 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
+
 

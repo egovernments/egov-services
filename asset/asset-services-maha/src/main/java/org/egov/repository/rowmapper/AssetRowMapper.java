@@ -105,6 +105,8 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                     e.printStackTrace();
                 } catch (final IOException e) {
                     e.printStackTrace();
+                } catch (Exception e) {
+                	e.printStackTrace();
                 }
                 asset.setTitleDocumentsAvalable(tda);
                 

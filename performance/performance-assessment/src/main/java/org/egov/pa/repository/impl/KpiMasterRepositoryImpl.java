@@ -123,6 +123,7 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
     	// List<DepartmentKpiList> deptWiseKpiList = new ArrayList<>();
     	if(null != kpiList && kpiList.size() > 0) { 
     		arrangeDocsToKpiList(kpiList, mapper.docMap);
+    		arrangeDeptToKpiList(kpiList, deptList);
     		// arrangeListDepartmentWise(kpiList, deptList, deptWiseKpiList);
     	}
     	return kpiList; 
@@ -150,6 +151,16 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
     	}
     }
 	
+	private void arrangeDeptToKpiList(List<KPI> kpiList, List<Department> deptList) {
+		Map<Long, Department> deptMap = new HashMap<>();
+		if (null != deptList && deptList.size() > 0) {
+			sortDepartmentToMap(deptList, deptMap);
+			for (int i = 0; i < kpiList.size(); i++) {
+				kpiList.get(i).setDepartment(deptMap.get(kpiList.get(i).getDepartmentId())); 
+			}
+		}
+	}
+	
 	/*private void arrangeListDepartmentWise(List<KPI> kpiList, List<Department> deptList, List<DepartmentKpiList> deptWiseList) { 
 		Map<Long, Department> deptMap = new HashMap<>(); 
 		sortDepartmentToMap(deptList, deptMap);
@@ -173,11 +184,11 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
     	for(KPI kpi : kpiList) kpi.setDepartment(null); 
     }*/
 	
-	/*private void sortDepartmentToMap(List<Department> deptList, Map<Long, Department> deptMap) { 
+	private void sortDepartmentToMap(List<Department> deptList, Map<Long, Department> deptMap) { 
 		for(Department dept : deptList) { 
 			deptMap.put(dept.getId(), dept); 
 		}
-	}*/
+	}
 
 	@Override
 	public void persistKpiTarget(KpiTargetList kpiTargetList) {

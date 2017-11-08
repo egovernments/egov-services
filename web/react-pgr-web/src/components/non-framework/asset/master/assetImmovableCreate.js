@@ -1048,11 +1048,11 @@ delete formData.Asset.assetAttributesCheck;
                  if (spec[`asset.${self.state.action}`].groups[q].fields[l].name == "WarrantyExpiryDate") {
                    if (e.target.value==false) {
                      spec[`asset.${self.state.action}`].groups[q].fields[l].isRequired = false;
-                     self.props.delRequiredFields("Asset.warrantyExpiryDate");
+                     self.props.delRequiredFields(["Asset.warrantyExpiryDate"]);
                      self.props.setMockData(JSON.parse(JSON.stringify(spec)));
                    } else if (e.target.value==true){
                      spec[`asset.${self.state.action}`].groups[q].fields[l].isRequired = true;
-                     self.props.addRequiredFields("Asset.warrantyExpiryDate");
+                     self.props.addRequiredFields(["Asset.warrantyExpiryDate"]);
                      self.props.setMockData(JSON.parse(JSON.stringify(spec)));
                    }
                  }

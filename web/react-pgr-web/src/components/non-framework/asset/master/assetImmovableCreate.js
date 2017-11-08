@@ -1038,18 +1038,23 @@ delete formData.Asset.assetAttributesCheck;
 
        if (property=="Asset.warrantyAvailable") {
          let spec = self.props.mockData;
-
+          console.log(spec);
+          console.log(self.state.action);
            for (var q = 0; q < spec[`asset.${self.state.action}`].groups.length; q++) {
+             console.log("fire1");
              if (spec[`asset.${self.state.action}`].groups[q].name == "AssetField") {
+               console.log("fire2");
                for (var l = 0; l < spec[`asset.${self.state.action}`].groups[q].fields.length; l++) {
-                 if (e.target.value==false) {
-                   spec[`asset.${self.state.action}`].groups[q].fields[l].isRequired = false;
-                   self.props.delRequiredFields("Asset.warrantyExpiryDate");
-                   self.props.setMockData(JSON.parse(JSON.stringify(spec)));
-                 } else {
-                   spec[`asset.${self.state.action}`].groups[q].fields[l].isRequired = true;
-                   self.props.addRequiredFields("Asset.warrantyExpiryDate");
-                   self.props.setMockData(JSON.parse(JSON.stringify(spec)));
+                 if (spec[`asset.${self.state.action}`].groups[q].fields[l].name == "WarrantyExpiryDate") {
+                   if (e.target.value==false) {
+                     spec[`asset.${self.state.action}`].groups[q].fields[l].isRequired = false;
+                     self.props.delRequiredFields("Asset.warrantyExpiryDate");
+                     self.props.setMockData(JSON.parse(JSON.stringify(spec)));
+                   } else if (e.target.value==true){
+                     spec[`asset.${self.state.action}`].groups[q].fields[l].isRequired = true;
+                     self.props.addRequiredFields("Asset.warrantyExpiryDate");
+                     self.props.setMockData(JSON.parse(JSON.stringify(spec)));
+                   }
                  }
              }
            }
@@ -1397,7 +1402,7 @@ delete formData.Asset.assetAttributesCheck;
             							errorStyle={{"float":"left"}}
             							fullWidth={true}
             							hintText="Please Select"
-            							floatingLabelText={<span>{translate("ac.create.Asset.account.code")} <span style={{"color": "#FF0000"}}>{ " *" }</span></span>}
+            							floatingLabelText={<span>{translate("ac.create.Asset.account.code")} <span style={{"color": "#FF0000"}}></span></span>}
                           value={this.getVal('Asset.assetAccount')}
             							onChange={(event, key, value) =>{
             								this.handleChange({target: {value: value}},'Asset.assetAccount', true ? true : false, '', false, false, false, false)
@@ -1419,7 +1424,7 @@ delete formData.Asset.assetAttributesCheck;
             							errorStyle={{"float":"left"}}
             							fullWidth={true}
             							hintText="Please Select"
-            							floatingLabelText={<span>{translate("ac.create.Accumulated.Depreciation.Account")} <span style={{"color": "#FF0000"}}>{ " *" }</span></span>}
+            							floatingLabelText={<span>{translate("ac.create.Accumulated.Depreciation.Account")} <span style={{"color": "#FF0000"}}></span></span>}
                           value={this.getVal('Asset.accumulatedDepreciationAccount')}
             							onChange={(event, key, value) =>{
             								this.handleChange({target: {value: value}},'Asset.accumulatedDepreciationAccount', true ? true : false, '', false, false, false, false)
@@ -1441,7 +1446,7 @@ delete formData.Asset.assetAttributesCheck;
                             errorStyle={{"float":"left"}}
                             fullWidth={true}
                             hintText="Please Select"
-                            floatingLabelText={<span>{translate("ac.create.Revaluation.Reserve.Account")} <span style={{"color": "#FF0000"}}>{ " *" }</span></span>}
+                            floatingLabelText={<span>{translate("ac.create.Revaluation.Reserve.Account")} <span style={{"color": "#FF0000"}}></span></span>}
                             value={this.getVal('Asset.revaluationReserveAccount')}
                             onChange={(event, key, value) =>{
                               this.handleChange({target: {value: value}},'Asset.revaluationReserveAccount', true ? true : false, '', false, false, false, false)
@@ -1463,7 +1468,7 @@ delete formData.Asset.assetAttributesCheck;
                           errorStyle={{"float":"left"}}
                           fullWidth={true}
                           hintText="Please Select"
-                          floatingLabelText={<span>{translate("ac.create.Depreciation.Expenses.Account")} <span style={{"color": "#FF0000"}}>{ " *" }</span></span>}
+                          floatingLabelText={<span>{translate("ac.create.Depreciation.Expenses.Account")} <span style={{"color": "#FF0000"}}></span></span>}
                           value={this.getVal('Asset.depreciationExpenseAccount')}
                           onChange={(event, key, value) =>{
                             this.handleChange({target: {value: value}},'Asset.depreciationExpenseAccount', true ? true : false, '', false, false, false, false)

@@ -53,7 +53,7 @@ public class EstimateTemplateValidator {
             }
             for(EstimateTemplateActivities estimateTemplateActivities : estimateTemplate.getEstimateTemplateActivities()) {
                 if (estimateTemplateActivities.getScheduleOfRate() != null && estimateTemplateActivities.getScheduleOfRate().getCode() != null) {
-                    ScheduleOfRate scheduleOfRate = scheduleOfRateService.searchByCode(estimateTemplateActivities.getScheduleOfRate().getCode(), estimateTemplateActivities.getTenantId());
+                    ScheduleOfRate scheduleOfRate = scheduleOfRateService.getbyId(estimateTemplateActivities.getScheduleOfRate().getCode(), estimateTemplateActivities.getTenantId());
                     mdmsResponse = mdmsRepository.getByCriteria(estimateTemplate.getTenantId(), CommonConstants.MODULENAME_WORKS,
                             CommonConstants.MASTERNAME_SCHEDULE_CATEGORY, "code", estimateTemplateActivities.getScheduleOfRate().getCode(),
                             estimateTemplateRequest.getRequestInfo());

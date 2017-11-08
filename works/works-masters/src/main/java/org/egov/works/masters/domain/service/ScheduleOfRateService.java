@@ -61,8 +61,8 @@ public class ScheduleOfRateService {
         return scheduleOfRateRepository.getScheduleOfRateByCriteria(scheduleOfRateSearchCriteria);
     }
 
-    public ScheduleOfRate searchByCode(String code, String tenantId) {
-        return scheduleOfRateRepository.getbyCode(code, tenantId);
+    public ScheduleOfRate getbyId(String id, String tenantId) {
+        return scheduleOfRateRepository.getbyId(id, tenantId);
     }
 
 }

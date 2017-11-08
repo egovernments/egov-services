@@ -7,11 +7,12 @@
          "tenantId":"mh",
          "code":"STORE1",
          "name":"Fake Store Name 1",
-         "department":{
-            "id":1,
-            "code":"DEPT1",
-            "name":"Fake Department 1",
-            "tenantId":"mh"            
+         "department":{  
+            "id":"18",
+            "name":"Store Department",
+            "code":"SD",
+            "active":"true",
+            "tenantId":"mh"
          },         
          "description":"Fake Store Description 1",
          "centralStore":false,
@@ -26,10 +27,11 @@
          "tenantId":"mh",
          "code":"STORE2",
          "name":"Fake Store Name 2",
-         "department":{
-            "id":2,
-            "code":"DEPT2",
-            "name":"Fake Department 2",
+         "department":{  
+            "id":"18",
+            "name":"Store Department",
+            "code":"SD",
+            "active":"true",
             "tenantId":"mh"
          },         
          "description":"Fake Store Description 2",
@@ -45,13 +47,13 @@
          "tenantId":"mh",
          "code":"STORE3",
          "name":"Fake Store Name 3",
-         "department":{
-            "id":3,
-            "code":"DEPT3",
-            "name":"Fake Department 3",
+         "department":{  
+            "id":"13",
+            "name":"Light Department",
+            "code":"LT",
+            "active":"true",
             "tenantId":"mh"
-
-         },         
+         },      
          "description":"Fake Store Description 3",
          "centralStore":true,
          "billingAddress":"Fake Store Billing Address 3",

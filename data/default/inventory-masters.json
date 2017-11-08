@@ -8,9 +8,10 @@
          "code":"STORE1",
          "name":"Fake Store Name 1",
          "department":{  
-            "id":1,
-            "code":"DEPT1",
-            "name":"Fake Department 1",
+            "id":"18",
+            "name":"Store Department",
+            "code":"SD",
+            "active":"true",
             "tenantId":"default"
          },
          "description":"Fake Store Description 1",
@@ -27,9 +28,10 @@
          "code":"STORE2",
          "name":"Fake Store Name 2",
          "department":{  
-            "id":2,
-            "code":"DEPT2",
-            "name":"Fake Department 2",
+            "id":"18",
+            "name":"Store Department",
+            "code":"SD",
+            "active":"true",
             "tenantId":"default"
          },
          "description":"Fake Store Description 2",
@@ -46,9 +48,10 @@
          "code":"STORE3",
          "name":"Fake Store Name 3",
          "department":{  
-            "id":3,
-            "code":"DEPT3",
-            "name":"Fake Department 3",
+            "id":"13",
+            "name":"Light Department",
+            "code":"LT",
+            "active":"true",
             "tenantId":"default"
          },
          "description":"Fake Store Description 3",

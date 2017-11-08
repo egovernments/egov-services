@@ -427,7 +427,13 @@ class Report extends Component {
   
     //Check if documents, upload and get fileStoreId
     let formdocumentData = formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName];
+    let documentPath = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].documentsPath;
+
+
     formdocumentData = formdocumentData && formdocumentData.length &&  formdocumentData[0] || formdocumentData ;
+    if(documentPath){
+      formdocumentData=_.get(formData,documentPath);
+    }
 
     if(formdocumentData["documents"] && formdocumentData["documents"].length) {
       let documents = [...formdocumentData["documents"]];

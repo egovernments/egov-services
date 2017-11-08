@@ -18,8 +18,8 @@ renderTimePicker = (item) => {
 						inputStyle={{"color": "#5F5C57"}}
 						floatingLabelFixed={true}
 						disabled={item.isDisabled}
-						hintText="24hr Format"
-						format="24hr"
+						hintText="12hr Format"
+						format="ampm"
 						floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
 						errorText={this.props.fieldErrors[item.jsonPath]}
                         value={new Date('2017','12','1',this.props.getVal(item.jsonPath).split(':')[0],this.props.getVal(item.jsonPath).split(':')[1])}//this.props.getVal(item.jsonPath)}

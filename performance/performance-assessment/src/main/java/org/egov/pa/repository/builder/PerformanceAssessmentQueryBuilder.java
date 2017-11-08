@@ -150,7 +150,8 @@ public class PerformanceAssessmentQueryBuilder {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addKpiMasterWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final KPIGetRequest kpiGetRequest) {
-        if (null == kpiGetRequest.getKpiCode() && null == kpiGetRequest.getKpiName())
+        if (null == kpiGetRequest.getKpiCode() && null == kpiGetRequest.getKpiName() 
+        		&& null == kpiGetRequest.getDepartmentId())
             return;
 
         selectQuery.append(" AND ");
@@ -166,6 +167,18 @@ public class PerformanceAssessmentQueryBuilder {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" master.name = ? ");
             preparedStatementValues.add(kpiGetRequest.getKpiName());
+        }
+        
+        if (StringUtils.isNotBlank(kpiGetRequest.getTenantId())) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" master.tenantid = ? ");
+            preparedStatementValues.add(kpiGetRequest.getTenantId());
+        }
+        
+        if (null != kpiGetRequest.getDepartmentId() && kpiGetRequest.getDepartmentId() > 0) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" master.department = ? ");
+            preparedStatementValues.add(kpiGetRequest.getDepartmentId());
         }
     }
     

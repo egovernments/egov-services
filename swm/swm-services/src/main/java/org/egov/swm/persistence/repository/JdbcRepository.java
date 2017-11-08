@@ -103,7 +103,7 @@ public abstract class JdbcRepository {
 				+ " where tenantId=:tenantId and " + fieldName + "=:fieldValue ");
 
 		if (uniqueFieldValue != null) {
-			uniqueQuery.append(" and " + uniqueFieldName + ":=uniqueFieldValue ");
+			uniqueQuery.append(" and " + uniqueFieldName + "=:uniqueFieldValue");
 			paramValues.put("uniqueFieldValue", uniqueFieldValue);
 		}
 

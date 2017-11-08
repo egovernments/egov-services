@@ -496,7 +496,7 @@ class assetImmovableCreate extends Component {
           customSpecs[catId] = customFieldsArray;
         }
         depericiationValue[catId] = response.MdmsRes.ASSET.AssetCategory[i].depreciationRate;
-        cateoryObject[catId] = response.MdmsRes.ASSET.AssetCategory[i];
+        cateoryObject[catId] = response.MdmsRes.ASSET.AssetCategory[i]; 
         self.setState({
             customFieldsGen: customSpecs,
             depericiationValue,

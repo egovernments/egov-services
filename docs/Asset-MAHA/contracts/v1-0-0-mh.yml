@@ -57,6 +57,12 @@ paths:
           format: varchar
         - name: assetCategory
           in: query
+          description: Asset Category id of the parent category to which subcategory belongs.
+          required: false
+          type: integer
+          format: int64
+        - name: assetSubCategory
+          in: query
           description: Asset Category id.
           required: false
           type: integer
@@ -64,6 +70,30 @@ paths:
         - name: department
           in: query
           description: Department id of the Asset.
+          required: false
+          type: integer
+          format: int64
+        - name: orignalValueFrom
+          in: query
+          description: min amount of asset original value, all the assets having origanl value above this value will be fetched.
+          required: false
+          type: number
+          format: bigdecimal
+        - name: orignalValueTo
+          in: query
+          description: max amount of asset original value, all the assets having origanl value lower this value will be fetched.
+          required: false
+          type: number
+          format: bigdecimal
+        - name: assetCreatedFrom
+          in: query
+          description: min value of asset created date, all the assets created after this date will be fetched .
+          required: false
+          type: integer
+          format: int64
+        - name: assetCreatedTo
+          in: query
+          description: max value of asset created date, all the assets created before this date will be fetched.
           required: false
           type: integer
           format: int64
@@ -894,14 +924,7 @@ definitions:
       assetCategory:
         $ref: '#/definitions/AssetCategory'
       modeOfAcquisition:
-        type: string
-        description: asset mode of acquistion enumeration .
-        enum:
-          - ACQUIRED
-          - CONSTRUCTION
-          - PURCHASE
-          - TENDER
-          - DONATION
+        $ref: '#/definitions/ModeOfAcquisition'
       status:
         type: string
         description: asset status from assetstatus master for Object name "Asset Master".
@@ -978,10 +1001,10 @@ definitions:
         description: The date asset is been registered
       landDetails:
         type: array
-        description: multiple rows can be specified for each asset 
+        description: multiple rows can be specified for each asset
         items:
           $ref: '#/definitions/LandDetails'
-       
+
     required:
       - name
       - departmentCode
@@ -994,8 +1017,8 @@ definitions:
       - anticipatedLife
       - acquisitionDate
       - address
-    
-      
+
+
   Attributes:
     type: object
     description: >-
@@ -1035,6 +1058,29 @@ definitions:
         type: string
         description: code of the landdetails
         format: varchar
+  ModeOfAcquisition:
+    type: object
+    description: modeOfAcquisition defined master type ModeOfAcquisiton are shown in the drop down.
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: id fo the object
+      tenantId:
+        type: string
+        description: tenantid of the modeOfAcquisition
+        format: varchar
+      name:
+        type: string
+        description: name of the modeOfAcquisition
+        format: varchar
+      code:
+        type: string
+        description: code of the modeOfAcquisition
+        format: varchar
+      isActive:
+        type: boolean
+        description: states whether the value is active or not.
   AssetCategory:
     type: object
     description: Categories defined under asset category type are shown in the drop down.
@@ -1790,7 +1836,7 @@ definitions:
               type: array
               items:
                 type: string
-            
+
 parameters:
   sortAssets:
     name: sort

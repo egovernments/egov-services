@@ -508,4 +508,7 @@ public class PropertiesManager {
 	
 	@Value("${egov.lcms.evidence.error.msg}")
 	private String evidenceResponseErrorMsg;
+	
+	@Value("${egov.lcms.lastmodifiedtime}")
+	private String lastModifiedTime;
 }

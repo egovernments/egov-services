@@ -79,11 +79,11 @@ public class OpinionQueryBuilder {
 	private void addOrderByClause(final StringBuilder selectQuery, final List<Object> preparedStatementValues,
 			final OpinionSearchCriteria opinionSearchCriteria) {
 		String sort = opinionSearchCriteria.getSort();
-		selectQuery.append(" ORDER BY ?");
+		selectQuery.append(" ORDER BY ? DESC");
 		if (sort != null && !sort.isEmpty()) {
 			preparedStatementValues.add(sort);
 		} else {
-			preparedStatementValues.add(propertiesManager.getSortCode());
+			preparedStatementValues.add(propertiesManager.getLastModifiedTime());
 		}
 	}
 

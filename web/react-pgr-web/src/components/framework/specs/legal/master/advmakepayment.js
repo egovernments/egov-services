@@ -116,7 +116,7 @@ var dat = {
             name: "instrumentNumber",
             jsonPath: "advocatePayments[0].instrumentNumber",
             label: "advocatepayment.create.instrumentNumber",
-            type: "datePicker",
+            type: "number",
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""
@@ -139,7 +139,7 @@ var dat = {
             isDisabled: false
           },
           {
-                   name: "invoiceDocument",
+            name: "invoiceDocument",
             jsonPath: "advocatePayments[0].invoiceDoucment.fileStoreId",
             label: "legal.create.downloadInvoice",
             type: "singleFileUpload",
@@ -199,7 +199,7 @@ var dat = {
                       name: "amount",
                       pattern: "",
                       type: "number",
-                      jsonPath: "advocatePayments[0].advocateCharges[0].amount",
+                      jsonPath: "advocatePayments[0].amountClaimed",
                       isRequired: false,
                       isDisabled: false
                     }

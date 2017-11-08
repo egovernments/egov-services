@@ -8,7 +8,7 @@ import jp from "jsonpath";
 import _ from 'lodash';
 
 
-
+let searchTextCom = "";
 class UiAutoComplete extends Component {
 	constructor(props) {
        super(props);
@@ -19,6 +19,7 @@ class UiAutoComplete extends Component {
 
   initData(props) {
    		let {item, setDropDownData, useTimestamp}=props;
+			let self = this;
 		// console.log(this.props.item);
 		if(item.hasOwnProperty("url") && item.url && item.url.search("\\|")>-1 && item.url.search("{")==-1)
 		{
@@ -91,6 +92,7 @@ class UiAutoComplete extends Component {
 		// console.log(dropDownData);
 		// console.log(dropDownData[item.jsonPath] );
 		// console.log(dropDownData.hasOwnProperty(item.jsonPath));
+		console.log(searchTextCom);
 		switch (this.props.ui) {
 			case 'google':
 				// let {dropDownData}=this.state;
@@ -113,6 +115,7 @@ class UiAutoComplete extends Component {
              floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
              fullWidth={true}
              value={this.props.getVal(item.jsonPath)}
+						 searchText={searchTextCom}
              disabled={item.isDisabled}
              errorText={this.props.fieldErrors[item.jsonPath]}
              onKeyUp={(e) => {
@@ -151,6 +154,8 @@ class UiAutoComplete extends Component {
 	}
 
 	render () {
+		let self = this;
+		searchTextCom = self.props.getVal(this.props.item.jsonPath);
 		return (
 	      <div>
 	        {this.renderAutoComplete(this.props.item)}

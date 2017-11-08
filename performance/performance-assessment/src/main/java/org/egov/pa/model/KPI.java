@@ -49,7 +49,7 @@ public class KPI   {
   @JsonProperty("financialYear")
   private String financialYear = null; 
 
-  @JsonProperty("documents")
+  @JsonProperty("documentsReq")
   private List<Document> documents = null;
   
   @JsonProperty("auditDetails")

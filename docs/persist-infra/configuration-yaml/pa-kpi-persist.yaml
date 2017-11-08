@@ -37,16 +37,16 @@ serviceMaps:
          type: LONG
          
     - query: INSERT INTO egpa_kpi_master_document (id, kpicode, documentcode, documentname, mandatoryflag, createdby, createddate)  values (nextval('seq_egpa_kpi_master_document'), ?, ?, ?, ?, ?, ?);
-      basePath: $.KPIs.*.documents.*
+      basePath: $.KPIs.*.documentsReq.*
       jsonMaps:
 
-       - jsonPath: $.KPIs.*.documents.*.kpiCode
+       - jsonPath: $.KPIs.*.documentsReq.*.kpiCode
 
-       - jsonPath: $.KPIs.*.documents.*.code
+       - jsonPath: $.KPIs.*.documentsReq.*.code
          
-       - jsonPath: $.KPIs.*.documents.*.name
+       - jsonPath: $.KPIs.*.documentsReq.*.name
          
-       - jsonPath: $.KPIs.*.documents.*.active
+       - jsonPath: $.KPIs.*.documentsReq.*.active
 
        - jsonPath: $.RequestInfo.userInfo.id
          type: LONG
@@ -94,16 +94,16 @@ serviceMaps:
        - jsonPath: $.KPIs.*.code
          
     - query: INSERT INTO egpa_kpi_master_document (id, kpicode, documentcode, documentname, mandatoryflag, createdby, createddate)  values (nextval('seq_egpa_kpi_master_document'), ?, ?, ?, ?, ?, ?);
-      basePath: $.KPIs.*.documents.*
+      basePath: $.KPIs.*.documentsReq.*
       jsonMaps:
 
-       - jsonPath: $.KPIs.*.documents.*.kpiCode
+       - jsonPath: $.KPIs.*.documentsReq.*.kpiCode
 
-       - jsonPath: $.KPIs.*.documents.*.code
+       - jsonPath: $.KPIs.*.documentsReq.*.code
          
-       - jsonPath: $.KPIs.*.documents.*.name
+       - jsonPath: $.KPIs.*.documentsReq.*.name
          
-       - jsonPath: $.KPIs.*.documents.*.active
+       - jsonPath: $.KPIs.*.documentsReq.*.active
 
        - jsonPath: $.RequestInfo.userInfo.id
          type: LONG

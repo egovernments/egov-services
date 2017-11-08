@@ -61,22 +61,27 @@ var dat = {
     ],
     result: {
       "disableRowClick" : true,
-      header: [
-        { label: "opinion.search.result.id" },
-        { label: "opinion.search.result.departmentName" },
-        { label: "opinion.search.result.opinionOn" },
-         {
-          label: "legal.search.result.actionLabels",
-          isAction: true,
-          actionItems: [
+       isAction: true,
+      actionItems: [
             {
               label: "Update Opinion",
               url: "/update/legal/updateopinion/"
             }
-          ]
-        }
+          ],
+      header: [
+         {
+          label: "legal.search.result.actionLabels",
+          isChecked:true,
+          checkedItem:{
+            jsonPath:"checkedRow",
+            label:"",
+          }
+        },
+        { label: "opinion.search.result.id" },
+        { label: "opinion.search.result.departmentName" },
+        { label: "opinion.search.result.opinionOn" }
       ],
-      values: ["code", "departmentName.name", "opinionOn","code"],
+      values: ["code","code", "departmentName.name", "opinionOn"],
       resultPath: "opinions",
       rowClickUrlUpdate: "/update/opinion/{id}",
       rowClickUrlView: "/view/opinion/{id}"

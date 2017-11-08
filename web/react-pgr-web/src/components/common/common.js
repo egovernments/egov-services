@@ -2227,6 +2227,12 @@ var localization_EN_Data = {
 "advocatepayment.create.instrumentNumber":"Instrument Number",
 "advocatepayment.create.InstrumentDate":"Instrument Date",
 
+"advocatepayment.create.group.title.resolution":"Resolution Details",
+"advocatepayment.create.resolutionDate":"Resolution Date",
+"advocatepayment.create.resolutionNo":"Resolution Number",
+"advocatepayment.create.resolutionRemarks":"Resolution Remarks",
+"legal.create.downloadInvoice":"Download Invoice",
+
 "opinion.create.group.title.OpinionRequest": "Opinion Request",
 "opinion.create.opinionRequestDate": "Opinion Request Date",
 "opinion.create.departmentName": "Department Name",
@@ -2438,8 +2444,7 @@ var localization_EN_Data = {
 "opinionrequest.update.opinionby":"Opinion By",
  "opinionrequest.update.opinionDescription":"Opinion Description",
   "opinionrequest.update.additionalAdvocate":"Additional Advocate",
-  "advocatepayment.create.instrumentNumber":"Instrument Number",
-"advocatepayment.create.InstrumentDate":"Instrument Date",
+  
 "legal.create.uploadInvoice":"Upload Invoice",
 "framework.date.error.message": "Please enter date in DD/MM/YYYY format",
 "legal.create.code":"Code",
@@ -4375,6 +4380,13 @@ var localization_MR_Data = {
  "opinionrequest.update.additionalAdvocate":"Additional Advocate-marathi",
  "advocatepayment.create.instrumentNumber":"Instrument Number-marathi",
 "advocatepayment.create.InstrumentDate":"Instrument Date-marathi",
+
+"advocatepayment.create.group.title.resolution":"Resolution Details-Marathi",
+"advocatepayment.create.resolutionDate":"Resolution Date-Marathi",
+"advocatepayment.create.resolutionNo":"Resolution Number-Marathi",
+"advocatepayment.create.resolutionRemarks":"Resolution Remarks-Marathi",
+"legal.create.downloadInvoice":"Download Invoice - Marathi",
+
 "legal.create.uploadInvoice":"Upload Invoice-marathi",
 "framework.date.error.message": "Please enter date in DD/MM/YYYY format-Marathi",
 

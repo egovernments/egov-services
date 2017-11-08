@@ -13,47 +13,21 @@ var dat = {
         fields: [
           {
             name: "advocateName",
-            jsonPath: "advocatePayments[0].advocate.code",
+            jsonPath: "advocatePayments[0].advocate.name",
             label: "advocatepayment.create.advocateName",
-            type: "singleValueList",
+            type: "text",
             isRequired: false,
             isDisabled: true,
             url: "/lcms-services/legalcase/advocate/_search?tenantId=default|$..code|$..name",
-            patternErrorMsg: "",
-            // depedants: [
-            //   {
-            //     jsonPath: "advocatePayments[0].advocate.pan",
-            //     type: "dropDown",
-            //     pattern:
-            //       "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatepayments[0].advocate.code}|$..pan|$..pan"
-            //   },
-            //   {
-            //     jsonPath: "advocatePayments[0].advocate.bankName",
-            //     type: "dropDown",
-            //     pattern:
-            //       "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatepayments[0].advocate.code}|$..bankName|$..bankName"
-            //   },
-            //     {
-            //     jsonPath: "advocatePayments[0].advocate.bankBranch",
-            //     type: "dropDown",
-            //     pattern:
-            //       "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatepayments[0].advocate.code}|$..bankBranch|$..bankBranch"
-            //   },
-            //     {
-            //     jsonPath: "advocatePayments[0].advocate.bankAccountNo",
-            //     type: "dropDown",
-            //     pattern:
-            //       "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatepayments[0].advocate.code}|$..bankAccountNo|$..bankAccountNo"
-            //   }
-            // ]
+            patternErrorMsg: ""
           },
           {
             name: "demandDate",
             jsonPath: "advocatePayments[0].demandDate",
             label: "advocatepayment.create.demandDate",
             type: "datePicker",
-            isRequired: true,
-            isDisabled: false,
+            isRequired: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -64,8 +38,6 @@ var dat = {
             isRequired: false,
             isDisabled: true,
             patternErrorMsg: ""
-            // defaultValue: [],
-            // url: ""
           },
           {
             name: "panNo",
@@ -75,8 +47,6 @@ var dat = {
             isRequired: false,
             isDisabled: true,
             patternErrorMsg: ""
-            // defaultValue: [],
-            // url: ""
           },
           {
             name: "bankBranch",
@@ -86,8 +56,6 @@ var dat = {
             isRequired: false,
             isDisabled: true,
             patternErrorMsg: ""
-            // defaultValue: [],
-            // url: ""
           },
           {
             name: "amountClaimed",
@@ -104,10 +72,8 @@ var dat = {
             label: "advocatepayment.create.bankAccountNo",
             type: "text",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
-            // defaultValue: [],
-            // url: ""
           },
           {
             name: "amountRecived",
@@ -175,12 +141,13 @@ var dat = {
           {
                    name: "invoiceDocument",
             jsonPath: "advocatePayments[0].invoiceDoucment.fileStoreId",
-            label: "legal.create.uploadInvoice",
+            label: "legal.create.downloadInvoice",
             type: "singleFileUpload",
             pattern:"",
-            isRequired: true,
+            isRequired: false,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: "",
+            readonly:true
             },  
           {
                 type: "tableList",
@@ -246,7 +213,8 @@ var dat = {
             type: "label",
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: "",
+            defaultValue:" "
               }
          ]
       },

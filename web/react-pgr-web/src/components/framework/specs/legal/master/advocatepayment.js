@@ -374,7 +374,8 @@ var dat =  {
             type: "label",
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: "",
+            defaultValue:" "
               }
           ]
       }
@@ -396,9 +397,9 @@ var dat =  {
         fields: [
           {
             name: "advocateName",
-            jsonPath: "advocatePayments[0].advocate.code",
+            jsonPath: "advocatePayments[0].advocate.name",
             label: "advocatepayment.create.advocateName",
-            type: "singleValueList",
+            type: "text",
             isRequired: false,
             isDisabled: true,
             url: "/lcms-services/legalcase/advocate/_search?tenantId=default|$..code|$..name",
@@ -525,12 +526,13 @@ var dat =  {
           {
                    name: "invoiceDocument",
             jsonPath: "advocatePayments[0].invoiceDoucment.fileStoreId",
-            label: "legal.create.uploadInvoice",
+            label: "legal.create.downloadInvoice",
             type: "singleFileUpload",
             pattern:"",
-            isRequired: true,
+            isRequired: false,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: "",
+            readonly:true
             },  
           {
                 type: "tableList",
@@ -597,7 +599,8 @@ var dat =  {
             type: "label",
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: "",
+            defaultValue:" "
               }
          ]
       }

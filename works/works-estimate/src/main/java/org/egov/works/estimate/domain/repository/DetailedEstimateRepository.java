@@ -83,7 +83,7 @@ public class DetailedEstimateRepository {
 			estimateAssetSearchContract.setDetailedEstimateIds(Arrays.asList(estimate.getId()));
 
 			detailedEstimateDeductionSearchContract = new DetailedEstimateDeductionSearchContract();
-			detailedEstimateDeductionSearchContract.setIds(Arrays.asList(estimate.getId()));
+			detailedEstimateDeductionSearchContract.setDetailedEstimateIds(Arrays.asList(estimate.getId()));
 			detailedEstimateDeductionSearchContract.setTenantId(estimate.getTenantId());
 			
 			estimateOverheadSearchContract = new EstimateOverheadSearchContract();

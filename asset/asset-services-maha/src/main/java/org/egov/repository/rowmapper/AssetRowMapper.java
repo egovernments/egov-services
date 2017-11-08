@@ -123,9 +123,8 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 }
 
                 asset.setAssetAttributes(asset2);
-            /*    final Department departmant=new Department(); 
-                departmant.setCode(rs.getString("departmentCode"));
-                asset.setDepartment(departmant);*/
+         
+                asset.setDepartmentCode(rs.getString("departmentCode"));
 
                 final  DefectLiability defectLiabilityPeriod= new DefectLiability();
                 defectLiabilityPeriod.setDay((Long) rs.getObject("defectliabilityday"));

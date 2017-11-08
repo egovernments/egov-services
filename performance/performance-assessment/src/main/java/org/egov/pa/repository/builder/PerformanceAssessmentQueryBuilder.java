@@ -54,10 +54,8 @@ public class PerformanceAssessmentQueryBuilder {
 	public static final Logger LOGGER = LoggerFactory.getLogger(PerformanceAssessmentQueryBuilder.class);
 
     public static final String SEARCH_KPI_BASE_QUERY = "SELECT docs.id as docid, docs.kpicode as dockpicode, docs.documentcode, docs.documentname, docs.mandatoryflag, master.id as id, master.name as name, master.code as code, master.finyear as finYear, master.createdby as createdBy, master.createddate as createdDate, "  
-    		+ " master.tenantid as tenantId, master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, master.targettype as targetType, master.targetvalue as targetValue, master.instructions as instructions, master.department as deptCode, " 
-    		+ " dept.name as deptName, dept.id as departmentId, dept.active as deptActive "
-    		+ " FROM egpa_kpi_master master LEFT JOIN eg_department dept ON dept.code = master.department " 
-    		+ " LEFT JOIN egpa_kpi_master_document docs ON master.code = docs.kpicode WHERE master.active IS TRUE " ; 
+    		+ " master.tenantid as tenantId, master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, master.targettype as targetType, master.targetvalue as targetValue, master.instructions as instructions, master.department as departmentId " 
+    		+ " FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_document docs ON master.code = docs.kpicode WHERE master.active IS TRUE " ; 
     
     public static final String SEARCH_VALUE_BASE_QUERY = "SELECT value.tenantid as tenantId, master.code as kpiCode, master.finyear as finYear, "  
     		+  " master.targetvalue as targetValue, master.instructions, "

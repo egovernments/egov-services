@@ -126,12 +126,12 @@ public class RequestValidator {
 	                    PerformanceAssessmentConstants.FINYEAR_MANDATORY_FIELD_NAME));
 			}
 			
-			if(null == kpi.getDepartmentCode()) { 
+			if(null == kpi.getDepartmentId()) { 
 				errorFields.add(buildErrorField(PerformanceAssessmentConstants.DEPARTMENT_MANDATORY_CODE, 
 	                    PerformanceAssessmentConstants.DEPARTMENT_MANDATORY_ERROR_MESSAGE,
 	                    PerformanceAssessmentConstants.DEPARTMENT_MANDATORY_FIELD_NAME));
 			} else { 
-				if(StringUtils.isBlank(kpi.getDepartmentCode())) { 
+				if(kpi.getDepartmentId() <= 0) { 
 					errorFields.add(buildErrorField(PerformanceAssessmentConstants.DEPARTMENT_CODE_MANDATORY_CODE, 
 		                    PerformanceAssessmentConstants.DEPARTMENT_CODE_MANDATORY_ERROR_MESSAGE,
 		                    PerformanceAssessmentConstants.DEPARTMENT_CODE_MANDATORY_FIELD_NAME));

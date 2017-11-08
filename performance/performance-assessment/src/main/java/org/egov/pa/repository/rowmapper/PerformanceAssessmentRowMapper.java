@@ -48,7 +48,6 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.pa.model.AuditDetails;
-import org.egov.pa.model.Department;
 import org.egov.pa.model.Document;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiValue;
@@ -94,13 +93,7 @@ public class PerformanceAssessmentRowMapper {
 				kpi.setTargetValue(rs.getLong("targetValue"));
 				kpi.setTenantId(rs.getString("tenantId"));
 				kpi.setInstructions(rs.getString("instructions"));
-				Department department= new Department(); 
-				department.setId(rs.getLong("departmentId"));
-				department.setCode(rs.getString("deptCode"));
-				department.setName(rs.getString("deptName"));
-				department.setActive(rs.getBoolean("deptActive"));
-				kpi.setDepartment(department);
-				kpi.setDepartmentCode(rs.getString("deptCode"));
+				kpi.setDepartmentId(rs.getLong("departmentId"));
 				kpiMap.put(String.valueOf(rs.getLong("id")), kpi);
 			}
 

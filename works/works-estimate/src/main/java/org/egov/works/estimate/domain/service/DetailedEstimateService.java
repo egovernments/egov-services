@@ -1,82 +1,7 @@
 package org.egov.works.estimate.domain.service;
 
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.APPCONFIGURATION_OBJECT;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.ASSET_DETAILES_REQUIRED_APPCONFIG;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.BUDGETGROUP_OBJECT;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.COMMON_MASTERS_MODULE_CODE;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.DEPARTMENT_OBJECT;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.FUNCTION_OBJECT;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.FUND_OBJECT;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.GIS_INTEGRATION_APPCONFIG;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_DUPLICATE_ESTIMATE_ASSET_DETAILS;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_DUPLICATE_MULTIYEAR_ESTIMATE;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESIMATE_OVERHEAD_AMOUNT;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESIMATE_OVERHEAD_ID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESTIMATE_ACTIVITY_ESTIMATE_RATE;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESTIMATE_ACTIVITY_ESTIMATE_RATE_REQUIRED;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESTIMATE_ACTIVITY_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_REQUIRED;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESTIMATE_ACTIVITY_QUANTITY;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESTIMATE_ACTIVITY_REQUIRED;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATE;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESTIMATE_ACTIVITY_UNIT_RATE_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESTIMATE_ACTIVITY_UNIT_RATE_REQUIRED;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESTIMATE_ACTIVITY_UOM_CODE_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESTIMATE_ACTIVITY_UOM_REQUIRED;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESTIMATE_ASSET_DETAILS_REQUIRED;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESTIMATE_ASSET_REQUIRED;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESTIMATE_BUDGETGROUP_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESTIMATE_DEPARTMENT_CODE_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESTIMATE_FUNCTION_CODE_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESTIMATE_FUND_CODE_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESTIMATE_LOCATION_REQUIRED;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESTIMATE_OVERHEAD_CODE_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESTIMATE_SCHEME_CODE_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESTIMATE_SUBSCHEME_CODE_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESTIMATE_SUBTYPEOFWORK_CODE_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_ESTIMATE_TYPEOFWORK_CODE_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.KEY_PERCENTAGE_MULTIYEAR_ESTIMATE;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_DUPLICATE_ESTIMATE_ASSET_DETAILS;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_DUPLICATE_MULTIYEAR_ESTIMATE;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESIMATE_OVERHEAD_AMOUNT;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESIMATE_OVERHEAD_ID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESTIMATE_ACTIVITY_ESTIMATE_RATE;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESTIMATE_ACTIVITY_ESTIMATE_RATE_REQUIRED;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESTIMATE_ACTIVITY_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_REQUIRED;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESTIMATE_ACTIVITY_QUANTITY;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESTIMATE_ACTIVITY_REQUIRED;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATE;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESTIMATE_ACTIVITY_UNIT_RATE_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESTIMATE_ACTIVITY_UNIT_RATE_REQUIRED;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESTIMATE_ACTIVITY_UOM_CODE_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESTIMATE_ACTIVITY_UOM_REQUIRED;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESTIMATE_ASSET_DETAILS_REQUIRED;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESTIMATE_ASSET_REQUIRED;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESTIMATE_BUDGETGROUP_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESTIMATE_DEPARTMENT_CODE_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESTIMATE_FUNCTION_CODE_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESTIMATE_FUND_CODE_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESTIMATE_LOCATION_REQUIRED;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESTIMATE_OVERHEAD_CODE_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESTIMATE_SCHEME_CODE_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESTIMATE_SUBSCHEME_CODE_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESTIMATE_SUBTYPEOFWORK_CODE_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_ESTIMATE_TYPEOFWORK_CODE_INVALID;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.MESSAGE_PERCENTAGE_MULTIYEAR_ESTIMATE;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.OVERHEAD_OBJECT;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.SCHEME_OBJECT;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.SUBSCHEME_OBJECT;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.TYPEOFWORK_OBJECT;
-import static org.egov.works.estimate.config.WorksEstimateServiceConstants.WORKS_MODULE_CODE;
-
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -84,29 +9,19 @@ import org.egov.tracer.model.CustomException;
 import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.domain.repository.DetailedEstimateRepository;
+import org.egov.works.estimate.persistence.repository.AssetRepository;
 import org.egov.works.estimate.persistence.repository.IdGenerationRepository;
+import org.egov.works.estimate.persistence.repository.WorksMastersRepository;
 import org.egov.works.estimate.utils.EstimateUtils;
-import org.egov.works.estimate.web.contract.Asset;
-import org.egov.works.estimate.web.contract.AssetsForEstimate;
-import org.egov.works.estimate.web.contract.AuditDetails;
-import org.egov.works.estimate.web.contract.DetailedEstimate;
-import org.egov.works.estimate.web.contract.DetailedEstimateDeduction;
-import org.egov.works.estimate.web.contract.DetailedEstimateRequest;
-import org.egov.works.estimate.web.contract.DetailedEstimateSearchContract;
-import org.egov.works.estimate.web.contract.DetailedEstimateStatus;
-import org.egov.works.estimate.web.contract.EstimateActivity;
-import org.egov.works.estimate.web.contract.EstimateMeasurementSheet;
-import org.egov.works.estimate.web.contract.EstimateOverhead;
-import org.egov.works.estimate.web.contract.FinancialYear;
-import org.egov.works.estimate.web.contract.MultiYearEstimate;
-import org.egov.works.estimate.web.contract.RequestInfo;
-import org.egov.works.estimate.web.contract.WorkFlowDetails;
+import org.egov.works.estimate.web.contract.*;
 import org.egov.works.workflow.service.WorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.minidev.json.JSONArray;
+
+import static org.egov.works.estimate.config.WorksEstimateServiceConstants.*;
 
 @Service
 @Transactional(readOnly= true)
@@ -136,6 +51,12 @@ public class DetailedEstimateService {
     
     @Autowired
 	private WorkflowService workflowService;
+
+    @Autowired
+    private WorksMastersRepository worksMastersRepository;
+
+    @Autowired
+    private AssetRepository assetRepository;
 
     public List<DetailedEstimate> search(DetailedEstimateSearchContract detailedEstimateSearchContract) {
         return detailedEstimateRepository.search(detailedEstimateSearchContract);
@@ -186,7 +107,7 @@ public class DetailedEstimateService {
                     }
                 }
             }
-            if (detailedEstimate.getSpillOverFlag())
+            if (detailedEstimate.getSpillOverFlag() != null && detailedEstimate.getSpillOverFlag())
             	detailedEstimate.setStatus(DetailedEstimateStatus.APPROVED);
 			else {
 				populateWorkFlowDetails(detailedEstimate, detailedEstimateRequest.getRequestInfo());
@@ -317,7 +238,7 @@ public class DetailedEstimateService {
 
     }
 
-    public void validateActivities(final DetailedEstimate detailedEstimate, Map<String,String> messages) {
+    public void validateActivities(final DetailedEstimate detailedEstimate, Map<String,String> messages, final RequestInfo requestInfo) {
         for (int i = 0; i < detailedEstimate.getEstimateActivities().size() ; i++)
             for (int j = i + 1; j < detailedEstimate.getEstimateActivities().size(); j++)
                 if (detailedEstimate.getEstimateActivities().get(i).getScheduleOfRate() != null
@@ -361,6 +282,12 @@ public class DetailedEstimateService {
                         messages.put(KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID, MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID);
                 }
 
+            if(activity.getScheduleOfRate() != null && StringUtils.isNotBlank(activity.getScheduleOfRate().getId())) {
+                List<ScheduleOfRate> scheduleOfRates =  worksMastersRepository.searchScheduleOfRates(activity.getTenantId(), Arrays.asList(activity.getScheduleOfRate().getId()), requestInfo);
+                if(scheduleOfRates != null && scheduleOfRates.isEmpty())
+                    messages.put(KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID, MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID);
+            }
+
         }
 
     }
@@ -394,6 +321,12 @@ public class DetailedEstimateService {
             if (assetsForEstimate != null) {
                 if(StringUtils.isBlank(assetsForEstimate.getAsset().getCode()))
                     messages.put(KEY_ESTIMATE_ASSET_REQUIRED, MESSAGE_ESTIMATE_ASSET_REQUIRED);
+                //TODO FIX aset code validation
+               /* else {
+                    List<Asset> assets = assetRepository.searchAssets(assetsForEstimate.getTenantId(),assetsForEstimate.getAsset().getCode(),requestInfo);
+                    if(assets != null && assets.isEmpty())
+                        messages.put(KEY_WORKS_ESTIMATE_ASSET_CODE_INVALID, MESSAGE_WORKS_ESTIMATE_ASSET_CODE_INVALID);
+                }*/
                 if (asset != null && asset.getCode().equals(assetsForEstimate.getAsset().getCode()))
                   messages.put(KEY_DUPLICATE_ESTIMATE_ASSET_DETAILS, MESSAGE_DUPLICATE_ESTIMATE_ASSET_DETAILS);
             }
@@ -403,7 +336,7 @@ public class DetailedEstimateService {
         final RequestInfo requestInfo = detailedEstimateRequest.getRequestInfo();
         Map<String, String> messages = new HashMap<>();
         for(DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
-            validateActivities(detailedEstimate, messages);
+            validateActivities(detailedEstimate, messages, requestInfo);
             validateLocationDetails(detailedEstimate,requestInfo, messages);
             validateAssetDetails(detailedEstimate, requestInfo, messages);
             validateMultiYearEstimates(detailedEstimate, messages);

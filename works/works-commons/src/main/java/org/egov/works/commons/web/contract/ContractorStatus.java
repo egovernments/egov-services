@@ -4,17 +4,21 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Gets or Sets MilestoneStatus
+ * Gets or Sets ContractorStatus
  */
-public enum MilestoneStatus {
+public enum ContractorStatus {
 
-	APPROVED("APPROVED"),
+	ACTIVE("ACTIVE"),
 
-	CANCELLED("CANCELLED");
+	INACTIVE("INACTIVE"),
+
+	BLACK_LISTED("BLACK_LISTED"),
+
+	DEBARRED("DEBARRED");
 
 	private String value;
 
-	MilestoneStatus(String value) {
+	ContractorStatus(String value) {
 		this.value = value;
 	}
 
@@ -25,8 +29,8 @@ public enum MilestoneStatus {
 	}
 
 	@JsonCreator
-	public static MilestoneStatus fromValue(String text) {
-		for (MilestoneStatus b : MilestoneStatus.values()) {
+	public static ContractorStatus fromValue(String text) {
+		for (ContractorStatus b : ContractorStatus.values()) {
 			if (String.valueOf(b.value).equals(text)) {
 				return b;
 			}

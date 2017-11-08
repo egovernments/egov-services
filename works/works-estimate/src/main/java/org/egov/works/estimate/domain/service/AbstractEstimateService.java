@@ -55,6 +55,7 @@ public class AbstractEstimateService {
 
 	@Transactional
 	public List<AbstractEstimate> create(AbstractEstimateRequest abstractEstimateRequest) {
+		ProjectCode projectCode = new ProjectCode();
 		for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
 			estimate.setId(commonUtils.getUUID());
 			estimate.setAuditDetails(
@@ -75,6 +76,13 @@ public class AbstractEstimateService {
 				estimate.setStateId(workflowService.enrichWorkflow(estimate.getWorkFlowDetails(),
 						estimate.getTenantId(), abstractEstimateRequest.getRequestInfo()));
 				estimate.setStatus(AbstractEstimateStatus.CREATED);
+				
+				for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
+					projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
+							abstractEstimateRequest.getRequestInfo()));
+					abstractEstimateDetails.setProjectCode(projectCode);
+
+				}
 			}
 		}
 		kafkaTemplate.send(propertiesManager.getWorksAbstractEstimateCreateTopic(), abstractEstimateRequest);
@@ -91,13 +99,9 @@ public class AbstractEstimateService {
 
 			populateNextStatus(estimate);
 
-			ProjectCode projectCode = new ProjectCode();
 			if (estimate.getStatus().toString().equalsIgnoreCase(AbstractEstimateStatus.APPROVED.toString())) {
 				for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
-					projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
-							abstractEstimateRequest.getRequestInfo()));
-					abstractEstimateDetails.setProjectCode(projectCode);
-					setEstimateAppropriation(estimate, abstractEstimateRequest.getRequestInfo());
+					setEstimateAppropriation(abstractEstimateDetails, abstractEstimateRequest.getRequestInfo());
 
 				}
 			}
@@ -391,15 +395,16 @@ public class AbstractEstimateService {
 		return savedCodes.get(0).getCode();
 	}
 
-	private void setEstimateAppropriation(AbstractEstimate abstractEstimate,
+	private void setEstimateAppropriation(AbstractEstimateDetails abstractEstimateDetails,
 			final RequestInfo requestInfo) {
 		EstimateAppropriationRequest estimateAppropriationRequest = new EstimateAppropriationRequest();
 		EstimateAppropriation estimateAppropriation = new EstimateAppropriation();
 		List<EstimateAppropriation> appropriations = new ArrayList<>();
-		estimateAppropriation
-				.setObjectNumber(abstractEstimate.getAbstractEstimateNumber());
+		if(abstractEstimateDetails.getProjectCode() != null && abstractEstimateDetails.getProjectCode().getCode() != null)
+			estimateAppropriation
+					.setObjectNumber(abstractEstimateDetails.getProjectCode().getCode());
 		estimateAppropriation.setObjectType(CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY);
-		estimateAppropriation.setTenantId(abstractEstimate.getTenantId());
+		estimateAppropriation.setTenantId(abstractEstimateDetails.getTenantId());
 		estimateAppropriationRequest.setEstimateAppropriations(appropriations);
 		estimateAppropriationRequest.setRequestInfo(requestInfo);
 

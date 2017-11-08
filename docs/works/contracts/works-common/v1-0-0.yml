@@ -324,7 +324,7 @@ definitions:
         x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of To date for the SOR Rate Details.
       rate:
-        type: integer
+        type: number
         format: BigDecimal
         description: SOR Rate which is applicable for given date range
 
@@ -361,7 +361,7 @@ definitions:
         x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of To date for the Market Rate Details.
       rate:
-        type: integer
+        type: number
         format: BigDecimal
         description: Market Rate which is applicable for given date range
 
@@ -1254,4 +1254,5 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
+
 

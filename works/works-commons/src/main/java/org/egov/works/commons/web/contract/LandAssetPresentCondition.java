@@ -12,12 +12,12 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * An Object that holds for Reference Type
+ * An Object that holds Present condition of the Land asset
  */
-@ApiModel(description = "An Object that holds for Reference Type")
+@ApiModel(description = "An Object that holds Present condition of the Land asset")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-08T13:25:44.581Z")
 
-public class ReferenceType {
+public class LandAssetPresentCondition {
 	@JsonProperty("id")
 	private String id = null;
 
@@ -27,20 +27,17 @@ public class ReferenceType {
 	@JsonProperty("name")
 	private String name = null;
 
-	@JsonProperty("code")
-	private String code = null;
-
-	public ReferenceType id(String id) {
+	public LandAssetPresentCondition id(String id) {
 		this.id = id;
 		return this;
 	}
 
 	/**
-	 * Unique Identifier of the Reference Type
+	 * Unique Identifier of the Present condition of the Land asset
 	 * 
 	 * @return id
 	 **/
-	@ApiModelProperty(value = "Unique Identifier of the Reference Type")
+	@ApiModelProperty(value = "Unique Identifier of the Present condition of the Land asset")
 
 	public String getId() {
 		return id;
@@ -50,17 +47,17 @@ public class ReferenceType {
 		this.id = id;
 	}
 
-	public ReferenceType tenantId(String tenantId) {
+	public LandAssetPresentCondition tenantId(String tenantId) {
 		this.tenantId = tenantId;
 		return this;
 	}
 
 	/**
-	 * Tenant id of the Reference Type
+	 * Tenant id of the Present condition of the Land asset
 	 * 
 	 * @return tenantId
 	 **/
-	@ApiModelProperty(required = true, value = "Tenant id of the Reference Type")
+	@ApiModelProperty(required = true, value = "Tenant id of the Present condition of the Land asset")
 	@NotNull
 
 	@Size(min = 2, max = 128)
@@ -72,50 +69,27 @@ public class ReferenceType {
 		this.tenantId = tenantId;
 	}
 
-	public ReferenceType name(String name) {
+	public LandAssetPresentCondition name(String name) {
 		this.name = name;
 		return this;
 	}
 
 	/**
-	 * Name of the Reference Type
+	 * Present condition of the Land asset
 	 * 
 	 * @return name
 	 **/
-	@ApiModelProperty(required = true, value = "Name of the Reference Type")
+	@ApiModelProperty(required = true, value = "Present condition of the Land asset")
 	@NotNull
 
 	@Pattern(regexp = "[a-zA-Z0-9\\s\\.,]+")
-	@Size(min = 1, max = 100)
+	@Size(min = 1, max = 256)
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public ReferenceType code(String code) {
-		this.code = code;
-		return this;
-	}
-
-	/**
-	 * Code of the Reference Type
-	 * 
-	 * @return code
-	 **/
-	@ApiModelProperty(required = true, value = "Code of the Reference Type")
-	@NotNull
-
-	@Pattern(regexp = "[a-zA-Z0-9-\\\\]+")
-	@Size(min = 1, max = 100)
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
 	}
 
 	@Override
@@ -126,25 +100,25 @@ public class ReferenceType {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		ReferenceType referenceType = (ReferenceType) o;
-		return Objects.equals(this.id, referenceType.id) && Objects.equals(this.tenantId, referenceType.tenantId)
-				&& Objects.equals(this.name, referenceType.name) && Objects.equals(this.code, referenceType.code);
+		LandAssetPresentCondition landAssetPresentCondition = (LandAssetPresentCondition) o;
+		return Objects.equals(this.id, landAssetPresentCondition.id)
+				&& Objects.equals(this.tenantId, landAssetPresentCondition.tenantId)
+				&& Objects.equals(this.name, landAssetPresentCondition.name);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, tenantId, name, code);
+		return Objects.hash(id, tenantId, name);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("class ReferenceType {\n");
+		sb.append("class LandAssetPresentCondition {\n");
 
 		sb.append("    id: ").append(toIndentedString(id)).append("\n");
 		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
 		sb.append("    name: ").append(toIndentedString(name)).append("\n");
-		sb.append("    code: ").append(toIndentedString(code)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}

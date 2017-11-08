@@ -4,17 +4,19 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Gets or Sets MilestoneStatus
+ * Gets or Sets EstimateSanctionType
  */
-public enum MilestoneStatus {
+public enum EstimateSanctionType {
 
-	APPROVED("APPROVED"),
+	FINANCIAL_SANCTION("FINANCIAL_SANCTION"),
 
-	CANCELLED("CANCELLED");
+	ADMINISTRATIVE_SANCTION("ADMINISTRATIVE_SANCTION"),
+
+	TECHNICAL_SANCTION("TECHNICAL_SANCTION");
 
 	private String value;
 
-	MilestoneStatus(String value) {
+	EstimateSanctionType(String value) {
 		this.value = value;
 	}
 
@@ -25,8 +27,8 @@ public enum MilestoneStatus {
 	}
 
 	@JsonCreator
-	public static MilestoneStatus fromValue(String text) {
-		for (MilestoneStatus b : MilestoneStatus.values()) {
+	public static EstimateSanctionType fromValue(String text) {
+		for (EstimateSanctionType b : EstimateSanctionType.values()) {
 			if (String.valueOf(b.value).equals(text)) {
 				return b;
 			}

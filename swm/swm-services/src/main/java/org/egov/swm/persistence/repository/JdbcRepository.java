@@ -100,7 +100,7 @@ public abstract class JdbcRepository {
 		Map<String, Object> paramValues = new HashMap<>();
 
 		StringBuffer uniqueQuery = new StringBuffer("select count(*) as count from " + tableName
-				+ " where tenantId=:tenantId and " + fieldName + "=:fieldValue ");
+				+ " where tenantId=:tenantId and " + fieldName + "!=:fieldValue ");
 
 		if (uniqueFieldValue != null) {
 			uniqueQuery.append(" and " + uniqueFieldName + "=:uniqueFieldValue");

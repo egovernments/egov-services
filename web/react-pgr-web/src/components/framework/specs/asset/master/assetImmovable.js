@@ -468,15 +468,16 @@ var dat = {
           },
           {
             "name": "SourceOfFunds",
-            "jsonPath": "Asset.funSource",
+            "jsonPath": "Asset.fundSource",
             "label": "ac.create.Source.of.funds",
             "pattern": "",
             "type": "singleValueList",
-            "url": "",
+            "url": "/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..name|$..name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+						"isStateLevel":true
           },
           {
             "name": "Warranty",
@@ -1362,11 +1363,12 @@ var dat = {
             "label": "ac.create.Source.of.funds",
             "pattern": "",
             "type": "singleValueList",
-            "url": "",
+            "url": "/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..name|$..name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+						"isStateLevel":true
           },
           {
             "name": "Warranty",
@@ -2130,15 +2132,16 @@ var dat = {
           },
           {
             "name": "SourceOfFunds",
-            "jsonPath": "Asset.funSource",
+            "jsonPath": "Asset.fundSource",
             "label": "ac.create.Source.of.funds",
             "pattern": "",
             "type": "singleValueList",
-            "url": "",
+            "url": "/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..name|$..name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+						"isStateLevel":true
           },
           {
             "name": "Warranty",

@@ -1889,7 +1889,7 @@ var dat = {
             "patternErrMsg": ""
           },
 				]
-			},
+			}, 
       {
 				"name": "TableField",
         "jsonPath":"",

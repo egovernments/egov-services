@@ -138,7 +138,7 @@ export default class assetImmovableReport extends Component {
 															<b>अधिपत्र ( होय / नाही )</b>
 													</td>
 													<td colSpan={4} style={{textAlign: "left"}}>
-															<b>{this.props.data[35]?this.props.data[35]:""}</b>
+															<b>{this.props.data[35]?"Yes":"No"}</b>
 													</td>
 											</tr>
 											<tr>

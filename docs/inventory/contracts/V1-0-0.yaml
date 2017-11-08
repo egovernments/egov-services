@@ -2630,8 +2630,8 @@ definitions:
         uom:
           $ref: "#/definitions/Uom"  
           description: Auto populate stocking unit of measure of selected material.
-        poline:
-          $ref: "#/definitions/PurchaseOrder"
+        purchaseOrderDetail:
+          $ref: "#/definitions/PurchaseOrderDetail"
           description: po line mandatory if receipt type is purchase receipt.
         receivedQty:
           type: number
@@ -4110,5 +4110,6 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
+
 
 

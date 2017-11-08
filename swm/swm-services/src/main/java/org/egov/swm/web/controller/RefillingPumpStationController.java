@@ -2,6 +2,9 @@ package org.egov.swm.web.controller;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.RefillingPumpStation;
+import org.egov.swm.domain.model.RefillingPumpStationSearch;
 import org.egov.swm.domain.service.RefillingPumpStationService;
 import org.egov.swm.web.requests.RefillingPumpStationRequest;
 import org.egov.swm.web.requests.RefillingPumpStationResponse;
@@ -46,6 +49,20 @@ public class RefillingPumpStationController {
         refillingPumpStationResponse.setRefillingPumpStations(refillingPumpStationRequest.getRefillingPumpStations());
 
         return refillingPumpStationResponse;
+    }
+
+    @PostMapping("/_search")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public RefillingPumpStationResponse search (@ModelAttribute RefillingPumpStationSearch refillingPumpStationSearch,
+                                                @RequestBody RequestInfo requestInfo, @RequestParam String tenantId){
+
+        Pagination<RefillingPumpStation> refillingPumpStationList = refillingPumpStationService.search(refillingPumpStationSearch);
+
+        return RefillingPumpStationResponse.builder()
+                .refillingPumpStations(refillingPumpStationList.getPagedData())
+                .responseInfo(getResponseInfo(requestInfo))
+                .build();
     }
 
     private ResponseInfo getResponseInfo(RequestInfo requestInfo) {

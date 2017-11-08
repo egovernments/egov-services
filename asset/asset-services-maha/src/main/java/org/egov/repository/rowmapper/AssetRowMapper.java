@@ -106,7 +106,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 } catch (final IOException e) {
                     e.printStackTrace();
                 } catch (Exception e) {
-                	e.printStackTrace();
+          
                 }
                 asset.setTitleDocumentsAvalable(tda);
                 
@@ -123,7 +123,9 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 }
 
                 asset.setAssetAttributes(asset2);
-                asset.setDepartmentCode(rs.getString("departmentCode"));
+            /*    final Department departmant=new Department(); 
+                departmant.setCode(rs.getString("departmentCode"));
+                asset.setDepartment(departmant);*/
 
                 final  DefectLiability defectLiabilityPeriod= new DefectLiability();
                 defectLiabilityPeriod.setDay((Long) rs.getObject("defectliabilityday"));

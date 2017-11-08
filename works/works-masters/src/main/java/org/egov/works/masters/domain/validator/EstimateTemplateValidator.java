@@ -57,7 +57,7 @@ public class EstimateTemplateValidator {
             for(EstimateTemplateActivities estimateTemplateActivities : estimateTemplate.getEstimateTemplateActivities()) {
                 if (estimateTemplateActivities.getScheduleOfRate() != null && estimateTemplateActivities.getScheduleOfRate().getId() != null) {
                     if (scheduleOfRateService.getById(estimateTemplateActivities.getScheduleOfRate().getId(), estimateTemplateActivities.getTenantId()) == null) {
-                        validationMessages.put(Constants.KEY_SCHEDULEOFRATE_ID_INVALID, Constants.MESSAGE_SCHEDULEOFRATE_ID_INVALID + estimateTemplateActivities.getScheduleOfRate().getCode());
+                        validationMessages.put(Constants.KEY_SCHEDULEOFRATE_ID_INVALID, Constants.MESSAGE_SCHEDULEOFRATE_ID_INVALID + estimateTemplateActivities.getScheduleOfRate().getId());
                         isDataValid = Boolean.TRUE;
                     }
                 }

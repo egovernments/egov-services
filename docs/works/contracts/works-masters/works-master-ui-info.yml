@@ -19,8 +19,8 @@ UIInfo:
     keyPath: "$..code"
     valPath: "$..code"
   searchResult:
-    rowClickUrlUpdate: /update/scheduleOfRates/{ids}
-    rowClickUrlView: /view/scheduleOfRates/{ids}
+    rowClickUrlUpdate: /update/scheduleofrates/{ids}
+    rowClickUrlView: /view/scheduleofrates/{ids}
     columns:
     - code
     - description

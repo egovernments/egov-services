@@ -496,7 +496,7 @@ class assetImmovableCreate extends Component {
           customSpecs[catId] = customFieldsArray;
         }
         depericiationValue[catId] = response.MdmsRes.ASSET.AssetCategory[i].depreciationRate;
-        cateoryObject[catId] = response.MdmsRes.ASSET.AssetCategory[i]; 
+        cateoryObject[catId] = response.MdmsRes.ASSET.AssetCategory[i];
         self.setState({
             customFieldsGen: customSpecs,
             depericiationValue,
@@ -1400,7 +1400,7 @@ delete formData.Asset.assetAttributesCheck;
             							errorStyle={{"float":"left"}}
             							fullWidth={true}
             							hintText="Please Select"
-            							floatingLabelText={<span>{translate("ac.create.Asset.account.code")} <span style={{"color": "#FF0000"}}>{ " *" }</span></span>}
+            							floatingLabelText={<span>{translate("ac.create.Asset.account.code")} <span style={{"color": "#FF0000"}}></span></span>}
                           value={this.getVal('Asset.assetAccount')}
             							onChange={(event, key, value) =>{
             								this.handleChange({target: {value: value}},'Asset.assetAccount', true ? true : false, '', false, false, false, false)
@@ -1422,7 +1422,7 @@ delete formData.Asset.assetAttributesCheck;
             							errorStyle={{"float":"left"}}
             							fullWidth={true}
             							hintText="Please Select"
-            							floatingLabelText={<span>{translate("ac.create.Accumulated.Depreciation.Account")} <span style={{"color": "#FF0000"}}>{ " *" }</span></span>}
+            							floatingLabelText={<span>{translate("ac.create.Accumulated.Depreciation.Account")} <span style={{"color": "#FF0000"}}></span></span>}
                           value={this.getVal('Asset.accumulatedDepreciationAccount')}
             							onChange={(event, key, value) =>{
             								this.handleChange({target: {value: value}},'Asset.accumulatedDepreciationAccount', true ? true : false, '', false, false, false, false)
@@ -1444,7 +1444,7 @@ delete formData.Asset.assetAttributesCheck;
                             errorStyle={{"float":"left"}}
                             fullWidth={true}
                             hintText="Please Select"
-                            floatingLabelText={<span>{translate("ac.create.Revaluation.Reserve.Account")} <span style={{"color": "#FF0000"}}>{ " *" }</span></span>}
+                            floatingLabelText={<span>{translate("ac.create.Revaluation.Reserve.Account")} <span style={{"color": "#FF0000"}}></span></span>}
                             value={this.getVal('Asset.revaluationReserveAccount')}
                             onChange={(event, key, value) =>{
                               this.handleChange({target: {value: value}},'Asset.revaluationReserveAccount', true ? true : false, '', false, false, false, false)
@@ -1466,7 +1466,7 @@ delete formData.Asset.assetAttributesCheck;
                           errorStyle={{"float":"left"}}
                           fullWidth={true}
                           hintText="Please Select"
-                          floatingLabelText={<span>{translate("ac.create.Depreciation.Expenses.Account")} <span style={{"color": "#FF0000"}}>{ " *" }</span></span>}
+                          floatingLabelText={<span>{translate("ac.create.Depreciation.Expenses.Account")} <span style={{"color": "#FF0000"}}></span></span>}
                           value={this.getVal('Asset.depreciationExpenseAccount')}
                           onChange={(event, key, value) =>{
                             this.handleChange({target: {value: value}},'Asset.depreciationExpenseAccount', true ? true : false, '', false, false, false, false)

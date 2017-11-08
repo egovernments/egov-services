@@ -892,7 +892,7 @@ serviceMaps:
         type: JSON
         dbType: JSONB
     
-      - jsonPath: $.cases.*.summon.sectionApplied,
+      - jsonPath: $.cases.*.summon.sectionApplied
       
       - jsonPath: $.RequestInfo.userInfo.id
         type: STRING

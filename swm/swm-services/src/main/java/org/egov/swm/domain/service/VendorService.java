@@ -170,7 +170,7 @@ public class VendorService {
 				for (Boundary location : vendor.getServicedLocations()) {
 
 					// Validate Location
-					/*if (location.getCode() != null) {
+					if (location.getCode() != null) {
 
 						boundary = boundaryRepository.fetchBoundaryByCode(location.getCode(), vendor.getTenantId());
 
@@ -181,7 +181,7 @@ public class VendorService {
 						else
 							throw new CustomException("Location", "Given Location is Invalid: " + location.getCode());
 
-					}*/
+					}
 				}
 
 			validateUniqueFields(vendor);

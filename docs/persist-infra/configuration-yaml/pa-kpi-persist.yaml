@@ -80,7 +80,7 @@ serviceMaps:
        - jsonPath: $.KPIs.*.auditDetails.lastModifiedTime
          type: LONG
        
-       - jsonPath: $.KPIs.*.department.id
+       - jsonPath: $.KPIs.*.departmentId
          type: LONG
        
        - jsonPath: $.KPIs.*.code

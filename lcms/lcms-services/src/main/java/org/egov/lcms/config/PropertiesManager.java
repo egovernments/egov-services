@@ -514,4 +514,11 @@ public class PropertiesManager {
 	
 	@Value("${egov.lcms.update.assign.advocate}")
 	private String updateAssignAdvocate;
+	
+	
+	@Value("${egov.lcms.assign.advocatedetails.size}")
+	private String advocateDetailsSize;
+	
+	@Value("${egov.lcms.assign.advocatedetails.size.message}")
+	private String advocateDetailsSizeMessage;
 }

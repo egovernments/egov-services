@@ -244,6 +244,13 @@ public class SummonService {
 				}
 
 			}
+			
+			if ( caseObj.getAdvocateDetails()==null || caseObj.getAdvocateDetails().size()<=0 ){
+				
+				throw new CustomException(propertiesManager.getAdvocateDetailsSize(),
+						propertiesManager.getAdvocateDetailsSizeMessage());
+				
+			}
 		}
 
 	}

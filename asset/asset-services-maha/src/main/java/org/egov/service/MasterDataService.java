@@ -37,7 +37,9 @@ public class MasterDataService {
 		
 		Map<String, String> argsMap = new HashMap<>();
 		argsMap.put(appProps.getMdMsMasterAssetCategory(), getIdQuery(idSet));
-
+		
+		if(!tenantId.equals("default"))
+			tenantId = tenantId.split(".")[0];
 		JSONArray jsonArray = mDRepo.getAssetMastersById(argsMap, requestInfo, tenantId)
 				.get(appProps.getMdMsMasterAssetCategory());
 		List<AssetCategory> assetCategorys = new ArrayList<>();

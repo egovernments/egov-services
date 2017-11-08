@@ -254,7 +254,9 @@ class assetMovableCreate extends Component {
     } else {
       action = "create";
     }
-
+    self.setState({
+      action
+    })
     let obj = specifications[`asset.${action}`];
     reqRequired = [];
     self.setLabelAndReturnRequired(obj);
@@ -305,6 +307,7 @@ class assetMovableCreate extends Component {
       var name, jsonPath, label, type, isRequired, isDisabled;
       var customSpecs = {};
       var depericiationValue = {};
+      let cateoryObject = [];
     //  var customFieldsArray = [];
     //  var customArr;
 
@@ -457,12 +460,12 @@ class assetMovableCreate extends Component {
                           customTemp.type = 'table';
                           break;
               }
-              if (customTemp.type == 'table') {
-                if (response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values.length) {
-
-                }
-
-              }
+              // if (customTemp.type == 'table') {
+              //   if (response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values.length) {
+              //
+              //   }
+              //
+              // }
               if(customTemp.type == 'singleValueList'){
                 if(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values.length){
                     var handleDropdown = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values;
@@ -487,11 +490,14 @@ class assetMovableCreate extends Component {
 
           }
           customSpecs[catId] = customFieldsArray;
+
         }
+        cateoryObject[catId] = response.MdmsRes.ASSET.AssetCategory[i];
         depericiationValue[catId] = response.MdmsRes.ASSET.AssetCategory[i].depreciationRate;
         self.setState({
             customFieldsGen: customSpecs,
-            depericiationValue
+            depericiationValue,
+            cateoryObject
           }, () => {
             if(self.props.match.params.id) {
               self.modifyData(self.props.match.params.id);
@@ -599,6 +605,14 @@ class assetMovableCreate extends Component {
     e.preventDefault();
     self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
+    if (formData.Asset.titleDocumentsAvalable) {
+      console.log(formData.Asset.titleDocumentsAvalable);
+      formData.Asset.titleDocumentsAvalable = formData.Asset.titleDocumentsAvalable.split(",");
+    }
+    if (formData.Asset.assetCategory.id) {
+    formData.Asset.assetCategory = self.state.cateoryObject[formData.Asset.assetCategory.id];
+    }
+
     if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
       if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
         formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
@@ -1344,7 +1358,7 @@ delete formData.Asset.assetAttributesCheck;
             							errorStyle={{"float":"left"}}
             							fullWidth={true}
             							hintText="Please Select"
-            							floatingLabelText={<span>{translate("ac.create.Asset.account.code")} <span style={{"color": "#FF0000"}}>{ " *" }</span></span>}
+            							floatingLabelText={<span>{translate("ac.create.Asset.account.code")} <span style={{"color": "#FF0000"}}></span></span>}
                           value={this.getVal('Asset.assetAccount')}
             							onChange={(event, key, value) =>{
             								this.handleChange({target: {value: value}},'Asset.assetAccount', true ? true : false, '', false, false, false, false)
@@ -1366,7 +1380,7 @@ delete formData.Asset.assetAttributesCheck;
             							errorStyle={{"float":"left"}}
             							fullWidth={true}
             							hintText="Please Select"
-            							floatingLabelText={<span>{translate("ac.create.Accumulated.Depreciation.Account")} <span style={{"color": "#FF0000"}}>{ " *" }</span></span>}
+            							floatingLabelText={<span>{translate("ac.create.Accumulated.Depreciation.Account")} <span style={{"color": "#FF0000"}}></span></span>}
                           value={this.getVal('Asset.accumulatedDepreciationAccount')}
             							onChange={(event, key, value) =>{
             								this.handleChange({target: {value: value}},'Asset.accumulatedDepreciationAccount', true ? true : false, '', false, false, false, false)
@@ -1388,7 +1402,7 @@ delete formData.Asset.assetAttributesCheck;
                             errorStyle={{"float":"left"}}
                             fullWidth={true}
                             hintText="Please Select"
-                            floatingLabelText={<span>{translate("ac.create.Revaluation.Reserve.Account")} <span style={{"color": "#FF0000"}}>{ " *" }</span></span>}
+                            floatingLabelText={<span>{translate("ac.create.Revaluation.Reserve.Account")} <span style={{"color": "#FF0000"}}></span></span>}
                             value={this.getVal('Asset.revaluationReserveAccount')}
                             onChange={(event, key, value) =>{
                               this.handleChange({target: {value: value}},'Asset.revaluationReserveAccount', true ? true : false, '', false, false, false, false)
@@ -1410,7 +1424,7 @@ delete formData.Asset.assetAttributesCheck;
                           errorStyle={{"float":"left"}}
                           fullWidth={true}
                           hintText="Please Select"
-                          floatingLabelText={<span>{translate("ac.create.Depreciation.Expenses.Account")} <span style={{"color": "#FF0000"}}>{ " *" }</span></span>}
+                          floatingLabelText={<span>{translate("ac.create.Depreciation.Expenses.Account")} <span style={{"color": "#FF0000"}}></span></span>}
                           value={this.getVal('Asset.depreciationExpenseAccount')}
                           onChange={(event, key, value) =>{
                             this.handleChange({target: {value: value}},'Asset.depreciationExpenseAccount', true ? true : false, '', false, false, false, false)

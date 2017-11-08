@@ -637,7 +637,7 @@ var dat = {
 						"type": "text",
 						"url": "",
 						"isRequired": false,
-						"isDisabled": false,
+						"isDisabled": true,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"defaultValue": "MOVABLE"
@@ -653,7 +653,7 @@ var dat = {
 						"isDisabled": true,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
-						"defaultValue":"IMMOVABLE",
+						"defaultValue":"MOVABLE",
 						"isHidden": "true"
 					},
 					{

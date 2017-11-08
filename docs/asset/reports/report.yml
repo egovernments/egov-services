@@ -63,7 +63,7 @@ ReportDefinitions:
     label: reports.asset.assetSubCategory
     isMandatory: false
     type: url
-    pattern: /egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.parent%3D%3D{assetcategory})%5D|$..id|$..name
+    pattern: /egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.parent%3D%3D{assetcategory})%5D|$.*.*.*.*.id|$.*.*.*.*.name
     source: asset
     wrapper: true
     searchClause : AND asset.assetcategory=$assetsubcategory

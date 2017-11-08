@@ -35,9 +35,9 @@ public class CaseSearchCriteria {
 	
 	private String summonReferenceNo;
 	
-	private String caseRefernceNo;
+	private String caseReferenceNo;
 	
-	private String caseStatus;
+	private String caseStatus; 
 	
 	private String caseType;
 	

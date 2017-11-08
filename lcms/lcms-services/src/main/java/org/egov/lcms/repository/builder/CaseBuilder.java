@@ -62,10 +62,10 @@ public class CaseBuilder {
 			preparedStatementValues.add(caseSearchCriteria.getSummonReferenceNo());
 		}
 
-		if (caseSearchCriteria.getCaseRefernceNo() != null && !caseSearchCriteria.getCaseRefernceNo().isEmpty()) {
+		if (caseSearchCriteria.getCaseReferenceNo() != null && !caseSearchCriteria.getCaseReferenceNo().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" caserefernceno= ?");
-			preparedStatementValues.add(caseSearchCriteria.getCaseRefernceNo());
+			preparedStatementValues.add(caseSearchCriteria.getCaseReferenceNo());
 		}
 
 		if (caseSearchCriteria.getCaseType() != null && !caseSearchCriteria.getCaseType().isEmpty()) {
@@ -102,9 +102,21 @@ public class CaseBuilder {
 		}
 
 		if (caseSearchCriteria.getAdvocateName() != null && !caseSearchCriteria.getAdvocateName().isEmpty()) {
-			String caseCode = AdvocateRepository.getcaseCodeByAdvocateCode(caseSearchCriteria.getAdvocateName());
+			List<String> caseCodes = AdvocateRepository.getcaseCodeByAdvocateCode(caseSearchCriteria.getAdvocateName());
+			
+			
+			int count = 1;
+			String code = "";
+			for (String caseCode : caseCodes) {
+				if (count < caseCodes.size())
+					code = code + "'" + caseCode + "',";
+				else
+					code = code + "'" + caseCode + "'";
+				count++;
+
+			}
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" code IN('" + caseCode + "')");
+			selectQuery.append(" code IN(" + code + ")");
 
 		}
 
@@ -162,6 +174,9 @@ public class CaseBuilder {
 
 		if (caseSearchCriteria.getSort() != null && !caseSearchCriteria.getSort().isEmpty()) {
 			selectQuery.append(" ORDER BY " + caseSearchCriteria.getSort());
+		}
+		else{
+			selectQuery.append(" ORDER BY lastmodifiedtime desc");
 		}
 	}
 

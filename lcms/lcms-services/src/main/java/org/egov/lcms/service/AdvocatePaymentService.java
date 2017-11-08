@@ -50,7 +50,7 @@ public class AdvocatePaymentService {
 				advocatePayment.setIsPartialPayment(Boolean.FALSE);
 			}
 			String code = uniqueCodeGeneration.getUniqueCode(advocatePayment.getTenantId(), advocatePaymentRequest.getRequestInfo(),
-					propertiesManager.getAdvocatePaymentUlbFormat(), propertiesManager.getAdvocatePaymentUlbName(),Boolean.FALSE,null);
+					propertiesManager.getAdvocatePaymentUlbFormat(), propertiesManager.getAdvocatePaymentUlbName(),Boolean.FALSE,null,Boolean.FALSE);
 			       advocatePayment.setCode(code);
 		}
 

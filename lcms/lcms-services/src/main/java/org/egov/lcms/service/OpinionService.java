@@ -46,7 +46,7 @@ public class OpinionService {
 		RequestInfo requestInfo = opinionRequest.getRequestInfo();
 		for (Opinion opinion : opinions) {
 			String code = uniqueCodeGeneration.getUniqueCode(opinion.getTenantId(), requestInfo,
-					propertiesManager.getOpinionUlbFormat(), propertiesManager.getOpinionUlbName(),Boolean.FALSE,null);
+					propertiesManager.getOpinionUlbFormat(), propertiesManager.getOpinionUlbName(),Boolean.FALSE,null,Boolean.FALSE);
 			opinion.setCode(code);
 		}
 		kafkaTemplate.send(propertiesManager.getOpinionCreateValidated(), opinionRequest);

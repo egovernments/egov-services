@@ -39,7 +39,7 @@ public class UniqueCodeGeneration {
 	 * @throws Exception
 	 */
 	public String getUniqueCode(String tenantId, RequestInfo requestInfo, String ulbFormat, String ulbName,
-			Boolean isCaseRef, String caseCode) throws Exception {
+			Boolean isCaseRef, String caseCode,Boolean isSummon) throws Exception {
 
 		String uniqueCode = "";
 
@@ -74,8 +74,12 @@ public class UniqueCodeGeneration {
 			}
 
 			if (isCaseRef) {
-				uniqueCode = ulbCode + caseCode + SequenceNo;
-			} else {
+				uniqueCode = caseCode + SequenceNo;
+			} 
+			else if ( isSummon ){
+				uniqueCode =  SequenceNo;
+			}
+			else {
 				uniqueCode = ulbCode + SequenceNo;
 			}
 

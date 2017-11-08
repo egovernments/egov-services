@@ -87,11 +87,11 @@ public class SummonService {
 		for (Summon summon : summonRequest.getSummons()) {
 
 			String code = uniqueCodeGeneration.getUniqueCode(summon.getTenantId(), summonRequest.getRequestInfo(),
-					propertiesManager.getSummonCodeFormat(), propertiesManager.getSummonName(), Boolean.FALSE, null);
+					propertiesManager.getSummonCodeFormat(), propertiesManager.getSummonName(), Boolean.FALSE, null,Boolean.FALSE);
 
 			String summonRefrence = uniqueCodeGeneration.getUniqueCode(summon.getTenantId(),
 					summonRequest.getRequestInfo(), propertiesManager.getSummonRefrenceFormat(),
-					propertiesManager.getSummonReferenceGenName(), Boolean.FALSE, null);
+					propertiesManager.getSummonReferenceGenName(), Boolean.FALSE, null,Boolean.TRUE);
 
 			summon.setSummonReferenceNo(summonRefrence);
 			summon.setCode(code);
@@ -128,7 +128,7 @@ public class SummonService {
 			for (AdvocateDetails advocatedetail : caseObj.getAdvocateDetails()) {
 				String advocateCode = uniqueCodeGeneration.getUniqueCode(caseObj.getTenantId(),
 						caseRequest.getRequestInfo(), propertiesManager.getAdvocateDetailsCodeFormat(),
-						propertiesManager.getAdvocateDetailsCodeName(), Boolean.FALSE, null);
+						propertiesManager.getAdvocateDetailsCodeName(), Boolean.FALSE, null,Boolean.FALSE);
 
 	
 

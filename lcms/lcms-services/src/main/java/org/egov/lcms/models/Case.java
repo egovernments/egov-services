@@ -91,4 +91,7 @@ public class Case {
 	
 	@JsonProperty("caseVoucher")
     private CaseVoucher caseVoucher = null;
+	
+	@JsonProperty("referenceEvidences")
+	private List<ReferenceEvidence> referenceEvidences = null;
 }

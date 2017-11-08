@@ -490,5 +490,22 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.department.search.message}")
 	private String searchDepartmentErrorMessage;
+	
+	@Value("${egov.lcms.evidence.ulb.format}")
+	private String evidenceUlbFormat;
+	
+	@Value("${egov.lcms.evidence.ulb.name}")
+	private String evidenceUlbName;
+	
+	@Value("${egov.lcms.evidence.create}")
+	private String evidenceCreateTopic;
+	
+	@Value("${egov.lcms.evidence.update}")
+	private String evidenceUpdateTopic;
+	
+	@Value("${egov.lcms.evidence.error.code}")
+	private String evidenceResponseErrorCode;
+	
+	@Value("${egov.lcms.evidence.error.msg}")
+	private String evidenceResponseErrorMsg;
 }
-

@@ -165,19 +165,17 @@ public class CaseBuilder {
 		}
 	}
 
-	public String searchByCaseCodeQuery(Case caseObj, String tableName, Boolean isTenantIdExixts,
-			final List<Object> preparedStatementValues) {
-		StringBuilder paraWiseSearchQuery = new StringBuilder();
-		paraWiseSearchQuery.append("SELECT * FROM " + tableName);
+	public String searchByCaseCodeQuery(Case caseObj, String tableName, final List<Object> preparedStatementValues) {
+		StringBuilder searchQuery = new StringBuilder();
+		searchQuery.append("SELECT * FROM " + tableName);
 		log.info("case code for getting hearing details is" + caseObj.getCode());
-		paraWiseSearchQuery.append(" WHERE casecode=?");
+		
+		searchQuery.append(" WHERE casecode=?");
 		preparedStatementValues.add(caseObj.getCode());
 
-		if (isTenantIdExixts) {
-			paraWiseSearchQuery.append(" AND tenantid=?");
-			preparedStatementValues.add(caseObj.getTenantId());
-		}
+		searchQuery.append(" AND tenantid=?");
+		preparedStatementValues.add(caseObj.getTenantId());
 
-		return paraWiseSearchQuery.toString();
+		return searchQuery.toString();
 	}
 }

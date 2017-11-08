@@ -23,6 +23,7 @@ import org.egov.lcms.models.Court;
 import org.egov.lcms.models.DepartmentResponse;
 import org.egov.lcms.models.HearingDetails;
 import org.egov.lcms.models.ParaWiseComment;
+import org.egov.lcms.models.ReferenceEvidence;
 import org.egov.lcms.models.Register;
 import org.egov.lcms.models.RegisterSearchCriteria;
 import org.egov.lcms.models.RequestInfoWrapper;
@@ -230,8 +231,8 @@ public class CaseService {
 
 				List<String> caseStatusCodes = new ArrayList<String>();
 				for (HearingDetails hearingDetail : caseObj.getHearingDetails()) {
-
-					caseStatusCodes.add(hearingDetail.getCaseStatus().getCode());
+					if (hearingDetail.getCaseStatus() != null)
+						caseStatusCodes.add(hearingDetail.getCaseStatus().getCode());
 				}
 
 				String caseStatusCode = "";
@@ -276,8 +277,8 @@ public class CaseService {
 			List<Court> courts = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
 					new TypeReference<List<Court>>() {
 					});
-			if ( courts!=null && courts.size()>0 )
-			caseObj.getSummon().setCourtName(courts.get(0));
+			if (courts != null && courts.size() > 0)
+				caseObj.getSummon().setCourtName(courts.get(0));
 			break;
 		}
 
@@ -303,7 +304,7 @@ public class CaseService {
 			List<CaseCategory> caseCategories = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
 					new TypeReference<List<CaseCategory>>() {
 					});
-			if (caseCategories != null &&  caseCategories.size() > 0)
+			if (caseCategories != null && caseCategories.size() > 0)
 				caseObj.getSummon().setCaseCategory(caseCategories.get(0));
 			break;
 		}
@@ -321,15 +322,15 @@ public class CaseService {
 			List<CaseStatus> caseStatus = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
 					new TypeReference<List<CaseStatus>>() {
 					});
-			
-			if ( caseStatus!=null && caseStatus.size()>0){
 
-			List<HearingDetails> hearingDetails = caseObj.getHearingDetails();
+			if (caseStatus != null && caseStatus.size() > 0) {
 
-			for (HearingDetails hearingDetail : hearingDetails) {
+				List<HearingDetails> hearingDetails = caseObj.getHearingDetails();
 
-				addHearingDetail(hearingDetail, caseStatus);
-			}
+				for (HearingDetails hearingDetail : hearingDetails) {
+
+					addHearingDetail(hearingDetail, caseStatus);
+				}
 			}
 
 			break;
@@ -562,4 +563,37 @@ public class CaseService {
 
 	}
 
+	public CaseResponse createReferenceEvidence(CaseRequest caseRequest) throws Exception {
+		List<Case> cases = caseRequest.getCases();
+		for (Case casee : cases) {
+			if (casee.getReferenceEvidences() != null && casee.getReferenceEvidences().size() > 0) {
+				for (ReferenceEvidence evidence : casee.getReferenceEvidences()) {
+					String code = uniqueCodeGeneration.getUniqueCode(casee.getTenantId(), caseRequest.getRequestInfo(),
+							propertiesManager.getEvidenceUlbFormat(), propertiesManager.getEvidenceUlbName(),
+							Boolean.FALSE, null);
+					evidence.setCode(code);
+					evidence.setCaseCode(casee.getCode());
+					evidence.setTenantId(casee.getTenantId());
+				}
+			}
+		}
+
+		kafkaTemplate.send(propertiesManager.getEvidenceCreateTopic(), caseRequest);
+		return getResponseInfo(caseRequest);
+	}
+
+	public CaseResponse updateReferenceEvidence(CaseRequest caseRequest) {
+		List<Case> cases = caseRequest.getCases();
+		for (Case casee : cases) {
+			if (casee.getReferenceEvidences() != null && casee.getReferenceEvidences().size() > 0) {
+				for (ReferenceEvidence evidence : casee.getReferenceEvidences()) {
+					evidence.setCaseCode(casee.getCode());
+					evidence.setTenantId(casee.getTenantId());
+				}
+			}
+		}
+		
+		kafkaTemplate.send(propertiesManager.getEvidenceUpdateTopic(), caseRequest);
+		return getResponseInfo(caseRequest);
+	}
 }

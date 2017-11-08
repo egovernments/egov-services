@@ -1309,3 +1309,83 @@ serviceMaps:
        
        - jsonPath: $.registers.*.tenantId
          type: STRING
+         
+  - version: 1.0
+    name: Reference Evidence Create
+    description: Creates Reference Evidence Api
+    fromTopic: lcms-evidence-create
+    isTransaction: true
+    queryMaps: 
+    - query: INSERT INTO egov_lcms_reference_evidence (code, tenantid, referencetype, caseno, casecode, referencedate, description, documents, createdBy, lastModifiedBy, createdTime, lastModifiedTime) VALUES (?,?,?,?,?,?,?,?,?,?,?,?);
+      basePath: $.cases.*.referenceEvidences.*
+      jsonMaps:
+
+       - jsonPath: $.referenceEvidences.*.code
+
+       - jsonPath: $.referenceEvidences.*.tenantId
+
+       - jsonPath: $.referenceEvidences.*.referenceType
+       
+       - jsonPath: $.referenceEvidences.*.caseNo
+       
+       - jsonPath: $.referenceEvidences.*.caseCode
+       
+       - jsonPath: $.referenceEvidences.*.referenceDate
+         type: LONG
+       
+       - jsonPath: $.referenceEvidences.*.description
+       
+       - jsonPath: $.referenceEvidences.*.documents
+         type: JSON
+         dbType: JSONB       
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING
+
+       - jsonPath: createdTime
+         type: CURRENTDATE
+         dbType: LONG         
+
+       - jsonPath: lastModifiedTime
+         type: CURRENTDATE
+         dbType: LONG         
+
+
+  - version: 1.0
+    name: Reference Evidence Update
+    description: Updates Reference Evidence Api
+    fromTopic: lcms-evidence-update
+    isTransaction: true
+    queryMaps: 
+    - query: UPDATE egov_lcms_reference_evidence SET referencetype=?, caseno=?, casecode=?, referencedate=?, description=?, documents=?, lastModifiedBy=?, lastModifiedTime=? WHERE code=? and tenantid=?;
+      basePath: $.cases.*.referenceEvidences.*
+      jsonMaps:
+
+       - jsonPath: $.referenceEvidences.*.referenceType
+       
+       - jsonPath: $.referenceEvidences.*.caseNo
+       
+       - jsonPath: $.referenceEvidences.*.caseCode
+       
+       - jsonPath: $.referenceEvidences.*.referenceDate
+         type: LONG
+       
+       - jsonPath: $.referenceEvidences.*.description
+       
+       - jsonPath: $.referenceEvidences.*.documents
+         type: JSON
+         dbType: JSONB       
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING        
+
+       - jsonPath: lastModifiedTime
+         type: CURRENTDATE
+         dbType: LONG
+         
+       - jsonPath: $.referenceEvidences.*.code
+
+       - jsonPath: $.referenceEvidences.*.tenantId

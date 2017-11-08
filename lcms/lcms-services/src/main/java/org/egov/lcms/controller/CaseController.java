@@ -102,4 +102,26 @@ public class CaseController {
 	public ResponseEntity<?> updateHearingDetails(@RequestBody @Valid CaseRequest caseRequest) {
 		return new ResponseEntity<>(caseService.updateHearingDetails(caseRequest), HttpStatus.OK);
 	}
+
+	/**
+	 * Create method for Reference Evidence API
+	 * @param caseRequest
+	 * @return caseResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/referenceevidence/_create", method = RequestMethod.POST)
+	public ResponseEntity<?> createReferenceEvidence(@RequestBody @Valid CaseRequest caseRequest) throws Exception {
+		return new ResponseEntity<>(caseService.createReferenceEvidence(caseRequest), HttpStatus.OK);
+	}
+	
+	/**
+	 * Update method for Reference Evidence API
+	 * @param caseRequest
+	 * @return caseResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(path ="/referenceevidence/_update", method = RequestMethod.POST)
+	public ResponseEntity<?> updateReferenceEvidence(@RequestBody @Valid CaseRequest caseRequest) throws Exception {
+		return new ResponseEntity<>(caseService.updateReferenceEvidence(caseRequest), HttpStatus.OK);
+	}
 }

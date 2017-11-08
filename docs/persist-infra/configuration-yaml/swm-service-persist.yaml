@@ -1060,3 +1060,40 @@ serviceMaps:
        - jsonPath: $.refillingPumpStations.*.auditDetails.lastModifiedTime
          dbType: LONG
 
+ - version: 1.0
+   name: refillingpumpstation update
+   description: update refillingpumpstation in egswm_refillingpumpstation
+   fromTopic: swm-refillingpumpstation-update-topic
+   queryMaps:
+    - query: UPDATE egswm_refillingpumpstation SET code = ?, tenantid = ?, location = ?, name = ?, typeofpump = ?, remarks = ?, typeoffuel = ?, quantity = ?, lastmodifiedby = ?, lastmodifiedtime = ? WHERE tenantid = ? and code = ?;
+      basePath: $.refillingPumpStations.*
+      jsonMaps:
+
+       - jsonPath: $.refillingPumpStations.*.code
+
+       - jsonPath: $.refillingPumpStations.*.tenantId
+
+       - jsonPath: $.refillingPumpStations.*.location.code
+
+       - jsonPath: $.refillingPumpStations.*.name
+
+       - jsonPath: $.refillingPumpStations.*.typeOfPump.code
+
+       - jsonPath: $.refillingPumpStations.*.remarks
+
+       - jsonPath: $.refillingPumpStations.*.typeOfFuel.code
+
+       - jsonPath: $.refillingPumpStations.*.quantity
+         dbType: LONG
+
+       - jsonPath: $.refillingPumpStations.*.auditDetails.lastModifiedBy
+         dbType: LONG
+
+       - jsonPath: $.refillingPumpStations.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+       - jsonPath: $.refillingPumpStations.*.tenantId
+
+       - jsonPath: $.refillingPumpStations.*.code
+
+

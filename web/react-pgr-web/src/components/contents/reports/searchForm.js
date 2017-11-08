@@ -44,33 +44,37 @@ class ShowForm extends Component {
             if (!metaData.reportDetails.searchParams[i].hasOwnProperty("pattern")) {
               metaData.reportDetails.searchParams[i]["pattern"]=metaData.reportDetails.searchParams[i].defaultValue;
             }
-            // console.log(metaData.reportDetails.searchParams[i].type);
-            if(metaData.reportDetails.searchParams[i].pattern.search(property)>-1)
-            {
-              let splitArray=metaData.reportDetails.searchParams[i].pattern.split("?");
-              let context="";
-              let id={};
-              id[splitArray[1].split("&")[1].split("=")[0]]=e.target.value;
-              for (var j = 0; j < splitArray[0].split("/").length; j++) {
-                context+=splitArray[0].split("/")[j]+"/";
+            
+            if(metaData.reportDetails.searchParams[i].pattern.search(property)>-1) {
+              let splitArray = metaData.reportDetails.searchParams[i].pattern.split("?");
+              let url = splitArray[0];
+              let queryString = splitArray[1].split("|")[0].split("&");
+              let queryJSON = {};
+
+              for(var key in queryString) {
+                let dat = queryString[key].split("=");
+                if(dat[0] == "tenantId") continue;
+                if(dat[1].indexOf("{") > -1) {
+                  var path = dat[1].split("{")[1].split("}")[0];
+                  var pat = new RegExp("\{" + path + "\}", "g");
+                  queryJSON[dat[0]] = dat[1].replace(pat, e.target.value);
+                } else {
+                  queryJSON[dat[0]] = dat[1];
+                }
               }
 
-              var response=Api.commonApiPost(context,id).then(function(response)
-              {
-                  let keys=jp.query(response,splitArray[1].split("|")[1]);
-                  let values=jp.query(response,splitArray[1].split("|")[2]);
-                  let defaultValue={};
+              var response = Api.commonApiPost(url, queryJSON).then(function(response) {
+                  let keys = jp.query(response, splitArray[1].split("|")[1]);
+                  let values = jp.query(response, splitArray[1].split("|")[2]);
+                  let defaultValue = {};
                   for (var k = 0; k < keys.length; k++) {
-                    defaultValue[keys[k]]=values[k];
+                    defaultValue[keys[k]] = values[k];
                   }
-                  for (var l = 0; l < metaData.reportDetails.searchParams.length; l++) {
-                    if (metaData.reportDetails.searchParams[l].type=="url" && metaData.reportDetails.searchParams[l].pattern.search(property)>-1) {
-                        metaData.reportDetails.searchParams[l].defaultValue=defaultValue;
+                  for (var l=0; l<metaData.reportDetails.searchParams.length; l++) {
+                    if (metaData.reportDetails.searchParams[l].type == "url" && metaData.reportDetails.searchParams[l].pattern.search(property) > -1) {
+                        metaData.reportDetails.searchParams[l].defaultValue = defaultValue;
                     }
                   }
-                  // console.log(defaultValue);
-                  // console.log(i);
-                  // console.log(metaData);
                   setMetaData(metaData);
               },function(err) {
                   alert("Somthing went wrong while loading depedant dropdown");
@@ -135,7 +139,7 @@ class ShowForm extends Component {
     let {currentThis}=this;
     let {metaData,searchForm}=this.props;
     // console.log(metaData);
-    if(!_.isEmpty(metaData) && metaData.reportDetails.searchParams.length > 0)
+    if(!_.isEmpty(metaData) && metaData.reportDetails && metaData.reportDetails.searchParams && metaData.reportDetails.searchParams.length > 0)
     {
       return metaData.reportDetails.searchParams.map((item,index) =>
       {

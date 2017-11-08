@@ -762,7 +762,7 @@ definitions:
         description: The estimate template of the Template activity
       scheduleOfRate:
         $ref: '#/definitions/ScheduleOfRate'
-        description: The Schedue of Rate of the Template activity
+        description: The Schedue of Rate of the Template activity. Primary key is ref. here.
       uom:
         description: UOM for the Estimate Template Activity
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/UOM"

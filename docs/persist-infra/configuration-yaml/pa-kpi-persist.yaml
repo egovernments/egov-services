@@ -33,7 +33,8 @@ serviceMaps:
        - jsonPath: $.KPIs.*.auditDetails.createdTime
          type: LONG
          
-       - jsonPath: $.KPIs.*.departmentCode
+       - jsonPath: $.KPIs.*.departmentId
+         type: LONG
          
     - query: INSERT INTO egpa_kpi_master_document (id, kpicode, documentcode, documentname, mandatoryflag, createdby, createddate)  values (nextval('seq_egpa_kpi_master_document'), ?, ?, ?, ?, ?, ?);
       basePath: $.KPIs.*.documents.*

@@ -218,6 +218,7 @@ class assetImmovableView extends Component {
     var ind;
     for(var i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
       if(specs[moduleName + "." + actionName].groups[i].multiple) {
+        console.log(specs[moduleName + "." + actionName].groups[i].jsonPath);
         var arr = _.get(_form, specs[moduleName + "." + actionName].groups[i].jsonPath);
         ind = i;
         var _stringifiedGroup = JSON.stringify(specs[moduleName + "." + actionName].groups[i]);
@@ -301,9 +302,10 @@ class assetImmovableView extends Component {
    }
 
   Api.commonApiPost(url, query, {}, false, specifications["asset.view"].useTimestamp).then(function(res){
-      self.props.setFormData(res);
+
       console.log(res);
-      //self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)),"tl", "view", specifications["tl.view"].objectName);
+      self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)),"asset", "view", specifications["asset.view"].objectName);
+      self.props.setFormData(res);
     }, function(err){
 
     })
@@ -360,24 +362,21 @@ printer = () => {
 
           const renderBody = function() {
 
-            console.log(formData);
-
 
               // console.log(formData.feeMatrices);
               if(formData && formData.hasOwnProperty("Assets") && formData.Assets[0].hasOwnProperty("assetAttributes")){
-                console.log(formData.Assets[0].assetAttributes);
+                // console.log(formData.Assets[0].assetAttributes);
                   var createCustomObject = formData.Assets[0].assetAttributes;
                   var disArray = [];
                   _.forEach(createCustomObject, function(value, key) {
                     var temp = {};
-                    console.log(value.key);
-                    console.log(value.value);
+
 
                     temp.label = value.key;
                     temp.value = value.value;
                     disArray.push(temp);
                   });
-                  console.log(disArray);
+
                   return (
                   <div>
                   <Card className="uiCard">
@@ -385,7 +384,7 @@ printer = () => {
                       <CardText>
                       <Row>
              { disArray.map(function(item, index) {
-                console.log(item);
+
 
                 return(
                   <Col xs={12} md={3}>

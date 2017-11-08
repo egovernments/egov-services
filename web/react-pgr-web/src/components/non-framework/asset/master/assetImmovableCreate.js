@@ -233,10 +233,15 @@ class assetImmovableCreate extends Component {
           assetCheck[response.Assets[0].assetAttributes[i].key]={[response.Assets[0].assetAttributes[i].type]:response.Assets[0].assetAttributes[i].value};
 
       }
+      if (response && response.Assets && response.Assets[0] && response.Assets[0].titleDocumentsAvalable) {
+
+        response.Assets[0].titleDocumentsAvalable = response.Assets[0].titleDocumentsAvalable.join(",");
+      }
       response.Assets[0].assetAttributesCheck = assetCheck;
       self.props.setFormData({Asset: response.Assets[0]});
       self.setInitialUpdateData({Asset: response.Assets[0]}, JSON.parse(JSON.stringify(specifications)), 'asset', 'update', specifications[`asset.update`].objectName);
       self.customFieldDataFun(self.state.customFieldsGen[response.Assets[0].assetCategory.id]);
+      self.warrantyFunction(response.Assets[0].warrantyAvailable);
 
     },function(err) {
           console.log(err);
@@ -980,6 +985,33 @@ delete formData.Asset.assetAttributesCheck;
     setMockData(_mockData);
   }
 
+  warrantyFunction = (_value) => {
+    let valueWarranty = _value;
+    let self = this;
+    let spec = self.props.mockData;
+     console.log(spec);
+     console.log(self.state.action);
+      for (var q = 0; q < spec[`asset.${self.state.action}`].groups.length; q++) {
+        console.log("fire1");
+        if (spec[`asset.${self.state.action}`].groups[q].name == "AssetField") {
+          console.log("fire2");
+          for (var l = 0; l < spec[`asset.${self.state.action}`].groups[q].fields.length; l++) {
+            if (spec[`asset.${self.state.action}`].groups[q].fields[l].name == "WarrantyExpiryDate") {
+              if (valueWarranty==false) {
+                spec[`asset.${self.state.action}`].groups[q].fields[l].isRequired = false;
+                self.props.delRequiredFields(["Asset.warrantyExpiryDate"]);
+                self.props.setMockData(JSON.parse(JSON.stringify(spec)));
+              } else if (valueWarranty==true){
+                spec[`asset.${self.state.action}`].groups[q].fields[l].isRequired = true;
+                self.props.addRequiredFields(["Asset.warrantyExpiryDate"]);
+                self.props.setMockData(JSON.parse(JSON.stringify(spec)));
+              }
+            }
+        }
+      }
+   }
+  }
+
   handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch", expression, expErr, isDate) => {
       let {getVal} = this;
       let self = this;
@@ -1035,28 +1067,7 @@ delete formData.Asset.assetAttributesCheck;
        }
 
        if (property=="Asset.warrantyAvailable") {
-         let spec = self.props.mockData;
-          console.log(spec);
-          console.log(self.state.action);
-           for (var q = 0; q < spec[`asset.${self.state.action}`].groups.length; q++) {
-             console.log("fire1");
-             if (spec[`asset.${self.state.action}`].groups[q].name == "AssetField") {
-               console.log("fire2");
-               for (var l = 0; l < spec[`asset.${self.state.action}`].groups[q].fields.length; l++) {
-                 if (spec[`asset.${self.state.action}`].groups[q].fields[l].name == "WarrantyExpiryDate") {
-                   if (e.target.value==false) {
-                     spec[`asset.${self.state.action}`].groups[q].fields[l].isRequired = false;
-                     self.props.delRequiredFields(["Asset.warrantyExpiryDate"]);
-                     self.props.setMockData(JSON.parse(JSON.stringify(spec)));
-                   } else if (e.target.value==true){
-                     spec[`asset.${self.state.action}`].groups[q].fields[l].isRequired = true;
-                     self.props.addRequiredFields(["Asset.warrantyExpiryDate"]);
-                     self.props.setMockData(JSON.parse(JSON.stringify(spec)));
-                   }
-                 }
-             }
-           }
-       }
+         self.warrantyFunction(e.target.value);
      }
 
       if(expression && e.target.value){

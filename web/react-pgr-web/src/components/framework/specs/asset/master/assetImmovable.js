@@ -1110,19 +1110,13 @@ var dat = {
 						"jsonPath": "Assets[0].landDetails[0].code",
 						"label": "ac.create.Land.Asset.ID",
 						"pattern": "",
-						"type": "autoCompelete",
-						"url": "asset-services-maha/assets/_search?&assetCategoryType=LAND|$..name|$..name",
+						"type": "text",
+						"url": "",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
-						"autoCompleteDependancy": {
-							"autoCompleteUrl": "asset-services-maha/assets/_search?name={value}",
-							"autoFillFields": {
-								"Assets[0].landDetails[0].surveyNo": "Assets[0].landSurveyNo",
-								"Assets[0].landDetails[0].area": "Assets[0].totalArea"
-							 }
-						 }
+
 					},
 					{
 						"name": "SurveyNoOfLandOnWhichStructureIsLocated ",
@@ -1136,7 +1130,6 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
-
 					{
             "name": "AreaofLandonwhichconstructed",
             "jsonPath": "Assets[0].landDetails[0].area",
@@ -1148,13 +1141,12 @@ var dat = {
             "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-
           }
 					]
 				},
       {
-				"label": "ac.create.Location.Details",
 				"name": "LocationField",
+				"label": "ac.create.Location.Details",
         "multiple":false,
         "jsonPath":"Asset",
 				"fields": [
@@ -1225,92 +1217,8 @@ var dat = {
 				"label": "ac.create.Asset.Details",
 				"name": "AssetField",
         "multiple":false,
-        "jsonPath":"Asset[0].",
+        "jsonPath":"Assets",
 				"fields": [
-					// {
-          //   "name": "No of Floors",
-          //   "jsonPath": "Assets[0].floors",
-          //   "label": "ac.create.No.of.Floors",
-          //   "pattern": "",
-          //   "type": "number",
-          //   "url": "",
-          //   "isRequired": false,
-          //   "isDisabled": false,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
-          // {
-          //   "name": "PlinthArea",
-          //   "jsonPath": "Assets[0].plinthArea",
-          //   "label": "ac.create.Plinth.Area",
-          //   "pattern": "",
-          //   "type": "number",
-          //   "url": "",
-          //   "isRequired": false,
-          //   "isDisabled": false,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
-          // {
-          //   "name": "CubicContents",
-          //   "jsonPath": "Assets[0].cubicContents",
-          //   "label": "ac.create.Cubic.Contents",
-          //   "pattern": "",
-          //   "type": "number",
-          //   "url": "",
-          //   "isRequired": false,
-          //   "isDisabled": false,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
-          // {
-          //   "name": "DimensionOfStructure(L,B,H)",
-          //   "jsonPath": "Assets[0].length",
-          //   "label": "ac.create.Dimension.of.Structure",
-          //   "pattern": "",
-          //   "type": "number",
-          //   "url": "",
-          //   "isRequired": false,
-          //   "isDisabled": false,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
-					// {
-          //   "name": "DimensionOfStructure(L,B,H)",
-          //   "jsonPath": "Assets[0].width",
-          //   "label": "ac.create.Dimension.breadth",
-          //   "pattern": "",
-          //   "type": "number",
-          //   "url": "",
-          //   "isRequired": false,
-          //   "isDisabled": false,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
-					// {
-          //   "name": "DimensionOfStructure(L,B,H)",
-          //   "jsonPath": "Assets[0].height",
-          //   "label": "ac.create.Dimension.height",
-          //   "pattern": "",
-          //   "type": "number",
-          //   "url": "",
-          //   "isRequired": false,
-          //   "isDisabled": false,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
-					// {
-          //   "name": "Usage",
-          //   "jsonPath": "Assets[0].usage",
-          //   "label": "ac.create.Usage",
-          //   "pattern": "",
-          //   "type": "text",
-          //   "url": "",
-          //   "isRequired": false,
-          //   "isDisabled": false,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
 					{
             "name": "AnticipatedLifeOfAsset",
             "jsonPath": "Assets[0].anticipatedLife",
@@ -1486,17 +1394,8 @@ var dat = {
 			},
       {
 				"name": "TableField",
-        "jsonPath":"Asset",
+        "jsonPath":"Assets",
 				"fields": [
-          // {
-          //   "name": "AnticipatedLifeOfAsset",
-          //   "label": "Anticipated life of Asset",
-          //   "type": "dynamicTable"
-          //   "resultList": {
-          //     "resultHeader": [{"label": "asset.create.test"}],
-          //     "resultValues": [[{}, ], [], []]
-          //   }
-          // },
           {
             "name": "OpeningDate",
             "jsonPath": "Assets[0].openingDate",
@@ -1622,7 +1521,7 @@ var dat = {
 			},
 			{
 
-				"name": "TableField",
+				"name": "AccoutCodeField",
         "jsonPath":"Assets",
 				"fields": [
 					{
@@ -1672,7 +1571,7 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          },
+          }
 				]
 			}
 		]

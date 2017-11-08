@@ -146,14 +146,15 @@ var dat = {
             url:
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name"
           },
-          {
+           {
             name: "ward",
             jsonPath: "cases[0].summon.ward",
             label: "legal.create.ward",
-            type: "text",
-            isRequired: true,
-            isDisabled: false,
-            patternErrorMsg: ""
+            type: "singleValueList",
+            isRequired: false,
+            isDisabled: true,
+            patternErrorMsg: "",
+            url:"/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name"
           },
           {
             name: "stamp",

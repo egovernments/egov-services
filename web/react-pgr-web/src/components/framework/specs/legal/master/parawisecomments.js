@@ -152,10 +152,11 @@ var dat = {
             name: "ward",
             jsonPath: "cases[0].summon.ward",
             label: "legal.create.ward",
-            type: "text",
+            type: "singleValueList",
             isRequired: false,
             isDisabled: true,
-            patternErrorMsg: ""
+            patternErrorMsg: "",
+            url:"/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name"
           },
          {
             name: "stamp",

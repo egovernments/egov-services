@@ -610,7 +610,8 @@ class assetImmovableCreate extends Component {
     let self = this, _url;
     e.preventDefault();
     self.props.setLoadingStatus('loading');
-    var formData = {...this.props.formData};
+    var formData = JSON.parse(JSON.stringify(this.props.formData));
+    
     if (formData.Asset.titleDocumentsAvalable) {
       console.log(formData.Asset.titleDocumentsAvalable);
       formData.Asset.titleDocumentsAvalable = formData.Asset.titleDocumentsAvalable.split(",");

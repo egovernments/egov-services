@@ -42,6 +42,42 @@ basePath: "/inventory-inventory/v110"
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/inventory-inventory/contracts/v1-0-0.yml'
 x-api-id: 'org.egov.inventory.inventory'
 paths:
+    /openingbalance/_search:
+      post:
+        summary: Get the opening balance
+        description: Get opening balance
+        tags: 
+          - Opening Balance
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: finanncilaYear
+            type: string
+            in: query
+            description: |
+              search on basis of financial year
+          - name: receiptNumber
+            type: string
+            in: query
+            description: |
+              search on basis of receiptNumber
+          - name: materialName
+            type: string
+            in: query
+            description: |
+              search on basis of materialName
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
+        responses:
+          200:
+            description: opening balance retrieved Successfully
+            schema:
+              $ref: '#/definitions/OpeningBalanceResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
     /openingbalance/_create:
       post:
         summary: Create New Opening Balanace.

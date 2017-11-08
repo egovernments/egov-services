@@ -489,11 +489,11 @@ definitions:
         maxLength: 12
       bank:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Bank"
-        description: Bank of the Contractor
+        description: Bank of the Contractor. If Financial integration is true at state/ULB level configuation then bank is mandatory else its optional.
         format: singleValueList
       bankAccountNumber:
         type: number
-        description: Bank Account Number of the Contractor
+        description: Bank Account Number of the Contractor. If Financial integration is true at state/ULB level configuation then bank account number is mandatory else its optional.
         maxLength: 20
         pattern: "[0-9]"
       pwdApprovalCode:
@@ -517,11 +517,11 @@ definitions:
         maxLength: 50
       accountCode:
         type: number
-        description: Chart of Account Code for the Contractor
+        description: Chart of Account Code for the Contractor. If Financial integration is true at state/ULB level configuation then accountCode is mandatory else its optional.
         maxLength: 100
       ifscCode:
         type: number
-        description: IFSC Code of the Bank Account for the Contractor
+        description: IFSC Code of the Bank Account for the Contractor. If Financial integration is true at state/ULB level configuation then ifscCode is mandatory else its optional.
         pattern: '[a-zA-Z0-9]+'
         maxLength: 20
       contractorClass:
@@ -544,13 +544,9 @@ definitions:
       - mobileNumber
       - panNumber
       - tinNumber
-      - bank
-      - bankAccountNumber
       - pwdApprovalCode
       - pwdApprovalValidTill
       - epfRegistrationNumber
-      - accountCode
-      - ifscCode
       - contractorClass
       
   MilestoneTemplate:

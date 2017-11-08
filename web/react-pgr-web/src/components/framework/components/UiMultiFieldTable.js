@@ -94,7 +94,7 @@ class UiMultiFieldTable extends Component {
 			values.push(val);
 			this.setState({
 				values
-			});	   		
+			});
    		})
    	}
 
@@ -130,6 +130,8 @@ class UiMultiFieldTable extends Component {
 	  	switch(item.type) {
 	  		case 'text':
 	  			 return <UiTextField ui={this.props.ui} getVal={this.props.getVal} item={item}  fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+			 case 'textarea':
+						return <UiTextArea ui={this.props.ui} getVal={this.props.getVal} item={item}  fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
 	  		case 'singleValueListMultiple':
 	  			return <UiSelectFieldMultiple ui={this.props.ui} useTimestamp={this.props.useTimestamp} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
 	  		case 'singleValueList':
@@ -177,7 +179,7 @@ class UiMultiFieldTable extends Component {
 							{
 								item.tableList.header.map((v, i) => {
 									return (
-										<th>{translate(v.label)}</th>
+										<th key={i}>{translate(v.label)}</th>
 									)
 								})
 							}
@@ -228,7 +230,7 @@ class UiMultiFieldTable extends Component {
 	}
 }
 
-const mapStateToProps = state => ({ 
+const mapStateToProps = state => ({
 	formData: state.frameworkForm.form
 });
 

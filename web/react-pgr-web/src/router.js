@@ -170,6 +170,9 @@ import NoMatch from './components/common/NoMatch';
 //inventory
 import SupplierSearch from './components/non-framework/inventory/master/supplier/SupplierSearch';
 
+//works
+import abstractEstimate from './components/non-framework/works/transaction/abstractEstimate';
+
 const base = "";
 
 const Main = () => {
@@ -352,6 +355,10 @@ const Main = () => {
 
       {/* inventory */}
       <Route exact path= {base + '/non-framework/inventory/master/supplier'} component={SupplierSearch}/>
+
+      {/* works */}
+      <Route exact path= {base + '/non-framework/works/transaction/abstractEstimate'} component={abstractEstimate}/>
+
       <Route component={NoMatch}/>
 
     </Switch>

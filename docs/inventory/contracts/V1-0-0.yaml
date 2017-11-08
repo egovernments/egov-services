@@ -701,98 +701,6 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /materailIssues/_search:
-      post:
-        summary: Get the list of indent issues.
-        description: This API is used to search the issues incurred for the indents raised in the system.
-        tags: 
-          - Indent Issue
-        parameters:
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: ids
-            type: array
-            items: 
-             type: string
-            in: query
-            maxItems: 50
-            description: comma seperated list of Ids 
-          - name: materialIssue
-            type: integer
-            format: int64
-            in: query
-            description: |
-              material issue of the IndentIssue
-          - name: issuedToEmployee
-            type: string
-            in: query
-            description: |
-              issued to employee of the IndentIssue
-          - name: stateId
-            type: integer
-            format: int64
-            in: query
-            description: |
-              state id of the IndentIssue
-          - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/pageNumber"
-          - $ref: "#/parameters/sortProperty"
-        responses:
-          200:
-            description: IndentIssue retrieved Successfully
-            schema:
-              $ref: '#/definitions/MaterialIssueResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /materailIssues/_create:
-      post:
-        summary: Create new indent issues.
-        description: This API is invoked when the issuing store issues materials against the indent raised in the system.
-        tags: 
-          - Indent Issue
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: indentIssueRequest
-            in: body
-            description: Create  new 
-            schema:
-              $ref: '#/definitions/MaterialIssueRequest'
-        responses:
-          200:
-            description: IndentIssue created Successfully
-            schema:
-              $ref: '#/definitions/MaterialIssueResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /materailIssues/_update:
-      post:
-        summary: Update any of the indent issues.
-        description: This API is invoked to update the indent material issue information and during the workflow as well.
-        tags: 
-          - Indent Issue
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: indentIssueRequest
-            in: body
-            description: common Request info
-            schema:
-              $ref: '#/definitions/MaterialIssueRequest'
-        responses:
-          200:
-            description: IndentIssue updated Successfully
-            schema:
-              $ref: '#/definitions/MaterialIssueResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
     /materials/_search:
       post:
         summary: Get the list of materials
@@ -2587,9 +2495,10 @@ definitions:
             materials.
           x-displayformat: 'dd/MM/yyyy'
         challanNo:
-          type: boolean
+          type: string
           description: The challan number associated with this receipt.
-          format: boolean
+          format: varchar
+          maxLength: 52
         challanDate:
           type: integer
           format: int64
@@ -2624,7 +2533,7 @@ definitions:
           description: >-
             The unique code of the employee who has inspected the receipt of
             materials.
-          format: boolean
+          format: varchar
         inspectionDate:
           type: integer
           format: int64
@@ -2675,6 +2584,10 @@ definitions:
           minLength: 4  
         material:
           $ref: "#/definitions/Material"
+        orderNumber:
+          type: number
+          format: int32
+          description: Order of items received.
         uom:
           $ref: "#/definitions/Uom"  
           description: Auto populate stocking unit of measure of selected material.
@@ -2716,6 +2629,10 @@ definitions:
           maxLength: 512
           description: General description about the materials.
           format: varchar
+        isScrapItem:
+          type: boolean
+          description: is scrap item flag. Donot use this data to issue material and show in any stock ledger report.
+          default: false
         receiptDetailsAddnInfo:
           type: array
           description: >-
@@ -2725,6 +2642,7 @@ definitions:
       required:
         - id
         - receivedQty
+        - tenantId
         
     MaterialReceiptDetailAddnlinfo:
       description: >-
@@ -2816,11 +2734,16 @@ definitions:
           enum:
             - IndentIssue
             - NonIndentIssue
-        issuingStore:
+            - Material Outward
+        fromStore:
           $ref: "#/definitions/Store"
           description: |
             This field holds the issuing store information.
-        issueNoteNumber:
+        toStore:
+          $ref: "#/definitions/Store"
+          description: |
+            This field holds the receiving store information.    
+        issueNumber:
           type: string
           maxLength: 100
           readOnly: true
@@ -2845,7 +2768,7 @@ definitions:
             material issue status of the MaterialIssue
         description:
           type: string
-          maxLength: 1000
+          maxLength: 512
           description: description of the MaterialIssue
         totalIssueValue:
           type: number
@@ -2870,9 +2793,13 @@ definitions:
         issuePurpose:
           type: string
           enum:
-            - WriteOffORScrap
-            - ReturnToSupplier
+            - WriteOff OR Scrap
+            - Return To Supplier
           description: Applicable in case of None Indent Issue. This field holds information about Issuing purpose of the Non Indent Issue
+        supplier:
+          $ref: "#/definitions/Supplier"
+          description: |
+            supplier code. Return of material to supplier against receipt.
         materialIssueDetails:
           type: array
           description: List of materials issued for indent and non indent items.
@@ -2888,11 +2815,12 @@ definitions:
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
-      - issuingStore
+      - fromStore
       - issueDate
       - materialIssueStatus
       - totalIssueValue
       - issueType
+      - tenantId
       
     MaterialIssueRequest:
       description: Contract class for web request. Array of MaterialIssue items  are used in case of create or update
@@ -2935,36 +2863,99 @@ definitions:
           description: Tenant id of the Material Issue Details
           maxLength: 128
           minLength: 4
+        material:
+          $ref: "#/definitions/Material"
+          description: |
+            Applicable for Non Indent Issue.
+          format: autoComplete  
+        orderNumber:
+          type: number
+          format: int32
+          description: Order of items issued.
+        quantityIssued:
+          type: number
+          format: BigDecimal
+          description: |
+            Quantity issued of the Material Issue Detail.
+        value:
+          type: number
+          format: BigDecimal
+          description: |
+            Total value of issued material.   Send value 0 if price not defined. 
+        uom:
+          $ref: "#/definitions/Uom"  
+          description: unit of measure of selected material.
+          format: singleValueList
+        voucherHeader:
+          type: string
+          description: financial voucher passed id map   
         indentDetail:
           description: >-
-            Applicable for Indent Issue. Balance quantity to be issued of the IndentDetails. 
+            Applicable for Indent Issue. Balance quantity to be issued of the IndentDetails. Mandatory in case of indent issue.
           $ref: "#/definitions/IndentDetail"
         quantityToBeIssued:
           type: number
           format: BigDecimal
           description: |
             Balance quantity to be issued of the IndentDetails.
-        materialReceipt:
-          description: >-
-            Applicable for Non Indent Issue.
-          $ref: "#/definitions/MaterialReceipt"  
-        material:
-          $ref: "#/definitions/Material"
-          description: |
-            Applicable for Non Indent Issue.
-        quantityIssued:
+        scrapValue:
           type: number
           format: BigDecimal
           description: |
-            Quantity issued of the Material Issue Detail.
+            If item writeoffed or scrapped, then define the scrap value.
         description:
           type: string
-          maxLength: 1000
+          maxLength: 512
           description: |
             description of the Material Issue Detail.
       required:
       - quantityIssued
+      - value
+      - uom
+      - material
+      - tenantId
       
+    MaterialIssuedFromReceipt:
+      type: object
+      description: |
+        This object holds the materail issue and receipts used for material issue. This table will be used in FIFO logic and total items issued againest a particular receipt.
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the Material Issue from receipt.
+        tenantId:
+          type: string
+          description: Tenant id of the Material Issue from receipt.
+          maxLength: 128
+          minLength: 4
+        materialIssueDetails:
+          $ref: "#/definitions/MaterialIssueDetails"
+          description: |
+            material issued detail id.
+        materialReceiptDetail:
+          description: >-
+             In case of return of material purpose type, select initial receipt to keep account. Do not use fifo logic in case of return to supplier. Supplier will received the same goods which are identified by lot number, expiry date, serial number or manufacture number or receive date wise.  For other purpose use FIFO logic to issue item.
+          $ref: "#/definitions/MaterialReceiptDetail"
+          format: autoComplete
+        materialReceiptDetailAddnlinfo:
+          description: >-
+             if material has lot number, expiry date, serial number or manufacture number then save receipt additional info id also.
+          $ref: "#/definitions/MaterialReceiptDetailAddnlinfo"
+        quantity:
+          type: number
+          format: BigDecimal
+          description: |
+            Quantity issued of the Material Issue Detail.
+        status:
+          type: boolean
+          description: |
+            If material issue cancelled or rejected in workflow, then use status as false.
+          default: true  
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
+      required:
+      - tenantId
     TransferInwardRequest:
       description: Contract class for material receipt inward request. Array of MaterialReceipt items  are used in case of create or update
       properties:
@@ -4192,6 +4183,7 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
+
 
 
 

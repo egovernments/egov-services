@@ -14,11 +14,20 @@ public class Constants {
     public static final String KEY_SOR_DATES_SHOULDNOT_OVERLAP="WMS.SOR.DATES.SHOULDNOT.OVERLAP";
     public static final String MESSAGE_SOR_DATES_SHOULDNOT_OVERLAP="SOR Dates should not be overlaped";
 
+    public static final String KEY_SOR_CODE_EXISTS="WMS.SOR.CODE.EXISTS";
+    public static final String MESSAGE_SOR_CODE_EXISTS="Given SOR already exists: ";
+
+    public static final String KEY_ESTIMATETEMPLATE_CODE_EXISTS="WMS.ESTIMATETEMPLATE.CODE.EXISTS";
+    public static final String MESSAGE_ESTIMATETEMPLATE_CODE_EXISTS="Given Estimate Template already exists: ";
+
     public static final String KEY_TYPEOFWORK_CODE_INVALID="WMS.TYPEOFWORK.CODE.INVALID";
     public static final String MESSAGE_TYPEOFWORK_CODE_INVALID="Given Type Of Work is invalid: ";
 
     public static final String KEY_SUBTYPEOFWORK_CODE_INVALID="WMS.SUBTYPEOFWORK.CODE.INVALID";
     public static final String MESSAGE_SUBTYPEOFWORK_CODE_INVALID="Given Type Of Work is invalid: ";
+
+    public static final String KEY_SCHEDULEOFRATE_ID_INVALID="WMS.SCHEDULEOFRATE.ID.INVALID";
+    public static final String MESSAGE_SCHEDULEOFRATE_ID_INVALID="Given Schedule Of Rate is invalid: ";
 
     public static final String KEY_CONTRACTOR_CONTRACTORCLASS_CLASS_INVALID="CONTRACTOR.CONTRACTORCLASS.CLASS.INVALID";
     public static final String MESSAGE_CONTRACTOR_CONTRACTORCLASS_CLASS_INVALID="Given ContractorClass is invalid: ";

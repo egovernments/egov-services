@@ -30,6 +30,7 @@ public class ScheduleOfRatesController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@Valid @RequestBody ScheduleOfRateRequest scheduleOfRateRequest) {
 		scheduleOfRateValidator.validate(scheduleOfRateRequest);
+		scheduleOfRateValidator.validateForExistance(scheduleOfRateRequest);
 		final List<ScheduleOfRate> scheduleOfRates = scheduleOfRatesService.create(scheduleOfRateRequest);
 		final ScheduleOfRateResponse response = new ScheduleOfRateResponse();
 		response.setScheduleOfRates(scheduleOfRates);

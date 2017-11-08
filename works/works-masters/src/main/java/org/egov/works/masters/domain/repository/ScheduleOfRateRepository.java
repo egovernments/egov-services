@@ -78,10 +78,26 @@ public class ScheduleOfRateRepository {
 
     public ScheduleOfRate getbyId(String id, String tenantId){
         ScheduleOfRateSearchCriteria scheduleOfRateSearchCriteria = new ScheduleOfRateSearchCriteria();
+        List<ScheduleOfRate> scheduleOfRates;
         List<String> ids = new ArrayList<>();
         ids.add(id);
         scheduleOfRateSearchCriteria.setIds(ids);
         scheduleOfRateSearchCriteria.setTenantId(tenantId);
-        return getScheduleOfRateByCriteria(scheduleOfRateSearchCriteria).get(0);
+        scheduleOfRates = getScheduleOfRateByCriteria(scheduleOfRateSearchCriteria);
+        return scheduleOfRates.isEmpty()?null:scheduleOfRates.get(0);
+    }
+
+    public ScheduleOfRate getByCodeCategory(String code, String scheduleCategory, String tenantId){
+        ScheduleOfRateSearchCriteria scheduleOfRateSearchCriteria = new ScheduleOfRateSearchCriteria();
+        List<ScheduleOfRate> scheduleOfRates;
+        List<String> codes = new ArrayList<>();
+        codes.add(code);
+        List<String> categories = new ArrayList<>();
+        categories.add(scheduleCategory);
+        scheduleOfRateSearchCriteria.setSorCodes(codes);
+        scheduleOfRateSearchCriteria.setTenantId(tenantId);
+        scheduleOfRateSearchCriteria.setScheduleCategoryCodes(categories);
+        scheduleOfRates = getScheduleOfRateByCriteria(scheduleOfRateSearchCriteria);
+        return scheduleOfRates.isEmpty()?null:scheduleOfRates.get(0);
     }
 }

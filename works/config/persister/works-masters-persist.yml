@@ -81,7 +81,7 @@ serviceMaps:
 
  - version: 1.0
    name: ScheduleOfRate Update
-   description: Persists Schedule Of Rate in egw_scheduleofrate table
+   description: Updates Schedule Of Rate in egw_scheduleofrate table
    fromTopic: works-sorrate-update-validated
    isTransaction: true
    queryMaps:
@@ -340,3 +340,57 @@ serviceMaps:
        - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.description
 
        - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.uom.code
+
+ - version: 1.0
+   name: Estimate Template Update
+   description: Updates Estimate Template in egw_estimatetemplate table
+   fromTopic: works-estimatetemplate-update-validated
+   isTransaction: true
+   queryMaps:
+    - query: update egw_estimatetemplate set code=?, name=?, active=?, description=?, typeofwork=?, subtypeofwork=? where id=? and tenantid=?;
+      basePath: $.estimateTemplates.*
+      jsonMaps:
+
+       - jsonPath: $.estimateTemplates.*.code
+
+       - jsonPath: $.estimateTemplates.*.name
+
+       - jsonPath: $.estimateTemplates.*.active
+
+       - jsonPath: $.estimateTemplates.*.description
+
+       - jsonPath: $.estimateTemplates.*.typeOfWork.code
+
+       - jsonPath: $.estimateTemplates.*.subTypeOfWork.code
+
+       - jsonPath: $.estimateTemplates.*.id
+
+       - jsonPath: $.estimateTemplates.*.tenantId
+
+    - query: update egw_estimatetemplateactivities set schedulerofrate=?, uom=?, nonsor=?,  unitrate=? where id=? and tenantid=?;
+      basePath: $.estimateTemplates.*.estimateTemplateActivities.*
+      jsonMaps:
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.scheduleOfRate.id
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.uom.code
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.id
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.unitRate
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.id
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.tenantId
+
+    - query: update egw_nonsor set description=?, uom=? where id=? and tenantid=?;
+      basePath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR
+      jsonMaps:
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.description
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.uom.code
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.id
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.tenantId

@@ -2,7 +2,10 @@ package org.egov.works.masters.domain.repository.helper;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.egov.works.masters.web.contract.EstimateTemplate;
 import org.egov.works.masters.web.contract.EstimateTemplateActivities;
+import org.egov.works.masters.web.contract.ScheduleOfRate;
+import org.egov.works.masters.web.contract.UOM;
 
 import java.math.BigDecimal;
 
@@ -52,10 +55,12 @@ public class EstimateTemplateActivitiesHelper {
         EstimateTemplateActivities estimateTemplateActivities = new EstimateTemplateActivities();
         estimateTemplateActivities.setId(this.id);
         estimateTemplateActivities.setTenantId(this.tenantId);
+        estimateTemplateActivities.setEstimateTemplate(new EstimateTemplate());
         estimateTemplateActivities.getEstimateTemplate().setCode(this.estimateTemplate);
+        estimateTemplateActivities.setScheduleOfRate(new ScheduleOfRate());
         estimateTemplateActivities.getScheduleOfRate().setCode(this.scheduleOfRate);
+        estimateTemplateActivities.setUom(new UOM());
         estimateTemplateActivities.getUom().setCode(this.uom);
-        estimateTemplateActivities.getNonSOR().setId(this.nonSOR);
         estimateTemplateActivities.setUnitRate(this.unitRate);
         return estimateTemplateActivities;
     }

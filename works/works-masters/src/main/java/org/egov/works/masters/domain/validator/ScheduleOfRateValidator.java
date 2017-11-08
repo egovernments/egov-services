@@ -3,6 +3,7 @@ package org.egov.works.masters.domain.validator;
 import net.minidev.json.JSONArray;
 import org.egov.tracer.model.CustomException;
 import org.egov.works.commons.utils.CommonConstants;
+import org.egov.works.masters.domain.service.ScheduleOfRateService;
 import org.egov.works.masters.utils.Constants;
 import org.egov.works.masters.web.contract.SORRate;
 import org.egov.works.masters.web.contract.ScheduleOfRate;
@@ -26,6 +27,9 @@ public class ScheduleOfRateValidator {
     @Autowired
     private MdmsRepository mdmsRepository;
 
+    @Autowired
+    private ScheduleOfRateService scheduleOfRateService;
+
     public void validate(ScheduleOfRateRequest scheduleOfRateRequest) {
         JSONArray mdmsResponse = null;
         Map<String, String> messages = new HashMap<>();
@@ -41,6 +45,7 @@ public class ScheduleOfRateValidator {
                     isDataValid=Boolean.TRUE;
                 }
             }
+
             if (scheduleOfRate.getScheduleCategory() != null && scheduleOfRate.getScheduleCategory().getCode() != null) {
                 mdmsResponse = mdmsRepository.getByCriteria(scheduleOfRate.getTenantId(), CommonConstants.MODULENAME_COMMON,
                         CommonConstants.MASTERNAME_UOM, "code", scheduleOfRate.getUom().getCode(),
@@ -50,6 +55,7 @@ public class ScheduleOfRateValidator {
                     isDataValid = Boolean.TRUE;
                 }
             }
+
             if (scheduleOfRate.getSorRates() != null && (!scheduleOfRate.getSorRates().isEmpty() && scheduleOfRate.getSorRates().size()>1)){
                 Boolean isDateOverlaped = Boolean.FALSE;
                 List<SORRate> sorRates;
@@ -76,6 +82,20 @@ public class ScheduleOfRateValidator {
                         messages.put(Constants.KEY_SOR_DATES_SHOULDNOT_OVERLAP, Constants.MESSAGE_SOR_DATES_SHOULDNOT_OVERLAP);
                         isDataValid = Boolean.TRUE;
                     }
+                }
+            }
+        }
+        if(isDataValid) throw new CustomException(messages);
+    }
+
+    public void validateForExistance(ScheduleOfRateRequest scheduleOfRateRequest) {
+        Map<String, String> messages = new HashMap<>();
+        Boolean isDataValid = Boolean.FALSE;
+        for (final ScheduleOfRate scheduleOfRate : scheduleOfRateRequest.getScheduleOfRates()) {
+            if (scheduleOfRate.getScheduleCategory() != null && scheduleOfRate.getScheduleCategory().getCode() != null && scheduleOfRate.getScheduleCategory().getCode() != null) {
+                if (scheduleOfRateService.getByCodeCategory(scheduleOfRate.getCode(), scheduleOfRate.getScheduleCategory().getCode(), scheduleOfRate.getTenantId()) != null) {
+                    messages.put(Constants.KEY_SOR_CODE_EXISTS, Constants.MESSAGE_SOR_CODE_EXISTS + scheduleOfRate.getCode());
+                    isDataValid = Boolean.TRUE;
                 }
             }
         }

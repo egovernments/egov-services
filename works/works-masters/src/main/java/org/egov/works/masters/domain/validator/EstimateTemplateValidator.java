@@ -3,12 +3,12 @@ package org.egov.works.masters.domain.validator;
 import net.minidev.json.JSONArray;
 import org.egov.tracer.model.CustomException;
 import org.egov.works.commons.utils.CommonConstants;
+import org.egov.works.masters.domain.service.EstimateTemplateService;
 import org.egov.works.masters.domain.service.ScheduleOfRateService;
 import org.egov.works.masters.utils.Constants;
 import org.egov.works.masters.web.contract.EstimateTemplate;
 import org.egov.works.masters.web.contract.EstimateTemplateActivities;
 import org.egov.works.masters.web.contract.EstimateTemplateRequest;
-import org.egov.works.masters.web.contract.ScheduleOfRate;
 import org.egov.works.masters.web.repository.MdmsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +26,9 @@ public class EstimateTemplateValidator {
 
     @Autowired
     private ScheduleOfRateService scheduleOfRateService;
+
+    @Autowired
+    private EstimateTemplateService estimateTemplateService;
 
     public void validate(EstimateTemplateRequest estimateTemplateRequest) {
         JSONArray mdmsResponse = null;
@@ -47,18 +50,14 @@ public class EstimateTemplateValidator {
                         CommonConstants.MASTERNAME_TYPEOFWORK, "code", estimateTemplate.getSubTypeOfWork().getCode(),
                         estimateTemplateRequest.getRequestInfo());
                 if (mdmsResponse == null || mdmsResponse.size() == 0) {
-                    validationMessages.put(Constants.KEY_TYPEOFWORK_CODE_INVALID, Constants.MESSAGE_TYPEOFWORK_CODE_INVALID + estimateTemplate.getSubTypeOfWork().getCode());
+                    validationMessages.put(Constants.KEY_SUBTYPEOFWORK_CODE_INVALID, Constants.MESSAGE_SUBTYPEOFWORK_CODE_INVALID + estimateTemplate.getSubTypeOfWork().getCode());
                     isDataValid=Boolean.TRUE;
                 }
             }
             for(EstimateTemplateActivities estimateTemplateActivities : estimateTemplate.getEstimateTemplateActivities()) {
-                if (estimateTemplateActivities.getScheduleOfRate() != null && estimateTemplateActivities.getScheduleOfRate().getCode() != null) {
-                    ScheduleOfRate scheduleOfRate = scheduleOfRateService.getbyId(estimateTemplateActivities.getScheduleOfRate().getCode(), estimateTemplateActivities.getTenantId());
-                    mdmsResponse = mdmsRepository.getByCriteria(estimateTemplate.getTenantId(), CommonConstants.MODULENAME_WORKS,
-                            CommonConstants.MASTERNAME_SCHEDULE_CATEGORY, "code", estimateTemplateActivities.getScheduleOfRate().getCode(),
-                            estimateTemplateRequest.getRequestInfo());
-                    if (scheduleOfRate == null) {
-                        validationMessages.put(Constants.KEY_SCHEDULERCATEGORY_CODE_INVALID, Constants.MESSAGE_SCHEDULERCATEGORY_CODE_INVALID + estimateTemplateActivities.getScheduleOfRate().getCode());
+                if (estimateTemplateActivities.getScheduleOfRate() != null && estimateTemplateActivities.getScheduleOfRate().getId() != null) {
+                    if (scheduleOfRateService.getById(estimateTemplateActivities.getScheduleOfRate().getId(), estimateTemplateActivities.getTenantId()) == null) {
+                        validationMessages.put(Constants.KEY_SCHEDULEOFRATE_ID_INVALID, Constants.MESSAGE_SCHEDULEOFRATE_ID_INVALID + estimateTemplateActivities.getScheduleOfRate().getCode());
                         isDataValid = Boolean.TRUE;
                     }
                 }
@@ -81,6 +80,21 @@ public class EstimateTemplateValidator {
                         validationMessages.put(Constants.KEY_UOM_CODE_INVALID, Constants.MESSAGE_UOM_CODE_INVALID + estimateTemplateActivities.getNonSOR().getUom().getCode());
                         isDataValid = Boolean.TRUE;
                     }
+                }
+            }
+        }
+        if(isDataValid) throw new CustomException(validationMessages);
+    }
+
+    public void validateForExistance(EstimateTemplateRequest estimateTemplateRequest) {
+        Map<String, String> validationMessages = new HashMap<>();
+        Boolean isDataValid = Boolean.FALSE;
+
+        for (final EstimateTemplate estimateTemplate : estimateTemplateRequest.getEstimateTemplates()) {
+            if (estimateTemplate.getCode() != null) {
+                if (estimateTemplateService.getByCode(estimateTemplate.getCode(), estimateTemplate.getTenantId()) != null) {
+                    validationMessages.put(Constants.KEY_ESTIMATETEMPLATE_CODE_EXISTS, Constants.MESSAGE_ESTIMATETEMPLATE_CODE_EXISTS + estimateTemplate.getCode());
+                    isDataValid = Boolean.TRUE;
                 }
             }
         }

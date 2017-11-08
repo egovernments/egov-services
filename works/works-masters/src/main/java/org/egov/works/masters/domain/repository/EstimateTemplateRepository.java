@@ -37,9 +37,9 @@ public class EstimateTemplateRepository {
 
         EstimateTemplate estimateTemplate;
 
-        for(EstimateTemplateHelper scheduleOfRateHelper : estimateTemplateHelpers) {
-            estimateTemplate = scheduleOfRateHelper.toDomain();
-            estimateTemplate.setEstimateTemplateActivities(prepareEstimateTemplateActivities(estimateTemplate.getCode(), estimateTemplate.getTenantId()));
+        for(EstimateTemplateHelper estimateTemplateHelper : estimateTemplateHelpers) {
+            estimateTemplate = estimateTemplateHelper.toDomain();
+            estimateTemplate.setEstimateTemplateActivities(prepareEstimateTemplateActivities(estimateTemplate.getId(), estimateTemplate.getTenantId()));
             estimateTemplates.add(estimateTemplate);
         }
         return estimateTemplates;
@@ -66,5 +66,25 @@ public class EstimateTemplateRepository {
         String queryStr = estimateTemplateQueryBuilder.getNonSorRate(nonSorId, tenantId, params);
         List<NonSORHelper> nonSORHelpers = namedParameterJdbcTemplate.query(queryStr, params, new BeanPropertyRowMapper(NonSORHelper.class));
         return nonSORHelpers.get(0).toDomain();
+    }
+
+    public EstimateTemplate getbyId(String id, String tenantId){
+        EstimateTemplateSearchCriteria estimateTemplateSearchCriteria = new EstimateTemplateSearchCriteria();
+        List<EstimateTemplate> estimateTemplates;
+        List<String> ids = new ArrayList<>();
+        ids.add(id);
+        estimateTemplateSearchCriteria.setIds(ids);
+        estimateTemplateSearchCriteria.setTenantId(tenantId);
+        estimateTemplates = getEstimateTemplateByCriteria(estimateTemplateSearchCriteria);
+        return estimateTemplates.isEmpty()?null:estimateTemplates.get(0);
+    }
+
+    public EstimateTemplate getByCode(String code, String tenantId){
+        EstimateTemplateSearchCriteria estimateTemplateSearchCriteria = new EstimateTemplateSearchCriteria();
+        List<EstimateTemplate> estimateTemplates;
+        estimateTemplateSearchCriteria.setCode(code);
+        estimateTemplateSearchCriteria.setTenantId(tenantId);
+        estimateTemplates = getEstimateTemplateByCriteria(estimateTemplateSearchCriteria);
+        return estimateTemplates.isEmpty()?null:estimateTemplates.get(0);
     }
 }

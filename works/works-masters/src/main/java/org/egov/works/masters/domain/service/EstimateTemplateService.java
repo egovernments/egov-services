@@ -59,4 +59,11 @@ public class EstimateTemplateService {
         return estimateTemplateRepository.getEstimateTemplateByCriteria(estimateTemplateSearchCriteria);
     }
 
+    public EstimateTemplate getById(String id, String tenantId) {
+        return estimateTemplateRepository.getbyId(id, tenantId);
+    }
+
+    public EstimateTemplate getByCode(String code, String tenantId) {
+        return estimateTemplateRepository.getByCode(code, tenantId);
+    }
 }

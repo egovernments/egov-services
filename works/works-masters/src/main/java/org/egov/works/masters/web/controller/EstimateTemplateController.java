@@ -30,6 +30,7 @@ public class EstimateTemplateController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@Valid @RequestBody EstimateTemplateRequest estimateTemplateRequest) {
 		estimateTemplateValidator.validate(estimateTemplateRequest);
+		estimateTemplateValidator.validateForExistance(estimateTemplateRequest);
 		final List<EstimateTemplate> estimateTemplates = estimateTemplateService.create(estimateTemplateRequest);
 		final EstimateTemplateResponse response = new EstimateTemplateResponse();
 		response.setEstimateTemplates(estimateTemplates);

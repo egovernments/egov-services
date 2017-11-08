@@ -9,7 +9,9 @@ import org.egov.tracer.model.CustomException;
 import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.estimate.config.PropertiesManager;
+import org.egov.works.estimate.domain.repository.AbstractEstimateRepository;
 import org.egov.works.estimate.domain.repository.DetailedEstimateRepository;
+import org.egov.works.estimate.persistence.repository.AbstractEstimateDetailsJdbcRepository;
 import org.egov.works.estimate.persistence.repository.AssetRepository;
 import org.egov.works.estimate.persistence.repository.IdGenerationRepository;
 import org.egov.works.estimate.persistence.repository.WorksMastersRepository;
@@ -59,6 +61,12 @@ public class DetailedEstimateService {
     @Autowired
     private AssetRepository assetRepository;
 
+    @Autowired
+    private AbstractEstimateDetailsJdbcRepository abstractEstimateDetailsJdbcRepository;
+
+    @Autowired
+    private AbstractEstimateRepository abstractEstimateRepository;
+
     public List<DetailedEstimate> search(DetailedEstimateSearchContract detailedEstimateSearchContract) {
         return detailedEstimateRepository.search(detailedEstimateSearchContract);
     }
@@ -71,11 +79,24 @@ public class DetailedEstimateService {
             detailedEstimate.setTotalIncludingRE(detailedEstimate.getWorkValue());
 
             if(detailedEstimate.getAbstractEstimateDetail() != null) {
-                detailedEstimate.setEstimateNumber(detailedEstimate.getAbstractEstimateDetail().getEstimateNumber());
-            } else {
-                String estimateNumber = idGenerationRepository
-                        .generateDetailedEstimateNumber(detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());
-                detailedEstimate.setEstimateNumber(propertiesManager.getDetailedEstimateNumberPrefix() + estimateNumber);
+                AbstractEstimateDetailsSearchContract searchContract = AbstractEstimateDetailsSearchContract.builder().tenantId(detailedEstimate.getTenantId())
+                        .ids(Arrays.asList(detailedEstimate.getAbstractEstimateDetail().getId())).build();
+                List<AbstractEstimateDetails> abstractEstimateDetails = abstractEstimateDetailsJdbcRepository.search(searchContract);
+                if(!abstractEstimateDetails.isEmpty()) {
+                    String abstractEstimateId = abstractEstimateDetails.get(0).getAbstractEstimate().getId();
+                    AbstractEstimateSearchContract abstractEstimateSearchContract = AbstractEstimateSearchContract.builder().tenantId(detailedEstimate.getTenantId())
+                            .ids(Arrays.asList(abstractEstimateId)).build();
+                    List<AbstractEstimate> abstractEstimates = abstractEstimateRepository.search(abstractEstimateSearchContract);
+                    if(!abstractEstimates.isEmpty()) {
+                        AbstractEstimate abstractEstimate = abstractEstimates.get(0);
+                        if(!abstractEstimate.getDetailedEstimateCreated()) {
+                            String estimateNumber = idGenerationRepository
+                                    .generateDetailedEstimateNumber(detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());
+                            detailedEstimate.setEstimateNumber(propertiesManager.getDetailedEstimateNumberPrefix() + estimateNumber);
+                        }
+                    }
+                }
+
             }
 
             for(final AssetsForEstimate assetsForEstimate : detailedEstimate.getAssets()) {

@@ -125,7 +125,7 @@ public class AbstractEstimateDetails   {
    * @return nameOfWork
   **/
   @ApiModelProperty(required = true, value = "Name Of Work of the Abstract Estimate")
-  @NotNull
+  //@NotNull
 
  @Pattern(regexp="[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+") @Size(min=1,max=1024)
   public String getNameOfWork() {
@@ -146,7 +146,7 @@ public class AbstractEstimateDetails   {
    * @return estimateAmount
   **/
   @ApiModelProperty(required = true, value = "Estimate amount for the Abstract Estimate")
-  @NotNull
+ // @NotNull
 
   @Valid
 
@@ -168,7 +168,7 @@ public class AbstractEstimateDetails   {
    * @return estimateNumber
   **/
   @ApiModelProperty(required = true, value = "Estimate number of the Abstract Estimate")
-  @NotNull
+//  @NotNull
 
  @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(min=1,max=50)
   public String getEstimateNumber() {

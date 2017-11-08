@@ -28,7 +28,6 @@ public class AbstractEstimateDetailsHelper {
 	@JsonProperty("tenantId")
 	private String tenantId = null;
 
-	@JsonIgnore
 	@JsonProperty("abstractEstimate")
 	private String abstractEstimate = null;
 
@@ -62,7 +61,7 @@ public class AbstractEstimateDetailsHelper {
 	public AbstractEstimateDetails toDomain() {
 		AbstractEstimateDetails estimateDetails = new AbstractEstimateDetails();
 		estimateDetails.setAbstractEstimate(new AbstractEstimate());
-//		estimateDetails.getAbstractEstimate().setId(this.abstractEstimate);
+		estimateDetails.getAbstractEstimate().setId(this.abstractEstimate);
 		estimateDetails.setAuditDetails(new AuditDetails());
 		estimateDetails.getAuditDetails().setCreatedBy(this.createdBy);
 		estimateDetails.getAuditDetails().setCreatedTime(this.createdTime);

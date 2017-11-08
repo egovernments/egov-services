@@ -69,10 +69,8 @@ public class DetailedEstimateRepository {
 				.search(detailedEstimateSearchContract)) {
 			detailedEstimate = estimate.toDomain(estimate);
 			
-			abstractEstimateDetailsSearchContract = new AbstractEstimateDetailsSearchContract();
-			abstractEstimateDetailsSearchContract.setTenantId(estimate.getTenantId());
-			abstractEstimateDetailsSearchContract
-					.setAbstractEstimateIds(Arrays.asList(estimate.getAbstractEstimateDetail()));
+			abstractEstimateDetailsSearchContract = AbstractEstimateDetailsSearchContract.builder().tenantId(estimate.getTenantId())
+                    .abstractEstimateIds(Arrays.asList(estimate.getAbstractEstimateDetail())).build();
 			
 			multiYearEstimateSearchContract = new MultiYearEstimateSearchContract();
 			multiYearEstimateSearchContract.setTenantId(estimate.getTenantId());

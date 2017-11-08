@@ -121,7 +121,7 @@ var dat = {
             name: "hearingTime",
             jsonPath: "cases[0].summon.hearingTime",
             label: "legal.create.hearingTime",
-            type: "text",
+            type: "timePicker",
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""
@@ -218,7 +218,7 @@ var dat = {
         fields: [
           {
             type: "tableList",
-            jsonPath: "cases[0].summon.advocateDetails",
+            jsonPath: "cases[0].advocateDetails",
             tableList: {
               header: [
                 {

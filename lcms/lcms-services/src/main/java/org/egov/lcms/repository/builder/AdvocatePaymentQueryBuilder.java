@@ -113,8 +113,9 @@ public class AdvocatePaymentQueryBuilder {
     	if(advocatePaymentSearchCriteria.getSort() != null && !advocatePaymentSearchCriteria.getSort().isEmpty()){
     		selectQuery.append(" ORDER BY "+advocatePaymentSearchCriteria.getSort());	
     	}
-        
+    	else
+    	{
+    		selectQuery.append(" ORDER BY lastmodifiedtime DESC");
+    	}
     }
-
-  
 }

@@ -16,7 +16,7 @@ var dat = {
             label: "advocates.create.primaryOwner",
             type: "radio",
             styleObj:{"display": "-webkit-box"},
-            isRequired: true,
+            isRequired: false,
             isDisabled: false,
             patternErrorMsg: "",
             values: [
@@ -42,7 +42,7 @@ var dat = {
             label: "advocates.create.advocateName",
             pattern: "",
             type: "text",
-            isRequired: true,
+            isRequired: false,
             isDisabled: false,
             requiredErrMsg: "",
             patternErrMsg: ""
@@ -52,7 +52,7 @@ var dat = {
             label: "advocates.create.agencOrganizationName",
             pattern: "",
             type: "text",
-            isRequired: true,
+            isRequired: false,
             isDisabled: false,
             requiredErrMsg: "",
             patternErrMsg: ""

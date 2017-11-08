@@ -24,6 +24,9 @@ class EmployeeReport extends React.Component {
     this.searchEmployee = this.searchEmployee.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
     this.closeWindow = this.closeWindow.bind(this);
+    this.formatDob = this.formatDob.bind(this);
+
+
   }
 
   setInitialState(initState) {
@@ -97,6 +100,14 @@ class EmployeeReport extends React.Component {
       open(location, '_self').close();
   }
 
+  formatDob(date){
+    if(date){
+        var dateParts1 = date.split("-");
+        var newDateStr = dateParts1[2] + "/" + dateParts1[1] + "/" + dateParts1[0];
+        return newDateStr;
+    }
+  }
+
   searchEmployee (e) {
     e.preventDefault();
     $('#employeeTable').DataTable().destroy();
@@ -119,7 +130,7 @@ class EmployeeReport extends React.Component {
   }
 
   render() {
-    let {handleChange, searchEmployee, closeWindow} = this;
+    let {handleChange, searchEmployee, formatDob, closeWindow} = this;
     let {result, employeeTypes,employeeStatusTypes,recruitmentTypes,employeeGroups,motherTongueTypes,recruitmentModes,recruitmentQuota,bank,branch} = this.state;
     let {recruitmentType, employeeStatus, employeeType} = this.state.searchSet;
 
@@ -158,7 +169,7 @@ class EmployeeReport extends React.Component {
                       <td>{getNameById(employeeTypes,item.employeeType)}</td>
                       <td>{getNameById(employeeStatusTypes,item.employeeStatus,"code")}</td>
                       <td>{getNameById(employeeGroups,item.group)}</td>
-                      <td>{item.dob}</td>
+                      <td>{formatDob(item.dob)}</td>
                       <td>{item.gender}</td>
                       <td>{item.maritalStatus}</td>
                       <td>{item.userName}</td>

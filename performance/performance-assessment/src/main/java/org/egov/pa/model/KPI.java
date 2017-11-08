@@ -19,8 +19,11 @@ public class KPI   {
   @JsonProperty("tenantIdCustom")
   private String tenantId = null;
 
+  @JsonProperty("departmentCode")
+  private String departmentCode = null;
+  
   @JsonProperty("department")
-  private Department department = null;
+  private Department department = null; 
 
   @JsonProperty("id")
   private String id = null;
@@ -33,6 +36,9 @@ public class KPI   {
 
   @JsonProperty("remoteSystemId")
   private String remoteSystemId = null;
+  
+  @JsonProperty("targetType")
+  private Boolean targetType;
 
   @JsonProperty("targetValue")
   private Long targetValue = null;
@@ -51,8 +57,26 @@ public class KPI   {
   
   
   
+  
+  
 
-  public AuditDetails getAuditDetails() {
+  public Boolean getTargetType() {
+	return targetType;
+}
+
+public void setTargetType(Boolean targetType) {
+	this.targetType = targetType;
+}
+
+public Department getDepartment() {
+	return department;
+}
+
+public void setDepartment(Department department) {
+	this.department = department;
+}
+
+public AuditDetails getAuditDetails() {
 	return auditDetails;
 }
 
@@ -95,23 +119,18 @@ public KPI tenantId(String tenantId) {
     this.tenantId = tenantId;
   }
 
-  public KPI department(Department department) {
-    this.department = department;
-    return this;
-  }
-
    /**
    * Get department
    * @return department
   **/
   @Valid
 
-  public Department getDepartment() {
-    return department;
+  public String getDepartmentCode() {
+    return departmentCode;
   }
 
-  public void setDepartment(Department department) {
-    this.department = department;
+  public void setDepartmentCode(String departmentCode) {
+    this.departmentCode = departmentCode;
   }
 
   public KPI id(String id) {
@@ -248,7 +267,7 @@ public KPI tenantId(String tenantId) {
     }
     KPI KPI = (KPI) o;
     return Objects.equals(this.tenantId, KPI.tenantId) &&
-        Objects.equals(this.department, KPI.department) &&
+        Objects.equals(this.departmentCode, KPI.departmentCode) &&
         Objects.equals(this.id, KPI.id) &&
         Objects.equals(this.name, KPI.name) &&
         Objects.equals(this.remoteSystemId, KPI.remoteSystemId) &&
@@ -259,7 +278,7 @@ public KPI tenantId(String tenantId) {
 
   @Override
   public int hashCode() {
-    return Objects.hash(tenantId, department, id, name, remoteSystemId, targetValue, instructions, financialYear, documents);
+    return Objects.hash(tenantId, departmentCode, id, name, remoteSystemId, targetValue, instructions, financialYear, documents);
   }
 
   @Override
@@ -268,7 +287,7 @@ public KPI tenantId(String tenantId) {
     sb.append("class KPI {\n");
     
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
-    sb.append("    department: ").append(toIndentedString(department)).append("\n");
+    sb.append("    department: ").append(toIndentedString(departmentCode)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    remoteSystemId: ").append(toIndentedString(remoteSystemId)).append("\n");

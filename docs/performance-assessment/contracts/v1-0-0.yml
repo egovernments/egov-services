@@ -444,14 +444,14 @@ definitions:
 parameters:
 
   name:
-    name: KPI Name
+    name: kpiName
     in: query
     description: Name of the KPI
     required: false
     type: string
 
   code:
-    name: KPI Code
+    name: kpiCode
     in: query
     description: Code of the KPI
     required: false

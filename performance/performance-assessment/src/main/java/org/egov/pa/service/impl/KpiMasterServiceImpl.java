@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.pa.model.AuditDetails;
-import org.egov.pa.model.DepartmentKpiList;
 import org.egov.pa.model.Document;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiTarget;
@@ -81,7 +80,7 @@ public class KpiMasterServiceImpl implements KpiMasterService {
 	}
 	
 	@Override
-	public List<DepartmentKpiList> searchKpi(KPIGetRequest kpiGetRequest) {
+	public List<KPI> searchKpi(KPIGetRequest kpiGetRequest) {
 		log.info("KPI Get Request Received at Service Level : " + kpiGetRequest); 
     	return kpiMasterRepository.searchKpi(kpiGetRequest);
 	}

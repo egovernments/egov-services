@@ -70,6 +70,8 @@ public class PerformanceAssessmentRowMapper {
 		public Map<String, KPI> kpiMap = new HashMap<>();
 		public Map<String, List<Document>> docMap = new HashMap<>();
 		public List<Long> docIdList = new ArrayList<>();
+		public static final String TRUE_FLAG = "true";
+		public static final String FALSE_FLAG = "false"; 
 
 		@Override
 		public KPI mapRow(final ResultSet rs, final int rowNum) throws SQLException {
@@ -84,12 +86,21 @@ public class PerformanceAssessmentRowMapper {
 				audit.setCreatedTime(rs.getLong("createdDate"));
 				audit.setLastModifiedBy(rs.getLong("lastModifiedBy"));
 				audit.setLastModifiedTime(rs.getLong("lastModifiedDate"));
+				if(null != rs.getString("targetType") && rs.getString("targetType").equals(TRUE_FLAG)) { 
+					kpi.setTargetType(Boolean.TRUE);
+				} else if (null != rs.getString("targetType") && rs.getString("targetType").equals(FALSE_FLAG)) {
+					kpi.setTargetType(Boolean.FALSE);
+				}
 				kpi.setTargetValue(rs.getLong("targetValue"));
 				kpi.setTenantId(rs.getString("tenantId"));
 				kpi.setInstructions(rs.getString("instructions"));
 				Department department= new Department(); 
 				department.setId(rs.getLong("departmentId"));
+				department.setCode(rs.getString("deptCode"));
+				department.setName(rs.getString("deptName"));
+				department.setActive(rs.getBoolean("deptActive"));
 				kpi.setDepartment(department);
+				kpi.setDepartmentCode(rs.getString("deptCode"));
 				kpiMap.put(String.valueOf(rs.getLong("id")), kpi);
 			}
 

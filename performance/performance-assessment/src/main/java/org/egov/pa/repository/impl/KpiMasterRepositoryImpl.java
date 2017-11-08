@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.egov.pa.model.Department;
-import org.egov.pa.model.DepartmentKpiList;
 import org.egov.pa.model.Document;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiTargetList;
@@ -112,7 +111,7 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 	}
 
 	@Override
-	public List<DepartmentKpiList> searchKpi(KPIGetRequest kpiGetRequest) {
+	public List<KPI> searchKpi(KPIGetRequest kpiGetRequest) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
 		List<Department> deptList = restCallService.getDepartmentForId("mh");
 		log.info("Department List obtained for the Tenant ID : " + deptList.toString());
@@ -121,12 +120,12 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
     	jdbcTemplate.query(query, preparedStatementValues.toArray(), mapper);
     	List<KPI> kpiList = getListFromMapper(mapper.kpiMap);
     	log.info("Number of KPIs Obtainted : " + kpiList.size()); 
-    	List<DepartmentKpiList> deptWiseKpiList = new ArrayList<>();
+    	// List<DepartmentKpiList> deptWiseKpiList = new ArrayList<>();
     	if(null != kpiList && kpiList.size() > 0) { 
     		arrangeDocsToKpiList(kpiList, mapper.docMap);
-    		arrangeListDepartmentWise(kpiList, deptList, deptWiseKpiList);
+    		// arrangeListDepartmentWise(kpiList, deptList, deptWiseKpiList);
     	}
-    	return deptWiseKpiList; 
+    	return kpiList; 
 	}
 	
 	private List<KPI> getListFromMapper(Map<String, KPI> kpiMap) { 
@@ -151,7 +150,7 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
     	}
     }
 	
-	private void arrangeListDepartmentWise(List<KPI> kpiList, List<Department> deptList, List<DepartmentKpiList> deptWiseList) { 
+	/*private void arrangeListDepartmentWise(List<KPI> kpiList, List<Department> deptList, List<DepartmentKpiList> deptWiseList) { 
 		Map<Long, Department> deptMap = new HashMap<>(); 
 		sortDepartmentToMap(deptList, deptMap);
     	Iterator<Entry<Long, Department>> itr =deptMap.entrySet().iterator();
@@ -172,13 +171,13 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
     		
     	}
     	for(KPI kpi : kpiList) kpi.setDepartment(null); 
-    }
+    }*/
 	
-	private void sortDepartmentToMap(List<Department> deptList, Map<Long, Department> deptMap) { 
+	/*private void sortDepartmentToMap(List<Department> deptList, Map<Long, Department> deptMap) { 
 		for(Department dept : deptList) { 
 			deptMap.put(dept.getId(), dept); 
 		}
-	}
+	}*/
 
 	@Override
 	public void persistKpiTarget(KpiTargetList kpiTargetList) {

@@ -55,7 +55,7 @@ ReportDefinitions:
     label: reports.asset.assetcategory
     isMandatory: false
     type: singlevaluelist
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.assetCategoryType%3D%3D%27IMMOVABLE%27%20%26%26%20%40.isAssetAllow%3D%3Dfalse)%5D|$.*.id|$.*.name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.assetCategoryType%3D%3D%27IMMOVABLE%27%20%26%26%20%40.isAssetAllow%3D%3Dfalse)%5D|$.*.*.*.*.id|$.*.*.*.*.name
     source: asset
     wrapper: true
     searchClause : 
@@ -71,7 +71,7 @@ ReportDefinitions:
     label: reports.asset.departmentcode
     isMandatory: false
     type: singlevaluelist
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department&tenantId=$tenantid|$.*.id|$.*.name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department&tenantId=$tenantid|$..id|$..name
     source: asset
     wrapper: true
     searchClause : AND asset.departmentcode=$department

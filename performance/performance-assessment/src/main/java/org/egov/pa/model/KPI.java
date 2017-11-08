@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-02T05:16:16.756Z")
 
 public class KPI   {
-  @JsonProperty("tenantId")
+  @JsonProperty("tenantIdCustom")
   private String tenantId = null;
 
   @JsonProperty("department")

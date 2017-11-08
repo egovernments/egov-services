@@ -115,10 +115,12 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 	public List<DepartmentKpiList> searchKpi(KPIGetRequest kpiGetRequest) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
 		List<Department> deptList = restCallService.getDepartmentForId("mh");
+		log.info("Department List obtained for the Tenant ID : " + deptList.toString());
     	String query = queryBuilder.getKpiSearchQuery(kpiGetRequest, preparedStatementValues); 
     	KPIMasterRowMapper mapper = new PerformanceAssessmentRowMapper().new KPIMasterRowMapper();
     	jdbcTemplate.query(query, preparedStatementValues.toArray(), mapper);
     	List<KPI> kpiList = getListFromMapper(mapper.kpiMap);
+    	log.info("Number of KPIs Obtainted : " + kpiList.size()); 
     	List<DepartmentKpiList> deptWiseKpiList = new ArrayList<>();
     	if(null != kpiList && kpiList.size() > 0) { 
     		arrangeDocsToKpiList(kpiList, mapper.docMap);

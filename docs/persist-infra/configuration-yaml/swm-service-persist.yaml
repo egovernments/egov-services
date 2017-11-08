@@ -422,7 +422,7 @@ serviceMaps:
    description: create route in egswm_route
    fromTopic: swm-route-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_route(code, tenantid, name,startingCollectionPoint, endingCollectionPoint, endingDumpingGroundPoint, distance, garbageEstimate, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_route(code, tenantid, name, collectionType, startingCollectionPoint, endingCollectionPoint, endingDumpingGroundPoint, distance, garbageEstimate, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.routes.*
       jsonMaps:
        
@@ -431,6 +431,8 @@ serviceMaps:
        - jsonPath: $.routes.*.tenantId
 
        - jsonPath: $.routes.*.name
+
+       - jsonPath: $.routes.*.collectionType.code
          
        - jsonPath: $.routes.*.startingCollectionPoint.code
 
@@ -481,11 +483,13 @@ serviceMaps:
    fromTopic: swm-route-update-topic
    queryMaps: 
 
-    - query: UPDATE egswm_route SET name=?, startingCollectionPoint=?, endingCollectionPoint=?, endingDumpingGroundPoint=?, distance=?, garbageEstimate=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+    - query: UPDATE egswm_route SET name=?, collectionType=?, startingCollectionPoint=?, endingCollectionPoint=?, endingDumpingGroundPoint=?, distance=?, garbageEstimate=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
       basePath: $.routes.*
       jsonMaps:
 
        - jsonPath: $.routes.*.name
+
+       - jsonPath: $.routes.*.collectionType.code
 
        - jsonPath: $.routes.*.startingCollectionPoint.code
 
@@ -918,13 +922,15 @@ serviceMaps:
    description: create sanitationstafftarget in egswm_sanitationstafftarget
    fromTopic: swm-sanitationstafftarget-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_sanitationstafftarget(targetNo, tenantid, swmProcess, route, employee, targetFrom, targetTo, targetedGarbage, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_sanitationstafftarget(targetNo, tenantid, location, swmProcess, route, employee, targetFrom, targetTo, targetedGarbage, wetWaste, dryWaste, dumpingGround, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.sanitationStaffTargets.*
       jsonMaps:
        
        - jsonPath: $.sanitationStaffTargets.*.targetNo
 
        - jsonPath: $.sanitationStaffTargets.*.tenantId
+
+       - jsonPath: $.sanitationStaffTargets.*.location.code
 
        - jsonPath: $.sanitationStaffTargets.*.swmProcess.code
          
@@ -940,6 +946,14 @@ serviceMaps:
          
        - jsonPath: $.sanitationStaffTargets.*.targetedGarbage
          dbType: DOUBLE
+
+       - jsonPath: $.sanitationStaffTargets.*.wetWaste
+         dbType: DOUBLE
+
+       - jsonPath: $.sanitationStaffTargets.*.dryWaste
+         dbType: DOUBLE
+
+       - jsonPath: $.sanitationStaffTargets.*.dumpingGround.code
 
        - jsonPath: $.sanitationStaffTargets.*.auditDetails.createdBy
 
@@ -976,10 +990,12 @@ serviceMaps:
    description: update sanitationstafftarget in egswm_sanitationstafftarget
    fromTopic: swm-sanitationstafftarget-update-topic
    queryMaps: 
-    - query: update egswm_sanitationstafftarget set swmProcess=?, route=?, employee=?, targetFrom=?, targetTo=?, targetedGarbage=?,lastmodifiedby=?, lastmodifiedtime=? where targetNo=? and tenantId=?;
+    - query: update egswm_sanitationstafftarget set location=?, swmProcess=?, route=?, employee=?, targetFrom=?, targetTo=?, targetedGarbage=?, wetWaste=?, dryWaste=?, dumpingGround=?, lastmodifiedby=?, lastmodifiedtime=? where targetNo=? and tenantId=?;
       basePath: $.sanitationStaffTargets.*
       jsonMaps:
        
+       - jsonPath: $.sanitationStaffTargets.*.location.code
+
        - jsonPath: $.sanitationStaffTargets.*.swmProcess.code
          
        - jsonPath: $.sanitationStaffTargets.*.route.code
@@ -994,6 +1010,14 @@ serviceMaps:
          
        - jsonPath: $.sanitationStaffTargets.*.targetedGarbage
          dbType: DOUBLE
+
+       - jsonPath: $.sanitationStaffTargets.*.wetWaste
+         dbType: DOUBLE
+
+       - jsonPath: $.sanitationStaffTargets.*.dryWaste
+         dbType: DOUBLE
+
+       - jsonPath: $.sanitationStaffTargets.*.dumpingGround.code
 
        - jsonPath: $.sanitationStaffTargets.*.auditDetails.lastModifiedBy
 
@@ -1059,41 +1083,4 @@ serviceMaps:
 
        - jsonPath: $.refillingPumpStations.*.auditDetails.lastModifiedTime
          dbType: LONG
-
- - version: 1.0
-   name: refillingpumpstation update
-   description: update refillingpumpstation in egswm_refillingpumpstation
-   fromTopic: swm-refillingpumpstation-update-topic
-   queryMaps:
-    - query: UPDATE egswm_refillingpumpstation SET code = ?, tenantid = ?, location = ?, name = ?, typeofpump = ?, remarks = ?, typeoffuel = ?, quantity = ?, lastmodifiedby = ?, lastmodifiedtime = ? WHERE tenantid = ? and code = ?;
-      basePath: $.refillingPumpStations.*
-      jsonMaps:
-
-       - jsonPath: $.refillingPumpStations.*.code
-
-       - jsonPath: $.refillingPumpStations.*.tenantId
-
-       - jsonPath: $.refillingPumpStations.*.location.code
-
-       - jsonPath: $.refillingPumpStations.*.name
-
-       - jsonPath: $.refillingPumpStations.*.typeOfPump.code
-
-       - jsonPath: $.refillingPumpStations.*.remarks
-
-       - jsonPath: $.refillingPumpStations.*.typeOfFuel.code
-
-       - jsonPath: $.refillingPumpStations.*.quantity
-         dbType: LONG
-
-       - jsonPath: $.refillingPumpStations.*.auditDetails.lastModifiedBy
-         dbType: LONG
-
-       - jsonPath: $.refillingPumpStations.*.auditDetails.lastModifiedTime
-         dbType: LONG
-
-       - jsonPath: $.refillingPumpStations.*.tenantId
-
-       - jsonPath: $.refillingPumpStations.*.code
-
 

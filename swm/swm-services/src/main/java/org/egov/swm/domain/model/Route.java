@@ -34,6 +34,10 @@ public class Route {
 	@Length(min = 1, max = 128)
 	@JsonProperty("name")
 	private String name = null;
+	
+	@NotNull
+	@JsonProperty("collectionType")
+	private CollectionType collectionType = null;
 
 	@NotNull
 	@JsonProperty("startingCollectionPoint")

@@ -710,7 +710,7 @@ definitions:
           type: array
           items:
             $ref: "#/definitions/BinDetails"
-        collecctionPointDetails:
+        collectionPointDetails:
           type: array
           items:
             $ref: "#/definitions/CollectionPointDetails"
@@ -1876,22 +1876,37 @@ definitions:
         swmProcess:
           $ref: '#/definitions/SwmProcess'
           format: singleValueList
+          description: Sanitary staff target is defined based on SWM process. However ,transportation is excluded from this list. Target will be assigned for Collection, Segregation and Disposal process.
+        location:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+          description: Admin will select the location (Ward / Zone / colony etc)
         route:
           $ref: "#/definitions/Route"
           format: singleValueList
-          description: route contains the location information too with associated collection points. Ward / Zone etc shall be displayed on the screen
+          description: Admin will select the route based on location selected.
         employee:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/hr/contracts/hr-employee/v1-0-0.yml#/definitions/Employee'
-          description: sanitary staff name based on dept. and designation. # We might have to integrate with HRMS
+          description: sanitary staff name based on dept. and designation.
         collectionPoints:
           type: array
           items:
             $ref: '#/definitions/CollectionPoint'
-          description: List of Collection point locations based on the route selected.
+          description: List of Collection points based on the route and location selected. Admin will be able to select one or more colection points
         targetedGarbage: 
           type: number
           format: double
-          description: targeted Garbage (in tonnes) to be collected by Sanitatary Staff
+          description: targeted Garbage (in tonnes) to be assigned to Sanitatary Staff. If process selected is segregation, this filed will be autofilled (Wet waste + Dry waste)
+        wetWaste: 
+          type: number
+          format: double
+          description: targeted wet waste (in tonnes) to be assigned to Sanitatary Staff. Mandatory ONLY IF swmProcess selected is segregation. Else disbale this field
+        dryWaste: 
+          type: number
+          format: double
+          description: targeted dry waste (in tonnes) to be assigned to Sanitatary Staff. Mandatory ONLY IF swmProcess selected is segregation. Else disbale this field
+        dumpingGround:
+          $ref: '#/definitions/DumpingGround'
+          description: Mandatory if process selected is disposal. Else disable this field 
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
@@ -1899,6 +1914,7 @@ definitions:
       - targetFrom
       - targetTo
       - swmProcess
+      - location
       - route
       - employee
       - collectionPoints
@@ -2036,15 +2052,12 @@ definitions:
         
         # ONLY one of "isMaintenance" OR "isRepair" can be selected. At least one of the two shall be selected  
           
-        isMaintenance:
-          type: boolean
-          format: checkbox
-          description: select if it is maintenance
-        isRepair:
-          type: boolean
-          format: checkbox
-          description: select if it is repair
-        vehicleRegNo:
+        maintenanceType:
+          type: string
+          maxLength: 128
+          minLength: 1
+          description: select if it is maintenance value will be MAINTENANCE if it is repair then value will be REPAIR
+        vehicle:
           $ref: "#/definitions/Vehicle"
           description: Registration number of the vehicle whose details are being captured
         actualMaintenanceDate:
@@ -2059,10 +2072,6 @@ definitions:
           type: number 
           format: double
           description: cost Incurred of the VehicleMaintenanceDetails
-        vehicleDowntimeDefined:
-          type: number
-          format: double
-          description: Expected vehicle downtime  due to planned maintenance. Populate this field from Vehicle Maintenance Master. Applicable ONLY in case of scheduled activities. Else this filed is not required
         vehicleDowntimeActual:
           type: number
           format: double
@@ -2071,9 +2080,6 @@ definitions:
           type: number
           format: double
           description: vehicle reading during maintenance
-        receipt:
-          $ref: '#/definitions/Document'
-          description: upload the receipt related to manintenance / repair activities
         remarks:
           type: string
           description: remarks by ULB Admin
@@ -2083,8 +2089,9 @@ definitions:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - tenantId
+      - maintenanceType
       - isScheduled
-      - vehicleRegNo
+      - vehicle
       - actualMaintenanceDate
       - costIncurred
       - vehicleDowntimeActual

@@ -5,6 +5,7 @@ import java.util.Date;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.AuditDetails;
+import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Route;
 import org.egov.swm.domain.model.RouteSearch;
@@ -12,8 +13,10 @@ import org.egov.swm.domain.model.SanitationStaffTarget;
 import org.egov.swm.domain.model.SanitationStaffTargetSearch;
 import org.egov.swm.domain.model.SwmProcess;
 import org.egov.swm.domain.repository.SanitationStaffTargetRepository;
+import org.egov.swm.persistence.entity.DumpingGroundEntity;
 import org.egov.swm.web.contract.EmployeeResponse;
 import org.egov.swm.web.contract.IdGenerationResponse;
+import org.egov.swm.web.repository.BoundaryRepository;
 import org.egov.swm.web.repository.EmployeeRepository;
 import org.egov.swm.web.repository.IdgenRepository;
 import org.egov.swm.web.repository.MdmsRepository;
@@ -50,6 +53,9 @@ public class SanitationStaffTargetService {
 
 	@Autowired
 	private MdmsRepository mdmsRepository;
+
+	@Autowired
+	private BoundaryRepository boundaryRepository;
 
 	@Value("${egov.swm.sanitationstaff.targetnum.idgen.name}")
 	private String idGenNameForTargetNumPath;
@@ -111,25 +117,39 @@ public class SanitationStaffTargetService {
 		Pagination<Route> routes;
 		for (SanitationStaffTarget sanitationStaffTarget : sanitationStaffTargetRequest.getSanitationStaffTargets()) {
 
+			// Validate Boundary
+
+			if (sanitationStaffTarget.getLocation() != null && sanitationStaffTarget.getLocation().getCode() != null) {
+
+				Boundary boundary = boundaryRepository.fetchBoundaryByCode(
+						sanitationStaffTarget.getLocation().getCode(), sanitationStaffTarget.getTenantId());
+
+				if (boundary != null)
+					sanitationStaffTarget.setLocation(boundary);
+				else
+					throw new CustomException("Location",
+							"Given Location is Invalid: " + sanitationStaffTarget.getLocation().getCode());
+			}
+
+			// Validate Swm Process
+
 			if (sanitationStaffTarget.getSwmProcess() != null
 					&& sanitationStaffTarget.getSwmProcess().getCode() != null) {
-				// Validate Swm Process
-				if (sanitationStaffTarget.getSwmProcess().getCode() != null) {
 
-					responseJSONArray = mdmsRepository.getByCriteria(sanitationStaffTarget.getTenantId(),
-							Constants.MODULE_CODE, Constants.SWMPROCESS_MASTER_NAME, "code",
-							sanitationStaffTarget.getSwmProcess().getCode(),
-							sanitationStaffTargetRequest.getRequestInfo());
+				responseJSONArray = mdmsRepository.getByCriteria(sanitationStaffTarget.getTenantId(),
+						Constants.MODULE_CODE, Constants.SWMPROCESS_MASTER_NAME, "code",
+						sanitationStaffTarget.getSwmProcess().getCode(), sanitationStaffTargetRequest.getRequestInfo());
 
-					if (responseJSONArray != null && responseJSONArray.size() > 0) {
-						sanitationStaffTarget
-								.setSwmProcess(mapper.convertValue(responseJSONArray.get(0), SwmProcess.class));
-					} else
-						throw new CustomException("ServicesOffered",
-								"Given ServicesOffered is invalid: " + sanitationStaffTarget.getSwmProcess().getCode());
+				if (responseJSONArray != null && responseJSONArray.size() > 0) {
+					sanitationStaffTarget
+							.setSwmProcess(mapper.convertValue(responseJSONArray.get(0), SwmProcess.class));
+				} else
+					throw new CustomException("ServicesOffered",
+							"Given ServicesOffered is invalid: " + sanitationStaffTarget.getSwmProcess().getCode());
 
-				}
 			}
+
+			// Validate Route
 
 			if (sanitationStaffTarget.getRoute() != null && sanitationStaffTarget.getRoute().getCode() != null) {
 
@@ -146,6 +166,8 @@ public class SanitationStaffTargetService {
 
 			}
 
+			// Validate Employee
+
 			if (sanitationStaffTarget.getEmployee() != null && sanitationStaffTarget.getEmployee().getCode() != null) {
 
 				employeeResponse = employeeRepository.getEmployeeByCode(sanitationStaffTarget.getEmployee().getCode(),
@@ -158,6 +180,24 @@ public class SanitationStaffTargetService {
 				} else {
 					sanitationStaffTarget.setEmployee(employeeResponse.getEmployees().get(0));
 				}
+
+			}
+
+			// Validate Ending Dumping ground
+			if (sanitationStaffTarget.getDumpingGround() != null
+					&& sanitationStaffTarget.getDumpingGround().getCode() != null) {
+
+				responseJSONArray = mdmsRepository.getByCriteria(sanitationStaffTarget.getTenantId(),
+						Constants.MODULE_CODE, Constants.DUMPINGGROUND_MASTER_NAME, "code",
+						sanitationStaffTarget.getDumpingGround().getCode(),
+						sanitationStaffTargetRequest.getRequestInfo());
+
+				if (responseJSONArray != null && responseJSONArray.size() > 0)
+					sanitationStaffTarget.setDumpingGround(
+							mapper.convertValue(responseJSONArray.get(0), DumpingGroundEntity.class).toDomain());
+				else
+					throw new CustomException("DumpingGround",
+							"Given DumpingGround is invalid: " + sanitationStaffTarget.getDumpingGround().getCode());
 
 			}
 

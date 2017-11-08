@@ -9,6 +9,7 @@ import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.CollectionPoint;
 import org.egov.swm.domain.model.CollectionPointSearch;
+import org.egov.swm.domain.model.CollectionType;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Route;
 import org.egov.swm.domain.model.RouteSearch;
@@ -94,6 +95,23 @@ public class RouteService {
 		findDuplicatesInUniqueFields(routeRequest);
 
 		for (Route route : routeRequest.getRoutes()) {
+
+			// Validate Collection Type
+
+			if (route.getCollectionType() != null && route.getCollectionType().getCode() != null) {
+
+				responseJSONArray = mdmsRepository.getByCriteria(route.getTenantId(), Constants.MODULE_CODE,
+						Constants.COLLECTIONTYPE_MASTER_NAME, "code", route.getCollectionType().getCode(),
+						routeRequest.getRequestInfo());
+
+				if (responseJSONArray != null && responseJSONArray.size() > 0)
+					route.setCollectionType(mapper.convertValue(responseJSONArray.get(0), CollectionType.class));
+				else
+					throw new CustomException("CollectionType",
+							"Given CollectionType is invalid: " + route.getCollectionType().getCode());
+
+			} else
+				throw new CustomException("CollectionType", "CollectionType is required");
 
 			// Validate Starting Collection Point
 

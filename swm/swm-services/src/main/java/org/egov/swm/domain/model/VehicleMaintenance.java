@@ -42,7 +42,7 @@ public class VehicleMaintenance {
 
 	@NotNull
 	@Min(1)
-	@Max(20000)
+	@Max(50000)
 	@JsonProperty("maintenanceAfter")
 	private Long maintenanceAfter = null;
 

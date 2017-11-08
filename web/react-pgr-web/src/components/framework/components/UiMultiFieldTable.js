@@ -27,6 +27,7 @@ import UiDate from './UiDate';
 import UiPinCode from './UiPinCode';
 import UiArrayField from './UiArrayField';
 import UiFileTable from './UiFileTable';
+import _ from 'lodash';
 
 class UiMultiFieldTable extends Component {
 	constructor(props) {
@@ -35,7 +36,8 @@ class UiMultiFieldTable extends Component {
        	values: [],
        	list: [],
        	index: 0,
-       	jsonPath: ""
+		jsonPath: "",
+		isintialLoad:false
        };
    	}
 
@@ -45,7 +47,37 @@ class UiMultiFieldTable extends Component {
    			list: Object.assign([], this.props.item.tableList.values),
    			jsonPath: this.props.item.jsonPath
    		})
-   	}
+	   }
+	componentWillReceiveProps(nextProps){
+		var valuesArray=[];
+		let {isintialLoad }=this.state;
+		if(nextProps.formData){
+			var numberOfRowsArray= _.get(nextProps.formData,this.props.item.jsonPath);
+			var listValues = _.cloneDeep(this.props.item.tableList.values);
+			if(numberOfRowsArray && numberOfRowsArray.length>0 && !isintialLoad){
+            for(var i=0;i<numberOfRowsArray.length;i++){
+				var listValuesArray=_.cloneDeep(listValues);
+				for(var j=0; j<listValuesArray.length; j++) {
+					 listValuesArray[j].jsonPath = listValuesArray[j].jsonPath.replace(this.state.jsonPath + "[" + 0 + "]", this.state.jsonPath + "[" +i+ "]");
+
+				}
+				valuesArray.push(listValuesArray);	
+
+			}
+			this.setState({
+				values:valuesArray,
+				index:(numberOfRowsArray)?numberOfRowsArray.length:0,
+				isintialLoad:true
+			})
+			}else{
+              this.setState({
+				 isintialLoad:true 
+			  })
+			}
+			
+		}
+
+	}
 
    	addNewRow() {
    		var val = JSON.parse(JSON.stringify(this.state.list));
@@ -54,7 +86,8 @@ class UiMultiFieldTable extends Component {
    			index: this.state.index + 1
    		}, () => {
    			for(var i=0; i<val.length; i++) {
-	   			val[i].jsonPath = val[i].jsonPath.replace(regexp, this.state.jsonPath + "[" + this.state.index + "]")
+				   //val[i].jsonPath = val[i].jsonPath.replace(regexp, this.state.jsonPath + "[" + this.state.index + "]")
+				 val[i].jsonPath = val[i].jsonPath.replace(this.state.jsonPath + "[" + 0 + "]", this.state.jsonPath + "[" + this.state.index + "]");
 	   		}
 
 			let values = [...this.state.values];

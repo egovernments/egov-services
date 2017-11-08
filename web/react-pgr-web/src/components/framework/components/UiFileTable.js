@@ -21,11 +21,22 @@ export default class UiFileTable extends Component {
    	}
 
    	renderRowList = (item) => {
+		   if(!item.fileCount){
+			   item.fileCount=10;
+		   }
    		let arr = [...Array(item.fileCount).keys()];
+   		let value = "";
+   		
    		return (
    			<tbody>
    				{	
    					arr && arr.length && arr.map((v, i) => {
+   						let fileListName = item.jsonPath + "[" + i + "]." + item.fileList.name;
+   						let fileStoreId = item.jsonPath + "[" + i + "]." + item.fileList.id;
+
+   		 value=this.props.getVal(fileListName);
+   		let idValue = this.props.getVal(fileStoreId);
+   		if(value || idValue || !this.props.readonly){
 								return (<tr key={i}>
 											<td>{i+1}</td>
 											<td>
@@ -36,16 +47,16 @@ export default class UiFileTable extends Component {
 													errorStyle={{"float":"left"}}
 													fullWidth={true}
 													disabled={this.props.readonly}
-													value={this.props.getVal(item.jsonPath + "[" + i + "]." + item.fileList.name)}
+													value={value}
 													onChange={(e) => {
-														this.props.handler(e, (item.jsonPath + "[" + i + "]." + item.fileList.name), item.isRequired, '', item.requiredErrMsg, item.patternErrMsg)
+														this.props.handler(e, fileListName, item.isRequired, '', item.requiredErrMsg, item.patternErrMsg)
 													}} />
 											</td>
 											<td>
 												{this.renderFileObject(item, i)}
 											</td>
 										</tr>)
-
+}
 							})
    				}
    			</tbody>

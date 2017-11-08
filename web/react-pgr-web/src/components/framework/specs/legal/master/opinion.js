@@ -64,6 +64,10 @@ var dat = {
        isAction: true,
       actionItems: [
             {
+              label: "Opinion Assign Advocate",
+             url:"/update/legal/opinionassignadvocate/"
+            },
+            {
               label: "Update Opinion",
               url: "/update/legal/updateopinion/"
             }

@@ -5,6 +5,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import {translate} from '../../common/common';
+import _ from 'lodash';
 
 export default class UiArrayField extends Component {
 	constructor(props) {
@@ -14,11 +15,20 @@ export default class UiArrayField extends Component {
        	currentValue: '',
        	valueList: []
        };
-   	}
+	   }
+		componentWillReceiveProps(nextProps){
+			  let arrayValue = this.props.getVal(this.props.item.jsonPath);
+				let {valueList}=this.state;
+			if( _.isArray(arrayValue) &&  JSON.stringify(arrayValue) != JSON.stringify(valueList)){
+				this.setState({
+					valueList:arrayValue
+				})
+			} 
+	}
 
    	renderField = (item) => {
+		  	let val = this.props.getVal(item.jsonPath);
    		if(this.props.readonly === "true") {
-   			let val = this.props.getVal(item.jsonPath);
    			return (
    				<div>
 	   				<Col xs={12}>
@@ -48,7 +58,8 @@ export default class UiArrayField extends Component {
 							errorStyle = {{"float":"left"}}
 							fullWidth = {true}
 							floatingLabelText = {<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
-							value = {this.state.valueList.join(", ")}
+							//value = {this.state.valueList.join(", ")}
+							value = {val && val.constructor == Array ? val.join(", ") : ""}
 							disabled = {true}
 						/>
 					</Col>

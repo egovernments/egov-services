@@ -82,7 +82,7 @@ var dat = {
             label: "legal.vakalatnama.create.chiefOfficerDetails",
             pattern: "",
             type: "text",
-            isRequired: true,
+            isRequired: false,
             isDisabled: false,
             requiredErrMsg: "",
             patternErrMsg: ""

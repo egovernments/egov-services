@@ -131,17 +131,6 @@ var dat = {
                 "requiredErrMsg": "",
                 "patternErrMsg": "",
                  url: "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
-              },{
-                "name": "opinionDescription",
-                "jsonPath": "opinions[0].opinionDescription",
-                "label": "opinionrequest.update.opinionDescription",
-                "pattern": "",
-                "type": "textarea",
-                "fullWidth":true,
-                "isRequired": false,
-                "isDisabled": false,
-                "requiredErrMsg": "",
-                "patternErrMsg": ""
               }]
         },{
         "name": "UploadDocument1",

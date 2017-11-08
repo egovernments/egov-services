@@ -152,11 +152,11 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
     }
 	
 	private void arrangeDeptToKpiList(List<KPI> kpiList, List<Department> deptList) {
-		Map<Long, Department> deptMap = new HashMap<>();
+		Map<String, Department> deptMap = new HashMap<>();
 		if (null != deptList && deptList.size() > 0) {
 			sortDepartmentToMap(deptList, deptMap);
 			for (int i = 0; i < kpiList.size(); i++) {
-				kpiList.get(i).setDepartment(deptMap.get(kpiList.get(i).getDepartmentId())); 
+				kpiList.get(i).setDepartment(deptMap.get(String.valueOf(kpiList.get(i).getDepartmentId()))); 
 			}
 		}
 	}
@@ -184,7 +184,7 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
     	for(KPI kpi : kpiList) kpi.setDepartment(null); 
     }*/
 	
-	private void sortDepartmentToMap(List<Department> deptList, Map<Long, Department> deptMap) { 
+	private void sortDepartmentToMap(List<Department> deptList, Map<String, Department> deptMap) { 
 		for(Department dept : deptList) { 
 			deptMap.put(dept.getId(), dept); 
 		}

@@ -186,7 +186,7 @@ serviceMaps:
           type: JSON
           dbType: JSONB
           
-        - jsonPath: $.cases[?({code} in @.paraWiseComments[*].code)].tenantId
+        - jsonPath: $.cases[?({code} in @.parawiseComments[*].code)].tenantId
         
         - jsonPath: $.cases[?({code} in @.parawiseComments[*].code)].code
         
@@ -231,7 +231,7 @@ serviceMaps:
           type: JSON
           dbType: JSONB
           
-        - jsonPath: $.cases[?({code} in @.paraWiseComments[*].code)].tenantId
+        - jsonPath: $.cases[?({code} in @.parawiseComments[*].code)].tenantId
         
         - jsonPath: $.cases[?({code} in @.parawiseComments[*].code)].code
         

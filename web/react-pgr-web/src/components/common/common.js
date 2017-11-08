@@ -2471,7 +2471,7 @@ var localization_EN_Data = {
 "legal.create.uploadInvoice":"Upload Invoice",
 "framework.date.error.message": "Please enter date in DD/MM/YYYY format",
 "legal.create.code":"Code",
-"legal.create.paymentNote":"Note: Total amount is window is valid and it is not necessarily same with amount mentioned in invoice document that is attached",
+"legal.create.paymentNote":"Note: Total amount shown in window is valid and it is not necessarily same as the amount mentioned in invoice document that is attached",
 "advocatepayment.update.document.title":"Advocate Payment Update",
 "legacycase.update.document.title":"Create Legacy Case"
 
@@ -4414,7 +4414,7 @@ var localization_MR_Data = {
 "framework.date.error.message": "Please enter date in DD/MM/YYYY format-Marathi",
 
 "legal.create.code":"Code-Marathi ",
-"legal.create.paymentNote":"Note: Total amount is window is valid and it is not necessarily same with amount mentioned in invoice document that is attached-Marathi",
+"legal.create.paymentNote":"Note: Total amount shown in window is valid and it is not necessarily same as the amount mentioned in invoice document that is attached-Marathi",
 "advocatepayment.update.document.title":"Advocate Payment Update-Marathi",
 "legacycase.update.document.title":"Create Legacy Case-marathi",
 

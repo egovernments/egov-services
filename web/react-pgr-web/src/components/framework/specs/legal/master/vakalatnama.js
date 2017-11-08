@@ -8,7 +8,7 @@ var dat = {
       "/lcms-services/legalcase/case/_vakalatnamageneration",
     tenantIdRequired: true,
     useTimestamp: true,
-    objectName: "vakalatnama",
+    objectName: "cases",
     groups: [
       {
         label: "legal.vakalatnama.create.group.title.generateVakalatnama",

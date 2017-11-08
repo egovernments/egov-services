@@ -9,6 +9,7 @@ var dat = {
     tenantIdRequired: true,
     useTimestamp: true,
     objectName: "cases",
+    documentsPath:"cases[0].parawiseComments[0]",
     groups: [
        {
         name: "CaseTypeDetails",

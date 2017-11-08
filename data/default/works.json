@@ -621,5 +621,41 @@
     "lastmodifiedby": null,
     "tenantId": "default"
   }
+],
+"NatureOfWork":[
+  {
+    "id": 1,
+    "name": "Capital Works",
+    "expenditureType": "CAPITAL",
+    "code": "CapitalWorks",
+    "tenantId": "default"
+  },
+  {
+    "id": 2,
+    "name": "Operations and Maintenance",
+    "expenditureType": "REVENUE",
+    "code": "OperationsandMaintenance",
+    "tenantId": "default"
+  }
+],
+"ModeOfAllotment":[
+  {
+    "id": 3,
+    "name": "Nomination",
+    "tenantId": "default",
+    "code": "Nomination"
+  },
+  {
+    "id": 1,
+    "name": "E-Procurement",
+    "tenantId": "default",
+    "code": "EProcurement"
+  },
+  {
+    "id": 2,
+    "name": "Tendering",
+    "tenantId": "default",
+    "code": "Tendering"
+  }
 ]
 }

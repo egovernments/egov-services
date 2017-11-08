@@ -19,6 +19,7 @@ serviceMaps:
       - jsonPath: $.summons.*.caseNo
       
       - jsonPath: $.summons.*.summonDate
+        type: LONG
       
       - jsonPath: $.summons.*.year
       

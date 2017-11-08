@@ -66,10 +66,10 @@ class UiMultiFieldTable extends Component {
 			}
 			this.setState({
 				values:valuesArray,
-				index:(numberOfRowsArray)?numberOfRowsArray.length:0,
+				index:(numberOfRowsArray)?numberOfRowsArray.length-1:0,
 				isintialLoad:true
 			})
-			}else{
+			}else if(numberOfRowsArray && numberOfRowsArray.length == 0){
               this.setState({
 				 isintialLoad:true 
 			  })
@@ -113,9 +113,10 @@ class UiMultiFieldTable extends Component {
 			index: this.state.index-1
 		}, () => {
 			let formData = JSON.parse(JSON.stringify(this.props.formData));
-			if(formData[this.state.jsonPath] && formData[this.state.jsonPath].length) {
-				formData[this.state.jsonPath].splice(ind, 1);
-				this.props.setFormData(formData);
+			let formDataArray =_.get(formData,this.state.jsonPath)
+			if(formDataArray && formDataArray.length) {
+				var newArray=_.cloneDeep(formDataArray.splice(ind, 1));
+				this.props.setFormData(newArray);
 			}
 		})
 	}

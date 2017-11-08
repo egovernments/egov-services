@@ -38,7 +38,7 @@ var dat = {
           },
           {
             name: "referenceCaseNo",
-            jsonPath: "caseRefernceNo",
+            jsonPath: "caseReferenceNo",
             label: "caseRegistration.create.referenceCaseNo",
             type: "text",
             isRequired: false,

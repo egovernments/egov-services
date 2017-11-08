@@ -10,7 +10,9 @@ public enum TransactionType {
 
     DISPOSAL("DISPOSAL"),
 
-    DEPRECIATION("DEPRECIATION");
+    DEPRECIATION("DEPRECIATION"),
+	
+	CREATE("CREATE");
 
     private String value;
 

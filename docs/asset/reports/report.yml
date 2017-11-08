@@ -55,7 +55,7 @@ ReportDefinitions:
     label: reports.asset.assetCategory
     isMandatory: false
     type: singlevaluelist
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.assetCategoryType%3D%3D%27IMMOVABLE%27%20%26%26%20%40.isAssetAllow%3D%3Dfalse)%5D|$.*.*.*.*.id|$.*.*.*.*.name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.assetCategoryType%3D%3D%27IMMOVABLE%27%20%26%26%20%40.isAssetAllow%3D%3Dfalse)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name
     source: asset
     wrapper: true
     searchClause : 
@@ -410,24 +410,55 @@ ReportDefinitions:
     source: asset
     searchClause : AND asset.createddate<=$toDate
     isMandatory: false
+  - name: originalvaluefrom
+    label: reports.asset.originalvaluefrom
+    type: number
+    source: asset
+    searchClause : AND asset.originalvalue>=$originalvaluefrom
+    isMandatory: false
+  - name: originalvalueto
+    label: reports.asset.originalvalueto
+    type: number
+    source: asset
+    searchClause : AND asset.originalvalue<=$originalvalueto
+    isMandatory: false
+  - name: assetcategory
+    label: reports.asset.assetCategory
+    isMandatory: false
+    type: singlevaluelist
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.assetCategoryType%3D%3D%27MOVABLE%27%20%26%26%20%40.isAssetAllow%3D%3Dfalse)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name
+    source: asset
+    wrapper: true
+    searchClause : 
+  - name: assetsubcategory
+    label: reports.asset.assetSubCategory
+    isMandatory: false
+    type: url
+    pattern: /egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.parent%3D%3D{assetcategory})%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name
+    source: asset
+    wrapper: true
+    searchClause : AND asset.assetcategory=$assetsubcategory
+  - name: department
+    label: reports.asset.departmentCode
+    isMandatory: false
+    type: singlevaluelist
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department&tenantId=$tenantid|$..id|$..name
+    source: asset
+    wrapper: true
+    searchClause : AND asset.departmentcode=$department
   - name: name
     label: reports.asset.name
     type: string
     isMandatory: false
     source: asset
     searchClause : AND asset.name=$name
-  - name: assetcategory
-    label: reports.asset.assetcategory
-    type: string
-    isMandatory: false
-    source: asset
-    searchClause : AND asset.assetcategory=assetcategory
   - name: code
     label: reports.asset.code
     type: string
     isMandatory: false
     source: asset
     searchClause : AND asset.code in ($code)
+
 
   
   query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.landsurveyno,asset.totalarea,asset.openingdate,asset.fundsource,asset.location,asset.assetcategorytype,

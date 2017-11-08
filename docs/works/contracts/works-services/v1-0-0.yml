@@ -474,6 +474,9 @@ definitions:
       objectId:
         type: string
         description: Unique Identifier for the specified obect type.
+      remarks:
+        type: string
+        description: Remarks for the object type.
 
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
@@ -576,4 +579,3 @@ tags:
     description: APIs required for Estimate Appropriation.
   - name: Document Detail
     description: APIs required for Document Detail
-

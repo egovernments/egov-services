@@ -1106,7 +1106,7 @@ definitions:
         maxLength: 128
         minLength: 2
       abstractEstimate:
-        $ref: '#/definitions/AbstractEstimate'
+        type: string
         description: Reference to Abstract Estimate Object 
       nameOfWork:
         type: string
@@ -1118,12 +1118,6 @@ definitions:
         type: number
         format: BigDecimal
         description: Estimate amount for the Abstract Estimate
-      estimateNumber:
-        type: string
-        pattern: '[a-zA-Z0-9-\\]+'
-        description: Estimate number of the Abstract Estimate
-        maxLength: 50
-        minLength: 1
       grossAmountBilled:
         type: number
         format: double
@@ -1142,7 +1136,6 @@ definitions:
     required:
       - nameOfWork
       - estimateAmount
-      - estimateNumber
       - tenantId
       
   AbstractEstimateAssetDetail:
@@ -1158,7 +1151,7 @@ definitions:
         maxLength: 128
         minLength: 2
       abstractEstimate:
-        $ref: '#/definitions/AbstractEstimate'
+        type: string
         description: Reference to Sanction Asset/Land of Abstract Estimate Object 
       asset:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/Asset'
@@ -1206,7 +1199,7 @@ definitions:
         maxLength: 128
         minLength: 2
       abstractEstimate:
-        $ref: '#/definitions/AbstractEstimate'
+        type: string
         description: Reference to Sanction Details of Abstract Estimate Object 
       sanctionType:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/EstimateSanctionType'
@@ -1956,6 +1949,3 @@ tags:
     description: APIs required for Revision Estimate.
   - name: Project Code
     description: APIs required for Project Code.
-
-
-

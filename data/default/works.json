@@ -625,17 +625,24 @@
 "NatureOfWork":[
   {
     "id": 1,
-    "name": "Capital Works",
+    "name": "New",
     "expenditureType": "CAPITAL",
-    "code": "CapitalWorks",
-    "tenantId": "default"
+    "code": "New",
+    "tenantId": "mh"
   },
   {
     "id": 2,
-    "name": "Operations and Maintenance",
+    "name": "Repairs",
     "expenditureType": "REVENUE",
-    "code": "OperationsandMaintenance",
-    "tenantId": "default"
+    "code": "Repairs",
+    "tenantId": "mh"
+  },
+  {
+    "id": 3,
+    "name": "Addition",
+    "expenditureType": "REVENUE",
+    "code": "Addition",
+    "tenantId": "mh"
   }
 ],
 "ModeOfAllotment":[

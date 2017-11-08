@@ -1817,7 +1817,7 @@ definitions:
     VehicleSchedule:
       type: object
       properties:
-        code:
+        transactionNo:
           type: string
           description: Unique Identifier of the SanitationStaffTarget
           maxLength: 256
@@ -1838,7 +1838,7 @@ definitions:
         route:
          $ref: "#/definitions/Route"
          format: autoComplete
-        vehicleRegNo:
+        vehicle:
           $ref: "#/definitions/Vehicle"
         targetedGarbage:
           type: number
@@ -1849,7 +1849,7 @@ definitions:
       - scheduledFrom
       - scheduledTo
       - route
-      - vehicleRegNo
+      - vehicle
       - targetedGarbage
     
     SanitationStaffTarget:
@@ -2151,11 +2151,6 @@ definitions:
           type: integer
           format: int64
           description: end date of the trip. Should be >= tripStartDate
-        location:
-          type: array
-          items:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-          description: display the location (ward, zone, street)and collection points covered while taking the assigned route
         inTime:
           type: integer
           format: int64
@@ -2225,24 +2220,7 @@ definitions:
         collectionDetails:
           type: array
           items:
-            type: object
-            properties:
-              collectionType:
-                $ref: "#/definitions/CollectionType"
-              wetWasteCollected:
-                type: number
-                format: double
-                description: quantity of wet waste collected (in tonnes)
-                minimum: 0
-              dryWasteCollected:
-                type: number
-                format: double
-                description: quantity of dry waste collected (in tonnes)
-                minimum: 0
-            required:
-            - collectionType
-            - wetWasteCollected
-            - dryWasteCollected
+            $ref: "#/definitions/CollectionDetails"
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
@@ -2250,6 +2228,39 @@ definitions:
       - dumpingGound
       - date
       - collectionDetails
+      
+    CollectionDetails:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Unique Identifier of the CollectionDetails
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the CollectionDetails
+          maxLength: 128
+          minLength: 1
+        collectionType:
+          $ref: "#/definitions/CollectionType"
+        wetWasteCollected:
+          type: number
+          format: double
+          description: quantity of wet waste collected (in tonnes)
+          minimum: 0
+        dryWasteCollected:
+          type: number
+          format: double
+          description: quantity of dry waste collected (in tonnes)
+          minimum: 0
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - tenantId
+      - collectionType
+      - wetWasteCollected
+      - dryWasteCollected
       
     SourceSegregationRequest:
       description: Contract class to receive request. Array of SourceSegregation items are used in case of create, whereas single SourceSegregation item is used for update
@@ -2394,6 +2405,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

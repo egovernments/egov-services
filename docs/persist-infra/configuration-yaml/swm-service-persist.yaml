@@ -422,7 +422,7 @@ serviceMaps:
    description: create route in egswm_route
    fromTopic: swm-route-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_route(code, tenantid, name, collectionType, startingCollectionPoint, endingCollectionPoint, endingDumpingGroundPoint, distance, garbageEstimate, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_route(code, tenantid, name, collectionType, startingCollectionPoint, endingCollectionPoint, endingDumpingGroundPoint, distance, garbageEstimate, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.routes.*
       jsonMaps:
        
@@ -483,7 +483,7 @@ serviceMaps:
    fromTopic: swm-route-update-topic
    queryMaps: 
 
-    - query: UPDATE egswm_route SET name=?, collectionType=?, startingCollectionPoint=?, endingCollectionPoint=?, endingDumpingGroundPoint=?, distance=?, garbageEstimate=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+    - query: UPDATE egswm_route SET name=?, collectionType=?, startingCollectionPoint=?, endingCollectionPoint=?, endingDumpingGroundPoint=?, distance=?, garbageEstimate=?, lastmodifiedby=?, lastmodifiedtime=? WHERE code=? AND tenantid=?;
       basePath: $.routes.*
       jsonMaps:
 
@@ -508,7 +508,7 @@ serviceMaps:
        - jsonPath: $.routes.*.auditDetails.lastModifiedTime
          dbType: LONG
          
-       - jsonPath: $.routes.*.id
+       - jsonPath: $.routes.*.code
 
        - jsonPath: $.routes.*.tenantId
 

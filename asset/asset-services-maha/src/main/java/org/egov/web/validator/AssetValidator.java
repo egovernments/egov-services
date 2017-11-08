@@ -52,7 +52,8 @@ public class AssetValidator implements Validator {
 	private void validateAnticipatedLife(Long anticipatedLife, BigDecimal originalValue, Double depreciationRate,
 			Map<String, String> errorMap) {
 
-		  long newVal = new Double(100/depreciationRate).longValue();
+		  long newVal = new Double(Math.round(100/depreciationRate)).longValue();
+		  System.err.println("newVal"+newVal);
 		  if (!anticipatedLife.equals(newVal))
 		  errorMap.put("Asset_anticipatedLife", "anticipatedLife Value is wrong");
 	}

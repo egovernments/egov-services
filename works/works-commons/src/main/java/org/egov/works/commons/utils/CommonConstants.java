@@ -21,4 +21,15 @@ public class CommonConstants {
     //Common master names
     public static final String MASTERNAME_UOM="Uom";
     public static final String MASTERNAME_BANK="Bank";
+    
+    public static final String WORKORDER="WorkOrder";
+    public static final String LOA="LOA";
+    public static final String DETAILEDESTIMATE="DetailedEstimate";
+    
+    public static final String CODE = "code";
+    
+    public static final String NAME = "name";
+    
+    public static final String KEYNAME = "keyname";
+    
 }

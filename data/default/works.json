@@ -256,7 +256,6 @@
       "createddate": null,
       "lastmodifiedby": null,
       "lastmodifieddate": null,
-      "version": 0
     },
     {
     "id": "2",
@@ -269,7 +268,19 @@
     "createddate": null,
     "lastmodifiedby": null,
     "lastmodifieddate": null,
-    "version": 0,
+    "tenantId": "default"
+    },
+    {
+    "id": "3",
+    "code" : "Financial_Integration_Required",
+    "keyname": "Financial_Integration_Required",
+    "value" : "No",
+    "description" : "Financial Integration Required or not to create works data",
+    "effectivefrom" : "2017-08-22",
+    "createdby": null,
+    "createddate": null,
+    "lastmodifiedby": null,
+    "lastmodifieddate": null,
     "tenantId": "default"
     }
   ],

@@ -243,7 +243,7 @@ public class AbstractEstimateService {
 
 		if (abstractEstimate.getFund() != null && StringUtils.isNotBlank(abstractEstimate.getFund().getCode())) {
 			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.FUND_OBJECT,
-					abstractEstimate.getFund().getCode(), null, abstractEstimate.getTenantId(), requestInfo,
+					CommonConstants.CODE, abstractEstimate.getFund().getCode(), abstractEstimate.getTenantId(), requestInfo,
 					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
 				messages.put(WorksEstimateServiceConstants.KEY_FUND_INVALID,
@@ -253,7 +253,7 @@ public class AbstractEstimateService {
 		if (abstractEstimate.getFunction() != null
 				&& StringUtils.isNotBlank(abstractEstimate.getFunction().getCode())) {
 			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.FUNCTION_OBJECT,
-					abstractEstimate.getFunction().getCode(), null, abstractEstimate.getTenantId(), requestInfo,
+					CommonConstants.CODE,abstractEstimate.getFunction().getCode(), abstractEstimate.getTenantId(), requestInfo,
 					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
 				messages.put(WorksEstimateServiceConstants.KEY_FUNCTION_INVALID,
@@ -264,7 +264,7 @@ public class AbstractEstimateService {
 		if (abstractEstimate.getTypeOfWork() != null
 				&& StringUtils.isNotBlank(abstractEstimate.getTypeOfWork().getCode())) {
 			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.TYPEOFWORK_OBJECT,
-					abstractEstimate.getTypeOfWork().getCode(), null, abstractEstimate.getTenantId(), requestInfo,
+					CommonConstants.CODE ,abstractEstimate.getTypeOfWork().getCode(), abstractEstimate.getTenantId(), requestInfo,
 					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
 				messages.put(WorksEstimateServiceConstants.KEY_TYPEOFWORK_INVALID,
@@ -274,7 +274,7 @@ public class AbstractEstimateService {
 		if (abstractEstimate.getSubTypeOfWork() != null
 				&& StringUtils.isNotBlank(abstractEstimate.getSubTypeOfWork().getCode())) {
 			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.TYPEOFWORK_OBJECT,
-					abstractEstimate.getSubTypeOfWork().getCode(), null, abstractEstimate.getTenantId(), requestInfo,
+					CommonConstants.CODE,abstractEstimate.getSubTypeOfWork().getCode(), abstractEstimate.getTenantId(), requestInfo,
 					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
 				messages.put(WorksEstimateServiceConstants.KEY_SUBTYPEOFWORK_INVALID,
@@ -284,7 +284,7 @@ public class AbstractEstimateService {
 		if (abstractEstimate.getDepartment() != null
 				& StringUtils.isNotBlank(abstractEstimate.getDepartment().getCode())) {
 			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.DEPARTMENT_OBJECT,
-					abstractEstimate.getDepartment().getCode(), null, abstractEstimate.getTenantId(), requestInfo,
+					CommonConstants.CODE,abstractEstimate.getDepartment().getCode(), abstractEstimate.getTenantId(), requestInfo,
 					WorksEstimateServiceConstants.COMMON_MASTERS_MODULE_CODE);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
 				messages.put(WorksEstimateServiceConstants.KEY_DEPARTMENT_INVALID,
@@ -293,7 +293,7 @@ public class AbstractEstimateService {
 		}
 		if (abstractEstimate.getScheme() != null & StringUtils.isNotBlank(abstractEstimate.getScheme().getCode())) {
 			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.SCHEME_OBJECT,
-					abstractEstimate.getScheme().getCode(), null, abstractEstimate.getTenantId(), requestInfo,
+					CommonConstants.CODE,abstractEstimate.getScheme().getCode(), abstractEstimate.getTenantId(), requestInfo,
 					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
 				messages.put(WorksEstimateServiceConstants.KEY_SCHEME_INVALID,
@@ -304,7 +304,7 @@ public class AbstractEstimateService {
 		if (abstractEstimate.getSubScheme() != null
 				& StringUtils.isNotBlank(abstractEstimate.getSubScheme().getCode())) {
 			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.SUBSCHEME_OBJECT,
-					abstractEstimate.getSubScheme().getCode(), null, abstractEstimate.getTenantId(), requestInfo,
+					CommonConstants.CODE,abstractEstimate.getSubScheme().getCode(), abstractEstimate.getTenantId(), requestInfo,
 					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
 				messages.put(WorksEstimateServiceConstants.KEY_SUBSCHEME_INVALID,
@@ -314,7 +314,7 @@ public class AbstractEstimateService {
 
 		if (abstractEstimate.getBudgetGroup() != null
 				& StringUtils.isNotBlank(abstractEstimate.getBudgetGroup().getName())) {
-			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.BUDGETGROUP_OBJECT, null,
+			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.BUDGETGROUP_OBJECT, CommonConstants.NAME,
 					abstractEstimate.getBudgetGroup().getName(), abstractEstimate.getTenantId(), requestInfo,
 					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {

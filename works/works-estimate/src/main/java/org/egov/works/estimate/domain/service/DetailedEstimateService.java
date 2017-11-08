@@ -6,6 +6,7 @@ import java.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
+import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.domain.repository.DetailedEstimateRepository;
@@ -206,7 +207,7 @@ public class DetailedEstimateService {
             if(estimateOverhead != null) {
                 if (estimateOverhead.getOverhead() != null && StringUtils.isNotBlank(estimateOverhead.getOverhead().getCode())) {
                     responseJSONArray = estimateUtils.getMDMSData(OVERHEAD_OBJECT,
-                            estimateOverhead.getOverhead().getCode(), null, detailedEstimate.getTenantId(), requestInfo,
+                    		CommonConstants.CODE,estimateOverhead.getOverhead().getCode(), detailedEstimate.getTenantId(), requestInfo,
                             WORKS_MODULE_CODE);
                     if (responseJSONArray != null && responseJSONArray.isEmpty()) {
                         messages.put(KEY_ESTIMATE_OVERHEAD_CODE_INVALID, MESSAGE_ESTIMATE_OVERHEAD_CODE_INVALID);
@@ -294,7 +295,7 @@ public class DetailedEstimateService {
 
     public void validateLocationDetails(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo, Map<String,String> messages) {
         if (propertiesManager.getLocationRequiredForEstimate().toString().equalsIgnoreCase("Yes")) {
-            JSONArray mdmsArray = estimateUtils.getMDMSData(APPCONFIGURATION_OBJECT, GIS_INTEGRATION_APPCONFIG, null,
+            JSONArray mdmsArray = estimateUtils.getMDMSData(APPCONFIGURATION_OBJECT, CommonConstants.CODE, GIS_INTEGRATION_APPCONFIG,
                     detailedEstimate.getTenantId(), requestInfo, WORKS_MODULE_CODE);
             if(mdmsArray != null && !mdmsArray.isEmpty()) {
                 Map<String,Object> jsonMap = (Map<String, Object>) mdmsArray.get(0);
@@ -307,7 +308,7 @@ public class DetailedEstimateService {
 
     public void validateAssetDetails(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo, Map<String,String> messages) {
 
-        JSONArray mdmsArray = estimateUtils.getMDMSData(APPCONFIGURATION_OBJECT, ASSET_DETAILES_REQUIRED_APPCONFIG, null,
+        JSONArray mdmsArray = estimateUtils.getMDMSData(APPCONFIGURATION_OBJECT, CommonConstants.CODE,ASSET_DETAILES_REQUIRED_APPCONFIG,
                 detailedEstimate.getTenantId(), requestInfo, WORKS_MODULE_CODE);
         if(mdmsArray != null && !mdmsArray.isEmpty()) {
             Map<String,Object> jsonMap = (Map<String, Object>) mdmsArray.get(0);
@@ -352,7 +353,7 @@ public class DetailedEstimateService {
 
         if (detailedEstimate.getFund() != null && StringUtils.isNotBlank(detailedEstimate.getFund().getCode())) {
             responseJSONArray = estimateUtils.getMDMSData(FUND_OBJECT,
-                    detailedEstimate.getFund().getCode(), null, detailedEstimate.getTenantId(), requestInfo,
+            		CommonConstants.CODE,detailedEstimate.getFund().getCode(), detailedEstimate.getTenantId(), requestInfo,
                     WORKS_MODULE_CODE);
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
                 messages.put(KEY_ESTIMATE_FUND_CODE_INVALID, MESSAGE_ESTIMATE_FUND_CODE_INVALID);
@@ -361,7 +362,7 @@ public class DetailedEstimateService {
         if (detailedEstimate.getFunction() != null
                 && StringUtils.isNotBlank(detailedEstimate.getFunction().getCode())) {
             responseJSONArray = estimateUtils.getMDMSData(FUNCTION_OBJECT,
-                    detailedEstimate.getFunction().getCode(), null, detailedEstimate.getTenantId(), requestInfo,
+            		CommonConstants.CODE,detailedEstimate.getFunction().getCode(), detailedEstimate.getTenantId(), requestInfo,
                     WORKS_MODULE_CODE);
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
                 messages.put(KEY_ESTIMATE_FUNCTION_CODE_INVALID, MESSAGE_ESTIMATE_FUNCTION_CODE_INVALID);
@@ -371,7 +372,7 @@ public class DetailedEstimateService {
         if (detailedEstimate.getWorksType() != null
                 && StringUtils.isNotBlank(detailedEstimate.getWorksType().getCode())) {
             responseJSONArray = estimateUtils.getMDMSData(TYPEOFWORK_OBJECT,
-                    detailedEstimate.getWorksType().getCode(), null, detailedEstimate.getTenantId(), requestInfo,
+            		CommonConstants.CODE,detailedEstimate.getWorksType().getCode(), detailedEstimate.getTenantId(), requestInfo,
                     WORKS_MODULE_CODE);
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
                 messages.put(KEY_ESTIMATE_TYPEOFWORK_CODE_INVALID, MESSAGE_ESTIMATE_TYPEOFWORK_CODE_INVALID);
@@ -380,7 +381,7 @@ public class DetailedEstimateService {
         if (detailedEstimate.getWorksSubtype() != null
                 && StringUtils.isNotBlank(detailedEstimate.getWorksSubtype().getCode())) {
             responseJSONArray = estimateUtils.getMDMSData(TYPEOFWORK_OBJECT,
-                    detailedEstimate.getWorksSubtype().getCode(), null, detailedEstimate.getTenantId(), requestInfo,
+            		CommonConstants.CODE,detailedEstimate.getWorksSubtype().getCode(), detailedEstimate.getTenantId(), requestInfo,
                     WORKS_MODULE_CODE);
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
                 messages.put(KEY_ESTIMATE_SUBTYPEOFWORK_CODE_INVALID, MESSAGE_ESTIMATE_SUBTYPEOFWORK_CODE_INVALID);
@@ -398,7 +399,7 @@ public class DetailedEstimateService {
         }
         if (detailedEstimate.getScheme() != null & StringUtils.isNotBlank(detailedEstimate.getScheme().getCode())) {
             responseJSONArray = estimateUtils.getMDMSData(SCHEME_OBJECT,
-                    detailedEstimate.getScheme().getCode(), null, detailedEstimate.getTenantId(), requestInfo,
+            		CommonConstants.CODE,detailedEstimate.getScheme().getCode(), detailedEstimate.getTenantId(), requestInfo,
                     WORKS_MODULE_CODE);
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
                 messages.put(KEY_ESTIMATE_SCHEME_CODE_INVALID, MESSAGE_ESTIMATE_SCHEME_CODE_INVALID);
@@ -408,7 +409,7 @@ public class DetailedEstimateService {
         if (detailedEstimate.getSubScheme() != null
                 & StringUtils.isNotBlank(detailedEstimate.getSubScheme().getCode())) {
             responseJSONArray = estimateUtils.getMDMSData(SUBSCHEME_OBJECT,
-                    detailedEstimate.getSubScheme().getCode(), null, detailedEstimate.getTenantId(), requestInfo,
+            		CommonConstants.CODE,detailedEstimate.getSubScheme().getCode(),  detailedEstimate.getTenantId(), requestInfo,
                     WORKS_MODULE_CODE);
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
                 messages.put(KEY_ESTIMATE_SUBSCHEME_CODE_INVALID, MESSAGE_ESTIMATE_SUBSCHEME_CODE_INVALID);
@@ -417,7 +418,7 @@ public class DetailedEstimateService {
 
         if (detailedEstimate.getBudgetGroup() != null
                 & StringUtils.isNotBlank(detailedEstimate.getBudgetGroup().getName())) {
-            responseJSONArray = estimateUtils.getMDMSData(BUDGETGROUP_OBJECT, null,
+            responseJSONArray = estimateUtils.getMDMSData(BUDGETGROUP_OBJECT,CommonConstants.NAME,
                     detailedEstimate.getBudgetGroup().getName(), detailedEstimate.getTenantId(), requestInfo,
                     WORKS_MODULE_CODE);
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {

@@ -42,7 +42,7 @@ public class EstimateUtils {
 	 * @return the json map it to your object.
 	 */
 
-	public JSONArray getMDMSData(final String objectName, final String codeFilter, final String nameFilter, final String tenantId,
+	public JSONArray getMDMSData(final String objectName, final String fieldName, final String fieldValue, final String tenantId,
 			final RequestInfo requestInfo,final String moduleName) {
 		MasterDetails[] masterDetailsArray;
 		ModuleDetails[] moduleDetailsArray;
@@ -50,11 +50,14 @@ public class EstimateUtils {
 		MdmsResponse mdmsResponse;
         String filter = "";
 
-        if(StringUtils.isNotBlank(codeFilter))
-            filter = "[?(@.code == '" + codeFilter + "')]";
-        else if(StringUtils.isNotBlank(nameFilter))
-           filter = "[?(@.name == '" + nameFilter + "')]";
+        if(StringUtils.isNotBlank(fieldName) && StringUtils.isNotBlank(fieldValue))
+        	filter = "[?(@." + fieldName +" == '" + fieldValue + "')]";
+        	
+//            filter = "[?(@.code == '" + codeFilter + "')]";
+//        else if(StringUtils.isNotBlank(nameFilter))
+//           filter = "[?(@.name == '" + nameFilter + "')]";
 
+        
 		masterDetailsArray = new MasterDetails[1];
 		masterDetailsArray[0] = MasterDetails.builder().name(objectName).filter(filter).build();
 		moduleDetailsArray = new ModuleDetails[1];

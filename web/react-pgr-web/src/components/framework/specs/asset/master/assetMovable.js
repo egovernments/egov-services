@@ -637,7 +637,7 @@ var dat = {
 						"type": "text",
 						"url": "",
 						"isRequired": false,
-						"isDisabled": true,
+						"isDisabled": true, 
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"defaultValue": "MOVABLE"

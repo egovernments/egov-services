@@ -69,7 +69,6 @@ public class PerformanceAssessmentRowMapper {
 	public class KPIMasterRowMapper implements RowMapper<KPI> {
 		public Map<String, KPI> kpiMap = new HashMap<>();
 		public Map<String, List<Document>> docMap = new HashMap<>();
-		public Map<Long, Department> deptMap = new HashMap<>();
 		public List<Long> docIdList = new ArrayList<>();
 
 		@Override
@@ -91,14 +90,6 @@ public class PerformanceAssessmentRowMapper {
 				Department department= new Department(); 
 				department.setId(rs.getLong("departmentId"));
 				kpi.setDepartment(department);
-				if(!deptMap.containsKey(rs.getLong("departmentId"))) {
-					Department dept = new Department(); 
-					dept.setId(rs.getLong("departmentId"));
-					dept.setCode(rs.getString("deptCode"));
-					dept.setName(rs.getString("deptName"));
-					dept.setActive(rs.getBoolean("deptActive"));
-					deptMap.put(rs.getLong("departmentId"), dept); 
-				}
 				kpiMap.put(String.valueOf(rs.getLong("id")), kpi);
 			}
 

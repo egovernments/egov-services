@@ -40,11 +40,15 @@
 package org.egov.pa.validator;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pa.config.ApplicationProperties;
+import org.egov.pa.model.Department;
 import org.egov.pa.model.Tenant;
+import org.egov.pa.web.contract.DepartmentResponse;
 import org.egov.pa.web.contract.RequestInfoBody;
 import org.egov.pa.web.contract.TenantResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,4 +92,24 @@ public class RestCallService {
         }
         return false; 
     }
+	
+	public List<Department> getDepartmentForId(final String tenantId) {
+		final StringBuilder url = new StringBuilder(
+				applicationProperties.getMdmsServiceHostName() + applicationProperties.getMdmsServiceSearchPath()
+						+ applicationProperties.getMdmsServiceSearchGetDepartmentUrl());
+		if(StringUtils.isNotBlank(tenantId))
+			url.append("&tenantId=" + tenantId); 
+		final RequestInfo requestInfo = RequestInfo.builder().ts(11111111l).build();
+		final RequestInfoBody requestInfoBody = new RequestInfoBody(requestInfo);
+		final HttpEntity<RequestInfoBody> request = new HttpEntity<>(requestInfoBody);
+		log.info("URL to invoke Tenant Service : " + url.toString());
+		log.info("Request Info to invoke the URL : " + request);
+		DepartmentResponse dr = new RestTemplate().postForObject(url.toString(), request, DepartmentResponse.class);
+		log.info("Response from MDMS : " + dr);
+		if (null != dr && null != dr.getMdmsRes() && null != dr.getMdmsRes().getCommonMasters()
+				&& null != dr.getMdmsRes().getCommonMasters().getDepartments()) {
+			return dr.getMdmsRes().getCommonMasters().getDepartments();
+		}
+		return null;
+	}
 }

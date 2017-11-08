@@ -11,6 +11,7 @@ import org.egov.pa.model.KpiTarget;
 import org.egov.pa.model.KpiTargetList;
 import org.egov.pa.repository.KpiMasterRepository;
 import org.egov.pa.service.KpiMasterService;
+import org.egov.pa.validator.RestCallService;
 import org.egov.pa.web.contract.KPIGetRequest;
 import org.egov.pa.web.contract.KPIRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class KpiMasterServiceImpl implements KpiMasterService {
 	@Autowired 
 	@Qualifier("kpiMasterRepo")
 	private KpiMasterRepository kpiMasterRepository;
+	
+	@Autowired
+	private RestCallService restCallService; 
 
 	@Override
 	public KPIRequest createNewKpi(KPIRequest kpiRequest) {

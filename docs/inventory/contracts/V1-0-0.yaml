@@ -2061,7 +2061,7 @@ definitions:
             - ISSUED
           description: |
             status of the Indent 
-        indentMaterials:
+        indentDetails:
           type:  array
           minItems: 1
           maxItems: 50
@@ -2101,7 +2101,7 @@ definitions:
       - indentStore
       - indentDate
       - indentPurpose
-      - indentMaterials
+      - indentDetails
       - indentType
       
     IndentDetail:
@@ -2125,8 +2125,8 @@ definitions:
           $ref: "#/definitions/Uom"
           format: singleValueList
         parentIndentLine:
-          $ref: "#/definitions/IndentDetail"  
-          description: In case of interstore transfer indent, this field is used to link with initial indent(if required)
+          type: string
+          description: In case of interstore transfer indent, this field is used to link with initial indent id (if required)
         orderNumber:
           type: number
           format: int32
@@ -2141,17 +2141,17 @@ definitions:
           description: |
             Mandatory if the purpose is Repair and Maintenance.Refer asset code
             format: autoComplete
-        indentQantity:
+        indentQuantity:
           type: number
           format: BigDecimal
           description: |
-            indent qantity of the IndentDetail. Quantity requested by indentor.
+            indent quantity of the IndentDetail. Quantity requested by indentor.
         totalProcessedQuantity:
           type: number
           format: BigDecimal
           description: |
             Quantity issued from indent issue.
-        indentIssuedQantity:
+        indentIssuedQuantity:
           type: number
           format: BigDecimal
           description: |
@@ -2178,7 +2178,7 @@ definitions:
       required:
       - uom
       - material
-      - indentQantity
+      - indentQuantity
       
     OpeningBalanceRequest:
       type: object
@@ -2191,6 +2191,9 @@ definitions:
           type: array
           items:
             $ref: '#/definitions/MaterialReceipt'
+      required:
+      - RequestInfo
+      - MaterialReceipt
             
     OpeningBalanceResponse:
       type: object
@@ -2214,6 +2217,9 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/Indent'
+      required:
+      - RequestInfo
+      - indents
             
     IndentResponse:
       description: Contract class for web response. Array of Indent items  are used in case of search ,create or update request. 
@@ -2238,6 +2244,9 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/Indent'
+      required:
+      - RequestInfo
+      - transferIndentNotes
             
     TransferIndentNoteResponse:
       description: Contract class for web response. Array of Indent items  are used in case of search ,create or update request. 
@@ -2380,6 +2389,9 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/PurchaseOrder'
+      required:
+      - RequestInfo
+      - purchaseOrders
             
     PurchaseOrderResponse:
       description: Contract class for web response. Array of PurchaseOrder items  are used in case of search ,create or update request. 
@@ -2733,6 +2745,9 @@ definitions:
           type: array
           items:
             $ref: '#/definitions/MaterialReceipt'
+      required:
+      - RequestInfo
+      - MaterialReceipt
             
     MaterialReceiptResponse:
       type: object
@@ -2853,6 +2868,9 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/MaterialIssue'
+      required:
+      - RequestInfo
+      - materialIssues
             
     MaterialIssueResponse:
       description: Contract class for web response. Array of MaterialIssue items  are used in case of search ,create or update request. 
@@ -2921,6 +2939,9 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/MaterialReceipt'
+      required:
+      - RequestInfo
+      - transferInwards
             
     TransferInwardResponse:
       description: Contract class for material receipt inward web response. Array of MaterialReceipt items  are used in case of search ,create or update request. 
@@ -2945,6 +2966,9 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/MaterialIssue'
+      required:
+      - RequestInfo
+      - transferOutwards
             
     TransferOutwardResponse:
       description: Contract class for web response. Array of TransferOutward items  are used in case of search ,create or update request. 
@@ -3210,6 +3234,10 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/Material'
+      required:
+      - RequestInfo
+      - materials
+            
             
     MaterialResponse:
       description: Contract class for web response. Array of Material items  are used in case of search ,create or update request. 
@@ -3234,6 +3262,9 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/MaterialStoreMapping'
+      required:
+      - RequestInfo
+      - materialStoreMappings
 
     MaterialStoreMappingResponse:
       description: Contract class for web response. Array of Material Store Mapping items  are used in case of search ,create or update request. 
@@ -3403,6 +3434,9 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/Store'
+      required:
+      - RequestInfo
+      - stores
             
     StoreResponse:
       description: Contract class for web response. Array of Store items  are used in case of search ,create or update request. 
@@ -3620,6 +3654,9 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/Supplier'
+      required:
+      - RequestInfo
+      - suppliers
             
     SupplierResponse:
       description: Contract class for web response. Array of Supplier items  are used in case of search ,create or update request. 
@@ -3754,6 +3791,9 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/Scrap'
+      required:
+      - RequestInfo
+      - scraps
             
     ScrapResponse:
       description: Contract class for web response. Array of Scrap items  are used in case of search ,create or update request. 
@@ -3875,6 +3915,9 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/Disposal'
+      required:
+      - RequestInfo
+      - disposals
             
     DisposalResponse:
       description: Contract class for web response. Array of Disposal items  are used in case of search ,create or update request. 
@@ -4028,6 +4071,9 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/PriceList'
+      required:
+      - RequestInfo
+      - priceLists
             
     PriceListResponse:
       description: Contract class for web response. Array of PriceList items  are used in case of search ,create or update request. 

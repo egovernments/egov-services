@@ -2079,7 +2079,7 @@ var localization_EN_Data = {
  "reports.asset.toDate" :"To Date",
  "reports.asset.assetCategory" : "Asset Category",
  "reports.asset.assetSubCategory" : "Asset Sub Category",
- "reports.asset.departementCode" : "Department",
+ "reports.asset.departmentCode" : "Department",
  "reports.asset.id"                           : "AssetId",
  "reports.asset.code"                         : "Asset ID No",
  "reports.asset.quantity"                     : "Quantity",

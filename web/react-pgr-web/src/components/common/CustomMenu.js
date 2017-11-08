@@ -223,7 +223,7 @@ const menuConvention={
 
 
 "Asset Management.Asset Reports.AssetImmovableRegister":"/report/asset/AssetImmovableRegister",
-"Asset Management.Asset Reports.AssetMovableRegister":"/report/asset/AssetMovableRegister",
+"Asset Management.Asset Reports.MovableRegisterMetadata":"/report/asset/AssetMovableRegister",
 //SWM
 "Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Create": "/create/vehiclefuellingdetails",
 "Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Search": "/search/vehiclefuellingdetails/view",

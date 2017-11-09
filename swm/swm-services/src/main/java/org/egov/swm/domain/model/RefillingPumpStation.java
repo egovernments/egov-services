@@ -52,7 +52,7 @@ public class RefillingPumpStation {
 	private FuelType typeOfFuel = null;
 
 	@JsonProperty("quantity")
-	@Min(value = 0)
+	@Min(value = 1)
 	@Max(value = 10000)
 	private Double quantity = null;
 

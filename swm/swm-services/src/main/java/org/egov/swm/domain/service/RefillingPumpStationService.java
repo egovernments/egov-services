@@ -94,7 +94,8 @@ public class RefillingPumpStationService {
 		for (RefillingPumpStation refillingPumpStation : refillingPumpStationRequest.getRefillingPumpStations()) {
 
 			// Validate Fuel Type
-			if(refillingPumpStation.getTypeOfFuel() != null && refillingPumpStation.getTypeOfFuel().getCode() == null)
+			if(refillingPumpStation.getTypeOfFuel() != null && (refillingPumpStation.getTypeOfFuel().getCode() == null ||
+			 refillingPumpStation.getTypeOfFuel().getCode().isEmpty()))
 				throw new CustomException("FuelType",
 						"typeOfFuel code is mandatory: ");
 
@@ -113,7 +114,8 @@ public class RefillingPumpStationService {
 			}
 
 			// validate Oil Company
-			if(refillingPumpStation.getTypeOfPump() != null && refillingPumpStation.getTypeOfPump().getCode() == null)
+			if(refillingPumpStation.getTypeOfPump() != null && (refillingPumpStation.getTypeOfPump().getCode() == null ||
+					refillingPumpStation.getTypeOfPump().getCode().isEmpty()))
 				throw new CustomException("OilCompany",
 						"typeOfPump code is mandatory ");
 
@@ -132,7 +134,8 @@ public class RefillingPumpStationService {
 			}
 
 			// Validate Boundary
-			if(refillingPumpStation.getLocation() != null && refillingPumpStation.getLocation().getCode() == null)
+			if(refillingPumpStation.getLocation() != null && (refillingPumpStation.getLocation().getCode() == null ||
+					refillingPumpStation.getLocation().getCode().isEmpty()))
 				throw new CustomException("Boundary",
 						"Boundary code is Mandatory");
 

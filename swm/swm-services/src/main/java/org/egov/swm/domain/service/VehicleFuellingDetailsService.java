@@ -7,13 +7,8 @@ import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.constants.Constants;
-import org.egov.swm.domain.model.AuditDetails;
-import org.egov.swm.domain.model.FuelType;
-import org.egov.swm.domain.model.Pagination;
-import org.egov.swm.domain.model.Vehicle;
-import org.egov.swm.domain.model.VehicleFuellingDetails;
-import org.egov.swm.domain.model.VehicleFuellingDetailsSearch;
-import org.egov.swm.domain.model.VehicleSearch;
+import org.egov.swm.domain.model.*;
+import org.egov.swm.domain.repository.RefillingPumpStationRepository;
 import org.egov.swm.domain.repository.VehicleFuellingDetailsRepository;
 import org.egov.swm.domain.repository.VehicleRepository;
 import org.egov.swm.persistence.entity.RefillingPumpStationEntity;
@@ -50,6 +45,9 @@ public class VehicleFuellingDetailsService {
 
 	@Autowired
 	private MdmsRepository mdmsRepository;
+
+	@Autowired
+	private RefillingPumpStationRepository refillingPumpStationRepository;
 
 	@Value("${egov.swm.vehiclefuellingdetails.transaction.num.idgen.name}")
 	private String idGenNameForTrnNumPath;
@@ -179,19 +177,24 @@ public class VehicleFuellingDetailsService {
 						"The field RefuellingPumpStation name is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
 			// Validate RefuellingPumpStation
+			if(details.getRefuellingStation() != null && (details.getRefuellingStation().getCode() == null ||
+			 details.getRefuellingStation().getCode().isEmpty()))
+				throw new CustomException("RefuellingPumpStation",
+						"RefuellingPumpStation code required: " + details.getRefuellingStation().getName());
+
 			if (details.getRefuellingStation() != null) {
+				RefillingPumpStationSearch refillingPumpStationSearch = new RefillingPumpStationSearch();
+				refillingPumpStationSearch.setTenantId(details.getRefuellingStation().getTenantId());
+				refillingPumpStationSearch.setCode(details.getRefuellingStation().getCode());
 
-				responseJSONArray = mdmsRepository.getByCriteria(details.getTenantId(), Constants.MODULE_CODE,
-						Constants.REFILLINGPUMPSTATION_MASTER_NAME, "name", details.getRefuellingStation().getName(),
-						vehicleFuellingDetailsRequest.getRequestInfo());
+				Pagination<RefillingPumpStation> refillingPumpStationList = refillingPumpStationRepository.search(refillingPumpStationSearch);
 
-				if (responseJSONArray != null && responseJSONArray.size() > 0)
-					details.setRefuellingStation(
-							mapper.convertValue(responseJSONArray.get(0), RefillingPumpStationEntity.class).toDomain());
-				else
+				if(refillingPumpStationList == null && refillingPumpStationList.getPagedData() == null &&
+						refillingPumpStationList.getPagedData().isEmpty())
 					throw new CustomException("RefuellingPumpStation",
 							"Given RefuellingPumpStation is invalid: " + details.getRefuellingStation().getName());
-
+				else
+					details.setRefuellingStation(refillingPumpStationList.getPagedData().get(0));
 			}
 
 			if (details.getReceiptDate() != null && details.getTransactionDate() != null) {

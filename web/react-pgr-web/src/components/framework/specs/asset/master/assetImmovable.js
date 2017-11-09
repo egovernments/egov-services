@@ -862,22 +862,22 @@ var dat = {
 						"isStateLevel":true
 					},
 					{
-						"name": "fromOriginalDate",
+						"name": "fromOriginalValue",
 						"jsonPath": "originalValueFrom",
 						"label": "ac.create.OriginalFromDate",
 						"pattern": "",
-						"type": "datePicker",
+						"type": "number",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
 					{
-						"name": "toOriginalDate",
+						"name": "toOriginalValue",
 						"jsonPath": "originalValueTo",
 						"label": "ac.create.OriginalToDate",
 						"pattern": "",
-						"type": "datePicker",
+						"type": "number",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",

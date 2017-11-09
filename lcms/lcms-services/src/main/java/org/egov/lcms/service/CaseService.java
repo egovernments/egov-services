@@ -245,6 +245,10 @@ public class CaseService {
 					count++;
 
 				}
+				
+				if ( !caseStatusCode.isEmpty() || caseStatusCode.length()>1 ){
+					masterMap.put("caseStatus", caseStatusCode);
+				}
 
 				getStampDetails(caseObj);
 

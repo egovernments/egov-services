@@ -73,8 +73,12 @@ public class PerformanceAssessmentQueryBuilder {
     			+ " values (nextval('seq_egpa_kpi_master_targets'), ?, ?, ?, ?, ?, ?)";
     }
     
-    public static String getNextKpiMasterId(int numberOfIds) {
+    public static String getNextKpiMasterId() {
     	return "select nextval('seq_egpa_kpi_master') FROM GENERATE_SERIES(1,:size)" ; 
+    }
+    
+    public static String getNextKpiValueId() {
+    	return "select nextval('seq_egpa_kpi_value') FROM GENERATE_SERIES(1,:size)" ; 
     }
     
     public static String fetchKpiByNameOrCode() { 

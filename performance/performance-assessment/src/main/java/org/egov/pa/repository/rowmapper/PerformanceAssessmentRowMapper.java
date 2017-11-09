@@ -91,7 +91,6 @@ public class PerformanceAssessmentRowMapper {
 					kpi.setTargetType(Boolean.FALSE);
 				}
 				kpi.setTargetValue(rs.getLong("targetValue"));
-				kpi.setTenantId(rs.getString("tenantId"));
 				kpi.setInstructions(rs.getString("instructions"));
 				kpi.setDepartmentId(rs.getLong("departmentId"));
 				kpiMap.put(String.valueOf(rs.getLong("id")), kpi);

@@ -16,9 +16,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-02T05:16:16.756Z")
 
 public class KPI   {
-  @JsonProperty("tenantIdCustom")
-  private String tenantId = null;
-
   @JsonProperty("departmentId")
   private Long departmentId = null;
   
@@ -100,24 +97,6 @@ public void setCode(String code) {
 	this.code = code;
 }
 
-public KPI tenantId(String tenantId) {
-    this.tenantId = tenantId;
-    return this;
-  }
-
-   /**
-   * Unique teanntid for the ULB - if the KPI is defined at state level use only state part of the namespaced tenantid
-   * @return tenantId
-  **/
-
-
-  public String getTenantId() {
-    return tenantId;
-  }
-
-  public void setTenantId(String tenantId) {
-    this.tenantId = tenantId;
-  }
 
    /**
    * Get department
@@ -266,8 +245,7 @@ public KPI tenantId(String tenantId) {
       return false;
     }
     KPI KPI = (KPI) o;
-    return Objects.equals(this.tenantId, KPI.tenantId) &&
-        Objects.equals(this.departmentId, KPI.departmentId) &&
+    return Objects.equals(this.departmentId, KPI.departmentId) &&
         Objects.equals(this.id, KPI.id) &&
         Objects.equals(this.name, KPI.name) &&
         Objects.equals(this.remoteSystemId, KPI.remoteSystemId) &&
@@ -278,7 +256,7 @@ public KPI tenantId(String tenantId) {
 
   @Override
   public int hashCode() {
-    return Objects.hash(tenantId, departmentId, id, name, remoteSystemId, targetValue, instructions, financialYear, documents);
+    return Objects.hash(departmentId, id, name, remoteSystemId, targetValue, instructions, financialYear, documents);
   }
 
   @Override
@@ -286,7 +264,6 @@ public KPI tenantId(String tenantId) {
     StringBuilder sb = new StringBuilder();
     sb.append("class KPI {\n");
     
-    sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    department: ").append(toIndentedString(departmentId)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");

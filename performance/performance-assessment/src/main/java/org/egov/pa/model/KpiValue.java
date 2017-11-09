@@ -30,7 +30,7 @@ public class KpiValue   {
   private String tenantId = null;
 
   @JsonProperty("documents")
-  private List<Document> documents = null;
+  private List<ValueDocument> documents = null;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -106,14 +106,14 @@ public KpiValue kpi(KPI kpi) {
     this.tenantId = tenantId;
   }
 
-  public KpiValue documents(List<Document> documents) {
+  public KpiValue documents(List<ValueDocument> documents) {
     this.documents = documents;
     return this;
   }
 
-  public KpiValue addDocumentsItem(Document documentsItem) {
+  public KpiValue addDocumentsItem(ValueDocument documentsItem) {
     if (this.documents == null) {
-      this.documents = new ArrayList<Document>();
+      this.documents = new ArrayList<ValueDocument>();
     }
     this.documents.add(documentsItem);
     return this;
@@ -126,11 +126,11 @@ public KpiValue kpi(KPI kpi) {
 
   @Valid
 
-  public List<Document> getDocuments() {
+  public List<ValueDocument> getDocuments() {
     return documents;
   }
 
-  public void setDocuments(List<Document> documents) {
+  public void setDocuments(List<ValueDocument> documents) {
     this.documents = documents;
   }
 

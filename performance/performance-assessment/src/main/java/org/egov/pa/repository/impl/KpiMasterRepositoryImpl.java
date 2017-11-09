@@ -82,7 +82,7 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 
 	@Override
 	public List<Long> getNewKpiIds(int numberOfIds) {
-		String query = PerformanceAssessmentQueryBuilder.getNextKpiMasterId(numberOfIds);
+		String query = PerformanceAssessmentQueryBuilder.getNextKpiMasterId();
 		Map<String, Object> paramValues = new HashMap<>();
 		paramValues.put("size", numberOfIds);
 		List<Long> idList;

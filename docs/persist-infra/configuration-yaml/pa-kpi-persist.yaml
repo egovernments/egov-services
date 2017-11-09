@@ -6,7 +6,7 @@ serviceMaps:
    description: Create a new KPI Master Record
    fromTopic: egov.pa.newkpi-create
    queryMaps: 
-    - query: INSERT INTO egpa_kpi_master (id, name, code, finyear, targettype, targetvalue, instructions, tenantid, createdby, createddate, department) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egpa_kpi_master (id, name, code, finyear, targettype, targetvalue, instructions, createdby, createddate, department) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.KPIs.*
       jsonMaps:
 
@@ -25,8 +25,6 @@ serviceMaps:
          
        - jsonPath: $.KPIs.*.instructions
        
-       - jsonPath: $.KPIs.*.tenantIdCustom
-         
        - jsonPath: $.RequestInfo.userInfo.id
          type: LONG
        
@@ -134,10 +132,12 @@ serviceMaps:
    description: Insert actual value for a KPI Master Record
    fromTopic: egov.pa.kpivalue-create
    queryMaps: 
-    - query: INSERT INTO egpa_kpi_value (id, kpicode, tenantid, actualvalue, createdby, createddate) VALUES (nextval('seq_egpa_kpi_value'), ?, ? ,? ,? ,?) ; 
+    - query: INSERT INTO egpa_kpi_value (id, kpicode, tenantid, actualvalue, createdby, createddate) VALUES (?, ?, ? ,? ,? ,?) ; 
       basePath: $.kpiValues.*
       jsonMaps:
-       
+               
+       - jsonPath: $.kpiValues.*.id
+                      
        - jsonPath: $.kpiValues.*.kpi.code
          
        - jsonPath: $.kpiValues.*.tenantId
@@ -150,6 +150,24 @@ serviceMaps:
        
        - jsonPath: $.kpiValues.*.auditDetails.createdTime
          type: LONG  
+         
+    - query: INSERT INTO egpa_kpi_value_documents (id, documentcode, kpicode, valueid, filestoreid, createdby, createddate) VALUES (nextval('seq_egpa_kpi_value_documents'), ?, ? ,? ,? ,?, ?) ; 
+      basePath: $.kpiValues.*.documents.*
+      jsonMaps:
+       
+       - jsonPath: $.kpiValues.*.documents.*.code
+         
+       - jsonPath: $.kpiValues.*.documents.*.kpiCode
+         
+       - jsonPath: $.kpiValues.*.documents.*.valueId
+       
+       - jsonPath: $.kpiValues.*.documents.*.fileStoreId
+         
+       - jsonPath: $.kpiValues.*.documents.*.auditDetails.createdBy
+         type: LONG
+       
+       - jsonPath: $.kpiValues.*.documents.*.auditDetails.createdTime
+         type: LONG
          
  - version: 1.0
    name: kpiValue update

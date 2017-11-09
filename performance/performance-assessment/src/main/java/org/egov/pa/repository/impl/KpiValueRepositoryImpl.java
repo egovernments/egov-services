@@ -3,6 +3,7 @@ package org.egov.pa.repository.impl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiValue;
@@ -128,6 +129,20 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 			log.error("Encountered an exception while fetching the data for Code and Tenant Id : " + e);
 		}
 		return possibilityCheck;
+	}
+
+	@Override
+	public List<Long> getNewKpiIds(int numberOfIds) {
+		String query = PerformanceAssessmentQueryBuilder.getNextKpiValueId();
+		Map<String, Object> paramValues = new HashMap<>();
+		paramValues.put("size", numberOfIds);
+		List<Long> idList;
+		try {
+			idList = namedParameterJdbcTemplate.queryForList(query, paramValues, Long.class);
+		} catch (Exception e) {
+			throw new RuntimeException("Next id is not generated.");
+		}
+		return idList;
 	}
 
 }

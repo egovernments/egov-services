@@ -311,7 +311,7 @@ definitions:
       documents:
         type: array
         items:
-          $ref: "#/definitions/Document"
+          $ref: "#/definitions/ValueDocument"
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -379,6 +379,32 @@ definitions:
       - active
       - code
       - description
+      
+  ValueDocument: 
+    type: object
+    description: Document and their file store IDs for the access of the File
+    properties:
+      code: 
+        type: string
+        pattern: ^[a-zA-Z0-9.]+$
+        description: Unique Code of the Document.
+      description:
+        type: string
+        pattern: ^[a-zA-Z0-9 ]+$
+        description: description of the Document.
+        maxLength: 250
+      kpiCode: 
+        type: string
+        pattern: ^[a-zA-Z0-9.]+$
+        description: Unique KPI Code to identify the KPI for which the Document is being uploaded.
+      fileStoreId: 
+        type: string
+        pattern: ^[a-zA-Z0-9.-]+$
+        description: Unique File Store ID to track the file which has been uploaded and saved
+    required:
+      - fileStoreId
+      - code
+      - kpiCode
      
   KPIRequest:
     type: object

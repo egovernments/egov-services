@@ -9,7 +9,7 @@ import Api from '../../../api/api';
 
 import UiButton from '../../framework/components/UiButton';
 import {fileUpload,getInitiatorPosition} from '../../framework/utility/utility';
-import UiDynamicTable from '../../framework/components/UiDynamicTable';
+import UiDynamicTable from '../../framework/components/UiDynamicTable2';
 
 import jp from "jsonpath";
 import $ from "jquery";
@@ -207,42 +207,18 @@ class Transaction extends Component {
     }
   }
 
-  search = (e=null,businessService="",consumerCode="") => {
+  search = () => {
 
-    e && e.preventDefault();
     let self = this;
     self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
-    if((formData.consumerCode && !formData.businessService)) {
-      self.props.setLoadingStatus('hide');
-      self.props.addFieldErrors("businessService", translate("ui.framework.required"));
-      return;
-    } else if((!formData.consumerCode && formData.businessService)) {
-      self.props.setLoadingStatus('hide');
-      self.props.addFieldErrors("consumerCode", translate("ui.framework.required"));
-      return;
-    }
-    else {
-      self.props.removeFieldErrors("businessService");
-      self.props.removeFieldErrors("consumerCode");
-    }
 
-    for(var key in formData) {
-      if(!formData[key])
-        delete formData[key];
-    }
-    // console.log(formData);
-    if (businessService && consumerCode) {
-      // alert("hai")
-      formData={
-        businessService,
-        consumerCode
-      }
-    }
 
-    Api.commonApiPost("/asset-services/assets/_search", formData, {}, null, true).then(function(res){
+    Api.commonApiPost("/asset-services-maha/assets/_search", formData, {}, null, true).then(function(res){
       self.props.setLoadingStatus('hide');
-      // self.props.handleChange({target:{value:res.Bill}},"Receipt[0].Bill",false,false);
+       self.props.handleChange({target:{value:res.Assets}},"Disposal.Assets",false,false);
+
+      //  self.props.handleChange({target:{value:res.code}},"Assets[0].code",false,false);
       // self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].tenantId",false,false);
       // self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].instrument.instrumentType.tenantId",false,false);
       // // self.props.handleChange({target:{value:new Date().getTime()}},"Receipt[0].instrument.transactionDate",false,false);
@@ -257,12 +233,15 @@ class Transaction extends Component {
 
       // }
 
-
+      // console.log(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.header);
 
       var resultList = {
         resultHeader: self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.header,
         resultValues: []
       };
+
+      console.log(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.tableResultPath);
+      console.log(res);
 
       let objectPath=self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.resultPath;
       let tableObjectPath=self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.tableResultPath;
@@ -271,7 +250,9 @@ class Transaction extends Component {
       let headers=Object.assign([],resultList.resultHeader);
 
       if(values && values.length) {
+
         for(var i=0; i<values.length; i++) {
+
           var tmp = [];
           for(var j=0; j<headers.length; j++) {
               // tmp.push({jsonPath:objectPath+"["+i+"]."+headers[j].jsonPath,...headers[j]})
@@ -602,78 +583,83 @@ class Transaction extends Component {
   }
 
 
-    handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
-        let {getVal} = this;
-        let {handleChange,mockData,setDropDownData, addRequiredFields, delRequiredFields} = this.props;
-        let hashLocation = window.location.hash;
-        let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
-        let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
-        this.checkIfHasShowHideFields(property, e.target.value);
-        this.checkIfHasEnDisFields(property, e.target.value);
-
-        if(property == "Receipt[0].instrument.instrumentType.name") {
-          if(e.target.value != "Cash")
-            addRequiredFields(["Receipt[0].instrument.transactionNumber", "Receipt[0].instrument.transactionDateInput", "Receipt[0].instrument.bank.id"]);
+  handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch", expression, expErr, isDate) => {
+      let {getVal, getValFromDropdownData} = this;
+      let {handleChange,mockData,setDropDownData, formData} = this.props;
+      let hashLocation = window.location.hash;
+      let obj = specifications[`asset.transaction`];
+      if(expression && e.target.value){
+        let str = expression;
+        let pos = 0;
+        let values = [];
+        while(pos < str.length) {
+          if(str.indexOf("$", pos) > -1) {
+            let ind = str.indexOf("$", pos);
+            let spaceInd = str.indexOf(" ", ind) > -1 ? str.indexOf(" ", ind) : (str.length-1) ;
+            let value = str.substr(ind, spaceInd);
+            if(value != "$" + property)  {
+              values.push(value.substr(1));
+              str = str.replace(value, ("getVal('" + value.substr(1, value.length) + "')"));
+            } else
+              str = str.replace(value, ("e.target.value"));
+            pos++;
+          }
           else {
-            delRequiredFields(["Receipt[0].instrument.transactionNumber", "Receipt[0].instrument.transactionDateInput", "Receipt[0].instrument.bank.id"])
+            pos++;
           }
         }
 
-        handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
-
-        if (property=="Receipt[0].instrument.transactionDateInput" && e.target.value.length==10) {
-          console.log(e.target.value);
-          // handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
-        }
-
-
-        if(property.indexOf("Receipt[0].Bill[0].billDetails")>-1){
-          let bill=this.getVal("Receipt[0].Bill[0].billDetails");
-          let sum=0;
-          for (var i = 0; i < bill.length; i++) {
-             if (bill[i].hasOwnProperty("amountPaid")) {
-               sum+=parseInt(bill[i].amountPaid);
-             }
+        let _flag = 0;
+        for(var i=0; i<values.length; i++) {
+          if(!getVal(values[i])) {
+            _flag = 1;
           }
-          handleChange({target:{value:sum}},"Receipt[0].instrument.amount",false,false);
         }
 
-        if (property.indexOf("Receipt[0].instrument.instrumentType.name")>-1) {
-          if (e.target.value=="Cash") {
-              $(".chequeOrDD").hide();
-          } else {
-              $(".chequeOrDD").show();
+        if(isDate && e.target.value && [12, 13].indexOf((e.target.value+"").length) == -1) {
+          _flag = 1;
+        }
+
+        if(_flag == 0) {
+          if(!eval(str)) {
+            return this.props.toggleSnackbarAndSetText(true, translate(expErr), false, true);
           }
-
         }
+      }
+      let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
+      if(depedants.length === 0)
+        depedants = jp.query(obj,`$.groups..fields[?(@.type=="tableList")].tableList.values[?(@.jsonPath == "${property}")].depedants.*`);
 
-        _.forEach(depedants, function(value, key) {
-              if (value.type=="dropDown") {
-                  let splitArray=value.pattern.split("?");
-                  let context="";
-            			let id={};
-            			// id[splitArray[1].split("&")[1].split("=")[0]]=e.target.value;
-            			for (var j = 0; j < splitArray[0].split("/").length; j++) {
-            				context+=splitArray[0].split("/")[j]+"/";
-            			}
+      this.checkIfHasShowHideFields(property, e.target.value);
+      this.checkIfHasEnDisFields(property, e.target.value);
+      handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
-            			let queryStringObject=splitArray[1].split("|")[0].split("&");
-            			for (var i = 0; i < queryStringObject.length; i++) {
-            				if (i) {
-                      if (queryStringObject[i].split("=")[1].search("{")>-1) {
-                        if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
-                          id[queryStringObject[i].split("=")[0]]=e.target.value || "";
-                        } else {
-                          id[queryStringObject[i].split("=")[0]]=getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
-                        }
+      _.forEach(depedants, function(value, key) {
+            if (value.type == "dropDown") {
+                let splitArray = value.pattern.split("?");
+                let context = "";
+          			let id = {};
+          			for (var j = 0; j < splitArray[0].split("/").length; j++) {
+          				context+=splitArray[0].split("/")[j]+"/";
+          			}
+
+          			let queryStringObject=splitArray[1].split("|")[0].split("&");
+          			for (var i = 0; i < queryStringObject.length; i++) {
+          				if (i) {
+                    if (queryStringObject[i].split("=")[1].search("{")>-1) {
+                      if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
+                        id[queryStringObject[i].split("=")[0]]=e.target.value || "";
                       } else {
-                        id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
+                        id[queryStringObject[i].split("=")[0]]=getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
                       }
-            				}
-            			}
+                    } else {
+                      id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
+                    }
+          				}
+          			}
 
-                  Api.commonApiPost(context,id).then(function(response)
-                  {
+                Api.commonApiPost(context, id, {}, false, false, false, "", "", value.isStateLevel).then(function(response) {
+                  if(response) {
                     let keys=jp.query(response,splitArray[1].split("|")[1]);
                     let values=jp.query(response,splitArray[1].split("|")[2]);
                     let dropDownData=[];
@@ -683,24 +669,63 @@ class Transaction extends Component {
                         obj["value"]=values[k];
                         dropDownData.push(obj);
                     }
-                    setDropDownData(value.jsonPath,dropDownData);
-                  },function(err) {
-                      console.log(err);
-                  });
-                  // console.log(id);
-                  // console.log(context);
-              }
 
-              else if (value.type=="textField") {
+                    dropDownData.sort(function(s1, s2) {
+                      return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+                    });
+                    dropDownData.unshift({key: null, value: "-- Please Select --"});
+                    setDropDownData(value.jsonPath, dropDownData);
+                  }
+                },function(err) {
+                    console.log(err);
+                });
+            } else if (value.type == "textField") {
+              try{
                 let object={
-                  target:{
-                    value:eval(eval(value.pattern))
+                  target: {
+                    value: value.valExp && eval(value.valExp) || eval(eval(value.pattern))
                   }
                 }
-                handleChange(object,value.jsonPath,value.isRequired,value.rg,value.requiredErrMsg,value.patternErrMsg);
+                handleChange(object, value.jsonPath, value.isRequired, value.rg,value.requiredErrMsg, value.patternErrMsg);
               }
-        });
-    }
+              catch(ex){
+                console.log('ex', ex);
+              }
+            } else if (value.type == "autoFill") {
+              let splitArray = value.pattern.split("?");
+                let context = "";
+                let id = {};
+                for (var j = 0; j < splitArray[0].split("/").length; j++) {
+                  context+=splitArray[0].split("/")[j]+"/";
+                }
+
+                let queryStringObject=splitArray[1].split("|")[0].split("&");
+                for (var i = 0; i < queryStringObject.length; i++) {
+                  if (i) {
+                    if (queryStringObject[i].split("=")[1].search("{")>-1) {
+                      if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
+                        id[queryStringObject[i].split("=")[0]] = e.target.value || "";
+                      } else {
+                        id[queryStringObject[i].split("=")[0]] = getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
+                      }
+                    } else {
+                      id[queryStringObject[i].split("=")[0]] = queryStringObject[i].split("=")[1];
+                    }
+                  }
+                }
+
+                Api.commonApiPost(context, id).then(function(response) {
+                  if(response) {
+                    for(let key in value.autoFillFields) {
+                      handleChange({target: {value: _.get(response, value.autoFillFields[key])}}, key, false, '', '');
+                    }
+                  }
+                },function(err) {
+                    console.log(err);
+                });
+            }
+      });
+  }
 
     rowClickHandler = (index) => {
     var value = this.state.values[index];

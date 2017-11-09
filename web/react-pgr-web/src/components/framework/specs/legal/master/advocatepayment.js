@@ -298,16 +298,16 @@ var dat =  {
           //   isDisabled: false,
           //   patternErrorMsg: ""
           // },
-          // {
-          //   name: "totalAmount",
-          //   pattern: "",
-          //   label: "legal.create.amount",
-          //   type: "number",
-          //   jsonPath: "advocatePayments[0].advocateCharges[0].amount",
-          //   isRequired: false,
-          //   isDisabled: true,
-          //   defaultValue: "advocatePayments[0].advocateCharges[0].amount"
-          // },
+          {
+            name: "totalAmount",
+            pattern: "",
+            label: "legal.create.amount",
+            type: "number",
+            hide:true,
+            jsonPath: "advocatePayments[0].totalAmount",
+            isRequired: false,
+            isDisabled: true
+          },
          {
                    name: "invoiceDocument",
             jsonPath: "advocatePayments[0].invoiceDoucment.fileStoreId",
@@ -419,7 +419,7 @@ var dat =  {
             label: "advocatepayment.create.demandDate",
             type: "datePicker",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -455,7 +455,7 @@ var dat =  {
             label: "advocatepayment.create.amountClaimed",
             type: "number",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -473,7 +473,7 @@ var dat =  {
             label: "advocatepayment.create.amountRecived",
             type: "number",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           // {
@@ -527,9 +527,10 @@ var dat =  {
             pattern: "",
             label: "legal.create.amount",
             type: "number",
+            hide:true,
             jsonPath: "assignAdvocate[0].totalAmount",
             isRequired: false,
-            isDisabled: false
+            isDisabled: true
           },
           {
                    name: "invoiceDocument",
@@ -564,7 +565,7 @@ var dat =  {
                       type: "singleValueList",
                       jsonPath: "advocatePayments[0].advocateCharges[0].charge",
                       isRequired: true,
-                      isDisabled: false,
+                      isDisabled: true,
                        defaultValue: [
                                     {
                                       "key": "CF",
@@ -585,7 +586,7 @@ var dat =  {
                       type: "singleValueList",
                       jsonPath: "advocatePayments[0].advocateCharges[0].caseNo",
                       isRequired: false,
-                      isDisabled: false,
+                      isDisabled: true,
                       url: "/lcms-services/legalcase/case/_search?|$..summon.summonReferenceNo|$..summon.caseNo"
                     },
                     {
@@ -594,7 +595,7 @@ var dat =  {
                       type: "number",
                       jsonPath: "advocatePayments[0].advocateCharges[0].amount",
                       isRequired: false,
-                      isDisabled: false
+                      isDisabled: true
                     }
                   ]
                 }

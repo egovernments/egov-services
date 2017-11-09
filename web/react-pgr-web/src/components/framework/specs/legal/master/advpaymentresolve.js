@@ -53,7 +53,7 @@ var dat = {
             label: "advocatepayment.create.demandDate",
             type: "datePicker",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -95,7 +95,7 @@ var dat = {
             label: "advocatepayment.create.amountClaimed",
             type: "number",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -104,7 +104,7 @@ var dat = {
             label: "advocatepayment.create.bankAccountNo",
             type: "text",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
             // defaultValue: [],
             // url: ""
@@ -115,7 +115,7 @@ var dat = {
             label: "advocatepayment.create.amountRecived",
             type: "number",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
         //   {
@@ -206,7 +206,7 @@ var dat = {
                       type: "singleValueList",
                       jsonPath: "advocatePayments[0].advocateCharges[0].charge",
                       isRequired: true,
-                      isDisabled: false,
+                      isDisabled: true,
                        defaultValue: [
                                     {
                                       "key": "CF",
@@ -227,7 +227,7 @@ var dat = {
                       type: "singleValueList",
                       jsonPath: "advocatePayments[0].advocateCharges[0].caseNo",
                       isRequired: false,
-                      isDisabled: false,
+                      isDisabled: true,
                       url: "/lcms-services/legalcase/case/_search?|$..summon.summonReferenceNo|$..summon.caseNo"
                     },
                     {
@@ -236,7 +236,7 @@ var dat = {
                       type: "number",
                       jsonPath: "advocatePayments[0].advocateCharges[0].amount",
                       isRequired: false,
-                      isDisabled: false
+                      isDisabled: true
                     }
                   ]
                 }

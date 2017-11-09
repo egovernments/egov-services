@@ -63,7 +63,7 @@ var dat = {
             label: "advocatepayment.create.amountClaimed",
             type: "number",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -81,7 +81,7 @@ var dat = {
             label: "advocatepayment.create.amountRecived",
             type: "number",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
          {
@@ -117,7 +117,7 @@ var dat = {
                       type: "singleValueList",
                       jsonPath: "advocatePayments[0].advocateCharges[0].charge",
                       isRequired: true,
-                      isDisabled: false,
+                      isDisabled: true,
                        defaultValue: [
                                     {
                                       "key": "CF",
@@ -138,7 +138,7 @@ var dat = {
                       type: "singleValueList",
                       jsonPath: "advocatePayments[0].advocateCharges[0].caseNo",
                       isRequired: false,
-                      isDisabled: false,
+                      isDisabled: true,
                       url: "/lcms-services/legalcase/case/_search?|$..summon.summonReferenceNo|$..summon.caseNo"
                     },
                     {
@@ -147,7 +147,7 @@ var dat = {
                       type: "number",
                       jsonPath: "advocatePayments[0].advocateCharges[0].amount",
                       isRequired: false,
-                      isDisabled: false
+                      isDisabled: true
                     }
                   ]
                 }
@@ -174,7 +174,7 @@ var dat = {
             label: "advocatepayment.create.resolutionDate",
             type: "datePicker",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -183,7 +183,7 @@ var dat = {
             label: "advocatepayment.create.resolutionNo",
             type: "text",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -193,7 +193,7 @@ var dat = {
             type: "textarea",
             fullWidth: true,
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           }
         ]
@@ -252,7 +252,7 @@ var dat = {
             pattern: "",
             label: "legal.create.amount",
             type: "number",
-            jsonPath: "assignAdvocate[0].totalAmount",
+            jsonPath: "advocatePayments[0].allowance",
             isRequired: false,
             isDisabled: false
           },

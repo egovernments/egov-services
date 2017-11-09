@@ -9,7 +9,7 @@ import Api from '../../../api/api';
 
 import UiButton from '../../framework/components/UiButton';
 import {fileUpload,getInitiatorPosition} from '../../framework/utility/utility';
-import UiDynamicTable from '../../framework/components/UiDynamicTable2';
+import UiDynamicTable from '../../framework/components/uiDynamicTable2';
 
 import jp from "jsonpath";
 import $ from "jquery";

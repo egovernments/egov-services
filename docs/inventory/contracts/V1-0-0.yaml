@@ -128,8 +128,8 @@ paths:
     
     /indents/_search:
       post:
-        summary: Get the list of common indent information
-        description: Indent is parent object that holds the common information for both Indent Note and Transfer Indent
+        summary: Get the list of indent notes/transfer indent information.
+        description: Indent object holds the information for both Indent Note and Transfer Indent.
         tags: 
           - Indent Note
           - Transfer Indent
@@ -172,11 +172,6 @@ paths:
               - RepairsAndMaintenance
               - Capital
               - MaterialTransferNote
-          - name: description
-            type: string
-            in: query
-            description: |
-              description of the Indent
           - name: indentStatus
             type: string
             in: query
@@ -208,8 +203,8 @@ paths:
               
     /indents/_create:
       post:
-        summary: Create new indent
-        description: Whenever an Indent Note OR Transfer Indent is created, this API will hold the common set of information. This API will be invoked intenrally during Indent Note OR Transfer Indent creation.
+        summary: Create new indent.
+        description: This API is invoked to create indent notes in the system.
         tags: 
           - Indent Note
           - Transfer Indent
@@ -233,7 +228,7 @@ paths:
     /indents/_update:
       post:
         summary: Update any of the indents
-        description: The common set of information shared by Indent Note/Transfer Indent will be updated upon invoking this API.
+        description: This API is invoked to update the indent notes in the system also during the workflow .
         tags: 
           - Indent Note
           - Transfer Indent
@@ -303,14 +298,14 @@ paths:
     /transferindentnotes/_create:
       post:
         summary: Create  new  transfer indent notes.
-        description: Transfer Indent Note is created when a store need materails available in other store. Indent store raised a Material Indent Note specifying list of materails required from issuing store.
+        description: Transfer Indent Note is created when a store need materails that are available in other store. Indent store raises a Material Indent Note specifying list of materails required from issuing store.
         tags: 
           - Transfer Indent
         parameters:
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - name: transferIndentNoteRequest
             in: body
-            description: Create  new 
+            description: Transfer indent create request.
             schema:
               $ref: '#/definitions/TransferIndentNoteRequest'
         responses:
@@ -727,11 +722,6 @@ paths:
             in: query
             description: |
               name of the Material
-          - name: description
-            type: string
-            in: query
-            description: |
-              description of the Material
           - name: oldCode
             type: string
             in: query
@@ -1169,11 +1159,6 @@ paths:
             in: query
             description: |
               issued to employee of the TransferOutward
-          - name: description
-            type: string
-            in: query
-            description: |
-              description of the TransferOutward
           - name: outwardNoteNumber
             type: string
             in: query
@@ -1288,11 +1273,6 @@ paths:
             in: query
             description: |
               transfer out ward of the TransferInward
-          - name: description
-            type: string
-            in: query
-            description: |
-              description of the TransferInward
           - name: inwardNoteNumber
             type: string
             in: query
@@ -1406,11 +1386,6 @@ paths:
             in: query
             description: |
               scrap date of the Scrap
-          - name: description
-            type: string
-            in: query
-            description: |
-              description of the Scrap
           - name: scrapStatus
             type: string
             in: query
@@ -4183,7 +4158,3 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
-
-
-
-

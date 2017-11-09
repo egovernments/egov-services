@@ -78,6 +78,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /openingbalance/_create:
       post:
         summary: Create New Opening Balanace.
@@ -100,8 +101,7 @@ paths:
           '400':
             description: Invalid input.
             schema:
-              $ref: >-
-                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
                 
     /openingbalance/_update:
       post:
@@ -118,7 +118,7 @@ paths:
           - Opening Balance
         responses:
           '200':
-            description: Opening Balance  Updated Successfully.
+            description: Opening Balance Updated Successfully.
             schema:
               $ref: '#/definitions/OpeningBalanceResponse'
           400:
@@ -2104,8 +2104,7 @@ definitions:
       description: Hold the Opening Balance request information.
       properties:
         RequestInfo:
-          $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         MaterialReceipt:
           type: array
           items:
@@ -2119,8 +2118,7 @@ definitions:
       description: Hold the Opening Balance Response information
       properties:
         ResposneInfo:
-          $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         MaterialReceipt:
           type: array
           items:
@@ -2425,9 +2423,21 @@ definitions:
           type: string
           readOnly: true
           description: Unique number generated internally on creating a receipt.
+        manualReceiptNumber:
+          type: string
+          description: Manual Receipt Number, applicable only for Opening Balanace Entry.
+          maxLength: 128
         receiptDate:
           type: integer
           description: The date on which the receipt was made.
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
+        financialYear:
+          type: string
+          description: This field holds the financial year information for Opening Balance Entry.
+        manualReceiptDate:
+          type: integer
+          description: Manual Receipt Date, applicable only for Opening Balance Entry.
           format: int64
           x-displayformat: 'dd/MM/yyyy'
         receiptType:
@@ -2543,6 +2553,7 @@ definitions:
         - receiptType
         - receivingStore
         - mrnStatus
+        
     MaterialReceiptDetail:
       description: >-
         Hold the material receipt note material level information. This will show
@@ -2554,7 +2565,7 @@ definitions:
           description: The unique identifier for the receipt details.
         tenantId:
           type: string
-          description: Tenant id of the Material Receipt Header
+          description: Tenant id of the Material Receipt Header.
           maxLength: 128
           minLength: 4  
         material:
@@ -2572,22 +2583,19 @@ definitions:
         receivedQty:
           type: number
           format: BigDecimal
-          description: >-
-            The quantity of the material received for this particular purchase
-            order or inter store  transfer. All the quantity needs to be saved in the database in the based
-            UOM.
+          description: The quantity of the material received for this particular purchase order or inter store  transfer. All the quantity needs to be saved in the database in the based UOM. 
         acceptedQty:
           type: number
           format: BigDecimal
-          description: >-
-            The quantity of the material accepted from the total quantity of
-            materials received. All the quantity needs to be saved in the database
-            in the based UOM. Accepted quantity cannot be greater than the
-            received quantity.
+          description: The quantity of the material accepted from the total quantity of materials received. All the quantity needs to be saved in the database in the based UOM. Accepted quantity cannot be greater than the received quantity. This field also contains Opening Quantity when the receipt purpose is OPENING BALANCE.
         unitRate:
           type: number
           description: Per unit rate of the material as per the Purchase Order.
-          format: BigDecimal    
+          format: BigDecimal
+        openingRate:
+          type: number
+          description: Opening rate, applicable for Material Opening Balance Entry.
+          format: BigDecimal
         asset:
           $ref: >-
             https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/Asset
@@ -2990,7 +2998,37 @@ definitions:
             $ref: '#/definitions/MaterialIssue'
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
-          
+    
+    MaterialType:
+      type: object
+      description: |
+        This object holds the material type information.  
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the Material Type
+        tenantId:
+          type: string
+          description: Tenant id of the Material Type
+          maxLength: 128
+          minLength: 4    
+        name:
+          type: string
+          description: |
+            name of the MaterialType
+        code:
+          type: string
+          description: |
+            code of the MaterialType
+        parent:
+          type: integer
+          format: int64
+          description: |
+            parent of the MaterialType
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
+
     Material:
       type: object
       description: |
@@ -3127,36 +3165,6 @@ definitions:
       - reorderQuantity
       - materialControlType
     
-    MaterialType:
-      type: object
-      description: |
-        This object holds the material type information.  
-      properties:
-        id:
-          type: string
-          description: |
-            Unique Identifier of the Material Type
-        tenantId:
-          type: string
-          description: Tenant id of the Material Type
-          maxLength: 128
-          minLength: 4    
-        name:
-          type: string
-          description: |
-            name of the MaterialType
-        code:
-          type: string
-          description: |
-            code of the MaterialType
-        parent:
-          type: integer
-          format: int64
-          description: |
-            parent of the MaterialType
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
-
     MaterialStoreMapping:
       type: object
       description: |
@@ -3249,7 +3257,6 @@ definitions:
       required:
       - RequestInfo
       - materials
-            
             
     MaterialResponse:
       description: Contract class for web response. Array of Material items  are used in case of search ,create or update request. 
@@ -3405,7 +3412,6 @@ definitions:
       required:
       - code            
             
-      
     Department:
       type: object
       description: |
@@ -3744,7 +3750,7 @@ definitions:
           description: Designation of the created by user at the time of Scrap Note creation.
           format: varchar    
         auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"   
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - store
       - scrapNumber
@@ -4168,4 +4174,3 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
-

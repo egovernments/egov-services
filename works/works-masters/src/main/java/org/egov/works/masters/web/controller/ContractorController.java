@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -30,28 +29,22 @@ public class ContractorController {
     @Autowired
     private ContractorService contractorService;
     
-    @Autowired
-    private ContractorValidator contractorValidator;
-    
     @PostMapping("/_create")
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> create(@Valid @RequestBody ContractorRequest contractorRequest, @RequestParam String tenantId) {
-        contractorValidator.validateContractor(contractorRequest);
-        final List<Contractor> contractors = contractorService.create(contractorRequest);
+        final List<Contractor> contractors = contractorService.create(contractorRequest, tenantId);
         final ContractorResponse response = new ContractorResponse();
         response.setContractors(contractors);
         response.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(contractorRequest.getRequestInfo(), true));
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     
     @PostMapping("/_update")
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> update(@Valid @RequestBody ContractorRequest contractorRequest, @RequestParam String tenantId) {
-        contractorValidator.validateContractor(contractorRequest);
-        final List<Contractor> contractors = contractorService.update(contractorRequest);
+        final List<Contractor> contractors = contractorService.update(contractorRequest, tenantId);
         final ContractorResponse response = new ContractorResponse();
         response.setContractors(contractors);
         response.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(contractorRequest.getRequestInfo(), true));
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    
 }

@@ -44,9 +44,9 @@ public class PropertiesManager {
     private String mdmsSearchPath;
     
     @Value("${egov.services.works.masters.contractor.create.validated}")
-    private String worksMasterContractorCreateTopic;
+    private String worksMasterContractorCreateValidatedTopic;
     
     @Value("${egov.services.works.masters.contractor.update.validated}")
-    private String worksMasterContractorUpdateTopic;
+    private String worksMasterContractorUpdateValidatedTopic;
 
 }

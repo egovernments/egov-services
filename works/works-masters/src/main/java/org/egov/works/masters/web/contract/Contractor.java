@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  * An Object that holds Contractor Information
  */
 @ApiModel(description = "An Object that holds Contractor Information")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-07T13:22:10.139Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:48:21.172Z")
 
 public class Contractor   {
   @JsonProperty("id")
@@ -75,7 +75,7 @@ public class Contractor   {
   private String epfRegistrationNumber = null;
 
   @JsonProperty("accountCode")
-  private BigDecimal accountCode = null;
+  private ChartOfAccount accountCode = null;
 
   @JsonProperty("ifscCode")
   private BigDecimal ifscCode = null;
@@ -247,7 +247,9 @@ public class Contractor   {
   @ApiModelProperty(required = true, value = "Email of the Contractor.")
   @NotNull
 
+//TODO : pattern not working. Gives error for valid email. Need to fix
  //@Pattern(regexp="/^(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$/") @Size(max=100)
+  @Pattern(regexp="^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$") @Size(max=100)
   public String getEmail() {
     return email;
   }
@@ -346,11 +348,12 @@ public class Contractor   {
   }
 
    /**
-   * Bank of the Contractor
+   * Bank of the Contractor. If Financial integration is true at state/ULB level configuation then bank is mandatory else its optional.
    * @return bank
   **/
-  @ApiModelProperty(required = true, value = "Bank of the Contractor")
-  @NotNull
+  @ApiModelProperty(value = "Bank of the Contractor. If Financial integration is true at state/ULB level configuation then bank is mandatory else its optional.")
+
+  //@Valid
 
   public Bank getBank() {
     return bank;
@@ -366,11 +369,10 @@ public class Contractor   {
   }
 
    /**
-   * Bank Account Number of the Contractor
+   * Bank Account Number of the Contractor. If Financial integration is true at state/ULB level configuation then bank account number is mandatory else its optional.
    * @return bankAccountNumber
   **/
-  @ApiModelProperty(required = true, value = "Bank Account Number of the Contractor")
-  @NotNull
+  @ApiModelProperty(value = "Bank Account Number of the Contractor. If Financial integration is true at state/ULB level configuation then bank account number is mandatory else its optional.")
 
   @Valid
 
@@ -466,25 +468,24 @@ public class Contractor   {
     this.epfRegistrationNumber = epfRegistrationNumber;
   }
 
-  public Contractor accountCode(BigDecimal accountCode) {
+  public Contractor accountCode(ChartOfAccount accountCode) {
     this.accountCode = accountCode;
     return this;
   }
 
    /**
-   * Chart of Account Code for the Contractor
+   * Chart of Account Code of the Contractor from Financials. If Financial integration is true at state/ULB level configuation then accountCode is mandatory else its optional.
    * @return accountCode
   **/
-  @ApiModelProperty(required = true, value = "Chart of Account Code for the Contractor")
-  @NotNull
+  @ApiModelProperty(value = "Chart of Account Code of the Contractor from Financials. If Financial integration is true at state/ULB level configuation then accountCode is mandatory else its optional.")
 
-  @Valid
+//  @Valid
 
-  public BigDecimal getAccountCode() {
+  public ChartOfAccount getAccountCode() {
     return accountCode;
   }
 
-  public void setAccountCode(BigDecimal accountCode) {
+  public void setAccountCode(ChartOfAccount accountCode) {
     this.accountCode = accountCode;
   }
 
@@ -494,11 +495,10 @@ public class Contractor   {
   }
 
    /**
-   * IFSC Code of the Bank Account for the Contractor
+   * IFSC Code of the Bank Account for the Contractor. If Financial integration is true at state/ULB level configuation then ifscCode is mandatory else its optional.
    * @return ifscCode
   **/
-  @ApiModelProperty(required = true, value = "IFSC Code of the Bank Account for the Contractor")
-  @NotNull
+  @ApiModelProperty(value = "IFSC Code of the Bank Account for the Contractor. If Financial integration is true at state/ULB level configuation then ifscCode is mandatory else its optional.")
 
   @Valid
 
@@ -521,6 +521,8 @@ public class Contractor   {
   **/
   @ApiModelProperty(required = true, value = "Contractor Class for which Contractor belongs to")
   @NotNull
+
+//  @Valid
 
   public ContractorClass getContractorClass() {
     return contractorClass;

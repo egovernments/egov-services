@@ -1,0 +1,13 @@
+update service set code='PAYMENTADVOCATE' where code = 'ADVOCATEPAYMENT' and tenantId='default';
+update eg_action set ordernumber=1 where name = 'New Case Create';
+update eg_action set ordernumber=2 where name = 'Legacy Case Create';
+update eg_action set ordernumber=3 where name = 'Case Search';
+update eg_action set ordernumber=11 where name = 'Opinion Create';
+update eg_action set ordernumber=12 where name = 'Opinion Update';
+update eg_action set ordernumber=13 where name = 'Opinion Search';
+update eg_action set ordernumber=21,servicecode='PAYMENTADVOCATE' where name = 'AdvocatePayment Create';
+update eg_action set ordernumber=22,servicecode='PAYMENTADVOCATE' where name = 'AdvocatePayment Update';
+update eg_action set ordernumber=23,servicecode='PAYMENTADVOCATE' where name = 'AdvocatePayment Search';
+update eg_action set ordernumber=31 where name = 'Legal Case Notice Create';
+update eg_action set ordernumber=32 where name = 'Legal Case Notice Update';
+update eg_action set ordernumber=33 where name = 'Legal Case Notice Search';

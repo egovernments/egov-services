@@ -99,7 +99,7 @@ class ShowField extends Component {
          {
             extend: 'pdf',
             exportOptions: {
-              rows: { selected: true }
+              rows: '.selected'
             },
             filename : this.state.reportName,
             title : this.state.reportSubTitle,
@@ -267,7 +267,7 @@ class ShowField extends Component {
                 <th key={i}>{translate(item.label)}</th>
               )
             }else{
-              return null;
+                 return <th style={{display : 'none'}} key={i}>{translate(item.label)}</th>;
             }
           })
         }
@@ -369,6 +369,12 @@ class ShowField extends Component {
                   columnObj = {};
                   return (
                     <td key={itemIndex} onClick={(e)=>{ drillDown(e,dataIndex,itemIndex,dataItem,item) }}>
+                      {respHeader.defaultValue ? <a href="javascript:void(0)">{checkIfDate(item,itemIndex)}</a> : checkIfDate(item,itemIndex)}
+                    </td>
+                  )
+                }else{
+                   return (
+                    <td key={itemIndex} style = {{display:'none' }} onClick={(e)=>{ drillDown(e,dataIndex,itemIndex,dataItem,item) }}>
                       {respHeader.defaultValue ? <a href="javascript:void(0)">{checkIfDate(item,itemIndex)}</a> : checkIfDate(item,itemIndex)}
                     </td>
                   )

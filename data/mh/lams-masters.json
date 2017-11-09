@@ -6,14 +6,14 @@
       "id": 1,
       "tenantId": "mh",
       "code": "REGNAME_REGISTER1",
-      "registerName": "Fake Register Name1",
+      "name": "Fake Register Name1",
       "isActive": true
     },
     {
       "id": 2,
       "tenantId": "mh",
       "code": "REGNAME_REGISTER2",
-      "registerName": "Fake Register Name2",
+      "name": "Fake Register Name2",
       "isActive": true
     }
   ],
@@ -22,17 +22,17 @@
       "id": 1,
       "tenantId": "mh",
       "code": "SUBREGNAME_SUBREGISTER1",
-      "registerName": 1,
-      "subRegister": "Fake Sub Register Name1",
-      "isactive": true
+      "register": 1,
+      "name": "Fake Sub Register Name1",
+      "isActive": true
     },
     {
       "id": 1,
       "tenantId": "mh",
       "code": "SUBREGNAME_SUBREGISTER2",
-      "registerName": 2,
-      "subRegister": "Fake Sub Register Name2",
-      "isactive": true
+      "register": 2,
+      "name": "Fake Sub Register Name2",
+      "isActive": true
     }
   ],
   "Purpose": [

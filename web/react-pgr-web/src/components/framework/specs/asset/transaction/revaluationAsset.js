@@ -11,7 +11,7 @@ var dat = {
         "fields": [
             {
               "name": "AssetCategoryType",
-              "jsonPath": "Revaluations[0].",
+              "jsonPath": "",
               "label": "ac.create.asset.asset.category.type",
               "pattern": "",
               "type": "singleValueList",
@@ -23,7 +23,7 @@ var dat = {
             },
             {
               "name": "AssetCategoryType",
-              "jsonPath": "Revaluations[0].",
+              "jsonPath": "",
               "label": "ac.create.Asset.SubCategory",
               "pattern": "",
               "type": "singleValueList",
@@ -35,7 +35,7 @@ var dat = {
             },
             {
               "name": "AssetCode",
-              "jsonPath": "Revaluations[0].",
+              "jsonPath": "",
               "label": "ac.create.Asset.Code",
               "pattern": "",
               "type": "text",
@@ -47,7 +47,7 @@ var dat = {
             },
             {
               "name": "AssetName",
-              "jsonPath": "Revaluations[0].",
+              "jsonPath": "",
               "label": "ac.create.Asset.Name",
               "pattern": "",
               "type": "text",

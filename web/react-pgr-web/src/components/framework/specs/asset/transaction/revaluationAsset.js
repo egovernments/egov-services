@@ -1,6 +1,6 @@
 var dat = {
 	"asset.transaction": {
-		"numCols": 12/3,
+		"numCols": 12/1,
 		"url": "",
     "tenantIdRequired": true,
     "objectName": "Revaluations",

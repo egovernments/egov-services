@@ -3,13 +3,13 @@ import {connect} from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 
 import _ from "lodash";
-import ShowFields from "../../framework/showFields";
-import {translate} from '../../common/common';
-import Api from '../../../api/api';
+import ShowFields from "../../../framework/showFields";
+import {translate} from '../../../common/common';
+import Api from '../../../../api/api';
 
-import UiButton from '../../framework/components/UiButton';
-import {fileUpload,getInitiatorPosition} from '../../framework/utility/utility';
-import UiDynamicTable from '../../framework/components/UiDynamicTable';
+import UiButton from '../../../framework/components/UiButton';
+import {fileUpload,getInitiatorPosition} from '../../../framework/utility/utility';
+import UiDynamicTable from '../../../framework/components/UiDynamicTable';
 
 import jp from "jsonpath";
 import $ from "jquery";
@@ -133,7 +133,7 @@ class Transaction extends Component {
 
   initData() {
     let self = this;
-    specifications = require(`../../framework/specs/asset/transaction/transferAsset`).default;
+      specifications = require(`../../../framework/specs/asset/transaction/generalDepericiation`).default;
 
     let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let obj = specifications["asset.transaction"];
@@ -800,7 +800,7 @@ class Transaction extends Component {
                   {showResult && !_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].transaction} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
                   <div style={{"textAlign": "center"}}>
                     <br/>
-                  {showResult &&  <UiButton handler={create} item={{"label": "Create", "uiType":"button","isDisabled": isFormValid ? false : true}} ui="google"/>}
+                  {showResult &&  <UiButton handler={create} item={{"label": "Generate Depreciation", "uiType":"button","isDisabled": isFormValid ? false : true}} ui="google"/>}
                     <br/>
                   </div>
       </div>

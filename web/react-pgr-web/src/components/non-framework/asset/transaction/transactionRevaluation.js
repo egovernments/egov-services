@@ -3,13 +3,13 @@ import {connect} from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 
 import _ from "lodash";
-import ShowFields from "../../framework/showFields";
-import {translate} from '../../common/common';
-import Api from '../../../api/api';
+import ShowFields from "../../../framework/showFields";
+import {translate} from '../../../common/common';
+import Api from '../../../../api/api';
 
-import UiButton from '../../framework/components/UiButton';
-import {fileUpload,getInitiatorPosition} from '../../framework/utility/utility';
-import UiDynamicTable from '../../framework/components/UiDynamicTable';
+import UiButton from '../../../framework/components/UiButton';
+import {fileUpload,getInitiatorPosition} from '../../../framework/utility/utility';
+import UiDynamicTable from '../../../framework/components/UiDynamicTable';
 
 import jp from "jsonpath";
 import $ from "jquery";
@@ -133,7 +133,7 @@ class Transaction extends Component {
 
   initData() {
     let self = this;
-    specifications = require(`../../framework/specs/asset/transaction/revaluationAsset`).default;
+    specifications = require(`../../../framework/specs/asset/transaction/revaluationAsset`).default;
 
     let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let obj = specifications["asset.transaction"];

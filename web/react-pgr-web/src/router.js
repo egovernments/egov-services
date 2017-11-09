@@ -153,9 +153,9 @@ import createWc from './components/non-framework/wc/createWc';
 import createVoucher from './components/non-framework/egf/transaction/createVoucher';
 
 import acknowledgementWc from './components/non-framework/wc/acknowledgement';
-import transactionRevaluation from './components/non-framework/asset/transactionRevaluation';
-import transactionTransfer from './components/non-framework/asset/transactionTransfer';
-import transactionGeneral from './components/non-framework/asset/transactionGeneral';
+import transactionRevaluation from './components/non-framework/asset/transaction/transactionRevaluation';
+import transactionTransfer from './components/non-framework/asset/transaction/transactionTransfer';
+import transactionGeneral from './components/non-framework/asset/transaction/transactionGeneral';
 
 //Template parser
 import TemplateParser from './components/framework/templates/templateParser/templateParser';
@@ -342,9 +342,9 @@ const Main = () => {
       <Route exact path= {base + '/createWc/wc'} component={createWc}/>
       <Route exact path= {base + '/non-framework/egf/transaction/createVoucher'} component={createVoucher}/>
       <Route exact path= {base + '/wc/acknowledgement/:id/:status'} component={acknowledgementWc}/>
-      <Route exact path= {base + '/transactionRevaluation/asset/revaluationAsset'} component={transactionRevaluation}/>
-      <Route exact path= {base + '/transactionTransfer/asset/translateAsset'} component={transactionTransfer}/>
-      <Route exact path= {base + '/transactionTransfer/asset/generalAsset'} component={transactionGeneral}/>
+      <Route exact path= {base + '/transactionRevaluation/asset/transaction/revaluationAsset'} component={transactionRevaluation}/>
+      <Route exact path= {base + '/transactionTransfer/asset/transaction/translateAsset'} component={transactionTransfer}/>
+      <Route exact path= {base + '/transactionGeneral/asset/transaction/generalAsset'} component={transactionGeneral}/>
       <Route exact path= {base + '/print/report/:templatePath'} component={TemplateParser}/>
 
       //Assets

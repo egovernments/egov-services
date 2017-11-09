@@ -334,22 +334,22 @@
          "code":"SOCIETY",
          "name":"society"
       }
-   ]  ,
+   ],
    "Location":[
-     {
-       "tenantId":"mh",
-       "code":"LOC1",
-       "name":"Location1"
-     },
-     {
-       "tenantId":"mh",
-       "code":"LOC2",
-       "name":"Location1"
-     },
-     {
-       "tenantId":"mh",
-       "code":"LOC3",
-       "name":"Location3"
-     }
+      {
+         "tenantId":"mh",
+         "code":"LOC1",
+         "name":"Location1"
+      },
+      {
+         "tenantId":"mh",
+         "code":"LOC2",
+         "name":"Location1"
+      },
+      {
+         "tenantId":"mh",
+         "code":"LOC3",
+         "name":"Location3"
+      }
    ]
 }

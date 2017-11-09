@@ -320,9 +320,9 @@
          "name":"firm"
       },
       {
-        "tenantId":"default",
-        "code":"COMPANY",
-        "name":"company"
+         "tenantId":"default",
+         "code":"COMPANY",
+         "name":"company"
       },
       {
          "tenantId":"default",
@@ -336,20 +336,20 @@
       }
    ],
    "Location":[
-     {
-       "tenantId":"default",
-       "code":"LOC1",
-       "name":"Location1"
-     },
-     {
-       "tenantId":"default",
-       "code":"LOC2",
-       "name":"Location1"
-     },
-     {
-       "tenantId":"default",
-       "code":"LOC3",
-       "name":"Location3"
-     },
+      {
+         "tenantId":"default",
+         "code":"LOC1",
+         "name":"Location1"
+      },
+      {
+         "tenantId":"default",
+         "code":"LOC2",
+         "name":"Location1"
+      },
+      {
+         "tenantId":"default",
+         "code":"LOC3",
+         "name":"Location3"
+      }
    ]
 }

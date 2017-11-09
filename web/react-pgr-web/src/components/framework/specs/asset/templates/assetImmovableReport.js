@@ -60,7 +60,7 @@ export default class assetImmovableReport extends Component {
 		let {convertToDate,numberWithCommas}= this;
 		return (
 			<Card className="uiCard">
-			    <CardHeader title="Certificate" />
+			    <CardHeader title="" />
 			    <CardText>
 			        <Table responsive bordered condensed>
 			            <tbody>
@@ -163,7 +163,9 @@ export default class assetImmovableReport extends Component {
 												<b>दोषी दायित्व</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "left"}}>
-												<b>{this.props.data[13]?this.props.data[13]:""}</b>
+										<b>{this.props.data[13]?this.props.data[13]+"Y,":""}&nbsp;&nbsp;</b>
+										<b>{this.props.data[14]?this.props.data[14]+"M,":""}&nbsp;&nbsp;</b>
+										<b>{this.props.data[15]?this.props.data[15]+"D":""}</b>
 										</td>
 									</tbody>
 
@@ -271,7 +273,7 @@ export default class assetImmovableReport extends Component {
 													<b> उपलब्ध शीर्ष दस्तऐवज</b>
 											</td>
 											<td colSpan={4} style={{textAlign: "left"}}>
-													<b>{this.props.data[38]?this.props.data[38]:""}</b>
+													<b>{this.props.data[38] ? JSON.parse(this.props.data[38]).join(","):""}</b>
 											</td>
 										</tr>
 										<tr>
@@ -456,7 +458,7 @@ export default class assetImmovableReport extends Component {
 													<b>{numberWithCommas(this.props.data[29]?this.props.data[29]:"")}</b>
 											</td>
 											<td style={{textAlign: "center"}} >
-													<b>{this.props.data[23]?this.props.data[23]:""}</b>
+													<b>{numberWithCommas(this.props.data[23]?this.props.data[23]:"")}</b>
 											</td>
 											<td style={{textAlign: "center"}} >
 													<b>{numberWithCommas(this.props.data[40]?this.props.data[40]:"")}</b>

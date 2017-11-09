@@ -60,7 +60,7 @@ export default class assetImmovableReport extends Component {
 		let {convertToDate,numberWithCommas}= this;
 		return (
 			<Card className="uiCard">
-			    <CardHeader title="Certificate" />
+			    <CardHeader title="" />
 			    <CardText>
 			        <Table responsive bordered condensed>
 			            <tbody>
@@ -102,10 +102,10 @@ export default class assetImmovableReport extends Component {
 												<b>{this.props.data[32]?this.props.data[32]:""}</b>
 										</td>
 										<td colSpan={5} style={{textAlign: "left"}}>
-												<b>संपादनाची पद्धत</b>
+												<b>घसारा रकमेचा दर</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "left"}}>
-												<b>{this.props.data[11]?this.props.data[11]:""}</b>
+												<b>{"NA"}</b>
 										</td>
 									</tbody>
 
@@ -117,54 +117,28 @@ export default class assetImmovableReport extends Component {
 												<b>{this.props.data[33]?this.props.data[33]:""}</b>
 										</td>
 										<td colSpan={5} style={{textAlign: "left"}}>
-												<b> निधीचे स्रोत</b>
+												<b>अधिपत्र ( होय / नाही )</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "left"}}>
-												<b>{this.props.data[42]?this.props.data[42]:""}</b>
+												<b>{this.props.data[35]?"Yes":"No"}</b>
 										</td>
 									</tbody>
 
 									<tbody>
 											<tr>
 													<td colSpan={4} rowSpan={2} style={{textAlign: "left"}}>
-															<b>मालमत्ता ज्या अन्वये संपादित केली होती, <br/> खरेदी केली होती किंवा बांधली होती,<br/>
- 															त्या आदेशाचा क्रमांक व दिनांक</b>
+															<b>कार्यादेश  क्रमांक</b>
 													</td>
 													<td colSpan={4} rowSpan={2} style={{textAlign: "left"}} >
-															<b>{this.props.data[34]?this.props.data[34]:""},</b>&nbsp;&nbsp;
-															<b>{convertToDate(this.props.data[19]?this.props.data[19]:"")}</b>
+															<b>{}</b>
 													</td>
-													<td colSpan={5} style={{textAlign: "left"}}>
-															<b>अधिपत्र ( होय / नाही )</b>
-													</td>
-													<td colSpan={4} style={{textAlign: "left"}}>
-															<b>{this.props.data[35]?"Yes":"No"}</b>
-													</td>
-											</tr>
-											<tr>
 													<td colSpan={5} style={{textAlign: "left"}} >
 														 <b>असल्यास , समाप्ती दिनांक</b>
 													</td>
 													<td colSpan={4} style={{textAlign: "left"}} >
-
 														 <b>{convertToDate(this.props.data[12]?this.props.data[12]:"")}</b>
 													</td>
 											</tr>
-									</tbody>
-
-									<tbody>
-										<td colSpan={4} style={{textAlign: "left"}}>
-												<b>स्थान</b>
-										</td>
-										<td colSpan={4} style={{textAlign: "left"}}>
-												<b>{this.props.data[43]?this.props.data[43]:""}</b>
-										</td>
-										<td colSpan={5} style={{textAlign: "left"}}>
-												<b>दोषी दायित्व</b>
-										</td>
-										<td colSpan={4} style={{textAlign: "left"}}>
-												<b>{this.props.data[13]?this.props.data[13]:""}</b>
-										</td>
 									</tbody>
 
 									<tbody>
@@ -175,6 +149,24 @@ export default class assetImmovableReport extends Component {
 												<b>{this.props.data[36]?this.props.data[36]:""}</b>
 										</td>
 										<td colSpan={5} style={{textAlign: "left"}}>
+												<b>दोषी दायित्व</b>
+										</td>
+										<td colSpan={4} style={{textAlign: "left"}}>
+										<b>{this.props.data[13]?this.props.data[13]+"Y,":""}&nbsp;&nbsp;</b>
+										<b>{this.props.data[14]?this.props.data[14]+"M,":""}&nbsp;&nbsp;</b>
+										<b>{this.props.data[15]?this.props.data[15]+"D":""}</b>
+										</td>
+									</tbody>
+
+									<tbody>
+
+										<td colSpan={4} style={{textAlign: "left"}}>
+												<b>स्थान</b>
+										</td>
+										<td colSpan={4} style={{textAlign: "left"}}>
+												<b>{this.props.data[43]?this.props.data[43]:""}</b>
+										</td>
+										<td colSpan={5} style={{textAlign: "left"}}>
 												<b>राखून ठेवलेली प्रतिभूती ठेव</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "right"}}>
@@ -183,12 +175,12 @@ export default class assetImmovableReport extends Component {
 									</tbody>
 
 									<tbody>
-										<td colSpan={4} style={{textAlign: "left"}}>
-												<b>मजल्यांची संख्या :</b>
-										</td>
-										<td colSpan={4} style={{textAlign: "left"}}>
-												<b>{this.props.data[37]?this.props.data[37]:""}</b>
-										</td>
+									<td colSpan={4} style={{textAlign: "left"}}>
+											<b>क्रमांक किंवा संख्या</b>
+									</td>
+									<td colSpan={4} style={{textAlign: "left"}}>
+											<b>{this.props.data[1]?this.props.data[1]:""}</b>
+									</td>
 										<td colSpan={5} style={{textAlign: "left"}}>
 												<b>वसूल केलेली प्रतिभूति ठेव</b>
 										</td>
@@ -199,10 +191,10 @@ export default class assetImmovableReport extends Component {
 
 									<tbody>
 										<td colSpan={4} style={{textAlign: "left"}}>
-												<b>जोते क्षेत्र :</b>
+												<b>कोणाकडून संपादित केली</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "left"}}>
-												<b>{this.props.data[2]?this.props.data[2]:""}</b>
+												<b>{this.props.data[9]?this.props.data[9]:""}</b>
 										</td>
 										<td colSpan={5} style={{textAlign: "left"}}>
 												<b>दिनांक</b>
@@ -214,10 +206,10 @@ export default class assetImmovableReport extends Component {
 
 									<tbody>
 										<td colSpan={4} style={{textAlign: "left"}}>
-												<b> घनफळ</b>
+												<b>संपादनाची पद्धत</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "left"}}>
-												<b>{this.props.data[3]?this.props.data[3]:""}</b>
+												<b>{this.props.data[11]?this.props.data[11]:""}</b>
 										</td>
 										<td colSpan={5} style={{textAlign: "left"}}>
 												<b> रक्कम रु.</b>
@@ -229,10 +221,10 @@ export default class assetImmovableReport extends Component {
 
 									<tbody>
 										<td colSpan={4} style={{textAlign: "left"}}>
-												<b> ज्यावर बांधकाम केले आहे अशा जमिनीचा सर्वेक्षण क्रमांक</b>
+												<b> निधीचे स्रोत</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "left"}}>
-												<b>{this.props.data[4]?this.props.data[4]:""}</b>
+												<b>{this.props.data[42]?this.props.data[42]:""}</b>
 										</td>
 										<td  colSpan={9} style={{textAlign: "center"}}>
 												<b>विक्री करणे</b>
@@ -241,56 +233,20 @@ export default class assetImmovableReport extends Component {
 
 									<tbody>
 										<td colSpan={4} style={{textAlign: "left"}}>
-												<b> संरचनेचा आकार</b>
+												<b> मत्तेचे  अपेक्षित आयुर्मान</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "left"}}>
-												<b>L-{this.props.data[5]?this.props.data[5]:""},&nbsp;&nbsp;</b>
-												<b>W-{this.props.data[6]?this.props.data[6]:""},&nbsp;&nbsp;</b>
-												<b>H-{this.props.data[7]?this.props.data[7]:""}</b>
+												<b>{this.props.data[10]?this.props.data[10]:""}</b>
 										</td>
-										<td colSpan={9} style={{textAlign: "left"}}>
+										<td colSpan={5} style={{textAlign: "left"}}>
 												<b> ज्यास मत्ता विकण्यात आली त्या व्यक्तीचे नाव</b>
 										</td>
+										<td colSpan={4} style={{textAlign: "right"}}>
+												<b>{}</b>
+										</td>
 
 									</tbody>
 
-									<tbody>
-										<tr>
-											<td colSpan={4} style={{textAlign: "left"}}>
-													<b>बांधण्यात आलेल्या जमिनीचे क्षेत्र</b>
-											</td>
-											<td colSpan={4} style={{textAlign: "left"}}>
-													<b>{this.props.data[8]?this.props.data[8]:""}</b>
-											</td>
-											<td rowSpan={4} colSpan={9} style={{textAlign: "left"}}>
-													<b>{this.props.data[39]?this.props.data[39]:""}</b>
-											</td>
-										</tr>
-										<tr>
-											<td colSpan={4} style={{textAlign: "left"}}>
-													<b> उपलब्ध शीर्ष दस्तऐवज</b>
-											</td>
-											<td colSpan={4} style={{textAlign: "left"}}>
-													<b>{this.props.data[38]?this.props.data[38]:""}</b>
-											</td>
-										</tr>
-										<tr>
-											<td colSpan={4} style={{textAlign: "left"}}>
-													<b>कोणाकडून संपादित केली</b>
-											</td>
-											<td colSpan={4} style={{textAlign: "left"}}>
-													<b>{this.props.data[9]?this.props.data[9]:""}</b>
-											</td>
-										</tr>
-										<tr>
-											<td colSpan={4} style={{textAlign: "left"}}>
-													<b> मत्तेचे  अपेक्षित आयुर्मान</b>
-											</td>
-											<td colSpan={4} style={{textAlign: "left"}}>
-													<b>{this.props.data[10]?this.props.data[10]:""}</b>
-											</td>
-										</tr>
-									</tbody>
 									<tbody>
 											<tr>
 													<td rowSpan={3} style={{textAlign: "center"}}>
@@ -456,7 +412,7 @@ export default class assetImmovableReport extends Component {
 													<b>{numberWithCommas(this.props.data[29]?this.props.data[29]:"")}</b>
 											</td>
 											<td style={{textAlign: "center"}} >
-													<b>{this.props.data[23]?this.props.data[23]:""}</b>
+													<b>{numberWithCommas(this.props.data[23]?this.props.data[23]:"")}</b>
 											</td>
 											<td style={{textAlign: "center"}} >
 													<b>{numberWithCommas(this.props.data[40]?this.props.data[40]:"")}</b>

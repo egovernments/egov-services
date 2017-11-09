@@ -755,18 +755,18 @@ definitions:
         maxLength: 128
         minLength: 2
       estimateTemplate:
-        $ref: '#/definitions/EstimateTemplate'
-        description: The estimate template of the Template activity
+        type: string
+        description: The estimate template of the Template activity. Unique reference from 'EstimateTemplate'. Primary key is ref. here.
       scheduleOfRate:
-        $ref: '#/definitions/ScheduleOfRate'
-        description: The Schedue of Rate of the Template activity. Primary key is ref. here.
+        type: string
+        description: The Schedue of Rate of the Template activity. Unique reference from 'ScheduleOfRate'.Primary key is ref. here.
       uom:
-        description: UOM for the Estimate Template Activity
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/UOM"
+        type: string
+        description: UOM for the Estimate Template Activity. Unique reference from 'UOM'. Primary key is ref. here.
         format: singleValueList
       nonSOR:
-        $ref: '#/definitions/NonSOR'
-        description: The Non SOR of the Template activity
+        type: string
+        description: Non SOR for the Estimate Template Activity. Unique reference from 'NonSOR'. Primary key is ref. here.
       unitRate:
         type: number
         format: BigDecimal
@@ -797,8 +797,8 @@ definitions:
         maxLength: 1024
         minLength: 1
       uom:
-        description: UOM for the NonSOR
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/UOM"
+        type: string
+        description: UOM for the Non SOR. Unique reference from 'UOM'. Primary key is ref. here.
         format: singleValueList
     required:
       - tenantId

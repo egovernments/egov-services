@@ -115,7 +115,7 @@ var dat = {
             label: "legal.vakalatnama.create.addWitness",
             pattern: "",
             type: "arrayText",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",
             patternErrMsg: ""

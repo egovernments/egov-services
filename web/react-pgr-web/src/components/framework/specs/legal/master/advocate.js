@@ -819,7 +819,7 @@ var dat = {
             name: "hearingTime",
             jsonPath: "legleCases[0].hearingTime",
             label: "legal.create.hearingTime",
-            type: "text",
+            type: "timePicker",
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""

@@ -153,7 +153,7 @@ var dat = {
          "code",
         "summon.summonReferenceNo",
         "caseRefernceNo",
-        "hearingDetails[0].caseStatus.code",
+        "hearingDetails[0].caseStatus.name",
         "summon.caseNo",
         "summon.departmentName.name",
         "summon.caseType.name",
@@ -610,7 +610,7 @@ var dat = {
             name: "hearingTime",
             jsonPath: "summons[0].hearingTime",
             label: "legal.create.hearingTime",
-            type: "text",
+            type: "timePicker",
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""
@@ -827,7 +827,7 @@ var dat = {
             name: "hearingTime",
             jsonPath: "summons[0].hearingTime",
             label: "legal.create.hearingTime",
-            type: "text",
+            type: "timePicker",
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""

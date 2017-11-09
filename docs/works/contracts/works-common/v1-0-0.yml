@@ -765,8 +765,8 @@ definitions:
         description: UOM for the Estimate Template Activity. Unique reference from 'UOM'. Primary key is ref. here.
         format: singleValueList
       nonSOR:
-        type: string
-        description: Non SOR for the Estimate Template Activity. Unique reference from 'NonSOR'. Primary key is ref. here.
+        $ref: '#/definitions/NonSOR'
+        description: The Non SOR of the Template activity
       unitRate:
         type: number
         format: BigDecimal

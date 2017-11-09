@@ -110,13 +110,16 @@ class UiMultiFieldTable extends Component {
 
 		this.setState({
 			values,
-			index: this.state.index-1
+			index: this.state.index-1,
+			isintialLoad:false
 		}, () => {
 			let formData = JSON.parse(JSON.stringify(this.props.formData));
 			let formDataArray =_.get(formData,this.state.jsonPath)
 			if(formDataArray && formDataArray.length) {
-				var newArray=_.cloneDeep(formDataArray.splice(ind, 1));
-				this.props.setFormData(newArray);
+				formDataArray.splice(ind, 1);
+				var newArray=_.cloneDeep(formDataArray);
+				var newFormData=_.set(formData,this.state.jsonPath,formDataArray);				
+				this.props.setFormData(newFormData);
 			}
 		})
 	}

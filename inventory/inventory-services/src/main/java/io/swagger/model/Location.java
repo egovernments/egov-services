@@ -5,6 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -13,7 +17,9 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "This object holds the boundary information.   ")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-06T06:06:21.932Z")
-
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Location   {
   @JsonProperty("id")
   private String id = null;

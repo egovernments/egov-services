@@ -50,7 +50,7 @@ var dat = {
             label: "legal.create.caseType",
             type: "singleValueList",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: "",
             url:
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name"
@@ -116,7 +116,7 @@ var dat = {
             label: "legal.create.courtName",
             type: "singleValueList",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: "",
             url:
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name"
@@ -166,7 +166,7 @@ var dat = {
             label: "legal.create.stamp",
             type: "singleValueList",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: "",
             url:
               "/lcms-services/legalcase/register/_search?|$..code|$..register"

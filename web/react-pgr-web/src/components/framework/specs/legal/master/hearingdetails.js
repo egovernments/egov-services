@@ -16,7 +16,7 @@ var dat ={
             "label": "legal.create.caseNo",
             "type": "text",
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "patternErrorMsg": ""
           },
           {
@@ -25,7 +25,7 @@ var dat ={
             label: "legal.create.caseType",
             type: "singleValueList",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: "",
             url:
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name"
@@ -36,7 +36,7 @@ var dat ={
             "label": "legal.create.year",
             "type": "text",
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "patternErrorMsg": ""
           },
          {
@@ -45,7 +45,7 @@ var dat ={
             label: "legal.create.courtName",
             type: "singleValueList",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: "",
             url:
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name"
@@ -56,7 +56,7 @@ var dat ={
             "label": "legal.create.caseRegistrationDate",
             "type": "datePicker",
             "isRequired": true,
-            "isDisabled": false,
+            "isDisabled": true,
             "patternErrorMsg": ""
           },
           {
@@ -83,7 +83,7 @@ var dat ={
             label: "caseRegistration.create.departmentConcernedPerson",
             type: "singleValueList",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: "",
             defaultValue: [],
             url: ""
@@ -94,7 +94,7 @@ var dat ={
             "label": "legal.create.hearingTime",
             "type": "timePicker",
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "patternErrorMsg": ""
           },
           {
@@ -103,7 +103,7 @@ var dat ={
             "label": "legal.create.hearingDate",
             "type": "datePicker",
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "patternErrorMsg": ""
           }
         ]

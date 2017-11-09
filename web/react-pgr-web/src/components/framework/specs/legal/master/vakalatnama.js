@@ -21,7 +21,7 @@ var dat = {
             pattern: "",
             type: "text",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             requiredErrMsg: "",
             patternErrMsg: ""
           },
@@ -32,7 +32,7 @@ var dat = {
             pattern: "",
             type: "text",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             requiredErrMsg: "",
             patternErrMsg: ""
           },
@@ -43,7 +43,7 @@ var dat = {
             pattern: "",
             type: "text",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             requiredErrMsg: "",
             patternErrMsg: ""
           },
@@ -163,7 +163,7 @@ var dat = {
                   type: "singleValueList",
                   jsonPath: "cases[0].advocateDetails[0].advocate.code",
                   isRequired: true,
-                  isDisabled: false,
+                  isDisabled: true,
                   url:
                     "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
                 },
@@ -173,7 +173,7 @@ var dat = {
                   type: "datePicker",
                   jsonPath: "cases[0].advocateDetails[0].assignedDate",
                   isRequired: true,
-                  isDisabled: false
+                  isDisabled: true
                 },
                 {
                   name: "advocateFee",
@@ -181,7 +181,7 @@ var dat = {
                   type: "text",
                   jsonPath: "cases[0].advocateDetails[0].fee",
                   isRequired: true,
-                  isDisabled: false
+                  isDisabled: true
                 }
               ]
             }

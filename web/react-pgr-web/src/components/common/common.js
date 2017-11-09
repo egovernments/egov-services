@@ -2464,7 +2464,8 @@ var localization_EN_Data = {
 "opinionrequest.update.approve":"Approve",
 "opinionrequest.update.reject":"Reject",
 "opinionrequest.update.ForwardTo":"Forward To",
-"opinionrequest.update.opinionby":"Opinion By",
+"opinionrequest.update.opinionby":"Advocate Name",
+"opinionrequest.update.group.title.assignAdvocate":"Assign Advocate",
  "opinionrequest.update.opinionDescription":"Opinion Description",
   "opinionrequest.update.additionalAdvocate":"Additional Advocate",
 
@@ -2532,7 +2533,14 @@ var localization_EN_Data = {
 "perfManagement.update.KPIs.groups.updateKpiInstruc":"Instruction to Achieve Target",
 "perfManagement.update.KPIs.groups.updatekpiDocuments":"Document Required",
 "perfManagement.update.KPIs.groups.updatekpidoc":"Document Name",
-"perfManagement.update.KPIs.groups.updatekpidocMandatory":"Document Mandatory"
+"perfManagement.update.KPIs.groups.updatekpidocMandatory":"Document Mandatory",
+
+"referenceEvidence.update.document.title":"Reference Evidences",
+"referenceEvidence.create.group.title.addReferenceEvidences":"Add Reference Evidences",
+"referenceEvidence.create.typeOfReference":"Type Of Reference",
+"referenceEvidence.create.referenceDate":"Reference Date",
+"referenceEvidence.create.referenceCaseNo":"Case No",
+ "referenceEvidence.create.description":"Description",
 
 
 
@@ -4456,7 +4464,8 @@ var localization_MR_Data = {
 "opinionrequest.update.approve":"Approve-Marathi",
 "opinionrequest.update.reject":"Reject-Marathi",
 "opinionrequest.update.ForwardTo":"Forward To-Marathi",
-"opinionrequest.update.opinionby":"Opinion By-Marathi",
+"opinionrequest.update.opinionby":"Advocate Name-Marathi",
+"opinionrequest.update.group.title.assignAdvocate":"Assign Advocate-Marathi",
  "opinionrequest.update.opinionDescription":"Opinion Description-Marathi",
  "opinionrequest.update.additionalAdvocate":"Additional Advocate-marathi",
  "advocatepayment.create.instrumentNumber":"Instrument Number-marathi",
@@ -4499,7 +4508,13 @@ var localization_MR_Data = {
 "swm.collectionpoints.create.group.title.CollectionPoints":"Collectionpoints",
 "swm.collectionpoints.create.group.title.BinDetails":"Bindetails",
 "swm.collectionpoints.create.garbageEstimate":"Garbage Estimate",
-"swm.collectionpoints.create.description":"Description"
+"swm.collectionpoints.create.description":"Description",
+"referenceEvidence.update.document.title":"Reference Evidences-marathi",
+"referenceEvidence.create.group.title.addReferenceEvidences":"Add Reference Evidences-marathi",
+"referenceEvidence.create.typeOfReference":"Type Of Reference-marathi",
+"referenceEvidence.create.referenceDate":"Reference Date-marathi",
+"referenceEvidence.create.referenceCaseNo":"Case No-marathi",
+ "referenceEvidence.create.description":"Description-marathi",
 }
 
 export function translate(locale_text) {

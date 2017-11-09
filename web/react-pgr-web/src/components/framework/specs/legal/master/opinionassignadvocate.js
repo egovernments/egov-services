@@ -17,7 +17,7 @@ var dat = {
             label: "opinionrequest.update.opinionRequestDate",
             type: "datePicker",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },{
                 "name": "departmentName",
@@ -26,7 +26,7 @@ var dat = {
                 "pattern": "",
                 "type": "singleValueList",
                 "isRequired": true,
-                "isDisabled": false,
+                "isDisabled": true,
                 "requiredErrMsg": "",
                 "patternErrMsg": "",
                  "url": "/egov-common-masters/departments/_search?|$..code|$..name"
@@ -107,7 +107,7 @@ var dat = {
           //   ]
           // }, 
           {
-            "label": "Opinion",
+            "label": "opinionrequest.update.group.title.assignAdvocate",
             "name": "opinion",
             "fields": [{
                  "name": "Opinionby",

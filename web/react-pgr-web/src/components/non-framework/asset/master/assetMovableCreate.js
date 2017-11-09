@@ -233,6 +233,10 @@ class assetMovableCreate extends Component {
           assetCheck[response.Assets[0].assetAttributes[i].key]={[response.Assets[0].assetAttributes[i].type]:response.Assets[0].assetAttributes[i].value};
 
       }
+      if (response && response.Assets && response.Assets[0] && response.Assets[0].titleDocumentsAvalable) {
+
+        response.Assets[0].titleDocumentsAvalable = response.Assets[0].titleDocumentsAvalable.join(",");
+      }
       response.Assets[0].assetAttributesCheck = assetCheck;
       self.props.setFormData({Asset: response.Assets[0]});
       self.setInitialUpdateData({Asset: response.Assets[0]}, JSON.parse(JSON.stringify(specifications)), 'asset', 'update', specifications[`asset.update`].objectName);
@@ -604,7 +608,7 @@ class assetMovableCreate extends Component {
     let self = this, _url;
     e.preventDefault();
     self.props.setLoadingStatus('loading');
-    var formData = {...this.props.formData};
+    var formData = JSON.parse(JSON.stringify(this.props.formData));
     if (formData.Asset.titleDocumentsAvalable) {
       console.log(formData.Asset.titleDocumentsAvalable);
       formData.Asset.titleDocumentsAvalable = formData.Asset.titleDocumentsAvalable.split(",");

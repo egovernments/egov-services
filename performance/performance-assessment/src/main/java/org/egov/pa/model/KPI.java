@@ -39,6 +39,9 @@ public class KPI   {
 
   @JsonProperty("targetValue")
   private Long targetValue = null;
+  
+  @JsonProperty("targetDescription")
+  private String targetDescription = null;
 
   @JsonProperty("instructions")
   private String instructions = null;
@@ -57,7 +60,15 @@ public class KPI   {
   
   
 
-  public Boolean getTargetType() {
+  public String getTargetDescription() {
+	return targetDescription;
+}
+
+public void setTargetDescription(String targetDescription) {
+	this.targetDescription = targetDescription;
+}
+
+public Boolean getTargetType() {
 	return targetType;
 }
 

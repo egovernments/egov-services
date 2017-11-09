@@ -85,12 +85,20 @@ public class PerformanceAssessmentRowMapper {
 				audit.setCreatedTime(rs.getLong("createdDate"));
 				audit.setLastModifiedBy(rs.getLong("lastModifiedBy"));
 				audit.setLastModifiedTime(rs.getLong("lastModifiedDate"));
+				kpi.setTargetValue(rs.getLong("targetValue"));
 				if(null != rs.getString("targetType") && rs.getString("targetType").equals(TRUE_FLAG)) { 
 					kpi.setTargetType(Boolean.TRUE);
+					kpi.setTargetDescription(String.valueOf(rs.getLong("targetValue")));
 				} else if (null != rs.getString("targetType") && rs.getString("targetType").equals(FALSE_FLAG)) {
 					kpi.setTargetType(Boolean.FALSE);
+					if(rs.getLong("targetValue") == 1) 
+						kpi.setTargetDescription("YES");
+					else if(rs.getLong("targetValue") == 2)
+						kpi.setTargetDescription("NO");
+					else if(rs.getLong("targetValue") == 3)
+						kpi.setTargetDescription("In Progress");
 				}
-				kpi.setTargetValue(rs.getLong("targetValue"));
+				
 				kpi.setInstructions(rs.getString("instructions"));
 				kpi.setDepartmentId(rs.getLong("departmentId"));
 				kpiMap.put(String.valueOf(rs.getLong("id")), kpi);

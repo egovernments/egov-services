@@ -25,6 +25,9 @@ public class KpiValue   {
 
   @JsonProperty("resultValue")
   private Long resultValue = null;
+  
+  @JsonProperty("resultDescription")
+  private String resultDescription = null;
 
   @JsonProperty("tenantId")
   private String tenantId = null;
@@ -37,7 +40,15 @@ public class KpiValue   {
   
   
 
-  public String getId() {
+  public String getResultDescription() {
+	return resultDescription;
+}
+
+public void setResultDescription(String resultDescription) {
+	this.resultDescription = resultDescription;
+}
+
+public String getId() {
 	return id;
 }
 

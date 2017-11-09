@@ -3154,12 +3154,12 @@ definitions:
     MaterialStoreMapping:
       type: object
       description: |
-        This object holds the material store mapping details information.  
+        This object holds the material store mapping details information.
       properties:
         id:
           type: string
           description: |
-            Unique Identifier of the Material Store Mapping      
+            Unique Identifier of the Material Store Mapping
         material:
           $ref: "#/definitions/Material"
         store:
@@ -3170,8 +3170,12 @@ definitions:
           type: boolean
           description: |
             active or inactive flag of mapping
+        delete:
+          type: boolean
+          description: |
+            delete flag of mapping used during deleting the mapping.
         auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"             
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
       - store
       - material

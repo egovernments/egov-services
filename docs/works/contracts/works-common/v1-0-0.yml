@@ -335,7 +335,6 @@ definitions:
       - tenantId
       - rate
       - fromDate
-      - scheduleOfRate
 
   MarketRate:
     type: object
@@ -373,7 +372,6 @@ definitions:
       - tenantId
       - fromDate
       - rate
-      - scheduleOfRate
 
   ContractorClass:
     type: object

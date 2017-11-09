@@ -30,7 +30,9 @@
    - Go to react-pgr-web -> src -> components -> framework -> specs, create a folder with module name and put renamed _autoui.js file in module folder.
    - copy default.json (formatted one) and paste it in react-pgr-web -> src -> components -> common -> common.js
    
-   TODO - Sourabh please add remainging items.
+### Example
+  Find example YAML and its ui-info YAML [here.](https://github.com/egovernments/egov-services/tree/master/web/ui-auto-gen/docs/example) 
+  > It is recommended that use the example ui-info file as your template file and start modifing it (Recommended). 
 
 #### Hosted:
 - URL : http://egov-micro-dev.egovernments.org/ui-auto-gen

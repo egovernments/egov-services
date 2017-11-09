@@ -1120,3 +1120,69 @@ serviceMaps:
  
        - jsonPath: $.refillingPumpStations.*.code
 
+ - version: 1.0
+   name: vehicleschedule create
+   description: create vehicleschedule in egswm_vehicleschedule
+   fromTopic: swm-vehicleschedule-save-topic
+   queryMaps: 
+    - query: INSERT INTO egswm_vehicleschedule(transactionNo, tenantid, scheduledFrom, scheduledTo, route, vehicle, targetedGarbage, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.vehicleSchedules.*
+      jsonMaps:
+       
+       - jsonPath: $.vehicleSchedules.*.transactionNo
+
+       - jsonPath: $.vehicleSchedules.*.tenantId
+
+       - jsonPath: $.vehicleSchedules.*.scheduledFrom
+         dbType: LONG
+         
+       - jsonPath: $.vehicleSchedules.*.scheduledTo
+         dbType: LONG
+
+       - jsonPath: $.vehicleSchedules.*.route.code
+
+       - jsonPath: $.vehicleSchedules.*.vehicle.regNumber
+         
+       - jsonPath: $.vehicleSchedules.*.targetedGarbage
+         dbType: DOUBLE
+
+       - jsonPath: $.vehicleSchedules.*.auditDetails.createdBy
+
+       - jsonPath: $.vehicleSchedules.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.vehicleSchedules.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.vehicleSchedules.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+ - version: 1.0
+   name: vehicleschedule update
+   description: update vehicleschedule in egswm_vehicleschedule
+   fromTopic: swm-vehicleschedule-update-topic
+   queryMaps:
+    - query: UPDATE egswm_vehicleschedule SET scheduledFrom = ?, scheduledTo = ?, route = ?, vehicle = ?, targetedGarbage = ?, lastmodifiedby = ?, lastmodifiedtime = ? WHERE transactionNo = ? and tenantid = ?;
+      basePath: $.vehicleSchedules.*
+      jsonMaps:
+ 
+       - jsonPath: $.vehicleSchedules.*.scheduledFrom
+         dbType: LONG
+         
+       - jsonPath: $.vehicleSchedules.*.scheduledTo
+         dbType: LONG
+
+       - jsonPath: $.vehicleSchedules.*.route.code
+
+       - jsonPath: $.vehicleSchedules.*.vehicle.regNumber
+         
+       - jsonPath: $.vehicleSchedules.*.targetedGarbage
+         dbType: DOUBLE
+
+       - jsonPath: $.vehicleSchedules.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.vehicleSchedules.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+       - jsonPath: $.vehicleSchedules.*.transactionNo
+
+       - jsonPath: $.vehicleSchedules.*.tenantId

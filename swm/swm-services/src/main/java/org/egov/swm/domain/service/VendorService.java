@@ -127,9 +127,9 @@ public class VendorService {
 
 			}
 
-			validate(vendorRequest);
-
 		}
+
+		validate(vendorRequest);
 
 		return vendorRepository.update(vendorRequest);
 

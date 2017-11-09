@@ -270,12 +270,12 @@ definitions:
         minLength: 1
       scheduleCategory:
         format: singleValueList
-        $ref: '#/definitions/ScheduleCategory'
-        description: Schedule Category of the SOR
+        type: string
+        description: Schedule Category of the SOR. unique reference from 'ScheduleCategory'. We will store code of 'ScheduleCategory'
       uom:
         format: singleValueList
-        description: Unit Of Measurement of the SOR
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/UOM"
+        type: string
+        description: Unit Of Measurement of the SOR. unique reference from 'UOM'. We will store code of 'UOM'
       sorRates:
         type: array
         description: Array of Rate Details.
@@ -312,7 +312,8 @@ definitions:
         maxLength: 128
         minLength: 2
       scheduleOfRate:
-        $ref: '#/definitions/ScheduleOfRate'
+        type: string
+        description: unique reference from 'ScheduleOfRate'. We will store primary key of 'ScheduleOfRate'
       fromDate:
         type: integer
         format: int64
@@ -324,7 +325,7 @@ definitions:
         x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of To date for the SOR Rate Details.
       rate:
-        type: integer
+        type: number
         format: BigDecimal
         description: SOR Rate which is applicable for given date range
 
@@ -349,7 +350,8 @@ definitions:
         maxLength: 128
         minLength: 2
       scheduleOfRate:
-        $ref: '#/definitions/ScheduleOfRate'
+        type: string
+        description: unique reference from 'ScheduleOfRate'. We will store primary key of 'ScheduleOfRate'
       fromDate:
         type: integer
         format: int64
@@ -361,7 +363,7 @@ definitions:
         x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of To date for the Market Rate Details.
       rate:
-        type: integer
+        type: number
         format: BigDecimal
         description: Market Rate which is applicable for given date range
 
@@ -387,7 +389,7 @@ definitions:
         minLength: 2
       class:
         type: string
-        description: Class of the Contractoraa
+        description: Class of the Contractor
         #pattern: '[0-9a-zA-Z\s\.-()]'
         maxLength: 100
         minLength: 1
@@ -1255,5 +1257,4 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
-
 

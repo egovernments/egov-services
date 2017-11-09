@@ -22,6 +22,7 @@ import './styles/vistyle.css';
 import './styles/bootstrap.min.css';
 import './styles/jquery.dataTables.min.css';
 import './styles/buttons.dataTables.min.css';
+import './styles/bootstrap.datepicker.css';
 // import router from "./router";
 
 // Needed for onTouchTap

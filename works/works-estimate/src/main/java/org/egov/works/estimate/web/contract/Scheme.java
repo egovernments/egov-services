@@ -2,7 +2,6 @@ package org.egov.works.estimate.web.contract;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.joda.time.LocalDate;
@@ -13,7 +12,7 @@ import javax.validation.constraints.*;
  * 
  */
 @ApiModel(description = "")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:32:33.802Z")
 
 public class Scheme   {
   @JsonProperty("id")
@@ -137,7 +136,7 @@ public class Scheme   {
    * @return validFrom
   **/
   @ApiModelProperty(required = true, value = "valid from of the Scheme ")
-  //@NotNull
+  @NotNull
 
   @Valid
 
@@ -159,7 +158,7 @@ public class Scheme   {
    * @return validTo
   **/
   @ApiModelProperty(required = true, value = "valid to of the Scheme ")
-  //@NotNull
+  @NotNull
 
   @Valid
 

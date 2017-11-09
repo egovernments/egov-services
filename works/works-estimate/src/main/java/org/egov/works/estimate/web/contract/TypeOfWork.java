@@ -10,7 +10,7 @@ import javax.validation.constraints.*;
  * An Object that holds Type of Work and Sub Type of work master data. The sub type of work will have parent type of work reference.
  */
 @ApiModel(description = "An Object that holds Type of Work and Sub Type of work master data. The sub type of work will have parent type of work reference.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:32:33.802Z")
 
 public class TypeOfWork   {
   @JsonProperty("id")
@@ -66,7 +66,7 @@ public class TypeOfWork   {
   @ApiModelProperty(required = true, value = "Tenant id of the Type Of Work")
   @NotNull
 
- @Size(min=4,max=128)
+ @Size(min=2,max=128)
   public String getTenantId() {
     return tenantId;
   }

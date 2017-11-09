@@ -1,13 +1,17 @@
 package org.egov.works.estimate.web.contract;
 
 import java.util.Objects;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.joda.time.LocalDate;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.joda.time.LocalDate;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * 
@@ -94,7 +98,7 @@ public class FinancialYear   {
    * @return startingDate
   **/
   @ApiModelProperty(required = true, value = "startingDate is the date on which Accounting Year starts. Usually it is 1st April of that year. ")
-  //@NotNull
+  @NotNull
 
   @Valid
 
@@ -116,7 +120,7 @@ public class FinancialYear   {
    * @return endingDate
   **/
   @ApiModelProperty(required = true, value = "endingDate is the date on which Financial Year ends. Usually it is 31st march of next year ")
-  //@NotNull
+  @NotNull
 
   @Valid
 

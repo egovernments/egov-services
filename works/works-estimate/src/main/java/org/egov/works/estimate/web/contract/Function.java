@@ -1,18 +1,21 @@
 package org.egov.works.estimate.web.contract;
 
 import java.util.Objects;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * 
  */
 @ApiModel(description = "")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:32:33.802Z")
 
 public class Function   {
   @JsonProperty("id")
@@ -108,7 +111,7 @@ public class Function   {
    * @return level
   **/
   @ApiModelProperty(required = true, value = "level identifies what is the level of the function in the tree structure. Top most parent will have level 0 and its child will have level as 1 ")
-  //@NotNull
+  @NotNull
 
 
   public Integer getLevel() {

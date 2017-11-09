@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  * An Object that hold Abstract Estimate Detail for a given Abstract Estimate
  */
 @ApiModel(description = "An Object that hold Abstract Estimate Detail for a given Abstract Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:32:33.802Z")
 
 public class AbstractEstimateDetails   {
   @JsonProperty("id")
@@ -27,16 +27,13 @@ public class AbstractEstimateDetails   {
   private String tenantId = null;
 
   @JsonProperty("abstractEstimate")
-  private AbstractEstimate abstractEstimate = null;
+  private String abstractEstimate = null;
 
   @JsonProperty("nameOfWork")
   private String nameOfWork = null;
 
   @JsonProperty("estimateAmount")
   private BigDecimal estimateAmount = null;
-
-  @JsonProperty("estimateNumber")
-  private String estimateNumber = null;
 
   @JsonProperty("grossAmountBilled")
   private Double grossAmountBilled = null;
@@ -85,7 +82,7 @@ public class AbstractEstimateDetails   {
   @ApiModelProperty(required = true, value = "Tenant id of the Abstract Estimate Details")
   @NotNull
 
- @Size(min=4,max=128)
+ @Size(min=2,max=128)
   public String getTenantId() {
     return tenantId;
   }
@@ -94,7 +91,7 @@ public class AbstractEstimateDetails   {
     this.tenantId = tenantId;
   }
 
-  public AbstractEstimateDetails abstractEstimate(AbstractEstimate abstractEstimate) {
+  public AbstractEstimateDetails abstractEstimate(String abstractEstimate) {
     this.abstractEstimate = abstractEstimate;
     return this;
   }
@@ -105,13 +102,12 @@ public class AbstractEstimateDetails   {
   **/
   @ApiModelProperty(value = "Reference to Abstract Estimate Object")
 
-  @Valid
 
-  public AbstractEstimate getAbstractEstimate() {
+  public String getAbstractEstimate() {
     return abstractEstimate;
   }
 
-  public void setAbstractEstimate(AbstractEstimate abstractEstimate) {
+  public void setAbstractEstimate(String abstractEstimate) {
     this.abstractEstimate = abstractEstimate;
   }
 
@@ -125,7 +121,7 @@ public class AbstractEstimateDetails   {
    * @return nameOfWork
   **/
   @ApiModelProperty(required = true, value = "Name Of Work of the Abstract Estimate")
-  //@NotNull
+  @NotNull
 
  @Pattern(regexp="[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+") @Size(min=1,max=1024)
   public String getNameOfWork() {
@@ -146,7 +142,7 @@ public class AbstractEstimateDetails   {
    * @return estimateAmount
   **/
   @ApiModelProperty(required = true, value = "Estimate amount for the Abstract Estimate")
- // @NotNull
+  @NotNull
 
   @Valid
 
@@ -156,27 +152,6 @@ public class AbstractEstimateDetails   {
 
   public void setEstimateAmount(BigDecimal estimateAmount) {
     this.estimateAmount = estimateAmount;
-  }
-
-  public AbstractEstimateDetails estimateNumber(String estimateNumber) {
-    this.estimateNumber = estimateNumber;
-    return this;
-  }
-
-   /**
-   * Estimate number of the Abstract Estimate
-   * @return estimateNumber
-  **/
-  @ApiModelProperty(required = true, value = "Estimate number of the Abstract Estimate")
-//  @NotNull
-
- @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(min=1,max=50)
-  public String getEstimateNumber() {
-    return estimateNumber;
-  }
-
-  public void setEstimateNumber(String estimateNumber) {
-    this.estimateNumber = estimateNumber;
   }
 
   public AbstractEstimateDetails grossAmountBilled(Double grossAmountBilled) {
@@ -205,12 +180,12 @@ public class AbstractEstimateDetails   {
   }
 
    /**
-   * Project code object refernce for the Abstract Estimate
+   * Project code object refernce for the Abstract Estimate. If the work is spillover then the project code/Work Identification number is user entered. Otherwise it is auto generated at the time of Admin Sanction.
    * @return projectCode
   **/
-  @ApiModelProperty(value = "Project code object refernce for the Abstract Estimate")
+  @ApiModelProperty(value = "Project code object refernce for the Abstract Estimate. If the work is spillover then the project code/Work Identification number is user entered. Otherwise it is auto generated at the time of Admin Sanction.")
 
-  @Valid
+//  @Valid
 
   public ProjectCode getProjectCode() {
     return projectCode;
@@ -298,7 +273,6 @@ public class AbstractEstimateDetails   {
         Objects.equals(this.abstractEstimate, abstractEstimateDetails.abstractEstimate) &&
         Objects.equals(this.nameOfWork, abstractEstimateDetails.nameOfWork) &&
         Objects.equals(this.estimateAmount, abstractEstimateDetails.estimateAmount) &&
-        Objects.equals(this.estimateNumber, abstractEstimateDetails.estimateNumber) &&
         Objects.equals(this.grossAmountBilled, abstractEstimateDetails.grossAmountBilled) &&
         Objects.equals(this.projectCode, abstractEstimateDetails.projectCode) &&
         Objects.equals(this.abstractEstimateAppropriations, abstractEstimateDetails.abstractEstimateAppropriations) &&
@@ -308,7 +282,7 @@ public class AbstractEstimateDetails   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, abstractEstimate, nameOfWork, estimateAmount, estimateNumber, grossAmountBilled, projectCode, abstractEstimateAppropriations, documentDetails, auditDetails);
+    return Objects.hash(id, tenantId, abstractEstimate, nameOfWork, estimateAmount, grossAmountBilled, projectCode, abstractEstimateAppropriations, documentDetails, auditDetails);
   }
 
   @Override
@@ -321,7 +295,6 @@ public class AbstractEstimateDetails   {
     sb.append("    abstractEstimate: ").append(toIndentedString(abstractEstimate)).append("\n");
     sb.append("    nameOfWork: ").append(toIndentedString(nameOfWork)).append("\n");
     sb.append("    estimateAmount: ").append(toIndentedString(estimateAmount)).append("\n");
-    sb.append("    estimateNumber: ").append(toIndentedString(estimateNumber)).append("\n");
     sb.append("    grossAmountBilled: ").append(toIndentedString(grossAmountBilled)).append("\n");
     sb.append("    projectCode: ").append(toIndentedString(projectCode)).append("\n");
     sb.append("    abstractEstimateAppropriations: ").append(toIndentedString(abstractEstimateAppropriations)).append("\n");

@@ -2,8 +2,6 @@ package org.egov.works.estimate.web.contract;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
@@ -179,7 +177,7 @@ public class Boundary   {
    * @return boundaryNum
   **/
   @ApiModelProperty(required = true, value = "boundary number of the boundary.")
-  //@NotNull
+  @NotNull
 
 
   public String getBoundaryNum() {

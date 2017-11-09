@@ -19,7 +19,7 @@ public enum DetailedEstimateStatus {
   CANCELLED("CANCELLED"),
   
   APPROVED("APPROVED"),
-	
+  
   CHECKED("CHECKED");
 
   private String value;

@@ -47,7 +47,7 @@ public class ProjectCodeService {
 		String workIdentificationNumber;
 		for (ProjectCode projectCode : projectCodeRequest.getProjectCodes()) {
 			projectCode.setId(UUID.randomUUID().toString().replace("-", ""));
-			auditDetails.setCreatedBy(requestInfo.getUserInfo().getUsername());
+			auditDetails.setCreatedBy(requestInfo.getUserInfo().getUserName());
 			auditDetails.setCreatedTime(new Date().getTime());
 
 			if (projectCode.getCode() == null || projectCode.getCode().isEmpty()) {
@@ -91,7 +91,7 @@ public class ProjectCodeService {
 		AuditDetails auditDetails = new AuditDetails();
 
 		for (ProjectCode projectCode : projectCodeRequest.getProjectCodes()) {
-			auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getUsername());
+			auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getUserName());
 			auditDetails.setLastModifiedTime(new Date().getTime());
 			projectCode.setAuditDetails(auditDetails);
 		}

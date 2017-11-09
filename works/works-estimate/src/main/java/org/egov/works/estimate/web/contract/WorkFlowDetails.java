@@ -10,7 +10,7 @@ import javax.validation.constraints.*;
  * An Object to hold the Application workflow details for a given Abstract Estimate
  */
 @ApiModel(description = "An Object to hold the Application workflow details for a given Abstract Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:32:33.802Z")
 
 public class WorkFlowDetails   {
   @JsonProperty("type")

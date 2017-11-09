@@ -2,7 +2,6 @@ package org.egov.works.estimate.persistence.helper;
 
 import org.egov.works.estimate.web.contract.AbstractEstimate;
 import org.egov.works.estimate.web.contract.AbstractEstimateStatus;
-import org.egov.works.estimate.web.contract.Asset;
 import org.egov.works.estimate.web.contract.AuditDetails;
 import org.egov.works.estimate.web.contract.Beneficiary;
 import org.egov.works.estimate.web.contract.Boundary;
@@ -12,6 +11,7 @@ import org.egov.works.estimate.web.contract.Function;
 import org.egov.works.estimate.web.contract.Fund;
 import org.egov.works.estimate.web.contract.ModeOfAllotment;
 import org.egov.works.estimate.web.contract.NatureOfWork;
+import org.egov.works.estimate.web.contract.ReferenceType;
 import org.egov.works.estimate.web.contract.Scheme;
 import org.egov.works.estimate.web.contract.SubScheme;
 import org.egov.works.estimate.web.contract.TypeOfWork;
@@ -105,14 +105,14 @@ public class AbstractEstimateHelper {
 	@JsonProperty("ward")
 	private String ward = null;
 
-	@JsonProperty("technicalSanctionNumber")
-	private String technicalSanctionNumber = null;
+	@JsonProperty("financialSanctionNumber")
+	private String financialSanctionNumber = null;
 
-	@JsonProperty("technicalSanctionDate")
-	private Long technicalSanctionDate = null;
+	@JsonProperty("financialSanctionDate")
+	private Long financialSanctionDate = null;
 
-	@JsonProperty("technicalSanctionBy")
-	private String technicalSanctionBy = null;
+	@JsonProperty("financialSanctionBy")
+	private String financialSanctionBy = null;
 
 	@JsonProperty("locality")
 	private String locality = null;
@@ -147,9 +147,6 @@ public class AbstractEstimateHelper {
 	@JsonProperty("stateId")
 	private String stateId = null;
 
-	@JsonProperty("asset")
-	private String asset = null;
-
 	@JsonProperty("implementationPeriod")
 	private Integer implementationPeriod = null;
 
@@ -167,6 +164,21 @@ public class AbstractEstimateHelper {
 
 	@JsonProperty("pmcName")
 	private String pmcName = null;
+	
+	@JsonProperty("workProposedAsPerDP")
+	private String workProposedAsPerDP = null;
+
+	@JsonProperty("dpRemarks")
+	private String dpRemarks = null;
+
+	@JsonProperty("landAssetRequired")
+	private Boolean landAssetRequired = null;
+
+	@JsonProperty("noOfLands")
+	private Integer noOfLands = null;
+
+	@JsonProperty("otherAssetSpecificationRemarks")
+	private String otherAssetSpecificationRemarks = null;
 
 	@JsonProperty("createdBy")
 	private String createdBy = null;
@@ -189,8 +201,6 @@ public class AbstractEstimateHelper {
 		abstractEstimate.getAdminSanctionBy().setUserName(this.adminSanctionBy);
 		abstractEstimate.setAdminSanctionDate(this.adminSanctionDate);
 		abstractEstimate.setAdminSanctionNumber(this.adminSanctionNumber);
-		abstractEstimate.setAsset(new Asset());
-		abstractEstimate.getAsset().setCode(this.asset);
 		abstractEstimate.setAuditDetails(new AuditDetails());
 		abstractEstimate.getAuditDetails().setCreatedBy(this.createdBy);
 		abstractEstimate.getAuditDetails().setCreatedTime(this.createdTime);
@@ -226,7 +236,8 @@ public class AbstractEstimateHelper {
 		abstractEstimate.setPmcRequired(this.pmcRequired);
 		abstractEstimate.setPmcType(this.pmcType);
 		abstractEstimate.setReferenceNumber(this.referenceNumber);
-		abstractEstimate.setReferenceType(this.referenceType);
+		abstractEstimate.setReferenceType(new ReferenceType());
+		abstractEstimate.getReferenceType().setCode(this.referenceType);
 		abstractEstimate.setScheme(new Scheme());
 		abstractEstimate.getScheme().setCode(this.scheme);
 		abstractEstimate.setSpillOverFlag(this.spillOverFlag);
@@ -237,16 +248,20 @@ public class AbstractEstimateHelper {
 		abstractEstimate.getSubScheme().setCode(this.subScheme);
 		abstractEstimate.setSubTypeOfWork(new TypeOfWork());
 		abstractEstimate.getSubTypeOfWork().setCode(this.subTypeOfWork);
-		abstractEstimate.setTechnicalSanctionBy(new User());
-		abstractEstimate.getTechnicalSanctionBy().setUserName(this.technicalSanctionBy);
-		abstractEstimate.setTechnicalSanctionDate(this.technicalSanctionDate);
-		abstractEstimate.setTechnicalSanctionNumber(this.technicalSanctionNumber);
 		abstractEstimate.setTypeOfWork(new TypeOfWork());
 		abstractEstimate.getTypeOfWork().setCode(this.typeOfWork);
 		abstractEstimate.setWard(new Boundary());
 		abstractEstimate.getWard().setCode(this.ward);
 		abstractEstimate.setWorkCategory(WorkCategory.valueOf(this.workCategory));
 		abstractEstimate.setWorkOrderCreated(this.workOrderCreated);
+		abstractEstimate.setFinancialSanctionNumber(this.financialSanctionNumber);
+		abstractEstimate.setFinancialSanctionDate(this.financialSanctionDate);
+		abstractEstimate.setFinancialSanctionBy(new User());
+		abstractEstimate.getFinancialSanctionBy().setUserName(this.financialSanctionBy);
+		abstractEstimate.setWorkProposedAsPerDP(this.workProposedAsPerDP);
+		abstractEstimate.setDpRemarks(this.dpRemarks);
+		abstractEstimate.setLandAssetRequired(this.landAssetRequired);
+		abstractEstimate.setNoOfLands(this.noOfLands);
 		
 		BudgetGroup budgetGroup = new BudgetGroup();
 		budgetGroup.setName(this.budgetHead);

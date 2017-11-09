@@ -2,9 +2,9 @@ package org.egov.works.estimate.web.contract;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -12,7 +12,7 @@ import javax.validation.constraints.*;
  * An Object that holds SOR Rate Details for the given Schedule Of Rate. No Overlapping of rates expected for the same period.
  */
 @ApiModel(description = "An Object that holds SOR Rate Details for the given Schedule Of Rate. No Overlapping of rates expected for the same period.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:32:33.802Z")
 
 public class SORRate   {
   @JsonProperty("id")
@@ -22,7 +22,7 @@ public class SORRate   {
   private String tenantId = null;
 
   @JsonProperty("scheduleOfRate")
-  private ScheduleOfRate scheduleOfRate = null;
+  private String scheduleOfRate = null;
 
   @JsonProperty("fromDate")
   private Long fromDate = null;
@@ -31,7 +31,7 @@ public class SORRate   {
   private Long toDate = null;
 
   @JsonProperty("rate")
-  private Integer rate = null;
+  private BigDecimal rate = null;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -68,7 +68,7 @@ public class SORRate   {
   @ApiModelProperty(required = true, value = "Tenant id of the Rate Detail")
   @NotNull
 
- @Size(min=4,max=128)
+ @Size(min=2,max=128)
   public String getTenantId() {
     return tenantId;
   }
@@ -77,25 +77,24 @@ public class SORRate   {
     this.tenantId = tenantId;
   }
 
-  public SORRate scheduleOfRate(ScheduleOfRate scheduleOfRate) {
+  public SORRate scheduleOfRate(String scheduleOfRate) {
     this.scheduleOfRate = scheduleOfRate;
     return this;
   }
 
    /**
-   * Get scheduleOfRate
+   * unique reference from 'ScheduleOfRate'. We will store primary key of 'ScheduleOfRate'
    * @return scheduleOfRate
   **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(required = true, value = "unique reference from 'ScheduleOfRate'. We will store primary key of 'ScheduleOfRate'")
   @NotNull
 
-  @Valid
 
-  public ScheduleOfRate getScheduleOfRate() {
+  public String getScheduleOfRate() {
     return scheduleOfRate;
   }
 
-  public void setScheduleOfRate(ScheduleOfRate scheduleOfRate) {
+  public void setScheduleOfRate(String scheduleOfRate) {
     this.scheduleOfRate = scheduleOfRate;
   }
 
@@ -140,7 +139,7 @@ public class SORRate   {
     this.toDate = toDate;
   }
 
-  public SORRate rate(Integer rate) {
+  public SORRate rate(BigDecimal rate) {
     this.rate = rate;
     return this;
   }
@@ -152,12 +151,13 @@ public class SORRate   {
   @ApiModelProperty(required = true, value = "SOR Rate which is applicable for given date range")
   @NotNull
 
+  @Valid
 
-  public Integer getRate() {
+  public BigDecimal getRate() {
     return rate;
   }
 
-  public void setRate(Integer rate) {
+  public void setRate(BigDecimal rate) {
     this.rate = rate;
   }
 

@@ -2,7 +2,6 @@ package org.egov.works.estimate.web.contract;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ import javax.validation.constraints.*;
  * An Object which holds Schedule Of Rate Master Data. The combination of SOR code and Schedule Category is unique for given tenant.
  */
 @ApiModel(description = "An Object which holds Schedule Of Rate Master Data. The combination of SOR code and Schedule Category is unique for given tenant.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:32:33.802Z")
 
 public class ScheduleOfRate   {
   @JsonProperty("id")
@@ -30,10 +29,10 @@ public class ScheduleOfRate   {
   private String description = null;
 
   @JsonProperty("scheduleCategory")
-  private ScheduleCategory scheduleCategory = null;
+  private String scheduleCategory = null;
 
   @JsonProperty("uom")
-  private UOM uom = null;
+  private String uom = null;
 
   @JsonProperty("sorRates")
   private List<SORRate> sorRates = new ArrayList<SORRate>();
@@ -76,7 +75,7 @@ public class ScheduleOfRate   {
   @ApiModelProperty(required = true, value = "Tenant id of the Schedule Of Rate")
   @NotNull
 
- @Size(min=4,max=128)
+ @Size(min=2,max=128)
   public String getTenantId() {
     return tenantId;
   }
@@ -127,47 +126,45 @@ public class ScheduleOfRate   {
     this.description = description;
   }
 
-  public ScheduleOfRate scheduleCategory(ScheduleCategory scheduleCategory) {
+  public ScheduleOfRate scheduleCategory(String scheduleCategory) {
     this.scheduleCategory = scheduleCategory;
     return this;
   }
 
    /**
-   * Schedule Category of the SOR
+   * Schedule Category of the SOR. unique reference from 'ScheduleCategory'. We will store code of 'ScheduleCategory'
    * @return scheduleCategory
   **/
-  @ApiModelProperty(required = true, value = "Schedule Category of the SOR")
+  @ApiModelProperty(required = true, value = "Schedule Category of the SOR. unique reference from 'ScheduleCategory'. We will store code of 'ScheduleCategory'")
   @NotNull
 
-  @Valid
 
-  public ScheduleCategory getScheduleCategory() {
+  public String getScheduleCategory() {
     return scheduleCategory;
   }
 
-  public void setScheduleCategory(ScheduleCategory scheduleCategory) {
+  public void setScheduleCategory(String scheduleCategory) {
     this.scheduleCategory = scheduleCategory;
   }
 
-  public ScheduleOfRate uom(UOM uom) {
+  public ScheduleOfRate uom(String uom) {
     this.uom = uom;
     return this;
   }
 
    /**
-   * Unit Of Measurement of the SOR
+   * Unit Of Measurement of the SOR. unique reference from 'UOM'. We will store code of 'UOM'
    * @return uom
   **/
-  @ApiModelProperty(required = true, value = "Unit Of Measurement of the SOR")
+  @ApiModelProperty(required = true, value = "Unit Of Measurement of the SOR. unique reference from 'UOM'. We will store code of 'UOM'")
   @NotNull
 
-  @Valid
 
-  public UOM getUom() {
+  public String getUom() {
     return uom;
   }
 
-  public void setUom(UOM uom) {
+  public void setUom(String uom) {
     this.uom = uom;
   }
 

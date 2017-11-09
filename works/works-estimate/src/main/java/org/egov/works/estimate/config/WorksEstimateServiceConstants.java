@@ -25,6 +25,13 @@ public class WorksEstimateServiceConstants {
     public static final String APPCONFIGURATION_OBJECT = "AppConfiguration";
     public static final String GIS_INTEGRATION_APPCONFIG = "GIS_INTEGRATION";
     public static final String ASSET_DETAILES_REQUIRED_APPCONFIG = "ASSET_MANDATORY";
+    public static final String FINANCIAL_INTEGRATION_KEY = "Financial_Integration_Required";
+    
+    public static final String APPROVE = "Approve";
+    public static final String SUBMIT = "Submit";
+    public static final String REJECT = "Reject";
+    public static final String FORWARD = "Forward";
+    public static final String CANCEL = "Cancel";
 
     //Error messages
     public static final String KEY_ESIMATE_OVERHEAD_ID = "ESIMATE OVERHEAD_ID";
@@ -38,6 +45,9 @@ public class WorksEstimateServiceConstants {
 
     public static final String KEY_PERCENTAGE_MULTIYEAR_ESTIMATE = "INVALID_PERCANTAGE_MULTIYEAR_ESTIMATE";
     public static final String MESSAGE_PERCENTAGE_MULTIYEAR_ESTIMATE = "Percentage should not  be greater than 100 for multiyear estimates";
+    
+    public static final String KEY_NULL_ABSTRACTESTIMATE_NUMBER = "INVALID_ABSTRACTESTIMATE_NUMBER";
+    public static final String MESSAGE_NULL_ABSTRACTESTIMATE_NUMBER = "Abstract Estimate Number should be entered";
 
     public static final String KEY_NULL_DATEOFPROPOSAL = "INVALID_DATEOFPROPOSAL";
     public static final String MESSAGE_NULL_DATEOFPROPOSAL = "Date of proposal should be entered";

@@ -2,8 +2,6 @@ package org.egov.works.estimate.web.contract;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -134,7 +132,7 @@ public class BoundaryType   {
    * @return hierarchy
   **/
   @ApiModelProperty(required = true, value = "hierarchy of the BoundaryType.")
- // @NotNull
+  @NotNull
 
 
   public Integer getHierarchy() {
@@ -216,7 +214,7 @@ public class BoundaryType   {
    * @return hierarchyType
   **/
   @ApiModelProperty(required = true, value = "")
-  //@NotNull
+  @NotNull
 
   @Valid
 

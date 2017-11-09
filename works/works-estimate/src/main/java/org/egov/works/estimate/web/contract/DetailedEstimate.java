@@ -1,17 +1,19 @@
 package org.egov.works.estimate.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * An Object holds the basic data for a Detailed Estimate
@@ -139,9 +141,9 @@ public class DetailedEstimate   {
 
   @JsonProperty("abstractEstimateDetail")
   private AbstractEstimateDetails abstractEstimateDetail = null;
-
+  
   @JsonProperty("estimateActivities")
-  private List<EstimateActivity> estimateActivities = null;
+  private List<EstimateActivity> estimateActivities = new ArrayList<>();
 
   @JsonProperty("multiYearEstimates")
   private List<MultiYearEstimate> multiYearEstimates = null;

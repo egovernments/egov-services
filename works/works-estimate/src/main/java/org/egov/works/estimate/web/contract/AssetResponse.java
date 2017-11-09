@@ -42,8 +42,6 @@ package org.egov.works.estimate.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.egov.common.contract.response.ResponseInfo;
-
 import java.util.ArrayList;
 import java.util.List;
 

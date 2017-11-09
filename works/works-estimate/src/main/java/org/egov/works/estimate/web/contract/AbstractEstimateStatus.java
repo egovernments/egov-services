@@ -1,7 +1,7 @@
 package org.egov.works.estimate.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * Gets or Sets AbstractEstimateStatus
@@ -9,8 +9,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 public enum AbstractEstimateStatus {
   
   NEW("NEW"),
-  
-  SAVED("SAVED"),
   
   CREATED("CREATED"),
   

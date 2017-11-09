@@ -1,20 +1,24 @@
 package org.egov.works.estimate.web.contract;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * An Object that holds Overhead master data.
  */
 @ApiModel(description = "An Object that holds Overhead master data.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:32:33.802Z")
 
 public class Overhead   {
   @JsonProperty("id")
@@ -70,7 +74,7 @@ public class Overhead   {
   @ApiModelProperty(required = true, value = "Tenant id of the Overhead")
   @NotNull
 
- @Size(min=4,max=128)
+ @Size(min=2,max=128)
   public String getTenantId() {
     return tenantId;
   }

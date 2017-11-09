@@ -79,12 +79,20 @@ class UiSelectField extends Component {
       this.initData(this.props);
    }
 
-   componentWillReceiveProps(nextProps) {
-      if(this.props.location.pathname != nextProps.history.location.pathname) {
-         this.initData(nextProps);
-      }
-   }
+	 componentWillReceiveProps(nextProps) {
+ 		if(this.props.location.pathname != nextProps.history.location.pathname || this.checkSelectHavingData(nextProps)) {
+ 			this.initData(nextProps);
+ 		}
+ 	}
 
+ 	checkSelectHavingData(nextProps)
+ 	{
+ 		let {dropDownData}=nextProps;
+ 		if(nextProps.hasOwnProperty("item") && nextProps.item.type=="singleValueList" && _.isEmpty(dropDownData[nextProps.item.jsonPath]))
+ 		{
+ 			this.initData(nextProps);
+ 		}
+ 	}
 
 
 

@@ -12,19 +12,19 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * Contract class for web request. Array of Material items  are used in case of create or update
+ * Hold the Opening Balance request information.
  */
-@ApiModel(description = "Contract class for web request. Array of Material items  are used in case of create or update")
+@ApiModel(description = "Hold the Opening Balance request information.")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-08T06:17:26.594Z")
 
-public class MaterialRequest   {
+public class OpeningBalanceRequest   {
   @JsonProperty("RequestInfo")
   private org.egov.common.contract.request.RequestInfo requestInfo = null;
 
-  @JsonProperty("materials")
-  private List<Material> materials = null;
+  @JsonProperty("MaterialReceipt")
+  private List<MaterialReceipt> materialReceipt = null;
 
-  public MaterialRequest requestInfo(org.egov.common.contract.request.RequestInfo requestInfo) {
+  public OpeningBalanceRequest requestInfo(org.egov.common.contract.request.RequestInfo requestInfo) {
     this.requestInfo = requestInfo;
     return this;
   }
@@ -45,33 +45,33 @@ public class MaterialRequest   {
     this.requestInfo = requestInfo;
   }
 
-  public MaterialRequest materials(List<Material> materials) {
-    this.materials = materials;
+  public OpeningBalanceRequest materialReceipt(List<MaterialReceipt> materialReceipt) {
+    this.materialReceipt = materialReceipt;
     return this;
   }
 
-  public MaterialRequest addMaterialsItem(Material materialsItem) {
-    if (this.materials == null) {
-      this.materials = new ArrayList<Material>();
+  public OpeningBalanceRequest addMaterialReceiptItem(MaterialReceipt materialReceiptItem) {
+    if (this.materialReceipt == null) {
+      this.materialReceipt = new ArrayList<MaterialReceipt>();
     }
-    this.materials.add(materialsItem);
+    this.materialReceipt.add(materialReceiptItem);
     return this;
   }
 
    /**
-   * Used for search result and create only
-   * @return materials
+   * Get materialReceipt
+   * @return materialReceipt
   **/
-  @ApiModelProperty(value = "Used for search result and create only")
+  @ApiModelProperty(value = "")
 
   @Valid
 
-  public List<Material> getMaterials() {
-    return materials;
+  public List<MaterialReceipt> getMaterialReceipt() {
+    return materialReceipt;
   }
 
-  public void setMaterials(List<Material> materials) {
-    this.materials = materials;
+  public void setMaterialReceipt(List<MaterialReceipt> materialReceipt) {
+    this.materialReceipt = materialReceipt;
   }
 
 
@@ -83,23 +83,23 @@ public class MaterialRequest   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    MaterialRequest materialRequest = (MaterialRequest) o;
-    return Objects.equals(this.requestInfo, materialRequest.requestInfo) &&
-        Objects.equals(this.materials, materialRequest.materials);
+    OpeningBalanceRequest openingBalanceRequest = (OpeningBalanceRequest) o;
+    return Objects.equals(this.requestInfo, openingBalanceRequest.requestInfo) &&
+        Objects.equals(this.materialReceipt, openingBalanceRequest.materialReceipt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(requestInfo, materials);
+    return Objects.hash(requestInfo, materialReceipt);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class MaterialRequest {\n");
+    sb.append("class OpeningBalanceRequest {\n");
     
     sb.append("    requestInfo: ").append(toIndentedString(requestInfo)).append("\n");
-    sb.append("    materials: ").append(toIndentedString(materials)).append("\n");
+    sb.append("    materialReceipt: ").append(toIndentedString(materialReceipt)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -19,14 +19,14 @@ import io.swagger.model.Pagination;
 public class RecieptNoteApiJdbcRepository extends JdbcRepository{
 	private static final Logger LOG = LoggerFactory.getLogger(RecieptNoteApiJdbcRepository.class);
 	static {
-		LOG.debug("init supplier");
+		LOG.debug("init MaterialReceipt");
 		init(ReceiptNoteApiEntity.class);
-		LOG.debug("end init supplier");
+		LOG.debug("end init MaterialReceipt");
 	}
 	
 	public Pagination<MaterialReceiptHeader> search(ReceiptNotesSearchCriteria receiptRequest) {
 		
-		String searchQuery = "select * from MaterialReceiptHeader :condition :orderby";
+		String searchQuery = "select * from MaterialReceipt :condition :orderby";
 		StringBuffer params = new StringBuffer();
 		Map<String, Object> paramValues = new HashMap<>();
 		if (receiptRequest.getSortBy() != null && !receiptRequest.getSortBy().isEmpty()) {

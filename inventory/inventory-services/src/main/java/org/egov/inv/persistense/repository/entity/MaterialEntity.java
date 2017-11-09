@@ -60,7 +60,7 @@ public class MaterialEntity {
                 .expenseAccount(mapChartOfAccounts(expenseAccount))
                 .minQuantity(BigDecimal.valueOf(minQuantity))
                 .maxQuantity(BigDecimal.valueOf(maxQuantity))
-                .staockingUom(mapUom(staockingUom))
+                .stockingUom(mapUom(staockingUom))
                 .materialClass(Material.MaterialClassEnum.valueOf((materialClass.toUpperCase())))
                 .reorderLevel(BigDecimal.valueOf(reorderLevel))
                 .reorderQuantity(BigDecimal.valueOf(reorderQuantity))

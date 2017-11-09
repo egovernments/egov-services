@@ -36,53 +36,64 @@ public class EstimateTemplateValidator {
         Boolean isDataValid = Boolean.FALSE;
 
         for (final EstimateTemplate estimateTemplate : estimateTemplateRequest.getEstimateTemplates()) {
-            if (estimateTemplate.getTypeOfWork() != null && estimateTemplate.getTypeOfWork().getCode() != null) {
+            if ((estimateTemplate.getTypeOfWork() != null && !estimateTemplate.getTypeOfWork().isEmpty())
+                    && (estimateTemplate.getSubTypeOfWork() != null && !estimateTemplate.getSubTypeOfWork().isEmpty())) {
+                validationMessages.put(Constants.KEY_TYPEOFWORK_SUBTYPEOFWORK_EITHER_ONE_MANDATORY,
+                        Constants.MESSAGE_TYPEOFWORK_SUBTYPEOFWORK_EITHER_ONE_MANDATORY + estimateTemplate.getTypeOfWork()
+                                + ", " + estimateTemplate.getSubTypeOfWork());
+                isDataValid=Boolean.TRUE;
+            }
+
+            if (estimateTemplate.getTypeOfWork() != null && !estimateTemplate.getTypeOfWork().isEmpty()) {
                 mdmsResponse = mdmsRepository.getByCriteria(estimateTemplate.getTenantId(), CommonConstants.MODULENAME_WORKS,
-                        CommonConstants.MASTERNAME_TYPEOFWORK, "code", estimateTemplate.getTypeOfWork().getCode(),
+                        CommonConstants.MASTERNAME_TYPEOFWORK, "code", estimateTemplate.getTypeOfWork(),
                         estimateTemplateRequest.getRequestInfo());
                 if (mdmsResponse == null || mdmsResponse.size() == 0) {
-                    validationMessages.put(Constants.KEY_TYPEOFWORK_CODE_INVALID, Constants.MESSAGE_TYPEOFWORK_CODE_INVALID + estimateTemplate.getTypeOfWork().getCode());
+                    validationMessages.put(Constants.KEY_TYPEOFWORK_CODE_INVALID, Constants.MESSAGE_TYPEOFWORK_CODE_INVALID + estimateTemplate.getTypeOfWork());
                     isDataValid=Boolean.TRUE;
                 }
             }
-            if (estimateTemplate.getSubTypeOfWork() != null && estimateTemplate.getSubTypeOfWork().getCode() != null) {
+
+            if (estimateTemplate.getSubTypeOfWork() != null && !estimateTemplate.getSubTypeOfWork().isEmpty()) {
                 mdmsResponse = mdmsRepository.getByCriteria(estimateTemplate.getTenantId(), CommonConstants.MODULENAME_WORKS,
-                        CommonConstants.MASTERNAME_TYPEOFWORK, "code", estimateTemplate.getSubTypeOfWork().getCode(),
+                        CommonConstants.MASTERNAME_TYPEOFWORK, "code", estimateTemplate.getSubTypeOfWork(),
                         estimateTemplateRequest.getRequestInfo());
                 if (mdmsResponse == null || mdmsResponse.size() == 0) {
-                    validationMessages.put(Constants.KEY_SUBTYPEOFWORK_CODE_INVALID, Constants.MESSAGE_SUBTYPEOFWORK_CODE_INVALID + estimateTemplate.getSubTypeOfWork().getCode());
+                    validationMessages.put(Constants.KEY_SUBTYPEOFWORK_CODE_INVALID, Constants.MESSAGE_SUBTYPEOFWORK_CODE_INVALID + estimateTemplate.getSubTypeOfWork());
                     isDataValid=Boolean.TRUE;
                 }
             }
+
             for(EstimateTemplateActivities estimateTemplateActivities : estimateTemplate.getEstimateTemplateActivities()) {
-                if (estimateTemplateActivities.getScheduleOfRate() != null && estimateTemplateActivities.getScheduleOfRate().getId() != null) {
-                    if (scheduleOfRateService.getById(estimateTemplateActivities.getScheduleOfRate().getId(), estimateTemplateActivities.getTenantId()) == null) {
-                        validationMessages.put(Constants.KEY_SCHEDULEOFRATE_ID_INVALID, Constants.MESSAGE_SCHEDULEOFRATE_ID_INVALID + estimateTemplateActivities.getScheduleOfRate().getId());
+                if (estimateTemplateActivities.getScheduleOfRate() != null && !estimateTemplateActivities.getScheduleOfRate().isEmpty()) {
+                    if (scheduleOfRateService.getById(estimateTemplateActivities.getScheduleOfRate(), estimateTemplateActivities.getTenantId()) == null) {
+                        validationMessages.put(Constants.KEY_SCHEDULEOFRATE_ID_INVALID, Constants.MESSAGE_SCHEDULEOFRATE_ID_INVALID + estimateTemplateActivities.getScheduleOfRate());
                         isDataValid = Boolean.TRUE;
                     }
                 }
 
-                if (estimateTemplateActivities.getUom() != null && estimateTemplateActivities.getUom().getCode() != null) {
+                if (estimateTemplateActivities.getUom() != null && !estimateTemplateActivities.getUom().isEmpty()) {
                     mdmsResponse = mdmsRepository.getByCriteria(estimateTemplate.getTenantId(), CommonConstants.MODULENAME_COMMON,
-                            CommonConstants.MASTERNAME_UOM, "code", estimateTemplateActivities.getUom().getCode(),
+                            CommonConstants.MASTERNAME_UOM, "code", estimateTemplateActivities.getUom(),
                             estimateTemplateRequest.getRequestInfo());
                     if (mdmsResponse == null || mdmsResponse.size() == 0) {
-                        validationMessages.put(Constants.KEY_UOM_CODE_INVALID, Constants.MESSAGE_UOM_CODE_INVALID + estimateTemplateActivities.getUom().getCode());
+                        validationMessages.put(Constants.KEY_UOM_CODE_INVALID, Constants.MESSAGE_UOM_CODE_INVALID + estimateTemplateActivities.getUom());
                         isDataValid = Boolean.TRUE;
                     }
                 }
 
-                if (estimateTemplateActivities.getNonSOR() != null && estimateTemplateActivities.getNonSOR().getUom().getCode() != null) {
+                if (estimateTemplateActivities.getNonSOR() != null && !estimateTemplateActivities.getNonSOR().getUom().isEmpty()) {
                     mdmsResponse = mdmsRepository.getByCriteria(estimateTemplate.getTenantId(), CommonConstants.MODULENAME_COMMON,
-                            CommonConstants.MASTERNAME_UOM, "code", estimateTemplateActivities.getNonSOR().getUom().getCode(),
+                            CommonConstants.MASTERNAME_UOM, "code", estimateTemplateActivities.getNonSOR().getUom(),
                             estimateTemplateRequest.getRequestInfo());
                     if (mdmsResponse == null || mdmsResponse.size() == 0) {
-                        validationMessages.put(Constants.KEY_UOM_CODE_INVALID, Constants.MESSAGE_UOM_CODE_INVALID + estimateTemplateActivities.getNonSOR().getUom().getCode());
+                        validationMessages.put(Constants.KEY_UOM_CODE_INVALID, Constants.MESSAGE_UOM_CODE_INVALID + estimateTemplateActivities.getNonSOR().getUom());
                         isDataValid = Boolean.TRUE;
                     }
                 }
             }
         }
+
         if(isDataValid) throw new CustomException(validationMessages);
     }
 

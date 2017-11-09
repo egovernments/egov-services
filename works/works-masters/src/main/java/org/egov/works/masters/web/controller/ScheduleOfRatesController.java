@@ -1,7 +1,6 @@
 package org.egov.works.masters.web.controller;
 
 import org.egov.works.masters.domain.service.ScheduleOfRateService;
-import org.egov.works.masters.domain.validator.ScheduleOfRateValidator;
 import org.egov.works.masters.utils.MasterUtils;
 import org.egov.works.masters.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,19 +22,9 @@ public class ScheduleOfRatesController {
 	@Autowired
 	private MasterUtils masterUtils;
 
-	@Autowired
-	private ScheduleOfRateValidator scheduleOfRateValidator;
-
 	@PostMapping("/_create")
-	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@Valid @RequestBody ScheduleOfRateRequest scheduleOfRateRequest) {
-		scheduleOfRateValidator.validate(scheduleOfRateRequest);
-		scheduleOfRateValidator.validateForExistance(scheduleOfRateRequest);
-		final List<ScheduleOfRate> scheduleOfRates = scheduleOfRatesService.create(scheduleOfRateRequest);
-		final ScheduleOfRateResponse response = new ScheduleOfRateResponse();
-		response.setScheduleOfRates(scheduleOfRates);
-		response.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(scheduleOfRateRequest.getRequestInfo(), true));
-		return new ResponseEntity<>(response, HttpStatus.CREATED);
+		return scheduleOfRatesService.create(scheduleOfRateRequest);
 	}
 
 	@PostMapping("/_search")
@@ -51,11 +40,6 @@ public class ScheduleOfRatesController {
 
 	@PostMapping("/_update")
 	public ResponseEntity<?> update(@RequestBody ScheduleOfRateRequest scheduleOfRateRequest) {
-		scheduleOfRateValidator.validate(scheduleOfRateRequest);
-		final List<ScheduleOfRate> scheduleOfRates = scheduleOfRatesService.update(scheduleOfRateRequest);
-		final ScheduleOfRateResponse response = new ScheduleOfRateResponse();
-		response.setScheduleOfRates(scheduleOfRates);
-		response.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(scheduleOfRateRequest.getRequestInfo(), true));
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		return scheduleOfRatesService.update(scheduleOfRateRequest);
 	}
 }

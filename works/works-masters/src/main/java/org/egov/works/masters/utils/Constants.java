@@ -20,6 +20,9 @@ public class Constants {
     public static final String KEY_ESTIMATETEMPLATE_CODE_EXISTS="WMS.ESTIMATETEMPLATE.CODE.EXISTS";
     public static final String MESSAGE_ESTIMATETEMPLATE_CODE_EXISTS="Given Estimate Template already exists: ";
 
+    public static final String KEY_TYPEOFWORK_SUBTYPEOFWORK_EITHER_ONE_MANDATORY="WMS.ESTIMATETEMPLATE.TYPEOFWORK.SUBTYPEOFWORK.ONEMANDATORY";
+    public static final String MESSAGE_TYPEOFWORK_SUBTYPEOFWORK_EITHER_ONE_MANDATORY="Either one of Type of work or Sub Type of Work is mandatory: ";
+
     public static final String KEY_TYPEOFWORK_CODE_INVALID="WMS.TYPEOFWORK.CODE.INVALID";
     public static final String MESSAGE_TYPEOFWORK_CODE_INVALID="Given Type Of Work is invalid: ";
 

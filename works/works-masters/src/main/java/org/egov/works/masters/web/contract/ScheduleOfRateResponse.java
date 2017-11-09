@@ -13,10 +13,10 @@ import java.util.Objects;
  * Contract class to send response. Array of Revision Estimate items are used in case of search results, also multiple  Revision Estimate item is used for create and update
  */
 @ApiModel(description = "Contract class to send response. Array of Revision Estimate items are used in case of search results, also multiple  Revision Estimate item is used for create and update")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-02T07:23:18.632Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T12:57:08.229Z")
 
 public class ScheduleOfRateResponse   {
-  @JsonProperty("responseInfo")
+  @JsonProperty("ResponseInfo")
   private ResponseInfo responseInfo = null;
 
   @JsonProperty("scheduleOfRates")

@@ -1,7 +1,6 @@
 package org.egov.works.masters.web.controller;
 
 import org.egov.works.masters.domain.service.EstimateTemplateService;
-import org.egov.works.masters.domain.validator.EstimateTemplateValidator;
 import org.egov.works.masters.utils.MasterUtils;
 import org.egov.works.masters.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,19 +22,9 @@ public class EstimateTemplateController {
 	@Autowired
 	private MasterUtils masterUtils;
 
-	@Autowired
-	private EstimateTemplateValidator estimateTemplateValidator;
-
 	@PostMapping("/_create")
-	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@Valid @RequestBody EstimateTemplateRequest estimateTemplateRequest) {
-		estimateTemplateValidator.validate(estimateTemplateRequest);
-		estimateTemplateValidator.validateForExistance(estimateTemplateRequest);
-		final List<EstimateTemplate> estimateTemplates = estimateTemplateService.create(estimateTemplateRequest);
-		final EstimateTemplateResponse response = new EstimateTemplateResponse();
-		response.setEstimateTemplates(estimateTemplates);
-		response.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(estimateTemplateRequest.getRequestInfo(), true));
-		return new ResponseEntity<>(response, HttpStatus.CREATED);
+		return estimateTemplateService.create(estimateTemplateRequest);
 	}
 
 	@PostMapping("/_search")
@@ -51,11 +40,6 @@ public class EstimateTemplateController {
 
 	@PostMapping("/_update")
 	public ResponseEntity<?> update(@RequestBody EstimateTemplateRequest estimateTemplateRequest) {
-		estimateTemplateValidator.validate(estimateTemplateRequest);
-		final List<EstimateTemplate> estimateTemplates = estimateTemplateService.update(estimateTemplateRequest);
-		final EstimateTemplateResponse response = new EstimateTemplateResponse();
-		response.setEstimateTemplates(estimateTemplates);
-		response.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(estimateTemplateRequest.getRequestInfo(), true));
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		return estimateTemplateService.update(estimateTemplateRequest);
 	}
 }

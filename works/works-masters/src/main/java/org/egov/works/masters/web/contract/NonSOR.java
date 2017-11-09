@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -14,7 +13,7 @@ import java.util.Objects;
  * An Object that holds NON SOR details for a given Estimate template.
  */
 @ApiModel(description = "An Object that holds NON SOR details for a given Estimate template.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-06T12:02:21.057Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T13:13:54.875Z")
 
 public class NonSOR   {
   @JsonProperty("id")
@@ -27,7 +26,7 @@ public class NonSOR   {
   private String description = null;
 
   @JsonProperty("uom")
-  private UOM uom = null;
+  private String uom = null;
 
   public NonSOR id(String id) {
     this.id = id;
@@ -61,7 +60,7 @@ public class NonSOR   {
   @ApiModelProperty(required = true, value = "Tenant id of the Non SOR")
   @NotNull
 
- @Size(min=4,max=128)
+ @Size(min=2,max=128)
   public String getTenantId() {
     return tenantId;
   }
@@ -91,25 +90,24 @@ public class NonSOR   {
     this.description = description;
   }
 
-  public NonSOR uom(UOM uom) {
+  public NonSOR uom(String uom) {
     this.uom = uom;
     return this;
   }
 
    /**
-   * UOM for the NonSOR
+   * UOM for the Non SOR. Unique reference from 'UOM'. Primary key is ref. here.
    * @return uom
   **/
-  @ApiModelProperty(required = true, value = "UOM for the NonSOR")
+  @ApiModelProperty(required = true, value = "UOM for the Non SOR. Unique reference from 'UOM'. Primary key is ref. here.")
   @NotNull
 
-  @Valid
 
-  public UOM getUom() {
+  public String getUom() {
     return uom;
   }
 
-  public void setUom(UOM uom) {
+  public void setUom(String uom) {
     this.uom = uom;
   }
 

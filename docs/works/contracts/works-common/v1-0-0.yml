@@ -760,7 +760,7 @@ definitions:
         description: The estimate template of the Template activity. Unique reference from 'EstimateTemplate'. Primary key is ref. here.
       scheduleOfRate:
         type: string
-        description: The Schedue of Rate of the Template activity. Unique reference from 'ScheduleOfRate'. Code is ref. here.
+        description: The Schedue of Rate of the Template activity. Unique reference from 'ScheduleOfRate'. Primary key is ref. here.
       uom:
         type: string
         description: UOM for the Estimate Template Activity. Unique reference from 'UOM'. Code is ref. here.
@@ -775,7 +775,6 @@ definitions:
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
-      - estimateTemplate
       - tenantId
       - uom
     

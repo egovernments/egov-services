@@ -3,7 +3,6 @@ package org.egov.works.masters.domain.repository.helper;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.egov.works.masters.web.contract.NonSOR;
-import org.egov.works.masters.web.contract.UOM;
 
 /**
  * Created by ramki on 7/11/17.
@@ -43,8 +42,7 @@ public class NonSORHelper {
         nonSOR.setId(this.id);
         nonSOR.setTenantId(this.tenantId);
         nonSOR.setDescription(this.description);
-        nonSOR.setUom(new UOM());
-        nonSOR.getUom().setCode(this.uom);
+        nonSOR.setUom(this.uom);
         return nonSOR;
     }
 }

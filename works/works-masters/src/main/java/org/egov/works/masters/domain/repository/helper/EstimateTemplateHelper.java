@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.egov.works.masters.web.contract.EstimateTemplate;
 import org.egov.works.masters.web.contract.EstimateTemplateActivities;
-import org.egov.works.masters.web.contract.TypeOfWork;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,10 +64,8 @@ public class EstimateTemplateHelper {
         estimateTemplate.setName(this.name);
         estimateTemplate.setActive(this.active);
         estimateTemplate.setDescription(this.description);
-        estimateTemplate.setTypeOfWork(new TypeOfWork());
-        estimateTemplate.getTypeOfWork().setCode(this.typeOfWork);
-        estimateTemplate.setSubTypeOfWork(new TypeOfWork());
-        estimateTemplate.getSubTypeOfWork().setCode(this.subTypeOfWork);
+        estimateTemplate.setTypeOfWork(this.typeOfWork);
+        estimateTemplate.setSubTypeOfWork(this.subTypeOfWork);
         return estimateTemplate;
     }
 }

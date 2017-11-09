@@ -131,7 +131,7 @@ public class VehicleFuellingDetailsService {
 
 		JSONArray responseJSONArray = null;
 		ObjectMapper mapper = new ObjectMapper();
-
+		Pagination<RefillingPumpStation> refillingPumpStationList;
 		findDuplicatesInUniqueFields(vehicleFuellingDetailsRequest);
 
 		for (VehicleFuellingDetails details : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
@@ -186,10 +186,10 @@ public class VehicleFuellingDetailsService {
 
 			if (details.getRefuellingStation() != null) {
 				RefillingPumpStationSearch refillingPumpStationSearch = new RefillingPumpStationSearch();
-				refillingPumpStationSearch.setTenantId(details.getRefuellingStation().getTenantId());
+				refillingPumpStationSearch.setTenantId(details.getTenantId());
 				refillingPumpStationSearch.setCode(details.getRefuellingStation().getCode());
 
-				Pagination<RefillingPumpStation> refillingPumpStationList = refillingPumpStationRepository
+				refillingPumpStationList = refillingPumpStationRepository
 						.search(refillingPumpStationSearch);
 
 				if (refillingPumpStationList == null && refillingPumpStationList.getPagedData() == null

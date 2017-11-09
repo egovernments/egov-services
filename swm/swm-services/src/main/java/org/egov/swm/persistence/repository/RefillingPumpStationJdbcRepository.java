@@ -42,7 +42,7 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
 		Map<String, Object> paramsMap = new HashMap<>();
 		StringBuilder query = new StringBuilder();
 
-		query.append("SELECT * FROM egswm_refillingpumpstation");
+		query.append("SELECT * FROM egswm_refillingpumpstation ");
 
 		if(searchRequest.getTenantId() != null && !searchRequest.getTenantId().isEmpty()){
 			addWhereClause(query, "tenantid", "tenantid");

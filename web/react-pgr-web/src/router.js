@@ -359,7 +359,7 @@ const Main = () => {
       {/* inventory */}
       <Route exact path= {base + '/non-framework/inventory/master/supplier'} component={SupplierSearch}/>
       <Route exact path = {base + '/non-framework/inventory/master/materialstoremapping'} component={MaterialStoreMappingSearch}/>
-    //  <Route exact path= {base + '/non-framework/inventory/master/indent'} component={IndentSearch}/>
+    {/*<Route exact path= {base + '/non-framework/inventory/master/indent'} component={IndentSearch}/>*/}
       {/* works */}
       <Route exact path= {base + '/non-framework/works/transaction/abstractEstimate'} component={abstractEstimate}/>
       <Route component={NoMatch}/>

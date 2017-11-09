@@ -31,6 +31,7 @@
    - You will get a zipped folder containing 2 files (_SOME_YAML_NAME.js & default.json). Give a intuitive name to _SOME_YAML_NAME.js.
    - Go to react-pgr-web -> src -> components -> framework -> specs, create a folder with module code/name and put renamed _SOME_YAML_NAME.js file in module folder or if you generated for master, then create *master* folder inside your module folder and paste your renamed _SOME_YAML_NAME.js.
    - Copy default.json (formatted one), change the default generated labels(if required) and paste it in react-pgr-web -> src -> components -> common -> common.js under localization data.
+   - Lets say your module name is X. Now run react-pgr-web and navigate to http://localhost:3000/create/X if your specs in inside your module folder, else navigate to http://localhost:3000/create/X/Y, if your specs is inside X->master. Here Y is your renamed _SONE_YAML_NAME.js. This should load the create page for that reference PATH. Follow similar steps for SEARCH/UPDATE/VIEW.
    
 #### Example
   Find example YAML and its ui-info YAML [here.](https://github.com/egovernments/egov-services/tree/master/web/ui-auto-gen/docs/example) 
@@ -135,7 +136,7 @@
   - singleValueList
   - multiValueList
   
- > **NOTE: ** format needs to be specified at the end field level and not its parent
+ > NOTE: format needs to be specified at the end field level and not its parent
 
 #### Hosted:
 - URL : http://egov-micro-dev.egovernments.org/ui-auto-gen

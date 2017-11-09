@@ -114,6 +114,28 @@
      - datePicker
      resultObjectName: autoUi //Object name from which above values will be picked from response
     ```
+#### Things to add/change in CONTRACT.yaml (*Refer example for additional help*)
+- ##### x-ui-info (**_MANDATORY_**)
+  To refer the ui-info file in your contract, this is required.
+  ```
+  x-ui-info:
+   $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/web/ui-auto-gen/docs/example/autoui-info.yaml
+  ```
+- ##### format
+  YAML **type** (types) has limited number of types provided which are not enough to specify the tool the desired component that should render on the screen. Hence, we use **format** field which accepts any string to specify these components.
+  Following formats are supported by the tool:
+  - date
+  - email
+  - pan
+  - pinCode
+  - mobileNumber
+  - autoComplete
+  - aadhar
+  - checkbox
+  - singleValueList
+  - multiValueList
+  
+ > **NOTE: ** format needs to be specified at the end field level and not its parent
 
 #### Hosted:
 - URL : http://egov-micro-dev.egovernments.org/ui-auto-gen

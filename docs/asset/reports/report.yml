@@ -764,3 +764,150 @@ ReportDefinitions:
          where rev1.tenantid = $tenantid) revaluation 
          ON asset.tenantid=revaluation.tenantid AND asset.id=revaluation.assetid
          where asset.tenantid = $tenantid AND asset.assetcategorytype='MOVABLE'
+
+         
+- reportName: AssetShcedule
+  summary: Asset Shcedule Register Report
+  version: 1.0.0
+  moduleName: asset
+  viewPath: assetShceduleReport
+  selectiveDownload: true
+  sourceColumns:
+  - name: name
+    label: reports.asset.name
+    type: string
+    source: asset
+  - name: code
+    label: reports.asset.code
+    type: string
+    source: asset      
+  - name: assetaccount
+    label: reports.asset.assetaccount
+    type: string
+    source: asset      
+  - name: revaluationreserveaccount
+    label: reports.asset.revaluationreserveaccount
+    type: string
+    source: asset
+  - name: previousfynetblock
+    label: reports.asset.previousfynetblock
+    type: number
+    source: asset      
+  - name: plusrevalsum
+    label: reports.asset.plusrevalsum
+    type: string
+    source: asset      
+  - name: minusrevalsum
+    label: reports.asset.minusrevalsum
+    type: number
+    source: asset      
+  - name: revaltotal
+    label: reports.asset.revaltotal
+    type: number
+    source: asset      
+  - name: accumulateddepreciationaccount
+    label: reports.asset.accumulateddepreciationaccount
+    type: string
+    source: asset      
+  - name: startdepval
+    label: reports.asset.startdepval
+    type: number
+    source: asset      
+  - name: currdepsum
+    label: reports.asset.currdepsum
+    type: number
+    source: asset      
+  - name: totaldepsum
+    label: reports.asset.totaldepsum
+    type: number
+    source: asset      
+  - name: endcurrentamount
+    label: reports.asset.endcurrentamount
+    type: string
+    source: asset      
+  - name: previousfynetblock
+    label: reports.asset.previousfynetblock
+    type: string
+    source: asset      
+  - name: dateofcreation
+    label: reports.asset.dateofcreation
+    type: epoch
+    source: asset
+  - name: originalvalue
+    label: reports.asset.originalvalue
+    type: number
+    source: asset
+  
+  searchParams:
+  - name: fromDate
+    label: reports.asset.fromDate
+    type: date
+    source: asset
+    searchClause : AND asset.createddate>=$fromDate
+    isMandatory: false
+  - name: toDate
+    label: reports.asset.toDate
+    type: date
+    source: asset
+    searchClause : AND asset.createddate<=$toDate
+    isMandatory: false
+  - name: finfromdate
+    label: reports.asset.finfromdate
+    type: date
+    source: asset
+    isMandatory: true
+  - name: fintoDate
+    label: reports.asset.fintoDate
+    type: date
+    source: asset
+    isMandatory: true
+  - name: originalvaluefrom
+    label: reports.asset.originalvaluefrom
+    type: number
+    source: asset
+    searchClause : AND asset.originalvalue>=$originalvaluefrom
+    isMandatory: false
+  - name: originalvalueto
+    label: reports.asset.originalvalueto
+    type: number
+    source: asset
+    searchClause : AND asset.originalvalue<=$originalvalueto
+    isMandatory: false
+  - name: assetcategory
+    label: reports.asset.assetCategory
+    isMandatory: false
+    type: singlevaluelist
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.assetCategoryType%3D%3D%27IMMOVABLE%27%20%26%26%20%40.isAssetAllow%3D%3Dfalse)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name
+    source: asset
+    wrapper: true
+    searchClause : 
+  - name: assetsubcategory
+    label: reports.asset.assetSubCategory
+    isMandatory: false
+    type: url
+    pattern: /egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.parent%3D%3D{assetcategory})%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name
+    source: asset
+    wrapper: true
+    searchClause : AND asset.assetcategory=$assetsubcategory
+  - name: department
+    label: reports.asset.departmentCode
+    isMandatory: false
+    type: singlevaluelist
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department&tenantId=$tenantid|$..id|$..name
+    source: asset
+    wrapper: true
+    searchClause : AND asset.departmentcode=$department
+  - name: name
+    label: reports.asset.name
+    type: string
+    isMandatory: false
+    source: asset
+    searchClause : AND asset.name=$name
+  - name: code
+    label: reports.asset.code
+    type: string
+    isMandatory: false
+    source: asset
+    searchClause : AND asset.code in ($code)
+
+query: select asset.code,asset.assetcategory,asset.revaluationreserveaccount,asset.accumulateddepreciationaccount,asset.assetaccount,asset.accumulateddepreciation,previousfynetblock,endcurrentamount,plusrevalsum,minusrevalsum,coalesce(previousfynetblock,0.0)+coalesce(plusrevalsum,0.0)-coalesce(minusRevalsum,0.0) as revaltotal,prevdepsum,currdepsum,coalesce(prevdepsum,0.0)+coalesce(currdepsum,0.0)+coalesce(asset.accumulateddepreciation,0.0) as totaldepsum from egasset_asset asset left outer join (select distinct(current.assetid),current.tenantid,previousfynetblock,endcurrentamount,plusrevalsum,minusrevalsum,coalesce(prevdepsum,0)+coalesce(asset.accumulateddepreciation,0) as startdepval,previousfynetblock+plusrevalsum-minusRevalsum as revaltotal,prevdepsum,currdepsum, prevdepsum+currdepsum as totaldepsum from egasset_current_value current left outer join ( select max(currentamount) endcurrentamount,assetid,tenantid from egasset_current_value where tenantid=$tenantid AND  transactiondate<=$fintodate GROUP BY assetid,tenantid ) endcurrent ON current.assetid=endcurrent.assetid AND current.tenantid=endcurrent.tenantid left outer join (select max(currentamount) previousfynetblock,assetid,tenantid from egasset_current_value where tenantid=$tenantid AND  transactiondate<$finfromdate  GROUP BY assetid,tenantid ) prevyearcurrent ON current.assetid=prevyearcurrent.assetid AND current.tenantid=prevyearcurrent.tenantid left outer join (select COALESCE(sum(revaluationamount),0.0) plusRevalsum,assetid,tenantid from egasset_revaluation where tenantid=$tenantid AND  typeofchange='INCREASED' AND (revaluationdate $finfromdate and $fintoDate) GROUP BY assetid,tenantid ) plusreval ON current.assetid=plusreval.assetid AND current.tenantid=plusreval.tenantid left outer join (select sum(revaluationamount) minusRevalsum,assetid,tenantid from egasset_revaluation where tenantid=$tenantid AND  typeofchange='DECREASED' AND (revaluationdate $finfromdate and $fintoDate) GROUP BY assetid,tenantid ) minusreval ON current.assetid=minusreval.assetid AND current.tenantid=minusreval.tenantid left outer join (select sum(depreciationvalue) prevdepsum,assetid,tenantid from egasset_depreciation where tenantid=$tenantid AND  todate<2 GROUP BY assetid,tenantid ) prevdep ON current.assetid=prevdep.assetid AND current.tenantid=prevdep.tenantid left outer join (select sum(depreciationvalue) currdepsum,assetid,tenantid from egasset_depreciation where tenantid=$tenantid AND (todate between $finfromdate and $fintoDate) GROUP BY assetid,tenantid ) currdep ON current.assetid=currdep.assetid AND current.tenantid=currdep.tenantid) as transactions ON asset.id=transactions.assetid AND asset.tenantid=transactions.tenantid WHERE tenantid=$tenantid

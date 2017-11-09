@@ -32,18 +32,7 @@ var dat =  {
           //   isDisabled: false,
           //   patternErrorMsg: "advocatepayment.create.field.message.ids"
           // },
-          {
-            name: "advocateName",
-            jsonPath: "advocateName",
-            label: "legal.create.advocateName",
-            type: "singleValueList",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg:
-              "advocatepayment.create.field.message.advocateName",
-             url: "/lcms-services/legalcase/advocate/_search?tenantId=default|$..code|$..name",
-          },
-          {
+         {
             name: "fromDate",
             jsonPath: "fromDate",
             label: "legal.create.fromDate",
@@ -60,6 +49,17 @@ var dat =  {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: "advocatepayment.create.field.message.toDate"
+          },
+           {
+            name: "advocateName",
+            jsonPath: "advocateName",
+            label: "legal.create.advocateName",
+            type: "singleValueList",
+            isRequired: false,
+            isDisabled: false,
+            patternErrorMsg:
+              "advocatepayment.create.field.message.advocateName",
+             url: "/lcms-services/legalcase/advocate/_search?tenantId=default|$..code|$..name",
           }
         ]
       }

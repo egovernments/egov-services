@@ -164,15 +164,15 @@ var dat = {
         //     isDisabled: false,
         //     patternErrorMsg: ""
         //   },
-         {
-            name: "totalAmount",
-            pattern: "",
-            label: "legal.create.amount",
-            type: "number",
-            jsonPath: "assignAdvocate[0].totalAmount",
-            isRequired: false,
-            isDisabled: false
-          },
+        //  {
+        //     name: "totalAmount",
+        //     pattern: "",
+        //     label: "legal.create.amount",
+        //     type: "number",
+        //     jsonPath: "assignAdvocate[0].totalAmount",
+        //     isRequired: false,
+        //     isDisabled: false
+        //   },
           {
                    name: "invoiceDocument",
             jsonPath: "advocatePayments[0].invoiceDoucment.fileStoreId",

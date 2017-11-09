@@ -2255,6 +2255,7 @@ var localization_EN_Data = {
 "advocatepayment.create.resolutionNo":"Resolution Number",
 "advocatepayment.create.resolutionRemarks":"Resolution Remarks",
 "legal.create.downloadInvoice":"Download Invoice",
+"advocatepayment.create.group.title.paymentdetails":"Payment Details",
 
 "opinion.create.group.title.OpinionRequest": "Opinion Request",
 "opinion.create.opinionRequestDate": "Opinion Request Date",
@@ -4410,6 +4411,8 @@ var localization_MR_Data = {
 "advocatepayment.create.resolutionNo":"Resolution Number-Marathi",
 "advocatepayment.create.resolutionRemarks":"Resolution Remarks-Marathi",
 "legal.create.downloadInvoice":"Download Invoice - Marathi",
+
+"advocatepayment.create.group.title.paymentdetails":"Payment Details-Marathi",
 
 "legal.create.uploadInvoice":"Upload Invoice-marathi",
 "framework.date.error.message": "Please enter date in DD/MM/YYYY format-Marathi",

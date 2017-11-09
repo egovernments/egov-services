@@ -2,11 +2,11 @@ var collectionPointDetails ={
   "name": "collectionPointDetails",
   "version": "v1",
   "level": 1,
-  "jsonPath": "",
   "hide":false,
   "groups":[{
     "name": "details",
     "multiple":true,
+    "jsonPath": "collectionPoints[0].collectionPointDetails[0]",
     "label":"swm.collectionpoints.create.group.title.CollectionPoints",
     "fields": [
       {  
@@ -48,11 +48,11 @@ var binDetails ={
   "name": "collectionPointDetails",
   "version": "v1",
   "level": 1,
-  "jsonPath": "",
   "hide":false,
   "groups":[{
     "name": "details",
     "label":"swm.collectionpoints.create.group.title.BinDetails",
+    "jsonPath": "collectionPoints[0].binDetails[0]",
     "multiple":true,
     "fields": [
       {  
@@ -73,10 +73,21 @@ var binDetails ={
         "type":"checkbox",
         "isRequired":false,
         "isDisabled":false,
-        "patternErrorMsg":""
+        "patternErrorMsg":"",
+        "defaultValue": true,
+        "showHideFields": [{
+          "ifValue": true,
+          "hide": [],
+          "show": [{
+            "name": "rfidk",
+            "isGroup": false,
+            "isField": true
+          }]
+        }]
      },
      {  
-        "name":"rfid",
+        "name":"rfidk",
+        "hide": false,
         "jsonPath":"collectionPoints[0].binDetails[0].rfid",
         "label":"swm.collectionpoints.create.rfid",
         "type":"text",
@@ -192,6 +203,7 @@ var dat ={
      "numCols":4,
      "useTimestamp":true,
      "objectName":"collectionPoints",
+     "idJsonPath": "collectionPoints[0].code",
      "title": "swm.collectionpoints.create.title",
      "groups":[  
         {  
@@ -228,7 +240,7 @@ var dat ={
                 "depedants": [{
                   "jsonPath": "collectionPoints[0].location.block",
                   "type": "dropDown",
-                  "pattern": "egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId={collectionPoints[0].location.zone}|$.Boundary.*.id|$.Boundary.*.name"
+                  "pattern": "egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId={collectionPoints[0].location.code}|$.Boundary.*.id|$.Boundary.*.name"
                 }]
             },
             {  

@@ -4,6 +4,7 @@ var dat = {
     title:"legacycase.update.document.title",
     useTimestamp: true,
     objectName: "cases",
+    documentsPath:"cases[0].summon",
     groups: [
       {
         name: "CaseTypeDetails",
@@ -279,7 +280,7 @@ var dat = {
         fields: [
           {
           "name":"UploadDocument",
-          "jsonPath": "cases[0].documents",
+          "jsonPath": "cases[0].summon.documents",
           "label": "legal.create.sectionApplied",
            "type": "fileTable",
             "isRequired": false,

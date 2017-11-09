@@ -9,7 +9,9 @@ import io.swagger.model.AuditDetails;
 import io.swagger.model.ChartofAccount;
 import io.swagger.model.Material;
 import io.swagger.model.Store;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -20,7 +22,8 @@ import javax.validation.constraints.*;
 @ApiModel(description = "This object holds the material store mapping details information. ")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T03:57:55.756Z")
 @Builder
-
+@AllArgsConstructor
+@NoArgsConstructor
 public class MaterialStoreMapping   {
     @JsonProperty("id")
     private String id = null;

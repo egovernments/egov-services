@@ -131,7 +131,7 @@ class Transaction extends Component {
   // }
 
 
-  initData() {
+  initData() { 
     let self = this;
       specifications = require(`../../framework/specs/asset/transaction/generalDepericiation`).default;
 

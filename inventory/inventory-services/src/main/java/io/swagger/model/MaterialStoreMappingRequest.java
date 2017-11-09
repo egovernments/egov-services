@@ -19,7 +19,7 @@ import java.util.Objects;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-02T16:27:56.269+05:30")
 @Builder
 public class MaterialStoreMappingRequest {
-    @JsonProperty("requestInfo")
+    @JsonProperty("RequestInfo")
     private org.egov.common.contract.request.RequestInfo requestInfo = null;
 
     @JsonProperty("materialStoreMappings")

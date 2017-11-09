@@ -15,6 +15,9 @@ import $ from "jquery";
 var specifications={};
 let reqRequired = [];
 let baseUrl="https://raw.githubusercontent.com/abhiegov/test/master/specs/";
+
+const REGEXP_FIND_IDX = /\[(.*?)\]+/g;
+
 class Report extends Component {
   state={
     pathname:""
@@ -789,6 +792,32 @@ class Report extends Component {
       let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;
       let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+
+      const findLastIdxOnJsonPath = (jsonPath) => {
+        var str = jsonPath.split(REGEXP_FIND_IDX);
+        for (let i = str.length - 1; i > -1; i--) {
+          if (str[i].match(/\d+/)) {
+            return str[i];
+          }
+        }
+        return undefined;
+      }
+
+      const replaceLastIdxOnJsonPath = (jsonPath, replaceIdx) => {
+        var str = jsonPath.split(REGEXP_FIND_IDX);
+        var isReplaced = false;
+        for (let i = str.length - 1; i > -1; i--) {
+          if (str[i].match(/\d+/)) {
+            if (!isReplaced) {
+              isReplaced = true;
+              str[i] = `[${replaceIdx}]`;
+            } else
+              str[i] = `[${str[i]}]`;
+          }
+        }
+        return str.join("");
+      }
+
       if(expression && e.target.value){
         let str = expression;
         let pos = 0;
@@ -827,9 +856,17 @@ class Report extends Component {
           }
         }
       }
+
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
-      if(depedants.length === 0)
-        depedants = jp.query(obj,`$.groups..fields[?(@.type=="tableList")].tableList.values[?(@.jsonPath == "${property}")].depedants.*`);
+      let dependantIdx;
+      if(depedants.length === 0){
+        let currentProperty = property;
+        dependantIdx = findLastIdxOnJsonPath(property);
+        if(dependantIdx !== undefined)
+          currentProperty = replaceLastIdxOnJsonPath(property, 0); //RESET INDEX 0 TO FIND DEPENDANT FIELDS FROM TEMPLATE JSON
+        depedants = jp.query(obj,`$.groups..fields[?(@.type=="tableList")].tableList.values[?(@.jsonPath == "${currentProperty}")].depedants.*`);
+      }
+
 
       this.checkIfHasShowHideFields(property, e.target.value);
       this.checkIfHasEnDisFields(property, e.target.value);
@@ -882,9 +919,14 @@ class Report extends Component {
                 });
             } else if (value.type == "textField") {
               try{
+                let exp = value.valExp;
+                if(dependantIdx){
+                  value.jsonPath = replaceLastIdxOnJsonPath(value.jsonPath, dependantIdx);
+                  exp = exp && exp.replace(/\*/g, dependantIdx);
+                }
                 let object={
                   target: {
-                    value: value.valExp && eval(value.valExp) || eval(eval(value.pattern))
+                    value: exp && eval(exp) || eval(eval(value.pattern))
                   }
                 }
                 handleChange(object, value.jsonPath, value.isRequired, value.rg,value.requiredErrMsg, value.patternErrMsg);

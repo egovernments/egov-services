@@ -271,11 +271,11 @@ definitions:
       scheduleCategory:
         format: singleValueList
         type: string
-        description: Schedule Category of the SOR. unique reference from 'ScheduleCategory'. We will store code of 'ScheduleCategory'
+        description: Schedule Category of the SOR. unique reference from 'ScheduleCategory'. Code is ref. here.
       uom:
         format: singleValueList
         type: string
-        description: Unit Of Measurement of the SOR. unique reference from 'UOM'. We will store code of 'UOM'
+        description: Unit Of Measurement of the SOR. unique reference from 'UOM'. Code is ref. here.
       sorRates:
         type: array
         description: Array of Rate Details.
@@ -313,7 +313,7 @@ definitions:
         minLength: 2
       scheduleOfRate:
         type: string
-        description: unique reference from 'ScheduleOfRate'. We will store primary key of 'ScheduleOfRate'
+        description: unique reference from 'ScheduleOfRate'. Primary key is ref. here.
       fromDate:
         type: integer
         format: int64
@@ -350,7 +350,7 @@ definitions:
         minLength: 2
       scheduleOfRate:
         type: string
-        description: unique reference from 'ScheduleOfRate'. We will store primary key of 'ScheduleOfRate'
+        description: unique reference from 'ScheduleOfRate'. Primary key is ref. here.
       fromDate:
         type: integer
         format: int64
@@ -719,12 +719,12 @@ definitions:
         maxLength: 1024
         minLength: 1
       typeOfWork:
-        $ref: '#/definitions/TypeOfWork'
-        description: Type of work for which this Estimate template is belongs to
+        type: string
+        description: The Type of work of the Template activity. Unique reference from 'TypeOfWork'.Code is ref. here.
         format: singleValueList
       subTypeOfWork:
-        $ref: '#/definitions/TypeOfWork'
-        description: Sub Type of work for which this Estimate template is belongs to
+        type: string
+        description: The Sub Type of work of the Template activity. Unique reference from 'SubTypeOfWork'.Code is ref. here.
         format: singleValueList
       estimateTemplateActivities:
         type: array
@@ -759,10 +759,10 @@ definitions:
         description: The estimate template of the Template activity. Unique reference from 'EstimateTemplate'. Primary key is ref. here.
       scheduleOfRate:
         type: string
-        description: The Schedue of Rate of the Template activity. Unique reference from 'ScheduleOfRate'.Primary key is ref. here.
+        description: The Schedue of Rate of the Template activity. Unique reference from 'ScheduleOfRate'. Code is ref. here.
       uom:
         type: string
-        description: UOM for the Estimate Template Activity. Unique reference from 'UOM'. Primary key is ref. here.
+        description: UOM for the Estimate Template Activity. Unique reference from 'UOM'. Code is ref. here.
         format: singleValueList
       nonSOR:
         $ref: '#/definitions/NonSOR'
@@ -798,7 +798,7 @@ definitions:
         minLength: 1
       uom:
         type: string
-        description: UOM for the Non SOR. Unique reference from 'UOM'. Primary key is ref. here.
+        description: UOM for the Non SOR. Unique reference from 'UOM'. Code is ref. here.
         format: singleValueList
     required:
       - tenantId

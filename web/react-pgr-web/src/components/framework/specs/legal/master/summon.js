@@ -153,7 +153,7 @@ var dat = {
          "code",
         "summon.summonReferenceNo",
         "caseRefernceNo",
-        "hearingDetails.caseStatus",
+        "hearingDetails[0].caseStatus.code",
         "summon.caseNo",
         "summon.departmentName.name",
         "summon.caseType.name",

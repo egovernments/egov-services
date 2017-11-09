@@ -242,9 +242,9 @@ var dat = {
             patternErrMsg: ""
           },
           {
-            name: "referenceNo",
+            name: "caseReferenceNo",
             jsonPath: "cases[0].caseRefernceNo",
-            label: "legal.parawisecomments.create.referenceNo",
+            label: "legal.parawisecomments.create.caseReferenceNo",
             pattern: "",
             type: "text",
             isRequired: true,
@@ -258,6 +258,7 @@ var dat = {
             label: "legal.parawisecomments.create.group.parawiseComments",
             pattern: "",
             type: "textarea",
+            fullWidth:true,
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",

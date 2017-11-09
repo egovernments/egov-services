@@ -89,19 +89,19 @@
     <script type="text/javascript" src="resources/javascript/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="resources/javascript/moment.js"></script>
     <script type="text/javascript" src="resources/javascript/bootstrap-datetimepicker.js"></script>
-    <script type="text/javascript" src="resources/javascript/data-table/dataTables.buttons.min.js">
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js">
 
     </script>
-    <script type="text/javascript" src="resources/javascript/data-table/buttons.flash.min.js">
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.flash.min.js">
 
     </script>
-    <script type="text/javascript" src="resources/javascript/data-table/jszip.min.js">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js">
 
     </script>
-    <script src="resources/javascript/data-table/pdfmake.min.js" charset="utf-8"></script>
-    <script src="resources/javascript/data-table/vfs_fonts.js" charset="utf-8"></script>
-    <script src="resources/javascript/data-table/buttons.html5.min.js" charset="utf-8"></script>
-    <script src="resources/javascript/data-table/buttons.print.min.js" charset="utf-8"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js" charset="utf-8"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js" charset="utf-8"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.html5.min.js" charset="utf-8"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.print.min.js" charset="utf-8"></script>
     <!-- <script src="https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js" charset="utf-8"></script> -->
     <script type="text/javascript" src="resources/javascript/dataTables.responsive.min.js"></script>
 
@@ -110,10 +110,11 @@
     <script type="text/javascript" src="resources/javascript/global/jquery-validation/additional-methods.min.js"></script>
     <script src="resources/javascript/reactjs/react.min.js"></script>
     <script src="resources/javascript/reactjs/react-dom.min.js"></script>
-    <script src="resources/javascript/reactjs/browser.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
     <script src="resources/javascript/hr/common/tenantId.js"></script>
     <script src="resources/javascript/hr/common/commonAPI.js" charset="utf-8"></script>
 </head>
+
 
 <body class="page-body">
     <!-- for showing loading spinner -->
@@ -135,7 +136,7 @@
                 </div>
 
                 <div class="navbar-brand">
-                    <h3 class="horizontal-page-title homepage hidden-xs" id="hp-citizen-title">Employee Promotion</h3>
+                    <h3 class="horizontal-page-title homepage hidden-xs" id="hp-citizen-title">Search Employee</h3>
                 </div>
 
                 <!-- notifications and other links -->
@@ -227,9 +228,8 @@
                         <div class="body-cont">
                             <div class="body-cont-inner">
                                 <div class="form-section">
-                                    <h3>Employee Promotion</h3>
                                     <div id="root"></div>
-                                    <script>document.write('<script type="text/babel" type="text/babel" src="resources/javascript/hr/promotion/promotion.js?version=' + getTimestamp() + '"\><\/script>');</script>
+                                      <script>document.write('<script type="text/babel" type="text/babel" src="resources/javascript/hr/nomineemaster/nominee-search.js?version=' + getTimestamp() + '"\><\/script>');</script>
                                 </div>
                             </div>
                         </div>
@@ -263,10 +263,7 @@
     </script>
 
     <script type="text/javascript">
-        $('#ast-srch').DataTable({
-            "bFilter": false
-            // "bLengthChange": false
-        });
+
         $('.menu-responsive').mouseover(function() {
             $('.menu-responsive > ul').css('display', 'block')
         });

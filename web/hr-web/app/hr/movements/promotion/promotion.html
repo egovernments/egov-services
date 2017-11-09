@@ -20,6 +20,8 @@
     <link rel="stylesheet" type="text/css" href="resources/stylesheet/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="resources/stylesheet/responsive.bootstrap.css">
     <link rel="stylesheet" type="text/css" href="resources/stylesheet/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/buttons.dataTables.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css"> -->
 
     <style>
         body {
@@ -87,19 +89,35 @@
     <script type="text/javascript" src="resources/javascript/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="resources/javascript/moment.js"></script>
     <script type="text/javascript" src="resources/javascript/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="resources/javascript/data-table/dataTables.buttons.min.js">
+
+    </script>
+    <script type="text/javascript" src="resources/javascript/data-table/buttons.flash.min.js">
+
+    </script>
+    <script type="text/javascript" src="resources/javascript/data-table/jszip.min.js">
+
+    </script>
+    <script src="resources/javascript/data-table/pdfmake.min.js" charset="utf-8"></script>
+    <script src="resources/javascript/data-table/vfs_fonts.js" charset="utf-8"></script>
+    <script src="resources/javascript/data-table/buttons.html5.min.js" charset="utf-8"></script>
+    <script src="resources/javascript/data-table/buttons.print.min.js" charset="utf-8"></script>
+    <!-- <script src="https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js" charset="utf-8"></script> -->
+    <script type="text/javascript" src="resources/javascript/dataTables.responsive.min.js"></script>
+
     <!-- Jquery form validator -->
     <script type="text/javascript" src="resources/javascript/global/jquery-validation/jquery.validate.min.js"></script>
     <script type="text/javascript" src="resources/javascript/global/jquery-validation/additional-methods.min.js"></script>
-    <script src="https://unpkg.com/react@15/dist/react.min.js"></script>
-    <script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
+    <script src="resources/javascript/reactjs/react.min.js"></script>
+    <script src="resources/javascript/reactjs/react-dom.min.js"></script>
+    <script src="resources/javascript/reactjs/browser.js"></script>
     <script src="resources/javascript/hr/common/tenantId.js"></script>
     <script src="resources/javascript/hr/common/commonAPI.js" charset="utf-8"></script>
-
 </head>
 
 <body class="page-body">
     <!-- for showing loading spinner -->
+
     <div id="loadingMask" style="display: none;"></div>
     <div id="loading" style="display: none;">
         <div class="loading-indicator"><i class="fa fa-spinner fa-pulse fa-2x"></i></div>
@@ -117,7 +135,7 @@
                 </div>
 
                 <div class="navbar-brand">
-                    <h3 class="horizontal-page-title homepage hidden-xs" id="hp-citizen-title">Family/Nominee of Employee</h3>
+                    <h3 class="horizontal-page-title homepage hidden-xs" id="hp-citizen-title">Employee Promotion</h3>
                 </div>
 
                 <!-- notifications and other links -->
@@ -182,9 +200,9 @@
                                 </a>
                             </li>
                         </ul>
-                    </li>
+                    </li> -->
 
-                    <li class="dropdown visible-xs hidden-sm">
+                    <!-- <li class="dropdown visible-xs hidden-sm">
                         <a href="/egi/logout" class="tooltip-secondary signout" data-toggle="tooltip" title="" data-original-title="Sign Out">
                             <i class="fa fa-sign-out"></i>
                         </a>
@@ -209,8 +227,9 @@
                         <div class="body-cont">
                             <div class="body-cont-inner">
                                 <div class="form-section">
+                                    <h3>Employee Promotion</h3>
                                     <div id="root"></div>
-                                      <script>document.write('<script type="text/babel" type="text/babel" src="resources/javascript/hr/nomineeMaster/nominee.js?version=' + getTimestamp() + '"\><\/script>');</script>
+                                    <script>document.write('<script type="text/babel" type="text/babel" src="resources/javascript/hr/movements/promotion/promotion.js?version=' + getTimestamp() + '"\><\/script>');</script>
                                 </div>
                             </div>
                         </div>

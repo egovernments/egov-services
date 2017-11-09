@@ -2779,7 +2779,7 @@ definitions:
           type: array
           description: List of materials issued for indent and non indent items.
           items:
-            $ref: '#/definitions/MaterialIssueDetails'
+            $ref: '#/definitions/MaterialIssueDetail'
         workFlowDetails:
           $ref: "#/definitions/WorkFlowDetails"
         stateId:
@@ -2824,7 +2824,7 @@ definitions:
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'      
 
-    MaterialIssueDetails:
+    MaterialIssueDetail:
       type: object
       description: |
         This object holds the materail issue detail information for both indent and non indent.
@@ -2883,6 +2883,11 @@ definitions:
           maxLength: 512
           description: |
             description of the Material Issue Detail.
+        materialIssuedFromReceipts:
+          type: array
+          description: List of materials issued from receipt detail
+          items:
+            $ref: '#/definitions/MaterialIssuedFromReceipt'    
       required:
       - quantityIssued
       - value
@@ -2904,19 +2909,20 @@ definitions:
           description: Tenant id of the Material Issue from receipt.
           maxLength: 128
           minLength: 4
-        materialIssueDetails:
-          $ref: "#/definitions/MaterialIssueDetails"
-          description: |
-            material issued detail id.
+        materialReceiptId:
+          type: string
+          description: material receipt id
+          maxLength: 128
         materialReceiptDetail:
           description: >-
              In case of return of material purpose type, select initial receipt to keep account. Do not use fifo logic in case of return to supplier. Supplier will received the same goods which are identified by lot number, expiry date, serial number or manufacture number or receive date wise.  For other purpose use FIFO logic to issue item.
           $ref: "#/definitions/MaterialReceiptDetail"
           format: autoComplete
-        materialReceiptDetailAddnlinfo:
+        materialReceiptDetailAddnlinfoId:
           description: >-
              if material has lot number, expiry date, serial number or manufacture number then save receipt additional info id also.
-          $ref: "#/definitions/MaterialReceiptDetailAddnlinfo"
+          type: string
+          maxLength: 128
         quantity:
           type: number
           format: BigDecimal
@@ -3154,12 +3160,12 @@ definitions:
     MaterialStoreMapping:
       type: object
       description: |
-        This object holds the material store mapping details information.
+        This object holds the material store mapping details information.  
       properties:
         id:
           type: string
           description: |
-            Unique Identifier of the Material Store Mapping
+            Unique Identifier of the Material Store Mapping      
         material:
           $ref: "#/definitions/Material"
         store:
@@ -3173,9 +3179,9 @@ definitions:
         delete:
           type: boolean
           description: |
-            delete flag of mapping used during deleting the mapping.
+            delete flag of mapping used during deleting the mapping.    
         auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"             
       required:
       - store
       - material
@@ -4162,3 +4168,4 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
+

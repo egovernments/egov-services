@@ -17,7 +17,7 @@ var dat = {
             label: "opinionrequest.update.opinionRequestDate",
             type: "datePicker",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },{
                 "name": "departmentName",
@@ -26,7 +26,7 @@ var dat = {
                 "pattern": "",
                 "type": "singleValueList",
                 "isRequired": true,
-                "isDisabled": false,
+                "isDisabled": true,
                 "requiredErrMsg": "",
                 "patternErrMsg": "",
                  "url": "/egov-common-masters/departments/_search?|$..code|$..name"
@@ -116,7 +116,7 @@ var dat = {
                 "pattern": "",
                  "type": "singleValueList",
                 "isRequired": false,
-                "isDisabled": false,
+                "isDisabled": true,
                 "requiredErrMsg": "",
                 "patternErrMsg": "",
                  url: "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
@@ -127,7 +127,7 @@ var dat = {
                 "pattern": "",
                 "type": "text",
                 "isRequired": false,
-                "isDisabled": false,
+                "isDisabled": true,
                 "requiredErrMsg": "",
                 "patternErrMsg": "",
                  url: "/lcms-services/legalcase/advocate/_search?|$..code|$..name"

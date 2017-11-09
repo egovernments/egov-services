@@ -166,9 +166,11 @@ import assetMovableCreate from './components/non-framework/asset/master/assetMov
 import assetImmovableView from './components/non-framework/asset/master/assetImmovableView';
 import assetMovableView from './components/non-framework/asset/master/assetMovableView';
 
-import NoMatch from './components/common/NoMatch';
 //inventory
 import SupplierSearch from './components/non-framework/inventory/master/supplier/SupplierSearch';
+import MaterialStoreMappingSearch from './components/non-framework/inventory/master/materialstoremapping/MaterialStoreMappingSearch';
+
+import NoMatch from './components/common/NoMatch';
 
 //works
 import abstractEstimate from './components/non-framework/works/transaction/abstractEstimate';
@@ -355,10 +357,10 @@ const Main = () => {
 
       {/* inventory */}
       <Route exact path= {base + '/non-framework/inventory/master/supplier'} component={SupplierSearch}/>
+      <Route exact path = {base + '/non-framework/inventory/master/materialstoremapping'} component={MaterialStoreMappingSearch}/>
 
       {/* works */}
       <Route exact path= {base + '/non-framework/works/transaction/abstractEstimate'} component={abstractEstimate}/>
-
       <Route component={NoMatch}/>
 
     </Switch>

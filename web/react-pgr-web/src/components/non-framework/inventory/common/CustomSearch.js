@@ -197,7 +197,7 @@ export default class CustomSearch extends Component {
               continue;
             }
 
-            tmp.push(_.get(values[i], specsValuesList[j]));
+            tmp.push(_.get(values[i], specsValuesList[j]) || "");
           }
           resultList.resultValues.push(tmp);
         }

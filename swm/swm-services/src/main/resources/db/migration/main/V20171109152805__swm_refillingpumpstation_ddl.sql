@@ -1,6 +1,3 @@
-DROP TABLE egswm_refillingpumpstation;
-DROP sequence seq_egswm_refillingpumpstation;
-
 Create table egswm_refillingpumpstation(
   code varchar(256) NOT NULL,
   tenantid varchar(128) NOT NULL,
@@ -14,6 +11,6 @@ Create table egswm_refillingpumpstation(
   createdtime bigint,
   lastmodifiedby varchar(50),
   lastmodifiedtime bigint,
-  version bigint,
-  constraint uk_refillingpumpstation_code_tenant unique (code,tenantid)
+  version bigint
 );
+alter table egswm_refillingpumpstation add constraint pk_egswm_refillingpumpstation primary key (code,tenantid);

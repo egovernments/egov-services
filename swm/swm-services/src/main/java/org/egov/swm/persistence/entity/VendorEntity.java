@@ -1,7 +1,7 @@
 package org.egov.swm.persistence.entity;
 
 import org.egov.swm.domain.model.AuditDetails;
-import org.egov.swm.domain.model.Contractor;
+import org.egov.swm.domain.model.Supplier;
 import org.egov.swm.domain.model.Vendor;
 
 import lombok.AllArgsConstructor;
@@ -25,7 +25,7 @@ public class VendorEntity {
 
 	private String registrationNo = null;
 
-	private String contractor = null;
+	private String supplier = null;
 
 	private String details = null;
 
@@ -44,7 +44,7 @@ public class VendorEntity {
 		vendor.setTenantId(tenantId);
 		vendor.setName(name);
 		vendor.setRegistrationNo(registrationNo);
-		vendor.setContractor(Contractor.builder().contactNo(contractor).build());
+		vendor.setSupplier(Supplier.builder().contactNo(supplier).build());
 		vendor.setDetails(details);
 		vendor.setAuditDetails(new AuditDetails());
 		vendor.getAuditDetails().setCreatedBy(createdBy);

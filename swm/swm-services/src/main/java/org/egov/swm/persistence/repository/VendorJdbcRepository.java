@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.swm.domain.model.Boundary;
-import org.egov.swm.domain.model.Contractor;
+import org.egov.swm.domain.model.Supplier;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.ServicedLocations;
 import org.egov.swm.domain.model.ServicesOffered;
@@ -31,7 +31,7 @@ public class VendorJdbcRepository extends JdbcRepository {
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
-	public ContractorJdbcRepository contractorJdbcRepository;
+	public SupplierJdbcRepository supplierJdbcRepository;
 
 	@Autowired
 	public ServicedLocationsJdbcRepository servicedLocationsJdbcRepository;
@@ -101,12 +101,12 @@ public class VendorJdbcRepository extends JdbcRepository {
 			paramValues.put("registrationNo", searchRequest.getRegistrationNo());
 		}
 
-		if (searchRequest.getContractorNo() != null) {
+		if (searchRequest.getSupplierNo() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("contractor =:contractor");
-			paramValues.put("contractor", searchRequest.getContractorNo());
+			params.append("supplier =:supplier");
+			paramValues.put("supplier", searchRequest.getSupplierNo());
 		}
 
 		Pagination<Vendor> page = new Pagination<>();
@@ -139,21 +139,21 @@ public class VendorJdbcRepository extends JdbcRepository {
 
 		List<VendorEntity> vendorEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
 		Vendor v;
-		Contractor cs;
+		Supplier cs;
 		ServicedLocations servicedLocations;
 		ServicesOffered servicesOffered;
-		List<Contractor> contractors;
+		List<Supplier> contractors;
 		List<ServicedLocations> sls;
 		List<ServicesOffered> sos;
 		for (VendorEntity vendorEntity : vendorEntities) {
 
 			v = vendorEntity.toDomain();
-			cs = Contractor.builder().tenantId(v.getTenantId()).contractorNo(vendorEntity.getContractor()).build();
+			cs = Supplier.builder().tenantId(v.getTenantId()).supplierNo(vendorEntity.getSupplier()).build();
 
-			contractors = contractorJdbcRepository.search(cs);
+			contractors = supplierJdbcRepository.search(cs);
 
 			if (contractors != null && !contractors.isEmpty()) {
-				v.setContractor(contractors.get(0));
+				v.setSupplier(contractors.get(0));
 			}
 
 			servicedLocations = ServicedLocations.builder().tenantId(v.getTenantId()).vendor(v.getVendorNo()).build();

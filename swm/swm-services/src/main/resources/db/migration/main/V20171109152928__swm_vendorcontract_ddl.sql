@@ -16,5 +16,4 @@ Create table egswm_vendorcontract(
 );
 
 
-alter table egswm_vendorcontract add constraint pk_egswm_vendorcontract primary key (contractNo);
-create sequence seq_egswm_vendorcontract;
+alter table egswm_vendorcontract add constraint pk_egswm_vendorcontract primary key (contractNo,tenantId);

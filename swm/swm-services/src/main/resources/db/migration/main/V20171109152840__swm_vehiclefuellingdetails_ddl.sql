@@ -17,5 +17,4 @@ Create table egswm_vehiclefuellingdetails(
   lastmodifiedtime bigint,
   version bigint
 );
-alter table egswm_vehiclefuellingdetails add constraint pk_egswm_vehiclefuellingdetails primary key (transactionNo);
-create sequence seq_egswm_vehiclefuellingdetails;
+alter table egswm_vehiclefuellingdetails add constraint pk_egswm_vehiclefuellingdetails primary key (transactionNo,tenantId);

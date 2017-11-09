@@ -14,7 +14,7 @@ import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.SwmProcess;
 import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorSearch;
-import org.egov.swm.domain.repository.ContractorRepository;
+import org.egov.swm.domain.repository.SupplierRepository;
 import org.egov.swm.domain.repository.VendorRepository;
 import org.egov.swm.web.contract.IdGenerationResponse;
 import org.egov.swm.web.repository.BoundaryRepository;
@@ -43,7 +43,7 @@ public class VendorService {
 	private VendorRepository vendorRepository;
 
 	@Autowired
-	private ContractorRepository contractorRepository;
+	private SupplierRepository contractorRepository;
 
 	@Autowired
 	private IdgenRepository idgenRepository;
@@ -51,8 +51,8 @@ public class VendorService {
 	@Value("${egov.swm.vendor.num.idgen.name}")
 	private String idGenNameForVendorNumPath;
 
-	@Value("${egov.swm.contractor.num.idgen.name}")
-	private String idGenNameForContractorNumPath;
+	@Value("${egov.swm.supplier.num.idgen.name}")
+	private String idGenNameForSupplierNumPath;
 
 	@Autowired
 	private MdmsRepository mdmsRepository;
@@ -78,11 +78,11 @@ public class VendorService {
 
 			v.setVendorNo(generateVendorNumber(v.getTenantId(), vendorRequest.getRequestInfo()));
 
-			if (v.getContractor() != null) {
-				v.getContractor().setTenantId(v.getTenantId());
-				v.getContractor().setContractorNo(
-						generateContractorNumber(v.getContractor().getTenantId(), vendorRequest.getRequestInfo()));
-				v.getContractor().setAuditDetails(v.getAuditDetails());
+			if (v.getSupplier() != null) {
+				v.getSupplier().setTenantId(v.getTenantId());
+				v.getSupplier().setSupplierNo(
+						generateSupplierNumber(v.getSupplier().getTenantId(), vendorRequest.getRequestInfo()));
+				v.getSupplier().setAuditDetails(v.getAuditDetails());
 			}
 
 			prepareAgreementDocument(v);
@@ -116,9 +116,8 @@ public class VendorService {
 
 			if (vendorSearchResult != null && vendorSearchResult.getPagedData() != null
 					&& !vendorSearchResult.getPagedData().isEmpty()) {
-				v.getContractor().setTenantId(v.getTenantId());
-				v.getContractor()
-						.setContractorNo(vendorSearchResult.getPagedData().get(0).getContractor().getContractorNo());
+				v.getSupplier().setTenantId(v.getTenantId());
+				v.getSupplier().setSupplierNo(vendorSearchResult.getPagedData().get(0).getSupplier().getSupplierNo());
 			}
 
 			if (v.getAgreementDocument() != null && v.getAgreementDocument().getFileStoreId() != null) {
@@ -212,15 +211,15 @@ public class VendorService {
 				regNumberMap.put(vendor.getRegistrationNo(), vendor.getRegistrationNo());
 			}
 
-			if (vendor.getContractor() != null) {
+			if (vendor.getSupplier() != null) {
 
-				if (vendor.getContractor().getGst() != null && !vendor.getContractor().getGst().isEmpty()) {
+				if (vendor.getSupplier().getGst() != null && !vendor.getSupplier().getGst().isEmpty()) {
 
-					if (gstMap.get(vendor.getContractor().getGst()) != null)
+					if (gstMap.get(vendor.getSupplier().getGst()) != null)
 						throw new CustomException("gst",
-								"Duplicate gst's in given vendors : " + vendor.getContractor().getGst());
+								"Duplicate gst's in given vendors : " + vendor.getSupplier().getGst());
 
-					gstMap.put(vendor.getContractor().getGst(), vendor.getContractor().getGst());
+					gstMap.put(vendor.getSupplier().getGst(), vendor.getSupplier().getGst());
 				}
 
 			}
@@ -242,15 +241,15 @@ public class VendorService {
 			}
 		}
 
-		if (vendor.getContractor() != null) {
+		if (vendor.getSupplier() != null) {
 
-			if (vendor.getContractor().getGst() != null && !vendor.getContractor().getGst().isEmpty()) {
+			if (vendor.getSupplier().getGst() != null && !vendor.getSupplier().getGst().isEmpty()) {
 
-				if (!contractorRepository.uniqueCheck(vendor.getTenantId(), "gst", vendor.getContractor().getGst(),
+				if (!contractorRepository.uniqueCheck(vendor.getTenantId(), "gst", vendor.getSupplier().getGst(),
 						"vendorNo", vendor.getVendorNo())) {
 
 					throw new CustomException("gst", "The field gst must be unique in the system The  value "
-							+ vendor.getContractor().getGst()
+							+ vendor.getSupplier().getGst()
 							+ " for the field gst already exists in the system. Please provide different value ");
 
 				}
@@ -295,11 +294,11 @@ public class VendorService {
 		return vendorNumber;
 	}
 
-	private String generateContractorNumber(String tenantId, RequestInfo requestInfo) {
+	private String generateSupplierNumber(String tenantId, RequestInfo requestInfo) {
 
-		String contractorNumber = null;
+		String supplierNumber = null;
 		String response = null;
-		response = idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForContractorNumPath);
+		response = idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForSupplierNumPath);
 		Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 		ErrorRes errorResponse = gson.fromJson(response, ErrorRes.class);
 		IdGenerationResponse idResponse = gson.fromJson(response, IdGenerationResponse.class);
@@ -310,11 +309,11 @@ public class VendorService {
 		} else if (idResponse.getResponseInfo() != null) {
 			if (idResponse.getResponseInfo().getStatus().toString().equalsIgnoreCase("SUCCESSFUL")) {
 				if (idResponse.getIdResponses() != null && idResponse.getIdResponses().size() > 0)
-					contractorNumber = idResponse.getIdResponses().get(0).getId();
+					supplierNumber = idResponse.getIdResponses().get(0).getId();
 			}
 		}
 
-		return contractorNumber;
+		return supplierNumber;
 	}
 
 	public Pagination<Vendor> search(VendorSearch vendorSearch) {

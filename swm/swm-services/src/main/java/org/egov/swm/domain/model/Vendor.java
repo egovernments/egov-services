@@ -47,8 +47,8 @@ public class Vendor {
 	private String registrationNo = null;
 
 	@Valid
-	@JsonProperty("contractor")
-	private Contractor contractor = null;
+	@JsonProperty("supplier")
+	private Supplier supplier = null;
 
 	@JsonProperty("agreementDocument")
 	private Document agreementDocument;

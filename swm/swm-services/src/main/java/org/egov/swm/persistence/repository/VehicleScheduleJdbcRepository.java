@@ -26,7 +26,7 @@ public class VehicleScheduleJdbcRepository extends JdbcRepository {
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
-	public ContractorJdbcRepository contractorJdbcRepository;
+	public SupplierJdbcRepository contractorJdbcRepository;
 
 	@Autowired
 	public ServicedLocationsJdbcRepository servicedLocationsJdbcRepository;

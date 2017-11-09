@@ -13,8 +13,10 @@ Create table egswm_vendor(
   version bigint
 );
 
-Create table egswm_contractor( 
-  contractorNo varchar(128) NOT NULL,
+alter table egswm_vendor add constraint pk_egswm_vendor primary key (vendorNo,tenantId);
+
+Create table egswm_supplier( 
+  supplierNo varchar(128) NOT NULL,
   tenantId varchar(256) NOT NULL,
   name varchar(100),
   agencyName varchar(100),
@@ -34,14 +36,12 @@ Create table egswm_contractor(
   version bigint
 );
 
+alter table egswm_supplier add constraint pk_egswm_supplier primary key (supplierNo,tenantId);
+
 Create table egswm_vendorservicedlocations( 
   tenantId varchar(256) NOT NULL,
   vendor varchar(256) NOT NULL,
   location varchar(256) NOT NULL,
-  createdby varchar(256),
-  createdtime bigint,
-  lastmodifiedby varchar(256),
-  lastmodifiedtime bigint,
   version bigint
 );
 
@@ -49,16 +49,5 @@ Create table egswm_vendorservicesOffered(
   tenantId varchar(256) NOT NULL,
   vendor varchar(256) NOT NULL,
   service varchar(256) NOT NULL,
-  createdby varchar(256),
-  createdtime bigint,
-  lastmodifiedby varchar(256),
-  lastmodifiedtime bigint,
   version bigint
 );
-
-
-alter table egswm_vendor add constraint pk_egswm_vendor primary key (vendorNo);
-create sequence seq_egswm_vendor;
-
-alter table egswm_contractor add constraint pk_egswm_contractor primary key (contractorNo);
-create sequence seq_egswm_contractor;

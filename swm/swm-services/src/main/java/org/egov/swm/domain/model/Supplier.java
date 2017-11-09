@@ -17,15 +17,15 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Contractor {
+public class Supplier {
 
 	@Length(min = 0, max = 256)
 	@JsonProperty("tenantId")
 	private String tenantId = null;
 
 	@Length(min = 0, max = 128)
-	@JsonProperty("contractorNo")
-	private String contractorNo = null;
+	@JsonProperty("supplierNo")
+	private String supplierNo = null;
 
 	@Length(min = 0, max = 100)
 	@JsonProperty("name")

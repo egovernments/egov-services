@@ -25,5 +25,4 @@ Create table egswm_vehicle(
   lastmodifiedtime bigint,
   version bigint
 );
-alter table egswm_vehicle add constraint pk_egswm_vehicle primary key (regNumber);
-create sequence seq_egswm_vehicle;
+alter table egswm_vehicle add constraint pk_egswm_vehicle primary key (regNumber,tenantId);

@@ -9,5 +9,4 @@ create table egswm_document(
   lastmodifiedtime bigint,
   version bigint
 );
-alter table egswm_document add constraint pk_egswm_document primary key (id);
-create sequence seq_egswm_document;
+alter table egswm_document add constraint pk_egswm_document primary key (id,tenantId);

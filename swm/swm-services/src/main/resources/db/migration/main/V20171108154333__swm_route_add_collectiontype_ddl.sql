@@ -1,1 +1,0 @@
-ALTER TABLE egswm_route ADD COLUMN collectionType varchar(256);

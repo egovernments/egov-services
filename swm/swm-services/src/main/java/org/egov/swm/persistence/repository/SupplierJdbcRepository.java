@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.swm.domain.model.Contractor;
+import org.egov.swm.domain.model.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ContractorJdbcRepository extends JdbcRepository {
+public class SupplierJdbcRepository extends JdbcRepository {
 
 	@Autowired
 	public JdbcTemplate jdbcTemplate;
@@ -23,22 +23,22 @@ public class ContractorJdbcRepository extends JdbcRepository {
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {
 
-		return uniqueCheck("egswm_contractor", tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
+		return uniqueCheck("egswm_supplier", tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
 	}
 
-	public List<Contractor> search(Contractor searchRequest) {
+	public List<Supplier> search(Supplier searchRequest) {
 
-		String searchQuery = "select * from egswm_contractor :condition ";
+		String searchQuery = "select * from egswm_supplier :condition ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
 
-		if (searchRequest.getContractorNo() != null) {
+		if (searchRequest.getSupplierNo() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("contractorNo =:contractorNo");
-			paramValues.put("contractorNo", searchRequest.getContractorNo());
+			params.append("supplierNo =:supplierNo");
+			paramValues.put("supplierNo", searchRequest.getSupplierNo());
 		}
 
 		if (params.length() > 0) {
@@ -49,7 +49,7 @@ public class ContractorJdbcRepository extends JdbcRepository {
 
 			searchQuery = searchQuery.replace(":condition", "");
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(Contractor.class);
+		BeanPropertyRowMapper row = new BeanPropertyRowMapper(Supplier.class);
 
 		return namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
 	}

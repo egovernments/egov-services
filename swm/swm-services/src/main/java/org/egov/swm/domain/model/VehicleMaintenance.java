@@ -31,7 +31,6 @@ public class VehicleMaintenance {
 	private String tenantId = null;
 
 	@NotNull
-
 	@JsonProperty("vehicle")
 	private Vehicle vehicle = null;
 

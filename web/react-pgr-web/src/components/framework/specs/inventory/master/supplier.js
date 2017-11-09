@@ -82,6 +82,7 @@ var dat = {
         "code", "name", {valuePath:"active", type:"checkbox"}
       ],
       "resultPath": "suppliers",
+      "resultIdKey":"code",
       "rowClickUrlUpdate": "/update/inventory/supplier/{code}",
       "rowClickUrlView": "/view/inventory/supplier/{code}",
       "rowClickUrlAdd" : "/create/inventory/supplier",

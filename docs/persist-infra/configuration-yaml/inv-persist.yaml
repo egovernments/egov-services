@@ -273,5 +273,19 @@ serviceMaps:
             - jsonPath: $.materialStoreMappings.*.auditDetails.tenantId
 
 
+    - version: 1.0
+      name: material store mapping delete
+      description: delete material store mapping  in inventory
+      fromTopic: inv-materialstore-delete-topic
+      queryMaps:
+        - query: DELETE from materialstoremapping WHERE material=? AND store=? AND tenantid=?;
+          basePath: $.materialStoreMappings.*
+          jsonMaps:
+            - jsonPath: $.materialStoreMappings.*.material.code
+            - jsonPath: $.materialStoreMappings.*.store.code
+            - jsonPath: $.materialStoreMappings.*.auditDetails.tenantId
+
+
+
 
 

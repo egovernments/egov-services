@@ -10,7 +10,6 @@ import lombok.*;
 @Setter
 public class MaterialStoreMappingEntity {
 
-
     public static final String TABLE_NAME = "materialstoremapping";
     public static final String SEQUENCE_NAME = "seq_materialstoremapping";
     public static final String ALIAS = "materialstoremapping";
@@ -55,7 +54,7 @@ public class MaterialStoreMappingEntity {
                 .id(materialStoreMapping.getId())
                 .material(materialStoreMapping.getMaterial().getCode())
                 .store(materialStoreMapping.getStore().getCode())
-                .active(materialStoreMapping.isActive())
+                .active(materialStoreMapping.getActive())
                 .chartOfAccount(materialStoreMapping.getChartofAccount().getGlCode())
                 .createdBy(auditDetails.getCreatedBy())
                 .createdTime(auditDetails.getCreatedTime())
@@ -64,7 +63,6 @@ public class MaterialStoreMappingEntity {
                 .tenantId(auditDetails.getTenantId())
                 .build();
     }
-
 
     private Material buildMaterial() {
         return Material.builder()

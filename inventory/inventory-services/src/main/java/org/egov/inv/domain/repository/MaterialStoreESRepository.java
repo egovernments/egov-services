@@ -121,6 +121,9 @@ public class MaterialStoreESRepository extends ESRepository {
 
         BoolQueryBuilder boolQueryBuilder = boolQuery();
 
+        if (materialStoreMappingSearchRequest.getIds() != null && !materialStoreMappingSearchRequest.getIds().isEmpty())
+            elasticSearchUtils.in(Arrays.asList(materialStoreMappingSearchRequest.getIds()), "id", boolQueryBuilder);
+
         if (null != materialStoreMappingSearchRequest.getActive())
             elasticSearchUtils.add(materialStoreMappingSearchRequest.getActive(), "active", boolQueryBuilder);
 

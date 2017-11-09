@@ -1,6 +1,7 @@
 package org.egov.inv.domain.service;
 
 import io.swagger.model.*;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.inv.domain.repository.MaterialStoreESRepository;
 import org.egov.inv.persistence.entity.MaterialStoreMappingEntity;
 import org.egov.inv.persistence.repository.MaterialStoreMappingJdbcRepository;
@@ -10,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -37,8 +40,11 @@ public class MaterialStoreMappingService {
 
     private String updateTopicName;
 
+    private String deleteTopicName;
+
     private boolean isESEnabled;
 
+    private boolean isFinancialEnabled;
 
     @Autowired
     public MaterialStoreMappingService(LogAwareKafkaTemplate logAwareKafkaTemplate,
@@ -48,7 +54,9 @@ public class MaterialStoreMappingService {
                                        MaterialStoreESRepository materialESRepository,
                                        @Value("${inv.materialstore.save.topic}") String createTopicName,
                                        @Value("${inv.materialstore.update.topic}") String updateTopicName,
-                                       @Value("${es.enabled}") boolean isESEnabled) {
+                                       @Value("${inv.materialstore.delete.topic}") String deleteTopicName,
+                                       @Value("${es.enabled}") boolean isESEnabled,
+                                       @Value("${financial.enabled}") boolean isFinancialEnabled) {
         this.logAwareKafkaTemplate = logAwareKafkaTemplate;
         this.materialStoreMappingJdbcRepository = materialStoreMappingJdbcRepository;
         this.materialESRepository = materialESRepository;
@@ -56,16 +64,20 @@ public class MaterialStoreMappingService {
         this.storeService = storeService;
         this.createTopicName = createTopicName;
         this.updateTopicName = updateTopicName;
+        this.deleteTopicName = deleteTopicName;
         this.isESEnabled = isESEnabled;
+        this.isFinancialEnabled = isFinancialEnabled;
     }
 
 
     public List<MaterialStoreMapping> create(MaterialStoreMappingRequest materialStoreMappingRequest, String tenantId) {
+
         materialStoreMappingRequest.getMaterialStoreMappings().stream()
                 .forEach(materialStoreMapping -> {
                     materialStoreMapping.setAuditDetails(inventoryUtilityService.mapAuditDetails(materialStoreMappingRequest.getRequestInfo(), tenantId));
-                    uniqueCheck(materialStoreMapping);
+                    validateCreateRequest(tenantId, materialStoreMapping);
                     materialStoreMapping.setId(materialStoreMappingJdbcRepository.getSequence(materialStoreMapping));
+                    buildStoreMapping(tenantId, materialStoreMapping);
                 });
 
         return push(createTopicName, materialStoreMappingRequest);
@@ -73,13 +85,39 @@ public class MaterialStoreMappingService {
     }
 
     public List<MaterialStoreMapping> update(MaterialStoreMappingRequest materialStoreMappingRequest, String tenantId) {
+        List<MaterialStoreMapping> deleteStoreMappings = materialStoreMappingRequest.getMaterialStoreMappings().stream()
+                .filter(materialStoreMapping -> materialStoreMapping.getDelete().equals(Boolean.TRUE))
+                .collect(Collectors.toList());
+
+        if (deleteStoreMappings.size() > 0) {
+            deleteMaterialStore(materialStoreMappingRequest.getRequestInfo(), deleteStoreMappings, tenantId);
+            materialStoreMappingRequest.getMaterialStoreMappings().remove(deleteStoreMappings);
+        }
+
         materialStoreMappingRequest.getMaterialStoreMappings().stream()
                 .forEach(materialStoreMapping -> {
                     materialStoreMapping.setAuditDetails(inventoryUtilityService.mapAuditDetails(materialStoreMappingRequest.getRequestInfo(), tenantId));
-                    validateUpdateRequest(tenantId, materialStoreMapping);
+                    validateUpdateRequest(tenantId, materialStoreMapping, materialStoreMappingRequest.getRequestInfo());
+                    buildStoreMapping(tenantId, materialStoreMapping);
                 });
+
         return push(updateTopicName, materialStoreMappingRequest);
 
+    }
+
+    private void deleteMaterialStore(RequestInfo requestInfo, List<MaterialStoreMapping> materialStoreMappings, String tenantId) {
+
+        materialStoreMappings.stream()
+                .forEach(storeMapping -> storeMapping.setAuditDetails(inventoryUtilityService.
+                        mapAuditDetails(requestInfo, tenantId))
+                );
+
+        MaterialStoreMappingRequest storeMappingRequest = MaterialStoreMappingRequest.builder()
+                .requestInfo(requestInfo)
+                .materialStoreMappings(materialStoreMappings)
+                .build();
+
+        push(deleteTopicName, storeMappingRequest);
     }
 
     public Pagination<MaterialStoreMapping> search(MaterialStoreMappingSearchRequest materialStoreMappingSearchRequest) {
@@ -96,7 +134,9 @@ public class MaterialStoreMappingService {
     }
 
 
-    private void validateUpdateRequest(String tenantId, MaterialStoreMapping materialStoreMapping) {
+    private void validateUpdateRequest(String tenantId, MaterialStoreMapping materialStoreMapping, RequestInfo requestInfo) {
+        validateChartOfAccount(materialStoreMapping);
+
         if (isEmpty(materialStoreMapping.getId())) {
             throw new CustomException("id", "Id is not present");
         }
@@ -105,10 +145,31 @@ public class MaterialStoreMappingService {
 
         if (size > 0) {
             uniqueCheck(materialStoreMapping);
-        } else
-            throw new CustomException(INV_003, "Material Store Mapping Not Found");
+        } else {
+            create(buildCreateRequest(materialStoreMapping, requestInfo), tenantId);
+        }
     }
 
+    private MaterialStoreMappingRequest buildCreateRequest(MaterialStoreMapping materialStoreMapping, RequestInfo requestInfo) {
+        List<MaterialStoreMapping> materialStoreMappings = new ArrayList<>();
+        materialStoreMappings.add(materialStoreMapping);
+        return MaterialStoreMappingRequest.builder()
+                .requestInfo(requestInfo)
+                .materialStoreMappings(materialStoreMappings)
+                .build();
+    }
+
+    private void validateCreateRequest(String tenantId, MaterialStoreMapping materialStoreMapping) {
+        validateChartOfAccount(materialStoreMapping);
+        getStore(materialStoreMapping.getStore().getCode(), tenantId);
+        uniqueCheck(materialStoreMapping);
+    }
+
+    private void validateChartOfAccount(MaterialStoreMapping materialStoreMapping) {
+        if (isFinancialEnabled && isEmpty(materialStoreMapping.getChartofAccount().getGlCode())) {
+            throw new CustomException("inv.007", "Account Code is Mandatory ");
+        }
+    }
 
     private List<MaterialStoreMapping> findMaterialStore(String tenantId, MaterialStoreMapping materialStoreMapping) {
         MaterialStoreMappingSearchRequest materialStoreMappingSearchRequest = new MaterialStoreMappingSearchRequest();
@@ -133,13 +194,14 @@ public class MaterialStoreMappingService {
         if (store.getPagedData().size() > 0) {
             return store.getPagedData().get(0);
         } else {
-            throw new CustomException(INV_005, "Store Not Found");
+            throw new CustomException(INV_005, "Store Not Found " + storeCode);
         }
     }
 
     private void uniqueCheck(MaterialStoreMapping materialStoreMapping) {
         if (!materialStoreMappingJdbcRepository.uniqueCheck(MATERIAL, STORE, new MaterialStoreMappingEntity().toEntity(materialStoreMapping))) {
-            throw new CustomException(INV_001, "Combination of Code and Name Already Exists ");
+            throw new CustomException(INV_001, "Combination of Code and Name Already Exists " + materialStoreMapping.getMaterial().getName()
+                    + ", " + materialStoreMapping.getStore().getName());
         }
     }
 

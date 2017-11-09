@@ -3,6 +3,7 @@ package io.swagger.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
@@ -16,7 +17,7 @@ import java.util.Objects;
 @ApiModel(description = "Contract class for web request. Array of Material items  are used in case of create or update")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-02T16:27:56.269+05:30")
-
+@Builder
 public class MaterialStoreMappingRequest {
     @JsonProperty("requestInfo")
     private org.egov.common.contract.request.RequestInfo requestInfo = null;

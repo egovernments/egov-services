@@ -3,7 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/asset-services-maha/assets/revaluation/_create",
     "tenantIdRequired": true,
-    "objectName": "",
+    "objectName": "Revaluation",
     "useTimestamp": true,
     "groups": [{
         "label": "ac.transaction.TA.title",
@@ -113,17 +113,17 @@ var dat = {
 						"isDate":true,
 						"isLabel": false,
           },
-          {
+					{
             "name": "WdvValue",
-            "jsonPath": "",
+            "jsonPath": "Assets.WdvValue",
             "label": "ac.create.WDV.Value",
             "pattern": "",
-            "type": "text",
+            "type": "label",
             "isRequired": false,
-            "isDisabled": true,
+            "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-						"defaultValue": "10000"
+						"isLabel": false,
           },
         ],
         // "values": ["businessService", "consumerCode", "totalAmount","minimumAmount","bill"],
@@ -140,7 +140,7 @@ var dat = {
 				"fields": [
 	        {
 	          "name": "ValuationDate",
-	          "jsonPath": "Revaluations[0].revaluationDate",
+	          "jsonPath": "Revaluation[0].revaluationDate",
 	          //"label": "ac.create.Revaluation.date",
 						"label": "Revaluation date",
 	          "pattern": "",
@@ -152,7 +152,7 @@ var dat = {
 	        },
 	        {
 	          "name": "OrderNo",
-	          "jsonPath": "Revaluations[0].orderNumber",
+	          "jsonPath": "Revaluation[0].orderNumber",
 	          "label": "Order No",
 	          "pattern": "",
 	          "type": "text",
@@ -163,7 +163,7 @@ var dat = {
 	        },
 	        {
 	          "name": "OrderDate",
-	          "jsonPath": "Revaluations[0].orderDate",
+	          "jsonPath": "Revaluation[0].orderDate",
 	          //"label": "ac.transaction.create.order.date",
 						"label": "Order Date",
 	          "pattern": "",
@@ -175,7 +175,7 @@ var dat = {
 	        },
 	        {
 	          "name": "ValuationAmount",
-	          "jsonPath": "Revaluations[0].valueAfterRevaluation",
+	          "jsonPath": "Revaluation[0].valueAfterRevaluation",
 	          "label": "Valuation Amount",
 	          "pattern": "",
 	          "type": "text",
@@ -186,7 +186,7 @@ var dat = {
 	        },
 					{
 	          "name": "Addition/deductedAmount",
-	          "jsonPath": "Revaluations[0].revaluationAmount",
+	          "jsonPath": "Revaluation[0].revaluationAmount",
 	          //"label": "ac.transaction.create.AdditionDeductedAmount",
 						"label": "Addition/ deducted amount",
 	          "pattern": "",

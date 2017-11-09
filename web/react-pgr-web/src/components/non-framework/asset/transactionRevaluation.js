@@ -158,8 +158,9 @@ class Transaction extends Component {
   }
 
   componentDidMount() {
+    let self = this;
       this.initData();
-
+      self.props.handleChange({target:{value:10000}}, "Assets.WdvValue");
 
   }
 
@@ -529,6 +530,32 @@ class Transaction extends Component {
       let hashLocation = window.location.hash;
       let obj = specifications[`asset.transaction`];
 
+      if(property == "Revaluation[0].valueAfterRevaluation"){
+        if(formData && formData.hasOwnProperty("Revaluation") && formData.Revaluation[0] && formData.Revaluation[0].hasOwnProperty("valueAfterRevaluation")){
+          var wdvValue = 10000;
+          var revaluationAmount = wdvValue - (formData.Revaluation[0].valueAfterRevaluation);
+          console.log(revaluationAmount);
+          handleChange({target:{value:revaluationAmount}}, "Revaluation[0].revaluationAmount");
+
+          // if(revaluationAmount >= 0){
+          //   console.log("positive");
+          // } else{
+          //   var posReVal = Math.abs(revaluationAmount)
+          //   console.log(posReVal);
+          // }
+        }
+      }
+
+      // self.calculateRevationAmount = (value) => {
+      //   let self = this;
+      //   var wdvValue = 10000;
+      //   console.log(value);
+      //   var revaluationAmount = wdvValue - value;
+      //   console.log(revaluationAmount);
+      //   handleChange({target:{value:revaluationAmount}}, "Revaluation[0].revaluationAmount");
+      //   return;
+      // }
+
       // if (property.search("isRadio")) {
       //   console.log(this.props.fromData);
       //   console.log(property);
@@ -697,6 +724,18 @@ class Transaction extends Component {
     var amountValidation=true;
     var amountValidationMsg="";
       console.log(formData);
+
+      if(formData && formData.hasOwnProperty("Revaluation") && formData.Revaluation[0] && formData.Revaluation[0].hasOwnProperty("revaluationAmount")){
+        var negNumber = formData.Revaluation[0].revaluationAmount;
+        if(negNumber >= 0){
+          console.log("positive");
+        } else{
+          var posReVal = Math.abs(negNumber)
+          console.log(posReVal);
+          this.props.handleChange({target:{value:posReVal}}, "Revaluation[0].revaluationAmount");
+        }
+      }
+
     for (var i = 0; i < formData.Revaluation.Assets.length; i++) {
       if (formData.Revaluation.Assets[i].isRadio==true) {
         console.log("hit");
@@ -707,6 +746,7 @@ class Transaction extends Component {
 
     delete formData.Revaluation.Assets;
 
+    console.log(formData);
 
               Api.commonApiPost("/asset-services-maha/assets/revaluation/_create", "", formData, "", true).then(function(response){
                 self.props.setLoadingStatus('hide');
@@ -726,6 +766,20 @@ class Transaction extends Component {
     let {mockData, moduleName, actionName, formData, fieldErrors,isFormValid,match} = this.props;
     let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler,create} = this;
     let {showResult, resultList} = this.state;
+    console.log(formData);
+
+
+
+      // if(formData && formData.hasOwnProperty("Revaluation") && formData.Revaluation[0] && formData.Revaluation[0].hasOwnProperty("valueAfterRevaluation")){
+      //   let self = this;
+      //   var wdvValue = 10000;
+      //   var value = formData.Revaluation[0].valueAfterRevaluation;
+      //   console.log(value);
+      //   var revaluationAmount = wdvValue - value;
+      //   console.log(revaluationAmount);
+      //   self.props.handleChange({target:{value:revaluationAmount}}, "Revaluation[0].revaluationAmount");
+      // }
+
 
     return (
       <div className="SearchResult">

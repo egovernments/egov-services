@@ -74,20 +74,20 @@ var binDetails ={
         "isRequired":false,
         "isDisabled":false,
         "patternErrorMsg":"",
-        "defaultValue": true,
+        "defaultValue": false,
         "showHideFields": [{
           "ifValue": true,
           "hide": [],
           "show": [{
-            "name": "rfidk",
+            "name": "rfid",
             "isGroup": false,
             "isField": true
           }]
         }]
      },
      {  
-        "name":"rfidk",
-        "hide": false,
+        "name":"rfid",
+        "hide": true,
         "jsonPath":"collectionPoints[0].binDetails[0].rfid",
         "label":"swm.collectionpoints.create.rfid",
         "type":"text",

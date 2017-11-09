@@ -108,14 +108,16 @@ export default class UiEmailField extends Component {
 		switch (this.props.ui) {
 			case 'google':
 				return (
-					<div style={{"marginTop": "17px"}} className="custom-form-control-for-datepicker">
+					<div style={{"marginTop": "17px", "display": (item.hide ? 'none' : 'inline-block')}} className="custom-form-control-for-datepicker">
 						<label>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></label><br/>
 						<DateTimeField
 							mode='date'
+							dateTime={this.props.getVal(item.jsonPath)}
 							size='sm'
 							inputFormat='DD/MM/YYYY'
 							inputProps={{
-								"placeholder": "DD/MM/YYYY"
+								"placeholder": "DD/MM/YYYY",
+								"id": item.jsonPath.split(".").join("-")
 							}}
 							defaultText=""
 							minDate={item.minDate ? this.calcMinMaxDate(item.minDate) : ""}

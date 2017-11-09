@@ -1,49 +1,5 @@
 var insuranceDetails ={
-  "name": "insuranceDetails",
-  "version": "v1",
-  "level": 1,
-  "jsonPath": "",
-  "hide":false,
-  "groups":[{
-    "name": "details",
-    "multiple":false,
-    "label":"swm.vehicles.create.group.title.InsuranceDetails",
-    "fields": [
-      {
-        "name": "insuranceNumber",
-        "jsonPath": "vehicles[0].insuranceNumber",
-        "label": "swm.vehicles.create.insuranceNumber",
-        "type": "text",
-        "isRequired": true,
-        "isDisabled": false,
-        "maxLength": 256,
-        "minLength": 1,
-        "patternErrorMsg": ""
-      },
-      {
-        "name": "insuranceValidityDate",
-        "jsonPath": "vehicles[0].insuranceValidityDate",
-        "label": "swm.vehicles.create.insuranceValidityDate",
-        "type": "datePicker",
-        "isRequired": true,
-        "isDisabled": false,
-        "patternErrorMsg": ""
-      },
-      {
-        "name": "uploadInsuranceDetails",
-        "jsonPath": "vehicles[0].insuranceDocument.fileStoreId",
-        "label": "swm.vehicles.create.insurance.details",
-        "type": "singleFileUpload",
-        "pathToArray": "documentTypes",
-        "displayNameJsonPath": "name",
-        "isRequired": true,
-        "isDisabled": false,
-        "maxLength": 256,
-        "minLength": 1,
-        "patternErrorMsg": ""
-      }
-    ]
-  }]
+  
 }
 
 var dat = {
@@ -54,123 +10,267 @@ var dat = {
     "url": "/swm-services/vehicles/_search",
     "groups": [
       {
-        "name": "search",
-        "label": "swm.vehicles.search.title",
+        "name": "VehicleDetails1",
+        "label": "swm.vehicles.create.group.title.VehicleDetails1",
         "fields": [
           {
-            "name": "vehicleTypeCode",
-            "jsonPath": "vehicleTypeCode",
+            "name": "code",
+            "jsonPath": "vehicles[0].vehicleType.code",
             "label": "swm.vehicles.create.vehicleType",
             "type": "singleValueList",
+            "isRequired": true,
             "isDisabled": false,
-            "maxLength": 256,
-            "patternErrorMsg": "swm.vehicles.create.field.message.vehicleTypeCode",
+            "maxLength": 128,
+            "minLength": 1,
+            "patternErrorMsg": "",
             "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..code|$..code"
           },
           {
-            "name": "fuelTypeCode",
-            "jsonPath": "fuelTypeCode",
-            "label": "swm.vehicles.create.fuelType",
-            "type": "singleValueList",
-            "isDisabled": false,
-            "maxLength": 256,
-            "patternErrorMsg": "swm.vehicles.create.field.message.fuelTypeCode",
-	          "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=FuelType|$..code|$..code"
-          },
-          {
             "name": "regNumber",
-            "jsonPath": "regNumber",
+            "jsonPath": "vehicles[0].regNumber",
             "label": "swm.vehicles.create.regNumber",
             "type": "text",
+            "isRequired": true,
             "isDisabled": false,
             "maxLength": 12,
-            "patternErrorMsg": "swm.vehicles.create.field.message.regNumber"
+            "minLength": 6,
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "vehicleCapacity",
+            "jsonPath": "vehicles[0].manufacturingDetails.vehicleCapacity",
+            "label": "swm.vehicles.search.result.vehicleCapacity",
+            "type": "number",
+            "isRequired": true,
+            "isDisabled": false,
+            "patternErrorMsg": ""
           },
           {
             "name": "engineSrNumber",
-            "jsonPath": "engineSrNumber",
+            "jsonPath": "vehicles[0].manufacturingDetails.engineSrNumber",
             "label": "swm.vehicles.create.engineSrNumber",
             "type": "text",
+            "isRequired": true,
             "isDisabled": false,
             "maxLength": 256,
-            "patternErrorMsg": "swm.vehicles.create.field.message.engineSrNumber"
+            "minLength": 1,
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "numberOfPersonsReq",
+            "jsonPath": "vehicles[0].operatorsReq",
+            "label": "swm.vehicles.create.numberOfPersonsReq",
+            "type": "number",
+            "isRequired": true,
+            "isDisabled": false,
+            "patternErrorMsg": ""
           },
           {
             "name": "chassisSrNumber",
-            "jsonPath": "chassisSrNumber",
+            "jsonPath": "vehicles[0].manufacturingDetails.chassisSrNumber",
             "label": "swm.vehicles.create.chassisSrNumber",
             "type": "text",
+            "isRequired": true,
             "isDisabled": false,
             "maxLength": 256,
-            "patternErrorMsg": "swm.vehicles.create.field.message.chassisSrNumber"
+            "minLength": 1,
+            "patternErrorMsg": ""
           },
           {
             "name": "model",
-            "jsonPath": "model",
+            "jsonPath": "vehicles[0].manufacturingDetails.model",
             "label": "swm.vehicles.create.model",
             "type": "text",
+            "isRequired": true,
             "isDisabled": false,
             "maxLength": 256,
-            "patternErrorMsg": "swm.vehicles.create.field.message.model"
+            "minLength": 1,
+            "patternErrorMsg": ""
           },
+          {
+            "name": "code",
+            "jsonPath": "vehicles[0].fuelType.code",
+            "label": "swm.vehicles.create.fuelType",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "maxLength": 128,
+            "minLength": 1,
+            "patternErrorMsg": "",
+            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=FuelType|$..code|$..code"
+          }
+        ]
+      },
+      {
+        "name": "WarrantyDetails",
+        "label": "swm.vehicles.create.group.title.WarrantyDetails",
+        "fields": [
+          {
+            "name": "isUnderWarranty",
+            "jsonPath": "vehicles[0].isUnderWarranty",
+            "label": "swm.vehicles.create.isUnderWarranty",
+            "type": "checkbox",
+            "isRequired": false,
+            "isDisabled": false,
+            "patternErrorMsg": "",
+            "defaultValue": false,
+            "showHideFields": [{
+              "ifValue": true,
+              "hide": [],
+              "show": [{
+                "name": "kilometers",
+                "isGroup": false,
+                "isField": true
+              },
+              {
+                "name": "endOfWarranty",
+                "isGroup": false,
+                "isField": true
+              }]
+            }]
+          },
+          {
+            "name": "kilometers",
+            "jsonPath": "vehicles[0].kilometers",
+            "label": "swm.vehicles.create.kilometers",
+            "type": "number",
+            "hide": true,
+            "isRequired": false,
+            "isDisabled": false,
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "endOfWarranty",
+            "jsonPath": "vehicles[0].endOfWarranty",
+            "label": "swm.vehicles.create.endOfWarranty",
+            "type": "datePicker",
+            "hide": true,
+            "isRequired": false,
+            "isDisabled": false,
+            "patternErrorMsg": ""
+          }
+        ]
+      },
+      {
+        "name": "VehicleDetails2",
+        "label": "swm.vehicles.create.group.title.VehicleDetails2",
+        "fields": [
           {
             "name": "ulbOwnedVehicle",
-            "jsonPath": "ulbOwnedVehicle",
+            "jsonPath": "vehicles[0].isulbownedvehicle",
             "label": "swm.vehicles.create.ulbOwnedVehicle",
             "type": "checkbox",
+            "isRequired": false,
             "isDisabled": false,
-            "patternErrorMsg": "swm.vehicles.create.field.message.ulbOwnedVehicle"
+            "patternErrorMsg": "",
+            "defaultValue": true,
+            "showHideFields": [{
+              "ifValue": false,
+              "hide": [],
+              "show": [{
+                "name": "vendorname",
+                "isGroup": false,
+                "isField": true
+              }]
+            }]
           },
           {
-            "name": "vendorName",
-            "jsonPath": "vendorName",
+            "name": "vendorname",
+            "jsonPath": "vehicles[0].vendor.name",
             "label": "swm.vehicles.create.vendor",
             "type": "singleValueList",
+            "isRequired": true,
             "isDisabled": false,
-            "maxLength": 265,
-            "patternErrorMsg": "swm.vehicles.create.field.message.vendorName",
+            "hide": true,
+            "maxLength": 256,
+            "minLength": 1,
+            "patternErrorMsg": "",
             "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vendor|$..name|$..name"
-          },
-          {
-            "name": "purchaseDate",
-            "jsonPath": "purchaseDate",
-            "label": "swm.vehicles.create.purchaseDate",
-            "type": "datePicker",
-            "isDisabled": false,
-            "patternErrorMsg": "swm.vehicles.create.field.message.purchaseDate"
-          },
-          {
-            "name": "purchaseYear",
-            "jsonPath": "purchaseYear",
-            "label": "swm.vehicles.create.purchaseYear",
-            "type": "text",
-            "isDisabled": false,
-            "maxLength": 265,
-            "patternErrorMsg": "swm.vehicles.create.field.message.purchaseYear"
-          },
+          }
+        ]
+      },
+      {
+        "name": "insuranceDetails",
+        "label":"swm.vehicles.create.group.title.InsuranceDetails",
+        "fields": [
           {
             "name": "insuranceNumber",
-            "jsonPath": "insuranceNumber",
+            "jsonPath": "vehicles[0].insuranceDetails.insuranceNumber",
             "label": "swm.vehicles.create.insuranceNumber",
             "type": "text",
+            "isRequired": true,
             "isDisabled": false,
-            "patternErrorMsg": "swm.vehicles.create.field.message.insuranceNumber"
+            "maxLength": 256,
+            "minLength": 1,
+            "patternErrorMsg": ""
           },
           {
             "name": "insuranceValidityDate",
-            "jsonPath": "insuranceValidityDate",
+            "jsonPath": "vehicles[0].insuranceDetails.insuranceValidityDate",
             "label": "swm.vehicles.create.insuranceValidityDate",
             "type": "datePicker",
+            "isRequired": true,
             "isDisabled": false,
-            "patternErrorMsg": "swm.vehicles.create.field.message.insuranceValidityDate"
+            "patternErrorMsg": ""
           },
           {
-            "name": "isUnderWarranty",
-            "jsonPath": "isUnderWarranty",
-            "label": "swm.vehicles.create.isUnderWarranty",
-            "type": "checkbox",
+            "name": "uploadInsuranceDetails",
+            "jsonPath": "vehicles[0].insuranceDetails.insuranceDocument.fileStoreId",
+            "label": "swm.vehicles.create.insurance.details",
+            "type": "singleFileUpload",
+            "pathToArray": "documentTypes",
+            "displayNameJsonPath": "name",
+            "isRequired": true,
             "isDisabled": false,
-            "patternErrorMsg": "swm.vehicles.create.field.message.isUnderWarranty"
+            "maxLength": 256,
+            "minLength": 1,
+            "patternErrorMsg": ""
+          }
+        ]
+      },
+      {
+        "name": "PurchaseDetails",
+        "label": "swm.vehicles.create.group.title.PurchaseDetails",
+        "fields": [
+          {
+            "name": "purchaseDate",
+            "jsonPath": "vehicles[0].purchaseInfo.purchaseDate",
+            "label": "swm.vehicles.create.purchaseDate",
+            "type": "datePicker",
+            "isRequired": true,
+            "isDisabled": false,
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "price",
+            "jsonPath": "vehicles[0].purchaseInfo.price",
+            "label": "swm.vehicles.create.price",
+            "type": "number",
+            "isRequired": true,
+            "isDisabled": false,
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "sourceOfPurchase",
+            "jsonPath": "vehicles[0].purchaseInfo.sourceOfPurchase",
+            "label": "swm.vehicles.create.sourceOfPurchase",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "maxLength": 256,
+            "minLength": 0,
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "remarks",
+            "jsonPath": "vehicles[0].remarks",
+            "label": "swm.vehicles.create.remarks",
+            "type": "textarea",
+            "isRequired": false,
+            "isDisabled": false,
+            "maxLength": 300,
+            "minLength": 15,
+            "patternErrorMsg": ""
           }
         ]
       }
@@ -271,6 +371,7 @@ var dat = {
     "numCols": 4,
     "useTimestamp": true,
     "objectName": "vehicles",
+    "idJsonPath": "vehicles[0].regNumber",
     "title": "swm.vehicles.create.title",
     "groups": [
       {
@@ -302,7 +403,7 @@ var dat = {
           },
           {
             "name": "vehicleCapacity",
-            "jsonPath": "vehicles[0].vehicleCapacity",
+            "jsonPath": "vehicles[0].manufacturingDetails.vehicleCapacity",
             "label": "swm.vehicles.search.result.vehicleCapacity",
             "type": "number",
             "isRequired": true,
@@ -311,7 +412,7 @@ var dat = {
           },
           {
             "name": "engineSrNumber",
-            "jsonPath": "vehicles[0].engineSrNumber",
+            "jsonPath": "vehicles[0].manufacturingDetails.engineSrNumber",
             "label": "swm.vehicles.create.engineSrNumber",
             "type": "text",
             "isRequired": true,
@@ -322,7 +423,7 @@ var dat = {
           },
           {
             "name": "numberOfPersonsReq",
-            "jsonPath": "vehicles[0].numberOfPersonsReq",
+            "jsonPath": "vehicles[0].operatorsReq",
             "label": "swm.vehicles.create.numberOfPersonsReq",
             "type": "number",
             "isRequired": true,
@@ -331,7 +432,7 @@ var dat = {
           },
           {
             "name": "chassisSrNumber",
-            "jsonPath": "vehicles[0].chassisSrNumber",
+            "jsonPath": "vehicles[0].manufacturingDetails.chassisSrNumber",
             "label": "swm.vehicles.create.chassisSrNumber",
             "type": "text",
             "isRequired": true,
@@ -342,7 +443,7 @@ var dat = {
           },
           {
             "name": "model",
-            "jsonPath": "vehicles[0].model",
+            "jsonPath": "vehicles[0].manufacturingDetails.model",
             "label": "swm.vehicles.create.model",
             "type": "text",
             "isRequired": true,
@@ -376,13 +477,29 @@ var dat = {
             "type": "checkbox",
             "isRequired": false,
             "isDisabled": false,
-            "patternErrorMsg": ""
+            "patternErrorMsg": "",
+            "defaultValue": false,
+            "showHideFields": [{
+              "ifValue": true,
+              "hide": [],
+              "show": [{
+                "name": "kilometers",
+                "isGroup": false,
+                "isField": true
+              },
+              {
+                "name": "endOfWarranty",
+                "isGroup": false,
+                "isField": true
+              }]
+            }]
           },
           {
             "name": "kilometers",
             "jsonPath": "vehicles[0].kilometers",
             "label": "swm.vehicles.create.kilometers",
             "type": "number",
+            "hide": true,
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": ""
@@ -392,6 +509,7 @@ var dat = {
             "jsonPath": "vehicles[0].endOfWarranty",
             "label": "swm.vehicles.create.endOfWarranty",
             "type": "datePicker",
+            "hide": true,
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": ""
@@ -401,28 +519,77 @@ var dat = {
       {
         "name": "VehicleDetails2",
         "label": "swm.vehicles.create.group.title.VehicleDetails2",
-        "children":[insuranceDetails],
         "fields": [
           {
             "name": "ulbOwnedVehicle",
-            "jsonPath": "vehicles[0].ulbOwnedVehicle",
+            "jsonPath": "vehicles[0].isulbownedvehicle",
             "label": "swm.vehicles.create.ulbOwnedVehicle",
             "type": "checkbox",
             "isRequired": false,
             "isDisabled": false,
-            "patternErrorMsg": ""
+            "patternErrorMsg": "",
+            "defaultValue": true,
+            "showHideFields": [{
+              "ifValue": false,
+              "hide": [],
+              "show": [{
+                "name": "vendorname",
+                "isGroup": false,
+                "isField": true
+              }]
+            }]
           },
           {
-            "name": "name",
+            "name": "vendorname",
             "jsonPath": "vehicles[0].vendor.name",
             "label": "swm.vehicles.create.vendor",
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
+            "hide": true,
             "maxLength": 256,
             "minLength": 1,
             "patternErrorMsg": "",
             "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vendor|$..name|$..name"
+          }
+        ]
+      },
+      {
+        "name": "insuranceDetails",
+        "label":"swm.vehicles.create.group.title.InsuranceDetails",
+        "fields": [
+          {
+            "name": "insuranceNumber",
+            "jsonPath": "vehicles[0].insuranceDetails.insuranceNumber",
+            "label": "swm.vehicles.create.insuranceNumber",
+            "type": "text",
+            "isRequired": true,
+            "isDisabled": false,
+            "maxLength": 256,
+            "minLength": 1,
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "insuranceValidityDate",
+            "jsonPath": "vehicles[0].insuranceDetails.insuranceValidityDate",
+            "label": "swm.vehicles.create.insuranceValidityDate",
+            "type": "datePicker",
+            "isRequired": true,
+            "isDisabled": false,
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "uploadInsuranceDetails",
+            "jsonPath": "vehicles[0].insuranceDetails.insuranceDocument.fileStoreId",
+            "label": "swm.vehicles.create.insurance.details",
+            "type": "singleFileUpload",
+            "pathToArray": "documentTypes",
+            "displayNameJsonPath": "name",
+            "isRequired": true,
+            "isDisabled": false,
+            "maxLength": 256,
+            "minLength": 1,
+            "patternErrorMsg": ""
           }
         ]
       },
@@ -432,7 +599,7 @@ var dat = {
         "fields": [
           {
             "name": "purchaseDate",
-            "jsonPath": "vehicles[0].purchaseDate",
+            "jsonPath": "vehicles[0].purchaseInfo.purchaseDate",
             "label": "swm.vehicles.create.purchaseDate",
             "type": "datePicker",
             "isRequired": true,
@@ -441,7 +608,7 @@ var dat = {
           },
           {
             "name": "price",
-            "jsonPath": "vehicles[0].price",
+            "jsonPath": "vehicles[0].purchaseInfo.price",
             "label": "swm.vehicles.create.price",
             "type": "number",
             "isRequired": true,
@@ -450,7 +617,7 @@ var dat = {
           },
           {
             "name": "sourceOfPurchase",
-            "jsonPath": "vehicles[0].sourceOfPurchase",
+            "jsonPath": "vehicles[0].purchaseInfo.sourceOfPurchase",
             "label": "swm.vehicles.create.sourceOfPurchase",
             "type": "text",
             "isRequired": false,
@@ -489,12 +656,13 @@ var dat = {
             "name": "code",
             "jsonPath": "vehicles[0].vehicleType.code",
             "label": "swm.vehicles.create.vehicleType",
-            "type": "text",
+            "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
             "maxLength": 128,
             "minLength": 1,
-            "patternErrorMsg": ""
+            "patternErrorMsg": "",
+            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..code|$..code"
           },
           {
             "name": "regNumber",
@@ -509,8 +677,8 @@ var dat = {
           },
           {
             "name": "vehicleCapacity",
-            "jsonPath": "vehicles[0].vehicleCapacity",
-            "label": "swm.vehicles.create.vehicleCapacity",
+            "jsonPath": "vehicles[0].manufacturingDetails.vehicleCapacity",
+            "label": "swm.vehicles.search.result.vehicleCapacity",
             "type": "number",
             "isRequired": true,
             "isDisabled": false,
@@ -518,7 +686,7 @@ var dat = {
           },
           {
             "name": "engineSrNumber",
-            "jsonPath": "vehicles[0].engineSrNumber",
+            "jsonPath": "vehicles[0].manufacturingDetails.engineSrNumber",
             "label": "swm.vehicles.create.engineSrNumber",
             "type": "text",
             "isRequired": true,
@@ -529,7 +697,7 @@ var dat = {
           },
           {
             "name": "numberOfPersonsReq",
-            "jsonPath": "vehicles[0].numberOfPersonsReq",
+            "jsonPath": "vehicles[0].operatorsReq",
             "label": "swm.vehicles.create.numberOfPersonsReq",
             "type": "number",
             "isRequired": true,
@@ -538,7 +706,7 @@ var dat = {
           },
           {
             "name": "chassisSrNumber",
-            "jsonPath": "vehicles[0].chassisSrNumber",
+            "jsonPath": "vehicles[0].manufacturingDetails.chassisSrNumber",
             "label": "swm.vehicles.create.chassisSrNumber",
             "type": "text",
             "isRequired": true,
@@ -549,7 +717,7 @@ var dat = {
           },
           {
             "name": "model",
-            "jsonPath": "vehicles[0].model",
+            "jsonPath": "vehicles[0].manufacturingDetails.model",
             "label": "swm.vehicles.create.model",
             "type": "text",
             "isRequired": true,
@@ -562,99 +730,13 @@ var dat = {
             "name": "code",
             "jsonPath": "vehicles[0].fuelType.code",
             "label": "swm.vehicles.create.fuelType",
-            "type": "text",
+            "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
             "maxLength": 128,
             "minLength": 1,
-            "patternErrorMsg": ""
-          }
-        ]
-      },
-      {
-        "name": "VehicleDetails2",
-        "label": "swm.vehicles.create.group.title.VehicleDetails2",
-        "fields": [
-          {
-            "name": "ulbOwnedVehicle",
-            "jsonPath": "vehicles[0].ulbOwnedVehicle",
-            "label": "swm.vehicles.create.ulbOwnedVehicle",
-            "type": "checkbox",
-            "isRequired": false,
-            "isDisabled": false,
-            "patternErrorMsg": ""
-          },
-          {
-            "name": "name",
-            "jsonPath": "vehicles[0].vendor.name",
-            "label": "swm.vehicles.create.vendor",
-            "type": "text",
-            "isRequired": true,
-            "isDisabled": false,
-            "maxLength": 256,
-            "minLength": 1,
-            "patternErrorMsg": ""
-          }
-        ]
-      },
-      {
-        "name": "InsuranceDetails",
-        "label": "swm.vehicles.create.group.title.InsuranceDetails",
-        "fields": [
-          {
-            "name": "insuranceNumber",
-            "jsonPath": "vehicles[0].insuranceNumber",
-            "label": "swm.vehicles.create.insuranceNumber",
-            "type": "text",
-            "isRequired": true,
-            "isDisabled": false,
-            "maxLength": 256,
-            "minLength": 1,
-            "patternErrorMsg": ""
-          },
-          {
-            "name": "insuranceValidityDate",
-            "jsonPath": "vehicles[0].insuranceValidityDate",
-            "label": "swm.vehicles.create.insuranceValidityDate",
-            "type": "datePicker",
-            "isRequired": true,
-            "isDisabled": false,
-            "patternErrorMsg": ""
-          }
-        ]
-      },
-      {
-        "name": "PurchaseDetails",
-        "label": "swm.vehicles.create.group.title.PurchaseDetails",
-        "fields": [
-          {
-            "name": "purchaseDate",
-            "jsonPath": "vehicles[0].purchaseDate",
-            "label": "swm.vehicles.create.purchaseDate",
-            "type": "datePicker",
-            "isRequired": true,
-            "isDisabled": false,
-            "patternErrorMsg": ""
-          },
-          {
-            "name": "price",
-            "jsonPath": "vehicles[0].price",
-            "label": "swm.vehicles.create.price",
-            "type": "number",
-            "isRequired": true,
-            "isDisabled": false,
-            "patternErrorMsg": ""
-          },
-          {
-            "name": "sourceOfPurchase",
-            "jsonPath": "vehicles[0].sourceOfPurchase",
-            "label": "swm.vehicles.create.sourceOfPurchase",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "maxLength": 256,
-            "minLength": 0,
-            "patternErrorMsg": ""
+            "patternErrorMsg": "",
+            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=FuelType|$..code|$..code"
           }
         ]
       },
@@ -669,13 +751,29 @@ var dat = {
             "type": "checkbox",
             "isRequired": false,
             "isDisabled": false,
-            "patternErrorMsg": ""
+            "patternErrorMsg": "",
+            "defaultValue": false,
+            "showHideFields": [{
+              "ifValue": true,
+              "hide": [],
+              "show": [{
+                "name": "kilometers",
+                "isGroup": false,
+                "isField": true
+              },
+              {
+                "name": "endOfWarranty",
+                "isGroup": false,
+                "isField": true
+              }]
+            }]
           },
           {
             "name": "kilometers",
             "jsonPath": "vehicles[0].kilometers",
             "label": "swm.vehicles.create.kilometers",
             "type": "number",
+            "hide": true,
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": ""
@@ -685,8 +783,121 @@ var dat = {
             "jsonPath": "vehicles[0].endOfWarranty",
             "label": "swm.vehicles.create.endOfWarranty",
             "type": "datePicker",
+            "hide": true,
             "isRequired": false,
             "isDisabled": false,
+            "patternErrorMsg": ""
+          }
+        ]
+      },
+      {
+        "name": "VehicleDetails2",
+        "label": "swm.vehicles.create.group.title.VehicleDetails2",
+        "fields": [
+          {
+            "name": "ulbOwnedVehicle",
+            "jsonPath": "vehicles[0].isulbownedvehicle",
+            "label": "swm.vehicles.create.ulbOwnedVehicle",
+            "type": "checkbox",
+            "isRequired": false,
+            "isDisabled": false,
+            "patternErrorMsg": "",
+            "defaultValue": true,
+            "showHideFields": [{
+              "ifValue": false,
+              "hide": [],
+              "show": [{
+                "name": "vendorname",
+                "isGroup": false,
+                "isField": true
+              }]
+            }]
+          },
+          {
+            "name": "vendorname",
+            "jsonPath": "vehicles[0].vendor.name",
+            "label": "swm.vehicles.create.vendor",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "hide": true,
+            "maxLength": 256,
+            "minLength": 1,
+            "patternErrorMsg": "",
+            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vendor|$..name|$..name"
+          }
+        ]
+      },
+      {
+        "name": "insuranceDetails",
+        "label":"swm.vehicles.create.group.title.InsuranceDetails",
+        "fields": [
+          {
+            "name": "insuranceNumber",
+            "jsonPath": "vehicles[0].insuranceDetails.insuranceNumber",
+            "label": "swm.vehicles.create.insuranceNumber",
+            "type": "text",
+            "isRequired": true,
+            "isDisabled": false,
+            "maxLength": 256,
+            "minLength": 1,
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "insuranceValidityDate",
+            "jsonPath": "vehicles[0].insuranceDetails.insuranceValidityDate",
+            "label": "swm.vehicles.create.insuranceValidityDate",
+            "type": "datePicker",
+            "isRequired": true,
+            "isDisabled": false,
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "uploadInsuranceDetails",
+            "jsonPath": "vehicles[0].insuranceDetails.insuranceDocument.fileStoreId",
+            "label": "swm.vehicles.create.insurance.details",
+            "type": "singleFileUpload",
+            "pathToArray": "documentTypes",
+            "displayNameJsonPath": "name",
+            "isRequired": true,
+            "isDisabled": false,
+            "maxLength": 256,
+            "minLength": 1,
+            "patternErrorMsg": ""
+          }
+        ]
+      },
+      {
+        "name": "PurchaseDetails",
+        "label": "swm.vehicles.create.group.title.PurchaseDetails",
+        "fields": [
+          {
+            "name": "purchaseDate",
+            "jsonPath": "vehicles[0].purchaseInfo.purchaseDate",
+            "label": "swm.vehicles.create.purchaseDate",
+            "type": "datePicker",
+            "isRequired": true,
+            "isDisabled": false,
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "price",
+            "jsonPath": "vehicles[0].purchaseInfo.price",
+            "label": "swm.vehicles.create.price",
+            "type": "number",
+            "isRequired": true,
+            "isDisabled": false,
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "sourceOfPurchase",
+            "jsonPath": "vehicles[0].purchaseInfo.sourceOfPurchase",
+            "label": "swm.vehicles.create.sourceOfPurchase",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "maxLength": 256,
+            "minLength": 0,
             "patternErrorMsg": ""
           },
           {
@@ -740,8 +951,8 @@ var dat = {
           },
           {
             "name": "vehicleCapacity",
-            "jsonPath": "vehicles[0].vehicleCapacity",
-            "label": "swm.vehicles.create.vehicleCapacity",
+            "jsonPath": "vehicles[0].manufacturingDetails.vehicleCapacity",
+            "label": "swm.vehicles.search.result.vehicleCapacity",
             "type": "number",
             "isRequired": true,
             "isDisabled": false,
@@ -749,7 +960,7 @@ var dat = {
           },
           {
             "name": "engineSrNumber",
-            "jsonPath": "vehicles[0].engineSrNumber",
+            "jsonPath": "vehicles[0].manufacturingDetails.engineSrNumber",
             "label": "swm.vehicles.create.engineSrNumber",
             "type": "text",
             "isRequired": true,
@@ -760,7 +971,7 @@ var dat = {
           },
           {
             "name": "numberOfPersonsReq",
-            "jsonPath": "vehicles[0].numberOfPersonsReq",
+            "jsonPath": "vehicles[0].operatorsReq",
             "label": "swm.vehicles.create.numberOfPersonsReq",
             "type": "number",
             "isRequired": true,
@@ -769,7 +980,7 @@ var dat = {
           },
           {
             "name": "chassisSrNumber",
-            "jsonPath": "vehicles[0].chassisSrNumber",
+            "jsonPath": "vehicles[0].manufacturingDetails.chassisSrNumber",
             "label": "swm.vehicles.create.chassisSrNumber",
             "type": "text",
             "isRequired": true,
@@ -780,7 +991,7 @@ var dat = {
           },
           {
             "name": "model",
-            "jsonPath": "vehicles[0].model",
+            "jsonPath": "vehicles[0].manufacturingDetails.model",
             "label": "swm.vehicles.create.model",
             "type": "text",
             "isRequired": true,
@@ -804,25 +1015,86 @@ var dat = {
         ]
       },
       {
-        "name": "VehicleDetails2",
-        "label": "swm.vehicles.create.group.title.VehicleDetails2",
+        "name": "WarrantyDetails",
+        "label": "swm.vehicles.create.group.title.WarrantyDetails",
         "fields": [
           {
-            "name": "ulbOwnedVehicle",
-            "jsonPath": "vehicles[0].ulbOwnedVehicle",
-            "label": "swm.vehicles.create.ulbOwnedVehicle",
+            "name": "isUnderWarranty",
+            "jsonPath": "vehicles[0].isUnderWarranty",
+            "label": "swm.vehicles.create.isUnderWarranty",
             "type": "checkbox",
+            "isRequired": false,
+            "isDisabled": false,
+            "patternErrorMsg": "",
+            "defaultValue": false,
+            "showHideFields": [{
+              "ifValue": true,
+              "hide": [],
+              "show": [{
+                "name": "kilometers",
+                "isGroup": false,
+                "isField": true
+              },
+              {
+                "name": "endOfWarranty",
+                "isGroup": false,
+                "isField": true
+              }]
+            }]
+          },
+          {
+            "name": "kilometers",
+            "jsonPath": "vehicles[0].kilometers",
+            "label": "swm.vehicles.create.kilometers",
+            "type": "number",
+            "hide": true,
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": ""
           },
           {
-            "name": "name",
+            "name": "endOfWarranty",
+            "jsonPath": "vehicles[0].endOfWarranty",
+            "label": "swm.vehicles.create.endOfWarranty",
+            "type": "datePicker",
+            "hide": true,
+            "isRequired": false,
+            "isDisabled": false,
+            "patternErrorMsg": ""
+          }
+        ]
+      },
+      {
+        "name": "VehicleDetails2",
+        "label": "swm.vehicles.create.group.title.VehicleDetails2",
+        "fields": [
+          {
+            "name": "ulbOwnedVehicle",
+            "jsonPath": "vehicles[0].isulbownedvehicle",
+            "label": "swm.vehicles.create.ulbOwnedVehicle",
+            "type": "checkbox",
+            "isRequired": false,
+            "isDisabled": false,
+            "patternErrorMsg": "",
+            "defaultValue": true,
+            "showHideFields": [{
+              "ifValue": false,
+              "hide": [],
+              "show": [{
+                "name": "vendorname",
+                "isGroup": false,
+                "isField": true
+              }]
+            }]
+          },
+          {
+            "name": "vendorname",
             "jsonPath": "vehicles[0].vendor.name",
             "label": "swm.vehicles.create.vendor",
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
+            "hide": true,
             "maxLength": 256,
             "minLength": 1,
             "patternErrorMsg": "",
@@ -831,12 +1103,12 @@ var dat = {
         ]
       },
       {
-        "name": "InsuranceDetails",
-        "label": "swm.vehicles.create.group.title.InsuranceDetails",
+        "name": "insuranceDetails",
+        "label":"swm.vehicles.create.group.title.InsuranceDetails",
         "fields": [
           {
             "name": "insuranceNumber",
-            "jsonPath": "vehicles[0].insuranceNumber",
+            "jsonPath": "vehicles[0].insuranceDetails.insuranceNumber",
             "label": "swm.vehicles.create.insuranceNumber",
             "type": "text",
             "isRequired": true,
@@ -847,7 +1119,7 @@ var dat = {
           },
           {
             "name": "insuranceValidityDate",
-            "jsonPath": "vehicles[0].insuranceValidityDate",
+            "jsonPath": "vehicles[0].insuranceDetails.insuranceValidityDate",
             "label": "swm.vehicles.create.insuranceValidityDate",
             "type": "datePicker",
             "isRequired": true,
@@ -855,10 +1127,12 @@ var dat = {
             "patternErrorMsg": ""
           },
           {
-            "name": "refId",
-            "jsonPath": "vehicles[0].insuranceDocument.fileStoreId",
+            "name": "uploadInsuranceDetails",
+            "jsonPath": "vehicles[0].insuranceDetails.insuranceDocument.fileStoreId",
             "label": "swm.vehicles.create.insurance.details",
-            "type": "text",
+            "type": "singleFileUpload",
+            "pathToArray": "documentTypes",
+            "displayNameJsonPath": "name",
             "isRequired": true,
             "isDisabled": false,
             "maxLength": 256,
@@ -873,7 +1147,7 @@ var dat = {
         "fields": [
           {
             "name": "purchaseDate",
-            "jsonPath": "vehicles[0].purchaseDate",
+            "jsonPath": "vehicles[0].purchaseInfo.purchaseDate",
             "label": "swm.vehicles.create.purchaseDate",
             "type": "datePicker",
             "isRequired": true,
@@ -882,7 +1156,7 @@ var dat = {
           },
           {
             "name": "price",
-            "jsonPath": "vehicles[0].price",
+            "jsonPath": "vehicles[0].purchaseInfo.price",
             "label": "swm.vehicles.create.price",
             "type": "number",
             "isRequired": true,
@@ -891,46 +1165,13 @@ var dat = {
           },
           {
             "name": "sourceOfPurchase",
-            "jsonPath": "vehicles[0].sourceOfPurchase",
+            "jsonPath": "vehicles[0].purchaseInfo.sourceOfPurchase",
             "label": "swm.vehicles.create.sourceOfPurchase",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
             "maxLength": 256,
             "minLength": 0,
-            "patternErrorMsg": ""
-          }
-        ]
-      },
-      {
-        "name": "WarrantyDetails",
-        "label": "swm.vehicles.create.group.title.WarrantyDetails",
-        "fields": [
-          {
-            "name": "isUnderWarranty",
-            "jsonPath": "vehicles[0].isUnderWarranty",
-            "label": "swm.vehicles.create.isUnderWarranty",
-            "type": "checkbox",
-            "isRequired": false,
-            "isDisabled": false,
-            "patternErrorMsg": ""
-          },
-          {
-            "name": "kilometers",
-            "jsonPath": "vehicles[0].kilometers",
-            "label": "swm.vehicles.create.kilometers",
-            "type": "number",
-            "isRequired": false,
-            "isDisabled": false,
-            "patternErrorMsg": ""
-          },
-          {
-            "name": "endOfWarranty",
-            "jsonPath": "vehicles[0].endOfWarranty",
-            "label": "swm.vehicles.create.endOfWarranty",
-            "type": "datePicker",
-            "isRequired": false,
-            "isDisabled": false,
             "patternErrorMsg": ""
           },
           {

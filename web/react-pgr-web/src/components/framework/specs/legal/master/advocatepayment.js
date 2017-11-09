@@ -149,27 +149,43 @@ var dat =  {
             depedants: [
               {
                 jsonPath: "advocatePayments[0].advocate.pan",
-                type: "dropDown",
+                type: "autoFill",
                 pattern:
-                  "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..pan|$..pan"
+                  "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..pan|$..pan",
+                 autoFillFields:
+                {
+                  "advocatePayments[0].advocate.pan": "advocates[0].pan"
+                }
               },
               {
                 jsonPath: "advocatePayments[0].advocate.bankName",
-                type: "dropDown",
+                type: "autoFill",
                 pattern:
-                  "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..bankName|$..bankName"
+                  "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..bankName|$..bankName",
+                 autoFillFields:
+                {
+                  "advocatePayments[0].advocate.bankName": "advocates[0].bankName"
+                }
               },
                 {
                 jsonPath: "advocatePayments[0].advocate.bankBranch",
-                type: "dropDown",
+                type: "autoFill",
                 pattern:
-                  "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..bankBranch|$..bankBranch"
+                  "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..bankBranch|$..bankBranch",
+                autoFillFields:
+                {
+                  "advocatePayments[0].advocate.bankBranch": "advocates[0].bankBranch"
+                }
               },
                 {
                 jsonPath: "advocatePayments[0].advocate.bankAccountNo",
-                type: "dropDown",
+                type: "autoFill",
                 pattern:
-                  "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..bankAccountNo|$..bankAccountNo"
+                  "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..bankAccountNo|$..bankAccountNo",
+                autoFillFields:
+                {
+                  "advocatePayments[0].advocate.bankAccountNo": "advocates[0].bankAccountNo"
+                }
               }
             ]
           },
@@ -186,34 +202,28 @@ var dat =  {
             name: "bankName",
             jsonPath: "advocatePayments[0].advocate.bankName",
             label: "advocatepayment.create.bankName",
-            type: "singleValueList",
+            type: "text",
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: "",
-            // defaultValue: [],
-            url: ""
+            patternErrorMsg: ""
           },
           {
             name: "panNo",
             jsonPath: "advocatePayments[0].advocate.pan",
             label: "advocatepayment.create.panNo",
-            type: "singleValueList",
+            type: "text",
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: "",
-            defaultValue: [],
-            url: ""
+            patternErrorMsg: ""
           },
           {
             name: "bankBranch",
             jsonPath: "advocatePayments[0].advocate.bankBranch",
             label: "advocatepayment.create.bankBranch",
-            type: "singleValueList",
+            type: "text",
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: "",
-            defaultValue: [],
-            url: ""
+            patternErrorMsg: ""
           },
           {
             name: "amountClaimed",
@@ -228,12 +238,10 @@ var dat =  {
             name: "bankAccountNo",
             jsonPath: "advocatePayments[0].advocate.bankAccountNo",
             label: "advocatepayment.create.bankAccountNo",
-            type: "singleValueList",
+            type: "text",
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: "",
-            defaultValue: [],
-            url: ""
+            patternErrorMsg: ""
           },
           {
             name: "amountRecived",

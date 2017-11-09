@@ -55,7 +55,7 @@ public class MaterialStoreMappingEntity {
                 .material(materialStoreMapping.getMaterial().getCode())
                 .store(materialStoreMapping.getStore().getCode())
                 .active(materialStoreMapping.getActive())
-                .chartOfAccount(materialStoreMapping.getChartofAccount().getGlCode())
+                .chartOfAccount(null != materialStoreMapping.getChartofAccount() ? materialStoreMapping.getChartofAccount().getGlCode() : null)
                 .createdBy(auditDetails.getCreatedBy())
                 .createdTime(auditDetails.getCreatedTime())
                 .lastModifiedBy(auditDetails.getLastModifiedBy())

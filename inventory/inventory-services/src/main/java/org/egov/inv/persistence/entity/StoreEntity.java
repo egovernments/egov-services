@@ -43,11 +43,7 @@ import io.swagger.model.AuditDetails;
 import io.swagger.model.Department;
 import io.swagger.model.Employee;
 import io.swagger.model.Store;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Builder
 @Getter
@@ -56,98 +52,98 @@ import lombok.Setter;
 @NoArgsConstructor
 public class StoreEntity {
 
-	public static final String TABLE_NAME = "store";
-	public static final String SEQUENCE_NAME = "seq_store";
-	public static final String ALIAS = "store";
+    public static final String TABLE_NAME = "store";
+    public static final String SEQUENCE_NAME = "seq_store";
+    public static final String ALIAS = "store";
 
-	private String id = null;
+    private String id = null;
 
-	private String code = null;
+    private String code = null;
 
-	private String name = null;
+    private String name = null;
 
-	private String description = null;
+    private String description = null;
 
-	private String department = null;
+    private String department = null;
 
-	private String officeLocation = null;
+    private String officeLocation = null;
 
-	private String storeInCharge = null;
+    private String storeInCharge = null;
 
-	private String billingAddress = null;
+    private String billingAddress = null;
 
-	private String deliveryAddress = null;
+    private String deliveryAddress = null;
 
-	private String contactno1 = null;
+    private String contactno1 = null;
 
-	private String contactno2 = null;
+    private String contactno2 = null;
 
-	private String email = null;
+    private String email = null;
 
-	private Boolean isCentralStore = null;
+    private Boolean isCentralStore = null;
 
-	private Boolean active = null;
+    private Boolean active = null;
 
-	private String tenantId = null;
+    private String tenantId = null;
 
-	private String createdBy = null;
+    private String createdBy = null;
 
-	private Long createdTime = null;
+    private Long createdTime = null;
 
-	private String lastmodifiedBy = null;
+    private String lastmodifiedBy = null;
 
-	private Long lastmodifiedTime = null;
+    private Long lastmodifiedTime = null;
 
-	public Store toDomain() {
-		Store store = new Store();
-		store.setId(id);
-		store.setCode(code);
-		store.setName(name);
-		store.setDescription(description);
-		store.setActive(active);
-		store.setBillingAddress(billingAddress);
-		store.setDeliveryAddress(deliveryAddress);
-		store.setContactNo1(contactno1);
-		store.setContactNo2(contactno2);
-		store.setEmail(email);
-		store.setIsCentralStore(isCentralStore);
-		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy(createdBy);
-		auditDetails.setCreatedTime(createdTime);
-		auditDetails.setLastModifiedBy(lastmodifiedBy);
-		auditDetails.setLastModifiedTime(lastmodifiedTime);
-		store.setAuditDetails(auditDetails);
-		Department dept = new Department();
-		dept.setCode(department);
-		store.setDepartment(dept);
-		Employee employee = new Employee();
-		employee.setCode(storeInCharge);
-		store.setStoreInCharge(employee);
-		return store;
+    public Store toDomain() {
+        Store store = new Store();
+        store.setId(id);
+        store.setCode(code);
+        store.setName(name);
+        store.setDescription(description);
+        store.setActive(active);
+        store.setBillingAddress(billingAddress);
+        store.setDeliveryAddress(deliveryAddress);
+        store.setContactNo1(contactno1);
+        store.setContactNo2(contactno2);
+        store.setEmail(email);
+        store.setIsCentralStore(isCentralStore);
+        AuditDetails auditDetails = new AuditDetails();
+        auditDetails.setCreatedBy(createdBy);
+        auditDetails.setCreatedTime(createdTime);
+        auditDetails.setLastModifiedBy(lastmodifiedBy);
+        auditDetails.setLastModifiedTime(lastmodifiedTime);
+        store.setAuditDetails(auditDetails);
+        Department dept = new Department();
+        dept.setCode(department);
+        store.setDepartment(dept);
+        Employee employee = new Employee();
+        employee.setCode(storeInCharge);
+        store.setStoreInCharge(employee);
+        return store;
 
-	}
+    }
 
-	public Object toEntity(Store store) {
-		this.id = store.getId();
-		this.name = store.getName();
-		this.code = store.getCode();
-		this.contactno1 = store.getContactNo1();
-		this.contactno2 = store.getContactNo2();
-		this.billingAddress = store.getBillingAddress();
-		this.deliveryAddress = store.getDeliveryAddress();
-		this.active = store.getActive();
-		this.description = store.getDescription();
-		this.officeLocation = store.getOfficeLocation().getCode();
-		this.email = store.getEmail();
-		this.isCentralStore = store.getIsCentralStore();
-		this.tenantId = store.getAuditDetails().getTenantId();
-		this.department = store.getDepartment().getCode();
-		this.storeInCharge = store.getStoreInCharge().getCode();
-		this.createdBy = store.getAuditDetails().getCreatedBy();
-		this.createdTime = store.getAuditDetails().getCreatedTime();
-		this.lastmodifiedBy = store.getAuditDetails().getLastModifiedBy();
-		this.lastmodifiedTime = store.getAuditDetails().getLastModifiedTime();
-		return this;
-	}
+    public Object toEntity(Store store) {
+        this.id = store.getId();
+        this.name = store.getName();
+        this.code = store.getCode();
+        this.contactno1 = store.getContactNo1();
+        this.contactno2 = store.getContactNo2();
+        this.billingAddress = store.getBillingAddress();
+        this.deliveryAddress = store.getDeliveryAddress();
+        this.active = store.getActive();
+        this.description = store.getDescription();
+        this.officeLocation = null != store.getOfficeLocation() ? store.getOfficeLocation().getCode() : null;
+        this.email = store.getEmail();
+        this.isCentralStore = store.getIsCentralStore();
+        this.tenantId = store.getAuditDetails().getTenantId();
+        this.department = store.getDepartment().getCode();
+        this.storeInCharge = store.getStoreInCharge().getCode();
+        this.createdBy = store.getAuditDetails().getCreatedBy();
+        this.createdTime = store.getAuditDetails().getCreatedTime();
+        this.lastmodifiedBy = store.getAuditDetails().getLastModifiedBy();
+        this.lastmodifiedTime = store.getAuditDetails().getLastModifiedTime();
+        return this;
+    }
 
 }

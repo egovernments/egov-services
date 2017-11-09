@@ -24,7 +24,7 @@ public class MaterialStoreMappingService {
     public static final String STORE = "store";
     public static final String MATERIAL = "material";
     public static final String INV_005 = "inv.005";
-    public static final String INV_003 = "INV.003";
+    public static final String INV_006 = "INV.006";
 
     private LogAwareKafkaTemplate logAwareKafkaTemplate;
 
@@ -35,6 +35,8 @@ public class MaterialStoreMappingService {
     private InventoryUtilityService inventoryUtilityService;
 
     private StoreService storeService;
+
+    private MaterialService materialService;
 
     private String createTopicName;
 
@@ -51,6 +53,7 @@ public class MaterialStoreMappingService {
                                        MaterialStoreMappingJdbcRepository materialStoreMappingJdbcRepository,
                                        InventoryUtilityService inventoryUtilityService,
                                        StoreService storeService,
+                                       MaterialService materialService,
                                        MaterialStoreESRepository materialESRepository,
                                        @Value("${inv.materialstore.save.topic}") String createTopicName,
                                        @Value("${inv.materialstore.update.topic}") String updateTopicName,
@@ -67,6 +70,7 @@ public class MaterialStoreMappingService {
         this.deleteTopicName = deleteTopicName;
         this.isESEnabled = isESEnabled;
         this.isFinancialEnabled = isFinancialEnabled;
+        this.materialService = materialService;
     }
 
 
@@ -77,7 +81,7 @@ public class MaterialStoreMappingService {
                     materialStoreMapping.setAuditDetails(inventoryUtilityService.mapAuditDetails(materialStoreMappingRequest.getRequestInfo(), tenantId));
                     validateCreateRequest(tenantId, materialStoreMapping);
                     materialStoreMapping.setId(materialStoreMappingJdbcRepository.getSequence(materialStoreMapping));
-                    buildStoreMapping(tenantId, materialStoreMapping);
+                    buildMaterialStoreMapping(tenantId, materialStoreMapping);
                 });
 
         return push(createTopicName, materialStoreMappingRequest);
@@ -98,7 +102,7 @@ public class MaterialStoreMappingService {
                 .forEach(materialStoreMapping -> {
                     materialStoreMapping.setAuditDetails(inventoryUtilityService.mapAuditDetails(materialStoreMappingRequest.getRequestInfo(), tenantId));
                     validateUpdateRequest(tenantId, materialStoreMapping, materialStoreMappingRequest.getRequestInfo());
-                    buildStoreMapping(tenantId, materialStoreMapping);
+                    buildMaterialStoreMapping(tenantId, materialStoreMapping);
                 });
 
         return push(updateTopicName, materialStoreMappingRequest);
@@ -179,10 +183,23 @@ public class MaterialStoreMappingService {
         return materialStoreMappingJdbcRepository.search(materialStoreMappingSearchRequest).getPagedData();
     }
 
-    private void buildStoreMapping(String tenantId, MaterialStoreMapping materialStoreMapping) {
+    private void buildMaterialStoreMapping(String tenantId, MaterialStoreMapping materialStoreMapping) {
         Store store = getStore(materialStoreMapping.getStore().getCode(), tenantId);
-        materialStoreMapping.getStore().setCode(store.getCode());
-        materialStoreMapping.getStore().setDepartment(store.getDepartment());
+      /*  Material material = getMaterial(materialStoreMapping.getMaterial().getCode(), tenantId);
+        materialStoreMapping.setMaterial(material);*/
+        materialStoreMapping.setStore(store);
+    }
+
+
+    private Material getMaterial(String materialCode, String tenantId) {
+        MaterialSearchRequest materialSearchRequest = getMaterialSearchRequest(materialCode, tenantId);
+        Pagination<Material> material = materialService.search(materialSearchRequest);
+
+        if (material.getPagedData().size() > 0) {
+            return material.getPagedData().get(0);
+        } else {
+            throw new CustomException(INV_006, "Material Not Found " + materialCode);
+        }
     }
 
     private Store getStore(String storeCode, String tenantId) {
@@ -208,6 +225,13 @@ public class MaterialStoreMappingService {
     private StoreGetRequest getStoreGetRequest(String storeCode, String tenantId) {
         return StoreGetRequest.builder()
                 .code(storeCode)
+                .tenantId(tenantId)
+                .build();
+    }
+
+    private MaterialSearchRequest getMaterialSearchRequest(String materialCode, String tenantId) {
+        return MaterialSearchRequest.builder()
+                .code(materialCode)
                 .tenantId(tenantId)
                 .build();
     }

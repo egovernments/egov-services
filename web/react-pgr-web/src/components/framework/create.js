@@ -287,7 +287,7 @@ class Report extends Component {
         [param.substr(0,index)]: param.substr(index+1)
       };
     }
-    
+
     Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
         var formData = {...self.props.formData};
         for(var key in autoObject.autoFillFields) {
@@ -424,7 +424,7 @@ class Report extends Component {
       _url = _url.replace(match, _.get(formData, jPath));
     }
 
-  
+
     //Check if documents, upload and get fileStoreId
     let formdocumentData = formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName];
     let documentPath = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].documentsPath;
@@ -472,6 +472,12 @@ class Report extends Component {
       return new Date(_date[0], (Number(_date[1])-1), _date[2]);
     }
 
+    return typeof _val != "undefined" ? _val : "";
+  }
+
+  getValFromDropdownData = (fieldJsonPath, key, path) => {
+    let dropdownData = this.props.dropDownData[fieldJsonPath] || [];
+    let _val = _.get(dropdownData.find((data)=>data.key == key) || [], path);
     return typeof _val != "undefined" ? _val : "";
   }
 
@@ -758,7 +764,7 @@ class Report extends Component {
   }
 
   handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch", expression, expErr, isDate) => {
-      let {getVal} = this;
+      let {getVal, getValFromDropdownData} = this;
       let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;
       let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
@@ -801,6 +807,9 @@ class Report extends Component {
         }
       }
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
+      if(depedants.length === 0)
+        depedants = jp.query(obj,`$.groups..fields[?(@.type=="tableList")].tableList.values[?(@.jsonPath == "${property}")].depedants.*`);
+
       this.checkIfHasShowHideFields(property, e.target.value);
       this.checkIfHasEnDisFields(property, e.target.value);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
@@ -851,12 +860,17 @@ class Report extends Component {
                     console.log(err);
                 });
             } else if (value.type == "textField") {
-              let object={
-                target: {
-                  value:eval(eval(value.pattern))
+              try{
+                let object={
+                  target: {
+                    value: value.valExp && eval(value.valExp) || eval(eval(value.pattern))
+                  }
                 }
+                handleChange(object, value.jsonPath, value.isRequired, value.rg,value.requiredErrMsg, value.patternErrMsg);
               }
-              handleChange(object, value.jsonPath, value.isRequired, value.rg,value.requiredErrMsg, value.patternErrMsg);
+              catch(ex){
+                console.log('ex', ex);
+              }
             } else if (value.type == "autoFill") {
               let splitArray = value.pattern.split("?");
                 let context = "";
@@ -1195,7 +1209,8 @@ const mapStateToProps = state => ({
   formData:state.frameworkForm.form,
   fieldErrors: state.frameworkForm.fieldErrors,
   isFormValid: state.frameworkForm.isFormValid,
-  requiredFields: state.frameworkForm.requiredFields
+  requiredFields: state.frameworkForm.requiredFields,
+  dropDownData: state.framework.dropDownData
 });
 
 const mapDispatchToProps = dispatch => ({

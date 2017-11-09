@@ -40,10 +40,16 @@
 
 package org.egov.eis.web.contract;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Date;
+import java.util.List;
 
 @Builder
 @Getter
@@ -52,7 +58,9 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class CompensatoryLeaveSearchRequest {
+public class LeaveSearchRequest {
+
+    private List<Long> employeeIds;
 
     @Size(min = 1, max = 256)
     private String code;
@@ -63,7 +71,31 @@ public class CompensatoryLeaveSearchRequest {
 
     private Long employeeType;
 
+    private Long employeeStatus;
+
+    private Long leaveType;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private Date fromDate;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private Date toDate;
+
+    private Long leaveStatus;
+
     @NotNull
     private String tenantId;
+
+    private String sortBy;
+
+    private String sortOrder;
+
+    @Min(1)
+    @Max(500)
+    private Short pageSize;
+
+    private Short pageNumber;
 
 }

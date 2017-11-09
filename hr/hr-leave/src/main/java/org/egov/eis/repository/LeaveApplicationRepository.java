@@ -89,6 +89,16 @@ public class LeaveApplicationRepository {
         return leaveApplications;
     }
 
+    public List<LeaveApplication> findForReportCriteria(final LeaveSearchRequest leaveSearchRequest,
+                                                        final RequestInfo requestInfo) {
+        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final String queryStr = leaveApplicationQueryBuilder.getLeaveReportQuery(leaveSearchRequest, preparedStatementValues,
+                requestInfo);
+        final List<LeaveApplication> leaveApplications = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+                leaveApplicationRowMapper);
+        return leaveApplications;
+    }
+
     public LeaveApplicationRequest saveLeaveApplication(final LeaveApplicationRequest leaveApplicationRequest) {
         ProcessInstance processInstance = new ProcessInstance();
         Long stateId = null;

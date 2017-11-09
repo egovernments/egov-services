@@ -2,9 +2,9 @@ package org.egov.eis.repository;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.service.helper.EmployeeSearchURLHelper;
-import org.egov.eis.web.contract.CompensatoryLeaveSearchRequest;
 import org.egov.eis.web.contract.EmployeeInfo;
 import org.egov.eis.web.contract.EmployeeInfoResponse;
+import org.egov.eis.web.contract.LeaveSearchRequest;
 import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,11 +31,11 @@ public class EmployeeRepository {
 
     }
 
-    public EmployeeInfoResponse getEmployeesForLeaveRequest(final CompensatoryLeaveSearchRequest compensatoryLeaveSearchRequest, RequestInfo requestInfo) {
+    public EmployeeInfoResponse getEmployeesForLeaveRequest(final LeaveSearchRequest leaveSearchRequest, RequestInfo requestInfo) {
         String url = String.format("%s%s", employeeServiceHost, employeeServiceUrl);
         RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
         requestInfoWrapper.setRequestInfo(requestInfo);
-        final String searchUrl = employeeSearchURLHelper.searchURL(compensatoryLeaveSearchRequest, url);
+        final String searchUrl = employeeSearchURLHelper.searchURL(leaveSearchRequest, url);
         return restTemplate.postForObject(searchUrl, requestInfoWrapper, EmployeeInfoResponse.class);
     }
 

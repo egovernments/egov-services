@@ -25,12 +25,12 @@ ReportDefinitions:
     label: reports.lcms.sectionApplied
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: summondate
     label: reports.lcms.dateOfSummon
     type: epoch
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: courtname
     label: reports.lcms.suitFiledCourtName
     type: string
@@ -40,22 +40,22 @@ ReportDefinitions:
     label: reports.lcms.dateOfJudgment
     type: epoch
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: casejudgement
     label: reports.lcms.judgmentDetails
     type: number
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: advocateopinion
     label: reports.lcms.opinionOfPleader
     type: number
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: furtherprocesssdetails
     label: reports.lcms.furtherProcessDetails
     type: number
     source: lcms
-    showColumn: true
+    showColumn: false
   searchParams:
   - name: fromDate
     label: reports.lcms.fromDate
@@ -124,12 +124,12 @@ ReportDefinitions:
     label: reports.lcms.department
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: casetype
     label: reports.lcms.caseType
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: plantiffname
     label: reports.lcms.plaintiff
     type: string
@@ -144,12 +144,12 @@ ReportDefinitions:
     label: reports.lcms.advocateName
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: casestatus
     label: reports.lcms.status
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   searchParams:
   - name: fromDate
     label: reports.lcms.fromDate

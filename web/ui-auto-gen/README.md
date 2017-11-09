@@ -1,5 +1,5 @@
 # Auto generation of UI
-### ui-auto-gen is tool to generate reactJS UI specs.
+### ui-auto-gen is a tool to generate reactJS UI specs.
 
 ### How to use
 - Create Contract yml

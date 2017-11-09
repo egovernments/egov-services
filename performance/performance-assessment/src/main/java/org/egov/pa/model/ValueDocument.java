@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ValueDocument {
 	
+	@JsonProperty("id")
+	private String id;
+	
 	@JsonProperty("code")
 	private String documentCode;
 	
@@ -20,8 +23,16 @@ public class ValueDocument {
 	private String description;
 	
 	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails; 
+	private AuditDetails auditDetails;
 	
+	
+	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public AuditDetails getAuditDetails() {
 		return auditDetails;
 	}

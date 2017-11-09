@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -150,8 +149,6 @@ public void setCode(String code) {
    * Name of the KPI
    * @return name
   **/
-  @NotNull
-
  @Pattern(regexp="^[a-zA-Z0-9 ]+$")
   public String getName() {
     return name;

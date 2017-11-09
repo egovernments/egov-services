@@ -165,6 +165,27 @@ class Report extends Component {
         }
       }
 
+      
+      for(var j=0; j<specs[moduleName + "." + actionName].groups[i].fields.length; j++) {
+          if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields && specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length) {
+            for(var k=0; k<specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length; k++) {
+              if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].ifValue == _.get(form, specs[moduleName + "." + actionName].groups[i].fields[j].jsonPath)) {
+                if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide && specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length) {
+                  for(var a=0; a<specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length; a++) {
+                    this.hideField(specs, specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[a]);
+                  }
+                }
+
+                if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show && specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length) {
+                  for(var a=0; a<specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length; a++) {
+                    this.showField(specs, specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show[a]);
+                  }
+                }
+              }
+            }
+          }
+      }
+
       if(specs[moduleName + "." + actionName].groups[ind || i].children && specs[moduleName + "." + actionName].groups[ind || i].children.length) {
         this.setInitialUpdateChildData(form, specs[moduleName + "." + actionName].groups[ind || i].children);
       }

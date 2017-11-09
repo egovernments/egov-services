@@ -253,7 +253,14 @@ const menuConvention={
 "Legal Case Management.Legal Case Reports.Case History Report":"/report/lcms/CaseHistoryReport",
 "Legal Case Management.Legal Case Reports.Case Pendency Report":"/report/lcms/CasePendencyReport",
 "Legal Case Management.Legal Case Reports.Case Status Report":"/report/lcms/CaseStatusReport",
-"Legal Case Management.Legal Case Reports.Due Date Report":"/report/lcms/DueDateReport"
+"Legal Case Management.Legal Case Reports.Due Date Report":"/report/lcms/DueDateReport",
+
+//Performance Assessment 
+"Performance Assessment.Performance Assessment Masters.PerfAssmtKpiMasterCreate":"/create/perfManagement/kpi",
+"Performance Assessment.Performance Assessment Masters.PerfAssmtKpiMasterUpdate":"/search/perfManagement/kpi/update",
+"Performance Assessment.Performance Assessment Masters.PerfAssmtKpiMasterSearch":"/search/perfManagement/kpi/view",
+"Performance Assessment.Performance Assessment Actuals.PerfAssmtKpiValueUpdate":"/search/perfManagement/actualKpiUpdate/update",
+"Performance Assessment.Performance Assessment Actuals.PerfAssmtKpiValueCreate":"/create/perfManagement/actualKpiCreate/"
 
 }
 

@@ -112,7 +112,7 @@ export default class UiEmailField extends Component {
 						<label>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></label><br/>
 						<DateTimeField
 							mode='date'
-							dateTime={this.props.getVal(item.jsonPath)}
+							dateTime={this.props.getVal(item.jsonPath) || undefined}
 							size='sm'
 							inputFormat='DD/MM/YYYY'
 							inputProps={{

@@ -84,62 +84,8 @@ var dat = {
             isDisabled: false,
             patternErrorMsg: ""
           },
-          {
-            name: "voucherNumber",
-            jsonPath: "advocatePayments[0].voucherNo",
-            label: "advocatepayment.create.voucherNumber",
-            type: "number",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: ""
-          },{
-              name: "modeOfPayment",
-              jsonPath: "advocatePayments[0].modeOfPayment",
-              label: "legal.create.modeOfPayment",
-              type: "singleValueList",
-              isRequired: true,
-              isDisabled: false,
-              patternErrorMsg: "",
-              // url: "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=stamp|$..code|$..name"
-              defaultValue: [{
-              "key": "Cash",
-              "value": "Cash"
-            }, {
-              "key": "Cheque",
-              "value": "Cheque"
-            }, {
-              "key": "DD",
-              "value": "DD"
-            }]
-            }, 
-            {
-            name: "instrumentNumber",
-            jsonPath: "advocatePayments[0].instrumentNumber",
-            label: "advocatepayment.create.instrumentNumber",
-            type: "number",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: ""
-          }, 
-            {
-            name: "InstrumentDate",
-            jsonPath: "advocatePayments[0].instrumentDate",
-            label: "advocatepayment.create.InstrumentDate",
-            type: "datePicker",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: ""
-          },{
-            name: "totalAmount",
-            pattern: "",
-            label: "legal.create.amount",
-            type: "number",
-            jsonPath: "assignAdvocate[0].totalAmount",
-            isRequired: false,
-            isDisabled: false
-          },
-          {
-            name: "invoiceDocument",
+         {
+                   name: "invoiceDocument",
             jsonPath: "advocatePayments[0].invoiceDoucment.fileStoreId",
             label: "legal.create.downloadInvoice",
             type: "singleFileUpload",
@@ -199,7 +145,7 @@ var dat = {
                       name: "amount",
                       pattern: "",
                       type: "number",
-                      jsonPath: "advocatePayments[0].amountClaimed",
+                      jsonPath: "advocatePayments[0].advocateCharges[0].amount",
                       isRequired: false,
                       isDisabled: false
                     }
@@ -245,10 +191,71 @@ var dat = {
             jsonPath: "advocatePayments[0].resolutionRemarks",
             label: "advocatepayment.create.resolutionRemarks",
             type: "textarea",
+            fullWidth: true,
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""
           }
+        ]
+      },
+      {
+        name: "paymentDetails",
+        label: "advocatepayment.create.group.title.paymentdetails",
+        fields: [
+          {
+            name: "voucherNumber",
+            jsonPath: "advocatePayments[0].voucherNo",
+            label: "advocatepayment.create.voucherNumber",
+            type: "number",
+            isRequired: false,
+            isDisabled: false,
+            patternErrorMsg: ""
+          },{
+              name: "modeOfPayment",
+              jsonPath: "advocatePayments[0].modeOfPayment",
+              label: "legal.create.modeOfPayment",
+              type: "singleValueList",
+              isRequired: true,
+              isDisabled: false,
+              patternErrorMsg: "",
+              // url: "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=stamp|$..code|$..name"
+              defaultValue: [{
+              "key": "Cash",
+              "value": "Cash"
+            }, {
+              "key": "Cheque",
+              "value": "Cheque"
+            }, {
+              "key": "DD",
+              "value": "DD"
+            }]
+            }, 
+            {
+            name: "instrumentNumber",
+            jsonPath: "advocatePayments[0].instrumentNumber",
+            label: "advocatepayment.create.instrumentNumber",
+            type: "number",
+            isRequired: false,
+            isDisabled: false,
+            patternErrorMsg: ""
+          }, 
+            {
+            name: "InstrumentDate",
+            jsonPath: "advocatePayments[0].instrumentDate",
+            label: "advocatepayment.create.InstrumentDate",
+            type: "datePicker",
+            isRequired: false,
+            isDisabled: false,
+            patternErrorMsg: ""
+          },{
+            name: "totalAmount",
+            pattern: "",
+            label: "legal.create.amount",
+            type: "number",
+            jsonPath: "assignAdvocate[0].totalAmount",
+            isRequired: false,
+            isDisabled: false
+          },
         ]
       } 
     ],

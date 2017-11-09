@@ -280,6 +280,7 @@ var dat = {
             jsonPath: "advocatePayments[0].resolutionRemarks",
             label: "advocatepayment.create.resolutionRemarks",
             type: "textarea",
+            fullWidth: true,
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""

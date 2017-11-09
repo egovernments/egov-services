@@ -101,7 +101,7 @@ var dat = {
             jsonPath: "cases[0].summon.defendant",
             label: "legal.create.defendant",
             type: "text",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             patternErrorMsg: ""
           },
@@ -228,7 +228,7 @@ var dat = {
         fields: [
           {
             type: "tableList",
-            jsonPath: "cases[0].summon.advocateDetails",
+            jsonPath: "cases[0].advocateDetails",
             tableList: {
               header: [
                 {

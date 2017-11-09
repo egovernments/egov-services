@@ -290,16 +290,16 @@ var dat =  {
           //   isDisabled: false,
           //   patternErrorMsg: ""
           // },
-          {
-            name: "totalAmount",
-            pattern: "",
-            label: "legal.create.amount",
-            type: "number",
-            jsonPath: "advocatePayments[0].advocateCharges[0].amount",
-            isRequired: false,
-            isDisabled: true,
-            defaultValue: "advocatePayments[0].advocateCharges[0].amount"
-          },
+          // {
+          //   name: "totalAmount",
+          //   pattern: "",
+          //   label: "legal.create.amount",
+          //   type: "number",
+          //   jsonPath: "advocatePayments[0].advocateCharges[0].amount",
+          //   isRequired: false,
+          //   isDisabled: true,
+          //   defaultValue: "advocatePayments[0].advocateCharges[0].amount"
+          // },
          {
                    name: "invoiceDocument",
             jsonPath: "advocatePayments[0].invoiceDoucment.fileStoreId",

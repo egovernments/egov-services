@@ -160,52 +160,9 @@ class Transaction extends Component {
   componentDidMount() {
       this.initData();
 
-        if (this.props.match.params.businessService && decodeURIComponent(this.props.match.params.consumerCode)) {
-          // count++;
-          // if (count==1) {
-            // alert("hai")
-
-            for (var i = 0; i < specifications["asset.transaction"].groups[0].fields.length; i++) {
-              specifications["asset.transaction"].groups[0].fields[i].isDisabled=true;
-            }
-            this.props.setMockData(JSON.parse(JSON.stringify(specifications)));
-
-            this.props.handleChange({target:{value:this.props.match.params.businessService}},"businessService",true,false);
-            this.props.handleChange({target:{value:decodeURIComponent(this.props.match.params.consumerCode)}},"consumerCode",true,false);
-            this.search(null,this.props.match.params.businessService,decodeURIComponent(this.props.match.params.consumerCode));
-            // console.log($("#payTax").length);
-            // $("#payTax").submit();
-
-          // }
-          // console.log(this.props.match.params.businessService + "- "+decodeURIComponent(this.props.match.params.consumerCode));
-        }
 
   }
-  componentWillReceiveProps(nextProps)
-  {
-    if (this.state.pathname && this.state.pathname!=nextProps.history.location.pathname) {
-      this.initData();
-      if (nextProps.match.params.businessService && decodeURIComponent(nextProps.match.params.consumerCode)) {
-        // count++;
-        // if (count==1) {
-          // alert("hai")
 
-          for (var i = 0; i < specifications["asset.transaction"].groups[0].fields.length; i++) {
-            specifications["asset.transaction"].groups[0].fields[i].isDisabled=true;
-          }
-          this.props.setMockData(JSON.parse(JSON.stringify(specifications)));
-
-          this.props.handleChange({target:{value:nextProps.match.params.businessService}},"businessService",true,false);
-          this.props.handleChange({target:{value:decodeURIComponent(nextProps.match.params.consumerCode)}},"consumerCode",true,false);
-          this.search(null,nextProps.match.params.businessService,decodeURIComponent(nextProps.match.params.consumerCode));
-          // console.log($("#payTax").length);
-          // $("#payTax").submit();
-
-        // }
-        // console.log(this.props.match.params.businessService + "- "+decodeURIComponent(this.props.match.params.consumerCode));
-      }
-    }
-  }
 
   search = () => {
 
@@ -218,30 +175,13 @@ class Transaction extends Component {
       self.props.setLoadingStatus('hide');
        self.props.handleChange({target:{value:res.Assets}},"Disposal.Assets",false,false);
 
-      //  self.props.handleChange({target:{value:res.code}},"Assets[0].code",false,false);
-      // self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].tenantId",false,false);
-      // self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].instrument.instrumentType.tenantId",false,false);
-      // // self.props.handleChange({target:{value:new Date().getTime()}},"Receipt[0].instrument.transactionDate",false,false);
-      // // self.props.handleChange({target:{value:"1232356543"}},"Receipt[0].instrument.transactionNumber",false,false);
-      // self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].instrument.bank.tenantId",false,false);
-      // self.props.handleChange({target:{value:100}},"Receipt[0].instrument.amount",false,false);
-      // if (res.Bill[0].billDetails[0].businessService=="TRADELICENSE") {
-      //   self.props.handleChange({target:{value:""}},"Receipt[0].Bill[0].paidBy",false,false);
-      //
-      // } else {
-        // self.props.handleChange({target:{value:res.Bill[0].payeeName}},"Receipt[0].Bill[0].paidBy",false,false);
 
-      // }
-
-      // console.log(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.header);
 
       var resultList = {
         resultHeader: self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.header,
         resultValues: []
       };
 
-      console.log(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.tableResultPath);
-      console.log(res);
 
       let objectPath=self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.resultPath;
       let tableObjectPath=self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.tableResultPath;
@@ -290,7 +230,6 @@ class Transaction extends Component {
       //   values,
       //   showResult: true
       // });
-      self.props.handleChange({target: {value: "Cash"}}, "Receipt[0].instrument.instrumentType.name", false, '');
       self.setState({
         resultList,
         showResult: true
@@ -585,9 +524,22 @@ class Transaction extends Component {
 
   handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch", expression, expErr, isDate) => {
       let {getVal, getValFromDropdownData} = this;
+      let self = this;
       let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;
       let obj = specifications[`asset.transaction`];
+
+      // if (property.search("isRadio")) {
+      //   console.log(this.props.fromData);
+      //   console.log(property);
+      //   let _indexVal = "Disposal.Assets[i].isRadio".split("[")[1].split("]")[0];
+      //   if (self.props.formData.Assets && self.props.formData.Assets.length) {
+      //     for (var i = _indexVal; i < self.props.fromData.Assets.length; i++) {
+      //       console.log(self.props.fromData.Assets.length);
+      //     }
+      //   }
+      //
+      // }
       if(expression && e.target.value){
         let str = expression;
         let pos = 0;
@@ -744,57 +696,28 @@ class Transaction extends Component {
     var formData = {...this.props.formData};
     var amountValidation=true;
     var amountValidationMsg="";
-
-    for (var i = 0; i < formData.Receipt[0].Bill[0].billDetails.length; i++) {
-      if (formData.Receipt[0].Bill[0].billDetails[i].hasOwnProperty("amountPaid")) {
-        if (formData.Receipt[0].Bill[0].billDetails[i].amountPaid>formData.Receipt[0].Bill[0].billDetails[i].totalAmount || formData.Receipt[0].Bill[0].billDetails[i].amountPaid<formData.Receipt[0].Bill[0].billDetails[i].minimumAmount) {
-          amountValidationMsg+="Consumer code - "+formData.Receipt[0].Bill[0].billDetails[i].consumerCode +" amount should greater than equal "+formData.Receipt[0].Bill[0].billDetails[i].minimumAmount +" and less than equal "+ formData.Receipt[0].Bill[0].billDetails[i].totalAmount+"\n";
-          amountValidation=false;
-        }
-
-      } else {
-        amountValidationMsg+="Consumer code - "+formData.Receipt[0].Bill[0].billDetails[i].consumerCode +" please enter the amount \n";
-        amountValidation=false;
-        // delete formData.Receipt[0].Bill[0].billDetails[i];
-        // --i;
-
+      console.log(formData.Disposal.Assets);
+    for (var i = 0; i < formData.Disposal.Assets.length; i++) {
+      if (formData.Disposal.Assets[i].isRadio==true) {
+        console.log("hit");
+          formData.Disposal["assetId"]=formData.Disposal.Assets[i].id;
+          console.log(formData.Disposal["assetId"]);
       }
-
-
     }
 
-    // if () {
-      if (amountValidation && formData.Receipt[0].Bill[0].paidBy) {
-              Api.commonApiPost("/asset-services/receipts/_create", "", formData, "", true).then(function(response){
+    delete formData.Disposal.Assets;
+
+
+              Api.commonApiPost("/asset-services-maha/assets/dispose/_create", "", formData, "", true).then(function(response){
                 self.props.setLoadingStatus('hide');
                 self.initData();
                 self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "transaction" ? "wc.create.message.success" : "wc.update.message.success"), true);
-                setTimeout(function() {
-                  self.props.setRoute("/non-framework/asset/receipt/view/"+response.Receipt[0].transactionId);
-                }, 1500);
 
               }, function(err) {
                 self.props.setLoadingStatus('hide');
                 self.props.toggleSnackbarAndSetText(true, err.message);
               })
-            } else {
-              if (formData.Receipt[0].Bill[0].paidBy) {
-                self.props.toggleSnackbarAndSetText(true,amountValidationMsg,false,true);
-                self.props.setLoadingStatus('hide');
-              }
-              else {
 
-                amountValidationMsg+=(amountValidationMsg?" - Paid by is mandatory":"Paid by is mandatory");
-                self.props.toggleSnackbarAndSetText(true,amountValidationMsg,false,true);
-                self.props.setLoadingStatus('hide');
-              }
-
-            }
-
-    // } else {
-    //   self.props.toggleSnackbarAndSetText(true,"Paid by is mandatory",false,true);
-    //   self.props.setLoadingStatus('hide');
-    // }
 
 
      }
@@ -902,9 +825,3 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Transaction);
-
-
-
-
-/*let res=
-{"ResposneInfo":null,"Bill":[{"id":"3","payeeName":"M Sambasivudu","payeeAddress":null,"payeeEmail":null,"isActive":true,"isCancelled":false,"billDetails":[{"id":"3","tenantId":"default","bill":"3","businessService":"Property Tax","billNumber":"3","billDate":1502090587494,"consumerCode":"1016000001","consumerType":"PRIVATE","billDescription":"Property Tax Consumer Code: 1016000001","displayMessage":"Property Tax Consumer Code: 1016000001","minimumAmount":4.00,"totalAmount":3649.00,"assetModesNotAllowed":[""],"callBackForApportioning":false,"partPaymentAllowed":true,"billAccountDetails":[{"id":"25","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"EDU_CESS-1443637800000-1459448999000","crAmountToBePaid":288.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"26","tenantId":"default","billDetail":"3","glcode":"1100101","order":1,"accountDescription":"PT_TAX-1443637800000-1459448999000","crAmountToBePaid":439.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"27","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"LIB_CESS-1443637800000-1459448999000","crAmountToBePaid":10.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"28","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"EDU_CESS-1459449000000-1475260199000","crAmountToBePaid":288.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"29","tenantId":"default","billDetail":"3","glcode":"1100101","order":1,"accountDescription":"PT_TAX-1459449000000-1475260199000","crAmountToBePaid":439.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"30","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"LIB_CESS-1459449000000-1475260199000","crAmountToBePaid":10.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"31","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"EDU_CESS-1475260200000-1490984999000","crAmountToBePaid":288.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"32","tenantId":"default","billDetail":"3","glcode":"1100101","order":1,"accountDescription":"PT_TAX-1475260200000-1490984999000","crAmountToBePaid":439.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"33","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"LIB_CESS-1475260200000-1490984999000","crAmountToBePaid":10.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"34","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"EDU_CESS-1490985000000-1506796199000","crAmountToBePaid":288.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"CURRENT_AMOUNT"},{"id":"35","tenantId":"default","billDetail":"3","glcode":"1100101","order":1,"accountDescription":"PT_TAX-1490985000000-1506796199000","crAmountToBePaid":1126.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"CURRENT_AMOUNT"},{"id":"36","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"LIB_CESS-1490985000000-1506796199000","crAmountToBePaid":24.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"CURRENT_AMOUNT"}]}],"tenantId":"default","auditDetail":null}]}*/

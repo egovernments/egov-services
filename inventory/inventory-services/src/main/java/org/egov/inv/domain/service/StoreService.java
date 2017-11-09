@@ -44,7 +44,6 @@ import io.swagger.model.Store;
 import io.swagger.model.StoreGetRequest;
 import io.swagger.model.StoreRequest;
 
-import org.egov.inv.domain.exception.CustomBindException;
 import org.egov.inv.domain.exception.ErrorCode;
 import org.egov.inv.domain.exception.InvalidDataException;
 import org.egov.inv.persistence.entity.StoreEntity;
@@ -53,11 +52,8 @@ import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-
 import java.util.List;
 
 @Service
@@ -78,46 +74,51 @@ public class StoreService {
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-	public List<Store> create(StoreRequest storeRequest, String tenantId, BindingResult errors) {
+	public List<Store> create(StoreRequest storeRequest, String tenantId,
+			BindingResult errors) {
 
 		for (Store store : storeRequest.getStores()) {
-			store.setAuditDetails(inventoryUtilityService.mapAuditDetails(storeRequest.getRequestInfo(), tenantId));
-			if (!storeJdbcRepository.uniqueCheck("code", new StoreEntity().toEntity(store))) {
-				throw new CustomException("inv.003", "Store code should be unique");
+			store.setAuditDetails(inventoryUtilityService
+					.mapAuditDetails(storeRequest.getRequestInfo(), tenantId));
+			if (!storeJdbcRepository.uniqueCheck("code",
+					new StoreEntity().toEntity(store))) {
+				throw new CustomException("inv.003",
+						"Store code should be unique");
 			}
 			store.setId(storeJdbcRepository.getSequence(store));
 		}
 
-		return push(storeRequest);
+		return push(storeRequest, createTopic);
 	}
 
-	public List<Store> update(StoreRequest storeRequest, String tenantId, BindingResult errors) {
+	public List<Store> update(StoreRequest storeRequest, String tenantId,
+			BindingResult errors) {
 
 		for (Store store : storeRequest.getStores()) {
 			if (store.getId() == null) {
-				throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), store.getId());
+				throw new InvalidDataException("id",
+						ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
+						store.getId());
 			}
 			store.setAuditDetails(
-					inventoryUtilityService.mapAuditDetailsForUpdate(storeRequest.getRequestInfo(), tenantId));
-			if (!storeJdbcRepository.uniqueCheck("code", new StoreEntity().toEntity(store))) {
-				throw new CustomException("inv.003", "Store code should be unique");
+					inventoryUtilityService.mapAuditDetailsForUpdate(
+							storeRequest.getRequestInfo(), tenantId));
+			if (!storeJdbcRepository.uniqueCheck("code",
+					new StoreEntity().toEntity(store))) {
+				throw new CustomException("inv.003",
+						"Store code should be unique");
 			}
 		}
 
-		return pushForUpdate(storeRequest);
+		return push(storeRequest, updateTopic);
 	}
 
 	public Pagination<Store> search(StoreGetRequest storeGetRequest) {
 		return storeJdbcRepository.search(storeGetRequest);
 	}
 
-	public List<Store> push(StoreRequest storeRequest) {
-		kafkaTemplate.send(createTopic, storeRequest);
-		return storeRequest.getStores();
-	}
-
-	public List<Store> pushForUpdate(StoreRequest storeRequest) {
-		kafkaTemplate.send(updateTopic, storeRequest);
+	public List<Store> push(StoreRequest storeRequest, String topic) {
+		kafkaTemplate.send(topic, storeRequest);
 		return storeRequest.getStores();
 	}
 

@@ -631,7 +631,7 @@ public class Supplier   {
   **/
   @ApiModelProperty(value = "name of the bank ")
 
- @Pattern(regexp="^[a-zA-Z ]$")
+ @Pattern(regexp="^[a-zA-Z ]*$")
   public String getBankName() {
     return bankName;
   }

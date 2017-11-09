@@ -125,7 +125,6 @@ public class SuppliersApiController implements SuppliersApi {
 	        @ApiParam(value = "name of the bankBranch ") @RequestParam(value = "bankBranch", required = false) String bankBranch,
 	        @ApiParam(value = "account number of the bank account ") @RequestParam(value = "bankAccNo", required = false) String bankAccNo,
 	        @ApiParam(value = "ifsc code of the bank account ") @RequestParam(value = "bankIfsc", required = false) String bankIfsc,
-	        @ApiParam(value = "micr code of the bank account ") @RequestParam(value = "bankMicr", required = false) String bankMicr,
 	         @Min(0) @Max(100)@ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue="20") Integer pageSize,
 	        @ApiParam(value = "offset") @RequestParam(value = "offset", required = false) Integer offset,
 	        @ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber,
@@ -134,7 +133,7 @@ public class SuppliersApiController implements SuppliersApi {
 				.type(type).status(status).inActiveDate(inActiveDate)
 				.contactNo(contactNo).faxNo(faxNo).website(website).email(email).panNo(panNo)
 				.tinNo(tinNo).cstNo(cstNo).vatNo(vatNo).gstNo(gstNo).contactPerson(contactPerson).contactPersonNo(contactPersonNo)
-			  .bankCode(bankCode).bankBranch(bankBranch).active(active).bankAccNo(bankAccNo).bankIfsc(bankIfsc).pageSize(pageSize).offset(offset)
+			  .bankCode(bankCode).bankBranch(bankBranch).tenantId(tenantId).active(active).bankAccNo(bankAccNo).bankIfsc(bankIfsc).pageSize(pageSize).offset(offset)
 				.pageNumber(pageNumber).sortBy(sortBy).build();
 		Pagination<Supplier> suppliers = supplierService.search(supplierGetRequest);
 		SupplierResponse response = new SupplierResponse();

@@ -7,16 +7,17 @@ serviceMaps:
       fromTopic: inv-store-save-topic
       queryMaps:
         - query: >-
-            INSERT INTO store(id, code, name, description, department,
+            INSERT INTO store(id, code, name, officelocation, description, department,
             storeincharge,billingaddress, deliveryaddress,
             contactno1,contactno2, email, iscentralstore, active,
             tenantId, createdby, lastmodifiedby,createdtime,lastmodifiedtime)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: $.stores.*
           jsonMaps:
             - jsonPath: $.stores.*.id
             - jsonPath: $.stores.*.code
             - jsonPath: $.stores.*.name
+            - jsonPath: $.stores.*.officeLocation.code
             - jsonPath: $.stores.*.description
             - jsonPath: $.stores.*.department.code
             - jsonPath: $.stores.*.storeInCharge.code
@@ -41,7 +42,7 @@ serviceMaps:
       queryMaps:
         - query: >-
             UPDATE store SET
-            name=?,description=?,department=?,storeincharge=?,
+            name=?,description=?,department=?,storeincharge=?,officelocation=?,
             billingaddress=?,deliveryaddress=?,contactno1=?,contactno2=?,email=?,iscentralstore=?,active=?,lastmodifiedby=?,lastmodifiedtime=?
             WHERE code=? AND tenantid=?;
           basePath: $.stores.*
@@ -50,6 +51,7 @@ serviceMaps:
             - jsonPath: $.stores.*.description
             - jsonPath: $.stores.*.department.code
             - jsonPath: $.stores.*.storeInCharge.code
+            - jsonPath: $.stores.*.officeLocation.code
             - jsonPath: $.stores.*.billingAddress
             - jsonPath: $.stores.*.deliveryAddress
             - jsonPath: $.stores.*.contactNo1

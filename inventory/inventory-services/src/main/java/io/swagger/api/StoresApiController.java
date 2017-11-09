@@ -78,12 +78,16 @@ public class StoresApiController implements StoresApi {
 		this.objectMapper = objectMapper;
 	}
 
+	@Override
 	public ResponseEntity<StoreResponse> storesCreatePost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "Create  new") @Valid @RequestBody StoreRequest storeRequest,
-			@RequestHeader(value = "Accept", required = false) String accept,BindingResult errors) throws Exception {
-		List<Store> stores = storesService.create(storeRequest, tenantId , errors);
-		StoreResponse storeResponse = buildStoreResponse(stores, storeRequest.getRequestInfo());
+			@RequestHeader(value = "Accept", required = false) String accept,
+			BindingResult errors) throws Exception {
+		List<Store> stores = storesService.create(storeRequest, tenantId,
+				errors);
+		StoreResponse storeResponse = buildStoreResponse(stores,
+				storeRequest.getRequestInfo());
 
 		if (accept != null && accept.contains("application/json")) {
 			return new ResponseEntity<StoreResponse>(objectMapper.readValue(
@@ -94,6 +98,7 @@ public class StoresApiController implements StoresApi {
 		return new ResponseEntity(storeResponse, HttpStatus.OK);
 	}
 
+	@Override
 	public ResponseEntity<StoreResponse> storesSearchPost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody RequestInfo requestInfo,
@@ -113,13 +118,16 @@ public class StoresApiController implements StoresApi {
 			@ApiParam(value = "pageSize") @Valid @RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@ApiParam(value = "offset") @Valid @RequestParam(value = "offset", required = false) Integer offset,
 			@ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords.   example name asc,code desc or name,code or name,code desc  ") @Valid @RequestParam(value = "sortBy", required = false) String sortBy,
-			@RequestHeader(value = "Accept", required = false) String accept) throws Exception {
+			@RequestHeader(value = "Accept", required = false) String accept)
+			throws Exception {
 
-		StoreGetRequest storeGetRequest = StoreGetRequest.builder().ids(ids).code(code).name(name).active(active)
-				.tenantId(tenantId).description(description).department(department).billingAddress(billingAddress)
-				.deliveryAddress(deliveryAddress).contactNo1(contactNo1).contactNo2(contactNo2).email(email)
-				.isCentralStore(isCentralStore).storeInCharge(storeInCharge).sortBy(sortBy).pageSize(pageSize)
-				.offset(offset).build();
+		StoreGetRequest storeGetRequest = StoreGetRequest.builder().ids(ids)
+				.code(code).name(name).active(active).tenantId(tenantId)
+				.description(description).department(department)
+				.billingAddress(billingAddress).deliveryAddress(deliveryAddress)
+				.contactNo1(contactNo1).contactNo2(contactNo2).email(email)
+				.isCentralStore(isCentralStore).storeInCharge(storeInCharge)
+				.sortBy(sortBy).pageSize(pageSize).offset(offset).build();
 		Pagination<Store> storesList = storesService.search(storeGetRequest);
 		StoreResponse response = new StoreResponse();
 		response.setStores(storesList.getPagedData());
@@ -134,12 +142,16 @@ public class StoresApiController implements StoresApi {
 		return new ResponseEntity(response, HttpStatus.OK);
 	}
 
+	@Override
 	public ResponseEntity<StoreResponse> storesUpdatePost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "common Request info") @Valid @RequestBody StoreRequest storeRequest,
-			@RequestHeader(value = "Accept", required = false) String accept, BindingResult errors) throws Exception {
-		List<Store> stores = storesService.update(storeRequest, tenantId , errors);
-		StoreResponse storeResponse = buildStoreResponse(stores, storeRequest.getRequestInfo());
+			@RequestHeader(value = "Accept", required = false) String accept,
+			BindingResult errors) throws Exception {
+		List<Store> stores = storesService.update(storeRequest, tenantId,
+				errors);
+		StoreResponse storeResponse = buildStoreResponse(stores,
+				storeRequest.getRequestInfo());
 
 		if (accept != null && accept.contains("application/json")) {
 			return new ResponseEntity<StoreResponse>(objectMapper.readValue(
@@ -150,20 +162,17 @@ public class StoresApiController implements StoresApi {
 		return new ResponseEntity(storeResponse, HttpStatus.OK);
 	}
 
-	private StoreResponse buildStoreResponse(List<Store> stores, RequestInfo requestInfo) {
-		return StoreResponse.builder().responseInfo(getResponseInfo(requestInfo)).stores(stores).build();
+	private StoreResponse buildStoreResponse(List<Store> stores,
+			RequestInfo requestInfo) {
+		return StoreResponse.builder()
+				.responseInfo(getResponseInfo(requestInfo)).stores(stores)
+				.build();
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+		return ResponseInfo.builder().apiId(requestInfo.getApiId())
+				.ver(requestInfo.getVer()).resMsgId(requestInfo.getMsgId())
+				.resMsgId("placeholder").status("placeholder").build();
 	}
 
-
-
-
-
-	
-
-	
 }

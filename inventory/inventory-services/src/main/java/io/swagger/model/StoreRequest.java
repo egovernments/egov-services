@@ -65,7 +65,8 @@ public class StoreRequest {
 	@Valid
 	private List<Store> stores = null;
 
-	public StoreRequest requestInfo(org.egov.common.contract.request.RequestInfo requestInfo) {
+	public StoreRequest requestInfo(
+			org.egov.common.contract.request.RequestInfo requestInfo) {
 		this.requestInfo = requestInfo;
 		return this;
 	}
@@ -83,7 +84,8 @@ public class StoreRequest {
 		return requestInfo;
 	}
 
-	public void setRequestInfo(org.egov.common.contract.request.RequestInfo requestInfo) {
+	public void setRequestInfo(
+			org.egov.common.contract.request.RequestInfo requestInfo) {
 		this.requestInfo = requestInfo;
 	}
 
@@ -140,7 +142,8 @@ public class StoreRequest {
 		StringBuilder sb = new StringBuilder();
 		sb.append("class StoreRequest {\n");
 
-		sb.append("    requestInfo: ").append(toIndentedString(requestInfo)).append("\n");
+		sb.append("    requestInfo: ").append(toIndentedString(requestInfo))
+				.append("\n");
 		sb.append("    stores: ").append(toIndentedString(stores)).append("\n");
 		sb.append("}");
 		return sb.toString();

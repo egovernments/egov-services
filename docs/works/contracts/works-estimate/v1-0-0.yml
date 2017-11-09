@@ -1415,21 +1415,21 @@ definitions:
         description: Total Estimate Amount including Revision Estimates
       abstractEstimateDetail:
         $ref: '#/definitions/AbstractEstimateDetails'
-      #estimateActivities:
-        #type: array
-        #description: Array of Estimate Activities
-        #items:
-          #$ref: '#/definitions/EstimateActivity' 
+      estimateActivities:
+        type: array
+        description: Array of Estimate Activities
+        items:
+          $ref: '#/definitions/EstimateActivity'
       multiYearEstimates:
         type: array
         description: Multiyear Estimate list for the Abstract Estimate
         items:
           $ref: '#/definitions/MultiYearEstimate'
-      #estimateTechnicalSanctions:
-        #type: array
-        #description: Technical Sanction list for the Abstract Estimate
-        #items:
-         # $ref: '#/definitions/EstimateTechnicalSanction'
+      estimateTechnicalSanctions:
+        type: array
+        description: Technical Sanction list for the Abstract Estimate
+        items:
+          $ref: '#/definitions/EstimateTechnicalSanction'
       detailedEstimateDeductions:
         type: array
         description: Detailed Estimate Deduction list for the Abstract Estimate
@@ -1513,7 +1513,7 @@ definitions:
           maxLength: 20
           description: Overhead amount
         detailedEstimate:
-          $ref: '#/definitions/DetailedEstimate'
+          type: string
           description: Reference of the Detailed Estimate for Overheads
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
@@ -1540,7 +1540,7 @@ definitions:
           description: Asset Reference from Asset module
           format: singleValueList
         detailedEstimate:
-          $ref: '#/definitions/DetailedEstimate'
+          type: string
           description: Reference of the Detailed Estimate for Estimate and Assets linking
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
@@ -1597,11 +1597,8 @@ definitions:
         parent:
           $ref: '#/definitions/EstimateActivity'
           description: Parent Activity in case of Revision Estimate Activity (Additional/Reduced Quantity)
-        #parent:
-        #  type: string
-        #  description: Parent of the Estimate Activity
         detailedEstimate:
-          $ref: '#/definitions/DetailedEstimate'
+          type: string
           description: Reference of the Detailed Estimate for Estimate Activity
         estimateMeasurementSheets:
           type: array
@@ -1670,7 +1667,7 @@ definitions:
           description: Quantity of the Estimate Measurement sheet
           maxLength: 12
         estimateActivity:
-          $ref: '#/definitions/EstimateActivity'
+          type: string
           description: Estimate Activity reference for the Estimate Measurement sheet
         parent:
           $ref: '#/definitions/EstimateMeasurementSheet'
@@ -1702,7 +1699,7 @@ definitions:
           description: Financial Year of the Multi Year Estimate
           format: singleValueList
         detailedEstimate:
-          $ref: '#/definitions/DetailedEstimate'
+          type: string
           description: Reference of the Detailed Estimate for Multi Year Estimate
         percentage:
           type: number
@@ -1736,7 +1733,7 @@ definitions:
           maxLength: 50
           minLength: 1
         detailedEstimate:
-          $ref: '#/definitions/DetailedEstimate'
+          type: string
           description: Reference of the Detailed Estimate for which the Technical sanction belongs to
         technicalSanctionDate:
           type: integer
@@ -1772,7 +1769,8 @@ definitions:
           description: Chart Of Accounts of the Detailed Estimate Deduction from Financials
           format: autoComplete
         detailedEstimate:
-          $ref: '#/definitions/DetailedEstimate'
+          type: string
+          description: Reference of the Detailed Estimate for Multi Year Estimate
         percentage:
           type: number
           format: double

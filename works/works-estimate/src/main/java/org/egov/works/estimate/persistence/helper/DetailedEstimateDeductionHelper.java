@@ -67,8 +67,7 @@ public class DetailedEstimateDeductionHelper {
 		detailedEstimateDeduction.getAuditDetails().setLastModifiedTime(this.lastModifiedTime);
 		detailedEstimateDeduction.setId(this.id);
 		detailedEstimateDeduction.setTenantId(this.tenantId);
-		detailedEstimateDeduction.setDetailedEstimate(new DetailedEstimate());
-		detailedEstimateDeduction.getDetailedEstimate().setId(this.detailedEstimate);
+		detailedEstimateDeduction.setDetailedEstimate(this.detailedEstimate);
 		detailedEstimateDeduction.setAmount(this.amount);
 		detailedEstimateDeduction.setPercentage(this.percentage);
 		ChartOfAccount chartOfAccount = new ChartOfAccount();

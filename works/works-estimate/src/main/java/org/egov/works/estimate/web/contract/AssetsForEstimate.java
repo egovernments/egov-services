@@ -1,18 +1,19 @@
 package org.egov.works.estimate.web.contract;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.Objects;
 
 /**
  * An Object holds the basic data for Assets for Estimate
  */
 @ApiModel(description = "An Object holds the basic data for Assets for Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T12:00:56.847Z")
 
 public class AssetsForEstimate   {
   @JsonProperty("id")
@@ -25,7 +26,7 @@ public class AssetsForEstimate   {
   private Asset asset = null;
 
   @JsonProperty("detailedEstimate")
-  private DetailedEstimate detailedEstimate = null;
+  private String detailedEstimate = null;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -62,7 +63,7 @@ public class AssetsForEstimate   {
   @ApiModelProperty(required = true, value = "Tenant id of the Assets For Estimate")
   @NotNull
 
- @Size(min=4,max=128)
+ @Size(min=2,max=128)
   public String getTenantId() {
     return tenantId;
   }
@@ -77,10 +78,10 @@ public class AssetsForEstimate   {
   }
 
    /**
-   * Asset Referenvce from Asset module
+   * Asset Reference from Asset module
    * @return asset
   **/
-  @ApiModelProperty(required = true, value = "Asset Referenvce from Asset module")
+  @ApiModelProperty(required = true, value = "Asset Reference from Asset module")
   @NotNull
 
   @Valid
@@ -93,7 +94,7 @@ public class AssetsForEstimate   {
     this.asset = asset;
   }
 
-  public AssetsForEstimate detailedEstimate(DetailedEstimate detailedEstimate) {
+  public AssetsForEstimate detailedEstimate(String detailedEstimate) {
     this.detailedEstimate = detailedEstimate;
     return this;
   }
@@ -103,15 +104,14 @@ public class AssetsForEstimate   {
    * @return detailedEstimate
   **/
   @ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for Estimate and Assets linking")
-  //@NotNull
+  @NotNull
 
-  @Valid
 
-  public DetailedEstimate getDetailedEstimate() {
+  public String getDetailedEstimate() {
     return detailedEstimate;
   }
 
-  public void setDetailedEstimate(DetailedEstimate detailedEstimate) {
+  public void setDetailedEstimate(String detailedEstimate) {
     this.detailedEstimate = detailedEstimate;
   }
 
@@ -138,7 +138,7 @@ public class AssetsForEstimate   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -176,7 +176,7 @@ public class AssetsForEstimate   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

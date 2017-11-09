@@ -1,25 +1,23 @@
 package org.egov.works.estimate.web.contract;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * An Object holds the basic data for a Detailed Estimate
  */
 @ApiModel(description = "An Object holds the basic data for a Detailed Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T12:00:56.847Z")
 
 public class DetailedEstimate   {
   @JsonProperty("id")
@@ -142,8 +140,14 @@ public class DetailedEstimate   {
   @JsonProperty("abstractEstimateDetail")
   private AbstractEstimateDetails abstractEstimateDetail = null;
 
+  @JsonProperty("estimateActivities")
+  private List<EstimateActivity> estimateActivities = null;
+
   @JsonProperty("multiYearEstimates")
   private List<MultiYearEstimate> multiYearEstimates = null;
+
+  @JsonProperty("estimateTechnicalSanctions")
+  private List<EstimateTechnicalSanction> estimateTechnicalSanctions = null;
 
   @JsonProperty("detailedEstimateDeductions")
   private List<DetailedEstimateDeduction> detailedEstimateDeductions = null;
@@ -156,9 +160,6 @@ public class DetailedEstimate   {
 
   @JsonProperty("estimateOverheads")
   private List<EstimateOverhead> estimateOverheads = null;
-  
-  @JsonProperty("estimateActivities")
-  private List<EstimateActivity> estimateActivities = null;
 
   @JsonProperty("workFlowDetails")
   private WorkFlowDetails workFlowDetails = null;
@@ -219,7 +220,7 @@ public class DetailedEstimate   {
   @ApiModelProperty(required = true, value = "Tenant id of the Detailed Estimate")
   @NotNull
 
- @Size(min=4,max=128)
+ @Size(min=2,max=128)
   public String getTenantId() {
     return tenantId;
   }
@@ -238,9 +239,9 @@ public class DetailedEstimate   {
    * @return estimateNumber
   **/
   @ApiModelProperty(required = true, value = "Unique number for the Detailed Estimate")
-  //@NotNull
+  @NotNull
 
- @Pattern(regexp="[a-zA-Z0-9-\\/\\\\]+") @Size(min=1,max=50)
+ @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(min=1,max=50)
   public String getEstimateNumber() {
     return estimateNumber;
   }
@@ -1017,6 +1018,35 @@ public class DetailedEstimate   {
     this.abstractEstimateDetail = abstractEstimateDetail;
   }
 
+  public DetailedEstimate estimateActivities(List<EstimateActivity> estimateActivities) {
+    this.estimateActivities = estimateActivities;
+    return this;
+  }
+
+  public DetailedEstimate addEstimateActivitiesItem(EstimateActivity estimateActivitiesItem) {
+    if (this.estimateActivities == null) {
+      this.estimateActivities = new ArrayList<EstimateActivity>();
+    }
+    this.estimateActivities.add(estimateActivitiesItem);
+    return this;
+  }
+
+   /**
+   * Array of Estimate Activities
+   * @return estimateActivities
+  **/
+  @ApiModelProperty(value = "Array of Estimate Activities")
+
+  @Valid
+
+  public List<EstimateActivity> getEstimateActivities() {
+    return estimateActivities;
+  }
+
+  public void setEstimateActivities(List<EstimateActivity> estimateActivities) {
+    this.estimateActivities = estimateActivities;
+  }
+
   public DetailedEstimate multiYearEstimates(List<MultiYearEstimate> multiYearEstimates) {
     this.multiYearEstimates = multiYearEstimates;
     return this;
@@ -1044,6 +1074,35 @@ public class DetailedEstimate   {
 
   public void setMultiYearEstimates(List<MultiYearEstimate> multiYearEstimates) {
     this.multiYearEstimates = multiYearEstimates;
+  }
+
+  public DetailedEstimate estimateTechnicalSanctions(List<EstimateTechnicalSanction> estimateTechnicalSanctions) {
+    this.estimateTechnicalSanctions = estimateTechnicalSanctions;
+    return this;
+  }
+
+  public DetailedEstimate addEstimateTechnicalSanctionsItem(EstimateTechnicalSanction estimateTechnicalSanctionsItem) {
+    if (this.estimateTechnicalSanctions == null) {
+      this.estimateTechnicalSanctions = new ArrayList<EstimateTechnicalSanction>();
+    }
+    this.estimateTechnicalSanctions.add(estimateTechnicalSanctionsItem);
+    return this;
+  }
+
+   /**
+   * Technical Sanction list for the Abstract Estimate
+   * @return estimateTechnicalSanctions
+  **/
+  @ApiModelProperty(value = "Technical Sanction list for the Abstract Estimate")
+
+  @Valid
+
+  public List<EstimateTechnicalSanction> getEstimateTechnicalSanctions() {
+    return estimateTechnicalSanctions;
+  }
+
+  public void setEstimateTechnicalSanctions(List<EstimateTechnicalSanction> estimateTechnicalSanctions) {
+    this.estimateTechnicalSanctions = estimateTechnicalSanctions;
   }
 
   public DetailedEstimate detailedEstimateDeductions(List<DetailedEstimateDeduction> detailedEstimateDeductions) {
@@ -1162,21 +1221,7 @@ public class DetailedEstimate   {
     this.estimateOverheads = estimateOverheads;
   }
 
-    /**
-     * Array of Detailed Estimate Activities
-     * @return estimateActivities
-     **/
-    @ApiModelProperty(required = true, value = "Array of Detailed Estimate Activities")
-    @NotNull
-  public List<EstimateActivity> getEstimateActivities() {
-	return estimateActivities;
-}
-
-public void setEstimateActivities(List<EstimateActivity> estimateActivities) {
-	this.estimateActivities = estimateActivities;
-}
-
-public DetailedEstimate workFlowDetails(WorkFlowDetails workFlowDetails) {
+  public DetailedEstimate workFlowDetails(WorkFlowDetails workFlowDetails) {
     this.workFlowDetails = workFlowDetails;
     return this;
   }
@@ -1366,7 +1411,7 @@ public DetailedEstimate workFlowDetails(WorkFlowDetails workFlowDetails) {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -1414,7 +1459,9 @@ public DetailedEstimate workFlowDetails(WorkFlowDetails workFlowDetails) {
         Objects.equals(this.cancellationRemarks, detailedEstimate.cancellationRemarks) &&
         Objects.equals(this.totalIncludingRE, detailedEstimate.totalIncludingRE) &&
         Objects.equals(this.abstractEstimateDetail, detailedEstimate.abstractEstimateDetail) &&
+        Objects.equals(this.estimateActivities, detailedEstimate.estimateActivities) &&
         Objects.equals(this.multiYearEstimates, detailedEstimate.multiYearEstimates) &&
+        Objects.equals(this.estimateTechnicalSanctions, detailedEstimate.estimateTechnicalSanctions) &&
         Objects.equals(this.detailedEstimateDeductions, detailedEstimate.detailedEstimateDeductions) &&
         Objects.equals(this.documentDetails, detailedEstimate.documentDetails) &&
         Objects.equals(this.assets, detailedEstimate.assets) &&
@@ -1432,7 +1479,7 @@ public DetailedEstimate workFlowDetails(WorkFlowDetails workFlowDetails) {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, estimateNumber, estimateDate, nameOfWork, description, department, adminSanctionNumber, adminSanctionDate, adminSanctionBy, status, workValue, estimateValue, projectCode, parent, copiedFrom, approvedDate, approvedBy, copiedEstimate, beneficiary, modeOfAllotment, worksType, worksSubtype, natureOfWork, ward, location, latitude, longitude, workCategory, locality, councilResolutionNumber, councilResolutionDate, workOrderCreated, billsCreated, spillOverFlag, grossAmountBilled, cancellationReason, cancellationRemarks, totalIncludingRE, abstractEstimateDetail, multiYearEstimates, detailedEstimateDeductions, documentDetails, assets, estimateOverheads, workFlowDetails, stateId, fund, function, functionary, scheme, subScheme, budgetGroup, auditDetails);
+    return Objects.hash(id, tenantId, estimateNumber, estimateDate, nameOfWork, description, department, adminSanctionNumber, adminSanctionDate, adminSanctionBy, status, workValue, estimateValue, projectCode, parent, copiedFrom, approvedDate, approvedBy, copiedEstimate, beneficiary, modeOfAllotment, worksType, worksSubtype, natureOfWork, ward, location, latitude, longitude, workCategory, locality, councilResolutionNumber, councilResolutionDate, workOrderCreated, billsCreated, spillOverFlag, grossAmountBilled, cancellationReason, cancellationRemarks, totalIncludingRE, abstractEstimateDetail, estimateActivities, multiYearEstimates, estimateTechnicalSanctions, detailedEstimateDeductions, documentDetails, assets, estimateOverheads, workFlowDetails, stateId, fund, function, functionary, scheme, subScheme, budgetGroup, auditDetails);
   }
 
   @Override
@@ -1480,7 +1527,9 @@ public DetailedEstimate workFlowDetails(WorkFlowDetails workFlowDetails) {
     sb.append("    cancellationRemarks: ").append(toIndentedString(cancellationRemarks)).append("\n");
     sb.append("    totalIncludingRE: ").append(toIndentedString(totalIncludingRE)).append("\n");
     sb.append("    abstractEstimateDetail: ").append(toIndentedString(abstractEstimateDetail)).append("\n");
+    sb.append("    estimateActivities: ").append(toIndentedString(estimateActivities)).append("\n");
     sb.append("    multiYearEstimates: ").append(toIndentedString(multiYearEstimates)).append("\n");
+    sb.append("    estimateTechnicalSanctions: ").append(toIndentedString(estimateTechnicalSanctions)).append("\n");
     sb.append("    detailedEstimateDeductions: ").append(toIndentedString(detailedEstimateDeductions)).append("\n");
     sb.append("    documentDetails: ").append(toIndentedString(documentDetails)).append("\n");
     sb.append("    assets: ").append(toIndentedString(assets)).append("\n");
@@ -1502,7 +1551,7 @@ public DetailedEstimate workFlowDetails(WorkFlowDetails workFlowDetails) {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

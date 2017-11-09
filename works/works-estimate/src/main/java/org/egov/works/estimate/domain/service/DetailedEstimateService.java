@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.minidev.json.JSONArray;
+import org.springframework.validation.BindingResult;
 
 import static org.egov.works.estimate.config.WorksEstimateServiceConstants.*;
 
@@ -358,6 +359,7 @@ public class DetailedEstimateService {
         final RequestInfo requestInfo = detailedEstimateRequest.getRequestInfo();
         Map<String, String> messages = new HashMap<>();
         for(DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
+            //validateSpillOverEstimate(detailedEstimate,messages);
             validateActivities(detailedEstimate, messages, requestInfo);
             validateLocationDetails(detailedEstimate,requestInfo, messages);
             validateAssetDetails(detailedEstimate, requestInfo, messages);
@@ -368,6 +370,35 @@ public class DetailedEstimateService {
         if(messages != null && !messages.isEmpty())
              throw new CustomException(messages);
     }
+
+    /*public void validateTechnicalSanctionDetail(final DetailedEstimate detailedEstimate) {
+        if (abstractEstimate.getEstimateTechnicalSanctions() != null
+                && abstractEstimate.getEstimateTechnicalSanctions().get(0).getTechnicalSanctionDate() == null)
+            errors.reject("error.techdate.notnull", "error.techdate.notnull");
+        if (abstractEstimate.getEstimateTechnicalSanctions() != null
+                && abstractEstimate.getEstimateTechnicalSanctions().get(0).getTechnicalSanctionDate() != null
+                && abstractEstimate.getEstimateTechnicalSanctions().get(0).getTechnicalSanctionDate()
+                .before(abstractEstimate.getEstimateDate()))
+            errors.reject("error.abstracttechnicalsanctiondate", "error.abstracttechnicalsanctiondate");
+        if (abstractEstimate.getEstimateTechnicalSanctions() != null
+                && abstractEstimate.getEstimateTechnicalSanctions().get(0).getTechnicalSanctionNumber() == null)
+            errors.reject("error.technumber.notnull", "error.technumber.notnull");
+        if (abstractEstimate.getEstimateTechnicalSanctions() != null
+                && abstractEstimate.getEstimateTechnicalSanctions().get(0).getTechnicalSanctionNumber() != null) {
+            final AbstractEstimate esistingAbstractEstimate = abstractEstimateRepository
+                    .findByEstimateTechnicalSanctionsIgnoreCase_TechnicalSanctionNumberAndEgwStatus_CodeNot(
+                            abstractEstimate.getEstimateTechnicalSanctions().get(0).getTechnicalSanctionNumber(),
+                            EstimateStatus.CANCELLED.toString());
+            if (esistingAbstractEstimate != null)
+                errors.reject("error.technumber.unique", "error.technumber.unique");
+        }
+        if (abstractEstimate.getEstimateDate() == null)
+            errors.reject("errors.abbstractestimate.estimatedate", "errors.abbstractestimate.estimatedate");
+        if (abstractEstimate.getLineEstimateDetails() != null && abstractEstimate.getEstimateDate() != null
+                && abstractEstimate.getEstimateDate()
+                .before(abstractEstimate.getLineEstimateDetails().getLineEstimate().getAdminSanctionDate()))
+            errors.reject("error.abstractadminsanctiondatele", "error.abstractadminsanctiondatele");
+    }*/
 
     private void validateMasterData(DetailedEstimate detailedEstimate, RequestInfo requestInfo, Map<String,String> messages) {
         JSONArray responseJSONArray = null;

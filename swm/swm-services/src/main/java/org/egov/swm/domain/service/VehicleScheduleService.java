@@ -102,6 +102,11 @@ public class VehicleScheduleService {
 
 		for (VehicleSchedule vehicleSchedule : vehicleScheduleRequest.getVehicleSchedules()) {
 
+			if (vehicleSchedule.getVehicle() != null && (vehicleSchedule.getVehicle().getRegNumber() == null
+					|| vehicleSchedule.getVehicle().getRegNumber().isEmpty()))
+				throw new CustomException("Vehicle",
+						"The field Vehicle registration number is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+
 			// Validate Vehicle
 
 			if (vehicleSchedule.getVehicle() != null && vehicleSchedule.getVehicle().getRegNumber() != null) {

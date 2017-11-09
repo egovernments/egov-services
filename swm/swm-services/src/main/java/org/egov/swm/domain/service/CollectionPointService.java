@@ -6,7 +6,14 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.egov.swm.constants.Constants;
-import org.egov.swm.domain.model.*;
+import org.egov.swm.domain.model.AuditDetails;
+import org.egov.swm.domain.model.BinDetails;
+import org.egov.swm.domain.model.Boundary;
+import org.egov.swm.domain.model.CollectionPoint;
+import org.egov.swm.domain.model.CollectionPointDetails;
+import org.egov.swm.domain.model.CollectionPointSearch;
+import org.egov.swm.domain.model.CollectionType;
+import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.repository.BinDetailsRepository;
 import org.egov.swm.domain.repository.CollectionPointRepository;
 import org.egov.swm.web.repository.BoundaryRepository;
@@ -119,6 +126,11 @@ public class CollectionPointService {
 
 			// Validate Boundary
 
+			if (collectionPoint.getLocation() != null && (collectionPoint.getLocation().getCode() == null
+					|| collectionPoint.getLocation().getCode().isEmpty()))
+				throw new CustomException("Location",
+						"The field Location Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+
 			if (collectionPoint.getLocation() != null && collectionPoint.getLocation().getCode() != null) {
 
 				Boundary boundary = boundaryRepository.fetchBoundaryByCode(collectionPoint.getLocation().getCode(),
@@ -134,6 +146,11 @@ public class CollectionPointService {
 			if (collectionPoint.getCollectionPointDetails() != null) {
 
 				for (CollectionPointDetails cpd : collectionPoint.getCollectionPointDetails()) {
+
+					if (cpd.getCollectionType() != null && (cpd.getCollectionType().getCode() == null
+							|| cpd.getCollectionType().getCode().isEmpty()))
+						throw new CustomException("CollectionType",
+								"The field CollectionType Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
 					// Validate Collection Type
 					if (cpd.getCollectionType() != null && cpd.getCollectionType().getCode() != null) {

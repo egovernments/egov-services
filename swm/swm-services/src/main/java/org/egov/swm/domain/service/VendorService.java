@@ -9,6 +9,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.Boundary;
+import org.egov.swm.domain.model.Document;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.SwmProcess;
 import org.egov.swm.domain.model.Vendor;
@@ -148,6 +149,9 @@ public class VendorService {
 			if (vendor.getServicesOffered() != null)
 				for (SwmProcess process : vendor.getServicesOffered()) {
 
+					if (process != null && (process.getCode() == null || process.getCode().isEmpty()))
+						throw new CustomException("ServicesOffered", "Code is missing in ServicesOffered");
+
 					// Validate Swm Process
 					if (process.getCode() != null) {
 
@@ -168,6 +172,10 @@ public class VendorService {
 
 			if (vendor.getServicedLocations() != null)
 				for (Boundary location : vendor.getServicedLocations()) {
+
+					if (location != null && (location.getCode() == null || location.getCode().isEmpty()))
+						throw new CustomException("Location",
+								"The field Location Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
 					// Validate Location
 					if (location.getCode() != null) {
@@ -259,6 +267,9 @@ public class VendorService {
 			v.getAgreementDocument().setTenantId(v.getTenantId());
 			v.getAgreementDocument().setRefCode(v.getVendorNo());
 			v.getAgreementDocument().setAuditDetails(v.getAuditDetails());
+		} else {
+
+			v.setAgreementDocument(new Document());
 		}
 	}
 

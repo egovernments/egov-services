@@ -118,6 +118,11 @@ public class VendorContractService {
 		Pagination<Vendor> vendors;
 		for (VendorContract vendorContract : vendorContractRequest.getVendorContracts()) {
 
+			if (vendorContract.getVendor() != null && (vendorContract.getVendor().getVendorNo() == null
+					|| vendorContract.getVendor().getVendorNo().isEmpty()))
+				throw new CustomException("FuelType",
+						"The field Vendor number is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+			
 			if (vendorContract.getVendor() != null && vendorContract.getVendor().getVendorNo() != null) {
 				vendorSearch = new VendorSearch();
 				vendorSearch.setTenantId(vendorContract.getTenantId());

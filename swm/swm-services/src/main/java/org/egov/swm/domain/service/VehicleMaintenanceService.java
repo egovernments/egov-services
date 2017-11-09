@@ -79,6 +79,11 @@ public class VehicleMaintenanceService {
 
 		for (VehicleMaintenance vehicleMaintenance : vehicleMaintenanceRequest.getVehicleMaintenances()) {
 
+			if (vehicleMaintenance.getVehicle() != null && (vehicleMaintenance.getVehicle().getRegNumber() == null
+					|| vehicleMaintenance.getVehicle().getRegNumber().isEmpty()))
+				throw new CustomException("Vehicle",
+						"The field Vehicle registration number is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+
 			// Validate Vehicle
 			if (vehicleMaintenance.getVehicle() != null && vehicleMaintenance.getVehicle().getRegNumber() != null) {
 

@@ -113,6 +113,11 @@ public class VehicleService {
 
 		for (Vehicle vehicle : vehicleRequest.getVehicles()) {
 
+			if (vehicle.getVehicleType() != null
+					&& (vehicle.getVehicleType().getCode() == null || vehicle.getVehicleType().getCode().isEmpty()))
+				throw new CustomException("VehicleType",
+						"The field VehicleType Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+
 			// Validate vehicle Type
 			if (vehicle.getVehicleType() != null && vehicle.getVehicleType().getCode() != null) {
 
@@ -127,6 +132,11 @@ public class VehicleService {
 							"Given VehicleType is invalid: " + vehicle.getVehicleType().getCode());
 
 			}
+
+			if (vehicle.getVendor() != null
+					&& (vehicle.getVendor().getVendorNo() == null || vehicle.getVendor().getVendorNo().isEmpty()))
+				throw new CustomException("VehicleType",
+						"The field Vendor number is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
 			// Validate vendor
 			if (vehicle.getVendor() != null) {
@@ -145,6 +155,11 @@ public class VehicleService {
 				}
 
 			}
+
+			if (vehicle.getFuelType() != null
+					&& (vehicle.getFuelType().getCode() == null || vehicle.getFuelType().getCode().isEmpty()))
+				throw new CustomException("FuelType",
+						"The field FuelType Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
 			// Validate Fuel Type
 			if (vehicle.getFuelType() != null) {

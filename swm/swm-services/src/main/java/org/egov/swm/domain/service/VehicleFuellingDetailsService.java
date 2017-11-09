@@ -131,6 +131,11 @@ public class VehicleFuellingDetailsService {
 
 		for (VehicleFuellingDetails details : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
 
+			if (details.getTypeOfFuel() != null
+					&& (details.getTypeOfFuel().getCode() == null || details.getTypeOfFuel().getCode().isEmpty()))
+				throw new CustomException("FuelType",
+						"The field FuelType Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+
 			// Validate Fuel Type
 			if (details.getTypeOfFuel() != null) {
 
@@ -145,6 +150,11 @@ public class VehicleFuellingDetailsService {
 							"Given FuelType is invalid: " + details.getTypeOfFuel().getCode());
 
 			}
+
+			if (details.getVehicle() != null
+					&& (details.getVehicle().getRegNumber() == null || details.getVehicle().getRegNumber().isEmpty()))
+				throw new CustomException("Vehicle",
+						"The field Vehicle registration number is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
 			// Validate Vehicle
 			if (details.getVehicle() != null && details.getVehicle().getRegNumber() != null) {
@@ -162,6 +172,11 @@ public class VehicleFuellingDetailsService {
 				}
 
 			}
+
+			if (details.getRefuellingStation() != null && (details.getRefuellingStation().getName() == null
+					|| details.getRefuellingStation().getName().isEmpty()))
+				throw new CustomException("RefuellingPumpStation",
+						"The field RefuellingPumpStation name is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
 			// Validate RefuellingPumpStation
 			if (details.getRefuellingStation() != null) {

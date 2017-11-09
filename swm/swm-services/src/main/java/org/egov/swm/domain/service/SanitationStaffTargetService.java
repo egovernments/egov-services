@@ -119,6 +119,11 @@ public class SanitationStaffTargetService {
 
 			// Validate Boundary
 
+			if (sanitationStaffTarget.getLocation() != null && (sanitationStaffTarget.getLocation().getCode() == null
+					|| sanitationStaffTarget.getLocation().getCode().isEmpty()))
+				throw new CustomException("Location",
+						"The field Location Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+
 			if (sanitationStaffTarget.getLocation() != null && sanitationStaffTarget.getLocation().getCode() != null) {
 
 				Boundary boundary = boundaryRepository.fetchBoundaryByCode(
@@ -130,6 +135,12 @@ public class SanitationStaffTargetService {
 					throw new CustomException("Location",
 							"Given Location is Invalid: " + sanitationStaffTarget.getLocation().getCode());
 			}
+
+			if (sanitationStaffTarget.getSwmProcess() != null
+					&& (sanitationStaffTarget.getSwmProcess().getCode() == null
+							|| sanitationStaffTarget.getSwmProcess().getCode().isEmpty()))
+				throw new CustomException("ServicesOffered",
+						"The field ServicesOffered Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
 			// Validate Swm Process
 
@@ -149,6 +160,11 @@ public class SanitationStaffTargetService {
 
 			}
 
+			if (sanitationStaffTarget.getRoute() != null && (sanitationStaffTarget.getRoute().getCode() == null
+					|| sanitationStaffTarget.getRoute().getCode().isEmpty()))
+				throw new CustomException("Route",
+						"The field Route Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+
 			// Validate Route
 
 			if (sanitationStaffTarget.getRoute() != null && sanitationStaffTarget.getRoute().getCode() != null) {
@@ -166,6 +182,11 @@ public class SanitationStaffTargetService {
 
 			}
 
+			if (sanitationStaffTarget.getEmployee() != null && (sanitationStaffTarget.getEmployee().getCode() == null
+					|| sanitationStaffTarget.getEmployee().getCode().isEmpty()))
+				throw new CustomException("Employee",
+						"The field Employee Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+
 			// Validate Employee
 
 			if (sanitationStaffTarget.getEmployee() != null && sanitationStaffTarget.getEmployee().getCode() != null) {
@@ -182,6 +203,12 @@ public class SanitationStaffTargetService {
 				}
 
 			}
+
+			if (sanitationStaffTarget.getDumpingGround() != null
+					&& (sanitationStaffTarget.getDumpingGround().getCode() == null
+							|| sanitationStaffTarget.getDumpingGround().getCode().isEmpty()))
+				throw new CustomException("DumpingGround",
+						"The field DumpingGround Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
 			// Validate Ending Dumping ground
 			if (sanitationStaffTarget.getDumpingGround() != null

@@ -4,6 +4,7 @@ ReportDefinitions:
   summary: Case Register Report
   version: 1.0.0
   moduleName: lcms
+  selectiveDownload: true
   sourceColumns:
   - name: caseno
     label: reports.lcms.caseNo
@@ -112,6 +113,7 @@ ReportDefinitions:
   summary: Case Summary Report
   version: 1.0.0
   moduleName: lcms
+  selectiveDownload: true
   sourceColumns:
   - name: caseno
     label: reports.lcms.caseNo
@@ -204,6 +206,7 @@ ReportDefinitions:
   summary: Case Detail Report
   version: 1.0.0
   moduleName: lcms
+  selectiveDownload: true
   sourceColumns:
   - name: caseno
     label: reports.lcms.caseNo
@@ -330,6 +333,7 @@ ReportDefinitions:
   summary: Case History Report
   version: 1.0.0
   moduleName: lcms
+  selectiveDownload: true
   sourceColumns:
   - name: caseno
     label: reports.lcms.caseNo
@@ -430,6 +434,7 @@ ReportDefinitions:
   summary: Case Pendency Report
   version: 1.0.0
   moduleName: lcms
+  selectiveDownload: true
   sourceColumns:
   - name: caseno
     label: reports.lcms.caseNo
@@ -506,6 +511,7 @@ ReportDefinitions:
   summary: Case Status Report
   version: 1.0.0
   moduleName: lcms
+  selectiveDownload: true
   sourceColumns:
   - name: caseno
     label: reports.lcms.caseNo
@@ -576,6 +582,7 @@ ReportDefinitions:
   summary: Due Date Report
   version: 1.0.0
   moduleName: lcms
+  selectiveDownload: true
   sourceColumns:
   - name: caseno
     label: reports.lcms.caseNo

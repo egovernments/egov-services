@@ -22,8 +22,12 @@ ReportDefinitions:
     label: reports.asset.dateofcreation
     type: epoch
     source: asset
-  - name: grossvalue
-    label: reports.asset.grossvalue
+  - name: currentamount
+    label: reports.asset.currentamount
+    type: number
+    source: asset
+  - name: originalvalue
+    label: reports.asset.originalvalue
     type: number
     source: asset
   searchParams:
@@ -393,8 +397,12 @@ ReportDefinitions:
     label: reports.asset.dateofcreation
     type: epoch
     source: asset
-  - name: grossvalue
-    label: reports.asset.grossvalue
+  - name: currentamount
+    label: reports.asset.currentamount
+    type: number
+    source: asset
+  - name: originalvalue
+    label: reports.asset.originalvalue
     type: number
     source: asset
   searchParams:

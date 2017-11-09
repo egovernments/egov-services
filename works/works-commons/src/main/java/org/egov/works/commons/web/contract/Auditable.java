@@ -1,15 +1,12 @@
 package org.egov.works.commons.web.contract;
 
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
-
-import org.joda.time.LocalDate;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModelProperty;
+import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * Auditable

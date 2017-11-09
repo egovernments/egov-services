@@ -1,12 +1,12 @@
 package org.egov.works.commons.web.contract;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.joda.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

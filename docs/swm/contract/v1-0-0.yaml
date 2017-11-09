@@ -14,6 +14,125 @@ x-ui-info:
   $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/vfd-ui-info.yaml
 
 paths:
+
+    /routes/_search:
+      post:
+        summary: Get the list of route
+        description: route
+        tags: 
+          - Route
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: codes
+            type: array
+            items: 
+              type: integer
+              format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of codes
+          - name: code
+            type: string
+            in: query
+            description: code of the Route
+          - name: name
+            type: string
+            in: query
+            description: name of the Route
+          - name: collectionTypeCode
+            type: string
+            in: query
+            description: collectionType of the Route
+            maxLength: 256
+          - name: startingCollectionPointCode
+            type: string
+            in: query
+            description: endingCollectionPoint code of the Route
+            maxLength: 256
+          - name: endingCollectionPointCode
+            type: string
+            in: query
+            description: endingCollectionPoint code of the Route
+            maxLength: 256
+          - name: endingDumpingGroundPointCode
+            type: string
+            in: query
+            description: endingDumpingGroundPoint code of the Route
+            maxLength: 256
+          - name: distance
+            type: number
+            format: double
+            in: query
+            description: distance  of the Route
+          - name: gabageEstimate
+            type: number
+            format: double
+            in: query
+            description: gabageEstimate  of the Route
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+          - name: sortBy
+            type: string
+            in: query
+            description: |
+              This takes any field from the Object seperated by comma and asc,desc keywords.  
+              example name asc,code desc or name,code or name,code desc 
+        responses:
+          200:
+            description: Route(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/RouteResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /routes/_create:
+      post:
+        summary: Create new route(s)
+        description: Create new route(s)
+        tags: 
+          - Route
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: routeRequest
+            in: body
+            description: Route Request
+            schema:
+              $ref: '#/definitions/RouteRequest'
+        responses:
+          201:
+            description: Route(s) created Successfully
+            schema:
+              $ref: '#/definitions/RouteResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /routes/_update:
+      post:
+        summary: Update any of the route
+        description: Update any of the route
+        tags: 
+          - Route
+        parameters:
+          - name: routeRequest
+            in: body
+            description: Route Request
+            schema:
+              $ref: '#/definitions/RouteRequest'
+        responses:
+          200:
+            description: Route updated Successfully
+            schema:
+              $ref: '#/definitions/RouteResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /collectionpoints/_search:
       post:
         summary: Get the list of collectionPoint
@@ -833,6 +952,8 @@ definitions:
           description: name of the Route. Shall be unique within ULB
           maxLength: 128
           minLength: 1
+        collectionType:  
+          $ref: "#/definitions/CollectionType"
         startingCollectionPoint:
           description: Starting point will be shown based on what collection type  and what location has been selected.
           $ref: "#/definitions/CollectionPoint"
@@ -866,6 +987,29 @@ definitions:
       - collectionPoints
       - distance
       - garbageEstimate
+      
+    RouteRequest:
+      description: Contract class to receive request. Array of Route items are used in case of create, whereas single Route item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        routes:
+          description: Used for search result and create only
+          type: array
+          items:
+            $ref: '#/definitions/Route'
+            
+    RouteResponse:
+      description: Contract class to send response. Array of Route items are used in case of search results or response for create, whereas single Route item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        routes:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/Route'
     
     FuelType:
       type: object
@@ -951,7 +1095,7 @@ definitions:
           description: name of the vendor who supplied the Vehicle. If name is not provide, vehicle is considered as ULB vehicle
         manufacturingDetails:
           $ref: '#/definitions/ManufacturingDetails'
-        insuranceDetail:
+        insuranceDetails:
           $ref: '#/definitions/InsuranceDetails'
           description: Captures insurance details of vehicle. Current and previuos insurance information
         kilometers:
@@ -981,7 +1125,7 @@ definitions:
       - fuelType
       - manufacturingDetails
       - operatorsReq
-      - insuranceDetail
+      - insuranceDetails
  
     PurchaseInfo:
       type: object
@@ -1030,7 +1174,7 @@ definitions:
           minimum: 0
           exclusiveMinimum: true
           example: 0.24
-        vehicleModel:
+        model:
           type: string
           description: Make / Model / Manufaturer of the Vehicle. / special character is allowed. Space is not allowed
           maxLength: 256
@@ -1040,7 +1184,7 @@ definitions:
       - engineSrNumber
       - chassisSrNumber
       - vehicleCapacity
-      - vehicleModel
+      - model
       
     
     InsuranceDetails:

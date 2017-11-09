@@ -1,6 +1,7 @@
 package org.egov.swm.persistence.repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,14 @@ public class RouteJdbcRepository extends JdbcRepository {
 			orderBy = "order by " + searchRequest.getSortBy();
 		}
 
+		if (searchRequest.getCodes() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("code in (:codes)");
+			paramValues.put("codes", new ArrayList<String>(Arrays.asList(searchRequest.getCodes().split(","))));
+		}
+		
 		if (searchRequest.getTenantId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
@@ -88,20 +97,20 @@ public class RouteJdbcRepository extends JdbcRepository {
 			paramValues.put("collectionType", searchRequest.getCollectionTypeCode());
 		}
 
-		if (searchRequest.getEndingCollectionPointName() != null) {
+		if (searchRequest.getEndingCollectionPointCode() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
 			params.append("endingCollectionPoint =:endingCollectionPoint");
-			paramValues.put("endingCollectionPoint", searchRequest.getEndingCollectionPointName());
+			paramValues.put("endingCollectionPoint", searchRequest.getEndingCollectionPointCode());
 		}
 
-		if (searchRequest.getEndingDumpingGroundPointName() != null) {
+		if (searchRequest.getEndingDumpingGroundPointCode() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
 			params.append("endingDumpingGroundPoint =:endingDumpingGroundPoint");
-			paramValues.put("endingDumpingGroundPoint", searchRequest.getEndingDumpingGroundPointName());
+			paramValues.put("endingDumpingGroundPoint", searchRequest.getEndingDumpingGroundPointCode());
 		}
 
 		if (searchRequest.getDistance() != null) {

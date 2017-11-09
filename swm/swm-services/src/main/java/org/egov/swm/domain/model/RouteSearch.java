@@ -10,11 +10,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RouteSearch extends Route {
-	private String ids;
+	private String codes;
 	private String collectionTypeCode;
-	private String startingCollectionPointName;
-	private String endingCollectionPointName;
-	private String endingDumpingGroundPointName;
+	private String startingCollectionPointCode;
+	private String endingCollectionPointCode;
+	private String endingDumpingGroundPointCode;
 	private String sortBy;
 	private Integer pageSize;
 	private Integer offset;

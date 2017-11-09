@@ -43,7 +43,7 @@ public class VendorService {
 	private VendorRepository vendorRepository;
 
 	@Autowired
-	private SupplierRepository contractorRepository;
+	private SupplierRepository supplierRepository;
 
 	@Autowired
 	private IdgenRepository idgenRepository;
@@ -245,8 +245,8 @@ public class VendorService {
 
 			if (vendor.getSupplier().getGst() != null && !vendor.getSupplier().getGst().isEmpty()) {
 
-				if (!contractorRepository.uniqueCheck(vendor.getTenantId(), "gst", vendor.getSupplier().getGst(),
-						"vendorNo", vendor.getVendorNo())) {
+				if (!supplierRepository.uniqueCheck(vendor.getTenantId(), "gst", vendor.getSupplier().getGst(),
+						"supplierNo", vendor.getSupplier().getSupplierNo())) {
 
 					throw new CustomException("gst", "The field gst must be unique in the system The  value "
 							+ vendor.getSupplier().getGst()

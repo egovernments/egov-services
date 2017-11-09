@@ -7,11 +7,18 @@ import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.constants.Constants;
-import org.egov.swm.domain.model.*;
+import org.egov.swm.domain.model.AuditDetails;
+import org.egov.swm.domain.model.FuelType;
+import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.RefillingPumpStation;
+import org.egov.swm.domain.model.RefillingPumpStationSearch;
+import org.egov.swm.domain.model.Vehicle;
+import org.egov.swm.domain.model.VehicleFuellingDetails;
+import org.egov.swm.domain.model.VehicleFuellingDetailsSearch;
+import org.egov.swm.domain.model.VehicleSearch;
 import org.egov.swm.domain.repository.RefillingPumpStationRepository;
 import org.egov.swm.domain.repository.VehicleFuellingDetailsRepository;
 import org.egov.swm.domain.repository.VehicleRepository;
-import org.egov.swm.persistence.entity.RefillingPumpStationEntity;
 import org.egov.swm.web.contract.IdGenerationResponse;
 import org.egov.swm.web.repository.IdgenRepository;
 import org.egov.swm.web.repository.MdmsRepository;
@@ -171,14 +178,9 @@ public class VehicleFuellingDetailsService {
 
 			}
 
-			if (details.getRefuellingStation() != null && (details.getRefuellingStation().getName() == null
-					|| details.getRefuellingStation().getName().isEmpty()))
-				throw new CustomException("RefuellingPumpStation",
-						"The field RefuellingPumpStation name is Mandatory . It cannot be not be null or empty.Please provide correct value ");
-
 			// Validate RefuellingPumpStation
-			if(details.getRefuellingStation() != null && (details.getRefuellingStation().getCode() == null ||
-			 details.getRefuellingStation().getCode().isEmpty()))
+			if (details.getRefuellingStation() != null && (details.getRefuellingStation().getCode() == null
+					|| details.getRefuellingStation().getCode().isEmpty()))
 				throw new CustomException("RefuellingPumpStation",
 						"RefuellingPumpStation code required: " + details.getRefuellingStation().getName());
 
@@ -187,10 +189,11 @@ public class VehicleFuellingDetailsService {
 				refillingPumpStationSearch.setTenantId(details.getRefuellingStation().getTenantId());
 				refillingPumpStationSearch.setCode(details.getRefuellingStation().getCode());
 
-				Pagination<RefillingPumpStation> refillingPumpStationList = refillingPumpStationRepository.search(refillingPumpStationSearch);
+				Pagination<RefillingPumpStation> refillingPumpStationList = refillingPumpStationRepository
+						.search(refillingPumpStationSearch);
 
-				if(refillingPumpStationList == null && refillingPumpStationList.getPagedData() == null &&
-						refillingPumpStationList.getPagedData().isEmpty())
+				if (refillingPumpStationList == null && refillingPumpStationList.getPagedData() == null
+						&& refillingPumpStationList.getPagedData().isEmpty())
 					throw new CustomException("RefuellingPumpStation",
 							"Given RefuellingPumpStation is invalid: " + details.getRefuellingStation().getName());
 				else

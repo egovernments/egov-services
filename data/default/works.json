@@ -675,5 +675,31 @@
       "tenantId": "default",
       "code": "Tendering"
     }
+  ],
+  "AssetPresentCondition": [
+    {
+      "id": 1,
+      "name": "Breaking Down Fake",
+      "tenantId": "default"
+    }
+  ],
+  "LandAssetPresentCondition": [
+    {
+      "id": 1,
+      "name": "Damage Fake",
+      "tenantId": "default"
+    }
+  ],
+  "EstimateSanctionAuthority": [
+    {
+      "id": 1,
+      "name": "Chief Officer",
+      "tenantId": "default"
+    },
+    {
+      "id": 2,
+      "name": "Commissioner",
+      "tenantId": "default"
+    }
   ]
 }

@@ -516,7 +516,7 @@ serviceMaps:
    description: create vendor in egswm_vendor
    fromTopic: swm-vendor-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_vendor(vendorNo, tenantid, name,registrationNo, contractor, details, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_vendor(vendorNo, tenantid, name,registrationNo, supplier, details, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vendors.*
       jsonMaps:
        
@@ -528,7 +528,7 @@ serviceMaps:
          
        - jsonPath: $.vendors.*.registrationNo
 
-       - jsonPath: $.vendors.*.contractor.contractorNo
+       - jsonPath: $.vendors.*.supplier.supplierNo
 
        - jsonPath: $.vendors.*.details
 
@@ -681,7 +681,7 @@ serviceMaps:
        - jsonPath: $.vendors.*.supplier.auditDetails.lastModifiedTime
          dbType: LONG
 
-       - jsonPath: $.vendors.*.supplier.contractorNo
+       - jsonPath: $.vendors.*.supplier.supplierNo
 
        - jsonPath: $.vendors.*.supplier.tenantId
 

@@ -4,7 +4,7 @@ Create table egswm_vendor(
   tenantId varchar(256) NOT NULL,
   name varchar(256) NOT NULL,
   registrationNo varchar(256) NOT NULL,
-  contractor varchar(256) NOT NULL,
+  supplier varchar(256) NOT NULL,
   details varchar(500) ,
   createdby varchar(256),
   createdtime bigint,

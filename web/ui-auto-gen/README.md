@@ -38,8 +38,8 @@
 
 #### How to write ui-info.yaml/Elements in ui-info (*Refer example for additional help*)
    - Create a YAML file with YOUR_CHOSEN_NAME-ui-info.yml.
-   - ##### UiInfo
-     Add **UiInfo** at the top level as an array (**_MANDATORY_**).
+   - ##### UiInfo (**_MANDATORY_**)
+     Add **UiInfo** at the top level as an array.
    - ##### referencePath
      Add **referencePath** inside UiInfo. Reference paths are the API paths for which there will be _search/_update/_create and screens are designed. 
    

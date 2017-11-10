@@ -212,7 +212,7 @@ ReportDefinitions:
     label: reports.lcms.caseNo
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: courtname
     label: reports.lcms.courtName
     type: string
@@ -222,27 +222,27 @@ ReportDefinitions:
     label: reports.lcms.courtType
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: department
     label: reports.lcms.department
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: casecategory
     label: reports.lcms.caseCategory
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: sectionapplied
     label: reports.lcms.sectionNo
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: advocate
     label: reports.lcms.advocateName
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: plantiffname
     label: reports.lcms.plaintiffName
     type: string
@@ -359,27 +359,27 @@ ReportDefinitions:
     label: reports.lcms.department
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: plantiffname
     label: reports.lcms.plaintiff
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: defendant
     label: reports.lcms.defendant
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: casejudgement
     label: reports.lcms.hearingDetails
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: casestatus
     label: reports.lcms.caseStatus
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   searchParams:
   - name: fromDate
     label: reports.lcms.fromDate
@@ -455,7 +455,7 @@ ReportDefinitions:
     label: reports.lcms.courtName
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: casetype
     label: reports.lcms.caseType
     type: string
@@ -465,22 +465,22 @@ ReportDefinitions:
     label: reports.lcms.plaintiff
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: defendant
     label: reports.lcms.defendant
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: casejudgement
     label: reports.lcms.hearingDetails
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: casestatus
     label: reports.lcms.caseStatus
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   searchParams:
   - name: fromDate
     label: reports.lcms.fromDate
@@ -527,12 +527,12 @@ ReportDefinitions:
     label: reports.lcms.department
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: courtname
     label: reports.lcms.courtName
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: casetype
     label: reports.lcms.caseType
     type: string
@@ -542,17 +542,17 @@ ReportDefinitions:
     label: reports.lcms.plaintiff
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: defendant
     label: reports.lcms.defendant
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: casejudgement
     label: reports.lcms.hearingDetails
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: casestatus
     label: reports.lcms.caseStatus
     type: string
@@ -593,17 +593,17 @@ ReportDefinitions:
     label: reports.lcms.courtName
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: department
     label: reports.lcms.department
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: departmentperson
     label: reports.lcms.departmentPerson
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: advocate
     label: reports.lcms.advocateName
     type: string
@@ -613,12 +613,12 @@ ReportDefinitions:
     label: reports.lcms.plaintiff
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: defendant
     label: reports.lcms.defendant
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   - name: casestatus
     label: reports.lcms.caseStatus
     type: string
@@ -628,7 +628,7 @@ ReportDefinitions:
     label: reports.lcms.hearingDetails
     type: string
     source: lcms
-    showColumn: true
+    showColumn: false
   searchParams:
   - name: fromDate
     label: reports.lcms.fromDate

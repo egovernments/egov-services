@@ -5,13 +5,16 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.config.ApplicationProperties;
+import org.egov.contract.AssetCurrentValueRequest;
 import org.egov.contract.AssetResponse;
 import org.egov.contract.RevaluationRequest;
 import org.egov.contract.RevaluationResponse;
+import org.egov.model.CurrentValue;
 import org.egov.model.Revaluation;
 import org.egov.model.criteria.RevaluationCriteria;
 import org.egov.model.enums.KafkaTopicName;
 import org.egov.model.enums.Sequence;
+import org.egov.model.enums.TransactionType;
 import org.egov.repository.RevaluationRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.web.wrapperfactory.ResponseInfoFactory;
@@ -59,10 +62,23 @@ public class RevaluationService {
         // revaluation.setStatus(getRevaluationStatus(AssetStatusObjectName.REVALUATION, Status.APPROVED,revaluation.getTenantId());
         if (revaluation.getAuditDetails() == null)
             revaluation.setAuditDetails(assetCommonService.getAuditDetails(requestInfo));
-        String revaluationVoucher= voucherService.revaluationVoucherGenerator(revaluationRequest);
-        revaluation.setVoucherReference(revaluationVoucher);
+        //todo voucher generation
+        /*String revaluationVoucher= voucherService.revaluationVoucherGenerator(revaluationRequest);
+        revaluation.setVoucherReference(revaluationVoucher);*/
         
         logAwareKafkaTemplate.send(applicationProperties.getRevaluationSaveTopic(), revaluationRequest);
+        CurrentValue currentValue = CurrentValue.builder().
+        		id(new Long(assetCommonService.getCode(Sequence.CURRENTVALUESEQUENCE))).assetId(revaluation.getAssetId()).assetTranType(TransactionType.REVALUATION).
+        		 transactionDate(revaluation.getRevaluationDate()).auditDetails(assetCommonService.getAuditDetails(revaluationRequest.getRequestInfo())).
+        		 tenantId(revaluation.getTenantId()).currentAmount(revaluation.getValueAfterRevaluation()).build();
+        List<CurrentValue> assetCurrentValueList = new ArrayList<>();
+        assetCurrentValueList.add(currentValue);
+		AssetCurrentValueRequest assetCurrentValueRequest = AssetCurrentValueRequest.builder().assetCurrentValue(assetCurrentValueList).
+				requestInfo(revaluationRequest.getRequestInfo()).build();
+		
+		logAwareKafkaTemplate.send(applicationProperties.getSaveCurrentvalueTopic(), assetCurrentValueRequest);
+		
+		// todo workflow integration
        /* logAwareKafkaTemplate.send(applicationProperties.getCreateWorkflowTopicName(), revaluationRequest);*/
         final List<Revaluation> revaluations = new ArrayList<Revaluation>();
         revaluations.add(revaluation);

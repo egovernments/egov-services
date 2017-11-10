@@ -122,13 +122,13 @@ var dat = {
             url: "/egov-common-masters/departments/_search?|$..code|$..name"
           },{
             name: "Case",
-            jsonPath: "opinions[0].case",
+            jsonPath: "opinions[0].caseDetails.summonReferenceNo",
             label: "opinion.create.case",
             type: "singleValueList",
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: "",
-            url: "/lcms-services/legalcase/case/_search?|$..summon.caseNo|$..summon.caseNo|"
+            url: "/lcms-services/legalcase/caseno/_search?|$..summonReferenceNo|$..caseNo"
           },
           {
             name: "opinionOn",

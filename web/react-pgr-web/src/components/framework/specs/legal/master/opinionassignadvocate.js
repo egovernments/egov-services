@@ -31,6 +31,15 @@ var dat = {
                 "patternErrMsg": "",
                  "url": "/egov-common-masters/departments/_search?|$..code|$..name"
               },{
+                  name: "Case",
+                  jsonPath: "opinions[0].caseDetails.summonReferenceNo",
+                  label: "opinion.create.case",
+                  type: "singleValueList",
+                  isRequired: false,
+                  isDisabled: true,
+                  patternErrorMsg: "",
+                  url: "/lcms-services/legalcase/caseno/_search?|$..summonReferenceNo|$..caseNo"
+             },{
                 "name": "opinionOn",
                 "jsonPath": "opinions[0].opinionOn",
                 "label": "opinionrequest.update.opinionOn",

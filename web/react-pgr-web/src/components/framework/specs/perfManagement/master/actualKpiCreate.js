@@ -4,6 +4,7 @@ var dat = {
     "url": "perfmanagement/v1/kpivalue/_create",
     "useTimestamp": true,
     "objectName": "kpiValues",
+    "tenantIdRequired":true,
     "groups": [
     {
       "label": "Key Performance Indicator Master",
@@ -28,7 +29,18 @@ var dat = {
           "jsonPath": "kpiValues[0].documents",
           "type": "documentList",
           "pattern": "/tl-masters/documenttype/v2/_search"
-          }]
+          },
+          {
+          "jsonPath": "kpiValues[0].targetType",
+          "type": "radio",
+          "pattern": "/tl-masters/documenttype/v2/_search"
+          }
+          // {
+          // "jsonPath": "kpiValues[0].tenantId",
+          // "type": "documentList",
+          // "pattern": localStorage.tenantId
+          // }
+          ]
       },
        {
         "name": "kpiDate",
@@ -40,6 +52,38 @@ var dat = {
         "type": "singleValueList",
         "isDisabled": false,
         "requiredErrMsg": ""
+      },
+      {
+          "name": "kpitype",
+          "jsonPath": "kpiValues[0].targetType",
+          "label": "perfManagement.create.KPIs.groups.kpitype",
+          "pattern": "",
+          "type": "radio",
+          "isRequired": false,
+          "isDisabled": true,
+          "requiredErrMsg": "",
+          "patternErrMsg": "",
+          "values": [{
+              "label": "perfManagement.create.KPIs.groups.kpitype.value",
+              "value": true
+          }, {
+              "label": "perfManagement.create.KPIs.groups.kpitype.objective",
+              "value": false
+          }],
+          "defaultValue": true,
+          "showHideFields": [{
+              "ifValue": false,
+              "hide": [{
+                  "name": "kpiTargetBlock",
+                  "isGroup": true,
+                  "isField": false
+              }],
+              "show": [{
+                  "name": "kpiTargetRadioBlock",
+                  "isGroup": true,
+                  "isField": false
+              }]
+          }]
       },
       {
         "name": "kpiActualValue",

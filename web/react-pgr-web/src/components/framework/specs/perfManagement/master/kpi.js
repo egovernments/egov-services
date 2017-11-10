@@ -213,7 +213,7 @@ var dat = {
             "name": "kpiSearch",
             "fields": [{
                     "name": "searchkpiDepartment",
-                    "jsonPath": "department",
+                    "jsonPath": "departmentId",
                     "label": "perfManagement.search.KPIs.groups.searchkpiDepartment",
                     "pattern": "",
                     "type": "singleValueList",
@@ -592,7 +592,6 @@ var dat = {
                         "label": "perfManagement.update.KPIs.groups.updatekpidocMandatory",
                         "pattern": "",
                         "type": "checkbox",
-                        "defaultValue": false,
                         "isDisabled": false,
                         "requiredErrMsg": "",
                         "patternErrMsg": "",

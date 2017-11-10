@@ -15,7 +15,8 @@ var dat = {
               "label": "KPI",
               "pattern": "",
               "type": "singleValueList",
-              "url":"/perfmanagement/v1/kpimaster/_search?tenantId=|$.KPIs.*.code|$.KPIs.*.name",
+              "isRequired":true,
+              "url":"/perfmanagement/v1/kpimaster/_search?tenantId=default|$.KPIs.*.code|$.KPIs.*.name",
               "isDisabled": false,
               "requiredErrMsg": ""
           },
@@ -24,37 +25,29 @@ var dat = {
               "jsonPath": "finYear",
               "label": "Financial Year",
               "pattern": "",
-              "type": "singleValueList",
+              "type": "multiValueList",
+              "isRequired":true,
               "url": "egf-master/financialyears/_search?tenantId=default|$.financialYears.*.finYearRange|$.financialYears.*.finYearRange",
               "isDisabled": false,
               "requiredErrMsg": ""
             }
-            // {
-            //   "name": "searchActualKpiName",
-            //   "jsonPath": "active",
-            //   "label": "KPI Name",
-            //   "pattern": "",
-            //   "type": "text",
-            //   "isDisabled": false,
-            //   "requiredErrMsg": ""
-            // }
         ]
       }
        ],
        "result": {
-      "header": [{label: "Document"},{label: "Financial Year"},{label: "KPI Name"}],
-      "values": ["applicationType","documentType", "active"],
-      "resultPath": "DocumentTypeApplicationTypes",
-      "rowClickUrlUpdate": "/update/perfManagement/actualKpiUpdate/{id}"
+      "header": [{label: "KPI Name"},{label: "Financial Year"},{label:"Target Value"},{label: "Actual Value"}],
+      "values": ["kpi.name","kpi.financialYear","kpi.targetValue", "resultValue"],
+      "resultPath": "kpiValues",
+      "rowClickUrlUpdate": "/update/perfManagement/actualKpiUpdate/{kpi.code}?finYear={kpi.financialYear}"
       }
   },
   "perfManagement.update": {
     "numCols": 12/2,
-    "searchUrl": "/wcms/masters/documenttypes-applicationtypes/_search?ids={id}",
-    "url":"/wcms/masters/documenttypes-applicationtypes/_update",
+    "searchUrl": "/perfmanagement/v1/kpivalue/_search?kpiCodes={code}&finYear={kpi.financialYear}",
+    "url":"perfmanagement/v1/kpivalue/_update",
     "tenantIdRequired": true,
     "useTimestamp": true,
-    "objectName": "DocumentTypeApplicationTypes",
+    "objectName": "kpiValues",
     "groups": [
       {
         "label": "Update Actual Key Performance Indicator",
@@ -62,27 +55,28 @@ var dat = {
         "fields": [
         {
               "name": "updateActualKpiDepartment",
-              "jsonPath": "DocumentTypeApplicationTypes[0].applicationType",
-              "label": "Tenant",
-              "isRequired": true,
+              "jsonPath": "kpiValues[0].kpi.code",
+              "label": "KPI Name",
+              "isRequired": false,
               "pattern": "",
-              "type": "singleValueList",
+              "type": "text",
+              //"url":"/perfmanagement/v1/kpivalue/_search?tenantId=default|$.kpiValues.KPI.code|$.kpiValues.KPI.name",
               "isDisabled": true,
               "requiredErrMsg": ""
             },
         {
-              "name": "updateActualKpiDate",
-              "jsonPath": "DocumentTypeApplicationTypes[0].documentType",
+              "name": "updateFinYear",
+              "jsonPath": "kpiValues[0].kpi.financialYear",
               "label": "Financial Year",
               "isRequired": true,
               "pattern": "",
-              "type": "singleValueList",
+              "type": "text",
               "isDisabled": true,
               "requiredErrMsg": ""
             },
             {
               "name": "updateActualKpiName",
-              "jsonPath": "DocumentTypeApplicationTypes[0].active",
+              "jsonPath": "kpiValues[0].kpi.name",
               "label": "KPI Name",
               "isRequired": true,
               "pattern": "",
@@ -92,7 +86,7 @@ var dat = {
             },
             {
               "name": "updateActualKpiTarget",
-              "jsonPath": "DocumentTypeApplicationTypes[0].active",
+              "jsonPath": "kpiValues[0].kpi.targetDescription",
               "label": "Target Value",
               "pattern": "",
               "type": "text",
@@ -101,7 +95,7 @@ var dat = {
             },
             {
               "name": "updateActualKpiInstruction",
-              "jsonPath": "DocumentTypeApplicationTypes[0].active",
+              "jsonPath": "kpiValues[0].kpi.instructions",
               "label": "Instruction to Achieve Target",
               "pattern": "",
               "type": "textarea",
@@ -111,7 +105,7 @@ var dat = {
             },
             {
               "name": "updateActualKpiActual",
-              "jsonPath": "DocumentTypeApplicationTypes[0].active",
+              "jsonPath": "kpiValues[0].resultValue",
               "label": "Actual Value",
               "pattern": "",
               "type": "number",
@@ -125,11 +119,16 @@ var dat = {
 	        "label": "legal.create.group.title.UploadDocument",
 	        fields:[{
               "name": "File",
-              "jsonPath": "DocumentTypeApplicationTypes[0].supportDocuments",
+              "jsonPath": "kpiValues[0].documents",
               "type": "documentList",
               "pathToArray": "documentTypes",
               "displayNameJsonPath": "name",
+              //  "jsonPath": "kpiValues[0].documents",
+              // "type": "documentList",
+              // "pathToArray": "kpiValues[0].documents",
+              // "displayNameJsonPath": "documents",
               "url": "/tl-masters/documenttype/v2/_search",
+              //"url": "/perfmanagement/v1/kpivalue/_search?kpiCodes={code}&finYear={kpi.financialYear}",
               "autoFillFields": [
                 {
                   "name": "documentTypeId",

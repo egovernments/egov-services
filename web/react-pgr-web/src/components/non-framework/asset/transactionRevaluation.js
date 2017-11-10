@@ -158,9 +158,8 @@ class Transaction extends Component {
   }
 
   componentDidMount() {
-    let self = this;
       this.initData();
-      self.props.handleChange({target:{value:10000}}, "Assets.WdvValue");
+
 
   }
 
@@ -175,7 +174,7 @@ class Transaction extends Component {
     Api.commonApiPost("/asset-services-maha/assets/_search", formData, {}, null, true).then(function(res){
       self.props.setLoadingStatus('hide');
        self.props.handleChange({target:{value:res.Assets}},"Revaluation.Assets",false,false);
-
+       self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Revaluation.tenantId",false,false);
 
 
       var resultList = {
@@ -196,15 +195,6 @@ class Transaction extends Component {
 
           var tmp = [];
           for(var j=0; j<headers.length; j++) {
-              // tmp.push({jsonPath:objectPath+"["+i+"]."+headers[j].jsonPath,...headers[j]})
-              // if (self.props.match.params.businessService && self.props.match.params.consumerCode) {
-              //
-              //   tmp.push(Object.assign({},headers[j],{jsonPath:tableObjectPath+"["+i+"]."+headers[j].jsonPath,isDisabled:true}));
-              //
-              // }
-              // else {
-              //   tmp.push(Object.assign({},headers[j],{jsonPath:tableObjectPath+"["+i+"]."+headers[j].jsonPath}));
-              // }
 
               tmp.push(Object.assign({},headers[j],{jsonPath:tableObjectPath+"["+i+"]."+headers[j].jsonPath}));
 
@@ -215,22 +205,6 @@ class Transaction extends Component {
       }
 
 
-      // var specsValuesList = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.values;
-      // var values = _.get(res, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.resultPath);
-      // if(values && values.length) {
-      //   for(var i=0; i<values.length; i++) {
-      //     var tmp = [i+1];
-      //     for(var j=0; j<specsValuesList.length; j++) {
-      //       tmp.push(_.get(values[i], specsValuesList[j]));
-      //     }
-      //     resultList.resultValues.push(tmp);
-      //   }
-      // }
-      // self.setState({
-      //   resultList,
-      //   values,
-      //   showResult: true
-      // });
       self.setState({
         resultList,
         showResult: true
@@ -238,7 +212,6 @@ class Transaction extends Component {
 
       self.props.setFlag(1);
 
-        $(".chequeOrDD").hide();
     }, function(err) {
       self.props.toggleSnackbarAndSetText(true, err.message, false, true);
       self.setState({
@@ -249,8 +222,16 @@ class Transaction extends Component {
 
   }
 
-  getVal = (path) => {
-    return _.get(this.props.formData, path) || "";
+  getVal = (path,isDate) => {
+    var val = _.get(this.props.formData, path);
+
+    if( isDate && val && ((val + "").length == 13 || (val + "").length == 12) && new Date(Number(val)).getTime() > 0) {
+      var _date = new Date(Number(val));
+      return ('0' + _date.getDate()).slice(-2) + '/'
+               + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
+               + _date.getFullYear();
+    }
+    return typeof val != "undefined" ? val : "";
   }
 
 
@@ -531,42 +512,27 @@ class Transaction extends Component {
       let obj = specifications[`asset.transaction`];
 
       if(property == "Revaluation[0].valueAfterRevaluation"){
-        if(formData && formData.hasOwnProperty("Revaluation") && formData.Revaluation[0] && formData.Revaluation[0].hasOwnProperty("valueAfterRevaluation")){
           var wdvValue = 10000;
-          var revaluationAmount = wdvValue - (formData.Revaluation[0].valueAfterRevaluation);
+          var revaluationAmount = wdvValue - (e.target.value);
           console.log(revaluationAmount);
           handleChange({target:{value:revaluationAmount}}, "Revaluation[0].revaluationAmount");
-
-          // if(revaluationAmount >= 0){
-          //   console.log("positive");
-          // } else{
-          //   var posReVal = Math.abs(revaluationAmount)
-          //   console.log(posReVal);
-          // }
-        }
       }
 
-      // self.calculateRevationAmount = (value) => {
-      //   let self = this;
-      //   var wdvValue = 10000;
-      //   console.log(value);
-      //   var revaluationAmount = wdvValue - value;
-      //   console.log(revaluationAmount);
-      //   handleChange({target:{value:revaluationAmount}}, "Revaluation[0].revaluationAmount");
-      //   return;
-      // }
+      console.log(property);
+      if (property.search("isRadio") != -1) {
+        let _indexVal = property.split("[")[1].split("]")[0];
+        if (formData.Revaluation.Assets && self.props.formData.Revaluation.Assets.length) {
+          for (var i = 0; i < formData.Revaluation.Assets.length; i++) {
+            if (_indexVal!=i) {
+              formData.Revaluation.Assets[i].isRadio = false;
+            }
+          }
+          self.props.setMockData(formData);
+        }
 
-      // if (property.search("isRadio")) {
-      //   console.log(this.props.fromData);
-      //   console.log(property);
-      //   let _indexVal = "Revaluation.Assets[i].isRadio".split("[")[1].split("]")[0];
-      //   if (self.props.formData.Assets && self.props.formData.Assets.length) {
-      //     for (var i = _indexVal; i < self.props.fromData.Assets.length; i++) {
-      //       console.log(self.props.fromData.Assets.length);
-      //     }
-      //   }
-      //
-      // }
+      }
+
+
       if(expression && e.target.value){
         let str = expression;
         let pos = 0;
@@ -729,9 +695,13 @@ class Transaction extends Component {
         var negNumber = formData.Revaluation[0].revaluationAmount;
         if(negNumber >= 0){
           console.log("positive");
+          formData.Revaluation[0].typeOfChange = "INCREASED";
+          console.log(formData.Revaluation[0].typeOfChange);
         } else{
           var posReVal = Math.abs(negNumber)
           console.log(posReVal);
+          formData.Revaluation[0].typeOfChange = "DECREASED";
+          console.log(formData.Revaluation[0].typeOfChange);
           this.props.handleChange({target:{value:posReVal}}, "Revaluation[0].revaluationAmount");
         }
       }
@@ -766,20 +736,6 @@ class Transaction extends Component {
     let {mockData, moduleName, actionName, formData, fieldErrors,isFormValid,match} = this.props;
     let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler,create} = this;
     let {showResult, resultList} = this.state;
-    console.log(formData);
-
-
-
-      // if(formData && formData.hasOwnProperty("Revaluation") && formData.Revaluation[0] && formData.Revaluation[0].hasOwnProperty("valueAfterRevaluation")){
-      //   let self = this;
-      //   var wdvValue = 10000;
-      //   var value = formData.Revaluation[0].valueAfterRevaluation;
-      //   console.log(value);
-      //   var revaluationAmount = wdvValue - value;
-      //   console.log(revaluationAmount);
-      //   self.props.handleChange({target:{value:revaluationAmount}}, "Revaluation[0].revaluationAmount");
-      // }
-
 
     return (
       <div className="SearchResult">

@@ -362,7 +362,8 @@ var dat =  {
                       jsonPath: "advocatePayments[0].advocateCharges[0].caseNo",
                       isRequired: false,
                       isDisabled: false,
-                      url: "/lcms-services/legalcase/case/_search?|$..summon.summonReferenceNo|$..summon.caseNo"
+                      url: "/lcms-services/legalcase/caseno/_search?|$..summonReferenceNo|$..caseNo"
+                      //  "/lcms-services/legalcase/case/_search?|$..summon.summonReferenceNo|$..summon.caseNo"
                     },
                     {
                       name: "amount",
@@ -588,7 +589,8 @@ var dat =  {
                       jsonPath: "advocatePayments[0].advocateCharges[0].caseNo",
                       isRequired: false,
                       isDisabled: true,
-                      url: "/lcms-services/legalcase/case/_search?|$..summon.summonReferenceNo|$..summon.caseNo"
+                      url:  "/lcms-services/legalcase/caseno/_search?|$..summonReferenceNo|$..caseNo"
+                      // "/lcms-services/legalcase/case/_search?|$..summon.summonReferenceNo|$..summon.caseNo"
                     },
                     {
                       name: "amount",

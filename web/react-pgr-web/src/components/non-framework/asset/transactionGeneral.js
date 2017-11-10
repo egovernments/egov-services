@@ -683,7 +683,7 @@ class Transaction extends Component {
       formData.Depreciation.toDate = toDateCheck;
       var mainAssetIds = [];
       for (var i = 0; i < formData.Depreciation.Assets.length; i++) {
-        if (formData.Depreciation.Assets[i].isChecked==true) {
+        if (formData.Depreciation.Assets[i].isChecked && formData.Depreciation.Assets[i].isChecked==true) {
           var collectAssetId = {};
             collectAssetId = formData.Depreciation.Assets[i].id;
             console.log(collectAssetId);
@@ -694,8 +694,9 @@ class Transaction extends Component {
       }
       var mainAssetIdssplice = mainAssetIds.slice(0, -1);
       console.log(mainAssetIdssplice);
-        formData.Depreciation.assetIds  = mainAssetIdssplice ;
-      console.log(formData.Depreciation.assetIds);
+      formData.Depreciation.assetIds = mainAssetIdssplice.split(",");
+      //   formData.Depreciation.assetIds  = mainAssetIdssplice ;
+       console.log(formData.Depreciation.assetIds);
     delete formData.Depreciation.Assets;
 
     console.log(formData);

@@ -103,6 +103,7 @@ public class DepreciationService {
 		// sending dep/currval objects to respective create async methods
 		depreciation = Depreciation.builder().depreciationCriteria(depreciationCriteria)
 				.depreciationDetails(depreciationDetailsList).build();
+		depreciation.setTenantId(depreciationCriteria.getTenantId());
 
 		currentValueService.createCurrentValueAsync(
 				AssetCurrentValueRequest.builder().assetCurrentValue(currentValues).requestInfo(requestInfo).build());
@@ -219,7 +220,7 @@ public class DepreciationService {
 			criteria.setFinancialYear(year-1+"-"+year);
 			year = year - 1;
 		}else
-			criteria.setFinancialYear(year+"-"+year+1);
+			criteria.setFinancialYear(year+"-"+(year+1));
 
 		// setting from date value
 		calendar.set(Calendar.YEAR, year);

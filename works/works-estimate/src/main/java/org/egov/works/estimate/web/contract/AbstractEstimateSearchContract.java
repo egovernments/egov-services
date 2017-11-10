@@ -28,8 +28,6 @@ public class AbstractEstimateSearchContract {
 
 	private String sortBy;
 
-	private List<String> estimateNumbers;
-
 	private String departmentCode;
 
 	private String fundCode;

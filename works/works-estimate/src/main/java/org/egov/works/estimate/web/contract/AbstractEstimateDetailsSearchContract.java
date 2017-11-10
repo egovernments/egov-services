@@ -28,7 +28,5 @@ public class AbstractEstimateDetailsSearchContract {
 
 	private String sortBy;
 
-	private List<String> estimateNumbers;
-
 	private List<String> workIdentificationNumbers;
 }

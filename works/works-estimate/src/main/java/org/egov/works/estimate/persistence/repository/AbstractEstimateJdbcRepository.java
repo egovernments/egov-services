@@ -64,13 +64,6 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 			params.append("adminSanctionNumber in (:adminSanctionNumbers)");
 			paramValues.put("adminSanctionNumbers", abstractEstimateSearchContract.getAdminSanctionNumbers());
 		}
-		if (abstractEstimateSearchContract.getEstimateNumbers() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("id in (select abstractEstimate from egw_abstractestimate_details where estimateNumber in (:estimateNumbers))");
-			paramValues.put("estimateNumbers", abstractEstimateSearchContract.getEstimateNumbers());
-		}
 		if (abstractEstimateSearchContract.getDepartmentCode() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");

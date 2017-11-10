@@ -6,7 +6,6 @@ import java.util.List;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.config.ApplicationProperties;
 import org.egov.contract.AssetCurrentValueRequest;
-import org.egov.contract.AssetResponse;
 import org.egov.contract.RevaluationRequest;
 import org.egov.contract.RevaluationResponse;
 import org.egov.model.CurrentValue;
@@ -19,7 +18,6 @@ import org.egov.repository.RevaluationRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.web.wrapperfactory.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +51,7 @@ public class RevaluationService {
     @Autowired
     private VoucherService voucherService;
 
-    public RevaluationResponse createAsync(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
+    public RevaluationResponse createAsync(final RevaluationRequest revaluationRequest) {
     	
          Revaluation revaluation = revaluationRequest.getRevaluation();
          RequestInfo requestInfo = revaluationRequest.getRequestInfo();

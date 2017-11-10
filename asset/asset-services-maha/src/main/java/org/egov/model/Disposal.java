@@ -2,6 +2,8 @@ package org.egov.model;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.NotNull;
+
 import org.egov.model.enums.TransactionType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,15 +20,19 @@ import lombok.NoArgsConstructor;
 public class Disposal   {
 	
   @JsonProperty("remarks")
+  @NotNull
   private String remarks;
 
   @JsonProperty("orderNumber")
+  @NotNull
   private String orderNumber;
 
   @JsonProperty("orderDate")
+  @NotNull
   private Long orderDate;
 
   @JsonProperty("tenantId")
+  @NotNull
   private String tenantId;
 
   @JsonProperty("id")
@@ -36,15 +42,18 @@ public class Disposal   {
   private Long assetId;
 
   @JsonProperty("buyerName")
+  @NotNull
   private String buyerName;
 
   @JsonProperty("buyerAddress")
   private String buyerAddress;
 
   @JsonProperty("disposalReason")
+  @NotNull
   private String disposalReason;
 
   @JsonProperty("disposalDate")
+  @NotNull
   private Long disposalDate;
 
   @JsonProperty("panCardNumber")
@@ -57,6 +66,7 @@ public class Disposal   {
   private BigDecimal assetCurrentValue;
 
   @JsonProperty("saleValue")
+  @NotNull
   private BigDecimal saleValue;
 
   @JsonProperty("transactionType")

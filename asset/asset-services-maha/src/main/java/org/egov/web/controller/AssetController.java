@@ -25,14 +25,11 @@ import org.egov.service.DisposalService;
 import org.egov.service.RevaluationService;
 import org.egov.web.validator.AssetValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -90,18 +87,17 @@ public class AssetController {
 
 	@PostMapping("revaluation/_create")
 	@ResponseBody
-	public ResponseEntity<?> revaluate(@RequestBody @Valid final RevaluationRequest revaluationRequest,
-			final BindingResult bindingResult, @RequestHeader final HttpHeaders headers) {
+	public ResponseEntity<?> revaluate(@RequestBody @Valid final RevaluationRequest revaluationRequest) {
 
 		// assetValidator.validateRevaluation(revaluationRequest);
-		final RevaluationResponse revaluationResponse = revaluationService.createAsync(revaluationRequest, headers);
+		final RevaluationResponse revaluationResponse = revaluationService.createAsync(revaluationRequest);
 		return new ResponseEntity<>(revaluationResponse, HttpStatus.CREATED);
 	}
 
 	@PostMapping("revaluation/_search")
 	@ResponseBody
 	public ResponseEntity<?> reevaluateSearch(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-			@ModelAttribute @Valid final RevaluationCriteria revaluationCriteria, final BindingResult bindingResult) {
+			@ModelAttribute @Valid final RevaluationCriteria revaluationCriteria) {
 
 		log.debug("reevaluateSearch revaluationCriteria:" + revaluationCriteria);
 
@@ -113,10 +109,9 @@ public class AssetController {
 
 	@PostMapping("dispose/_create")
 	@ResponseBody
-	public ResponseEntity<?> dispose(@RequestBody @Valid final DisposalRequest disposalRequest,
-			final BindingResult bindingResult, @RequestHeader final HttpHeaders headers) {
+	public ResponseEntity<?> dispose(@RequestBody @Valid final DisposalRequest disposalRequest) {
 
-		final DisposalResponse disposalResponse = disposalService.createAsync(disposalRequest, headers);
+		final DisposalResponse disposalResponse = disposalService.createAsync(disposalRequest);
 		log.debug("dispose disposalResponse:" + disposalResponse);
 		return new ResponseEntity<DisposalResponse>(disposalResponse, HttpStatus.CREATED);
 	}
@@ -124,7 +119,7 @@ public class AssetController {
 	@PostMapping("dispose/_search")
 	@ResponseBody
 	public ResponseEntity<?> disposalSearch(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-			@ModelAttribute @Valid final DisposalCriteria disposalCriteria, final BindingResult bindingResult) {
+			@ModelAttribute @Valid final DisposalCriteria disposalCriteria) {
 
 		final DisposalResponse disposalResponse = disposalService.search(disposalCriteria,
 				requestInfoWrapper.getRequestInfo());

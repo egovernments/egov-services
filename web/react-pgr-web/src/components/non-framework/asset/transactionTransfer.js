@@ -164,7 +164,7 @@ class Transaction extends Component {
   }
 
 
-  search = () => {
+  search = (e) => {
 
     let self = this;
     self.props.setLoadingStatus('loading');
@@ -174,7 +174,7 @@ class Transaction extends Component {
     Api.commonApiPost("/asset-services-maha/assets/_search", formData, {}, null, true).then(function(res){
       self.props.setLoadingStatus('hide');
        self.props.handleChange({target:{value:res.Assets}},"Disposal.Assets",false,false);
-
+       self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Disposal.tenantId",false,false);
 
 
       var resultList = {
@@ -195,15 +195,6 @@ class Transaction extends Component {
 
           var tmp = [];
           for(var j=0; j<headers.length; j++) {
-              // tmp.push({jsonPath:objectPath+"["+i+"]."+headers[j].jsonPath,...headers[j]})
-              // if (self.props.match.params.businessService && self.props.match.params.consumerCode) {
-              //
-              //   tmp.push(Object.assign({},headers[j],{jsonPath:tableObjectPath+"["+i+"]."+headers[j].jsonPath,isDisabled:true}));
-              //
-              // }
-              // else {
-              //   tmp.push(Object.assign({},headers[j],{jsonPath:tableObjectPath+"["+i+"]."+headers[j].jsonPath}));
-              // }
 
               tmp.push(Object.assign({},headers[j],{jsonPath:tableObjectPath+"["+i+"]."+headers[j].jsonPath}));
 
@@ -214,22 +205,6 @@ class Transaction extends Component {
       }
 
 
-      // var specsValuesList = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.values;
-      // var values = _.get(res, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.resultPath);
-      // if(values && values.length) {
-      //   for(var i=0; i<values.length; i++) {
-      //     var tmp = [i+1];
-      //     for(var j=0; j<specsValuesList.length; j++) {
-      //       tmp.push(_.get(values[i], specsValuesList[j]));
-      //     }
-      //     resultList.resultValues.push(tmp);
-      //   }
-      // }
-      // self.setState({
-      //   resultList,
-      //   values,
-      //   showResult: true
-      // });
       self.setState({
         resultList,
         showResult: true
@@ -237,7 +212,6 @@ class Transaction extends Component {
 
       self.props.setFlag(1);
 
-        $(".chequeOrDD").hide();
     }, function(err) {
       self.props.toggleSnackbarAndSetText(true, err.message, false, true);
       self.setState({
@@ -248,8 +222,16 @@ class Transaction extends Component {
 
   }
 
-  getVal = (path) => {
-    return _.get(this.props.formData, path) || "";
+  getVal = (path,isDate) => {
+    var val = _.get(this.props.formData, path);
+
+    if( isDate && val && ((val + "").length == 13 || (val + "").length == 12) && new Date(Number(val)).getTime() > 0) {
+      var _date = new Date(Number(val));
+      return ('0' + _date.getDate()).slice(-2) + '/'
+               + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
+               + _date.getFullYear();
+    }
+    return typeof val != "undefined" ? val : "";
   }
 
 

@@ -555,11 +555,11 @@ serviceMaps:
        
        - jsonPath: $.AuditDetails.createdBy
        
-       - jsonPath: $.AuditDetails.createdTime
+       - jsonPath: $.AuditDetails.createdDate
        
        - jsonPath: $.AuditDetails.lastModifiedBy
        
-       - jsonPath: $.AuditDetails.lastModifiedTime
+       - jsonPath: $.AuditDetails.lastModifiedDate
        
        - jsonPath: $.reasonForFailure
        

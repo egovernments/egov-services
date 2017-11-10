@@ -83,10 +83,13 @@ public class DepreciationService {
 		RequestInfo requestInfo = depreciationRequest.getRequestInfo();
 		
 		List<DepreciationInputs> depreciationInputsList = depreciationRepository.getDepreciationInputs(depreciationCriteria);
-		enrichDepreciationInputs(depreciationInputsList,requestInfo,depreciationCriteria.getTenantId());
 		
 		List<DepreciationDetail> depreciationDetailsList = new ArrayList<>();
 		List<CurrentValue> currentValues = new ArrayList<>();
+		Depreciation depreciation = null;
+		
+		if(!depreciationInputsList.isEmpty()) 
+		enrichDepreciationInputs(depreciationInputsList,requestInfo,depreciationCriteria.getTenantId());
 		
 		// calculating the depreciation and adding the currenVal and DepDetail to the lists
 		calculateDepreciationAndCurrentValue(depreciationInputsList,depreciationDetailsList,currentValues,depreciationCriteria.getFromDate(),
@@ -95,13 +98,12 @@ public class DepreciationService {
 		// FIXME TODO voucher integration
 		
 		
-		// TODO FIXME send dep/currval objects to respective create async methods
-		Depreciation depreciation = Depreciation.builder().depreciationCriteria(depreciationCriteria)
+		// sending dep/currval objects to respective create async methods
+		 depreciation = Depreciation.builder().depreciationCriteria(depreciationCriteria)
 				.depreciationDetails(depreciationDetailsList).build();
 		
 		currentValueService.createCurrentValueAsync(AssetCurrentValueRequest.builder()
 				.assetCurrentValue(currentValues).requestInfo(requestInfo).build());
-		
 		
 		return depreciation;
 	}

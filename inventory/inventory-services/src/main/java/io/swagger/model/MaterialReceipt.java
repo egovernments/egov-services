@@ -15,7 +15,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 /**
  * Hold the material receipt specific information.
@@ -23,6 +25,8 @@ import lombok.Builder;
 @ApiModel(description = "Hold the material receipt specific information.")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-08T06:17:26.594Z")
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class MaterialReceipt   {
   @JsonProperty("id")
   private String id = null;

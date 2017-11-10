@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
-import io.swagger.model.MaterialReceiptHeader;
+import io.swagger.model.MaterialReceipt;
 import io.swagger.model.Pagination;
 
 @Service
@@ -24,7 +24,7 @@ public class RecieptNoteApiJdbcRepository extends JdbcRepository{
 		LOG.debug("end init MaterialReceipt");
 	}
 	
-	public Pagination<MaterialReceiptHeader> search(ReceiptNotesSearchCriteria receiptRequest) {
+	public Pagination<MaterialReceipt> search(ReceiptNotesSearchCriteria receiptRequest) {
 		
 		String searchQuery = "select * from MaterialReceipt :condition :orderby";
 		StringBuffer params = new StringBuffer();
@@ -36,12 +36,6 @@ public class RecieptNoteApiJdbcRepository extends JdbcRepository{
 		String orderBy = "order by id";
 		if (receiptRequest.getSortBy() != null && !receiptRequest.getSortBy().isEmpty()) {
 			orderBy = "order by " + receiptRequest.getSortBy();
-		}
-		if (receiptRequest.getId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("id in (:id)");
-			paramValues.put("id", receiptRequest.getId());
 		}
 		if (receiptRequest.getTenantId() != null) {
 			if (params.length() > 0)
@@ -93,7 +87,7 @@ public class RecieptNoteApiJdbcRepository extends JdbcRepository{
 			params.append("receiptDateT0 = :receiptDateT0");
 			paramValues.put("receiptDateT0", receiptRequest.getReceiptDateT0());
 		}
-		Pagination<MaterialReceiptHeader> page = new Pagination<>();
+		Pagination<MaterialReceipt> page = new Pagination<>();
 		if (receiptRequest.getPageSize() != null)
 			page.setPageSize(receiptRequest.getPageSize());
 		if (receiptRequest.getOffset() != null)
@@ -104,14 +98,14 @@ public class RecieptNoteApiJdbcRepository extends JdbcRepository{
 			searchQuery = searchQuery.replace(":condition", "");
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
-		page = (Pagination<MaterialReceiptHeader>) getPagination(searchQuery, page, paramValues);
+		page = (Pagination<MaterialReceipt>) getPagination(searchQuery, page, paramValues);
 
 		searchQuery = searchQuery + " :pagination";
 		searchQuery = searchQuery.replace(":pagination",
 				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(ReceiptNoteApiEntity.class);
 
-		List<MaterialReceiptHeader> materialList = new ArrayList<>();
+		List<MaterialReceipt> materialList = new ArrayList<>();
 
 		List<ReceiptNoteApiEntity> receiptEntity = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues,
 				row);

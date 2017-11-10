@@ -11,8 +11,6 @@ import lombok.Setter;
 @Setter
 public class ReceiptNotesSearchCriteria {
 	
-	private List<String> id;
-
 	private List<String> mrnNumber;
 
 	private List<String> receiptType;

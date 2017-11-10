@@ -1,16 +1,17 @@
 package io.swagger.model;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import io.swagger.model.MaterialReceipt;
-import io.swagger.model.RequestInfo;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+
+import org.egov.common.contract.request.RequestInfo;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * Hold the Material Receipt Note request information.
@@ -20,7 +21,7 @@ import javax.validation.constraints.*;
 
 public class MaterialReceiptRequest   {
   @JsonProperty("RequestInfo")
-  private RequestInfo requestInfo = null;
+  private org.egov.common.contract.request.RequestInfo requestInfo = null;
 
   @JsonProperty("MaterialReceipt")
   private List<MaterialReceipt> materialReceipt = null;
@@ -38,11 +39,11 @@ public class MaterialReceiptRequest   {
 
   @Valid
 
-  public RequestInfo getRequestInfo() {
+  public org.egov.common.contract.request.RequestInfo getRequestInfo() {
     return requestInfo;
   }
 
-  public void setRequestInfo(RequestInfo requestInfo) {
+  public void setRequestInfo(org.egov.common.contract.request.RequestInfo requestInfo) {
     this.requestInfo = requestInfo;
   }
 

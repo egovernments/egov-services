@@ -52,22 +52,12 @@ public class DetailedEstimateController {
     @PostMapping("/_create")
     @ResponseStatus(HttpStatus.OK)
     public DetailedEstimateResponse create(@Valid @RequestBody DetailedEstimateRequest detailedEstimateRequest) {
-        detailedEstimateService.validateDetailedEstimates(detailedEstimateRequest);
-        final List<DetailedEstimate> detailedEstimates = detailedEstimateService.create(detailedEstimateRequest);
-        final DetailedEstimateResponse response = new DetailedEstimateResponse();
-        response.setDetailedEstimates(detailedEstimates);
-        response.setResponseInfo(estimateUtils.getResponseInfo(detailedEstimateRequest.getRequestInfo()));
-        return response;
+        return detailedEstimateService.create(detailedEstimateRequest);
     }
     
     @PostMapping("/_update")
     @ResponseStatus(HttpStatus.OK)
     public DetailedEstimateResponse update(@Valid @RequestBody DetailedEstimateRequest detailedEstimateRequest) {
-        detailedEstimateService.validateDetailedEstimates(detailedEstimateRequest);
-        final List<DetailedEstimate> detailedEstimates = detailedEstimateService.update(detailedEstimateRequest);
-        final DetailedEstimateResponse response = new DetailedEstimateResponse();
-        response.setDetailedEstimates(detailedEstimates);
-        response.setResponseInfo(estimateUtils.getResponseInfo(detailedEstimateRequest.getRequestInfo()));
-        return response;
+        return detailedEstimateService.update(detailedEstimateRequest);
     }
 }

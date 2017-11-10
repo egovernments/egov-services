@@ -11,7 +11,7 @@ import org.egov.tracer.model.CustomException;
 import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.estimate.config.PropertiesManager;
-import org.egov.works.estimate.config.WorksEstimateServiceConstants;
+import org.egov.works.estimate.config.Constants;
 import org.egov.works.estimate.domain.repository.AbstractEstimateRepository;
 import org.egov.works.estimate.domain.validator.EstimateValidator;
 import org.egov.works.estimate.persistence.repository.IdGenerationRepository;
@@ -169,31 +169,31 @@ public class AbstractEstimateService {
 		}
 
 		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
-				&& WorksEstimateServiceConstants.SUBMIT.equalsIgnoreCase(workFlowDetails.getAction())
+				&& Constants.SUBMIT.equalsIgnoreCase(workFlowDetails.getAction())
 				&& (currentStatus.equalsIgnoreCase(AbstractEstimateStatus.CREATED.toString())
 						|| currentStatus.equalsIgnoreCase(AbstractEstimateStatus.RESUBMITTED.toString()))) {
 			abstractEstimate.setStatus(AbstractEstimateStatus.CHECKED);
 		}
 
 		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
-				&& WorksEstimateServiceConstants.APPROVE.equalsIgnoreCase(workFlowDetails.getAction())
+				&& Constants.APPROVE.equalsIgnoreCase(workFlowDetails.getAction())
 				&& currentStatus.equalsIgnoreCase(AbstractEstimateStatus.CHECKED.toString())) {
 			abstractEstimate.setStatus(AbstractEstimateStatus.APPROVED);
 		}
 
 		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
-				&& WorksEstimateServiceConstants.REJECT.equalsIgnoreCase(workFlowDetails.getAction())) {
+				&& Constants.REJECT.equalsIgnoreCase(workFlowDetails.getAction())) {
 			abstractEstimate.setStatus(AbstractEstimateStatus.REJECTED);
 		}
 
 		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
-				&& WorksEstimateServiceConstants.FORWARD.equalsIgnoreCase(workFlowDetails.getAction())
+				&& Constants.FORWARD.equalsIgnoreCase(workFlowDetails.getAction())
 				&& currentStatus.equalsIgnoreCase(AbstractEstimateStatus.REJECTED.toString())) {
 			abstractEstimate.setStatus(AbstractEstimateStatus.RESUBMITTED);
 		}
 
 		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
-				&& WorksEstimateServiceConstants.CANCEL.equalsIgnoreCase(workFlowDetails.getAction())
+				&& Constants.CANCEL.equalsIgnoreCase(workFlowDetails.getAction())
 				&& currentStatus.equalsIgnoreCase(AbstractEstimateStatus.REJECTED.toString())) {
 			abstractEstimate.setStatus(AbstractEstimateStatus.CANCELLED);
 		}
@@ -228,8 +228,8 @@ public class AbstractEstimateService {
 					&& abstractEstimateDetails.getProjectCode().getCode() != null)
 				projectCode.setCode(abstractEstimateDetails.getProjectCode().getCode());
 			else
-				messages.put(WorksEstimateServiceConstants.KEY_UNIQUE_WORKIDENTIFICATIONNUMBER,
-						WorksEstimateServiceConstants.MESSAGE_UNIQUE_WORKIDENTIFICATIONNUMBER);
+				messages.put(Constants.KEY_UNIQUE_WORKIDENTIFICATIONNUMBER,
+						Constants.MESSAGE_UNIQUE_WORKIDENTIFICATIONNUMBER);
 		}
 
 		if (messages != null && !messages.isEmpty())

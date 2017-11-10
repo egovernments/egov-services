@@ -3,7 +3,7 @@ package org.egov.works.estimate.config;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class WorksEstimateServiceConstants {
+public class Constants {
 
     public static final String ABSTRACT_ESTIMATE_NUMBER_GENERATION_ERROR = "Abstract estimate numebr can not be generated";
     public static final String DETAILED_ESTIMATE_NUMBER_GENERATION_ERROR = "Detailed estimate numebr can not be generated";

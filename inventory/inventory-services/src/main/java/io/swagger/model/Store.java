@@ -323,7 +323,7 @@ public class Store {
      **/
     @ApiModelProperty(value = "contact no1 of the Store ")
 
-    @Pattern(regexp = "^[0-9]*$")
+    @Pattern(regexp = "^[0-9]+$")
     @Size(max = 10)
     public String getContactNo1() {
         return contactNo1;
@@ -345,7 +345,7 @@ public class Store {
      **/
     @ApiModelProperty(value = "contact no2 of the Store ")
 
-    @Pattern(regexp = "^[0-9]*$")
+    @Pattern(regexp = "^[0-9]+$")
     public String getContactNo2() {
         return contactNo2;
     }
@@ -387,7 +387,7 @@ public class Store {
      * @return storeInCharge
      **/
     @ApiModelProperty(value = "")
-
+    @NotNull
     @Valid
 
     public Employee getStoreInCharge() {
@@ -543,3 +543,4 @@ public class Store {
         return o.toString().replace("\n", "\n    ");
     }
 }
+

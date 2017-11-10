@@ -55,6 +55,7 @@ public class SearchService {
 		}catch(CustomException e){
 			throw e;
 		}catch(Exception e){
+			logger.error("Exception: ",e);
 			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), 
 					"There was an error encountered at the Db");
 		}
@@ -62,6 +63,7 @@ public class SearchService {
 		try{
 			data = formatResult(maps, searchDefinition, searchRequest);
 		}catch(Exception e){
+			logger.error("Exception: ",e);
 			throw new CustomException(HttpStatus.BAD_REQUEST.toString(), 
 					"There was an error encountered while formatting the result, Verify output config from the yaml file.");
 		}

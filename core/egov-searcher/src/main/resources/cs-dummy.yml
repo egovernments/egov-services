@@ -1,5 +1,5 @@
 SearchDefinitions:
- moduleName: citizen-service
+ moduleName: cs-dummy
  summary: Citizen Services Report
  version: 1.0.0
  definitions:
@@ -24,24 +24,4 @@ SearchDefinitions:
     jsonFormat: {"ResponseInfo": {},"ServiceRequests": []}
     outJsonPath: $.ServiceRequests
     responseInfoPath: $.ResponseInfo
-
- - name: commentsearch
-   query: 
-    baseQuery: (select array_to_json(array_agg(row_to_json(comments)))from (select srn,commentfrom,comment from egov_citizen_service_req_comments $where) comments)
-    groupBy:    
-    orderBy: srn,ASC
-   searchParams:
-    condition: AND
-    params:
-    - name: tenantid
-      isMandatory: true
-      jsonPath: $.searchCriteria.tenantId
-    - name: srn
-      isMandatory: false
-      jsonPath: $.searchCriteria.id
-   output:
-    jsonFormat: {"ResponseInfo": {},"Comments": []}
-    outJsonPath: $.Comments
-    responseInfoPath: $.ResponseInfo
-
 

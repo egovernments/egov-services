@@ -519,7 +519,7 @@ class Transaction extends Component {
       }
 
       console.log(property);
-      if (property.search("isRadio") != -1) {
+      if (property.search("isRadio") != -1) { 
         let _indexVal = property.split("[")[1].split("]")[0];
         if (formData.Revaluation.Assets && self.props.formData.Revaluation.Assets.length) {
           for (var i = 0; i < formData.Revaluation.Assets.length; i++) {

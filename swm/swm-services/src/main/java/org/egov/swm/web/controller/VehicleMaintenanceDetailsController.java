@@ -2,6 +2,9 @@ package org.egov.swm.web.controller;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.VehicleMaintenanceDetails;
+import org.egov.swm.domain.model.VehicleMaintenanceDetailsSearch;
 import org.egov.swm.domain.service.VehicleMaintenanceDetailsService;
 import org.egov.swm.web.requests.VehicleMaintenanceDetailsRequest;
 import org.egov.swm.web.requests.VehicleMaintenanceDetailsResponse;
@@ -46,6 +49,20 @@ public class VehicleMaintenanceDetailsController {
         vehicleMaintenanceDetailsResponse.setVehicleMaintenanceDetails(vehicleMaintenanceDetailsRequest.getVehicleMaintenanceDetails());
 
         return vehicleMaintenanceDetailsResponse;
+    }
+
+    @PostMapping("/_search")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public VehicleMaintenanceDetailsResponse search (@ModelAttribute VehicleMaintenanceDetailsSearch vehicleMaintenanceDetailsSearch ,
+                                                @RequestBody RequestInfo requestInfo, @RequestParam String tenantId){
+
+        Pagination<VehicleMaintenanceDetails> vehicleMaintenanceDetailsList  = vehicleMaintenanceDetailsService.search(vehicleMaintenanceDetailsSearch);
+
+        return VehicleMaintenanceDetailsResponse.builder()
+                .vehicleMaintenanceDetails(vehicleMaintenanceDetailsList.getPagedData())
+                .responseInfo(getResponseInfo(requestInfo))
+                .build();
     }
 
     private ResponseInfo getResponseInfo(RequestInfo requestInfo) {

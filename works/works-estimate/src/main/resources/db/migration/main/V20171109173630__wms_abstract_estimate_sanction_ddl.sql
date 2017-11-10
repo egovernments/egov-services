@@ -23,6 +23,6 @@ CREATE TABLE egw_abstractestimate_asset_details
   createdby character varying(256) NOT NULL,
   createdtime bigint NOT NULL,
   lastmodifiedby character varying(256),
-  lastmodifiedtime bigint
+  lastmodifiedtime bigint,
   CONSTRAINT egw_abstractestimate_asset_details_pkey PRIMARY KEY(id,tenantId)
 );

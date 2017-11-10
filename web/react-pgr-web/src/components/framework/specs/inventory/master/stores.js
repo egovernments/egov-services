@@ -179,7 +179,7 @@ var dat = {
                   "label":"inventory.store.incharge",
                   "pattern":"",
                   "type":"text",
-                  "isRequired":false,
+                  "isRequired":true,
                   "isDisabled":false,
                   "defaultValue":"",
                   "patternErrorMsg":""
@@ -190,7 +190,7 @@ var dat = {
                   "label":"inventory.store.contactNo1",
                   "pattern":"^[0-9]*$",
                   "type":"text",
-                  "isRequired":true,
+                  "isRequired":false,
                   "isDisabled":false,
                   "defaultValue":"",
                   "maxLength":10,
@@ -348,7 +348,7 @@ var dat = {
                   "label":"inventory.store.incharge",
                   "pattern":"",
                   "type":"text",
-                  "isRequired":false,
+                  "isRequired":true,
                   "isDisabled":false,
                   "defaultValue":"",
                   "patternErrorMsg":""
@@ -517,8 +517,8 @@ var dat = {
                   "jsonPath":"stores[0].storeInCharge.code",
                   "label":"inventory.store.incharge",
                   "pattern":"",
-                  "type":"checkbox",
-                  "isRequired":false,
+                  "type":"text",
+                  "isRequired":true,
                   "isDisabled":false,
                   "defaultValue":"",
                   "patternErrorMsg":""

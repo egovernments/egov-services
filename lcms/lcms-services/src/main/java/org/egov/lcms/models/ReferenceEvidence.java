@@ -29,7 +29,6 @@ public class ReferenceEvidence {
 	@JsonProperty("referenceDate")
 	private Long referenceDate;
 
-	@NotNull
 	@JsonProperty("caseNo")
 	private String caseNo;
 

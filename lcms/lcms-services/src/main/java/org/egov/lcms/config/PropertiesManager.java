@@ -521,4 +521,16 @@ public class PropertiesManager {
 	
 	@Value("${egov.lcms.assign.advocatedetails.size.message}")
 	private String advocateDetailsSizeMessage;
+	
+	@Value("${egov.lcms.casedetails.error.code}")
+	private String caseDetailsResponseErrorCode;
+	
+	@Value("${egov.lcms.casedetails.error.msg}")
+	private String caseDetailsResponseErrorMsg;
+	
+	@Value("${egov.lcms.caseno.error.code}")
+	private String caseNoErrorCode;
+	
+	@Value("${egov.lcms.caseno.error.msg}")
+	private String caseNoErrorMsg;
 }

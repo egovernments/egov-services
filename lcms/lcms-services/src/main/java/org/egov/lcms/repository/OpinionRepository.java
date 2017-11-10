@@ -57,6 +57,7 @@ public class OpinionRepository {
 		List<Opinion> opinions = new ArrayList<Opinion>();
 		try {
 			opinions = jdbcTemplate.query(searchQuery, preparedStatementValues.toArray(), opinionRowMapper);
+			getCaseNoWithSummonReference(opinions);
 		} catch (Exception ex) {
 			log.info("the exception in opinion :" + ex.getMessage());
 			throw new CustomException(propertiesManager.getOpinionSearchErrorCode(), ex.getMessage());
@@ -99,6 +100,29 @@ public class OpinionRepository {
 						.collect(Collectors.toList()).get(0);
 				opinion.setOpinionsBy(advocate);
 
+			}
+		}
+	}
+
+	private void getCaseNoWithSummonReference(List<Opinion> opinions) {
+		
+		for (Opinion opinion : opinions) {
+			if (opinion.getCaseDetails() != null && opinion.getCaseDetails().getSummonReferenceNo() != null) {
+
+				final List<Object> preparedStatementValues = new ArrayList<Object>();
+				String searchQuery = opinionBuilder.getCaseNo(opinion.getCaseDetails().getSummonReferenceNo(),
+						opinion.getTenantId(), preparedStatementValues);
+				try {
+					
+					String caseNo = jdbcTemplate.queryForObject(searchQuery, preparedStatementValues.toArray(),
+							String.class);
+					opinion.getCaseDetails().setCaseNo(caseNo);
+				} catch (Exception ex) {
+					
+					log.info("the exception in opinion :" + ex.getMessage());
+					throw new CustomException(propertiesManager.getCaseNoErrorCode(),
+							propertiesManager.getCaseNoErrorMsg());
+				}
 			}
 		}
 	}

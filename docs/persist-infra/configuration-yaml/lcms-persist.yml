@@ -760,7 +760,7 @@ serviceMaps:
     description: create opinion in lcms
     fromTopic: lcms-opinion-create
     queryMaps:
-      - query: INSERT INTO egov_lcms_opinion (code,opinionRequestDate, departmentName, opinionOn, documents,opinionDescription, opinionsBy, additionalAdvocate,inWardDate, tenantId, createdBy,lastModifiedBy,createdTime,lastModifiedTime,stateId)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+      - query: INSERT INTO egov_lcms_opinion (code,opinionRequestDate, departmentName, opinionOn, documents,opinionDescription, opinionsBy, additionalAdvocate,inWardDate, tenantId, createdBy,lastModifiedBy,createdTime,lastModifiedTime,stateId,summonReferenceNo)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
         basePath: $.opinions.*
         jsonMaps:
         - jsonPath: $.opinions.*.code
@@ -792,13 +792,14 @@ serviceMaps:
           type: CURRENTDATE
           dbType: LONG
         - jsonPath: $.opinions.*.stateId
+        - jsonPath: $.opinions.*.caseDetails.summonReferenceNo
         
   - version: 1.0
     name: lcms-update-opinion
     description: update opinion in lcms
     fromTopic: lcms-opinion-update
     queryMaps:
-      - query: UPDATE egov_lcms_opinion SET opinionRequestDate=?,departmentName=?,opinionOn=?,documents=?,opinionDescription=?,opinionsBy=?,additionalAdvocate=?,inWardDate=?,tenantId=?,stateId=?,lastModifiedBy=?,lastModifiedTime=? WHERE code=?;
+      - query: UPDATE egov_lcms_opinion SET opinionRequestDate=?,departmentName=?,opinionOn=?,documents=?,opinionDescription=?,opinionsBy=?,additionalAdvocate=?,inWardDate=?,tenantId=?,stateId=?,summonReferenceNo=?,lastModifiedBy=?,lastModifiedTime=? WHERE code=?;
         basePath: $.opinions.*
         jsonMaps:        
         - jsonPath: $.opinions.*.opinionRequestDate
@@ -819,6 +820,7 @@ serviceMaps:
           type: LONG
         - jsonPath: $.opinions.*.tenantId
         - jsonPath: $.opinions.*.stateId
+        - jsonPath: $.opinions.*.caseDetails.summonReferenceNo
         - jsonPath: $.RequestInfo.userInfo.id
           type: STRING
         - jsonPath: lastModifiedTime

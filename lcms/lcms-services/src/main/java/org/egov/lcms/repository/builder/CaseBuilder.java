@@ -3,6 +3,7 @@ package org.egov.lcms.repository.builder;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import org.egov.lcms.models.Case;
 import org.egov.lcms.models.CaseSearchCriteria;
 import org.egov.lcms.models.HearingRepository;
@@ -191,6 +192,16 @@ public class CaseBuilder {
 		searchQuery.append(" AND tenantid=?");
 		preparedStatementValues.add(caseObj.getTenantId());
 
+		return searchQuery.toString();
+	}
+
+	public String searchCaseDetailsByTenantId(String tenantId, String caseTableName, List<Object> preparedStatementValues) {
+		StringBuilder searchQuery = new StringBuilder();
+		searchQuery.append("SELECT caseno, summonreferenceno FROM " + caseTableName);
+		
+		searchQuery.append(" WHERE tenantId=?");
+		preparedStatementValues.add(tenantId);
+		
 		return searchQuery.toString();
 	}
 }

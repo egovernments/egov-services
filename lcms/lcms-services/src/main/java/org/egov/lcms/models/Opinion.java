@@ -66,4 +66,7 @@ public class Opinion {
 
 	@JsonProperty("stateId")
 	private String stateId;
+	
+	@JsonProperty("caseDetails")
+	private CaseDetails caseDetails;
 }

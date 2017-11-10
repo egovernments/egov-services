@@ -2,6 +2,7 @@ package org.egov.lcms.controller;
 
 import javax.validation.Valid;
 
+import org.egov.lcms.models.CaseDetailsResponse;
 import org.egov.lcms.models.CaseRequest;
 import org.egov.lcms.models.CaseResponse;
 import org.egov.lcms.models.CaseSearchCriteria;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -105,6 +107,7 @@ public class CaseController {
 
 	/**
 	 * Create method for Reference Evidence API
+	 * 
 	 * @param caseRequest
 	 * @return caseResponse
 	 * @throws Exception
@@ -113,15 +116,27 @@ public class CaseController {
 	public ResponseEntity<?> createReferenceEvidence(@RequestBody @Valid CaseRequest caseRequest) throws Exception {
 		return new ResponseEntity<>(caseService.createReferenceEvidence(caseRequest), HttpStatus.OK);
 	}
-	
+
 	/**
 	 * Update method for Reference Evidence API
+	 * 
 	 * @param caseRequest
 	 * @return caseResponse
 	 * @throws Exception
 	 */
-	@RequestMapping(path ="/referenceevidence/_update", method = RequestMethod.POST)
+	@RequestMapping(path = "/referenceevidence/_update", method = RequestMethod.POST)
 	public ResponseEntity<?> updateReferenceEvidence(@RequestBody @Valid CaseRequest caseRequest) throws Exception {
 		return new ResponseEntity<>(caseService.updateReferenceEvidence(caseRequest), HttpStatus.OK);
+	}
+
+	/**
+	 * used to get the caseNo and summonRefernceNo using tenantId
+	 * @param tenantId
+	 * @return
+	 */
+	@RequestMapping(path = "/caseno/_search", method = RequestMethod.POST)
+	public CaseDetailsResponse getCaseNo(@RequestParam(value = "tenantId", required = true) String tenantId,
+			@RequestBody RequestInfoWrapper requestInfoWrapper) {
+		return caseService.getCaseNo(tenantId, requestInfoWrapper.getRequestInfo());
 	}
 }

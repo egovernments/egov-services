@@ -104,4 +104,19 @@ public class OpinionQueryBuilder {
 			preparedStatementValues.add(limit);
 		}
 	}
+
+	public String getCaseNo(String summonReferenceNo, String tenantId, List<Object> preparedStatementValues) {
+
+		StringBuilder searchQuery = new StringBuilder();
+
+		searchQuery.append("SELECT caseno FROM " + ConstantUtility.CASE_TABLE_NAME);
+
+		searchQuery.append(" WHERE tenantId=?");
+		preparedStatementValues.add(tenantId);
+
+		searchQuery.append(" AND summonreferenceno=?");
+		preparedStatementValues.add(summonReferenceNo);
+
+		return searchQuery.toString();
+	}
 }

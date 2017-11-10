@@ -8,6 +8,7 @@ import org.egov.lcms.models.Advocate;
 import org.egov.lcms.models.AdvocateDetails;
 import org.egov.lcms.models.AdvocateSearchCriteria;
 import org.egov.lcms.models.Case;
+import org.egov.lcms.models.CaseDetails;
 import org.egov.lcms.models.CaseSearchCriteria;
 import org.egov.lcms.models.CaseVoucher;
 import org.egov.lcms.models.HearingDetails;
@@ -15,6 +16,7 @@ import org.egov.lcms.models.ParaWiseComment;
 import org.egov.lcms.models.ReferenceEvidence;
 import org.egov.lcms.repository.builder.CaseBuilder;
 import org.egov.lcms.repository.rowmapper.AdvocateDetailsRowMapper;
+import org.egov.lcms.repository.rowmapper.CaseDetailsRowMapper;
 import org.egov.lcms.repository.rowmapper.CaseRowMapper;
 import org.egov.lcms.repository.rowmapper.CaseVoucherRowMapper;
 import org.egov.lcms.repository.rowmapper.EvidenceRowMapper;
@@ -66,6 +68,9 @@ public class CaseSearchRepository {
 
 	@Autowired
 	EvidenceRowMapper evidenceRowMapper;
+
+	@Autowired
+	CaseDetailsRowMapper caseDetailsRowMapper;
 
 	/**
 	 * This will search the cases based on the given casesearchCriteria
@@ -197,7 +202,27 @@ public class CaseSearchRepository {
 		}
 		if (referenceEvidences != null && referenceEvidences.size() > 0)
 			return referenceEvidences;
-		
+
+		return null;
+	}
+
+	public List<CaseDetails> getCaseDetails(String tenantId) {
+		List<CaseDetails> caseDetails = new ArrayList<>();
+		final List<Object> preparedStatementValues = new ArrayList<Object>();
+		final String queryStr = caseBuilder.searchCaseDetailsByTenantId(tenantId, ConstantUtility.CASE_TABLE_NAME,
+				preparedStatementValues);
+
+		try {
+			caseDetails = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), caseDetailsRowMapper);
+		} catch (Exception ex) {
+			log.info("the exception is :" + ex.getMessage());
+			throw new CustomException(propertiesManager.getCaseDetailsResponseErrorCode(),
+					propertiesManager.getCaseDetailsResponseErrorMsg());
+		}
+
+		if (caseDetails != null && caseDetails.size() > 0)
+			return caseDetails;
+
 		return null;
 	}
 }

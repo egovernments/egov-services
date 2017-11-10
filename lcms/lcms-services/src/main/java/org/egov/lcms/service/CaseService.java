@@ -14,6 +14,8 @@ import org.egov.lcms.models.AdvocateDetails;
 import org.egov.lcms.models.Bench;
 import org.egov.lcms.models.Case;
 import org.egov.lcms.models.CaseCategory;
+import org.egov.lcms.models.CaseDetails;
+import org.egov.lcms.models.CaseDetailsResponse;
 import org.egov.lcms.models.CaseRequest;
 import org.egov.lcms.models.CaseResponse;
 import org.egov.lcms.models.CaseSearchCriteria;
@@ -113,11 +115,11 @@ public class CaseService {
 
 	private CaseResponse getResponseInfo(CaseRequest caseRequest) {
 		ResponseInfo responseInfo = responseFactory.getResponseInfo(caseRequest.getRequestInfo(), HttpStatus.CREATED);
-		CaseResponse opinionResponse = new CaseResponse();
+		CaseResponse caseResponse = new CaseResponse();
 
-		opinionResponse.setResponseInfo(responseInfo);
-		opinionResponse.setCases(caseRequest.getCases());
-		return opinionResponse;
+		caseResponse.setResponseInfo(responseInfo);
+		caseResponse.setCases(caseRequest.getCases());
+		return caseResponse;
 	}
 
 	/**
@@ -578,6 +580,7 @@ public class CaseService {
 					evidence.setCode(code);
 					evidence.setCaseCode(casee.getCode());
 					evidence.setTenantId(casee.getTenantId());
+					evidence.setCaseNo(casee.getSummon().getCaseNo());
 				}
 			}
 		}
@@ -593,11 +596,20 @@ public class CaseService {
 				for (ReferenceEvidence evidence : casee.getReferenceEvidences()) {
 					evidence.setCaseCode(casee.getCode());
 					evidence.setTenantId(casee.getTenantId());
+					evidence.setCaseNo(casee.getSummon().getCaseNo());
 				}
 			}
 		}
 		
 		kafkaTemplate.send(propertiesManager.getEvidenceUpdateTopic(), caseRequest);
 		return getResponseInfo(caseRequest);
+	}
+
+	public CaseDetailsResponse getCaseNo(String tenantId, RequestInfo requestInfo) {
+		
+		List<CaseDetails> caseDetails = caseSearchRepository.getCaseDetails(tenantId);
+		ResponseInfo responseInfo = responseFactory.getResponseInfo(requestInfo, HttpStatus.CREATED);
+		
+		return new CaseDetailsResponse(responseInfo, caseDetails);
 	}
 }

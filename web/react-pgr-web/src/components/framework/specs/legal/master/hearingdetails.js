@@ -150,10 +150,10 @@ var dat ={
             "patternErrorMsg": ""
           },
           {
-            "name": "nextHearingDate",
+            "name": "nextHearingTime",
             "jsonPath": "cases[0].hearingDetails.nextHearingTime",
             "label": "legal.create.nextHearingTime",
-            "type": "text",
+            "type": "timePicker",
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": ""
@@ -214,7 +214,7 @@ var dat ={
                 {
                   "name": "mobileNo",
                   "pattern": "",
-                  "type": "text",
+                  "type": "mobileNumber",
                   "jsonPath": "cases[0].hearingDetails[0].attendees[0].mobileNumber",
                   "isRequired": true,
                   "isDisabled": false

@@ -39,10 +39,7 @@
  */
 package org.egov.inv.persistence.entity;
 
-import io.swagger.model.AuditDetails;
-import io.swagger.model.Department;
-import io.swagger.model.Employee;
-import io.swagger.model.Store;
+import io.swagger.model.*;
 import lombok.*;
 
 @Builder
@@ -106,7 +103,8 @@ public class StoreEntity {
         store.setContactNo1(contactno1);
         store.setContactNo2(contactno2);
         store.setEmail(email);
-        store.setIsCentralStore(isCentralStore);
+        store.setIsCentralStore(null != isCentralStore ? isCentralStore : Boolean.FALSE);
+        store.setOfficeLocation(buildOfficeLocation());
         AuditDetails auditDetails = new AuditDetails();
         auditDetails.setCreatedBy(createdBy);
         auditDetails.setCreatedTime(createdTime);
@@ -135,7 +133,7 @@ public class StoreEntity {
         this.description = store.getDescription();
         this.officeLocation = null != store.getOfficeLocation() ? store.getOfficeLocation().getCode() : null;
         this.email = store.getEmail();
-        this.isCentralStore = store.getIsCentralStore();
+        this.isCentralStore = (null != store.getIsCentralStore() ? store.getIsCentralStore() : false);
         this.tenantId = store.getAuditDetails().getTenantId();
         this.department = store.getDepartment().getCode();
         this.storeInCharge = store.getStoreInCharge().getCode();
@@ -146,4 +144,9 @@ public class StoreEntity {
         return this;
     }
 
+    private Location buildOfficeLocation() {
+        return Location.builder()
+                .code(officeLocation)
+                .build();
+    }
 }

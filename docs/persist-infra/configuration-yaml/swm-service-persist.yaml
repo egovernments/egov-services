@@ -1202,3 +1202,95 @@ serviceMaps:
 
        - jsonPath: $.vehicleMaintenanceDetails.*.code
 
+ - version: 1.0
+   name: vehicletripsheetdetails create
+   description: create vehicletripsheetdetails in egswm_vehicletripsheetdetails
+   fromTopic: swm-vehicletripsheetdetails-save-topic
+   queryMaps: 
+    - query: INSERT INTO egswm_vehicletripsheetdetails(tripNo, tenantid, vehicle, vendor, route, tripStartDate, tripEndDate, inTime, outTime, entryWeight, exitWeight, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.vehicleTripSheetDetails.*
+      jsonMaps:
+       
+       - jsonPath: $.vehicleTripSheetDetails.*.tripNo
+
+       - jsonPath: $.vehicleTripSheetDetails.*.tenantId
+
+       - jsonPath: $.vehicleTripSheetDetails.*.vehicle.regNumber
+         dbType: LONG
+         
+       - jsonPath: $.vehicleTripSheetDetails.*.vendor.vendorNo
+         dbType: LONG
+
+       - jsonPath: $.vehicleTripSheetDetails.*.route.code
+
+       - jsonPath: $.vehicleTripSheetDetails.*.tripStartDate
+         dbType: LONG
+         
+       - jsonPath: $.vehicleTripSheetDetails.*.tripEndDate
+         dbType: LONG
+
+       - jsonPath: $.vehicleTripSheetDetails.*.inTime
+         dbType: LONG
+         
+       - jsonPath: $.vehicleTripSheetDetails.*.outTime
+         dbType: LONG
+
+       - jsonPath: $.vehicleTripSheetDetails.*.entryWeight
+         dbType: DOUBLE
+         
+       - jsonPath: $.vehicleTripSheetDetails.*.exitWeight
+         dbType: DOUBLE
+
+       - jsonPath: $.vehicleTripSheetDetails.*.auditDetails.createdBy
+
+       - jsonPath: $.vehicleTripSheetDetails.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.vehicleTripSheetDetails.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.vehicleTripSheetDetails.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+ - version: 1.0
+   name: vehicletripsheetdetails update
+   description: update vehicletripsheetdetails in egswm_vehicletripsheetdetails
+   fromTopic: swm-vehicletripsheetdetails-update-topic
+   queryMaps: 
+    - query: update egswm_vehicletripsheetdetails set vehicle=?, vendor=?, route=?, tripStartDate=?, tripEndDate=?, inTime=?, outTime=?, entryWeight=?, exitWeight=?, lastmodifiedby=?, lastmodifiedtime=? where tripNo=? and tenantId=?;
+      basePath: $.vehicleTripSheetDetails.*
+      jsonMaps:
+       
+       - jsonPath: $.vehicleTripSheetDetails.*.vehicle.regNumber
+         dbType: LONG
+         
+       - jsonPath: $.vehicleTripSheetDetails.*.vendor.vendorNo
+         dbType: LONG
+
+       - jsonPath: $.vehicleTripSheetDetails.*.route.code
+
+       - jsonPath: $.vehicleTripSheetDetails.*.tripStartDate
+         dbType: LONG
+         
+       - jsonPath: $.vehicleTripSheetDetails.*.tripEndDate
+         dbType: LONG
+
+       - jsonPath: $.vehicleTripSheetDetails.*.inTime
+         dbType: LONG
+         
+       - jsonPath: $.vehicleTripSheetDetails.*.outTime
+         dbType: LONG
+
+       - jsonPath: $.vehicleTripSheetDetails.*.entryWeight
+         dbType: DOUBLE
+         
+       - jsonPath: $.vehicleTripSheetDetails.*.exitWeight
+         dbType: DOUBLE
+
+       - jsonPath: $.vehicleTripSheetDetails.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.vehicleTripSheetDetails.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+       - jsonPath: $.vehicleTripSheetDetails.*.tripNo
+
+       - jsonPath: $.vehicleTripSheetDetails.*.tenantId

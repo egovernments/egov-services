@@ -234,7 +234,7 @@ export default class assetImmovableReport extends Component {
 												<b> ज्यावर बांधकाम केले आहे अशा जमिनीचा सर्वेक्षण क्रमांक</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "left"}}>
-												<b>{this.props.data[4]?this.props.data[4]:""}</b>
+												<b>{this.props.data[44] ? this.props.data[44] :""}</b>
 										</td>
 										<td  colSpan={9} style={{textAlign: "center"}}>
 												<b>विक्री करणे</b>

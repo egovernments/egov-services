@@ -6,6 +6,7 @@ import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.VehicleMaintenanceDetails;
 import org.egov.swm.domain.model.VehicleMaintenanceDetailsSearch;
 import org.egov.swm.domain.service.VehicleMaintenanceDetailsService;
+import org.egov.swm.web.requests.ScheduledMaintenanceDateResponse;
 import org.egov.swm.web.requests.VehicleMaintenanceDetailsRequest;
 import org.egov.swm.web.requests.VehicleMaintenanceDetailsResponse;
 import org.springframework.http.HttpStatus;
@@ -62,6 +63,19 @@ public class VehicleMaintenanceDetailsController {
         return VehicleMaintenanceDetailsResponse.builder()
                 .vehicleMaintenanceDetails(vehicleMaintenanceDetailsList.getPagedData())
                 .responseInfo(getResponseInfo(requestInfo))
+                .build();
+    }
+
+    @PostMapping("/_getnextscheduleddate")
+    @ResponseStatus(HttpStatus.OK)
+    public ScheduledMaintenanceDateResponse getScheduledMaintenanceDate(@RequestBody RequestInfo requestInfo, @RequestParam String tenantId,
+                                                                       @RequestParam String vehicleCode){
+
+        Long scheduledDate = vehicleMaintenanceDetailsService.calaculateNextSceduledMaintenanceDate(tenantId, vehicleCode);
+
+        return ScheduledMaintenanceDateResponse.builder()
+                .responseInfo(new ResponseInfo())
+                .sceduledDate(scheduledDate)
                 .build();
     }
 

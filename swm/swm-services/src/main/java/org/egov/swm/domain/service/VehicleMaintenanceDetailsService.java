@@ -1,8 +1,8 @@
 package org.egov.swm.domain.service;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.egov.swm.domain.model.*;
 import org.egov.swm.domain.repository.VehicleMaintenanceDetailsRepository;
-import org.egov.swm.domain.repository.VehicleMaintenanceRepository;
 import org.egov.swm.domain.repository.VehicleRepository;
 import org.egov.swm.web.requests.VehicleMaintenanceDetailsRequest;
 import org.egov.tracer.model.CustomException;
@@ -20,15 +20,24 @@ public class VehicleMaintenanceDetailsService {
 
     private VehicleMaintenanceDetailsRepository vehicleMaintenanceDetailsRepository;
 
-    private VehicleMaintenanceRepository vehicleMaintenanceRepository;
+    private VehicleMaintenanceService vehicleMaintenanceService;
+
+    private VehicleScheduleService vehicleScheduleService;
+
+    private RouteService routeService;
 
     public VehicleMaintenanceDetailsService(VehicleRepository vehicleRepository,
                                             VehicleMaintenanceDetailsRepository vehicleMaintenanceDetailsRepository,
-                                            VehicleMaintenanceRepository vehicleMaintenanceRepository) {
+                                            VehicleMaintenanceService vehicleMaintenanceService,
+                                            VehicleScheduleService vehicleScheduleService,
+                                            RouteService routeService) {
         this.vehicleRepository = vehicleRepository;
         this.vehicleMaintenanceDetailsRepository = vehicleMaintenanceDetailsRepository;
-        this.vehicleMaintenanceRepository = vehicleMaintenanceRepository;
+        this.vehicleMaintenanceService = vehicleMaintenanceService;
+        this.vehicleScheduleService = vehicleScheduleService;
+        this.routeService = routeService;
     }
+
 
     public VehicleMaintenanceDetailsRequest create (VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest){
 
@@ -74,6 +83,27 @@ public class VehicleMaintenanceDetailsService {
         populateVehicleData(vehicleMaintenanceDetailsList.getPagedData());
 
         return vehicleMaintenanceDetailsList;
+    }
+
+    public long calaculateNextSceduledMaintenanceDate(String tenantId, String vehicleCode){
+        //Fetch vehicle maintenance detail using code and tenantid
+        VehicleMaintenanceDetailsSearch vehicleMaintenanceDetailsSearch = new VehicleMaintenanceDetailsSearch();
+        vehicleMaintenanceDetailsSearch.setTenantId(tenantId);
+        vehicleMaintenanceDetailsSearch.setVehicle(Vehicle.builder().regNumber(vehicleCode).build());
+        vehicleMaintenanceDetailsSearch.setSortBy("createddate");
+
+        Pagination<VehicleMaintenanceDetails> vehicleMaintenanceDetailsPage = vehicleMaintenanceDetailsRepository.search(vehicleMaintenanceDetailsSearch);
+
+        //Check if vehicleMaintenance detail is present
+        if(!vehicleMaintenanceDetailsPage.getPagedData().isEmpty()) {
+            Long lastServiceDate = vehicleMaintenanceDetailsPage.getPagedData().get(0).getActualMaintenanceDate();
+            int noOfDays = fetchMaintenanceAfterFromVehicleMaintenance(vehicleMaintenanceDetailsPage.getPagedData().get(0));
+
+            return DateUtils.addDays(new Date(lastServiceDate), noOfDays).getTime();
+        }
+        else{
+            throw new CustomException("VehicleMaintenanceDetail", "Invalid Vehicle Maintenance Detatils:");
+        }
     }
 
     private void validateForUniqueCodesInRequest(VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest){
@@ -136,7 +166,71 @@ public class VehicleMaintenanceDetailsService {
             }
 
         }
+    }
 
+    //Return number of days from vehicle maintenance
+    private int fetchMaintenanceAfterFromVehicleMaintenance(VehicleMaintenanceDetails vehicleMaintenanceDetail){
+
+        if(vehicleMaintenanceDetail.getVehicle() != null && (vehicleMaintenanceDetail.getVehicle().getRegNumber() == null ||
+                vehicleMaintenanceDetail.getVehicle().getRegNumber().isEmpty()))
+            throw new CustomException("code", "Vehicle code required in maintenance details");
+
+        VehicleMaintenanceSearch vehicleMaintenanceSearch = new VehicleMaintenanceSearch();
+        vehicleMaintenanceSearch.setTenantId(vehicleMaintenanceDetail.getTenantId());
+        vehicleMaintenanceDetail.setVehicle(vehicleMaintenanceDetail.getVehicle());
+
+        Pagination<VehicleMaintenance> vehicleMaintenancePage = vehicleMaintenanceService.search(vehicleMaintenanceSearch);
+
+        if(!vehicleMaintenancePage.getPagedData().isEmpty()) {
+
+            VehicleMaintenance vehicleMaintenance = vehicleMaintenancePage.getPagedData().get(0);
+
+            if(vehicleMaintenance.getMaintenanceUom().equals("DAYS")){
+                return Math.toIntExact(vehicleMaintenance.getMaintenanceAfter());
+
+            }
+            else if(vehicleMaintenance.getMaintenanceUom().equals("KMS")){
+                return Math.toIntExact(vehicleMaintenance.getMaintenanceAfter() / fetchkilometersFromRoutes(vehicleMaintenanceDetail));
+            }
+        }
+        else
+            throw new CustomException("VehicleMaintenance", "Vehicle Maintenance not defin:");
+
+        return 0;
+    }
+
+    private int fetchkilometersFromRoutes(VehicleMaintenanceDetails vehicleMaintenanceDetail){
+        VehicleScheduleSearch vehicleScheduleSearch = new VehicleScheduleSearch();
+        vehicleScheduleSearch.setTenantId(vehicleMaintenanceDetail.getTenantId());
+        vehicleScheduleSearch.setVehicle(vehicleMaintenanceDetail.getVehicle());
+
+        Pagination<VehicleSchedule> vehicleSchedulePage = vehicleScheduleService.search(vehicleScheduleSearch);
+
+        Long dateFrom = DateUtils.addDays(new Date(vehicleMaintenanceDetail.getActualMaintenanceDate()), 1).getTime();
+        Long dateTo = new Date().getTime();
+        List<VehicleSchedule>  vehicleScheduleList  = vehicleSchedulePage.getPagedData().stream()
+                .filter(v -> (dateFrom >= v.getScheduledFrom() && dateTo <= v.getScheduledTo()))
+                .collect(Collectors.toList());
+        Double kiloMetersPerDay = 0.0;
+
+        if(!vehicleScheduleList.isEmpty()){
+            for(VehicleSchedule vehicleSchedule : vehicleScheduleList){
+                RouteSearch routeSearch = new RouteSearch();
+                routeSearch.setTenantId(vehicleMaintenanceDetail.getTenantId());
+                routeSearch.setCode(vehicleSchedule.getRoute().getCode());
+
+                Pagination<Route> routePage = routeService.search(routeSearch);
+
+                if(!routePage.getPagedData().isEmpty())
+                    kiloMetersPerDay = kiloMetersPerDay + routePage.getPagedData().get(0).getDistance();
+                else
+                    throw new CustomException("Route", "Route not defined:");
+            }
+        }
+        else{
+            throw new CustomException("VehicleSchedule", "Vehicle Schedule not defined:");
+        }
+        return kiloMetersPerDay.intValue();
     }
 
     private void setAuditDetails(VehicleMaintenanceDetails contract, Long userId) {

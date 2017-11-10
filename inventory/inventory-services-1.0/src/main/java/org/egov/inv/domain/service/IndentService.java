@@ -9,6 +9,10 @@ import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.Indent;
 import org.egov.inv.model.IndentRequest;
+import org.egov.inv.model.IndentResponse;
+import org.egov.inv.model.ResponseInfo.StatusEnum;
+import org.egov.inv.model.RequestInfo;
+import org.egov.inv.model.ResponseInfo;
 import org.egov.inv.persistence.repository.IndentJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +22,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
-public class IndentService  extends DomainService{
- 	/*@Autowired
-	private StoreRepository storeRepository;
-	@Autowired
-	private DepartmentRepository departmentRepository;
- */
-	
+public class IndentService extends DomainService {
+	/*
+	 * @Autowired private StoreRepository storeRepository;
+	 * 
+	 * @Autowired private DepartmentRepository departmentRepository;
+	 */
+
 	@Autowired
 	protected LogAwareKafkaTemplate<String, Object> kafkaQue;
 	@Autowired
@@ -33,89 +37,76 @@ public class IndentService  extends DomainService{
 	private String saveTopic;
 	@Value("${inv.indents.save.key}")
 	private String saveKey;
-	
+
 	@Value("${inv.indents.save.topic}")
 	private String updateTopic;
 	@Value("${inv.indents.save.key}")
 	private String updateKey;
 
 	@Transactional
-	public IndentRequest create(IndentRequest indentRequest  ) {
+	public IndentResponse create(IndentRequest indentRequest) {
 
 		try {
 			List<Indent> indents = fetchRelated(indentRequest.getIndents());
 			validate(indents, Constants.ACTION_CREATE);
 			for (Indent b : indents) {
 				b.setId(indentRepository.getSequence(b));
-				//b.add();
+				// b.add();
 			}
 			kafkaQue.send(saveTopic, saveKey, indentRequest);
+			
+			IndentResponse response = new IndentResponse();
+			response.setIndents(indentRequest.getIndents());
+			response.setResponseInfo(getResponseInfo(indentRequest.getRequestInfo()));
+			return response;
 		} catch (CustomBindException e) {
 			throw e;
 		}
 
-		return indentRequest;
-
 	}
-
-	 
-
-	private void validate(List<Indent> indents, String method ) {
+	private void validate(List<Indent> indents, String method) {
 
 		try {
 			switch (method) {
-			 
-			case Constants.ACTION_CREATE:{
+
+			case Constants.ACTION_CREATE: {
 				if (indents == null) {
 					throw new InvalidDataException("indents", ErrorCode.NOT_NULL.getCode(), null);
 				}
-				}
+			}
 				break;
-			 
 
 			}
 		} catch (IllegalArgumentException e) {
-			 
+
 		}
-		 
+
 	}
 
 	public List<Indent> fetchRelated(List<Indent> indents) {
 		for (Indent indent : indents) {
 			// fetch related items
-		/*	if (indent.getIssueStore() != null) {
-				Store issueStore = storeRepository.findById(indent.getIssueStore());
-				if (issueStore == null) {
-					throw new InvalidDataException("issueStore", "issueStore.invalid", " Invalid issueStore");
-				}
-				indent.setIssueStore(issueStore);
-			}
-			if (indent.getIndentStore() != null) {
-				Store indentStore = storeRepository.findById(indent.getIndentStore());
-				if (indentStore == null) {
-					throw new InvalidDataException("indentStore", "indentStore.invalid", " Invalid indentStore");
-				}
-				indent.setIndentStore(indentStore);
-			}
-			if (indent.getDepartment() != null) {
-				Department department = departmentRepository.findById(indent.getDepartment());
-				if (department == null) {
-					throw new InvalidDataException("department", "department.invalid", " Invalid department");
-				}
-				indent.setDepartment(department);
-			}*/
-			 
-
-		 
+			/*
+			 * if (indent.getIssueStore() != null) { Store issueStore =
+			 * storeRepository.findById(indent.getIssueStore()); if (issueStore
+			 * == null) { throw new InvalidDataException("issueStore",
+			 * "issueStore.invalid", " Invalid issueStore"); }
+			 * indent.setIssueStore(issueStore); } if (indent.getIndentStore()
+			 * != null) { Store indentStore =
+			 * storeRepository.findById(indent.getIndentStore()); if
+			 * (indentStore == null) { throw new
+			 * InvalidDataException("indentStore", "indentStore.invalid",
+			 * " Invalid indentStore"); } indent.setIndentStore(indentStore); }
+			 * if (indent.getDepartment() != null) { Department department =
+			 * departmentRepository.findById(indent.getDepartment()); if
+			 * (department == null) { throw new
+			 * InvalidDataException("department", "department.invalid",
+			 * " Invalid department"); } indent.setDepartment(department); }
+			 */
 
 		}
 
 		return indents;
 	}
-
-
- 
-
-	 
 
 }

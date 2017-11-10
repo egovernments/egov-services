@@ -1,38 +1,39 @@
 package org.egov.inv.api;
 
 import java.math.BigDecimal;
-import org.egov.inv.model.ErrorRes;
+import java.util.List;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.egov.inv.domain.service.IndentService;
 import org.egov.inv.model.IndentRequest;
 import org.egov.inv.model.IndentResponse;
 import org.egov.inv.model.RequestInfo;
-
-import io.swagger.annotations.*;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
-import javax.validation.constraints.*;
-import javax.validation.Valid;
+import io.swagger.annotations.ApiParam;
 @javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
 
 @Controller
 public class IndentsApiController implements IndentsApi {
-
+    @Autowired
+    private IndentService indentService;
 
 
     public ResponseEntity<IndentResponse> indentsCreatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
         @ApiParam(value = "Create  new Indent"  )  @Valid @RequestBody IndentRequest indentRequest) {
-        // do some magic!
-        return new ResponseEntity<IndentResponse>(HttpStatus.OK);
+        IndentResponse response = indentService.create(indentRequest);
+        ResponseEntity<IndentResponse> res=new ResponseEntity<>(HttpStatus.OK);
+        return res;
     }
 
     public ResponseEntity<IndentResponse> indentsSearchPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,

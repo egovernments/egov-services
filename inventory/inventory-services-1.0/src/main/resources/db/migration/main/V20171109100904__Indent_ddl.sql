@@ -20,11 +20,10 @@ Create table indent(
 	designation varchar(50),
 	stateId bigint,
 	createdby bigint,
-		createdTime timestamp without time zone,
-		lastmodifiedby bigint,
-		lastModifiedTime timestamp without time zone,
-		tenantId varchar(250),
-			version bigint
+	createdTime timestamp without time zone,
+	lastmodifiedby bigint,
+	lastModifiedTime timestamp without time zone,
+	version bigint
 );
 alter table indent add constraint pk_indent primary key (indentNumber,tenantId);
 create sequence seq_indent;

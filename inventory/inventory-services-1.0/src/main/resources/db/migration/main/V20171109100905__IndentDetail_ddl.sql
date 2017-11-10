@@ -1,6 +1,7 @@
 
 Create table indentdetail( 
 	id varchar(50),
+	indentNumber varchar(64) ,
 	tenantId varchar(128),
 	material varchar(50),
 	uom varchar(50),
@@ -15,7 +16,7 @@ Create table indentdetail(
 	interstoreRequestQuantity numeric (13,2),
 	deliveryTerms varchar(512),
 	remarks varchar(512),
-	indentNumber varchar(64) ,
+
 	version bigint
 );
 alter table indentdetail add constraint pk_indentdetail primary key (id);

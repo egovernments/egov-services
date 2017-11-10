@@ -117,8 +117,7 @@ public class IndentDetail   {
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
-  @Valid
-
+  
   public Material getMaterial() {
     return material;
   }
@@ -139,7 +138,7 @@ public class IndentDetail   {
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
-  @Valid
+  
 
   public Uom getUom() {
     return uom;
@@ -180,7 +179,7 @@ public class IndentDetail   {
   **/
   @ApiModelProperty(value = "Order of items selected.")
 
-  @Valid
+   
 
   public BigDecimal getOrderNumber() {
     return orderNumber;
@@ -201,7 +200,7 @@ public class IndentDetail   {
   **/
   @ApiModelProperty(value = "projectCode  If case the purpose is Capital ")
 
-  @Valid
+  
 
   public ProjectCode getProjectCode() {
     return projectCode;
@@ -222,7 +221,7 @@ public class IndentDetail   {
   **/
   @ApiModelProperty(value = "Mandatory if the purpose is Repair and Maintenance.Refer asset code format: autoComplete ")
 
-  @Valid
+ 
 
   public Asset getAsset() {
     return asset;
@@ -244,7 +243,7 @@ public class IndentDetail   {
   @ApiModelProperty(required = true, value = "indent quantity of the IndentDetail. Quantity requested by indentor. ")
   @NotNull
 
-  @Valid
+ 
 
   public BigDecimal getIndentQuantity() {
     return indentQuantity;
@@ -265,7 +264,7 @@ public class IndentDetail   {
   **/
   @ApiModelProperty(value = "Quantity issued from indent issue. ")
 
-  @Valid
+ 
 
   public BigDecimal getTotalProcessedQuantity() {
     return totalProcessedQuantity;
@@ -286,7 +285,7 @@ public class IndentDetail   {
   **/
   @ApiModelProperty(value = "Quantity issued from material indent screen. ")
 
-  @Valid
+ 
 
   public BigDecimal getIndentIssuedQuantity() {
     return indentIssuedQuantity;
@@ -307,7 +306,7 @@ public class IndentDetail   {
   **/
   @ApiModelProperty(value = "How many quantities ordered for purchase order. ")
 
-  @Valid
+ 
 
   public BigDecimal getPoOrderedQuantity() {
     return poOrderedQuantity;
@@ -328,7 +327,7 @@ public class IndentDetail   {
   **/
   @ApiModelProperty(value = "Quantity requsted via inter store indent.")
 
-  @Valid
+ 
 
   public BigDecimal getInterstoreRequestQuantity() {
     return interstoreRequestQuantity;

@@ -45,9 +45,9 @@ public class Indent   {
    * There are 2 types of indent namely Indent Note and Transfer Indent 
    */
   public enum IndentTypeEnum {
-    INDENTNOTE("IndentNote"),
+    INDENTNOTE("Indent"),
     
-    TRANSFERINDENT("TransferIndent");
+    TRANSFERINDENT("Transfer Indent");
 
     private String value;
 
@@ -81,11 +81,11 @@ public class Indent   {
   public enum IndentPurposeEnum {
     CONSUMPTION("Consumption"),
     
-    REPAIRSANDMAINTENANCE("RepairsAndMaintenance"),
+    REPAIRSANDMAINTENANCE("Repairs and Maintenance"),
     
     CAPITAL("Capital"),
     
-    MATERIALTRANSFERNOTE("MaterialTransferNote");
+    MATERIALTRANSFERNOTE("Material Transfer Note");
 
     private String value;
 
@@ -271,7 +271,7 @@ public class Indent   {
   **/
   @ApiModelProperty(value = "Applicable for both Indent Note and Transfer Indent. This field holds information of the intended issuing store.  ")
 
-  @Valid
+  
 
   public Store getIssueStore() {
     return issueStore;
@@ -291,9 +291,8 @@ public class Indent   {
    * @return indentStore
   **/
   @ApiModelProperty(required = true, value = "Applicable for Tranfer Indent Only.This field holds the value of store raising the indent in case of Transfer Indent.  ")
-  @NotNull
 
-  @Valid
+  
 
   public Store getIndentStore() {
     return indentStore;
@@ -504,7 +503,7 @@ public class Indent   {
   @NotNull
 
   @Valid
- @Size(min=1,max=50)
+  @Size(min=1,max=50)
   public List<IndentDetail> getIndentDetails() {
     return indentDetails;
   }
@@ -524,7 +523,7 @@ public class Indent   {
   **/
   @ApiModelProperty(value = "department of indenting store or direct department request for material. If store is selected then autopopulate department information and readonly field.")
 
-  @Valid
+ 
 
   public Department getDepartment() {
     return department;
@@ -646,7 +645,7 @@ public class Indent   {
   **/
   @ApiModelProperty(value = "")
 
-  @Valid
+   
 
   public AuditDetails getAuditDetails() {
     return auditDetails;

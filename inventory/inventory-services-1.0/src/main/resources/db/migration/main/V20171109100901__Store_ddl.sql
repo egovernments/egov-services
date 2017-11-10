@@ -19,8 +19,7 @@ Create table store(
 		createdTime timestamp without time zone,
 		lastmodifiedby bigint,
 		lastModifiedTime timestamp without time zone,
-		tenantId varchar(250),
-			version bigint
+		version bigint
 );
 alter table store add constraint pk_store primary key (code,tenantId);
 create sequence seq_store;

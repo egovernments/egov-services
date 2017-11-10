@@ -33,6 +33,10 @@ public class MaterialService extends DomainService{
 
 	@Autowired
 	protected LogAwareKafkaTemplate<String, Object> kafkaQue;
+<<<<<<< HEAD
+=======
+	 
+>>>>>>> stash
 	/*@Autowired
 	private MaterialTypeRepository materialTypeRepository;
 	@Autowired

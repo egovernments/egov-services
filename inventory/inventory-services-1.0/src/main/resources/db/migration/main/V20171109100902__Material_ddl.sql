@@ -26,11 +26,10 @@ Create table material(
 	overrideMaterialControlType boolean,
 	scrapable boolean,
 	createdby bigint,
-		createdTime timestamp without time zone,
-		lastmodifiedby bigint,
-		lastModifiedTime timestamp without time zone,
-		tenantId varchar(250),
-			version bigint
+	createdTime timestamp without time zone,
+	lastmodifiedby bigint,
+	lastModifiedTime timestamp without time zone,
+	version bigint
 );
 alter table material add constraint pk_material primary key (code,tenantId);
 create sequence seq_material;

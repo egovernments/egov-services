@@ -123,8 +123,17 @@ public class PersistRepository {
 						log.debug("k:" + k + "linkedHashMap1:" + linkedHashMap1);
 
 						if (objDepth.length > 1 && k != objDepth.length - 1) {
-							linkedHashMap1 = (LinkedHashMap<String, Object>) linkedHashMap.get(objDepth[k]);
+							log.info("objDepth[k]"+objDepth[k]);
+							if(linkedHashMap1 == null)
+								linkedHashMap1 = (LinkedHashMap<String, Object>) linkedHashMap.get(objDepth[k]);
+							else
+								linkedHashMap1 = (LinkedHashMap<String, Object>) linkedHashMap1.get(objDepth[k]);	
 							log.debug("k:" + k + "linkedHashMap1>>>" + linkedHashMap1);
+							if(linkedHashMap1 == null){
+								value = null;
+								break;
+							}
+								
 						}
 
 						if (k == objDepth.length - 1) {

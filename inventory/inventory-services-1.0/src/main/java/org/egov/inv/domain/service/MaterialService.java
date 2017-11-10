@@ -1,29 +1,17 @@
 package org.egov.inv.domain.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.common.Constants;
 import org.egov.common.DomainService;
-import org.egov.common.Pagination;
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.exception.CustomBindException;
-import org.egov.common.exception.ErrorCode;
-import org.egov.common.exception.InvalidDataException;
-import org.egov.inv.model.AuditDetails;
-import org.egov.inv.model.ChartofAccount;
 import org.egov.inv.model.Material;
 import org.egov.inv.model.MaterialRequest;
-import org.egov.inv.model.MaterialType;
-import org.egov.inv.model.Uom;
 import org.egov.inv.persistence.repository.MaterialJdbcRepository;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 
 @Service
 @Transactional(readOnly = true)
@@ -43,7 +31,8 @@ public class MaterialService extends DomainService{
 	@Autowired
 	private MaterialJdbcRepository  materialRepository;
 
-	 
+	@Autowired
+	protected LogAwareKafkaTemplate<String, Object> kafkaQue;
 	/*@Autowired
 	private MaterialTypeRepository materialTypeRepository;
 	@Autowired

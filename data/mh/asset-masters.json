@@ -607,32 +607,7 @@
       "version": "1.0",
       "depreciationRate": null,
       "isDepreciationApplicable": true,
-      "assetFieldsDefination": [
-        {
-          "name": "Type",
-          "type": "Select",
-          "isActive": true,
-          "isMandatory": false,
-          "values": "wood,plastic,steel",
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Color",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        }
-      ]
+      "assetFieldsDefination": null
     },
     {
       "tenantId": "mh",
@@ -917,32 +892,7 @@
       "version": "1.0",
       "depreciationRate": 15,
       "isDepreciationApplicable": true,
-      "assetFieldsDefination": [
-        {
-          "name": "Type",
-          "type": "Select",
-          "isActive": true,
-          "isMandatory": false,
-          "values": "wood,plastic,steel",
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Color",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        }
-      ]
+      "assetFieldsDefination": null
     },
     {
       "tenantId": "mh",
@@ -999,32 +949,7 @@
       "version": "1.0",
       "depreciationRate": 15,
       "isDepreciationApplicable": true,
-      "assetFieldsDefination": [
-        {
-          "name": "Type",
-          "type": "Select",
-          "isActive": true,
-          "isMandatory": false,
-          "values": "wood,plastic,steel",
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Color",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        }
-      ]
+      "assetFieldsDefination": null
     },
     {
       "tenantId": "mh",

@@ -157,17 +157,38 @@ public class PerformanceAssessmentRowMapper {
 	}
 	
 	public class KPIValueRowMapper implements RowMapper<KpiValue> {
+		public static final String TRUE_FLAG = "true";
+		public static final String FALSE_FLAG = "false"; 
 		@Override
 		public KpiValue mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 			KpiValue value = new KpiValue(); 
-			KPI kpi = new KPI();
-			kpi.setCode(rs.getString("kpiCode"));
-			kpi.setTargetValue(rs.getLong("targetValue"));
-			kpi.setInstructions(rs.getString("instructions"));
-			value.setKpi(kpi);
 			value.setId(String.valueOf(rs.getString("valueId"))); 
 			value.setResultValue(rs.getLong("actualValue")); 
 			value.setTenantId(rs.getString("tenantId"));
+			
+			KPI kpi = new KPI();
+			kpi.setId(rs.getString("kpiId"));
+			kpi.setCode(rs.getString("kpiCode"));
+			kpi.setTargetValue(rs.getLong("targetValue"));
+			kpi.setInstructions(rs.getString("instructions"));
+			kpi.setFinancialYear(rs.getString("finYear"));
+			kpi.setName(rs.getString("kpiName"));
+			if(null != rs.getString("targetType") && rs.getString("targetType").equals(TRUE_FLAG)) { 
+				kpi.setTargetType(Boolean.TRUE);
+				kpi.setTargetDescription(String.valueOf(rs.getLong("targetValue")));
+				value.setResultDescription(String.valueOf(rs.getLong("actualValue")));
+			} else if (null != rs.getString("targetType") && rs.getString("targetType").equals(FALSE_FLAG)) {
+				kpi.setTargetType(Boolean.FALSE);
+				if(rs.getLong("targetValue") == 1) kpi.setTargetDescription("YES");
+				else if(rs.getLong("targetValue") == 2) kpi.setTargetDescription("NO");
+				else if(rs.getLong("targetValue") == 3) kpi.setTargetDescription("In Progress");
+				
+				if(rs.getLong("actualValue") == 1) value.setResultDescription("YES");
+				else if (rs.getLong("actualValue") == 2) value.setResultDescription("NO");
+				else if (rs.getLong("actualValue") == 3) value.setResultDescription("In Progress");
+			}
+			value.setKpi(kpi);
+			
 			return value; 
 		}
 	}

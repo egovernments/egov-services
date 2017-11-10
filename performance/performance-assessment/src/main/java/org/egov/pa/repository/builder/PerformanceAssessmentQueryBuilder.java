@@ -57,7 +57,7 @@ public class PerformanceAssessmentQueryBuilder {
     		+ " master.tenantid as tenantId, master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, master.targettype as targetType, master.targetvalue as targetValue, master.instructions as instructions, master.department as departmentId " 
     		+ " FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_document docs ON master.code = docs.kpicode WHERE master.active IS TRUE " ; 
     
-    public static final String SEARCH_VALUE_BASE_QUERY = "SELECT value.tenantid as tenantId, master.code as kpiCode, master.finyear as finYear, "  
+    public static final String SEARCH_VALUE_BASE_QUERY = "SELECT value.tenantid as tenantId, master.code as kpiCode, master.finyear as finYear, master.name as kpiName, master.id as kpiId, master.targettype as targetType, "  
     		+  " master.targetvalue as targetValue, master.instructions, "
     		+  " value.id as valueId, value.kpicode as valueKpiCode, value.actualvalue as actualValue "  
     		+  " FROM egpa_kpi_value value LEFT JOIN egpa_kpi_master master ON value.kpicode = master.code " 
@@ -124,32 +124,38 @@ public class PerformanceAssessmentQueryBuilder {
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addKpiValueWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
-            final KPIValueSearchRequest kpiValueSearchReq) {
-    	List<String> finYearList = kpiValueSearchReq.getFinYear();
-    	List<String> tenantIdList = kpiValueSearchReq.getTenantId(); 
-    	List<String> kpiCodeList = kpiValueSearchReq.getKpiCodes(); 
-        if (null == kpiValueSearchReq.getTenantId() || null == kpiValueSearchReq.getFinYear() 
-        		|| null == kpiValueSearchReq.getKpiCodes())
-            return;
+			final KPIValueSearchRequest kpiValueSearchReq) {
+		List<String> finYearList = kpiValueSearchReq.getFinYear();
+		List<String> tenantIdList = kpiValueSearchReq.getTenantId();
+		List<String> kpiCodeList = kpiValueSearchReq.getKpiCodes();
+		if (null == kpiValueSearchReq.getTenantId() || null == kpiValueSearchReq.getFinYear()
+				|| null == kpiValueSearchReq.getKpiCodes())
+			return;
 
-        selectQuery.append(" AND ");
-        boolean isAppendAndClause = false;
+		selectQuery.append(" AND ");
+		boolean isAppendAndClause = false;
 
-        if (null != finYearList && finYearList.size() > 0) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" master.finyear IN " + getStringQuery(finYearList));
-        }
-        
-        if (null != tenantIdList && tenantIdList.size() > 0) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" value.tenantid IN " + getStringQuery(tenantIdList));
-        }
-        
-        if (null != kpiCodeList && kpiCodeList.size() > 0) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" master.code IN " + getStringQuery(kpiCodeList));
-        }
-    }
+		if (null != finYearList && finYearList.size() > 0) {
+			if (finYearList.size() == 1 && !finYearList.get(0).equals("ALL")) {
+				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+				selectQuery.append(" master.finyear IN " + getStringQuery(finYearList));
+			}
+		}
+
+		if (null != tenantIdList && tenantIdList.size() > 0) {
+			if (tenantIdList.size() == 1 && !tenantIdList.get(0).equals("ALL")) {
+				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+				selectQuery.append(" value.tenantid IN " + getStringQuery(tenantIdList));
+			}
+		}
+
+		if (null != kpiCodeList && kpiCodeList.size() > 0) {
+			if (kpiCodeList.size() == 1 && !kpiCodeList.get(0).equals("ALL")) {
+				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+				selectQuery.append(" master.code IN " + getStringQuery(kpiCodeList));
+			}
+		}
+	}
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addKpiMasterWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,

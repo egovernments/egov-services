@@ -255,15 +255,32 @@ public class RequestValidator {
 	
 	public Error getError(final KPIValueSearchRequest kpiValueSearchRequest) {
 		final List<ErrorField> errorFields = new ArrayList<>();
+		
+		if(null == kpiValueSearchRequest.getFinYear()) { 
+			errorFields.add(buildErrorField(PerformanceAssessmentConstants.FINYEAR_SEARCH_MANDATORY_CODE,  
+                    PerformanceAssessmentConstants.FINYEAR_SEARCH_MANDATORY_ERROR_MESSAGE,
+                    PerformanceAssessmentConstants.FINYEAR_SEARCH_MANDATORY_FIELD_NAME));
+		}
+		if(null == kpiValueSearchRequest.getKpiCodes()) { 
+			errorFields.add(buildErrorField(PerformanceAssessmentConstants.KPICODE_SEARCH_MANDATORY_CODE,  
+                    PerformanceAssessmentConstants.KPICODE_SEARCH_MANDATORY_ERROR_MESSAGE,
+                    PerformanceAssessmentConstants.KPICODE_SEARCH_MANDATORY_FIELD_NAME));
+		}
+		if(null == kpiValueSearchRequest.getTenantId()) { 
+			errorFields.add(buildErrorField(PerformanceAssessmentConstants.TENANTID_SEARCH_MANDATORY_CODE,  
+                    PerformanceAssessmentConstants.TENANTID_SEARCH_MANDATORY_ERROR_MESSAGE,
+                    PerformanceAssessmentConstants.TENANTID_SEARCH_MANDATORY_FIELD_NAME));
+		}
+		
 		String tenantCount = DEFAULT_COUNT, kpiCount = DEFAULT_COUNT, finYearCount = DEFAULT_COUNT; 
 		if(null != kpiValueSearchRequest.getFinYear() && kpiValueSearchRequest.getFinYear().size() > 0) { 
-			finYearCount = (kpiValueSearchRequest.getFinYear().size() == 1) ? "1" : "*" ;  	
+			finYearCount = (kpiValueSearchRequest.getFinYear().size() == 1 && !kpiValueSearchRequest.getFinYear().get(0).equals("ALL")) ? "1" : "*" ;  	
 		}
 		if(null != kpiValueSearchRequest.getTenantId() && kpiValueSearchRequest.getTenantId().size() > 0) { 
-			tenantCount = (kpiValueSearchRequest.getTenantId().size() == 1) ? "1" : "*" ;  	
+			tenantCount = (kpiValueSearchRequest.getTenantId().size() == 1 && !kpiValueSearchRequest.getTenantId().get(0).equals("ALL")) ? "1" : "*" ;  	
 		}
 		if(null != kpiValueSearchRequest.getKpiCodes() && kpiValueSearchRequest.getKpiCodes().size() > 0) { 
-			kpiCount = (kpiValueSearchRequest.getKpiCodes().size() == 1) ? "1" : "*" ;  	
+			kpiCount = (kpiValueSearchRequest.getKpiCodes().size() == 1 && !kpiValueSearchRequest.getKpiCodes().get(0).equals("ALL")) ? "1" : "*" ;  	
 		}
 		String check = kpiValueService.searchPossibilityCheck(tenantCount, kpiCount, finYearCount);
 		if(!check.equals(SEARCH_POSSIBLE)) { 

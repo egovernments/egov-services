@@ -18,11 +18,7 @@ public class RevaluationQueryBuilder {
 	private ApplicationProperties applicationProperties;
 
 
-    public String BASE_QUERY = "SELECT ordernumber,orderdate,"
-            + "id,tenantid,assetid,currentcapitalizedvalue,typeofchange,revaluationamount,valueafterrevaluation,"
-            + "revaluationdate,revaluatedby,reasonforrevaluation,fixedassetswrittenoffaccount,"
-            + "function,fund,scheme,subscheme,comments,status,createdby,createddate,lastmodifiedby,lastmodifieddate,voucherreference FROM"
-            + " egasset_revaluation as revaluation";
+    public String BASE_QUERY = "SELECT * FROM  egasset_revaluation as revaluation";
 
     @SuppressWarnings("rawtypes")
     public String getQuery(final RevaluationCriteria revaluationCriteria, final List preparedStatementValues) {
@@ -43,7 +39,7 @@ public class RevaluationQueryBuilder {
         boolean isAppendAndClause = false;
 
         selectQuery.append(" WHERE");
-        if (revaluationCriteria.getStatus() != null) {
+      /*  if (revaluationCriteria.getStatus() != null) {
             isAppendAndClause = true;
             selectQuery.append(" revaluation.status = ?");
             preparedStatementValues.add(revaluationCriteria.getStatus());
@@ -52,7 +48,7 @@ public class RevaluationQueryBuilder {
             selectQuery.append(" revaluation.status = ?");
             preparedStatementValues.add(Status.APPROVED.toString());
         }
-
+*/
         if (revaluationCriteria.getId() == null && revaluationCriteria.getAssetId() == null)
             return;
 

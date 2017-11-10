@@ -100,7 +100,7 @@ public class RevaluationService {
             revaluation.setAuditDetails(assetCommonService.getAuditDetails(revaluationRequest.getRequestInfo()));
         
        /* logAwareKafkaTemplate.send(applicationProperties.getUpdateWorkflowTopicNmae(), revaluationRequest);*/
-        logAwareKafkaTemplate.send(applicationProperties.getUpdateRevaluationTopic(),
+        logAwareKafkaTemplate.send(applicationProperties.getRevaluationUpdateTopic(),
 				KafkaTopicName.UPDATEASSET.toString(), revaluationRequest);
 
 		final List<Revaluation> revaluations = new ArrayList<>();

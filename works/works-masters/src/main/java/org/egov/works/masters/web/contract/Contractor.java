@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  * An Object that holds Contractor Information
  */
 @ApiModel(description = "An Object that holds Contractor Information")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:48:21.172Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T13:06:33.860Z")
 
 public class Contractor   {
   @JsonProperty("id")
@@ -84,7 +84,7 @@ public class Contractor   {
   private ContractorClass contractorClass = null;
 
   @JsonProperty("pmc")
-  private Boolean pmc = null;
+  private Boolean pmc = false;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -247,8 +247,6 @@ public class Contractor   {
   @ApiModelProperty(required = true, value = "Email of the Contractor.")
   @NotNull
 
-//TODO : pattern not working. Gives error for valid email. Need to fix
- //@Pattern(regexp="/^(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$/") @Size(max=100)
   @Pattern(regexp="^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$") @Size(max=100)
   public String getEmail() {
     return email;
@@ -656,4 +654,3 @@ public class Contractor   {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

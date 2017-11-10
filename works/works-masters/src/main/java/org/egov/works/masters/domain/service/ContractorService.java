@@ -5,10 +5,12 @@ import java.util.List;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.masters.config.PropertiesManager;
+import org.egov.works.masters.domain.repository.ContractorRepository;
 import org.egov.works.masters.domain.validator.ContractorValidator;
 import org.egov.works.masters.utils.MasterUtils;
 import org.egov.works.masters.web.contract.Contractor;
 import org.egov.works.masters.web.contract.ContractorRequest;
+import org.egov.works.masters.web.contract.ContractorSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,9 @@ public class ContractorService {
     
     @Autowired
     private ContractorValidator contractorValidator;
+    
+    @Autowired
+    private ContractorRepository contractorRepository;
     
     @Transactional
     public List<Contractor> create(ContractorRequest contractorRequest, String tenantId) {
@@ -52,5 +57,9 @@ public class ContractorService {
         }
         kafkaTemplate.send(propertiesManager.getWorksMasterContractorUpdateValidatedTopic(), contractorRequest);
         return contractorRequest.getContractors();
+    }
+    
+    public List<Contractor> search(ContractorSearchCriteria contractorSearchCriteria) {
+        return contractorRepository.getContractorByCriteria(contractorSearchCriteria);
     }
 }

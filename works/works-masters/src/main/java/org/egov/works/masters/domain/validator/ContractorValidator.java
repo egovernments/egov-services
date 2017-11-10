@@ -5,12 +5,14 @@ import java.util.Map;
 
 import org.egov.tracer.model.CustomException;
 import org.egov.works.commons.utils.CommonConstants;
+import org.egov.works.masters.domain.repository.ContractorRepository;
 import org.egov.works.masters.utils.Constants;
 import org.egov.works.masters.web.contract.Contractor;
 import org.egov.works.masters.web.contract.ContractorRequest;
 import org.egov.works.masters.web.repository.MdmsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.apache.commons.lang3.StringUtils;
 
 import net.minidev.json.JSONArray;
 
@@ -19,6 +21,9 @@ public class ContractorValidator {
 
     @Autowired
     private MdmsRepository mdmsRepository;
+
+    @Autowired
+    private ContractorRepository contractorRepository;
 
     public void validateContractor(ContractorRequest contractorRequest, String tenantId) {
         JSONArray mdmsResponse = null;
@@ -36,50 +41,56 @@ public class ContractorValidator {
         }
 
         for (final Contractor contractor : contractorRequest.getContractors()) {
-            if (contractor.getContractorClass() != null && contractor.getContractorClass().getPropertyClass() != null) {
-                if (financialIntegrationReq) {
-                    // TODO : Need to add MDMS data for Bank and COA.
-                    if (contractor.getBank() != null && contractor.getBank().getCode() != null) {
-                        mdmsResponse = mdmsRepository.getByCriteria(contractor.getTenantId(),
-                                CommonConstants.MODULENAME_WORKS, CommonConstants.MASTERNAME_BANK, CommonConstants.CODE,
-                                contractor.getBank().getCode(), contractorRequest.getRequestInfo());
-                        if (mdmsResponse == null || mdmsResponse.size() == 0) {
-                            messages.put(Constants.KEY_CONTRACTOR_BANK_CODE_INVALID,
-                                    Constants.MESSAGE_CONTRACTOR_BANK_CODE_INVALID + contractor.getBank().getCode());
-                            isDataValid = Boolean.TRUE;
-                        }
-                    }
+            if (!StringUtils.isBlank(contractor.getCode())) {
+                if (contractorRepository.getByCode(contractor.getCode(), tenantId) != null) {
+                    messages.put(Constants.KEY_CONTRACTOR_CODE_INVALID, Constants.MESSAGE_CONTRACTOR_CODE_INVALID);
+                    isDataValid = Boolean.TRUE;
+                }
+            }
 
-                    if (contractor.getAccountCode() != null && contractor.getAccountCode().getGlcode() != null) {
-                        mdmsResponse = mdmsRepository.getByCriteria(contractor.getTenantId(),
-                                CommonConstants.MODULENAME_WORKS, CommonConstants.MASTERNAME_CHARTOFACCOUNTS,
-                                CommonConstants.GLCODE, contractor.getAccountCode().getGlcode(),
-                                contractorRequest.getRequestInfo());
-                        if (mdmsResponse == null || mdmsResponse.size() == 0) {
-                            messages.put(Constants.KEY_CONTRACTOR_ACCOUNTCODE_GLCODE_INVALID,
-                                    Constants.MESSAGE_CONTRACTOR_ACCOUNTCODE_GLCODE_INVALID
-                                            + contractor.getAccountCode().getGlcode());
-                            isDataValid = Boolean.TRUE;
-                        }
-                    }
-
-                    if (contractor.getBankAccountNumber() == null) {
-                        messages.put(Constants.KEY_CONTRACTOR_BANKACCOUNTNUMBER_INVALID,
-                                Constants.MESSAGE_CONTRACTOR_BANKACCOUNTNUMBER_INVALID);
-                        isDataValid = Boolean.TRUE;
-                    }
-                    if (contractor.getAccountCode() == null) {
-                        messages.put(Constants.KEY_CONTRACTOR_ACCOUNTCODE_INVALID,
-                                Constants.MESSAGE_CONTRACTOR_ACCOUNTCODE_INVALID);
-                        isDataValid = Boolean.TRUE;
-                    }
-                    if (contractor.getIfscCode() == null) {
-                        messages.put(Constants.KEY_CONTRACTOR_IFSCCODE_INVALID,
-                                Constants.MESSAGE_CONTRACTOR_IFSCCODE_INVALID);
+            if (financialIntegrationReq) {
+                // TODO : Need to add MDMS data for Bank and COA.
+                if (contractor.getBank() != null && contractor.getBank().getCode() != null) {
+                    mdmsResponse = mdmsRepository.getByCriteria(contractor.getTenantId(),
+                            CommonConstants.MODULENAME_WORKS, CommonConstants.MASTERNAME_BANK, CommonConstants.CODE,
+                            contractor.getBank().getCode(), contractorRequest.getRequestInfo());
+                    if (mdmsResponse == null || mdmsResponse.size() == 0) {
+                        messages.put(Constants.KEY_CONTRACTOR_BANK_CODE_INVALID,
+                                Constants.MESSAGE_CONTRACTOR_BANK_CODE_INVALID + contractor.getBank().getCode());
                         isDataValid = Boolean.TRUE;
                     }
                 }
 
+                if (contractor.getAccountCode() != null && contractor.getAccountCode().getGlcode() != null) {
+                    mdmsResponse = mdmsRepository.getByCriteria(contractor.getTenantId(),
+                            CommonConstants.MODULENAME_WORKS, CommonConstants.MASTERNAME_CHARTOFACCOUNTS,
+                            CommonConstants.GLCODE, contractor.getAccountCode().getGlcode(),
+                            contractorRequest.getRequestInfo());
+                    if (mdmsResponse == null || mdmsResponse.size() == 0) {
+                        messages.put(Constants.KEY_CONTRACTOR_ACCOUNTCODE_GLCODE_INVALID,
+                                Constants.MESSAGE_CONTRACTOR_ACCOUNTCODE_GLCODE_INVALID
+                                        + contractor.getAccountCode().getGlcode());
+                        isDataValid = Boolean.TRUE;
+                    }
+                }
+
+                if (contractor.getBankAccountNumber() == null) {
+                    messages.put(Constants.KEY_CONTRACTOR_BANKACCOUNTNUMBER_INVALID,
+                            Constants.MESSAGE_CONTRACTOR_BANKACCOUNTNUMBER_INVALID);
+                    isDataValid = Boolean.TRUE;
+                }
+                if (contractor.getAccountCode() == null) {
+                    messages.put(Constants.KEY_CONTRACTOR_ACCOUNTCODE_INVALID,
+                            Constants.MESSAGE_CONTRACTOR_ACCOUNTCODE_INVALID);
+                    isDataValid = Boolean.TRUE;
+                }
+                if (contractor.getIfscCode() == null) {
+                    messages.put(Constants.KEY_CONTRACTOR_IFSCCODE_INVALID,
+                            Constants.MESSAGE_CONTRACTOR_IFSCCODE_INVALID);
+                    isDataValid = Boolean.TRUE;
+                }
+            }
+            if (contractor.getContractorClass() != null && contractor.getContractorClass().getPropertyClass() != null) {
                 mdmsResponse = mdmsRepository.getByCriteria(contractor.getTenantId(), CommonConstants.MODULENAME_WORKS,
                         CommonConstants.MASTERNAME_CONTRACTORCLASS, "class",
                         contractor.getContractorClass().getPropertyClass(), contractorRequest.getRequestInfo());

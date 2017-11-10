@@ -410,9 +410,6 @@ definitions:
         description: Maximum Amount of the Contractor Class.
         maxLength: 20
         minLength: 1
-      status:
-        $ref: '#/definitions/ContractorStatus'
-        description: Status of the Contractor
     required:
       - tenantId
       - class
@@ -534,6 +531,10 @@ definitions:
         type: boolean
         description: The boolean value to indicate whether the contractor is PMC(Project Management Consultant). The default value is false.
         default: false
+      status:
+        $ref: '#/definitions/ContractorStatus'
+        description: Status of the Contractor      
+	format: singleValueList
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails" 
     required:

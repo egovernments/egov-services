@@ -151,7 +151,7 @@ serviceMaps:
    fromTopic: works-contractor-create-validated
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO egw_contractor(id, tenantid, name, code, correspondenceaddress, paymentaddress, contactperson, email, narration, mobilenumber, pannumber, tinnumber, bank, bankaccountnumber, pwdapprovalcode, exemptedfrom, pwdapprovalvalidtill, epfregistrationnumber, accountcode, ifsccode, contractorclass, pmc, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egw_contractor(id, tenantid, name, code, correspondenceaddress, paymentaddress, contactperson, email, narration, mobilenumber, pannumber, tinnumber, bank, bankaccountnumber, pwdapprovalcode, exemptedfrom, pwdapprovalvalidtill, epfregistrationnumber, accountcode, ifsccode, contractorclass, pmc, status, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.contractors.*
       jsonMaps:
          
@@ -200,7 +200,9 @@ serviceMaps:
        
        - jsonPath: $.contractors.*.pmc
          type: BOOLEAN
-       
+
+       - jsonPath: $.contractors.*.status       
+
        - jsonPath: $.contractors.*.auditDetails.createdBy
  
        - jsonPath: $.contractors.*.auditDetails.createdTime
@@ -215,7 +217,7 @@ serviceMaps:
    fromTopic: works-contractor-update-validated
    isTransaction: true
    queryMaps:
-    - query: UPDATE egw_contractor SET name=?, code=?, correspondenceaddress=?, paymentaddress=?, contactperson=?, email=?, narration=?, mobilenumber=?, pannumber=?, tinnumber=?, bank=?, bankaccountnumber=?, pwdapprovalcode=?, exemptedfrom=?, pwdapprovalvalidtill=?, epfregistrationnumber=?, accountcode=?, ifsccode=?, contractorclass=?, pmc=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+    - query: UPDATE egw_contractor SET name=?, code=?, correspondenceaddress=?, paymentaddress=?, contactperson=?, email=?, narration=?, mobilenumber=?, pannumber=?, tinnumber=?, bank=?, bankaccountnumber=?, pwdapprovalcode=?, exemptedfrom=?, pwdapprovalvalidtill=?, epfregistrationnumber=?, accountcode=?, ifsccode=?, contractorclass=?, pmc=?, status=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
       basePath: $.contractors.*
       jsonMaps:
          
@@ -260,6 +262,8 @@ serviceMaps:
        
        - jsonPath: $.contractors.*.pmc
          type: BOOLEAN
+
+       - jsonPath: $.contractors.*.status
        
        - jsonPath: $.contractors.*.auditDetails.lastModifiedBy
   
@@ -392,3 +396,4 @@ serviceMaps:
        - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.id
 
        - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.tenantId
+

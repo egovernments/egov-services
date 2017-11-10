@@ -103,6 +103,11 @@ public class AssetQueryBuilder {
 			selectQuery.append(" AND ASSET.status = ?");
 			preparedStatementValues.add(searchAsset.getStatus());
 		}
+		
+		if(searchAsset.getToDate()!=null) {
+			selectQuery.append(" AND asset.dateofcreation<?");
+			preparedStatementValues.add(searchAsset.getToDate());
+		}
 
 		/*
 		 * if (searchAsset.getLocality() != null) { isAppendAndClause =

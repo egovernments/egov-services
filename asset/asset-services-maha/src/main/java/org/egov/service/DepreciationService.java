@@ -1,8 +1,12 @@
 package org.egov.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,6 +27,7 @@ import org.egov.model.enums.Sequence;
 import org.egov.model.enums.TransactionType;
 import org.egov.repository.DepreciationRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,10 +58,15 @@ public class DepreciationService {
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	public DepreciationResponse createDepreciationAsync(DepreciationRequest depreciationRequest) {
-
+		
 		DepreciationCriteria criteria = depreciationRequest.getDepreciationCriteria();
 		RequestInfo requestInfo = depreciationRequest.getRequestInfo();
 
+		if(criteria.getToDate() > new Date().getTime()) {
+			Map<String,String> map = new HashMap<>();
+			map.put("egasset_depreciation_depreciationdate","Assets cannot be depreciated for future dates");
+			throw new CustomException(map);
+		}
 		calculateFinancialStartDate(criteria);
 
 		Depreciation depreciation = depreciateAssets(depreciationRequest);

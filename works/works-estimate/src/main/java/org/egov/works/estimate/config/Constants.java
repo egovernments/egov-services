@@ -51,6 +51,12 @@ public class Constants {
     public static final String KEY_NULL_ABSTRACTESTIMATE_NUMBER = "INVALID_ABSTRACTESTIMATE_NUMBER";
     public static final String MESSAGE_NULL_ABSTRACTESTIMATE_NUMBER = "Abstract Estimate Number should be entered";
 
+    public static final String KEY_NULL_DETAILEDESTIMATE_NUMBER = "NULL_DETAILEDESTIMATE_NUMBER";
+    public static final String MESSAGE_NULL_DETAILEDESTIMATE_NUMBER = "Detailed Estimate Number should be entered";
+
+    public static final String KEY_NULL_DETAILEDESTIMATE_DATE = "NULL_DETAILEDESTIMATE_DATE";
+    public static final String MESSAGE_NULL_DETAILEDESTIMATE_DATE = "Detailed Estimate date should be entered";
+
     public static final String KEY_NULL_DATEOFPROPOSAL = "INVALID_DATEOFPROPOSAL";
     public static final String MESSAGE_NULL_DATEOFPROPOSAL = "Date of proposal should be entered";
 
@@ -135,6 +141,15 @@ public class Constants {
 
     public static final String KEY_DUPLICATE_ESTIMATE_ASSET_DETAILS= "DUPLICATE_ESTIMATE_ASSET_DETAILES";
     public static final String MESSAGE_DUPLICATE_ESTIMATE_ASSET_DETAILS= "Duplicate Asset detailes for an estimate";
+
+    public static final String KEY_INVALID_TECHNICALSANCTION_DATE = "TECHNICAL_SANCTION_DATE_INVALID";
+    public static final String MESSAGE_INVALID_TECHNICALSANCTION_DATE= "Technical Sanction Date cannot be prior to Abstract/Detailed Estimate Date.";
+
+    public static final String KEY_INVALID_ADMINSANCTION_DATE = "TECHNICAL_SANCTION_DATE_INVALID";
+    public static final String MESSAGE_INVALID_ADMINSANCTION_DATE= "Abstract/Detailed Estimate Date cannot be prior to Admin Sanction Date of Estimate";
+
+    public static final String KEY_TECHNICAL_SANCTION_DATE_NULL = "TECHNICAL_SANCTION_DATE_NULL";
+    public static final String MESSAGE_TECHNICAL_SANCTION_DATE_NULL= "Estimate technical sanction date is required";
 
     public static final String KEY_FUND_REQUIRED = "FUND_REQUIRED";
     public static final String MESSAGE_FUND_REQUIRED = "Fund data is required";

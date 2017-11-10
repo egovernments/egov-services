@@ -306,15 +306,14 @@ public class EstimateValidator {
     }
 
     public void validateSpillOverEstimate(final DetailedEstimate detailedEstimate, Map<String, String> messages) {
-      /*  if (estimate.getSpillOverFlag() && estimate.getAbstractEstimateNumber() == null)
-            messages.put(Constants.KEY_NULL_ABSTRACTESTIMATE_NUMBER,
-                    Constants.MESSAGE_NULL_ABSTRACTESTIMATE_NUMBER);
-        if (!estimate.getSpillOverFlag() && estimate.getDateOfProposal() != null
-                && new Date(estimate.getDateOfProposal()).after(new Date()))
-            messages.put(Constants.KEY_FUTUREDATE_DATEOFPROPOSAL,
-                    Constants.MESSAGE_FUTUREDATE_DATEOFPROPOSAL);*/
         if(checkDetailedEstimateCreatedFlag(detailedEstimate)) {
-
+            if(StringUtils.isBlank(detailedEstimate.getEstimateNumber()))
+                messages.put(Constants.KEY_NULL_DETAILEDESTIMATE_NUMBER,
+                        Constants.MESSAGE_NULL_DETAILEDESTIMATE_NUMBER);
+            if(detailedEstimate.getEstimateDate() == null)
+                messages.put(Constants.KEY_NULL_DETAILEDESTIMATE_DATE,
+                        Constants.MESSAGE_NULL_DETAILEDESTIMATE_DATE);
+            validateTechnicalSanctionDetail(detailedEstimate, messages);
         }
     }
 
@@ -444,33 +443,44 @@ public class EstimateValidator {
     }
 
 
-    /*public void validateTechnicalSanctionDetail(final DetailedEstimate detailedEstimate) {
-        if (abstractEstimate.getEstimateTechnicalSanctions() != null
-                && abstractEstimate.getEstimateTechnicalSanctions().get(0).getTechnicalSanctionDate() == null)
-            errors.reject("error.techdate.notnull", "error.techdate.notnull");
-        if (abstractEstimate.getEstimateTechnicalSanctions() != null
-                && abstractEstimate.getEstimateTechnicalSanctions().get(0).getTechnicalSanctionDate() != null
-                && abstractEstimate.getEstimateTechnicalSanctions().get(0).getTechnicalSanctionDate()
-                .before(abstractEstimate.getEstimateDate()))
-            errors.reject("error.abstracttechnicalsanctiondate", "error.abstracttechnicalsanctiondate");
-        if (abstractEstimate.getEstimateTechnicalSanctions() != null
-                && abstractEstimate.getEstimateTechnicalSanctions().get(0).getTechnicalSanctionNumber() == null)
-            errors.reject("error.technumber.notnull", "error.technumber.notnull");
-        if (abstractEstimate.getEstimateTechnicalSanctions() != null
-                && abstractEstimate.getEstimateTechnicalSanctions().get(0).getTechnicalSanctionNumber() != null) {
-            final AbstractEstimate esistingAbstractEstimate = abstractEstimateRepository
-                    .findByEstimateTechnicalSanctionsIgnoreCase_TechnicalSanctionNumberAndEgwStatus_CodeNot(
-                            abstractEstimate.getEstimateTechnicalSanctions().get(0).getTechnicalSanctionNumber(),
-                            EstimateStatus.CANCELLED.toString());
-            if (esistingAbstractEstimate != null)
-                errors.reject("error.technumber.unique", "error.technumber.unique");
+    public void validateTechnicalSanctionDetail(final DetailedEstimate detailedEstimate, Map<String,String> messages) {
+        if (detailedEstimate.getEstimateTechnicalSanctions() != null ) {
+            for(EstimateTechnicalSanction estimateTechnicalSanction : detailedEstimate.getEstimateTechnicalSanctions()) {
+
+                if(StringUtils.isBlank(estimateTechnicalSanction.getTechnicalSanctionNumber()))
+                    messages.put(KEY_DUPLICATE_ESTIMATE_ASSET_DETAILS, MESSAGE_DUPLICATE_ESTIMATE_ASSET_DETAILS);
+                else
+                 //check with cancelled status and search should be enhanced with technical sanction number search
+                   //validateUniqueTechnicalSanctionForDetailedEstimate(detailedEstimate, messages);
+                if(estimateTechnicalSanction.getTechnicalSanctionDate() == null)
+                    messages.put(KEY_TECHNICAL_SANCTION_DATE_NULL, MESSAGE_TECHNICAL_SANCTION_DATE_NULL);
+                 else if(detailedEstimate.getEstimateDate() != null && new Date(estimateTechnicalSanction.getTechnicalSanctionDate()).before(new Date(detailedEstimate.getEstimateDate())))
+                    messages.put(KEY_INVALID_TECHNICALSANCTION_DATE, MESSAGE_INVALID_TECHNICALSANCTION_DATE);
+
+                if(detailedEstimate.getAbstractEstimateDetail() != null && detailedEstimate.getEstimateDate() != null) {
+                    AbstractEstimateDetailsSearchContract searchContract = AbstractEstimateDetailsSearchContract.builder().tenantId(detailedEstimate.getTenantId())
+                            .ids(Arrays.asList(detailedEstimate.getAbstractEstimateDetail().getId())).build();
+                    List<AbstractEstimateDetails> abstractEstimateDetails = abstractEstimateDetailsJdbcRepository.search(searchContract);
+                    if (!abstractEstimateDetails.isEmpty()) {
+                        String abstractEstimateId = abstractEstimateDetails.get(0).getAbstractEstimate();
+                        AbstractEstimateSearchContract abstractEstimateSearchContract = AbstractEstimateSearchContract.builder().tenantId(detailedEstimate.getTenantId())
+                                .ids(Arrays.asList(abstractEstimateId)).build();
+                        List<AbstractEstimate> abstractEstimates = abstractEstimateRepository.search(abstractEstimateSearchContract);
+                        if (!abstractEstimates.isEmpty() && abstractEstimates.get(0).getAdminSanctionDate() != null &&
+                                new Date(detailedEstimate.getEstimateDate()).before(new Date(abstractEstimates.get(0).getAdminSanctionDate()))) {
+                            messages.put(KEY_INVALID_ADMINSANCTION_DATE, MESSAGE_INVALID_ADMINSANCTION_DATE);
+                        }
+
+                    }
+                }
+            }
         }
-        if (abstractEstimate.getEstimateDate() == null)
-            errors.reject("errors.abbstractestimate.estimatedate", "errors.abbstractestimate.estimatedate");
-        if (abstractEstimate.getLineEstimateDetails() != null && abstractEstimate.getEstimateDate() != null
-                && abstractEstimate.getEstimateDate()
-                .before(abstractEstimate.getLineEstimateDetails().getLineEstimate().getAdminSanctionDate()))
-            errors.reject("error.abstractadminsanctiondatele", "error.abstractadminsanctiondatele");
+
+    }
+
+    /*private void validateUniqueTechnicalSanctionForDetailedEstimate(DetailedEstimate detailedEstimate, Map<String, String> messages) {
+        DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder().tenantId(detailedEstimate.getTenantId())
+                .
     }*/
 
     private void validateMasterData(DetailedEstimate detailedEstimate, RequestInfo requestInfo, Map<String, String> messages) {

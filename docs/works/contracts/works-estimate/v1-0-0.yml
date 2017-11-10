@@ -191,11 +191,12 @@ paths:
           
           This API is used for creating Spillover (Ongoing works) and as well as new Abstract Estimates. All the flags like spillover, detailed estimate created, work order created and bills created flags will be allowed to select only in case of Spillover abstract estimate.
           
-          The estimate number and work identification numbers will be user entered in case of spillover work and auto generated in case of new work.
+          The abstract estimate number and work identification numbers will be user entered in case of spillover work and auto generated in case of new work.
           
-          Workflow will not be there for spillover work and new works will have workflow. So the spillover work will be created on approved status with budget check.   Financial sanction and Administrative Sanction will be part of the workflow. 
+          Basic two steps workflow will be there for spillover Abstract Estimate and new Abstract Estimates will have multiple level workflow. The spillover Abstract Estimate can be created on approved status or with workflow based on configuration. The spillover work will have budget check which is required if Financial integration flag is turned on. Budget check not required If Financial integration flag is turned off.
           
-          Asset details will not be shown on the screen. Instead hyperlink will be provided to the Asset code which will redirect to the view screen from Asset module.
+          Asset details are mandatory if the Nature of work is 'Repairs or Addition'. If the Nature of work is 'New' then the Land details (Land and Estate module integration
+          ) are mandatory based on the field value 'Land asset required'.
           
           There will be financial sanction during the workflow before Admin sanction. The financial details such as fund, function, budgethead, scheme, sub scheme, is fund available and fund sanction authority details will be captured during this stage. Whether budget appropriation required/not required during this stage is based on configuration.
           
@@ -571,17 +572,17 @@ paths:
       description: |
           To create new Detailed Estimate in the system. API supports bulk creation with max limit as defined in the Detailed Estimate Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Detailed Estimate, please pass array with one Detailed Estimate object.
           
-          Detailed Estimate will be created for Approved Abstract Estimate or Detailed estimate itself can be created without Asbtract Estimate. This is one of the reason we are keeping most of the attributes in Detaield Estimate also which are there in Asbtract Estimate. The values for these attributes are auto populated from Abstract Estimate if the Detailed estimate is created for Abstract Estimate. All these values which are populated from Abstract Estimate should be readonly mode and user not allowed to modify these values.
+          Detailed Estimate will be created for Approved Abstract Estimate or Detailed estimate itself can be created without Asbtract Estimate. This is one of the reason we are keeping most of the attributes in Detailed Estimate also which are there in Asbtract Estimate. The values for these attributes are auto populated from Abstract Estimate if the Detailed estimate is created for Abstract Estimate. All these values which are populated from Abstract Estimate should be readonly mode and user not allowed to modify these values.
           
-          Workflow will not be there for spillover Detailed Estimate and new Detailed Estimates will have workflow. So the spillover Detailed Estimate will be created on approved status with or without budget check based on configuration. Technical Sanction and Administrative Sanction will be part of the workflow. Whether Financial Sanction required for Detailed Estimate is based on configuration. Save as drafts required for Detailed Estimate. 
+          Basic two steps workflow will be there for spillover Detailed Estimate and new Detailed Estimates will have multiple level workflow. The spillover Detailed Estimate can be created on approved status or with workflow based on configuration. Technical Sanction will be part of the workflow for Normal detailed Estimate. Save as drafts required for Detailed Estimate. 
           
           Atleast one item is Schedule A(SOR or NON SOR) is mandatory before submitting the Detailed Estimate. Detailed Measurements needs to be captured for Detailed Estimate at each activity(SOR/Non SOR) level. It is not mandatory to capture Detailed measurements for each activity. If Detailed Measurements are captured then the Quantity at activity level will be defaulted from the computed value from measurements and not allowed to edit.
           
           Capturing of Location along with Latitude and Longitude from GIS Map needs to be mandated based on the configuration value.  
           
-          Asset linking in Detailed Estimate is required if Asset is already not linked during Abstract Estimate creation. If Asset already linked during Abstract Estimate creation then its auto populated from Abstract Estimate. Whether allowed to modify the asset linked in Abstract Estimate during Detailed Estimate creation is configration driven. Whether Asset linking mandatory or not also is based on configuration. The default value will be false.
+          If Asset already linked during Abstract Estimate creation then its auto populated from Abstract Estimate. Whether allowed to modify the asset linked in Abstract Estimate during Detailed Estimate creation is configration driven. Whether Asset linking mandatory or not also is based on configuration. The default value will be false.
           
-          The Overheads and Estimate deductions selection is optional in Detailed Estimate. If its selected then the Total Estimate cost is inclusive of Overheads/Estiamte deductions.
+          The Overheads and Estimate deductions selection is optional in Detailed Estimate. If its selected then the Total Estimate cost is inclusive of Overheads. The amount from Estimate deduction is not included in Total Estimate value.
           
           The sum of SOR and NON SOR value will be the total Work Value. Whether the Service Tax/VAT needs to be captured or not at activity level is based on configuration.
           
@@ -1255,7 +1256,7 @@ definitions:
       estimateNumber:
         type: string
         pattern: '[a-zA-Z0-9-\\]+'
-        description: Unique number for the Detailed Estimate
+        description: Unique number for the Detailed Estimate. If the detailed estimate is spillover then the Detailed Estimate number is user entered. Otherwise it is auto generated.
         maxLength: 50
         minLength: 1
       estimateDate:
@@ -1947,3 +1948,4 @@ tags:
     description: APIs required for Revision Estimate.
   - name: Project Code
     description: APIs required for Project Code.
+

@@ -135,7 +135,7 @@ var dat =  {
     groups: [
       {
         name: "AdvocatePaymentDetails",
-        label: "advocatepayment.create.group.title.AdvocatePaymentDetails",
+        label: "",
         fields: [
           {
             name: "advocateName",
@@ -204,7 +204,7 @@ var dat =  {
             label: "advocatepayment.create.bankName",
             type: "text",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -213,7 +213,7 @@ var dat =  {
             label: "advocatepayment.create.panNo",
             type: "text",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -222,7 +222,7 @@ var dat =  {
             label: "advocatepayment.create.bankBranch",
             type: "text",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -231,7 +231,7 @@ var dat =  {
             label: "advocatepayment.create.amountClaimed",
             type: "number",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -240,7 +240,7 @@ var dat =  {
             label: "advocatepayment.create.bankAccountNo",
             type: "text",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -304,9 +304,9 @@ var dat =  {
             label: "legal.create.amount",
             type: "number",
             hide:true,
-            jsonPath: "advocatePayments[0].totalAmount",
+            jsonPath: "",
             isRequired: false,
-            isDisabled: true
+            isDisabled: false
           },
          {
                    name: "invoiceDocument",
@@ -370,14 +370,15 @@ var dat =  {
                       type: "number",
                       jsonPath: "advocatePayments[0].advocateCharges[0].amount",
                       isRequired: false,
-                      isDisabled: false
+                      isDisabled: false,
+                      dependency:"advocatePayments[0].amountClaimed"
                     }
                   ]
                 }
               },
               {
             name: "advocateLabel",
-            jsonPath: "advocatePayments[0].bankAccountNo",
+            jsonPath: "",
             label: "legal.create.paymentNote",
             type: "label",
             isRequired: false,

@@ -865,6 +865,48 @@ class Report extends Component {
         if(dependantIdx !== undefined)
           currentProperty = replaceLastIdxOnJsonPath(property, 0); //RESET INDEX 0 TO FIND DEPENDANT FIELDS FROM TEMPLATE JSON
         depedants = jp.query(obj,`$.groups..fields[?(@.type=="tableList")].tableList.values[?(@.jsonPath == "${currentProperty}")].depedants.*`);
+
+        //Changes to handle table sum
+        var jpathname= property.substr(0,property.lastIndexOf("[")+1) + '0' + property.substr(property.lastIndexOf("[")+2);
+
+       var dependency =jp.query(obj,`$.groups..values[?(@.jsonPath=="${jpathname}")].dependency`);
+       if(dependency.length>0)
+        {
+           let _formData = {...this.props.formData};
+           if( _formData)
+            {
+           let field= property.substr(0,property.lastIndexOf("["));
+           let last= property.substr(property.lastIndexOf("]")+2);
+           let curIndex= property.substr(property.lastIndexOf("[")+1,1);
+
+           let arrval = _.get(_formData,field);
+           if(arrval){
+             let len= _.get(_formData,field).length;
+
+           let amtsum=0;
+           let svalue="";
+           for(var i=0;i<len;i++)
+            {
+              let ifield=field+'['+i+']'+'.'+last;
+              if(i==curIndex)
+                {
+                   svalue=e.target.value;
+                }
+              else
+                {
+                  svalue=_.get(_formData,ifield);
+                }
+              
+              amtsum += parseInt(svalue);
+            }
+            if(amtsum>0)
+              {
+               handleChange({target: {value: amtsum}}, dependency[0], false, '', '');
+              
+              }
+           }
+           
+            }
       }
 
 

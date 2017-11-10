@@ -99,12 +99,23 @@ class UiMultiFieldTable extends Component {
    	}
 
    	deleteRow = (ind) => {
+		//Changes to handle dependency sum
+		let dependencyFlag =0;
+		let depField="";
+		let sumField="";
+
 		let values = Object.assign([], this.state.values);
 		values.splice(ind, 1);
 		var regexp = new RegExp(this.state.jsonPath + "\\[\\d{1}\\]", "g");
 		for(var i=0; i<values.length; i++) {
 			for(var j=0; j<values[i].length; j++) {
 				values[i][j].jsonPath = values[i][j].jsonPath.replace(regexp, this.state.jsonPath + "[" + i + "]");
+				if(values[i][j].dependency)//Changes to handle dependency sum
+					{
+						dependencyFlag =1;
+						depField=values[i][j].dependency;
+						sumField=values[i][j].jsonPath;
+					}
 			}
 		}
 
@@ -122,6 +133,38 @@ class UiMultiFieldTable extends Component {
 				this.props.setFormData(newFormData);
 			}
 		})
+
+		if(dependencyFlag==1)//Changes to handle dependency sum
+		{
+			let _formData = JSON.parse(JSON.stringify(this.props.formData));
+			if( _formData)
+					{
+				let field= sumField.substr(0,sumField.lastIndexOf("["));
+				let last= sumField.substr(sumField.lastIndexOf("]")+2);
+			
+				let arrval = _.get(_formData,field);
+			if(arrval){
+					let len= _.get(_formData,field).length;
+
+				let amtsum=0;
+				let svalue="";
+				for(var i=0;i<len;i++)
+					{
+					let ifield=field+'['+i+']'+'.'+last;
+					if(i==ind){
+						svalue="";
+					}
+					else{
+						svalue=_.get(_formData,ifield);
+						amtsum += parseInt(svalue);
+					}
+					
+					
+					}
+			this.props.handler({target: {value: amtsum}}, depField, false, '', '');
+			}
+		}
+		}
 	}
 
    	renderFields = (item, screen) => {

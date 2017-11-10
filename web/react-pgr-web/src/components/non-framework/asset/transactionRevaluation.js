@@ -513,13 +513,13 @@ class Transaction extends Component {
 
       if(property == "Revaluation[0].valueAfterRevaluation"){
           var wdvValue = 10000;
-          var revaluationAmount = wdvValue - (e.target.value);
+          var revaluationAmount = (e.target.value) - wdvValue;
           console.log(revaluationAmount);
           handleChange({target:{value:revaluationAmount}}, "Revaluation[0].revaluationAmount");
       }
 
       console.log(property);
-      if (property.search("isRadio") != -1) { 
+      if (property.search("isRadio") != -1) {
         let _indexVal = property.split("[")[1].split("]")[0];
         if (formData.Revaluation.Assets && self.props.formData.Revaluation.Assets.length) {
           for (var i = 0; i < formData.Revaluation.Assets.length; i++) {
@@ -706,13 +706,13 @@ class Transaction extends Component {
         }
       }
 
-    for (var i = 0; i < formData.Revaluation.Assets.length; i++) {
-      if (formData.Revaluation.Assets[i].isRadio==true) {
-        console.log("hit");
-          formData.Revaluation["assetId"]=formData.Revaluation.Assets[i].id;
-          console.log(formData.Revaluation["assetId"]);
+      for (var i = 0; i < formData.Revaluation.Assets.length; i++) {
+        if (formData.Revaluation.Assets[i].isRadio==true) {
+          console.log("hit");
+            formData.Revaluation["assetId"]=formData.Revaluation.Assets[i].id;
+            console.log(formData.Revaluation["assetId"]);
+        }
       }
-    }
 
     delete formData.Revaluation.Assets;
 

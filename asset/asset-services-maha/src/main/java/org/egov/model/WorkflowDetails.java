@@ -1,0 +1,23 @@
+package org.egov.model;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+public class WorkflowDetails {
+	
+  private String department;
+
+  private String designation;
+
+  private Long assignee;
+
+  private String action;
+  
+  private String status;
+  
+  private Long initiatorPosition;
+  
+  private String comments;
+}

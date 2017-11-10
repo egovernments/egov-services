@@ -366,7 +366,7 @@ public class Store {
      **/
     @ApiModelProperty(value = "email of the Store ")
 
-    @Pattern(regexp = "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$")
+    @Pattern(regexp = "^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$")
     @Size(max = 100)
     public String getEmail() {
         return email;

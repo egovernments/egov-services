@@ -382,7 +382,7 @@ export default class assetImmovableReport extends Component {
 													<b>{convertToDate(this.props.data[19]?this.props.data[19]:"")}</b>
 											</td>
 											<td style={{textAlign: "center"}} >
-													<b>{this.props.data[20]?this.props.data[20]:""}</b>
+													<b>{numberWithCommas(this.props.data[20]?this.props.data[20]:"")}</b>
 											</td>
 											<td style={{textAlign: "center"}} >
 													<b>{numberWithCommas(this.props.data[21]?this.props.data[21]:"")}</b>

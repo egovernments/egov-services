@@ -44,7 +44,7 @@ class ShowForm extends Component {
             if (!metaData.reportDetails.searchParams[i].hasOwnProperty("pattern")) {
               metaData.reportDetails.searchParams[i]["pattern"]=metaData.reportDetails.searchParams[i].defaultValue;
             }
-            
+
             if(metaData.reportDetails.searchParams[i].pattern.search(property)>-1) {
               let splitArray = metaData.reportDetails.searchParams[i].pattern.split("?");
               let url = splitArray[0];
@@ -175,15 +175,18 @@ class ShowForm extends Component {
   {
     let {initForm,metaData,setForm, changeButtonText,clearReportHistory} = this.props;
     changeButtonText("Generate Report");
-    let {searchParams}=!_.isEmpty(metaData)?metaData.reportDetails:{searchParams:[]};
+    let searchParams =!_.isEmpty(metaData)?metaData.reportDetails:{searchParams:[]};
     let required=[];
     this.setState({reportName : this.props.match.params.reportName});
     this.setState({moduleName : this.props.match.params.moduleName});
-    for (var i = 0; i < searchParams.length; i++) {
-      if(searchParams[i].isMandatory) {
-        required.push(searchParams[i].name)
+    if (searchParams) {
+      for (var i = 0; i < searchParams.length; i++) {
+        if(searchParams[i].isMandatory) {
+          required.push(searchParams[i].name)
+        }
       }
     }
+
     setForm(required);
     clearReportHistory();
     //setForm(required);

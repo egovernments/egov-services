@@ -225,7 +225,7 @@ var dat = {
                       name: "case",
                       pattern: "",
                       type: "singleValueList",
-                      jsonPath: "advocatePayments[0].advocateCharges[0].caseNo",
+                      jsonPath: "advocatePayments[0].advocateCharges[0].caseDetails.summonReferenceNo",
                       isRequired: false,
                       isDisabled: true,
                        url:  "/lcms-services/legalcase/caseno/_search?|$..summonReferenceNo|$..caseNo"

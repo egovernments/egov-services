@@ -359,7 +359,7 @@ var dat =  {
                       name: "case",
                       pattern: "",
                       type: "singleValueList",
-                      jsonPath: "advocatePayments[0].advocateCharges[0].caseNo",
+                      jsonPath: "advocatePayments[0].advocateCharges[0].caseDetails.summonReferenceNo",
                       isRequired: false,
                       isDisabled: false,
                       url: "/lcms-services/legalcase/caseno/_search?|$..summonReferenceNo|$..caseNo"
@@ -530,7 +530,7 @@ var dat =  {
             label: "legal.create.amount",
             type: "number",
             hide:true,
-            jsonPath: "assignAdvocate[0].totalAmount",
+            jsonPath: "",
             isRequired: false,
             isDisabled: true
           },
@@ -586,7 +586,7 @@ var dat =  {
                       name: "case",
                       pattern: "",
                       type: "singleValueList",
-                      jsonPath: "advocatePayments[0].advocateCharges[0].caseNo",
+                      jsonPath: "advocatePayments[0].advocateCharges[0].caseDetails.summonReferenceNo",
                       isRequired: false,
                       isDisabled: true,
                       url:  "/lcms-services/legalcase/caseno/_search?|$..summonReferenceNo|$..caseNo"
@@ -606,7 +606,7 @@ var dat =  {
               ,
               {
             name: "advocateLabel",
-            jsonPath: "advocatePayments[0].bankAccountNo",
+            jsonPath: "",
             label: "legal.create.paymentNote",
             type: "label",
             isRequired: false,

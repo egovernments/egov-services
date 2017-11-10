@@ -6,6 +6,7 @@ class CreateDepreciation extends React.Component {
     super(props);
     this.state={};
     this.create=this.create.bind(this);
+    this.close = this.close.bind(this);
     this.handleChange=this.handleChange.bind(this);
     this.showError=this.showError.bind(this);
   }
@@ -76,6 +77,10 @@ class CreateDepreciation extends React.Component {
     )
   }
 
+  close() {
+    open(location, '_self').close();
+  }
+
   render(){
     current = this;
     let {handleChange} = this;
@@ -106,8 +111,8 @@ class CreateDepreciation extends React.Component {
         </div>
         <div className="row">
           <div className="text-center">
-            <button type="button" className="btn btn-submit" onClick={(e)=>this.create()}>Create</button>&nbsp;&nbsp;
-            <button type="button" className="btn btn-close">Close</button>
+            <button type="button" className="btn btn-submit" onClick={(e)=>this.create()}>Search</button>&nbsp;&nbsp;
+            <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
           </div>
         </div>
       </div>

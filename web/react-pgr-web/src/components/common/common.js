@@ -2543,7 +2543,23 @@ var localization_EN_Data = {
  "referenceEvidence.create.description":"Description",
 
 
-
+ "inventory.create.group.title.addStore":"Add Store",
+ "inventory.create.group.title.updateStore":"Update Store",
+ "inventory.create.group.title.viewStore":"View Store",
+ "inventory.store.search.title":"Search Store",
+ "inventory.store.code" : "Store Code",
+ "inventory.store.name" : "Store Name",
+ "inventory.department.name" : "Department Name",
+ "inventory.store.description" : "Store Description",
+ "inventory.store.billingAddress" : "Billing Address",
+ "inventory.store.centralStore" : "Central Store",
+ "inventory.store.deliveryAddress" : "Delivery Address",
+ "inventory.store.incharge" : "Store In-Charge",
+ "inventory.store.contactNo1" : "Contact No.1",
+ "inventory.store.contactNo2" : "Contact No.2",
+ "inventory.store.email" : "Email Address",
+ "inventory.store.active" : "Active",
+ "inventory.store.officeLocation":"Office Location"
 
 
 };

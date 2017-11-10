@@ -15,10 +15,10 @@ import io.swagger.annotations.ApiModelProperty;
  * Contract class to send response. Array of Contractor items are used in case of search results, also multiple Contractor item is used for create and update
  */
 @ApiModel(description = "Contract class to send response. Array of Contractor items are used in case of search results, also multiple Contractor item is used for create and update")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:48:21.172Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T10:39:50.702Z")
 
 public class ContractorRequest   {
-  @JsonProperty("requestInfo")
+  @JsonProperty("RequestInfo")
   private RequestInfo requestInfo = null;
 
   @JsonProperty("contractors")

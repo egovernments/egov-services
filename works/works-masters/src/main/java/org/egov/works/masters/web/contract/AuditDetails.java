@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
  * Collection of audit related fields used by most models
  */
 @ApiModel(description = "Collection of audit related fields used by most models")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:48:21.172Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T10:39:50.702Z")
 
 public class AuditDetails   {
   @JsonProperty("createdBy")

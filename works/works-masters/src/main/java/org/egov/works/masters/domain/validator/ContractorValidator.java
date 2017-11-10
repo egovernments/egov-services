@@ -25,11 +25,12 @@ public class ContractorValidator {
     @Autowired
     private ContractorRepository contractorRepository;
 
-    public void validateContractor(ContractorRequest contractorRequest, String tenantId) {
+    public void validateContractor(ContractorRequest contractorRequest, String tenantId, Boolean isNew) {
         JSONArray mdmsResponse = null;
         Map<String, String> messages = new HashMap<>();
         Boolean isDataValid = Boolean.FALSE;
         Boolean financialIntegrationReq = Boolean.FALSE;
+        Contractor dbContractorObj = null;
 
         mdmsResponse = mdmsRepository.getByCriteria(tenantId, CommonConstants.MODULENAME_WORKS,
                 CommonConstants.APPCONFIGURATION_MDMS_OBJECT, CommonConstants.CODE,
@@ -41,15 +42,18 @@ public class ContractorValidator {
         }
 
         for (final Contractor contractor : contractorRequest.getContractors()) {
+            //Validate for code uniqueness. In case of update do not validate for the same object code.
             if (!StringUtils.isBlank(contractor.getCode())) {
-                if (contractorRepository.getByCode(contractor.getCode(), tenantId) != null) {
-                    messages.put(Constants.KEY_CONTRACTOR_CODE_INVALID, Constants.MESSAGE_CONTRACTOR_CODE_INVALID);
-                    isDataValid = Boolean.TRUE;
+                dbContractorObj = contractorRepository.getByCode(contractor.getCode(), tenantId);
+                if (dbContractorObj != null) {
+                    if (isNew || (!isNew && !contractor.getCode().equalsIgnoreCase(dbContractorObj.getCode()))) {
+                        messages.put(Constants.KEY_CONTRACTOR_CODE_INVALID, Constants.MESSAGE_CONTRACTOR_CODE_INVALID);
+                        isDataValid = Boolean.TRUE;
+                    }
                 }
             }
-
+            // Validate bank/ accountnumber/ accountcode/ ifsccode only if financial integration is configured
             if (financialIntegrationReq) {
-                // TODO : Need to add MDMS data for Bank and COA.
                 if (contractor.getBank() != null && contractor.getBank().getCode() != null) {
                     mdmsResponse = mdmsRepository.getByCriteria(contractor.getTenantId(),
                             CommonConstants.MODULENAME_WORKS, CommonConstants.MASTERNAME_BANK, CommonConstants.CODE,
@@ -90,6 +94,7 @@ public class ContractorValidator {
                     isDataValid = Boolean.TRUE;
                 }
             }
+            // Contractorclass reference validation
             if (contractor.getContractorClass() != null && contractor.getContractorClass().getPropertyClass() != null) {
                 mdmsResponse = mdmsRepository.getByCriteria(contractor.getTenantId(), CommonConstants.MODULENAME_WORKS,
                         CommonConstants.MASTERNAME_CONTRACTORCLASS, "class",

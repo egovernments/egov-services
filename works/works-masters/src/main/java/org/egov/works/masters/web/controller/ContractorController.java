@@ -34,20 +34,12 @@ public class ContractorController {
     
     @PostMapping("/_create")
     public ResponseEntity<?> create(@Valid @RequestBody ContractorRequest contractorRequest, @RequestParam String tenantId) {
-        final List<Contractor> contractors = contractorService.create(contractorRequest, tenantId);
-        final ContractorResponse response = new ContractorResponse();
-        response.setContractors(contractors);
-        response.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(contractorRequest.getRequestInfo(), true));
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return contractorService.create(contractorRequest, tenantId);
     }
     
     @PostMapping("/_update")
     public ResponseEntity<?> update(@Valid @RequestBody ContractorRequest contractorRequest, @RequestParam String tenantId) {
-        final List<Contractor> contractors = contractorService.update(contractorRequest, tenantId);
-        final ContractorResponse response = new ContractorResponse();
-        response.setContractors(contractors);
-        response.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(contractorRequest.getRequestInfo(), true));
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return contractorService.update(contractorRequest, tenantId);
     }
     
     @PostMapping("/_search")

@@ -10,8 +10,11 @@ import org.egov.works.masters.domain.validator.ContractorValidator;
 import org.egov.works.masters.utils.MasterUtils;
 import org.egov.works.masters.web.contract.Contractor;
 import org.egov.works.masters.web.contract.ContractorRequest;
+import org.egov.works.masters.web.contract.ContractorResponse;
 import org.egov.works.masters.web.contract.ContractorSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,29 +37,35 @@ public class ContractorService {
     private ContractorRepository contractorRepository;
     
     @Transactional
-    public List<Contractor> create(ContractorRequest contractorRequest, String tenantId) {
-        contractorValidator.validateContractor(contractorRequest,tenantId);
+    public ResponseEntity<?> create(ContractorRequest contractorRequest, String tenantId) {
+        ContractorResponse response = new ContractorResponse();
+        contractorValidator.validateContractor(contractorRequest,tenantId, true);
         CommonUtils commonUtils = new CommonUtils();
         for(final Contractor contractor : contractorRequest.getContractors()){
             contractor.setId(commonUtils.getUUID());
-            contractor.setAuditDetails(masterUtils.getAuditDetails(contractorRequest.getRequestInfo(), false));
+            contractor.setAuditDetails(masterUtils.getAuditDetails(contractorRequest.getRequestInfo(), false)); 
         }
         kafkaTemplate.send(propertiesManager.getWorksMasterContractorCreateValidatedTopic(), contractorRequest);
         // TODO: To be enabled when account detail consumer is available
         // kafkaTemplate.send(propertiesManager.getCreateAccountDetailKeyTopic(),
         // contractorRequest);
-        return contractorRequest.getContractors();
+        response.setContractors(contractorRequest.getContractors());
+        response.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(contractorRequest.getRequestInfo(), true));
+        return new ResponseEntity<>(response, HttpStatus.OK);
         
     }
     
     @Transactional
-    public List<Contractor> update(ContractorRequest contractorRequest, String tenantId) {
-        contractorValidator.validateContractor(contractorRequest,tenantId);
+    public ResponseEntity<?> update(ContractorRequest contractorRequest, String tenantId) {
+        ContractorResponse response = new ContractorResponse();
+        contractorValidator.validateContractor(contractorRequest,tenantId, false);
         for(final Contractor contractor : contractorRequest.getContractors()){
             contractor.setAuditDetails(masterUtils.getAuditDetails(contractorRequest.getRequestInfo(), true));
         }
         kafkaTemplate.send(propertiesManager.getWorksMasterContractorUpdateValidatedTopic(), contractorRequest);
-        return contractorRequest.getContractors();
+        response.setContractors(contractorRequest.getContractors());
+        response.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(contractorRequest.getRequestInfo(), true));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     
     public List<Contractor> search(ContractorSearchCriteria contractorSearchCriteria) {

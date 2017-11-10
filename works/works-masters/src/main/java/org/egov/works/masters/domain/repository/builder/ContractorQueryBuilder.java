@@ -47,19 +47,17 @@ public class ContractorQueryBuilder {
             params.put("contractorClass", contractorSearchCriteria.getContractClass());
         }
 
-        /*
-         * if (contractorSearchCriteria.getStatuses() != null &&
-         * !contractorSearchCriteria.getStatuses().isEmpty()) {
-         * selectQuery.append(" and ec.status in (:contractorStatus)");
-         * params.put("contractorStatus",
-         * contractorSearchCriteria.getStatuses()); }
-         */
+        if (contractorSearchCriteria.getStatuses() != null && !contractorSearchCriteria.getStatuses().isEmpty()) {
+            selectQuery.append(" and ec.status in (:contractorStatus)");
+            params.put("contractorStatus", contractorSearchCriteria.getStatuses());
+        }
+
     }
 
     private StringBuilder appendLimitAndOffset(ContractorSearchCriteria contractorSearchCriteria,
             @SuppressWarnings("rawtypes") Map params, StringBuilder selectQuery) {
 
-        selectQuery.append(" order by et.id");
+        selectQuery.append(" order by ec.id");
         selectQuery.append(" limit :pageSize");
         if (contractorSearchCriteria.getPageSize() != null)
             params.put("pageSize", contractorSearchCriteria.getPageSize());

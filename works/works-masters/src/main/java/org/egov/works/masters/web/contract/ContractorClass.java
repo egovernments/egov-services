@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  * An Object that holds Contractor Class details
  */
 @ApiModel(description = "An Object that holds Contractor Class details")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:48:21.172Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T10:39:50.702Z")
 
 public class ContractorClass   {
   @JsonProperty("id")
@@ -37,9 +37,6 @@ public class ContractorClass   {
 
   @JsonProperty("maxAmount")
   private BigDecimal maxAmount = null;
-
-  @JsonProperty("status")
-  private ContractorStatus status = null;
 
   public ContractorClass id(String id) {
     this.id = id;
@@ -168,27 +165,6 @@ public class ContractorClass   {
     this.maxAmount = maxAmount;
   }
 
-  public ContractorClass status(ContractorStatus status) {
-    this.status = status;
-    return this;
-  }
-
-   /**
-   * Status of the Contractor
-   * @return status
-  **/
-  @ApiModelProperty(value = "Status of the Contractor")
-
-  @Valid
-
-  public ContractorStatus getStatus() {
-    return status;
-  }
-
-  public void setStatus(ContractorStatus status) {
-    this.status = status;
-  }
-
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -204,13 +180,12 @@ public class ContractorClass   {
         Objects.equals(this.propertyClass, contractorClass.propertyClass) &&
         Objects.equals(this.description, contractorClass.description) &&
         Objects.equals(this.minAmount, contractorClass.minAmount) &&
-        Objects.equals(this.maxAmount, contractorClass.maxAmount) &&
-        Objects.equals(this.status, contractorClass.status);
+        Objects.equals(this.maxAmount, contractorClass.maxAmount);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, propertyClass, description, minAmount, maxAmount, status);
+    return Objects.hash(id, tenantId, propertyClass, description, minAmount, maxAmount);
   }
 
   @Override
@@ -224,7 +199,6 @@ public class ContractorClass   {
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    minAmount: ").append(toIndentedString(minAmount)).append("\n");
     sb.append("    maxAmount: ").append(toIndentedString(maxAmount)).append("\n");
-    sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("}");
     return sb.toString();
   }

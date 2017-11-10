@@ -8,6 +8,7 @@ import org.egov.works.masters.web.contract.ChartOfAccount;
 import org.egov.works.masters.web.contract.Contractor;
 import org.egov.works.masters.web.contract.ContractorClass;
 import org.egov.works.masters.web.contract.ContractorExemption;
+import org.egov.works.masters.web.contract.ContractorStatus;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -88,6 +89,9 @@ public class ContractorHelper {
 
     @JsonProperty("pmc")
     private Boolean pmc = false;
+    
+    @JsonProperty("status")
+    private String status = null;
 
     @JsonProperty("createdBy")
     private String createdBy = null;
@@ -104,7 +108,7 @@ public class ContractorHelper {
     public Contractor toDomain() {
         Contractor contractor = new Contractor();
         contractor.setTenantId(this.tenantId);
-        contractor.setCode(this.accountCode);
+        contractor.setCode(this.code);
         contractor.setName(this.name);
         contractor.setCorrespondenceAddress(this.correspondenceAddress);
         contractor.setPaymentAddress(this.paymentAddress);
@@ -127,6 +131,7 @@ public class ContractorHelper {
         contractor.setContractorClass(new ContractorClass());
         contractor.getContractorClass().setPropertyClass(this.contractorClass);
         contractor.setPmc(this.pmc);
+        contractor.setStatus(ContractorStatus.valueOf(this.status));
         contractor.setAuditDetails(new AuditDetails());
         contractor.getAuditDetails().setCreatedBy(this.createdBy);
         contractor.getAuditDetails().setCreatedTime(this.createdTime);

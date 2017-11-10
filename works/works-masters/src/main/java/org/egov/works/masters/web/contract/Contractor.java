@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  * An Object that holds Contractor Information
  */
 @ApiModel(description = "An Object that holds Contractor Information")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T13:06:33.860Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T10:39:50.702Z")
 
 public class Contractor   {
   @JsonProperty("id")
@@ -85,6 +85,9 @@ public class Contractor   {
 
   @JsonProperty("pmc")
   private Boolean pmc = false;
+
+  @JsonProperty("status")
+  private ContractorStatus status = null;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -247,6 +250,8 @@ public class Contractor   {
   @ApiModelProperty(required = true, value = "Email of the Contractor.")
   @NotNull
 
+  //@Pattern(regexp="^([a-zA-Z0-9_\\\\-\\\\.]+)@([a-zA-Z0-9_\\\\-\\\\.]+)\\\\.([a-zA-Z]{2,5})$") @Size(max=100)
+  //TODO : there is a difference in autogen email pattern and original pattern. Commenting autogen code.
   @Pattern(regexp="^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$") @Size(max=100)
   public String getEmail() {
     return email;
@@ -550,6 +555,28 @@ public class Contractor   {
     this.pmc = pmc;
   }
 
+  public Contractor status(ContractorStatus status) {
+    this.status = status;
+    return this;
+  }
+
+   /**
+   * Status of the Contractor
+   * @return status
+  **/
+  @ApiModelProperty(required = true, value = "Status of the Contractor")
+  @NotNull
+
+  @Valid
+
+  public ContractorStatus getStatus() {
+    return status;
+  }
+
+  public void setStatus(ContractorStatus status) {
+    this.status = status;
+  }
+
   public Contractor auditDetails(AuditDetails auditDetails) {
     this.auditDetails = auditDetails;
     return this;
@@ -603,12 +630,13 @@ public class Contractor   {
         Objects.equals(this.ifscCode, contractor.ifscCode) &&
         Objects.equals(this.contractorClass, contractor.contractorClass) &&
         Objects.equals(this.pmc, contractor.pmc) &&
+        Objects.equals(this.status, contractor.status) &&
         Objects.equals(this.auditDetails, contractor.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, name, code, correspondenceAddress, paymentAddress, contactPerson, email, narration, mobileNumber, panNumber, tinNumber, bank, bankAccountNumber, pwdApprovalCode, exemptedFrom, pwdApprovalValidTill, epfRegistrationNumber, accountCode, ifscCode, contractorClass, pmc, auditDetails);
+    return Objects.hash(id, tenantId, name, code, correspondenceAddress, paymentAddress, contactPerson, email, narration, mobileNumber, panNumber, tinNumber, bank, bankAccountNumber, pwdApprovalCode, exemptedFrom, pwdApprovalValidTill, epfRegistrationNumber, accountCode, ifscCode, contractorClass, pmc, status, auditDetails);
   }
 
   @Override
@@ -638,6 +666,7 @@ public class Contractor   {
     sb.append("    ifscCode: ").append(toIndentedString(ifscCode)).append("\n");
     sb.append("    contractorClass: ").append(toIndentedString(contractorClass)).append("\n");
     sb.append("    pmc: ").append(toIndentedString(pmc)).append("\n");
+    sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -654,3 +683,4 @@ public class Contractor   {
     return o.toString().replace("\n", "\n    ");
   }
 }
+

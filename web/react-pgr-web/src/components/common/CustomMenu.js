@@ -261,7 +261,11 @@ const menuConvention={
 "Performance Assessment.Performance Assessment Masters.PerfAssmtKpiMasterUpdate":"/search/perfManagement/kpi/update",
 "Performance Assessment.Performance Assessment Masters.PerfAssmtKpiMasterSearch":"/search/perfManagement/kpi/view",
 "Performance Assessment.Performance Assessment Actuals.PerfAssmtKpiValueUpdate":"/search/perfManagement/actualKpiUpdate/update",
-"Performance Assessment.Performance Assessment Actuals.PerfAssmtKpiValueCreate":"/create/perfManagement/actualKpiCreate/"
+"Performance Assessment.Performance Assessment Actuals.PerfAssmtKpiValueCreate":"/create/perfManagement/actualKpiCreate/",
+
+//Inventoy Service
+"Inventory.Inventory Masters.Supplier Master.Supplier Search":"/non-framework/inventory/master/supplier",
+"Inventory.Inventory Masters.Store Master.Store Search":"/non-framework/inventory/master/store"
 
 }
 

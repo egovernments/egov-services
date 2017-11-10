@@ -2543,7 +2543,7 @@ var localization_EN_Data = {
 "referenceEvidence.create.referenceCaseNo":"Case No",
  "referenceEvidence.create.description":"Description",
 
-
+//Inventory Store Master
  "inventory.create.group.title.addStore":"Add Store",
  "inventory.create.group.title.updateStore":"Update Store",
  "inventory.create.group.title.viewStore":"View Store",
@@ -2560,7 +2560,38 @@ var localization_EN_Data = {
  "inventory.store.contactNo2" : "Contact No.2",
  "inventory.store.email" : "Email Address",
  "inventory.store.active" : "Active",
- "inventory.store.officeLocation":"Office Location"
+ "inventory.store.officeLocation":"Office Location",
+ //Inventory Store Master
+ "inventory.supplier.search.title":"Search Supplier",
+ "inventory.supplier.add.title":"Add Supplier",
+ "inventory.supplier.update.title":"Update Supplier",
+ "inventory.supplier.view.title":"View Supplier",
+ "inventory.supplier.type":"Supplier Type",
+ "inventory.supplier.name":"Supplier Name",
+ "inventory.supplier.code":"Supplier Code",
+ "inventory.supplier.address":"Supplier Address",
+ "inventory.supplier.description":"Narration",
+ "inventory.supplier.website":"Website",
+
+ //Inventory Common Lables
+ "inventory.common.contactNo":"Contact No",
+ "inventory.common.faxno":"Fax No",
+ "inventory.common.email":"Email Address",
+ "inventory.common.panno":"Pan No",
+ "inventory.common.tinno":"Tin No",
+ "inventory.common.cstno":"C.S.T No",
+ "inventory.common.vatno":"Vat No",
+ "inventory.common.gstno":"GST Number",
+ "inventory.common.contactperson":"Contact Person",
+ "inventory.common.contactno":"Contact No",
+ "inventory.common.bankinfo":"Bank Information",
+ "inventory.common.bankname":"Bank Name",
+ "inventory.common.bankacctno":"Bank Account No",
+ "inventory.common.bankbranchname":"Bank Branch",
+ "inventory.common.ifsc":"Bank IFSC Code",
+ "inventory.common.micr":"MICR Code",
+ "inventory.common.active":"Active",
+
 
 
 };

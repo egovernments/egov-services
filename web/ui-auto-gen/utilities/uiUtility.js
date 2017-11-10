@@ -3,19 +3,18 @@ const getTitleCase = utilities.getTitleCase;
 const getType = utilities.getType;
 const getQuery = utilities.getQuery;
 
-let getFieldsFromInnerObject = function(fields, properties, module, jPath, isArray, required) {
+let getFieldsFromInnerObject = function(fields, properties, module, jPath, isArray, required, localeFields) {
     let errors = {};
-    let localeFields = {};
+    localeFields = localeFields || {};
 
     for (let key in properties) {
         if (["id", "tenantId", "auditDetails", "assigner"].indexOf(key) > -1) continue;
 
         if(properties[key].properties) {
-            getFieldsFromInnerObject(fields, properties[key].properties, module, (isArray ? (jPath + "[0]") : jPath) + "." + key, false, (properties[key].properties.required || []));
+            getFieldsFromInnerObject(fields, properties[key].properties, module, (isArray ? (jPath + "[0]") : jPath) + "." + key, false, (properties[key].properties.required || []), localeFields);
         } else if(properties[key].item && properties[key].item.properties) {
-            getFieldsFromInnerObject(fields, properties[key].item.properties, module, (isArray ? (jPath + "[0]") : jPath) + "." + key, true, (properties[key].properties.required || []));
+            getFieldsFromInnerObject(fields, properties[key].item.properties, module, (isArray ? (jPath + "[0]") : jPath) + "." + key, true, (properties[key].properties.required || []), localeFields);
         } else {
-            localeFields[module + ".create." + key] = getTitleCase(key);
             fields[(isArray ? (jPath + "[0]") : jPath) + "." + key] = {
                 "name": key,
                 "jsonPath": (isArray ? (jPath + "[0]") : jPath) + "." + key,
@@ -30,6 +29,10 @@ let getFieldsFromInnerObject = function(fields, properties, module, jPath, isArr
                 "patternErrorMsg": properties[key].pattern ? (module + ".create.field.message." + key) : ""
             };
 
+            let keyNameSplit = fields[(isArray ? (jPath + "[0]") : jPath) + "." + key].jsonPath.split(".");
+            let len = keyNameSplit.length;
+            localeFields[module + ".create." + (keyNameSplit.length > 2 ? (keyNameSplit[len-2] + "." + keyNameSplit[len-1]) : key)] = getTitleCase(key);
+            fields[(isArray ? (jPath + "[0]") : jPath) + "." + key].label = module + ".create." + (keyNameSplit.length > 2 ? (keyNameSplit[len-2] + "." + keyNameSplit[len-1]) : key);
             if (fields[(isArray ? (jPath + "[0]") : jPath) + "." + key].type == "text" && properties[key].maxLength && properties[key].maxLength > 256)
                 fields[(isArray ? (jPath + "[0]") : jPath) + "." + key].type = "textarea";
 

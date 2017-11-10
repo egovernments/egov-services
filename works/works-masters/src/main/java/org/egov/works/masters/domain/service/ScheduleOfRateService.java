@@ -1,6 +1,7 @@
 package org.egov.works.masters.domain.service;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.masters.config.PropertiesManager;
 import org.egov.works.masters.domain.repository.ScheduleOfRateRepository;
@@ -71,6 +72,19 @@ public class ScheduleOfRateService {
         ScheduleOfRateResponse response = new ScheduleOfRateResponse();
 
         scheduleOfRateValidator.validate(scheduleOfRateRequest);
+
+        for (final ScheduleOfRate scheduleOfRate : scheduleOfRateRequest.getScheduleOfRates()) {
+            scheduleOfRate.setAuditDetails(masterUtils.getAuditDetails(scheduleOfRateRequest.getRequestInfo(), true));
+            for (final SORRate sorRate : scheduleOfRate.getSorRates()) {
+                sorRate.setAuditDetails(masterUtils.getAuditDetails(scheduleOfRateRequest.getRequestInfo(), true));
+            }
+            if(scheduleOfRate.getMarketRates()!=null && !scheduleOfRate.getMarketRates().isEmpty()) {
+                for (final MarketRate marketRate : scheduleOfRate.getMarketRates()) {
+                    marketRate.setAuditDetails(masterUtils.getAuditDetails(scheduleOfRateRequest.getRequestInfo(), true));
+                }
+            }
+        }
+
         kafkaTemplate.send(propertiesManager.getWorksMasterSorrateUpdateValidatedTopic(), scheduleOfRateRequest);
 
         response.setScheduleOfRates(scheduleOfRateRequest.getScheduleOfRates());

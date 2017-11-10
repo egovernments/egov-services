@@ -810,7 +810,7 @@ definitions:
   AbstractEstimateRequest:
       description: Contract class to send response. Array of AbstractEstimate items are used in case of search results, also multiple  AbstractEstimate item is used for create and update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         abstractEstimates:
           description: Used for create and update only
@@ -823,7 +823,7 @@ definitions:
   AbstractEstimateResponse:
       description: Contract class to send response. Array of AbstractEstimate items are used in case of search results, also multiple  AbstractEstimate item is used for create and update
       properties:
-        responseInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         abstractEstimates:
           description: Used for search result and create only
@@ -1218,7 +1218,7 @@ definitions:
   DetailedEstimateRequest:
       description: Contract class to send response. Array of Detailed Estimate items are used in case of search results, also multiple  Detailed Estimate item is used for create and update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         detailedEstimates:
           description: Used for create and update only
@@ -1231,7 +1231,7 @@ definitions:
   DetailedEstimateResponse:
       description: Contract class to send response. Array of Detailed Estimate items are used in case of search results, also multiple  Detailed Estimate item is used for create and update
       properties:
-        responseInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         detailedEstimates:
           description: Used for search result and create only
@@ -1844,7 +1844,7 @@ definitions:
   ProjectCodeRequest:
       description: Contract class to send response. Array of Project Code items are used in case of search results, also multiple Project Code item is used for create and update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         projectCodes:
           description: Used for create and update only
@@ -1857,7 +1857,7 @@ definitions:
   ProjectCodeResponse:
       description: Contract class to send response. Array of Project Code items are used in case of search results, also multiple Project Code item is used for create and update
       properties:
-        responseInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         projectCodes:
           description: Used for search result and create only
@@ -1916,7 +1916,7 @@ definitions:
   RevisionEstimateRequest:
       description: Contract class to send response. Array of Revision Estimate items are used in case of search results, also multiple  Revision Estimate item is used for create and update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         revisionEstimates:
           description: Used for create and update only
@@ -1929,7 +1929,7 @@ definitions:
   RevisionEstimateResponse:
       description: Contract class to send response. Array of Revision Estimate items are used in case of search results, also multiple  Revision Estimate item is used for create and update
       properties:
-        responseInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         RevisiontEstimates:
           description: Used for search result and create only

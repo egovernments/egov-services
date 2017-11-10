@@ -1455,7 +1455,7 @@ definitions:
   LetterOfAcceptanceRequest:
       description: Contract class to send response. Array of LetterOfAcceptance items are used in case of search results, also multiple  Letter Of Acceptance item is used for create and update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         letterOfAcceptances:
           description: Used for create and update only
@@ -1468,7 +1468,7 @@ definitions:
   LetterOfAcceptanceResponse:
     description: Contract class to send response. Array of Letter Of Acceptance items are used in case of search results, also multiple  Letter Of Acceptance item is used for create and update
     properties:
-      responseInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       letterOfAcceptances:
         description: Used for search result and create only
@@ -1555,7 +1555,7 @@ definitions:
   WorkOrderRequest:
       description: Contract class to send response. Array of Wor kOrder items are used in case of search results, also multiple  Work Order item is used for create and update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         workOrders:
           description: Used for create and update only
@@ -1568,7 +1568,7 @@ definitions:
   WorkOrderResponse:
     description: Contract class to send response. Array of Work Order items are used in case of search results, also multiple  Work Order item is used for create and update
     properties:
-      responseInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       workOrders:
         description: Used for search result and create only
@@ -1647,7 +1647,7 @@ definitions:
   NoticeRequest:
       description: Contract class to send response. Array of Notice items are used in case of search results, also multiple  Notice item is used for create and update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         notices:
           description: Used for create and update only
@@ -1660,7 +1660,7 @@ definitions:
   NoticeResponse:
     description: Contract class to send response. Array of Notice items are used in case of search results, also multiple  Notice item is used for create and update
     properties:
-      responseInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       notices:
         description: Used for search result and create only
@@ -1768,7 +1768,7 @@ definitions:
   MilestoneRequest:
       description: Contract class to send response. Array of Milestone items are used in case of search results, also multiple  Milestone item is used for create and update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         milestones:
           description: Used for create and update only
@@ -1781,7 +1781,7 @@ definitions:
   MilestoneResponse:
     description: Contract class to send response. Array of Letter Of Acceptance items are used in case of search results, also multiple  Milestone item is used for create and update
     properties:
-      responseInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       milestones:
         description: Used for search result and create only
@@ -1875,7 +1875,7 @@ definitions:
   TrackMilestoneRequest:
       description: Contract class to send response. Array of Track Milestone items are used in case of search results, also multiple  Track Milestone item is used for create and update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         trackMilestones:
           description: Used for create and update only
@@ -1888,7 +1888,7 @@ definitions:
   TrackMilestoneResponse:
     description: Contract class to send response. Array of Track Milestone items are used in case of search results, also multiple  Track Milestone item is used for create and update
     properties:
-      responseInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       trackMilestones:
         description: Used for search result and create only
@@ -1900,7 +1900,7 @@ definitions:
   ContractorAdvanceRequisitionRequest:
       description: Contract class to send response. Array of ContractorAdvanceRequisition items are used in case of search results, whereas single ContractorAdvanceRequisition item is used for create and update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         contractorAdvanceRequisitions:
           description: Used for create and update only
@@ -1912,7 +1912,7 @@ definitions:
   ContractorAdvanceRequisitionResponse:
       description: Contract class to send response. Array of ContractorAdvanceRequisition items are used in case of search results, whereas single ContractorAdvanceRequisition item is used for create and update
       properties:
-        responseInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         contractorAdvanceRequisitions:
           description: Used for search result and create only

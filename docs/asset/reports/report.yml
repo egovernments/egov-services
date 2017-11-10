@@ -926,3 +926,4 @@ ReportDefinitions:
          ON current.assetid=prevdep.assetid AND current.tenantid=prevdep.tenantid left outer join (select sum(depreciationvalue) currdepsum,assetid,tenantid from egasset_depreciation where tenantid=$tenantid 
          AND (todate between $finfromdate and $fintoDate) GROUP BY assetid,tenantid ) currdep ON current.assetid=currdep.assetid AND current.tenantid=currdep.tenantid) as transactions 
          ON asset.id=transactions.assetid AND asset.tenantid=transactions.tenantid WHERE tenantid=$tenantid
+

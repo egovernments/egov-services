@@ -10,110 +10,123 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.model.CustomException;
 import org.egov.works.commons.utils.CommonConstants;
-import org.egov.works.estimate.config.WorksEstimateServiceConstants;
+import org.egov.works.estimate.config.PropertiesManager;
+import org.egov.works.estimate.config.Constants;
+import org.egov.works.estimate.domain.repository.AbstractEstimateRepository;
 import org.egov.works.estimate.domain.service.AbstractEstimateService;
+import org.egov.works.estimate.persistence.repository.AbstractEstimateDetailsJdbcRepository;
+import org.egov.works.estimate.persistence.repository.AssetRepository;
+import org.egov.works.estimate.persistence.repository.WorksMastersRepository;
 import org.egov.works.estimate.utils.EstimateUtils;
-import org.egov.works.estimate.web.contract.AbstractEstimate;
-import org.egov.works.estimate.web.contract.AbstractEstimateDetails;
-import org.egov.works.estimate.web.contract.AbstractEstimateRequest;
-import org.egov.works.estimate.web.contract.AbstractEstimateSearchContract;
-import org.egov.works.estimate.web.contract.BudgetGroup;
-import org.egov.works.estimate.web.contract.Department;
-import org.egov.works.estimate.web.contract.Function;
-import org.egov.works.estimate.web.contract.Fund;
-import org.egov.works.estimate.web.contract.RequestInfo;
-import org.egov.works.estimate.web.contract.Scheme;
-import org.egov.works.estimate.web.contract.SubScheme;
-import org.egov.works.estimate.web.contract.TypeOfWork;
+import org.egov.works.estimate.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import net.minidev.json.JSONArray;
 
+import static org.egov.works.estimate.config.Constants.*;
+import static org.egov.works.estimate.config.Constants.KEY_DUPLICATE_ESTIMATE_ASSET_DETAILS;
+import static org.egov.works.estimate.config.Constants.MESSAGE_DUPLICATE_ESTIMATE_ASSET_DETAILS;
+
 @Service
 public class EstimateValidator {
 
-	@Autowired
-	private EstimateUtils estimateUtils;
+    @Autowired
+    private EstimateUtils estimateUtils;
 
-	@Autowired
-	private AbstractEstimateService abstractEstimateService;
+    @Autowired
+    private AbstractEstimateService abstractEstimateService;
 
-	public void validateEstimates(AbstractEstimateRequest abstractEstimateRequest, Boolean isNew) {
-		Map<String, String> messages = new HashMap<>();
-		for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
-			validateSpillOverData(estimate, messages);
-			validateMasterData(estimate, abstractEstimateRequest.getRequestInfo(), messages);
+    @Autowired
+    private WorksMastersRepository worksMastersRepository;
 
-			AbstractEstimateSearchContract searchContract = new AbstractEstimateSearchContract();
-			if (estimate.getId() != null)
-				searchContract.setIds(Arrays.asList(estimate.getId()));
-			searchContract.setAbstractEstimateNumbers(Arrays.asList(estimate.getAbstractEstimateNumber()));
-			searchContract.setTenantId(estimate.getTenantId());
-			List<AbstractEstimate> oldEstimates = abstractEstimateService
-					.search(searchContract, abstractEstimateRequest.getRequestInfo()).getAbstractEstimates();
-			if (isNew && !oldEstimates.isEmpty())
-				messages.put(WorksEstimateServiceConstants.KEY_UNIQUE_ABSTRACTESTIMATENUMBER,
-						WorksEstimateServiceConstants.MESSAGE_UNIQUE_ABSTRACTESTIMATENUMBER);
-			searchContract.setAbstractEstimateNumbers(null);
-			if (!isNew && estimate.getWorkFlowDetails() != null && WorksEstimateServiceConstants.APPROVE
-					.equalsIgnoreCase(estimate.getWorkFlowDetails().getAction())) {
-				if (StringUtils.isBlank(estimate.getAdminSanctionNumber()))
-					messages.put(WorksEstimateServiceConstants.KEY_NULL_ADMINSANCTIONNUMBER,
-							WorksEstimateServiceConstants.MESSAGE_NULL_ADMINSANCTIONNUMBER);
-				searchContract.setAdminSanctionNumbers(Arrays.asList(estimate.getAdminSanctionNumber()));
-				oldEstimates = abstractEstimateService.search(searchContract, abstractEstimateRequest.getRequestInfo())
-						.getAbstractEstimates();
-				if (!oldEstimates.isEmpty() && !estimate.getId().equalsIgnoreCase(oldEstimates.get(0).getId()))
-					messages.put(WorksEstimateServiceConstants.KEY_UNIQUE_ADMINSANCTIONNUMBER,
-							WorksEstimateServiceConstants.MESSAGE_UNIQUE_ADMINSANCTIONNUMBER);
-			}
-			validateEstimateDetails(estimate, messages);
+    @Autowired
+    private AssetRepository assetRepository;
 
-			if (messages != null && !messages.isEmpty())
-				throw new CustomException(messages);
-		}
-	}
+    @Autowired
+    private PropertiesManager propertiesManager;
 
-	private void validateSpillOverData(AbstractEstimate estimate, Map<String, String> messages) {
-		if (estimate.getSpillOverFlag() && estimate.getAbstractEstimateNumber() == null)
-			messages.put(WorksEstimateServiceConstants.KEY_NULL_ABSTRACTESTIMATE_NUMBER,
-					WorksEstimateServiceConstants.MESSAGE_NULL_ABSTRACTESTIMATE_NUMBER);
-		if (!estimate.getSpillOverFlag() && estimate.getDateOfProposal() != null
-				&& new Date(estimate.getDateOfProposal()).after(new Date()))
-			messages.put(WorksEstimateServiceConstants.KEY_FUTUREDATE_DATEOFPROPOSAL,
-					WorksEstimateServiceConstants.MESSAGE_FUTUREDATE_DATEOFPROPOSAL);
-	}
+    @Autowired
+    private AbstractEstimateDetailsJdbcRepository abstractEstimateDetailsJdbcRepository;
 
-	private void validateEstimateDetails(AbstractEstimate estimate, Map<String, String> messages) {
-		BigDecimal estimateAmount = BigDecimal.ZERO;
-		for (final AbstractEstimateDetails aed : estimate.getAbstractEstimateDetails())
-			estimateAmount = estimateAmount.add(aed.getEstimateAmount());
-		if (estimateAmount.compareTo(BigDecimal.ZERO) == -1)
-			messages.put(WorksEstimateServiceConstants.KEY_INVALID_ESTIMATEAMOUNT,
-					WorksEstimateServiceConstants.MESSAGE_INVALID_ESTIMATEAMOUNT);
-	}
+    @Autowired
+    private AbstractEstimateRepository abstractEstimateRepository;
 
-	public void validateMasterData(AbstractEstimate abstractEstimate, RequestInfo requestInfo,
-			Map<String, String> messages) {
+    public void validateEstimates(AbstractEstimateRequest abstractEstimateRequest, Boolean isNew) {
+        Map<String, String> messages = new HashMap<>();
+        for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
+            validateSpillOverData(estimate, messages);
+            validateMasterData(estimate, abstractEstimateRequest.getRequestInfo(), messages);
 
-		Boolean isFinIntReq = false;
-		JSONArray responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.APPCONFIGURATION_OBJECT,
-				CommonConstants.CODE, WorksEstimateServiceConstants.FINANCIAL_INTEGRATION_KEY,
-				abstractEstimate.getTenantId(), requestInfo, WorksEstimateServiceConstants.WORKS_MODULE_CODE);
-		if (responseJSONArray != null && !responseJSONArray.isEmpty()) {
-			Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
-			if (jsonMap.get("value").equals("Yes"))
-				isFinIntReq = true;
-		}
+            AbstractEstimateSearchContract searchContract = new AbstractEstimateSearchContract();
+            if (estimate.getId() != null)
+                searchContract.setIds(Arrays.asList(estimate.getId()));
+            searchContract.setAbstractEstimateNumbers(Arrays.asList(estimate.getAbstractEstimateNumber()));
+            searchContract.setTenantId(estimate.getTenantId());
+            List<AbstractEstimate> oldEstimates = abstractEstimateService
+                    .search(searchContract, abstractEstimateRequest.getRequestInfo()).getAbstractEstimates();
+            if (isNew && !oldEstimates.isEmpty())
+                messages.put(Constants.KEY_UNIQUE_ABSTRACTESTIMATENUMBER,
+                        Constants.MESSAGE_UNIQUE_ABSTRACTESTIMATENUMBER);
+            searchContract.setAbstractEstimateNumbers(null);
+            if (!isNew && estimate.getWorkFlowDetails() != null && Constants.APPROVE
+                    .equalsIgnoreCase(estimate.getWorkFlowDetails().getAction())) {
+                if (StringUtils.isBlank(estimate.getAdminSanctionNumber()))
+                    messages.put(Constants.KEY_NULL_ADMINSANCTIONNUMBER,
+                            Constants.MESSAGE_NULL_ADMINSANCTIONNUMBER);
+                searchContract.setAdminSanctionNumbers(Arrays.asList(estimate.getAdminSanctionNumber()));
+                oldEstimates = abstractEstimateService.search(searchContract, abstractEstimateRequest.getRequestInfo())
+                        .getAbstractEstimates();
+                if (!oldEstimates.isEmpty() && !estimate.getId().equalsIgnoreCase(oldEstimates.get(0).getId()))
+                    messages.put(Constants.KEY_UNIQUE_ADMINSANCTIONNUMBER,
+                            Constants.MESSAGE_UNIQUE_ADMINSANCTIONNUMBER);
+            }
+            validateEstimateDetails(estimate, messages);
 
-		if (isFinIntReq)
-			validateFinancialDetails(abstractEstimate, requestInfo, messages);
+            if (messages != null && !messages.isEmpty())
+                throw new CustomException(messages);
+        }
+    }
 
-		validateTypeOfWork(abstractEstimate.getTypeOfWork(), abstractEstimate.getTenantId(), requestInfo, messages);
-		validateSubTypeOfWork(abstractEstimate.getSubTypeOfWork(), abstractEstimate.getTenantId(), requestInfo,
-				messages);
-		validateDepartment(abstractEstimate.getDepartment(), abstractEstimate.getTenantId(), requestInfo, messages);
+    private void validateSpillOverData(AbstractEstimate estimate, Map<String, String> messages) {
+        if (estimate.getSpillOverFlag() && estimate.getAbstractEstimateNumber() == null)
+            messages.put(Constants.KEY_NULL_ABSTRACTESTIMATE_NUMBER,
+                    Constants.MESSAGE_NULL_ABSTRACTESTIMATE_NUMBER);
+        if (!estimate.getSpillOverFlag() && estimate.getDateOfProposal() != null
+                && new Date(estimate.getDateOfProposal()).after(new Date()))
+            messages.put(Constants.KEY_FUTUREDATE_DATEOFPROPOSAL,
+                    Constants.MESSAGE_FUTUREDATE_DATEOFPROPOSAL);
+    }
+
+    private void validateEstimateDetails(AbstractEstimate estimate, Map<String, String> messages) {
+        BigDecimal estimateAmount = BigDecimal.ZERO;
+        for (final AbstractEstimateDetails aed : estimate.getAbstractEstimateDetails())
+            estimateAmount = estimateAmount.add(aed.getEstimateAmount());
+        if (estimateAmount.compareTo(BigDecimal.ZERO) == -1)
+            messages.put(Constants.KEY_INVALID_ESTIMATEAMOUNT,
+                    Constants.MESSAGE_INVALID_ESTIMATEAMOUNT);
+    }
+
+    public void validateMasterData(AbstractEstimate abstractEstimate, RequestInfo requestInfo,
+                                   Map<String, String> messages) {
+
+        Boolean isFinIntReq = false;
+        JSONArray responseJSONArray = estimateUtils.getMDMSData(Constants.APPCONFIGURATION_OBJECT,
+                CommonConstants.CODE, Constants.FINANCIAL_INTEGRATION_KEY,
+                abstractEstimate.getTenantId(), requestInfo, Constants.WORKS_MODULE_CODE);
+        if (responseJSONArray != null && !responseJSONArray.isEmpty()) {
+            Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
+            if (jsonMap.get("value").equals("Yes"))
+                isFinIntReq = true;
+        }
+
+        if (isFinIntReq)
+            validateFinancialDetails(abstractEstimate, requestInfo, messages);
+
+        validateTypeOfWork(abstractEstimate.getTypeOfWork(), abstractEstimate.getTenantId(), requestInfo, messages);
+        validateSubTypeOfWork(abstractEstimate.getSubTypeOfWork(), abstractEstimate.getTenantId(), requestInfo,
+                messages);
+        validateDepartment(abstractEstimate.getDepartment(), abstractEstimate.getTenantId(), requestInfo, messages);
 
 		/*
 		 * * if(abstractEstimate.getWard() != null &
@@ -138,124 +151,355 @@ public class EstimateValidator {
 		 * abstractEstimate.getLocality().getCode()); } }
 		 */
 
-	}
+    }
 
-	private void validateFinancialDetails(AbstractEstimate abstractEstimate, RequestInfo requestInfo,
-			Map<String, String> messages) {
-		validateFund(abstractEstimate.getFund(), abstractEstimate.getTenantId(), requestInfo, messages);
-		validateFunction(abstractEstimate.getFunction(), abstractEstimate.getTenantId(), requestInfo, messages);
-		validateScheme(abstractEstimate.getScheme(), abstractEstimate.getTenantId(), requestInfo, messages);
-		validateSubScheme(abstractEstimate.getSubScheme(), abstractEstimate.getTenantId(), requestInfo, messages);
-		validateBudgetGroup(abstractEstimate.getBudgetGroup(), abstractEstimate.getTenantId(), requestInfo, messages);
-	}
 
-	public void validateFund(Fund fund, String tenantId, RequestInfo requestInfo, Map<String, String> messages) {
-		JSONArray responseJSONArray;
-		if (fund != null && fund.getCode() != null) {
-			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.FUND_OBJECT,
-					CommonConstants.CODE, fund.getCode(), tenantId, requestInfo,
-					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
-			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
-				messages.put(WorksEstimateServiceConstants.KEY_FUND_INVALID,
-						WorksEstimateServiceConstants.MESSAGE_FUND_INVALID);
-			}
-		}
-	}
+    private void validateFinancialDetails(AbstractEstimate abstractEstimate, RequestInfo requestInfo,
+                                          Map<String, String> messages) {
+        validateFund(abstractEstimate.getFund(), abstractEstimate.getTenantId(), requestInfo, messages);
+        validateFunction(abstractEstimate.getFunction(), abstractEstimate.getTenantId(), requestInfo, messages);
+        validateScheme(abstractEstimate.getScheme(), abstractEstimate.getTenantId(), requestInfo, messages);
+        validateSubScheme(abstractEstimate.getSubScheme(), abstractEstimate.getTenantId(), requestInfo, messages);
+        validateBudgetGroup(abstractEstimate.getBudgetGroup(), abstractEstimate.getTenantId(), requestInfo, messages);
+    }
 
-	public void validateFunction(Function function, String tenantId, RequestInfo requestInfo,
-			Map<String, String> messages) {
-		JSONArray responseJSONArray;
-		if (function != null && function.getCode() != null) {
-			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.FUNCTION_OBJECT,
-					CommonConstants.CODE, function.getCode(), tenantId, requestInfo,
-					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
-			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
-				messages.put(WorksEstimateServiceConstants.KEY_FUNCTION_INVALID,
-						WorksEstimateServiceConstants.MESSAGE_FUNCTION_INVALID);
-			}
-		}
-	}
+    public void validateFund(Fund fund, String tenantId, RequestInfo requestInfo, Map<String, String> messages) {
+        JSONArray responseJSONArray;
+        if (fund != null && fund.getCode() != null) {
+            responseJSONArray = estimateUtils.getMDMSData(Constants.FUND_OBJECT,
+                    CommonConstants.CODE, fund.getCode(), tenantId, requestInfo,
+                    Constants.WORKS_MODULE_CODE);
+            if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+                messages.put(Constants.KEY_FUND_INVALID,
+                        Constants.MESSAGE_FUND_INVALID);
+            }
+        }
+    }
 
-	public void validateScheme(Scheme scheme, String tenantId, RequestInfo requestInfo, Map<String, String> messages) {
-		JSONArray responseJSONArray;
-		if (scheme != null && scheme.getCode() != null) {
-			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.SCHEME_OBJECT,
-					CommonConstants.CODE, scheme.getCode(), tenantId, requestInfo,
-					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
-			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
-				messages.put(WorksEstimateServiceConstants.KEY_SCHEME_INVALID,
-						WorksEstimateServiceConstants.MESSAGE_SCHEME_INVALID);
-			}
-		}
-	}
+    public void validateFunction(Function function, String tenantId, RequestInfo requestInfo,
+                                 Map<String, String> messages) {
+        JSONArray responseJSONArray;
+        if (function != null && function.getCode() != null) {
+            responseJSONArray = estimateUtils.getMDMSData(Constants.FUNCTION_OBJECT,
+                    CommonConstants.CODE, function.getCode(), tenantId, requestInfo,
+                    Constants.WORKS_MODULE_CODE);
+            if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+                messages.put(Constants.KEY_FUNCTION_INVALID,
+                        Constants.MESSAGE_FUNCTION_INVALID);
+            }
+        }
+    }
 
-	public void validateSubScheme(SubScheme subScheme, String tenantId, RequestInfo requestInfo,
-			Map<String, String> messages) {
-		JSONArray responseJSONArray;
-		if (subScheme != null && subScheme.getCode() != null) {
-			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.SUBSCHEME_OBJECT,
-					CommonConstants.CODE, subScheme.getCode(), tenantId, requestInfo,
-					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
-			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
-				messages.put(WorksEstimateServiceConstants.KEY_SUBSCHEME_INVALID,
-						WorksEstimateServiceConstants.MESSAGE_SUBSCHEME_INVALID);
-			}
-		}
-	}
+    public void validateScheme(Scheme scheme, String tenantId, RequestInfo requestInfo, Map<String, String> messages) {
+        JSONArray responseJSONArray;
+        if (scheme != null && scheme.getCode() != null) {
+            responseJSONArray = estimateUtils.getMDMSData(Constants.SCHEME_OBJECT,
+                    CommonConstants.CODE, scheme.getCode(), tenantId, requestInfo,
+                    Constants.WORKS_MODULE_CODE);
+            if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+                messages.put(Constants.KEY_SCHEME_INVALID,
+                        Constants.MESSAGE_SCHEME_INVALID);
+            }
+        }
+    }
 
-	public void validateBudgetGroup(BudgetGroup budgetGroup, String tenantId, RequestInfo requestInfo,
-			Map<String, String> messages) {
-		JSONArray responseJSONArray;
-		if (budgetGroup != null && budgetGroup.getName() != null) {
-			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.BUDGETGROUP_OBJECT,
-					CommonConstants.NAME, budgetGroup.getName(), tenantId, requestInfo,
-					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
-			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
-				messages.put(WorksEstimateServiceConstants.KEY_BUDGETGROUP_INVALID,
-						WorksEstimateServiceConstants.MESSAGE_BUDGETGROUP_INVALID);
-			}
-		}
-	}
+    public void validateSubScheme(SubScheme subScheme, String tenantId, RequestInfo requestInfo,
+                                  Map<String, String> messages) {
+        JSONArray responseJSONArray;
+        if (subScheme != null && subScheme.getCode() != null) {
+            responseJSONArray = estimateUtils.getMDMSData(Constants.SUBSCHEME_OBJECT,
+                    CommonConstants.CODE, subScheme.getCode(), tenantId, requestInfo,
+                    Constants.WORKS_MODULE_CODE);
+            if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+                messages.put(Constants.KEY_SUBSCHEME_INVALID,
+                        Constants.MESSAGE_SUBSCHEME_INVALID);
+            }
+        }
+    }
 
-	public void validateTypeOfWork(TypeOfWork typeOfWork, String tenantId, RequestInfo requestInfo,
-			Map<String, String> messages) {
-		JSONArray responseJSONArray;
-		if (typeOfWork != null && typeOfWork.getName() != null) {
-			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.TYPEOFWORK_OBJECT,
-					CommonConstants.CODE, typeOfWork.getCode(), tenantId, requestInfo,
-					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
-			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
-				messages.put(WorksEstimateServiceConstants.KEY_TYPEOFWORK_INVALID,
-						WorksEstimateServiceConstants.MESSAGE_TYPEOFWORK_INVALID);
-			}
-		}
-	}
+    public void validateBudgetGroup(BudgetGroup budgetGroup, String tenantId, RequestInfo requestInfo,
+                                    Map<String, String> messages) {
+        JSONArray responseJSONArray;
+        if (budgetGroup != null && budgetGroup.getName() != null) {
+            responseJSONArray = estimateUtils.getMDMSData(Constants.BUDGETGROUP_OBJECT,
+                    CommonConstants.NAME, budgetGroup.getName(), tenantId, requestInfo,
+                    Constants.WORKS_MODULE_CODE);
+            if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+                messages.put(Constants.KEY_BUDGETGROUP_INVALID,
+                        Constants.MESSAGE_BUDGETGROUP_INVALID);
+            }
+        }
+    }
 
-	public void validateSubTypeOfWork(TypeOfWork subTypeOfWork, String tenantId, RequestInfo requestInfo,
-			Map<String, String> messages) {
-		JSONArray responseJSONArray;
-		if (subTypeOfWork != null && subTypeOfWork.getName() != null) {
-			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.TYPEOFWORK_OBJECT,
-					CommonConstants.CODE, subTypeOfWork.getCode(), tenantId, requestInfo,
-					WorksEstimateServiceConstants.WORKS_MODULE_CODE);
-			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
-				messages.put(WorksEstimateServiceConstants.KEY_SUBTYPEOFWORK_INVALID,
-						WorksEstimateServiceConstants.MESSAGE_SUBTYPEOFWORK_INVALID);
-			}
-		}
-	}
+    public void validateTypeOfWork(TypeOfWork typeOfWork, String tenantId, RequestInfo requestInfo,
+                                   Map<String, String> messages) {
+        JSONArray responseJSONArray;
+        if (typeOfWork != null && typeOfWork.getName() != null) {
+            responseJSONArray = estimateUtils.getMDMSData(Constants.TYPEOFWORK_OBJECT,
+                    CommonConstants.CODE, typeOfWork.getCode(), tenantId, requestInfo,
+                    Constants.WORKS_MODULE_CODE);
+            if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+                messages.put(Constants.KEY_TYPEOFWORK_INVALID,
+                        Constants.MESSAGE_TYPEOFWORK_INVALID);
+            }
+        }
+    }
 
-	public void validateDepartment(Department department, String tenantId, RequestInfo requestInfo,
-			Map<String, String> messages) {
-		JSONArray responseJSONArray;
-		if (department != null && department.getName() != null) {
-			responseJSONArray = estimateUtils.getMDMSData(WorksEstimateServiceConstants.DEPARTMENT_OBJECT,
-					CommonConstants.CODE, department.getCode(), tenantId, requestInfo,
-					WorksEstimateServiceConstants.COMMON_MASTERS_MODULE_CODE);
-			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
-				messages.put(WorksEstimateServiceConstants.KEY_DEPARTMENT_INVALID,
-						WorksEstimateServiceConstants.MESSAGE_DEPARTMENT_INVALID);
-			}
-		}
-	}
+    public void validateSubTypeOfWork(TypeOfWork subTypeOfWork, String tenantId, RequestInfo requestInfo,
+                                      Map<String, String> messages) {
+        JSONArray responseJSONArray;
+        if (subTypeOfWork != null && subTypeOfWork.getName() != null) {
+            responseJSONArray = estimateUtils.getMDMSData(Constants.TYPEOFWORK_OBJECT,
+                    CommonConstants.CODE, subTypeOfWork.getCode(), tenantId, requestInfo,
+                    Constants.WORKS_MODULE_CODE);
+            if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+                messages.put(Constants.KEY_SUBTYPEOFWORK_INVALID,
+                        Constants.MESSAGE_SUBTYPEOFWORK_INVALID);
+            }
+        }
+    }
+
+    public void validateDepartment(Department department, String tenantId, RequestInfo requestInfo,
+                                   Map<String, String> messages) {
+        JSONArray responseJSONArray;
+        if (department != null && department.getName() != null) {
+            responseJSONArray = estimateUtils.getMDMSData(Constants.DEPARTMENT_OBJECT,
+                    CommonConstants.CODE, department.getCode(), tenantId, requestInfo,
+                    Constants.COMMON_MASTERS_MODULE_CODE);
+            if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+                messages.put(Constants.KEY_DEPARTMENT_INVALID,
+                        Constants.MESSAGE_DEPARTMENT_INVALID);
+            }
+        }
+    }
+
+    public void validateDetailedEstimates(DetailedEstimateRequest detailedEstimateRequest) {
+        final RequestInfo requestInfo = detailedEstimateRequest.getRequestInfo();
+        Map<String, String> messages = new HashMap<>();
+        for (DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
+            validateSpillOverEstimate(detailedEstimate, messages);
+            validateActivities(detailedEstimate, messages, requestInfo);
+            validateLocationDetails(detailedEstimate, requestInfo, messages);
+            validateAssetDetails(detailedEstimate, requestInfo, messages);
+            validateMultiYearEstimates(detailedEstimate, messages);
+            validateOverheads(detailedEstimate, requestInfo, messages);
+            validateMasterData(detailedEstimate, requestInfo, messages);
+        }
+        if (messages != null && !messages.isEmpty())
+            throw new CustomException(messages);
+    }
+
+    public void validateSpillOverEstimate(final DetailedEstimate detailedEstimate, Map<String, String> messages) {
+
+    }
+
+    public void validateOverheads(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo, Map<String, String> messages) {
+        for (final EstimateOverhead estimateOverhead : detailedEstimate.getEstimateOverheads()) {
+
+            JSONArray responseJSONArray = null;
+            if (estimateOverhead != null) {
+                if (estimateOverhead.getOverhead() != null && StringUtils.isNotBlank(estimateOverhead.getOverhead().getCode())) {
+                    responseJSONArray = estimateUtils.getMDMSData(OVERHEAD_OBJECT,
+                            CommonConstants.CODE, estimateOverhead.getOverhead().getCode(), detailedEstimate.getTenantId(), requestInfo,
+                            WORKS_MODULE_CODE);
+                    if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+                        messages.put(KEY_ESTIMATE_OVERHEAD_CODE_INVALID, MESSAGE_ESTIMATE_OVERHEAD_CODE_INVALID);
+                    }
+                }
+
+                if (estimateOverhead.getOverhead().getId() == null) {
+                    messages.put(KEY_ESIMATE_OVERHEAD_ID, MESSAGE_ESIMATE_OVERHEAD_ID);
+                }
+                if (estimateOverhead.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+                    messages.put(KEY_ESIMATE_OVERHEAD_AMOUNT, MESSAGE_ESIMATE_OVERHEAD_AMOUNT);
+                }
+
+            }
+        }
+    }
+
+    public void validateMultiYearEstimates(final DetailedEstimate detailedEstimate, Map<String, String> messages) {
+        FinancialYear financialYear = null;
+        Double totalPercentage = 0d;
+        for (final MultiYearEstimate multiYearEstimate : detailedEstimate.getMultiYearEstimates()) {
+            totalPercentage = totalPercentage + multiYearEstimate.getPercentage();
+            if (financialYear != null && financialYear.equals(multiYearEstimate.getFinancialYear()))
+                messages.put(KEY_DUPLICATE_MULTIYEAR_ESTIMATE, MESSAGE_DUPLICATE_MULTIYEAR_ESTIMATE);
+            if (totalPercentage > 100)
+                messages.put(KEY_PERCENTAGE_MULTIYEAR_ESTIMATE, MESSAGE_PERCENTAGE_MULTIYEAR_ESTIMATE);
+            financialYear = multiYearEstimate.getFinancialYear();
+        }
+
+    }
+
+    public void validateActivities(final DetailedEstimate detailedEstimate, Map<String, String> messages, final RequestInfo requestInfo) {
+        for (int i = 0; i < detailedEstimate.getEstimateActivities().size(); i++)
+            for (int j = i + 1; j < detailedEstimate.getEstimateActivities().size(); j++)
+                if (detailedEstimate.getEstimateActivities().get(i).getScheduleOfRate() != null
+                        && detailedEstimate.getEstimateActivities().get(i).getScheduleOfRate().getId()
+                        .equals(detailedEstimate.getEstimateActivities().get(j).getScheduleOfRate().getId())) {
+                    messages.put(KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATE, MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATE);
+                }
+        if (detailedEstimate.getEstimateActivities() == null || detailedEstimate.getEstimateActivities().isEmpty())
+            messages.put(KEY_ESTIMATE_ACTIVITY_REQUIRED, MESSAGE_ESTIMATE_ACTIVITY_REQUIRED);
+
+        for (final EstimateActivity activity : detailedEstimate.getEstimateActivities()) {
+            if ((activity.getScheduleOfRate() != null && activity.getScheduleOfRate().getId() == null) || (activity.getNonSor() != null && activity.getNonSor().getId() == null))
+                messages.put(KEY_ESTIMATE_ACTIVITY_REQUIRED, MESSAGE_ESTIMATE_ACTIVITY_REQUIRED);
+
+            if (activity.getScheduleOfRate() == null && activity.getNonSor() == null)
+                messages.put(KEY_ESTIMATE_ACTIVITY_INVALID, MESSAGE_ESTIMATE_ACTIVITY_INVALID);
+
+            if (activity.getQuantity() != null && activity.getQuantity() <= 0)
+                messages.put(KEY_ESTIMATE_ACTIVITY_QUANTITY, MESSAGE_ESTIMATE_ACTIVITY_QUANTITY);
+
+            if (activity.getEstimateRate() == null)
+                messages.put(KEY_ESTIMATE_ACTIVITY_ESTIMATE_RATE_REQUIRED, MESSAGE_ESTIMATE_ACTIVITY_ESTIMATE_RATE_REQUIRED);
+            else if (activity.getEstimateRate().compareTo(BigDecimal.ZERO) <= 0)
+                messages.put(KEY_ESTIMATE_ACTIVITY_ESTIMATE_RATE, MESSAGE_ESTIMATE_ACTIVITY_ESTIMATE_RATE);
+
+            if (activity.getUom() == null)
+                messages.put(KEY_ESTIMATE_ACTIVITY_UOM_REQUIRED, MESSAGE_ESTIMATE_ACTIVITY_UOM_REQUIRED);
+            else if (StringUtils.isBlank(activity.getUom().getCode()))
+                messages.put(KEY_ESTIMATE_ACTIVITY_UOM_CODE_INVALID, MESSAGE_ESTIMATE_ACTIVITY_UOM_CODE_INVALID);
+
+            if (activity.getUnitRate() == null)
+                messages.put(KEY_ESTIMATE_ACTIVITY_UNIT_RATE_REQUIRED, MESSAGE_ESTIMATE_ACTIVITY_UNIT_RATE_REQUIRED);
+            else if (activity.getUnitRate().compareTo(BigDecimal.ZERO) <= 0)
+                messages.put(KEY_ESTIMATE_ACTIVITY_UNIT_RATE_INVALID, MESSAGE_ESTIMATE_ACTIVITY_UNIT_RATE_INVALID);
+
+            if (activity.getEstimateMeasurementSheets() != null)
+                for (final EstimateMeasurementSheet estimateMeasurementSheet : activity.getEstimateMeasurementSheets()) {
+                    if (estimateMeasurementSheet.getQuantity() == null)
+                        messages.put(KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_REQUIRED, MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_REQUIRED);
+                    else if (estimateMeasurementSheet.getQuantity().compareTo(BigDecimal.ZERO) <= 0)
+                        messages.put(KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID, MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID);
+                }
+
+            if (activity.getScheduleOfRate() != null && StringUtils.isNotBlank(activity.getScheduleOfRate().getId())) {
+                List<ScheduleOfRate> scheduleOfRates = worksMastersRepository.searchScheduleOfRates(activity.getTenantId(), Arrays.asList(activity.getScheduleOfRate().getId()), requestInfo);
+                if (scheduleOfRates != null && scheduleOfRates.isEmpty())
+                    messages.put(KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID, MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID);
+            }
+
+        }
+
+    }
+
+    public void validateLocationDetails(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo, Map<String, String> messages) {
+        if (propertiesManager.getLocationRequiredForEstimate().toString().equalsIgnoreCase("Yes")) {
+            JSONArray mdmsArray = estimateUtils.getMDMSData(APPCONFIGURATION_OBJECT, CommonConstants.CODE, GIS_INTEGRATION_APPCONFIG,
+                    detailedEstimate.getTenantId(), requestInfo, WORKS_MODULE_CODE);
+            if (mdmsArray != null && !mdmsArray.isEmpty()) {
+                Map<String, Object> jsonMap = (Map<String, Object>) mdmsArray.get(0);
+                if (jsonMap.get("value").equals("Yes") && (StringUtils.isBlank(detailedEstimate.getLocation())
+                        || detailedEstimate.getLatitude() == null || detailedEstimate.getLongitude() == null))
+                    messages.put(KEY_ESTIMATE_LOCATION_REQUIRED, MESSAGE_ESTIMATE_LOCATION_REQUIRED);
+            }
+        }
+    }
+
+    public void validateAssetDetails(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo, Map<String, String> messages) {
+
+        JSONArray mdmsArray = estimateUtils.getMDMSData(APPCONFIGURATION_OBJECT, CommonConstants.CODE, ASSET_DETAILES_REQUIRED_APPCONFIG,
+                detailedEstimate.getTenantId(), requestInfo, WORKS_MODULE_CODE);
+        if (mdmsArray != null && !mdmsArray.isEmpty()) {
+            Map<String, Object> jsonMap = (Map<String, Object>) mdmsArray.get(0);
+            if (jsonMap.get("value").equals("Yes") && detailedEstimate.getAssets() != null
+                    && detailedEstimate.getAssets().isEmpty())
+                messages.put(KEY_ESTIMATE_ASSET_DETAILS_REQUIRED, MESSAGE_ESTIMATE_ASSET_DETAILS_REQUIRED);
+        }
+
+        Asset asset = null;
+        for (final AssetsForEstimate assetsForEstimate : detailedEstimate.getAssets())
+            if (assetsForEstimate != null) {
+                if (StringUtils.isBlank(assetsForEstimate.getAsset().getCode()))
+                    messages.put(KEY_ESTIMATE_ASSET_REQUIRED, MESSAGE_ESTIMATE_ASSET_REQUIRED);
+                //TODO FIX aset code validation
+               /* else {
+                    List<Asset> assets = assetRepository.searchAssets(assetsForEstimate.getTenantId(),assetsForEstimate.getAsset().getCode(),requestInfo);
+                    if(assets != null && assets.isEmpty())
+                        messages.put(KEY_WORKS_ESTIMATE_ASSET_CODE_INVALID, MESSAGE_WORKS_ESTIMATE_ASSET_CODE_INVALID);
+                }*/
+                if (asset != null && asset.getCode().equals(assetsForEstimate.getAsset().getCode()))
+                    messages.put(KEY_DUPLICATE_ESTIMATE_ASSET_DETAILS, MESSAGE_DUPLICATE_ESTIMATE_ASSET_DETAILS);
+            }
+    }
+
+
+    /*public void validateTechnicalSanctionDetail(final DetailedEstimate detailedEstimate) {
+        if (abstractEstimate.getEstimateTechnicalSanctions() != null
+                && abstractEstimate.getEstimateTechnicalSanctions().get(0).getTechnicalSanctionDate() == null)
+            errors.reject("error.techdate.notnull", "error.techdate.notnull");
+        if (abstractEstimate.getEstimateTechnicalSanctions() != null
+                && abstractEstimate.getEstimateTechnicalSanctions().get(0).getTechnicalSanctionDate() != null
+                && abstractEstimate.getEstimateTechnicalSanctions().get(0).getTechnicalSanctionDate()
+                .before(abstractEstimate.getEstimateDate()))
+            errors.reject("error.abstracttechnicalsanctiondate", "error.abstracttechnicalsanctiondate");
+        if (abstractEstimate.getEstimateTechnicalSanctions() != null
+                && abstractEstimate.getEstimateTechnicalSanctions().get(0).getTechnicalSanctionNumber() == null)
+            errors.reject("error.technumber.notnull", "error.technumber.notnull");
+        if (abstractEstimate.getEstimateTechnicalSanctions() != null
+                && abstractEstimate.getEstimateTechnicalSanctions().get(0).getTechnicalSanctionNumber() != null) {
+            final AbstractEstimate esistingAbstractEstimate = abstractEstimateRepository
+                    .findByEstimateTechnicalSanctionsIgnoreCase_TechnicalSanctionNumberAndEgwStatus_CodeNot(
+                            abstractEstimate.getEstimateTechnicalSanctions().get(0).getTechnicalSanctionNumber(),
+                            EstimateStatus.CANCELLED.toString());
+            if (esistingAbstractEstimate != null)
+                errors.reject("error.technumber.unique", "error.technumber.unique");
+        }
+        if (abstractEstimate.getEstimateDate() == null)
+            errors.reject("errors.abbstractestimate.estimatedate", "errors.abbstractestimate.estimatedate");
+        if (abstractEstimate.getLineEstimateDetails() != null && abstractEstimate.getEstimateDate() != null
+                && abstractEstimate.getEstimateDate()
+                .before(abstractEstimate.getLineEstimateDetails().getLineEstimate().getAdminSanctionDate()))
+            errors.reject("error.abstractadminsanctiondatele", "error.abstractadminsanctiondatele");
+    }*/
+
+    private void validateMasterData(DetailedEstimate detailedEstimate, RequestInfo requestInfo, Map<String, String> messages) {
+        JSONArray responseJSONArray = null;
+
+        responseJSONArray = estimateUtils.getMDMSData(Constants.APPCONFIGURATION_OBJECT,
+                CommonConstants.CODE, Constants.FINANCIAL_INTEGRATION_KEY,
+                detailedEstimate.getTenantId(), requestInfo, Constants.WORKS_MODULE_CODE);
+        if (responseJSONArray != null && !responseJSONArray.isEmpty()) {
+            Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
+            if (jsonMap.get("value").equals("Yes"))
+                validateFinancialDetailsForDetailedEstmate(detailedEstimate, requestInfo, messages);
+        }
+
+        validateTypeOfWork(detailedEstimate.getWorksType(), detailedEstimate.getTenantId(), requestInfo, messages);
+        validateSubTypeOfWork(detailedEstimate.getWorksSubtype(), detailedEstimate.getTenantId(), requestInfo,
+                messages);
+        validateDepartment(detailedEstimate.getDepartment(), detailedEstimate.getTenantId(), requestInfo, messages);
+    }
+
+    private void validateFinancialDetailsForDetailedEstmate(DetailedEstimate detailedEstimate, RequestInfo requestInfo,
+                                                            Map<String, String> messages) {
+        validateFund(detailedEstimate.getFund(), detailedEstimate.getTenantId(), requestInfo, messages);
+        validateFunction(detailedEstimate.getFunction(), detailedEstimate.getTenantId(), requestInfo, messages);
+        validateScheme(detailedEstimate.getScheme(), detailedEstimate.getTenantId(), requestInfo, messages);
+        validateSubScheme(detailedEstimate.getSubScheme(), detailedEstimate.getTenantId(), requestInfo, messages);
+        validateBudgetGroup(detailedEstimate.getBudgetGroup(), detailedEstimate.getTenantId(), requestInfo, messages);
+    }
+
+    public boolean checkDetailedEstimateCreatedFlag(final DetailedEstimate detailedEstimate) {
+        boolean isDetailedEstimateCreated = false;
+        AbstractEstimateDetailsSearchContract searchContract = AbstractEstimateDetailsSearchContract.builder().tenantId(detailedEstimate.getTenantId())
+                .ids(Arrays.asList(detailedEstimate.getAbstractEstimateDetail().getId())).build();
+        List<AbstractEstimateDetails> abstractEstimateDetails = abstractEstimateDetailsJdbcRepository.search(searchContract);
+        if (!abstractEstimateDetails.isEmpty()) {
+            String abstractEstimateId = abstractEstimateDetails.get(0).getAbstractEstimate();
+            AbstractEstimateSearchContract abstractEstimateSearchContract = AbstractEstimateSearchContract.builder().tenantId(detailedEstimate.getTenantId())
+                    .ids(Arrays.asList(abstractEstimateId)).build();
+            List<AbstractEstimate> abstractEstimates = abstractEstimateRepository.search(abstractEstimateSearchContract);
+            if (!abstractEstimates.isEmpty()) {
+                AbstractEstimate abstractEstimate = abstractEstimates.get(0);
+                isDetailedEstimateCreated = abstractEstimate.getDetailedEstimateCreated();
+            }
+
+        }
+        return isDetailedEstimateCreated;
+    }
 }
+

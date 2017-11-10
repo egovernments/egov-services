@@ -13,9 +13,16 @@ class UiAutoComplete extends Component {
 	constructor(props) {
        super(props);
 			 this.state={
-				 dropDownData:[]
+				 searchText:""
 			 }
    	}
+
+	 handleUpdateInput = (searchText) => {
+     this.setState({
+       searchText: searchText,
+     });
+   }
+
 
   initData(props) {
    		let {item, setDropDownData, useTimestamp}=props;
@@ -46,13 +53,33 @@ class UiAutoComplete extends Component {
 			var response=Api.commonApiPost(context, id, {}, "", useTimestamp || false).then(function(response) {
 
 				if(response) {
-					let keys=jp.query(response,splitArray[1].split("|")[1]);
-					let values=jp.query(response,splitArray[1].split("|")[2]);
+
+					let queries = splitArray[1].split("|");
+					let keys=jp.query(response, queries[1]);
+					let values=jp.query(response, queries[2]);
+
+					let others=[];
+					if(queries.length>3){
+						for(let i=3;i<queries.length;i++){
+							others.push(jp.query(response, queries[i]) || undefined);
+						}
+					}
+
 					let dropDownData=[];
 					for (var k = 0; k < keys.length; k++) {
 							let obj={};
 							obj["key"]=keys[k] && keys[k].toString();
 							obj["value"]=values[k];
+
+							if(others && others.length>0)
+							{
+								let otherItemDatas=[];
+								for(let i=0;i<others.length;i++){
+									otherItemDatas.push(others[i][k] || undefined);
+								}
+								obj['others'] = otherItemDatas;
+							}
+
 							if (item.hasOwnProperty("isKeyValuePair") && item.isKeyValuePair) {
 								obj["value"]=keys[k]+"-"+values[k]
 							}
@@ -90,7 +117,6 @@ class UiAutoComplete extends Component {
 
 		// console.log(dropDownData.hasOwnProperty(item.jsonpath) && dropDownData[item.jsonpath].replace(".", "\."));
 		// console.log(dropDownData);
-		// console.log(dropDownData[item.jsonPath] );
 		// console.log(dropDownData.hasOwnProperty(item.jsonPath));
 		console.log(searchTextCom);
 		switch (this.props.ui) {
@@ -102,6 +128,7 @@ class UiAutoComplete extends Component {
 						 className="custom-form-control-for-textfield"
 						 id={item.jsonPath.split(".").join("-")}
 						 listStyle={{ maxHeight: 100, overflow: 'auto' }}
+						 onUpdateInput={this.handleUpdateInput}
 						 filter={(searchText, key)=> {
   					 			return key.toLowerCase().includes(searchText.toLowerCase());
 						 }}
@@ -114,8 +141,7 @@ class UiAutoComplete extends Component {
              dataSourceConfig={dataSourceConfig}
              floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
              fullWidth={true}
-             value={this.props.getVal(item.jsonPath)}
-						 searchText={searchTextCom}
+						 searchText={this.state.searchText}
              disabled={item.isDisabled}
              errorText={this.props.fieldErrors[item.jsonPath]}
              onKeyUp={(e) => {
@@ -123,6 +149,7 @@ class UiAutoComplete extends Component {
              }}
              onNewRequest={(value,index) =>{
               this.props.handler({target: {value: value.key}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
+							this.handleUpdateInput(value.value);
               if(this.props.autoComHandler && item.autoCompleteDependancy) {
               	this.props.autoComHandler(item.autoCompleteDependancy, item.jsonPath)
               }

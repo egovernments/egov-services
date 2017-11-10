@@ -168,7 +168,7 @@ class Report extends Component {
         }
       }
 
-      
+
       for(var j=0; j<specs[moduleName + "." + actionName].groups[i].fields.length; j++) {
           if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields && specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length) {
             for(var k=0; k<specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length; k++) {
@@ -859,7 +859,7 @@ class Report extends Component {
 
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
       let dependantIdx;
-      if(depedants.length === 0){
+      if(depedants.length === 0 && property){
         let currentProperty = property;
         dependantIdx = findLastIdxOnJsonPath(property);
         if(dependantIdx !== undefined)

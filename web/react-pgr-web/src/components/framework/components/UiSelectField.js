@@ -45,14 +45,29 @@ class UiSelectField extends Component {
                let queries = splitArray[1].split("|");
                let keys=jp.query(response, queries[1]);
                let values=jp.query(response, queries[2]);
-               let others = queries.length > 3 && jp.query(response, queries[3]) || undefined;
+
+               let others=[];
+               if(queries.length>3){
+                 for(let i=3;i<queries.length;i++){
+                   others.push(jp.query(response, queries[i]) || undefined);
+                 }
+               }
 
                let dropDownData=[];
                for (var k = 0; k < keys.length; k++) {
                   let obj={};
                   obj["key"]= item.convertToString ? keys[k].toString() : (item.convertToNumber ? Number(keys[k]) : keys[k]);
                   obj["value"]= values[k];
-                  obj['others'] = others && others[k] || undefined;
+
+                  if(others && others.length>0)
+                  {
+                    let otherItemDatas=[];
+                    for(let i=0;i<others.length;i++){
+                      otherItemDatas.push(others[i][k] || undefined);
+                    }
+                    obj['others'] = otherItemDatas;
+                  }
+
                   if (item.hasOwnProperty("isKeyValuePair") && item.isKeyValuePair) {
                      obj["value"]=keys[k]+"-"+values[k]
                   }

@@ -9,14 +9,17 @@ import java.util.stream.Collectors;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.models.Advocate;
+import org.egov.lcms.models.AdvocateCharge;
 import org.egov.lcms.models.AdvocatePayment;
 import org.egov.lcms.models.AdvocatePaymentSearchCriteria;
 import org.egov.lcms.models.AdvocateSearchCriteria;
 import org.egov.lcms.models.Case;
+import org.egov.lcms.models.CaseDetails;
 import org.egov.lcms.models.CaseStatus;
 import org.egov.lcms.models.CaseType;
 import org.egov.lcms.models.RequestInfoWrapper;
 import org.egov.lcms.repository.builder.AdvocatePaymentQueryBuilder;
+import org.egov.lcms.repository.builder.OpinionQueryBuilder;
 import org.egov.lcms.repository.rowmapper.AdvocatePaymentRowMapper;
 import org.egov.mdms.model.MdmsResponse;
 import org.egov.tracer.model.CustomException;
@@ -61,6 +64,9 @@ public class AdvocatePaymentRepository {
 	@Autowired
 	private AdvocateRepository advocateRepository;
 
+	@Autowired
+	OpinionQueryBuilder opinionBuilder;
+
 	public List<AdvocatePayment> search(final AdvocatePaymentSearchCriteria advocatePaymentSearchCriteria,
 			RequestInfo requestInfo) throws Exception {
 
@@ -72,6 +78,7 @@ public class AdvocatePaymentRepository {
 		try {
 			advocatePayments = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
 					advocatePaymentRowMapper);
+			getCaseNoFromSummonReferenceNo(advocatePayments);
 		} catch (final Exception exception) {
 			log.info("Exception in advocate payment :" + exception.getMessage());
 			throw new CustomException(propertiesManager.getPaymentSearchErrorCode(), exception.getMessage());
@@ -83,15 +90,44 @@ public class AdvocatePaymentRepository {
 		return advocatePayments;
 	}
 
+	private void getCaseNoFromSummonReferenceNo(List<AdvocatePayment> advocatePayments) {
+		
+		for (AdvocatePayment advocatePayment : advocatePayments) {
+
+			if (advocatePayment.getAdvocateCharges() != null) {
+				for (AdvocateCharge advocateCharge : advocatePayment.getAdvocateCharges()) {
+
+					if (advocateCharge.getCaseDetails() != null
+							&& advocateCharge.getCaseDetails().getSummonReferenceNo() != null) {
+						final List<Object> preparedStatementValues = new ArrayList<Object>();
+						String searchQuery = opinionBuilder.getCaseNo(advocateCharge.getCaseDetails().getSummonReferenceNo(),
+								advocatePayment.getTenantId(), preparedStatementValues);
+						
+						try {
+							
+							String caseNo = jdbcTemplate.queryForObject(searchQuery, preparedStatementValues.toArray(),
+									String.class);
+							advocateCharge.getCaseDetails().setCaseNo(caseNo);
+						} catch (Exception ex) {
+							
+							log.info("the exception in opinion :" + ex.getMessage());
+							throw new CustomException(propertiesManager.getCaseNoErrorCode(),
+									propertiesManager.getCaseNoErrorMsg());
+						}
+					}
+				}
+			}
+		}
+	}
+
 	private void setCaseDetails(List<AdvocatePayment> advocatePayments, String tenantId, RequestInfo requestInfo)
 			throws Exception {
 
 		RequestInfoWrapper requestWrapper = new RequestInfoWrapper();
 		requestWrapper.setRequestInfo(requestInfo);
 
-		List<String> caseTypeCodes = advocatePayments.stream()
-				.filter(advocateData -> advocateData.getCaseType() != null
-						&& advocateData.getCaseType().getCode() != null)
+		List<String> caseTypeCodes = advocatePayments.stream().filter(
+				advocateData -> advocateData.getCaseType() != null && advocateData.getCaseType().getCode() != null)
 				.map(advocateCode -> advocateCode.getCaseType().getCode()).collect(Collectors.toList());
 
 		List<String> caseStatusCodes = advocatePayments.stream()
@@ -129,9 +165,8 @@ public class AdvocatePaymentRepository {
 
 	private void setAdvocate(List<AdvocatePayment> advocatePayments, String tenantId) {
 
-		List<String> codes = advocatePayments.stream()
-				.filter(advocateData -> advocateData.getAdvocate() != null
-						&& advocateData.getAdvocate().getCode() != null)
+		List<String> codes = advocatePayments.stream().filter(
+				advocateData -> advocateData.getAdvocate() != null && advocateData.getAdvocate().getCode() != null)
 				.map(advocateCode -> advocateCode.getAdvocate().getCode()).collect(Collectors.toList());
 
 		AdvocateSearchCriteria advocateSearch = new AdvocateSearchCriteria();
@@ -197,9 +232,8 @@ public class AdvocatePaymentRepository {
 
 				if (caseTypes != null) {
 
-					List<CaseType> caseTypesList = caseTypes.stream()
-							.filter(CaseType -> CaseType.getCode()
-									.equalsIgnoreCase(advocatePayment.getCaseType().getCode()))
+					List<CaseType> caseTypesList = caseTypes.stream().filter(
+							CaseType -> CaseType.getCode().equalsIgnoreCase(advocatePayment.getCaseType().getCode()))
 							.collect(Collectors.toList());
 					if (caseTypesList != null && caseTypesList.size() > 0)
 						advocatePayment.setCaseType(caseTypesList.get(0));

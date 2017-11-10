@@ -35,10 +35,9 @@ public class Depreciation extends DepreciationCriteria {
     private List<DepreciationDetail> depreciationDetails = new ArrayList<>();
 
     @Builder
-    private Depreciation(final DepreciationCriteria depreciationCriteria, final String tenantId,
+    private Depreciation(final DepreciationCriteria depreciationCriteria, 
             final AuditDetails auditDetails, final List<DepreciationDetail> depreciationDetails) {
         super(depreciationCriteria);
-        this.tenantId = tenantId;
         this.auditDetails = auditDetails;
         this.depreciationDetails = depreciationDetails;
     }

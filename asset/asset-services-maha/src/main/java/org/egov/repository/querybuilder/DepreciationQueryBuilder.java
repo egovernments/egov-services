@@ -48,7 +48,7 @@ public class DepreciationQueryBuilder {
 		preparedStatementValues.add(depreciationCriteria.getTenantId());
 		preparedStatementValues.add(depreciationCriteria.getToDate());
 
-		if (!depreciationCriteria.getAssetIds().isEmpty())
+		if (depreciationCriteria.getAssetIds()!= null && !depreciationCriteria.getAssetIds().isEmpty())
 			return BASEDEPRECIATIONQUERY.replace("{assetids}", " AND id IN (" + getIdQuery(depreciationCriteria.getAssetIds()) + ")");
 		else
 			return BASEDEPRECIATIONQUERY.replace("{assetids}", "");

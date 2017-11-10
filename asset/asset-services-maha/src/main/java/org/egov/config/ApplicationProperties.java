@@ -61,6 +61,9 @@ public class ApplicationProperties {
     @Value("${mdms.modulename}")
     private String mdMsModuleName;
     
+    @Value("${kafka.topics.save.depreciation}")
+    private String saveDepreciationTopic;
+    
     @Autowired
     private Environment environment;
 

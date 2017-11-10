@@ -1,8 +1,6 @@
 package org.egov.service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -11,6 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.config.ApplicationProperties;
 import org.egov.contract.AssetCurrentValueRequest;
 import org.egov.contract.DepreciationRequest;
 import org.egov.contract.DepreciationResponse;
@@ -22,6 +21,7 @@ import org.egov.model.DepreciationInputs;
 import org.egov.model.criteria.DepreciationCriteria;
 import org.egov.model.enums.TransactionType;
 import org.egov.repository.DepreciationRepository;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +35,9 @@ public class DepreciationService {
 	private AssetCommonService assetCommonService;
 	
 	@Autowired
+	private ApplicationProperties applicationProperties;
+	
+	@Autowired
 	private DepreciationRepository depreciationRepository;
 	
 	@Autowired 
@@ -43,29 +46,23 @@ public class DepreciationService {
 	@Autowired
 	private MasterDataService masterDataService;
 	
+	@Autowired
+	private LogAwareKafkaTemplate< String, Object> kafkaTemplate;
+	
 	
 	public DepreciationResponse createDepreciationAsync(DepreciationRequest depreciationRequest) {
 		
 		DepreciationCriteria criteria = depreciationRequest.getDepreciationCriteria();
 		RequestInfo requestInfo = depreciationRequest.getRequestInfo();
 		
-		Long todate = criteria.getToDate();
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(todate);
-		//int year = calendar.get(Calendar.YEAR);
-		
-		//Calendar fromCal = Calendar.getInstance();
-		//fromCal.set(Calendar.YEAR, year);
-		calendar.set(Calendar.MONTH,Calendar.APRIL);
-		calendar.set(Calendar.DATE,1);
-		criteria.setFromDate(calendar.getTimeInMillis());
-		System.err.println("from date calculated : "+ criteria.getFromDate());
+		calculateFinancialStartDate(criteria);
 		
 		Depreciation depreciation = depreciateAssets(depreciationRequest);
 		
 		depreciation.setAuditDetails(assetCommonService.getAuditDetails(requestInfo));
 		
 		//TODO put depreciation in kafka topic
+		kafkaTemplate.send(applicationProperties.getSaveDepreciationTopic(), depreciation);
 		
 		return DepreciationResponse.builder().depreciation(depreciation).responseInfo(null).build();
 	}
@@ -133,7 +130,7 @@ public class DepreciationService {
 
 			// adding currval to the currval list
 			currValList.add(CurrentValue.builder().assetId(a.getAssetId()).assetTranType(TransactionType.DEPRECIATION)
-					.currentAmount(valueAfterDep).build());
+					.currentAmount(valueAfterDep).transactionDate(toDate).build());
 		});
 	}
 
@@ -151,9 +148,7 @@ public class DepreciationService {
 			fromDate = depInputs.getLastDepreciationDate();
 		
 		// getting the no of days betweeen the from and todate using ChronoUnit
-		LocalDate fromEpoch = LocalDate.ofEpochDay(fromDate);
-		LocalDate toEpoch = LocalDate.ofEpochDay(toDate);
-		Long noOfDays = ChronoUnit.DAYS.between(fromEpoch, toEpoch);
+		Long noOfDays = ((toDate-fromDate)/1000/60/60/24);
 
 		// deprate for the no of days = no of days * calculated dep rate per day
 		Double depRateForGivenPeriod = noOfDays * depInputs.getDepreciationRate()/365;
@@ -177,6 +172,35 @@ public class DepreciationService {
 		Map<Long, AssetCategory> assetCatMap = masterDataService.getAssetCategoryMap(assetCategoryIds, requestInfo, tenantId);
 		
 		depreciationInputsList.forEach(a -> a.setDepreciationRate(assetCatMap.get(a.getAssetCategory()).getDepreciationRate()));
+		
+		/*//FIXME remove after testing
+		depreciationInputsList.forEach(a -> a.setDepreciationRate(10.0));*/
+	}
+	
+	private void calculateFinancialStartDate(DepreciationCriteria criteria) {
+		
+		Long todate = criteria.getToDate();
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(todate);
+		int year = calendar.get(Calendar.YEAR);
+		int month = calendar.get(Calendar.MONTH);
+		calendar.set(Calendar.HOUR_OF_DAY,23);
+		calendar.set(Calendar.MINUTE,59);
+		criteria.setToDate(calendar.getTimeInMillis());
+		//int year = calendar.get(Calendar.YEAR);
+		
+		if(month < 3)
+			year = year-1;
+		
+		//Calendar fromCal = Calendar.getInstance();
+		//fromCal.set(Calendar.YEAR, year);
+		calendar.set(Calendar.YEAR, year);
+		calendar.set(Calendar.MONTH,Calendar.APRIL);
+		calendar.set(Calendar.DATE,1);
+		calendar.set(Calendar.HOUR_OF_DAY,0);
+		calendar.set(Calendar.MINUTE,0);
+		criteria.setFromDate(calendar.getTimeInMillis());
+		System.err.println("from date calculated : "+ criteria.getFromDate());
 	}
 	
 }

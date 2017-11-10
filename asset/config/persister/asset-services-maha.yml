@@ -553,13 +553,13 @@ serviceMaps:
        
        - jsonPath: $.tenantId
        
-       - jsonPath: $.createdBy
+       - jsonPath: $.AuditDetails.createdBy
        
-       - jsonPath: $.createdTime
+       - jsonPath: $.AuditDetails.createdTime
        
-       - jsonPath: $.lastModifiedBy
+       - jsonPath: $.AuditDetails.lastModifiedBy
        
-       - jsonPath: $.lastModifiedTime
+       - jsonPath: $.AuditDetails.lastModifiedTime
        
        - jsonPath: $.reasonForFailure
        

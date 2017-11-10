@@ -2117,7 +2117,7 @@ definitions:
       type: object
       description: Hold the Opening Balance Response information
       properties:
-        ResposneInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         MaterialReceipt:
           type: array

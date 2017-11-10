@@ -899,7 +899,7 @@ ReportDefinitions:
     source: asset
     searchClause : AND asset.code in ($code)
   
-  query: select asset.code,asset.assetcategory,asset.revaluationreserveaccount,asset.accumulateddepreciationaccount,asset.assetaccount,asset.accumulateddepreciation,
+  query: select asset.code,asset.assetcategory,asset.name,asset.originalvalue,asset.revaluationreserveaccount,asset.accumulateddepreciationaccount,asset.assetaccount,asset.accumulateddepreciation,
     previousfynetblock,endcurrentamount,plusrevalsum,minusrevalsum,coalesce(prevdepsum,0)+coalesce(asset.accumulateddepreciation,0) as 
     startdepval,coalesce(previousfynetblock,0.0)+coalesce(plusrevalsum,0.0)-coalesce(minusRevalsum,0.0) as revaltotal,prevdepsum, 
     currdepsum,coalesce(prevdepsum,0.0)+coalesce(currdepsum,0.0)+coalesce(asset.accumulateddepreciation,0.0) as totaldepsum 

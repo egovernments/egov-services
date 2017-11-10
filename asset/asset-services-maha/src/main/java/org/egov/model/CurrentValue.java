@@ -29,6 +29,8 @@ public class CurrentValue {
 	@NotNull
 	private Long assetId;
 	
+	private Long transactionDate;
+	
 	private BigDecimal currentAmount;
 	
 	private TransactionType assetTranType;

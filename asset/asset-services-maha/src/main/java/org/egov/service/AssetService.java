@@ -70,6 +70,7 @@ public class AssetService {
 		CurrentValue currentValue = new CurrentValue();
 		currentValue.setId(new Long(assetCommonService.getCode(Sequence.CURRENTVALUESEQUENCE)));
 		currentValue.setAssetId(asset.getId());
+		currentValue.setTransactionDate(asset.getDateOfCreation());
 		currentValue.setAssetTranType(TransactionType.CREATE);
 		currentValue.setTenantId(asset.getTenantId());
 		currentValue.setAuditDetails(assetCommonService.getAuditDetails(assetRequest.getRequestInfo()));

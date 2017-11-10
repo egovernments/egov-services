@@ -534,7 +534,7 @@ definitions:
       status:
         $ref: '#/definitions/ContractorStatus'
         description: Status of the Contractor      
-	format: singleValueList
+        format: singleValueList
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails" 
     required:
@@ -552,6 +552,7 @@ definitions:
       - pwdApprovalValidTill
       - epfRegistrationNumber
       - contractorClass
+      - status
       
   MilestoneTemplate:
     type: object
@@ -1257,4 +1258,5 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
+
 

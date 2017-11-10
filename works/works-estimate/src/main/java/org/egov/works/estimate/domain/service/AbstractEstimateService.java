@@ -84,19 +84,12 @@ public class AbstractEstimateService {
 				details.setAuditDetails(
 						getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), false));
 			}
-			if (estimate.getSpillOverFlag())
-				estimate.setStatus(AbstractEstimateStatus.APPROVED);
-			else {
+			if (!estimate.getSpillOverFlag()) {
 				String abstractEstimateNumber = idGenerationRepository
 						.generateAbstractEstimateNumber(estimate.getTenantId(), abstractEstimateRequest.getRequestInfo());
 				// TODO: check idgen to accept values to generate
 				estimate.setAbstractEstimateNumber(propertiesManager.getEstimateNumberPrefix() + "/"
 						+ estimate.getDepartment().getCode() + abstractEstimateNumber);
-				populateWorkFlowDetails(estimate, abstractEstimateRequest.getRequestInfo());
-				estimate.setStateId(workflowService.enrichWorkflow(estimate.getWorkFlowDetails(),
-						estimate.getTenantId(), abstractEstimateRequest.getRequestInfo()));
-				estimate.setStatus(AbstractEstimateStatus.CREATED);
-				
 				for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
 					projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
 							abstractEstimateRequest.getRequestInfo()));
@@ -104,6 +97,10 @@ public class AbstractEstimateService {
 
 				}
 			}
+			populateWorkFlowDetails(estimate, abstractEstimateRequest.getRequestInfo());
+			estimate.setStateId(workflowService.enrichWorkflow(estimate.getWorkFlowDetails(),
+					estimate.getTenantId(), abstractEstimateRequest.getRequestInfo()));
+			estimate.setStatus(AbstractEstimateStatus.CREATED);
 		}
 		kafkaTemplate.send(propertiesManager.getWorksAbstractEstimateCreateTopic(), abstractEstimateRequest);
 		final AbstractEstimateResponse response = new AbstractEstimateResponse();
@@ -143,8 +140,13 @@ public class AbstractEstimateService {
 
 			WorkFlowDetails workFlowDetails = abstractEstimate.getWorkFlowDetails();
 
-			workFlowDetails.setType(CommonConstants.ABSTRACT_ESTIMATE_WF_TYPE);
-			workFlowDetails.setBusinessKey(CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY);
+			if (abstractEstimate.getSpillOverFlag()) {
+				workFlowDetails.setType(CommonConstants.SPILLOVER_ABSTRACT_ESTIMATE_WF_TYPE);
+				workFlowDetails.setBusinessKey(CommonConstants.SPILLOVER_ABSTRACT_ESTIMATE_BUSINESSKEY);
+			} else {
+				workFlowDetails.setType(CommonConstants.ABSTRACT_ESTIMATE_WF_TYPE);
+				workFlowDetails.setBusinessKey(CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY);
+			}
 			workFlowDetails.setStateId(abstractEstimate.getStateId());
 			if (abstractEstimate.getStatus() != null)
 				workFlowDetails.setStatus(abstractEstimate.getStatus().toString());
@@ -176,8 +178,7 @@ public class AbstractEstimateService {
 		}
 
 		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
-				&& Constants.APPROVE.equalsIgnoreCase(workFlowDetails.getAction())
-				&& currentStatus.equalsIgnoreCase(AbstractEstimateStatus.CHECKED.toString())) {
+				&& Constants.APPROVE.equalsIgnoreCase(workFlowDetails.getAction())) {
 			abstractEstimate.setStatus(AbstractEstimateStatus.APPROVED);
 		}
 

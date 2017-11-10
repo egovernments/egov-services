@@ -770,7 +770,7 @@ var dat = {
 		]
 	},
 	"asset.search": {
-		"numCols": 12/2,
+		"numCols": 12/3,
 		"url": "asset-services-maha/assets/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
@@ -797,19 +797,6 @@ var dat = {
 					}]
 				},
 					{
-						"name": "Department",
-						"jsonPath": "department",
-						"label": "ac.create.Department",
-						"pattern": "",
-						"type": "singleValueList",
-						"url": "/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name",
-						"isRequired": false,
-						"isDisabled": false,
-						"requiredErrMsg": "",
-						"patternErrMsg": "",
-						"isStateLevel":true
-					},
-					{
 						"name": "AssetCategoryType",
 						"jsonPath": "assetCategoryType",
 						"label": "ac.create.asset.asset.category.type",
@@ -823,23 +810,23 @@ var dat = {
 						"defaultValue":"IMMOVABLE",
 						"isHidden": "true"
 					},
-					// {
-					// 	"name": "AssetCategory",
-					// 	"jsonPath": "assetParentCategory",
-					// 	"label": "Asset Category",
-					// 	"pattern": "",
-					// 	"type": "singleValueList",
-					// 	"url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22MOVABLE%22)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
-					// 	"isRequired": false,
-					// 	"isDisabled": false,
-					// 	"requiredErrMsg": "",
-					// 	"patternErrMsg": "",
-					// 	"depedants": [{
-					// 		"jsonPath": "assetCategory",
-					// 		"type": "dropDown",
-					// 		"pattern": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22MOVABLE%22)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name"
-					// 	}]
-					// },
+					{
+						"name": "AssetCategory",
+						"jsonPath": "assetParentCategory",
+						"label": "ac.create.Asset.Category",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22MOVABLE%22)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"depedants": [{
+							"jsonPath": "assetCategory",
+							"type": "dropDown",
+							"pattern": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22MOVABLE%22)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name"
+						}]
+					},
 					{
 						"name": "AssetSearchAssetSubCategory",
 						"jsonPath": "assetCategory",
@@ -848,6 +835,19 @@ var dat = {
 						"type": "singleValueList",
 						"url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22IMMOVABLE%22)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
 						// "url": "/egov-mdms-service/v1/_get?&masterName=AssetCategory&moduleName=ASSET|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"isStateLevel":true
+					},
+					{
+						"name": "Department",
+						"jsonPath": "department",
+						"label": "ac.create.Department",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -878,6 +878,7 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
+
 					{
 						"name": "fromOriginalValue",
 						"jsonPath": "originalValueFrom",
@@ -921,7 +922,7 @@ var dat = {
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
-					},
+					}
 				]
 			}
 		],

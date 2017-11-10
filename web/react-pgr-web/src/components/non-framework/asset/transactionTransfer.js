@@ -143,9 +143,9 @@ class Transaction extends Component {
     this.setLabelAndReturnRequired(obj);
     initForm(reqRequired);
     setMetaData(specifications);
-    for (var i = 0; i < specifications["asset.transaction"].groups[0].fields.length; i++) {
-          specifications["asset.transaction"].groups[0].fields[i].isDisabled=false;
-    }
+    // for (var i = 0; i < specifications["asset.transaction"].groups[0].fields.length; i++) {
+    //       specifications["asset.transaction"].groups[0].fields[i].isDisabled=false;
+    // }
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName("asset");
     setActionName("transaction");
@@ -718,7 +718,7 @@ class Transaction extends Component {
         {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
-            <UiButton item={{"label": "Search", "uiType":"submit","isDisabled": isFormValid ?(match.params.businessService && match.params.consumerCode?true:false) : true}} ui="google"/>
+            <UiButton item={{"label": "Search", "uiType":"submit"}} ui="google"/>
             <br/>
           </div>
           {/*showResult && <UiTable resultList={resultList} rowClickHandler={rowClickHandler}/>*/}

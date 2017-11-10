@@ -9,56 +9,138 @@ var dat = {
         "label": "ac.transaction.TA.title",
         "name": "createCategoryType",
         "fields": [
-            {
-              "name": "AssetCategoryType",
-              "jsonPath": "",
-              "label": "ac.create.asset.asset.category.type",
-              "pattern": "",
-              "type": "singleValueList",
-              "url": "",
-              "isRequired": false,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": ""
-            },
-						{
-							"name": "AssetSearchAssetSubCategory",
+					{
+						"name": "AssetSearchCode",
+						"jsonPath": "assetCategoryType",
+						"label": "ac.create.asset.asset.category.type",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue": [  {
+						"key": "IMMOVABLE",
+						"value": "IMMOVABLE",
+					},
+					{
+						"key": "MOVABLE",
+						"value": "MOVABLE"
+					}]
+					},
+					{
+						"name": "AssetCategory",
+						"jsonPath": "assetParentCategory",
+						"label": "ac.create.Asset.Category",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22MOVABLE%22)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"depedants": [{
 							"jsonPath": "assetCategory",
-							"label": "ac.create.Asset.SubCategory.Name",
-							"pattern": "",
-							"type": "singleValueList",
-							"url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22IMMOVABLE%22)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
-							// "url": "/egov-mdms-service/v1/_get?&masterName=AssetCategory&moduleName=ASSET|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": "",
-							"isStateLevel":true
-						},
-						{
-							"name": "AssetSearchCode",
-							"jsonPath": "code",
-							"label": "ac.search.asset.code",
-							"pattern": "",
-							"type": "text",
-							"url": "",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "AssetSearchName",
-							"jsonPath": "name",
-							"label": "ac.search.asset.name",
-							"pattern": "",
-							"type": "text",
-							"url": "",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						}
+							"type": "dropDown",
+							"pattern": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22MOVABLE%22)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name"
+						}]
+					},
+					{
+						"name": "AssetSearchAssetSubCategory",
+						"jsonPath": "assetCategory",
+						"label": "ac.create.Asset.SubCategory.Name",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22IMMOVABLE%22)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
+						// "url": "/egov-mdms-service/v1/_get?&masterName=AssetCategory&moduleName=ASSET|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"isStateLevel":true
+					},
+					{
+						"name": "Department",
+						"jsonPath": "department",
+						"label": "ac.create.Department",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"isStateLevel":true
+					},
+					{
+						"name": "AssetSearchCode",
+						"jsonPath": "code",
+						"label": "ac.search.asset.code",
+						"pattern": "",
+						"type": "text",
+						"url": "",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "AssetSearchName",
+						"jsonPath": "name",
+						"label": "ac.search.asset.name",
+						"pattern": "",
+						"type": "text",
+						"url": "",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "fromOriginalValue",
+						"jsonPath": "originalValueFrom",
+						"label": "ac.create.OriginalFromDate",
+						"pattern": "",
+						"type": "number",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "toOriginalValue",
+						"jsonPath": "originalValueTo",
+						"label": "ac.create.OriginalToDate",
+						"pattern": "",
+						"type": "number",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "fromDate",
+						"jsonPath": "assetCreatedFrom",
+						"label": "ac.create.createFromDate",
+						"pattern": "",
+						"type": "datePicker",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "toDate",
+						"jsonPath": "assetCreatedTo",
+						"label": "ac.create.createToDate",
+						"pattern": "",
+						"type": "datePicker",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					}
         ]
       }],
       "result": {
@@ -159,7 +241,7 @@ var dat = {
 	          //"label": "ac.transaction.TA.TransferDisposalDate",
 						"label": "Transfer / Disposal date",
 	          "pattern": "",
-	          "type": "date",
+	          "type": "datePicker",
 	          "isRequired": true,
 	          "isDisabled": false,
 	          "requiredErrMsg": "",
@@ -183,7 +265,7 @@ var dat = {
 	          //"label": "ac.transaction.create.order.date",
 						"label": "Order Date",
 	          "pattern": "",
-	          "type": "date",
+	          "type": "datePicker",
 	          "isRequired": true,
 	          "isDisabled": false,
 	          "requiredErrMsg": "", //Remove required messages

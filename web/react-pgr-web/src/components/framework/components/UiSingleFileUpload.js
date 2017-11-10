@@ -35,7 +35,7 @@ export default class UiSingleFileUpload extends Component {
   render () {
     return (
         <div>
-          {this.renderSingleFileUpload(this.props.item)}
+          {this.renderSingleFileUpload(this.props.item)}<br/>
         </div>
       );
   }

@@ -546,7 +546,7 @@ var dat =  {
             },  
           {
                 type: "tableList",
-                jsonPath: "advocatepayments[0].advocateCharges",
+                jsonPath: "advocatePayments[0].advocateCharges",
                 tableList: {
                   header: [
                     {

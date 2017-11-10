@@ -97,7 +97,7 @@ var dat = {
             },  
           {
                 type: "tableList",
-                jsonPath: "advocatepayments[0].advocateCharges",
+                jsonPath: "advocatePayments[0].advocateCharges",
                 tableList: {
                   header: [
                     {
@@ -154,7 +154,7 @@ var dat = {
               }
               ,{
             name: "advocateLabel",
-            jsonPath: "advocatePayments[0].bankAccountNo",
+            jsonPath: "",
             label: "legal.create.paymentNote",
             type: "label",
             isRequired: false,

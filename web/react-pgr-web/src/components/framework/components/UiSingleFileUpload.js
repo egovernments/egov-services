@@ -16,7 +16,7 @@ export default class UiSingleFileUpload extends Component {
           window.location.origin + "/filestore/v1/files/id?tenantId=" + localStorage.tenantId + "&fileStoreId=" + this.props.getVal(item.jsonPath)} target="_blank">{translate(item.label)}</a>
       );
       } else {
-        return (
+        /*
           <RaisedButton
             floatingLabelStyle={{"color": "#696969"}}
             style={{"display": (item.hide ? 'none' : 'block')}}
@@ -27,6 +27,17 @@ export default class UiSingleFileUpload extends Component {
             label={item.label}>
               <input id={item.jsonPath.split(".").join("-")}   type="file" style={{ display: 'none' }} onChange={(e) => this.props.handler({target:{value: e.target.files[0]}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)}/>
           </RaisedButton>
+        */
+        return (
+          <div style={{"marginTop": "17px", "display": (item.hide ? 'none' : 'inline-block')}}>
+            <label>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></label><br/>
+            <input 
+              id={item.jsonPath.split(".").join("-")} 
+              disabled={item.isDisabled} 
+              type="file" 
+              style={{"marginTop": "10px"}}
+              onChange={(e) => this.props.handler({target:{value: e.target.files[0]}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)}/>
+          </div>
         );
        }
     }
@@ -35,7 +46,7 @@ export default class UiSingleFileUpload extends Component {
   render () {
     return (
         <div>
-          {this.renderSingleFileUpload(this.props.item)}<br/>
+          {this.renderSingleFileUpload(this.props.item)}
         </div>
       );
   }

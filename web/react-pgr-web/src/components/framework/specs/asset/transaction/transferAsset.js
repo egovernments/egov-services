@@ -313,7 +313,7 @@ var dat = {
 	          //"label": "ac.transaction.TA.remarks",
 						"label": "Remarks",
 	          "pattern": "",
-	          "type": "text",
+	          "type": "textarea",
 	          "isRequired": true,
 	          "isDisabled": false,
 	          "requiredErrMsg": "", //Remove required messages

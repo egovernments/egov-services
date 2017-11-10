@@ -1962,8 +1962,9 @@ var localization_EN_Data = {
     "ac.create.createToDate":"Asset Created Date To",
     "ac.create.OriginalFromDate":"Original Value of Asset From",
     "ac.create.OriginalToDate":"Original Value of Asset To",
-"reports.collection.receipt.transactionno":"Transaction ID",
-"reports.collection.transaction.date":"Transaction Date",
+    "reports.collection.receipt.transactionno":"Transaction ID",
+    "reports.collection.transaction.date":"Transaction Date",
+    "ac.create.asset.asset.category": "Asset Category",
 
 //auto gen swm
 "vehiclefuellingdetails.create.transactionId": "Transaction No",

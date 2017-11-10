@@ -55,15 +55,6 @@ public class MaterialStoreMappingApiController implements MaterialStoreMappingAp
                                                                                        @ApiParam(value = "Create  new") @Valid @RequestBody MaterialStoreMappingRequest materialStoreMappingRequest,
                                                                                        @RequestHeader(value = "Accept", required = false) String accept, BindingResult errors) throws Exception {
 
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<MaterialStoreMappingResponse>(objectMapper.readValue("{  \"materialStoreMappings\" : [ {    \"material\" : \"material\",    \"chartofAccount\" : {      \"glCode\" : \"glCode\",      \"auditDetails\" : {        \"lastModifiedTime\" : 1,        \"createdBy\" : \"createdBy\",        \"lastModifiedBy\" : \"lastModifiedBy\",        \"createdTime\" : 6      },      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"id\" : \"id\"    },    \"auditDetails\" : {      \"lastModifiedTime\" : 1,      \"createdBy\" : \"createdBy\",      \"lastModifiedBy\" : \"lastModifiedBy\",      \"createdTime\" : 6    },    \"active\" : true,    \"id\" : \"id\",    \"store\" : \"store\"  }, {    \"material\" : \"material\",    \"chartofAccount\" : {      \"glCode\" : \"glCode\",      \"auditDetails\" : {        \"lastModifiedTime\" : 1,        \"createdBy\" : \"createdBy\",        \"lastModifiedBy\" : \"lastModifiedBy\",        \"createdTime\" : 6      },      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"id\" : \"id\"    },    \"auditDetails\" : {      \"lastModifiedTime\" : 1,      \"createdBy\" : \"createdBy\",      \"lastModifiedBy\" : \"lastModifiedBy\",      \"createdTime\" : 6    },    \"active\" : true,    \"id\" : \"id\",    \"store\" : \"store\"  } ],  \"page\" : {    \"totalResults\" : 1,    \"offSet\" : 1,    \"totalPages\" : 1,    \"pageSize\" : 6,    \"currentPage\" : 7  },  \"responseInfo\" : {    \"ver\" : \"ver\",    \"resMsgId\" : \"resMsgId\",    \"msgId\" : \"msgId\",    \"apiId\" : \"apiId\",    \"ts\" : 0,    \"status\" : \"SUCCESSFUL\"  }}", MaterialStoreMappingResponse.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<MaterialStoreMappingResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
-
         List<MaterialStoreMapping> materialStoreMappings = materialStoreMappingService.create(materialStoreMappingRequest, tenantId);
         return new ResponseEntity<MaterialStoreMappingResponse>(buildMaterialStoreMappingResponse(materialStoreMappings,
                 materialStoreMappingRequest.getRequestInfo()), HttpStatus.OK);
@@ -103,14 +94,6 @@ public class MaterialStoreMappingApiController implements MaterialStoreMappingAp
                                                                                        @ApiParam(value = "common Request info") @Valid @RequestBody MaterialStoreMappingRequest materialStoreMappingRequest,
                                                                                        @RequestHeader(value = "Accept", required = false) String accept, BindingResult errors) throws Exception {
 
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<MaterialStoreMappingResponse>(objectMapper.readValue("{  \"materialStoreMappings\" : [ {    \"material\" : \"material\",    \"chartofAccount\" : {      \"glCode\" : \"glCode\",      \"auditDetails\" : {        \"lastModifiedTime\" : 1,        \"createdBy\" : \"createdBy\",        \"lastModifiedBy\" : \"lastModifiedBy\",        \"createdTime\" : 6      },      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"id\" : \"id\"    },    \"auditDetails\" : {      \"lastModifiedTime\" : 1,      \"createdBy\" : \"createdBy\",      \"lastModifiedBy\" : \"lastModifiedBy\",      \"createdTime\" : 6    },    \"active\" : true,    \"id\" : \"id\",    \"store\" : \"store\"  }, {    \"material\" : \"material\",    \"chartofAccount\" : {      \"glCode\" : \"glCode\",      \"auditDetails\" : {        \"lastModifiedTime\" : 1,        \"createdBy\" : \"createdBy\",        \"lastModifiedBy\" : \"lastModifiedBy\",        \"createdTime\" : 6      },      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"id\" : \"id\"    },    \"auditDetails\" : {      \"lastModifiedTime\" : 1,      \"createdBy\" : \"createdBy\",      \"lastModifiedBy\" : \"lastModifiedBy\",      \"createdTime\" : 6    },    \"active\" : true,    \"id\" : \"id\",    \"store\" : \"store\"  } ],  \"page\" : {    \"totalResults\" : 1,    \"offSet\" : 1,    \"totalPages\" : 1,    \"pageSize\" : 6,    \"currentPage\" : 7  },  \"responseInfo\" : {    \"ver\" : \"ver\",    \"resMsgId\" : \"resMsgId\",    \"msgId\" : \"msgId\",    \"apiId\" : \"apiId\",    \"ts\" : 0,    \"status\" : \"SUCCESSFUL\"  }}", MaterialStoreMappingResponse.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<MaterialStoreMappingResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
 
         List<MaterialStoreMapping> materialStoreMappings = materialStoreMappingService.update(materialStoreMappingRequest, tenantId);
         return new ResponseEntity<MaterialStoreMappingResponse>(buildMaterialStoreMappingResponse(materialStoreMappings,

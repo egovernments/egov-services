@@ -15,6 +15,580 @@ x-ui-info:
 
 paths:
 
+    /sanitationstaffschedules/_search:
+      post:
+        summary: Get the list of SanitationStaffSchedules
+        description: SanitationStaffSchedule
+        tags: 
+          - SanitationStaffSchedule
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+              format: int64
+            in: query
+            maxItems: 50
+            description: comma separated list of Ids 
+          - name: transactionNo
+            type: array
+            items: 
+              type: string
+            in: query
+            maxItems: 50
+            description: comma separated list of transactionNo
+          - name: name
+            type: array
+            items: 
+              type: string
+            in: query
+            maxItems: 50
+            description: comma separated list of SanitationStaff names
+          - name: collectionPoints
+            type: array
+            items: 
+              type: string
+            in: query
+            maxItems: 50
+            description: comma separated list of collection points
+          - name: dumpingGround
+            type: array
+            items: 
+              type: string
+            in: query
+            maxItems: 50
+            description: comma separated list of Dumping Ground
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: SanitationStaffSchedules(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/SanitationStaffScheduleResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /sanitationstaffschedules/_create:
+      post:
+        summary: Create new SanitationStaffSchedules(s)
+        description: Create new SanitationStaffSchedules(s)
+        tags: 
+          - SanitationStaffSchedule
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: SanitationStaffScheduleRequest
+            in: body
+            description: SanitationStaffSchedule Request
+            schema:
+              $ref: '#/definitions/SanitationStaffScheduleRequest'
+        responses:
+          201:
+            description: SanitationStaffSchedules(s) created Successfully
+            schema:
+              $ref: '#/definitions/SanitationStaffScheduleResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /sanitationstaffschedules/_update:
+      post:
+        summary: Update any of the SanitationStaffSchedules
+        description: Update any of the SanitationStaffSchedules
+        tags: 
+          - SanitationStaffSchedule
+        parameters:
+          - name: SanitationStaffScheduleRequest
+            in: body
+            description: SanitationStaffSchedules Request
+            schema:
+              $ref: '#/definitions/SanitationStaffScheduleRequest'
+        responses:
+          200:
+            description: SanitationStaffSchedules updated Successfully
+            schema:
+              $ref: '#/definitions/SanitationStaffScheduleResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    
+    /sanitationstafftargets/_search:
+      post:
+        summary: Get the list of SanitationStaffTargets
+        description: SanitationStaffTarget
+        tags: 
+          - SanitationStaffTarget
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: targetNos
+            type: array
+            items: 
+              type: integer
+              format: int64
+            in: query
+            maxItems: 50
+            description: comma separated list of targetNos 
+          - name: targetNo
+            type: string
+            in: query
+            description: targetNo of SanitationStaffTarget
+          - name: routeCode
+            type: string
+            in: query
+            description: routeCode of SanitationStaffTarget
+          - name: swmProcessCode
+            type: string
+            in: query
+            description: swmProcessCode of SanitationStaffTarget
+          - name: employeeCode
+            type: string
+            in: query
+            description: employeeCode of SanitationStaffTarget
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: SanitationStaffTargets(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/SanitationStaffTargetResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /sanitationstafftargets/_create:
+      post:
+        summary: Create new SanitationStaffTargets(s)
+        description: Create new SanitationStaffTargets(s)
+        tags: 
+          - SanitationStaffTarget
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: SanitationStaffTargetRequest
+            in: body
+            description: SanitationStaffTarget Request
+            schema:
+              $ref: '#/definitions/SanitationStaffTargetRequest'
+        responses:
+          201:
+            description: SanitationStaffTargets(s) created Successfully
+            schema:
+              $ref: '#/definitions/SanitationStaffTargetResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /sanitationstafftargets/_update:
+      post:
+        summary: Update any of the SanitationStaffTargets
+        description: Update any of the SanitationStaffTargets
+        tags: 
+          - SanitationStaffTarget
+        parameters:
+          - name: SanitationStaffTargetRequest
+            in: body
+            description: SanitationStaffTargets Request
+            schema:
+              $ref: '#/definitions/SanitationStaffTargetRequest'
+        responses:
+          200:
+            description: SanitationStaffTargets updated Successfully
+            schema:
+              $ref: '#/definitions/SanitationStaffTargetResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    
+    /vehicleschedules/_search:
+      post:
+        summary: Get the list of Vehicle Schedules
+        description: VehicleSchedule
+        tags: 
+          - VehicleSchedule
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: transactionNos
+            type: array
+            items: 
+              type: integer
+              format: int64
+            in: query
+            maxItems: 50
+            description: comma separated list of transactionNos 
+          - name: transactionNo
+            type: string
+            in: query
+            description: transactionNo of vehicle schedule
+          - name: routeCode
+            type: string
+            in: query
+            description: Route code of vehicle schedule
+          - name: regNumber
+            type: string
+            in: query
+            description: regNumber of vehicle schedule
+          - name: scheduledFrom
+            type: integer
+            format: int64 
+            in: query
+            description: Schedule start date
+          - name: scheduledTo
+            type: integer
+            format: int64 
+            in: query
+            description: Schedule end date 
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: VehicleSchedules(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/VehicleScheduleResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /vehicleschedules/_create:
+      post:
+        summary: Create new VehicleSchedules(s)
+        description: Create new VehicleSchedules(s)
+        tags: 
+          - VehicleSchedule
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: VehicleScheduleRequest
+            in: body
+            description: VehicleSchedule Request
+            schema:
+              $ref: '#/definitions/VehicleScheduleRequest'
+        responses:
+          201:
+            description: VehicleSchedule(s) created Successfully
+            schema:
+              $ref: '#/definitions/VehicleScheduleResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /vehicleschedules/_update:
+      post:
+        summary: Update any of the VehicleSchedules
+        description: Update any of the VehicleSchedules
+        tags: 
+          - VehicleSchedule
+        parameters:
+          - name: VehicleScheduleRequest
+            in: body
+            description: VehicleSchedules Request
+            schema:
+              $ref: '#/definitions/VehicleScheduleRequest'
+        responses:
+          200:
+            description: VehicleSchedules updated Successfully
+            schema:
+              $ref: '#/definitions/VehicleScheduleResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    
+    /refillingpumpstations/_search:
+      post:
+        summary: Get the list of Refilling Pump Stations
+        description: RefillingPumpStation
+        tags: 
+          - RefillingPumpStation
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: code
+            type: string
+            in: query
+            description: code of pump station
+          - name: name
+            type: string
+            in: query
+            description: name of pump station
+          - name: quantity
+            type: number
+            format: double
+            in: query
+            description: quantity of pump station
+          - name: locationCode
+            type: string
+            in: query
+            description: location code of pump statio
+          - name: typeoffuelCode
+            type: string
+            in: query
+            description: typeoffuel code of pump station
+          - name: typeofpumpCode
+            type: string
+            in: query
+            description: typeofpump code of pump station
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: RefillingPumpStations(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/RefillingPumpStationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /refillingpumpstations/_create:
+      post:
+        summary: Create new RefillingPumpStations(s)
+        description: Create new RefillingPumpStations(s)
+        tags: 
+          - RefillingPumpStation
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: RefillingPumpStationRequest
+            in: body
+            description: RefillingPumpStation Request
+            schema:
+              $ref: '#/definitions/RefillingPumpStationRequest'
+        responses:
+          201:
+            description: RefillingPumpStations(s) created Successfully
+            schema:
+              $ref: '#/definitions/RefillingPumpStationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /refillingpumpstations/_update:
+      post:
+        summary: Update any of the RefillingPumpStations
+        description: Update any of the RefillingPumpStations
+        tags: 
+          - RefillingPumpStation
+        parameters:
+          - name: RefillingPumpStationRequest
+            in: body
+            description: RefillingPumpStations Request
+            schema:
+              $ref: '#/definitions/RefillingPumpStationRequest'
+        responses:
+          200:
+            description: RefillingPumpStations updated Successfully
+            schema:
+              $ref: '#/definitions/RefillingPumpStationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    
+    /vendorcontracts/_search:
+      post:
+        summary: Get the list of Vendor Contract records
+        description: Vendor Contract
+        tags: 
+          - VendorContract
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: contractNos
+            type: array
+            items: 
+              type: integer
+              format: int64
+            in: query
+            maxItems: 50
+            description: comma separated list of contractNo 
+          - name: contractNo
+            type: string
+            in: query
+            description: contract number of contract
+          - name: vendorNo
+            type: string
+            in: query
+            description: vendor number of contract
+          - name: contractPeriodFrom
+            type: integer
+            format: int64 
+            in: query
+            description: Contract period start date
+          - name: contractPeriodto
+            type: integer
+            format: int64 
+            in: query
+            description: Contract period end date
+          - name: contractDate
+            type: integer
+            format: int64 
+            in: query
+            description: Contract period date
+          - name: securityDeposit
+            type: number
+            format: double 
+            in: query
+            description: security Deposit of contract 
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: VendorContracts(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/VendorContractResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /vendorcontracts/_create:
+      post:
+        summary: Create new Vendor Contract(s) records
+        description: Create new Vendor Contract(s) records
+        tags: 
+          - VendorContract
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: VendorContractRequest
+            in: body
+            description: VendorContract Request
+            schema:
+              $ref: '#/definitions/VendorContractRequest'
+        responses:
+          201:
+            description: VendorContracts(s) created Successfully
+            schema:
+              $ref: '#/definitions/VendorContractResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /vendorcontracts/_update:
+      post:
+        summary: Update any of the VendorContract record
+        description: Update any of the VendorContract record
+        tags: 
+          - VendorContract
+        parameters:
+          - name: VendorContractRequest
+            in: body
+            description: VendorContracts Request
+            schema:
+              $ref: '#/definitions/VendorContractRequest'
+        responses:
+          200:
+            description: Vendor Contract record updated Successfully
+            schema:
+              $ref: '#/definitions/VendorContractResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    
+    /vehiclemaintenances/_search:
+      post:
+        summary: Get the list of Vehicle Maintenance records
+        description: Vehicle Maintenance
+        tags: 
+          - VehicleMaintenance
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: codes
+            type: array
+            items: 
+              type: integer
+              format: int64
+            in: query
+            maxItems: 50
+            description: comma separated list of codes 
+          - name: regNumber
+            type: string
+            in: query
+            description: registration number of vehicle
+          - name: code
+            type: string
+            in: query
+            description: code of vehicle maintyenance
+          - name: downtimeforMaintenance
+            type: integer
+            format: int64
+            in: query
+            description: downtimeforMaintenance of vehicle maintyenance
+          - name: maintenanceAfter
+            type: integer
+            format: int64
+            in: query
+            description: maintenanceAfter of vehicle maintyenance
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: VehicleMaintenances(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/VehicleMaintenanceResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    
+    /vehiclemaintenances/_create:
+      post:
+        summary: Create new Vehicle Maintenance(s) records
+        description: Create new Vehicle Maintenance(s) records
+        tags: 
+          - VehicleMaintenance
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: VehicleMaintenanceRequest
+            in: body
+            description: VehicleMaintenance Request
+            schema:
+              $ref: '#/definitions/VehicleMaintenanceRequest'
+        responses:
+          201:
+            description: VehicleMaintenances(s) created Successfully
+            schema:
+              $ref: '#/definitions/VehicleMaintenanceResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /vehiclemaintenances/_update:
+      post:
+        summary: Update any of the VehicleMaintenance record
+        description: Update any of the VehicleMaintenance record
+        tags: 
+          - VehicleMaintenance
+        parameters:
+          - name: VehicleMaintenanceRequest
+            in: body
+            description: VehicleMaintenances Request
+            schema:
+              $ref: '#/definitions/VehicleMaintenanceRequest'
+        responses:
+          200:
+            description: Vehicle Maintenance record updated Successfully
+            schema:
+              $ref: '#/definitions/VehicleMaintenanceResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    
     /vendors/_search:
       post:
         summary: Get the list of vendor
@@ -1736,6 +2310,28 @@ definitions:
       - servicesOffered
       - paymentTerms
       
+    VendorContractRequest:
+      description: Contract class to receive request. Array of VendorContract items are used in case of create, whereas single VendorContract item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        vendorContracts:
+          description: Used for search result and create only
+          type: array
+          items:
+            $ref: '#/definitions/VendorContract'
+    
+    VendorContractResponse:
+      description: Contract class to send response. Array of VendorContract items are used in case of search results or response for create, whereas single VendorContract item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        vendorContracts:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/VendorContract'
     
     PaymentTerms:
       type: object
@@ -1918,6 +2514,30 @@ definitions:
       - downtimeforMaintenance
       - vehicle
       
+    VehicleMaintenanceRequest:
+      description: Contract class to receive request. Array of VehicleMaintenance items are used in case of create, whereas single VehicleMaintenance item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        vehicleMaintenances:
+          description: Used for search result and create only
+          type: array
+          items:
+            $ref: '#/definitions/VehicleMaintenance'
+    
+    VehicleMaintenanceResponse:
+      description: Contract class to send response. Array of VehicleMaintenance items are used in case of search results or response for create, whereas single VehicleMaintenance item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        vehicleMaintenances:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/VehicleMaintenance'
+    
+    
     Population:
       type: object
       properties:
@@ -2002,6 +2622,29 @@ definitions:
       - typeOfPump
       - typeOfFuel
       
+    RefillingPumpStationRequest:
+      description: Contract class to receive request. Array of RefillingPumpStation items are used in case of create, whereas single RefillingPumpStation item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        refillingPumpStations:
+          description: Used for search result and create only
+          type: array
+          items:
+            $ref: '#/definitions/RefillingPumpStation'
+    
+    RefillingPumpStationResponse:
+      description: Contract class to send response. Array of RefillingPumpStation items are used in case of search results or response for create, whereas single RefillingPumpStation item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        refillingPumpStations:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/RefillingPumpStation'
+    
     OilCompanyName:
       type: object
       description: This object captures name of Oil Companies operating petrol pumps. e.g Indian Oil 
@@ -2110,6 +2753,29 @@ definitions:
       - vehicle
       - targetedGarbage
     
+    VehicleScheduleRequest:
+      description: Contract class to receive request. Array of VehicleSchedule items are used in case of create, whereas single VehicleSchedule item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        vehicleSchedules:
+          description: Used for search result and create only
+          type: array
+          items:
+            $ref: '#/definitions/VehicleSchedule'
+    
+    VehicleScheduleResponse:
+      description: Contract class to send response. Array of VehicleSchedule items are used in case of search results or response for create, whereas single VehicleSchedule item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        vehicleSchedules:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/VehicleSchedule'
+    
     SanitationStaffTarget:
       type: object
       properties:
@@ -2178,6 +2844,29 @@ definitions:
       - collectionPoints
       - targetedGarbage
       
+    SanitationStaffTargetRequest:
+      description: Contract class to receive request. Array of SanitationStaffTarget items are used in case of create, whereas single SanitationStaffTarget item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        sanitationStaffTargets:
+          description: Used for search result and create only
+          type: array
+          items:
+            $ref: '#/definitions/SanitationStaffTarget'
+    
+    SanitationStaffTargetResponse:
+      description: Contract class to send response. Array of SanitationStaffTarget items are used in case of search results or response for create, whereas single SanitationStaffTarget item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        sanitationStaffTargets:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/SanitationStaffTarget'
+    
     SanitationStaffSchedule:
       type: object
       description: Captures the schedule details of sanitary staff
@@ -2204,6 +2893,29 @@ definitions:
       - tenantId
       - sanitationStaffTarget
       - shift
+    
+    SanitationStaffScheduleRequest:
+      description: Contract class to receive request. Array of SanitationStaffSchedule items are used in case of create, whereas single SanitationStaffSchedule item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        sanitationStaffSchedules:
+          description: Used for search result and create only
+          type: array
+          items:
+            $ref: '#/definitions/SanitationStaffSchedule'
+    
+    SanitationStaffScheduleResponse:
+      description: Contract class to send response. Array of SanitationStaffSchedule items are used in case of search results or response for create, whereas single SanitationStaffSchedule item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        sanitationStaffSchedules:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/SanitationStaffSchedule'
     
     VehicleFuellingDetails:
       type: object
@@ -2530,7 +3242,7 @@ definitions:
       properties:
         requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        sourceSegregation:
+        sourceSegregations:
           description: Used for search result and create only
           type: array
           items:
@@ -2540,7 +3252,7 @@ definitions:
       properties:
         responseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        sourceSegregation:
+        sourceSegregations:
           description: Used for search result and create only
           type: array
           maximum: 500

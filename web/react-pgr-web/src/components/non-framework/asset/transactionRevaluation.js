@@ -511,11 +511,11 @@ class Transaction extends Component {
       let hashLocation = window.location.hash;
       let obj = specifications[`asset.transaction`];
 
-      if(property == "Revaluation[0].valueAfterRevaluation"){
+      if(property == "Revaluation.valueAfterRevaluation"){
           var wdvValue = 10000;
           var revaluationAmount = (e.target.value) - wdvValue;
           console.log(revaluationAmount);
-          handleChange({target:{value:revaluationAmount}}, "Revaluation[0].revaluationAmount");
+          handleChange({target:{value:revaluationAmount}}, "Revaluation.revaluationAmount");
       }
 
       console.log(property);
@@ -691,25 +691,26 @@ class Transaction extends Component {
     var amountValidationMsg="";
       console.log(formData);
 
-      if(formData && formData.hasOwnProperty("Revaluation") && formData.Revaluation[0] && formData.Revaluation[0].hasOwnProperty("revaluationAmount")){
-        var negNumber = formData.Revaluation[0].revaluationAmount;
+      if(formData && formData.hasOwnProperty("Revaluation") && formData.Revaluation.hasOwnProperty("revaluationAmount")){
+        var negNumber = formData.Revaluation.revaluationAmount;
         if(negNumber >= 0){
           console.log("positive");
-          formData.Revaluation[0].typeOfChange = "INCREASED";
-          console.log(formData.Revaluation[0].typeOfChange);
+          formData.Revaluation.typeOfChange = "INCREASED";
+          console.log(formData.Revaluation.typeOfChange);
         } else{
           var posReVal = Math.abs(negNumber)
           console.log(posReVal);
-          formData.Revaluation[0].typeOfChange = "DECREASED";
-          console.log(formData.Revaluation[0].typeOfChange);
-          this.props.handleChange({target:{value:posReVal}}, "Revaluation[0].revaluationAmount");
+          formData.Revaluation.typeOfChange = "DECREASED";
+          console.log(formData.Revaluation.typeOfChange);
+          this.props.handleChange({target:{value:posReVal}}, "Revaluation.revaluationAmount");
         }
       }
 
       for (var i = 0; i < formData.Revaluation.Assets.length; i++) {
+        console.log("i");
         if (formData.Revaluation.Assets[i].isRadio==true) {
           console.log("hit");
-            formData.Revaluation["assetId"]=formData.Revaluation.Assets[i].id;
+            formData.Revaluation.assetId=formData.Revaluation.Assets[i].id;
             console.log(formData.Revaluation["assetId"]);
         }
       }

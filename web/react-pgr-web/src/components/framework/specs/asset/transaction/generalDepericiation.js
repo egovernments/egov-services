@@ -1,81 +1,186 @@
 var dat = {
 	"asset.transaction": {
 		"numCols": 12/3,
-		"url": "",
+		"url": "/asset-services-maha/assets/depreciations/_create",
     "tenantIdRequired": true,
-    "objectName": "",
+    "objectName": "Depreciation",
     "useTimestamp": true,
     "groups": [{
         "label": "ac.transaction.gd.title",
         "name": "createCategoryType",
         "fields": [
-          {
-            "name": "DateofDepreciation",
-            "jsonPath": "",
-            "label": "ac.create.Date.of.Depreciation",
-            "pattern": "^[\s.]*([^\s.][\s.]*){0,100}",
-            "type": "date",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "AssetCategoryType",
-            "jsonPath": "",
-            "label": "ac.create.asset.asset.category.type",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "AssetCategoryType",
-            "jsonPath": "",
-            "label": "ac.create.Asset.SubCategory",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          }
+					{
+						"name": "dateOfDepreciation",
+						"jsonPath": "toDate",
+						"label": "Date of Depreciation",
+						"pattern": "",
+						"type": "datePicker",
+						"url": "",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+						{
+							"name": "AssetSearchCode",
+							"jsonPath": "assetCategoryType",
+							"label": "ac.create.asset.asset.category.type",
+							"pattern": "",
+							"type": "singleValueList",
+							"url": "",
+							"isRequired": false,
+							"isDisabled": true,
+							"requiredErrMsg": "",
+							"patternErrMsg": "",
+							"defaultValue": [  {
+									"key": "MOVABLE",
+									"value": "MOVABLE"
+								},  {
+									"key": "IMMOVABLE",
+									"value": "IMMOVABLE"
+								}
+							],
+
+						},
+            {
+              "name": "AssetCategoryType",
+              "jsonPath": "",
+              "label": "ac.create.asset.asset.category",
+              "pattern": "",
+              "type": "singleValueList",
+              "url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
+              "isRequired": false,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": ""
+            },
+						{
+							"name": "AssetSearchAssetSubCategory",
+							"jsonPath": "assetCategory",
+							"label": "ac.create.Asset.SubCategory.Name",
+							"pattern": "",
+							"type": "singleValueList",
+							"url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
+							// "url": "/egov-mdms-service/v1/_get?&masterName=AssetCategory&moduleName=ASSET|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "",
+							"isStateLevel":true
+						},
+						{
+							"name": "fromOriginalValue",
+							"jsonPath": "originalValueFrom",
+							"label": "ac.create.OriginalFromDate",
+							"pattern": "",
+							"type": "number",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "toOriginalValue",
+							"jsonPath": "originalValueTo",
+							"label": "ac.create.OriginalToDate",
+							"pattern": "",
+							"type": "number",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "Department",
+							"jsonPath": "department",
+							"label": "ac.create.Department",
+							"pattern": "",
+							"type": "singleValueList",
+							"url": "/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "",
+							"isStateLevel":true
+						},
+						{
+							"name": "fromDate",
+							"jsonPath": "assetCreatedFrom",
+							"label": "ac.create.createFromDate",
+							"pattern": "",
+							"type": "datePicker",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "toDate",
+							"jsonPath": "assetCreatedTo",
+							"label": "ac.create.createToDate",
+							"pattern": "",
+							"type": "datePicker",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "AssetSearchCode",
+							"jsonPath": "code",
+							"label": "ac.search.asset.code",
+							"pattern": "",
+							"type": "text",
+							"url": "",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "AssetSearchName",
+							"jsonPath": "name",
+							"label": "ac.search.asset.name",
+							"pattern": "",
+							"type": "text",
+							"url": "",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						}
         ]
       }],
       "result": {
-        "header": [{
-            "name": "SelectButon",
-            "jsonPath": "",
-            "label": "ac.create.Select",
-            "pattern": "",
-            "type": "checkbox",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "url":"",
-            "isLabel": false
-          },
+        "header": [
+					{
+						"name": "",
+	          "jsonPath": "isChecked",
+	          "label": "",
+	          "pattern": "",
+	          "type": "checkbox",
+	          "isRequired": false,
+	          "isDisabled": false,
+	          "requiredErrMsg": "",
+	          "patternErrMsg": "",
+	    			"values": [{"label":"", "value":true}],
+	    			"defaultValue":false
+			},
 					{
             "name": "AssetCode",
-            "jsonPath": "",
+            "jsonPath": "code",
             "label": "ac.create.Asset.Code",
             "pattern": "",
-            "type": "text",
+            "type": "label",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-            "url":"",
-            "isLabel": false
+						"isLabel": false,
           },
           {
             "name": "NameAsset",
-            "jsonPath": "",
+            "jsonPath": "name",
             "label": "ac.create.Name.of.Asset",
             "pattern": "",
             "type": "label",
@@ -83,12 +188,24 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-            "isLabel": false,
-            "hyperLink": ""
+						"isLabel": false,
           },
           {
+            "name": "DateofPurchase/Construction/Acquisition",
+            "jsonPath": "acquisitionDate",
+            "label": "ac.transaction.create.datePurchaseConstruction",
+            "pattern": "",
+            "type": "label",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+						"isLabel": false,
+						"isDate":true,
+          },
+					{
             "name": "WdvValue",
-            "jsonPath": "",
+            "jsonPath": "currentValue",
             "label": "ac.create.WDV.Value",
             "pattern": "",
             "type": "label",
@@ -96,65 +213,46 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-            "isLabel": false,
-            "textAlign":"right"
-          },
-          {
-            "name": "DepreciationRate",
-            "jsonPath": "",
-            "label": "ac.create.Depreciation.Rate",
-            "pattern": "",
-            "type": "label",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "isLabel": false,
-            "textAlign":"right"
-          },
-          {
-            "name": "DepreciationAmount",
-            "jsonPath": "",
-            "label": "ac.create.Depreciation.Amount",
-            "pattern": "",
-            "type": "label",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "isLabel": false,
-            "textAlign":"right"
-          },
-          {
-            "name": "WdvAfterDepreciation",
-            "jsonPath": "",
-            "label": "ac.create.WDV.after.Depreciation",
-            "pattern": "",
-            "type": "label",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "isLabel": false,
-            "textAlign":"right"
+						"isLabel": false,
           },
         ],
         // "values": ["businessService", "consumerCode", "totalAmount","minimumAmount","bill"],
-        "resultPath": "",
-        "tableResultPath": "",
+        "resultPath": "Assets",
+        "tableResultPath": "Depreciation.Assets",
 
         // "rowClickUrlUpdate": "/update/wc/pipeSize/{id}",
         // "rowClickUrlView": "/view/wc/pipeSize/{id}"
       },
 			"transaction": [{
-				"label": "",
-			 "name": "OtherDetails",
-			 "children": [],
-			 "fields": [
-				{
-					
-				}
-			]
+	      "label": "",
+	      "name": "OtherDetails",
+	      "children": [],
+				"fields": [
+	        {
+	          "name": "ValuationDate",
+	          "jsonPath": "Depreciation.assetIds",
+						"label": "Revaluation date",
+	          "pattern": "",
+	          "type": "text",
+	          "isRequired": true,
+	          "isDisabled": false,
+	          "requiredErrMsg": "",
+	          "patternErrMsg": "",
+						"hide": true
+	        },
+					{
+	          "name": "toDate",
+	          "jsonPath": "Depreciation.toDate",
+						"label": "To Date",
+	          "pattern": "",
+	          "type": "datePicker",
+	          "isRequired": true,
+	          "isDisabled": false,
+	          "requiredErrMsg": "",
+	          "patternErrMsg": "",
+						"hide": true
+	        }
+	      ]
 	    }]
 	}
 }

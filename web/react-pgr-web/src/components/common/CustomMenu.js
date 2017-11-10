@@ -220,6 +220,7 @@ const menuConvention={
 "Asset Management.Asset Masters.Movable Asset.CreateMovableAsset":"/non-framework/asset/master/assetMovableCreate",
 "Asset Management.Asset Masters.Movable Asset.ModifyMovableAsset": "/search/asset/assetMovable/update",
 "Asset Management.Asset Masters.Movable Asset.ViewMovableAsset": "/search/asset/assetMovable/view",
+"Asset Management.Asset Transactions.Generate Depreciation": "/transactionTransfer/asset/generalAsset",
 
 
 "Asset Management.Asset Reports.AssetImmovableRegister":"/report/asset/AssetImmovableRegister",

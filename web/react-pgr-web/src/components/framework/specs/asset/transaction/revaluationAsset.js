@@ -27,7 +27,8 @@ var dat = {
 									"key": "IMMOVABLE",
 									"value": "IMMOVABLE"
 								}
-							]
+							],
+
 						},
             {
               "name": "AssetCategoryType",
@@ -49,43 +50,6 @@ var dat = {
 							"type": "singleValueList",
 							"url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
 							// "url": "/egov-mdms-service/v1/_get?&masterName=AssetCategory&moduleName=ASSET|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": "",
-							"isStateLevel":true
-						},
-						{
-							"name": "AssetSearchCode",
-							"jsonPath": "code",
-							"label": "ac.search.asset.code",
-							"pattern": "",
-							"type": "text",
-							"url": "",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "AssetSearchName",
-							"jsonPath": "name",
-							"label": "ac.search.asset.name",
-							"pattern": "",
-							"type": "text",
-							"url": "",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "Department",
-							"jsonPath": "department",
-							"label": "ac.create.Department",
-							"pattern": "",
-							"type": "singleValueList",
-							"url": "/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -115,6 +79,19 @@ var dat = {
 							"patternErrMsg": ""
 						},
 						{
+							"name": "Department",
+							"jsonPath": "department",
+							"label": "ac.create.Department",
+							"pattern": "",
+							"type": "singleValueList",
+							"url": "/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "",
+							"isStateLevel":true
+						},
+						{
 							"name": "fromDate",
 							"jsonPath": "assetCreatedFrom",
 							"label": "ac.create.createFromDate",
@@ -131,6 +108,30 @@ var dat = {
 							"label": "ac.create.createToDate",
 							"pattern": "",
 							"type": "datePicker",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "AssetSearchCode",
+							"jsonPath": "code",
+							"label": "ac.search.asset.code",
+							"pattern": "",
+							"type": "text",
+							"url": "",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "AssetSearchName",
+							"jsonPath": "name",
+							"label": "ac.search.asset.name",
+							"pattern": "",
+							"type": "text",
+							"url": "",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -192,7 +193,7 @@ var dat = {
           },
 					{
             "name": "WdvValue",
-            "jsonPath": "Assets.WdvValue",
+            "jsonPath": "currentValue",
             "label": "ac.create.WDV.Value",
             "pattern": "",
             "type": "label",
@@ -217,7 +218,7 @@ var dat = {
 				"fields": [
 	        {
 	          "name": "ValuationDate",
-	          "jsonPath": "Revaluation[0].revaluationDate",
+	          "jsonPath": "Revaluation.revaluationDate",
 	          //"label": "ac.create.Revaluation.date",
 						"label": "Revaluation date",
 	          "pattern": "",
@@ -229,7 +230,7 @@ var dat = {
 	        },
 	        {
 	          "name": "OrderNo",
-	          "jsonPath": "Revaluation[0].orderNumber",
+	          "jsonPath": "Revaluation.orderNumber",
 	          "label": "Order No",
 	          "pattern": "",
 	          "type": "text",
@@ -240,7 +241,7 @@ var dat = {
 	        },
 	        {
 	          "name": "OrderDate",
-	          "jsonPath": "Revaluation[0].orderDate",
+	          "jsonPath": "Revaluation.orderDate",
 	          //"label": "ac.transaction.create.order.date",
 						"label": "Order Date",
 	          "pattern": "",
@@ -252,7 +253,7 @@ var dat = {
 	        },
 	        {
 	          "name": "ValuationAmount",
-	          "jsonPath": "Revaluation[0].valueAfterRevaluation",
+	          "jsonPath": "Revaluation.valueAfterRevaluation",
 	          "label": "Valuation Amount",
 	          "pattern": "",
 	          "type": "text",
@@ -263,7 +264,7 @@ var dat = {
 	        },
 					{
 	          "name": "Addition/deductedAmount",
-	          "jsonPath": "Revaluation[0].revaluationAmount",
+	          "jsonPath": "Revaluation.revaluationAmount",
 	          //"label": "ac.transaction.create.AdditionDeductedAmount",
 						"label": "Addition/ deducted amount",
 	          "pattern": "",

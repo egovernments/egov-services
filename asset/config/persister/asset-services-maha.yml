@@ -550,3 +550,46 @@ serviceMaps:
        - jsonPath: $.AssetCurrentValue.*.assetTranType
        
        - jsonPath: $.AssetCurrentValue.*.transactionDate
+       
+       
+ - version: 1.0
+   name: Depreciation
+   description: Persists depreciationdetails  in egasset_depreciation table
+   fromTopic: save-depreciation-maha
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO egasset_depreciation(id, assetid, financialyear, fromdate, todate, voucherreference, status, valuebeforedepreciation, depreciationvalue, valueafterdepreciation, tenantid, createdby, createdtime, lastmodifiedby, lastmodifiedtime, reasonforfailure) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: depreciation.DepreciationDetail.*
+      jsonMaps:
+         
+       - jsonPath: $.depreciation.DepreciationDetail.*.id
+       
+       - jsonPath: $.depreciation.DepreciationDetail.*.assetId
+       
+       - jsonPath: $.depreciation.financialYear
+       
+       - jsonPath: $.depreciation.fromDate
+       
+       - jsonPath: $.depreciation.toDate
+       
+       - jsonPath: $.depreciation.DepreciationDetail.*.voucherReference
+       
+       - jsonPath: $.depreciation.DepreciationDetail.*.status
+       
+       - jsonPath: $.depreciation.DepreciationDetail.*.valueBeforeDepreciation
+       
+       - jsonPath: $.depreciation.DepreciationDetail.*.depreciationValue
+       
+       - jsonPath: $.depreciation.DepreciationDetail.*.valueAfterDepreciation
+       
+       - jsonPath: $.depreciation.tenantId
+       
+       - jsonPath: $.depreciation.createdBy
+       
+       - jsonPath: $.depreciation.createdTime
+       
+       - jsonPath: $.depreciation.lastModifiedBy
+       
+       - jsonPath: $.depreciation.lastModifiedTime
+       
+       - jsonPath: $.depreciation.reasonForFailure

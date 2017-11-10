@@ -53,6 +53,7 @@ import org.egov.pa.web.contract.KPIValueRequest;
 import org.egov.pa.web.contract.KPIValueResponse;
 import org.egov.pa.web.contract.KPIValueSearchRequest;
 import org.egov.pa.web.contract.KPIValueSearchResponse;
+import org.egov.pa.web.contract.RequestInfoWrapper;
 import org.egov.pa.web.contract.factory.ResponseInfoFactory;
 import org.egov.pa.web.errorhandler.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -115,30 +117,37 @@ public class KpiValueController implements KpiValue {
     
     @Override
     @ResponseBody
-    public ResponseEntity<?> compareAndSearch(@RequestBody @Valid final KPIValueSearchRequest kpiValueSearchReq,
-            final BindingResult errors) {
-    	log.info("KPI Master Search Request as recieved in Controller : " + kpiValueSearchReq);
-        if (errors.hasErrors()) {
-            final ErrorResponse errRes = requestValidator.populateErrors(errors); 
-            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-        }
-        final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiValueSearchReq);
+    public ResponseEntity<?> compareAndSearch(@RequestParam("tenantId") List<String> tenantIdList,
+									 @RequestParam("kpiCodes") List<String> kpiCodes,
+									 @RequestParam("finYear") List<String> finYearList,
+									 @RequestBody RequestInfoWrapper requestInfo) {
+    	log.info("Request Received for Compare and Search : " + tenantIdList + "\n" + kpiCodes + "\n" + finYearList);
+    	KPIValueSearchRequest kpiValueSearchReq = new KPIValueSearchRequest();
+    	kpiValueSearchReq.setRequestInfo(requestInfo.getRequestInfo());
+    	kpiValueSearchReq.setFinYear(finYearList);
+    	kpiValueSearchReq.setKpiCodes(kpiCodes);
+    	kpiValueSearchReq.setTenantId(tenantIdList);
+    	final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiValueSearchReq);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
         List<KpiValueList> kpiValueList = kpiValueService.compareSearchKpiValue(kpiValueSearchReq); 
-        return getCompareSearchSuccessResponse(kpiValueList, kpiValueSearchReq.getRequestInfo()); 
+        return getCompareSearchSuccessResponse(kpiValueList, kpiValueSearchReq.getRequestInfo());
+    	
     }
     
     @Override
-	@PostMapping(value = "/_search")
+    @PostMapping(value = "/_search")
     @ResponseBody
-    public ResponseEntity<?> search(@RequestBody @Valid final KPIValueSearchRequest kpiValueSearchReq,
-            final BindingResult errors) {
-    	log.info("KPI Master Search Request as recieved in Controller : " + kpiValueSearchReq);
-        if (errors.hasErrors()) {
-            final ErrorResponse errRes = requestValidator.populateErrors(errors); 
-            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-        }
+	public ResponseEntity<?> search(@RequestParam("tenantId") List<String> tenantIdList,
+			 @RequestParam("kpiCodes") List<String> kpiCodes,
+			 @RequestParam("finYear") List<String> finYearList,
+			 @RequestBody RequestInfoWrapper requestInfo) {
+    	log.info("Request Received for Search : " + tenantIdList + "\n" + kpiCodes + "\n" + finYearList);
+    	KPIValueSearchRequest kpiValueSearchReq = new KPIValueSearchRequest();
+    	kpiValueSearchReq.setRequestInfo(requestInfo.getRequestInfo());
+    	kpiValueSearchReq.setFinYear(finYearList);
+    	kpiValueSearchReq.setKpiCodes(kpiCodes);
+    	kpiValueSearchReq.setTenantId(tenantIdList);
         final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiValueSearchReq);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);

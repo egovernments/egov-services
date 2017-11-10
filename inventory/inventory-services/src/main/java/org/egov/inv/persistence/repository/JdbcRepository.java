@@ -12,7 +12,6 @@ import java.util.Map;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.egov.inv.domain.exception.InvalidDataException;
-import io.swagger.model.Pagination;
 import org.egov.inv.persistence.entity.AuditableEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +20,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import io.swagger.model.Pagination;
 
 @Repository
 public abstract class JdbcRepository {

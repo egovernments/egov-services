@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.inv.domain.model.OpeningBalanceSearchCriteria;
-import org.egov.inv.domain.model.ReceiptNotesSearchCriteria;
 import org.egov.inv.domain.service.OpeningBalanceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +25,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.swagger.annotations.ApiParam;
 import io.swagger.model.MaterialReceipt;
-import io.swagger.model.MaterialReceiptHeader;
-import io.swagger.model.MaterialReceiptHeaderResponse;
 import io.swagger.model.OpeningBalanceRequest;
 import io.swagger.model.OpeningBalanceResponse;
 import io.swagger.model.Pagination;
@@ -99,7 +96,7 @@ public class OpeningbalanceApiController implements OpeningbalanceApi {
     
     private OpeningBalanceResponse buildOpenBalanceResponse(List<MaterialReceipt> material, org.egov.common.contract.request.RequestInfo requestInfo) 
     {
-		return OpeningBalanceResponse.builder().resposneInfo(getResponseInfo(requestInfo)).materialReceipt(material).build();
+		return OpeningBalanceResponse.builder().responseInfo(getResponseInfo(requestInfo)).materialReceipt(material).build();
 	}
 
 	private ResponseInfo getResponseInfo(org.egov.common.contract.request.RequestInfo requestInfo) 

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -15,14 +16,14 @@ import io.swagger.annotations.ApiModelProperty;
  * Hold the Opening Balance request information.
  */
 @ApiModel(description = "Hold the Opening Balance request information.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-08T06:17:26.594Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T05:08:03.613Z")
 
 public class OpeningBalanceRequest   {
   @JsonProperty("RequestInfo")
   private org.egov.common.contract.request.RequestInfo requestInfo = null;
 
   @JsonProperty("MaterialReceipt")
-  private List<MaterialReceipt> materialReceipt = null;
+  private List<MaterialReceipt> materialReceipt = new ArrayList<MaterialReceipt>();
 
   public OpeningBalanceRequest requestInfo(org.egov.common.contract.request.RequestInfo requestInfo) {
     this.requestInfo = requestInfo;
@@ -33,7 +34,8 @@ public class OpeningBalanceRequest   {
    * Get requestInfo
    * @return requestInfo
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
+  @NotNull
 
   @Valid
 
@@ -51,9 +53,6 @@ public class OpeningBalanceRequest   {
   }
 
   public OpeningBalanceRequest addMaterialReceiptItem(MaterialReceipt materialReceiptItem) {
-    if (this.materialReceipt == null) {
-      this.materialReceipt = new ArrayList<MaterialReceipt>();
-    }
     this.materialReceipt.add(materialReceiptItem);
     return this;
   }
@@ -62,7 +61,8 @@ public class OpeningBalanceRequest   {
    * Get materialReceipt
    * @return materialReceipt
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
+  @NotNull
 
   @Valid
 

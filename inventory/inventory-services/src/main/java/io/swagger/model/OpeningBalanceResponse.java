@@ -18,36 +18,36 @@ import lombok.NoArgsConstructor;
  * Hold the Opening Balance Response information
  */
 @ApiModel(description = "Hold the Opening Balance Response information")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-08T06:17:26.594Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T05:08:03.613Z")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class OpeningBalanceResponse   {
-  @JsonProperty("ResposneInfo")
-  private org.egov.common.contract.response.ResponseInfo resposneInfo = null;
+  @JsonProperty("ResponseInfo")
+  private org.egov.common.contract.response.ResponseInfo responseInfo = null;
 
   @JsonProperty("MaterialReceipt")
   private List<MaterialReceipt> materialReceipt = null;
 
-  public OpeningBalanceResponse resposneInfo(org.egov.common.contract.response.ResponseInfo resposneInfo) {
-    this.resposneInfo = resposneInfo;
+  public OpeningBalanceResponse responseInfo(org.egov.common.contract.response.ResponseInfo responseInfo) {
+    this.responseInfo = responseInfo;
     return this;
   }
 
    /**
-   * Get resposneInfo
-   * @return resposneInfo
+   * Get responseInfo
+   * @return responseInfo
   **/
   @ApiModelProperty(value = "")
 
   @Valid
 
-  public org.egov.common.contract.response.ResponseInfo getResposneInfo() {
-    return resposneInfo;
+  public org.egov.common.contract.response.ResponseInfo getResponseInfo() {
+    return responseInfo;
   }
 
-  public void setResposneInfo(org.egov.common.contract.response.ResponseInfo resposneInfo) {
-    this.resposneInfo = resposneInfo;
+  public void setResponseInfo(org.egov.common.contract.response.ResponseInfo responseInfo) {
+    this.responseInfo = responseInfo;
   }
 
   public OpeningBalanceResponse materialReceipt(List<MaterialReceipt> materialReceipt) {
@@ -89,13 +89,13 @@ public class OpeningBalanceResponse   {
       return false;
     }
     OpeningBalanceResponse openingBalanceResponse = (OpeningBalanceResponse) o;
-    return Objects.equals(this.resposneInfo, openingBalanceResponse.resposneInfo) &&
+    return Objects.equals(this.responseInfo, openingBalanceResponse.responseInfo) &&
         Objects.equals(this.materialReceipt, openingBalanceResponse.materialReceipt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(resposneInfo, materialReceipt);
+    return Objects.hash(responseInfo, materialReceipt);
   }
 
   @Override
@@ -103,7 +103,7 @@ public class OpeningBalanceResponse   {
     StringBuilder sb = new StringBuilder();
     sb.append("class OpeningBalanceResponse {\n");
     
-    sb.append("    resposneInfo: ").append(toIndentedString(resposneInfo)).append("\n");
+    sb.append("    responseInfo: ").append(toIndentedString(responseInfo)).append("\n");
     sb.append("    materialReceipt: ").append(toIndentedString(materialReceipt)).append("\n");
     sb.append("}");
     return sb.toString();

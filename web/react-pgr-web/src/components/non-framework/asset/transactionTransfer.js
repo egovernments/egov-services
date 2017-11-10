@@ -510,18 +510,19 @@ class Transaction extends Component {
       let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;
       let obj = specifications[`asset.transaction`];
+      console.log(property);
+      if (property.search("isRadio") != -1 && property.indexOf("transactionType")== -1) {
+        let _indexVal = property.split("[")[1].split("]")[0];
+        if (formData.Disposal.Assets && self.props.formData.Disposal.Assets.length) {
+          for (var i = 0; i < formData.Disposal.Assets.length; i++) {
+            if (_indexVal!=i) {
+              formData.Disposal.Assets[i].isRadio = false;
+            }
+          }
+          self.props.setMockData(formData);
+        }
 
-      // if (property.search("isRadio")) {
-      //   console.log(this.props.fromData);
-      //   console.log(property);
-      //   let _indexVal = "Disposal.Assets[i].isRadio".split("[")[1].split("]")[0];
-      //   if (self.props.formData.Assets && self.props.formData.Assets.length) {
-      //     for (var i = _indexVal; i < self.props.fromData.Assets.length; i++) {
-      //       console.log(self.props.fromData.Assets.length);
-      //     }
-      //   }
-      //
-      // }
+      }
       if(expression && e.target.value){
         let str = expression;
         let pos = 0;

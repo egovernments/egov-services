@@ -224,6 +224,7 @@ const menuConvention={
 
 "Asset Management.Asset Reports.AssetImmovableRegister":"/report/asset/AssetImmovableRegister",
 "Asset Management.Asset Reports.AssetMovableRegister":"/report/asset/AssetMovableRegister",
+"Asset Management.Asset Reports.AssetSchedule":"/report/asset/AssetSchedule",
 //SWM
 "Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Create": "/create/vehiclefuellingdetails",
 "Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Search": "/search/vehiclefuellingdetails/view",
@@ -255,7 +256,7 @@ const menuConvention={
 "Legal Case Management.Legal Case Reports.Case Status Report":"/report/lcms/CaseStatusReport",
 "Legal Case Management.Legal Case Reports.Due Date Report":"/report/lcms/DueDateReport",
 
-//Performance Assessment 
+//Performance Assessment
 "Performance Assessment.Performance Assessment Masters.PerfAssmtKpiMasterCreate":"/create/perfManagement/kpi",
 "Performance Assessment.Performance Assessment Masters.PerfAssmtKpiMasterUpdate":"/search/perfManagement/kpi/update",
 "Performance Assessment.Performance Assessment Masters.PerfAssmtKpiMasterSearch":"/search/perfManagement/kpi/view",

@@ -139,15 +139,13 @@ serviceMaps:
 
  - version: 1.0
    name: Offline Status
-   description: Persists Estimate Appropriation in egw_estimate_appropriation table
+   description: Persists Offline Status in egw_offlinestatus table
    fromTopic: works-offlinestatus-create-validated
    isTransaction: true
    queryMaps:
     - query: INSERT INTO egw_offlinestatus(
             id, objecttype, objectnumber, remarks, statusdate, status, createdby, 
-            lastmodifiedby, createdtime, lastmodifiedtime, tenantid)
-    VALUES (?, ?, ?, ?, ?, ?, ?, 
-            ?, ?, ?, ?);
+            lastmodifiedby, createdtime, lastmodifiedtime, tenantid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.offlineStatuses.*
       jsonMaps:
          
@@ -174,6 +172,26 @@ serviceMaps:
        - jsonPath: $.offlineStatuses.*.auditDetails.lastModifiedTime
          dbType: LONG
        - jsonPath: $.offlineStatuses.*.tenantId
+
+ - version: 1.0
+   name: Works Offline Status Update
+   description: Update Offline Status in egw_offlinestatus table
+   fromTopic: works-offlinestatus-update-validated
+   isTransaction: true
+   queryMaps:   
+    - query: UPDATE egw_offlinestatus SET statusdate= ?, remarks=?, lastModifiedBy=?, lastModifiedTime=?  WHERE id = ? AND tenantId = ?;
+      basePath: $.offlineStatuses.*
+      jsonMaps:
+         
+       - jsonPath: $.offlineStatuses.*.statusDate
+
+       - jsonPath: $.offlineStatuses.*.remarks
+
+       - jsonPath: $.offlineStatuses.*.auditDetails.lastModifiedBy
        
+       - jsonPath: $.offlineStatuses.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+       - jsonPath: $.offlineStatuses.*.id
        
- 
+       - jsonPath: $.offlineStatuses.*.tenantId

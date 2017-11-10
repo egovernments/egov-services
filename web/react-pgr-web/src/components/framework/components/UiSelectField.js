@@ -80,7 +80,7 @@ class UiSelectField extends Component {
    }
 
 	 componentWillReceiveProps(nextProps) {
- 		if(this.props.location.pathname != nextProps.history.location.pathname || this.checkSelectHavingData(nextProps)) {
+ 		if(this.props.location.pathname != nextProps.history.location.pathname) {
  			this.initData(nextProps);
  		}
  	}

@@ -17,4 +17,9 @@ public class VehicleMaintenanceDetailsRepository {
 
         return vehicleMaintenanceDetailsQueueRepository.save(vehicleMaintenanceDetailsRequest);
     }
+
+    public VehicleMaintenanceDetailsRequest update(VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest){
+
+        return vehicleMaintenanceDetailsQueueRepository.update(vehicleMaintenanceDetailsRequest);
+    }
 }

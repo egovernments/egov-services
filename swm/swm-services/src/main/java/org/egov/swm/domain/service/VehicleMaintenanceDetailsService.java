@@ -8,7 +8,9 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class VehicleMaintenanceDetailsService {
@@ -39,6 +41,36 @@ public class VehicleMaintenanceDetailsService {
         }
 
         return vehicleMaintenanceDetailsRepository.create(vehicleMaintenanceDetailsRequest);
+    }
+
+    public VehicleMaintenanceDetailsRequest update(VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest){
+        Long userId = null;
+        if (vehicleMaintenanceDetailsRequest.getRequestInfo() != null
+                && vehicleMaintenanceDetailsRequest.getRequestInfo().getUserInfo() != null
+                && null != vehicleMaintenanceDetailsRequest.getRequestInfo().getUserInfo().getId()) {
+            userId = vehicleMaintenanceDetailsRequest.getRequestInfo().getUserInfo().getId();
+        }
+
+        for(VehicleMaintenanceDetails vehicleMaintenanceDetail : vehicleMaintenanceDetailsRequest.getVehicleMaintenanceDetails()){
+            setAuditDetails(vehicleMaintenanceDetail, userId);
+        }
+
+        validateForUniqueCodesInRequest(vehicleMaintenanceDetailsRequest);
+        validate(vehicleMaintenanceDetailsRequest);
+
+        return vehicleMaintenanceDetailsRepository.update(vehicleMaintenanceDetailsRequest);
+
+    }
+
+    private void validateForUniqueCodesInRequest(VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest){
+
+        List<String> codesList = vehicleMaintenanceDetailsRequest.getVehicleMaintenanceDetails()
+                .stream().map(VehicleMaintenanceDetails::getCode)
+                .collect(Collectors.toList());
+
+        if(codesList.size() != codesList.stream().distinct().count())
+            throw new CustomException("Code",
+                    "Duplicate codes in given Vehicle Maintenance Details:");
     }
 
     private void validate(VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest){

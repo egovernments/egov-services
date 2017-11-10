@@ -34,6 +34,20 @@ public class VehicleMaintenanceDetailsController {
         return vehicleMaintenanceDetailsResponse;
     }
 
+    @PostMapping("/_update")
+    @ResponseStatus(HttpStatus.CREATED)
+    public VehicleMaintenanceDetailsResponse update(@RequestBody @Valid VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest) {
+
+        VehicleMaintenanceDetailsResponse vehicleMaintenanceDetailsResponse  = new VehicleMaintenanceDetailsResponse();
+        vehicleMaintenanceDetailsResponse.setResponseInfo(getResponseInfo(vehicleMaintenanceDetailsRequest.getRequestInfo()));
+
+        vehicleMaintenanceDetailsRequest = vehicleMaintenanceDetailsService.update(vehicleMaintenanceDetailsRequest);
+
+        vehicleMaintenanceDetailsResponse.setVehicleMaintenanceDetails(vehicleMaintenanceDetailsRequest.getVehicleMaintenanceDetails());
+
+        return vehicleMaintenanceDetailsResponse;
+    }
+
     private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
         return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
                 .resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();

@@ -1153,3 +1153,52 @@ serviceMaps:
 
        - jsonPath: $.refillingPumpStations.*.auditDetails.lastModifiedTime
          dbType: LONG
+
+
+ - version: 1.0
+   name: vehiclemaintenancedetails update
+   description: update vehiclemaintenancedetails in egswm_vehiclemaintenancedetails
+   fromTopic: swm-vehiclemaintenancedetail-update-topic
+   queryMaps: 
+    - query: UPDATE egswm_vehiclemaintenancedetails SET code = ?, tenantid = ?, isscheduled = ?, maintenancetype = ?, vehicle = ?, actualmaintenancedate = ?, vehiclescheduledmaintenancedate = ?, vehicledowntimeactual = ?, vehicledowntimeactualuom = ?, vehiclereadingduringmaintenance = ?, remarks = ?, costincurred = ?, lastmodifiedby = ?, lastmodifiedtime = ? WHERE tenantid = ? and code = ?;
+      basePath: $.vehicleMaintenanceDetails.*
+      jsonMaps:
+       
+       - jsonPath: $.vehicleMaintenanceDetails.*.code
+
+       - jsonPath: $.vehicleMaintenanceDetails.*.tenantId
+
+       - jsonPath: $.vehicleMaintenanceDetails.*.isScheduled
+
+       - jsonPath: $.vehicleMaintenanceDetails.*.maintenanceType
+
+       - jsonPath: $.vehicleMaintenanceDetails.*.vehicle.regNumber
+
+       - jsonPath: $.vehicleMaintenanceDetails.*.actualMaintenanceDate
+         dbType: LONG
+
+       - jsonPath: $.vehicleMaintenanceDetails.*.vehicleScheduledMaintenanceDate
+         dbType: LONG
+
+       - jsonPath: $.vehicleMaintenanceDetails.*.vehicleDowntimeActual
+         dbType: DOUBLE
+         
+       - jsonPath: $.vehicleMaintenanceDetails.*.vehicleDownTimeActualUom
+
+       - jsonPath: $.vehicleMaintenanceDetails.*.vehicleReadingDuringMaintenance
+         dbType: DOUBLE
+
+       - jsonPath: $.vehicleMaintenanceDetails.*.remarks
+
+       - jsonPath: $.vehicleMaintenanceDetails.*.costIncurred
+         dbType: DOUBLE
+
+       - jsonPath: $.vehicleMaintenanceDetails.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.refillingPumpStations.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+       - jsonPath: $.vehicleMaintenanceDetails.*.tenantId
+
+       - jsonPath: $.vehicleMaintenanceDetails.*.code
+

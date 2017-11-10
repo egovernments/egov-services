@@ -28,7 +28,6 @@ public class VehicleMaintenanceDetails {
 
     @NotNull
     @JsonProperty("maintenanceType")
-//    @Size(min = 1, max = 128)
     private MaintenanceType maintenanceType = null;
 
     @NotNull

@@ -35,4 +35,13 @@ public class VehicleMaintenanceDetailsQueueRepository {
 
         return vehicleMaintenanceDetailsRequest;
     }
+
+    public VehicleMaintenanceDetailsRequest update(VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest){
+
+        kafkaTemplate.send(updateTopic, vehicleMaintenanceDetailsRequest);
+
+        kafkaTemplate.send(indexTopic, vehicleMaintenanceDetailsRequest.getVehicleMaintenanceDetails());
+
+        return vehicleMaintenanceDetailsRequest;
+    }
 }

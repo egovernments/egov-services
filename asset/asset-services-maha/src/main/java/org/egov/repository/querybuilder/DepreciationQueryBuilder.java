@@ -35,9 +35,9 @@ public class DepreciationQueryBuilder {
 				
 				+ "ON maxdep.assetid=dep.assetid AND maxdep.tenantid=dep.tenantid AND maxdep.todate=dep.todate) depreciation ON "
 				
-				+ "asset.id=depreciation.assetid AND asset.tenantid=depreciation.tenantid WHERE asset.tenantid=? AND "
+				+ "asset.id=depreciation.assetid AND asset.tenantid=depreciation.tenantid WHERE asset.assetcategorytype!='LAND' "
 				
-				+ "id NOT IN (select assetid from egasset_depreciation where todate>=?) {assetids};";
+				+ "asset.tenantid=? AND id NOT IN (select assetid from egasset_depreciation where todate>=?) {assetids};";
 
 	public String getDepreciationQuery(DepreciationCriteria depreciationCriteria,List<Object> preparedStatementValues) {
 

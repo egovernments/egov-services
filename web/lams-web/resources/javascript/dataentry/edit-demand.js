@@ -86,6 +86,12 @@ validateOnSubmit(e){
   }
 
   handleChange(e,name,k) {
+
+      if(e.target.value<0){
+        e.preventDefault();
+        showError("amount can't be negative.");
+      }
+       else{
         this.setState({
             demands:{
               ...this.state.demands,
@@ -95,12 +101,18 @@ validateOnSubmit(e){
               }
             }
         })
+      }
   }
 
     handleChangeAll(e,whichProperty)
     {
         var demands=this.state.demands;
-
+        if(e.target.value<0){
+          e.target.value=0;
+          e.preventDefault();
+          showError("amount can't be negative.");
+        }
+         else{
         for (var variable in demands) {
               demands[variable][whichProperty]=e.target.value;
         }
@@ -108,6 +120,7 @@ validateOnSubmit(e){
         this.setState({
           demands
         })
+      }
     }
 
   // handleCheckAll(e, name){

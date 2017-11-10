@@ -215,8 +215,11 @@ public class DepreciationService {
 		criteria.setToDate(calendar.getTimeInMillis());
 
 		// choosing the finacial year based on todate month
-		if (month < 3)
+		if (month < 3) {
+			criteria.setFinancialYear(year-1+"-"+year);
 			year = year - 1;
+		}else
+			criteria.setFinancialYear(year+"-"+year+1);
 
 		// setting from date value
 		calendar.set(Calendar.YEAR, year);

@@ -53,6 +53,7 @@ public class Revaluation   {
   private BigDecimal revaluationAmount;
 
   @JsonProperty("valueAfterRevaluation")
+  @NotNull
   private BigDecimal valueAfterRevaluation;
 
   @JsonProperty("revaluationDate")

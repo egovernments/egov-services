@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,9 +46,20 @@ public class DepreciationService {
 	
 	public DepreciationResponse createDepreciationAsync(DepreciationRequest depreciationRequest) {
 		
+		DepreciationCriteria criteria = depreciationRequest.getDepreciationCriteria();
 		RequestInfo requestInfo = depreciationRequest.getRequestInfo();
 		
-		//TODO financial year validations
+		Long todate = criteria.getToDate();
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(todate);
+		//int year = calendar.get(Calendar.YEAR);
+		
+		//Calendar fromCal = Calendar.getInstance();
+		//fromCal.set(Calendar.YEAR, year);
+		calendar.set(Calendar.MONTH,Calendar.APRIL);
+		calendar.set(Calendar.DATE,1);
+		criteria.setFromDate(calendar.getTimeInMillis());
+		System.err.println("from date calculated : "+ criteria.getFromDate());
 		
 		Depreciation depreciation = depreciateAssets(depreciationRequest);
 		
@@ -70,7 +82,6 @@ public class DepreciationService {
 		DepreciationCriteria depreciationCriteria = depreciationRequest.getDepreciationCriteria();
 		RequestInfo requestInfo = depreciationRequest.getRequestInfo();
 		
-		//TODO validation and filling financila year data in criteria
 		List<DepreciationInputs> depreciationInputsList = depreciationRepository.getDepreciationInputs(depreciationCriteria);
 		enrichDepreciationInputs(depreciationInputsList,requestInfo,depreciationCriteria.getTenantId());
 		

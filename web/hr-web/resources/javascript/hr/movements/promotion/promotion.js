@@ -8,7 +8,7 @@ class EmployeePromotion extends React.Component {
             employee: "",
             typeOfMovement: "PROMOTION",
             currentAssignment: "",
-            transferType: "",
+            transferType: "TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB",
             promotionBasis: {
               id: ""
             },
@@ -315,12 +315,14 @@ componentWillUpdate() {
         }
         break;
         case "department":
+        _this.state.movement.workflowDetails.assignee = "";
         if(this.state.movement.workflowDetails.designation){
           var _designation = this.state.movement.workflowDetails.designation;
           _this.getUsersFun(e.target.value,_designation);
         }
         break;
         case "designation":
+        _this.state.movement.workflowDetails.assignee = "";
         if(this.state.movement.workflowDetails.department){
           var _department = this.state.movement.workflowDetails.department;
           _this.getUsersFun(_department,e.target.value);
@@ -710,7 +712,7 @@ componentWillUpdate() {
                     </div>
                 </div>
               </div>
-              {/*<div className="row">
+              <div className="row">
                 <div className="col-sm-6">
                     <div className="row">
                         <div className="col-sm-6 label-text">
@@ -718,17 +720,17 @@ componentWillUpdate() {
                         </div>
                         <div className="col-sm-6">
                           <div className="styled-select">
-                              <select id="accepted" name="accepted" value={accepted}
-                                onChange={(e)=>{  handleChange(e,"accepted") }}>
+                              <select id="employeeAcceptance" name="employeeAcceptance" value={employeeAcceptance}
+                                onChange={(e)=>{  handleChange(e,"employeeAcceptance") }}>
                               <option value="">Select Promotion</option>
-                              <option>Yes</option>
-                              <option>No</option>
+                              <option value="true">Yes</option>
+                              <option value="false">No</option>
                              </select>
                         </div>
                       </div>
                     </div>
                   </div>
-              </div>*/}
+              </div>
           </div>
 
           <br/>

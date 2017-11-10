@@ -76,26 +76,6 @@ function getCommonMaster(mainRoute, resource, cb, pageSize) {
     });
 }
 
-function getCommonHRMaster(mainRoute, resource, cb, pageSize) {
-    $.ajax({
-        url: baseUrl + "/" + mainRoute + "/" + resource + "/_search?tenantId=" + tenantId + "&" + "pageSize=" + (pageSize || 500) + "&objectName=Employee Master",
-        type: 'POST',
-        dataType: 'json',
-        data: JSON.stringify({ RequestInfo: requestInfo }),
-        headers: {
-            'auth-token': authToken,
-            Authorization:'Basic Og=='
-        },
-        contentType: 'application/json',
-        success: function(res) {
-            cb(null, res);
-        },
-        error: function(err) {
-            cb(err);
-        }
-    });
-}
-
 function commonApiPost(context, resource = "", action = "", queryObject = {}, cb) {
     var url = baseUrl + "/" + context + (resource ? "/" + resource : "") + (action ? "/" + action : "") + (queryObject ? "?" : "");
     for (var variable in queryObject) {
@@ -257,7 +237,7 @@ function getDropdown(name, cb, params) {
     switch (name) {
         case 'employeeType':
             if (!localStorage.getItem("employeeType") || localStorage.getItem("employeeType") == "undefined") {
-                getCommonHRMaster("hr-masters", "employeetypes", function(err, res) {
+                getCommonMaster("hr-masters", "employeetypes", function(err, res) {
                     if (res) {
                         localStorage.setItem("employeeType", JSON.stringify(res["EmployeeType"]));
                         cb(res["EmployeeType"]);
@@ -271,7 +251,7 @@ function getDropdown(name, cb, params) {
             break;
         case 'employeeStatus':
             if (!localStorage.getItem("employeeStatus") || localStorage.getItem("employeeStatus") == "undefined") {
-              var queryString = {tenantId, pageSize:500};
+              var queryString = {tenantId, pageSize:500, objectName:"Employee Master"};
               if (params && typeof params == "object")
                   queryString = Object.assign(queryString, params);
                 commonApiPost("hr-masters", "hrstatuses", "_search", queryString, function(err, res) {
@@ -288,7 +268,7 @@ function getDropdown(name, cb, params) {
             break;
         case 'group':
             if (!localStorage.getItem("group") || localStorage.getItem("group") == "undefined") {
-                getCommonHRMaster("hr-masters", "groups", function(err, res) {
+                getCommonMaster("hr-masters", "groups", function(err, res) {
                     if (res) {
                         localStorage.setItem("group", JSON.stringify(res["Group"]));
                         cb(res["Group"]);
@@ -420,7 +400,7 @@ function getDropdown(name, cb, params) {
             break;
         case 'recruitmentMode':
             if (!localStorage.getItem("recruitmentMode") || localStorage.getItem("recruitmentMode") == "undefined") {
-                getCommonHRMaster("hr-masters", "recruitmentmodes", function(err, res) {
+                getCommonMaster("hr-masters", "recruitmentmodes", function(err, res) {
                     if (res) {
                         localStorage.setItem("recruitmentMode", JSON.stringify(res["RecruitmentMode"]));
                         cb(res["RecruitmentMode"]);
@@ -434,7 +414,7 @@ function getDropdown(name, cb, params) {
             break;
         case 'recruitmentType':
             if (!localStorage.getItem("recruitmentType") || localStorage.getItem("recruitmentType") == "undefined") {
-                getCommonHRMaster("hr-masters", "recruitmenttypes", function(err, res) {
+                getCommonMaster("hr-masters", "recruitmenttypes", function(err, res) {
                     if (res) {
                         localStorage.setItem("recruitmentType", JSON.stringify(res["RecruitmentType"]));
                         cb(res["RecruitmentType"]);
@@ -448,7 +428,7 @@ function getDropdown(name, cb, params) {
             break;
         case 'assignments_grade':
             if (!localStorage.getItem("assignments_grade") || localStorage.getItem("assignments_grade") == "undefined") {
-                getCommonHRMaster("hr-masters", "grades", function(err, res) {
+                getCommonMaster("hr-masters", "grades", function(err, res) {
                     if (res) {
                         localStorage.setItem("assignments_grade", JSON.stringify(res["Grade"]));
                         cb(res["Grade"]);
@@ -521,7 +501,7 @@ function getDropdown(name, cb, params) {
             break;
         case 'assignments_position':
             if (!localStorage.getItem("assignments_position") || localStorage.getItem("assignments_position") == "undefined") {
-                getCommonHRMaster("hr-masters", "positions", function(err, res) {
+                getCommonMaster("hr-masters", "positions", function(err, res) {
                     if (res) {
                         localStorage.setItem("assignments_position", JSON.stringify(res["Position"]));
                         cb(res["Position"]);
@@ -535,7 +515,7 @@ function getDropdown(name, cb, params) {
             break;
         case 'assignments_designation':
             if (!localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined") {
-                getCommonHRMaster("hr-masters", "designations", function(err, res) {
+                getCommonMaster("hr-masters", "designations", function(err, res) {
                     if (res) {
                         localStorage.setItem("assignments_designation", JSON.stringify(res["Designation"]));
                         cb(res["Designation"]);
@@ -563,7 +543,7 @@ function getDropdown(name, cb, params) {
             break;
         case 'recruitmentQuota':
             if (!localStorage.getItem("recruitmentQuota") || localStorage.getItem("recruitmentQuota") == "undefined") {
-                getCommonHRMaster("hr-masters", "recruitmentquotas", function(err, res) {
+                getCommonMaster("hr-masters", "recruitmentquotas", function(err, res) {
                     if (res) {
                         localStorage.setItem("recruitmentQuota", JSON.stringify(res["RecruitmentQuota"]));
                         cb(res["RecruitmentQuota"]);

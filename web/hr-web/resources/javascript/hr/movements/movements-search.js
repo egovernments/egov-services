@@ -300,7 +300,7 @@ class EmployeeSearch extends React.Component {
             <div className="col-sm-6">
                 <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label for="">Department  </label>
+                      <label htmlFor="">Department  </label>
                     </div>
                     <div className="col-sm-6">
                     <div className="styled-select">
@@ -317,7 +317,7 @@ class EmployeeSearch extends React.Component {
               <div className="col-sm-6">
                   <div className="row">
                       <div className="col-sm-6 label-text">
-                        <label for="">Designation  </label>
+                        <label htmlFor="">Designation  </label>
                       </div>
                       <div className="col-sm-6">
                       <div className="styled-select">
@@ -336,7 +336,7 @@ class EmployeeSearch extends React.Component {
             <div className="col-sm-6">
                 <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label for="">Employee Code  </label>
+                      <label htmlFor="">Employee Code  </label>
                     </div>
                     <div className="col-sm-6">
                         <input type="text" name="code" id="code" onChange={(e)=>{
@@ -348,7 +348,7 @@ class EmployeeSearch extends React.Component {
               <div className="col-sm-6">
                   <div className="row">
                       <div className="col-sm-6 label-text">
-                        <label for=""> Employee Name  </label>
+                        <label htmlFor=""> Employee Name  </label>
                       </div>
                       <div className="col-sm-6">
                           <input type="text" name="name" id="name" value= {name} onChange={(e)=>{
@@ -362,7 +362,7 @@ class EmployeeSearch extends React.Component {
             <div className="col-sm-6">
                 <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label for="">Type  </label>
+                      <label htmlFor="">Type  </label>
                     </div>
                     <div className="col-sm-6">
                       <div className="styled-select">
@@ -378,7 +378,7 @@ class EmployeeSearch extends React.Component {
               <div className="col-sm-6">
                   <div className="row">
                       <div className="col-sm-6 label-text">
-                        <label for=""> Status</label>
+                        <label htmlFor=""> Status</label>
                       </div>
                       <div className="col-sm-6">
                       <div className="styled-select">

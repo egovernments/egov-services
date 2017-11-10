@@ -173,7 +173,10 @@ public class EstimateValidator {
                 messages.put(Constants.KEY_FUND_INVALID,
                         Constants.MESSAGE_FUND_INVALID);
             }
-        }
+        } else
+            messages.put(Constants.KEY_FUND_REQUIRED,
+                    Constants.MESSAGE_FUND_REQUIRED);
+
     }
 
     public void validateFunction(Function function, String tenantId, RequestInfo requestInfo,
@@ -186,7 +189,9 @@ public class EstimateValidator {
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
                 messages.put(Constants.KEY_FUNCTION_INVALID,
                         Constants.MESSAGE_FUNCTION_INVALID);
-            }
+            } else
+               messages.put(Constants.KEY_FUNCTION_REQUIRED,
+                    Constants.MESSAGE_FUNCTION_REQUIRED);
         }
     }
 
@@ -199,7 +204,9 @@ public class EstimateValidator {
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
                 messages.put(Constants.KEY_SCHEME_INVALID,
                         Constants.MESSAGE_SCHEME_INVALID);
-            }
+            } else
+                messages.put(Constants.KEY_SCHEME_REQUIRED,
+                        Constants.MESSAGE_SCHEME_REQUIRED);
         }
     }
 
@@ -213,7 +220,9 @@ public class EstimateValidator {
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
                 messages.put(Constants.KEY_SUBSCHEME_INVALID,
                         Constants.MESSAGE_SUBSCHEME_INVALID);
-            }
+            } else
+                messages.put(Constants.KEY_SUBSCHEME_REQUIRED,
+                        Constants.MESSAGE_SUBSCHEME_REQUIRED);
         }
     }
 
@@ -227,7 +236,9 @@ public class EstimateValidator {
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
                 messages.put(Constants.KEY_BUDGETGROUP_INVALID,
                         Constants.MESSAGE_BUDGETGROUP_INVALID);
-            }
+            } else
+                messages.put(Constants.KEY_BUDGETGROUP_NAME_REQUIRED,
+                        Constants.MESSAGE_UDGETGROUP_NAME_REQUIRED);
         }
     }
 
@@ -241,7 +252,9 @@ public class EstimateValidator {
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
                 messages.put(Constants.KEY_TYPEOFWORK_INVALID,
                         Constants.MESSAGE_TYPEOFWORK_INVALID);
-            }
+            } else
+                messages.put(Constants.KEY_TYPEOFWORK_REQUIRED,
+                        Constants.MESSAGE_TYPEOFWORK_REQUIRED);
         }
     }
 
@@ -255,7 +268,9 @@ public class EstimateValidator {
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
                 messages.put(Constants.KEY_SUBTYPEOFWORK_INVALID,
                         Constants.MESSAGE_SUBTYPEOFWORK_INVALID);
-            }
+            } else
+                messages.put(Constants.KEY_DEPARTMENT_CODE_REQUIRED,
+                        Constants.MESSAGE_DEPARTMENT_CODE_REQUIRED);
         }
     }
 
@@ -269,7 +284,9 @@ public class EstimateValidator {
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
                 messages.put(Constants.KEY_DEPARTMENT_INVALID,
                         Constants.MESSAGE_DEPARTMENT_INVALID);
-            }
+            } else
+                messages.put(Constants.KEY_SUBTYPEOFWORK_REQUIRED,
+                        Constants.MESSAGE_SUBTYPEOFWORK_REQUIRED);
         }
     }
 
@@ -281,7 +298,6 @@ public class EstimateValidator {
             validateActivities(detailedEstimate, messages, requestInfo);
             validateLocationDetails(detailedEstimate, requestInfo, messages);
             validateAssetDetails(detailedEstimate, requestInfo, messages);
-            validateMultiYearEstimates(detailedEstimate, messages);
             validateOverheads(detailedEstimate, requestInfo, messages);
             validateMasterData(detailedEstimate, requestInfo, messages);
         }
@@ -290,7 +306,16 @@ public class EstimateValidator {
     }
 
     public void validateSpillOverEstimate(final DetailedEstimate detailedEstimate, Map<String, String> messages) {
+      /*  if (estimate.getSpillOverFlag() && estimate.getAbstractEstimateNumber() == null)
+            messages.put(Constants.KEY_NULL_ABSTRACTESTIMATE_NUMBER,
+                    Constants.MESSAGE_NULL_ABSTRACTESTIMATE_NUMBER);
+        if (!estimate.getSpillOverFlag() && estimate.getDateOfProposal() != null
+                && new Date(estimate.getDateOfProposal()).after(new Date()))
+            messages.put(Constants.KEY_FUTUREDATE_DATEOFPROPOSAL,
+                    Constants.MESSAGE_FUTUREDATE_DATEOFPROPOSAL);*/
+        if(checkDetailedEstimateCreatedFlag(detailedEstimate)) {
 
+        }
     }
 
     public void validateOverheads(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo, Map<String, String> messages) {
@@ -318,20 +343,6 @@ public class EstimateValidator {
         }
     }
 
-    public void validateMultiYearEstimates(final DetailedEstimate detailedEstimate, Map<String, String> messages) {
-        FinancialYear financialYear = null;
-        Double totalPercentage = 0d;
-        for (final MultiYearEstimate multiYearEstimate : detailedEstimate.getMultiYearEstimates()) {
-            totalPercentage = totalPercentage + multiYearEstimate.getPercentage();
-            if (financialYear != null && financialYear.equals(multiYearEstimate.getFinancialYear()))
-                messages.put(KEY_DUPLICATE_MULTIYEAR_ESTIMATE, MESSAGE_DUPLICATE_MULTIYEAR_ESTIMATE);
-            if (totalPercentage > 100)
-                messages.put(KEY_PERCENTAGE_MULTIYEAR_ESTIMATE, MESSAGE_PERCENTAGE_MULTIYEAR_ESTIMATE);
-            financialYear = multiYearEstimate.getFinancialYear();
-        }
-
-    }
-
     public void validateActivities(final DetailedEstimate detailedEstimate, Map<String, String> messages, final RequestInfo requestInfo) {
         for (int i = 0; i < detailedEstimate.getEstimateActivities().size(); i++)
             for (int j = i + 1; j < detailedEstimate.getEstimateActivities().size(); j++)
@@ -353,19 +364,12 @@ public class EstimateValidator {
             if (activity.getQuantity() != null && activity.getQuantity() <= 0)
                 messages.put(KEY_ESTIMATE_ACTIVITY_QUANTITY, MESSAGE_ESTIMATE_ACTIVITY_QUANTITY);
 
-            if (activity.getEstimateRate() == null)
-                messages.put(KEY_ESTIMATE_ACTIVITY_ESTIMATE_RATE_REQUIRED, MESSAGE_ESTIMATE_ACTIVITY_ESTIMATE_RATE_REQUIRED);
-            else if (activity.getEstimateRate().compareTo(BigDecimal.ZERO) <= 0)
+             if (activity.getEstimateRate().compareTo(BigDecimal.ZERO) <= 0)
                 messages.put(KEY_ESTIMATE_ACTIVITY_ESTIMATE_RATE, MESSAGE_ESTIMATE_ACTIVITY_ESTIMATE_RATE);
 
-            if (activity.getUom() == null)
-                messages.put(KEY_ESTIMATE_ACTIVITY_UOM_REQUIRED, MESSAGE_ESTIMATE_ACTIVITY_UOM_REQUIRED);
-            else if (StringUtils.isBlank(activity.getUom().getCode()))
-                messages.put(KEY_ESTIMATE_ACTIVITY_UOM_CODE_INVALID, MESSAGE_ESTIMATE_ACTIVITY_UOM_CODE_INVALID);
+            validateUOM(activity.getUom(), detailedEstimate.getTenantId(), requestInfo,messages);
 
-            if (activity.getUnitRate() == null)
-                messages.put(KEY_ESTIMATE_ACTIVITY_UNIT_RATE_REQUIRED, MESSAGE_ESTIMATE_ACTIVITY_UNIT_RATE_REQUIRED);
-            else if (activity.getUnitRate().compareTo(BigDecimal.ZERO) <= 0)
+           if (activity.getUnitRate().compareTo(BigDecimal.ZERO) <= 0)
                 messages.put(KEY_ESTIMATE_ACTIVITY_UNIT_RATE_INVALID, MESSAGE_ESTIMATE_ACTIVITY_UNIT_RATE_INVALID);
 
             if (activity.getEstimateMeasurementSheets() != null)
@@ -384,6 +388,19 @@ public class EstimateValidator {
 
         }
 
+    }
+
+    private void validateUOM(final UOM uom, String tenantId, RequestInfo requestInfo, Map<String, String> messages) {
+        JSONArray responseJSONArray;
+        if (uom != null && uom.getCode() != null) {
+            responseJSONArray = estimateUtils.getMDMSData(Constants.UOM_OBJECT,
+                    CommonConstants.CODE, uom.getCode(), tenantId, requestInfo,
+                    Constants.COMMON_MASTERS_MODULE_CODE);
+            if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+                messages.put(Constants.KEY_UOM_INVALID,
+                        Constants.MESSAGE_UOM_INVALID);
+            }
+        }
     }
 
     public void validateLocationDetails(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo, Map<String, String> messages) {

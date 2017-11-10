@@ -21,6 +21,7 @@ public class Constants {
     public static final String EGF_MODULE_CODE = "egf-master";
     public static final String COMMON_MASTERS_MODULE_CODE = "common-masters";
     public static final String OVERHEAD_OBJECT = "Overhead";
+    public static final String UOM_OBJECT = "Uom";
 
     public static final String BOUNDARY_OBJECT = "Boundary";
     public static final String APPCONFIGURATION_OBJECT = "AppConfiguration";
@@ -73,6 +74,10 @@ public class Constants {
 
     public static final String KEY_DEPARTMENT_INVALID = "INVALID_DEPARTMENT";
     public static final String MESSAGE_DEPARTMENT_INVALID = "Plese provide valid data for Department";
+
+    public static final String KEY_UOM_INVALID = "UOM_INVALID";
+    public static final String MESSAGE_UOM_INVALID = "Plese provide valid data for UOM";
+
     
     public static final String KEY_SCHEME_INVALID = "INVALID_SCHEME";
     public static final String MESSAGE_SCHEME_INVALID = "Plese provide valid data for Scheme";
@@ -131,29 +136,30 @@ public class Constants {
     public static final String KEY_DUPLICATE_ESTIMATE_ASSET_DETAILS= "DUPLICATE_ESTIMATE_ASSET_DETAILES";
     public static final String MESSAGE_DUPLICATE_ESTIMATE_ASSET_DETAILS= "Duplicate Asset detailes for an estimate";
 
-    public static final String KEY_ESTIMATE_FUND_CODE_INVALID= "ESTIMATE_FUND_CODE_INVALID";
-    public static final String MESSAGE_ESTIMATE_FUND_CODE_INVALID= "Invalid data for esimate fund code";
+    public static final String KEY_FUND_REQUIRED = "FUND_REQUIRED";
+    public static final String MESSAGE_FUND_REQUIRED = "Fund data is required";
 
-    public static final String KEY_ESTIMATE_FUNCTION_CODE_INVALID= "ESTIMATE_FUNCTION_CODE_INVALID";
-    public static final String MESSAGE_ESTIMATE_FUNCTION_CODE_INVALID= "Invalid data for esimate function code";
+    public static final String KEY_FUNCTION_REQUIRED= "FUNCTION_REQUIRED";
+    public static final String MESSAGE_FUNCTION_REQUIRED= "Function data is required";
 
-    public static final String KEY_ESTIMATE_TYPEOFWORK_CODE_INVALID= "ESTIMATE_TYPEOFWORK_CODE_INVALID";
-    public static final String MESSAGE_ESTIMATE_TYPEOFWORK_CODE_INVALID= "Invalid data for esimate type of work code";
+    public static final String KEY_SCHEME_REQUIRED= "SCHEME_REQUIRED";
+    public static final String MESSAGE_SCHEME_REQUIRED= "Scheme data is required";
 
-    public static final String KEY_ESTIMATE_SUBTYPEOFWORK_CODE_INVALID= "ESTIMATE_SUBTYPEOFWORK_CODE_INVALID";
-    public static final String MESSAGE_ESTIMATE_SUBTYPEOFWORK_CODE_INVALID= "Invalid data for esimate subtype of work code";
+    public static final String KEY_SUBSCHEME_REQUIRED= "SUBSCHEME_REQUIRED";
+    public static final String MESSAGE_SUBSCHEME_REQUIRED= "SubScheme data is required";
 
-    public static final String KEY_ESTIMATE_SCHEME_CODE_INVALID= "ESTIMATE_SCHEME_CODE_INVALID";
-    public static final String MESSAGE_ESTIMATE_SCHEME_CODE_INVALID= "Invalid data for esimate scheme";
+    public static final String KEY_BUDGETGROUP_NAME_REQUIRED= "BUDGET_NAME_REQUIRED";
+    public static final String MESSAGE_UDGETGROUP_NAME_REQUIRED= "Budget group name is required";
 
-    public static final String KEY_ESTIMATE_SUBSCHEME_CODE_INVALID= "ESTIMATE_SUBSCHEME_CODE_INVALID";
-    public static final String MESSAGE_ESTIMATE_SUBSCHEME_CODE_INVALID= "Invalid data for esimate subscheme";
+    public static final String KEY_TYPEOFWORK_REQUIRED= "TYPEOFWORK_REQUIRED";
+    public static final String MESSAGE_TYPEOFWORK_REQUIRED= "Type of work is required";
 
-    public static final String KEY_ESTIMATE_DEPARTMENT_CODE_INVALID= "ESTIMATE_DEPARTMENT_CODE_INVALID";
-    public static final String MESSAGE_ESTIMATE_DEPARTMENT_CODE_INVALID= "Invalid data for esimate department";
+    public static final String KEY_SUBTYPEOFWORK_REQUIRED= "SUBTYPEOFWORK_REQUIRED";
+    public static final String MESSAGE_SUBTYPEOFWORK_REQUIRED= "SubType of work is required";
 
-    public static final String KEY_ESTIMATE_BUDGETGROUP_INVALID= "ESTIMATE_BUDGETGROUP_INVALID";
-    public static final String MESSAGE_ESTIMATE_BUDGETGROUP_INVALID= "Invalid data for esimate budget group";
+    public static final String KEY_DEPARTMENT_CODE_REQUIRED= "DEPARTMENT_CODE_REQUIRED";
+    public static final String MESSAGE_DEPARTMENT_CODE_REQUIRED= "Department data is required";
+
 
     public static final String KEY_ESTIMATE_OVERHEAD_CODE_INVALID= "ESTIMATE_OVERHEAD_INVALID";
     public static final String MESSAGE_ESTIMATE_OVERHEAD_CODE_INVALID= "Invalid data for esimate overhead code";

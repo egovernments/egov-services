@@ -1,25 +1,23 @@
 package org.egov.works.estimate.web.contract;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * An Object holds the basic data for a Detailed Estimate
  */
 @ApiModel(description = "An Object holds the basic data for a Detailed Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T12:00:56.847Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T07:36:50.343Z")
 
 public class DetailedEstimate   {
   @JsonProperty("id")
@@ -141,9 +139,9 @@ public class DetailedEstimate   {
 
   @JsonProperty("abstractEstimateDetail")
   private AbstractEstimateDetails abstractEstimateDetail = null;
-  
+
   @JsonProperty("estimateActivities")
-  private List<EstimateActivity> estimateActivities = new ArrayList<>();
+  private List<EstimateActivity> estimateActivities = null;
 
   @JsonProperty("multiYearEstimates")
   private List<MultiYearEstimate> multiYearEstimates = null;
@@ -241,7 +239,8 @@ public class DetailedEstimate   {
    * @return estimateNumber
   **/
   @ApiModelProperty(required = true, value = "Unique number for the Detailed Estimate")
-  @NotNull
+  //@NotNull
+  //TODO from UI its not mandatory
 
  @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(min=1,max=50)
   public String getEstimateNumber() {
@@ -327,7 +326,7 @@ public class DetailedEstimate   {
   @ApiModelProperty(required = true, value = "Department for which Detailed Estimate belongs to")
   @NotNull
 
-  @Valid
+  //@Valid
 
   public Department getDepartment() {
     return department;
@@ -618,7 +617,8 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "The Recommended Mode of Allotment of the work")
 
-  @Valid
+  //@Valid
+  //Only code is required
 
   public ModeOfAllotment getModeOfAllotment() {
     return modeOfAllotment;
@@ -640,7 +640,8 @@ public class DetailedEstimate   {
   @ApiModelProperty(required = true, value = "The Type of work for which this Detailed Estimate belongs to")
   @NotNull
 
-  @Valid
+  //@Valid
+  //TODO Handle only code validation
 
   public TypeOfWork getWorksType() {
     return worksType;
@@ -661,7 +662,8 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "The Sub Type of work for which this Detailed Estimate belongs to")
 
-  @Valid
+  //@Valid
+  //TODO Handle only code validation
 
   public TypeOfWork getWorksSubtype() {
     return worksSubtype;
@@ -683,7 +685,7 @@ public class DetailedEstimate   {
   @ApiModelProperty(required = true, value = "The Nature of work for which this Detailed Estimate belongs to")
   @NotNull
 
-  @Valid
+  //@Valid
 
   public NatureOfWork getNatureOfWork() {
     return natureOfWork;
@@ -705,7 +707,8 @@ public class DetailedEstimate   {
   @ApiModelProperty(required = true, value = "Ward of the Detailed Estimate")
   @NotNull
 
-  @Valid
+  //@Valid
+  //TODO code is required
 
   public Boundary getWard() {
     return ward;
@@ -1010,7 +1013,8 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "")
 
-  @Valid
+  //@Valid
+  //TODO Only id is required
 
   public AbstractEstimateDetails getAbstractEstimateDetail() {
     return abstractEstimateDetail;
@@ -1275,7 +1279,8 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "Fund of the Detailed Estimate")
 
-  @Valid
+  //@Valid
+  //TODO Only fund code is required based on configuration
 
   public Fund getFund() {
     return fund;
@@ -1296,7 +1301,8 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "Function of the Detailed Estimate")
 
-  @Valid
+  //@Valid
+  //TODO Only function code is required based on configuration
 
   public Function getFunction() {
     return function;
@@ -1317,7 +1323,8 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "Functionary of the Detailed Estimate")
 
-  @Valid
+  //@Valid
+  //TODO Only functionary code is required based on configuration
 
   public Functionary getFunctionary() {
     return functionary;
@@ -1338,7 +1345,8 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "Scheme of the Detailed Estimate")
 
-  @Valid
+  //@Valid
+  //TODO Only scheme code is required based on configuration
 
   public Scheme getScheme() {
     return scheme;
@@ -1359,7 +1367,8 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "Sub Scheme of the Detailed Estimate")
 
-  @Valid
+  //@Valid
+  //TODO Only subscheme code is required based on configuration
 
   public SubScheme getSubScheme() {
     return subScheme;
@@ -1380,7 +1389,8 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "Budget Group of the Detailed Estimate")
 
-  @Valid
+  //@Valid
+  ////TODO Only budgetgroup name is required based on configuration
 
   public BudgetGroup getBudgetGroup() {
     return budgetGroup;

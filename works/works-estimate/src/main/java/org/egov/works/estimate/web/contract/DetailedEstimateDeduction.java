@@ -14,7 +14,7 @@ import java.util.Objects;
  * An Object that holds the basic data of Detailed Estimate Deductions
  */
 @ApiModel(description = "An Object that holds the basic data of Detailed Estimate Deductions")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T12:00:56.847Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T07:36:50.343Z")
 
 public class DetailedEstimateDeduction   {
   @JsonProperty("id")
@@ -91,7 +91,8 @@ public class DetailedEstimateDeduction   {
   @ApiModelProperty(required = true, value = "Chart Of Accounts of the Detailed Estimate Deduction from Financials")
   @NotNull
 
-  @Valid
+  //@Valid
+  //TODO Only code is required
 
   public ChartOfAccount getChartOfAccounts() {
     return chartOfAccounts;
@@ -110,8 +111,7 @@ public class DetailedEstimateDeduction   {
    * Reference of the Detailed Estimate for Multi Year Estimate
    * @return detailedEstimate
   **/
-  @ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for Multi Year Estimate")
-  @NotNull
+  @ApiModelProperty(value = "Reference of the Detailed Estimate for Multi Year Estimate")
 
 
   public String getDetailedEstimate() {

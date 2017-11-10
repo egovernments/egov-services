@@ -13,7 +13,7 @@ import java.util.Objects;
  * An Object holds the basic data for Assets for Estimate
  */
 @ApiModel(description = "An Object holds the basic data for Assets for Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T12:00:56.847Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T07:36:50.343Z")
 
 public class AssetsForEstimate   {
   @JsonProperty("id")
@@ -84,7 +84,7 @@ public class AssetsForEstimate   {
   @ApiModelProperty(required = true, value = "Asset Reference from Asset module")
   @NotNull
 
-  @Valid
+  //@Valid
 
   public Asset getAsset() {
     return asset;
@@ -103,8 +103,7 @@ public class AssetsForEstimate   {
    * Reference of the Detailed Estimate for Estimate and Assets linking
    * @return detailedEstimate
   **/
-  @ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for Estimate and Assets linking")
-  @NotNull
+  @ApiModelProperty(value = "Reference of the Detailed Estimate for Estimate and Assets linking")
 
 
   public String getDetailedEstimate() {

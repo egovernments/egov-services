@@ -14,7 +14,7 @@ import java.util.Objects;
  * An Object holds the basic data of Estimate Overheads
  */
 @ApiModel(description = "An Object holds the basic data of Estimate Overheads")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T12:00:56.847Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T07:36:50.343Z")
 
 public class EstimateOverhead   {
   @JsonProperty("id")
@@ -129,8 +129,7 @@ public class EstimateOverhead   {
    * Reference of the Detailed Estimate for Overheads
    * @return detailedEstimate
   **/
-  @ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for Overheads")
-  @NotNull
+  @ApiModelProperty(value = "Reference of the Detailed Estimate for Overheads")
 
 
   public String getDetailedEstimate() {

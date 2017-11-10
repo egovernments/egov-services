@@ -15,7 +15,7 @@ import java.util.Objects;
  * An Object holds the basic data of Estimate Measurement Sheet
  */
 @ApiModel(description = "An Object holds the basic data of Estimate Measurement Sheet")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T12:00:56.847Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T07:36:50.343Z")
 
 public class EstimateMeasurementSheet   {
   @JsonProperty("id")
@@ -49,7 +49,7 @@ public class EstimateMeasurementSheet   {
   private BigDecimal quantity = null;
 
   @JsonProperty("estimateActivity")
-  private EstimateActivity estimateActivity = null;
+  private String estimateActivity = null;
 
   @JsonProperty("parent")
   private EstimateMeasurementSheet parent = null;
@@ -264,7 +264,7 @@ public class EstimateMeasurementSheet   {
     this.quantity = quantity;
   }
 
-  public EstimateMeasurementSheet estimateActivity(EstimateActivity estimateActivity) {
+  public EstimateMeasurementSheet estimateActivity(String estimateActivity) {
     this.estimateActivity = estimateActivity;
     return this;
   }
@@ -273,16 +273,14 @@ public class EstimateMeasurementSheet   {
    * Estimate Activity reference for the Estimate Measurement sheet
    * @return estimateActivity
   **/
-  @ApiModelProperty(required = true, value = "Estimate Activity reference for the Estimate Measurement sheet")
-  @NotNull
+  @ApiModelProperty(value = "Estimate Activity reference for the Estimate Measurement sheet")
 
-  @Valid
 
-  public EstimateActivity getEstimateActivity() {
+  public String getEstimateActivity() {
     return estimateActivity;
   }
 
-  public void setEstimateActivity(EstimateActivity estimateActivity) {
+  public void setEstimateActivity(String estimateActivity) {
     this.estimateActivity = estimateActivity;
   }
 

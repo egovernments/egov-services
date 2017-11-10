@@ -61,7 +61,7 @@ public class DetailedEstimateService {
             detailedEstimate.setTotalIncludingRE(detailedEstimate.getWorkValue());
 
             if(detailedEstimate.getAbstractEstimateDetail() != null) {
-                        if(validator.checkDetailedEstimateCreatedFlag(detailedEstimate)) {
+                        if(!validator.checkDetailedEstimateCreatedFlag(detailedEstimate)) {
                             String estimateNumber = idGenerationRepository
                                     .generateDetailedEstimateNumber(detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());
                             detailedEstimate.setEstimateNumber(propertiesManager.getDetailedEstimateNumberPrefix() + estimateNumber);
@@ -73,9 +73,14 @@ public class DetailedEstimateService {
                 assetsForEstimate.setAuditDetails(auditDetails);
             }
 
-            for(final MultiYearEstimate multiYearEstimate : detailedEstimate.getMultiYearEstimates()) {
-                multiYearEstimate.setId(commonUtils.getUUID());
-                multiYearEstimate.setAuditDetails(auditDetails);
+            if(detailedEstimate.getMultiYearEstimates() != null) {
+                for (final MultiYearEstimate multiYearEstimate : detailedEstimate.getMultiYearEstimates()) {
+                    multiYearEstimate.setId(commonUtils.getUUID());
+                    //Set from financials
+                    multiYearEstimate.setFinancialYear(new FinancialYear());
+                    multiYearEstimate.setPercentage(100d);
+                    multiYearEstimate.setAuditDetails(auditDetails);
+                }
             }
 
             for(final EstimateOverhead estimateOverhead : detailedEstimate.getEstimateOverheads()) {

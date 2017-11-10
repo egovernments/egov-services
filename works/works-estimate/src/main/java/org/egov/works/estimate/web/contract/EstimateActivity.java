@@ -16,7 +16,7 @@ import java.util.Objects;
  * An Object holds the basic data of Estimate Activity
  */
 @ApiModel(description = "An Object holds the basic data of Estimate Activity")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T12:00:56.847Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T07:36:50.343Z")
 
 public class EstimateActivity   {
   @JsonProperty("id")
@@ -113,7 +113,8 @@ public class EstimateActivity   {
   **/
   @ApiModelProperty(value = "Schedule Of Rate reference of the Estimate Activity. Either Schedule Of Rate or Non SOR is mandatory for any activity.")
 
-  @Valid
+  //@Valid
+  //TODO only code is required
 
   public ScheduleOfRate getScheduleOfRate() {
     return scheduleOfRate;
@@ -134,7 +135,8 @@ public class EstimateActivity   {
   **/
   @ApiModelProperty(value = "Schedule Of Rate reference of the Estimate Activity. Either Schedule Of Rate or Non SOR is mandatory for any activity.")
 
-  @Valid
+  //@Valid
+  //TODO only code is required
 
   public NonSOR getNonSor() {
     return nonSor;
@@ -156,7 +158,8 @@ public class EstimateActivity   {
   @ApiModelProperty(required = true, value = "UOM for the Estimate Activity")
   @NotNull
 
-  @Valid
+  //@Valid
+  //TODO only code is required
 
   public UOM getUom() {
     return uom;
@@ -302,8 +305,7 @@ public class EstimateActivity   {
    * Reference of the Detailed Estimate for Estimate Activity
    * @return detailedEstimate
   **/
-  @ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for Estimate Activity")
-  @NotNull
+  @ApiModelProperty(value = "Reference of the Detailed Estimate for Estimate Activity")
 
 
   public String getDetailedEstimate() {

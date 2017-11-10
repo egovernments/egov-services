@@ -13,7 +13,7 @@ import java.util.Objects;
  * An Object that holds the basic data of Multi Year Estimate
  */
 @ApiModel(description = "An Object that holds the basic data of Multi Year Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T12:00:56.847Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T07:36:50.343Z")
 
 public class MultiYearEstimate   {
   @JsonProperty("id")
@@ -106,8 +106,7 @@ public class MultiYearEstimate   {
    * Reference of the Detailed Estimate for Multi Year Estimate
    * @return detailedEstimate
   **/
-  @ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for Multi Year Estimate")
-  @NotNull
+  @ApiModelProperty(value = "Reference of the Detailed Estimate for Multi Year Estimate")
 
 
   public String getDetailedEstimate() {

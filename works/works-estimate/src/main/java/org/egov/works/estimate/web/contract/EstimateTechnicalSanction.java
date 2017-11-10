@@ -14,7 +14,7 @@ import java.util.Objects;
  * An Object that holds the basic data of Technical Sanction for Detailed Estimate
  */
 @ApiModel(description = "An Object that holds the basic data of Technical Sanction for Detailed Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T12:00:56.847Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T07:36:50.343Z")
 
 public class EstimateTechnicalSanction   {
   @JsonProperty("id")
@@ -109,8 +109,7 @@ public class EstimateTechnicalSanction   {
    * Reference of the Detailed Estimate for which the Technical sanction belongs to
    * @return detailedEstimate
   **/
-  @ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for which the Technical sanction belongs to")
-  @NotNull
+  @ApiModelProperty(value = "Reference of the Detailed Estimate for which the Technical sanction belongs to")
 
 
   public String getDetailedEstimate() {

@@ -94,6 +94,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 asset.setOpeningDate(rs.getLong("openingDate"));
                 asset.setLocation(rs.getString("location"));
                 asset.setFundSource(rs.getString("fundSource"));
+                asset.setCurrentValue(rs.getBigDecimal("currentamount"));
               
                 final String tittleDocs = rs.getString("titledocumentsavalable");
                 List<String> tda = null;

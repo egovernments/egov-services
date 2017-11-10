@@ -15,12 +15,24 @@ public class AssetQueryBuilder {
 
 	public final static String FINDBYNAMEQUERY = "SELECT asset.name FROM egasset_asset asset WHERE asset.name=? AND asset.tenantid=?";
 	
-    private static final String BASE_QUERY = "SELECT *,asd.code as landcode,asd.assetid as landassetid from egasset_asset asset left outer join egasset_asset_landdetails asd ON "
-    		+ " asset.id=asd.assetid AND asset.tenantid=asd.tenantid ";
+    private static final String BASE_QUERY = "SELECT *,asd.code as landcode,asd.assetid as landassetid,currentval.currentamount "
 
-	@SuppressWarnings("rawtypes")
+    										+ "from egasset_asset asset left outer join egasset_asset_landdetails asd ON  asset.id=asd.assetid AND asset.tenantid=asd.tenantid "
+    										
+    										+ "left outer join (select current.assetid,current.tenantid,current.transactiondate,"
+    										
+    										+ "maxcurr.currentamount from egasset_current_value current inner join (select max(transactiondate) as transactiondate,currentamount,assetid"
+    										
+    										+ ",tenantid from egasset_current_value where tenantid=? GROUP BY assetid,tenantid,currentamount ) as maxcurr "
+    										
+    										+ "ON current.assetid=maxcurr.assetid AND current.tenantid=maxcurr.tenantid AND current.transactiondate=maxcurr.transactiondate) as currentval "
+    										
+    										+ "ON asset.id=currentval.assetid AND asset.tenantid=currentval.tenantid ";
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String getQuery(final AssetCriteria searchAsset, final List preparedStatementValues) {
 		final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+		preparedStatementValues.add(searchAsset.getTenantId());
 		log.info("get query");
 		addWhereClause(selectQuery, preparedStatementValues, searchAsset);
 		addPagingClause(selectQuery, preparedStatementValues, searchAsset);

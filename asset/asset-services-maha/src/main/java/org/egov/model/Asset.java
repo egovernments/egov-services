@@ -186,4 +186,6 @@ public class Asset   {
 	  @JsonProperty("landDetails")
 	  private List<LandDetail> landDetails;
 	  
+	  @JsonProperty("currentValue")
+	  private BigDecimal currentValue;
 }

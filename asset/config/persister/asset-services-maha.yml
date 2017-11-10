@@ -527,7 +527,7 @@ serviceMaps:
    fromTopic: save-currentvalue-maha
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO egasset_current_value( id, tenantid, assetid, currentamount, createdby, createdtime, lastmodifiedby, lastmodifiedtime, assettrantype)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egasset_current_value( id, tenantid, assetid, currentamount, createdby, createdtime, lastmodifiedby, lastmodifiedtime, assettrantype,transactiondate)VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: AssetCurrentValue.*
       jsonMaps:
          
@@ -548,3 +548,5 @@ serviceMaps:
        - jsonPath: $.AssetCurrentValue.*.auditDetails.lastModifiedDate
        
        - jsonPath: $.AssetCurrentValue.*.assetTranType
+       
+       - jsonPath: $.AssetCurrentValue.*.transactionDate

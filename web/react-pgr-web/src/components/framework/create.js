@@ -905,7 +905,7 @@ class Report extends Component {
               
               }
            }
-           
+           }
             }
       }
 

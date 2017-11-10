@@ -716,7 +716,7 @@ definitions:
   MeasurementBookRequest:
       description: Contract class to send response. Array of Measurement Book items are used in case of search results, also multiple  Measurement Book item is used for create and update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         measurementBooks:
           description: Used for create and update only
@@ -729,7 +729,7 @@ definitions:
   MeasurementBookResponse:
     description: Contract class to send response. Array of Measurement Book items are used in case of search results, also multiple  Measurement Book item is used for create and update
     properties:
-      responseInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       measurementBooks:
         description: Used for search result and create only
@@ -741,7 +741,7 @@ definitions:
   ContractorBillRequest:
       description: Contract class to send response. Array of ContractorBill items are used in case of search results, whereas single ContractorBill item is used for create and update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         contractorBills:
           description: Used for create and update only
@@ -754,7 +754,7 @@ definitions:
   ContractorBillResponse:
     description: Contract class to send response. Array of ContractorBill items are used in case of search results, whereas single ContractorBill item is used for create and update
     properties:
-      responseInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       contractorBills:
         description: Used for search result and create only

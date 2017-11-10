@@ -171,7 +171,57 @@ serviceMaps:
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.grossAmountBilled
        
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.code
+
+    - query: INSERT INTO egw_abstractestimate_asset_details(id, tenantid, abstractestimate, asset, assetcondition, assetremarks, landasset, landassetcondition, constructionarea, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.abstractEstimates.*.assetDetails.*
+      jsonMaps:
+         
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.id
+         
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.tenantId
+         
+       - jsonPath: $.abstractEstimates[?({id} in @.abstractEstimateDetails[*].id)].id
        
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.asset.code
+       
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.assetCondition.name
+       
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.assetRemarks
+
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.landAssetCondition.name
+       
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.constructionArea
+       
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.auditDetails.createdBy
+       
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.auditDetails.createdTime
+
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.auditDetails.lastModifiedTime
+
+    - query: INSERT INTO egw_abstractestimate_sanction_details(id, tenantid, abstractestimate, sanctiontype, sanctionauthority) VALUES (?, ?, ?, ?, ?);
+      basePath: $.abstractEstimates.*.sanctionDetails.*
+      jsonMaps:
+         
+       - jsonPath: $.abstractEstimates.*.sanctionDetails.*.id
+         
+       - jsonPath: $.abstractEstimates.*.sanctionDetails.*.tenantId
+         
+       - jsonPath: $.abstractEstimates[?({id} in @.abstractEstimateDetails[*].id)].id
+       
+       - jsonPath: $.abstractEstimates.*.sanctionDetails.*.sanctionType
+       
+       - jsonPath: $.abstractEstimates.*.sanctionDetails.*.sanctionAuthority.name
+       
+       - jsonPath: $.abstractEstimates.*.sanctionDetails.*.auditDetails.createdBy
+       
+       - jsonPath: $.abstractEstimates.*.sanctionDetails.*.auditDetails.createdTime
+
+       - jsonPath: $.abstractEstimates.*.sanctionDetails.*.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.abstractEstimates.*.sanctionDetails.*.auditDetails.lastModifiedTime
+
  - version: 1.0
    name: AbstractEstimate Update
    description: Update abstract estimate  in egw_abstractestimate table

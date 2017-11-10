@@ -2,6 +2,7 @@ package org.egov.swm.domain.service;
 
 import org.egov.swm.domain.model.*;
 import org.egov.swm.domain.repository.VehicleMaintenanceDetailsRepository;
+import org.egov.swm.domain.repository.VehicleMaintenanceRepository;
 import org.egov.swm.domain.repository.VehicleRepository;
 import org.egov.swm.web.requests.VehicleMaintenanceDetailsRequest;
 import org.egov.tracer.model.CustomException;
@@ -19,10 +20,14 @@ public class VehicleMaintenanceDetailsService {
 
     private VehicleMaintenanceDetailsRepository vehicleMaintenanceDetailsRepository;
 
+    private VehicleMaintenanceRepository vehicleMaintenanceRepository;
+
     public VehicleMaintenanceDetailsService(VehicleRepository vehicleRepository,
-                                            VehicleMaintenanceDetailsRepository vehicleMaintenanceDetailsRepository) {
+                                            VehicleMaintenanceDetailsRepository vehicleMaintenanceDetailsRepository,
+                                            VehicleMaintenanceRepository vehicleMaintenanceRepository) {
         this.vehicleRepository = vehicleRepository;
         this.vehicleMaintenanceDetailsRepository = vehicleMaintenanceDetailsRepository;
+        this.vehicleMaintenanceRepository = vehicleMaintenanceRepository;
     }
 
     public VehicleMaintenanceDetailsRequest create (VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest){
@@ -62,6 +67,15 @@ public class VehicleMaintenanceDetailsService {
 
     }
 
+    public Pagination<VehicleMaintenanceDetails> search(VehicleMaintenanceDetailsSearch vehicleMaintenanceDetailsSearch){
+
+        Pagination<VehicleMaintenanceDetails> vehicleMaintenanceDetailsList =  vehicleMaintenanceDetailsRepository.search(vehicleMaintenanceDetailsSearch);
+
+        populateVehicleData(vehicleMaintenanceDetailsList.getPagedData());
+
+        return vehicleMaintenanceDetailsList;
+    }
+
     private void validateForUniqueCodesInRequest(VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest){
 
         List<String> codesList = vehicleMaintenanceDetailsRequest.getVehicleMaintenanceDetails()
@@ -71,6 +85,26 @@ public class VehicleMaintenanceDetailsService {
         if(codesList.size() != codesList.stream().distinct().count())
             throw new CustomException("Code",
                     "Duplicate codes in given Vehicle Maintenance Details:");
+    }
+
+    private List<VehicleMaintenanceDetails> populateVehicleData(List<VehicleMaintenanceDetails> vehicleMaintenanceDetailsList){
+
+        for(VehicleMaintenanceDetails vehicleMaintenanceDetail : vehicleMaintenanceDetailsList){
+
+            if(vehicleMaintenanceDetail.getVehicle() != null && vehicleMaintenanceDetail.getVehicle().getRegNumber() != null &&
+                    !vehicleMaintenanceDetail.getVehicle().getRegNumber().isEmpty()){
+
+                VehicleSearch vehicleSearch = new VehicleSearch();
+                vehicleSearch.setTenantId(vehicleMaintenanceDetail.getTenantId());
+                vehicleSearch.setRegNumber(vehicleMaintenanceDetail.getVehicle().getRegNumber());
+                Pagination<Vehicle> vehicleList = vehicleRepository.search(vehicleSearch);
+
+                if (vehicleList != null || vehicleList.getPagedData() != null || !vehicleList.getPagedData().isEmpty())
+                    vehicleMaintenanceDetail.setVehicle(vehicleList.getPagedData().get(0));
+            }
+        }
+
+        return vehicleMaintenanceDetailsList;
     }
 
     private void validate(VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest){

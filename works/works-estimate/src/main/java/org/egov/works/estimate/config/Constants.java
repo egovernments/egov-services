@@ -18,6 +18,7 @@ public class Constants {
     public static final String BUDGETGROUP_OBJECT = "BudgetGroup";
     public static final String DEPARTMENT_OBJECT = "Department";
     public static final String WORKS_MODULE_CODE = "Works";
+    public static final String EGF_MODULE_CODE = "egf-master";
     public static final String COMMON_MASTERS_MODULE_CODE = "common-masters";
     public static final String OVERHEAD_OBJECT = "Overhead";
 

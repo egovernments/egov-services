@@ -15,6 +15,104 @@ x-ui-info:
 
 paths:
 
+    /vendors/_search:
+      post:
+        summary: Get the list of vendor
+        description: vendor
+        tags: 
+          - Vendor
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: vendorNos
+            type: array
+            items: 
+              type: integer
+              format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of vendorNo's
+          - name: vendorNo
+            type: string
+            in: query
+            description: vendorNo of the Vendor
+          - name: name
+            type: string
+            in: query
+            description: name of the Vendor
+          - name: registrationNo
+            type: string
+            in: query
+            description: registrationNo of the Vendor
+            maxLength: 256
+          - name: supplier
+            type: string
+            in: query
+            description: supplier code of the Vendor
+            maxLength: 256
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+          - name: sortBy
+            type: string
+            in: query
+            description: |
+              This takes any field from the Object seperated by comma and asc,desc keywords.  
+              example name asc,code desc or name,code or name,code desc 
+        responses:
+          200:
+            description: Vendor(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/VendorResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /vendors/_create:
+      post:
+        summary: Create new vendor(s)
+        description: Create new vendor(s)
+        tags: 
+          - Vendor
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: vendorRequest
+            in: body
+            description: Vendor Request
+            schema:
+              $ref: '#/definitions/VendorRequest'
+        responses:
+          201:
+            description: Vendor(s) created Successfully
+            schema:
+              $ref: '#/definitions/VendorResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /vendors/_update:
+      post:
+        summary: Update any of the vendor
+        description: Update any of the vendor
+        tags: 
+          - Vendor
+        parameters:
+          - name: vendorRequest
+            in: body
+            description: Vendor Request
+            schema:
+              $ref: '#/definitions/VendorRequest'
+        responses:
+          200:
+            description: Vendor updated Successfully
+            schema:
+              $ref: '#/definitions/VendorResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /routes/_search:
       post:
         summary: Get the list of route
@@ -1465,6 +1563,28 @@ definitions:
       - name
       - servicesOffered
       - servicedLocations
+      
+    VendorRequest:
+      description: Contract class to receive request. Array of Vendor items are used in case of create, whereas single Vendor item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        vendors:
+          description: Used for search result and create only
+          type: array
+          items:
+            $ref: '#/definitions/Vendor'
+    VendorResponse:
+      description: Contract class to send response. Array of Vendor items are used in case of search results or response for create, whereas single Vendor item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        vendors:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/Vendor'
       
     Supplier:
       type: object

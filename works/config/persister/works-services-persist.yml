@@ -35,14 +35,14 @@ serviceMaps:
        - jsonPath: $.documentDetails.*.workProgress
        
        - jsonPath: $.documentDetails.*.auditDetails.createdBy
-         dbType: LONG
        
        - jsonPath: $.documentDetails.*.auditDetails.createdTime
-       
-       - jsonPath: $.documentDetails.*.auditDetails.lastModifiedBy
          dbType: LONG
+
+       - jsonPath: $.documentDetails.*.auditDetails.lastModifiedBy
        
        - jsonPath: $.documentDetails.*.auditDetails.lastModifiedTime
+         dbType: LONG
        
  - version: 1.0
    name: Works Documents Update
@@ -76,7 +76,8 @@ serviceMaps:
        
        - jsonPath: $.documentDetails.*.auditDetails.lastModifiedBy
        
-       - jsonPath: $.documentDetails.*.auditDetails.lastModifiedTime 
+       - jsonPath: $.documentDetails.*.auditDetails.lastModifiedTime
+         dbType: LONG
 
        - jsonPath: $.documentDetails.*.id
 
@@ -104,14 +105,14 @@ serviceMaps:
        - jsonPath: $.estimateAppropriations.*.budgetUsage
        
        - jsonPath: $.estimateAppropriations.*.auditDetails.createdBy
-         dbType: LONG
        
        - jsonPath: $.estimateAppropriations.*.auditDetails.createdTime
+         dbType: LONG
 
        - jsonPath: $.estimateAppropriations.*.auditDetails.lastModifiedBy
-         dbType: LONG
        
        - jsonPath: $.estimateAppropriations.*.auditDetails.lastModifiedTime
+         dbType: LONG
 
  - version: 1.0
    name: Works Estimate Appropriation Update
@@ -128,13 +129,51 @@ serviceMaps:
        - jsonPath: $.estimateAppropriations.*.objectNumber
 
        - jsonPath: $.estimateAppropriations.*.auditDetails.lastModifiedBy
-         dbType: LONG
        
        - jsonPath: $.estimateAppropriations.*.auditDetails.lastModifiedTime
+         dbType: LONG
 
        - jsonPath: $.estimateAppropriations.*.id
        
        - jsonPath: $.estimateAppropriations.*.tenantId
+
+ - version: 1.0
+   name: Offline Status
+   description: Persists Estimate Appropriation in egw_estimate_appropriation table
+   fromTopic: works-offlinestatus-create-validated
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO egw_offlinestatus(
+            id, objecttype, objectnumber, remarks, statusdate, status, createdby, 
+            lastmodifiedby, createdtime, lastmodifiedtime, tenantid)
+    VALUES (?, ?, ?, ?, ?, ?, ?, 
+            ?, ?, ?, ?);
+      basePath: $.offlineStatuses.*
+      jsonMaps:
+         
+       - jsonPath: $.offlineStatuses.*.id
+       
+       - jsonPath: $.offlineStatuses.*.objectType
+         
+       - jsonPath: $.offlineStatuses.*.objectNumber
+       
+       - jsonPath: $.offlineStatuses.*.remarks
+
+       - jsonPath: $.offlineStatuses.*.statusDate
+         dbType: LONG
+         
+       - jsonPath: $.offlineStatuses.*.status
+       
+       - jsonPath: $.offlineStatuses.*.auditDetails.createdBy
+       
+       - jsonPath: $.offlineStatuses.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.offlineStatuses.*.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.offlineStatuses.*.auditDetails.lastModifiedTime
+         dbType: LONG
+       - jsonPath: $.offlineStatuses.*.tenantId
        
        
  

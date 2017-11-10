@@ -169,9 +169,9 @@ paths:
               indent purpose of the Indent
             enum:
               - Consumption
-              - RepairsAndMaintenance
+              - Repairs and Maintenance
               - Capital
-              - MaterialTransferNote
+              - Material Transfer Note
           - name: indentStatus
             type: string
             in: query
@@ -1830,10 +1830,11 @@ paths:
             description: |
               type of the information about the material we are getting from the supplier
             enum:
-              - DGSC_RATECONTRACT
-              - ULB_RATE_CONTRACT
-              - ONE_TIME_TENDER
-              - QUOTATION
+              - DGSC Rate Contract
+              - ULB Rate Contract
+              - One Time Tender
+              - Quotation
+              
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
@@ -1894,6 +1895,13 @@ paths:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
 definitions:
+    RateTypes:
+      type: string
+      enum: 
+        - DGSC Rate Contract
+        - ULB Rate Contract
+        - One Time Tender
+        - Quotation
     Indent:
       type: object
       description: | 
@@ -1933,7 +1941,7 @@ definitions:
         indentType:
           type: string
           enum:
-            - IndentNote
+            - Indent
             - TransferIndent
           description: |
             There are 2 types of indent namely Indent Note and Transfer Indent
@@ -1942,9 +1950,9 @@ definitions:
           format: singleValueList
           enum:
             - Consumption
-            - RepairsAndMaintenance
+            - Repairs and Maintenance
             - Capital
-            - MaterialTransferNote
+            - Material Transfer Note
           description: |
             Consumption, RepairsAndMaintenance, Capital - applicable for Indent Note.
             MaterialTransferNote - applicable for Transfer Indent.
@@ -2215,12 +2223,7 @@ definitions:
           description: |
             rate type of the PurchaseOrder
         rateType:
-          type: string
-          enum:
-            - DGSC Rate Contract
-            - ULB Rate Contract
-            - One Time Tender
-            - Quotation
+          $ref: "#/definitions/RateTypes"
           description: |
             rate type of the PurchaseOrder
         supplier:
@@ -4016,11 +4019,7 @@ definitions:
           type: string
           description: |
             type of the information about the material we are getting from the supplier
-          enum:
-            - DGSC Rate Contract
-            - ULB Rate Contract
-            - One Time Tender
-            - Quotation
+          $ref: "#/definitions/RateTypes"
         rateContractNumber:
           type: string
           description: |

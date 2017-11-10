@@ -34,5 +34,11 @@ public class PropertiesManager {
     
     @Value("${appropriationNumber.prefix}")
     private String appropriationNumberPrefix;
+    
+    @Value("${egov.services.works.service.offlinestatus.create.validated}")
+    private String worksServiceOfflineStatusCreateValidatedTopic;
+
+    @Value("${egov.services.works.service.offlinestatus.update.validated}")
+    private String worksServiceOfflineStatusUpdateValidatedTopic;
 
 }

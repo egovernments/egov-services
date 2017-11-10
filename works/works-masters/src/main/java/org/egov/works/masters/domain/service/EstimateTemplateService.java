@@ -68,6 +68,13 @@ public class EstimateTemplateService {
 
         estimateTemplateValidator.validate(estimateTemplateRequest);
 
+        for (final EstimateTemplate estimateTemplate : estimateTemplateRequest.getEstimateTemplates()) {
+            estimateTemplate.setAuditDetails(masterUtils.getAuditDetails(estimateTemplateRequest.getRequestInfo(), true));
+            for (final EstimateTemplateActivities estimateTemplateActivities : estimateTemplate.getEstimateTemplateActivities()) {
+                estimateTemplateActivities.setAuditDetails(masterUtils.getAuditDetails(estimateTemplateRequest.getRequestInfo(), true));
+            }
+        }
+
         kafkaTemplate.send(propertiesManager.getWorksMasterEstimateTemplateUpdateValidatedTopic(), estimateTemplateRequest);
 
         response.setEstimateTemplates(estimateTemplateRequest.getEstimateTemplates());

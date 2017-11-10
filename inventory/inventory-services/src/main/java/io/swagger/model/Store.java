@@ -164,7 +164,7 @@ public class Store {
     @ApiModelProperty(required = true, value = "code of the Store ")
     @NotNull
 
-    @Pattern(regexp = "^[a-zA-Z0-9]+$")
+    @Pattern(regexp = "^[a-zA-Z0-9]*$")
     @Size(min = 5, max = 50)
     public String getCode() {
         return code;
@@ -187,7 +187,7 @@ public class Store {
     @ApiModelProperty(required = true, value = "name of the Store ")
     @NotNull
 
-    @Pattern(regexp = "^[a-zA-Z ]+$")
+    @Pattern(regexp = "^[a-zA-Z ]*$")
     @Size(min = 5, max = 50)
     public String getName() {
         return name;
@@ -210,7 +210,7 @@ public class Store {
     @ApiModelProperty(required = true, value = "description of the Store ")
     @NotNull
 
-    @Pattern(regexp = "^[a-zA-Z0-9 ]+$")
+    @Pattern(regexp = "^[a-zA-Z0-9 ]*$")
     @Size(max = 1000)
     public String getDescription() {
         return description;
@@ -278,7 +278,7 @@ public class Store {
     @ApiModelProperty(required = true, value = "billing address of the Store ")
     @NotNull
 
-    @Pattern(regexp = "^[a-zA-Z0-9 ]+$")
+    @Pattern(regexp = "^[a-zA-Z0-9 ]*$")
     @Size(max = 1000)
     public String getBillingAddress() {
         return billingAddress;
@@ -301,7 +301,7 @@ public class Store {
     @ApiModelProperty(required = true, value = "delivery address of the Store ")
     @NotNull
 
-    @Pattern(regexp = "^[a-zA-Z0-9 ]+$")
+    @Pattern(regexp = "^[a-zA-Z0-9 ]*$")
     @Size(max = 1000)
     public String getDeliveryAddress() {
         return deliveryAddress;
@@ -366,7 +366,7 @@ public class Store {
      **/
     @ApiModelProperty(value = "email of the Store ")
 
-    @Pattern(regexp = "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$")
+    @Pattern(regexp = "^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$")
     @Size(max = 100)
     public String getEmail() {
         return email;
@@ -387,7 +387,7 @@ public class Store {
      * @return storeInCharge
      **/
     @ApiModelProperty(value = "")
-
+    @NotNull
     @Valid
 
     public Employee getStoreInCharge() {
@@ -543,3 +543,4 @@ public class Store {
         return o.toString().replace("\n", "\n    ");
     }
 }
+

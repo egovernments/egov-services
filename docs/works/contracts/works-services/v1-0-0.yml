@@ -426,7 +426,7 @@ definitions:
   OfflineStatusRequest:
     description: Contract class to send response. Array of offlineStatuses items are used in case of search results, also multiple  offlineStatuses item is used for create and update
     properties:
-      requestInfo:
+      RequestInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       offlineStatuses:
         description: Used for create and update only
@@ -439,7 +439,7 @@ definitions:
   OfflineStatusResponse:
     description: Contract class to send response. Array of offlineStatuses items are used in case of search results, also multiple  offlineStatuses item is used for create and update
     properties:
-      responseInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       offlineStatuses:
         description: Used for search result and create only
@@ -471,7 +471,7 @@ definitions:
         format: int64
         description: Epoch time of Offline Status Date
         x-displayformat: 'dd/MM/yyyy'
-      objectId:
+      objectNumber:
         type: string
         description: Unique Identifier for the specified obect type.
       remarks:
@@ -485,12 +485,12 @@ definitions:
       - objectType
       - status
       - statusDate
-      - objectId
+      - objectNumber
     
   DocumentDetailRequest:
     description: Contract class to send response. Array of Document Detail items are used in case of search results, also multiple  Document Detail item is used for create and update
     properties:
-      requestInfo:
+      RequestInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       documentDetails:
         description: Used for create and update only
@@ -503,7 +503,7 @@ definitions:
   DocumentDetailResponse:
     description: Contract class to send response. Array of Document Detail items are used in case of search results, also multiple  Document Detail item is used for create and update
     properties:
-      responseInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       documentDetails:
         description: Used for search result and create only
@@ -550,7 +550,7 @@ definitions:
   EstimateAppropriationRequest:
       description: Contract class to send response. Array of Estimate Appropriation items are used in case of search results, also multiple  Estimate Appropriation item is used for create and update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         estimateAppropriations:
           description: Used for create and update only
@@ -563,7 +563,7 @@ definitions:
   EstimateAppropriationResponse:
       description: Contract class to send response. Array of Estimate Appropriation items are used in case of search results, also multiple  Estimate Appropriation item is used for create and update
       properties:
-        responseInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         estimateAppropriations:
           description: Used for search result and create only
@@ -579,3 +579,4 @@ tags:
     description: APIs required for Estimate Appropriation.
   - name: Document Detail
     description: APIs required for Document Detail
+

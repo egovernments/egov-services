@@ -1,0 +1,6 @@
+Dear {{Advocate Name}},
+
+	Payment against Demand {{Demand No}} is successful.
+	
+Sincerely,
+{{ULB Name}}

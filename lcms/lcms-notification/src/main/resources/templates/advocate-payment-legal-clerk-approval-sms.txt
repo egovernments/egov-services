@@ -1,0 +1,1 @@
+Approval Letter {{Letter No}} against the Demand {{Demand No}} is approved successfully.

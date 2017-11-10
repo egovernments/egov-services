@@ -1,0 +1,1 @@
+Opinion {{Opinion No}} is received successfully.

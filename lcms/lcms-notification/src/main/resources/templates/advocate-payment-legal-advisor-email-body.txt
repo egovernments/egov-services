@@ -1,0 +1,6 @@
+Dear {{Legal Advisor}},
+
+Approval Letter {{Letter No}} against the Demand {{Demand No}} is generated and received for approval.
+
+Sincerely,
+{{ULB Name}}

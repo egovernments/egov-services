@@ -1,0 +1,6 @@
+Dear {{Advocate}},
+
+	Vakalatnama dated {{Dated}} is received.
+	
+Sincerely,
+{{ULB Name}}

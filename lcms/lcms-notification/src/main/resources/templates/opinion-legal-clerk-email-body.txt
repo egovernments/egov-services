@@ -1,0 +1,6 @@
+Dear {{Legal clerk}},
+
+	Opinion request from {{Department Name}} is received {{Opinion No}} dated {{Dated}}.
+	
+Sincerely,
+{{ULB Name}}

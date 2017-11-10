@@ -1,0 +1,6 @@
+Dear {{Concerned Department}},
+
+	Case Details dated {{Case details date}} is received.
+	
+Sincerely,
+{{ULB Name}}

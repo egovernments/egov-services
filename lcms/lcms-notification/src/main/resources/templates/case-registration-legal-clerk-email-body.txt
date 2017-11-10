@@ -1,0 +1,6 @@
+Dear {{Legal Clerk}},
+	
+	Case Registration is successfully completed. Case Registration Reference No. is {{caseRegNo}}.
+
+Sincerely,
+{{ULB Name}}

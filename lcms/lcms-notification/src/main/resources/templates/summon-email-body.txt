@@ -1,0 +1,6 @@
+Dear {{Assigning Authority}},
+
+	Summon/Warrant  is received vid Summon/Warrant Reference No. {{Reference No}} Dated {{Dated}} for assigning Advocate
+	
+Sincerely,
+{{ULB Name}}

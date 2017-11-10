@@ -561,7 +561,7 @@ serviceMaps:
        
        - jsonPath: $.AuditDetails.lastModifiedDate
        
-       - jsonPath: $.reasonForFailure
+       - jsonPath: $.DepreciationDetail.*reasonForFailure
        
        
  - version: 1.0

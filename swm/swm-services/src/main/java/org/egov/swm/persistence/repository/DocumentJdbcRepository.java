@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class DocumentJdbcRepository {
+public class DocumentJdbcRepository extends JdbcRepository {
+
+	public static final String TABLE_NAME = "egswm_document";
 
 	@Autowired
 	public JdbcTemplate jdbcTemplate;
@@ -22,14 +24,13 @@ public class DocumentJdbcRepository {
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Transactional
-	public void delete(String refCode) {
-		String delQuery = "delete from  egswm_document where refCode = '" + refCode + "'";
-		jdbcTemplate.execute(delQuery);
+	public void delete(String tenantId, String refCode) {
+		delete(TABLE_NAME, tenantId, "refCode", refCode);
 	}
 
 	public List<Document> search(Document searchRequest) {
 
-		String searchQuery = "select * from egswm_document :condition ";
+		String searchQuery = "select * from " + TABLE_NAME + " :condition ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();

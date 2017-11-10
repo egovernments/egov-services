@@ -16,22 +16,17 @@ import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.domain.repository.SupplierRepository;
 import org.egov.swm.domain.repository.VendorRepository;
-import org.egov.swm.web.contract.IdGenerationResponse;
 import org.egov.swm.web.repository.BoundaryRepository;
 import org.egov.swm.web.repository.IdgenRepository;
 import org.egov.swm.web.repository.MdmsRepository;
 import org.egov.swm.web.requests.VendorRequest;
 import org.egov.tracer.model.CustomException;
-import org.egov.tracer.model.Error;
-import org.egov.tracer.model.ErrorRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import net.minidev.json.JSONArray;
 
@@ -67,12 +62,12 @@ public class VendorService {
 
 		Long userId = null;
 
-		for (Vendor v : vendorRequest.getVendors()) {
+		if (vendorRequest.getRequestInfo() != null && vendorRequest.getRequestInfo().getUserInfo() != null
+				&& null != vendorRequest.getRequestInfo().getUserInfo().getId()) {
+			userId = vendorRequest.getRequestInfo().getUserInfo().getId();
+		}
 
-			if (vendorRequest.getRequestInfo() != null && vendorRequest.getRequestInfo().getUserInfo() != null
-					&& null != vendorRequest.getRequestInfo().getUserInfo().getId()) {
-				userId = vendorRequest.getRequestInfo().getUserInfo().getId();
-			}
+		for (Vendor v : vendorRequest.getVendors()) {
 
 			setAuditDetails(v, userId);
 
@@ -100,12 +95,12 @@ public class VendorService {
 
 		Long userId = null;
 
-		for (Vendor v : vendorRequest.getVendors()) {
+		if (vendorRequest.getRequestInfo() != null && vendorRequest.getRequestInfo().getUserInfo() != null
+				&& null != vendorRequest.getRequestInfo().getUserInfo().getId()) {
+			userId = vendorRequest.getRequestInfo().getUserInfo().getId();
+		}
 
-			if (vendorRequest.getRequestInfo() != null && vendorRequest.getRequestInfo().getUserInfo() != null
-					&& null != vendorRequest.getRequestInfo().getUserInfo().getId()) {
-				userId = vendorRequest.getRequestInfo().getUserInfo().getId();
-			}
+		for (Vendor v : vendorRequest.getVendors()) {
 
 			setAuditDetails(v, userId);
 
@@ -274,46 +269,12 @@ public class VendorService {
 
 	private String generateVendorNumber(String tenantId, RequestInfo requestInfo) {
 
-		String vendorNumber = null;
-		String response = null;
-		response = idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForVendorNumPath);
-		Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-		ErrorRes errorResponse = gson.fromJson(response, ErrorRes.class);
-		IdGenerationResponse idResponse = gson.fromJson(response, IdGenerationResponse.class);
-
-		if (errorResponse.getErrors() != null && errorResponse.getErrors().size() > 0) {
-			Error error = errorResponse.getErrors().get(0);
-			throw new CustomException(error.getMessage(), error.getDescription());
-		} else if (idResponse.getResponseInfo() != null) {
-			if (idResponse.getResponseInfo().getStatus().toString().equalsIgnoreCase("SUCCESSFUL")) {
-				if (idResponse.getIdResponses() != null && idResponse.getIdResponses().size() > 0)
-					vendorNumber = idResponse.getIdResponses().get(0).getId();
-			}
-		}
-
-		return vendorNumber;
+		return idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForVendorNumPath);
 	}
 
 	private String generateSupplierNumber(String tenantId, RequestInfo requestInfo) {
 
-		String supplierNumber = null;
-		String response = null;
-		response = idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForSupplierNumPath);
-		Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-		ErrorRes errorResponse = gson.fromJson(response, ErrorRes.class);
-		IdGenerationResponse idResponse = gson.fromJson(response, IdGenerationResponse.class);
-
-		if (errorResponse.getErrors() != null && errorResponse.getErrors().size() > 0) {
-			Error error = errorResponse.getErrors().get(0);
-			throw new CustomException(error.getMessage(), error.getDescription());
-		} else if (idResponse.getResponseInfo() != null) {
-			if (idResponse.getResponseInfo().getStatus().toString().equalsIgnoreCase("SUCCESSFUL")) {
-				if (idResponse.getIdResponses() != null && idResponse.getIdResponses().size() > 0)
-					supplierNumber = idResponse.getIdResponses().get(0).getId();
-			}
-		}
-
-		return supplierNumber;
+		return idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForSupplierNumPath);
 	}
 
 	public Pagination<Vendor> search(VendorSearch vendorSearch) {

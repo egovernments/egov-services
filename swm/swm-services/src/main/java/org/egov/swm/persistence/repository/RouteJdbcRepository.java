@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class RouteJdbcRepository extends JdbcRepository {
 
+	public static final String TABLE_NAME = "egswm_route";
+
 	@Autowired
 	public RouteCollectionPointMapJdbcRepository routeCollectionPointMapJdbcRepository;
 
@@ -37,12 +39,12 @@ public class RouteJdbcRepository extends JdbcRepository {
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {
 
-		return uniqueCheck("egswm_route", tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
+		return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
 	}
 
 	public Pagination<Route> search(RouteSearch searchRequest) {
 
-		String searchQuery = "select * from egswm_route :condition  :orderby ";
+		String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
@@ -64,7 +66,7 @@ public class RouteJdbcRepository extends JdbcRepository {
 			params.append("code in (:codes)");
 			paramValues.put("codes", new ArrayList<String>(Arrays.asList(searchRequest.getCodes().split(","))));
 		}
-		
+
 		if (searchRequest.getTenantId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");

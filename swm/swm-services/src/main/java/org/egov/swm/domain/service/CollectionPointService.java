@@ -51,13 +51,13 @@ public class CollectionPointService {
 
 		Long userId = null;
 
-		for (CollectionPoint cp : collectionPointRequest.getCollectionPoints()) {
+		if (collectionPointRequest.getRequestInfo() != null
+				&& collectionPointRequest.getRequestInfo().getUserInfo() != null
+				&& null != collectionPointRequest.getRequestInfo().getUserInfo().getId()) {
+			userId = collectionPointRequest.getRequestInfo().getUserInfo().getId();
+		}
 
-			if (collectionPointRequest.getRequestInfo() != null
-					&& collectionPointRequest.getRequestInfo().getUserInfo() != null
-					&& null != collectionPointRequest.getRequestInfo().getUserInfo().getId()) {
-				userId = collectionPointRequest.getRequestInfo().getUserInfo().getId();
-			}
+		for (CollectionPoint cp : collectionPointRequest.getCollectionPoints()) {
 
 			setAuditDetails(cp, userId);
 
@@ -78,13 +78,13 @@ public class CollectionPointService {
 
 		Long userId = null;
 
-		for (CollectionPoint cp : collectionPointRequest.getCollectionPoints()) {
+		if (collectionPointRequest.getRequestInfo() != null
+				&& collectionPointRequest.getRequestInfo().getUserInfo() != null
+				&& null != collectionPointRequest.getRequestInfo().getUserInfo().getId()) {
+			userId = collectionPointRequest.getRequestInfo().getUserInfo().getId();
+		}
 
-			if (collectionPointRequest.getRequestInfo() != null
-					&& collectionPointRequest.getRequestInfo().getUserInfo() != null
-					&& null != collectionPointRequest.getRequestInfo().getUserInfo().getId()) {
-				userId = collectionPointRequest.getRequestInfo().getUserInfo().getId();
-			}
+		for (CollectionPoint cp : collectionPointRequest.getCollectionPoints()) {
 
 			setAuditDetails(cp, userId);
 

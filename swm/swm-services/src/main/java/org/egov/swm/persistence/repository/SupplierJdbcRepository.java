@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class SupplierJdbcRepository extends JdbcRepository {
 
+	public static final String TABLE_NAME = "egswm_supplier";
+
 	@Autowired
 	public JdbcTemplate jdbcTemplate;
 
@@ -23,12 +25,12 @@ public class SupplierJdbcRepository extends JdbcRepository {
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {
 
-		return uniqueCheck("egswm_supplier", tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
+		return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
 	}
 
 	public List<Supplier> search(Supplier searchRequest) {
 
-		String searchQuery = "select * from egswm_supplier :condition ";
+		String searchQuery = "select * from " + TABLE_NAME + " :condition ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();

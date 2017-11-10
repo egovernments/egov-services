@@ -1,5 +1,10 @@
 package org.egov.swm.persistence.repository;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.RefillingPumpStation;
 import org.egov.swm.domain.model.RefillingPumpStationSearch;
@@ -7,11 +12,6 @@ import org.egov.swm.persistence.entity.RefillingPumpStationEntity;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Repository
 public class RefillingPumpStationJdbcRepository extends JdbcRepository {
@@ -27,7 +27,7 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
 		return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
 	}
 
-	public Pagination<RefillingPumpStation> search(RefillingPumpStationSearch refillingPumpStationSearch){
+	public Pagination<RefillingPumpStation> search(RefillingPumpStationSearch refillingPumpStationSearch) {
 
 		if (refillingPumpStationSearch.getSortBy() != null && !refillingPumpStationSearch.getSortBy().isEmpty()) {
 			validateSortByOrder(refillingPumpStationSearch.getSortBy());
@@ -37,45 +37,47 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
 		return buildSearchQuery(refillingPumpStationSearch);
 	}
 
-	private Pagination<RefillingPumpStation> buildSearchQuery(RefillingPumpStationSearch searchRequest){
+	private Pagination<RefillingPumpStation> buildSearchQuery(RefillingPumpStationSearch searchRequest) {
 
 		Map<String, Object> paramsMap = new HashMap<>();
 		StringBuilder query = new StringBuilder();
 
-		query.append("SELECT * FROM egswm_refillingpumpstation ");
+		query.append("SELECT * FROM ");
+		query.append(TABLE_NAME);
+		query.append(" ");
 
-		if(searchRequest.getTenantId() != null && !searchRequest.getTenantId().isEmpty()){
+		if (searchRequest.getTenantId() != null && !searchRequest.getTenantId().isEmpty()) {
 			addWhereClause(query, "tenantid", "tenantid");
 			paramsMap.put("tenantid", searchRequest.getTenantId());
 		}
 
-		if(searchRequest.getCode() != null && !searchRequest.getCode().isEmpty()){
+		if (searchRequest.getCode() != null && !searchRequest.getCode().isEmpty()) {
 			addWhereClauseWithAnd(query, "code", "code");
 			paramsMap.put("code", searchRequest.getCode());
 		}
 
-		if(searchRequest.getName() != null && !searchRequest.getName().isEmpty()){
-			addWhereClauseWithAnd(query,"name","name");
+		if (searchRequest.getName() != null && !searchRequest.getName().isEmpty()) {
+			addWhereClauseWithAnd(query, "name", "name");
 			paramsMap.put("name", searchRequest.getName());
 		}
 
-		if(searchRequest.getQuantity() != null){
-			addWhereClauseWithAnd(query,"quantity", "quantity");
+		if (searchRequest.getQuantity() != null) {
+			addWhereClauseWithAnd(query, "quantity", "quantity");
 			paramsMap.put("quantity", searchRequest.getQuantity());
 		}
 
-		if(searchRequest.getLocationCode() != null && !searchRequest.getLocationCode().isEmpty()){
-			addWhereClauseWithAnd(query,"location", "location");
+		if (searchRequest.getLocationCode() != null && !searchRequest.getLocationCode().isEmpty()) {
+			addWhereClauseWithAnd(query, "location", "location");
 			paramsMap.put("location", searchRequest.getLocationCode());
 		}
 
-		if(searchRequest.getTypeOfFuelCode() != null && !searchRequest.getTypeOfFuelCode().isEmpty()){
-			addWhereClauseWithAnd(query,"typeoffuel", "typeoffuel");
+		if (searchRequest.getTypeOfFuelCode() != null && !searchRequest.getTypeOfFuelCode().isEmpty()) {
+			addWhereClauseWithAnd(query, "typeoffuel", "typeoffuel");
 			paramsMap.put("typeoffuel", searchRequest.getTypeOfFuelCode());
 		}
 
-		if(searchRequest.getTypeOfPumpCode() != null && !searchRequest.getTypeOfPumpCode().isEmpty()){
-			addWhereClauseWithAnd(query,"typeofpump", "typeofpump");
+		if (searchRequest.getTypeOfPumpCode() != null && !searchRequest.getTypeOfPumpCode().isEmpty()) {
+			addWhereClauseWithAnd(query, "typeofpump", "typeofpump");
 			paramsMap.put("typeofpump", searchRequest.getTypeOfPumpCode());
 		}
 
@@ -93,14 +95,14 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
 
 		page = (Pagination<RefillingPumpStation>) getPagination(query.toString(), page, paramsMap);
 
-		query.append(" limit ").append(page.getPageSize()).append(" offset ").append(page.getOffset() * page.getPageSize());
+		query.append(" limit ").append(page.getPageSize()).append(" offset ")
+				.append(page.getOffset() * page.getPageSize());
 
 		List<RefillingPumpStationEntity> refillingPumpStationEntityList = namedParameterJdbcTemplate
 				.query(query.toString(), paramsMap, new BeanPropertyRowMapper(RefillingPumpStationEntity.class));
 
 		List<RefillingPumpStation> refillingPumpStationList = refillingPumpStationEntityList.stream()
-				.map(RefillingPumpStationEntity::toDomain)
-				.collect(Collectors.toList());
+				.map(RefillingPumpStationEntity::toDomain).collect(Collectors.toList());
 
 		page.setTotalResults(refillingPumpStationList.size());
 
@@ -109,11 +111,11 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
 		return page;
 	}
 
-	private StringBuilder addWhereClause(StringBuilder query, String fieldName, String paramName){
+	private StringBuilder addWhereClause(StringBuilder query, String fieldName, String paramName) {
 		return query.append(" WHERE ").append(fieldName).append("= :").append(paramName);
 	}
 
-	private StringBuilder addWhereClauseWithAnd(StringBuilder query, String fieldName, String paramName){
+	private StringBuilder addWhereClauseWithAnd(StringBuilder query, String fieldName, String paramName) {
 		return query.append(" AND ").append(fieldName).append("= :").append(paramName);
 	}
 }

@@ -12,19 +12,13 @@ import org.egov.swm.domain.model.VehicleSchedule;
 import org.egov.swm.domain.model.VehicleScheduleSearch;
 import org.egov.swm.domain.model.VehicleSearch;
 import org.egov.swm.domain.repository.VehicleScheduleRepository;
-import org.egov.swm.web.contract.IdGenerationResponse;
 import org.egov.swm.web.repository.IdgenRepository;
 import org.egov.swm.web.requests.VehicleScheduleRequest;
 import org.egov.tracer.model.CustomException;
-import org.egov.tracer.model.Error;
-import org.egov.tracer.model.ErrorRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 @Service
 @Transactional(readOnly = true)
@@ -51,14 +45,14 @@ public class VehicleScheduleService {
 		validate(vehicleScheduleRequest);
 
 		Long userId = null;
+		
+		if (vehicleScheduleRequest.getRequestInfo() != null
+				&& vehicleScheduleRequest.getRequestInfo().getUserInfo() != null
+				&& null != vehicleScheduleRequest.getRequestInfo().getUserInfo().getId()) {
+			userId = vehicleScheduleRequest.getRequestInfo().getUserInfo().getId();
+		}
 
 		for (VehicleSchedule v : vehicleScheduleRequest.getVehicleSchedules()) {
-
-			if (vehicleScheduleRequest.getRequestInfo() != null
-					&& vehicleScheduleRequest.getRequestInfo().getUserInfo() != null
-					&& null != vehicleScheduleRequest.getRequestInfo().getUserInfo().getId()) {
-				userId = vehicleScheduleRequest.getRequestInfo().getUserInfo().getId();
-			}
 
 			setAuditDetails(v, userId);
 
@@ -77,12 +71,6 @@ public class VehicleScheduleService {
 		Long userId = null;
 
 		for (VehicleSchedule v : vehicleScheduleRequest.getVehicleSchedules()) {
-
-			if (vehicleScheduleRequest.getRequestInfo() != null
-					&& vehicleScheduleRequest.getRequestInfo().getUserInfo() != null
-					&& null != vehicleScheduleRequest.getRequestInfo().getUserInfo().getId()) {
-				userId = vehicleScheduleRequest.getRequestInfo().getUserInfo().getId();
-			}
 
 			setAuditDetails(v, userId);
 		}
@@ -154,24 +142,7 @@ public class VehicleScheduleService {
 
 	private String generateTransactionNumber(String tenantId, RequestInfo requestInfo) {
 
-		String transactionNumber = null;
-		String response = null;
-		response = idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForVehicleScheduleTNRNumPath);
-		Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-		ErrorRes errorResponse = gson.fromJson(response, ErrorRes.class);
-		IdGenerationResponse idResponse = gson.fromJson(response, IdGenerationResponse.class);
-
-		if (errorResponse.getErrors() != null && errorResponse.getErrors().size() > 0) {
-			Error error = errorResponse.getErrors().get(0);
-			throw new CustomException(error.getMessage(), error.getDescription());
-		} else if (idResponse.getResponseInfo() != null) {
-			if (idResponse.getResponseInfo().getStatus().toString().equalsIgnoreCase("SUCCESSFUL")) {
-				if (idResponse.getIdResponses() != null && idResponse.getIdResponses().size() > 0)
-					transactionNumber = idResponse.getIdResponses().get(0).getId();
-			}
-		}
-
-		return transactionNumber;
+		return idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForVehicleScheduleTNRNumPath);
 	}
 
 	public Pagination<VehicleSchedule> search(VehicleScheduleSearch vehicleScheduleSearch) {

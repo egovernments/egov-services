@@ -19,21 +19,16 @@ import org.egov.swm.domain.model.VehicleSearch;
 import org.egov.swm.domain.repository.RefillingPumpStationRepository;
 import org.egov.swm.domain.repository.VehicleFuellingDetailsRepository;
 import org.egov.swm.domain.repository.VehicleRepository;
-import org.egov.swm.web.contract.IdGenerationResponse;
 import org.egov.swm.web.repository.IdgenRepository;
 import org.egov.swm.web.repository.MdmsRepository;
 import org.egov.swm.web.requests.VehicleFuellingDetailsRequest;
 import org.egov.tracer.model.CustomException;
-import org.egov.tracer.model.Error;
-import org.egov.tracer.model.ErrorRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import net.minidev.json.JSONArray;
 
@@ -66,18 +61,18 @@ public class VehicleFuellingDetailsService {
 
 		Long userId = null;
 
+		if (vehicleFuellingDetailsRequest.getRequestInfo() != null
+				&& vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo() != null
+				&& null != vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo().getId()) {
+			userId = vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo().getId();
+		}
+
 		for (VehicleFuellingDetails vfd : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
 
 			setAuditDetails(vfd, userId);
 
 			vfd.setTransactionNo(
 					generateTransactionNumber(vfd.getTenantId(), vehicleFuellingDetailsRequest.getRequestInfo()));
-
-			if (vehicleFuellingDetailsRequest.getRequestInfo() != null
-					&& vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo() != null
-					&& null != vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo().getId()) {
-				userId = vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo().getId();
-			}
 
 			prepareReceiptCopy(vfd);
 
@@ -90,23 +85,23 @@ public class VehicleFuellingDetailsService {
 	@Transactional
 	public VehicleFuellingDetailsRequest update(VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
 
-		validate(vehicleFuellingDetailsRequest);
-
 		Long userId = null;
 
-		for (VehicleFuellingDetails vfd : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
+		if (vehicleFuellingDetailsRequest.getRequestInfo() != null
+				&& vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo() != null
+				&& null != vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo().getId()) {
+			userId = vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo().getId();
+		}
 
-			if (vehicleFuellingDetailsRequest.getRequestInfo() != null
-					&& vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo() != null
-					&& null != vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo().getId()) {
-				userId = vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo().getId();
-			}
+		for (VehicleFuellingDetails vfd : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
 
 			setAuditDetails(vfd, userId);
 
 			prepareReceiptCopy(vfd);
 
 		}
+
+		validate(vehicleFuellingDetailsRequest);
 
 		return vehicleFuellingDetailsRepository.update(vehicleFuellingDetailsRequest);
 
@@ -189,8 +184,7 @@ public class VehicleFuellingDetailsService {
 				refillingPumpStationSearch.setTenantId(details.getTenantId());
 				refillingPumpStationSearch.setCode(details.getRefuellingStation().getCode());
 
-				refillingPumpStationList = refillingPumpStationRepository
-						.search(refillingPumpStationSearch);
+				refillingPumpStationList = refillingPumpStationRepository.search(refillingPumpStationSearch);
 
 				if (refillingPumpStationList == null && refillingPumpStationList.getPagedData() == null
 						&& refillingPumpStationList.getPagedData().isEmpty())
@@ -262,24 +256,7 @@ public class VehicleFuellingDetailsService {
 
 	private String generateTransactionNumber(String tenantId, RequestInfo requestInfo) {
 
-		String transactionNumber = null;
-		String response = null;
-		response = idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForTrnNumPath);
-		Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-		ErrorRes errorResponse = gson.fromJson(response, ErrorRes.class);
-		IdGenerationResponse idResponse = gson.fromJson(response, IdGenerationResponse.class);
-
-		if (errorResponse.getErrors() != null && errorResponse.getErrors().size() > 0) {
-			Error error = errorResponse.getErrors().get(0);
-			throw new CustomException(error.getMessage(), error.getDescription());
-		} else if (idResponse.getResponseInfo() != null) {
-			if (idResponse.getResponseInfo().getStatus().toString().equalsIgnoreCase("SUCCESSFUL")) {
-				if (idResponse.getIdResponses() != null && idResponse.getIdResponses().size() > 0)
-					transactionNumber = idResponse.getIdResponses().get(0).getId();
-			}
-		}
-
-		return transactionNumber;
+		return idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForTrnNumPath);
 	}
 
 }

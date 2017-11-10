@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class RouteCollectionPointMapJdbcRepository {
+public class RouteCollectionPointMapJdbcRepository extends JdbcRepository {
+
+	public static final String TABLE_NAME = "egswm_routecollectionpointmap";
 
 	@Autowired
 	public JdbcTemplate jdbcTemplate;
@@ -22,14 +24,13 @@ public class RouteCollectionPointMapJdbcRepository {
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Transactional
-	public void delete(String route) {
-		String delQuery = "delete from  egswm_routecollectionpointmap where route = '" + route + "'";
-		jdbcTemplate.execute(delQuery);
+	public void delete(String tenantId, String route) {
+		delete(TABLE_NAME, tenantId, "refCode", route);
 	}
 
 	public List<RouteCollectionPointMap> search(RouteCollectionPointMap searchRequest) {
 
-		String searchQuery = "select * from egswm_routecollectionpointmap :condition ";
+		String searchQuery = "select * from " + TABLE_NAME + " :condition ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();

@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class VehicleScheduleJdbcRepository extends JdbcRepository {
 
+	public static final String TABLE_NAME = "egswm_vehicleschedule";
+
 	@Autowired
 	public JdbcTemplate jdbcTemplate;
 
@@ -37,12 +39,12 @@ public class VehicleScheduleJdbcRepository extends JdbcRepository {
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {
 
-		return uniqueCheck("egswm_vehicleschedule", tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
+		return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
 	}
 
 	public Pagination<VehicleSchedule> search(VehicleScheduleSearch searchRequest) {
 
-		String searchQuery = "select * from egswm_vehicleschedule :condition  :orderby ";
+		String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();

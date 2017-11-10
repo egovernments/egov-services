@@ -47,12 +47,13 @@ public class RouteService {
 
 		Long userId = null;
 
+		if (routeRequest.getRequestInfo() != null && routeRequest.getRequestInfo().getUserInfo() != null
+				&& null != routeRequest.getRequestInfo().getUserInfo().getId()) {
+			userId = routeRequest.getRequestInfo().getUserInfo().getId();
+		}
+		
 		for (Route r : routeRequest.getRoutes()) {
 
-			if (routeRequest.getRequestInfo() != null && routeRequest.getRequestInfo().getUserInfo() != null
-					&& null != routeRequest.getRequestInfo().getUserInfo().getId()) {
-				userId = routeRequest.getRequestInfo().getUserInfo().getId();
-			}
 			setAuditDetails(r, userId);
 			r.setCode(UUID.randomUUID().toString().replace("-", ""));
 
@@ -66,12 +67,12 @@ public class RouteService {
 
 		Long userId = null;
 
+		if (routeRequest.getRequestInfo() != null && routeRequest.getRequestInfo().getUserInfo() != null
+				&& null != routeRequest.getRequestInfo().getUserInfo().getId()) {
+			userId = routeRequest.getRequestInfo().getUserInfo().getId();
+		}
+		
 		for (Route r : routeRequest.getRoutes()) {
-
-			if (routeRequest.getRequestInfo() != null && routeRequest.getRequestInfo().getUserInfo() != null
-					&& null != routeRequest.getRequestInfo().getUserInfo().getId()) {
-				userId = routeRequest.getRequestInfo().getUserInfo().getId();
-			}
 
 			setAuditDetails(r, userId);
 		}

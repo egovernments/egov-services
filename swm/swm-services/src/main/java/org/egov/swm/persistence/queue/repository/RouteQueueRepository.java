@@ -40,7 +40,7 @@ public class RouteQueueRepository {
 
 		for (Route r : routeRequest.getRoutes()) {
 
-			routeCollectionPointMapJdbcRepository.delete(r.getCode());
+			routeCollectionPointMapJdbcRepository.delete(r.getTenantId(), r.getCode());
 
 		}
 

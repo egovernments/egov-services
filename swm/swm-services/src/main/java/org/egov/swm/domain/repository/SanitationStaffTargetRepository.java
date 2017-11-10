@@ -46,7 +46,7 @@ public class SanitationStaffTargetRepository {
 
 		for (SanitationStaffTarget sst : sanitationStaffTargetRequest.getSanitationStaffTargets()) {
 
-			sanitationStaffTargetMapJdbcRepository.delete(sst.getTargetNo());
+			sanitationStaffTargetMapJdbcRepository.delete(sst.getTenantId(), sst.getTargetNo());
 
 		}
 

@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 
+	public static final String TABLE_NAME = "egswm_sanitationstafftarget";
+
 	@Autowired
 	public JdbcTemplate jdbcTemplate;
 
@@ -36,7 +38,7 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 
 	public Pagination<SanitationStaffTarget> search(SanitationStaffTargetSearch searchRequest) {
 
-		String searchQuery = "select * from egswm_sanitationstafftarget :condition  :orderby ";
+		String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();

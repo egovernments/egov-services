@@ -10,7 +10,6 @@ import org.egov.swm.domain.model.VehicleMaintenance;
 import org.egov.swm.domain.model.VehicleMaintenanceSearch;
 import org.egov.swm.domain.model.VehicleSearch;
 import org.egov.swm.domain.repository.VehicleMaintenanceRepository;
-import org.egov.swm.domain.repository.VehicleRepository;
 import org.egov.swm.web.requests.VehicleMaintenanceRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ public class VehicleMaintenanceService {
 	private VehicleMaintenanceRepository vehicleMaintenanceRepository;
 
 	@Autowired
-	private VehicleRepository vehicleRepository;
+	private VehicleService vehicleService;
 
 	@Transactional
 	public VehicleMaintenanceRequest create(VehicleMaintenanceRequest vehicleMaintenanceRequest) {
@@ -34,13 +33,13 @@ public class VehicleMaintenanceService {
 
 		Long userId = null;
 
-		for (VehicleMaintenance vm : vehicleMaintenanceRequest.getVehicleMaintenances()) {
+		if (vehicleMaintenanceRequest.getRequestInfo() != null
+				&& vehicleMaintenanceRequest.getRequestInfo().getUserInfo() != null
+				&& null != vehicleMaintenanceRequest.getRequestInfo().getUserInfo().getId()) {
+			userId = vehicleMaintenanceRequest.getRequestInfo().getUserInfo().getId();
+		}
 
-			if (vehicleMaintenanceRequest.getRequestInfo() != null
-					&& vehicleMaintenanceRequest.getRequestInfo().getUserInfo() != null
-					&& null != vehicleMaintenanceRequest.getRequestInfo().getUserInfo().getId()) {
-				userId = vehicleMaintenanceRequest.getRequestInfo().getUserInfo().getId();
-			}
+		for (VehicleMaintenance vm : vehicleMaintenanceRequest.getVehicleMaintenances()) {
 
 			setAuditDetails(vm, userId);
 
@@ -58,14 +57,14 @@ public class VehicleMaintenanceService {
 		validate(vehicleMaintenanceRequest);
 
 		Long userId = null;
+		
+		if (vehicleMaintenanceRequest.getRequestInfo() != null
+				&& vehicleMaintenanceRequest.getRequestInfo().getUserInfo() != null
+				&& null != vehicleMaintenanceRequest.getRequestInfo().getUserInfo().getId()) {
+			userId = vehicleMaintenanceRequest.getRequestInfo().getUserInfo().getId();
+		}
 
 		for (VehicleMaintenance vm : vehicleMaintenanceRequest.getVehicleMaintenances()) {
-
-			if (vehicleMaintenanceRequest.getRequestInfo() != null
-					&& vehicleMaintenanceRequest.getRequestInfo().getUserInfo() != null
-					&& null != vehicleMaintenanceRequest.getRequestInfo().getUserInfo().getId()) {
-				userId = vehicleMaintenanceRequest.getRequestInfo().getUserInfo().getId();
-			}
 
 			setAuditDetails(vm, userId);
 
@@ -77,6 +76,9 @@ public class VehicleMaintenanceService {
 
 	private void validate(VehicleMaintenanceRequest vehicleMaintenanceRequest) {
 
+		VehicleSearch vehicleSearch;
+		Pagination<Vehicle> vehicleList;
+
 		for (VehicleMaintenance vehicleMaintenance : vehicleMaintenanceRequest.getVehicleMaintenances()) {
 
 			if (vehicleMaintenance.getVehicle() != null && (vehicleMaintenance.getVehicle().getRegNumber() == null
@@ -87,10 +89,10 @@ public class VehicleMaintenanceService {
 			// Validate Vehicle
 			if (vehicleMaintenance.getVehicle() != null && vehicleMaintenance.getVehicle().getRegNumber() != null) {
 
-				VehicleSearch vehicleSearch = new VehicleSearch();
+				vehicleSearch = new VehicleSearch();
 				vehicleSearch.setTenantId(vehicleMaintenance.getTenantId());
 				vehicleSearch.setRegNumber(vehicleMaintenance.getVehicle().getRegNumber());
-				Pagination<Vehicle> vehicleList = vehicleRepository.search(vehicleSearch);
+				vehicleList = vehicleService.search(vehicleSearch);
 
 				if (vehicleList == null || vehicleList.getPagedData() == null || vehicleList.getPagedData().isEmpty())
 					throw new CustomException("Vehicle",

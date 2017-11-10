@@ -15,23 +15,18 @@ import org.egov.swm.domain.model.SwmProcess;
 import org.egov.swm.domain.repository.SanitationStaffTargetRepository;
 import org.egov.swm.persistence.entity.DumpingGroundEntity;
 import org.egov.swm.web.contract.EmployeeResponse;
-import org.egov.swm.web.contract.IdGenerationResponse;
 import org.egov.swm.web.repository.BoundaryRepository;
 import org.egov.swm.web.repository.EmployeeRepository;
 import org.egov.swm.web.repository.IdgenRepository;
 import org.egov.swm.web.repository.MdmsRepository;
 import org.egov.swm.web.requests.SanitationStaffTargetRequest;
 import org.egov.tracer.model.CustomException;
-import org.egov.tracer.model.Error;
-import org.egov.tracer.model.ErrorRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import net.minidev.json.JSONArray;
 
@@ -67,13 +62,13 @@ public class SanitationStaffTargetService {
 
 		Long userId = null;
 
+		if (sanitationStaffTargetRequest.getRequestInfo() != null
+				&& sanitationStaffTargetRequest.getRequestInfo().getUserInfo() != null
+				&& null != sanitationStaffTargetRequest.getRequestInfo().getUserInfo().getId()) {
+			userId = sanitationStaffTargetRequest.getRequestInfo().getUserInfo().getId();
+		}
+		
 		for (SanitationStaffTarget v : sanitationStaffTargetRequest.getSanitationStaffTargets()) {
-
-			if (sanitationStaffTargetRequest.getRequestInfo() != null
-					&& sanitationStaffTargetRequest.getRequestInfo().getUserInfo() != null
-					&& null != sanitationStaffTargetRequest.getRequestInfo().getUserInfo().getId()) {
-				userId = sanitationStaffTargetRequest.getRequestInfo().getUserInfo().getId();
-			}
 
 			setAuditDetails(v, userId);
 
@@ -92,13 +87,13 @@ public class SanitationStaffTargetService {
 
 		Long userId = null;
 
+		if (sanitationStaffTargetRequest.getRequestInfo() != null
+				&& sanitationStaffTargetRequest.getRequestInfo().getUserInfo() != null
+				&& null != sanitationStaffTargetRequest.getRequestInfo().getUserInfo().getId()) {
+			userId = sanitationStaffTargetRequest.getRequestInfo().getUserInfo().getId();
+		}
+		
 		for (SanitationStaffTarget v : sanitationStaffTargetRequest.getSanitationStaffTargets()) {
-
-			if (sanitationStaffTargetRequest.getRequestInfo() != null
-					&& sanitationStaffTargetRequest.getRequestInfo().getUserInfo() != null
-					&& null != sanitationStaffTargetRequest.getRequestInfo().getUserInfo().getId()) {
-				userId = sanitationStaffTargetRequest.getRequestInfo().getUserInfo().getId();
-			}
 
 			setAuditDetails(v, userId);
 
@@ -233,24 +228,7 @@ public class SanitationStaffTargetService {
 
 	private String generateTargetNumber(String tenantId, RequestInfo requestInfo) {
 
-		String targetNumber = null;
-		String response = null;
-		response = idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForTargetNumPath);
-		Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-		ErrorRes errorResponse = gson.fromJson(response, ErrorRes.class);
-		IdGenerationResponse idResponse = gson.fromJson(response, IdGenerationResponse.class);
-
-		if (errorResponse.getErrors() != null && errorResponse.getErrors().size() > 0) {
-			Error error = errorResponse.getErrors().get(0);
-			throw new CustomException(error.getMessage(), error.getDescription());
-		} else if (idResponse.getResponseInfo() != null) {
-			if (idResponse.getResponseInfo().getStatus().toString().equalsIgnoreCase("SUCCESSFUL")) {
-				if (idResponse.getIdResponses() != null && idResponse.getIdResponses().size() > 0)
-					targetNumber = idResponse.getIdResponses().get(0).getId();
-			}
-		}
-
-		return targetNumber;
+		return idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForTargetNumPath);
 	}
 
 	public Pagination<SanitationStaffTarget> search(SanitationStaffTargetSearch sanitationStaffTargetSearch) {

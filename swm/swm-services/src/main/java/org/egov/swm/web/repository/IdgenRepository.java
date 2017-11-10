@@ -5,14 +5,20 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.web.contract.IdGenerationRequest;
+import org.egov.swm.web.contract.IdGenerationResponse;
 import org.egov.swm.web.contract.IdRequest;
 import org.egov.tracer.http.LogAwareRestTemplate;
 import org.egov.tracer.model.CustomException;
+import org.egov.tracer.model.Error;
+import org.egov.tracer.model.ErrorRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 @Repository
 public class IdgenRepository {
@@ -44,6 +50,7 @@ public class IdgenRepository {
 		idGeneration.setIdRequests(idRequests);
 		idGeneration.setRequestInfo(requestInfo);
 		String response = null;
+
 		try {
 			logger.info("UpicNoGeneration calling id generation service url :" + idGenerationUrl.toString()
 					+ " request is " + requestInfo);
@@ -51,7 +58,22 @@ public class IdgenRepository {
 		} catch (Exception ex) {
 			throw new CustomException("InValidUrl", idGenerationUrl.toString());
 		}
-		return response;
+
+		String responseNumber = null;
+		Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+		ErrorRes errorResponse = gson.fromJson(response, ErrorRes.class);
+		IdGenerationResponse idResponse = gson.fromJson(response, IdGenerationResponse.class);
+
+		if (errorResponse.getErrors() != null && errorResponse.getErrors().size() > 0) {
+			Error error = errorResponse.getErrors().get(0);
+			throw new CustomException(error.getMessage(), error.getDescription());
+		} else if (idResponse.getResponseInfo() != null) {
+			if (idResponse.getResponseInfo().getStatus().toString().equalsIgnoreCase("SUCCESSFUL")) {
+				if (idResponse.getIdResponses() != null && idResponse.getIdResponses().size() > 0)
+					responseNumber = idResponse.getIdResponses().get(0).getId();
+			}
+		}
+		return responseNumber;
 	}
 
 }

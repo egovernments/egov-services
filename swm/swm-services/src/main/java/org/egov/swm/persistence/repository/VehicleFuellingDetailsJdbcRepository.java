@@ -17,19 +17,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
 
+	public static final String TABLE_NAME = "egswm_vehiclefuellingdetails";
+
 	@Autowired
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {
 
-		return uniqueCheck("egswm_vehiclefuellingdetails", tenantId, fieldName, fieldValue, uniqueFieldName,
-				uniqueFieldValue);
+		return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
 	}
 
 	public Pagination<VehicleFuellingDetails> search(VehicleFuellingDetailsSearch searchRequest) {
 
-		String searchQuery = "select * from egswm_vehiclefuellingdetails :condition  :orderby ";
+		String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();

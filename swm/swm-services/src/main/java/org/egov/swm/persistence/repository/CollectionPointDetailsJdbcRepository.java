@@ -19,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CollectionPointDetailsJdbcRepository extends JdbcRepository {
 
+	public static final String TABLE_NAME = "egswm_collectionpointdetails";
+	
 	@Autowired
 	public JdbcTemplate jdbcTemplate;
 
@@ -27,12 +29,12 @@ public class CollectionPointDetailsJdbcRepository extends JdbcRepository {
 
 	@Transactional
 	public void delete(String tenantId, String collectionPoint) {
-		delete("egswm_collectionpointdetails", tenantId, "collectionPoint", collectionPoint);
+		delete(TABLE_NAME, tenantId, "collectionPoint", collectionPoint);
 	}
 
 	public List<CollectionPointDetails> search(CollectionPointDetailsSearch searchRequest) {
 
-		String searchQuery = "select * from egswm_collectionpointdetails :condition ";
+		String searchQuery = "select * from "+TABLE_NAME+" :condition ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();

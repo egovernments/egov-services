@@ -175,7 +175,7 @@ paths:
           in: query
           type: string
           required: false
-          description: Name of the work of Detailed Estimate
+          description: Name of the work of Abstract Estimate from Work Details
       responses:
         200:
           description: Abstract Estimate(s) Retrieved Successfully

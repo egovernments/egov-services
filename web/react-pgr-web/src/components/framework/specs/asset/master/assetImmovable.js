@@ -89,7 +89,7 @@ var dat = {
   						"label": "ac.create.Department",
   						"pattern": "",
   						"type": "singleValueList",
-  						"url": "/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name",
+  						"url": "/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..name|$..name",
   						"isRequired": true,
   						"isDisabled": false,
   						"requiredErrMsg": "",

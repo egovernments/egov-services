@@ -17,7 +17,7 @@ var dat = {
 						"type": "datePicker",
 						"url": "",
 						"isRequired": true,
-						"isDisabled": false,
+						"isDisabled": false, 
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},

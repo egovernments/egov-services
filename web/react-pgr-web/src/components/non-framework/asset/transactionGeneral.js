@@ -167,7 +167,7 @@ class Transaction extends Component {
 
   search = () => {
 
-    let self = this;
+    let self = this; 
     var formData = {...this.props.formData};
     if(!(formData.toDate) || formData.toDate == null || formData.toDate == ""){
       self.props.toggleSnackbarAndSetText(true, "Please enter Date of Depreciation", false, true);

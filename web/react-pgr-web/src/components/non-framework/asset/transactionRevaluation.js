@@ -511,6 +511,7 @@ class Transaction extends Component {
       let hashLocation = window.location.hash;
       let obj = specifications[`asset.transaction`];
 
+
       if(property == "Revaluation.valueAfterRevaluation"){
           var wdvValue = 10000;
           var revaluationAmount = (e.target.value) - wdvValue;
@@ -685,11 +686,31 @@ class Transaction extends Component {
   create=(e) => {
     let self=this;
     e.preventDefault();
-    self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
+    if(!(formData.Revaluation.valueAfterRevaluation) || formData.Revaluation.valueAfterRevaluation == null || formData.Revaluation.valueAfterRevaluation == ""){
+      self.props.toggleSnackbarAndSetText(true, "Please enter Valuation Amount", false, true);
+
+
+      if(!(formData.Revaluation.orderDate) || formData.Revaluation.orderDate == null || formData.Revaluation.orderDate == ""){
+        self.props.toggleSnackbarAndSetText(true, "Please enter Order Date", false, true);
+      }
+
+      if(!(formData.Revaluation.orderNumber) || formData.Revaluation.orderNumber == null || formData.Revaluation.orderNumber == ""){
+        self.props.toggleSnackbarAndSetText(true, "Please enter Order No.", false, true);
+      }
+
+      if(!(formData.Revaluation.revaluationDate) || formData.Revaluation.revaluationDate == null || formData.Revaluation.revaluationDate == ""){
+        self.props.toggleSnackbarAndSetText(true, "Please enter Revaluation Date", false, true);
+      }
+    }else{
+
+    self.props.setLoadingStatus('loading');
+
     var amountValidation=true;
     var amountValidationMsg="";
       console.log(formData);
+
+
 
       if(formData && formData.hasOwnProperty("Revaluation") && formData.Revaluation.hasOwnProperty("revaluationAmount")){
         var negNumber = formData.Revaluation.revaluationAmount;
@@ -729,7 +750,7 @@ class Transaction extends Component {
                 self.props.toggleSnackbarAndSetText(true, err.message);
               })
 
-
+            }
 
      }
 

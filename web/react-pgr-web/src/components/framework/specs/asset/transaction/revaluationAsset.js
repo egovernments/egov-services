@@ -26,6 +26,9 @@ var dat = {
 								},  {
 									"key": "IMMOVABLE",
 									"value": "IMMOVABLE"
+								},{
+									"key": "LAND",
+									"value": "LAND"
 								}
 							],
 

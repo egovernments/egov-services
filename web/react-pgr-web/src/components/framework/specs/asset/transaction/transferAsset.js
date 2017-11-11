@@ -27,6 +27,9 @@ var dat = {
 					{
 						"key": "MOVABLE",
 						"value": "MOVABLE"
+					},{
+						"key": "LAND",
+						"value": "LAND"
 					}]
 					},
 					{

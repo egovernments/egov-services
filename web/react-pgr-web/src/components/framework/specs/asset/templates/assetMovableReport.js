@@ -242,7 +242,7 @@ export default class assetImmovableReport extends Component {
 												<b> ज्यास मत्ता विकण्यात आली त्या व्यक्तीचे नाव</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "right"}}>
-												<b>{}</b>
+												<b>{this.props.data[39]?this.props.data[39]:""}</b>
 										</td>
 
 									</tbody>

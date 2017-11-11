@@ -829,15 +829,7 @@ ReportDefinitions:
     label: reports.asset.previousfynetblock
     type: string
     source: asset      
-  - name: dateofcreation
-    label: reports.asset.dateofcreation
-    type: epoch
-    source: asset
-  - name: originalvalue
-    label: reports.asset.originalvalue
-    type: number
-    source: asset
-  searchParams:
+ searchParams:
   - name: fromDate
     label: reports.asset.fromDate
     type: date

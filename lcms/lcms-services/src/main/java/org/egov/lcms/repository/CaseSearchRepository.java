@@ -92,11 +92,15 @@ public class CaseSearchRepository {
 		}
 
 		for (Case casee : cases) {
-			casee.setParawiseComments(searchParaWiseComments(casee));
-			casee.setHearingDetails(searchHearingDetails(casee));
+			if (caseSearchCriteria.getSearchResultLevel() != null) {
+				casee.setParawiseComments(searchParaWiseComments(casee));
+				casee.setHearingDetails(searchHearingDetails(casee));
+				casee.setReferenceEvidences(searchRefernceEvidence(casee));
+			}
 			casee.setAdvocateDetails(searchAdvocateDetails(casee));
+
 			casee.setCaseVoucher(searchCaseVoucher(casee));
-			casee.setReferenceEvidences(searchRefernceEvidence(casee));
+
 		}
 
 		return cases;

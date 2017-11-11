@@ -3097,6 +3097,7 @@ definitions:
           $ref: "#/definitions/Uom"
         expenseAccount:
           $ref: "#/definitions/ChartofAccount"
+          description: Expense account code is mandatory , if inventory type is consumable
         minQuantity:
           type: number
           format: BigDecimal
@@ -3155,14 +3156,13 @@ definitions:
           type: string
           description: |
             terms of delivery of the Material
-        overrideMaterialControlType:
-          type: boolean
-          description: |
-            override material control type of the Material
         scrapable:
           type: boolean
           description: |
             Material is scrapable or not.
+        assetCategory:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/AssetCategory"
+          description:  Asset category is mandatory if the inventory type is asset
         storeMapping:
           type:  array
           items:

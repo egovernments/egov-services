@@ -168,8 +168,11 @@ class Transaction extends Component {
   search = () => {
 
     let self = this;
-    self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
+    if(!(formData.toDate) || formData.toDate == null || formData.toDate == ""){
+      self.props.toggleSnackbarAndSetText(true, "Please enter Date of Depreciation", false, true);
+    }else{
+    self.props.setLoadingStatus('loading');
 
 
     Api.commonApiPost("/asset-services-maha/assets/_search", formData, {}, null, true).then(function(res){
@@ -220,7 +223,7 @@ class Transaction extends Component {
       });
       self.props.setLoadingStatus('hide');
     })
-
+  }
   }
 
   getVal = (path,isDate) => {
@@ -674,8 +677,8 @@ class Transaction extends Component {
   create=(e) => {
     let self=this;
     e.preventDefault();
-    self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
+    self.props.setLoadingStatus('loading');
     var amountValidation=true;
     var amountValidationMsg="";
 

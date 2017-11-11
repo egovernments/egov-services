@@ -514,9 +514,15 @@ class Transaction extends Component {
 
       if(property == "Revaluation.valueAfterRevaluation"){
           var wdvValue = 10000;
-          var revaluationAmount = (e.target.value) - wdvValue;
-          console.log(revaluationAmount);
-          handleChange({target:{value:revaluationAmount}}, "Revaluation.revaluationAmount");
+          for (var i = 0; i < formData.Revaluation.Assets.length; i++) {
+            console.log("i");
+            if (formData.Revaluation.Assets[i].isRadio==true) {
+              console.log(formData.Revaluation.Assets[i].currentValue);
+              var revaluationAmount = (e.target.value) - formData.Revaluation.Assets[i].currentValue;
+              console.log(revaluationAmount);
+              handleChange({target:{value:revaluationAmount}}, "Revaluation.revaluationAmount");
+            }
+          }
       }
 
       console.log(property);

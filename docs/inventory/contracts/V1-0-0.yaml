@@ -3127,13 +3127,18 @@ definitions:
           format: BigDecimal
           description: |
             reorder quantity of the Material
-        materialControlType:
-          type: string
-          enum:
-            - LOTControl
-            - Shelf_life_Control
+        lotControl:
+          type: boolean
           description: |
-            material control type of the Material
+            LOT Control for Material.     
+        shelfLifeControl:
+          type: boolean
+          description: |
+            Shelf Life Control for Material.    
+        serialNumber:
+          type: boolean
+          description: |
+            serial Number for Material.                                
         model:
           type: string
           description: |
@@ -3176,8 +3181,7 @@ definitions:
       - materialClass
       - reorderLevel
       - reorderQuantity
-      - materialControlType
-    
+
     MaterialStoreMapping:
       type: object
       description: |

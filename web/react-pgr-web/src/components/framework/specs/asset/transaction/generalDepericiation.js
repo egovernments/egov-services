@@ -228,6 +228,18 @@ var dat = {
             "patternErrMsg": "",
 						"isLabel": false,
           },
+					{
+            "name": "depreciationRate",
+            "jsonPath": "depreciationRate",
+            "label": "ac.create.depreciationRate",
+            "pattern": "",
+            "type": "label",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+						"isLabel": false,
+          }
         ],
         // "values": ["businessService", "consumerCode", "totalAmount","minimumAmount","bill"],
         "resultPath": "Assets",

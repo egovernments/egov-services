@@ -1965,6 +1965,7 @@ var localization_EN_Data = {
     "reports.collection.receipt.transactionno":"Transaction ID",
     "reports.collection.transaction.date":"Transaction Date",
     "ac.create.asset.asset.category": "Asset Category",
+    "ac.create.depreciationRate": "Depreciation Rate (%)",
 
 //auto gen swm
 "vehiclefuellingdetails.create.transactionId": "Transaction No",

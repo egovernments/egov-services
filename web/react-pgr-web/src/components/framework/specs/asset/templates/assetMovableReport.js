@@ -44,6 +44,7 @@ export default class assetImmovableReport extends Component {
 
 	 numberWithCommas = (x)=> {
 		if (x) {
+			console.log(x);
 			x=x.toString();
 			var y = x.split(".")[1];
 			x=x.split(".")[0];

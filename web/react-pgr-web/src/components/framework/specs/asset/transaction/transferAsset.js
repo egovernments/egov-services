@@ -210,7 +210,7 @@ var dat = {
           },
           {
             "name": "WdvValue",
-            "jsonPath": "",
+            "jsonPath": "currentValue",
             "label": "ac.create.WDV.Value",
             "pattern": "",
             "type": "label",
@@ -219,7 +219,7 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
 						"isLabel": false,
-          },
+          }
         ],
         // "values": ["businessService", "consumerCode", "totalAmount","minimumAmount","bill"],
         "resultPath": "Assets",

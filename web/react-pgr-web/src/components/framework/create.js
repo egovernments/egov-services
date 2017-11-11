@@ -346,6 +346,12 @@ class Report extends Component {
 
 
           self.props.setRoute(hash + (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].queryString || ''));
+        } else if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].passResToLocalStore){
+             var hash = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl;
+             var obj = _.get(response,self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].passResToLocalStore);
+             localStorage.setItem(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].localStoreResponseKey,JSON.stringify(obj));
+              self.props.setRoute(hash);
+
         }
       }, 1500);
     }, function(err) {

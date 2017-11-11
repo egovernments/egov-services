@@ -6,6 +6,9 @@ var dat = {
       "/lcms-services/legalcase/case/_search?code={id}",
     url:
       "/lcms-services/legalcase/case/_vakalatnamageneration",
+    ackUrl:"/print/notice/VakalatnamaTemplate",
+    passResToLocalStore:"cases[0]",
+    localStoreResponseKey: "templateData",
     tenantIdRequired: true,
     useTimestamp: true,
     objectName: "cases",

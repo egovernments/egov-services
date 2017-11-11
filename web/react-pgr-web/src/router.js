@@ -160,6 +160,9 @@ import transactionGeneral from './components/non-framework/asset/transactionGene
 //Template parser
 import TemplateParser from './components/framework/templates/templateParser/templateParser';
 
+//LegalTemplate parser 
+import LegalTemplateParser  from './components/framework/specs/legal/templateParser/legalTemplateParser';
+
 //Assets
 import assetImmovableCreate from './components/non-framework/asset/master/assetImmovableCreate';
 import assetMovableCreate from './components/non-framework/asset/master/assetMovableCreate';
@@ -351,6 +354,7 @@ const Main = () => {
       <Route exact path= {base + '/transactionTransfer/asset/translateAsset'} component={transactionTransfer}/>
       <Route exact path= {base + '/transactionTransfer/asset/generalAsset'} component={transactionGeneral}/>
       <Route exact path= {base + '/print/report/:templatePath'} component={TemplateParser}/>
+      <Route exact path= {base + '/print/notice/:legalTemplatePath'} component={LegalTemplateParser}/>
 
       //Assets
       <Route exact path= {base + '/non-framework/asset/master/assetImmovableCreate/:id?'} component={assetImmovableCreate}/>

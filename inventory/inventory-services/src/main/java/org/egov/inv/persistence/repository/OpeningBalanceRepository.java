@@ -65,11 +65,11 @@ public class OpeningBalanceRepository extends JdbcRepository{
 			params.append("receiptNumber = :receiptNumber");
 			paramValues.put("receiptNumber", openBalanceSearch.getReceiptNumber());
 		}
-		if (openBalanceSearch.getFinanncilaYear() != null) {
+		if (openBalanceSearch.getFinancialYear() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
 			params.append("finanncilaYear = :finanncilaYear");
-			paramValues.put("finanncilaYear", openBalanceSearch.getFinanncilaYear());
+			paramValues.put("finanncilaYear", openBalanceSearch.getFinancialYear());
 		}
 		if (openBalanceSearch.getMaterialName() != null) {
 			if (params.length() > 0)

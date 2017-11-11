@@ -20,7 +20,7 @@ public class OpeningBalanceSearchCriteria {
 	
 	private String 	supplierCode;
 	
-	private String finanncilaYear;
+	private String financialYear;
 	
 	private Integer pageSize;
 

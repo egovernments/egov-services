@@ -69,7 +69,7 @@ public class OpeningbalanceApiController implements OpeningbalanceApi {
     		@NotNull@ApiParam(value = "Unique id for a tenant.", required = true) 
     		@RequestParam(value = "tenantId", required = true) String tenantId,
             @ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @Valid @RequestBody RequestInfo requestInfo,
-            @ApiParam(value = "search on basis of financial year ") @RequestParam(value = "finanncilaYear", required = false) String finanncilaYear,
+            @ApiParam(value = "search on basis of financial year ") @RequestParam(value = "financialYear", required = false) String financialYear,
             @ApiParam(value = "search on basis of receiptNumber ") @RequestParam(value = "receiptNumber", required = false) String receiptNumber,
             @ApiParam(value = "search on basis of materialName ") @RequestParam(value = "materialName", required = false) String materialName,
              @Min(0) @Max(100) @ApiParam(value = "Number of records returned.", defaultValue = "20") 
@@ -80,7 +80,7 @@ public class OpeningbalanceApiController implements OpeningbalanceApi {
     	OpeningBalanceSearchCriteria receiptSearch = OpeningBalanceSearchCriteria
     			.builder()
     			.tenantId(tenantId)
-				.finanncilaYear(finanncilaYear)
+				.financialYear(financialYear)
 				.receiptNumber(receiptNumber)
 				.materialName(materialName)
 				.pageSize(pageSize)

@@ -207,7 +207,7 @@ public class Constants {
     public static final String MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID= "Estimate measurement sheet quantity should be greater than zero";
 
     public static final String KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID= "ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID";
-    public static final String MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID= "Estimate activity schedule of rate code invalid";
+    public static final String MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID= "Estimate activity schedule of rate is invalid";
 
     public static final String KEY_WORKS_ESTIMATE_ASSET_CODE_INVALID= "WORKS_ESTIMATE_ASSET_CODE_INVALID";
     public static final String MESSAGE_WORKS_ESTIMATE_ASSET_CODE_INVALID= "Invalid data for estimate asset code";

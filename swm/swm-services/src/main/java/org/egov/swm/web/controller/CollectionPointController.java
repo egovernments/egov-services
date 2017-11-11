@@ -7,6 +7,7 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.swm.domain.model.CollectionPoint;
 import org.egov.swm.domain.model.CollectionPointSearch;
 import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.PaginationContract;
 import org.egov.swm.domain.service.CollectionPointService;
 import org.egov.swm.web.requests.CollectionPointRequest;
 import org.egov.swm.web.requests.CollectionPointResponse;
@@ -67,7 +68,7 @@ public class CollectionPointController {
 		CollectionPointResponse response = new CollectionPointResponse();
 		response.setCollectionPoints(collectionPointList.getPagedData());
 		response.setResponseInfo(getResponseInfo(requestInfo));
-
+		response.setPage(new PaginationContract(collectionPointList));
 		return response;
 
 	}

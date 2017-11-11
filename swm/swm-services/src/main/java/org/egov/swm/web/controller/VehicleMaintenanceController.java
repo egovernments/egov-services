@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.PaginationContract;
 import org.egov.swm.domain.model.VehicleMaintenance;
 import org.egov.swm.domain.model.VehicleMaintenanceSearch;
 import org.egov.swm.domain.service.VehicleMaintenanceService;
@@ -68,7 +69,8 @@ public class VehicleMaintenanceController {
 		VehicleMaintenanceResponse response = new VehicleMaintenanceResponse();
 		response.setVehicleMaintenances(vehicleMaintenanceList.getPagedData());
 		response.setResponseInfo(getResponseInfo(requestInfo));
-
+		response.setPage(new PaginationContract(vehicleMaintenanceList));
+		
 		return response;
 
 	}

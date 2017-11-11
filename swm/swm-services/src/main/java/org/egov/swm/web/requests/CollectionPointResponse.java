@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.swm.domain.model.CollectionPoint;
-import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.PaginationContract;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -18,5 +18,5 @@ public @Data class CollectionPointResponse {
 	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo;
 	private List<CollectionPoint> collectionPoints;
-	private Pagination page;
+	private PaginationContract page;
 }

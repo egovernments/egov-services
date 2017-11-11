@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.PaginationContract;
 import org.egov.swm.domain.model.SourceSegregation;
 import org.egov.swm.domain.model.SourceSegregationSearch;
 import org.egov.swm.domain.service.SourceSegregationService;
@@ -67,7 +68,8 @@ public class SourceSegregationController {
 		SourceSegregationResponse response = new SourceSegregationResponse();
 		response.setSourceSegregations(sourceSegregationList.getPagedData());
 		response.setResponseInfo(getResponseInfo(requestInfo));
-
+		response.setPage(new PaginationContract(sourceSegregationList));
+		
 		return response;
 
 	}

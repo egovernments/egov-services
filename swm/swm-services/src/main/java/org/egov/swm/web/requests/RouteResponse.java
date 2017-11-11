@@ -3,7 +3,7 @@ package org.egov.swm.web.requests;
 import java.util.List;
 
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.PaginationContract;
 import org.egov.swm.domain.model.Route;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -18,5 +18,5 @@ public @Data class RouteResponse {
 	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo;
 	private List<Route> routes;
-	private Pagination page;
+	private PaginationContract page;
 }

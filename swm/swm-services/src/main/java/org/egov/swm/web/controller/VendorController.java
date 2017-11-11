@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.PaginationContract;
 import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.domain.service.VendorService;
@@ -67,6 +68,7 @@ public class VendorController {
 		VendorResponse response = new VendorResponse();
 		response.setVendors(vendorList.getPagedData());
 		response.setResponseInfo(getResponseInfo(requestInfo));
+		response.setPage(new PaginationContract(vendorList));
 
 		return response;
 

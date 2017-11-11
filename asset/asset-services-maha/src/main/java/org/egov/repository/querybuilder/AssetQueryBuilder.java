@@ -7,6 +7,7 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.egov.model.criteria.AssetCriteria;
 import org.egov.model.enums.AssetCategoryType;
+import org.egov.model.enums.TransactionType;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -140,6 +141,16 @@ public class AssetQueryBuilder {
 		if (searchAsset.getElectionWard() != null) {
 			selectQuery.append(" AND ASSET.electionWard = ?");
 			preparedStatementValues.add(searchAsset.getElectionWard());
+		}
+		
+		if (searchAsset.getTransaction() != null) {
+			if(searchAsset.getTransaction().toString().equals(TransactionType.REVALUATION.toString())) {
+				selectQuery.append(" AND ASSET.status!='DISPOSED' ");
+			}else if(searchAsset.getTransaction().toString().equals(TransactionType.DISPOSAL.toString())) {
+				selectQuery.append(" AND ASSET.status!='DISPOSED' ");
+			}else if(searchAsset.getTransaction().toString().equals(TransactionType.DEPRECIATION.toString())) {
+				selectQuery.append(" AND ASSET.status!='DISPOSED' AND ASSET.assetcategorytype!='LAND' ");
+			}
 		}
 
 	}

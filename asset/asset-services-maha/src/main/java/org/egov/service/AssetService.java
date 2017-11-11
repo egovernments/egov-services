@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.config.ApplicationProperties;
 import org.egov.contract.AssetCurrentValueRequest;
@@ -19,6 +20,7 @@ import org.egov.model.CurrentValue;
 import org.egov.model.criteria.AssetCriteria;
 import org.egov.model.enums.KafkaTopicName;
 import org.egov.model.enums.Sequence;
+import org.egov.model.enums.Status;
 import org.egov.model.enums.TransactionType;
 import org.egov.repository.AssetRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -62,6 +64,7 @@ public class AssetService {
 		System.err.println("asset.getcode"+asset.getCode());
 
 		asset.setId(assetCommonService.getNextId(Sequence.ASSETSEQUENCE));
+		asset.setStatus(Status.CAPITALIZED.toString());
 
 		log.debug("assetRequest createAsync::" + assetRequest);
 		asset.setAuditDetails(assetCommonService.getAuditDetails(assetRequest.getRequestInfo()));

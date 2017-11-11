@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.validation.constraints.NotNull;
 
 import org.egov.model.enums.AssetCategoryType;
+import org.egov.model.enums.TransactionType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,6 +47,7 @@ public class AssetCriteria {
 	private String doorNo;
 	private String status;
 	private List<String> sort=null;
+	private TransactionType transaction;
 	
 	
 	private Long size;

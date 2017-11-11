@@ -93,9 +93,11 @@ var dat ={
             "jsonPath": "cases[0].summon.hearingTime",
             "label": "legal.create.hearingTime",
             "type": "timePicker",
+             isNumber:true,
             "isRequired": false,
             "isDisabled": true,
-            "patternErrorMsg": ""
+            "patternErrorMsg": "",
+            defaultValue:"00:00"
           },
           {
             "name": "hearingDate",
@@ -153,7 +155,7 @@ var dat ={
             "name": "nextHearingTime",
             "jsonPath": "cases[0].hearingDetails.nextHearingTime",
             "label": "legal.create.nextHearingTime",
-            "type": "timePicker",
+            "type": "text",
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": ""

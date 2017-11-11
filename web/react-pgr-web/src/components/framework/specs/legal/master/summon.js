@@ -218,7 +218,7 @@ var dat = {
             label: "legal.create.referenceNo",
             type: "text",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           }, {
             name: "year",
@@ -236,7 +236,7 @@ var dat = {
             jsonPath: "summons[0].summonDate",
             label: "legal.create.summonDate",
             type: "datePicker",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             patternErrorMsg: ""
           },
@@ -707,7 +707,7 @@ var dat = {
             label: "legal.create.referenceNo",
             type: "text",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -715,7 +715,7 @@ var dat = {
             jsonPath: "summons[0].summonDate",
             label: "legal.create.summonDate",
             type: "number",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             patternErrorMsg: ""
           },

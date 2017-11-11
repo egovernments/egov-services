@@ -2431,6 +2431,7 @@ var localization_EN_Data = {
 "createstamp.create.createStampName":"Register/Stamp Name",
 "createstamp.create.isActive":"is Active",
 "advocates.create.document.title":"Create Advocate",
+"advocates.update.document.title":"Update Advocate",
 "advocates.search.document.title":"Search Advocate",
 "advocates.update.document.title":"Update Advocate",
 "advocatepayment.create.document.title":"Create Advocate Request for Payment",
@@ -2450,7 +2451,7 @@ var localization_EN_Data = {
 "register.search.document.title":"Search Register",
 "register.update.document.title":"Update Register",
 "summon.create.document.title":"Create Summon/Warrant",
-"summon.search.document.title":"Search Summon/Warrant",
+"summon.search.document.title":"Search Case",
 "summon.update.document.title":"Update Summon/Warrant",
 "vakalatnama.create.document.title":"Create Vakalatnama ",
 "reports.print.details": "Print Details",
@@ -2591,6 +2592,8 @@ var localization_EN_Data = {
  "inventory.common.ifsc":"Bank IFSC Code",
  "inventory.common.micr":"MICR Code",
  "inventory.common.active":"Active",
+ "legal.vakalatnama.create.primaryAdvocate":"Primary Advocate",
+  "legal.vakalatnama.create.additionalAdvocate":"Additional Advocate",
 
 
 
@@ -4393,7 +4396,7 @@ var localization_MR_Data = {
 "createstamp.create.createStampName":"Register/Stamp Name-marathi",
 "createstamp.create.isActive":"is Active-marathi",
 
-"advocates.create.document.title":"Create Advocat-marathi",
+"advocate.update.document.title":"Update Advocat-marathi",
 "advocates.search.document.title":"Search Advocat-marathi",
 "advocates.update.document.title":"Update Advocat-marathi",
 "advocatepayment.create.document.title":"Create Advocate Request for Payment-marathi ",
@@ -4413,7 +4416,7 @@ var localization_MR_Data = {
 "register.search.document.title":"Search Registe-marathir",
 "register.update.document.title":"Update Registe-marathir",
 "summon.create.document.title":"Create Summon/Warran-marathit",
-"summon.search.document.title":"Search Summon/Warran-marathit",
+"summon.search.document.title":"Search Case-marathit",
 "summon.update.document.title":"Update Summon/Warran-marathit",
 "vakalatnama.create.document.title":"Create Vakalatnama-marathi ",
 
@@ -4563,6 +4566,8 @@ var localization_MR_Data = {
 "referenceEvidence.create.referenceDate":"Reference Date-marathi",
 "referenceEvidence.create.referenceCaseNo":"Case No-marathi",
  "referenceEvidence.create.description":"Description-marathi",
+  "legal.vakalatnama.create.primaryAdvocate":"Primary Advocate-marathi",
+  "legal.vakalatnama.create.additionalAdvocate":"Additional Advocate-marathi",
 }
 
 export function translate(locale_text) {

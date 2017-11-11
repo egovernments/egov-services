@@ -119,6 +119,26 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: "",
             patternErrMsg: ""
+          },{
+            name: "primaryAdvocate",
+            jsonPath: "cases[0].advocateDetails[0].advocate.name",
+            label: "legal.vakalatnama.create.primaryAdvocate",
+            pattern: "",
+            type: "text",
+            isRequired: false,
+            isDisabled: true,
+            requiredErrMsg: "",
+            patternErrMsg: ""
+          },{
+            name: "additionalAdvocate",
+            jsonPath: "cases[0].advocateDetails[1].advocate.name",
+            label: "legal.vakalatnama.create.additionalAdvocate",
+            pattern: "",
+            type: "text",
+            isRequired: false,
+            isDisabled: true,
+            requiredErrMsg: "",
+            patternErrMsg: ""
           },
           {
             name: "GenerateVakalatnama",
@@ -143,7 +163,7 @@ var dat = {
         fields: [
           {
             type: "tableList",
-            jsonPath: "cases[0].summon.advocateDetails",
+            jsonPath: "cases[0].advocateDetails",
             tableList: {
               header: [
                 {

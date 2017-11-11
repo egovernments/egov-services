@@ -234,8 +234,9 @@ class Report extends Component {
             self.props.setFormData(obj);
             self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
           } else {
-            self.props.setFormData(res);
+          
             self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
+              self.props.setFormData(res);
           }
             let obj1 = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
 

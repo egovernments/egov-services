@@ -1150,8 +1150,8 @@ definitions:
         items:
           $ref: '#/definitions/SecurityDeposit'
       engineerIncharge:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
-        description: User who is incharge of the work
+        type: string
+        description: User who is incharge of the work, primary key is ref. here.
         format: singleValueList
       defectLiabilityPeriod:
         type: number
@@ -1188,8 +1188,6 @@ definitions:
         format: int64
         x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of File Date of the Letter Of Acceptance.
-      #parent:
-      #  $ref: '#/definitions/LetterOfAcceptance'
       parent:
         $ref: '#/definitions/LetterOfAcceptance'
         description: Parent of Letter Of Acceptance. This is required in case of Revision Work Order 
@@ -1234,6 +1232,7 @@ definitions:
       - defectLiabilityPeriod
       - fileNumber
       - fileDate
+      - letterOfAcceptanceEstimates
     
   AssetsForLOA:
       type: object
@@ -1248,12 +1247,12 @@ definitions:
           maxLength: 128
           minLength: 2
         asset:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/Asset'
-          description: Asset for which this LOA is created
+          type: string
+          description: Asset for which this LOA is created, code from 'Asset' is ref. here.
           format: singleValueList
         letterOfAcceptanceEstimate:
-          $ref: '#/definitions/LetterOfAcceptanceEstimate'
-          description: LOA Estimate reference
+          type: string
+          description: LOA Estimate reference, primary key is ref. here.
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1274,11 +1273,11 @@ definitions:
         maxLength: 128
         minLength: 2
       letterOfAcceptance:
-        $ref: '#/definitions/LetterOfAcceptance'
-        description: LOA reference
+        type: string
+        description: reference of 'LetterOfAcceptance'. Pimary key is ref. here.
       detailedEstimate:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/DetailedEstimate'
-        description: Detailed Estimate reference
+        type: string
+        description: Detailed Estimate reference. estimate number is ref. here.
       workCompletionDate:
         type: integer
         format: int64
@@ -1293,12 +1292,11 @@ definitions:
         description: Array of Asset for LOA Details
         items:
           $ref: '#/definitions/AssetsForLOA'
-      #loaActivities:
-        #type: array
-        #description: Array of LOA Activity Details
-        #minItems: 1
-        #$items:
-         # $ref: '#/definitions/LOAActivity'
+      loaActivities:
+        type: array
+        description: Array of LOA Activity Details
+        items:
+          $ref: '#/definitions/LOAActivity'
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -1311,15 +1309,18 @@ definitions:
     description: An Object that holds Security deposit collection Details for the given LOA.
     properties:
       letterOfAcceptance:
-        $ref: '#/definitions/LetterOfAcceptance'
-        description: LOA reference
+        type: string
+        description: reference of 'LetterOfAcceptance'. Pimary key is ref. here.
       tenantId:
         type: string
         description: Tenant id of the Security Deposit
         maxLength: 128
         minLength: 2
-      mode:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/CollectionMode'
+      collectionMode:
+        type: string
+        description: Enum value from 'CollectionMode'Enum value from 'CollectionMode'
+        maxLength: 50
+        minLength: 1
       percentage:
         type: string
         description: Percentage for the given mode
@@ -1336,7 +1337,7 @@ definitions:
     required:
       - tenantId
       - letterOfAcceptance
-      - mode
+      - collectionMode
       - percentage
       - amount
       
@@ -1353,11 +1354,11 @@ definitions:
         maxLength: 128
         minLength: 2
       letterOfAcceptanceEstimate:
-        $ref: '#/definitions/LetterOfAcceptanceEstimate'
-        description: Letter of acceptance reference
+        type: string
+        description: Letter of acceptance reference. Primary key is ref here.
       estimateActivity:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/EstimateActivity'
-        description: Reference of Estimate Activity
+        type: string
+        description: Reference of Estimate Activity, primary key is ref here.
       parent:
         $ref: '#/definitions/LOAActivity'
         description: Parent of the Letter Of Acceptance Activity. This is required for Revision Workrder parent activity.
@@ -1437,13 +1438,11 @@ definitions:
           maxLength: 20
           minLength: 1
         loaActivity:
-          $ref: '#/definitions/LOAActivity'
-          description: LOA activity reference
+          type: string
+          description: LOA activity reference, primary key is ref here.
         estimateMeasurementSheet:
           type: string
           description: Estimate Measurement sheet reference
-        #estimateMeasurementSheet:
-          #$ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/EstimateMeasurementSheet'
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:

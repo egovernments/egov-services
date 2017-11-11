@@ -902,7 +902,7 @@ ReportDefinitions:
     endcurrentamount,tenantid,transactiondate from egasset_current_value value inner join (select max(transactiondate) as transactiondate,
     assetid,tenantid from egasset_current_value where tenantid=$tenantid  AND transactiondate<=(select extract ('epoch' from 
     (select endingdate from egf_financialyear where (current_date between startingdate and endingdate) AND tenantid=$tenantid))*1000) 
-    GROUP BY assetid,tenantid,currentamount) as maxvalue ON value.assetid=maxval.assetid and value.tenantid=maxval.tenantid AND 
+    GROUP BY assetid,tenantid,currentamount) as maxvalue ON value.assetid=maxvalue.assetid and value.tenantid=maxvalue.tenantid AND 
     value.transactiondate=maxvalue.transactiondate) endcurrent ON current.assetid=endcurrent.assetid AND current.tenantid=
     endcurrent.tenantid AND current.transactiondate=endcurrent.transactiondate left outer join (select assetid,currentamount as 
     previousfynetblock,tenantid,transactiondate from egasset_current_value value inner join (select max(transactiondate) as 

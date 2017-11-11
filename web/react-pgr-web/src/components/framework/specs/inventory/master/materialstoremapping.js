@@ -178,7 +178,7 @@ var dat =
             ]
          }
       ],
-      "url":"/inventory-services/materialstoremapping/_create",
+      "url":"/inventory-services/materials/_create",
       "tenantIdRequired":true
    },
    "inventory.view":{

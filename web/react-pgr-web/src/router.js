@@ -171,6 +171,7 @@ import SupplierSearch from './components/non-framework/inventory/master/supplier
 import MaterialStoreMappingSearch from './components/non-framework/inventory/master/materialstoremapping/MaterialStoreMappingSearch';
 //import IndentSearch from './components/non-framework/inventory/master/indent/IndentSearch';
 import StoreSearch from './components/non-framework/inventory/master/store/StoreSearch';
+import MaterialSearch from './components/non-framework/inventory/master/material/MaterialSearch';
 
 import NoMatch from './components/common/NoMatch';
 
@@ -361,6 +362,7 @@ const Main = () => {
       <Route exact path= {base + '/non-framework/inventory/master/supplier'} component={SupplierSearch}/>
       <Route exact path = {base + '/non-framework/inventory/master/materialstoremapping'} component={MaterialStoreMappingSearch}/>
       <Route exact path= {base + '/non-framework/inventory/master/store'} component={StoreSearch}/>
+      <Route exact path= {base + '/non-framework/inventory/master/material'} component={MaterialSearch}/>
 
     {/*<Route exact path= {base + '/non-framework/inventory/master/indent'} component={IndentSearch}/>*/}
       {/* works */}

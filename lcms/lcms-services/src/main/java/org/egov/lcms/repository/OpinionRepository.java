@@ -67,7 +67,7 @@ public class OpinionRepository {
 			if (opinion.getDepartmentName() != null)
 				opinion.setDepartmentName(searchDepartments(opinion, requestInfoWrapper));
 		}
-		if (opinions != null) {
+		if (opinions != null && opinions.size() > 0) {
 			setAdvocates(opinions, requestInfoWrapper);
 		}
 		return opinions;

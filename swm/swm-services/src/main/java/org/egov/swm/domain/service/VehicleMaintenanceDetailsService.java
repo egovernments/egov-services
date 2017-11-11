@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -190,7 +191,8 @@ public class VehicleMaintenanceDetailsService {
 
             }
             else if(vehicleMaintenance.getMaintenanceUom().equals("KMS")){
-                return Math.toIntExact(vehicleMaintenance.getMaintenanceAfter() / fetchkilometersFromRoutes(vehicleMaintenanceDetail));
+                return Math.toIntExact(vehicleMaintenance.getMaintenanceAfter() / fetchkilometersFromRoutes(vehicleMaintenanceDetail,
+                        vehicleMaintenance.getMaintenanceAfter()));
             }
         }
         else
@@ -199,7 +201,7 @@ public class VehicleMaintenanceDetailsService {
         return 0;
     }
 
-    private int fetchkilometersFromRoutes(VehicleMaintenanceDetails vehicleMaintenanceDetail){
+    private int fetchkilometersFromRoutes(VehicleMaintenanceDetails vehicleMaintenanceDetail, Long vehicleMaintenanceAfter){
         VehicleScheduleSearch vehicleScheduleSearch = new VehicleScheduleSearch();
         vehicleScheduleSearch.setTenantId(vehicleMaintenanceDetail.getTenantId());
         vehicleScheduleSearch.setVehicle(vehicleMaintenanceDetail.getVehicle());
@@ -208,29 +210,47 @@ public class VehicleMaintenanceDetailsService {
 
         Long dateFrom = DateUtils.addDays(new Date(vehicleMaintenanceDetail.getActualMaintenanceDate()), 1).getTime();
         Long dateTo = new Date().getTime();
+        //Filtering vehicle schedule list based on from and to date
         List<VehicleSchedule>  vehicleScheduleList  = vehicleSchedulePage.getPagedData().stream()
                 .filter(v -> (dateFrom >= v.getScheduledFrom() && dateTo <= v.getScheduledTo()))
                 .collect(Collectors.toList());
-        Double kiloMetersPerDay = 0.0;
+        Double totalKilometers = 0.0;
+        Long totalDays = 0l;
 
         if(!vehicleScheduleList.isEmpty()){
+            //Days calculation for filtered set of routes
             for(VehicleSchedule vehicleSchedule : vehicleScheduleList){
-                RouteSearch routeSearch = new RouteSearch();
-                routeSearch.setTenantId(vehicleMaintenanceDetail.getTenantId());
-                routeSearch.setCode(vehicleSchedule.getRoute().getCode());
 
-                Pagination<Route> routePage = routeService.search(routeSearch);
+                    RouteSearch routeSearch = new RouteSearch();
+                    routeSearch.setTenantId(vehicleMaintenanceDetail.getTenantId());
+                    routeSearch.setCode(vehicleSchedule.getRoute().getCode());
 
-                if(!routePage.getPagedData().isEmpty())
-                    kiloMetersPerDay = kiloMetersPerDay + routePage.getPagedData().get(0).getDistance();
-                else
-                    throw new CustomException("Route", "Route not defined:");
+                    Pagination<Route> routePage = routeService.search(routeSearch);
+
+                    if(!routePage.getPagedData().isEmpty()) {
+                        Long dateDifferenceInMilliseconds = vehicleSchedule.getScheduledFrom() - vehicleSchedule.getScheduledTo();
+                        Long days = TimeUnit.DAYS.convert(dateDifferenceInMilliseconds, TimeUnit.MILLISECONDS);
+                        totalDays = totalDays + days;
+                        Double totalKilometersOnRoute = days * routePage.getPagedData().get(0).getDistance();
+
+                        if((totalKilometers + totalKilometersOnRoute) < vehicleMaintenanceAfter){
+                            totalKilometers = totalKilometers + (days * routePage.getPagedData().get(0).getDistance());
+                        }
+                        else{
+                            Double distanceDifference = vehicleMaintenanceAfter - totalKilometers;
+                            totalDays = totalDays + (distanceDifference.longValue() / routePage.getPagedData().get(0).getDistance().longValue());
+
+                            return  totalDays.intValue();
+                        }
+                    }
+                    else
+                        throw new CustomException("Route", "Route not defined:");
             }
         }
         else{
             throw new CustomException("VehicleSchedule", "Vehicle Schedule not defined:");
         }
-        return kiloMetersPerDay.intValue();
+        return totalDays.intValue();
     }
 
     private void setAuditDetails(VehicleMaintenanceDetails contract, Long userId) {

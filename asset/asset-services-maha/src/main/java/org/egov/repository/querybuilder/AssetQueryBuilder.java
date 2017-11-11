@@ -145,9 +145,9 @@ public class AssetQueryBuilder {
 		
 		if (searchAsset.getTransaction() != null) {
 			if(searchAsset.getTransaction().toString().equals(TransactionType.REVALUATION.toString())) {
-				selectQuery.append(" AND ASSET.status!='DISPOSED' ");
+				selectQuery.append(" AND ASSET.status!='DISPOSED'  AND ASSET.assetcategorytype!='LAND' ");
 			}else if(searchAsset.getTransaction().toString().equals(TransactionType.DISPOSAL.toString())) {
-				selectQuery.append(" AND ASSET.status!='DISPOSED' ");
+				selectQuery.append(" AND ASSET.status!='DISPOSED'  AND ASSET.assetcategorytype!='LAND'");
 			}else if(searchAsset.getTransaction().toString().equals(TransactionType.DEPRECIATION.toString())) {
 				selectQuery.append(" AND ASSET.status!='DISPOSED' AND ASSET.assetcategorytype!='LAND' ");
 			}

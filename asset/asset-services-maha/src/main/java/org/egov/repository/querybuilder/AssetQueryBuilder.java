@@ -4,7 +4,9 @@ package org.egov.repository.querybuilder;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.egov.model.criteria.AssetCriteria;
+import org.egov.model.enums.AssetCategoryType;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -52,8 +54,8 @@ public class AssetQueryBuilder {
 		}
 
 		if (searchAsset.getAssetCategoryType() != null) {
-			selectQuery.append(" AND ASSET.assetcategorytype = ?");
-			preparedStatementValues.add(searchAsset.getAssetCategoryType().toString());
+			selectQuery.append(" AND ASSET.assetcategorytype IN (" + getCategoryType(searchAsset.getAssetCategoryType()).toString()+ ")");
+			/*preparedStatementValues.add(searchAsset.getAssetCategoryType().toString());*/
 		}
 		if (searchAsset.getName() != null) {
 			selectQuery.append(" AND ASSET.name ilike ?");
@@ -181,6 +183,19 @@ public class AssetQueryBuilder {
 		query = new StringBuilder(arr[0].toString());
 		for (int i = 1; i < arr.length; i++)
 			query.append("," + arr[i]);
+		return query.toString();
+	}
+    
+    private String getCategoryType(final List<AssetCategoryType> assetCategoryTypeList) {
+		StringBuilder query = null;
+		AssetCategoryType[] arr= new AssetCategoryType[assetCategoryTypeList.size()];
+		arr=assetCategoryTypeList.toArray(arr);
+	  // String join = "'" + StringUtils.join(arr,"','") + "'";
+	   System.out.println("arr"+arr);
+		query = new StringBuilder("'"+arr[0].toString()+"'");
+	  for (int i = 1; i < arr.length; i++)
+			query.append("," +"'"+arr[i].toString()+"'");
+		System.err.println("query"+query);
 		return query.toString();
 	}
 }

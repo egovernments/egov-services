@@ -24,7 +24,7 @@ public class AssetCriteria {
 
 	@NotNull
 	private String tenantId;
-	private AssetCategoryType assetCategoryType;
+	private List<AssetCategoryType> assetCategoryType;
 	private Set<Long> assetSubCategory;
 	private Long assetCategory;
 	private String department;

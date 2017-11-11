@@ -1,0 +1,80 @@
+---
+ReportDefinitions:
+  #  Stock Opening Balance Report
+- reportName: openingbalance
+  summary: Stock Opening Balance Report
+  version: 1.0.0
+  moduleName: inventory
+  sourceColumns:
+  - name: materialCode
+    label: reports.inventory.openbal.MaterialCode         
+    type: string
+    source: material
+    
+  - name: materialName
+    label: reports.inventory.openbal.MaterialName
+    type: string
+    source: material
+    
+  - name: materialTypeName
+    label: reports.inventory.openbal.MaterialTypeName
+    type: string
+    source: materialReceiptDetails
+    
+  - name: uom
+    label: reports.inventory.openbal.Uom
+    type: string
+    source: materialReceiptDetails
+  
+  - name: qty
+    label: reports.inventory.openbal.Qty.
+    type: string
+    source: materialReceiptDetails
+    
+  - name: rate
+    label: reports.inventory.openbal.Rate
+    type: string
+    source: materialReceiptDetails
+  
+  - name: totalAmount
+    label: reports.inventory.openbal.TotalAmount
+    type: string
+    source: materialReceiptDetails
+    
+  - name: remarks
+    label: reports.inventory.openbal.Remarks
+    type: string
+    source: materialReceiptDetails
+    
+      
+  searchParams:
+  - name: financialYear
+    label: reports.inventory.openbal.financialYear
+    type: String
+    source: materialReceipt
+    isMandatory: true
+    
+  - name: storeName
+    label: reports.inventory.openbal.storeName
+    type: singlevaluelist
+    pattern: http://hr-masters:8080/inventory-services/stores/_search?tenantId=$tenantId|$..code|$..name 
+    source: store
+    isMandatory: true
+    
+  - name: materialTypeName
+    label: reports.inventory.openbal.materialTypeName
+    type: string
+    source: materialReceipt 
+    isMandatory: false
+    searchClause: and mrheader.receiptType=$materialTypeName
+    
+  - name: materialName
+    label: reports.inventory.openbal.materialName
+    type: singlevaluelist
+    source: materialReceipt  
+    isMandatory: false
+    searchClause: and mrheader.materialName=$materialName
+  query: SELECt * FROM materialreceiptDetail where financialYear= $financialYear And receivingStore=$storeName AND tenantId=$tenantId
+    
+    
+    

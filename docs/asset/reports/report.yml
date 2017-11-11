@@ -902,7 +902,7 @@ ReportDefinitions:
     coalesce(prevdepsum,0.0)+coalesce(currdepsum,0.0)+coalesce(asset.accumulateddepreciation,0.0) as totaldepsum from egasset_asset 
     asset inner join (select distinct(current.assetid),current.tenantid,current.transactiondate,previousfynetblock,
     endcurrentamount,plusrevalsum,minusrevalsum ,previousfynetblock+plusrevalsum-minusRevalsum as revaltotal,prevdepsum,currdepsum,
-    prevdepsum+currdepsum as totaldepsum from egasset_current_value current left outer join (select value.assetid,currentamount as 
+    prevdepsum+currdepsum as totaldepsum from egasset_current_value current inner join (select value.assetid,currentamount as 
     endcurrentamount,value.tenantid,value.transactiondate from egasset_current_value value inner join (select max(transactiondate) as transactiondate,
     assetid,tenantid from egasset_current_value where tenantid=$tenantid  AND transactiondate<=(select extract ('epoch' from 
     (select endingdate from egf_financialyear where (current_date between startingdate and endingdate) AND tenantid=$tenantid))*1000) 

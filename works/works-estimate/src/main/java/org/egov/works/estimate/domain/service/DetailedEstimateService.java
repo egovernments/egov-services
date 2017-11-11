@@ -94,6 +94,13 @@ public class DetailedEstimateService {
                 detailedEstimateDeduction.setAuditDetails(auditDetails);
             }
 
+            if(detailedEstimate.getEstimateTechnicalSanctions() != null) {
+                for(final EstimateTechnicalSanction estimateTechnicalSanction : detailedEstimate.getEstimateTechnicalSanctions()) {
+                    estimateTechnicalSanction.setId(commonUtils.getUUID());
+                    estimateTechnicalSanction.setAuditDetails(auditDetails);
+                }
+            }
+
             for(final EstimateActivity estimateActivity : detailedEstimate.getEstimateActivities()) {
                 estimateActivity.setId(commonUtils.getUUID());
                 estimateActivity.setAuditDetails(auditDetails);

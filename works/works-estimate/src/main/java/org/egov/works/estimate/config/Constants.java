@@ -137,10 +137,13 @@ public class Constants {
     public static final String MESSAGE_ESTIMATE_LOCATION_REQUIRED= "Estimate location detailed required";
 
     public static final String KEY_ESTIMATE_ASSET_DETAILS_REQUIRED= "INVALID_ESTIMATE_ASSET_DETAILES";
-    public static final String MESSAGE_ESTIMATE_ASSET_DETAILS_REQUIRED= "Asset detailes required for an estimate";
+    public static final String MESSAGE_ESTIMATE_ASSET_DETAILS_REQUIRED= "Asset details required for an estimate";
+
+    public static final String KEY_ESTIMATE_TECHNICALSANCTION_DETAILS_REQUIRED= "INVALID_TECHNICALSANCTION_DETAILES";
+    public static final String MESSAGE_ESTIMATE_TECHNICALSANCTION_DETAILS_REQUIRED= "Technical Sanction details required for an estimate";
 
     public static final String KEY_DUPLICATE_ESTIMATE_ASSET_DETAILS= "DUPLICATE_ESTIMATE_ASSET_DETAILES";
-    public static final String MESSAGE_DUPLICATE_ESTIMATE_ASSET_DETAILS= "Duplicate Asset detailes for an estimate";
+    public static final String MESSAGE_DUPLICATE_ESTIMATE_ASSET_DETAILS= "Duplicate Asset details for an estimate";
 
     public static final String KEY_INVALID_TECHNICALSANCTION_DATE = "TECHNICAL_SANCTION_DATE_INVALID";
     public static final String MESSAGE_INVALID_TECHNICALSANCTION_DATE= "Technical Sanction Date cannot be prior to Abstract/Detailed Estimate Date.";
@@ -149,7 +152,7 @@ public class Constants {
     public static final String MESSAGE_INVALID_ADMINSANCTION_DATE= "Abstract/Detailed Estimate Date cannot be prior to Admin Sanction Date of Estimate";
 
     public static final String KEY_INVALID_TECHNICALSANCTION_NUMBER = "INVALID_TECHNICALSANCTION_NUMBER";
-    public static final String MESSAGE_INVALID_TECHNICALSANCTION_NUMBER= "Duplicate technical sanction nummber";
+    public static final String MESSAGE_INVALID_TECHNICALSANCTION_NUMBER= "Duplicate technical sanction number";
 
     public static final String KEY_TECHNICAL_SANCTION_DATE_NULL = "TECHNICAL_SANCTION_DATE_NULL";
     public static final String MESSAGE_TECHNICAL_SANCTION_DATE_NULL= "Estimate technical sanction date is required";

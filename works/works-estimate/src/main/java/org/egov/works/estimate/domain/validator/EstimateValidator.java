@@ -449,16 +449,18 @@ public class EstimateValidator {
 
 
     public void validateTechnicalSanctionDetail(final DetailedEstimate detailedEstimate, Map<String,String> messages) {
-        if (detailedEstimate.getEstimateTechnicalSanctions() != null ) {
+        if(detailedEstimate.getEstimateTechnicalSanctions() == null ||
+                detailedEstimate.getEstimateTechnicalSanctions() != null && detailedEstimate.getEstimateTechnicalSanctions().isEmpty()) {
+            messages.put(KEY_ESTIMATE_TECHNICALSANCTION_DETAILS_REQUIRED, MESSAGE_ESTIMATE_TECHNICALSANCTION_DETAILS_REQUIRED);
+        }
+
+        if(detailedEstimate.getEstimateTechnicalSanctions() != null )
             for(EstimateTechnicalSanction estimateTechnicalSanction : detailedEstimate.getEstimateTechnicalSanctions()) {
 
-                if(StringUtils.isBlank(estimateTechnicalSanction.getTechnicalSanctionNumber()))
-                    messages.put(KEY_DUPLICATE_ESTIMATE_ASSET_DETAILS, MESSAGE_DUPLICATE_ESTIMATE_ASSET_DETAILS);
-                else
+                if(StringUtils.isNotBlank(estimateTechnicalSanction.getTechnicalSanctionNumber()))
                    validateUniqueTechnicalSanctionForDetailedEstimate(detailedEstimate, estimateTechnicalSanction, messages);
-                if(estimateTechnicalSanction.getTechnicalSanctionDate() == null)
-                    messages.put(KEY_TECHNICAL_SANCTION_DATE_NULL, MESSAGE_TECHNICAL_SANCTION_DATE_NULL);
-                 else if(detailedEstimate.getEstimateDate() != null && new Date(estimateTechnicalSanction.getTechnicalSanctionDate()).before(new Date(detailedEstimate.getEstimateDate())))
+
+                if(detailedEstimate.getEstimateDate() != null && new Date(estimateTechnicalSanction.getTechnicalSanctionDate()).before(new Date(detailedEstimate.getEstimateDate())))
                     messages.put(KEY_INVALID_TECHNICALSANCTION_DATE, MESSAGE_INVALID_TECHNICALSANCTION_DATE);
 
                 if(detailedEstimate.getAbstractEstimateDetail() != null && detailedEstimate.getEstimateDate() != null) {
@@ -478,7 +480,6 @@ public class EstimateValidator {
                     }
                 }
             }
-        }
 
     }
 

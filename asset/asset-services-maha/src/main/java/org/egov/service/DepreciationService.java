@@ -176,6 +176,9 @@ public class DepreciationService {
 		// depreciation date
 		if (depInputs.getLastDepreciationDate().compareTo(fromDate) >= 0)
 			fromDate = depInputs.getLastDepreciationDate();
+		else {
+			// set asset dateofcreation as from date if it is greater than financial from date
+		}
 
 		// getting the no of days betweeen the from and todate using ChronoUnit
 		Long noOfDays = ((toDate - fromDate) / 1000 / 60 / 60 / 24)+1;

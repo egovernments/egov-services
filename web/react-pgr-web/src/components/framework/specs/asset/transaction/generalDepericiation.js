@@ -17,7 +17,7 @@ var dat = {
 						"type": "datePicker",
 						"url": "",
 						"isRequired": true,
-						"isDisabled": false, 
+						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
@@ -148,6 +148,19 @@ var dat = {
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
+						},
+						{
+							"name": "transactionType",
+							"jsonPath": "transaction",
+							"label": "transaction",
+							"pattern": "",
+							"type": "text",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "",
+							"defaultValue": "DEPRECIATION",
+							"isHidden": true
 						}
         ]
       }],

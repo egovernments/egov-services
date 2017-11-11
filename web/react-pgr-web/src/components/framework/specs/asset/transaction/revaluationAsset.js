@@ -26,9 +26,6 @@ var dat = {
 								},  {
 									"key": "IMMOVABLE",
 									"value": "IMMOVABLE"
-								},{
-									"key": "LAND",
-									"value": "LAND"
 								}
 							],
 
@@ -139,6 +136,19 @@ var dat = {
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
+						},
+						{
+							"name": "transactionType",
+							"jsonPath": "transaction",
+							"label": "transaction",
+							"pattern": "",
+							"type": "text",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "",
+							"defaultValue": "REVALUATION",
+							"isHidden": true
 						}
         ]
       }],

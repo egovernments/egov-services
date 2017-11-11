@@ -27,9 +27,6 @@ var dat = {
 					{
 						"key": "MOVABLE",
 						"value": "MOVABLE"
-					},{
-						"key": "LAND",
-						"value": "LAND"
 					}]
 					},
 					{
@@ -143,6 +140,19 @@ var dat = {
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
+					},
+					{
+						"name": "transactionType",
+						"jsonPath": "transaction",
+						"label": "transaction",
+						"pattern": "",
+						"type": "text",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue": "DISPOSAL",
+						"isHidden": true
 					}
         ]
       }],

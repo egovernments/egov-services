@@ -67,8 +67,9 @@ public class OpinionRepository {
 			if (opinion.getDepartmentName() != null)
 				opinion.setDepartmentName(searchDepartments(opinion, requestInfoWrapper));
 		}
-
-		setAdvocates(opinions, requestInfoWrapper);
+		if (opinions != null) {
+			setAdvocates(opinions, requestInfoWrapper);
+		}
 		return opinions;
 	}
 
@@ -83,8 +84,9 @@ public class OpinionRepository {
 
 	private void setAdvocates(List<Opinion> opinions, RequestInfoWrapper requestInfoWrapper) {
 
-		List<String> codes = opinions.stream().filter(
-				opinionData -> opinionData.getOpinionsBy() != null && opinionData.getOpinionsBy().getCode() != null)
+		List<String> codes = opinions.stream()
+				.filter(opinionData -> opinionData.getOpinionsBy() != null
+						&& opinionData.getOpinionsBy().getCode() != null)
 				.map(advocateCode -> advocateCode.getOpinionsBy().getCode()).collect(Collectors.toList());
 
 		AdvocateSearchCriteria advocateSearch = new AdvocateSearchCriteria();
@@ -105,7 +107,7 @@ public class OpinionRepository {
 	}
 
 	private void getCaseNoWithSummonReference(List<Opinion> opinions) {
-		
+
 		for (Opinion opinion : opinions) {
 			if (opinion.getCaseDetails() != null && opinion.getCaseDetails().getSummonReferenceNo() != null) {
 
@@ -113,12 +115,12 @@ public class OpinionRepository {
 				String searchQuery = opinionBuilder.getCaseNo(opinion.getCaseDetails().getSummonReferenceNo(),
 						opinion.getTenantId(), preparedStatementValues);
 				try {
-					
+
 					String caseNo = jdbcTemplate.queryForObject(searchQuery, preparedStatementValues.toArray(),
 							String.class);
 					opinion.getCaseDetails().setCaseNo(caseNo);
 				} catch (Exception ex) {
-					
+
 					log.info("the exception in opinion :" + ex.getMessage());
 					throw new CustomException(propertiesManager.getCaseNoErrorCode(),
 							propertiesManager.getCaseNoErrorMsg());

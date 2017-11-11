@@ -3024,6 +3024,15 @@ definitions:
           type: string
           description: |
             code of the MaterialType
+        description:
+          type: string
+          maxLength: 512
+          description: |
+            description of the Material type 
+        storeMapping:
+          type:  array
+          items:
+            $ref: '#/definitions/StoreMapping'
         parent:
           type: integer
           format: int64
@@ -3379,13 +3388,13 @@ definitions:
         billingAddress:
           type: string
           pattern: ^[a-zA-Z0-9 ]+$
-          maxLength: 1000
+          maxLength: 512
           description: |
             billing address of the Store
         deliveryAddress:
           type: string
           pattern: ^[a-zA-Z0-9 ]+$
-          maxLength: 1000
+          maxLength: 512
           description: |
             delivery address of the Store
         contactNo1:

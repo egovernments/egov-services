@@ -59,8 +59,8 @@ var dat = {
       ],
       "values": [
         "materialReceipt[0].receivingStore.code",
-	"materialReceipt[0].receiptNumber",
-	"materialReceipt[0].materialName"
+        "materialReceipt[0].receiptNumber",
+        "materialReceipt[0].materialName"
       ],
       "resultPath": "openingbalance",
       "rowClickUrlUpdate": "/update/openingbalance/{mrnNumber}",
@@ -84,9 +84,12 @@ var dat = {
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
-	    "defaultValue":[
-              {"key":"2017",
-                 "value":"2017"}],
+            "defaultValue": [
+              {
+                "key": "2017",
+                "value": "2017"
+              }
+            ],
             "patternErrorMsg": ""
           },
           {
@@ -101,159 +104,153 @@ var dat = {
             "maxLength": 50,
             "minLength": 5,
             "patternErrorMsg": "inventory.create.field.message.code",
-						"url":"inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name"
+            "url": "inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name"
           }
         ]
       },
-		
-    {
-
-						 "name":"Opening Balance Details",
-            "label":"inventory.create.group.openingbalance.title.opbdetails",
-            "fields":[
-               {
-                  "type":"tableList",
-                  "jsonPath":"",
-                  "tableList":{
-                     "header":[
-                        {
-                           "label":"Material Name"
-                        },
-                        {
-                           "label":"Material Descr."
-                        },
-                        {
-                           "label":"Uom"
-                        },
-												 {
-                           "label":"Quantity"
-                        },
-                        {
-                           "label":"Rate"
-                        },
-                        {
-                           "label":"Receipt Number"
-                        },
-                        {
-                           "label":"Receipt Date"
-                        },
-                        {
-                           "label":"Lot Number"
-                        },
-                        {
-                           "label":"Expiry Date"
-                        }
-
-                     ],
-                     "values":[
-
-               {  
-          			"name":"material",
-                 "pattern":"",
-                 "type":"singleValueList",
-                 "jsonPath":"materialReceipt[0].materialReceiptDetail[0].material.code",
-                 "isRequired":true,
-                 "isDisabled":false,
-                 "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description",
-                 "depedants":[
-                      {
-                         "jsonPath":"materialReceipt[0].materialReceiptDetail[0].material.description",
-                         "type":"textField",
-                         "valExp":"getValFromDropdownData('materialStoreMappings[*].material.code', getVal('materialStoreMappings[*].material.code'), 'others[0]')"
-                      }
-                    ]
-               },
-               {  
-                  "name":"materialDescription",
-                  "jsonPath":"materialReceipt[0].materialReceiptDetail[0].material.description",
-                  "pattern":"",
-                  "type":"text",
-                  "isRequired":false,
-                  "isDisabled":true,
-                  "defaultValue":"",
-                  "patternErrorMsg":""
-               },
-               {  
-                  "name":"uom",
-                  "jsonPath":"materialReceipt[0].materialReceiptDetail[0].uom.code",
-                  "pattern":"",
-                  "type":"singleValueList",
-                  "isRequired":true,
-                  "isDisabled":false,
-                   "url":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description"
-               },
-              
-               {  
-                  "name":"receivedQty",
-                  "jsonPath":"materialReceipt[0].materialReceiptDetail[0].receivedQty",
-                  "pattern":"",
-                  "type":"number",
-                  "isRequired":true,
-                  "isDisabled":false,
-                  "defaultValue":"",
-                  "patternErrorMsg":""
-               }, {  
-                  "name":"openingRate",
-                  "jsonPath":"materialReceipt[0].materialReceiptDetail[0].openingRate",
-                  "pattern":"",
-                  "type":"number",
-                  "isRequired":true,
-                  "isDisabled":false,
-                  "defaultValue":"",
-                  "maxLength":100,
-                  "patternErrorMsg":"inventory.create.field.message.code"
-               },
-               {
-            "name": "oldReceiptNumber",
-            "jsonPath": "materialReceipt[0].materialReceiptDetail[0].receiptDetailsAddnInfo[0].oldReceiptNumber",
-            "pattern": "",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "defaultValue": "",
-            "patternErrorMsg": ""
-          },
+      {
+        "name": "Opening Balance Details",
+        "label": "inventory.create.group.openingbalance.title.opbdetails",
+        "fields": [
           {
-            "name": "receivedDate",
-            "jsonPath": "materialReceipt[0].materialReceiptDetail[0].receiptDetailsAddnInfo[0].receivedDate",
-             "pattern": "",
-            "type": "datePicker",
-            "isRequired": false,
-            "isDisabled": false,
-            "defaultValue": "",
-            "patternErrorMsg": ""
-          },
-          {
-            "name": "lotNo",
-            "jsonPath": "materialReceipt[0].materialReceiptDetail[0].receiptDetailsAddnInfo[0].lotNo",
-             "pattern": "^[a-zA-Z ]+$",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "defaultValue": "",
-            "patternErrorMsg": ""
-          },
-          {
-            "name": "expiryDate",
-            "jsonPath": "materialReceipt[0].materialReceiptDetail[0].receiptDetailsAddnInfo[0].expiryDate",
-            "pattern": "",
-            "type": "datePicker",
-            "isRequired": false,
-            "isDisabled": false,
-            "defaultValue": "",
-            "patternErrorMsg": ""
+            "type": "tableList",
+            "jsonPath": "",
+            "tableList": {
+              "header": [
+                {
+                  "label": "Material Name"
+                },
+                {
+                  "label": "Material Descr."
+                },
+                {
+                  "label": "Uom"
+                },
+                {
+                  "label": "Quantity"
+                },
+                {
+                  "label": "Rate"
+                },
+                {
+                  "label": "Receipt Number"
+                },
+                {
+                  "label": "Receipt Date"
+                },
+                {
+                  "label": "Lot Number"
+                },
+                {
+                  "label": "Expiry Date"
+                }
+              ],
+              "values": [
+                {
+                  "name": "material",
+                  "pattern": "",
+                  "type":"autoCompelete",
+                  "jsonPath": "materialReceipt[0].materialReceiptDetail[0].material.code",
+		  "displayJsonPath":"materialReceipt[0].materialReceiptDetail[0].material.name",
+                  "isRequired": true,
+                  "isDisabled": false,
+                  "url": "/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description",
+                  "depedants": [
+                    {
+                      "jsonPath": "materialReceipt[0].materialReceiptDetail[0].material.description",
+                      "type": "textField",
+                      "valExp": "getValFromDropdownData('materialStoreMappings[*].material.code', getVal('materialStoreMappings[*].material.code'), 'others[0]')"
+                    }
+                  ]
+                },
+                {
+                  "name": "materialDescription",
+                  "jsonPath": "materialReceipt[0].materialReceiptDetail[0].material.description",
+                  "pattern": "",
+                  "type": "text",
+                  "isRequired": false,
+                  "isDisabled": true,
+                  "defaultValue": "",
+                  "patternErrorMsg": ""
+                },
+                {
+                  "name": "uom",
+                  "jsonPath": "materialReceipt[0].materialReceiptDetail[0].uom.code",
+                  "pattern": "",
+                  "type": "singleValueList",
+                  "isRequired": true,
+                  "isDisabled": false,
+                  "url": "/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description"
+                },
+                {
+                  "name": "receivedQty",
+                  "jsonPath": "materialReceipt[0].materialReceiptDetail[0].receivedQty",
+                  "pattern": "",
+                  "type": "number",
+                  "isRequired": true,
+                  "isDisabled": false,
+                  "defaultValue": "",
+                  "patternErrorMsg": ""
+                },
+                {
+                  "name": "openingRate",
+                  "jsonPath": "materialReceipt[0].materialReceiptDetail[0].openingRate",
+                  "pattern": "",
+                  "type": "number",
+                  "isRequired": true,
+                  "isDisabled": false,
+                  "defaultValue": "",
+                  "maxLength": 100,
+                  "patternErrorMsg": "inventory.create.field.message.code"
+                },
+                {
+                  "name": "oldReceiptNumber",
+                  "jsonPath": "materialReceipt[0].materialReceiptDetail[0].receiptDetailsAddnInfo[0].oldReceiptNumber",
+                  "pattern": "",
+                  "type": "text",
+                  "isRequired": false,
+                  "isDisabled": false,
+                  "defaultValue": "",
+                  "patternErrorMsg": ""
+                },
+                {
+                  "name": "receivedDate",
+                  "jsonPath": "materialReceipt[0].materialReceiptDetail[0].receiptDetailsAddnInfo[0].receivedDate",
+                  "pattern": "",
+                  "type": "datePicker",
+                  "isRequired": false,
+                  "isDisabled": false,
+                  "defaultValue": "",
+                  "patternErrorMsg": ""
+                },
+                {
+                  "name": "lotNo",
+                  "jsonPath": "materialReceipt[0].materialReceiptDetail[0].receiptDetailsAddnInfo[0].lotNo",
+                  "pattern": "^[a-zA-Z ]+$",
+                  "type": "text",
+                  "isRequired": false,
+                  "isDisabled": false,
+                  "defaultValue": "",
+                  "patternErrorMsg": ""
+                },
+                {
+                  "name": "expiryDate",
+                  "jsonPath": "materialReceipt[0].materialReceiptDetail[0].receiptDetailsAddnInfo[0].expiryDate",
+                  "pattern": "",
+                  "type": "datePicker",
+                  "isRequired": false,
+                  "isDisabled": false,
+                  "defaultValue": "",
+                  "patternErrorMsg": ""
+                }
+              ]
+            }
           }
- 
-
-     ]
-                  }
-               }
-            ]
-         }
+        ]
+      }
     ],
     "url": "/inventory-inventory/v110/openingbalance/_create",
     "tenantIdRequired": true
   }
-  
 }
  export default dat;

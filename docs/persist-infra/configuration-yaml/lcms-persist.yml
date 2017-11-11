@@ -1178,7 +1178,7 @@ serviceMaps:
     fromTopic: lcms-notice-create
     isTransaction: true
     queryMaps: 
-    - query: INSERT INTO egov_lcms_notice (code, tenantId, exhibitNo, courtName, courtAddress, applicant, defendant, chiefOfficerDetails, advocateName, day, witness, noticeType, fileStoreId, createdBy, lastModifiedBy, createdTime, lastModifiedTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egov_lcms_notice (code, tenantId, exhibitNo, courtName, courtAddress, applicant, defendant, chiefOfficerDetails, advocateName, day, witness, noticeType, fileStoreId, createdBy, lastModifiedBy, createdTime, lastModifiedTime, caseNo, caseCode, caseRefernceNo, summonReferenceNo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?);
       basePath: $.notice
       jsonMaps:
        - jsonPath: $.notice.code
@@ -1235,13 +1235,24 @@ serviceMaps:
          type: CURRENTDATE
          dbType: LONG
          
+       - jsonPath: $.notice.caseNo
+         type: STRING
+         
+       - jsonPath: $.notice.caseCode
+         type: STRING
+         
+       - jsonPath: $.notice.caseRefernceNo
+         type: STRING
+         
+       - jsonPath: $.notice.summonReferenceNo
+         type: STRING 
   - version: 1.0
     name: update notice
     description: Updates notice service details in egov_lcms_notice table for specified code and tenantId
     fromTopic: lcms-notice-update
     isTransaction: true
     queryMaps: 
-    - query: UPDATE egov_lcms_notice SET exhibitNo=?, courtName=?, courtAddress=?, applicant=?, defendant=?, chiefOfficerDetails=?, advocateName=?, day=?, witness=?, noticeType=?, fileStoreId=?, lastModifiedBy=?, lastModifiedTime=? WHERE code=? and tenantid=?;
+    - query: UPDATE egov_lcms_notice SET exhibitNo=?, courtName=?, courtAddress=?, applicant=?, defendant=?, chiefOfficerDetails=?, advocateName=?, day=?, witness=?, noticeType=?, fileStoreId=?, lastModifiedBy=?, lastModifiedTime=? caseNo=?, caseCode=?, caseRefernceNo = ?, summonReferenceNo = ? WHERE code=? and tenantid=?;
       basePath: $.notice
       jsonMaps:
        - jsonPath: $.notice.exhibitNo
@@ -1284,6 +1295,18 @@ serviceMaps:
        - jsonPath: lastModifiedTime
          type: CURRENTDATE
          dbType: LONG
+         
+       - jsonPath: $.notice.caseNo
+         type: STRING
+         
+       - jsonPath: $.notice.caseCode
+         type: STRING
+         
+       - jsonPath: $.notice.caseRefernceNo
+         type: STRING
+         
+       - jsonPath: $.notice.summonReferenceNo
+         type: STRING
          
        - jsonPath: $.notice.code
          type: STRING

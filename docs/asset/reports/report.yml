@@ -908,8 +908,8 @@ ReportDefinitions:
     previousfynetblock,tenantid,transactiondate from egasset_current_value value inner join (select max(transactiondate) as 
     transactiondate,assetid,tenantid from egasset_current_value where tenantid=$tenantid  AND transactiondate<=(select extract 
     ('epoch' from (select startingdate from  egf_financialyear where (current_date between startingdate and endingdate) AND 
-    tenantid=$tenantid))*1000) GROUP BY assetid,tenantid,currentamount ) as maxvalue ON value.assetid=maxval.assetid and 
-    value.tenantid=maxval.tenantid AND value.transactiondate=maxvalue.transactiondate) prevyearcurrent ON current.assetid=
+    tenantid=$tenantid))*1000) GROUP BY assetid,tenantid,currentamount ) as maxvalue ON value.assetid=maxvalue.assetid and 
+    value.tenantid=maxvalue.tenantid AND value.transactiondate=maxvalue.transactiondate) prevyearcurrent ON current.assetid=
     prevyearcurrent.assetid AND current.tenantid=prevyearcurrent.tenantid AND current.transactiondate=prevyearcurrent.transactiondate 
     left outer join (select COALESCE(sum(revaluationamount),0.0) plusRevalsum,assetid,tenantid from egasset_revaluation where 
     tenantid=$tenantid AND  typeofchange='INCREASED' AND  (revaluationdate BETWEEN  (select extract ('epoch' from (select startingdate 

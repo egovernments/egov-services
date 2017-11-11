@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.domain.repository.DetailedEstimateRepository;
@@ -103,14 +104,10 @@ public class DetailedEstimateService {
                     }
                 }
             }
-            if (detailedEstimate.getSpillOverFlag() != null && detailedEstimate.getSpillOverFlag())
-            	detailedEstimate.setStatus(DetailedEstimateStatus.APPROVED);
-			else {
 				populateWorkFlowDetails(detailedEstimate, detailedEstimateRequest.getRequestInfo());
 				detailedEstimate.setStateId(workflowService.enrichWorkflow(detailedEstimate.getWorkFlowDetails(),
-						detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo()));
+                        detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo()));
 				detailedEstimate.setStatus(DetailedEstimateStatus.CREATED);
-			}
         }
         kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateCreateTopic(), detailedEstimateRequest);
         final DetailedEstimateResponse response = new DetailedEstimateResponse();
@@ -209,8 +206,13 @@ public class DetailedEstimateService {
 
 			WorkFlowDetails workFlowDetails = detailedEstimate.getWorkFlowDetails();
 
-			workFlowDetails.setType(DETAILED_ESTIMATE_WF_TYPE);
-			workFlowDetails.setBusinessKey(DETAILED_ESTIMATE_BUSINESSKEY);
+            if (validator.checkDetailedEstimateCreatedFlag(detailedEstimate)) {
+                workFlowDetails.setType(CommonConstants.SPILLOVER_DETAILED_ESTIMATE_WF_TYPE);
+                workFlowDetails.setBusinessKey(CommonConstants.SPILLOVER_DETAILED_ESTIMATE_WF_TYPE);
+            } else {
+                workFlowDetails.setType(DETAILED_ESTIMATE_WF_TYPE);
+                workFlowDetails.setBusinessKey(DETAILED_ESTIMATE_BUSINESSKEY);
+            }
 			workFlowDetails.setStateId(detailedEstimate.getStateId());
 			if (detailedEstimate.getStatus() != null)
 				workFlowDetails.setStatus(detailedEstimate.getStatus().toString());

@@ -14,8 +14,10 @@ import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.config.Constants;
 import org.egov.works.estimate.domain.repository.AbstractEstimateRepository;
 import org.egov.works.estimate.domain.service.AbstractEstimateService;
+import org.egov.works.estimate.domain.service.DetailedEstimateService;
 import org.egov.works.estimate.persistence.repository.AbstractEstimateDetailsJdbcRepository;
 import org.egov.works.estimate.persistence.repository.AssetRepository;
+import org.egov.works.estimate.persistence.repository.EstimateTechnicalSanctionRepository;
 import org.egov.works.estimate.persistence.repository.WorksMastersRepository;
 import org.egov.works.estimate.utils.EstimateUtils;
 import org.egov.works.estimate.web.contract.*;
@@ -51,6 +53,9 @@ public class EstimateValidator {
 
     @Autowired
     private AbstractEstimateRepository abstractEstimateRepository;
+
+    @Autowired
+    private EstimateTechnicalSanctionRepository estimateTechnicalSanctionRepository;
 
     public void validateEstimates(AbstractEstimateRequest abstractEstimateRequest, Boolean isNew) {
         Map<String, String> messages = new HashMap<>();
@@ -450,8 +455,7 @@ public class EstimateValidator {
                 if(StringUtils.isBlank(estimateTechnicalSanction.getTechnicalSanctionNumber()))
                     messages.put(KEY_DUPLICATE_ESTIMATE_ASSET_DETAILS, MESSAGE_DUPLICATE_ESTIMATE_ASSET_DETAILS);
                 else
-                 //check with cancelled status and search should be enhanced with technical sanction number search
-                   //validateUniqueTechnicalSanctionForDetailedEstimate(detailedEstimate, messages);
+                   validateUniqueTechnicalSanctionForDetailedEstimate(detailedEstimate, estimateTechnicalSanction, messages);
                 if(estimateTechnicalSanction.getTechnicalSanctionDate() == null)
                     messages.put(KEY_TECHNICAL_SANCTION_DATE_NULL, MESSAGE_TECHNICAL_SANCTION_DATE_NULL);
                  else if(detailedEstimate.getEstimateDate() != null && new Date(estimateTechnicalSanction.getTechnicalSanctionDate()).before(new Date(detailedEstimate.getEstimateDate())))
@@ -478,10 +482,13 @@ public class EstimateValidator {
 
     }
 
-    /*private void validateUniqueTechnicalSanctionForDetailedEstimate(DetailedEstimate detailedEstimate, Map<String, String> messages) {
-        DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder().tenantId(detailedEstimate.getTenantId())
-                .
-    }*/
+    private void validateUniqueTechnicalSanctionForDetailedEstimate(DetailedEstimate detailedEstimate, EstimateTechnicalSanction estimateTechnicalSanction, Map<String, String> messages) {
+        TechnicalSanctionSearchContract technicalSanctionSearchContract = TechnicalSanctionSearchContract.builder().tenantId(detailedEstimate.getTenantId())
+                .technicalSanctionNumbers(Arrays.asList(estimateTechnicalSanction.getTechnicalSanctionNumber())).build();
+        List<EstimateTechnicalSanction> technicalSanctions = estimateTechnicalSanctionRepository.search(technicalSanctionSearchContract);
+        if(technicalSanctions != null && !technicalSanctions.isEmpty())
+            messages.put(KEY_INVALID_ADMINSANCTION_DATE, MESSAGE_INVALID_ADMINSANCTION_DATE);
+    }
 
     private void validateMasterData(DetailedEstimate detailedEstimate, RequestInfo requestInfo, Map<String, String> messages) {
         JSONArray responseJSONArray = null;

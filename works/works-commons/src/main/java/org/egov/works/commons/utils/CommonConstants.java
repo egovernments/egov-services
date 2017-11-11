@@ -18,9 +18,11 @@ public class CommonConstants {
     
 	public static final String ABSTRACT_ESTIMATE_WF_TYPE = "AbstractEstimate";
 	public static final String SPILLOVER_ABSTRACT_ESTIMATE_WF_TYPE = "SpilloverAbstractEstimate";
+    public static final String SPILLOVER_DETAILED_ESTIMATE_WF_TYPE = "SpilloverDetailedEstimate";
 
 	public static final String ABSTRACT_ESTIMATE_BUSINESSKEY = "AbstractEstimate";
 	public static final String SPILLOVER_ABSTRACT_ESTIMATE_BUSINESSKEY = "SpilloverAbstractEstimate";
+    public static final String SPILLOVER_DETAILED_ESTIMATE_BUSINESSKEY = "SpilloverDetailedEstimate";
 
     //Common master names
     public static final String MASTERNAME_UOM="Uom";

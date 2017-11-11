@@ -5,26 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.egov.works.estimate.persistence.helper.DetailedEstimateHelper;
-import org.egov.works.estimate.persistence.repository.AbstractEstimateDetailsJdbcRepository;
-import org.egov.works.estimate.persistence.repository.DetailedEstimateDeductionJdbcRepository;
-import org.egov.works.estimate.persistence.repository.DetailedEstimateJdbcRepository;
-import org.egov.works.estimate.persistence.repository.EstimateActivityJdbcRepository;
-import org.egov.works.estimate.persistence.repository.EstimateAssetJdbcRepository;
-import org.egov.works.estimate.persistence.repository.EstimateMeasurementSheetJdbcRepository;
-import org.egov.works.estimate.persistence.repository.EstimateOverheadJdbcRepository;
-import org.egov.works.estimate.persistence.repository.MultiYearEstimateJdbcRepository;
-import org.egov.works.estimate.web.contract.AbstractEstimateDetails;
-import org.egov.works.estimate.web.contract.AbstractEstimateDetailsSearchContract;
-import org.egov.works.estimate.web.contract.DetailedEstimate;
-import org.egov.works.estimate.web.contract.DetailedEstimateDeductionSearchContract;
-import org.egov.works.estimate.web.contract.DetailedEstimateSearchContract;
-import org.egov.works.estimate.web.contract.EstimateActivity;
-import org.egov.works.estimate.web.contract.EstimateActivitySearchContract;
-import org.egov.works.estimate.web.contract.EstimateAssetSearchContract;
-import org.egov.works.estimate.web.contract.EstimateMeasurementSheet;
-import org.egov.works.estimate.web.contract.EstimateMeasurementSheetSearchContract;
-import org.egov.works.estimate.web.contract.EstimateOverheadSearchContract;
-import org.egov.works.estimate.web.contract.MultiYearEstimateSearchContract;
+import org.egov.works.estimate.persistence.repository.*;
+import org.egov.works.estimate.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -54,6 +36,9 @@ public class DetailedEstimateRepository {
 	
 	@Autowired
 	private EstimateMeasurementSheetJdbcRepository estimateMeasurementSheetJdbcRepository;
+
+    @Autowired
+    private EstimateTechnicalSanctionRepository estimateTechnicalSanctionRepository;
 	
 	public List<DetailedEstimate> search(DetailedEstimateSearchContract detailedEstimateSearchContract) {
 		DetailedEstimate detailedEstimate;
@@ -91,8 +76,11 @@ public class DetailedEstimateRepository {
 			estimateActivitySearchContract = new EstimateActivitySearchContract();
 			estimateActivitySearchContract.setDetailedEstimateIds(Arrays.asList(estimate.getId()));
 			estimateActivitySearchContract.setTenantId(estimate.getTenantId());
-			
-			
+
+            TechnicalSanctionSearchContract technicalSanctionSearchContract = TechnicalSanctionSearchContract.builder()
+                    .tenantId(estimate.getTenantId())
+                    .detailedEstimateIds(Arrays.asList(estimate.getId()))
+                    .technicalSanctionNumbers(detailedEstimateSearchContract.getTechnicalSanctionNumbers()).build();
 			
 			List<EstimateActivity> estimateActivities = estimateActivityJdbcRepository.search(estimateActivitySearchContract);
 			for(EstimateActivity estimateActivity : estimateActivities) {
@@ -111,6 +99,7 @@ public class DetailedEstimateRepository {
 			detailedEstimate.setEstimateOverheads(estimateOverheadJdbcRepository.search(estimateOverheadSearchContract));
 			detailedEstimate.setAssets(estimateAssetJdbcRepository.search(estimateAssetSearchContract));
 			detailedEstimate.setEstimateActivities(estimateActivities);
+            detailedEstimate.setEstimateTechnicalSanctions(estimateTechnicalSanctionRepository.search(technicalSanctionSearchContract));
 			detailedEstimates.add(detailedEstimate);
 		}
 		return detailedEstimates;

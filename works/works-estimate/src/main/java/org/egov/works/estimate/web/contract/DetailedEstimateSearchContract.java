@@ -59,4 +59,6 @@ public class DetailedEstimateSearchContract {
 	private Boolean spillOverFlag;
 
 	private String createdBy;
+
+    private List<String> technicalSanctionNumbers;
 }

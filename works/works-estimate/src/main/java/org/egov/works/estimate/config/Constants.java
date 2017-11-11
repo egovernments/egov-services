@@ -148,6 +148,9 @@ public class Constants {
     public static final String KEY_INVALID_ADMINSANCTION_DATE = "TECHNICAL_SANCTION_DATE_INVALID";
     public static final String MESSAGE_INVALID_ADMINSANCTION_DATE= "Abstract/Detailed Estimate Date cannot be prior to Admin Sanction Date of Estimate";
 
+    public static final String KEY_INVALID_TECHNICALSANCTION_NUMBER = "INVALID_TECHNICALSANCTION_NUMBER";
+    public static final String MESSAGE_INVALID_TECHNICALSANCTION_NUMBER= "Duplicate technical sanction nummber";
+
     public static final String KEY_TECHNICAL_SANCTION_DATE_NULL = "TECHNICAL_SANCTION_DATE_NULL";
     public static final String MESSAGE_TECHNICAL_SANCTION_DATE_NULL= "Estimate technical sanction date is required";
 

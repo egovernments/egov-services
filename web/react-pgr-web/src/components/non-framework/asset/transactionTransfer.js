@@ -675,8 +675,29 @@ class Transaction extends Component {
   create=(e) => {
     let self=this;
     e.preventDefault();
-    self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
+
+    if(!(formData.Disposal.remarks) || formData.Disposal.remarks == null || formData.Disposal.remarks == ""){
+      self.props.toggleSnackbarAndSetText(true, "Please enter Remarks", false, true);
+
+      if(!(formData.Disposal.buyerName) || formData.Disposal.buyerName == null || formData.Disposal.buyerName == ""){
+        self.props.toggleSnackbarAndSetText(true, "Please enter Asset Transfer/Sold to", false, true);
+      }
+
+      if(!(formData.Disposal.saleValue) || formData.Disposal.saleValue == null || formData.Disposal.saleValue == ""){
+        self.props.toggleSnackbarAndSetText(true, "Please enter Amount", false, true);
+      }
+
+      if(!(formData.Disposal.disposalReason) || formData.Disposal.disposalReason == null || formData.Disposal.disposalReason == ""){
+        self.props.toggleSnackbarAndSetText(true, "Please enter Purpose", false, true);
+      }
+
+      if(!(formData.Disposal.orderDate) || formData.Disposal.orderDate == null || formData.Disposal.orderDate == ""){
+        self.props.toggleSnackbarAndSetText(true, "Please enter Order Date", false, true);
+      }
+    }else{
+
+    self.props.setLoadingStatus('loading');
     var amountValidation=true;
     var amountValidationMsg="";
       console.log(formData.Disposal.Assets);
@@ -702,7 +723,7 @@ class Transaction extends Component {
               })
 
 
-
+            }
      }
 
   render() {

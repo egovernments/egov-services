@@ -7,6 +7,13 @@ export default class UiTimeField extends Component {
    	}
 
 renderTimePicker = (item) => {
+	let value ="";
+	if(this.props.getVal(item.jsonPath).split(':').length==2){
+		value=new Date('2017','12','1',this.props.getVal(item.jsonPath).split(':')[0],this.props.getVal(item.jsonPath).split(':')[1]);
+	}else if(item.defaultValue){
+		value=new Date('2017','12','1',item.defaultValue.split(':')[0],item.defaultValue.split(':')[1]);
+
+	}
 		switch (this.props.ui) {
             case 'google':
 				return (
@@ -22,7 +29,7 @@ renderTimePicker = (item) => {
 						format="ampm"
 						floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
 						errorText={this.props.fieldErrors[item.jsonPath]}
-                        value={new Date('2017','12','1',this.props.getVal(item.jsonPath).split(':')[0],this.props.getVal(item.jsonPath).split(':')[1])}//this.props.getVal(item.jsonPath)}
+                        value={value}//this.props.getVal(item.jsonPath)}
 						onChange={(e,time) => {debugger;
                          var val = time.getHours()+":"+time.getMinutes();
                             this.props.handler({target: {value: val}}, item.jsonPath, item.isRequired ? true : false, item.pattern, item.requiredErrMsg, item.patternErrMsg)

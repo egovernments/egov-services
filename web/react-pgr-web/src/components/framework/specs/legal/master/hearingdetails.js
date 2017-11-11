@@ -155,7 +155,7 @@ var dat ={
             "name": "nextHearingTime",
             "jsonPath": "cases[0].hearingDetails.nextHearingTime",
             "label": "legal.create.nextHearingTime",
-            "type": "text",
+            "type": "timePicker",
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": ""

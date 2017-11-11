@@ -12,7 +12,7 @@ var dat = {
         fields: [
           {
             name: "opinionFromDate",
-            jsonPath: "opinionFromDate",
+            jsonPath: "fromDate",
             label: "opinion.create.opinionFromDate",
             type: "datePicker",
             isRequired: false,
@@ -21,7 +21,7 @@ var dat = {
           },
           {
             name: "opinionToDate",
-            jsonPath: "opinionToDate",
+            jsonPath: "toDate",
             label: "opinion.create.opinionToDate",
             type: "datePicker",
             isRequired: false,

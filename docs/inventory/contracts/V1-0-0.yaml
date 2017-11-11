@@ -3092,7 +3092,7 @@ definitions:
           format: int64
           x-displayformat: 'dd/MM/yyyy'
           description: |
-            inactive date of the Supplier
+            inactive date of the Material
         purchaseUom:
           $ref: "#/definitions/Uom"
         expenseAccount:

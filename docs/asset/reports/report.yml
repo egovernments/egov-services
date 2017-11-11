@@ -829,7 +829,7 @@ ReportDefinitions:
     label: reports.asset.previousfynetblock
     type: string
     source: asset      
- searchParams:
+  searchParams:
   - name: fromDate
     label: reports.asset.fromDate
     type: date

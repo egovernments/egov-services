@@ -81,6 +81,8 @@ public class AssetService {
 		//Accumulateddepreciation should be less than gross value todo in validator
 		if (grossValue != null && accumulatedDepreciation != null) {
 			currentValue.setCurrentAmount(grossValue.subtract(accumulatedDepreciation));
+		}else if(grossValue!=null) {
+			currentValue.setCurrentAmount(grossValue);
 		}
 		else
 			currentValue.setCurrentAmount(asset.getOriginalValue());

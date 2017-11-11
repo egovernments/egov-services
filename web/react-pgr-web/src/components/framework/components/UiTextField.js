@@ -54,7 +54,7 @@ export default class UiTextField extends Component {
               className="custom-form-control-for-textfield"
               id={item.jsonPath.split(".").join("-")}
 							floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
-							inputStyle={{"color": "#5F5C57"}}
+              inputStyle={{"color": "#5F5C57","textAlign":item.hasOwnProperty("textAlign")?item.textAlign:"left"}}
 							floatingLabelFixed={true}
 							maxLength={item.maxLength || ""}
 							style={{"display": (item.hide ? 'none' : 'inline-block')}}

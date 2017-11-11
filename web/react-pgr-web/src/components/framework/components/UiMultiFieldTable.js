@@ -27,7 +27,12 @@ import UiDate from './UiDate';
 import UiPinCode from './UiPinCode';
 import UiArrayField from './UiArrayField';
 import UiFileTable from './UiFileTable';
+import jp from "jsonpath";
 import _ from 'lodash';
+
+function getSum(total, num) {
+    return total + num;
+}
 
 class UiMultiFieldTable extends Component {
 	constructor(props) {
@@ -61,20 +66,20 @@ class UiMultiFieldTable extends Component {
 					 listValuesArray[j].jsonPath = listValuesArray[j].jsonPath.replace(this.state.jsonPath + "[" + 0 + "]", this.state.jsonPath + "[" +i+ "]");
 
 				}
-				valuesArray.push(listValuesArray);	
+				valuesArray.push(listValuesArray);
 
 			}
 			this.setState({
 				values:valuesArray,
-				index:(numberOfRowsArray)?numberOfRowsArray.length-1:0,
+				index:(numberOfRowsArray)?(numberOfRowsArray.length-1):0,
 				isintialLoad:true
 			})
 			}else if(numberOfRowsArray && numberOfRowsArray.length == 0){
               this.setState({
-				 isintialLoad:true 
+				 isintialLoad:true
 			  })
 			}
-			
+
 		}
 
 	}
@@ -89,7 +94,6 @@ class UiMultiFieldTable extends Component {
 				   //val[i].jsonPath = val[i].jsonPath.replace(regexp, this.state.jsonPath + "[" + this.state.index + "]")
 				 val[i].jsonPath = val[i].jsonPath.replace(this.state.jsonPath + "[" + 0 + "]", this.state.jsonPath + "[" + this.state.index + "]");
 	   		}
-
 			let values = [...this.state.values];
 			values.push(val);
 			this.setState({
@@ -97,6 +101,10 @@ class UiMultiFieldTable extends Component {
 			});
    		})
    	}
+
+    escapeRegExp = (str) => {
+		   return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+		}
 
    	deleteRow = (ind) => {
 		//Changes to handle dependency sum
@@ -106,10 +114,10 @@ class UiMultiFieldTable extends Component {
 
 		let values = Object.assign([], this.state.values);
 		values.splice(ind, 1);
-		var regexp = new RegExp(this.state.jsonPath + "\\[\\d{1}\\]", "g");
+		var regexp = new RegExp(`${this.escapeRegExp(this.state.jsonPath)}\\[\\d+\\]`);
 		for(var i=0; i<values.length; i++) {
 			for(var j=0; j<values[i].length; j++) {
-				values[i][j].jsonPath = values[i][j].jsonPath.replace(regexp, this.state.jsonPath + "[" + i + "]");
+				values[i][j].jsonPath = values[i][j].jsonPath.replace(regexp, `${this.state.jsonPath}[${i}]`);
 				if(values[i][j].dependency)//Changes to handle dependency sum
 					{
 						dependencyFlag =1;
@@ -129,7 +137,7 @@ class UiMultiFieldTable extends Component {
 			if(formDataArray && formDataArray.length) {
 				formDataArray.splice(ind, 1);
 				var newArray=_.cloneDeep(formDataArray);
-				var newFormData=_.set(formData,this.state.jsonPath,formDataArray);				
+				var newFormData=_.set(formData,this.state.jsonPath,formDataArray);
 				this.props.setFormData(newFormData);
 			}
 		})
@@ -141,7 +149,7 @@ class UiMultiFieldTable extends Component {
 					{
 				let field= sumField.substr(0,sumField.lastIndexOf("["));
 				let last= sumField.substr(sumField.lastIndexOf("]")+2);
-			
+
 				let arrval = _.get(_formData,field);
 			if(arrval){
 					let len= _.get(_formData,field).length;
@@ -158,8 +166,8 @@ class UiMultiFieldTable extends Component {
 						svalue=_.get(_formData,ifield);
 						amtsum += parseInt(svalue);
 					}
-					
-					
+
+
 					}
 			this.props.handler({target: {value: amtsum}}, depField, false, '', '');
 			}
@@ -217,6 +225,30 @@ class UiMultiFieldTable extends Component {
 	}
 
 	renderTable = (item) => {
+		// console.log(item.tableList.hasFooter, item.tableList.footer);
+		let {formData} = this.props;
+		let footerArray=[];
+
+		item.tableList.values.map((val=>{
+			footerArray.push(undefined);
+		}));
+
+    // console.log(formData);
+
+		if(item.tableList.hasFooter){
+			for(var i=0;i<item.tableList.footer.length;i++){
+				// console.log(JSON.stringify(formData));
+				for(var key in item.tableList.footer[i]){
+					// console.log(key);
+					let array = jp.query(formData, `$..${item.tableList.footer[i][key]}`);
+          // console.log(array);
+					footerArray.splice(key+1,0,array.reduce( (previousValue, currentValue) => Number(previousValue) + Number(currentValue), 0))
+				}
+			}
+		}
+
+    // console.log(footerArray);
+
 		return (
 			<div>
 				<Table className="table table-striped table-bordered" responsive>
@@ -230,7 +262,7 @@ class UiMultiFieldTable extends Component {
 									)
 								})
 							}
-							<th>{translate("reports.common.action")}</th>
+							{!item.tableList.actionsNotRequired ? <th>{translate("reports.common.action")}</th> : ''}
 						</tr>
 					</thead>
 					<tbody>
@@ -248,22 +280,35 @@ class UiMultiFieldTable extends Component {
 												)
 											})
 										}
-										<td>
-											<div className="material-icons" onClick={()=>{
-												this.deleteRow(i)
-											}}>delete</div>
-										</td>
+										{!item.tableList.actionsNotRequired ?
+											<td>
+												<div className="material-icons" onClick={()=>{
+													this.deleteRow(i)
+												}}>delete</div>
+											</td>
+										 : ''}
 									</tr>
 								)
 							})
 						}
 					</tbody>
+					{item.tableList.hasFooter ?
+					<tfoot>
+						<tr>
+							{footerArray.map((val, index) => {
+								let value = val !== undefined ? val.toFixed(2) : '';
+							  return (<td className="text-right" style={{fontWeight:'bold'}}>{value ? `Total: ${value}` : ''}</td>)
+							})}
+							{!item.tableList.actionsNotRequired ? <td></td> : ''}
+						</tr>
+					</tfoot> : ''}
 				</Table>
+				{!item.tableList.actionsNotRequired ?
 				<div style={{"textAlign": "right"}}>
 					<RaisedButton label={translate("pgr.lbl.add")} primary={true} onClick={() => {
 						this.addNewRow()
 					}}/>
-				</div>
+				</div> : ''}
 			</div>
 		)
 	}

@@ -1,10 +1,9 @@
 var dat = {
 	"works.create": {
-		"numCols": 12/4,
-		"url": "",
-		"tenantIdRequired": true,
-		"useTimestamp": true,
-		"objectName": "abstractEstimates",
+		"numCols": 4,
+    "useTimestamp": true,
+    "objectName": "abstractEstimates",
+		"url":"works-estimate/abstractestimates/_create",
 		"groups": [
 			{
 				"label": "works.create.groups.label.estandadminsanction",
@@ -24,7 +23,7 @@ var dat = {
             },
 						{
               "name": "department",
-              "jsonPath": "abstractEstimates[0].department",
+              "jsonPath": "abstractEstimates[0].department.code",
               "label": "works.create.groups.fields.department",
               "pattern": "",
               "type": "singleValueList",
@@ -36,7 +35,7 @@ var dat = {
             },
 						{
               "name": "referenceType",
-              "jsonPath": "abstractEstimates[0].referenceType",
+              "jsonPath": "abstractEstimates[0].referenceType.code",
               "label": "works.create.groups.fields.referenceType",
               "pattern": "",
               "type": "singleValueList",
@@ -82,7 +81,7 @@ var dat = {
 						},
 						{
               "name": "natureOfWork",
-              "jsonPath": "abstractEstimates[0].natureOfWork",
+              "jsonPath": "abstractEstimates[0].natureOfWork.code",
               "label": "works.create.groups.fields.natureOfWork",
               "pattern": "",
               "type": "singleValueList",
@@ -94,7 +93,7 @@ var dat = {
             },
 						{
               "name": "modeOfAllotment",
-              "jsonPath": "abstractEstimates[0].modeOfAllotment",
+              "jsonPath": "abstractEstimates[0].modeOfAllotment.code",
               "label": "works.create.groups.fields.modeOfAllotment",
               "pattern": "",
               "type": "singleValueList",
@@ -106,7 +105,7 @@ var dat = {
             },
 						{
               "name": "typeOfWork",
-              "jsonPath": "abstractEstimates[0].typeOfWork",
+              "jsonPath": "abstractEstimates[0].typeOfWork.code",
               "label": "works.create.groups.fields.typeOfWork",
               "pattern": "",
               "type": "singleValueList",
@@ -116,14 +115,14 @@ var dat = {
               "requiredErrMsg": "",
               "patternErrMsg": "",
 							"depedants": [{
-	              "jsonPath": "abstractEstimates[0].subTypeOfWork",
+	              "jsonPath": "abstractEstimates[0].subTypeOfWork.code",
 	              "type": "dropDown",
-								"pattern": "/egov-mdms-service/v1/_get?&moduleName=Works&masterName=TypeOfWork&filter=%5B%3F%28%40.parent%3D%3D'{abstractEstimates[0].typeOfWork}'%29%5D|$..code|$..name"
+								"pattern": "/egov-mdms-service/v1/_get?&moduleName=Works&masterName=TypeOfWork&filter=%5B%3F%28%40.parent%3D%3D'{abstractEstimates[0].typeOfWork.code}'%29%5D|$..code|$..name"
 	            }]
             },
 						{
               "name": "subTypeOfWork",
-              "jsonPath": "abstractEstimates[0].subTypeOfWork",
+              "jsonPath": "abstractEstimates[0].subTypeOfWork.code",
               "label": "works.create.groups.fields.subTypeOfWork",
               "pattern": "",
               "type": "singleValueList",
@@ -198,11 +197,11 @@ var dat = {
             },
 						{
               "name": "locality",
-              "jsonPath": "abstractEstimates[0].locality",
+              "jsonPath": "abstractEstimates[0].locality.code",
               "label": "works.create.groups.fields.locality",
               "pattern": "",
               "type": "singleValueList",
-              "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$..code|$..name",
+              "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$..id|$..name",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -210,11 +209,11 @@ var dat = {
             },
 						{
               "name": "ward",
-              "jsonPath": "abstractEstimates[0].ward",
+              "jsonPath": "abstractEstimates[0].ward.code",
               "label": "works.create.groups.fields.ward",
               "pattern": "",
               "type": "singleValueList",
-              "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=ADMINISTRATION|$..code|$..name",
+              "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=ADMINISTRATION|$..id|$..name",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -227,6 +226,16 @@ var dat = {
               "pattern": "",
               "type": "singleValueList",
               "url": "",
+							"defaultValue":[
+								{
+                    "key": true,
+                    "value": "Yes"
+                },
+								{
+                    "key": false,
+                    "value": "No"
+                }
+							],
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -308,7 +317,7 @@ var dat = {
 				"fields":[
 					{
 						"name": "code",
-						"jsonPath": "abstractEstimates[0].assetDetails[0].asset",
+						"jsonPath": "abstractEstimates[0].assetDetails[0].asset.code",
 						"label": "works.create.groups.fields.assetCode",
 						"pattern": "",
 						"type": "text",
@@ -319,11 +328,11 @@ var dat = {
 					},
 					{
 						"name": "assetCondition",
-						"jsonPath": "abstractEstimates[0].assetDetails[0].assetCondition",
+						"jsonPath": "abstractEstimates[0].assetDetails[0].assetCondition.name",
 						"label": "works.create.groups.fields.assetCondition",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "",
+						"url":"/egov-mdms-service/v1/_get?&moduleName=Works&masterName=AssetPresentCondition|$..id|$..name",
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -343,58 +352,41 @@ var dat = {
 				]
 			},
 			{
-				"label": "works.create.groups.label.workdetails",
-				"name": "Work Details",
-				"fields":[
-					{
-					  "type": "tableList",
-					  "jsonPath": "abstractEstimates[0].abstractEstimateDetails",
-					  "tableList": {
-					    "header": [{
-					      "label": "works.create.groups.label.nameofthework"
-					    }, {
-					      "label": "works.create.groups.label.estimateAmount"
-					    }],
-					    "values": [{
-					      "name": "name",
-					      "pattern": "",
-					      "type": "textarea",
-					      "jsonPath": "abstractEstimates[0].abstractEstimateDetails[0].nameOfWork",
-					      "isRequired": true,
-								"isDisabled": false
-					    }, {
-					      "name": "type",
-					      "pattern": "",
-					      "type": "text",
-					      "jsonPath": "abstractEstimates[0].abstractEstimateDetails[0].estimateAmount",
-					      "isRequired": true,
-								"isDisabled": false
-					    }]
-					  }
-					}
-				]
-			},
-			{
-				"label": "works.create.groups.label.uploaddocs",
-				"name": "Upload Documents",
-				"fields":[
-					{
-						"name": "name",
-		        "jsonPath": "documentDetails[0].name",
-						"label": "works.create.groups.label.docDetails",
-						"pattern": "",
-						"type": "fileTable",
-						"isRequired": true,
-						"isDisabled": false,
-						"requiredErrMsg": "",
-						"patternErrMsg": "",
-						"fileList": {
-									name: "docName",
-									id: "fileStoreId"
-						},
-						fileCount: 3
-					}
-				]
+			  "label": "works.create.groups.label.workdetails",
+			  "name": "Work Details",
+			  "fields":[
+			    {
+			      "type": "tableList",
+			      "jsonPath": "abstractEstimates[0].abstractEstimateDetails",
+			      "tableList": {
+			        "header": [{
+			          "label": "works.create.groups.label.nameofthework"
+			        }, {
+			          "label": "works.create.groups.label.estimateAmount"
+			        }],
+			        "values": [{
+			          "name": "name",
+			          "pattern": "",
+			          "type": "textarea",
+			          "jsonPath": "abstractEstimates[0].abstractEstimateDetails[0].nameOfWork",
+			          "isRequired": true,
+			          "isDisabled": false
+			        }, {
+			          "name": "type",
+			          "pattern": "",
+			          "type": "text",
+			          "jsonPath": "abstractEstimates[0].abstractEstimateDetails[0].estimateAmount",
+			          "isRequired": true,
+			          "textAlign":'right',
+			          "isDisabled": false
+			        }],
+			        "hasFooter":true,
+			        "footer":[
+			          {1:"abstractEstimates[*].abstractEstimateDetails[*].estimateAmount"}
+			        ]
+			      }
+			    }
+			  ]
 			}
 		]
 	}

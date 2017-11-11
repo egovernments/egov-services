@@ -780,7 +780,11 @@ ReportDefinitions:
   - name: code
     label: reports.asset.code
     type: string
-    source: asset      
+    source: asset
+  - name: assetcategory
+    label: reports.asset.assetcategory
+    type: string
+    source: asset 
   - name: assetaccount
     label: reports.asset.assetaccount
     type: string

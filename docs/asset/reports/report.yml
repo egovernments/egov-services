@@ -784,17 +784,13 @@ ReportDefinitions:
   - name: assetcategory
     label: reports.asset.assetcategory
     type: string
-    source: asset 
-  - name: assetaccount
-    label: reports.asset.assetaccount
-    type: string
     source: asset      
   - name: revaluationreserveaccount
     label: reports.asset.revaluationreserveaccount
     type: string
     source: asset
   - name: previousfynetblock
-    label: reports.asset.previousfynetblock
+    label: reports.asset.startcurrentvalue
     type: number
     source: asset      
   - name: plusrevalsum

@@ -15,7 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UploadDefinitions {
 	
-	@JsonProperty("UploadDefinition")
+	@JsonProperty("UploadDefinitions")
     public UploadDefinition uploadDefinition;
 	
 	

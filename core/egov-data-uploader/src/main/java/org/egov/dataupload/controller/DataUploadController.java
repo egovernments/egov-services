@@ -1,10 +1,8 @@
 package org.egov.dataupload.controller;
 
-import java.io.File;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.dataupload.service.DataUploadService;
@@ -35,7 +33,7 @@ public class DataUploadController {
 	
 	public static final Logger logger = LoggerFactory.getLogger(DataUploadController.class);
 
-	@PostMapping("/{moduleName}/{searchName}/_get")
+	@PostMapping("/{moduleName}/_get")
 	@ResponseBody
 	public ResponseEntity<?> getReportData(MultipartFile inputFile, 
 			@RequestBody RequestInfo requestInfo, @PathVariable("moduleName") String moduleName) throws Exception {

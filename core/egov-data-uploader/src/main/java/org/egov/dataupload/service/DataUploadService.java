@@ -34,7 +34,7 @@ import com.jayway.jsonpath.JsonPath;
 public class DataUploadService {
 
 	@Autowired
-	private DataUploadRepository searchRepository;
+	private DataUploadRepository dataUploadRepository;
 	
 	@Autowired
 	private DataUploadApplicationRunnerImpl runner;
@@ -49,6 +49,7 @@ public class DataUploadService {
 	public Object buildRequest(MultipartFile file, String moduleName, RequestInfo requestInfo) throws IOException {
 		Map<String, UploadDefinition> uploadDefinitionMap = runner.getUploadDefinitionMap();
 	    Definition uploadDefinition = getUploadDefinition(uploadDefinitionMap, moduleName, file.getName());
+	    Object response = null;
 		HSSFWorkbook wb = new HSSFWorkbook(file.getInputStream());
         HSSFSheet sheet = wb.getSheetAt(0);
         logger.info("Workbook: "+sheet);
@@ -81,18 +82,18 @@ public class DataUploadService {
 	            				dataList.get(i));	            	
 	            		}
 	            	documentContext.put("$", "RequestInfo", requestInfo);
+	            	String request = documentContext.jsonString().toString();
+	            	logger.info("Request: "+request);
 	            	
-	            	logger.info("Request: "+documentContext.jsonString().toString());
+	            	response = dataUploadRepository.doApiCall(request, uploadDefinition.getUri());
 	            	
 	            }
             }
-            
-            String apiRequest = null;
-            
+                        
             
         }
         
-        return null;
+        return response;
 	}
 	
 	private Definition getUploadDefinition(Map<String, UploadDefinition> searchDefinitionMap,

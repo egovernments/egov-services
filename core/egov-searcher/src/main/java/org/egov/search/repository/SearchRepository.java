@@ -59,7 +59,6 @@ public class SearchRepository {
 		for(PGobject obj: maps){
 			LOGGER.info("obj::"+obj);
 			String tuple = obj.toString();
-			LOGGER.info("Tuple: "+tuple);
 			if(tuple.startsWith("[") && tuple.endsWith("]")){
 				JSONArray jsonArray = new JSONArray(tuple);
 				for(int i = 0; i < jsonArray.length();  i++){

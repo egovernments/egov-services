@@ -17,12 +17,15 @@ import org.egov.works.estimate.domain.validator.EstimateValidator;
 import org.egov.works.estimate.persistence.repository.IdGenerationRepository;
 import org.egov.works.estimate.utils.EstimateUtils;
 import org.egov.works.estimate.web.contract.AbstractEstimate;
+import org.egov.works.estimate.web.contract.AbstractEstimateAssetDetail;
 import org.egov.works.estimate.web.contract.AbstractEstimateDetails;
 import org.egov.works.estimate.web.contract.AbstractEstimateRequest;
 import org.egov.works.estimate.web.contract.AbstractEstimateResponse;
+import org.egov.works.estimate.web.contract.AbstractEstimateSanctionDetail;
 import org.egov.works.estimate.web.contract.AbstractEstimateSearchContract;
 import org.egov.works.estimate.web.contract.AbstractEstimateStatus;
 import org.egov.works.estimate.web.contract.AuditDetails;
+import org.egov.works.estimate.web.contract.DocumentDetail;
 import org.egov.works.estimate.web.contract.EstimateAppropriation;
 import org.egov.works.estimate.web.contract.EstimateAppropriationRequest;
 import org.egov.works.estimate.web.contract.EstimateAppropriationResponse;
@@ -84,6 +87,18 @@ public class AbstractEstimateService {
 				details.setAuditDetails(
 						getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), false));
 			}
+			for (final AbstractEstimateSanctionDetail sanctionDetail : estimate.getSanctionDetails())
+				sanctionDetail.setId(commonUtils.getUUID());
+			for (final AbstractEstimateAssetDetail assetDetail : estimate.getAssetDetails()) {
+				assetDetail.setId(commonUtils.getUUID());
+				assetDetail.setAuditDetails(
+						getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), false));
+			}
+			for (final DocumentDetail documentDetail : estimate.getDocumentDetails()) {
+				documentDetail.setId(commonUtils.getUUID());
+				documentDetail.setAuditDetails(
+						getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), false));
+			}
 			if (!estimate.getSpillOverFlag()) {
 				String abstractEstimateNumber = idGenerationRepository
 						.generateAbstractEstimateNumber(estimate.getTenantId(), abstractEstimateRequest.getRequestInfo());
@@ -112,6 +127,15 @@ public class AbstractEstimateService {
 	public AbstractEstimateResponse update(AbstractEstimateRequest abstractEstimateRequest) {
 		validator.validateEstimates(abstractEstimateRequest, true);
 		for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
+			for (final AbstractEstimateDetails details : estimate.getAbstractEstimateDetails())
+				details.setAuditDetails(
+						getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), true));
+			for (final AbstractEstimateAssetDetail assetDetail : estimate.getAssetDetails())
+				assetDetail.setAuditDetails(
+						getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), true));
+			for (final DocumentDetail documentDetail : estimate.getDocumentDetails())
+				documentDetail.setAuditDetails(
+						getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), true));
 			populateWorkFlowDetails(estimate, abstractEstimateRequest.getRequestInfo());
 			estimate.setAuditDetails(
 					getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), true));

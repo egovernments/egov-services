@@ -224,6 +224,41 @@ serviceMaps:
        
        - jsonPath: $.abstractEstimates.*.sanctionDetails.*.sanctionAuthority.name
 
+    - query: INSERT INTO egw_documentdetail(id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+      basePath: $.abstractEstimates.*.documentdetails.*
+      jsonMaps:
+         
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.id
+         
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.tenantId
+         
+       - jsonPath: $.abstractEstimates[?({id} in @.documentdetails[*].id)].id
+       
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.objectType
+       
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.documentType
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.fileStore
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.latitude
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.longitude
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.description
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.dateOfCapture
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.workProgress
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.createdBy
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.createdTime
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.lastModifiedBy
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.lastModifiedTime
+
  - version: 1.0
    name: AbstractEstimate Update
    description: Update abstract estimate  in egw_abstractestimate table
@@ -406,6 +441,41 @@ serviceMaps:
        - jsonPath: $.abstractEstimates.*.sanctionDetails.*.id
          
        - jsonPath: $.abstractEstimates.*.sanctionDetails.*.tenantId
+
+    - query: UPDATE egw_documentdetail SET objectid=?, objecttype=?, documenttype=?, filestore=?, latitude=?, longitude=?, description=?, dateofcapture=?, workprogress=?, createdby=?, createdtime=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+
+      basePath: $.abstractEstimates.*.documentdetails.*
+      jsonMaps:
+         
+       - jsonPath: $.abstractEstimates[?({id} in @.documentdetails[*].id)].id
+       
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.objectType
+       
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.documentType
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.fileStore
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.latitude
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.longitude
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.description
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.dateOfCapture
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.workProgress
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.createdBy
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.createdTime
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.lastModifiedBy
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.lastModifiedTime
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.id
+         
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.tenantId
 
 
  - version: 1.0

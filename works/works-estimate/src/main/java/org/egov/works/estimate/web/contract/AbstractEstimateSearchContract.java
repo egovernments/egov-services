@@ -28,13 +28,13 @@ public class AbstractEstimateSearchContract {
 
 	private String sortBy;
 
-	private String departmentCode;
+	private List<String> departmentCodes;
 
-	private String fundCode;
+	private List<String> fundCodes;
 
-	private String functionCode;
+	private List<String> functionCodes;
 
-	private String budgetHeadCode;
+	private List<String> budgetHeadCodes;
 	
 	private Long adminSanctionFromDate;
 
@@ -47,4 +47,8 @@ public class AbstractEstimateSearchContract {
 	private List<String> abstractEstimateNumbers;
 
 	private List<String> workIdentificationNumbers;
+	
+	private List<String> statuses;
+	
+	private String nameOfWork;
 }

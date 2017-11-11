@@ -64,33 +64,47 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 			params.append("adminSanctionNumber in (:adminSanctionNumbers)");
 			paramValues.put("adminSanctionNumbers", abstractEstimateSearchContract.getAdminSanctionNumbers());
 		}
-		if (abstractEstimateSearchContract.getDepartmentCode() != null) {
+		if (abstractEstimateSearchContract.getDepartmentCodes() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("department =:department");
-			paramValues.put("department", abstractEstimateSearchContract.getDepartmentCode());
+			params.append("department in (:departments)");
+			paramValues.put("departments", abstractEstimateSearchContract.getDepartmentCodes());
 		}
-		if (abstractEstimateSearchContract.getFundCode() != null) {
+		if (abstractEstimateSearchContract.getFundCodes() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("fund =:fund");
-			paramValues.put("fund", abstractEstimateSearchContract.getFundCode());
+			params.append("fund in (:funds)");
+			paramValues.put("funds", abstractEstimateSearchContract.getFundCodes());
 		}
-		if (abstractEstimateSearchContract.getFunctionCode() != null) {
+		if (abstractEstimateSearchContract.getFunctionCodes() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("function =:function");
-			paramValues.put("function", abstractEstimateSearchContract.getFunctionCode());
+			params.append("function in (:functions)");
+			paramValues.put("functions", abstractEstimateSearchContract.getFunctionCodes());
 		}
-		if (abstractEstimateSearchContract.getBudgetHeadCode() != null) {
+		if (abstractEstimateSearchContract.getBudgetHeadCodes() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("budgetHead =:budgetHead");
-			paramValues.put("budgetHead", abstractEstimateSearchContract.getBudgetHeadCode());
+			params.append("budgetHead in (:budgetHeads)");
+			paramValues.put("budgetHeads", abstractEstimateSearchContract.getBudgetHeadCodes());
+		}
+		if (abstractEstimateSearchContract.getStatuses() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("status in (:statuses)");
+			paramValues.put("statuses", abstractEstimateSearchContract.getStatuses());
+		}
+		if (abstractEstimateSearchContract.getNameOfWork() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("id in (select abstractestimate from egw_abstractestimate_details where nameofwork = :nameOfWork)");
+			paramValues.put("nameOfWork", abstractEstimateSearchContract.getNameOfWork());
 		}
 		if (abstractEstimateSearchContract.getAdminSanctionFromDate() != null) {
 			if (params.length() > 0) {

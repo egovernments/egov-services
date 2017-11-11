@@ -66,17 +66,7 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Ids of Abstract Estimate to get the Abstract Estimates
-        - name: estimateNumbers
-          in: query
-          type: array
-          items:
-            type: string
-          format: autoComplete
-          maxItems: 50
-          required: false
-          allowEmptyValue: true
-          description: Comma separated list of estimate numbers of Abstract Estimate
-        - name: departments
+        - name: departmentCodes
           in: query
           type: array
           items:
@@ -86,7 +76,7 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of the Departments for which Abstract Estimate belongs to
-        - name: funds
+        - name: fundCodes
           in: query
           type: array
           items:
@@ -96,7 +86,7 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of the Funds for which Abstract Estimate belongs to
-        - name: functions
+        - name: functionCodes
           in: query
           type: array
           items:
@@ -106,7 +96,7 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of the Functions for which Abstract Estimate belongs to
-        - name: budgetHeads
+        - name: budgetHeadCodes
           in: query
           type: array
           items:

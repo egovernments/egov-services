@@ -23,6 +23,14 @@ public class Notice {
 	@Size(min = 4, max = 128)
 	private String tenantId ;
 	
+	private String caseNo;
+	
+	private String caseCode;
+	
+	private String caseRefernceNo;
+	
+	private String summonReferenceNo;
+	
 	private String exhibitNo;
 	
 	private String courtName;

@@ -45,14 +45,16 @@ export default class assetImmovableReport extends Component {
 	 numberWithCommas = (x)=> {
 		if (x) {
 			x=x.toString();
+			var y = x.split(".")[1];
+			x=x.split(".")[0];
 			var lastThree = x.substring(x.length-3);
 			var otherNumbers = x.substring(0,x.length-3);
 			if(otherNumbers != '')
 			    lastThree = ',' + lastThree;
-			var res = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
+			var resCal = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree ;
+			var res = (y==null) ? resCal : (resCal + "." + y);
 			return res;
 		}
-
 }
 
 

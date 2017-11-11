@@ -3087,6 +3087,12 @@ definitions:
             - Obsolete
           description: |
             status of the Material
+        inActiveDate:
+          type: integer
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
+          description: |
+            inactive date of the Supplier
         purchaseUom:
           $ref: "#/definitions/Uom"
         expenseAccount:
@@ -3151,7 +3157,11 @@ definitions:
         scrapable:
           type: boolean
           description: |
-            Material is scrapable or not.    
+            Material is scrapable or not.
+        storeMapping:
+          type:  array
+          items:
+            $ref: '#/definitions/StoreMapping'
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
@@ -3197,6 +3207,28 @@ definitions:
       - store
       - material
 
+    StoreMapping:
+      type: object
+      description: |
+        This object holds the store mapping details information.
+      properties:  
+        store:
+          $ref: "#/definitions/Store"
+        chartofAccount:
+          $ref: "#/definitions/ChartofAccount"
+        active:
+          type: boolean
+          description: |
+            active or inactive flag of mapping
+        delete:
+          type: boolean
+          description: |
+            delete flag of mapping used during deleting the mapping.    
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"             
+      required:
+      - store
+      
     Uom:
       type: object
       description: |

@@ -2156,6 +2156,22 @@ var localization_EN_Data = {
 "reports.asset.titledocumentsavailable":"Title Document Available",
 "reports.asset.accumulateddepreciation":"Aaccumulated Depreciation",
 
+// TODO might be renamed
+"reports.asset.schedulename":"Details Head Description",
+"reports.asset.assetcategory":"Asset Sub Category",
+"reports.asset.revaluationreserveaccount":"GROSS BLOCK-Account code",
+"reports.asset.startcurrentvalue":"GROSS BLOCK-BALANCE as at <1st April of Current FY>"
+"reports.asset.plusrevalsum":"GROSS BLOCK-Additional during the year"
+"reports.asset.minusrevalsum":"GROSS BLOCK-Deduction During the year"
+"reports.asset.revaltotal":"GROSS BLOCK-Total"
+"reports.asset.accumulateddepreciationaccount":"ACCUMULATED DEPRECIATION-Account Code"
+"reports.asset.startdepval":"ACCUMULATED DEPRECIATION-BALANCE as at <1st April of Current FY>"
+"reports.asset.currdepsum":"Depreciation on during the year"
+"reports.asset.totaldepsum":"DePRECIATION Total"
+"reports.asset.endcurrentamount":"Net Block as at <31st March of Current FY>"
+"reports.asset.previousfynetblock":"Net Block as at <31st March of Current FY>"
+
+
 
 "legal.create.group.title.CaseType" : "ENTRY TYPE",
 "legal.create.isSummon" :"Entry Type",

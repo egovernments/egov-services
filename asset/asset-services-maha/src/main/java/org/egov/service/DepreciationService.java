@@ -174,11 +174,11 @@ public class DepreciationService {
 
 		// deciding the from date for the current depreciation from the last
 		// depreciation date
-		if (depInputs.getLastDepreciationDate().compareTo(toDate) >= 0)
+		if (depInputs.getLastDepreciationDate().compareTo(fromDate) >= 0)
 			fromDate = depInputs.getLastDepreciationDate();
 
 		// getting the no of days betweeen the from and todate using ChronoUnit
-		Long noOfDays = ((toDate - fromDate) / 1000 / 60 / 60 / 24);
+		Long noOfDays = ((toDate - fromDate) / 1000 / 60 / 60 / 24)+1;
 
 		// deprate for the no of days = no of days * calculated dep rate per day
 		Double depRateForGivenPeriod = noOfDays * depInputs.getDepreciationRate() / 365;

@@ -171,6 +171,11 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of the Abstract Estimate Status
+        - name: nameOfWork
+          in: query
+          type: string
+          required: false
+          description: Name of the work of Detailed Estimate
       responses:
         200:
           description: Abstract Estimate(s) Retrieved Successfully
@@ -200,7 +205,7 @@ paths:
           
           There will be financial sanction during the workflow before Admin sanction. The financial details such as fund, function, budgethead, scheme, sub scheme, is fund available and fund sanction authority details will be captured during this stage. Whether budget appropriation required/not required during this stage is based on configuration.
           
-          The final approver who does Administrative sanction will enter the Administrative sanction no./date and Council sanction no./date.
+          The final approver who does Administrative sanction will enter the Administrative sanction no. and Council sanction no./date in case of new Abstract Estimates. These details along with admin sanction date and authority will be captured during the initial create screen itself for spillover works.
           
       parameters:
         - name: AbstractEstimateRequest
@@ -235,7 +240,9 @@ paths:
           
           There will be financial sanction during the workflow before Admin sanction. The financial details such as fund, function, budgethead, scheme, sub scheme, is fund available and fund sanction authority details will be captured during this stage. Whether budget appropriation required/not required during this stage is based on configuration.
           
-          The final approver who does Administrative sanction will enter the Administrative sanction no./date and Council sanction no./date.
+          Abstract Estimate date is not allowed to modify during workflow or during rejection except in drafts.  Abstract Estimate number not allowed to modify for normal estimate.
+          
+          The final approver who does Administrative sanction will enter the Administrative sanction no. and Council sanction no./date in case of new Abstract Estimates. These details along with admin sanction date and authority will be captured during the initial create screen itself for spillover works.
           
       parameters:
         - name: AbstractEstimateRequest
@@ -929,16 +936,20 @@ definitions:
         description: Epoch time of the council resolution date
       spillOverFlag:  
         type: boolean
-        description: Boolean value if spill over or not. Required only if Abstract Estimate is Spill Over. Default value is false.
+        description: Boolean value if spill over or not. Required only if Abstract Estimate is Spill Over. 
+        default: false
       detailedEstimateCreated:
         type: boolean
-        description: Boolean value if the detailed estimate created or not. Required only if Abstract Estimate is Spill Over. Default value is false.
+        description: Boolean value if the detailed estimate created or not. Required only if Abstract Estimate is Spill Over.
+        default: false
       workOrderCreated:
         type: boolean
-        description: Boolean value if work order created or not, Required only if Abstract Estimate is Spill Over. Default value is false.
+        description: Boolean value if work order created or not, Required only if Abstract Estimate is Spill Over.
+        default: false
       billsCreated: 
         type: boolean
-        description: Boolean value if bills created or not. Required only if Abstract Estimate is Spill Over. Default value is false.
+        description: Boolean value if bills created or not. Required only if Abstract Estimate is Spill Over. The grossAmountBilled field needs to be shown in Works detail tab if  the billsCreated flag is true for Abstract Estimate.
+        default: false
       cancellationReason:
         type: string
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
@@ -952,7 +963,7 @@ definitions:
       adminSanctionNumber:
         type: string
         pattern: '[a-zA-Z0-9-\\]+'
-        description: Unique number after admin sanction for the Abstract Estimate
+        description: Unique number of admin sanction for the Abstract Estimate
         maxLength: 50
         minLength: 1
       adminSanctionDate:
@@ -986,27 +997,32 @@ definitions:
         maxLength: 5
       fund:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Fund'
-        description: Fund of the Abstract Estimate
+        description: Fund of the Abstract Estimate. This data comes from financials.
         format: singleValueList
       function:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Function'
-        description: Function of the Abstract Estimate
+        description: Function of the Abstract Estimate. This data comes from financials.
         format: singleValueList
       budgetGroup:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/BudgetGroup'
-        description: Budget head of the Abstract Estimate
+        description: Budget head of the Abstract Estimate. This data comes from financials.
+        format: singleValueList
+      accountCode:
+        type: string
+        description: Account code of the Abstract Estimate. This data comes from financials. This field is required only if Financial Integration required flag is turned on and it should be mandatory.
         format: singleValueList
       scheme:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Scheme'
-        description: Scheme of the Abstract Estimate
+        description: Scheme of the Abstract Estimate. This data comes from financials.
         format: singleValueList
       subScheme:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/SubScheme'
-        description: Sub scheme of the Abstract Estimate
+        description: Sub scheme of the Abstract Estimate. This data comes from financials.
         format: singleValueList
       fundAvailable:
         type: boolean
         description: Boolean value to capture whether the fund available to execute this work. True if Fund available. False if fund not available.
+        default: false
       fundSanctioningAuthority:
         type: string
         pattern: '[a-zA-Z0-9\s\.,]+'
@@ -1014,7 +1030,9 @@ definitions:
         maxLength: 100
       pmcRequired:
         type: boolean
-        description: Boolean vlaue to capture whether the PMC need to appoint or not. True if PMC needs to be appointed. Otherwise the value will be false. The valid values are 'Yes' and 'No'
+        description: Boolean vlaue to capture whether the PMC need to appoint or not. True if PMC needs to be appointed. Otherwise the value will be false. The valid values are 'Yes' and 'No'.
+        format: singleValueList
+        default: false
       pmcType:
         type: string
         description: If PMC required is yes then to capture PMC is from Panel or New Appointment.
@@ -1027,11 +1045,10 @@ definitions:
         format: singleValueList
         maxLength: 100
       workProposedAsPerDP:
-        type: string
-        pattern: '[a-zA-Z0-9\s\.,]+'
+        type: boolean
         description: Work proposed as per DP. The valid values are 'Yes' and 'No'.
         format: singleValueList
-        maxLength: 100
+        default: false
       dpRemarks:
         type: string
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
@@ -1039,12 +1056,13 @@ definitions:
         maxLength: 512
       landAssetRequired:
         type: boolean
-        description: Boolean value to capture whether the Land Asset required. True if Land Asset required. False if the Land Asset value is not required. The values should be shown in UI are Yes and No. This field needs to be shown if Nature of work is 'New'.
+        description: Boolean value to capture whether the Land Asset required. True if Land Asset required. False if the Land Asset value is not required. The values should be shown in UI are 'Yes' and 'No'. This field needs to be shown if Nature of work is 'New'.
+        format: singleValueList
+        default: false
       noOfLands:
           type: integer
           description: No of Lands. This field needs to be shown if Nature of work is 'New'. If landAssetRequired=Yes then this field is mandatory.
           maxLength: 10
-          minLength: 1
       otherAssetSpecificationRemarks:
         type: string
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
@@ -1089,9 +1107,13 @@ definitions:
       - workCategory
       - modeOfAllotment
       - ward
+      - locality
       - status
       - workProposedAsPerDP
       - dpRemarks
+      - fund
+      - function
+      - budgetGroup
       - abstractEstimateDetails
   
   AbstractEstimateDetails:
@@ -1128,7 +1150,7 @@ definitions:
         description: Project code object refernce for the Abstract Estimate. If the work is spillover then the project code/Work Identification number is user entered. Otherwise it is auto generated at the time of Admin Sanction.
       abstractEstimateAppropriations:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-services/v1-0-0.yml#/definitions/EstimateAppropriation'
-        description: This object holds Budget Appropriation details for the Abstract Estimate
+        description: This object holds Budget Appropriation details for the Abstract Estimate. Appropriation required or not is based on whether the Financial Integration is required or not.
       documentDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DocumentDetail'
         description: This object holds Budget any documents attached while creating Abstract Estimate or any documents generated from the system or any photographs captured for the Abstract Estimate.
@@ -1156,22 +1178,22 @@ definitions:
         description: Reference to Sanction Asset/Land of Abstract Estimate Object 
       asset:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/Asset'
-        description: Asset for which the Abstract Estimate is created. This field is required and to be shown if Nature of work is 'Repairs and Addition'
+        description: Asset for which the Abstract Estimate is created. This field is required and to be shown if Nature of work is 'Repairs or Addition'.
         format: singleValueList
       assetCondition:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/AssetPresentCondition'
-        description: Present condition of the asset. This field is required and to be shown if Nature of work is 'Repairs and Addition'
+        description: Present condition of the asset. This field is required and to be shown if Nature of work is 'Repairs or Addition'
         format: singleValueList
       assetRemarks:
         type: string
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
-        description: Remarks of the asset. This field is required and to be shown if Nature of work is 'Repairs and Addition'
+        description: Remarks of the asset. This field is required and to be shown if Nature of work is 'Repairs or Addition'
         maxLength: 1024
       landAsset:
         type: string
         pattern: '[a-zA-Z0-9-\\]+'
-        description: Land Asset ID
-        format: singleValueList. If Is Land Asset required=Yes then this field is mandatory. This field needs to be shown if Nature of work is 'New'.
+        description: Land Asset ID. If Is Land Asset required=Yes then this field is mandatory. This field needs to be shown if Nature of work is 'New'.
+        format: singleValueList. 
       landAssetCondition:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/LandAssetPresentCondition'
         description: Present condition of the asset. If Is Land Asset required=Yes then this field is mandatory. This field needs to be shown if Nature of work is 'New'.
@@ -1948,4 +1970,5 @@ tags:
     description: APIs required for Revision Estimate.
   - name: Project Code
     description: APIs required for Project Code.
+
 

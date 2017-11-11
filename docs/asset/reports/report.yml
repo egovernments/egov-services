@@ -774,7 +774,7 @@ ReportDefinitions:
   selectiveDownload: true
   sourceColumns:
   - name: name
-    label: reports.asset.name
+    label: Details Head Description
     type: string
     source: asset
   - name: code
@@ -782,47 +782,47 @@ ReportDefinitions:
     type: string
     source: asset
   - name: revaluationreserveaccount
-    label: reports.asset.revaluationreserveaccount
+    label: GROSS BLOCK-Account code
     type: string
     source: asset
   - name: previousfynetblock
-    label: reports.asset.startcurrentvalue
+    label: GROSS BLOCK-BALANCE as at <1st April of Current FY>
     type: number
     source: asset      
   - name: plusrevalsum
-    label: reports.asset.plusrevalsum
+    label: GROSS BLOCK-Additional during the year
     type: string
     source: asset      
   - name: minusrevalsum
-    label: reports.asset.minusrevalsum
+    label: GROSS BLOCK-Deduction During the year
     type: number
     source: asset      
   - name: revaltotal
-    label: reports.asset.revaltotal
+    label: GROSS BLOCK-Total
     type: number
     source: asset      
   - name: accumulateddepreciationaccount
-    label: reports.asset.accumulateddepreciationaccount
+    label: ACCUMULATED DEPRECIATION-Account Code
     type: string
     source: asset      
   - name: startdepval
-    label: reports.asset.startdepval
+    label: ACCUMULATED DEPRECIATION-BALANCE as at <1st April of Current FY>
     type: number
     source: asset      
   - name: currdepsum
-    label: reports.asset.currdepsum
+    label: Depreciation on during the year
     type: number
     source: asset      
   - name: totaldepsum
-    label: reports.asset.totaldepsum
+    label: ACCUMULATED DEPRECIATION Total
     type: number
     source: asset      
   - name: endcurrentamount
-    label: reports.asset.endcurrentamount
+    label: Net Block as at <31st March of Current FY>
     type: string
     source: asset      
   - name: previousfynetblock
-    label: reports.asset.previousfynetblock
+    label: Net Block as at <31st March of Current FY>
     type: string
     source: asset      
   searchParams:

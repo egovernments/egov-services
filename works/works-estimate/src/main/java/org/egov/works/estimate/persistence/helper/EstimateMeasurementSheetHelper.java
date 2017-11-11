@@ -40,8 +40,8 @@ public class EstimateMeasurementSheetHelper {
 	@JsonProperty("remarks")
 	private String remarks = null;
 
-	@JsonProperty("no")
-	private BigDecimal no = null;
+    @JsonProperty("number")
+    private BigDecimal number = null;
 
 	@JsonProperty("length")
 	private BigDecimal length = null;
@@ -86,7 +86,7 @@ public class EstimateMeasurementSheetHelper {
 		estimateMeasurementSheet.setDepthOrHeight(this.depthOrHeight);
 		estimateMeasurementSheet.setIdentifier(this.identifier);
 		estimateMeasurementSheet.setLength(this.length);
-		estimateMeasurementSheet.setNo(this.no);
+		estimateMeasurementSheet.setNumber(this.number);
 		final EstimateMeasurementSheet parent = new EstimateMeasurementSheet();
 		parent.setId(this.parent);
 		estimateMeasurementSheet.setParent(parent);

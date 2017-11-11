@@ -15,6 +15,94 @@ x-ui-info:
 
 paths:
 
+    /sourcesegregations/_search:
+      post:
+        summary: Get the list of SourceSegregations
+        description: SourceSegregation
+        tags: 
+          - SourceSegregation
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: codes
+            type: array
+            items: 
+              type: integer
+              format: int64
+            in: query
+            maxItems: 50
+            description: comma separated list of codes 
+          - name: code
+            type: string
+            in: query
+            description: code of SourceSegregation
+          - name: sourceSegregationDate
+            type: integer
+            format: int64
+            in: query
+            description: sourceSegregationDate of SourceSegregation
+          - name: dumpingGroundCode
+            type: string
+            in: query
+            description: dumping Ground Code of SourceSegregation
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: SourceSegregations(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/SourceSegregationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /sourcesegregations/_create:
+      post:
+        summary: Create new SourceSegregations(s)
+        description: Create new SourceSegregations(s)
+        tags: 
+          - SourceSegregation
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: SourceSegregationRequest
+            in: body
+            description: SourceSegregation Request
+            schema:
+              $ref: '#/definitions/SourceSegregationRequest'
+        responses:
+          201:
+            description: SourceSegregations(s) created Successfully
+            schema:
+              $ref: '#/definitions/SourceSegregationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /sourcesegregations/_update:
+      post:
+        summary: Update any of the SourceSegregations
+        description: Update any of the SourceSegregations
+        tags: 
+          - SourceSegregation
+        parameters:
+          - name: SourceSegregationRequest
+            in: body
+            description: SourceSegregations Request
+            schema:
+              $ref: '#/definitions/SourceSegregationRequest'
+        responses:
+          200:
+            description: SourceSegregations updated Successfully
+            schema:
+              $ref: '#/definitions/SourceSegregationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+
     /sanitationstaffschedules/_search:
       post:
         summary: Get the list of SanitationStaffSchedules
@@ -3185,10 +3273,10 @@ definitions:
           description: tenant id of the SourceSegregation
           maxLength: 128
           minLength: 1
-        dumpingGound:
+        dumpingGround:
           $ref: '#/definitions/DumpingGround'
           description: With the name of dumping ground, display the location data Ward / Zone/ street etc on GUI
-        date:
+        sourceSegregationDate:
           type: integer
           format: int64
           description: date picker required. date on which Segregation was done. By default make it system date
@@ -3200,14 +3288,14 @@ definitions:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - tenantId
-      - dumpingGound
-      - date
+      - dumpingGround
+      - sourceSegregationDate
       - collectionDetails
       
     CollectionDetails:
       type: object
       properties:
-        code:
+        id:
           type: string
           description: Unique Identifier of the CollectionDetails
           maxLength: 256
@@ -3229,8 +3317,6 @@ definitions:
           format: double
           description: quantity of dry waste collected (in tonnes)
           minimum: 0
-        auditDetails:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - tenantId
       - collectionType
@@ -3380,6 +3466,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

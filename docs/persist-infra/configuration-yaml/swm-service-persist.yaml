@@ -1151,7 +1151,7 @@ serviceMaps:
        - jsonPath: $.vehicleMaintenanceDetails.*.auditDetails.createdTime
          dbType: LONG
 
-       - jsonPath: $.refillingPumpStations.*.auditDetails.lastModifiedTime
+       - jsonPath: $.vehicleMaintenanceDetails.*.auditDetails.lastModifiedTime
          dbType: LONG
 
 
@@ -1195,7 +1195,7 @@ serviceMaps:
 
        - jsonPath: $.vehicleMaintenanceDetails.*.auditDetails.lastModifiedBy
 
-       - jsonPath: $.refillingPumpStations.*.auditDetails.lastModifiedTime
+       - jsonPath: $.vehicleMaintenanceDetails.*.auditDetails.lastModifiedTime
          dbType: LONG
 
        - jsonPath: $.vehicleMaintenanceDetails.*.tenantId
@@ -1294,3 +1294,92 @@ serviceMaps:
        - jsonPath: $.vehicleTripSheetDetails.*.tripNo
 
        - jsonPath: $.vehicleTripSheetDetails.*.tenantId
+
+
+ - version: 1.0
+   name: sourcesegregation create
+   description: create sourcesegregation in egswm_sourcesegregation
+   fromTopic: swm-sourcesegregation-save-topic
+   queryMaps: 
+    - query: INSERT INTO egswm_sourcesegregation(code, tenantid, dumpingGround, sourceSegregationDate, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.sourceSegregations.*
+      jsonMaps:
+       
+       - jsonPath: $.sourceSegregations.*.code
+
+       - jsonPath: $.sourceSegregations.*.tenantId
+         
+       - jsonPath: $.sourceSegregations.*.dumpingGround.code
+
+       - jsonPath: $.sourceSegregations.*.sourceSegregationDate
+         dbType: LONG
+
+       - jsonPath: $.sourceSegregations.*.auditDetails.createdBy
+
+       - jsonPath: $.sourceSegregations.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.sourceSegregations.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.sourceSegregations.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+    - query: INSERT INTO egswm_collectiondetails(id, tenantid, sourcesegregation, collectiontype, wetwastecollected, drywastecollected) VALUES (?, ?, ?, ?, ?, ?);
+      basePath: $.sourceSegregations.*.collectionDetails.*
+      jsonMaps:
+       
+       - jsonPath: $.sourceSegregations.*.collectionDetails.*.id
+
+       - jsonPath: $.sourceSegregations.*.collectionDetails.*.tenantId
+         
+       - jsonPath: $.sourceSegregations[?({id} in @.collectionDetails[*].id)].code
+
+       - jsonPath: $.sourceSegregations.*.collectionDetails.*.collectionType.code
+         
+       - jsonPath: $.sourceSegregations.*.collectionDetails.*.wetWasteCollected
+         dbType: DOUBLE
+
+       - jsonPath: $.sourceSegregations.*.collectionDetails.*.dryWasteCollected
+         dbType: DOUBLE
+
+
+ - version: 1.0
+   name: sourcesegregation update
+   description: update sourcesegregation in egswm_sourcesegregation
+   fromTopic: swm-sourcesegregation-update-topic
+   queryMaps: 
+    - query: update egswm_sourcesegregation set dumpingGround=?, sourceSegregationDate=?, lastmodifiedby=?, lastmodifiedtime=? where code=? and tenantId=?;
+      basePath: $.sourceSegregations.*
+      jsonMaps:
+       
+       - jsonPath: $.sourceSegregations.*.dumpingGround.code
+
+       - jsonPath: $.sourceSegregations.*.sourceSegregationDate
+         dbType: LONG
+
+       - jsonPath: $.sourceSegregations.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.sourceSegregations.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+       - jsonPath: $.sourceSegregations.*.code
+
+       - jsonPath: $.sourceSegregations.*.tenantId
+
+    - query: INSERT INTO egswm_collectiondetails(id, tenantid, sourcesegregation, collectiontype, wetwastecollected, drywastecollected) VALUES (?, ?, ?, ?, ?, ?);
+      basePath: $.sourceSegregations.*.collectionDetails.*
+      jsonMaps:
+       
+       - jsonPath: $.sourceSegregations.*.collectionDetails.*.id
+
+       - jsonPath: $.sourceSegregations.*.collectionDetails.*.tenantId
+         
+       - jsonPath: $.sourceSegregations[?({id} in @.collectionDetails[*].id)].code
+
+       - jsonPath: $.sourceSegregations.*.collectionDetails.*.collectionType.code
+         
+       - jsonPath: $.sourceSegregations.*.collectionDetails.*.wetWasteCollected
+         dbType: DOUBLE
+
+       - jsonPath: $.sourceSegregations.*.collectionDetails.*.dryWasteCollected
+         dbType: DOUBLE

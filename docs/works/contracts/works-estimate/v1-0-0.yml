@@ -856,11 +856,11 @@ definitions:
         type: integer
         format: int64
         x-displayformat: 'dd/MM/yyyy'
-        description: Epoch time of the Date of Proposal
+        description: Epoch time of the Date of Proposal. Default the current date for new estimates and do not allow to modify. This field is user entered for spillover works. Allowed to edit during rejected status or drafts for Spillover Estimates. Future date is not allowed to enter.
       abstractEstimateNumber:
         type: string
         pattern: '[a-zA-Z0-9-\\]+'
-        description: Unique number for the Abstract Estimate. If the work is spillover then the Abstract Estimate number is user entered. Otherwise it is auto generated.
+        description: Unique number for the Abstract Estimate. If the work is spillover then the Abstract Estimate number is user entered. Otherwise it is auto generated. This field is allowed to edit during rejected status or drafts for Spillover Estimates.
         maxLength: 50
         minLength: 1
       subject:
@@ -969,7 +969,7 @@ definitions:
       adminSanctionDate:
         type: integer
         format: int64
-        description:  Epoch time of when the admin santion done
+        description:  Epoch time of when the admin santion done. Future date is not allowed to enter in this field. Admin sanction date should be on or after the Date of Proposal.
       adminSanctionBy:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
         description: User who admin sanctioned
@@ -982,7 +982,7 @@ definitions:
         type: integer
         format: int64
         x-displayformat: 'dd/MM/yyyy'
-        description: Epoch time of when Financial sanctioned
+        description: Epoch time of when Financial sanctioned. Future date is not allowed to enter in this field. 
       financialSanctionBy:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
         description: The user who Financial sanctioned the Abstract Estimate
@@ -1193,7 +1193,7 @@ definitions:
         type: string
         pattern: '[a-zA-Z0-9-\\]+'
         description: Land Asset ID. If Is Land Asset required=Yes then this field is mandatory. This field needs to be shown if Nature of work is 'New'.
-        format: singleValueList. 
+        format: singleValueList
       landAssetCondition:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/LandAssetPresentCondition'
         description: Present condition of the asset. If Is Land Asset required=Yes then this field is mandatory. This field needs to be shown if Nature of work is 'New'.
@@ -1278,14 +1278,14 @@ definitions:
       estimateNumber:
         type: string
         pattern: '[a-zA-Z0-9-\\]+'
-        description: Unique number for the Detailed Estimate. If the detailed estimate is spillover then the Detailed Estimate number is user entered. Otherwise it is auto generated.
+        description: Unique number for the Detailed Estimate. If the detailed estimate is spillover then the Detailed Estimate number is user entered. Otherwise it is auto generated. This field is allowed to edit during rejected status or drafts for Spillover detailed estimates.
         maxLength: 50
         minLength: 1
       estimateDate:
         type: integer
         format: int64
         x-displayformat: 'dd/MM/yyyy'
-        description: Epoch time of the Detailed Estimate Created
+        description: Epoch time of the Detailed Estimate Created. Default the current date for new detailed estimates and do not allow to modify. This field is user entered for spillover detailed estimates. Allowed to edit during rejected status or drafts for Spillover Estimates. Future date is not allowed to enter in this field. Detailed Estimate date should be on or after the Admin Sanction date of Abstract Estimate. If the date is modified after the activities(Schedule A) are added from drafts - then reset the activities(Schedule A) with a warning message.
       nameOfWork:
         type: string
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
@@ -1311,7 +1311,7 @@ definitions:
         type: integer
         format: int64
         x-displayformat: 'dd/MM/yyyy'
-        description:  Epoch time of when the admin santion is done
+        description:  Epoch time of when the admin santion is done. Admin Sanctioned date should be on or after the Detailed Estimate date.
       adminSanctionBy:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
         description: User who admin sanctioned Detailed Estimate
@@ -1326,7 +1326,7 @@ definitions:
       estimateValue:
         type: number
         format: BigDecimal
-        description: Estimate value (Sum of Schedule A and Schedule B) of the Detailed Estimate
+        description: Estimate value (Sum of Schedule A and Schedule B) of the Detailed Estimate which excludes Estimate deductions.
         maxLength: 20
       projectCode:
         $ref: '#/definitions/ProjectCode'
@@ -1353,7 +1353,8 @@ definitions:
         description: User who approved the Detailed Estimate
       copiedEstimate:
         type: boolean
-        description: Boolean value to identify whether the Detailed Estimate is copied from another estimate. Default value is false.    
+        description: Boolean value to identify whether the Detailed Estimate is copied from another estimate.
+        default: false
       beneficiary:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/Beneficiary'
         format: singleValueList
@@ -1411,17 +1412,20 @@ definitions:
         x-displayformat: 'dd/MM/yyyy'
       workOrderCreated:
         type: boolean
-        description: Boolean value to identify whether the work order created or not for spillover data. Default value is false.
+        description: Boolean value to identify whether the work order created or not for spillover data.
+        default: false
       billsCreated: 
         type: boolean
-        description: Boolean value to identify whether the bills created or not for spillover data. Default value is false.
+        description: Boolean value to identify whether the bills created or not for spillover data. The grossAmountBilled field needs to be shown if the billsCreated flag is true.
+        default: false
       spillOverFlag:  
         type: boolean
-        description: Boolean value to identify whether the spill over or not. Default value is false.
+        description: Boolean value to identify whether the spill over or not.
+        default: false
       grossAmountBilled:  
         type: number
         format: BigDecimal
-        description: Gross Amount Billed if billsCreated flag is true 
+        description: Gross Amount Billed if billsCreated flag is true. This attribute is required only if billsCreated flag is true.
       cancellationReason:
         type: string
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
@@ -1548,7 +1552,7 @@ definitions:
       
   AssetsForEstimate:
       type: object
-      description: An Object holds the basic data for Assets for Estimate
+      description: An Object holds the basic data for Assets or Land assets for Estimate
       properties:
         id:
           type: string
@@ -1560,8 +1564,13 @@ definitions:
           minLength: 2
         asset:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/Asset'
-          description: Asset Reference from Asset module
+          description: Asset for which the Detailed Estimate is created. This field is required and to be shown if Nature of work is 'Repairs or Addition'.
           format: singleValueList
+        landAsset:
+          type: string
+          pattern: '[a-zA-Z0-9-\\]+'
+          description: Land Asset ID. This field needs to be shown if Nature of work is 'New'.
+          format: singleValueList 
         detailedEstimate:
           type: string
           description: Reference of the Detailed Estimate for Estimate and Assets linking
@@ -1762,10 +1771,11 @@ definitions:
           type: integer
           format: int64
           x-displayformat: 'dd/MM/yyyy'
-          description: Epoch time of the Technical Sanction Date
+          description: Epoch time of the Technical Sanction Date. Technical Sanctioned date should be on or after the Detailed Estimate date.
         technicalSanctionBy:
           type: string
           description: User who technical sanctioned Detailed Estimate
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:

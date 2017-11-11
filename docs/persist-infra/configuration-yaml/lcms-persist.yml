@@ -833,7 +833,7 @@ serviceMaps:
     description: legacy load case load
     fromTopic: legacy-case-create
     queryMaps: 
-    - query: INSERT INTO egov_lcms_case (code, isSummon, summonReferenceNo, amountReceived, caseCategory, caseRefernceNo, side, caseType, caseNo, summonDate, plantiffName, plantiffAddress, pleaderEngagementDetails, receiptDate, resloution, resloutiondate, advocateInfoDate, vakalatnamaGenerationDate, coName, age, address, remarks, caseDetails, defendant, hearingDate, hearingTime, departmentName, year, courtName, ward, bench, register, sectionApplied, lastModifiedBy,createdBy, createdTime, lastModifiedTime, tenantId, isUlbinitiated, documents) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+    - query: INSERT INTO egov_lcms_case (code, isSummon, summonReferenceNo, amountReceived, caseCategory, caseRefernceNo, side, caseType, caseNo, summonDate, plantiffName, plantiffAddress, pleaderEngagementDetails, receiptDate, resloution, resloutiondate, advocateInfoDate, vakalatnamaGenerationDate, coName, age, address, remarks, caseDetails, defendant, hearingDate, hearingTime, departmentName, year, courtName, ward, bench, register, sectionApplied, lastModifiedBy,createdBy, createdTime, lastModifiedTime, tenantId, isUlbinitiated, documents,caseRegistrationDate,departmentPerson) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
       basePath: $.cases.*
       jsonMaps:       
       - jsonPath: $.cases.*.summon.code
@@ -950,6 +950,13 @@ serviceMaps:
       - jsonPath: $.cases.*.summon.documents
         type: JSON
         dbType: JSONB
+        
+      - jsonPath: $.cases.*.caseRegistrationDate
+        type: LONG 
+        
+      - jsonPath: $.cases.*.departmentPerson
+ 
+        
       
   
   - version: 1.0

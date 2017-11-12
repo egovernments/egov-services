@@ -92,8 +92,8 @@ serviceMaps:
             - jsonPath: $.materials.*.lotControl
             - jsonPath: $.materials.*.shelfLifeControl
             - jsonPath: $.materials.*.serialNumber
-            - jsonPath: $.materials.*.assetCategory.code
             - jsonPath: $.materials.*.scrapable
+            - jsonPath: $.materials.*.assetCategory.code
             - jsonPath: $.materials.*.reorderLevel
               dbType: LONG
             - jsonPath: $.materials.*.reorderQuantity

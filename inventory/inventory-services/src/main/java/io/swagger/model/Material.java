@@ -343,8 +343,6 @@ public class Material   {
     @ApiModelProperty(required = true, value = "")
     @NotNull
 
-    @Valid
-
     public MaterialType getMaterialType() {
         return materialType;
     }
@@ -364,8 +362,6 @@ public class Material   {
      **/
     @ApiModelProperty(required = true, value = "")
     @NotNull
-
-    @Valid
 
     public Uom getBaseUom() {
         return baseUom;
@@ -773,8 +769,6 @@ public class Material   {
      **/
     @ApiModelProperty(value = "Asset category is mandatory if the inventory type is asset")
 
-    @Valid
-
     public AssetCategory getAssetCategory() {
         return assetCategory;
     }
@@ -802,8 +796,6 @@ public class Material   {
      **/
     @ApiModelProperty(value = "")
 
-    @Valid
-
     public List<StoreMapping> getStoreMapping() {
         return storeMapping;
     }
@@ -823,7 +815,6 @@ public class Material   {
      **/
     @ApiModelProperty(value = "")
 
-    @Valid
 
     public AuditDetails getAuditDetails() {
         return auditDetails;

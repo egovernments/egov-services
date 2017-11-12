@@ -76,7 +76,7 @@ serviceMaps:
             - jsonPath: $.materials.*.id
             - jsonPath: $.materials.*.code
             - jsonPath: $.materials.*.name
-            - jsonPath: $.materials.*.materialclass
+            - jsonPath: $.materials.*.materialClass
             - jsonPath: $.materials.*.description
             - jsonPath: $.materials.*.oldCode
             - jsonPath: $.materials.*.materialType.code
@@ -122,7 +122,7 @@ serviceMaps:
           basePath: $.materials.*
           jsonMaps:
             - jsonPath: $.materials.*.name
-            - jsonPath: $.materials.*.materialclass
+            - jsonPath: $.materials.*.materialClass
             - jsonPath: $.materials.*.description
             - jsonPath: $.materials.*.inActiveDate
               dbType: LONG

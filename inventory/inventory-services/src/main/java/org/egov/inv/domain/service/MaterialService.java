@@ -65,6 +65,7 @@ public class MaterialService {
             material.setAuditDetails(
                     inventoryUtilityService.mapAuditDetailsForUpdate(materialRequest.getRequestInfo(), tenantId));
             materialStoreMappings = buildMaterialStoreMapping(material.getCode(), material.getStoreMapping());
+            uniqueCheck(material);
         }
 
         materialRepository.update(materialRequest);
@@ -109,6 +110,7 @@ public class MaterialService {
         storeMappings.stream().forEach(
                 storeMapping -> {
                     MaterialStoreMapping materialStoreMapping = MaterialStoreMapping.builder()
+                            .id(storeMapping.getId())
                             .material(buildMaterial(materialCode))
                             .store(storeMapping.getStore())
                             .chartofAccount(storeMapping.getChartofAccount())
@@ -116,6 +118,7 @@ public class MaterialService {
                             .auditDetails(storeMapping.getAuditDetails())
                             .delete(storeMapping.getDelete())
                             .build();
+
                     materialStoreMappings.add(materialStoreMapping);
                 }
         );
@@ -141,6 +144,10 @@ public class MaterialService {
 
         if (!materialJdbcRepository.uniqueCheck("name", new MaterialEntity().toEntity(material))) {
             throw new CustomException("inv.010", "material name already exists " + material.getName());
+        }
+        if (!materialJdbcRepository.uniqueCheck("name", "code", new MaterialEntity().toEntity(material))) {
+            throw new CustomException("inv.0011", "Combination of Code and Name Already Exists " + material.getName()
+                    + ", " + material.getCode());
         }
     }
 

@@ -3225,6 +3225,10 @@ definitions:
       description: |
         This object holds the store mapping details information.
       properties:  
+        id:
+          type: string
+          description: |
+            Unique Identifier of the Store Mapping      
         store:
           $ref: "#/definitions/Store"
         chartofAccount:

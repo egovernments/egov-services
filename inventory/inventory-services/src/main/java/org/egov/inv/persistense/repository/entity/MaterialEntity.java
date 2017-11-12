@@ -82,6 +82,7 @@ public class MaterialEntity {
 
     public MaterialEntity toEntity(Material material) {
         return MaterialEntity.builder()
+                .id(material.getId())
                 .assetcategory(null != material.getAssetCategory() ? material.getAssetCategory().getCode() : null)
                 .baseUom(material.getBaseUom().getCode())
                 .code(material.getCode())

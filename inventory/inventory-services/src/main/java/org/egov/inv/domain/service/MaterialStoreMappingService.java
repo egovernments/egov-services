@@ -121,8 +121,9 @@ public class MaterialStoreMappingService {
     }
 
     public Pagination<MaterialStoreMapping> search(MaterialStoreMappingSearchRequest materialStoreMappingSearchRequest) {
-        Pagination<MaterialStoreMapping> materialStoreMappingList = isESEnabled ? materialESRepository.search(materialStoreMappingSearchRequest) :
-                materialStoreMappingJdbcRepository.search(materialStoreMappingSearchRequest);
+        /*Pagination<MaterialStoreMapping> materialStoreMappingList = isESEnabled ? materialESRepository.search(materialStoreMappingSearchRequest) :
+                materialStoreMappingJdbcRepository.search(materialStoreMappingSearchRequest);*/
+        Pagination<MaterialStoreMapping> materialStoreMappingList = materialStoreMappingJdbcRepository.search(materialStoreMappingSearchRequest);
         materialStoreMappingList.getPagedData().stream()
                 .forEach(materialStoreMapping ->
                         buildMaterialStoreMapping(materialStoreMappingSearchRequest.getTenantId(), materialStoreMapping));

@@ -70,12 +70,13 @@ serviceMaps:
       description: create materials in inventory
       fromTopic: inv-materials-save-topic
       queryMaps:
-        - query: INSERT INTO material(id, code, name, description, oldcode, materialtype, baseuom, inventorytype, status, purchaseuom, expenseaccount, minquantity, maxquantity, stockinguom, lotcontrol, shelflifecontrol, serialnumber, scrapable, assetcategory, reorderlevel, reorderquantity, model, manufacturepartno, techincalspecs, termsofdelivery, inactivedate, tenantid , createdby, lastmodifiedby, createdtime, lastmodifiedtime ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        - query: INSERT INTO material(id, code, name, materialclass, description, oldcode, materialtype, baseuom, inventorytype, status, purchaseuom, expenseaccount, minquantity, maxquantity, stockinguom, lotcontrol, shelflifecontrol, serialnumber, scrapable, assetcategory, reorderlevel, reorderquantity, model, manufacturepartno, techincalspecs, termsofdelivery, inactivedate, tenantid , createdby, lastmodifiedby, createdtime, lastmodifiedtime ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: $.materials.*
           jsonMaps:
             - jsonPath: $.materials.*.id
             - jsonPath: $.materials.*.code
             - jsonPath: $.materials.*.name
+            - jsonPath: $.materials.*.materialclass
             - jsonPath: $.materials.*.description
             - jsonPath: $.materials.*.oldCode
             - jsonPath: $.materials.*.materialType.code
@@ -117,10 +118,11 @@ serviceMaps:
       description: update materials in inventory
       fromTopic: inv-materials-update-topic
       queryMaps:
-        - query: UPDATE material SET name=?,  description=?,  inactivedate=?, oldcode=?,  materialtype=?,  baseuom=?,  inventorytype=?,  status=?,  purchaseuom=?,  expenseaccount=?,  minquantity=?,  maxquantity=?,  stockinguom=?,  lotcontrol=?, shelflifecontrol=?, serialnumber=?, scrapable=?,  assetcategory=?, reorderlevel=?,  reorderquantity=?, model=?,  manufacturepartno=?,  techincalspecs=?,  termsofdelivery=?, lastmodifiedby=?,  lastmodifiedtime=? WHERE code=? AND tenantid=?;
+        - query: UPDATE material SET name=?,  materialclass=?, description=?,  inactivedate=?, oldcode=?,  materialtype=?,  baseuom=?,  inventorytype=?,  status=?,  purchaseuom=?,  expenseaccount=?,  minquantity=?,  maxquantity=?,  stockinguom=?,  lotcontrol=?, shelflifecontrol=?, serialnumber=?, scrapable=?,  assetcategory=?, reorderlevel=?,  reorderquantity=?, model=?,  manufacturepartno=?,  techincalspecs=?,  termsofdelivery=?, lastmodifiedby=?,  lastmodifiedtime=? WHERE code=? AND tenantid=?;
           basePath: $.materials.*
           jsonMaps:
             - jsonPath: $.materials.*.name
+            - jsonPath: $.materials.*.materialclass
             - jsonPath: $.materials.*.description
             - jsonPath: $.materials.*.inActiveDate
               dbType: LONG

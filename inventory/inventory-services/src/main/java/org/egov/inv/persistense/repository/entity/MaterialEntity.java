@@ -1,10 +1,7 @@
 package org.egov.inv.persistense.repository.entity;
 
 import io.swagger.model.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -12,9 +9,13 @@ import java.math.BigDecimal;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class MaterialEntity {
 
-    protected String createdBy;
+    public static final String TABLE_NAME = "material";
+    public static final String SEQUENCE_NAME = "seq_material";
+    public static final String ALIAS = "material";
+
     private String id;
     private String code;
     private String name;
@@ -28,21 +29,23 @@ public class MaterialEntity {
     private String expenseAccount;
     private Long minQuantity;
     private Long maxQuantity;
-    private String staockingUom;
+    private String stockingUom;
     private String materialClass;
     private Long reorderLevel;
     private Long reorderQuantity;
-    private String materialControlType;
+    private Boolean lotcontrol;
+    private Boolean shelfLifeControl;
+    private Boolean serialNumber;
+    private Boolean scrapable;
+    private String assetcategory;
     private String model;
     private String manufacturePartNo;
     private String techincalSpecs;
     private String termsOfDelivery;
-    private boolean overrideMaterialControlType;
     private String tenantId;
     private String lastModifiedBy;
-
     private Long createdTime;
-
+    private String createdBy;
     private Long lastModifiedTime;
 
     public Material toDomain() {
@@ -54,23 +57,61 @@ public class MaterialEntity {
                 .oldCode(oldCode)
                 .materialType(mapMaterialType(materialType))
                 .baseUom(mapUom(baseUom))
-                .inventoryType(Material.InventoryTypeEnum.valueOf(inventoryType.toUpperCase()))
+                .inventoryType(null != inventoryType ? Material.InventoryTypeEnum.valueOf(inventoryType.toUpperCase()) : null)
                 .status(Material.StatusEnum.valueOf(status.toUpperCase()))
                 .purchaseUom(mapUom(purchaseUom))
                 .expenseAccount(mapChartOfAccounts(expenseAccount))
                 .minQuantity(BigDecimal.valueOf(minQuantity))
                 .maxQuantity(BigDecimal.valueOf(maxQuantity))
-                .stockingUom(mapUom(staockingUom))
-                .materialClass(Material.MaterialClassEnum.valueOf((materialClass.toUpperCase())))
+                .stockingUom(mapUom(stockingUom))
+                .materialClass(null != materialClass ? Material.MaterialClassEnum.valueOf((materialClass.toUpperCase())) : null)
                 .reorderLevel(BigDecimal.valueOf(reorderLevel))
                 .reorderQuantity(BigDecimal.valueOf(reorderQuantity))
-                .materialControlType(Material.MaterialControlTypeEnum.valueOf((materialControlType.toUpperCase())))
+                .lotControl(lotcontrol)
+                .shelfLifeControl(shelfLifeControl)
+                .serialNumber(serialNumber)
+                .scrapable(scrapable)
+                .assetCategory(buildAssetCategory())
                 .model(model)
                 .manufacturePartNo(manufacturePartNo)
                 .techincalSpecs(techincalSpecs)
                 .termsOfDelivery(termsOfDelivery)
-                .overrideMaterialControlType(overrideMaterialControlType)
                 .auditDetails(mapAuditDetails(tenantId, createdBy, createdTime, lastModifiedBy, lastModifiedTime))
+                .build();
+    }
+
+    public MaterialEntity toEntity(Material material) {
+        return MaterialEntity.builder()
+                .assetcategory(null != material.getAssetCategory() ? material.getAssetCategory().getCode() : null)
+                .baseUom(material.getBaseUom().getCode())
+                .code(material.getCode())
+                .createdBy(material.getAuditDetails().getCreatedBy())
+                .createdTime(material.getAuditDetails().getCreatedTime())
+                .description(material.getDescription())
+                .expenseAccount(null != material.getExpenseAccount() ? material.getExpenseAccount().getGlCode() : null)
+                .inventoryType(null != material.getInventoryType() ? material.getInventoryType().toString() : null)
+                .lastModifiedBy(material.getAuditDetails().getLastModifiedBy())
+                .lastModifiedTime(material.getAuditDetails().getLastModifiedTime())
+                .lotcontrol(material.getLotControl())
+                .manufacturePartNo(material.getManufacturePartNo())
+                .materialClass(null != material.getMaterialClass() ? material.getMaterialClass().toString() : null)
+                .materialType(null != material.getMaterialType() ? material.getMaterialType().getCode() : null)
+                .maxQuantity(null != material.getMaxQuantity() ? material.getMaxQuantity().longValue() : null)
+                .minQuantity(null != material.getMinQuantity() ? material.getMinQuantity().longValue() : null)
+                .model(material.getModel())
+                .name(material.getName())
+                .oldCode(material.getOldCode())
+                .purchaseUom(null != material.getPurchaseUom() ? material.getPurchaseUom().getCode() : null)
+                .reorderLevel(null != material.getReorderLevel() ? material.getReorderLevel().longValue() : null)
+                .reorderQuantity(null != material.getReorderQuantity() ? material.getReorderQuantity().longValue() : null)
+                .scrapable(material.getScrapable())
+                .serialNumber(material.getSerialNumber())
+                .shelfLifeControl(material.getShelfLifeControl())
+                .status(null != material.getStatus() ? material.getStatus().toString() : null)
+                .stockingUom(null != material.getStockingUom() ? material.getStockingUom().getCode() : null)
+                .techincalSpecs(material.getTechincalSpecs())
+                .tenantId(material.getAuditDetails().getTenantId())
+                .termsOfDelivery(material.getTermsOfDelivery())
                 .build();
     }
 
@@ -99,6 +140,12 @@ public class MaterialEntity {
                 .createdTime(createdTime)
                 .lastModifiedBy(lastModifiedBy)
                 .lastModifiedTime(lastModifiedTime)
+                .build();
+    }
+
+    private AssetCategory buildAssetCategory() {
+        return AssetCategory.builder()
+                .code(assetcategory)
                 .build();
     }
 }

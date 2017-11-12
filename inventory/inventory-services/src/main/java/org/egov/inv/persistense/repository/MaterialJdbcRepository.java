@@ -3,6 +3,7 @@ package org.egov.inv.persistense.repository;
 import io.swagger.model.Material;
 import io.swagger.model.MaterialSearchRequest;
 import io.swagger.model.Pagination;
+import org.egov.inv.persistence.repository.JdbcRepository;
 import org.egov.inv.persistense.repository.entity.MaterialEntity;
 import org.egov.tracer.model.CustomException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -15,7 +16,11 @@ import java.util.stream.Collectors;
 import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
-public class MaterialJdbcRepository {
+public class MaterialJdbcRepository extends JdbcRepository {
+
+    static {
+        init(MaterialEntity.class);
+    }
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 

@@ -70,7 +70,7 @@ serviceMaps:
       description: create materials in inventory
       fromTopic: inv-materials-save-topic
       queryMaps:
-        - query: INSERT INTO material(id, code, name, description, oldcode, materialtype, baseuom, inventorytype, status, purchaseuom, expenseaccount, minquantity, maxquantity, staockinguom, materialclass, reorderlevel, reorderquantity, materialcontroltype, model, manufacturepartno, techincalspecs, termsofdelivery, overridematerialcontroltype, tenantid , createdby, lastmodifiedby, createdtime, lastmodifiedtime ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        - query: INSERT INTO material(id, code, name, description, oldcode, materialtype, baseuom, inventorytype, status, purchaseuom, expenseaccount, minquantity, maxquantity, stockinguom, lotcontrol, shelflifecontrol, serialnumber, scrapable, assetcategory, reorderlevel, reorderquantity, model, manufacturepartno, techincalspecs, termsofdelivery, inactivedate, tenantid , createdby, lastmodifiedby, createdtime, lastmodifiedtime ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: $.materials.*
           jsonMaps:
             - jsonPath: $.materials.*.id
@@ -88,18 +88,22 @@ serviceMaps:
               dbType: LONG
             - jsonPath: $.materials.*.maxQuantity
               dbType: LONG
-            - jsonPath: $.materials.*.staockinguom.code
-            - jsonPath: $.materials.*.materialClass
+            - jsonPath: $.materials.*.stockingUom.code
+            - jsonPath: $.materials.*.lotControl
+            - jsonPath: $.materials.*.shelfLifeControl
+            - jsonPath: $.materials.*.serialNumber
+            - jsonPath: $.materials.*.assetCategory.code
+            - jsonPath: $.materials.*.scrapable
             - jsonPath: $.materials.*.reorderLevel
               dbType: LONG
             - jsonPath: $.materials.*.reorderQuantity
               dbType: LONG
-            - jsonPath: $.materials.*.materialControlType
             - jsonPath: $.materials.*.model
             - jsonPath: $.materials.*.manufacturePartNo
             - jsonPath: $.materials.*.techincalSpecs
             - jsonPath: $.materials.*.termsOfDelivery
-            - jsonPath: $.materials.*.overrideMaterialControlType
+            - jsonPath: $.materials.*.inActiveDate
+              dbType: LONG
             - jsonPath: $.materials.*.auditDetails.tenantId
             - jsonPath: $.materials.*.auditDetails.createdBy
             - jsonPath: $.materials.*.auditDetails.lastModifiedBy
@@ -113,11 +117,13 @@ serviceMaps:
       description: update materials in inventory
       fromTopic: inv-materials-update-topic
       queryMaps:
-        - query: UPDATE material SET name=?,  description=?,  oldcode=?,  materialtype=?,  baseuom=?,  inventorytype=?,  status=?,  purchaseuom=?,  expenseaccount=?,  minquantity=?,  maxquantity=?,  staockinguom=?,  materialclass=?,  reorderlevel=?,  reorderquantity=?,  materialcontroltype=?,  model=?,  manufacturepartno=?,  techincalspecs=?,  termsofdelivery=?,  overridematerialcontroltype=?,  lastmodifiedby=?,  lastmodifiedtime=? WHERE code=? AND tenantid=?;
+        - query: UPDATE material SET name=?,  description=?,  inactivedate=?, oldcode=?,  materialtype=?,  baseuom=?,  inventorytype=?,  status=?,  purchaseuom=?,  expenseaccount=?,  minquantity=?,  maxquantity=?,  stockinguom=?,  lotcontrol=?, shelflifecontrol=?, serialnumber=?, scrapable=?,  assetcategory=?, reorderlevel=?,  reorderquantity=?, model=?,  manufacturepartno=?,  techincalspecs=?,  termsofdelivery=?, lastmodifiedby=?,  lastmodifiedtime=? WHERE code=? AND tenantid=?;
           basePath: $.materials.*
           jsonMaps:
             - jsonPath: $.materials.*.name
             - jsonPath: $.materials.*.description
+            - jsonPath: $.materials.*.inActiveDate
+              dbType: LONG
             - jsonPath: $.materials.*.oldCode
             - jsonPath: $.materials.*.materialType.code
             - jsonPath: $.materials.*.baseUom.code
@@ -129,18 +135,20 @@ serviceMaps:
               dbType: LONG
             - jsonPath: $.materials.*.maxQuantity
               dbType: LONG
-            - jsonPath: $.materials.*.staockinguom.code
-            - jsonPath: $.materials.*.materialClass
+            - jsonPath: $.materials.*.stockingUom.code
+            - jsonPath: $.materials.*.lotControl
+            - jsonPath: $.materials.*.shelfLifeControl
+            - jsonPath: $.materials.*.serialNumber
+            - jsonPath: $.materials.*.scrapable            
+            - jsonPath: $.materials.*.assetCategory.code
             - jsonPath: $.materials.*.reorderLevel
               dbType: LONG
             - jsonPath: $.materials.*.reorderQuantity
               dbType: LONG
-            - jsonPath: $.materials.*.materialControlType
             - jsonPath: $.materials.*.model
             - jsonPath: $.materials.*.manufacturePartNo
             - jsonPath: $.materials.*.techincalSpecs
             - jsonPath: $.materials.*.termsOfDelivery
-            - jsonPath: $.materials.*.overrideMaterialControlType
             - jsonPath: $.materials.*.auditDetails.lastModifiedBy
             - jsonPath: $.materials.*.auditDetails.lastModifiedTime
               dbType: LONG

@@ -36,8 +36,6 @@ public class MaterialStoreMappingService {
 
     private StoreService storeService;
 
-    private MaterialService materialService;
-
     private String createTopicName;
 
     private String updateTopicName;
@@ -53,7 +51,6 @@ public class MaterialStoreMappingService {
                                        MaterialStoreMappingJdbcRepository materialStoreMappingJdbcRepository,
                                        InventoryUtilityService inventoryUtilityService,
                                        StoreService storeService,
-                                       MaterialService materialService,
                                        MaterialStoreESRepository materialESRepository,
                                        @Value("${inv.materialstore.save.topic}") String createTopicName,
                                        @Value("${inv.materialstore.update.topic}") String updateTopicName,
@@ -70,7 +67,6 @@ public class MaterialStoreMappingService {
         this.deleteTopicName = deleteTopicName;
         this.isESEnabled = isESEnabled;
         this.isFinancialEnabled = isFinancialEnabled;
-        this.materialService = materialService;
     }
 
 
@@ -145,10 +141,6 @@ public class MaterialStoreMappingService {
     private void validateUpdateRequest(String tenantId, MaterialStoreMapping materialStoreMapping, RequestInfo requestInfo) {
         validateChartOfAccount(materialStoreMapping);
 
-        if (isEmpty(materialStoreMapping.getId())) {
-            throw new CustomException("id", "Id is not present");
-        }
-
         int size = findMaterialStore(tenantId, materialStoreMapping).size();
 
         if (size > 0) {
@@ -189,22 +181,9 @@ public class MaterialStoreMappingService {
 
     private void buildMaterialStoreMapping(String tenantId, MaterialStoreMapping materialStoreMapping) {
         Store store = getStore(materialStoreMapping.getStore().getCode(), tenantId);
-      /*  Material material = getMaterial(materialStoreMapping.getMaterial().getCode(), tenantId);
-        materialStoreMapping.setMaterial(material);*/
         materialStoreMapping.setStore(store);
     }
 
-
-    private Material getMaterial(String materialCode, String tenantId) {
-        MaterialSearchRequest materialSearchRequest = getMaterialSearchRequest(materialCode, tenantId);
-        Pagination<Material> material = materialService.search(materialSearchRequest);
-
-        if (material.getPagedData().size() > 0) {
-            return material.getPagedData().get(0);
-        } else {
-            throw new CustomException(INV_006, "Material Not Found " + materialCode);
-        }
-    }
 
     private Store getStore(String storeCode, String tenantId) {
 
@@ -229,13 +208,6 @@ public class MaterialStoreMappingService {
     private StoreGetRequest getStoreGetRequest(String storeCode, String tenantId) {
         return StoreGetRequest.builder()
                 .code(storeCode)
-                .tenantId(tenantId)
-                .build();
-    }
-
-    private MaterialSearchRequest getMaterialSearchRequest(String materialCode, String tenantId) {
-        return MaterialSearchRequest.builder()
-                .code(materialCode)
                 .tenantId(tenantId)
                 .build();
     }

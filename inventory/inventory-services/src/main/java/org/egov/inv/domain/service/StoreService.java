@@ -122,8 +122,8 @@ public class StoreService {
 
 	public Pagination<Store> search(StoreGetRequest storeGetRequest) {
 		
-		return isESEnabled ? storeESRepository.search(storeGetRequest)
-				: storeJdbcRepository.search(storeGetRequest);
+	//	return isESEnabled ? storeESRepository.search(storeGetRequest):
+			return	storeJdbcRepository.search(storeGetRequest);
 	}
 
 	public List<Store> push(StoreRequest storeRequest, String topic) {

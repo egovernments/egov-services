@@ -2579,7 +2579,7 @@ var localization_EN_Data = {
  "inventory.store.email" : "Email Address",
  "inventory.store.active" : "Active",
  "inventory.store.officeLocation":"Office Location",
- //Inventory Store Master
+ //Inventory Supplier Master
  "inventory.supplier.search.title":"Search Supplier",
  "inventory.supplier.add.title":"Add Supplier",
  "inventory.supplier.update.title":"Update Supplier",

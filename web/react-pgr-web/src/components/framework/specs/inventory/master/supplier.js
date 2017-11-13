@@ -553,7 +553,7 @@ var dat = {
         ]
       }, {
         "name": "Bank Information",
-        "label": "inventory.create.group.title.Bank Information",
+        "label": "inventory.common.bankinfo",
         "fields": [
           {
             "name": "name",
@@ -818,7 +818,7 @@ var dat = {
         ]
       }, {
         "name": "Bank Information",
-        "label": "inventory.create.group.title.Bank Information",
+        "label": "inventory.common.bankinfo",
         "fields": [
           {
             "name": "name",

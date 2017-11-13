@@ -73,7 +73,7 @@ public class LeaveApplicationQueryBuilder {
             + " lt.payEligible AS lt_payEligible, lt.accumulative AS lt_accumulative, lt.encashable AS lt_encashable,"
             + " lt.active AS lt_active, lt.createdBy AS lt_createdBy, lt.createdDate AS lt_createdDate,"
             + " lt.lastModifiedBy AS lt_lastModifiedBy, lt.lastModifiedDate AS lt_lastModifiedDate"
-            + " FROM egeis_leaveApplication la" + " JOIN egeis_leaveType lt ON la.leaveTypeId = lt.id";
+            + " FROM egeis_leaveApplication la" + " LEFT JOIN egeis_leaveType lt ON la.leaveTypeId = lt.id";
     @Autowired
     public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     @Autowired

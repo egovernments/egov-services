@@ -201,6 +201,8 @@ public class ReportService {
 		ReportDefinition reportDefinition = rds.getReportDefinition(moduleName+ " "+reportName);
 		
 		LOGGER.info("Incoming Report Name is "+reportName);
+		LOGGER.info("Incoming Report Query is "+reportDefinition.getReportName());
+		LOGGER.info("Incoming Report Query is "+reportDefinition.getQuery());
 		List<Map<String, Object>> maps = reportRepository.getData(reportRequest, reportDefinition);
 	    
 		List<SourceColumn> columns = reportDefinition.getSourceColumns();

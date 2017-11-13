@@ -38,7 +38,15 @@ public class ReportDefinition   {
 	public void setSearchFilter(boolean searchFilter) {
 		this.searchFilter = searchFilter;
 	}
-
+	@JsonProperty("externalService")
+	private List<ExternalService> externalService = new ArrayList<ExternalService>();
+	
+	public List<ExternalService> getExternalService() {
+		return externalService;
+	}
+	public void setExternalService(List<ExternalService> externalService) {
+		this.externalService = externalService;
+	}
 	@JsonProperty("subReport")
 	private boolean subReport = false;
 	
@@ -136,7 +144,7 @@ public void setLinkedReport(LinkedReport linkedReport) {
 	this.linkedReport = linkedReport;
 }
 
-@JsonProperty("sourceColumns")
+  @JsonProperty("sourceColumns")
   private List<SourceColumn> sourceColumns = new ArrayList<SourceColumn>();
  
   @JsonProperty("searchParams")

@@ -71,6 +71,7 @@ public class ReportController {
 			ReportResponse reportResponse = reportService.getReportData(reportRequest,moduleName,reportRequest.getReportName());
 			return new ResponseEntity<>(reportResponse, HttpStatus.OK);
 		} catch(NullPointerException e){
+			e.printStackTrace();
 			return reportService.getFailureResponse(reportRequest.getRequestInfo(),reportRequest.getTenantId());
 		}
 	}

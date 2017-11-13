@@ -1,32 +1,55 @@
 package org.egov.report.repository.builder;
 
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.swagger.model.ExternalService;
 import org.egov.swagger.model.ReportDefinition;
 import org.egov.swagger.model.SearchColumn;
 import org.egov.swagger.model.SearchParam;
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 
 @Component
 public class ReportQueryBuilder {
+	
+	@Autowired
+	private RestTemplate restTemplate;
 		 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ReportQueryBuilder.class);
 	   
 	public String buildQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition){
 		
-		String baseQuery;
+		String baseQuery = "";
+		String url = "";
+		String res = "";
+			try {
+		if(reportDefinition.getExternalService().size() > 0) {
+			baseQuery = populateExternalServiceValues(reportDefinition, reportDefinition.getQuery());
+		} } catch(JSONException e){
+			e.printStackTrace();
+		}
 		
 		StringBuffer csinput = new StringBuffer();
 		LOGGER.info("searchParams:" + searchParams);
+		System.out.println("ReportName : "+reportDefinition.getReportName());
+		System.out.println("Query : "+reportDefinition.getQuery());
 		if(reportDefinition.getQuery().contains("UNION")){
 			baseQuery = generateUnionQuery(searchParams, tenantId, reportDefinition);
 		}else if(reportDefinition.getQuery().contains("FULLJOIN")){
@@ -34,7 +57,7 @@ public class ReportQueryBuilder {
 		} 
 		else {
 			
-			baseQuery = generateQuery(searchParams, tenantId, reportDefinition);
+			baseQuery = generateQuery(searchParams, tenantId, reportDefinition,baseQuery);
 			
 		}
 		baseQuery = baseQuery.replaceAll("\\$tenantid","'"+tenantId+"'");
@@ -76,11 +99,73 @@ public class ReportQueryBuilder {
 		LOGGER.info("baseQuery :"+baseQuery);
 		return baseQuery;
 	}
-public String generateQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition){
+	
+	private String populateExternalServiceValues(ReportDefinition reportDefinition, String baseQuery)
+			throws JSONException {
+		String url;
+		String res;
+		String replacetableQuery = baseQuery;
+		for (ExternalService es : reportDefinition.getExternalService()) {
+			
+			
+			url = es.getApiURL();
+			URI uri = URI.create(url);
+			res = restTemplate.postForObject(uri, getRInfo(),String.class);
+			
+			JSONObject jObj = new JSONObject(res);
+			
+			Object jsonObject = JsonPath.read(res,es.getEntity());
+			
+			JSONArray mdmsArray = new JSONArray(jsonObject.toString());
+
+			//JSONArray slideContent = (JSONArray) jObj.get(es.getEntity());
+			 
+			 StringBuffer finalString = new StringBuffer();
+			 
+			 for (int i = 0; i < mdmsArray.length(); i++) {
+				   JSONObject obj = mdmsArray.getJSONObject(i);
+				   Iterator j = obj.keys();
+				   StringBuffer sb = new StringBuffer();
+				   sb.append("(");
+				   int index = 0;
+				   while (j.hasNext()){
+					    
+					    String[] jsonKeys = es.getKeyOrder().split(",");
+					    if(index == jsonKeys.length){
+					    	index = 0;
+					    }
+					    String key = (String) j.next();
+				        String value = String.valueOf(obj.get(jsonKeys[index]));
+				        index++;
+					    sb.append("'"+value+"'");
+				        if((j.hasNext())) {
+				        sb.append(",");
+				        }
+				    }
+				   sb.append(")");
+				   if(i != (mdmsArray.length()-1)){
+					   sb.append(",");
+				   }
+				   
+			       
+			       finalString.append(sb);
+			       System.out.println(finalString);
+			       
+			    }
+			 
+		       
+			 replacetableQuery = replacetableQuery.replace(es.getTableName(), finalString.toString());
+			
+		}
+		return replacetableQuery;
+	}
+public String generateQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition,String inlineQuery){
 		
 		LOGGER.info("searchParams:" + searchParams);
 		
-		StringBuffer baseQuery = new StringBuffer(reportDefinition.getQuery());
+		//StringBuffer baseQuery = new StringBuffer(reportDefinition.getQuery());
+		
+		StringBuffer baseQuery = new StringBuffer(inlineQuery);
 
 		String orderByQuery = reportDefinition.getOrderByQuery();
 		
@@ -325,6 +410,22 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
 		}
 		
 		return inlineQuery.toString();
+	}
+	
+	public RequestInfo getRInfo()
+	{
+		// TODO Auto-generated method stub
+				RequestInfo ri = new RequestInfo();
+				ri.setAction("action");
+				ri.setAuthToken("a487e887-cafd-41cf-bb8a-2245acbb6c01");
+				/*ri.setTs(new Date());*/
+				ri.setApiId("apiId");
+				ri.setVer("version");
+				ri.setDid("did");
+				ri.setKey("key");
+				ri.setMsgId("msgId");
+				ri.setRequesterId("requestId");
+		return ri;
 	}
 
 }

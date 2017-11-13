@@ -331,7 +331,7 @@ var dat = {
 	          //     }]
           },
           {
-            "name": "WarrantyExpiryDateMandatory",
+            "name": "WarrantyExpiryDate",
             "jsonPath": "Asset.warrantyExpiryDate",
             "label": "ac.create.Warranty.expiry.date",
             "pattern": "",

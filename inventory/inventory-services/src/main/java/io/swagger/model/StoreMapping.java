@@ -3,7 +3,9 @@ package io.swagger.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -15,6 +17,8 @@ import java.util.Objects;
 @ApiModel(description = "This object holds the store mapping details information. ")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-12T13:22:52.081Z")
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class StoreMapping {
     @JsonProperty("id")
     private String id = null;

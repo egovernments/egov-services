@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -21,6 +23,8 @@ import java.util.Objects;
 @ApiModel(description = "This object holds the material information.   ")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-11T10:04:38.711Z")
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Material   {
     @JsonProperty("id")
     private String id = null;
@@ -150,7 +154,6 @@ public class Material   {
             this.value = value;
         }
 
-        @Override
         @JsonValue
         public String toString() {
             return String.valueOf(value);

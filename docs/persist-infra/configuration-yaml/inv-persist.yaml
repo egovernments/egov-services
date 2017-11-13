@@ -284,7 +284,6 @@ serviceMaps:
             - jsonPath: $.materialStoreMappings.*.store.code
             - jsonPath: $.materialStoreMappings.*.auditDetails.tenantId
 
-<<<<<<< HEAD
 
     - version: 1.0
       name: material store mapping delete
@@ -353,7 +352,36 @@ serviceMaps:
               type: LONG
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.serialno
               type: LONG
-     
+   
+    - version: 1.0
+      name: opening Balance
+      description: update opening Balance
+      fromTopic: inv-openbalance-update-topic
+      queryMaps: 
+        - query: UPDATE  materialreceiptdetail SET receivedQty =?,acceptedQty =?, unitRate =?,createdby=?,createdTime=?,lastmodifiedby=?,lastModifiedTime=? WHERE id=? AND tenantId=? ;
+          basePath: $.materialReceipt.*.receiptDetails.*
+          jsonMaps:      
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receivedQty
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receivedQty
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.openingRate
+            - jsonPath: $.materialReceipt.*.auditDetails.createdBy
+              type: LONG
+            - type: CURRENTDATE
+              dbType: LONG
+            - jsonPath: $.materialReceipt.*.auditDetails.lastModifiedBy
+              type: LONG
+            - type: CURRENTDATE
+              dbType: LONG  
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.id
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.tenantId
+        - query: UPDATE materialreceiptdetailaddnlinfo SET   lotNo =?,expiryDate =? where receiptDetailId=? AND tenantId= ?;
+          basePath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*
+          jsonMaps:      
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.lotNo
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.expiryDate
+              type: LONG
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.id
+            - jsonPath: $.materialReceipt.*.tenantId
     
     - version: 1.0
       name: priceLists create
@@ -440,12 +468,6 @@ serviceMaps:
             - jsonPath: $.priceLists.*.priceListDetails.*.id
             - jsonPath: $.priceLists.*.priceListDetails.*.tenantId
 
-
-
-
-
-
-=======
     - version: 1
       name: Indents create
       description: create Indents in ulb
@@ -518,4 +540,4 @@ serviceMaps:
               dbType: LONG
             - jsonPath: $.indents.*.id 
             - jsonPath: $.indents.*.tenantId
->>>>>>> stash
+

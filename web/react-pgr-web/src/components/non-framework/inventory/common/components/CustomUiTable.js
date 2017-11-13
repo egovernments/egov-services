@@ -39,7 +39,7 @@ class CustomUiTable extends Component {
 	constructor(props) {
        super(props);
        this.state = {};
-   	}
+  }
 
   componentWillUnmount() {
 			if($.fn.DataTable.isDataTable('#searchTable')) {
@@ -47,13 +47,9 @@ class CustomUiTable extends Component {
 		  }
   }
 
-  // componentWillUpdate() {
-	// 		if (!$.fn.DataTable.isDataTable('#searchTable')) {
-	// 		  this.initializeDataTable();
-	// 		}
-	// }
 
 	initializeDataTable(){
+
 		$('#searchTable').DataTable({
 				 dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
 				 buttons: [ 'excel', {

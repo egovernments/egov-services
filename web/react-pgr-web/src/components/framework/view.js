@@ -203,7 +203,7 @@ class Report extends Component {
     //Get view form data
     var url = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].url.split("?")[0];
     var hash = window.location.hash.split("/");
-    var value = self.props.match.params.id;
+    var value = decodeURIComponent(self.props.match.params.id);
     var query = {
       [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].url.split("?")[1].split("=")[0]]: value
     };

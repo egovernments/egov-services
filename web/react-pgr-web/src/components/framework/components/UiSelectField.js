@@ -95,7 +95,7 @@ class UiSelectField extends Component {
    }
 
 	 componentWillReceiveProps(nextProps) {
- 		if(this.props.location.pathname != nextProps.history.location.pathname) {
+ 		if(this.props.location.pathname != nextProps.history.location.pathname || this.checkSelectHavingData(nextProps)) {
  			this.initData(nextProps);
  		}
  	}
@@ -105,8 +105,9 @@ class UiSelectField extends Component {
  		let {dropDownData}=nextProps;
  		if(nextProps.hasOwnProperty("item") && nextProps.item.type=="singleValueList" && _.isEmpty(dropDownData[nextProps.item.jsonPath]))
  		{
- 			this.initData(nextProps);
+ 			return true;
  		}
+    return false;
  	}
 
 

@@ -931,7 +931,7 @@ ReportDefinitions:
   summary: Land Register Report
   version: 1.0.0
   moduleName: asset
-  viewPath: LandRegisterReport
+  viewPath: landRegisterReport
   selectiveDownload: true
   sourceColumns:
   - name: name
@@ -1050,7 +1050,7 @@ ReportDefinitions:
   summary: Land Register Report
   version: 1.0.0
   moduleName: asset
-  viewPath: LandRegisterReport
+  viewPath: landRegisterReport
   selectiveDownload: true
   sourceColumns:
   - name: id

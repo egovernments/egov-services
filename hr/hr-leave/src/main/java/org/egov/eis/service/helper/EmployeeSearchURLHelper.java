@@ -2,7 +2,7 @@ package org.egov.eis.service.helper;
 
 import org.egov.eis.config.ApplicationProperties;
 import org.egov.eis.config.PropertiesManager;
-import org.egov.eis.web.contract.CompensatoryLeaveSearchRequest;
+import org.egov.eis.web.contract.LeaveSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -16,25 +16,28 @@ public class EmployeeSearchURLHelper {
     @Autowired
     private PropertiesManager propertiesManager;
 
-    public String searchURL(final CompensatoryLeaveSearchRequest compensatoryLeaveSearchRequest, final String url) {
+    public String searchURL(final LeaveSearchRequest leaveSearchRequest, final String url) {
         final StringBuilder searchURL = new StringBuilder(url + "?");
 
-        if (compensatoryLeaveSearchRequest.getTenantId() == null)
+        if (leaveSearchRequest.getTenantId() == null)
             return searchURL.toString();
         else
-            searchURL.append("tenantId=" + compensatoryLeaveSearchRequest.getTenantId());
+            searchURL.append("tenantId=" + leaveSearchRequest.getTenantId());
 
-        if (!StringUtils.isEmpty(compensatoryLeaveSearchRequest.getCode()))
-            searchURL.append("&code=" + compensatoryLeaveSearchRequest.getCode());
+        if (!StringUtils.isEmpty(leaveSearchRequest.getCode()))
+            searchURL.append("&code=" + leaveSearchRequest.getCode());
 
-        if (compensatoryLeaveSearchRequest.getDepartmentId() != null)
-            searchURL.append("&departmentId=" + compensatoryLeaveSearchRequest.getDepartmentId());
+        if (leaveSearchRequest.getDepartmentId() != null)
+            searchURL.append("&departmentId=" + leaveSearchRequest.getDepartmentId());
 
-        if (compensatoryLeaveSearchRequest.getDesignationId() != null)
-            searchURL.append("&designationId=" + compensatoryLeaveSearchRequest.getDesignationId());
+        if (leaveSearchRequest.getDesignationId() != null)
+            searchURL.append("&designationId=" + leaveSearchRequest.getDesignationId());
 
-        if (compensatoryLeaveSearchRequest.getEmployeeType() != null)
-            searchURL.append("&type=" + compensatoryLeaveSearchRequest.getEmployeeType());
+        if (leaveSearchRequest.getEmployeeType() != null)
+            searchURL.append("&employeeType=" + leaveSearchRequest.getEmployeeType());
+
+        if (leaveSearchRequest.getEmployeeStatus() != null)
+            searchURL.append("&employeeStatus=" + leaveSearchRequest.getEmployeeStatus());
 
         searchURL.append("&pageSize=" + applicationProperties.hrLeaveSearchPageSizeMax());
 

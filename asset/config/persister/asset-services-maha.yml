@@ -86,6 +86,8 @@ serviceMaps:
        - jsonPath: $.Asset.depreciationExpenseAccount
        
        - jsonPath: $.Asset.titleDocumentsAvalable
+         type: JSON
+         dbType: JSONB
        
        - jsonPath: $.Asset.totalArea
                 
@@ -520,12 +522,55 @@ serviceMaps:
        - jsonPath: $.Disposal.tenantId
 
  - version: 1.0
+   name: Depreciation
+   description: Persists depreciationdetails  in egasset_depreciation table
+   fromTopic: save-depreciation-maha
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO egasset_depreciation(id, assetid, financialyear, fromdate, todate, voucherreference, status, valuebeforedepreciation, depreciationvalue, valueafterdepreciation, tenantid, createdby, createdtime, lastmodifiedby, lastmodifiedtime, reasonforfailure) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: DepreciationDetail.*
+      jsonMaps:
+         
+       - jsonPath: $.DepreciationDetail.*.id
+       
+       - jsonPath: $.DepreciationDetail.*.assetId
+       
+       - jsonPath: $.financialYear
+       
+       - jsonPath: $.fromDate
+       
+       - jsonPath: $.toDate
+       
+       - jsonPath: $.DepreciationDetail.*.voucherReference
+       
+       - jsonPath: $.DepreciationDetail.*.status
+       
+       - jsonPath: $.DepreciationDetail.*.valueBeforeDepreciation
+       
+       - jsonPath: $.DepreciationDetail.*.depreciationValue
+       
+       - jsonPath: $.DepreciationDetail.*.valueAfterDepreciation
+       
+       - jsonPath: $.tenantId
+       
+       - jsonPath: $.AuditDetails.createdBy
+       
+       - jsonPath: $.AuditDetails.createdDate
+       
+       - jsonPath: $.AuditDetails.lastModifiedBy
+       
+       - jsonPath: $.AuditDetails.lastModifiedDate
+       
+       - jsonPath: $.DepreciationDetail.*.reasonForFailure
+       
+       
+ - version: 1.0
    name: CurrentValue
    description: Persists currentvalue details in egasset_current_value table
    fromTopic: save-currentvalue-maha
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO egasset_current_value( id, tenantid, assetid, currentamount, createdby, createdtime, lastmodifiedby, lastmodifiedtime, assettrantype)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egasset_current_value( id, tenantid, assetid, currentamount, createdby, createdtime, lastmodifiedby, lastmodifiedtime, assettrantype,transactiondate)VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: AssetCurrentValue.*
       jsonMaps:
          
@@ -546,3 +591,5 @@ serviceMaps:
        - jsonPath: $.AssetCurrentValue.*.auditDetails.lastModifiedDate
        
        - jsonPath: $.AssetCurrentValue.*.assetTranType
+       
+       - jsonPath: $.AssetCurrentValue.*.transactionDate

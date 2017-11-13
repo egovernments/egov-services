@@ -1,18 +1,20 @@
 package org.egov.works.estimate.web.contract;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import java.util.Objects;
 
 /**
  * An Object that holds the basic data of Technical Sanction for Detailed Estimate
  */
 @ApiModel(description = "An Object that holds the basic data of Technical Sanction for Detailed Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T07:36:50.343Z")
 
 public class EstimateTechnicalSanction   {
   @JsonProperty("id")
@@ -25,7 +27,7 @@ public class EstimateTechnicalSanction   {
   private String technicalSanctionNumber = null;
 
   @JsonProperty("detailedEstimate")
-  private DetailedEstimate detailedEstimate = null;
+  private String detailedEstimate = null;
 
   @JsonProperty("technicalSanctionDate")
   private Long technicalSanctionDate = null;
@@ -68,7 +70,7 @@ public class EstimateTechnicalSanction   {
   @ApiModelProperty(required = true, value = "Tenant id of the Estimate Technical Sanction")
   @NotNull
 
- @Size(min=4,max=128)
+ @Size(min=2,max=128)
   public String getTenantId() {
     return tenantId;
   }
@@ -98,7 +100,7 @@ public class EstimateTechnicalSanction   {
     this.technicalSanctionNumber = technicalSanctionNumber;
   }
 
-  public EstimateTechnicalSanction detailedEstimate(DetailedEstimate detailedEstimate) {
+  public EstimateTechnicalSanction detailedEstimate(String detailedEstimate) {
     this.detailedEstimate = detailedEstimate;
     return this;
   }
@@ -107,16 +109,14 @@ public class EstimateTechnicalSanction   {
    * Reference of the Detailed Estimate for which the Technical sanction belongs to
    * @return detailedEstimate
   **/
-  @ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for which the Technical sanction belongs to")
-  @NotNull
+  @ApiModelProperty(value = "Reference of the Detailed Estimate for which the Technical sanction belongs to")
 
-  @Valid
 
-  public DetailedEstimate getDetailedEstimate() {
+  public String getDetailedEstimate() {
     return detailedEstimate;
   }
 
-  public void setDetailedEstimate(DetailedEstimate detailedEstimate) {
+  public void setDetailedEstimate(String detailedEstimate) {
     this.detailedEstimate = detailedEstimate;
   }
 
@@ -185,7 +185,7 @@ public class EstimateTechnicalSanction   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -227,7 +227,7 @@ public class EstimateTechnicalSanction   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

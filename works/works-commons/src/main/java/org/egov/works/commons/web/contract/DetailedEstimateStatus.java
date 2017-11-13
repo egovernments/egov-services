@@ -1,45 +1,44 @@
 package org.egov.works.commons.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * Gets or Sets DetailedEstimateStatus
  */
 public enum DetailedEstimateStatus {
-  
-  NEW("NEW"),
-  
-  CREATED("CREATED"),
-  
-  REJECTED("REJECTED"),
-  
-  RESUBMITTED("RESUBMITTED"),
-  
-  CANCELLED("CANCELLED"),
-  
-  APPROVED("APPROVED");
 
-  private String value;
+	NEW("NEW"),
 
-  DetailedEstimateStatus(String value) {
-    this.value = value;
-  }
+	CREATED("CREATED"),
 
-  @Override
-  @JsonValue
-  public String toString() {
-    return String.valueOf(value);
-  }
+	REJECTED("REJECTED"),
 
-  @JsonCreator
-  public static DetailedEstimateStatus fromValue(String text) {
-    for (DetailedEstimateStatus b : DetailedEstimateStatus.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	RESUBMITTED("RESUBMITTED"),
+
+	CANCELLED("CANCELLED"),
+
+	APPROVED("APPROVED");
+
+	private String value;
+
+	DetailedEstimateStatus(String value) {
+		this.value = value;
+	}
+
+	@Override
+	@JsonValue
+	public String toString() {
+		return String.valueOf(value);
+	}
+
+	@JsonCreator
+	public static DetailedEstimateStatus fromValue(String text) {
+		for (DetailedEstimateStatus b : DetailedEstimateStatus.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }
-

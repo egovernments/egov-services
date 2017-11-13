@@ -45,6 +45,7 @@ import org.egov.eis.config.ApplicationProperties;
 import org.egov.eis.model.LeaveApplication;
 import org.egov.eis.service.HRStatusService;
 import org.egov.eis.web.contract.LeaveApplicationGetRequest;
+import org.egov.eis.web.contract.LeaveSearchRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class LeaveApplicationQueryBuilder {
@@ -70,7 +73,7 @@ public class LeaveApplicationQueryBuilder {
             + " lt.payEligible AS lt_payEligible, lt.accumulative AS lt_accumulative, lt.encashable AS lt_encashable,"
             + " lt.active AS lt_active, lt.createdBy AS lt_createdBy, lt.createdDate AS lt_createdDate,"
             + " lt.lastModifiedBy AS lt_lastModifiedBy, lt.lastModifiedDate AS lt_lastModifiedDate"
-            + " FROM egeis_leaveApplication la" + " JOIN egeis_leaveType lt ON la.leaveTypeId = lt.id";
+            + " FROM egeis_leaveApplication la" + " LEFT JOIN egeis_leaveType lt ON la.leaveTypeId = lt.id";
     @Autowired
     public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     @Autowired
@@ -99,6 +102,14 @@ public class LeaveApplicationQueryBuilder {
                 + " halfdays, firsthalfleave, reason, status, stateid, createdby, createddate, "
                 + "lastmodifiedby, lastmodifieddate, tenantid) VALUES "
                 + "(nextval('seq_egeis_leaveapplication'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    }
+
+    public static String insertCompoffLeaveApplicationQuery() {
+        return "INSERT INTO egeis_leaveapplication(id, applicationnumber, employeeid, "
+                + " fromdate, todate, compensatoryfordate, leavedays, availabledays,"
+                + " halfdays, firsthalfleave, reason, status, stateid, createdby, createddate, "
+                + "lastmodifiedby, lastmodifieddate, tenantid) VALUES "
+                + "(nextval('seq_egeis_leaveapplication'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     }
 
     public static String updateLeaveApplicationQuery() {
@@ -138,6 +149,16 @@ public class LeaveApplicationQueryBuilder {
         addOrderByClause(selectQuery, leaveApplicationGetRequest);
         addPagingClause(selectQuery, preparedStatementValues, leaveApplicationGetRequest);
 
+        logger.debug("Query : " + selectQuery);
+        return selectQuery.toString();
+    }
+
+    public String getLeaveReportQuery(final LeaveSearchRequest leaveSearchRequest, final List preparedStatementValues,
+                                      final RequestInfo requestInfo) {
+
+        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+        addReportWhereClause(selectQuery, preparedStatementValues, leaveSearchRequest, requestInfo);
+        addPagingClauseForReports(selectQuery, preparedStatementValues, leaveSearchRequest.getPageSize(), leaveSearchRequest.getPageNumber());
         logger.debug("Query : " + selectQuery);
         return selectQuery.toString();
     }
@@ -211,6 +232,60 @@ public class LeaveApplicationQueryBuilder {
         }
     }
 
+    private void addReportWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+                                      final LeaveSearchRequest leaveSearchRequest, final RequestInfo requestInfo) {
+
+        selectQuery.append(" WHERE");
+        selectQuery.append(" la.status != ? and ");
+        preparedStatementValues.add(hrStatusService.getHRStatuses("REJECTED", leaveSearchRequest.getTenantId(),
+                requestInfo).get(0).getId());
+        boolean isAppendAndClause = true;
+
+        if (leaveSearchRequest.getTenantId() != null) {
+            isAppendAndClause = true;
+            selectQuery.append(" la.tenantId = ?");
+            preparedStatementValues.add(leaveSearchRequest.getTenantId());
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" lt.tenantId = ?");
+            preparedStatementValues.add(leaveSearchRequest.getTenantId());
+        }
+
+        if (leaveSearchRequest.getLeaveStatus() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" la.status = ?");
+        }
+
+        if (leaveSearchRequest.getEmployeeIds() != null && !leaveSearchRequest.getEmployeeIds().isEmpty()) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" la.employeeId IN " + getIdQuery(leaveSearchRequest.getEmployeeIds()));
+        }
+
+        if (leaveSearchRequest.getLeaveType() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" la.leaveTypeId = ?");
+            preparedStatementValues.add(leaveSearchRequest.getLeaveType());
+        }
+
+        if (leaveSearchRequest.getFromDate() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" la.fromDate > ?");
+            preparedStatementValues.add(leaveSearchRequest.getFromDate());
+        }
+
+        if (leaveSearchRequest.getToDate() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" la.toDate < ?");
+            preparedStatementValues.add(leaveSearchRequest.getToDate());
+        }
+
+        final String sortBy = leaveSearchRequest.getSortBy() == null ? "lt.name"
+                : leaveSearchRequest.getSortBy();
+        final String sortOrder = leaveSearchRequest.getSortOrder() == null ? "ASC"
+                : leaveSearchRequest.getSortOrder();
+        selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
+
+    }
+
     private void addOrderByClause(final StringBuilder selectQuery,
                                   final LeaveApplicationGetRequest leaveApplicationGetRequest) {
         final String sortBy = leaveApplicationGetRequest.getSortBy() == null ? "lt.name"
@@ -237,6 +312,23 @@ public class LeaveApplicationQueryBuilder {
             pageNumber = leaveApplicationGetRequest.getPageNumber() - 1;
         preparedStatementValues.add(pageNumber * pageSize); // Set offset to
         // pageNo * pageSize
+    }
+
+    private void addPagingClauseForReports(StringBuilder selectQuery, List preparedStatementValues,
+                                           Short reportPageSize, Short reportPageNumber) {
+        // handle limit(also called pageSize) here
+        selectQuery.append(" LIMIT ?");
+        int pageSize = Integer.parseInt(applicationProperties.hrLeaveSearchPageSizeDefault());
+        if (!isEmpty(reportPageSize))
+            pageSize = reportPageSize;
+        preparedStatementValues.add(pageSize); // Set limit to pageSize
+
+        // handle offset here
+        selectQuery.append(" OFFSET ?");
+        int pageNumber = 0; // Default pageNo is zero meaning first page
+        if (!isEmpty(reportPageNumber))
+            pageNumber = reportPageNumber < 1 ? 0 : reportPageNumber - 1;
+        preparedStatementValues.add(pageNumber * pageSize); // Set offset to pageNo * pageSize
     }
 
     /**

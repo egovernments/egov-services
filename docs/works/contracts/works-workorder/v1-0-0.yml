@@ -1144,14 +1144,9 @@ definitions:
         description: EMD Amount Deposited for the Letter Of Acceptance
         maxLength: 20
         minLength: 1
-      securityDeposit:
-        type: array
-        description: Array to hold the Security Deposit details
-        items:
-          $ref: '#/definitions/SecurityDeposit'
       engineerIncharge:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
-        description: User who is incharge of the work
+        type: string
+        description: User who is incharge of the work, primary key is ref. here.
         format: singleValueList
       defectLiabilityPeriod:
         type: number
@@ -1188,8 +1183,6 @@ definitions:
         format: int64
         x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of File Date of the Letter Of Acceptance.
-      #parent:
-      #  $ref: '#/definitions/LetterOfAcceptance'
       parent:
         $ref: '#/definitions/LetterOfAcceptance'
         description: Parent of Letter Of Acceptance. This is required in case of Revision Work Order 
@@ -1234,6 +1227,7 @@ definitions:
       - defectLiabilityPeriod
       - fileNumber
       - fileDate
+      - letterOfAcceptanceEstimates
     
   AssetsForLOA:
       type: object
@@ -1248,12 +1242,12 @@ definitions:
           maxLength: 128
           minLength: 2
         asset:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/Asset'
-          description: Asset for which this LOA is created
+          type: string
+          description: Asset for which this LOA is created, code from 'Asset' is ref. here.
           format: singleValueList
         letterOfAcceptanceEstimate:
-          $ref: '#/definitions/LetterOfAcceptanceEstimate'
-          description: LOA Estimate reference
+          type: string
+          description: LOA Estimate reference, primary key is ref. here.
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1274,11 +1268,11 @@ definitions:
         maxLength: 128
         minLength: 2
       letterOfAcceptance:
-        $ref: '#/definitions/LetterOfAcceptance'
-        description: LOA reference
+        type: string
+        description: reference of 'LetterOfAcceptance'. Pimary key is ref. here.
       detailedEstimate:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/DetailedEstimate'
-        description: Detailed Estimate reference
+        type: string
+        description: Detailed Estimate reference. estimate number is ref. here.
       workCompletionDate:
         type: integer
         format: int64
@@ -1293,12 +1287,11 @@ definitions:
         description: Array of Asset for LOA Details
         items:
           $ref: '#/definitions/AssetsForLOA'
-      #loaActivities:
-        #type: array
-        #description: Array of LOA Activity Details
-        #minItems: 1
-        #$items:
-         # $ref: '#/definitions/LOAActivity'
+      loaActivities:
+        type: array
+        description: Array of LOA Activity Details
+        items:
+          $ref: '#/definitions/LOAActivity'
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -1311,20 +1304,23 @@ definitions:
     description: An Object that holds Security deposit collection Details for the given LOA.
     properties:
       letterOfAcceptance:
-        $ref: '#/definitions/LetterOfAcceptance'
-        description: LOA reference
+        type: string
+        description: reference of 'LetterOfAcceptance'. Pimary key is ref. here.
       tenantId:
         type: string
         description: Tenant id of the Security Deposit
         maxLength: 128
         minLength: 2
-      mode:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/CollectionMode'
-      percentage:
+      collectionMode:
         type: string
-        description: Percentage for the given mode
-        maxLength: 10
+        description: Enum value from 'CollectionMode'Enum value from 'CollectionMode'
+        maxLength: 50
         minLength: 1
+      percentage:
+        type: number
+        format: double
+        maxLength: 6
+        description: Percentage for the given mode
       amount:
         type: number
         format: BigDecimal
@@ -1336,7 +1332,7 @@ definitions:
     required:
       - tenantId
       - letterOfAcceptance
-      - mode
+      - collectionMode
       - percentage
       - amount
       
@@ -1353,11 +1349,15 @@ definitions:
         maxLength: 128
         minLength: 2
       letterOfAcceptanceEstimate:
-        $ref: '#/definitions/LetterOfAcceptanceEstimate'
-        description: Letter of acceptance reference
+        type: string
+        description: Letter of acceptance reference. Primary key is ref here.
+        maxLength: 100
+        minLength: 1
       estimateActivity:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/EstimateActivity'
-        description: Reference of Estimate Activity
+        type: string
+        description: Reference of Estimate Activity, primary key is ref here.
+        maxLength: 100
+        minLength: 1
       parent:
         $ref: '#/definitions/LOAActivity'
         description: Parent of the Letter Of Acceptance Activity. This is required for Revision Workrder parent activity.
@@ -1411,7 +1411,7 @@ definitions:
           description: Tenant id of the Measurement Sheet
           maxLength: 128
           minLength: 2
-        no:
+        number:
           type: number
           format: BigDecimal
           description: No. of the Measurement sheet
@@ -1437,13 +1437,11 @@ definitions:
           maxLength: 20
           minLength: 1
         loaActivity:
-          $ref: '#/definitions/LOAActivity'
-          description: LOA activity reference
+          type: string
+          description: LOA activity reference, primary key is ref here.
         estimateMeasurementSheet:
           type: string
           description: Estimate Measurement sheet reference
-        #estimateMeasurementSheet:
-          #$ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/EstimateMeasurementSheet'
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1455,7 +1453,7 @@ definitions:
   LetterOfAcceptanceRequest:
       description: Contract class to send response. Array of LetterOfAcceptance items are used in case of search results, also multiple  Letter Of Acceptance item is used for create and update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         letterOfAcceptances:
           description: Used for create and update only
@@ -1468,7 +1466,7 @@ definitions:
   LetterOfAcceptanceResponse:
     description: Contract class to send response. Array of Letter Of Acceptance items are used in case of search results, also multiple  Letter Of Acceptance item is used for create and update
     properties:
-      responseInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       letterOfAcceptances:
         description: Used for search result and create only
@@ -1555,7 +1553,7 @@ definitions:
   WorkOrderRequest:
       description: Contract class to send response. Array of Wor kOrder items are used in case of search results, also multiple  Work Order item is used for create and update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         workOrders:
           description: Used for create and update only
@@ -1568,7 +1566,7 @@ definitions:
   WorkOrderResponse:
     description: Contract class to send response. Array of Work Order items are used in case of search results, also multiple  Work Order item is used for create and update
     properties:
-      responseInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       workOrders:
         description: Used for search result and create only
@@ -1647,7 +1645,7 @@ definitions:
   NoticeRequest:
       description: Contract class to send response. Array of Notice items are used in case of search results, also multiple  Notice item is used for create and update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         notices:
           description: Used for create and update only
@@ -1660,7 +1658,7 @@ definitions:
   NoticeResponse:
     description: Contract class to send response. Array of Notice items are used in case of search results, also multiple  Notice item is used for create and update
     properties:
-      responseInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       notices:
         description: Used for search result and create only
@@ -1768,7 +1766,7 @@ definitions:
   MilestoneRequest:
       description: Contract class to send response. Array of Milestone items are used in case of search results, also multiple  Milestone item is used for create and update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         milestones:
           description: Used for create and update only
@@ -1781,7 +1779,7 @@ definitions:
   MilestoneResponse:
     description: Contract class to send response. Array of Letter Of Acceptance items are used in case of search results, also multiple  Milestone item is used for create and update
     properties:
-      responseInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       milestones:
         description: Used for search result and create only
@@ -1875,7 +1873,7 @@ definitions:
   TrackMilestoneRequest:
       description: Contract class to send response. Array of Track Milestone items are used in case of search results, also multiple  Track Milestone item is used for create and update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         trackMilestones:
           description: Used for create and update only
@@ -1888,7 +1886,7 @@ definitions:
   TrackMilestoneResponse:
     description: Contract class to send response. Array of Track Milestone items are used in case of search results, also multiple  Track Milestone item is used for create and update
     properties:
-      responseInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       trackMilestones:
         description: Used for search result and create only
@@ -1900,7 +1898,7 @@ definitions:
   ContractorAdvanceRequisitionRequest:
       description: Contract class to send response. Array of ContractorAdvanceRequisition items are used in case of search results, whereas single ContractorAdvanceRequisition item is used for create and update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         contractorAdvanceRequisitions:
           description: Used for create and update only
@@ -1912,7 +1910,7 @@ definitions:
   ContractorAdvanceRequisitionResponse:
       description: Contract class to send response. Array of ContractorAdvanceRequisition items are used in case of search results, whereas single ContractorAdvanceRequisition item is used for create and update
       properties:
-        responseInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         contractorAdvanceRequisitions:
           description: Used for search result and create only
@@ -1965,4 +1963,5 @@ tags:
     description: APIs required for Track Milestone.
   - name: Contractor Advance Requisition
     description: APIs required for Contractor Advance Requisition.
+
 

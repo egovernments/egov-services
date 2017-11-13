@@ -4,6 +4,7 @@ const http = require('http');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const SwaggerParser = require('swagger-parser');
+var $RefParser = require('json-schema-ref-parser');
 const app = express();
 const zip = require('express-zip');
 const mkdirp = require('mkdirp');
@@ -16,10 +17,8 @@ const updateTemplate = require('./templates/update');
 //===================PARSER===================//
 let parse = function(yamlPath, module, cb) {
     mkdirp.sync("./output/" + module);
-
-    SwaggerParser.bundle(yamlPath)
+    SwaggerParser.dereference(yamlPath)
         .then(function(yamlJSON) {
-
             let basePath = yamlJSON.basePath;
             let specifications = {};
             let allUiInfo = {};
@@ -28,22 +27,21 @@ let parse = function(yamlPath, module, cb) {
                 allUiInfo[yamlJSON["x-ui-info"].UIInfo[i].referencePath] = yamlJSON["x-ui-info"].UIInfo[i];
             }
 
-
             for (let key in yamlJSON.paths) {
                 let arr = key.split("/");
                 arr.splice((arr.length - 1), 1);
                 let xPath = arr.join("/");
                 if (!allUiInfo[xPath]) continue;
                 if (/_search/.test(key)) {
-                    specifications[xPath + ".search"] = searchTemplate((module || "specs"), 4, basePath + key, yamlJSON.paths[key], yamlJSON.parameters, basePath, allUiInfo[xPath]);
+                    specifications[xPath + ".search"] = searchTemplate((module || "specs"), 4, basePath + key, yamlJSON.paths[key], basePath, allUiInfo[xPath]);
                     if (specifications[xPath + ".search"].errors) {
                         errors = Object.assign({}, errors, specifications[xPath + ".search"].errors);
                     } else {
                         specifications[xPath + ".search"] = specifications[xPath + ".search"].specifications;
                     }
                 } else if (/_create/.test(key)) {
-                    specifications[xPath + ".create"] = createTemplate((module || "specs"), 4, basePath + key, yamlJSON.paths[key], yamlJSON.definitions, basePath, allUiInfo[xPath]);
-                    specifications[xPath + ".view"] = viewTemplate((module || "specs"), 4, basePath + key, yamlJSON.paths[key], yamlJSON.definitions, basePath, allUiInfo[xPath]);
+                    specifications[xPath + ".create"] = createTemplate((module || "specs"), 4, basePath + key, yamlJSON.paths[key], basePath, allUiInfo[xPath]);
+                    specifications[xPath + ".view"] = viewTemplate((module || "specs"), 4, basePath + key, yamlJSON.paths[key], basePath, allUiInfo[xPath]);
                     if (specifications[xPath + ".create"].errors) {
                         errors = Object.assign({}, errors, specifications[xPath + ".create"].errors);
                     } else {
@@ -55,7 +53,7 @@ let parse = function(yamlPath, module, cb) {
                         specifications[xPath + ".view"] = specifications[xPath + ".view"].specifications;
                     }
                 } else if (/_update/.test(key)) {
-                    specifications[xPath + ".update"] = updateTemplate((module || "specs"), 4, basePath + key, yamlJSON.paths[key], yamlJSON.definitions, basePath, allUiInfo[xPath]);
+                    specifications[xPath + ".update"] = updateTemplate((module || "specs"), 4, basePath + key, yamlJSON.paths[key], basePath, allUiInfo[xPath]);
                     if (specifications[xPath + ".update"].errors) {
                         errors = Object.assign({}, errors, specifications[xPath + ".update"].errors);
                     } else {
@@ -74,6 +72,7 @@ let parse = function(yamlPath, module, cb) {
                 var _partkey = (module || "specs") + "." + key.split(".")[1];
                 specsObj[key.split(".")[0]][_partkey] = specifications[key];
             }
+
             let fileNames = [];
             for (var key in specsObj) {
                 let filePath = key.replace(/\//g, "_");

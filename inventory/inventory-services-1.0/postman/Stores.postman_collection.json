@@ -1,0 +1,111 @@
+{
+	"variables": [],
+	"info": {
+		"name": "invfinal",
+		"_postman_id": "f0115682-2bee-412c-0fda-c1cb5e9a92bc",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "store",
+			"description": "",
+			"item": [
+				{
+					"name": "create",
+					"description": "",
+					"item": [
+						{
+							"name": "localhost:8080/inventory-services/stores/_create?tenantId=default",
+							"request": {
+								"url": {
+									"raw": "localhost:8080/inventory-services/stores/_create?tenantId=default",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"inventory-services",
+										"stores",
+										"_create"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "default",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"12345677\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"rajesh\",\n    \"authToken\": \"9660025a-f3f9-4ee8-8af0-03121123f429\",\n    \"userInfo\":\n    {\n    \t\"id\":\"1\"\n    }\n\n  },\n  \"stores\":[{\n  \n  \t\"code\":\"storecode123\",\n  \t\"name\":\"cosmeticstore\",\n  \t\"description\":\"This is a cosmetic store\",\n  \t\"department\":{\n  \t\"code\":\"dept_123\",\n  \t\"name\":\"Stationary\"\n  \t},\n  \t\"storeInCharge\":{\n  \t\t\"code\":\"employee1\",\n  \t\t\"name\":\"Ram\"\n  \t},\n  \t\"officeLocation\":{\n  \t\t\"code\":\"office234\",\n  \t\t\"name\":\"Kormangala\"\n  \t},\n  \t\"billingAddress\":\"BTM Layout \",\n  \t\"deliveryAddress\":\"BTM Layout\",\n  \t\"contactNo1\":\"9368963246\",\n  \t\"contactNo2\":\"8923618863\",\n  \t\"email\":\"jantastores@gmail.com\",\n  \t\"isCentralStore\":true,\n  \t\"active\":true\n \n  \t\n  \t\n  },\n  {\n  \n  \t\"code\":\"storecode234\",\n  \t\"name\":\"generalstore\",\n  \t\"description\":\"This is a general store\",\n  \t\"department\":{\n  \t\"code\":\"dept_234\",\n  \t\"name\":\"General\"\n  \t},\n  \t\"storeInCharge\":{\n  \t\t\"code\":\"employee2\",\n  \t\t\"name\":\"Laxman\"\n  \t},\n  \t\"officeLocation\":{\n  \t\t\"code\":\"office123\",\n  \t\t\"name\":\"BTM LAyout\"\n  \t},\n  \t\"billingAddress\":\"BTM Layout UDUPI \",\n  \t\"deliveryAddress\":\"BTM Layout UDUPI\",\n  \t\"contactNo1\":\"9368963249\",\n  \t\"contactNo2\":\"8923618863\",\n  \t\"email\":\"jantastores@gmail.com\",\n  \t\"isCentralStore\":true,\n  \t\"active\":true\n  \t\n\n  \t\n  \t\n  }]\n  \n}"
+								},
+								"description": ""
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "update",
+					"description": "",
+					"item": [
+						{
+							"name": "localhost:8080/inventory-services/stores/_create?tenantId=default",
+							"request": {
+								"url": {
+									"raw": "localhost:8080/inventory-services/stores/_update?tenantId=default",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"inventory-services",
+										"stores",
+										"_update"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "default",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"12345677\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"rajesh\",\n    \"authToken\": \"9660025a-f3f9-4ee8-8af0-03121123f429\",\n    \"userInfo\":\n    {\n    \t\"id\":\"1\"\n    }\n\n  },\n  \"stores\":[{\n    \"id\":\"15\",\n  \t\"code\":\"storecode123\",\n  \t\"name\":\"cosmeticsstore\",\n  \t\"description\":\"This is a cosmetic store\",\n  \t\"department\":{\n  \t\"code\":\"dept_123\",\n  \t\"name\":\"Stationary\"\n  \t},\n  \t\"storeInCharge\":{\n  \t\t\"code\":\"employee1\",\n  \t\t\"name\":\"Ram\"\n  \t},\n  \t\"officeLocation\":{\n  \t\t\"code\":\"office2345\",\n  \t\t\"name\":\"Kormangala\"\n  \t},\n  \t\"billingAddress\":\"BTM Layout \",\n  \t\"deliveryAddress\":\"BTM Layout\",\n  \t\"contactNo1\":\"9368963246\",\n  \t\"contactNo2\":\"8923618863\",\n  \t\"email\":\"jantastores@gmail.com\",\n  \t\"isCentralStore\":true,\n  \t\"active\":true\n \n  \t\n  \t\n  },\n  {\n    \"id\":\"16\",\n  \t\"code\":\"storecode234\",\n  \t\"name\":\"generalsstore\",\n  \t\"description\":\"This is a general store\",\n  \t\"department\":{\n  \t\"code\":\"dept_234\",\n  \t\"name\":\"General\"\n  \t},\n  \t\"storeInCharge\":{\n  \t\t\"code\":\"employee2\",\n  \t\t\"name\":\"Laxman\"\n  \t},\n  \t\"officeLocation\":{\n  \t\t\"code\":\"office1234\",\n  \t\t\"name\":\"BTM LAyout\"\n  \t},\n  \t\"billingAddress\":\"BTM Layout UDUPI \",\n  \t\"deliveryAddress\":\"BTM Layout UDUPI\",\n  \t\"contactNo1\":\"9368963249\",\n  \t\"contactNo2\":\"8923618863\",\n  \t\"email\":\"jantastores@gmail.com\",\n  \t\"isCentralStore\":true,\n  \t\"active\":true\n  \t\n\n  \t\n  \t\n  }]\n  \n}"
+								},
+								"description": ""
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				}
+			]
+		}
+	]
+}

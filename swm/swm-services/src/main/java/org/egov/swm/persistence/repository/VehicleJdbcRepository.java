@@ -8,6 +8,8 @@ import java.util.Map;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleSearch;
+import org.egov.swm.domain.model.Vendor;
+import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.persistence.entity.VehicleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -17,18 +19,23 @@ import org.springframework.stereotype.Service;
 @Service
 public class VehicleJdbcRepository extends JdbcRepository {
 
+	public static final String TABLE_NAME = "egswm_vehicle";
+
 	@Autowired
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+	@Autowired
+	public VendorJdbcRepository vendorJdbcRepository;
 
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {
 
-		return uniqueCheck("egswm_vehicle", tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
+		return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
 	}
 
 	public Pagination<Vehicle> search(VehicleSearch searchRequest) {
 
-		String searchQuery = "select * from egswm_vehicle :condition  :orderby ";
+		String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
@@ -180,10 +187,22 @@ public class VehicleJdbcRepository extends JdbcRepository {
 
 		List<VehicleEntity> vehicleEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues,
 				row);
-
+		Vehicle v;
+		VendorSearch vendorSearch;
+		Pagination<Vendor> vendors;
 		for (VehicleEntity vehicleEntity : vehicleEntities) {
+			
+			v = vehicleEntity.toDomain();
+			vendorSearch = new VendorSearch();
+			vendorSearch.setTenantId(v.getTenantId());
+			vendorSearch.setVendorNo(v.getVendor().getVendorNo());
 
-			vehicleList.add(vehicleEntity.toDomain());
+			vendors = vendorJdbcRepository.search(vendorSearch);
+			if (vendors != null && vendors.getPagedData() != null && !vendors.getPagedData().isEmpty()) {
+				v.setVendor(vendors.getPagedData().get(0));
+			}
+
+			vehicleList.add(v);
 		}
 
 		page.setTotalResults(vehicleList.size());

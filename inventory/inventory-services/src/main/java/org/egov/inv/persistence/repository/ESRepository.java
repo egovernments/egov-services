@@ -1,21 +1,19 @@
 package org.egov.inv.persistence.repository;
 
-import static org.elasticsearch.index.query.QueryBuilders.termsQuery;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.egov.inv.domain.exception.InvalidDataException;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.elasticsearch.index.query.QueryBuilders.termsQuery;
+
 @Repository
 public abstract class ESRepository {
-
-    protected TransportClient esClient;
 
     public void validateSortByOrder(final String sortBy) {
         List<String> sortByList = new ArrayList<String>();

@@ -1,0 +1,20 @@
+Create table egswm_vehiclemaintenancedetail(
+  code varchar(256) NOT NULL,
+  tenantid varchar(128) NOT NULL,
+  isscheduled BOOLEAN,
+  maintenancetype varchar(128) NOT NULL,
+  vehicle varchar(256) NOT NULL,
+  actualMaintenanceDate bigint NOT NULL,
+  vehicleScheduledMaintenanceDate bigint,
+  vehicleDowntimeActual numeric NOT NULL,
+  vehicleDownTimeActualUom varchar(256) NOT NULL,
+  vehicleReadingDuringMaintenance numeric NOT NULL,
+  remarks varchar(300) NOT NULL,
+  costIncurred numeric NOT NULL,
+  createdby varchar(50),
+  createdtime bigint,
+  lastmodifiedby varchar(50),
+  lastmodifiedtime bigint,
+  version bigint,
+  constraint uk_vehiclemaintenancedetail_code_tenant unique (code,tenantid)
+);

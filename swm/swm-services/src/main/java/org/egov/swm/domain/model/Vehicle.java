@@ -3,7 +3,6 @@ package org.egov.swm.domain.model;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import org.egov.swm.web.contract.Employee;
 import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -36,6 +35,7 @@ public class Vehicle {
 	private VehicleType vehicleType = null;
 
 	@NotNull
+	@Valid
 	@JsonProperty("purchaseInfo")
 	private PurchaseInfo purchaseInfo = null;
 
@@ -51,11 +51,13 @@ public class Vehicle {
 	private Vendor vendor = null;
 
 	@NotNull
+	@Valid
 	@JsonProperty("manufacturingDetails")
 	private ManufacturingDetails manufacturingDetails = null;
 
 	@NotNull
 	@JsonProperty("insuranceDetails")
+	@Valid
 	private InsuranceDetails insuranceDetails = null;
 
 	@JsonProperty("kilometers")

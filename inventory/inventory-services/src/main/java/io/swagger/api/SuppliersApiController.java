@@ -93,11 +93,6 @@ public class SuppliersApiController implements SuppliersApi {
 			@RequestHeader(value = "Accept", required = false) String accept, BindingResult errors) throws Exception {
 		List<Supplier> suppliers = supplierService.create(supplierRequest, tenantId, errors);
 		SupplierResponse supplierResponse = buildSupplierResponse(suppliers, supplierRequest.getRequestInfo());
-		if (accept != null && accept.contains("application/json")) {
-			return new ResponseEntity<SupplierResponse>(objectMapper.readValue(
-					"{  \"suppliers\" : [ {    \"bankInfo\" : {      \"acctNo\" : \"acctNo\",      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"micr\" : \"micr\",      \"ifsc\" : \"ifsc\"    },    \"website\" : \"website\",    \"code\" : \"code\",    \"address\" : \"address\",    \"panNo\" : \"panNo\",    \"vatNo\" : \"vatNo\",    \"contactPerson\" : \"contactPerson\",    \"cstNo\" : \"cstNo\",    \"tinNo\" : \"tinNo\",    \"contactPersonNo\" : \"contactPersonNo\",    \"faxNo\" : \"faxNo\",    \"supplierContactNo\" : \"supplierContactNo\",    \"narration\" : \"narration\",    \"auditDetails\" : {      \"lastModifiedTime\" : 1,      \"createdBy\" : \"createdBy\",      \"lastModifiedBy\" : \"lastModifiedBy\",      \"createdTime\" : 6    },    \"tenantId\" : \"tenantId\",    \"name\" : \"name\",    \"inActiveDate\" : 0,    \"id\" : \"id\",    \"supplierType\" : {      \"code\" : \"code\",      \"tenantId\" : \"tenantId\",      \"name\" : \"name\"    },    \"email\" : \"email\",    \"status\" : {      \"code\" : \"code\",      \"tenantId\" : \"tenantId\",      \"name\" : \"name\"    }  }, {    \"bankInfo\" : {      \"acctNo\" : \"acctNo\",      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"micr\" : \"micr\",      \"ifsc\" : \"ifsc\"    },    \"website\" : \"website\",    \"code\" : \"code\",    \"address\" : \"address\",    \"panNo\" : \"panNo\",    \"vatNo\" : \"vatNo\",    \"contactPerson\" : \"contactPerson\",    \"cstNo\" : \"cstNo\",    \"tinNo\" : \"tinNo\",    \"contactPersonNo\" : \"contactPersonNo\",    \"faxNo\" : \"faxNo\",    \"supplierContactNo\" : \"supplierContactNo\",    \"narration\" : \"narration\",    \"auditDetails\" : {      \"lastModifiedTime\" : 1,      \"createdBy\" : \"createdBy\",      \"lastModifiedBy\" : \"lastModifiedBy\",      \"createdTime\" : 6    },    \"tenantId\" : \"tenantId\",    \"name\" : \"name\",    \"inActiveDate\" : 0,    \"id\" : \"id\",    \"supplierType\" : {      \"code\" : \"code\",      \"tenantId\" : \"tenantId\",      \"name\" : \"name\"    },    \"email\" : \"email\",    \"status\" : {      \"code\" : \"code\",      \"tenantId\" : \"tenantId\",      \"name\" : \"name\"    }  } ],  \"page\" : {    \"totalResults\" : 1,    \"offSet\" : 1,    \"totalPages\" : 1,    \"pageSize\" : 6,    \"currentPage\" : 7  },  \"responseInfo\" : {    \"ver\" : \"ver\",    \"resMsgId\" : \"resMsgId\",    \"msgId\" : \"msgId\",    \"apiId\" : \"apiId\",    \"ts\" : 0,    \"status\" : \"SUCCESSFUL\"  }}",
-					SupplierResponse.class), HttpStatus.OK);
-		}
 		return new ResponseEntity(supplierResponse, HttpStatus.OK);
 	}
 
@@ -125,7 +120,6 @@ public class SuppliersApiController implements SuppliersApi {
 	        @ApiParam(value = "name of the bankBranch ") @RequestParam(value = "bankBranch", required = false) String bankBranch,
 	        @ApiParam(value = "account number of the bank account ") @RequestParam(value = "bankAccNo", required = false) String bankAccNo,
 	        @ApiParam(value = "ifsc code of the bank account ") @RequestParam(value = "bankIfsc", required = false) String bankIfsc,
-	        @ApiParam(value = "micr code of the bank account ") @RequestParam(value = "bankMicr", required = false) String bankMicr,
 	         @Min(0) @Max(100)@ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue="20") Integer pageSize,
 	        @ApiParam(value = "offset") @RequestParam(value = "offset", required = false) Integer offset,
 	        @ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber,
@@ -134,7 +128,7 @@ public class SuppliersApiController implements SuppliersApi {
 				.type(type).status(status).inActiveDate(inActiveDate)
 				.contactNo(contactNo).faxNo(faxNo).website(website).email(email).panNo(panNo)
 				.tinNo(tinNo).cstNo(cstNo).vatNo(vatNo).gstNo(gstNo).contactPerson(contactPerson).contactPersonNo(contactPersonNo)
-			  .bankCode(bankCode).bankBranch(bankBranch).active(active).bankAccNo(bankAccNo).bankIfsc(bankIfsc).pageSize(pageSize).offset(offset)
+			  .bankCode(bankCode).bankBranch(bankBranch).tenantId(tenantId).active(active).bankAccNo(bankAccNo).bankIfsc(bankIfsc).pageSize(pageSize).offset(offset)
 				.pageNumber(pageNumber).sortBy(sortBy).build();
 		Pagination<Supplier> suppliers = supplierService.search(supplierGetRequest);
 		SupplierResponse response = new SupplierResponse();
@@ -150,11 +144,6 @@ public class SuppliersApiController implements SuppliersApi {
 			@RequestHeader(value = "Accept", required = false) String accept, BindingResult errors) throws Exception {
 		List<Supplier> suppliers = supplierService.update(supplierRequest, tenantId, errors);
 		SupplierResponse supplierResponse = buildSupplierResponse(suppliers, supplierRequest.getRequestInfo());
-		if (accept != null && accept.contains("application/json")) {
-			return new ResponseEntity<SupplierResponse>(objectMapper.readValue(
-					"{  \"suppliers\" : [ {    \"bankInfo\" : {      \"acctNo\" : \"acctNo\",      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"micr\" : \"micr\",      \"ifsc\" : \"ifsc\"    },    \"website\" : \"website\",    \"code\" : \"code\",    \"address\" : \"address\",    \"panNo\" : \"panNo\",    \"vatNo\" : \"vatNo\",    \"contactPerson\" : \"contactPerson\",    \"cstNo\" : \"cstNo\",    \"tinNo\" : \"tinNo\",    \"contactPersonNo\" : \"contactPersonNo\",    \"faxNo\" : \"faxNo\",    \"supplierContactNo\" : \"supplierContactNo\",    \"narration\" : \"narration\",    \"auditDetails\" : {      \"lastModifiedTime\" : 1,      \"createdBy\" : \"createdBy\",      \"lastModifiedBy\" : \"lastModifiedBy\",      \"createdTime\" : 6    },    \"tenantId\" : \"tenantId\",    \"name\" : \"name\",    \"inActiveDate\" : 0,    \"id\" : \"id\",    \"supplierType\" : {      \"code\" : \"code\",      \"tenantId\" : \"tenantId\",      \"name\" : \"name\"    },    \"email\" : \"email\",    \"status\" : {      \"code\" : \"code\",      \"tenantId\" : \"tenantId\",      \"name\" : \"name\"    }  }, {    \"bankInfo\" : {      \"acctNo\" : \"acctNo\",      \"tenantId\" : \"tenantId\",      \"name\" : \"name\",      \"micr\" : \"micr\",      \"ifsc\" : \"ifsc\"    },    \"website\" : \"website\",    \"code\" : \"code\",    \"address\" : \"address\",    \"panNo\" : \"panNo\",    \"vatNo\" : \"vatNo\",    \"contactPerson\" : \"contactPerson\",    \"cstNo\" : \"cstNo\",    \"tinNo\" : \"tinNo\",    \"contactPersonNo\" : \"contactPersonNo\",    \"faxNo\" : \"faxNo\",    \"supplierContactNo\" : \"supplierContactNo\",    \"narration\" : \"narration\",    \"auditDetails\" : {      \"lastModifiedTime\" : 1,      \"createdBy\" : \"createdBy\",      \"lastModifiedBy\" : \"lastModifiedBy\",      \"createdTime\" : 6    },    \"tenantId\" : \"tenantId\",    \"name\" : \"name\",    \"inActiveDate\" : 0,    \"id\" : \"id\",    \"supplierType\" : {      \"code\" : \"code\",      \"tenantId\" : \"tenantId\",      \"name\" : \"name\"    },    \"email\" : \"email\",    \"status\" : {      \"code\" : \"code\",      \"tenantId\" : \"tenantId\",      \"name\" : \"name\"    }  } ],  \"page\" : {    \"totalResults\" : 1,    \"offSet\" : 1,    \"totalPages\" : 1,    \"pageSize\" : 6,    \"currentPage\" : 7  },  \"responseInfo\" : {    \"ver\" : \"ver\",    \"resMsgId\" : \"resMsgId\",    \"msgId\" : \"msgId\",    \"apiId\" : \"apiId\",    \"ts\" : 0,    \"status\" : \"SUCCESSFUL\"  }}",
-					SupplierResponse.class), HttpStatus.NOT_IMPLEMENTED);
-		}
 		return new ResponseEntity(supplierResponse, HttpStatus.OK);
 	}
 

@@ -140,6 +140,29 @@ export default class CustomSearch extends Component {
     }
   }
 
+  delete=()=> {
+    let {moduleName, actionName, metaData, setRoute, tableSelectionData, setLoadingStatus} = this.props;
+    let obj = metaData[`${moduleName}.${actionName}`];
+    let resultIdKey = obj.result.resultIdKey;
+    if(tableSelectionData && tableSelectionData.length > 0){
+      let inActiveDatas = this.state.values.filter((value)=> tableSelectionData.indexOf(value[resultIdKey]) > -1).map((value)=>{
+        value['active'] = false;
+        value['inActiveDate'] = new Date().getTime();
+        return value;
+      });
+      setLoadingStatus('loading');
+
+      let formData = {
+        [obj.result.resultPath] : inActiveDatas
+      };
+
+      Api.commonApiPost(obj.result.rowClickUrlDelete, "", formData, "", true).then(function(response){
+        setLoadingStatus('hide');
+        this.search();
+      });
+    }
+  }
+
   search = (e) => {
     e.preventDefault();
     let self = this;
@@ -159,9 +182,12 @@ export default class CustomSearch extends Component {
       };
       var specsValuesList = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.values;
       var values = _.get(res, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.resultPath);
+
+      let resultIdKey = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.resultIdKey;
+
       if(values && values.length) {
         for(var i=0; i<values.length; i++) {
-          var tmp = [_.get(values[i], self.props.resultIdKey), i+1];
+          var tmp = [_.get(values[i], resultIdKey), i+1];
           for(var j=0; j<specsValuesList.length; j++) {
             let valuePath = specsValuesList[j];
             if(typeof valuePath === 'object' && valuePath.type === "checkbox"){
@@ -171,7 +197,7 @@ export default class CustomSearch extends Component {
               continue;
             }
 
-            tmp.push(_.get(values[i], specsValuesList[j]));
+            tmp.push(_.get(values[i], specsValuesList[j]) || "");
           }
           resultList.resultValues.push(tmp);
         }
@@ -558,7 +584,7 @@ export default class CustomSearch extends Component {
             <UiButton item={{"label": "Reset", "uiType":"button", "primary": false}} ui="google" handler={this.resetForm}/>&nbsp;&nbsp;
             <UiButton item={{"label": "View", "uiType":"button", "primary": true, "isDisabled":!isEnableUpdateViewBtn}} ui="google" handler={this.view}/>&nbsp;&nbsp;
             <UiButton item={{"label": "Update", "uiType":"button", "primary": true, "isDisabled":!isEnableUpdateViewBtn}} ui="google" handler={this.update}/>&nbsp;&nbsp;
-            <UiButton item={{"label": "Delete", "uiType":"button", "primary": true, "isDisabled":!isEnableDeleteBtn}} ui="google" />&nbsp;&nbsp;
+            <UiButton item={{"label": "Delete", "uiType":"button", "primary": true, "isDisabled":!isEnableDeleteBtn}} ui="google" handler={this.delete} />&nbsp;&nbsp;
             <UiButton item={{"label": "Add", "uiType":"button", "primary": true}} ui="google" handler={this.redirectToUrl.bind(this, "rowClickUrlAdd")}/>
             <br/>
             {showResult && <CustomUiTable resultList={resultList} rowClickHandler={rowClickHandler}/>}

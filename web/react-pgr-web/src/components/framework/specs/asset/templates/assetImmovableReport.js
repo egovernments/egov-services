@@ -42,17 +42,19 @@ export default class assetImmovableReport extends Component {
 	}
 
 
-	 numberWithCommas = (x)=> {
-		if (x) {
-			x=x.toString();
-			var lastThree = x.substring(x.length-3);
-			var otherNumbers = x.substring(0,x.length-3);
-			if(otherNumbers != '')
-			    lastThree = ',' + lastThree;
-			var res = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
-			return res;
-		}
-
+	numberWithCommas = (x)=> {
+	 if (x) {
+		 x=x.toString();
+		 var y = x.split(".")[1];
+		 x=x.split(".")[0];
+		 var lastThree = x.substring(x.length-3);
+		 var otherNumbers = x.substring(0,x.length-3);
+		 if(otherNumbers != '')
+				 lastThree = ',' + lastThree;
+		 var resCal = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree ;
+		 var res = (y==null) ? resCal : (resCal + "." + y);
+		 return res;
+	 }
 }
 
 
@@ -60,7 +62,7 @@ export default class assetImmovableReport extends Component {
 		let {convertToDate,numberWithCommas}= this;
 		return (
 			<Card className="uiCard">
-			    <CardHeader title="Certificate" />
+			    <CardHeader title="" />
 			    <CardText>
 			        <Table responsive bordered condensed>
 			            <tbody>
@@ -138,7 +140,7 @@ export default class assetImmovableReport extends Component {
 															<b>अधिपत्र ( होय / नाही )</b>
 													</td>
 													<td colSpan={4} style={{textAlign: "left"}}>
-															<b>{this.props.data[35]?this.props.data[35]:""}</b>
+															<b>{this.props.data[35]?"Yes":"No"}</b>
 													</td>
 											</tr>
 											<tr>
@@ -163,7 +165,9 @@ export default class assetImmovableReport extends Component {
 												<b>दोषी दायित्व</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "left"}}>
-												<b>{this.props.data[13]?this.props.data[13]:""}</b>
+										<b>{this.props.data[13]?this.props.data[13]+"Y,":""}&nbsp;&nbsp;</b>
+										<b>{this.props.data[14]?this.props.data[14]+"M,":""}&nbsp;&nbsp;</b>
+										<b>{this.props.data[15]?this.props.data[15]+"D":""}</b>
 										</td>
 									</tbody>
 
@@ -232,7 +236,7 @@ export default class assetImmovableReport extends Component {
 												<b> ज्यावर बांधकाम केले आहे अशा जमिनीचा सर्वेक्षण क्रमांक</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "left"}}>
-												<b>{this.props.data[4]?this.props.data[4]:""}</b>
+												<b>{this.props.data[44] ? this.props.data[44] :""}</b>
 										</td>
 										<td  colSpan={9} style={{textAlign: "center"}}>
 												<b>विक्री करणे</b>
@@ -271,7 +275,7 @@ export default class assetImmovableReport extends Component {
 													<b> उपलब्ध शीर्ष दस्तऐवज</b>
 											</td>
 											<td colSpan={4} style={{textAlign: "left"}}>
-													<b>{this.props.data[38]?this.props.data[38]:""}</b>
+													<b>{this.props.data[38] ? JSON.parse(this.props.data[38]).join(","):""}</b>
 											</td>
 										</tr>
 										<tr>
@@ -426,7 +430,7 @@ export default class assetImmovableReport extends Component {
 													<b>{convertToDate(this.props.data[19]?this.props.data[19]:"")}</b>
 											</td>
 											<td style={{textAlign: "center"}} >
-													<b>{this.props.data[20]?this.props.data[20]:""}</b>
+													<b>{numberWithCommas(this.props.data[20]?this.props.data[20]:"")}</b>
 											</td>
 											<td style={{textAlign: "center"}} >
 													<b>{numberWithCommas(this.props.data[21]?this.props.data[21]:"")}</b>
@@ -456,7 +460,7 @@ export default class assetImmovableReport extends Component {
 													<b>{numberWithCommas(this.props.data[29]?this.props.data[29]:"")}</b>
 											</td>
 											<td style={{textAlign: "center"}} >
-													<b>{this.props.data[23]?this.props.data[23]:""}</b>
+													<b>{numberWithCommas(this.props.data[23]?this.props.data[23]:"")}</b>
 											</td>
 											<td style={{textAlign: "center"}} >
 													<b>{numberWithCommas(this.props.data[40]?this.props.data[40]:"")}</b>

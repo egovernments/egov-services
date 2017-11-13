@@ -61,8 +61,7 @@ public class EstimateOverheadHelper {
 		estimateOverhead.getAuditDetails().setLastModifiedTime(this.lastModifiedTime);
 		estimateOverhead.setId(this.id);
 		estimateOverhead.setTenantId(this.tenantId);
-		estimateOverhead.setDetailedEstimate(new DetailedEstimate());
-		estimateOverhead.getDetailedEstimate().setId(this.detailedEstimate);
+		estimateOverhead.setDetailedEstimate(this.detailedEstimate);
 		estimateOverhead.setAmount(this.amount);
 		return estimateOverhead;
 	}

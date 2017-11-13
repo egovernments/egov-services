@@ -14,7 +14,7 @@ class SupplierSearch extends Component {
 
     return (
       <CustomSearch {...this.props} templateObj={template}
-      actionKey="inventory.search" resultIdKey="code">
+      actionKey="inventory.search">
       </CustomSearch>
     );
 

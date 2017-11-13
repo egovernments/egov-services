@@ -1,19 +1,20 @@
 package org.egov.works.estimate.web.contract;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.math.BigDecimal;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * An Object that holds the basic data of Detailed Estimate Deductions
  */
 @ApiModel(description = "An Object that holds the basic data of Detailed Estimate Deductions")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T07:36:50.343Z")
 
 public class DetailedEstimateDeduction   {
   @JsonProperty("id")
@@ -26,7 +27,7 @@ public class DetailedEstimateDeduction   {
   private ChartOfAccount chartOfAccounts = null;
 
   @JsonProperty("detailedEstimate")
-  private DetailedEstimate detailedEstimate = null;
+  private String detailedEstimate = null;
 
   @JsonProperty("percentage")
   private Double percentage = null;
@@ -69,7 +70,7 @@ public class DetailedEstimateDeduction   {
   @ApiModelProperty(required = true, value = "Tenant id of the Detailed Estimate Deduction")
   @NotNull
 
- @Size(min=4,max=128)
+ @Size(min=2,max=128)
   public String getTenantId() {
     return tenantId;
   }
@@ -90,7 +91,8 @@ public class DetailedEstimateDeduction   {
   @ApiModelProperty(required = true, value = "Chart Of Accounts of the Detailed Estimate Deduction from Financials")
   @NotNull
 
-  @Valid
+  //@Valid
+  //TODO Only code is required
 
   public ChartOfAccount getChartOfAccounts() {
     return chartOfAccounts;
@@ -100,25 +102,23 @@ public class DetailedEstimateDeduction   {
     this.chartOfAccounts = chartOfAccounts;
   }
 
-  public DetailedEstimateDeduction detailedEstimate(DetailedEstimate detailedEstimate) {
+  public DetailedEstimateDeduction detailedEstimate(String detailedEstimate) {
     this.detailedEstimate = detailedEstimate;
     return this;
   }
 
    /**
-   * Get detailedEstimate
+   * Reference of the Detailed Estimate for Multi Year Estimate
    * @return detailedEstimate
   **/
-  @ApiModelProperty(required = true, value = "")
-  //@NotNull
+  @ApiModelProperty(value = "Reference of the Detailed Estimate for Multi Year Estimate")
 
-  @Valid
 
-  public DetailedEstimate getDetailedEstimate() {
+  public String getDetailedEstimate() {
     return detailedEstimate;
   }
 
-  public void setDetailedEstimate(DetailedEstimate detailedEstimate) {
+  public void setDetailedEstimate(String detailedEstimate) {
     this.detailedEstimate = detailedEstimate;
   }
 
@@ -187,7 +187,7 @@ public class DetailedEstimateDeduction   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -229,7 +229,7 @@ public class DetailedEstimateDeduction   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

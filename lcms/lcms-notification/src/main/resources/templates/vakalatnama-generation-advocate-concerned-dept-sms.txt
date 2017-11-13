@@ -1,0 +1,1 @@
+Case Details dated {{Case details date}} is received

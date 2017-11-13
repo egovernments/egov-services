@@ -427,7 +427,7 @@ var dat = {
             name: "hearingTime",
             jsonPath: "cases[0].summon.hearingTime",
             label: "legacylegal.create.hearingTime",
-            type: "text",
+            type: "timePicker",
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""
@@ -795,7 +795,7 @@ var dat = {
             name: "hearingTime",
             jsonPath: "summons[0].hearingTime",
             label: "legacylegal.create.hearingTime",
-            type: "text",
+            type: "timePicker",
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""
@@ -1011,7 +1011,7 @@ var dat = {
             name: "hearingTime",
             jsonPath: "summons[0].hearingTime",
             label: "legacylegal.create.hearingTime",
-            type: "text",
+            type: "timePicker",
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""

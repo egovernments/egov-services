@@ -1,0 +1,6 @@
+Dear {{Legal Clerk}}
+
+	Demand request from {{Advocate Name}} is received against {{Case No}} dated {{Case Date}}.
+
+Sincerely,
+{{ULB Name}}

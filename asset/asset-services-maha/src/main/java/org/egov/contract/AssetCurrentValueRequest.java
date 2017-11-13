@@ -4,6 +4,7 @@ package org.egov.contract;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.model.CurrentValue;
@@ -29,6 +30,7 @@ public class AssetCurrentValueRequest   {
 	  private RequestInfo requestInfo = null;
       
 	  @Valid
+	  @NotNull
 	  @JsonProperty("AssetCurrentValue")
 	  private List<CurrentValue> assetCurrentValue = null;
 }

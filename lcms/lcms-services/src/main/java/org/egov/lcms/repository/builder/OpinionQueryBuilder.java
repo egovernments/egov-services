@@ -79,11 +79,11 @@ public class OpinionQueryBuilder {
 	private void addOrderByClause(final StringBuilder selectQuery, final List<Object> preparedStatementValues,
 			final OpinionSearchCriteria opinionSearchCriteria) {
 		String sort = opinionSearchCriteria.getSort();
-		selectQuery.append(" ORDER BY ?");
+		
 		if (sort != null && !sort.isEmpty()) {
-			preparedStatementValues.add(sort);
+			selectQuery.append(" ORDER BY " + sort + " DESC");
 		} else {
-			preparedStatementValues.add(propertiesManager.getSortCode());
+			selectQuery.append(" ORDER BY " + propertiesManager.getLastModifiedTime() + " DESC");
 		}
 	}
 
@@ -103,5 +103,20 @@ public class OpinionQueryBuilder {
 			preparedStatementValues.add(offset);
 			preparedStatementValues.add(limit);
 		}
+	}
+
+	public String getCaseNo(String summonReferenceNo, String tenantId, List<Object> preparedStatementValues) {
+
+		StringBuilder searchQuery = new StringBuilder();
+
+		searchQuery.append("SELECT caseno FROM " + ConstantUtility.CASE_TABLE_NAME);
+
+		searchQuery.append(" WHERE tenantId=?");
+		preparedStatementValues.add(tenantId);
+
+		searchQuery.append(" AND summonreferenceno=?");
+		preparedStatementValues.add(summonReferenceNo);
+
+		return searchQuery.toString();
 	}
 }

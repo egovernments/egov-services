@@ -32,9 +32,15 @@ public class LandPossessionService {
 
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	
+	@Autowired
+	private MasterDataService mdmsService;
 
 	public LandPossessionResponse create(LandPossessionRequest landPossessionRequest) {
 
+		landPossessionRequest.getLandPossession().stream().forEach(landPossession -> mdmsService
+				.getLandPossessionMaster(landPossessionRequest.getRequestInfo(), landPossession));
+		
 		landPossessionRequest.getLandPossession().stream().forEach(landPossession -> {
 			landPossession.setId(sequenceGenService.getIds(1, "seq_eg_lams_landpossession").get(0));
 		});
@@ -48,6 +54,10 @@ public class LandPossessionService {
 	}
 
 	public LandPossessionResponse update(LandPossessionRequest landPossessionRequest) {
+		
+		landPossessionRequest.getLandPossession().stream().forEach(landPossession -> mdmsService
+				.getLandPossessionMaster(landPossessionRequest.getRequestInfo(), landPossession));
+		
 		kafkaTemplate.send(propertiesManager.getUpdateLandPossessionKafkaTopic(), landPossessionRequest);
 		return getLandPossessionResponse(landPossessionRequest.getLandPossession(),
 				landPossessionRequest.getRequestInfo());
@@ -68,7 +78,7 @@ public class LandPossessionService {
 	}
 
 	private String sequenceGen() {
-		long id = sequenceGenService.getIds(1, "seq_eg_lams_landpossession").get(0);
+		String id = sequenceGenService.getIds(1, "seq_eg_lams_landpossession").get(0);
 		int year = Calendar.getInstance().get(Calendar.YEAR);
 		String idgen = String.format("%05d", id);
 		String seqId = year + idgen;

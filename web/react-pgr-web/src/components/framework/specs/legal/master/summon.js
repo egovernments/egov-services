@@ -38,7 +38,7 @@ var dat = {
           },
           {
             name: "referenceCaseNo",
-            jsonPath: "caseRefernceNo",
+            jsonPath: "caseReferenceNo",
             label: "caseRegistration.create.referenceCaseNo",
             type: "text",
             isRequired: false,
@@ -118,10 +118,23 @@ var dat = {
             }, {
               label: "ParaWise",
               url: "/update/legal/parawisecomments/"
+            },{
+              label: "Ref Evidence",
+              url:"/update/legal/referenceevidence/"
+            },{
+              label: "Case Details",
+              url:"/update/legal/casedetails/"
             }
           ],
       header: [
         {
+          label: "legal.search.result.actionLabels",
+          isChecked:true,
+          checkedItem:{
+            jsonPath:"checkedRow",
+            label:"",
+          }
+        },{
           label: "legal.create.referenceNo"
         },
         {
@@ -140,25 +153,17 @@ var dat = {
         },
         {
           label: "legal.create.advocateName"
-        },
-        {
-          label: "legal.search.result.actionLabels",
-          isChecked:true,
-          checkedItem:{
-            jsonPath:"checkedRow",
-            label:"",
-          }
         }
       ],
       values: [
+         "code",
         "summon.summonReferenceNo",
         "caseRefernceNo",
-        "hearingDetails.caseStatus",
+        "hearingDetails[0].caseStatus.name",
         "summon.caseNo",
         "summon.departmentName.name",
         "summon.caseType.name",
-        "advocateDetails[0].advocate.name",
-         "code"
+        "advocateDetails[0].advocate.name"
       ],
       resultPath: "cases",
       rowClickUrlUpdate: "/update/legalcase/case/{id}",
@@ -216,7 +221,7 @@ var dat = {
             label: "legal.create.referenceNo",
             type: "text",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           }, {
             name: "year",
@@ -234,7 +239,7 @@ var dat = {
             jsonPath: "summons[0].summonDate",
             label: "legal.create.summonDate",
             type: "datePicker",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             patternErrorMsg: ""
           },
@@ -306,7 +311,8 @@ var dat = {
             name: "plantiffAddress",
             jsonPath: "summons[0].plantiffAddress.addressLine1",
             label: "legal.create.plantiffAddress",
-            type: "text",
+            type: "textarea",
+            fullWidth: true,
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: ""
@@ -367,8 +373,7 @@ var dat = {
             isNumber: true,
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: "",
-            defaultValue:"00:00"
+            patternErrorMsg: ""
           },
           {
             name: "courtName",
@@ -381,14 +386,15 @@ var dat = {
             url:
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name"
           },
-          {
+         {
             name: "ward",
             jsonPath: "summons[0].ward",
             label: "legal.create.ward",
-            type: "text",
+            type: "singleValueList",
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: "",
+            url:"/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name"
           },
           {
             name: "bench",
@@ -599,16 +605,17 @@ var dat = {
             name: "ward",
             jsonPath: "summons[0].ward",
             label: "legal.create.ward",
-            type: "text",
+            type: "singleValueList",
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: "",
+            url:"/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name"
           },
           {
             name: "hearingTime",
             jsonPath: "summons[0].hearingTime",
             label: "legal.create.hearingTime",
-            type: "text",
+            type: "timePicker",
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""
@@ -702,7 +709,7 @@ var dat = {
             label: "legal.create.referenceNo",
             type: "text",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -710,7 +717,7 @@ var dat = {
             jsonPath: "summons[0].summonDate",
             label: "legal.create.summonDate",
             type: "number",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             patternErrorMsg: ""
           },
@@ -815,16 +822,17 @@ var dat = {
             name: "ward",
             jsonPath: "summons[0].ward",
             label: "legal.create.ward",
-            type: "text",
+            type: "singleValueList",
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: "",
+            url:"/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name"
           },
           {
             name: "hearingTime",
             jsonPath: "summons[0].hearingTime",
             label: "legal.create.hearingTime",
-            type: "text",
+            type: "timePicker",
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""

@@ -1,18 +1,21 @@
 package org.egov.works.estimate.web.contract;
 
 import java.util.Objects;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * Functionary is considered as another cost center. In the government set-up, demands for expenditure are drawn by the department discharging the functions and become the responsibility center for the assigned functions. Functionary group represents this. Each sub-level within this group typically can represent the organisational structure within the ULB. This level is used only for the internal control of the ULB. 
  */
 @ApiModel(description = "Functionary is considered as another cost center. In the government set-up, demands for expenditure are drawn by the department discharging the functions and become the responsibility center for the assigned functions. Functionary group represents this. Each sub-level within this group typically can represent the organisational structure within the ULB. This level is used only for the internal control of the ULB. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:32:33.802Z")
 
 public class Functionary   {
   @JsonProperty("id")

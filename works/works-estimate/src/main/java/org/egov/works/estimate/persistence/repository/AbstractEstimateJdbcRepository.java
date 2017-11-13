@@ -9,7 +9,9 @@ import java.util.Map;
 import org.egov.common.persistence.repository.JdbcRepository;
 import org.egov.works.estimate.persistence.helper.AbstractEstimateHelper;
 import org.egov.works.estimate.web.contract.AbstractEstimate;
+import org.egov.works.estimate.web.contract.AbstractEstimateAssetDetailSearchContract;
 import org.egov.works.estimate.web.contract.AbstractEstimateDetailsSearchContract;
+import org.egov.works.estimate.web.contract.AbstractEstimateSanctionSearchContract;
 import org.egov.works.estimate.web.contract.AbstractEstimateSearchContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -22,6 +24,12 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 	
 	@Autowired
 	private AbstractEstimateDetailsJdbcRepository abstractEstimateDetailsJdbcRepository;
+	
+	@Autowired
+	private AbstractEstimateSanctionDetailJdbcRepository abstractEstimateSanctionDetailJdbcRepository;
+	
+	@Autowired
+	private AbstractEstimateAssetDetailJdbcRepository abstractEstimateAssetDetailJdbcRepository;
 	
 	public List<AbstractEstimate> search(AbstractEstimateSearchContract abstractEstimateSearchContract) {
 		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
@@ -64,40 +72,47 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 			params.append("adminSanctionNumber in (:adminSanctionNumbers)");
 			paramValues.put("adminSanctionNumbers", abstractEstimateSearchContract.getAdminSanctionNumbers());
 		}
-		if (abstractEstimateSearchContract.getEstimateNumbers() != null) {
+		if (abstractEstimateSearchContract.getDepartmentCodes() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("id in (select abstractEstimate from egw_abstractestimate_details where estimateNumber in (:estimateNumbers))");
-			paramValues.put("estimateNumbers", abstractEstimateSearchContract.getEstimateNumbers());
+			params.append("department in (:departments)");
+			paramValues.put("departments", abstractEstimateSearchContract.getDepartmentCodes());
 		}
-		if (abstractEstimateSearchContract.getDepartmentCode() != null) {
+		if (abstractEstimateSearchContract.getFundCodes() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("department =:department");
-			paramValues.put("department", abstractEstimateSearchContract.getDepartmentCode());
+			params.append("fund in (:funds)");
+			paramValues.put("funds", abstractEstimateSearchContract.getFundCodes());
 		}
-		if (abstractEstimateSearchContract.getFundCode() != null) {
+		if (abstractEstimateSearchContract.getFunctionCodes() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("fund =:fund");
-			paramValues.put("fund", abstractEstimateSearchContract.getFundCode());
+			params.append("function in (:functions)");
+			paramValues.put("functions", abstractEstimateSearchContract.getFunctionCodes());
 		}
-		if (abstractEstimateSearchContract.getFunctionCode() != null) {
+		if (abstractEstimateSearchContract.getBudgetHeadCodes() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("function =:function");
-			paramValues.put("function", abstractEstimateSearchContract.getFunctionCode());
+			params.append("budgetHead in (:budgetHeads)");
+			paramValues.put("budgetHeads", abstractEstimateSearchContract.getBudgetHeadCodes());
 		}
-		if (abstractEstimateSearchContract.getBudgetHeadCode() != null) {
+		if (abstractEstimateSearchContract.getStatuses() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("budgetHead =:budgetHead");
-			paramValues.put("budgetHead", abstractEstimateSearchContract.getBudgetHeadCode());
+			params.append("status in (:statuses)");
+			paramValues.put("statuses", abstractEstimateSearchContract.getStatuses());
+		}
+		if (abstractEstimateSearchContract.getNameOfWork() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("id in (select abstractestimate from egw_abstractestimate_details where nameofwork = :nameOfWork)");
+			paramValues.put("nameOfWork", abstractEstimateSearchContract.getNameOfWork());
 		}
 		if (abstractEstimateSearchContract.getAdminSanctionFromDate() != null) {
 			if (params.length() > 0) {
@@ -160,6 +175,8 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 		
 		AbstractEstimate abstractEstimate;
 		AbstractEstimateDetailsSearchContract abstractEstimateDetailsSearchContract;
+		AbstractEstimateSanctionSearchContract abstractEstimateSanctionSearchContract;
+		AbstractEstimateAssetDetailSearchContract abstractEstimateAssetDetailSearchContract;
 		
 		for(AbstractEstimateHelper abstractEstimateEntity : abstractEstimateEntities) {
 			abstractEstimate = abstractEstimateEntity.toDomain();
@@ -167,6 +184,17 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 			abstractEstimateDetailsSearchContract.setTenantId(abstractEstimateEntity.getTenantId());
 			abstractEstimateDetailsSearchContract.setAbstractEstimateIds(Arrays.asList(abstractEstimateEntity.getId()));
 			abstractEstimate.setAbstractEstimateDetails(abstractEstimateDetailsJdbcRepository.search(abstractEstimateDetailsSearchContract));
+			
+			abstractEstimateSanctionSearchContract = new AbstractEstimateSanctionSearchContract();
+			abstractEstimateSanctionSearchContract.setTenantId(abstractEstimateEntity.getTenantId());
+			abstractEstimateSanctionSearchContract.setAbstractEstimateIds(Arrays.asList(abstractEstimateEntity.getId()));
+			abstractEstimate.setSanctionDetails(abstractEstimateSanctionDetailJdbcRepository.search(abstractEstimateSanctionSearchContract));
+			
+			abstractEstimateAssetDetailSearchContract = new AbstractEstimateAssetDetailSearchContract();
+			abstractEstimateAssetDetailSearchContract.setTenantId(abstractEstimateEntity.getTenantId());
+			abstractEstimateAssetDetailSearchContract.setAbstractEstimateIds(Arrays.asList(abstractEstimateEntity.getId()));
+			abstractEstimate.setAssetDetails(abstractEstimateAssetDetailJdbcRepository.search(abstractEstimateAssetDetailSearchContract));
+			
 			abstractEstimates.add(abstractEstimate);
 		}
 		return abstractEstimates;

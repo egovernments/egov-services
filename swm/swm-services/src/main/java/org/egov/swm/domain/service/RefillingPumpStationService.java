@@ -1,26 +1,20 @@
 package org.egov.swm.domain.service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import net.minidev.json.JSONArray;
 import org.egov.swm.constants.Constants;
-import org.egov.swm.domain.model.AuditDetails;
-import org.egov.swm.domain.model.FuelType;
-import org.egov.swm.domain.model.OilCompanyName;
-import org.egov.swm.domain.model.RefillingPumpStation;
+import org.egov.swm.domain.model.*;
 import org.egov.swm.domain.repository.RefillingPumpStationRepository;
-import org.egov.swm.persistence.repository.RefillingPumpStationJdbcRepository;
 import org.egov.swm.web.repository.BoundaryRepository;
 import org.egov.swm.web.repository.MdmsRepository;
 import org.egov.swm.web.requests.RefillingPumpStationRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import net.minidev.json.JSONArray;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class RefillingPumpStationService {
@@ -76,6 +70,11 @@ public class RefillingPumpStationService {
 		return refillingPumpStationRequest;
 	}
 
+	public Pagination<RefillingPumpStation> search(RefillingPumpStationSearch refillingPumpStationSearch){
+
+		return refillingPumpStationRepository.search(refillingPumpStationSearch);
+	}
+
 	private void validateForUniqueCodesInRequest(RefillingPumpStationRequest refillingPumpStationRequest){
 
 		List<String> codesList = refillingPumpStationRequest.getRefillingPumpStations()
@@ -95,7 +94,8 @@ public class RefillingPumpStationService {
 		for (RefillingPumpStation refillingPumpStation : refillingPumpStationRequest.getRefillingPumpStations()) {
 
 			// Validate Fuel Type
-			if(refillingPumpStation.getTypeOfFuel() != null && refillingPumpStation.getTypeOfFuel().getCode() == null)
+			if(refillingPumpStation.getTypeOfFuel() != null && (refillingPumpStation.getTypeOfFuel().getCode() == null ||
+			 refillingPumpStation.getTypeOfFuel().getCode().isEmpty()))
 				throw new CustomException("FuelType",
 						"typeOfFuel code is mandatory: ");
 
@@ -114,7 +114,8 @@ public class RefillingPumpStationService {
 			}
 
 			// validate Oil Company
-			if(refillingPumpStation.getTypeOfPump() != null && refillingPumpStation.getTypeOfPump().getCode() == null)
+			if(refillingPumpStation.getTypeOfPump() != null && (refillingPumpStation.getTypeOfPump().getCode() == null ||
+					refillingPumpStation.getTypeOfPump().getCode().isEmpty()))
 				throw new CustomException("OilCompany",
 						"typeOfPump code is mandatory ");
 
@@ -133,7 +134,8 @@ public class RefillingPumpStationService {
 			}
 
 			// Validate Boundary
-			if(refillingPumpStation.getLocation() != null && refillingPumpStation.getLocation().getCode() == null)
+			if(refillingPumpStation.getLocation() != null && (refillingPumpStation.getLocation().getCode() == null ||
+					refillingPumpStation.getLocation().getCode().isEmpty()))
 				throw new CustomException("Boundary",
 						"Boundary code is Mandatory");
 

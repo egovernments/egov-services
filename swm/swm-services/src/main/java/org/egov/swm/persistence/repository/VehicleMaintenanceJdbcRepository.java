@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class VehicleMaintenanceJdbcRepository extends JdbcRepository {
 
+	public static final String TABLE_NAME = "egswm_vehiclemaintenance";
+
 	@Autowired
 	public JdbcTemplate jdbcTemplate;
 
@@ -27,7 +29,7 @@ public class VehicleMaintenanceJdbcRepository extends JdbcRepository {
 
 	public Pagination<VehicleMaintenance> search(VehicleMaintenanceSearch searchRequest) {
 
-		String searchQuery = "select * from egswm_vehiclemaintenance :condition  :orderby ";
+		String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
@@ -42,12 +44,12 @@ public class VehicleMaintenanceJdbcRepository extends JdbcRepository {
 			orderBy = "order by " + searchRequest.getSortBy();
 		}
 
-		if (searchRequest.getVehicleNo() != null) {
+		if (searchRequest.getRegNumber() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("vehicleNo in (:vehicleNo)");
-			paramValues.put("vehicleNo", searchRequest.getVehicleNo());
+			params.append("vehicle in (:vehicle)");
+			paramValues.put("vehicle", searchRequest.getRegNumber());
 		}
 
 		if (searchRequest.getCode() != null) {

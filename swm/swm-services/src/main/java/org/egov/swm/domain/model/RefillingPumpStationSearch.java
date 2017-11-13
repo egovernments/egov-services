@@ -10,7 +10,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RefillingPumpStationSearch extends RefillingPumpStation {
-	private String ids;
+	private String locationCode;
+	private String typeOfFuelCode;
+	private String typeOfPumpCode;
 	private String sortBy;
 	private Integer pageSize;
 	private Integer offset;

@@ -57,8 +57,7 @@ public class AssetsForEstimateHelper {
 		assetsForEstimate.getAuditDetails().setLastModifiedTime(this.lastModifiedTime);
 		assetsForEstimate.setId(this.id);
 		assetsForEstimate.setTenantId(this.tenantId);
-		assetsForEstimate.setDetailedEstimate(new DetailedEstimate());
-		assetsForEstimate.getDetailedEstimate().setId(this.detailedEstimate);
+		assetsForEstimate.setDetailedEstimate(this.detailedEstimate);
 
 		Asset asset = new Asset();
 		asset.setCode(this.asset);

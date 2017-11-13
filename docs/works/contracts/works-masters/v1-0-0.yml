@@ -29,7 +29,7 @@ basePath: '/works-masters/v1'
 x-api-id: 'org.egov.works.masters'
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 x-ui-info:
-  $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-masters/sor-ui-info.yml
+  $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-masters/works-master-ui-info.yml
 paths:
   /scheduleofrates/_search:
     post:
@@ -666,7 +666,7 @@ definitions:
   ScheduleOfRateRequest:
       description: Contract class to send response. Array of Revision Estimate items are used in case of search results, also multiple  Revision Estimate item is used for create and update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         scheduleOfRates:
           description: Used for create and update only
@@ -679,7 +679,7 @@ definitions:
   ScheduleOfRateResponse:
       description: Contract class to send response. Array of Revision Estimate items are used in case of search results, also multiple  Revision Estimate item is used for create and update
       properties:
-        responseInfo:
+        ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         scheduleOfRates:
           description: Used for search result and create only
@@ -691,7 +691,7 @@ definitions:
   EstimateTemplateRequest:
       description: Contract class to send response. Array of Estimate Template items are used in case of search results, also multiple Estimate Template item is used for create and update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         estimateTemplates:
           description: Used for create and update only
@@ -704,7 +704,7 @@ definitions:
   EstimateTemplateResponse:
     description: Contract class to send response. Array of Estimate Template items are used in case of search results, also multiple Estimate Template item is used for create and update
     properties:
-      responseInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       estimateTemplates:
         description: Used for search result and create only
@@ -716,7 +716,7 @@ definitions:
   MilestoneTemplateRequest:
       description: Contract class to send response. Array of Milestone Template items are used in case of search results, also multiple Milestone Template item is used for create and update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         milestoneTemplates:
           description: Used for create and update only
@@ -729,7 +729,7 @@ definitions:
   MilestoneTemplateResponse:
     description: Contract class to send response. Array of Milestone Template items are used in case of search results, also multiple Milestone Template item is used for create and update
     properties:
-      responseInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       milestoneTemplates:
         description: Used for search result and create only
@@ -741,7 +741,7 @@ definitions:
   ContractorRequest:
       description: Contract class to send response. Array of Contractor items are used in case of search results, also multiple Contractor item is used for create and update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         contractors:
           description: Used for create and update only
@@ -754,7 +754,7 @@ definitions:
   ContractorResponse:
     description: Contract class to send response. Array of Contractor items are used in case of search results, also multiple Contractor item is used for create and update
     properties:
-      responseInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       contractors:
         description: Used for search result and create only
@@ -766,7 +766,7 @@ definitions:
   RemarksRequest:
       description: Contract class to send response. Array of Remarks items are used in case of search results, also multiple Remarks item is used for create and update
       properties:
-        requestInfo:
+        RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         remarks:
           description: Used for create and update only
@@ -779,7 +779,7 @@ definitions:
   RemarksResponse:
     description: Contract class to send response. Array of Remarks items are used in case of search results, also multiple Remarks item is used for create and update
     properties:
-      responseInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       remarks:
         description: Used for search result and create only
@@ -799,4 +799,5 @@ tags:
     description: APIs required for Contractor.
   - name: Remarks
     description: APIs required for Remarks.  
+
 

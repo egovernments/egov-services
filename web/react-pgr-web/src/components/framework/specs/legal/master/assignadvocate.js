@@ -17,7 +17,7 @@ var dat = {
             label: "legal.create.referenceNo",
             type: "text",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -26,7 +26,7 @@ var dat = {
             label: "legal.create.summonDate",
             type: "datePicker",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -35,7 +35,7 @@ var dat = {
             label: "legal.create.year",
             type: "singleValueList",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             url:
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=year|$..code|$..name",
             patternErrorMsg: ""
@@ -46,7 +46,7 @@ var dat = {
             label: "legal.create.caseType",
             type: "singleValueList",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: "",
             url:
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name"
@@ -57,7 +57,7 @@ var dat = {
             label: "legal.create.plantiffName",
             type: "text",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -66,7 +66,7 @@ var dat = {
             label: "legal.create.caseNo",
             type: "text",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -75,7 +75,7 @@ var dat = {
             label: "legal.create.plantiffAddress",
             type: "text",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -84,7 +84,7 @@ var dat = {
             label: "legal.create.caseDetails",
             type: "text",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -93,7 +93,7 @@ var dat = {
             label: "legal.create.defendant",
             type: "text",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -112,7 +112,7 @@ var dat = {
             label: "legal.create.courtName",
             type: "singleValueList",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: "",
             url:
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name"
@@ -121,9 +121,9 @@ var dat = {
             name: "hearingTime",
             jsonPath: "cases[0].summon.hearingTime",
             label: "legal.create.hearingTime",
-            type: "text",
+            type: "timePicker",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -132,7 +132,7 @@ var dat = {
             label: "legal.create.hearingDate",
             type: "datePicker",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
@@ -141,19 +141,20 @@ var dat = {
             label: "legal.create.side",
             type: "singleValueList",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: "",
             url:
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name"
           },
-          {
+           {
             name: "ward",
             jsonPath: "cases[0].summon.ward",
             label: "legal.create.ward",
-            type: "text",
-            isRequired: true,
-            isDisabled: false,
-            patternErrorMsg: ""
+            type: "singleValueList",
+            isRequired: false,
+            isDisabled: true,
+            patternErrorMsg: "",
+            url:"/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name"
           },
           {
             name: "stamp",
@@ -161,7 +162,7 @@ var dat = {
             label: "legal.create.stamp",
             type: "singleValueList",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: "",
             url:
               "/lcms-services/legalcase/register/_search?|$..code|$..register"
@@ -172,7 +173,7 @@ var dat = {
             label: "legal.create.bench",
             type: "singleValueList",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: "",
             url:
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bench|$..code|$..name"
@@ -183,7 +184,7 @@ var dat = {
             label: "legal.create.sectionApplied",
             type: "text",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           }
         ]
@@ -218,7 +219,7 @@ var dat = {
         fields: [
           {
             type: "tableList",
-            jsonPath: "cases[0].summon.advocateDetails",
+            jsonPath: "cases[0].advocateDetails",
             tableList: {
               header: [
                 {

@@ -48,7 +48,7 @@ import org.egov.eis.repository.AttendanceRepository;
 import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.repository.LeaveApplicationRepository;
 import org.egov.eis.web.contract.AttendanceResponse;
-import org.egov.eis.web.contract.CompensatoryLeaveSearchRequest;
+import org.egov.eis.web.contract.LeaveSearchRequest;
 import org.egov.eis.web.contract.EmployeeInfo;
 import org.egov.eis.web.contract.EmployeeInfoResponse;
 import org.joda.time.DateTime;
@@ -87,33 +87,33 @@ public class CompensatoryLeaveService {
     }
 
 
-    public List<CompensatoryLeave> getCompensatoryLeavesForEmployees(final CompensatoryLeaveSearchRequest compensatoryLeaveSearchRequest, final RequestInfo requestInfo) {
+    public List<CompensatoryLeave> getCompensatoryLeavesForEmployees(final LeaveSearchRequest leaveSearchRequest, final RequestInfo requestInfo) {
 
 
-        Date validFromDate = getValidFromDate(compensatoryLeaveSearchRequest.getTenantId(), requestInfo);
+        Date validFromDate = getValidFromDate(leaveSearchRequest.getTenantId(), requestInfo);
         EmployeeInfoResponse employeeResponse;
         List<Long> employeeIds = new ArrayList<>();
-        if (!StringUtils.isEmpty(compensatoryLeaveSearchRequest.getCode()) ||
-                compensatoryLeaveSearchRequest.getDepartmentId() != null ||
-                compensatoryLeaveSearchRequest.getDesignationId() != null ||
-                compensatoryLeaveSearchRequest.getEmployeeType() != null) {
+        if (!StringUtils.isEmpty(leaveSearchRequest.getCode()) ||
+                leaveSearchRequest.getDepartmentId() != null ||
+                leaveSearchRequest.getDesignationId() != null ||
+                leaveSearchRequest.getEmployeeType() != null) {
 
             employeeResponse = employeeRepository
-                    .getEmployeesForLeaveRequest(compensatoryLeaveSearchRequest, requestInfo);
+                    .getEmployeesForLeaveRequest(leaveSearchRequest, requestInfo);
 
             employeeIds = employeeResponse.getEmployees().stream().map(employeeInfo -> employeeInfo.getId())
                     .collect(Collectors.toList());
         } else {
             employeeResponse = employeeRepository
-                    .getEmployees(requestInfo, compensatoryLeaveSearchRequest.getTenantId());
+                    .getEmployees(requestInfo, leaveSearchRequest.getTenantId());
         }
         List<CompensatoryLeave> compensatoryLeaves = new ArrayList<>();
 
 
-        Long statusId = hrStatusService.getHRStatuses(LeaveStatus.REJECTED.toString(), compensatoryLeaveSearchRequest.getTenantId(),
+        Long statusId = hrStatusService.getHRStatuses(LeaveStatus.REJECTED.toString(), leaveSearchRequest.getTenantId(),
                 requestInfo).get(0).getId();
 
-        AttendanceResponse attendanceResponse = attendanceRepository.getAttendance(compensatoryLeaveSearchRequest.getTenantId(), validFromDate, employeeIds, requestInfo);
+        AttendanceResponse attendanceResponse = attendanceRepository.getAttendance(leaveSearchRequest.getTenantId(), validFromDate, employeeIds, requestInfo);
         attendanceResponse.getAttendances().stream().forEach(attendance -> {
             LeaveApplication leaveApplication = leaveApplicationRepository.getLeaveApplicationForDate(attendance.getEmployee(), attendance.getAttendanceDate(), attendance.getTenantId());
             if (leaveApplication == null || (leaveApplication != null && leaveApplication.getStatus() == statusId)) {
@@ -122,7 +122,7 @@ public class CompensatoryLeaveService {
                 CompensatoryLeave compensatoryLeave = new CompensatoryLeave();
                 if (employeesInfo.size() > 0) {
                     compensatoryLeave.setEmployeeId(attendance.getEmployee());
-                    compensatoryLeave.setTenantId(compensatoryLeaveSearchRequest.getTenantId());
+                    compensatoryLeave.setTenantId(leaveSearchRequest.getTenantId());
                     compensatoryLeave.setCode(employeesInfo.get(0).getCode());
                     compensatoryLeave.setName(employeesInfo.get(0).getName());
                     compensatoryLeave.setWorkedDate(attendance.getAttendanceDate());

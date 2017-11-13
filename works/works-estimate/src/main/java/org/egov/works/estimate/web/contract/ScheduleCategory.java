@@ -10,7 +10,7 @@ import javax.validation.constraints.*;
  * An Object which holds Schedule Category Master Data
  */
 @ApiModel(description = "An Object which holds Schedule Category Master Data")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-08T12:30:16.072Z")
 
 public class ScheduleCategory   {
   @JsonProperty("id")
@@ -57,7 +57,7 @@ public class ScheduleCategory   {
   @ApiModelProperty(required = true, value = "Tenant id of the Schedule Category")
   @NotNull
 
- @Size(min=4,max=128)
+ @Size(min=2,max=128)
   public String getTenantId() {
     return tenantId;
   }

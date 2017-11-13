@@ -3,6 +3,7 @@ package org.egov.inv.persistense.repository;
 import io.swagger.model.Material;
 import io.swagger.model.MaterialSearchRequest;
 import io.swagger.model.Pagination;
+import org.egov.inv.persistence.repository.JdbcRepository;
 import org.egov.inv.persistense.repository.entity.MaterialEntity;
 import org.egov.tracer.model.CustomException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -15,7 +16,11 @@ import java.util.stream.Collectors;
 import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
-public class MaterialJdbcRepository {
+public class MaterialJdbcRepository extends JdbcRepository {
+
+    static {
+        init(MaterialEntity.class);
+    }
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -63,6 +68,25 @@ public class MaterialJdbcRepository {
             paramValues.put("code", materialSearchRequest.getCode());
         }
 
+        if (materialSearchRequest.getStore() != null) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("code in (select material from materialstoremapping where store=:storeCode and tenantid=:tenantId)");
+            paramValues.put("storeCode", materialSearchRequest.getStore());
+            paramValues.put("tenantid", materialSearchRequest.getTenantId());
+
+        }
+
+        if (materialSearchRequest.getName() != null) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("name =:name");
+            paramValues.put("name", materialSearchRequest.getName());
+        }
+
+        
         if (materialSearchRequest.getDescription() != null) {
             if (params.length() > 0) {
                 params.append(" and ");

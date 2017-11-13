@@ -1,0 +1,1 @@
+Opinion request from {{Department Name}} is received {{Opinion No}} dated {{Dated}} is received for approval.

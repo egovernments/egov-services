@@ -88,8 +88,7 @@ public class EstimateActivityHelper {
 		estimateActivity.getAuditDetails().setLastModifiedTime(this.lastModifiedTime);
 		estimateActivity.setId(this.id);
 		estimateActivity.setTenantId(this.tenantId);
-		estimateActivity.setDetailedEstimate(new DetailedEstimate());
-		estimateActivity.getDetailedEstimate().setId(this.detailedEstimate);
+		estimateActivity.setDetailedEstimate(this.detailedEstimate);
 		estimateActivity.setEstimateRate(this.estimateRate);
 		NonSOR nonSOR = new NonSOR();
 		if(this.nonSor != null)

@@ -410,7 +410,7 @@ public class Supplier   {
   **/
   @ApiModelProperty(value = "website of the Supplier ")
 
- @Pattern(regexp="^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$")
+  @Pattern(regexp = "^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$")
   public String getWebsite() {
     return website;
   }
@@ -430,7 +430,8 @@ public class Supplier   {
   **/
   @ApiModelProperty(value = "email of the Supplier ")
 
- @Pattern(regexp="^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$") @Size(max=100)
+  @Pattern(regexp = "^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$")
+  @Size(max=100)
   public String getEmail() {
     return email;
   }
@@ -631,7 +632,7 @@ public class Supplier   {
   **/
   @ApiModelProperty(value = "name of the bank ")
 
- @Pattern(regexp="^[a-zA-Z ]$")
+ @Pattern(regexp="^[a-zA-Z ]*$")
   public String getBankName() {
     return bankName;
   }

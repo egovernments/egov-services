@@ -14,7 +14,7 @@ import java.util.Objects;
  * An Object that holds Activities for a given Estimate template. Either SOR or NON SOR is mandatory.
  */
 @ApiModel(description = "An Object that holds Activities for a given Estimate template. Either SOR or NON SOR is mandatory.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-06T12:02:21.057Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T13:20:32.652Z")
 
 public class EstimateTemplateActivities   {
   @JsonProperty("id")
@@ -24,13 +24,13 @@ public class EstimateTemplateActivities   {
   private String tenantId = null;
 
   @JsonProperty("estimateTemplate")
-  private EstimateTemplate estimateTemplate = null;
+  private String estimateTemplate = null;
 
   @JsonProperty("scheduleOfRate")
-  private ScheduleOfRate scheduleOfRate = null;
+  private String scheduleOfRate = null;
 
   @JsonProperty("uom")
-  private UOM uom = null;
+  private String uom = null;
 
   @JsonProperty("nonSOR")
   private NonSOR nonSOR = null;
@@ -73,7 +73,7 @@ public class EstimateTemplateActivities   {
   @ApiModelProperty(required = true, value = "Tenant id of the Estimate Template Activitie")
   @NotNull
 
- @Size(min=4,max=128)
+ @Size(min=2,max=128)
   public String getTenantId() {
     return tenantId;
   }
@@ -82,66 +82,64 @@ public class EstimateTemplateActivities   {
     this.tenantId = tenantId;
   }
 
-  public EstimateTemplateActivities estimateTemplate(EstimateTemplate estimateTemplate) {
+  public EstimateTemplateActivities estimateTemplate(String estimateTemplate) {
     this.estimateTemplate = estimateTemplate;
     return this;
   }
 
    /**
-   * The estimate template of the Template activity
+   * The estimate template of the Template activity. Unique reference from 'EstimateTemplate'. Primary key is ref. here.
    * @return estimateTemplate
   **/
-  @ApiModelProperty(required = true, value = "The estimate template of the Template activity")
-  @NotNull
+  @ApiModelProperty(required = true, value = "The estimate template of the Template activity. Unique reference from 'EstimateTemplate'. Primary key is ref. here.")
 
-  public EstimateTemplate getEstimateTemplate() {
+
+  public String getEstimateTemplate() {
     return estimateTemplate;
   }
 
-  public void setEstimateTemplate(EstimateTemplate estimateTemplate) {
+  public void setEstimateTemplate(String estimateTemplate) {
     this.estimateTemplate = estimateTemplate;
   }
 
-  public EstimateTemplateActivities scheduleOfRate(ScheduleOfRate scheduleOfRate) {
+  public EstimateTemplateActivities scheduleOfRate(String scheduleOfRate) {
     this.scheduleOfRate = scheduleOfRate;
     return this;
   }
 
    /**
-   * The Schedue of Rate of the Template activity
+   * The Schedue of Rate of the Template activity. Unique reference from 'ScheduleOfRate'.Primary key is ref. here.
    * @return scheduleOfRate
   **/
-  @ApiModelProperty(value = "The Schedue of Rate of the Template activity")
+  @ApiModelProperty(value = "The Schedue of Rate of the Template activity. Unique reference from 'ScheduleOfRate'.Primary key is ref. here.")
 
-  @Valid
 
-  public ScheduleOfRate getScheduleOfRate() {
+  public String getScheduleOfRate() {
     return scheduleOfRate;
   }
 
-  public void setScheduleOfRate(ScheduleOfRate scheduleOfRate) {
+  public void setScheduleOfRate(String scheduleOfRate) {
     this.scheduleOfRate = scheduleOfRate;
   }
 
-  public EstimateTemplateActivities uom(UOM uom) {
+  public EstimateTemplateActivities uom(String uom) {
     this.uom = uom;
     return this;
   }
 
    /**
-   * UOM for the Estimate Template Activity
+   * UOM for the Estimate Template Activity. Unique reference from 'UOM'. Primary key is ref. here.
    * @return uom
   **/
-  @ApiModelProperty(required = true, value = "UOM for the Estimate Template Activity")
+  @ApiModelProperty(required = true, value = "UOM for the Estimate Template Activity. Unique reference from 'UOM'. Primary key is ref. here.")
   @NotNull
 
-  @Valid
 
-  public UOM getUom() {
+  public String getUom() {
     return uom;
   }
 
-  public void setUom(UOM uom) {
+  public void setUom(String uom) {
     this.uom = uom;
   }
 

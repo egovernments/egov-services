@@ -1,0 +1,34 @@
+UIInfo:
+- referencePath: "/scheduleofrates"
+  searchUrl: "/scheduleofrates/_search?ids={ids}"
+  
+  groups:
+    createRateMaster:
+      fields:
+      - scheduleOfRates[0].scheduleCategory.code
+      - scheduleOfRates[0].code
+      - scheduleOfRates[0].description
+      - scheduleOfRates[0].uom.code
+  externalData:
+  - fieldName: scheduleOfRates[0].scheduleCategory.code
+    url: "/egov-mdms-service/v1/_get?&moduleName=Works&masterName=ScheduleCategory"
+    keyPath: "$..code"
+    valPath: "$..code"
+  - fieldName: scheduleOfRates[0].uom.code
+    url: "/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom"
+    keyPath: "$..code"
+    valPath: "$..code"
+  searchResult:
+    rowClickUrlUpdate: /update/scheduleofrates/{ids}
+    rowClickUrlView: /view/scheduleofrates/{ids}
+    columns:
+    - code
+    - description
+    - scheduleCategory
+    - uom
+    values:
+    - code
+    - description
+    - scheduleCategory.name
+    - uom.description
+    resultObjectName: scheduleOfRates

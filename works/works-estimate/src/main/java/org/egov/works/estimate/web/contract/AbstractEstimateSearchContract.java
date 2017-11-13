@@ -4,18 +4,15 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * Contract class to get search request.
  */
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
+@Builder
 public class AbstractEstimateSearchContract {
 	
 	@NotNull
@@ -31,15 +28,13 @@ public class AbstractEstimateSearchContract {
 
 	private String sortBy;
 
-	private List<String> estimateNumbers;
+	private List<String> departmentCodes;
 
-	private String departmentCode;
+	private List<String> fundCodes;
 
-	private String fundCode;
+	private List<String> functionCodes;
 
-	private String functionCode;
-
-	private String budgetHeadCode;
+	private List<String> budgetHeadCodes;
 	
 	private Long adminSanctionFromDate;
 
@@ -52,4 +47,8 @@ public class AbstractEstimateSearchContract {
 	private List<String> abstractEstimateNumbers;
 
 	private List<String> workIdentificationNumbers;
+	
+	private List<String> statuses;
+	
+	private String nameOfWork;
 }

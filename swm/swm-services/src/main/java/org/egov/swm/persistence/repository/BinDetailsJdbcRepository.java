@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class BinDetailsJdbcRepository extends JdbcRepository {
 
+	public static final String TABLE_NAME = "egswm_bindetails";
+
 	@Autowired
 	public JdbcTemplate jdbcTemplate;
 
@@ -25,17 +27,17 @@ public class BinDetailsJdbcRepository extends JdbcRepository {
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {
 
-		return uniqueCheck("egswm_bindetails", tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
+		return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
 	}
 
 	@Transactional
 	public void delete(String tenantId, String collectionPoint) {
-		delete("egswm_bindetails", tenantId, "collectionPoint", collectionPoint);
+		delete(TABLE_NAME, tenantId, "collectionPoint", collectionPoint);
 	}
 
 	public List<BinDetails> search(BinDetailsSearch searchRequest) {
 
-		String searchQuery = "select * from egswm_bindetails :condition ";
+		String searchQuery = "select * from " + TABLE_NAME + " :condition ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();

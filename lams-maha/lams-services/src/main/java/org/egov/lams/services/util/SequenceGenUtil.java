@@ -15,12 +15,12 @@ public class SequenceGenUtil {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
-	public List<Long> getIds(int rsSize, String sequenceName) {
+	public List<String> getIds(int rsSize, String sequenceName) {
 
 		String demandIdQuery = "SELECT NEXTVAL('" + sequenceName + "') FROM GENERATE_SERIES(1,?)";
-		List<Long> idList = null;
+		List<String> idList = null;
 		try {
-			idList = jdbcTemplate.queryForList(demandIdQuery, new Object[] { rsSize }, Long.class);
+			idList = jdbcTemplate.queryForList(demandIdQuery, new Object[] { rsSize }, String.class);
 		} catch (Exception e) {
 			log.error("the exception from demand ID gen : " + e);
 		}

@@ -32,18 +32,7 @@ var dat =  {
           //   isDisabled: false,
           //   patternErrorMsg: "advocatepayment.create.field.message.ids"
           // },
-          {
-            name: "advocateName",
-            jsonPath: "advocateName",
-            label: "legal.create.advocateName",
-            type: "singleValueList",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg:
-              "advocatepayment.create.field.message.advocateName",
-             url: "/lcms-services/legalcase/advocate/_search?tenantId=default|$..code|$..name",
-          },
-          {
+         {
             name: "fromDate",
             jsonPath: "fromDate",
             label: "legal.create.fromDate",
@@ -60,12 +49,47 @@ var dat =  {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: "advocatepayment.create.field.message.toDate"
+          },
+           {
+            name: "advocateName",
+            jsonPath: "advocateName",
+            label: "legal.create.advocateName",
+            type: "singleValueList",
+            isRequired: false,
+            isDisabled: false,
+            patternErrorMsg:
+              "advocatepayment.create.field.message.advocateName",
+             url: "/lcms-services/legalcase/advocate/_search?tenantId=default|$..code|$..name",
           }
         ]
       }
-    ],
+    ], 
     result: {
+      "disableRowClick" : true,
+       isAction: true,
+          actionItems: [
+            {
+              label: "Add Resolution",
+              url: "/update/legal/advpaymentresolve/"
+            },
+            {
+              label: "Make Payment",
+              url: "/update/legal/advmakepayment/"
+            },
+            {
+              label: "Advocate Payment Details",
+              url: "/update/legal/advpaymentdetails/"
+            }
+          ],
       header: [
+        {
+          label: "legal.search.result.actionLabels",
+          isChecked:true,
+          checkedItem:{
+            jsonPath:"checkedRow",
+            label:"",
+          }
+        },
         {
           label: "legal.create.code"
         },
@@ -93,6 +117,7 @@ var dat =  {
       ],
       values: [
         "code",
+        "code",
         "advocate.name",
         "demandDate",
         "instrumentNumber",
@@ -114,7 +139,7 @@ var dat =  {
     groups: [
       {
         name: "AdvocatePaymentDetails",
-        label: "advocatepayment.create.group.title.AdvocatePaymentDetails",
+        label: "",
         fields: [
           {
             name: "advocateName",
@@ -128,27 +153,43 @@ var dat =  {
             depedants: [
               {
                 jsonPath: "advocatePayments[0].advocate.pan",
-                type: "dropDown",
+                type: "autoFill",
                 pattern:
-                  "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..pan|$..pan"
+                  "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..pan|$..pan",
+                 autoFillFields:
+                {
+                  "advocatePayments[0].advocate.pan": "advocates[0].pan"
+                }
               },
               {
                 jsonPath: "advocatePayments[0].advocate.bankName",
-                type: "dropDown",
+                type: "autoFill",
                 pattern:
-                  "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..bankName|$..bankName"
+                  "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..bankName|$..bankName",
+                 autoFillFields:
+                {
+                  "advocatePayments[0].advocate.bankName": "advocates[0].bankName"
+                }
               },
                 {
                 jsonPath: "advocatePayments[0].advocate.bankBranch",
-                type: "dropDown",
+                type: "autoFill",
                 pattern:
-                  "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..bankBranch|$..bankBranch"
+                  "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..bankBranch|$..bankBranch",
+                autoFillFields:
+                {
+                  "advocatePayments[0].advocate.bankBranch": "advocates[0].bankBranch"
+                }
               },
                 {
                 jsonPath: "advocatePayments[0].advocate.bankAccountNo",
-                type: "dropDown",
+                type: "autoFill",
                 pattern:
-                  "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..bankAccountNo|$..bankAccountNo"
+                  "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..bankAccountNo|$..bankAccountNo",
+                autoFillFields:
+                {
+                  "advocatePayments[0].advocate.bankAccountNo": "advocates[0].bankAccountNo"
+                }
               }
             ]
           },
@@ -165,34 +206,28 @@ var dat =  {
             name: "bankName",
             jsonPath: "advocatePayments[0].advocate.bankName",
             label: "advocatepayment.create.bankName",
-            type: "singleValueList",
+            type: "text",
             isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: "",
-            // defaultValue: [],
-            url: ""
+            isDisabled: true,
+            patternErrorMsg: ""
           },
           {
             name: "panNo",
             jsonPath: "advocatePayments[0].advocate.pan",
             label: "advocatepayment.create.panNo",
-            type: "singleValueList",
+            type: "text",
             isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: "",
-            defaultValue: [],
-            url: ""
+            isDisabled: true,
+            patternErrorMsg: ""
           },
           {
             name: "bankBranch",
             jsonPath: "advocatePayments[0].advocate.bankBranch",
             label: "advocatepayment.create.bankBranch",
-            type: "singleValueList",
+            type: "text",
             isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: "",
-            defaultValue: [],
-            url: ""
+            isDisabled: true,
+            patternErrorMsg: ""
           },
           {
             name: "amountClaimed",
@@ -200,19 +235,17 @@ var dat =  {
             label: "advocatepayment.create.amountClaimed",
             type: "number",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
             name: "bankAccountNo",
             jsonPath: "advocatePayments[0].advocate.bankAccountNo",
             label: "advocatepayment.create.bankAccountNo",
-            type: "singleValueList",
+            type: "text",
             isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: "",
-            defaultValue: [],
-            url: ""
+            isDisabled: true,
+            patternErrorMsg: ""
           },
           {
             name: "amountRecived",
@@ -223,61 +256,61 @@ var dat =  {
             isDisabled: false,
             patternErrorMsg: ""
           },
-          {
-            name: "voucherNumber",
-            jsonPath: "advocatePayments[0].voucherNo",
-            label: "advocatepayment.create.voucherNumber",
-            type: "number",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: ""
-          },{
-              name: "modeOfPayment",
-              jsonPath: "advocatePayments[0].modeOfPayment",
-              label: "legal.create.modeOfPayment",
-              type: "singleValueList",
-              isRequired: true,
-              isDisabled: false,
-              patternErrorMsg: "",
-              // url: "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=stamp|$..code|$..name"
-              defaultValue: [{
-              "key": "Cash",
-              "value": "Cash"
-            }, {
-              "key": "Cheque",
-              "value": "Cheque"
-            }, {
-              "key": "DD",
-              "value": "DD"
-            }]
-            }, 
-            {
-            name: "instrumentNumber",
-            jsonPath: "advocatePayments[0].instrumentNumber",
-            label: "advocatepayment.create.instrumentNumber",
-            type: "datePicker",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: ""
-          }, 
-            {
-            name: "InstrumentDate",
-            jsonPath: "advocatePayments[0].instrumentDate",
-            label: "advocatepayment.create.InstrumentDate",
-            type: "datePicker",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: ""
-          },
+          // {
+          //   name: "voucherNumber",
+          //   jsonPath: "advocatePayments[0].voucherNo",
+          //   label: "advocatepayment.create.voucherNumber",
+          //   type: "number",
+          //   isRequired: false,
+          //   isDisabled: false,
+          //   patternErrorMsg: ""
+          // },{
+          //     name: "modeOfPayment",
+          //     jsonPath: "advocatePayments[0].modeOfPayment",
+          //     label: "legal.create.modeOfPayment",
+          //     type: "singleValueList",
+          //     isRequired: true,
+          //     isDisabled: false,
+          //     patternErrorMsg: "",
+          //     // url: "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=stamp|$..code|$..name"
+          //     defaultValue: [{
+          //     "key": "Cash",
+          //     "value": "Cash"
+          //   }, {
+          //     "key": "Cheque",
+          //     "value": "Cheque"
+          //   }, {
+          //     "key": "DD",
+          //     "value": "DD"
+          //   }]
+          //   }, 
+          //   {
+          //   name: "instrumentNumber",
+          //   jsonPath: "advocatePayments[0].instrumentNumber",
+          //   label: "advocatepayment.create.instrumentNumber",
+          //   type: "datePicker",
+          //   isRequired: false,
+          //   isDisabled: false,
+          //   patternErrorMsg: ""
+          // }, 
+          //   {
+          //   name: "InstrumentDate",
+          //   jsonPath: "advocatePayments[0].instrumentDate",
+          //   label: "advocatepayment.create.InstrumentDate",
+          //   type: "datePicker",
+          //   isRequired: false,
+          //   isDisabled: false,
+          //   patternErrorMsg: ""
+          // },
           {
             name: "totalAmount",
             pattern: "",
             label: "legal.create.amount",
             type: "number",
-            jsonPath: "advocatePayments[0].advocateCharges[0].amount",
+            hide:true,
+            jsonPath: "",
             isRequired: false,
-            isDisabled: true,
-            defaultValue: "advocatePayments[0].advocateCharges[0].amount"
+            isDisabled: false
           },
          {
                    name: "invoiceDocument",
@@ -330,10 +363,11 @@ var dat =  {
                       name: "case",
                       pattern: "",
                       type: "singleValueList",
-                      jsonPath: "advocatePayments[0].advocateCharges[0].caseNo",
+                      jsonPath: "advocatePayments[0].advocateCharges[0].caseDetails.summonReferenceNo",
                       isRequired: false,
                       isDisabled: false,
-                      url: "/lcms-services/legalcase/case/_search?|$..summon.summonReferenceNo|$..summon.caseNo"
+                      url: "/lcms-services/legalcase/caseno/_search?|$..summonReferenceNo|$..caseNo"
+                      //  "/lcms-services/legalcase/case/_search?|$..summon.summonReferenceNo|$..summon.caseNo"
                     },
                     {
                       name: "amount",
@@ -341,277 +375,26 @@ var dat =  {
                       type: "number",
                       jsonPath: "advocatePayments[0].advocateCharges[0].amount",
                       isRequired: false,
-                      isDisabled: false
+                      isDisabled: false,
+                      dependency:"advocatePayments[0].amountClaimed"
                     }
                   ]
                 }
               },
               {
             name: "advocateLabel",
-            jsonPath: "advocatePayments[0].bankAccountNo",
+            jsonPath: "",
             label: "legal.create.paymentNote",
             type: "label",
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: "",
+            defaultValue:" "
               }
           ]
       }
    ],
     url: "/lcms-services/legalcase/advocatepayment/_create",
-    tenantIdRequired: true
-  },
-  "legal.view": {
-    numCols: 4,
-    useTimestamp: true,
-    objectName: "advocatePayments",
-    searchUrl:
-      "/lcms-services/legalcase/advocatepayment/_search?code={code}",
-    groups: [
-      {
-        name: "AdvocatePaymentDetails",
-        label: "advocatepayment.create.group.title.AdvocatePaymentDetails",
-        fields: [
-          {
-            name: "advocateName",
-            jsonPath: "advocatePayments[0].advocate.code",
-            label: "advocatepayment.create.advocateName",
-            type: "singleValueList",
-            isRequired: false,
-            isDisabled: false,
-            url: "/lcms-services/legalcase/advocate/_search?tenantId=default|$..code|$..name",
-            patternErrorMsg: "",
-            depedants: [
-              {
-                jsonPath: "advocatePayments[0].advocate.pan",
-                type: "dropDown",
-                pattern:
-                  "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..pan|$..pan"
-              },
-              {
-                jsonPath: "advocatePayments[0].advocate.bankName",
-                type: "dropDown",
-                pattern:
-                  "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..bankName|$..bankName"
-              },
-                {
-                jsonPath: "advocatePayments[0].advocate.bankBranch",
-                type: "dropDown",
-                pattern:
-                  "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..bankBranch|$..bankBranch"
-              },
-                {
-                jsonPath: "advocatePayments[0].advocate.bankAccountNo",
-                type: "dropDown",
-                pattern:
-                  "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..bankAccountNo|$..bankAccountNo"
-              }
-            ]
-          },
-          {
-            name: "demandDate",
-            jsonPath: "advocatePayments[0].demandDate",
-            label: "advocatepayment.create.demandDate",
-            type: "datePicker",
-            isRequired: true,
-            isDisabled: false,
-            patternErrorMsg: ""
-          },
-          {
-            name: "bankName",
-            jsonPath: "advocatePayments[0].advocate.bankName",
-            label: "advocatepayment.create.bankName",
-            type: "singleValueList",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: "",
-            defaultValue: [],
-            url: ""
-          },
-          {
-            name: "panNo",
-            jsonPath: "advocatePayments[0].advocate.pan",
-            label: "advocatepayment.create.panNo",
-            type: "singleValueList",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: "",
-            defaultValue: [],
-            url: ""
-          },
-          {
-            name: "bankBranch",
-            jsonPath: "advocatePayments[0].advocate.bankBranch",
-            label: "advocatepayment.create.bankBranch",
-            type: "singleValueList",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: "",
-            defaultValue: [],
-            url: ""
-          },
-          {
-            name: "amountClaimed",
-            jsonPath: "advocatePayments[0].amountClaimed",
-            label: "advocatepayment.create.amountClaimed",
-            type: "number",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: ""
-          },
-          {
-            name: "bankAccountNo",
-            jsonPath: "advocatePayments[0].advocate.bankAccountNo",
-            label: "advocatepayment.create.bankAccountNo",
-            type: "singleValueList",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: "",
-            defaultValue: [],
-            url: ""
-          },
-          {
-            name: "amountRecived",
-            jsonPath: "advocatePayments[0].amountRecived",
-            label: "advocatepayment.create.amountRecived",
-            type: "number",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: ""
-          },
-          {
-            name: "voucherNumber",
-            jsonPath: "advocatePayments[0].voucherNo",
-            label: "advocatepayment.create.voucherNumber",
-            type: "number",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: ""
-          },{
-              name: "modeOfPayment",
-              jsonPath: "advocatePayments[0].modeOfPayment",
-              label: "legal.create.modeOfPayment",
-              type: "singleValueList",
-              isRequired: true,
-              isDisabled: false,
-              patternErrorMsg: "",
-              // url: "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=stamp|$..code|$..name"
-              defaultValue: [{
-              "key": "Cash",
-              "value": "Cash"
-            }, {
-              "key": "Cheque",
-              "value": "Cheque"
-            }, {
-              "key": "DD",
-              "value": "DD"
-            }]
-            }, 
-            {
-            name: "instrumentNumber",
-            jsonPath: "advocatePayments[0].instrumentNumber",
-            label: "advocatepayment.create.instrumentNumber",
-            type: "number",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: ""
-          }, 
-            {
-            name: "InstrumentDate",
-            jsonPath: "advocatePayments[0].instrumentDate",
-            label: "advocatepayment.create.InstrumentDate",
-            type: "datePicker",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: ""
-          },{
-            name: "totalAmount",
-            pattern: "",
-            label: "legal.create.amount",
-            type: "number",
-            jsonPath: "advocatePayments[0].advocateCharges[0].amount",
-            isRequired: false,
-            isDisabled: true,
-            defaultValue: ""
-           },
-           {
-                   name: "invoiceDocument",
-            jsonPath: "advocatePayments[0].invoiceDoucment.fileStoreId",
-            label: "legal.create.uploadInvoice",
-            type: "singleFileUpload",
-            pattern:"",
-            isRequired: true,
-            isDisabled: false,
-            patternErrorMsg: ""
-            },  
-          {
-                type: "tableList",
-                jsonPath: "advocatepayments[0].advocateCharges",
-                tableList: {
-                  header: [
-                    {
-                      label: "legal.create.charge"
-                    },
-                    {
-                      label: "legal.create.case"
-                    },
-                    {
-                      label: "legal.create.amount"
-                    }
-                  ],
-                  values: [
-                    {
-                      name: "charge",
-                      pattern: "",
-                      type: "singleValueList",
-                      jsonPath: "advocatePayments[0].advocateCharges[0].charge",
-                      isRequired: true,
-                      isDisabled: false,
-                       defaultValue: [
-                                    {
-                                      "key": "CF",
-                                      "value": "Consultation Fee"
-                                    },
-                                    {
-                                      "key": "SF",
-                                      "value": "Sitting Fee"
-                                    },
-                                    {
-                                      "key": "HF",
-                                      "value": "Hearing Fee"
-                                    }]         
-                    },
-                    {
-                      name: "case",
-                      pattern: "",
-                      type: "singleValueList",
-                      jsonPath: "advocatePayments[0].advocateCharges[0].caseNo",
-                      isRequired: false,
-                      isDisabled: false,
-                      url: "/lcms-services/legalcase/case/_search?|$..summon.summonReferenceNo|$..summon.caseNo"
-                    },
-                    {
-                      name: "amount",
-                      pattern: "",
-                      type: "number",
-                      jsonPath: "advocatePayments[0].advocateCharges[0].amount",
-                      isRequired: false,
-                      isDisabled: false
-                    }
-                  ]
-                }
-              },{
-            name: "advocateLabel",
-            jsonPath: "advocatePayments[0].bankAccountNo",
-            label: "legal.create.paymentNote",
-            type: "label",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: ""
-              }
-        ]
-      }
-    ],
     tenantIdRequired: true
   },
   "legal.update": {
@@ -620,7 +403,7 @@ var dat =  {
     useTimestamp: true,
     objectName: "advocatePayments",
     searchUrl:
-      "/lcms-services/legalcase/advocatepayment/_search?code={code}",
+      "/lcms-services/legalcase/advocatepayment/_search",
    groups: [
       {
         name: "AdvocatePaymentDetails",
@@ -628,39 +411,13 @@ var dat =  {
         fields: [
           {
             name: "advocateName",
-            jsonPath: "advocatePayments[0].advocate.code",
+            jsonPath: "advocatePayments[0].advocate.name",
             label: "advocatepayment.create.advocateName",
-            type: "singleValueList",
+            type: "text",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             url: "/lcms-services/legalcase/advocate/_search?tenantId=default|$..code|$..name",
-            patternErrorMsg: "",
-            depedants: [
-              {
-                jsonPath: "advocatePayments[0].advocate.pan",
-                type: "dropDown",
-                pattern:
-                  "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatepayments[0].advocate.code}|$..pan|$..pan"
-              },
-              {
-                jsonPath: "advocatePayments[0].advocate.bankName",
-                type: "dropDown",
-                pattern:
-                  "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatepayments[0].advocate.code}|$..bankName|$..bankName"
-              },
-                {
-                jsonPath: "advocatePayments[0].advocate.bankBranch",
-                type: "dropDown",
-                pattern:
-                  "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatepayments[0].advocate.code}|$..bankBranch|$..bankBranch"
-              },
-                {
-                jsonPath: "advocatePayments[0].advocate.bankAccountNo",
-                type: "dropDown",
-                pattern:
-                  "/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatepayments[0].advocate.code}|$..bankAccountNo|$..bankAccountNo"
-              }
-            ]
+            patternErrorMsg: ""          
           },
           {
             name: "demandDate",
@@ -668,41 +425,35 @@ var dat =  {
             label: "advocatepayment.create.demandDate",
             type: "datePicker",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
             name: "bankName",
             jsonPath: "advocatePayments[0].advocate.bankName",
             label: "advocatepayment.create.bankName",
-            type: "singleValueList",
+            type: "text",
             isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: "",
-            defaultValue: [],
-            url: ""
+            isDisabled: true,
+            patternErrorMsg: ""
           },
           {
             name: "panNo",
             jsonPath: "advocatePayments[0].advocate.pan",
             label: "advocatepayment.create.panNo",
-            type: "singleValueList",
+            type: "text",
             isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: "",
-            defaultValue: [],
-            url: ""
+            isDisabled: true,
+            patternErrorMsg: ""
           },
           {
             name: "bankBranch",
             jsonPath: "advocatePayments[0].advocate.bankBranch",
             label: "advocatepayment.create.bankBranch",
-            type: "singleValueList",
+            type: "text",
             isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: "",
-            defaultValue: [],
-            url: ""
+            isDisabled: true,
+            patternErrorMsg: ""
           },
           {
             name: "amountClaimed",
@@ -710,19 +461,17 @@ var dat =  {
             label: "advocatepayment.create.amountClaimed",
             type: "number",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
           {
             name: "bankAccountNo",
             jsonPath: "advocatePayments[0].advocate.bankAccountNo",
             label: "advocatepayment.create.bankAccountNo",
-            type: "singleValueList",
+            type: "text",
             isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: "",
-            defaultValue: [],
-            url: ""
+            isDisabled: true,
+            patternErrorMsg: ""
           },
           {
             name: "amountRecived",
@@ -730,76 +479,79 @@ var dat =  {
             label: "advocatepayment.create.amountRecived",
             type: "number",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },
+          // {
+          //   name: "voucherNumber",
+          //   jsonPath: "advocatePayments[0].voucherNo",
+          //   label: "advocatepayment.create.voucherNumber",
+          //   type: "number",
+          //   isRequired: false,
+          //   isDisabled: false,
+          //   patternErrorMsg: ""
+          // },{
+          //     name: "modeOfPayment",
+          //     jsonPath: "advocatePayments[0].modeOfPayment",
+          //     label: "legal.create.modeOfPayment",
+          //     type: "singleValueList",
+          //     isRequired: true,
+          //     isDisabled: false,
+          //     patternErrorMsg: "",
+          //     // url: "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=stamp|$..code|$..name"
+          //     defaultValue: [{
+          //     "key": "Cash",
+          //     "value": "Cash"
+          //   }, {
+          //     "key": "Cheque",
+          //     "value": "Cheque"
+          //   }, {
+          //     "key": "DD",
+          //     "value": "DD"
+          //   }]
+          //   }, 
+          //   {
+          //   name: "instrumentNumber",
+          //   jsonPath: "advocatePayments[0].instrumentNumber",
+          //   label: "advocatepayment.create.instrumentNumber",
+          //   type: "datePicker",
+          //   isRequired: false,
+          //   isDisabled: false,
+          //   patternErrorMsg: ""
+          // }, 
+          //   {
+          //   name: "InstrumentDate",
+          //   jsonPath: "advocatePayments[0].instrumentDate",
+          //   label: "advocatepayment.create.InstrumentDate",
+          //   type: "datePicker",
+          //   isRequired: false,
+          //   isDisabled: false,
+          //   patternErrorMsg: ""
+          // },
           {
-            name: "voucherNumber",
-            jsonPath: "advocatePayments[0].voucherNo",
-            label: "advocatepayment.create.voucherNumber",
-            type: "number",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: ""
-          },{
-              name: "modeOfPayment",
-              jsonPath: "advocatePayments[0].modeOfPayment",
-              label: "legal.create.modeOfPayment",
-              type: "singleValueList",
-              isRequired: true,
-              isDisabled: false,
-              patternErrorMsg: "",
-              // url: "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=stamp|$..code|$..name"
-              defaultValue: [{
-              "key": "Cash",
-              "value": "Cash"
-            }, {
-              "key": "Cheque",
-              "value": "Cheque"
-            }, {
-              "key": "DD",
-              "value": "DD"
-            }]
-            }, 
-            {
-            name: "instrumentNumber",
-            jsonPath: "advocatePayments[0].instrumentNumber",
-            label: "advocatepayment.create.instrumentNumber",
-            type: "datePicker",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: ""
-          }, 
-            {
-            name: "InstrumentDate",
-            jsonPath: "advocatePayments[0].instrumentDate",
-            label: "advocatepayment.create.InstrumentDate",
-            type: "datePicker",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: ""
-          },{
             name: "totalAmount",
             pattern: "",
             label: "legal.create.amount",
             type: "number",
-            jsonPath: "assignAdvocate[0].totalAmount",
+            hide:true,
+            jsonPath: "",
             isRequired: false,
-            isDisabled: false
+            isDisabled: true
           },
           {
                    name: "invoiceDocument",
             jsonPath: "advocatePayments[0].invoiceDoucment.fileStoreId",
-            label: "legal.create.uploadInvoice",
+            label: "legal.create.downloadInvoice",
             type: "singleFileUpload",
             pattern:"",
-            isRequired: true,
+            isRequired: false,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: "",
+            readonly:true
             },  
           {
                 type: "tableList",
-                jsonPath: "advocatepayments[0].advocateCharges",
+                jsonPath: "advocatePayments[0].advocateCharges",
                 tableList: {
                   header: [
                     {
@@ -819,7 +571,7 @@ var dat =  {
                       type: "singleValueList",
                       jsonPath: "advocatePayments[0].advocateCharges[0].charge",
                       isRequired: true,
-                      isDisabled: false,
+                      isDisabled: true,
                        defaultValue: [
                                     {
                                       "key": "CF",
@@ -838,10 +590,11 @@ var dat =  {
                       name: "case",
                       pattern: "",
                       type: "singleValueList",
-                      jsonPath: "advocatePayments[0].advocateCharges[0].caseNo",
+                      jsonPath: "advocatePayments[0].advocateCharges[0].caseDetails.summonReferenceNo",
                       isRequired: false,
-                      isDisabled: false,
-                      url: "/lcms-services/legalcase/case/_search?|$..summon.summonReferenceNo|$..summon.caseNo"
+                      isDisabled: true,
+                      url:  "/lcms-services/legalcase/caseno/_search?|$..summonReferenceNo|$..caseNo"
+                      // "/lcms-services/legalcase/case/_search?|$..summon.summonReferenceNo|$..summon.caseNo"
                     },
                     {
                       name: "amount",
@@ -849,19 +602,21 @@ var dat =  {
                       type: "number",
                       jsonPath: "advocatePayments[0].advocateCharges[0].amount",
                       isRequired: false,
-                      isDisabled: false
+                      isDisabled: true
                     }
                   ]
                 }
               }
-              ,{
+              ,
+              {
             name: "advocateLabel",
-            jsonPath: "advocatePayments[0].bankAccountNo",
+            jsonPath: "",
             label: "legal.create.paymentNote",
             type: "label",
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: "",
+            defaultValue:" "
               }
          ]
       }

@@ -1,0 +1,281 @@
+class EmployeeReport extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+        "result": [],
+        "searchSet": {
+            "code": "",
+            "departmentId": "",
+            "designationId": "",
+            "employeeType": "",
+            "employeeStatus": ""
+        },
+        "employeeTypes": [],
+        "departments": [],
+        "designations": [],
+        "status":[],
+        "isSearchClicked": false
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.searchEmployee = this.searchEmployee.bind(this);
+    this.closeWindow = this.closeWindow.bind(this);
+  }
+
+  componentWillMount() {
+
+    try {
+      var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
+    } catch (e) {
+        console.log(e);
+         var assignments_designation = [];
+    }
+
+    try {
+      var assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
+    } catch (e) {
+        console.log(e);
+      var  assignments_department = [];
+    }
+
+    try {
+      var employeeType = !localStorage.getItem("employeeType") || localStorage.getItem("employeeType") == "undefined" ? (localStorage.setItem("employeeType", JSON.stringify(getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"] || [])), JSON.parse(localStorage.getItem("employeeType"))) : JSON.parse(localStorage.getItem("employeeType"));
+      }
+      catch (e) {
+        console.log(e);
+      var employeeType = [];
+    }
+
+    var employeeStatusList;
+
+    getDropdown("employeeStatus", function(res) {
+      employeeStatusList = res;
+    });
+
+     this.setState({
+         ...this.state,
+         departments: Object.assign([], assignments_department),
+         designations: Object.assign([], assignments_designation),
+         employeeTypes: Object.assign([], employeeType),
+         status: Object.assign([], employeeStatusList),
+         assignments_department,
+         assignments_designation
+
+     });
+  }
+
+  componentDidUpdate(prevProps, prevState)
+  {
+      if (prevState.result.length!=this.state.result.length) {
+          $('#employeeTable').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                     'copy', 'csv', 'excel', 'pdf', 'print'
+             ],
+             ordering: false
+          });
+      }
+  }
+
+  handleChange(e, name) {
+      this.setState({
+          ...this.state,
+          searchSet:{
+              ...this.state.searchSet,
+              [name]:e.target.value
+          }
+      })
+  }
+
+  closeWindow () {
+      open(location, '_self').close();
+  }
+
+  searchEmployee (e) {
+    var _this = this;
+    e.preventDefault();
+    $('#employeeTable').DataTable().destroy();
+
+    try {
+        commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId,pageSize:500}, function(err, res) {
+          if(res && res.Employee) {
+            _this.setState({
+              ..._this.state,
+                isSearchClicked: true,
+                result : res.Employee
+            })
+          }
+        });
+    } catch (e) {
+        result = [];
+        console.log(e);
+    }
+  }
+
+  render() {
+    let {handleChange, searchEmployee, closeWindow} = this;
+    let {result, employeeTypes, departments, status, employeeStatusList, designations,assignments_designation,assignments_department} = this.state;
+    let {code, departmentId, designationId, employeeType, employeeStatus} = this.state.searchSet;
+
+    const renderOptions = function(list)
+    {
+        if(list && list.constructor == Array)
+        {
+            return list.map((item)=>
+            {
+                return (<option key={item.id} value={item.id}>
+                        {item.name?item.name:item.code}
+                    </option>)
+            })
+        }
+    }
+
+    const renderTr = () => {
+        return result.map((item, ind) => {
+            return (
+                <tr key={ind}>
+                    <td>{item.code}</td>
+                    <td>{item.name}</td>
+                    <td data-label="designation">{getNameById(assignments_designation,item.assignments[0].designation)}</td>
+                    <td data-label="department">{getNameById(assignments_department,item.assignments[0].department)}</td>
+                    <td><a href={"app/hr/reports/employee-history-report.html?id=" + item.id} >Employee History </a></td>
+                </tr>
+            )
+        })
+    }
+
+    const showTable = () => {
+        if(this.state.isSearchClicked) {
+            return (
+                <div className="form-section" >
+                    <h3 className="pull-left">Employee Details </h3>
+                    <div className="clearfix"></div>
+                    <div className="land-table">
+                        <table id="employeeTable" className="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Employee Code</th>
+                                <th>Employee Name</th>
+                                <th>Employee Designation</th>
+                                <th>Employee Department</th>
+                                <th>Reports</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {renderTr()}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            )
+        }
+    }
+
+    return (
+        <div>
+            <div className="form-section">
+                <h3 className="pull-left">Employee Search </h3>
+                <div className="clearfix"></div>
+                <form onSubmit={(e)=>
+                    {searchEmployee(e)}}>
+                    <fieldset>
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="">Department </label>
+                                    </div>
+                                    <div className="col-sm-6">
+                                      <div className="styled-select">
+                                        <select id="departmentId" value={departmentId} onChange={(e) => {handleChange(e, "departmentId")}}>
+                                            <option value="">Select department</option>
+                                            {renderOptions(departments)}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="">Designation </label>
+                                    </div>
+                                    <div className="col-sm-6">
+                                      <div className="styled-select">
+                                        <select id="designationId" value={designationId} onChange={(e) => {handleChange(e, "designationId")}}>
+                                            <option value="">Select Designation</option>
+                                            {renderOptions(designations)}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="">Employee Code/Name </label>
+                                    </div>
+                                    <div className="col-sm-6">
+                                        <input id="code" type="text" value={code} onChange={(e) => {handleChange(e, "code")}}/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="">Employee Type </label>
+                                    </div>
+                                    <div className="col-sm-6">
+                                      <div className="styled-select">
+                                        <select id="employeeType" value={employeeType} onChange={(e) => {handleChange(e, "employeeType")}}>
+                                          <option value="">Select EmployeeType</option>
+                                            {renderOptions(employeeTypes)}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="">Status </label>
+                                    </div>
+                                    <div className="col-sm-6">
+                                      <div className="styled-select">
+                                        <select id="employeeStatus" value={employeeStatus} onChange={(e) => {handleChange(e, "employeeStatus")}}>
+                                          <option value="">Select EmployeeStatus</option>
+                                            {renderOptions(status)}
+                                        </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="text-center">
+
+
+                            <button type="submit" className="btn btn-submit">Search</button>&nbsp;&nbsp;
+                            <button type="button" className="btn btn-close" onClick={(e)=>{this.closeWindow()}}>Close</button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            {showTable()}
+        </div>
+    );
+  }
+}
+
+
+
+
+
+
+ReactDOM.render(
+  <EmployeeReport />,
+  document.getElementById('root')
+);

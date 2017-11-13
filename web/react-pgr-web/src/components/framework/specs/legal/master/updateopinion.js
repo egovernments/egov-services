@@ -17,7 +17,7 @@ var dat = {
             label: "opinionrequest.update.opinionRequestDate",
             type: "datePicker",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: ""
           },{
                 "name": "departmentName",
@@ -26,16 +26,26 @@ var dat = {
                 "pattern": "",
                 "type": "singleValueList",
                 "isRequired": true,
-                "isDisabled": false,
+                "isDisabled": true,
                 "requiredErrMsg": "",
                 "patternErrMsg": "",
                  "url": "/egov-common-masters/departments/_search?|$..code|$..name"
               },{
+                  name: "Case",
+                  jsonPath: "opinions[0].caseDetails.summonReferenceNo",
+                  label: "opinion.create.case",
+                  type: "singleValueList",
+                  isRequired: false,
+                  isDisabled: true,
+                  patternErrorMsg: "",
+                  url: "/lcms-services/legalcase/caseno/_search?|$..summonReferenceNo|$..caseNo"
+             },{
                 "name": "opinionOn",
                 "jsonPath": "opinions[0].opinionOn",
                 "label": "opinionrequest.update.opinionOn",
                 "pattern": "",
                 "type": "textarea",
+                "fullWidth":true,
                 "isRequired": true,
                 "isDisabled": true,
                 "requiredErrMsg": "",
@@ -115,7 +125,7 @@ var dat = {
                 "pattern": "",
                  "type": "singleValueList",
                 "isRequired": false,
-                "isDisabled": false,
+                "isDisabled": true,
                 "requiredErrMsg": "",
                 "patternErrMsg": "",
                  url: "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
@@ -126,7 +136,7 @@ var dat = {
                 "pattern": "",
                 "type": "text",
                 "isRequired": false,
-                "isDisabled": false,
+                "isDisabled": true,
                 "requiredErrMsg": "",
                 "patternErrMsg": "",
                  url: "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
@@ -136,6 +146,7 @@ var dat = {
                 "label": "opinionrequest.update.opinionDescription",
                 "pattern": "",
                 "type": "textarea",
+                "fullWidth":true,
                 "isRequired": false,
                 "isDisabled": false,
                 "requiredErrMsg": "",

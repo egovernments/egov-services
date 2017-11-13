@@ -57,7 +57,7 @@ public class AdvocateService {
 			}
 			code = uniqueCodeGeneration.getUniqueCode(advocate.getTenantId(), requestInfo,
 					propertiesManager.getAdvocateUlbFormat(), propertiesManager.getAdvocateUlbName(), Boolean.FALSE,
-					null);
+					null,Boolean.FALSE);
 			advocate.setCode(code);
 			advocate.setName(name);
 		}

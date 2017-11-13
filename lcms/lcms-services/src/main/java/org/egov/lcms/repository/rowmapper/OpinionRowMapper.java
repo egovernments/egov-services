@@ -8,6 +8,7 @@ import java.util.List;
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.models.Advocate;
 import org.egov.lcms.models.AuditDetails;
+import org.egov.lcms.models.CaseDetails;
 import org.egov.lcms.models.Department;
 import org.egov.lcms.models.Document;
 import org.egov.lcms.models.Opinion;
@@ -41,7 +42,12 @@ public class OpinionRowMapper implements RowMapper<Opinion> {
 		opinion.setTenantId(getString(rs.getString("tenantid")));
 		opinion.setStateId(getString(rs.getString("stateid")));
 		opinion.setAdditionalAdvocate(getString(rs.getString("additionaladvocate")));
-
+		
+		CaseDetails caseDetails = new CaseDetails();
+		caseDetails.setSummonReferenceNo(getString(rs.getString("summonreferenceno")));
+		
+		opinion.setCaseDetails(caseDetails);		
+		
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(rs.getString("createdby"));
 		auditDetails.setLastModifiedBy(rs.getString("lastmodifiedby"));

@@ -16,8 +16,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
-import io.swagger.model.MaterialReceiptHeader;
-import io.swagger.model.MaterialReceiptHeaderRequest;
+import io.swagger.model.MaterialReceipt;
+import io.swagger.model.MaterialReceiptRequest;
 import io.swagger.model.Pagination;
 import io.swagger.model.Supplier;
 import io.swagger.model.SupplierRequest;
@@ -40,9 +40,9 @@ public class ReceiptNoteApiService {
 	@Value("${inv.reciept.update.topic}")
 	private String updateTopic;
 	
-	public List<MaterialReceiptHeader> create(MaterialReceiptHeaderRequest headerRequest, String tenantId, BindingResult errors) {
+	public List<MaterialReceipt> create(MaterialReceiptRequest headerRequest, String tenantId) {
 
-		for (MaterialReceiptHeader material : headerRequest.getMaterialReceipt()) {
+		for (MaterialReceipt material : headerRequest.getMaterialReceipt()) {
 			material.setAuditDetails(
 					inventoryUtilityService.mapAuditDetails(headerRequest.getRequestInfo(), tenantId));
 			if (!recieptNoteApiJdbcRepository.uniqueCheck("id", new  ReceiptNoteApiEntity().toEntity(material))) {
@@ -53,9 +53,9 @@ public class ReceiptNoteApiService {
 		return push(headerRequest);
 	}
 	
-	public List<MaterialReceiptHeader> update(MaterialReceiptHeaderRequest headerRequest, String tenantId, BindingResult errors) {
+	public List<MaterialReceipt> update(MaterialReceiptRequest headerRequest, String tenantId) {
 
-		for (MaterialReceiptHeader material : headerRequest.getMaterialReceipt()) {
+		for (MaterialReceipt material : headerRequest.getMaterialReceipt()) {
 			if (material.getId() == null) {
 				throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), material.getId());
 			}
@@ -69,17 +69,17 @@ public class ReceiptNoteApiService {
 		return pushForUpdate(headerRequest);
 	}
 	
-	public List<MaterialReceiptHeader> pushForUpdate(MaterialReceiptHeaderRequest headerRequest) {
+	public List<MaterialReceipt> pushForUpdate(MaterialReceiptRequest headerRequest) {
 		kafkaTemplate.send(updateTopic, headerRequest);
 		return headerRequest.getMaterialReceipt();
 	}
 	
-	public List<MaterialReceiptHeader> push(MaterialReceiptHeaderRequest headerRequest) {
+	public List<MaterialReceipt> push(MaterialReceiptRequest headerRequest) {
 		kafkaTemplate.send(createTopic, headerRequest);
 		return headerRequest.getMaterialReceipt();
 	}
 	
-	public Pagination<MaterialReceiptHeader> search(ReceiptNotesSearchCriteria request) {
+	public Pagination<MaterialReceipt> search(ReceiptNotesSearchCriteria request) {
 		return recieptNoteApiJdbcRepository.search(request);
 
 	}

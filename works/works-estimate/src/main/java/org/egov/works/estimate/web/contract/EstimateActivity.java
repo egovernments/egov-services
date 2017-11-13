@@ -1,21 +1,22 @@
 package org.egov.works.estimate.web.contract;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import java.util.Objects;
 
 /**
  * An Object holds the basic data of Estimate Activity
  */
 @ApiModel(description = "An Object holds the basic data of Estimate Activity")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T07:36:50.343Z")
 
 public class EstimateActivity   {
   @JsonProperty("id")
@@ -52,7 +53,7 @@ public class EstimateActivity   {
   private EstimateActivity parent = null;
 
   @JsonProperty("detailedEstimate")
-  private DetailedEstimate detailedEstimate = null;
+  private String detailedEstimate = null;
 
   @JsonProperty("estimateMeasurementSheets")
   private List<EstimateMeasurementSheet> estimateMeasurementSheets = null;
@@ -92,7 +93,7 @@ public class EstimateActivity   {
   @ApiModelProperty(required = true, value = "Tenant id of the Estimate Activity")
   @NotNull
 
- @Size(min=4,max=128)
+ @Size(min=2,max=128)
   public String getTenantId() {
     return tenantId;
   }
@@ -112,7 +113,8 @@ public class EstimateActivity   {
   **/
   @ApiModelProperty(value = "Schedule Of Rate reference of the Estimate Activity. Either Schedule Of Rate or Non SOR is mandatory for any activity.")
 
-  @Valid
+  //@Valid
+  //TODO only code is required
 
   public ScheduleOfRate getScheduleOfRate() {
     return scheduleOfRate;
@@ -133,7 +135,8 @@ public class EstimateActivity   {
   **/
   @ApiModelProperty(value = "Schedule Of Rate reference of the Estimate Activity. Either Schedule Of Rate or Non SOR is mandatory for any activity.")
 
-  @Valid
+  //@Valid
+  //TODO only code is required
 
   public NonSOR getNonSor() {
     return nonSor;
@@ -155,7 +158,8 @@ public class EstimateActivity   {
   @ApiModelProperty(required = true, value = "UOM for the Estimate Activity")
   @NotNull
 
-  @Valid
+  //@Valid
+  //TODO only code is required
 
   public UOM getUom() {
     return uom;
@@ -292,7 +296,7 @@ public class EstimateActivity   {
     this.parent = parent;
   }
 
-  public EstimateActivity detailedEstimate(DetailedEstimate detailedEstimate) {
+  public EstimateActivity detailedEstimate(String detailedEstimate) {
     this.detailedEstimate = detailedEstimate;
     return this;
   }
@@ -301,16 +305,14 @@ public class EstimateActivity   {
    * Reference of the Detailed Estimate for Estimate Activity
    * @return detailedEstimate
   **/
-  @ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for Estimate Activity")
-  @NotNull
+  @ApiModelProperty(value = "Reference of the Detailed Estimate for Estimate Activity")
 
-  @Valid
 
-  public DetailedEstimate getDetailedEstimate() {
+  public String getDetailedEstimate() {
     return detailedEstimate;
   }
 
-  public void setDetailedEstimate(DetailedEstimate detailedEstimate) {
+  public void setDetailedEstimate(String detailedEstimate) {
     this.detailedEstimate = detailedEstimate;
   }
 
@@ -366,7 +368,7 @@ public class EstimateActivity   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -422,7 +424,7 @@ public class EstimateActivity   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

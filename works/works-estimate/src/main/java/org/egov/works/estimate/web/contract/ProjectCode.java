@@ -1,23 +1,18 @@
 package org.egov.works.estimate.web.contract;
 
-import java.math.BigDecimal;
 import java.util.Objects;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
  * An Object that holds the basic data for a Project Code
  */
 @ApiModel(description = "An Object that holds the basic data for a Project Code")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-04T11:10:27.426Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:32:33.802Z")
 
 public class ProjectCode   {
   @JsonProperty("id")
@@ -39,7 +34,7 @@ public class ProjectCode   {
   private ProjectCodeStatus status = null;
 
   @JsonProperty("active")
-  private Boolean active = null;
+  private Boolean active = false;
 
   @JsonProperty("projectValue")
   private BigDecimal projectValue = null;
@@ -82,7 +77,7 @@ public class ProjectCode   {
   @ApiModelProperty(required = true, value = "Tenant id of the Project Code")
   @NotNull
 
- @Size(min=4,max=128)
+ @Size(min=2,max=128)
   public String getTenantId() {
     return tenantId;
   }

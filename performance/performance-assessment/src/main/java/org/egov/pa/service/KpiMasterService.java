@@ -2,7 +2,7 @@ package org.egov.pa.service;
 
 import java.util.List;
 
-import org.egov.pa.model.DepartmentKpiList;
+import org.egov.pa.model.KPI;
 import org.egov.pa.web.contract.KPIGetRequest;
 import org.egov.pa.web.contract.KPIRequest;
 import org.springframework.stereotype.Service;
@@ -49,7 +49,7 @@ public interface KpiMasterService {
 	 * @param kpiGetRequest
 	 * @return List<KPI>
 	 */
-	public List<DepartmentKpiList> searchKpi(KPIGetRequest kpiGetRequest); 
+	public List<KPI> searchKpi(KPIGetRequest kpiGetRequest); 
 	
 
 }

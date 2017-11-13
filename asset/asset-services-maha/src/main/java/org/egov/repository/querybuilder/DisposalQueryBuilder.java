@@ -18,11 +18,7 @@ public class DisposalQueryBuilder {
 
 
 
-	public String BASE_QUERY = "SELECT ordernumber,orderdate,"
-			+ "id,tenantid,assetid,buyername,buyeraddress,disposalreason,disposaldate,pancardnumber,"
-			+ "aadharcardnumber,assetcurrentvalue,salevalue,transactiontype,assetsaleaccount,"
-			+ "createdby,createddate,lastmodifiedby,lastmodifieddate,profitlossvoucherreference FROM"
-			+ " egasset_disposal as disposal";
+	public String BASE_QUERY = "SELECT * FROM egasset_disposal as disposal";
 
 	@SuppressWarnings("rawtypes")
 	public String getQuery(final DisposalCriteria disposalCriteria, final List preparedStatementValues) {

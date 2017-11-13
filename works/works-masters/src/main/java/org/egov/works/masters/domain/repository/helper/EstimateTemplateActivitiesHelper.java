@@ -52,10 +52,9 @@ public class EstimateTemplateActivitiesHelper {
         EstimateTemplateActivities estimateTemplateActivities = new EstimateTemplateActivities();
         estimateTemplateActivities.setId(this.id);
         estimateTemplateActivities.setTenantId(this.tenantId);
-        estimateTemplateActivities.getEstimateTemplate().setCode(this.estimateTemplate);
-        estimateTemplateActivities.getScheduleOfRate().setCode(this.scheduleOfRate);
-        estimateTemplateActivities.getUom().setCode(this.uom);
-        estimateTemplateActivities.getNonSOR().setId(this.nonSOR);
+        estimateTemplateActivities.setEstimateTemplate(this.estimateTemplate);
+        estimateTemplateActivities.setScheduleOfRate(this.scheduleOfRate);
+        estimateTemplateActivities.setUom(this.uom);
         estimateTemplateActivities.setUnitRate(this.unitRate);
         return estimateTemplateActivities;
     }

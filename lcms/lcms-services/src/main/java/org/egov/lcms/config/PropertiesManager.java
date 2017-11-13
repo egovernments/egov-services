@@ -490,5 +490,47 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.department.search.message}")
 	private String searchDepartmentErrorMessage;
+	
+	@Value("${egov.lcms.evidence.ulb.format}")
+	private String evidenceUlbFormat;
+	
+	@Value("${egov.lcms.evidence.ulb.name}")
+	private String evidenceUlbName;
+	
+	@Value("${egov.lcms.evidence.create}")
+	private String evidenceCreateTopic;
+	
+	@Value("${egov.lcms.evidence.update}")
+	private String evidenceUpdateTopic;
+	
+	@Value("${egov.lcms.evidence.error.code}")
+	private String evidenceResponseErrorCode;
+	
+	@Value("${egov.lcms.evidence.error.msg}")
+	private String evidenceResponseErrorMsg;
+	
+	@Value("${egov.lcms.lastmodifiedtime}")
+	private String lastModifiedTime;
+	
+	@Value("${egov.lcms.update.assign.advocate}")
+	private String updateAssignAdvocate;
+	
+	
+	@Value("${egov.lcms.assign.advocatedetails.size}")
+	private String advocateDetailsSize;
+	
+	@Value("${egov.lcms.assign.advocatedetails.size.message}")
+	private String advocateDetailsSizeMessage;
+	
+	@Value("${egov.lcms.casedetails.error.code}")
+	private String caseDetailsResponseErrorCode;
+	
+	@Value("${egov.lcms.casedetails.error.msg}")
+	private String caseDetailsResponseErrorMsg;
+	
+	@Value("${egov.lcms.caseno.error.code}")
+	private String caseNoErrorCode;
+	
+	@Value("${egov.lcms.caseno.error.msg}")
+	private String caseNoErrorMsg;
 }
-

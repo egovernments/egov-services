@@ -47,6 +47,10 @@ public class VendorContract {
 	@NotNull
 	@JsonProperty("securityDeposit")
 	private Double securityDeposit = null;
+	
+	@NotNull
+	@JsonProperty("paymentAmount")
+	private Double paymentAmount = null;
 
 	@NotNull
 	@JsonProperty("paymentTerms")

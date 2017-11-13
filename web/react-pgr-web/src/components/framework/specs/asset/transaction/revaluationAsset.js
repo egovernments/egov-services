@@ -1,94 +1,187 @@
 var dat = {
 	"asset.transaction": {
 		"numCols": 12/3,
-		"url": "",
+		"url": "/asset-services-maha/assets/revaluation/_create",
     "tenantIdRequired": true,
-    "objectName": "Revaluations",
+    "objectName": "Revaluation",
     "useTimestamp": true,
     "groups": [{
         "label": "ac.transaction.RA.title",
         "name": "createCategoryType",
         "fields": [
+						{
+							"name": "AssetSearchCode",
+							"jsonPath": "assetCategoryType",
+							"label": "ac.create.asset.asset.category.type",
+							"pattern": "",
+							"type": "singleValueList",
+							"url": "",
+							"isRequired": false,
+							"isDisabled": true,
+							"requiredErrMsg": "",
+							"patternErrMsg": "",
+							"defaultValue": [  {
+									"key": "MOVABLE",
+									"value": "MOVABLE"
+								},  {
+									"key": "IMMOVABLE",
+									"value": "IMMOVABLE"
+								}
+							],
+
+						},
             {
               "name": "AssetCategoryType",
-              "jsonPath": "Revaluations[0].",
-              "label": "ac.create.asset.asset.category.type",
+              "jsonPath": "",
+              "label": "ac.create.asset.asset.category",
               "pattern": "",
               "type": "singleValueList",
-              "url": "",
-              "isRequired": true,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": ""
-            },
-            {
-              "name": "AssetCategoryType",
-              "jsonPath": "Revaluations[0].",
-              "label": "ac.create.Asset.SubCategory",
-              "pattern": "",
-              "type": "singleValueList",
-              "url": "",
-              "isRequired": true,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": ""
-            },
-            {
-              "name": "AssetCode",
-              "jsonPath": "Revaluations[0].",
-              "label": "ac.create.Asset.Code",
-              "pattern": "",
-              "type": "text",
-              "url": "",
+              "url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
               "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
             },
-            {
-              "name": "AssetName",
-              "jsonPath": "Revaluations[0].",
-              "label": "ac.create.Asset.Name",
-              "pattern": "",
-              "type": "text",
-              "url": "",
-              "isRequired": false,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": ""
-            }
+						{
+							"name": "AssetSearchAssetSubCategory",
+							"jsonPath": "assetCategory",
+							"label": "ac.create.Asset.SubCategory.Name",
+							"pattern": "",
+							"type": "singleValueList",
+							"url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
+							// "url": "/egov-mdms-service/v1/_get?&masterName=AssetCategory&moduleName=ASSET|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "",
+							"isStateLevel":true
+						},
+						{
+							"name": "fromOriginalValue",
+							"jsonPath": "originalValueFrom",
+							"label": "ac.create.OriginalFromDate",
+							"pattern": "",
+							"type": "number",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "toOriginalValue",
+							"jsonPath": "originalValueTo",
+							"label": "ac.create.OriginalToDate",
+							"pattern": "",
+							"type": "number",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "Department",
+							"jsonPath": "department",
+							"label": "ac.create.Department",
+							"pattern": "",
+							"type": "singleValueList",
+							"url": "/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "",
+							"isStateLevel":true
+						},
+						{
+							"name": "fromDate",
+							"jsonPath": "assetCreatedFrom",
+							"label": "ac.create.createFromDate",
+							"pattern": "",
+							"type": "datePicker",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "toDate",
+							"jsonPath": "assetCreatedTo",
+							"label": "ac.create.createToDate",
+							"pattern": "",
+							"type": "datePicker",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "AssetSearchCode",
+							"jsonPath": "code",
+							"label": "ac.search.asset.code",
+							"pattern": "",
+							"type": "text",
+							"url": "",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "AssetSearchName",
+							"jsonPath": "name",
+							"label": "ac.search.asset.name",
+							"pattern": "",
+							"type": "text",
+							"url": "",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "transactionType",
+							"jsonPath": "transaction",
+							"label": "transaction",
+							"pattern": "",
+							"type": "text",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "",
+							"defaultValue": "REVALUATION",
+							"isHidden": true
+						}
         ]
       }],
       "result": {
-        "header": [{
-            "name": "SelectButon",
-            "jsonPath": "Revaluations[0].",
-            "label": "ac.create.Select",
-            "pattern": "",
-            "type": "checkbox",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "url":"",
-            "isLabel": false
-          },
+        "header": [
+					{
+						"name": "",
+	          "jsonPath": "isRadio",
+	          "label": "",
+	          "pattern": "",
+	          "type": "radio",
+	          "isRequired": false,
+	          "isDisabled": false,
+	          "requiredErrMsg": "",
+	          "patternErrMsg": "",
+	    			"values": [{"label":"", "value":true}],
+	    			"defaultValue":false
+			},
 					{
             "name": "AssetCode",
-            "jsonPath": "Revaluations[0].",
+            "jsonPath": "code",
             "label": "ac.create.Asset.Code",
             "pattern": "",
-            "type": "text",
+            "type": "label",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-            "url":"",
-            "isLabel": false
+						"isLabel": false,
           },
           {
             "name": "NameAsset",
-            "jsonPath": "Revaluations[0].",
+            "jsonPath": "name",
             "label": "ac.create.Name.of.Asset",
             "pattern": "",
             "type": "label",
@@ -96,12 +189,11 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-            "isLabel": false,
-            "hyperLink": ""
+						"isLabel": false,
           },
           {
             "name": "DateofPurchase/Construction/Acquisition",
-            "jsonPath": "Revaluations[0].",
+            "jsonPath": "acquisitionDate",
             "label": "ac.transaction.create.datePurchaseConstruction",
             "pattern": "",
             "type": "label",
@@ -109,12 +201,12 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-            "isLabel": false,
-            "textAlign":"right"
+						"isLabel": false,
+						"isDate":true,
           },
-          {
+					{
             "name": "WdvValue",
-            "jsonPath": "Revaluations[0].",
+            "jsonPath": "currentValue",
             "label": "ac.create.WDV.Value",
             "pattern": "",
             "type": "label",
@@ -122,13 +214,12 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-            "isLabel": false,
-            "textAlign":"right"
+						"isLabel": false,
           },
         ],
         // "values": ["businessService", "consumerCode", "totalAmount","minimumAmount","bill"],
-        "resultPath": "",
-        "tableResultPath": "",
+        "resultPath": "Assets",
+        "tableResultPath": "Revaluation.Assets",
 
         // "rowClickUrlUpdate": "/update/wc/pipeSize/{id}",
         // "rowClickUrlView": "/view/wc/pipeSize/{id}"
@@ -137,14 +228,14 @@ var dat = {
 	      "label": "",
 	      "name": "OtherDetails",
 	      "children": [],
-	      "fields": [
+				"fields": [
 	        {
 	          "name": "ValuationDate",
-	          "jsonPath": "Revaluations[0].revaluationDate",
+	          "jsonPath": "Revaluation.revaluationDate",
 	          //"label": "ac.create.Revaluation.date",
 						"label": "Revaluation date",
 	          "pattern": "",
-	          "type": "date",
+	          "type": "datePicker",
 	          "isRequired": true,
 	          "isDisabled": false,
 	          "requiredErrMsg": "",
@@ -152,7 +243,7 @@ var dat = {
 	        },
 	        {
 	          "name": "OrderNo",
-	          "jsonPath": "Revaluations[0].orderNumber",
+	          "jsonPath": "Revaluation.orderNumber",
 	          "label": "Order No",
 	          "pattern": "",
 	          "type": "text",
@@ -163,11 +254,11 @@ var dat = {
 	        },
 	        {
 	          "name": "OrderDate",
-	          "jsonPath": "Revaluations[0].orderDate",
+	          "jsonPath": "Revaluation.orderDate",
 	          //"label": "ac.transaction.create.order.date",
 						"label": "Order Date",
 	          "pattern": "",
-	          "type": "date",
+	          "type": "datePicker",
 	          "isRequired": true,
 	          "isDisabled": false,
 	          "requiredErrMsg": "", //Remove required messages
@@ -175,7 +266,7 @@ var dat = {
 	        },
 	        {
 	          "name": "ValuationAmount",
-	          "jsonPath": "Revaluations[0].valueAfterRevaluation",
+	          "jsonPath": "Revaluation.valueAfterRevaluation",
 	          "label": "Valuation Amount",
 	          "pattern": "",
 	          "type": "text",
@@ -186,7 +277,7 @@ var dat = {
 	        },
 					{
 	          "name": "Addition/deductedAmount",
-	          "jsonPath": "Revaluations[0].revaluationAmount",
+	          "jsonPath": "Revaluation.revaluationAmount",
 	          //"label": "ac.transaction.create.AdditionDeductedAmount",
 						"label": "Addition/ deducted amount",
 	          "pattern": "",

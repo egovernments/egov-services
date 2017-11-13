@@ -2,12 +2,10 @@ package org.egov.works.estimate.persistence.helper;
 
 import java.math.BigDecimal;
 
-import org.egov.works.estimate.web.contract.AbstractEstimate;
 import org.egov.works.estimate.web.contract.AbstractEstimateDetails;
 import org.egov.works.estimate.web.contract.AuditDetails;
 import org.egov.works.estimate.web.contract.ProjectCode;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -28,7 +26,6 @@ public class AbstractEstimateDetailsHelper {
 	@JsonProperty("tenantId")
 	private String tenantId = null;
 
-	@JsonIgnore
 	@JsonProperty("abstractEstimate")
 	private String abstractEstimate = null;
 
@@ -37,9 +34,6 @@ public class AbstractEstimateDetailsHelper {
 
 	@JsonProperty("estimateAmount")
 	private BigDecimal estimateAmount = null;
-
-	@JsonProperty("estimateNumber")
-	private String estimateNumber = null;
 
 	@JsonProperty("grossAmountBilled")
 	private Double grossAmountBilled = null;
@@ -61,15 +55,13 @@ public class AbstractEstimateDetailsHelper {
 
 	public AbstractEstimateDetails toDomain() {
 		AbstractEstimateDetails estimateDetails = new AbstractEstimateDetails();
-		estimateDetails.setAbstractEstimate(new AbstractEstimate());
-//		estimateDetails.getAbstractEstimate().setId(this.abstractEstimate);
+		estimateDetails.setAbstractEstimate(this.abstractEstimate);
 		estimateDetails.setAuditDetails(new AuditDetails());
 		estimateDetails.getAuditDetails().setCreatedBy(this.createdBy);
 		estimateDetails.getAuditDetails().setCreatedTime(this.createdTime);
 		estimateDetails.getAuditDetails().setLastModifiedBy(this.lastModifiedBy);
 		estimateDetails.getAuditDetails().setLastModifiedTime(this.lastModifiedTime);
 		estimateDetails.setEstimateAmount(this.estimateAmount);
-		estimateDetails.setEstimateNumber(this.estimateNumber);
 		estimateDetails.setGrossAmountBilled(this.grossAmountBilled);
 		estimateDetails.setId(this.id);
 		estimateDetails.setNameOfWork(this.nameOfWork);

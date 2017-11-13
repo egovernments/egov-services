@@ -148,6 +148,17 @@ public class LeaveApplicationService {
             return getSuccessResponseForCreate(leaveApplicationsList, leaveApplicationRequest.getRequestInfo());
     }
 
+    public List<LeaveApplication> getLeaveApplicationsReport(final LeaveSearchRequest leaveSearchRequest, final RequestInfo requestInfo) {
+
+        List<Long> employeeIds = null;
+        EmployeeInfoResponse employeeResponse = employeeRepository.getEmployeesForLeaveRequest(leaveSearchRequest, requestInfo);
+        employeeIds = employeeResponse.getEmployees().stream().map(employeeInfo -> employeeInfo.getId()).collect(Collectors.toList());
+        leaveSearchRequest.setEmployeeIds(employeeIds);
+
+        return leaveApplicationRepository.findForReportCriteria(leaveSearchRequest, requestInfo);
+
+    }
+
     private List<LeaveApplication> validate(final LeaveApplicationRequest leaveApplicationRequest, final Boolean isExcelUpload) {
         String errorMsg = "";
         for (final LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
@@ -222,7 +233,10 @@ public class LeaveApplicationService {
     }
 
     public LeaveApplicationRequest create(final LeaveApplicationRequest leaveApplicationRequest) {
-        return leaveApplicationRepository.saveLeaveApplication(leaveApplicationRequest);
+        if (leaveApplicationRequest.getLeaveApplication().size() > 0 && leaveApplicationRequest.getLeaveApplication().get(0).getLeaveType() != null)
+            return leaveApplicationRepository.saveLeaveApplication(leaveApplicationRequest);
+        else
+            return leaveApplicationRepository.saveCompoffLeaveApplication(leaveApplicationRequest);
     }
 
     public ResponseEntity<?> updateLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {

@@ -3,11 +3,10 @@ package org.egov.lcms.repository.builder;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import org.egov.lcms.models.NoticeSearchCriteria;
 
 public class NoticeBuilder {
-
+		
 	private static final String BASE_QUERY = "SELECT * from egov_lcms_notice ";
 
 	public static String getSearchQuery(NoticeSearchCriteria noticeSearchCriteria,
@@ -93,12 +92,12 @@ public class NoticeBuilder {
 			}
 
 			if (orderBycount > 1)
-				orderByCondition.append(" asc");
+				orderByCondition.append(" desc");
 
 			selectQuery.append(orderByCondition.toString());
+		} else {
+			selectQuery.append(" lastmodifiedtime desc ");
 		}
-
-		selectQuery.append(" code ");
 	}
 
 	private static void addPagingClause(StringBuffer selectQuery, List<Object> preparedStatementValues,

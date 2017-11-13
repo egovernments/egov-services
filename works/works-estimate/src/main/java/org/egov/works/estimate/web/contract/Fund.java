@@ -1,18 +1,21 @@
 package org.egov.works.estimate.web.contract;
 
 import java.util.Objects;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * Fund is a defining concept in municipal accounting – where it is required to segregate all accounting transactions into designated funds. Each fund needs to be treated as an independent accounting entity – in other words, all vouchers within a fund must be self-balancing and balance sheets and IncomeExpenditure reports must be generated for each fund. A hierarchy of funds may be defined – i.e. each fund can have multiple sub-funds and so on. 
  */
 @ApiModel(description = "Fund is a defining concept in municipal accounting – where it is required to segregate all accounting transactions into designated funds. Each fund needs to be treated as an independent accounting entity – in other words, all vouchers within a fund must be self-balancing and balance sheets and IncomeExpenditure reports must be generated for each fund. A hierarchy of funds may be defined – i.e. each fund can have multiple sub-funds and so on. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:32:33.802Z")
 
 public class Fund   {
   @JsonProperty("id")
@@ -114,7 +117,7 @@ public class Fund   {
    * @return identifier
   **/
   @ApiModelProperty(required = true, value = "identifier of the Fund ")
-  //@NotNull
+  @NotNull
 
 
   public String getIdentifier() {
@@ -196,7 +199,7 @@ public class Fund   {
    * @return level
   **/
   @ApiModelProperty(required = true, value = "level identifies what is the level of the fund in the tree structure. Top most parent will have level 0 and its child will have level as 1 ")
-  //@NotNull
+  @NotNull
 
 
   public Long getLevel() {

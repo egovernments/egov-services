@@ -9,7 +9,7 @@ import Api from '../../../api/api';
 
 import UiButton from '../../framework/components/UiButton';
 import {fileUpload,getInitiatorPosition} from '../../framework/utility/utility';
-import UiDynamicTable from '../../framework/components/UiDynamicTable';
+import UiDynamicTable from '../../framework/components/uiDynamicTable2';
 
 import jp from "jsonpath";
 import $ from "jquery";
@@ -18,6 +18,7 @@ import $ from "jquery";
 var count=0;
 
 var specifications={};
+var toDateCheck;
 
 let reqRequired = [];
 class Transaction extends Component {
@@ -160,109 +161,31 @@ class Transaction extends Component {
   componentDidMount() {
       this.initData();
 
-        if (this.props.match.params.businessService && decodeURIComponent(this.props.match.params.consumerCode)) {
-          // count++;
-          // if (count==1) {
-            // alert("hai")
-
-            for (var i = 0; i < specifications["asset.transaction"].groups[0].fields.length; i++) {
-              specifications["asset.transaction"].groups[0].fields[i].isDisabled=true;
-            }
-            this.props.setMockData(JSON.parse(JSON.stringify(specifications)));
-
-            this.props.handleChange({target:{value:this.props.match.params.businessService}},"businessService",true,false);
-            this.props.handleChange({target:{value:decodeURIComponent(this.props.match.params.consumerCode)}},"consumerCode",true,false);
-            this.search(null,this.props.match.params.businessService,decodeURIComponent(this.props.match.params.consumerCode));
-            // console.log($("#payTax").length);
-            // $("#payTax").submit();
-
-          // }
-          // console.log(this.props.match.params.businessService + "- "+decodeURIComponent(this.props.match.params.consumerCode));
-        }
 
   }
-  componentWillReceiveProps(nextProps)
-  {
-    if (this.state.pathname && this.state.pathname!=nextProps.history.location.pathname) {
-      this.initData();
-      if (nextProps.match.params.businessService && decodeURIComponent(nextProps.match.params.consumerCode)) {
-        // count++;
-        // if (count==1) {
-          // alert("hai")
 
-          for (var i = 0; i < specifications["asset.transaction"].groups[0].fields.length; i++) {
-            specifications["asset.transaction"].groups[0].fields[i].isDisabled=true;
-          }
-          this.props.setMockData(JSON.parse(JSON.stringify(specifications)));
 
-          this.props.handleChange({target:{value:nextProps.match.params.businessService}},"businessService",true,false);
-          this.props.handleChange({target:{value:decodeURIComponent(nextProps.match.params.consumerCode)}},"consumerCode",true,false);
-          this.search(null,nextProps.match.params.businessService,decodeURIComponent(nextProps.match.params.consumerCode));
-          // console.log($("#payTax").length);
-          // $("#payTax").submit();
+  search = () => {
 
-        // }
-        // console.log(this.props.match.params.businessService + "- "+decodeURIComponent(this.props.match.params.consumerCode));
-      }
-    }
-  }
-
-  search = (e=null,businessService="",consumerCode="") => {
-
-    e && e.preventDefault();
-    let self = this;
-    self.props.setLoadingStatus('loading');
+    let self = this; 
     var formData = {...this.props.formData};
-    if((formData.consumerCode && !formData.businessService)) {
+    if(!(formData.toDate) || formData.toDate == null || formData.toDate == ""){
+      self.props.toggleSnackbarAndSetText(true, "Please enter Date of Depreciation", false, true);
+    }else{
+    self.props.setLoadingStatus('loading');
+
+
+    Api.commonApiPost("/asset-services-maha/assets/_search", formData, {}, null, true).then(function(res){
       self.props.setLoadingStatus('hide');
-      self.props.addFieldErrors("businessService", translate("ui.framework.required"));
-      return;
-    } else if((!formData.consumerCode && formData.businessService)) {
-      self.props.setLoadingStatus('hide');
-      self.props.addFieldErrors("consumerCode", translate("ui.framework.required"));
-      return;
-    }
-    else {
-      self.props.removeFieldErrors("businessService");
-      self.props.removeFieldErrors("consumerCode");
-    }
-
-    for(var key in formData) {
-      if(!formData[key])
-        delete formData[key];
-    }
-    // console.log(formData);
-    if (businessService && consumerCode) {
-      // alert("hai")
-      formData={
-        businessService,
-        consumerCode
-      }
-    }
-
-    Api.commonApiPost("/asset-services/assets/_search", formData, {}, null, true).then(function(res){
-      self.props.setLoadingStatus('hide');
-      // self.props.handleChange({target:{value:res.Bill}},"Receipt[0].Bill",false,false);
-      // self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].tenantId",false,false);
-      // self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].instrument.instrumentType.tenantId",false,false);
-      // // self.props.handleChange({target:{value:new Date().getTime()}},"Receipt[0].instrument.transactionDate",false,false);
-      // // self.props.handleChange({target:{value:"1232356543"}},"Receipt[0].instrument.transactionNumber",false,false);
-      // self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].instrument.bank.tenantId",false,false);
-      // self.props.handleChange({target:{value:100}},"Receipt[0].instrument.amount",false,false);
-      // if (res.Bill[0].billDetails[0].businessService=="TRADELICENSE") {
-      //   self.props.handleChange({target:{value:""}},"Receipt[0].Bill[0].paidBy",false,false);
-      //
-      // } else {
-        // self.props.handleChange({target:{value:res.Bill[0].payeeName}},"Receipt[0].Bill[0].paidBy",false,false);
-
-      // }
-
+       self.props.handleChange({target:{value:res.Assets}},"Depreciation.Assets",false,false);
+       self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Depreciation.tenantId",false,false);
 
 
       var resultList = {
         resultHeader: self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.header,
         resultValues: []
       };
+
 
       let objectPath=self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.resultPath;
       let tableObjectPath=self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.tableResultPath;
@@ -271,18 +194,11 @@ class Transaction extends Component {
       let headers=Object.assign([],resultList.resultHeader);
 
       if(values && values.length) {
+
         for(var i=0; i<values.length; i++) {
+
           var tmp = [];
           for(var j=0; j<headers.length; j++) {
-              // tmp.push({jsonPath:objectPath+"["+i+"]."+headers[j].jsonPath,...headers[j]})
-              // if (self.props.match.params.businessService && self.props.match.params.consumerCode) {
-              //
-              //   tmp.push(Object.assign({},headers[j],{jsonPath:tableObjectPath+"["+i+"]."+headers[j].jsonPath,isDisabled:true}));
-              //
-              // }
-              // else {
-              //   tmp.push(Object.assign({},headers[j],{jsonPath:tableObjectPath+"["+i+"]."+headers[j].jsonPath}));
-              // }
 
               tmp.push(Object.assign({},headers[j],{jsonPath:tableObjectPath+"["+i+"]."+headers[j].jsonPath}));
 
@@ -293,23 +209,6 @@ class Transaction extends Component {
       }
 
 
-      // var specsValuesList = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.values;
-      // var values = _.get(res, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.resultPath);
-      // if(values && values.length) {
-      //   for(var i=0; i<values.length; i++) {
-      //     var tmp = [i+1];
-      //     for(var j=0; j<specsValuesList.length; j++) {
-      //       tmp.push(_.get(values[i], specsValuesList[j]));
-      //     }
-      //     resultList.resultValues.push(tmp);
-      //   }
-      // }
-      // self.setState({
-      //   resultList,
-      //   values,
-      //   showResult: true
-      // });
-      self.props.handleChange({target: {value: "Cash"}}, "Receipt[0].instrument.instrumentType.name", false, '');
       self.setState({
         resultList,
         showResult: true
@@ -317,7 +216,6 @@ class Transaction extends Component {
 
       self.props.setFlag(1);
 
-        $(".chequeOrDD").hide();
     }, function(err) {
       self.props.toggleSnackbarAndSetText(true, err.message, false, true);
       self.setState({
@@ -325,11 +223,19 @@ class Transaction extends Component {
       });
       self.props.setLoadingStatus('hide');
     })
-
+  }
   }
 
-  getVal = (path) => {
-    return _.get(this.props.formData, path) || "";
+  getVal = (path,isDate) => {
+    var val = _.get(this.props.formData, path);
+
+    if( isDate && val && ((val + "").length == 13 || (val + "").length == 12) && new Date(Number(val)).getTime() > 0) {
+      var _date = new Date(Number(val));
+      return ('0' + _date.getDate()).slice(-2) + '/'
+               + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
+               + _date.getFullYear();
+    }
+    return typeof val != "undefined" ? val : "";
   }
 
 
@@ -602,78 +508,95 @@ class Transaction extends Component {
   }
 
 
-    handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
-        let {getVal} = this;
-        let {handleChange,mockData,setDropDownData, addRequiredFields, delRequiredFields} = this.props;
-        let hashLocation = window.location.hash;
-        let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
-        let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
-        this.checkIfHasShowHideFields(property, e.target.value);
-        this.checkIfHasEnDisFields(property, e.target.value);
+  handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch", expression, expErr, isDate) => {
+      let {getVal, getValFromDropdownData} = this;
+      let self = this;
+      let {handleChange,mockData,setDropDownData, formData} = this.props;
+      let hashLocation = window.location.hash;
+      let obj = specifications[`asset.transaction`];
 
-        if(property == "Receipt[0].instrument.instrumentType.name") {
-          if(e.target.value != "Cash")
-            addRequiredFields(["Receipt[0].instrument.transactionNumber", "Receipt[0].instrument.transactionDateInput", "Receipt[0].instrument.bank.id"]);
+      console.log(property);
+      if(property == "toDate"){
+        console.log(e.target.value);
+        toDateCheck = e.target.value
+        console.log(toDateCheck);
+        // self.props.handleChange({target:{value:e.target.value}}, this.props.formData.Depreciation.toDate);
+        // console.log(this.props.formData.Depreciation.toDate);
+      }
+
+
+      if(expression && e.target.value){
+        let str = expression;
+        let pos = 0;
+        let values = [];
+        while(pos < str.length) {
+          if(str.indexOf("$", pos) > -1) {
+            let ind = str.indexOf("$", pos);
+            let spaceInd = str.indexOf(" ", ind) > -1 ? str.indexOf(" ", ind) : (str.length-1) ;
+            let value = str.substr(ind, spaceInd);
+            if(value != "$" + property)  {
+              values.push(value.substr(1));
+              str = str.replace(value, ("getVal('" + value.substr(1, value.length) + "')"));
+            } else
+              str = str.replace(value, ("e.target.value"));
+            pos++;
+          }
           else {
-            delRequiredFields(["Receipt[0].instrument.transactionNumber", "Receipt[0].instrument.transactionDateInput", "Receipt[0].instrument.bank.id"])
+            pos++;
           }
         }
 
-        handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
-
-        if (property=="Receipt[0].instrument.transactionDateInput" && e.target.value.length==10) {
-          console.log(e.target.value);
-          // handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
-        }
-
-
-        if(property.indexOf("Receipt[0].Bill[0].billDetails")>-1){
-          let bill=this.getVal("Receipt[0].Bill[0].billDetails");
-          let sum=0;
-          for (var i = 0; i < bill.length; i++) {
-             if (bill[i].hasOwnProperty("amountPaid")) {
-               sum+=parseInt(bill[i].amountPaid);
-             }
+        let _flag = 0;
+        for(var i=0; i<values.length; i++) {
+          if(!getVal(values[i])) {
+            _flag = 1;
           }
-          handleChange({target:{value:sum}},"Receipt[0].instrument.amount",false,false);
         }
 
-        if (property.indexOf("Receipt[0].instrument.instrumentType.name")>-1) {
-          if (e.target.value=="Cash") {
-              $(".chequeOrDD").hide();
-          } else {
-              $(".chequeOrDD").show();
+        if(isDate && e.target.value && [12, 13].indexOf((e.target.value+"").length) == -1) {
+          _flag = 1;
+        }
+
+        if(_flag == 0) {
+          if(!eval(str)) {
+            return this.props.toggleSnackbarAndSetText(true, translate(expErr), false, true);
           }
-
         }
+      }
+      let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
+      if(depedants.length === 0)
+        depedants = jp.query(obj,`$.groups..fields[?(@.type=="tableList")].tableList.values[?(@.jsonPath == "${property}")].depedants.*`);
 
-        _.forEach(depedants, function(value, key) {
-              if (value.type=="dropDown") {
-                  let splitArray=value.pattern.split("?");
-                  let context="";
-            			let id={};
-            			// id[splitArray[1].split("&")[1].split("=")[0]]=e.target.value;
-            			for (var j = 0; j < splitArray[0].split("/").length; j++) {
-            				context+=splitArray[0].split("/")[j]+"/";
-            			}
+      this.checkIfHasShowHideFields(property, e.target.value);
+      this.checkIfHasEnDisFields(property, e.target.value);
+      handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
-            			let queryStringObject=splitArray[1].split("|")[0].split("&");
-            			for (var i = 0; i < queryStringObject.length; i++) {
-            				if (i) {
-                      if (queryStringObject[i].split("=")[1].search("{")>-1) {
-                        if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
-                          id[queryStringObject[i].split("=")[0]]=e.target.value || "";
-                        } else {
-                          id[queryStringObject[i].split("=")[0]]=getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
-                        }
+      _.forEach(depedants, function(value, key) {
+            if (value.type == "dropDown") {
+                let splitArray = value.pattern.split("?");
+                let context = "";
+          			let id = {};
+          			for (var j = 0; j < splitArray[0].split("/").length; j++) {
+          				context+=splitArray[0].split("/")[j]+"/";
+          			}
+
+          			let queryStringObject=splitArray[1].split("|")[0].split("&");
+          			for (var i = 0; i < queryStringObject.length; i++) {
+          				if (i) {
+                    if (queryStringObject[i].split("=")[1].search("{")>-1) {
+                      if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
+                        id[queryStringObject[i].split("=")[0]]=e.target.value || "";
                       } else {
-                        id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
+                        id[queryStringObject[i].split("=")[0]]=getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
                       }
-            				}
-            			}
+                    } else {
+                      id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
+                    }
+          				}
+          			}
 
-                  Api.commonApiPost(context,id).then(function(response)
-                  {
+                Api.commonApiPost(context, id, {}, false, false, false, "", "", value.isStateLevel).then(function(response) {
+                  if(response) {
                     let keys=jp.query(response,splitArray[1].split("|")[1]);
                     let values=jp.query(response,splitArray[1].split("|")[2]);
                     let dropDownData=[];
@@ -683,24 +606,63 @@ class Transaction extends Component {
                         obj["value"]=values[k];
                         dropDownData.push(obj);
                     }
-                    setDropDownData(value.jsonPath,dropDownData);
-                  },function(err) {
-                      console.log(err);
-                  });
-                  // console.log(id);
-                  // console.log(context);
-              }
 
-              else if (value.type=="textField") {
+                    dropDownData.sort(function(s1, s2) {
+                      return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+                    });
+                    dropDownData.unshift({key: null, value: "-- Please Select --"});
+                    setDropDownData(value.jsonPath, dropDownData);
+                  }
+                },function(err) {
+                    console.log(err);
+                });
+            } else if (value.type == "textField") {
+              try{
                 let object={
-                  target:{
-                    value:eval(eval(value.pattern))
+                  target: {
+                    value: value.valExp && eval(value.valExp) || eval(eval(value.pattern))
                   }
                 }
-                handleChange(object,value.jsonPath,value.isRequired,value.rg,value.requiredErrMsg,value.patternErrMsg);
+                handleChange(object, value.jsonPath, value.isRequired, value.rg,value.requiredErrMsg, value.patternErrMsg);
               }
-        });
-    }
+              catch(ex){
+                console.log('ex', ex);
+              }
+            } else if (value.type == "autoFill") {
+              let splitArray = value.pattern.split("?");
+                let context = "";
+                let id = {};
+                for (var j = 0; j < splitArray[0].split("/").length; j++) {
+                  context+=splitArray[0].split("/")[j]+"/";
+                }
+
+                let queryStringObject=splitArray[1].split("|")[0].split("&");
+                for (var i = 0; i < queryStringObject.length; i++) {
+                  if (i) {
+                    if (queryStringObject[i].split("=")[1].search("{")>-1) {
+                      if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
+                        id[queryStringObject[i].split("=")[0]] = e.target.value || "";
+                      } else {
+                        id[queryStringObject[i].split("=")[0]] = getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
+                      }
+                    } else {
+                      id[queryStringObject[i].split("=")[0]] = queryStringObject[i].split("=")[1];
+                    }
+                  }
+                }
+
+                Api.commonApiPost(context, id).then(function(response) {
+                  if(response) {
+                    for(let key in value.autoFillFields) {
+                      handleChange({target: {value: _.get(response, value.autoFillFields[key])}}, key, false, '', '');
+                    }
+                  }
+                },function(err) {
+                    console.log(err);
+                });
+            }
+      });
+  }
 
     rowClickHandler = (index) => {
     var value = this.state.values[index];
@@ -715,61 +677,43 @@ class Transaction extends Component {
   create=(e) => {
     let self=this;
     e.preventDefault();
-    self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
+    self.props.setLoadingStatus('loading');
     var amountValidation=true;
     var amountValidationMsg="";
 
-    for (var i = 0; i < formData.Receipt[0].Bill[0].billDetails.length; i++) {
-      if (formData.Receipt[0].Bill[0].billDetails[i].hasOwnProperty("amountPaid")) {
-        if (formData.Receipt[0].Bill[0].billDetails[i].amountPaid>formData.Receipt[0].Bill[0].billDetails[i].totalAmount || formData.Receipt[0].Bill[0].billDetails[i].amountPaid<formData.Receipt[0].Bill[0].billDetails[i].minimumAmount) {
-          amountValidationMsg+="Consumer code - "+formData.Receipt[0].Bill[0].billDetails[i].consumerCode +" amount should greater than equal "+formData.Receipt[0].Bill[0].billDetails[i].minimumAmount +" and less than equal "+ formData.Receipt[0].Bill[0].billDetails[i].totalAmount+"\n";
-          amountValidation=false;
+
+      formData.Depreciation.toDate = toDateCheck;
+      var mainAssetIds = [];
+      for (var i = 0; i < formData.Depreciation.Assets.length; i++) {
+        if (formData.Depreciation.Assets[i].isChecked && formData.Depreciation.Assets[i].isChecked==true) {
+          var collectAssetId = {};
+            collectAssetId = formData.Depreciation.Assets[i].id;
+            console.log(collectAssetId);
+            mainAssetIds += collectAssetId+",";
         }
 
-      } else {
-        amountValidationMsg+="Consumer code - "+formData.Receipt[0].Bill[0].billDetails[i].consumerCode +" please enter the amount \n";
-        amountValidation=false;
-        // delete formData.Receipt[0].Bill[0].billDetails[i];
-        // --i;
 
       }
+      var mainAssetIdssplice = mainAssetIds.slice(0, -1);
+      console.log(mainAssetIdssplice);
+      formData.Depreciation.assetIds = mainAssetIdssplice.split(",");
+      //   formData.Depreciation.assetIds  = mainAssetIdssplice ;
+       console.log(formData.Depreciation.assetIds);
+    delete formData.Depreciation.Assets;
 
+    console.log(formData);
 
-    }
-
-    // if () {
-      if (amountValidation && formData.Receipt[0].Bill[0].paidBy) {
-              Api.commonApiPost("/asset-services/receipts/_create", "", formData, "", true).then(function(response){
+              Api.commonApiPost("/asset-services-maha/assets/depreciations/_create", "", formData, "", true).then(function(response){
                 self.props.setLoadingStatus('hide');
                 self.initData();
                 self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "transaction" ? "wc.create.message.success" : "wc.update.message.success"), true);
-                setTimeout(function() {
-                  self.props.setRoute("/non-framework/asset/receipt/view/"+response.Receipt[0].transactionId);
-                }, 1500);
 
               }, function(err) {
                 self.props.setLoadingStatus('hide');
                 self.props.toggleSnackbarAndSetText(true, err.message);
               })
-            } else {
-              if (formData.Receipt[0].Bill[0].paidBy) {
-                self.props.toggleSnackbarAndSetText(true,amountValidationMsg,false,true);
-                self.props.setLoadingStatus('hide');
-              }
-              else {
 
-                amountValidationMsg+=(amountValidationMsg?" - Paid by is mandatory":"Paid by is mandatory");
-                self.props.toggleSnackbarAndSetText(true,amountValidationMsg,false,true);
-                self.props.setLoadingStatus('hide');
-              }
-
-            }
-
-    // } else {
-    //   self.props.toggleSnackbarAndSetText(true,"Paid by is mandatory",false,true);
-    //   self.props.setLoadingStatus('hide');
-    // }
 
 
      }
@@ -800,7 +744,7 @@ class Transaction extends Component {
                   {showResult && !_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].transaction} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
                   <div style={{"textAlign": "center"}}>
                     <br/>
-                  {showResult &&  <UiButton handler={create} item={{"label": "Generate Depreciation", "uiType":"button","isDisabled": isFormValid ? false : true}} ui="google"/>}
+                  {showResult &&  <UiButton handler={create} item={{"label": "Create", "uiType":"button","isDisabled": isFormValid ? false : true}} ui="google"/>}
                     <br/>
                   </div>
       </div>
@@ -877,9 +821,3 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Transaction);
-
-
-
-
-/*let res=
-{"ResposneInfo":null,"Bill":[{"id":"3","payeeName":"M Sambasivudu","payeeAddress":null,"payeeEmail":null,"isActive":true,"isCancelled":false,"billDetails":[{"id":"3","tenantId":"default","bill":"3","businessService":"Property Tax","billNumber":"3","billDate":1502090587494,"consumerCode":"1016000001","consumerType":"PRIVATE","billDescription":"Property Tax Consumer Code: 1016000001","displayMessage":"Property Tax Consumer Code: 1016000001","minimumAmount":4.00,"totalAmount":3649.00,"assetModesNotAllowed":[""],"callBackForApportioning":false,"partPaymentAllowed":true,"billAccountDetails":[{"id":"25","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"EDU_CESS-1443637800000-1459448999000","crAmountToBePaid":288.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"26","tenantId":"default","billDetail":"3","glcode":"1100101","order":1,"accountDescription":"PT_TAX-1443637800000-1459448999000","crAmountToBePaid":439.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"27","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"LIB_CESS-1443637800000-1459448999000","crAmountToBePaid":10.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"28","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"EDU_CESS-1459449000000-1475260199000","crAmountToBePaid":288.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"29","tenantId":"default","billDetail":"3","glcode":"1100101","order":1,"accountDescription":"PT_TAX-1459449000000-1475260199000","crAmountToBePaid":439.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"30","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"LIB_CESS-1459449000000-1475260199000","crAmountToBePaid":10.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"31","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"EDU_CESS-1475260200000-1490984999000","crAmountToBePaid":288.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"32","tenantId":"default","billDetail":"3","glcode":"1100101","order":1,"accountDescription":"PT_TAX-1475260200000-1490984999000","crAmountToBePaid":439.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"33","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"LIB_CESS-1475260200000-1490984999000","crAmountToBePaid":10.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"ADVANCE_AMOUNT"},{"id":"34","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"EDU_CESS-1490985000000-1506796199000","crAmountToBePaid":288.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"CURRENT_AMOUNT"},{"id":"35","tenantId":"default","billDetail":"3","glcode":"1100101","order":1,"accountDescription":"PT_TAX-1490985000000-1506796199000","crAmountToBePaid":1126.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"CURRENT_AMOUNT"},{"id":"36","tenantId":"default","billDetail":"3","glcode":"3503002","order":1,"accountDescription":"LIB_CESS-1490985000000-1506796199000","crAmountToBePaid":24.00,"creditAmount":null,"debitAmount":null,"isActualDemand":true,"purpose":"CURRENT_AMOUNT"}]}],"tenantId":"default","auditDetail":null}]}*/

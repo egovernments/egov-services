@@ -32,6 +32,8 @@ public class VendorContractEntity {
 
 	private Double securityDeposit = null;
 
+	private Double paymentAmount = null;
+
 	private String paymentTerms = null;
 
 	private String remarks = null;
@@ -54,6 +56,7 @@ public class VendorContractEntity {
 		vendorContract.setContractPeriodFrom(contractPeriodFrom);
 		vendorContract.setContractPeriodTo(contractPeriodTo);
 		vendorContract.setSecurityDeposit(securityDeposit);
+		vendorContract.setPaymentAmount(paymentAmount);
 		vendorContract.setPaymentTerms(PaymentTerms.builder().label(paymentTerms).build());
 		vendorContract.setRemarks(remarks);
 		vendorContract.setAuditDetails(new AuditDetails());

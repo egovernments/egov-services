@@ -75,6 +75,7 @@ function getCommonMaster(mainRoute, resource, cb, pageSize) {
         }
     });
 }
+
 function commonApiPost(context, resource = "", action = "", queryObject = {}, cb) {
     var url = baseUrl + "/" + context + (resource ? "/" + resource : "") + (action ? "/" + action : "") + (queryObject ? "?" : "");
     for (var variable in queryObject) {
@@ -250,7 +251,7 @@ function getDropdown(name, cb, params) {
             break;
         case 'employeeStatus':
             if (!localStorage.getItem("employeeStatus") || localStorage.getItem("employeeStatus") == "undefined") {
-              var queryString = {tenantId, pageSize:500};
+              var queryString = {tenantId, pageSize:500, objectName:"Employee Master"};
               if (params && typeof params == "object")
                   queryString = Object.assign(queryString, params);
                 commonApiPost("hr-masters", "hrstatuses", "_search", queryString, function(err, res) {

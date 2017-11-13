@@ -85,7 +85,7 @@ paths:
         200: 
           description: Successful response
           schema:
-            $ref: "#/definitions/DepartmentKpiResponse"
+            $ref: "#/definitions/KPIResponse"
         400:
           description: Invalid input
           schema:
@@ -217,6 +217,30 @@ paths:
             description: Invalid input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+  /v2/kpi/_search:
+    post:
+      summary: Fetch the KPI Master Record
+      description: Search the KPI Record based on the different parameters such as code, name
+      tags:
+        - KPI Master
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/name"
+        - $ref: "#/parameters/code"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortResult"
+      responses:
+        200: 
+          description: Successful response
+          schema:
+            $ref: "#/definitions/DepartmentKpiResponse"
+        400:
+          description: Invalid input
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
 definitions:
   
@@ -224,11 +248,15 @@ definitions:
     type: object
     description: This is the object for KPI Details not specific to any ULB
     properties:
-      tenantId:
+      tenantIdCustom:
         type: string
         description: Unique teanntid for the ULB - if the KPI is defined at state level use only state part of the namespaced tenantid
       department:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/Department'
+      departmentId: 
+        type: integer
+        format: int64
+        description: Unique identifier of Department Object
       id:
         type: string
         pattern: ^[0-9]+$
@@ -253,16 +281,18 @@ definitions:
         type: string
         pattern: ^[a-zA-Z0-9 ]+$
         description: Instructions on how to achieve the target
-      finYear:
-        $ref: "#/definitions/FinancialYear"
-      documents:
+      financialYear:
+        type: string
+        pattern: ^[a-zA-Z0-9-]+$
+        description: Financial Year to which this KPI is applicable
+      documentsReq:
         type: array
         items:
           $ref: "#/definitions/Document"
     required:
       - name
       - id
-      - finYear
+      - financialYear
       
   KpiValue:
     type: object
@@ -277,12 +307,11 @@ definitions:
       tenantId:
         type: string
         pattern: ^[a-zA-Z0-9.]+$
-        readOnly: true
         description: Unique Identifier of the tenant
       documents:
         type: array
         items:
-          $ref: "#/definitions/Document"
+          $ref: "#/definitions/ValueDocument"
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -323,24 +352,6 @@ definitions:
         items:
           $ref: '#/definitions/KPI'
       
-  FinancialYear:
-    type: object
-    description: Financial year
-    properties:
-      fromDate:
-        type: integer
-        format: int64
-        x-displayformay: 'dd/mm/YYYY'
-        description: timestamp for the start of the fianncial year
-      toDate:
-        type: integer
-        format: int64
-        x-displayformay: 'dd/mm/YYYY'
-        description: timestamp for the end of the fianncial year
-    required:
-      - fromDate
-      - toDate
-      
   Document:
     type: object
     description: documents required under respective KPI 
@@ -368,6 +379,32 @@ definitions:
       - active
       - code
       - description
+      
+  ValueDocument: 
+    type: object
+    description: Document and their file store IDs for the access of the File
+    properties:
+      code: 
+        type: string
+        pattern: ^[a-zA-Z0-9.]+$
+        description: Unique Code of the Document.
+      description:
+        type: string
+        pattern: ^[a-zA-Z0-9 ]+$
+        description: description of the Document.
+        maxLength: 250
+      kpiCode: 
+        type: string
+        pattern: ^[a-zA-Z0-9.]+$
+        description: Unique KPI Code to identify the KPI for which the Document is being uploaded.
+      fileStoreId: 
+        type: string
+        pattern: ^[a-zA-Z0-9.-]+$
+        description: Unique File Store ID to track the file which has been uploaded and saved
+    required:
+      - fileStoreId
+      - code
+      - kpiCode
      
   KPIRequest:
     type: object
@@ -444,14 +481,14 @@ definitions:
 parameters:
 
   name:
-    name: KPI Name
+    name: kpiName
     in: query
     description: Name of the KPI
     required: false
     type: string
 
   code:
-    name: KPI Code
+    name: kpiCode
     in: query
     description: Code of the KPI
     required: false

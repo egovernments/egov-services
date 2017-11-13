@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.works.commons.exception.ValidationException;
 import org.egov.works.commons.web.contract.IdRequest;
 import org.egov.works.estimate.config.PropertiesManager;
-import org.egov.works.estimate.config.WorksEstimateServiceConstants;
+import org.egov.works.estimate.config.Constants;
 import org.egov.works.estimate.web.contract.IdGenerationRequest;
 import org.egov.works.estimate.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,7 @@ public class IdGenerationRepository {
                     idGenerationRequest, Object.class);
         } catch (Exception e) {
             throw new ValidationException(null,
-                    WorksEstimateServiceConstants.ABSTRACT_ESTIMATE_NUMBER_GENERATION_ERROR, WorksEstimateServiceConstants.ABSTRACT_ESTIMATE_NUMBER_GENERATION_ERROR);
+                    Constants.ABSTRACT_ESTIMATE_NUMBER_GENERATION_ERROR, Constants.ABSTRACT_ESTIMATE_NUMBER_GENERATION_ERROR);
 
         }
         log.info("Response from id gen service: " + response.toString());
@@ -69,7 +69,7 @@ public class IdGenerationRepository {
                     idGenerationRequest, Object.class);
         } catch (Exception e) {
             throw new ValidationException(null,
-                    WorksEstimateServiceConstants.DETAILED_ESTIMATE_NUMBER_GENERATION_ERROR, WorksEstimateServiceConstants.DETAILED_ESTIMATE_NUMBER_GENERATION_ERROR);
+                    Constants.DETAILED_ESTIMATE_NUMBER_GENERATION_ERROR, Constants.DETAILED_ESTIMATE_NUMBER_GENERATION_ERROR);
 
         }
         log.info("Response from id gen service: " + response.toString());
@@ -91,7 +91,7 @@ public class IdGenerationRepository {
                     idGenerationRequest, Object.class);
         } catch (Exception e) {
             throw new ValidationException(null,
-                    WorksEstimateServiceConstants.WORK_IDENTIFICATION_NUMBER_GENERATION_ERROR, WorksEstimateServiceConstants.WORK_IDENTIFICATION_NUMBER_GENERATION_ERROR);
+                    Constants.WORK_IDENTIFICATION_NUMBER_GENERATION_ERROR, Constants.WORK_IDENTIFICATION_NUMBER_GENERATION_ERROR);
 
         }
         log.info("Response from id gen service: " + response.toString());

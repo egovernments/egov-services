@@ -1,7 +1,5 @@
 package org.egov.lams.workflow.repository;
 
-import java.util.List;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.lams.common.web.contract.Agreement;
 import org.egov.lams.common.web.contract.EstateRegister;
@@ -76,7 +74,7 @@ public class WorkflowRepository {
 				throw e;
 			}
 			agreement.setStateId(processInstanceRes.getProcessInstance().getId());
-			agreement.setWorkflowStatus(processInstanceRes.getProcessInstance().getStatus());
+//			agreement.setWorkflowStatus(processInstanceRes.getProcessInstance().getStatus());
 		}
 		
 		kafkaTemplate.send(propertiesManager.getCreateAgreementKafkaTopic(), agreementRequest);
@@ -125,7 +123,7 @@ public class WorkflowRepository {
 				log.error(e.toString());
 				throw e;
 			}
-			agreement.setWorkflowStatus(taskResponse.getTask().getAction());
+//			agreement.setWorkflowStatus(taskResponse.getTask().getAction());
 			log.info("the response from workflow update : " + taskResponse.getTask());
 			if (agreement.getWorkFlowDetails() != null) {
 				kafkaTemplate.send(propertiesManager.getUpdateAgreementKafkaTopic(), agreementRequest);
@@ -146,8 +144,8 @@ public class WorkflowRepository {
 		log.info("process businesskey :" + processInstance.getBusinessKey());
 		log.info("process type: " + processInstance.getType());
 		processInstance.setAssignee(assignee);
-		processInstance.setComments(workFlowDetails.getComments());
-		processInstance.setInitiatorPosition(workFlowDetails.getInitiatorPosition());
+//		processInstance.setComments(workFlowDetails.get);
+//		processInstance.setInitiatorPosition(workFlowDetails.getInitiatorPosition());
 		processInstance.setTenantId(estateRegister.getTenantId());
 		processInstance.setDetails("Acknowledgement Number : " + estateRegister.getEstateNumber());
 		processInstanceRequest.setProcessInstance(processInstance);
@@ -167,8 +165,8 @@ public class WorkflowRepository {
 		log.info("process businesskey :" + processInstance.getBusinessKey());
 		log.info("process type: " + processInstance.getType());
 		processInstance.setAssignee(assignee);
-		processInstance.setComments(workFlowDetails.getComments());
-		processInstance.setInitiatorPosition(workFlowDetails.getInitiatorPosition());
+//		processInstance.setComments(workFlowDetails.getComments());
+//		processInstance.setInitiatorPosition(workFlowDetails.getInitiatorPosition());
 		processInstance.setTenantId(tenantId);
 		processInstance.setDetails("Acknowledgement Number : " +number);
 		processInstanceRequest.setProcessInstance(processInstance);
@@ -193,7 +191,7 @@ public class WorkflowRepository {
 		if (workflowDetails != null) {
 			log.info("workflowDetails::"+workflowDetails.getAction());
 			task.setAction(workflowDetails.getAction());
-			if (propertiesManager.getWfStatusRejected().equalsIgnoreCase(workflowDetails.getStatus())) {
+			if (propertiesManager.getWfStatusRejected().equalsIgnoreCase(workflowDetails.getAction())) {
 
 				task.setStatus(propertiesManager.getWfStatusRejected());
 				log.info("updating the task status for reject-forward case after payment : ", task.getStatus());
@@ -201,7 +199,7 @@ public class WorkflowRepository {
 				task.setStatus(workflowDetails.getStatus());
 			assignee.setId(workflowDetails.getAssignee());
 			task.setAssignee(assignee);
-			task.setComments(workflowDetails.getComments());
+//			task.setComments(workflowDetails.getComments());
 		} else {
 
 			log.info("The workflow object before collection update ::: " + workflowDetails);

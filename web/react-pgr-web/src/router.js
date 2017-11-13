@@ -160,15 +160,26 @@ import transactionGeneral from './components/non-framework/asset/transactionGene
 //Template parser
 import TemplateParser from './components/framework/templates/templateParser/templateParser';
 
+//LegalTemplate parser 
+import LegalTemplateParser  from './components/framework/specs/legal/templateParser/legalTemplateParser';
+
 //Assets
 import assetImmovableCreate from './components/non-framework/asset/master/assetImmovableCreate';
 import assetMovableCreate from './components/non-framework/asset/master/assetMovableCreate';
 import assetImmovableView from './components/non-framework/asset/master/assetImmovableView';
 import assetMovableView from './components/non-framework/asset/master/assetMovableView';
 
-import NoMatch from './components/common/NoMatch';
 //inventory
 import SupplierSearch from './components/non-framework/inventory/master/supplier/SupplierSearch';
+import MaterialStoreMappingSearch from './components/non-framework/inventory/master/materialstoremapping/MaterialStoreMappingSearch';
+//import IndentSearch from './components/non-framework/inventory/master/indent/IndentSearch';
+import StoreSearch from './components/non-framework/inventory/master/store/StoreSearch';
+import MaterialSearch from './components/non-framework/inventory/master/material/MaterialSearch';
+
+import NoMatch from './components/common/NoMatch';
+
+//works
+import abstractEstimate from './components/non-framework/works/transaction/abstractEstimate';
 
 const base = "";
 
@@ -343,6 +354,7 @@ const Main = () => {
       <Route exact path= {base + '/transactionTransfer/asset/translateAsset'} component={transactionTransfer}/>
       <Route exact path= {base + '/transactionTransfer/asset/generalAsset'} component={transactionGeneral}/>
       <Route exact path= {base + '/print/report/:templatePath'} component={TemplateParser}/>
+      <Route exact path= {base + '/print/notice/:legalTemplatePath'} component={LegalTemplateParser}/>
 
       //Assets
       <Route exact path= {base + '/non-framework/asset/master/assetImmovableCreate/:id?'} component={assetImmovableCreate}/>
@@ -352,6 +364,13 @@ const Main = () => {
 
       {/* inventory */}
       <Route exact path= {base + '/non-framework/inventory/master/supplier'} component={SupplierSearch}/>
+      <Route exact path = {base + '/non-framework/inventory/master/materialstoremapping'} component={MaterialStoreMappingSearch}/>
+      <Route exact path= {base + '/non-framework/inventory/master/store'} component={StoreSearch}/>
+      <Route exact path= {base + '/non-framework/inventory/master/material'} component={MaterialSearch}/>
+
+    {/*<Route exact path= {base + '/non-framework/inventory/master/indent'} component={IndentSearch}/>*/}
+      {/* works */}
+      <Route exact path= {base + '/non-framework/works/transaction/abstractEstimate'} component={abstractEstimate}/>
       <Route component={NoMatch}/>
 
     </Switch>

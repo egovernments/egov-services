@@ -147,6 +147,18 @@ public class PerformanceAssessmentConstants {
     public static final String DEPARTMENT_ID_MANDATORY_CODE = "pa.0022";
     public static final String DEPARTMENT_ID_MANDATORY_FIELD_NAME = "id";
     public static final String DEPARTMENT_ID_MANDATORY_ERROR_MESSAGE = "Department ID is Mandatory!";
+    
+    public static final String KPICODE_SEARCH_MANDATORY_CODE = "pa.0023";
+    public static final String KPICODE_SEARCH_MANDATORY_FIELD_NAME = "kpiCodes";
+    public static final String KPICODE_SEARCH_MANDATORY_ERROR_MESSAGE = "KPI Codes List is Mandatory!";
+    
+    public static final String FINYEAR_SEARCH_MANDATORY_CODE = "pa.0024";
+    public static final String FINYEAR_SEARCH_MANDATORY_FIELD_NAME = "finYear";
+    public static final String FINYEAR_SEARCH_MANDATORY_ERROR_MESSAGE = "Financial Year List is Mandatory!";
+    
+    public static final String TENANTID_SEARCH_MANDATORY_CODE = "pa.0025";
+    public static final String TENANTID_SEARCH_MANDATORY_FIELD_NAME = "tenantId";
+    public static final String TENANTID_SEARCH_MANDATORY_ERROR_MESSAGE = "Tenant ID List is Mandatory!";
         
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);

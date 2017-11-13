@@ -1,0 +1,1 @@
+alter table egw_offlinestatus add constraint unique_egw_offlinestatus_ unique  (objectnumber,status,objecttype);

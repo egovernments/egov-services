@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,11 +15,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-02T05:16:16.756Z")
 
 public class KPI   {
-  @JsonProperty("tenantId")
-  private String tenantId = null;
-
+  @JsonProperty("departmentId")
+  private Long departmentId = null;
+  
   @JsonProperty("department")
-  private Department department = null;
+  private Department department = null; 
 
   @JsonProperty("id")
   private String id = null;
@@ -33,9 +32,15 @@ public class KPI   {
 
   @JsonProperty("remoteSystemId")
   private String remoteSystemId = null;
+  
+  @JsonProperty("targetType")
+  private Boolean targetType;
 
   @JsonProperty("targetValue")
   private Long targetValue = null;
+  
+  @JsonProperty("targetDescription")
+  private String targetDescription = null;
 
   @JsonProperty("instructions")
   private String instructions = null;
@@ -43,7 +48,7 @@ public class KPI   {
   @JsonProperty("financialYear")
   private String financialYear = null; 
 
-  @JsonProperty("documents")
+  @JsonProperty("documentsReq")
   private List<Document> documents = null;
   
   @JsonProperty("auditDetails")
@@ -51,8 +56,34 @@ public class KPI   {
   
   
   
+  
+  
 
-  public AuditDetails getAuditDetails() {
+  public String getTargetDescription() {
+	return targetDescription;
+}
+
+public void setTargetDescription(String targetDescription) {
+	this.targetDescription = targetDescription;
+}
+
+public Boolean getTargetType() {
+	return targetType;
+}
+
+public void setTargetType(Boolean targetType) {
+	this.targetType = targetType;
+}
+
+public Department getDepartment() {
+	return department;
+}
+
+public void setDepartment(Department department) {
+	this.department = department;
+}
+
+public AuditDetails getAuditDetails() {
 	return auditDetails;
 }
 
@@ -76,29 +107,6 @@ public void setCode(String code) {
 	this.code = code;
 }
 
-public KPI tenantId(String tenantId) {
-    this.tenantId = tenantId;
-    return this;
-  }
-
-   /**
-   * Unique teanntid for the ULB - if the KPI is defined at state level use only state part of the namespaced tenantid
-   * @return tenantId
-  **/
-
-
-  public String getTenantId() {
-    return tenantId;
-  }
-
-  public void setTenantId(String tenantId) {
-    this.tenantId = tenantId;
-  }
-
-  public KPI department(Department department) {
-    this.department = department;
-    return this;
-  }
 
    /**
    * Get department
@@ -106,12 +114,12 @@ public KPI tenantId(String tenantId) {
   **/
   @Valid
 
-  public Department getDepartment() {
-    return department;
+  public Long getDepartmentId() {
+    return departmentId;
   }
 
-  public void setDepartment(Department department) {
-    this.department = department;
+  public void setDepartmentId(Long departmentId) {
+    this.departmentId = departmentId;
   }
 
   public KPI id(String id) {
@@ -141,8 +149,6 @@ public KPI tenantId(String tenantId) {
    * Name of the KPI
    * @return name
   **/
-  @NotNull
-
  @Pattern(regexp="^[a-zA-Z0-9 ]+$")
   public String getName() {
     return name;
@@ -247,8 +253,7 @@ public KPI tenantId(String tenantId) {
       return false;
     }
     KPI KPI = (KPI) o;
-    return Objects.equals(this.tenantId, KPI.tenantId) &&
-        Objects.equals(this.department, KPI.department) &&
+    return Objects.equals(this.departmentId, KPI.departmentId) &&
         Objects.equals(this.id, KPI.id) &&
         Objects.equals(this.name, KPI.name) &&
         Objects.equals(this.remoteSystemId, KPI.remoteSystemId) &&
@@ -259,7 +264,7 @@ public KPI tenantId(String tenantId) {
 
   @Override
   public int hashCode() {
-    return Objects.hash(tenantId, department, id, name, remoteSystemId, targetValue, instructions, financialYear, documents);
+    return Objects.hash(departmentId, id, name, remoteSystemId, targetValue, instructions, financialYear, documents);
   }
 
   @Override
@@ -267,8 +272,7 @@ public KPI tenantId(String tenantId) {
     StringBuilder sb = new StringBuilder();
     sb.append("class KPI {\n");
     
-    sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
-    sb.append("    department: ").append(toIndentedString(department)).append("\n");
+    sb.append("    department: ").append(toIndentedString(departmentId)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    remoteSystemId: ").append(toIndentedString(remoteSystemId)).append("\n");

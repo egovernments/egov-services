@@ -2,7 +2,9 @@ package org.egov.works.masters.domain.repository.helper;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.egov.works.masters.web.contract.*;
+import org.egov.works.masters.web.contract.MarketRate;
+import org.egov.works.masters.web.contract.SORRate;
+import org.egov.works.masters.web.contract.ScheduleOfRate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,10 +60,8 @@ public class ScheduleOfRateHelper {
         scheduleOfRate.setTenantId(this.tenantId);
         scheduleOfRate.setCode(this.code);
         scheduleOfRate.setDescription(this.description);
-        scheduleOfRate.setScheduleCategory(new ScheduleCategory());
-        scheduleOfRate.getScheduleCategory().setCode(this.scheduleCategory);
-        scheduleOfRate.setUom(new UOM());
-        scheduleOfRate.getUom().setCode(this.uom);
+        scheduleOfRate.setScheduleCategory(this.scheduleCategory);
+        scheduleOfRate.setUom(this.uom);
         return scheduleOfRate;
     }
 }

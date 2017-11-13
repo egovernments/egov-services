@@ -313,6 +313,7 @@ class AgreementSearch extends React.Component {
           },
           error: function(data) {
               console.log(data);
+                showError(data.responseJSON.error ? data.responseJSON.error.message : data.responseJSON.message);
           }
         });
         break;

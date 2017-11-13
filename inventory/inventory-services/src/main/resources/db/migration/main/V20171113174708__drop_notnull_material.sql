@@ -1,0 +1,1 @@
+ALTER TABLE material ALTER COLUMN expenseaccount drop NOT NULL;

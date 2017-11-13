@@ -7,16 +7,17 @@ serviceMaps:
       fromTopic: inv-store-save-topic
       queryMaps:
         - query: >-
-            INSERT INTO store(id, code, name, description, department,
+            INSERT INTO store(id, code, name, officelocation, description, department,
             storeincharge,billingaddress, deliveryaddress,
             contactno1,contactno2, email, iscentralstore, active,
             tenantId, createdby, lastmodifiedby,createdtime,lastmodifiedtime)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: $.stores.*
           jsonMaps:
             - jsonPath: $.stores.*.id
             - jsonPath: $.stores.*.code
             - jsonPath: $.stores.*.name
+            - jsonPath: $.stores.*.officeLocation.code
             - jsonPath: $.stores.*.description
             - jsonPath: $.stores.*.department.code
             - jsonPath: $.stores.*.storeInCharge.code
@@ -41,7 +42,7 @@ serviceMaps:
       queryMaps:
         - query: >-
             UPDATE store SET
-            name=?,description=?,department=?,storeincharge=?,
+            name=?,description=?,department=?,storeincharge=?,officelocation=?,
             billingaddress=?,deliveryaddress=?,contactno1=?,contactno2=?,email=?,iscentralstore=?,active=?,lastmodifiedby=?,lastmodifiedtime=?
             WHERE code=? AND tenantid=?;
           basePath: $.stores.*
@@ -50,6 +51,7 @@ serviceMaps:
             - jsonPath: $.stores.*.description
             - jsonPath: $.stores.*.department.code
             - jsonPath: $.stores.*.storeInCharge.code
+            - jsonPath: $.stores.*.officeLocation.code
             - jsonPath: $.stores.*.billingAddress
             - jsonPath: $.stores.*.deliveryAddress
             - jsonPath: $.stores.*.contactNo1
@@ -68,12 +70,13 @@ serviceMaps:
       description: create materials in inventory
       fromTopic: inv-materials-save-topic
       queryMaps:
-        - query: INSERT INTO material(id, code, name, description, oldcode, materialtype, baseuom, inventorytype, status, purchaseuom, expenseaccount, minquantity, maxquantity, staockinguom, materialclass, reorderlevel, reorderquantity, materialcontroltype, model, manufacturepartno, techincalspecs, termsofdelivery, overridematerialcontroltype, tenantid , createdby, lastmodifiedby, createdtime, lastmodifiedtime ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        - query: INSERT INTO material(id, code, name, materialclass, description, oldcode, materialtype, baseuom, inventorytype, status, purchaseuom, expenseaccount, minquantity, maxquantity, stockinguom, lotcontrol, shelflifecontrol, serialnumber, scrapable, assetcategory, reorderlevel, reorderquantity, model, manufacturepartno, techincalspecs, termsofdelivery, inactivedate, tenantid , createdby, lastmodifiedby, createdtime, lastmodifiedtime ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: $.materials.*
           jsonMaps:
             - jsonPath: $.materials.*.id
             - jsonPath: $.materials.*.code
             - jsonPath: $.materials.*.name
+            - jsonPath: $.materials.*.materialClass
             - jsonPath: $.materials.*.description
             - jsonPath: $.materials.*.oldCode
             - jsonPath: $.materials.*.materialType.code
@@ -86,18 +89,22 @@ serviceMaps:
               dbType: LONG
             - jsonPath: $.materials.*.maxQuantity
               dbType: LONG
-            - jsonPath: $.materials.*.staockinguom.code
-            - jsonPath: $.materials.*.materialClass
+            - jsonPath: $.materials.*.stockingUom.code
+            - jsonPath: $.materials.*.lotControl
+            - jsonPath: $.materials.*.shelfLifeControl
+            - jsonPath: $.materials.*.serialNumber
+            - jsonPath: $.materials.*.scrapable
+            - jsonPath: $.materials.*.assetCategory.code
             - jsonPath: $.materials.*.reorderLevel
               dbType: LONG
             - jsonPath: $.materials.*.reorderQuantity
               dbType: LONG
-            - jsonPath: $.materials.*.materialControlType
             - jsonPath: $.materials.*.model
             - jsonPath: $.materials.*.manufacturePartNo
             - jsonPath: $.materials.*.techincalSpecs
             - jsonPath: $.materials.*.termsOfDelivery
-            - jsonPath: $.materials.*.overrideMaterialControlType
+            - jsonPath: $.materials.*.inActiveDate
+              dbType: LONG
             - jsonPath: $.materials.*.auditDetails.tenantId
             - jsonPath: $.materials.*.auditDetails.createdBy
             - jsonPath: $.materials.*.auditDetails.lastModifiedBy
@@ -111,11 +118,14 @@ serviceMaps:
       description: update materials in inventory
       fromTopic: inv-materials-update-topic
       queryMaps:
-        - query: UPDATE material SET name=?,  description=?,  oldcode=?,  materialtype=?,  baseuom=?,  inventorytype=?,  status=?,  purchaseuom=?,  expenseaccount=?,  minquantity=?,  maxquantity=?,  staockinguom=?,  materialclass=?,  reorderlevel=?,  reorderquantity=?,  materialcontroltype=?,  model=?,  manufacturepartno=?,  techincalspecs=?,  termsofdelivery=?,  overridematerialcontroltype=?,  lastmodifiedby=?,  lastmodifiedtime=? WHERE code=? AND tenantid=?;
+        - query: UPDATE material SET name=?,  materialclass=?, description=?,  inactivedate=?, oldcode=?,  materialtype=?,  baseuom=?,  inventorytype=?,  status=?,  purchaseuom=?,  expenseaccount=?,  minquantity=?,  maxquantity=?,  stockinguom=?,  lotcontrol=?, shelflifecontrol=?, serialnumber=?, scrapable=?,  assetcategory=?, reorderlevel=?,  reorderquantity=?, model=?,  manufacturepartno=?,  techincalspecs=?,  termsofdelivery=?, lastmodifiedby=?,  lastmodifiedtime=? WHERE code=? AND tenantid=?;
           basePath: $.materials.*
           jsonMaps:
             - jsonPath: $.materials.*.name
+            - jsonPath: $.materials.*.materialClass
             - jsonPath: $.materials.*.description
+            - jsonPath: $.materials.*.inActiveDate
+              dbType: LONG
             - jsonPath: $.materials.*.oldCode
             - jsonPath: $.materials.*.materialType.code
             - jsonPath: $.materials.*.baseUom.code
@@ -127,18 +137,20 @@ serviceMaps:
               dbType: LONG
             - jsonPath: $.materials.*.maxQuantity
               dbType: LONG
-            - jsonPath: $.materials.*.staockinguom.code
-            - jsonPath: $.materials.*.materialClass
+            - jsonPath: $.materials.*.stockingUom.code
+            - jsonPath: $.materials.*.lotControl
+            - jsonPath: $.materials.*.shelfLifeControl
+            - jsonPath: $.materials.*.serialNumber
+            - jsonPath: $.materials.*.scrapable            
+            - jsonPath: $.materials.*.assetCategory.code
             - jsonPath: $.materials.*.reorderLevel
               dbType: LONG
             - jsonPath: $.materials.*.reorderQuantity
               dbType: LONG
-            - jsonPath: $.materials.*.materialControlType
             - jsonPath: $.materials.*.model
             - jsonPath: $.materials.*.manufacturePartNo
             - jsonPath: $.materials.*.techincalSpecs
             - jsonPath: $.materials.*.termsOfDelivery
-            - jsonPath: $.materials.*.overrideMaterialControlType
             - jsonPath: $.materials.*.auditDetails.lastModifiedBy
             - jsonPath: $.materials.*.auditDetails.lastModifiedTime
               dbType: LONG
@@ -271,6 +283,162 @@ serviceMaps:
             - jsonPath: $.materialStoreMappings.*.material.code
             - jsonPath: $.materialStoreMappings.*.store.code
             - jsonPath: $.materialStoreMappings.*.auditDetails.tenantId
+
+
+    - version: 1.0
+      name: material store mapping delete
+      description: delete material store mapping  in inventory
+      fromTopic: inv-materialstore-delete-topic
+      queryMaps:
+        - query: DELETE from materialstoremapping WHERE material=? AND store=? AND tenantid=?;
+          basePath: $.materialStoreMappings.*
+          jsonMaps:
+            - jsonPath: $.materialStoreMappings.*.material.code
+            - jsonPath: $.materialStoreMappings.*.store.code
+            - jsonPath: $.materialStoreMappings.*.auditDetails.tenantId
+
+    - version: 1.0
+      name: Opening Balance 
+      description: Create Opening Balance 
+      fromTopic: inv-openbalance-save-topic
+      queryMaps: 
+        - query: INSERT INTO materialReceipt(id, tenantId, financialYear,mrnStatus,mrnNumber,receivingstore,receiptDate, receiptType, createdby, createdTime, lastmodifiedby,lastModifiedTime)VALUES ( ?,?,?,?, ?, ?, ? ,? ,? ,?,?,?);
+          basePath: $.materialReceipt.*
+          jsonMaps:
+            - jsonPath: $.materialReceipt.*.id
+            - jsonPath: $.materialReceipt.*.auditDetails.tenantId
+            - jsonPath: $.materialReceipt.*.financialYear
+            - jsonPath: $.materialReceipt.*.mrnStatus
+            - jsonPath: $.materialReceipt.*.mrnNumber
+            - jsonPath: $.materialReceipt.*.receivingStore.code
+            - jsonPath: $.materialReceipt.*.receiptDate
+            - jsonPath: $.materialReceipt.*.receiptType
+            - jsonPath: $.materialReceipt.*.auditDetails.createdBy
+              type: LONG
+            - type: CURRENTDATE
+              dbType: LONG  
+            - jsonPath: $.materialReceipt.*.auditDetails.lastModifiedBy
+              type: LONG
+            - type: CURRENTDATE
+              dbType: LONG  
+        - query: INSERT INTO materialreceiptdetail(id, tenantId, mrnNumber,uomNo,receivedQty,acceptedQty, unitRate,createdby,createdTime,lastmodifiedby,lastModifiedTime )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?,?,? );
+          basePath: $.materialReceipt.*.receiptDetails.*
+          jsonMaps:      
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.id
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.tenantId
+            - jsonPath: $.materialReceipt.*.mrnNumber
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.uom.code
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receivedQty
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receivedQty
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.openingRate
+            - jsonPath: $.materialReceipt.*.auditDetails.createdBy
+              type: LONG
+            - type: CURRENTDATE
+              dbType: LONG
+            - jsonPath: $.materialReceipt.*.auditDetails.lastModifiedBy
+              type: LONG
+            - type: CURRENTDATE
+              dbType: LONG  
+        - query: INSERT INTO materialreceiptdetailaddnlinfo(id, receiptDetailId,tenantId,receivedDate, lotNo,expiryDate,serialno )VALUES ( ?, ?, ?, ?, ?, ?,?);
+          basePath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*
+          jsonMaps:      
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.id
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.id
+            - jsonPath: $.materialReceipt.*.tenantId
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.receivedDate
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.lotNo
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.expiryDate
+              type: LONG
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.serialno
+              type: LONG
+     
+    
+    - version: 1.0
+      name: priceLists create
+      description: create pricelist in inventory
+      fromTopic: inv-pricelist-save-topic
+      queryMaps:
+        - query: INSERT INTO pricelist(id, supplier, rateType, rateContractNumber, rateContractDate, agreementNumber, agreementDate, agreementStartDate, agreementEndDate, active, fileStoreId, priceListDetails, tenantid, createdby, lastmodifiedby, createdtime, lastmodifiedtime ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: $.priceLists.*
+          jsonMaps:
+            - jsonPath: $.priceLists.*.id
+            - jsonPath: $.priceLists.*.supplier.id
+            - jsonPath: $.priceLists.*.rateType
+            - jsonPath: $.priceLists.*.rateContractNumber
+            - jsonPath: $.priceLists.*.rateContractDate
+            - jsonPath: $.priceLists.*.agreementNumber
+            - jsonPath: $.priceLists.*.agreementDate
+              dbType: LONG
+            - jsonPath: $.priceLists.*.agreementStartDate
+              dbType: LONG
+            - jsonPath: $.priceLists.*.agreementEndDate
+              dbType: LONG
+            - jsonPath: $.priceLists.*.active
+              dbType: BOOLEAN
+            - jsonPath: $.priceLists.*.fileStoreId
+            - jsonPath: $.priceLists.*.priceListDetails.*.id
+            - jsonPath: $.priceLists.*.auditDetails.tenantId
+            - jsonPath: $.priceLists.*.auditDetails.createdBy
+            - jsonPath: $.priceLists.*.auditDetails.lastModifiedBy
+            - jsonPath: $.priceLists.*.auditDetails.createdTime
+              dbType: LONG
+            - jsonPath: $.priceLists.*.auditDetails.lastModifiedTime
+              dbType: LONG
+
+        - query: INSERT INTO pricelistdetails(id, pricelist, material, fromDate, toDate, ratePerUnit, quantity, uom, active, tenantid, createdby, lastmodifiedby, createdtime, lastmodifiedtime ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: $.priceLists.*.priceListDetails.*
+          jsonMaps:
+            - jsonPath: $.priceLists.*.priceListDetails.*.id
+            - jsonPath: $.priceLists[?({id} in @.priceListDetails[*].id)].id
+            - jsonPath: $.priceLists.*.priceListDetails.*.material.id
+            - jsonPath: $.priceLists.*.priceListDetails.*.fromDate
+            - jsonPath: $.priceLists.*.priceListDetails.*.toDate
+            - jsonPath: $.priceLists.*.priceListDetails.*.ratePerUnit
+            - jsonPath: $.priceLists.*.priceListDetails.*.quantity
+            - jsonPath: $.priceLists.*.priceListDetails.*.uom.id
+            - jsonPath: $.priceLists.*.priceListDetails.*.active
+              dbType: BOOLEAN
+            - jsonPath: $.priceLists.*.priceListDetails.*.tenantId
+            - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.createdBy
+            - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.lastModifiedBy
+            - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.createdTime
+              dbType: LONG
+            - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.lastModifiedTime
+              dbType: LONG
+
+
+    - version: 1.0
+      name: priceLists update
+      description: update pricelist in inventory
+      fromTopic: inv-pricelist-update-topic
+      queryMaps:
+        - query: update pricelist SET active=?, lastmodifiedby=?,  lastmodifiedtime=? WHERE id=? AND tenantid=?;
+          basePath: $.priceLists.*
+          jsonMaps:
+            - jsonPath: $.priceLists.*.active
+              dbType: BOOLEAN
+            - jsonPath: $.priceLists.*.auditDetails.lastModifiedBy
+            - jsonPath: $.priceLists.*.auditDetails.lastModifiedTime
+              dbType: LONG
+            - jsonPath: $.priceLists.*.id
+            - jsonPath: $.priceLists.*.auditDetails.tenantId
+
+        - query: update pricelistdetails SET active=?, quantity=?, ratePerUnit=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+          basePath: $.priceLists.*.priceListDetails.*
+          jsonMaps:
+            - jsonPath: $.priceLists.*.priceListDetails.*.active
+              dbType: BOOLEAN
+            - jsonPath: $.priceLists.*.priceListDetails.*.quantity
+              dbType: LONG
+            - jsonPath: $.priceLists.*.priceListDetails.*.ratePerUnit
+              dbType: LONG
+            - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.lastModifiedBy
+            - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.lastModifiedTime
+              dbType: LONG
+            - jsonPath: $.priceLists.*.priceListDetails.*.id
+            - jsonPath: $.priceLists.*.priceListDetails.*.tenantId
+
+
 
 
 

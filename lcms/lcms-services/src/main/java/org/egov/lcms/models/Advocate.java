@@ -103,7 +103,6 @@ public class Advocate {
 	@JsonProperty("pan")
 	private String pan ;
 
-	@NotNull	
 	@JsonProperty("vatTinNo")
 	private String vatTinNo ;
 

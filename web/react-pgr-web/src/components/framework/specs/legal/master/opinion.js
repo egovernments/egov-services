@@ -12,7 +12,7 @@ var dat = {
         fields: [
           {
             name: "opinionFromDate",
-            jsonPath: "opinionFromDate",
+            jsonPath: "fromDate",
             label: "opinion.create.opinionFromDate",
             type: "datePicker",
             isRequired: false,
@@ -21,7 +21,7 @@ var dat = {
           },
           {
             name: "opinionToDate",
-            jsonPath: "opinionToDate",
+            jsonPath: "toDate",
             label: "opinion.create.opinionToDate",
             type: "datePicker",
             isRequired: false,
@@ -61,22 +61,35 @@ var dat = {
     ],
     result: {
       "disableRowClick" : true,
-      header: [
-        { label: "opinion.search.result.id" },
-        { label: "opinion.search.result.departmentName" },
-        { label: "opinion.search.result.opinionOn" },
-         {
-          label: "legal.search.result.actionLabels",
-          isAction: true,
-          actionItems: [
+       isAction: true,
+      actionItems: [
+            {
+              label: "Opinion Assign Advocate",
+             url:"/update/legal/opinionassignadvocate/"
+            },
             {
               label: "Update Opinion",
               url: "/update/legal/updateopinion/"
+            },
+            {
+              label: "Opinion Details",
+              url: "/update/legal/opiniondetails/"
             }
-          ]
-        }
+          ],
+      header: [
+         {
+          label: "legal.search.result.actionLabels",
+          isChecked:true,
+          checkedItem:{
+            jsonPath:"checkedRow",
+            label:"",
+          }
+        },
+        { label: "opinion.search.result.id" },
+        { label: "opinion.search.result.departmentName" },
+        { label: "opinion.search.result.opinionOn" }
       ],
-      values: ["code", "departmentName.name", "opinionOn","code"],
+      values: ["code","code", "departmentName.name", "opinionOn"],
       resultPath: "opinions",
       rowClickUrlUpdate: "/update/opinion/{id}",
       rowClickUrlView: "/view/opinion/{id}"
@@ -113,13 +126,13 @@ var dat = {
             url: "/egov-common-masters/departments/_search?|$..code|$..name"
           },{
             name: "Case",
-            jsonPath: "opinions[0].case",
+            jsonPath: "opinions[0].caseDetails.summonReferenceNo",
             label: "opinion.create.case",
             type: "singleValueList",
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: "",
-            url: "/lcms-services/legalcase/case/_search?|$..summon.caseNo|$..summon.caseNo|"
+            url: "/lcms-services/legalcase/caseno/_search?|$..summonReferenceNo|$..caseNo"
           },
           {
             name: "opinionOn",

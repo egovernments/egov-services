@@ -16,7 +16,7 @@ var dat ={
             "label": "legal.create.caseNo",
             "type": "text",
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "patternErrorMsg": ""
           },
           {
@@ -25,7 +25,7 @@ var dat ={
             label: "legal.create.caseType",
             type: "singleValueList",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: "",
             url:
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name"
@@ -36,7 +36,7 @@ var dat ={
             "label": "legal.create.year",
             "type": "text",
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "patternErrorMsg": ""
           },
          {
@@ -45,7 +45,7 @@ var dat ={
             label: "legal.create.courtName",
             type: "singleValueList",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: "",
             url:
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name"
@@ -56,7 +56,7 @@ var dat ={
             "label": "legal.create.caseRegistrationDate",
             "type": "datePicker",
             "isRequired": true,
-            "isDisabled": false,
+            "isDisabled": true,
             "patternErrorMsg": ""
           },
           {
@@ -83,7 +83,7 @@ var dat ={
             label: "caseRegistration.create.departmentConcernedPerson",
             type: "singleValueList",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: "",
             defaultValue: [],
             url: ""
@@ -92,9 +92,10 @@ var dat ={
             "name": "hearingTime",
             "jsonPath": "cases[0].summon.hearingTime",
             "label": "legal.create.hearingTime",
-            "type": "text",
+            "type": "timePicker",
+             isNumber:true,
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "patternErrorMsg": ""
           },
           {
@@ -103,7 +104,7 @@ var dat ={
             "label": "legal.create.hearingDate",
             "type": "datePicker",
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "patternErrorMsg": ""
           }
         ]
@@ -150,10 +151,10 @@ var dat ={
             "patternErrorMsg": ""
           },
           {
-            "name": "nextHearingDate",
+            "name": "nextHearingTime",
             "jsonPath": "cases[0].hearingDetails.nextHearingTime",
             "label": "legal.create.nextHearingTime",
-            "type": "text",
+            "type": "timePicker",
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": ""
@@ -197,7 +198,6 @@ var dat ={
                   "name": "gender",
                   "jsonPath": "cases[0].hearingDetails[0].attendees[0].gender",
                    "type": "radio",
-                   styleObj:{"display": "-webkit-box"},
                   "isRequired": true,
                   "isDisabled": false,
                   "patternErrorMsg": "",
@@ -215,7 +215,7 @@ var dat ={
                 {
                   "name": "mobileNo",
                   "pattern": "",
-                  "type": "text",
+                  "type": "mobileNumber",
                   "jsonPath": "cases[0].hearingDetails[0].attendees[0].mobileNumber",
                   "isRequired": true,
                   "isDisabled": false
@@ -269,7 +269,6 @@ var dat ={
                   "name": "gender",
                   "jsonPath": "cases[0].hearingDetails[0].judges[0].gender",
                   "type": "radio",
-                  styleObj:{"display": "-webkit-box"},
                   "isRequired": true,
                   "isDisabled": false,
                   "patternErrorMsg": "",

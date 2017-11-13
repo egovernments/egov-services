@@ -1,0 +1,2 @@
+Case Registration is successfully completed.
+Case Registration Reference No. is {{caseRegNo}}.

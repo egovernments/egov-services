@@ -1,6 +1,5 @@
 package org.egov.swm.domain.model;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
@@ -21,7 +20,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PurchaseInfo {
 
-	@Valid
 	@JsonProperty("purchaseDate")
 	private Long purchaseDate = null;
 

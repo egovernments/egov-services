@@ -1,7 +1,9 @@
 package org.egov.works.estimate.web.contract;
 
 import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -9,7 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
  * Hold the asset location specific information.
  */
 @ApiModel(description = "Hold the asset location specific information.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:32:33.802Z")
 
 public class Location   {
   @JsonProperty("locality")

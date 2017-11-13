@@ -1,9 +1,10 @@
 var dat = {
   "legal.create": {
     numCols: 4,
-    title:"assignadvocate.update.document.title",
+    title:"legacycase.update.document.title",
     useTimestamp: true,
     objectName: "cases",
+    documentsPath:"cases[0].summon",
     groups: [
       {
         name: "CaseTypeDetails",
@@ -37,6 +38,16 @@ var dat = {
             url:
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=year|$..code|$..name",
             patternErrorMsg: ""
+          },  {
+            name: "side",
+            jsonPath: "cases[0].summon.side.code",
+            label: "legal.create.side",
+            type: "singleValueList",
+            isRequired: true,
+            isDisabled: false,
+            patternErrorMsg: "",
+            url:
+              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name"
           },
           {
             name: "caseType",
@@ -80,7 +91,8 @@ var dat = {
             name: "caseDetails",
             jsonPath: "cases[0].summon.caseDetails",
             label: "legal.create.caseDetails",
-            type: "text",
+            type: "textarea",
+            fullWidth:true,
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: ""
@@ -90,7 +102,7 @@ var dat = {
             jsonPath: "cases[0].summon.defendant",
             label: "legal.create.defendant",
             type: "text",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             patternErrorMsg: ""
           },
@@ -130,8 +142,7 @@ var dat = {
             type: "timePicker",
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: "",
-            defaultValue:'00:00'
+            patternErrorMsg: ""
           },
           {
             name: "hearingDate",
@@ -142,25 +153,15 @@ var dat = {
             isDisabled: false,
             patternErrorMsg: ""
           },
-          {
-            name: "side",
-            jsonPath: "cases[0].summon.side.code",
-            label: "legal.create.side",
+           {
+            name: "ward",
+            jsonPath: "cases[0].summon.ward",
+            label: "legal.create.ward",
             type: "singleValueList",
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: "",
-            url:
-              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name"
-          },
-          {
-            name: "ward",
-            jsonPath: "cases[0].summon.ward",
-            label: "legal.create.ward",
-            type: "text",
-            isRequired: true,
-            isDisabled: false,
-            patternErrorMsg: ""
+            url:"/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name"
           },
           {
             name: "stamp",
@@ -227,7 +228,7 @@ var dat = {
         fields: [
           {
             type: "tableList",
-            jsonPath: "cases[0].summon.advocateDetails",
+            jsonPath: "cases[0].advocateDetails",
             tableList: {
               header: [
                 {
@@ -278,12 +279,11 @@ var dat = {
         fields: [
           {
           "name":"UploadDocument",
-          "jsonPath": "cases[0].documents",
+          "jsonPath": "cases[0].summon.documents",
           "label": "legal.create.sectionApplied",
            "type": "fileTable",
             "isRequired": false,
             "isDisabled": false,
-            "screenView":true,
             "patternErrMsg": "",
             "fileList":{
                 "name":"documentName",

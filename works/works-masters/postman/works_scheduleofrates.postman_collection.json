@@ -1,6 +1,6 @@
 {
 	"info": {
-		"name": "works - masters",
+		"name": "WMS-Masters-SOR",
 		"_postman_id": "1d86f374-be1c-cda4-dc43-f6a3213d1971",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -18,10 +18,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"6a798539-6d2b-44fd-83cc-9bb8a0075c59\",\n        \"userInfo\":{\n          \"tenantId\":\"default\",\n          \"userName\":\"ramki\"\n        }\n    },\n    \"scheduleOfRates\":[{\n      \"tenantId\":\"default\",\n      \"code\":\"road\",\n      \"description\":\"First SOR for road\",\n      \"scheduleCategory\":{\n        \"code\":\"EXV - FAKE\"\n      },\n      \"uom\":{  \n        \"code\":\"TON\"\n      },\n      \"sorRates\":[{\n        \"tenantId\":\"default\",\n        \"fromDate\":\"1491004800000\",\n        \"toDate\":\"1522540799000\",\n        \"rate\":673,\n    \"auditDetails\": {\n          \"createdBy\": \"egovernments\",  \n          \"lastModifiedBy\": \"egovernments\",\n          \"createdTime\": 1509758255000,\n          \"lastModifiedTime\": 1509758255000\n      }\n      }],\n    \"auditDetails\": {\n          \"createdBy\": \"egovernments\",\n          \"lastModifiedBy\": \"egovernments\",\n          \"createdTime\": 1509758255000,\n          \"lastModifiedTime\": 1509758255000\n      }\n        \n    }]\n}"
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"66d3aa78-bfd3-4698-bc56-3d5ce2c8cbd5\",\n        \"userInfo\":{\n          \"tenantId\":\"default\",\n          \"userName\":\"ramki\"\n        }\n    },\n    \"scheduleOfRates\":[{\n      \"tenantId\":\"default\",\n      \"code\":\"SOR7\",\n      \"description\":\"Second SOR for road\",\n      \"scheduleCategory\":\"EXV - FAKE\",\n      \"uom\":\"TON\",\n      \"sorRates\":[{\n        \"tenantId\":\"default\",\n        \"fromDate\":\"1491004800000\",\n        \"toDate\":\"1522540799000\",\n        \"rate\":673.67,\n    \"auditDetails\": {\n          \"createdBy\": \"egovernments\",  \n          \"lastModifiedBy\": \"egovernments\",\n          \"createdTime\": 1509758255000,\n          \"lastModifiedTime\": 1509758255000\n      }\n      }],\n      \"marketRates\":[{\n        \"tenantId\":\"default\",\n        \"fromDate\":\"1491004800000\",\n        \"toDate\":\"1522540799000\",\n        \"rate\":893.67,\n    \"auditDetails\": {\n          \"createdBy\": \"egovernments\",  \n          \"lastModifiedBy\": \"egovernments\",\n          \"createdTime\": 1509758255000,\n          \"lastModifiedTime\": 1509758255000\n      }\n      }],\n    \"auditDetails\": {\n          \"createdBy\": \"egovernments\",\n          \"lastModifiedBy\": \"egovernments\",\n          \"createdTime\": 1509758255000,\n          \"lastModifiedTime\": 1509758255000\n      }\n        \n    }]\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8280/works-masters/scheduleofrates/_create",
+					"raw": "http://localhost:8280/works-masters/v1/scheduleofrates/_create",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -29,38 +29,8 @@
 					"port": "8280",
 					"path": [
 						"works-masters",
+						"v1",
 						"scheduleofrates",
-						"_create"
-					]
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "create ET",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"6a798539-6d2b-44fd-83cc-9bb8a0075c59\",\n        \"userInfo\":{\n          \"tenantId\":\"default\",\n          \"userName\":\"ramki\"\n        }\n    },\n    \"estimateTemplates\":[{\n      \"tenantId\":\"default\",\n      \"name\":\"Road Estimate Template\",\n      \"code\":\"roadet\",\n      \"active\":true,\n      \"description\":\"First Estimate Template for Road\",\n      \"typeOfWork\":{\n        \"code\":\"RoadsFake\"\n      },\n      \"subTypeOfWork\":{\n        \"code\":\"CCRoadsFake\"\n      },\n      \"estimateTemplateActivities\":[{  \n         \"tenantId\":\"default\",\n         \"scheduleOfRate\":{\n         \t\"code\":\"road\"\n         },\n         \"uom\":{\n         \t\"code\":\"TON\"\n         },\n         \"nonSOR\":{\n         \t\"tenantId\":\"default\",\n         \t\"description\":\"description\",\n         \t\"uom\":{\n         \t\"code\":\"TON\"\n        \t}\n         },\n         \"unitRate\":452\n      }]\n        \n    }]\n}"
-				},
-				"url": {
-					"raw": "http://localhost:8280/works-masters/estimatetemplates/_create",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8280",
-					"path": [
-						"works-masters",
-						"estimatetemplates",
 						"_create"
 					]
 				},
@@ -80,10 +50,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"6f17d2da-f576-41c2-a506-5656a9214d9f\"\n    }\n}\n"
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"52575917-5896-4b88-bebd-be58bd0caf77\"\n    }\n}\n"
 				},
 				"url": {
-					"raw": "http://localhost:8280/works-masters/scheduleofrates/_search?tenantId=default&sorCodes=estates",
+					"raw": "http://localhost:8280/works-masters/v1/scheduleofrates/_search?tenantId=default&sorCodes=SOR7",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -91,6 +61,7 @@
 					"port": "8280",
 					"path": [
 						"works-masters",
+						"v1",
 						"scheduleofrates",
 						"_search"
 					],
@@ -102,50 +73,7 @@
 						},
 						{
 							"key": "sorCodes",
-							"value": "estates",
-							"equals": true
-						}
-					]
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "search ET",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"6f17d2da-f576-41c2-a506-5656a9214d9f\"\n    }\n}\n"
-				},
-				"url": {
-					"raw": "http://localhost:8280/works-masters/scheduleofrates/_search?tenantId=default&sorCodes=estates",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8280",
-					"path": [
-						"works-masters",
-						"scheduleofrates",
-						"_search"
-					],
-					"query": [
-						{
-							"key": "tenantId",
-							"value": "default",
-							"equals": true
-						},
-						{
-							"key": "sorCodes",
-							"value": "estates",
+							"value": "SOR7",
 							"equals": true
 						}
 					]
@@ -166,39 +94,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"9472ea04-685e-4311-ac9c-44ebca8f6abf\",\n        \"userInfo\":{\n          \"tenantId\":\"default\",\n          \"userName\":\"ramki\"\n        }\n    },\n    \"scheduleOfRates\":[{\n      \"id\":\"3a6e0d0db0154848a5f674b6a8eebe43\",\n      \"tenantId\":\"default\",\n      \"code\":\"estates\",\n      \"description\":\"Road updated to estates\",\n      \"scheduleCategory\":{\n        \"code\":\"EXV - FAKE\"\n      },\n      \"uom\":{  \n        \"code\":\"TON\"\n      },\n      \"sorRates\":[{\n      \t\"id\": \"1dc04a9632ab49b8b23d7f2eaf1176b7\",\n        \"tenantId\":\"default\",\n        \"fromDate\":\"1491004800000\",\n        \"toDate\":\"1522540799000\",\n        \"rate\":673,\n    \"auditDetails\": {\n          \"createdBy\": \"egovernments\",  \n          \"lastModifiedBy\": \"egovernments\",\n          \"createdTime\": 1509758255000,\n          \"lastModifiedTime\": 1509758255000\n      }\n      }],\n    \"auditDetails\": {\n          \"createdBy\": \"egovernments\",\n          \"lastModifiedBy\": \"egovernments\",\n          \"createdTime\": 1509758255000,\n          \"lastModifiedTime\": 1509758255000\n      }\n        \n    }]\n}"
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"9472ea04-685e-4311-ac9c-44ebca8f6abf\",\n        \"userInfo\":{\n          \"tenantId\":\"default\",\n          \"userName\":\"ramki\"\n        }\n    },\n    \"scheduleOfRates\":[{\n      \"id\":\"8cf4ea6ad27a45a18bef13b9050af104\",\n      \"tenantId\":\"default\",\n      \"code\":\"SOR7\",\n      \"description\":\"Syed\",\n      \"scheduleCategory\":\"EXV - FAKE\",\n      \"uom\":\"TON\",\n      \"sorRates\":[{\n      \t\"id\": \"b12dfb04525f4fb9a1c31e079515aaf5\",\n        \"tenantId\":\"default\",\n        \"fromDate\":\"1491004800001\",\n        \"toDate\":\"1522540799000\",\n        \"rate\":673,\n    \"auditDetails\": {\n          \"createdBy\": \"egovernments\",  \n          \"lastModifiedBy\": \"egovernments\",\n          \"createdTime\": 1509758255000,\n          \"lastModifiedTime\": 1509758255000\n      }\n      }],\n      \"marketRates\":[{\n      \t\"id\": \"2799f184572c4da6a2e386f8043227df\",\n        \"tenantId\":\"default\",\n        \"fromDate\":\"1491004800000\",\n        \"toDate\":\"1522540799000\",\n        \"rate\":673,\n    \"auditDetails\": {\n          \"createdBy\": \"egovernments\",  \n          \"lastModifiedBy\": \"egovernments\",\n          \"createdTime\": 1509758255000,\n          \"lastModifiedTime\": 1509758255000\n      }\n      }],\n    \"auditDetails\": {\n          \"createdBy\": \"egovernments\",\n          \"lastModifiedBy\": \"egovernments\",\n          \"createdTime\": 1509758255000,\n          \"lastModifiedTime\": 1509758255000\n      }\n        \n    }]\n}"
 				},
 				"url": {
-					"raw": "{{host}}/works-masters/scheduleofrates/_update",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"works-masters",
-						"scheduleofrates",
-						"_update"
-					]
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "update ET",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"6a798539-6d2b-44fd-83cc-9bb8a0075c59\",\n        \"userInfo\":{\n          \"tenantId\":\"default\",\n          \"userName\":\"ramki\"\n        }\n    },\n    \"scheduleOfRates\":[{\n      \"id\":\"494f35d521454ad2bcf82623caab5ce4\",\n      \"tenantId\":\"default\",\n      \"code\":\"estates\",\n      \"description\":\"Road updated to estates\",\n      \"scheduleCategory\":{\n        \"code\":\"EXV - FAKE\"\n      },\n      \"uom\":{  \n        \"code\":\"TON\"\n      },\n      \"sorRates\":[{\n      \t\"id\": \"df59da5314fb420dbf95ad8bceeb7814\",\n        \"tenantId\":\"default\",\n        \"fromDate\":\"1491004800000\",\n        \"toDate\":\"1522540799000\",\n        \"rate\":673,\n    \"auditDetails\": {\n          \"createdBy\": \"egovernments\",  \n          \"lastModifiedBy\": \"egovernments\",\n          \"createdTime\": 1509758255000,\n          \"lastModifiedTime\": 1509758255000\n      }\n      }],\n    \"auditDetails\": {\n          \"createdBy\": \"egovernments\",\n          \"lastModifiedBy\": \"egovernments\",\n          \"createdTime\": 1509758255000,\n          \"lastModifiedTime\": 1509758255000\n      }\n        \n    }]\n}"
-				},
-				"url": {
-					"raw": "http://localhost:8280/works-masters/scheduleofrates/_update",
+					"raw": "http://localhost:8280/works-masters/v1/scheduleofrates/_update",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -206,6 +105,7 @@
 					"port": "8280",
 					"path": [
 						"works-masters",
+						"v1",
 						"scheduleofrates",
 						"_update"
 					]

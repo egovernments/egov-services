@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.PaginationContract;
 import org.egov.swm.domain.model.SanitationStaffTarget;
 import org.egov.swm.domain.model.SanitationStaffTargetSearch;
 import org.egov.swm.domain.service.SanitationStaffTargetService;
@@ -72,7 +73,8 @@ public class SanitationStaffTargetController {
 		SanitationStaffTargetResponse response = new SanitationStaffTargetResponse();
 		response.setSanitationStaffTargets(sanitationStaffTargetList.getPagedData());
 		response.setResponseInfo(getResponseInfo(requestInfo));
-
+		response.setPage(new PaginationContract(sanitationStaffTargetList));
+		
 		return response;
 
 	}

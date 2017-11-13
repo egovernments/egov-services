@@ -24,6 +24,24 @@ public class PropertiesManager {
 	@Autowired
 	Environment environment;
 
+	@Value("${mdms.master.registername}")
+	public String mdmsRegisterName;
+	
+	@Value("${mdms.master.usagetype}")
+	public String mdmsUsageType;
+
+	@Value("${mdms.master.subusagetype}")
+	public String mdmsSubUsageType;
+	
+	@Value("${mdms.master.subregistername}")
+	public String mdmsSubRegisterName;
+
+	@Value("${mdms.master.propertytype}")
+	public String mdmsPropertyType;
+
+	@Value("${mdms.modulename}")
+	public String mdmsModuleName;
+	
 	@Value("${kafka.topic.start.workflow.agreement}")
 	public String startAgreementWorkflowTopic;
 	

@@ -8,7 +8,6 @@ import org.egov.swm.domain.model.PurchaseInfo;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleType;
 import org.egov.swm.domain.model.Vendor;
-import org.egov.swm.web.contract.Employee;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

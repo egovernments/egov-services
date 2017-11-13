@@ -28,9 +28,15 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
      */
 
     private UserService userService;
+    
+    private static String tenantId;
 
 	public CustomAuthenticationProvider(UserService userService) {
 		this.userService = userService;
+	}
+	
+	public static String getTenantId() {
+		return CustomAuthenticationProvider.tenantId;
 	}
 
 	@Override
@@ -38,7 +44,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         String userName = authentication.getName();
         String password = authentication.getCredentials().toString();
-        String tenantId = getTenantId(authentication);
+        CustomAuthenticationProvider.tenantId = getTenantId(authentication);
         User user;
         if (userName.contains("@") && userName.contains(".")) {
             user = userService.getUserByEmailId(userName, tenantId);

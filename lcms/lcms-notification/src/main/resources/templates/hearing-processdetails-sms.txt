@@ -1,0 +1,2 @@
+Hearing Decision for Case Reference No. {{Reference No}} Date {{Dated}} by Court is {{Court}}. 
+[In case of next Hearing] – the next hearing is scheduled on (Date) {{Next Hearing Date}} at (time) {{Next Hearing Time}}.

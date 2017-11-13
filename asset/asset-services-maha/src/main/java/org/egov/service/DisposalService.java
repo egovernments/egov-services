@@ -5,18 +5,20 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.config.ApplicationProperties;
+import org.egov.contract.AssetCurrentValueRequest;
 import org.egov.contract.AssetRequest;
 import org.egov.contract.DisposalRequest;
 import org.egov.contract.DisposalResponse;
 import org.egov.model.Asset;
+import org.egov.model.CurrentValue;
 import org.egov.model.Disposal;
 import org.egov.model.criteria.DisposalCriteria;
 import org.egov.model.enums.Sequence;
+import org.egov.model.enums.TransactionType;
 import org.egov.repository.DisposalRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.web.wrapperfactory.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -60,13 +62,13 @@ public class DisposalService {
          String tenantId = disposal.getTenantId();
          Asset asset = assetService.getAsset(tenantId, disposal.getAssetId(), disposalRequest.getRequestInfo());
          // final List<AssetStatus> assetStatuses = assetMasterService.getStatuses(AssetStatusObjectName.ASSETMASTER,Status.DISPOSED, tenantId);
-         // asset.setStatus(assetStatuses.get(0).getStatusValues().get(0).getCode());
+         asset.setStatus("DISPOSED"); // TODO remove hard coding get data from mdms
          AssetRequest assetRequest = AssetRequest.builder().asset(asset)
                 .requestInfo(disposalRequest.getRequestInfo()).build();
         assetService.updateAsync(assetRequest);
     }
 
-    public DisposalResponse createAsync(final DisposalRequest disposalRequest, final HttpHeaders headers) {
+    public DisposalResponse createAsync(final DisposalRequest disposalRequest) {
         final Disposal disposal = disposalRequest.getDisposal();
 
         disposal.setId(assetCommonService.getNextId(Sequence.DISPOSALSEQUENCE));
@@ -75,6 +77,17 @@ public class DisposalService {
             disposal.setAuditDetails(assetCommonService.getAuditDetails(disposalRequest.getRequestInfo()));
 
         logAwareKafkaTemplate.send(applicationProperties.getDisposalSaveTopicName(), disposalRequest);
+       /* CurrentValue currentValue = CurrentValue.builder().
+        		id(new Long(assetCommonService.getCode(Sequence.CURRENTVALUESEQUENCE))).assetId(disposal.getAssetId()).assetTranType(TransactionType.DISPOSAL).
+        		 transactionDate(disposal.getDisposalDate()).auditDetails(assetCommonService.getAuditDetails(disposalRequest.getRequestInfo())).
+        		 tenantId(disposal.getTenantId()).currentAmount(disposal.getSaleValue()).build();
+        List<CurrentValue> assetCurrentValueList = new ArrayList<>();
+        assetCurrentValueList.add(currentValue);
+		AssetCurrentValueRequest assetCurrentValueRequest = AssetCurrentValueRequest.builder().assetCurrentValue(assetCurrentValueList).
+				requestInfo(disposalRequest.getRequestInfo()).build();
+		logAwareKafkaTemplate.send(applicationProperties.getSaveCurrentvalueTopic(), assetCurrentValueRequest);*/
+		//todo workflow
+		
         setStatusOfAssetToDisposed(disposalRequest);
         final List<Disposal> disposals = new ArrayList<Disposal>();
         disposals.add(disposal);

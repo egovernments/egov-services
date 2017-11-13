@@ -24,8 +24,7 @@ public class SubUsageType {
   @Size(min = 2, max = 128)
   private String tenantId = null;
 
-  @NotNull
-  private UsageType usage = null;
+  private String usage = null;
 
   @NotNull
   @Size(min = 1, max = 64)

@@ -5,25 +5,32 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import org.springframework.validation.annotation.Validated;
+import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
- *
+ * This object holds the material information.
  */
-@ApiModel(description = "")
-@Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-28T13:21:55.964+05:30")
+@ApiModel(description = "This object holds the material information.   ")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-11T10:04:38.711Z")
 @Builder
-public class Material {
+@AllArgsConstructor
+@NoArgsConstructor
+public class Material   {
     @JsonProperty("id")
     private String id = null;
+
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
     @JsonProperty("code")
     private String code = null;
@@ -113,6 +120,9 @@ public class Material {
     @JsonProperty("status")
     private StatusEnum status = null;
 
+    @JsonProperty("inActiveDate")
+    private Long inActiveDate = null;
+
     @JsonProperty("purchaseUom")
     private Uom purchaseUom = null;
 
@@ -125,8 +135,8 @@ public class Material {
     @JsonProperty("maxQuantity")
     private BigDecimal maxQuantity = null;
 
-    @JsonProperty("staockingUom")
-    private Uom staockingUom = null;
+    @JsonProperty("stockingUom")
+    private Uom stockingUom = null;
 
     /**
      * material class of the Material
@@ -144,7 +154,6 @@ public class Material {
             this.value = value;
         }
 
-        @Override
         @JsonValue
         public String toString() {
             return String.valueOf(value);
@@ -170,39 +179,14 @@ public class Material {
     @JsonProperty("reorderQuantity")
     private BigDecimal reorderQuantity = null;
 
-    /**
-     * material control type of the Material
-     */
-    public enum MaterialControlTypeEnum {
-        LOTCONTROL("LOTControl"),
+    @JsonProperty("lotControl")
+    private Boolean lotControl = null;
 
-        SHELF_LIFE_CONTROL("Shelf_life_Control");
+    @JsonProperty("shelfLifeControl")
+    private Boolean shelfLifeControl = null;
 
-        private String value;
-
-        MaterialControlTypeEnum(String value) {
-            this.value = value;
-        }
-
-        @Override
-        @JsonValue
-        public String toString() {
-            return String.valueOf(value);
-        }
-
-        @JsonCreator
-        public static MaterialControlTypeEnum fromValue(String text) {
-            for (MaterialControlTypeEnum b : MaterialControlTypeEnum.values()) {
-                if (String.valueOf(b.value).equals(text)) {
-                    return b;
-                }
-            }
-            return null;
-        }
-    }
-
-    @JsonProperty("materialControlType")
-    private MaterialControlTypeEnum materialControlType = null;
+    @JsonProperty("serialNumber")
+    private Boolean serialNumber = null;
 
     @JsonProperty("model")
     private String model = null;
@@ -216,8 +200,14 @@ public class Material {
     @JsonProperty("termsOfDelivery")
     private String termsOfDelivery = null;
 
-    @JsonProperty("overrideMaterialControlType")
-    private Boolean overrideMaterialControlType = null;
+    @JsonProperty("scrapable")
+    private Boolean scrapable = null;
+
+    @JsonProperty("assetCategory")
+    private AssetCategory assetCategory = null;
+
+    @JsonProperty("storeMapping")
+    private List<StoreMapping> storeMapping = null;
 
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;
@@ -229,7 +219,6 @@ public class Material {
 
     /**
      * Unique Identifier of the Material
-     *
      * @return id
      **/
     @ApiModelProperty(value = "Unique Identifier of the Material ")
@@ -243,13 +232,25 @@ public class Material {
         this.id = id;
     }
 
+    public Material tenantId(String tenantId) {
+        this.tenantId = tenantId;
+        return this;
+    }
+
     /**
      * Tenant id of the Material
-     *
      * @return tenantId
      **/
     @ApiModelProperty(value = "Tenant id of the Material")
 
+    @Size(min=4,max=128)
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 
     public Material code(String code) {
         this.code = code;
@@ -258,11 +259,11 @@ public class Material {
 
     /**
      * code of the Material
-     *
      * @return code
      **/
     @ApiModelProperty(value = "code of the Material ")
-    @Size(min = 5, max = 50)
+
+    @Size(min=5,max=50)
     public String getCode() {
         return code;
     }
@@ -278,16 +279,15 @@ public class Material {
 
     /**
      * name of the Material
-     *
      * @return name
      **/
     @ApiModelProperty(required = true, value = "name of the Material ")
     @NotNull
-    @Size(min = 5, max = 50)
+
+    @Size(min=5,max=50)
     public String getName() {
         return name;
     }
-
 
     public void setName(String name) {
         this.name = name;
@@ -300,13 +300,12 @@ public class Material {
 
     /**
      * description of the Material
-     *
      * @return description
      **/
     @ApiModelProperty(required = true, value = "description of the Material ")
     @NotNull
 
-    @Size(max = 1000)
+    @Size(max=1000)
     public String getDescription() {
         return description;
     }
@@ -322,12 +321,11 @@ public class Material {
 
     /**
      * unique old code of the Material
-     *
      * @return oldCode
      **/
     @ApiModelProperty(value = "unique old code of the Material ")
 
-    @Size(max = 50)
+    @Size(max=50)
     public String getOldCode() {
         return oldCode;
     }
@@ -343,13 +341,10 @@ public class Material {
 
     /**
      * Get materialType
-     *
      * @return materialType
      **/
     @ApiModelProperty(required = true, value = "")
     @NotNull
-
-    @Valid
 
     public MaterialType getMaterialType() {
         return materialType;
@@ -366,13 +361,10 @@ public class Material {
 
     /**
      * Get baseUom
-     *
      * @return baseUom
      **/
     @ApiModelProperty(required = true, value = "")
     @NotNull
-
-    @Valid
 
     public Uom getBaseUom() {
         return baseUom;
@@ -389,7 +381,6 @@ public class Material {
 
     /**
      * inventory type of the Material
-     *
      * @return inventoryType
      **/
     @ApiModelProperty(value = "inventory type of the Material ")
@@ -410,7 +401,6 @@ public class Material {
 
     /**
      * status of the Material
-     *
      * @return status
      **/
     @ApiModelProperty(value = "status of the Material ")
@@ -424,6 +414,26 @@ public class Material {
         this.status = status;
     }
 
+    public Material inActiveDate(Long inActiveDate) {
+        this.inActiveDate = inActiveDate;
+        return this;
+    }
+
+    /**
+     * inactive date of the Material
+     * @return inActiveDate
+     **/
+    @ApiModelProperty(value = "inactive date of the Material ")
+
+
+    public Long getInActiveDate() {
+        return inActiveDate;
+    }
+
+    public void setInActiveDate(Long inActiveDate) {
+        this.inActiveDate = inActiveDate;
+    }
+
     public Material purchaseUom(Uom purchaseUom) {
         this.purchaseUom = purchaseUom;
         return this;
@@ -431,13 +441,10 @@ public class Material {
 
     /**
      * Get purchaseUom
-     *
      * @return purchaseUom
      **/
     @ApiModelProperty(required = true, value = "")
     @NotNull
-
-    @Valid
 
     public Uom getPurchaseUom() {
         return purchaseUom;
@@ -453,13 +460,10 @@ public class Material {
     }
 
     /**
-     * Get expenseAccount
-     *
+     * Expense account code is mandatory , if inventory type is consumable
      * @return expenseAccount
      **/
-    @ApiModelProperty(value = "")
-
-    @Valid
+    @ApiModelProperty(value = "Expense account code is mandatory , if inventory type is consumable")
 
     public ChartofAccount getExpenseAccount() {
         return expenseAccount;
@@ -476,7 +480,6 @@ public class Material {
 
     /**
      * min quantity of the Material
-     *
      * @return minQuantity
      **/
     @ApiModelProperty(required = true, value = "min quantity of the Material ")
@@ -499,7 +502,6 @@ public class Material {
 
     /**
      * max quantity of the Material
-     *
      * @return maxQuantity
      **/
     @ApiModelProperty(required = true, value = "max quantity of the Material ")
@@ -515,27 +517,24 @@ public class Material {
         this.maxQuantity = maxQuantity;
     }
 
-    public Material staockingUom(Uom staockingUom) {
-        this.staockingUom = staockingUom;
+    public Material stockingUom(Uom stockingUom) {
+        this.stockingUom = stockingUom;
         return this;
     }
 
     /**
-     * Get staockingUom
-     *
-     * @return staockingUom
+     * Get stockingUom
+     * @return stockingUom
      **/
     @ApiModelProperty(required = true, value = "")
     @NotNull
 
-    @Valid
-
-    public Uom getStaockingUom() {
-        return staockingUom;
+    public Uom getStockingUom() {
+        return stockingUom;
     }
 
-    public void setStaockingUom(Uom staockingUom) {
-        this.staockingUom = staockingUom;
+    public void setStockingUom(Uom stockingUom) {
+        this.stockingUom = stockingUom;
     }
 
     public Material materialClass(MaterialClassEnum materialClass) {
@@ -545,7 +544,6 @@ public class Material {
 
     /**
      * material class of the Material
-     *
      * @return materialClass
      **/
     @ApiModelProperty(required = true, value = "material class of the Material ")
@@ -567,7 +565,6 @@ public class Material {
 
     /**
      * reorder level of the Material
-     *
      * @return reorderLevel
      **/
     @ApiModelProperty(required = true, value = "reorder level of the Material ")
@@ -590,7 +587,6 @@ public class Material {
 
     /**
      * reorder quantity of the Material
-     *
      * @return reorderQuantity
      **/
     @ApiModelProperty(required = true, value = "reorder quantity of the Material ")
@@ -606,26 +602,63 @@ public class Material {
         this.reorderQuantity = reorderQuantity;
     }
 
-    public Material materialControlType(MaterialControlTypeEnum materialControlType) {
-        this.materialControlType = materialControlType;
+    public Material lotControl(Boolean lotControl) {
+        this.lotControl = lotControl;
         return this;
     }
 
     /**
-     * material control type of the Material
-     *
-     * @return materialControlType
+     * LOT Control for Material.
+     * @return lotControl
      **/
-    @ApiModelProperty(required = true, value = "material control type of the Material ")
-    @NotNull
+    @ApiModelProperty(value = "LOT Control for Material.      ")
 
-
-    public MaterialControlTypeEnum getMaterialControlType() {
-        return materialControlType;
+    public Boolean getLotControl() {
+        return lotControl;
     }
 
-    public void setMaterialControlType(MaterialControlTypeEnum materialControlType) {
-        this.materialControlType = materialControlType;
+    public void setLotControl(Boolean lotControl) {
+        this.lotControl = lotControl;
+    }
+
+    public Material shelfLifeControl(Boolean shelfLifeControl) {
+        this.shelfLifeControl = shelfLifeControl;
+        return this;
+    }
+
+    /**
+     * Shelf Life Control for Material.
+     * @return shelfLifeControl
+     **/
+    @ApiModelProperty(value = "Shelf Life Control for Material.     ")
+
+
+    public Boolean getShelfLifeControl() {
+        return shelfLifeControl;
+    }
+
+    public void setShelfLifeControl(Boolean shelfLifeControl) {
+        this.shelfLifeControl = shelfLifeControl;
+    }
+
+    public Material serialNumber(Boolean serialNumber) {
+        this.serialNumber = serialNumber;
+        return this;
+    }
+
+    /**
+     * serial Number for Material.
+     * @return serialNumber
+     **/
+    @ApiModelProperty(value = "serial Number for Material.                                 ")
+
+
+    public Boolean getSerialNumber() {
+        return serialNumber;
+    }
+
+    public void setSerialNumber(Boolean serialNumber) {
+        this.serialNumber = serialNumber;
     }
 
     public Material model(String model) {
@@ -635,7 +668,6 @@ public class Material {
 
     /**
      * model of the Material
-     *
      * @return model
      **/
     @ApiModelProperty(value = "model of the Material ")
@@ -656,7 +688,6 @@ public class Material {
 
     /**
      * manufacture part no of the Material
-     *
      * @return manufacturePartNo
      **/
     @ApiModelProperty(value = "manufacture part no of the Material ")
@@ -677,7 +708,6 @@ public class Material {
 
     /**
      * techincal specs of the Material
-     *
      * @return techincalSpecs
      **/
     @ApiModelProperty(value = "techincal specs of the Material ")
@@ -698,7 +728,6 @@ public class Material {
 
     /**
      * terms of delivery of the Material
-     *
      * @return termsOfDelivery
      **/
     @ApiModelProperty(value = "terms of delivery of the Material ")
@@ -712,25 +741,70 @@ public class Material {
         this.termsOfDelivery = termsOfDelivery;
     }
 
-    public Material overrideMaterialControlType(Boolean overrideMaterialControlType) {
-        this.overrideMaterialControlType = overrideMaterialControlType;
+    public Material scrapable(Boolean scrapable) {
+        this.scrapable = scrapable;
         return this;
     }
 
     /**
-     * override material control type of the Material
-     *
-     * @return overrideMaterialControlType
+     * Material is scrapable or not.
+     * @return scrapable
      **/
-    @ApiModelProperty(value = "override material control type of the Material ")
+    @ApiModelProperty(value = "Material is scrapable or not. ")
 
 
-    public Boolean isOverrideMaterialControlType() {
-        return overrideMaterialControlType;
+    public Boolean getScrapable() {
+        return scrapable;
     }
 
-    public void setOverrideMaterialControlType(Boolean overrideMaterialControlType) {
-        this.overrideMaterialControlType = overrideMaterialControlType;
+    public void setScrapable(Boolean scrapable) {
+        this.scrapable = scrapable;
+    }
+
+    public Material assetCategory(AssetCategory assetCategory) {
+        this.assetCategory = assetCategory;
+        return this;
+    }
+
+    /**
+     * Asset category is mandatory if the inventory type is asset
+     * @return assetCategory
+     **/
+    @ApiModelProperty(value = "Asset category is mandatory if the inventory type is asset")
+
+    public AssetCategory getAssetCategory() {
+        return assetCategory;
+    }
+
+    public void setAssetCategory(AssetCategory assetCategory) {
+        this.assetCategory = assetCategory;
+    }
+
+    public Material storeMapping(List<StoreMapping> storeMapping) {
+        this.storeMapping = storeMapping;
+        return this;
+    }
+
+    public Material addStoreMappingItem(StoreMapping storeMappingItem) {
+        if (this.storeMapping == null) {
+            this.storeMapping = new ArrayList<StoreMapping>();
+        }
+        this.storeMapping.add(storeMappingItem);
+        return this;
+    }
+
+    /**
+     * Get storeMapping
+     * @return storeMapping
+     **/
+    @ApiModelProperty(value = "")
+
+    public List<StoreMapping> getStoreMapping() {
+        return storeMapping;
+    }
+
+    public void setStoreMapping(List<StoreMapping> storeMapping) {
+        this.storeMapping = storeMapping;
     }
 
     public Material auditDetails(AuditDetails auditDetails) {
@@ -740,12 +814,10 @@ public class Material {
 
     /**
      * Get auditDetails
-     *
      * @return auditDetails
      **/
     @ApiModelProperty(value = "")
 
-    @Valid
 
     public AuditDetails getAuditDetails() {
         return auditDetails;
@@ -766,6 +838,7 @@ public class Material {
         }
         Material material = (Material) o;
         return Objects.equals(this.id, material.id) &&
+                Objects.equals(this.tenantId, material.tenantId) &&
                 Objects.equals(this.code, material.code) &&
                 Objects.equals(this.name, material.name) &&
                 Objects.equals(this.description, material.description) &&
@@ -774,26 +847,31 @@ public class Material {
                 Objects.equals(this.baseUom, material.baseUom) &&
                 Objects.equals(this.inventoryType, material.inventoryType) &&
                 Objects.equals(this.status, material.status) &&
+                Objects.equals(this.inActiveDate, material.inActiveDate) &&
                 Objects.equals(this.purchaseUom, material.purchaseUom) &&
                 Objects.equals(this.expenseAccount, material.expenseAccount) &&
                 Objects.equals(this.minQuantity, material.minQuantity) &&
                 Objects.equals(this.maxQuantity, material.maxQuantity) &&
-                Objects.equals(this.staockingUom, material.staockingUom) &&
+                Objects.equals(this.stockingUom, material.stockingUom) &&
                 Objects.equals(this.materialClass, material.materialClass) &&
                 Objects.equals(this.reorderLevel, material.reorderLevel) &&
                 Objects.equals(this.reorderQuantity, material.reorderQuantity) &&
-                Objects.equals(this.materialControlType, material.materialControlType) &&
+                Objects.equals(this.lotControl, material.lotControl) &&
+                Objects.equals(this.shelfLifeControl, material.shelfLifeControl) &&
+                Objects.equals(this.serialNumber, material.serialNumber) &&
                 Objects.equals(this.model, material.model) &&
                 Objects.equals(this.manufacturePartNo, material.manufacturePartNo) &&
                 Objects.equals(this.techincalSpecs, material.techincalSpecs) &&
                 Objects.equals(this.termsOfDelivery, material.termsOfDelivery) &&
-                Objects.equals(this.overrideMaterialControlType, material.overrideMaterialControlType) &&
+                Objects.equals(this.scrapable, material.scrapable) &&
+                Objects.equals(this.assetCategory, material.assetCategory) &&
+                Objects.equals(this.storeMapping, material.storeMapping) &&
                 Objects.equals(this.auditDetails, material.auditDetails);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, code, name, description, oldCode, materialType, baseUom, inventoryType, status, purchaseUom, expenseAccount, minQuantity, maxQuantity, staockingUom, materialClass, reorderLevel, reorderQuantity, materialControlType, model, manufacturePartNo, techincalSpecs, termsOfDelivery, overrideMaterialControlType, auditDetails);
+        return Objects.hash(id, tenantId, code, name, description, oldCode, materialType, baseUom, inventoryType, status, inActiveDate, purchaseUom, expenseAccount, minQuantity, maxQuantity, stockingUom, materialClass, reorderLevel, reorderQuantity, lotControl, shelfLifeControl, serialNumber, model, manufacturePartNo, techincalSpecs, termsOfDelivery, scrapable, assetCategory, storeMapping, auditDetails);
     }
 
     @Override
@@ -802,6 +880,7 @@ public class Material {
         sb.append("class Material {\n");
 
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
         sb.append("    code: ").append(toIndentedString(code)).append("\n");
         sb.append("    name: ").append(toIndentedString(name)).append("\n");
         sb.append("    description: ").append(toIndentedString(description)).append("\n");
@@ -810,20 +889,25 @@ public class Material {
         sb.append("    baseUom: ").append(toIndentedString(baseUom)).append("\n");
         sb.append("    inventoryType: ").append(toIndentedString(inventoryType)).append("\n");
         sb.append("    status: ").append(toIndentedString(status)).append("\n");
+        sb.append("    inActiveDate: ").append(toIndentedString(inActiveDate)).append("\n");
         sb.append("    purchaseUom: ").append(toIndentedString(purchaseUom)).append("\n");
         sb.append("    expenseAccount: ").append(toIndentedString(expenseAccount)).append("\n");
         sb.append("    minQuantity: ").append(toIndentedString(minQuantity)).append("\n");
         sb.append("    maxQuantity: ").append(toIndentedString(maxQuantity)).append("\n");
-        sb.append("    staockingUom: ").append(toIndentedString(staockingUom)).append("\n");
+        sb.append("    stockingUom: ").append(toIndentedString(stockingUom)).append("\n");
         sb.append("    materialClass: ").append(toIndentedString(materialClass)).append("\n");
         sb.append("    reorderLevel: ").append(toIndentedString(reorderLevel)).append("\n");
         sb.append("    reorderQuantity: ").append(toIndentedString(reorderQuantity)).append("\n");
-        sb.append("    materialControlType: ").append(toIndentedString(materialControlType)).append("\n");
+        sb.append("    lotControl: ").append(toIndentedString(lotControl)).append("\n");
+        sb.append("    shelfLifeControl: ").append(toIndentedString(shelfLifeControl)).append("\n");
+        sb.append("    serialNumber: ").append(toIndentedString(serialNumber)).append("\n");
         sb.append("    model: ").append(toIndentedString(model)).append("\n");
         sb.append("    manufacturePartNo: ").append(toIndentedString(manufacturePartNo)).append("\n");
         sb.append("    techincalSpecs: ").append(toIndentedString(techincalSpecs)).append("\n");
         sb.append("    termsOfDelivery: ").append(toIndentedString(termsOfDelivery)).append("\n");
-        sb.append("    overrideMaterialControlType: ").append(toIndentedString(overrideMaterialControlType)).append("\n");
+        sb.append("    scrapable: ").append(toIndentedString(scrapable)).append("\n");
+        sb.append("    assetCategory: ").append(toIndentedString(assetCategory)).append("\n");
+        sb.append("    storeMapping: ").append(toIndentedString(storeMapping)).append("\n");
         sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
         sb.append("}");
         return sb.toString();
@@ -840,4 +924,3 @@ public class Material {
         return o.toString().replace("\n", "\n    ");
     }
 }
-

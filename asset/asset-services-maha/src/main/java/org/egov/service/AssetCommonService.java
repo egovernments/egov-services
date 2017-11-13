@@ -1,6 +1,7 @@
 package org.egov.service;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorResponse;
@@ -81,4 +82,19 @@ public class AssetCommonService {
             throw new RuntimeException("Next id is not generated.");
         }
     }
+    
+    /***
+     * method to convert the set of long values to coma separated string for the purpose of appending to url and queries
+     * @param idSet
+     * @return
+     */
+	public String getIdQuery(final Set<Long> idSet) {
+		StringBuilder query = null;
+		Long[] arr = new Long[idSet.size()];
+		arr = idSet.toArray(arr);
+		query = new StringBuilder(arr[0].toString());
+		for (int i = 1; i < arr.length; i++)
+			query.append("," + arr[i]);
+		return query.toString();
+	}
 }

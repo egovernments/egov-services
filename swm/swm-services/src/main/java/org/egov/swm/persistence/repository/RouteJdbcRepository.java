@@ -1,6 +1,7 @@
 package org.egov.swm.persistence.repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class RouteJdbcRepository extends JdbcRepository {
 
+	public static final String TABLE_NAME = "egswm_route";
+
 	@Autowired
 	public RouteCollectionPointMapJdbcRepository routeCollectionPointMapJdbcRepository;
 
@@ -36,12 +39,12 @@ public class RouteJdbcRepository extends JdbcRepository {
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {
 
-		return uniqueCheck("egswm_route", tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
+		return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
 	}
 
 	public Pagination<Route> search(RouteSearch searchRequest) {
 
-		String searchQuery = "select * from egswm_route :condition  :orderby ";
+		String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
@@ -54,6 +57,14 @@ public class RouteJdbcRepository extends JdbcRepository {
 		String orderBy = "order by name";
 		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
 			orderBy = "order by " + searchRequest.getSortBy();
+		}
+
+		if (searchRequest.getCodes() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("code in (:codes)");
+			paramValues.put("codes", new ArrayList<String>(Arrays.asList(searchRequest.getCodes().split(","))));
 		}
 
 		if (searchRequest.getTenantId() != null) {
@@ -88,20 +99,20 @@ public class RouteJdbcRepository extends JdbcRepository {
 			paramValues.put("collectionType", searchRequest.getCollectionTypeCode());
 		}
 
-		if (searchRequest.getEndingCollectionPointName() != null) {
+		if (searchRequest.getEndingCollectionPointCode() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
 			params.append("endingCollectionPoint =:endingCollectionPoint");
-			paramValues.put("endingCollectionPoint", searchRequest.getEndingCollectionPointName());
+			paramValues.put("endingCollectionPoint", searchRequest.getEndingCollectionPointCode());
 		}
 
-		if (searchRequest.getEndingDumpingGroundPointName() != null) {
+		if (searchRequest.getEndingDumpingGroundPointCode() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
 			params.append("endingDumpingGroundPoint =:endingDumpingGroundPoint");
-			paramValues.put("endingDumpingGroundPoint", searchRequest.getEndingDumpingGroundPointName());
+			paramValues.put("endingDumpingGroundPoint", searchRequest.getEndingDumpingGroundPointCode());
 		}
 
 		if (searchRequest.getDistance() != null) {

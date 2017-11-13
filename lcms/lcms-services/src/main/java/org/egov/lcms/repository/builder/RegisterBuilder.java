@@ -79,12 +79,12 @@ public class RegisterBuilder {
 			}
 
 			if (orderBycount > 1)
-				orderByCondition.append(" asc");
+				orderByCondition.append(" desc");
 
 			selectQuery.append(orderByCondition.toString());
 		}
 
-		selectQuery.append(" code ");
+		selectQuery.append(" lastmodifiedtime desc ");
 	}
 
 	private static void addPagingClause(StringBuffer selectQuery, List<Object> preparedStatementValues,

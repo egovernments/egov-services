@@ -5,6 +5,8 @@ import lombok.*;
 import org.egov.works.masters.web.contract.SORRate;
 import org.egov.works.masters.web.contract.ScheduleOfRate;
 
+import java.math.BigDecimal;
+
 /**
  * Created by ramki on 6/11/17.
  */
@@ -30,7 +32,7 @@ public class SORRateHelper {
     private Long toDate = null;
 
     @JsonProperty("rate")
-    private Integer rate = null;
+    private BigDecimal rate = null;
 
     @JsonProperty("createdBy")
     private String createdBy = null;
@@ -48,8 +50,7 @@ public class SORRateHelper {
         SORRate sorRate = new SORRate();
         sorRate.setId(this.id);
         sorRate.setTenantId(this.tenantId);
-        sorRate.setScheduleOfRate(new ScheduleOfRate());
-        sorRate.getScheduleOfRate().setCode(this.scheduleOfRate);
+        sorRate.setScheduleOfRate(this.scheduleOfRate);
         sorRate.setFromDate(this.fromDate);
         sorRate.setToDate(this.toDate);
         sorRate.setRate(this.rate);

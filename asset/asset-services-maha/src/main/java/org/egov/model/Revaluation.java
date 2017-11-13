@@ -2,6 +2,8 @@ package org.egov.model;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.NotNull;
+
 import org.egov.model.enums.TypeOfChange;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,23 +17,28 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+
 public class Revaluation   {
 	
   @JsonProperty("remarks")
   private String remarks;
 
+  @NotNull
   @JsonProperty("orderNumber")
   private String orderNumber;
 
+  @NotNull
   @JsonProperty("orderDate")
   private Long orderDate;
 
+  @NotNull
   @JsonProperty("tenantId")
   private String tenantId;
 
   @JsonProperty("id")
   private Long id;
 
+  @NotNull
   @JsonProperty("assetId")
   private Long assetId;
 
@@ -41,10 +48,12 @@ public class Revaluation   {
   @JsonProperty("typeOfChange")
   private TypeOfChange typeOfChange;
 
+  @NotNull
   @JsonProperty("revaluationAmount")
   private BigDecimal revaluationAmount;
 
   @JsonProperty("valueAfterRevaluation")
+  @NotNull
   private BigDecimal valueAfterRevaluation;
 
   @JsonProperty("revaluationDate")
@@ -79,5 +88,14 @@ public class Revaluation   {
 
   @JsonProperty("status")
   private String status;
+
+  @JsonProperty("stateId")
+  private Long stateId;
+  
+  @JsonProperty("workflowDetails")
+  private WorkflowDetails  workflowDetails;
+
 }
+
+
 

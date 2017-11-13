@@ -1,27 +1,30 @@
 package io.swagger.model;
 
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.model.AuditDetails;
+import io.swagger.model.ChartofAccount;
+import io.swagger.model.Material;
+import io.swagger.model.Store;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.util.Objects;
+import javax.validation.constraints.*;
 
 /**
  * This object holds the material store mapping details information.
  */
-@ApiModel(description = "This object holds the material store mapping details information.   ")
-@Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-02T16:27:56.269+05:30")
+@ApiModel(description = "This object holds the material store mapping details information. ")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T03:57:55.756Z")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MaterialStoreMapping {
+public class MaterialStoreMapping   {
     @JsonProperty("id")
     private String id = null;
 
@@ -37,6 +40,9 @@ public class MaterialStoreMapping {
     @JsonProperty("active")
     private Boolean active = null;
 
+    @JsonProperty("delete")
+    private Boolean delete = null;
+
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;
 
@@ -47,10 +53,9 @@ public class MaterialStoreMapping {
 
     /**
      * Unique Identifier of the Material Store Mapping
-     *
      * @return id
      **/
-    @ApiModelProperty(value = "Unique Identifier of the Material Store Mapping       ")
+    @ApiModelProperty(value = "Unique Identifier of the Material Store Mapping ")
 
 
     public String getId() {
@@ -67,12 +72,11 @@ public class MaterialStoreMapping {
     }
 
     /**
-     * code of material
-     *
+     * Get material
      * @return material
      **/
-    @ApiModelProperty(value = "code of material ")
-
+    @ApiModelProperty(required = true, value = "")
+    @NotNull
 
     public Material getMaterial() {
         return material;
@@ -88,11 +92,10 @@ public class MaterialStoreMapping {
     }
 
     /**
-     * code of store
-     *
+     * Get store
      * @return store
      **/
-    @ApiModelProperty(required = true, value = "code of store ")
+    @ApiModelProperty(required = true, value = "")
     @NotNull
 
     public Store getStore() {
@@ -110,7 +113,6 @@ public class MaterialStoreMapping {
 
     /**
      * Get chartofAccount
-     *
      * @return chartofAccount
      **/
     @ApiModelProperty(value = "")
@@ -132,18 +134,37 @@ public class MaterialStoreMapping {
 
     /**
      * active or inactive flag of mapping
-     *
      * @return active
      **/
     @ApiModelProperty(value = "active or inactive flag of mapping ")
 
 
-    public Boolean isActive() {
+    public Boolean getActive() {
         return active;
     }
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public MaterialStoreMapping delete(Boolean delete) {
+        this.delete = delete;
+        return this;
+    }
+
+    /**
+     * delete flag of mapping used during deleting the mapping.
+     * @return delete
+     **/
+    @ApiModelProperty(value = "delete flag of mapping used during deleting the mapping. ")
+
+
+    public Boolean getDelete() {
+        return delete;
+    }
+
+    public void setDelete(Boolean delete) {
+        this.delete = delete;
     }
 
     public MaterialStoreMapping auditDetails(AuditDetails auditDetails) {
@@ -153,7 +174,6 @@ public class MaterialStoreMapping {
 
     /**
      * Get auditDetails
-     *
      * @return auditDetails
      **/
     @ApiModelProperty(value = "")
@@ -170,7 +190,7 @@ public class MaterialStoreMapping {
 
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(java.lang.Object o) {
         if (this == o) {
             return true;
         }
@@ -183,12 +203,13 @@ public class MaterialStoreMapping {
                 Objects.equals(this.store, materialStoreMapping.store) &&
                 Objects.equals(this.chartofAccount, materialStoreMapping.chartofAccount) &&
                 Objects.equals(this.active, materialStoreMapping.active) &&
+                Objects.equals(this.delete, materialStoreMapping.delete) &&
                 Objects.equals(this.auditDetails, materialStoreMapping.auditDetails);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, material, store, chartofAccount, active, auditDetails);
+        return Objects.hash(id, material, store, chartofAccount, active, delete, auditDetails);
     }
 
     @Override
@@ -201,6 +222,7 @@ public class MaterialStoreMapping {
         sb.append("    store: ").append(toIndentedString(store)).append("\n");
         sb.append("    chartofAccount: ").append(toIndentedString(chartofAccount)).append("\n");
         sb.append("    active: ").append(toIndentedString(active)).append("\n");
+        sb.append("    delete: ").append(toIndentedString(delete)).append("\n");
         sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
         sb.append("}");
         return sb.toString();
@@ -210,11 +232,10 @@ public class MaterialStoreMapping {
      * Convert the given object to string with each line indented by 4 spaces
      * (except the first line).
      */
-    private String toIndentedString(Object o) {
+    private String toIndentedString(java.lang.Object o) {
         if (o == null) {
             return "null";
         }
         return o.toString().replace("\n", "\n    ");
     }
 }
-

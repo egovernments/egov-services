@@ -44,11 +44,7 @@ import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.model.User;
 import org.springframework.stereotype.Component;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
-
-import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class EmployeeUserMapper {
@@ -82,8 +78,6 @@ public class EmployeeUserMapper {
     }
 
     public List<EmployeeInfo> mapUsersWithEmployeesForReport(List<EmployeeInfo> employeeInfoList, List<User> userInfoList) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-DD");
-
 
         Map<Long, User> userInfoMap = new HashMap<Long, User>();
         List<EmployeeInfo> finalEmployeeList = new ArrayList<EmployeeInfo>();
@@ -100,18 +94,7 @@ public class EmployeeUserMapper {
                     employeeInfo.setSalutation(userInfo.getSalutation());
                     employeeInfo.setName(userInfo.getName());
                     employeeInfo.setUserName(userInfo.getUserName());
-                    try {
-                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                        Date date = isEmpty(userInfo.getDob()) ? null : (Date) formatter.parse(userInfo.getDob());
-                        if (!isEmpty(date)) {
-                            String finalString = sdf.format(date);
-                            dob = sdf.parse(finalString);
-                        }
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    employeeInfo.setDob(dob);
+                    employeeInfo.setDob(userInfo.getDob());
                     employeeInfo.setGender(userInfo.getGender());
                     employeeInfo.setMobileNumber(userInfo.getMobileNumber());
                     employeeInfo.setAltContactNumber(userInfo.getAltContactNumber());

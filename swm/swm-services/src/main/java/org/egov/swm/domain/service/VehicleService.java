@@ -48,12 +48,14 @@ public class VehicleService {
 
 		validate(Constants.ACTION_CREATE, vehicleRequest);
 		Long userId = null;
+
+		if (vehicleRequest.getRequestInfo() != null && vehicleRequest.getRequestInfo().getUserInfo() != null
+				&& null != vehicleRequest.getRequestInfo().getUserInfo().getId()) {
+			userId = vehicleRequest.getRequestInfo().getUserInfo().getId();
+		}
+
 		for (Vehicle v : vehicleRequest.getVehicles()) {
 
-			if (vehicleRequest.getRequestInfo() != null && vehicleRequest.getRequestInfo().getUserInfo() != null
-					&& null != vehicleRequest.getRequestInfo().getUserInfo().getId()) {
-				userId = vehicleRequest.getRequestInfo().getUserInfo().getId();
-			}
 			setAuditDetails(v, userId);
 
 			prepareInsuranceDocument(v);
@@ -113,6 +115,11 @@ public class VehicleService {
 
 		for (Vehicle vehicle : vehicleRequest.getVehicles()) {
 
+			if (vehicle.getVehicleType() != null
+					&& (vehicle.getVehicleType().getCode() == null || vehicle.getVehicleType().getCode().isEmpty()))
+				throw new CustomException("VehicleType",
+						"The field VehicleType Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+
 			// Validate vehicle Type
 			if (vehicle.getVehicleType() != null && vehicle.getVehicleType().getCode() != null) {
 
@@ -128,23 +135,30 @@ public class VehicleService {
 
 			}
 
+			if (vehicle.getVendor() != null
+					&& (vehicle.getVendor().getVendorNo() == null || vehicle.getVendor().getVendorNo().isEmpty()))
+				throw new CustomException("VehicleType",
+						"The field Vendor number is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+
 			// Validate vendor
-			if (vehicle.getVendor() != null) {
 
-				if (vehicle.getVendor() != null && vehicle.getVendor().getVendorNo() != null) {
-					vendorSearch = new VendorSearch();
-					vendorSearch.setTenantId(vehicle.getTenantId());
-					vendorSearch.setVendorNo(vehicle.getVendor().getVendorNo());
-					vendors = vendorService.search(vendorSearch);
-					if (vendors != null && vendors.getPagedData() != null && !vendors.getPagedData().isEmpty()) {
-						vehicle.setVendor(vendors.getPagedData().get(0));
-					} else {
-						throw new CustomException("Vendor",
-								"Given Vendor is invalid: " + vehicle.getVendor().getVendorNo());
-					}
+			if (vehicle.getVendor() != null && vehicle.getVendor().getVendorNo() != null) {
+				vendorSearch = new VendorSearch();
+				vendorSearch.setTenantId(vehicle.getTenantId());
+				vendorSearch.setVendorNo(vehicle.getVendor().getVendorNo());
+				vendors = vendorService.search(vendorSearch);
+				if (vendors != null && vendors.getPagedData() != null && !vendors.getPagedData().isEmpty()) {
+					vehicle.setVendor(vendors.getPagedData().get(0));
+				} else {
+					throw new CustomException("Vendor",
+							"Given Vendor is invalid: " + vehicle.getVendor().getVendorNo());
 				}
-
 			}
+
+			if (vehicle.getFuelType() != null
+					&& (vehicle.getFuelType().getCode() == null || vehicle.getFuelType().getCode().isEmpty()))
+				throw new CustomException("FuelType",
+						"The field FuelType Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
 			// Validate Fuel Type
 			if (vehicle.getFuelType() != null) {

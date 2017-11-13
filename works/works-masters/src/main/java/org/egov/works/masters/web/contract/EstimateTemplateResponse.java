@@ -13,10 +13,10 @@ import java.util.Objects;
  * Contract class to send response. Array of Estimate Template items are used in case of search results, also multiple Estimate Template item is used for create and update
  */
 @ApiModel(description = "Contract class to send response. Array of Estimate Template items are used in case of search results, also multiple Estimate Template item is used for create and update")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-06T12:02:21.057Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T12:57:08.229Z")
 
 public class EstimateTemplateResponse   {
-  @JsonProperty("responseInfo")
+  @JsonProperty("ResponseInfo")
   private ResponseInfo responseInfo = null;
 
   @JsonProperty("estimateTemplates")

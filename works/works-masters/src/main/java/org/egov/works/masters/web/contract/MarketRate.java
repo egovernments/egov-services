@@ -7,13 +7,14 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
  * An Object that hold Market Rate Details for a given SOR
  */
 @ApiModel(description = "An Object that hold Market Rate Details for a given SOR")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-02T07:23:18.632Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T05:49:05.088Z")
 
 public class MarketRate   {
   @JsonProperty("id")
@@ -23,7 +24,7 @@ public class MarketRate   {
   private String tenantId = null;
 
   @JsonProperty("scheduleOfRate")
-  private ScheduleOfRate scheduleOfRate = null;
+  private String scheduleOfRate = null;
 
   @JsonProperty("fromDate")
   private Long fromDate = null;
@@ -32,7 +33,7 @@ public class MarketRate   {
   private Long toDate = null;
 
   @JsonProperty("rate")
-  private Integer rate = null;
+  private BigDecimal rate = null;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -69,7 +70,7 @@ public class MarketRate   {
   @ApiModelProperty(required = true, value = "Tenant id of the Market Rate Details")
   @NotNull
 
- @Size(min=4,max=128)
+ @Size(min=2,max=128)
   public String getTenantId() {
     return tenantId;
   }
@@ -78,25 +79,23 @@ public class MarketRate   {
     this.tenantId = tenantId;
   }
 
-  public MarketRate scheduleOfRate(ScheduleOfRate scheduleOfRate) {
+  public MarketRate scheduleOfRate(String scheduleOfRate) {
     this.scheduleOfRate = scheduleOfRate;
     return this;
   }
 
    /**
-   * Get scheduleOfRate
+   * unique reference from 'ScheduleOfRate'. We will store primary key of 'ScheduleOfRate'
    * @return scheduleOfRate
   **/
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
+  @ApiModelProperty(required = true, value = "unique reference from 'ScheduleOfRate'. We will store primary key of 'ScheduleOfRate'")
 
-  @Valid
 
-  public ScheduleOfRate getScheduleOfRate() {
+  public String getScheduleOfRate() {
     return scheduleOfRate;
   }
 
-  public void setScheduleOfRate(ScheduleOfRate scheduleOfRate) {
+  public void setScheduleOfRate(String scheduleOfRate) {
     this.scheduleOfRate = scheduleOfRate;
   }
 
@@ -141,7 +140,7 @@ public class MarketRate   {
     this.toDate = toDate;
   }
 
-  public MarketRate rate(Integer rate) {
+  public MarketRate rate(BigDecimal rate) {
     this.rate = rate;
     return this;
   }
@@ -153,12 +152,13 @@ public class MarketRate   {
   @ApiModelProperty(required = true, value = "Market Rate which is applicable for given date range")
   @NotNull
 
+  @Valid
 
-  public Integer getRate() {
+  public BigDecimal getRate() {
     return rate;
   }
 
-  public void setRate(Integer rate) {
+  public void setRate(BigDecimal rate) {
     this.rate = rate;
   }
 

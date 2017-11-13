@@ -48,12 +48,13 @@ public class LandAcquisitionService {
 			landTransfer.setId(sequenceGenService.getIds(1, "seq_eg_lams_landtransfer").get(0));
 			});
 			
-			landAcquisition.getValuationDetails().setId(sequenceGenService.getIds(1, "seq_eg_lams_valuationdetail").get(0));
+			
+			landAcquisition.getValuationDetails().stream().forEach(valuation-> valuation.setId(sequenceGenService.getIds(1, "seq_eg_lams_valuationdetail").get(0)));
 			
 			landAcquisition.getProposalDetails().setId(sequenceGenService.getIds(1, "seq_eg_lams_proposaldetails").get(0));
-			landAcquisition.getProposalDetails().setProposalNumber("P"+Calendar.getInstance().get(Calendar.YEAR)+String.format("%05d",landAcquisition.getProposalDetails().getId()));
+//			landAcquisition.getProposalDetails().setProposalNumber("P"+Calendar.getInstance().get(Calendar.YEAR)+String.format("%05d",landAcquisition.getProposalDetails().getId()));
 			
-			landAcquisition.getSupportDocuments().stream().forEach(suportDocument -> {
+			landAcquisition.getDocuments().stream().forEach(suportDocument -> {
 			suportDocument.setId(sequenceGenService.getIds(1,"seq_eg_lams_supportdocuments").get(0));
 			});
 			
@@ -96,7 +97,7 @@ public class LandAcquisitionService {
 	{  
 	    Calendar cal = Calendar.getInstance();
 		String code= "LACQ-";
-		long id = sequenceGenService.getIds(1, "seq_eg_lams_landacquisition").get(0);
+		String id = sequenceGenService.getIds(1, "seq_eg_lams_landacquisition").get(0);
 		int year= cal.get(Calendar.YEAR);
 		String idgen =String.format("%05d", id);
 

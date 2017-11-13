@@ -4,13 +4,13 @@ import java.math.BigDecimal;
 
 import io.swagger.model.AuditDetails;
 import io.swagger.model.CommonEnum;
-import io.swagger.model.MaterialReceiptHeader;
-import lombok.Builder;
+import io.swagger.model.MaterialReceipt;
+import io.swagger.model.Store;
+import io.swagger.model.Supplier;
 import lombok.Getter;
 import lombok.Setter;
  @Getter
  @Setter
- 
 public class ReceiptNoteApiEntity {
 
 	public static final String TABLE_NAME = "materialReceiptHeader";
@@ -33,7 +33,7 @@ public class ReceiptNoteApiEntity {
 
 	private Long supplierBillDate = null;
 
-	private Boolean challanNo = false;
+	private String challanNo = null;
 
 	private Long challanDate = null;
 
@@ -65,17 +65,16 @@ public class ReceiptNoteApiEntity {
 
 	private String tenantId;
 
-	public Object toEntity(MaterialReceiptHeader materialReceiptHeader) {
+	public Object toEntity(MaterialReceipt materialReceiptHeader) {
 		this.id = materialReceiptHeader.getId();
 		this.mrnNumber = materialReceiptHeader.getMrnNumber();
-		this.mrnStatus = materialReceiptHeader.getMrnStatus().name();
 		this.receiptDate = materialReceiptHeader.getReceiptDate();
-		this.receivingStore = materialReceiptHeader.getReceivingStore();
-		this.supplierCode = materialReceiptHeader.getSupplierCode();
+		this.receivingStore = materialReceiptHeader.getReceivingStore().getCode();
+		this.supplierCode = materialReceiptHeader.getSupplier().getCode();
 		this.receiptType = materialReceiptHeader.getReceiptType().name();
 		this.supplierBillNo = materialReceiptHeader.getSupplierBillNo();
 		this.supplierBillDate = materialReceiptHeader.getSupplierBillDate();
-		this.challanNo = materialReceiptHeader.isChallanNo();
+		this.challanNo = materialReceiptHeader.getChallanNo();
 		this.challanDate = materialReceiptHeader.getChallanDate();
 		this.description = materialReceiptHeader.getDescription();
 		this.receivedBy = materialReceiptHeader.getReceivedBy();
@@ -94,18 +93,22 @@ public class ReceiptNoteApiEntity {
 		return this;
 	}
 
-	public MaterialReceiptHeader toDomain() {
-		MaterialReceiptHeader materialReceiptHeader = new MaterialReceiptHeader();
+	public MaterialReceipt toDomain() {
+		MaterialReceipt materialReceiptHeader = new MaterialReceipt();
 		materialReceiptHeader.setId(id);
 		materialReceiptHeader.setMrnNumber(mrnNumber);
 		materialReceiptHeader.setTenantId(tenantId);
 		
 		CommonEnum mrnType = new CommonEnum();
 		mrnType.setName(mrnStatus);
-		
 		materialReceiptHeader.setReceiptDate(receiptDate);
-		materialReceiptHeader.setReceivingStore(receivingStore);
-		materialReceiptHeader.setSupplierCode(supplierCode);
+		
+		Store store = new Store();
+		store.setCode(receivingStore);
+		materialReceiptHeader.setReceivingStore(store);
+		Supplier supp = new Supplier();
+		supp.setCode(supplierCode);
+		materialReceiptHeader.setSupplier(supp);
 		
 		CommonEnum receiptTypes = new CommonEnum();
 		receiptTypes.setName(receiptType);

@@ -176,7 +176,7 @@ public class DetailedEstimateHelper   {
 
     @JsonProperty("budgetGroup")
     private String budgetGroup = null;
-    
+
     public DetailedEstimate toDomain(final DetailedEstimateHelper estimate) {
 
 		DetailedEstimate detailedEstimate = new DetailedEstimate();

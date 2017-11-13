@@ -1,16 +1,17 @@
-{  
+{
    "tenantId":"default",
    "moduleName":"inventory",
-   "Store":[  
-      {  
+   "Store":[
+      {
          "id":1,
          "tenantId":"default",
          "code":"STORE1",
          "name":"Fake Store Name 1",
-         "department":{  
-            "id":1,
-            "code":"DEPT1",
-            "name":"Fake Department 1",
+         "department":{
+            "id":"18",
+            "name":"Store Department",
+            "code":"SD",
+            "active":"true",
             "tenantId":"default"
          },
          "description":"Fake Store Description 1",
@@ -21,15 +22,16 @@
          "contactDetails":"Fake Store Contact Details 1",
          "emailAddress":"fakeemail1@xyz.com"
       },
-      {  
+      {
          "id":2,
          "tenantId":"default",
          "code":"STORE2",
          "name":"Fake Store Name 2",
-         "department":{  
-            "id":2,
-            "code":"DEPT2",
-            "name":"Fake Department 2",
+         "department":{
+            "id":"18",
+            "name":"Store Department",
+            "code":"SD",
+            "active":"true",
             "tenantId":"default"
          },
          "description":"Fake Store Description 2",
@@ -40,15 +42,16 @@
          "contactDetails":"Fake Store Contact Details ",
          "emailAddress":"fakeemail2@xyz.com"
       },
-      {  
+      {
          "id":3,
          "tenantId":"default",
          "code":"STORE3",
          "name":"Fake Store Name 3",
-         "department":{  
-            "id":3,
-            "code":"DEPT3",
-            "name":"Fake Department 3",
+         "department":{
+            "id":"13",
+            "name":"Light Department",
+            "code":"LT",
+            "active":"true",
             "tenantId":"default"
          },
          "description":"Fake Store Description 3",
@@ -60,8 +63,8 @@
          "emailAddress":"fakeemail3@xyz.com"
       }
    ],
-   "MaterialType":[  
-      {  
+   "MaterialType":[
+      {
          "id":1,
          "tenantId":"default",
          "code":"MT1",
@@ -73,7 +76,7 @@
          "stockInHandCode":"SIH1",
          "active":true
       },
-      {  
+      {
          "id":2,
          "tenantId":"default",
          "code":"MT2",
@@ -85,7 +88,7 @@
          "stockInHandCode":"SIH2",
          "active":true
       },
-      {  
+      {
          "id":3,
          "tenantId":"default",
          "code":"MT3",
@@ -98,37 +101,37 @@
          "active":true
       }
    ],
-   "Material":[  
-      {  
+   "Material":[
+      {
          "code":"MAT1",
          "description":"description1",
          "name":"name1",
          "oldCode":"oldCode1",
-         "materialType":{  
+         "materialType":{
             "id":1,
             "name":"Fake Material Type Name 1",
             "code":"MT1"
          },
-         "baseUom":{  
+         "baseUom":{
             "id":1,
             "name":"kgs",
             "code":"KGS"
          },
          "inventoryType":"Consumable",
          "status":"Active",
-         "purchaseUom":{  
+         "purchaseUom":{
             "id":1,
             "name":"kgs",
             "code":"KGS"
          },
-         "expenseAccount":{  
+         "expenseAccount":{
             "id":1,
             "name":"uomName",
             "glCode":"glCode"
          },
          "minQuantity":1,
          "maxQuantity":1,
-         "staockingUom":{  
+         "staockingUom":{
             "id":1,
             "name":"uomName",
             "code":"uomCode"
@@ -143,36 +146,36 @@
          "termsOfDelivery":"termsOfDelivery",
          "overrideMaterialControlType":true
       },
-      {  
+      {
          "code":"MAT2",
          "description":"description2",
          "name":"name2",
          "oldCode":"oldCode2",
-         "materialType":{  
+         "materialType":{
             "id":1,
             "name":"Fake Material Type Name 2",
             "code":"MT1"
          },
-         "baseUom":{  
+         "baseUom":{
             "id":1,
             "name":"kgs",
             "code":"KGS"
          },
          "inventoryType":"Consumable",
          "status":"Active",
-         "purchaseUom":{  
+         "purchaseUom":{
             "id":1,
             "name":"kgs",
             "code":"KGS"
          },
-         "expenseAccount":{  
+         "expenseAccount":{
             "id":1,
             "name":"uomName",
             "glCode":"glCode"
          },
          "minQuantity":1,
          "maxQuantity":1,
-         "staockingUom":{  
+         "staockingUom":{
             "id":1,
             "name":"uomName",
             "code":"uomCode"
@@ -187,36 +190,36 @@
          "termsOfDelivery":"termsOfDelivery",
          "overrideMaterialControlType":true
       },
-      {  
+      {
          "code":"MAT3",
          "description":"description3",
          "name":"name3",
          "oldCode":"oldCode3",
-         "materialType":{  
+         "materialType":{
             "id":1,
             "name":"Fake Material Type Name 3",
             "code":"MT1"
          },
-         "baseUom":{  
+         "baseUom":{
             "id":1,
             "name":"kgs",
             "code":"KGS"
          },
          "inventoryType":"Consumable",
          "status":"Active",
-         "purchaseUom":{  
+         "purchaseUom":{
             "id":1,
             "name":"kgs",
             "code":"KGS"
          },
-         "expenseAccount":{  
+         "expenseAccount":{
             "id":1,
             "name":"uomName",
             "glCode":"glCode"
          },
          "minQuantity":1,
          "maxQuantity":1,
-         "staockingUom":{  
+         "staockingUom":{
             "id":1,
             "name":"uomName",
             "code":"uomCode"
@@ -232,104 +235,121 @@
          "overrideMaterialControlType":true
       }
    ],
-   "MaterialControlType":[  
-      {  
+   "MaterialControlType":[
+      {
          "tenantId":"default",
          "code":"LOTCONTROL",
          "name":"LOT Control"
       },
-      {  
+      {
          "tenantId":"default",
          "code":"SHELF_LIFE_CONTROL",
          "name":"Shelf_life_Control"
       }
    ],
-   "MaterialClass":[  
-      {  
+   "MaterialClass":[
+      {
          "tenantId":"default",
          "code":"HIGHUSAGE",
          "name":"HighUsage"
       },
-      {  
+      {
          "tenantId":"default",
          "code":"MEDIUMUSAGE",
          "name":"MediumUsage"
       },
-      {  
+      {
          "tenantId":"default",
          "code":"LOWUSAGE",
          "name":"LowUsage"
       }
    ],
-   "Status":[  
-      {  
+   "Status":[
+      {
          "tenantId":"default",
          "code":"ACTIVE",
          "name":"Active"
       },
-      {  
+      {
          "tenantId":"default",
          "code":"WITHDRAWN",
          "name":"Withdrawn"
       },
-      {  
+      {
          "tenantId":"default",
          "code":"OBSOLETE",
          "name":"Obsolete"
       },
-      {  
+      {
          "tenantId":"default",
          "code":"SUSPENDED",
          "name":"suspended"
       },
-      {  
+      {
          "tenantId":"default",
          "code":"BARRED",
          "name":"barred"
       },
-      {  
+      {
          "tenantId":"default",
          "code":"INACTIVE",
          "name":"inactive"
       }
    ],
-   "InventoryType":[  
-      {  
+   "InventoryType":[
+      {
          "tenantId":"default",
          "code":"ASSET",
          "name":"Asset"
       },
-      {  
+      {
          "tenantId":"default",
          "code":"CONSUMABLE",
          "name":"consumable"
       }
    ],
-   "SuplierType":[  
-      {  
+   "SuplierType":[
+      {
          "tenantId":"default",
          "code":"INDIVIDUAL",
          "name":"individual"
       },
-      {  
+      {
          "tenantId":"default",
          "code":"FIRM",
          "name":"firm"
       },
-      {  
+      {
          "tenantId":"default",
          "code":"COMPANY",
          "name":"company"
       },
-      {  
+      {
          "tenantId":"default",
          "code":"REGISTERED",
          "name":"registered"
       },
-      {  
+      {
          "tenantId":"default",
          "code":"SOCIETY",
          "name":"society"
+      }
+   ],
+   "Location":[
+      {
+         "tenantId":"default",
+         "code":"LOC1",
+         "name":"Location1"
+      },
+      {
+         "tenantId":"default",
+         "code":"LOC2",
+         "name":"Location1"
+      },
+      {
+         "tenantId":"default",
+         "code":"LOC3",
+         "name":"Location3"
       }
    ]
 }

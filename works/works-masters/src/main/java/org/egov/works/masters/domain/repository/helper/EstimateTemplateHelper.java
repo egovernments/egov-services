@@ -61,10 +61,11 @@ public class EstimateTemplateHelper {
         estimateTemplate.setId(this.id);
         estimateTemplate.setTenantId(this.tenantId);
         estimateTemplate.setCode(this.code);
+        estimateTemplate.setName(this.name);
         estimateTemplate.setActive(this.active);
         estimateTemplate.setDescription(this.description);
-        estimateTemplate.getTypeOfWork().setCode(this.typeOfWork);
-        estimateTemplate.getSubTypeOfWork().setCode(this.subTypeOfWork);
+        estimateTemplate.setTypeOfWork(this.typeOfWork);
+        estimateTemplate.setSubTypeOfWork(this.subTypeOfWork);
         return estimateTemplate;
     }
 }

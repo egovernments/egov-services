@@ -7,12 +7,12 @@ var dat = {
     "groups": [
       {
         "name": "search",
-        "label": "supplier.search.title",
+        "label": "inventory.supplier.search.title",
         "fields": [
           {
             "name": "supplierName",
             "jsonPath": "codes",
-            "label": "supplier.search.name",
+            "label": "inventory.supplier.name",
             "type": "singleValueList",
             "url":"inventory-services/suppliers/_search?|$..code|$..name",
             "isRequired": false,
@@ -22,7 +22,7 @@ var dat = {
           {
             "name": "supplier.type",
             "jsonPath": "type",
-            "label": "supplier.search.type",
+            "label": "inventory.supplier.type",
             "type": "singleValueList",
             "defaultValue":[
               {key: null, value: "-- Please Select --"},
@@ -58,7 +58,7 @@ var dat = {
           {
             "name": "isActive",
             "jsonPath": "active",
-            "label": "supplier.search.isactive",
+            "label": "inventory.common.active",
             "type": "checkbox",
             "defaultValue":true,
             "isRequired": false,
@@ -71,21 +71,22 @@ var dat = {
     "result": {
       "header": [
         {
-          "label": "inventory.search.result.Supplier Code"
+          "label": "inventory.supplier.name"
         }, {
-          "label": "inventory.search.result.Supplier Name"
+          "label": "inventory.supplier.type"
         }, {
-          "label": "inventory.search.result.Active"
+          "label": "inventory.common.active"
         }
       ],
       "values": [
         "code", "name", {valuePath:"active", type:"checkbox"}
       ],
       "resultPath": "suppliers",
+      "resultIdKey":"code",
       "rowClickUrlUpdate": "/update/inventory/supplier/{code}",
       "rowClickUrlView": "/view/inventory/supplier/{code}",
       "rowClickUrlAdd" : "/create/inventory/supplier",
-      "rowClickUrlDelete" : ""
+      "rowClickUrlDelete" : "inventory-services/suppliers/_update"
     }
   },
   "inventory.create": {
@@ -94,13 +95,13 @@ var dat = {
     "objectName": "suppliers",
     "groups": [
       {
-        "name": "Add Supplie",
-        "label": "inventory.create.group.title.Add Supplie",
+        "name": "Add Supplier",
+        "label": "inventory.supplier.add.title",
         "fields": [
           {
             "name": "supplierType",
             "jsonPath": "suppliers[0].type",
-            "label": "inventory.create.supplierType",
+            "label": "inventory.supplier.type",
             "type": "singleValueList",
             "defaultValue":[
               {key: null, value: "-- Please Select --"},
@@ -135,7 +136,7 @@ var dat = {
           }, {
             "name": "code",
             "jsonPath": "suppliers[0].code",
-            "label": "inventory.create.code",
+            "label": "inventory.supplier.code",
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
@@ -145,7 +146,7 @@ var dat = {
           }, {
             "name": "name",
             "jsonPath": "suppliers[0].name",
-            "label": "inventory.create.name",
+            "label": "inventory.supplier.name",
             "pattern": "^[a-zA-Z ]+$",
             "type": "text",
             "isRequired": true,
@@ -156,7 +157,7 @@ var dat = {
           }, {
             "name": "address",
             "jsonPath": "suppliers[0].address",
-            "label": "inventory.create.address",
+            "label": "inventory.supplier.address",
             "pattern": "^[a-zA-Z0-9 ]+$",
             "type": "textarea",
             "isRequired": true,
@@ -166,7 +167,7 @@ var dat = {
           }, {
             "name": "description",
             "jsonPath": "suppliers[0].description",
-            "label": "inventory.create.description",
+            "label": "inventory.supplier.description",
             "type": "textarea",
             "isRequired": false,
             "isDisabled": false,
@@ -175,7 +176,7 @@ var dat = {
           }, {
             "name": "contactNo",
             "jsonPath": "suppliers[0].contactNo",
-            "label": "inventory.create.contactNo",
+            "label": "inventory.common.contactno",
             "pattern": "^[0-9]+$",
             "type": "text",
             "isRequired": true,
@@ -185,7 +186,7 @@ var dat = {
           }, {
             "name": "faxNo",
             "jsonPath": "suppliers[0].faxNo",
-            "label": "inventory.create.faxNo",
+            "label": "inventory.common.faxno",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -193,8 +194,8 @@ var dat = {
           }, {
             "name": "website",
             "jsonPath": "suppliers[0].website",
-            "label": "inventory.create.website",
-            "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
+            "label": "inventory.supplier.website",
+            "pattern": "^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -202,8 +203,8 @@ var dat = {
           }, {
             "name": "email",
             "jsonPath": "suppliers[0].email",
-            "label": "inventory.create.email",
-            "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
+            "label": "inventory.common.email",
+            "pattern": "^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -212,7 +213,7 @@ var dat = {
           }, {
             "name": "panNo",
             "jsonPath": "suppliers[0].panNo",
-            "label": "inventory.create.panNo",
+            "label": "inventory.common.panno",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -221,7 +222,7 @@ var dat = {
           }, {
             "name": "tinNo",
             "jsonPath": "suppliers[0].tinNo",
-            "label": "inventory.create.tinNo",
+            "label": "inventory.common.tinno",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -230,7 +231,7 @@ var dat = {
           }, {
             "name": "cstNo",
             "jsonPath": "suppliers[0].cstNo",
-            "label": "inventory.create.cstNo",
+            "label": "inventory.common.cstno",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -239,7 +240,7 @@ var dat = {
           }, {
             "name": "vatNo",
             "jsonPath": "suppliers[0].vatNo",
-            "label": "inventory.create.vatNo",
+            "label": "inventory.common.vatno",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -248,7 +249,7 @@ var dat = {
           }, {
             "name": "gstNo",
             "jsonPath": "suppliers[0].gstNo",
-            "label": "inventory.create.gstNo",
+            "label": "inventory.common.gstno",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -257,7 +258,7 @@ var dat = {
           }, {
             "name": "contactPerson",
             "jsonPath": "suppliers[0].contactPerson",
-            "label": "inventory.create.contactPerson",
+            "label": "inventory.common.contactperson",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -267,7 +268,7 @@ var dat = {
           }, {
             "name": "contactPersonNo",
             "jsonPath": "suppliers[0].contactPersonNo",
-            "label": "inventory.create.contactPersonNo",
+            "label": "inventory.common.contactno",
             "pattern": "^[0-9]+$",
             "type": "text",
             "isRequired": false,
@@ -277,7 +278,7 @@ var dat = {
           }, {
             "name": "active",
             "jsonPath": "suppliers[0].active",
-            "label": "inventory.create.active",
+            "label": "inventory.common.active",
             "type": "checkbox",
             "defaultValue":true,
             "isRequired": true,
@@ -299,12 +300,12 @@ var dat = {
         ]
       }, {
         "name": "Bank Information",
-        "label": "inventory.create.group.title.Bank Information",
+        "label": "inventory.common.bankinfo",
         "fields": [
           {
             "name": "name",
             "jsonPath": "suppliers[0].bankCode",
-            "label": "inventory.create.name",
+            "label": "inventory.common.bankname",
             "pattern": "^[a-zA-Z ]$",
             "type": "singleValueList",
             "isRequired": true,
@@ -314,7 +315,7 @@ var dat = {
           }, {
             "name": "bankBranch",
             "jsonPath": "suppliers[0].bankBranch",
-            "label": "inventory.create.bankBranch",
+            "label": "inventory.common.bankbranchname",
             "pattern": "",
             "type": "text",
             "isRequired": true,
@@ -323,7 +324,7 @@ var dat = {
           },{
             "name": "acctNo",
             "jsonPath": "suppliers[0].acctNo",
-            "label": "inventory.create.acctNo",
+            "label": "inventory.common.bankacctno",
             "pattern": "^[0-9]+$",
             "type": "text",
             "isRequired": true,
@@ -332,7 +333,7 @@ var dat = {
           }, {
             "name": "ifsc",
             "jsonPath": "suppliers[0].ifsc",
-            "label": "inventory.create.ifsc",
+            "label": "inventory.common.ifsc",
             "pattern": "^[a-zA-Z0-9]+$",
             "type": "text",
             "isRequired": true,
@@ -341,7 +342,7 @@ var dat = {
           }, {
             "name": "micr",
             "jsonPath": "suppliers[0].micr",
-            "label": "inventory.create.micr",
+            "label": "inventory.common.micr",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -359,13 +360,13 @@ var dat = {
     "objectName": "suppliers",
     "groups": [
       {
-        "name": "Add Supplie",
-        "label": "inventory.create.group.title.Add Supplie",
+        "name": "View Supplier",
+        "label": "inventory.supplier.view.title",
         "fields": [
           {
             "name": "name",
             "jsonPath": "suppliers[0].type",
-            "label": "inventory.create.name",
+            "label": "inventory.supplier.type",
             "type": "singleValueList",
             "defaultValue":[
               {key: null, value: "-- Please Select --"},
@@ -400,7 +401,7 @@ var dat = {
           }, {
             "name": "code",
             "jsonPath": "suppliers[0].code",
-            "label": "inventory.create.code",
+            "label": "inventory.supplier.code",
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
@@ -410,7 +411,7 @@ var dat = {
           }, {
             "name": "name",
             "jsonPath": "suppliers[0].name",
-            "label": "inventory.create.name",
+            "label": "inventory.supplier.name",
             "pattern": "^[a-zA-Z ]+$",
             "type": "text",
             "isRequired": true,
@@ -421,7 +422,7 @@ var dat = {
           }, {
             "name": "address",
             "jsonPath": "suppliers[0].address",
-            "label": "inventory.create.address",
+            "label": "inventory.supplier.address",
             "pattern": "^[a-zA-Z0-9 ]+$",
             "type": "textarea",
             "isRequired": true,
@@ -431,7 +432,7 @@ var dat = {
           }, {
             "name": "description",
             "jsonPath": "suppliers[0].description",
-            "label": "inventory.create.description",
+            "label": "inventory.supplier.description",
             "type": "textarea",
             "isRequired": false,
             "isDisabled": false,
@@ -440,7 +441,7 @@ var dat = {
           }, {
             "name": "contactNo",
             "jsonPath": "suppliers[0].contactNo",
-            "label": "inventory.create.contactNo",
+            "label": "inventory.common.contactno",
             "pattern": "^[0-9]+$",
             "type": "text",
             "isRequired": true,
@@ -450,7 +451,7 @@ var dat = {
           }, {
             "name": "faxNo",
             "jsonPath": "suppliers[0].faxNo",
-            "label": "inventory.create.faxNo",
+            "label": "inventory.common.faxno",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -458,8 +459,8 @@ var dat = {
           }, {
             "name": "website",
             "jsonPath": "suppliers[0].website",
-            "label": "inventory.create.website",
-            "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
+            "label": "inventory.supplier.website",
+            "pattern": "^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -467,8 +468,8 @@ var dat = {
           }, {
             "name": "email",
             "jsonPath": "suppliers[0].email",
-            "label": "inventory.create.email",
-            "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
+            "label": "inventory.common.email",
+            "pattern": "^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -477,7 +478,7 @@ var dat = {
           }, {
             "name": "panNo",
             "jsonPath": "suppliers[0].panNo",
-            "label": "inventory.create.panNo",
+            "label": "inventory.common.panno",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -486,7 +487,7 @@ var dat = {
           }, {
             "name": "tinNo",
             "jsonPath": "suppliers[0].tinNo",
-            "label": "inventory.create.tinNo",
+            "label": "inventory.common.tinno",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -495,7 +496,7 @@ var dat = {
           }, {
             "name": "cstNo",
             "jsonPath": "suppliers[0].cstNo",
-            "label": "inventory.create.cstNo",
+            "label": "inventory.common.cstno",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -504,7 +505,7 @@ var dat = {
           }, {
             "name": "vatNo",
             "jsonPath": "suppliers[0].vatNo",
-            "label": "inventory.create.vatNo",
+            "label": "inventory.common.vatno",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -513,7 +514,7 @@ var dat = {
           }, {
             "name": "gstNo",
             "jsonPath": "suppliers[0].gstNo",
-            "label": "inventory.create.gstNo",
+            "label": "inventory.common.gstno",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -522,7 +523,7 @@ var dat = {
           }, {
             "name": "contactPerson",
             "jsonPath": "suppliers[0].contactPerson",
-            "label": "inventory.create.contactPerson",
+            "label": "inventory.common.contactperson",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -532,7 +533,7 @@ var dat = {
           }, {
             "name": "contactPersonNo",
             "jsonPath": "suppliers[0].contactPersonNo",
-            "label": "inventory.create.contactPersonNo",
+            "label": "inventory.common.contactno",
             "pattern": "^[0-9]+$",
             "type": "text",
             "isRequired": false,
@@ -542,7 +543,7 @@ var dat = {
           }, {
             "name": "active",
             "jsonPath": "suppliers[0].active",
-            "label": "inventory.create.active",
+            "label": "inventory.common.active",
             "type": "checkbox",
             "defaultValue":true,
             "isRequired": true,
@@ -552,12 +553,12 @@ var dat = {
         ]
       }, {
         "name": "Bank Information",
-        "label": "inventory.create.group.title.Bank Information",
+        "label": "inventory.common.bankinfo",
         "fields": [
           {
             "name": "name",
             "jsonPath": "suppliers[0].bankCode",
-            "label": "inventory.create.name",
+            "label": "inventory.common.bankname",
             "pattern": "^[a-zA-Z ]$",
             "type": "singleValueList",
             "isRequired": true,
@@ -567,7 +568,7 @@ var dat = {
           }, {
             "name": "bankBranch",
             "jsonPath": "suppliers[0].bankBranch",
-            "label": "inventory.create.bankBranch",
+            "label": "inventory.common.bankbranchname",
             "pattern": "",
             "type": "text",
             "isRequired": true,
@@ -576,7 +577,7 @@ var dat = {
           },{
             "name": "acctNo",
             "jsonPath": "suppliers[0].acctNo",
-            "label": "inventory.create.acctNo",
+            "label": "inventory.common.bankacctno",
             "pattern": "^[0-9]+$",
             "type": "text",
             "isRequired": true,
@@ -585,7 +586,7 @@ var dat = {
           }, {
             "name": "ifsc",
             "jsonPath": "suppliers[0].ifsc",
-            "label": "inventory.create.ifsc",
+            "label": "inventory.common.ifsc",
             "pattern": "^[a-zA-Z0-9]+$",
             "type": "text",
             "isRequired": true,
@@ -594,7 +595,7 @@ var dat = {
           }, {
             "name": "micr",
             "jsonPath": "suppliers[0].micr",
-            "label": "inventory.create.micr",
+            "label": "inventory.common.micr",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -612,13 +613,13 @@ var dat = {
     "objectName": "suppliers",
     "groups": [
       {
-        "name": "Add Supplie",
-        "label": "inventory.create.group.title.Add Supplie",
+        "name": "Update Supplier",
+        "label": "inventory.supplier.update.title",
         "fields": [
           {
             "name": "supplierType",
             "jsonPath": "suppliers[0].type",
-            "label": "inventory.create.supplierType",
+            "label": "inventory.supplier.type",
             "type": "singleValueList",
             "defaultValue":[
               {key: null, value: "-- Please Select --"},
@@ -653,7 +654,7 @@ var dat = {
           }, {
             "name": "code",
             "jsonPath": "suppliers[0].code",
-            "label": "inventory.create.code",
+            "label": "inventory.supplier.code",
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
@@ -663,7 +664,7 @@ var dat = {
           }, {
             "name": "name",
             "jsonPath": "suppliers[0].name",
-            "label": "inventory.create.name",
+            "label": "inventory.supplier.name",
             "pattern": "^[a-zA-Z ]+$",
             "type": "text",
             "isRequired": true,
@@ -674,7 +675,7 @@ var dat = {
           }, {
             "name": "address",
             "jsonPath": "suppliers[0].address",
-            "label": "inventory.create.address",
+            "label": "inventory.supplier.address",
             "pattern": "^[a-zA-Z0-9 ]+$",
             "type": "textarea",
             "isRequired": true,
@@ -684,7 +685,7 @@ var dat = {
           }, {
             "name": "description",
             "jsonPath": "suppliers[0].description",
-            "label": "inventory.create.description",
+            "label": "inventory.supplier.description",
             "type": "textarea",
             "isRequired": false,
             "isDisabled": false,
@@ -693,7 +694,7 @@ var dat = {
           }, {
             "name": "contactNo",
             "jsonPath": "suppliers[0].contactNo",
-            "label": "inventory.create.contactNo",
+            "label": "inventory.common.contactno",
             "pattern": "^[0-9]+$",
             "type": "text",
             "isRequired": true,
@@ -703,7 +704,7 @@ var dat = {
           }, {
             "name": "faxNo",
             "jsonPath": "suppliers[0].faxNo",
-            "label": "inventory.create.faxNo",
+            "label": "inventory.common.faxno",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -711,8 +712,8 @@ var dat = {
           }, {
             "name": "website",
             "jsonPath": "suppliers[0].website",
-            "label": "inventory.create.website",
-            "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
+            "label": "inventory.supplier.website",
+            "pattern": "^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -720,8 +721,8 @@ var dat = {
           }, {
             "name": "email",
             "jsonPath": "suppliers[0].email",
-            "label": "inventory.create.email",
-            "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
+            "label": "inventory.common.email",
+            "pattern": "^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -730,7 +731,7 @@ var dat = {
           }, {
             "name": "panNo",
             "jsonPath": "suppliers[0].panNo",
-            "label": "inventory.create.panNo",
+            "label": "inventory.common.panno",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -739,7 +740,7 @@ var dat = {
           }, {
             "name": "tinNo",
             "jsonPath": "suppliers[0].tinNo",
-            "label": "inventory.create.tinNo",
+            "label": "inventory.common.tinno",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -748,7 +749,7 @@ var dat = {
           }, {
             "name": "cstNo",
             "jsonPath": "suppliers[0].cstNo",
-            "label": "inventory.create.cstNo",
+            "label": "inventory.common.cstno",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -757,7 +758,7 @@ var dat = {
           }, {
             "name": "vatNo",
             "jsonPath": "suppliers[0].vatNo",
-            "label": "inventory.create.vatNo",
+            "label": "inventory.common.vatno",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -766,7 +767,7 @@ var dat = {
           }, {
             "name": "gstNo",
             "jsonPath": "suppliers[0].gstNo",
-            "label": "inventory.create.gstNo",
+            "label": "inventory.common.gstno",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -775,7 +776,7 @@ var dat = {
           }, {
             "name": "contactPerson",
             "jsonPath": "suppliers[0].contactPerson",
-            "label": "inventory.create.contactPerson",
+            "label": "inventory.common.contactperson",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -785,7 +786,7 @@ var dat = {
           }, {
             "name": "contactPersonNo",
             "jsonPath": "suppliers[0].contactPersonNo",
-            "label": "inventory.create.contactPersonNo",
+            "label": "inventory.common.contactno",
             "pattern": "^[0-9]+$",
             "type": "text",
             "isRequired": false,
@@ -795,7 +796,7 @@ var dat = {
           }, {
             "name": "active",
             "jsonPath": "suppliers[0].active",
-            "label": "inventory.create.active",
+            "label": "inventory.common.active",
             "type": "checkbox",
             "defaultValue":true,
             "isRequired": true,
@@ -817,12 +818,12 @@ var dat = {
         ]
       }, {
         "name": "Bank Information",
-        "label": "inventory.create.group.title.Bank Information",
+        "label": "inventory.common.bankinfo",
         "fields": [
           {
             "name": "name",
             "jsonPath": "suppliers[0].bankCode",
-            "label": "inventory.create.name",
+            "label": "inventory.common.bankname",
             "pattern": "^[a-zA-Z ]$",
             "type": "singleValueList",
             "isRequired": true,
@@ -832,7 +833,7 @@ var dat = {
           }, {
             "name": "bankBranch",
             "jsonPath": "suppliers[0].bankBranch",
-            "label": "inventory.create.bankBranch",
+            "label": "inventory.common.bankbranchname",
             "pattern": "",
             "type": "text",
             "isRequired": true,
@@ -841,7 +842,7 @@ var dat = {
           },{
             "name": "acctNo",
             "jsonPath": "suppliers[0].acctNo",
-            "label": "inventory.create.acctNo",
+            "label": "inventory.common.acctno",
             "pattern": "^[0-9]+$",
             "type": "text",
             "isRequired": true,
@@ -850,7 +851,7 @@ var dat = {
           }, {
             "name": "ifsc",
             "jsonPath": "suppliers[0].ifsc",
-            "label": "inventory.create.ifsc",
+            "label": "inventory.common.ifsc",
             "pattern": "^[a-zA-Z0-9]+$",
             "type": "text",
             "isRequired": true,
@@ -859,7 +860,7 @@ var dat = {
           }, {
             "name": "micr",
             "jsonPath": "suppliers[0].micr",
-            "label": "inventory.create.micr",
+            "label": "inventory.common.micr",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,

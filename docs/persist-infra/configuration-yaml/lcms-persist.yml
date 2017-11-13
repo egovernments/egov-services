@@ -19,6 +19,7 @@ serviceMaps:
       - jsonPath: $.summons.*.caseNo
       
       - jsonPath: $.summons.*.summonDate
+        type: LONG
       
       - jsonPath: $.summons.*.year
       
@@ -186,7 +187,7 @@ serviceMaps:
           type: JSON
           dbType: JSONB
           
-        - jsonPath: $.cases[?({code} in @.paraWiseComments[*].code)].tenantId
+        - jsonPath: $.cases[?({code} in @.parawiseComments[*].code)].tenantId
         
         - jsonPath: $.cases[?({code} in @.parawiseComments[*].code)].code
         
@@ -231,7 +232,7 @@ serviceMaps:
           type: JSON
           dbType: JSONB
           
-        - jsonPath: $.cases[?({code} in @.paraWiseComments[*].code)].tenantId
+        - jsonPath: $.cases[?({code} in @.parawiseComments[*].code)].tenantId
         
         - jsonPath: $.cases[?({code} in @.parawiseComments[*].code)].code
         
@@ -282,6 +283,37 @@ serviceMaps:
       - jsonPath: lastModifiedTime
         type: CURRENTDATE
         dbType: LONG        
+
+  - version: 1.0
+    name: lcms-assign-advocate
+    description: create assign advocate in lcms
+    fromTopic: lcms-update-assign-advocate
+    queryMaps:     
+    - query: UPDATE egov_lcms_case_advocate SET assigneddate=?,advocate=?,fee=?, tenantid=?,lastModifiedBy=?,lastModifiedTime=? WHERE code=?;
+      basePath: $.cases.*.advocateDetails.*
+      jsonMaps:
+         
+      - jsonPath: $.cases.*.advocateDetails.*.assignedDate
+        type: LONG
+  
+      - jsonPath: $.advocateDetails.*.advocate
+        type: JSON
+        dbType: JSONB
+  
+      - jsonPath: $.advocateDetails.*.fee
+        type: DOUBLE
+       
+      - jsonPath: $.cases[?({code} in @.advocateDetails[*].code)].tenantId
+        
+      - jsonPath: $.RequestInfo.userInfo.id
+        type: STRING      
+
+      - jsonPath: lastModifiedTime
+        type: CURRENTDATE
+        dbType: LONG
+
+      - jsonPath: $.advocateDetails.*.code
+  
 
   - version: 1.0
     name: advocates_create
@@ -728,7 +760,7 @@ serviceMaps:
     description: create opinion in lcms
     fromTopic: lcms-opinion-create
     queryMaps:
-      - query: INSERT INTO egov_lcms_opinion (code,opinionRequestDate, departmentName, opinionOn, documents,opinionDescription, opinionsBy, additionalAdvocate,inWardDate, tenantId, createdBy,lastModifiedBy,createdTime,lastModifiedTime,stateId)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+      - query: INSERT INTO egov_lcms_opinion (code,opinionRequestDate, departmentName, opinionOn, documents,opinionDescription, opinionsBy, additionalAdvocate,inWardDate, tenantId, createdBy,lastModifiedBy,createdTime,lastModifiedTime,stateId,summonReferenceNo)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
         basePath: $.opinions.*
         jsonMaps:
         - jsonPath: $.opinions.*.code
@@ -760,13 +792,14 @@ serviceMaps:
           type: CURRENTDATE
           dbType: LONG
         - jsonPath: $.opinions.*.stateId
+        - jsonPath: $.opinions.*.caseDetails.summonReferenceNo
         
   - version: 1.0
     name: lcms-update-opinion
     description: update opinion in lcms
     fromTopic: lcms-opinion-update
     queryMaps:
-      - query: UPDATE egov_lcms_opinion SET opinionRequestDate=?,departmentName=?,opinionOn=?,documents=?,opinionDescription=?,opinionsBy=?,additionalAdvocate=?,inWardDate=?,tenantId=?,stateId=?,lastModifiedBy=?,lastModifiedTime=? WHERE code=?;
+      - query: UPDATE egov_lcms_opinion SET opinionRequestDate=?,departmentName=?,opinionOn=?,documents=?,opinionDescription=?,opinionsBy=?,additionalAdvocate=?,inWardDate=?,tenantId=?,stateId=?,summonReferenceNo=?,lastModifiedBy=?,lastModifiedTime=? WHERE code=?;
         basePath: $.opinions.*
         jsonMaps:        
         - jsonPath: $.opinions.*.opinionRequestDate
@@ -787,6 +820,7 @@ serviceMaps:
           type: LONG
         - jsonPath: $.opinions.*.tenantId
         - jsonPath: $.opinions.*.stateId
+        - jsonPath: $.opinions.*.caseDetails.summonReferenceNo
         - jsonPath: $.RequestInfo.userInfo.id
           type: STRING
         - jsonPath: lastModifiedTime
@@ -799,7 +833,7 @@ serviceMaps:
     description: legacy load case load
     fromTopic: legacy-case-create
     queryMaps: 
-    - query: INSERT INTO egov_lcms_case (code, isSummon, summonReferenceNo, amountReceived, caseCategory, caseRefernceNo, side, caseType, caseNo, summonDate, plantiffName, plantiffAddress, pleaderEngagementDetails, receiptDate, resloution, resloutiondate, advocateInfoDate, vakalatnamaGenerationDate, coName, age, address, remarks, caseDetails, defendant, hearingDate, hearingTime, departmentName, year, courtName, ward, bench, register, sectionApplied, lastModifiedBy,createdBy, createdTime, lastModifiedTime, tenantId, isUlbinitiated) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+    - query: INSERT INTO egov_lcms_case (code, isSummon, summonReferenceNo, amountReceived, caseCategory, caseRefernceNo, side, caseType, caseNo, summonDate, plantiffName, plantiffAddress, pleaderEngagementDetails, receiptDate, resloution, resloutiondate, advocateInfoDate, vakalatnamaGenerationDate, coName, age, address, remarks, caseDetails, defendant, hearingDate, hearingTime, departmentName, year, courtName, ward, bench, register, sectionApplied, lastModifiedBy,createdBy, createdTime, lastModifiedTime, tenantId, isUlbinitiated, documents,caseRegistrationDate,departmentPerson) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
       basePath: $.cases.*
       jsonMaps:       
       - jsonPath: $.cases.*.summon.code
@@ -892,7 +926,7 @@ serviceMaps:
         type: JSON
         dbType: JSONB
     
-      - jsonPath: $.cases.*.summon.sectionApplied,
+      - jsonPath: $.cases.*.summon.sectionApplied
       
       - jsonPath: $.RequestInfo.userInfo.id
         type: STRING
@@ -912,6 +946,17 @@ serviceMaps:
     
       - jsonPath: $.cases.*.summon.isUlbinitiated
         type: BOOLEAN
+                            
+      - jsonPath: $.cases.*.summon.documents
+        type: JSON
+        dbType: JSONB
+        
+      - jsonPath: $.cases.*.caseRegistrationDate
+        type: LONG 
+        
+      - jsonPath: $.cases.*.departmentPerson
+ 
+        
       
   
   - version: 1.0
@@ -1133,7 +1178,7 @@ serviceMaps:
     fromTopic: lcms-notice-create
     isTransaction: true
     queryMaps: 
-    - query: INSERT INTO egov_lcms_notice (code, tenantId, exhibitNo, courtName, courtAddress, applicant, defendant, chiefOfficerDetails, advocateName, day, witness, noticeType, fileStoreId, createdBy, lastModifiedBy, createdTime, lastModifiedTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egov_lcms_notice (code, tenantId, exhibitNo, courtName, courtAddress, applicant, defendant, chiefOfficerDetails, advocateName, day, witness, noticeType, fileStoreId, createdBy, lastModifiedBy, createdTime, lastModifiedTime, caseNo, caseCode, caseRefernceNo, summonReferenceNo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?);
       basePath: $.notice
       jsonMaps:
        - jsonPath: $.notice.code
@@ -1190,13 +1235,24 @@ serviceMaps:
          type: CURRENTDATE
          dbType: LONG
          
+       - jsonPath: $.notice.caseNo
+         type: STRING
+         
+       - jsonPath: $.notice.caseCode
+         type: STRING
+         
+       - jsonPath: $.notice.caseRefernceNo
+         type: STRING
+         
+       - jsonPath: $.notice.summonReferenceNo
+         type: STRING 
   - version: 1.0
     name: update notice
     description: Updates notice service details in egov_lcms_notice table for specified code and tenantId
     fromTopic: lcms-notice-update
     isTransaction: true
     queryMaps: 
-    - query: UPDATE egov_lcms_notice SET exhibitNo=?, courtName=?, courtAddress=?, applicant=?, defendant=?, chiefOfficerDetails=?, advocateName=?, day=?, witness=?, noticeType=?, fileStoreId=?, lastModifiedBy=?, lastModifiedTime=? WHERE code=? and tenantid=?;
+    - query: UPDATE egov_lcms_notice SET exhibitNo=?, courtName=?, courtAddress=?, applicant=?, defendant=?, chiefOfficerDetails=?, advocateName=?, day=?, witness=?, noticeType=?, fileStoreId=?, lastModifiedBy=?, lastModifiedTime=? caseNo=?, caseCode=?, caseRefernceNo = ?, summonReferenceNo = ? WHERE code=? and tenantid=?;
       basePath: $.notice
       jsonMaps:
        - jsonPath: $.notice.exhibitNo
@@ -1239,6 +1295,18 @@ serviceMaps:
        - jsonPath: lastModifiedTime
          type: CURRENTDATE
          dbType: LONG
+         
+       - jsonPath: $.notice.caseNo
+         type: STRING
+         
+       - jsonPath: $.notice.caseCode
+         type: STRING
+         
+       - jsonPath: $.notice.caseRefernceNo
+         type: STRING
+         
+       - jsonPath: $.notice.summonReferenceNo
+         type: STRING
          
        - jsonPath: $.notice.code
          type: STRING
@@ -1309,3 +1377,83 @@ serviceMaps:
        
        - jsonPath: $.registers.*.tenantId
          type: STRING
+         
+  - version: 1.0
+    name: Reference Evidence Create
+    description: Creates Reference Evidence Api
+    fromTopic: lcms-evidence-create
+    isTransaction: true
+    queryMaps: 
+    - query: INSERT INTO egov_lcms_reference_evidence (code, tenantid, referencetype, caseno, casecode, referencedate, description, documents, createdBy, lastModifiedBy, createdTime, lastModifiedTime) VALUES (?,?,?,?,?,?,?,?,?,?,?,?);
+      basePath: $.cases.*.referenceEvidences.*
+      jsonMaps:
+
+       - jsonPath: $.referenceEvidences.*.code
+
+       - jsonPath: $.referenceEvidences.*.tenantId
+
+       - jsonPath: $.referenceEvidences.*.referenceType
+       
+       - jsonPath: $.referenceEvidences.*.caseNo
+       
+       - jsonPath: $.referenceEvidences.*.caseCode
+       
+       - jsonPath: $.referenceEvidences.*.referenceDate
+         type: LONG
+       
+       - jsonPath: $.referenceEvidences.*.description
+       
+       - jsonPath: $.referenceEvidences.*.documents
+         type: JSON
+         dbType: JSONB       
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING
+
+       - jsonPath: createdTime
+         type: CURRENTDATE
+         dbType: LONG         
+
+       - jsonPath: lastModifiedTime
+         type: CURRENTDATE
+         dbType: LONG         
+
+
+  - version: 1.0
+    name: Reference Evidence Update
+    description: Updates Reference Evidence Api
+    fromTopic: lcms-evidence-update
+    isTransaction: true
+    queryMaps: 
+    - query: UPDATE egov_lcms_reference_evidence SET referencetype=?, caseno=?, casecode=?, referencedate=?, description=?, documents=?, lastModifiedBy=?, lastModifiedTime=? WHERE code=? and tenantid=?;
+      basePath: $.cases.*.referenceEvidences.*
+      jsonMaps:
+
+       - jsonPath: $.referenceEvidences.*.referenceType
+       
+       - jsonPath: $.referenceEvidences.*.caseNo
+       
+       - jsonPath: $.referenceEvidences.*.caseCode
+       
+       - jsonPath: $.referenceEvidences.*.referenceDate
+         type: LONG
+       
+       - jsonPath: $.referenceEvidences.*.description
+       
+       - jsonPath: $.referenceEvidences.*.documents
+         type: JSON
+         dbType: JSONB       
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING        
+
+       - jsonPath: lastModifiedTime
+         type: CURRENTDATE
+         dbType: LONG
+         
+       - jsonPath: $.referenceEvidences.*.code
+
+       - jsonPath: $.referenceEvidences.*.tenantId

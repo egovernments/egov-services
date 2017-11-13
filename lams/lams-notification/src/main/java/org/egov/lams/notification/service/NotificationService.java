@@ -17,10 +17,10 @@ public class NotificationService {
 	private PropertiesManager propertiesManager;
 
 	public String getCreateInitiateMessage(Agreement agreement, Asset asset, Allottee allottee, Tenant tenant) {
-		Double totalAmount = agreement.getSecurityDeposit() + agreement.getBankGuaranteeAmount();
+		Double totalAmount = agreement.getSecurityDeposit() + agreement.getGoodWillAmount();
 		String message = MessageFormat.format(propertiesManager.getCreateNotificationMessage(), allottee.getName(),
 				asset.getCategory().getName(), asset.getName(), agreement.getAcknowledgementNumber(),
-				agreement.getRent(), agreement.getSecurityDeposit(), agreement.getBankGuaranteeAmount(), totalAmount,
+				agreement.getRent(), agreement.getSecurityDeposit(), agreement.getGoodWillAmount(), totalAmount,
 				tenant.getName());
 		return message;
 	}

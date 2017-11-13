@@ -1,0 +1,669 @@
+var dat = {
+  "inventory.search": {
+    "numCols": 4,
+    "useTimestamp": true,
+    "objectName": "",
+    "url": "/inventory-inventory/v110/pricelists/_search",
+    "groups": [
+      {
+        "name": "search",
+        "label": "inventory.pricelist.search.title",
+        "fields": [
+          {
+            "name": "supplierName",
+            "jsonPath": "supplierName",
+            "label": "inventory.supplierName",
+            "type": "singleValueList",
+            "isDisabled": false,
+	    "url":"inventory-services/supplier/_search?|$.supplier[*].code|$.supplier[*].name",
+            "patternErrorMsg": "inventory.create.field.message.supplierName"
+          },
+          {
+            "name": "rateContractNumber",
+            "jsonPath": "rateContractNumber",
+            "label": "inventory.rateContractNumber",
+            "type": "text",
+            "isDisabled": false,
+            "patternErrorMsg": "inventory.create.field.message.rateContractNumber"
+          },
+          {
+            "name": "agreementNumber",
+            "jsonPath": "agreementNumber",
+            "label": "inventory.agreementNumber",
+            "type": "text",
+            "isDisabled": false,
+            "patternErrorMsg": "inventory.create.field.message.agreementNumber"
+          },
+          {
+            "name": "rateContractDate",
+            "jsonPath": "rateContractDate",
+            "label": "inventory.rateContractDate",
+            "type": "datePicker",
+            "isDisabled": false,
+            "patternErrorMsg": "inventory.create.field.message.rateContractDate"
+          },
+          {
+            "name": "agreementDate",
+            "jsonPath": "agreementDate",
+            "label": "inventory.agreementDate",
+           "type": "datePicker",
+            "isDisabled": false,
+            "patternErrorMsg": "inventory.create.field.message.agreementDate"
+          },
+          {
+            "name": "agreementStartDate",
+            "jsonPath": "agreementStartDate",
+            "label": "inventory.agreementStartDate",
+           "type": "datePicker",
+            "isDisabled": false,
+            "patternErrorMsg": "inventory.create.field.message.agreementStartDate"
+          },
+          {
+            "name": "agreementEndDate",
+            "jsonPath": "agreementEndDate",
+            "label": "inventory.agreementEndDate",
+            "type": "datePicker",
+            "isDisabled": false,
+            "patternErrorMsg": "inventory.create.field.message.agreementEndDate"
+          },
+          {
+            "name": "rateType",
+            "jsonPath": "rateType",
+            "label": "inventory.rateType",
+            "type": "singleValueList",
+	    "defaultValue":[
+              {key: null, value: "-- Please Select --"},
+              {
+                 "key":"DGSC Rate Contract",
+                 "value":"DGSC Rate Contract"
+              },
+              {
+                 "key":"ULB Rate Contract",
+                 "value":"ULB Rate Contract"
+              },
+              {
+                 "key":"One Time Tender",
+                 "value":"One Time Tender"
+              },
+              {
+                 "key":"Quotation",
+                 "value":"Quotation"
+              }
+            ],
+            "isDisabled": false,
+            "patternErrorMsg": "inventory.create.field.message.rateType"
+          }
+        ]
+      }
+    ],
+    "result": {
+      "header": [
+        {
+          "label": "inventory.supplier"
+        },
+        {
+          "label": "inventory.rateType"
+        },
+        {
+          "label": "inventory.rateContractNumber"
+        },
+        {
+          "label": "inventory.rateContractDate"
+        },
+        {
+          "label": "inventory.agreementNumber"
+        },
+        {
+          "label": "inventory.agreementDate"
+        },
+        {
+          "label": "inventory.agreementStartDate"
+        },
+        {
+          "label": "inventory.agreementEndDate"
+        },
+        {
+          "label": "inventory.active"
+        }
+      ],
+      "values": [
+        "supplier.name",
+	"rateType",
+        "rateContractNumber",
+	"agreementNumber",
+	"agreementDate",
+	"agreementStartDate",
+	"agreementEndDate",
+	{valuePath:"active", type:"checkbox"}
+      ],
+      "resultPath": "pricelists",
+      "resultIdKey":"rateContractNumber",
+      "rowClickUrlUpdate": "/update/inventory/pricelists/{code}",
+      "rowClickUrlView": "/view/inventory/pricelists/{code}",
+      "rowClickUrlAdd" : "/create/inventory/pricelists",
+      "rowClickUrlDelete" : "inventory-services/pricelists/_update"
+
+    }
+  },
+  "inventory.create": {
+    "numCols": 4,
+    "useTimestamp": true,
+    "objectName": "priceLists",
+    "groups": [
+      {
+        "name": "Group1",
+        "label": "inventory.supplierDetail",
+        "fields": [
+          {
+            "name": "supplier",
+            "jsonPath": "priceLists[0].supplier.code",
+            "label": "inventory.supplier",
+            "url":"inventory-services/supplier/_search?|$.supplier[*].code|$.supplier[*].name",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "defaultValue": "",
+            "maxLength": 50,
+            "minLength": 5,
+            "patternErrorMsg": "inventory.create.field.message.code"
+          },
+          {
+            "name": "rateType",
+            "jsonPath": "priceLists[0].rateType",
+            "label": "inventory.rateType",
+            "pattern": "",
+            "type": "singleValueList",
+	    "defaultValue":[
+              {key: null, value: "-- Please Select --"},
+              {
+                 "key":"DGSC Rate Contract",
+                 "value":"DGSC Rate Contract"
+              },
+              {
+                 "key":"ULB Rate Contract",
+                 "value":"ULB Rate Contract"
+              },
+              {
+                 "key":"One Time Tender",
+                 "value":"One Time Tender"
+              },
+              {
+                 "key":"Quotation",
+                 "value":"Quotation"
+              }
+            ],
+            "isRequired": true,
+            "isDisabled": false,
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "rateContractNumber",
+            "jsonPath": "priceLists[0].rateContractNumber",
+            "label": "inventory.rateContractNumber",
+            "pattern": "",
+            "type": "text",
+            "isRequired": true,
+            "isDisabled": false,
+            "defaultValue": "",
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "rateContractDate",
+            "jsonPath": "priceLists[0].rateContractDate",
+            "label": "inventory.rateContractDate",
+            "pattern": "",
+            "type": "datePicker",
+            "isRequired": true,
+            "isDisabled": false,
+            "defaultValue": "",
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "agreementNumber",
+            "jsonPath": "priceLists[0].agreementNumber",
+            "label": "inventory.agreementNumber",
+            "pattern": "^[a-zA-Z0-9]+$",
+            "type": "text",
+            "isRequired": true,
+            "isDisabled": false,
+            "defaultValue": "",
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "agreementDate",
+            "jsonPath": "priceLists[0].agreementDate",
+            "label": "inventory.agreementDate",
+            "pattern": "",
+             "type": "datePicker",
+            "isRequired": true,
+            "isDisabled": false,
+            "defaultValue": "",
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "agreementStartDate",
+            "jsonPath": "priceLists[0].agreementStartDate",
+            "label": "inventory.agreementStartDate",
+            "pattern": "",
+             "type": "datePicker",
+            "isRequired": true,
+            "isDisabled": false,
+            "defaultValue": "",
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "agreementEndDate",
+            "jsonPath": "priceLists[0].agreementEndDate",
+            "label": "inventory.agreementEndDate",
+            "pattern": "",
+             "type": "datePicker",
+            "isRequired": true,
+            "isDisabled": false,
+            "defaultValue": "",
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "active",
+            "jsonPath": "priceLists[0].active",
+            "label": "inventory.active",
+            "pattern": "",
+              "type":"checkbox",
+            "defaultValue":true,
+            "isRequired": true,
+            "isDisabled": false,
+            "defaultValue": true,
+            "patternErrorMsg": ""
+          }
+        ]
+      },
+      {
+        "name": "Rate contract Details",
+        "label": "inventory.pricebdetails.title",
+        "fields": [
+          {
+            "type": "tableList",
+            "jsonPath": "",
+            "tableList": {
+              "header": [
+                {
+                  "label": "inventory.materialName"
+                },
+                {
+                  "label": "inventory.materialDesc"
+                },
+                {
+                  "label": "inventory.Uom"
+                },
+                {
+                  "label":"inventory.Rate"
+                },
+                {
+                  "label": "inventory.from.date"
+                },
+                {
+                  "label": "inventory.to.date"
+                },
+                {
+                  "label": "inventory.quantity" 
+                }
+              ],
+              "values": [
+                {
+                  "name": "material",
+                  "pattern": "",
+                  "type":"autoCompelete",
+                  "jsonPath": "priceLists[0].PriceListDetails[0].material.code",
+		  "displayJsonPath":"priceLists[0].PriceListDetails[0].material.name",
+                  "isRequired": true,
+                  "isDisabled": false,
+                  "url": "/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description",
+                  "depedants": [
+                    {
+                      "jsonPath": "priceLists[0].PriceListDetails[0].material.description",
+                      "type": "textField",
+                      "valExp": "getValFromDropdownData('materialStoreMappings[*].material.code', getVal('materialStoreMappings[*].material.code'), 'others[0]')"
+                    }
+                  ]
+                },
+                {
+                  "name": "materialDescription",
+                  "jsonPath": "priceLists[0].PriceListDetails[0].material.description",
+                  "pattern": "",
+                  "type": "text",
+                  "isRequired": false,
+                  "isDisabled": true,
+                  "defaultValue": "",
+                  "patternErrorMsg": ""
+                },
+                {
+                  "name": "uom",
+                  "jsonPath": "priceLists[0].PriceListDetails[0].uom.code",
+                  "pattern": "",
+                  "type": "singleValueList",
+                  "isRequired": true,
+                  "isDisabled": false,
+                  "url": "/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description"
+                },
+                {
+                  "name": "ratePerUnit",
+                  "jsonPath": "priceLists[0].PriceListDetails[0].ratePerUnit",
+                  "pattern": "",
+                  "type": "number",
+                  "isRequired": true,
+                  "isDisabled": false,
+                  "defaultValue": "",
+                  "maxLength": 100,
+                  "patternErrorMsg": "inventory.create.field.message.code"
+                },
+                {
+                  "name": "fromDate",
+                  "jsonPath": "priceLists[0].PriceListDetails[0].fromDate",
+                  "pattern": "",
+                  "type": "text",
+                  "isRequired": false,
+                  "isDisabled": true,
+                  "defaultValue": "",
+                  "patternErrorMsg": ""
+                },
+                {
+                  "name": "toDate",
+                  "jsonPath": "priceLists[0].PriceListDetails[0].toDate",
+                  "pattern": "",
+                  "type": "text",
+                  "isRequired": false,
+                  "isDisabled": true,
+                  "defaultValue": "",
+                  "patternErrorMsg": ""
+                },
+                {
+                  "name": "quantity",
+                  "jsonPath": "priceLists[0].PriceListDetails[0].quantity",
+                  "pattern": "",
+                  "type": "number",
+                  "isRequired": false,
+                  "isDisabled": false,
+                  "defaultValue": "",
+                  "patternErrorMsg": ""
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "url": "/inventory-inventory/v110/pricelists/_create",
+    "tenantIdRequired": true
+  },
+  "inventory.view": {
+    "numCols": 4,
+    "useTimestamp": true,
+    "objectName": "priceLists",
+    "groups": [
+      {
+        "name": "Group1",
+        "label": "inventory.supplierDetail",
+        "fields": [
+          {
+            "name": "code",
+            "jsonPath": "priceLists[0].supplier.code",
+            "label": "inventory.supplier",
+            "pattern": "^[a-zA-Z0-9]+$",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "defaultValue": "",
+            "maxLength": 50,
+            "minLength": 5,
+            "patternErrorMsg": "inventory.create.field.message.code"
+          },
+          {
+            "name": "rateType",
+            "jsonPath": "priceLists[0].rateType",
+            "label": "inventory.rateType",
+            "pattern": "",
+            "type": "singleValueList",
+	    "defaultValue":[
+              {key: null, value: "-- Please Select --"},
+              {
+                 "key":"DGSC Rate Contract",
+                 "value":"DGSC Rate Contract"
+              },
+              {
+                 "key":"ULB Rate Contract",
+                 "value":"ULB Rate Contract"
+              },
+              {
+                 "key":"One Time Tender",
+                 "value":"One Time Tender"
+              },
+              {
+                 "key":"Quotation",
+                 "value":"Quotation"
+              }
+            ],
+            "isRequired": true,
+            "isDisabled": false,
+            "defaultValue": "",
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "rateContractNumber",
+            "jsonPath": "priceLists[0].rateContractNumber",
+            "label": "inventory.rateContractNumber",
+            "pattern": "",
+            "type": "text",
+            "isRequired": true,
+            "isDisabled": false,
+            "defaultValue": "",
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "rateContractDate",
+            "jsonPath": "priceLists[0].rateContractDate",
+            "label": "inventory.rateContractDate",
+            "pattern": "",
+             "type": "datePicker",
+            "isRequired": true,
+            "isDisabled": false,
+            "defaultValue": "",
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "agreementNumber",
+            "jsonPath": "priceLists[0].agreementNumber",
+            "label": "inventory.agreementNumber",
+            "pattern": "",
+            "type": "text",
+            "isRequired": true,
+            "isDisabled": false,
+            "defaultValue": "",
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "agreementDate",
+            "jsonPath": "priceLists[0].agreementDate",
+            "label": "inventory.agreementDate",
+            "pattern": "",
+            "type": "datePicker",
+            "isRequired": true,
+            "isDisabled": false,
+            "defaultValue": "",
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "agreementStartDate",
+            "jsonPath": "priceLists[0].agreementStartDate",
+            "label": "inventory.agreementStartDate",
+            "pattern": "",
+             "type": "datePicker",
+            "isRequired": true,
+            "isDisabled": false,
+            "defaultValue": "",
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "agreementEndDate",
+            "jsonPath": "priceLists[0].agreementEndDate",
+            "label": "inventory.agreementEndDate",
+            "pattern": "",
+          "type": "datePicker",
+            "isRequired": true,
+            "isDisabled": false,
+            "defaultValue": "",
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "active",
+            "jsonPath": "priceLists[0].active",
+            "label": "inventory.active",
+            "pattern": "",
+            "type": "radio",
+            "isRequired": true,
+            "isDisabled": false,
+            "defaultValue": true,
+            "patternErrorMsg": ""
+          }
+        ]
+      }
+    ],
+    "tenantIdRequired": true,
+    "url": "/inventory-inventory/v110/pricelists/_search?tenantId={tenantId}"
+  },
+  "inventory.update": {
+    "numCols": 4,
+    "useTimestamp": true,
+    "objectName": "priceLists",
+    "groups": [
+      {
+        "name": "Group1",
+        "label": "inventory.supplierDetail",
+        "fields": [
+          {
+            "name": "code",
+            "jsonPath": "priceLists[0].supplier.code",
+            "label": "inventory.supplier",
+            "pattern": "^[a-zA-Z0-9]+$",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "defaultValue": "",
+            "maxLength": 50,
+            "minLength": 5,
+            "patternErrorMsg": "inventory.create.field.message.code"
+          },
+          {
+            "name": "rateType",
+            "jsonPath": "priceLists[0].rateType",
+            "label": "inventory.rateType",
+            "pattern": "",
+            "type": "singleValueList",
+		"defaultValue":[
+              {key: null, value: "-- Please Select --"},
+              {
+                 "key":"DGSC Rate Contract",
+                 "value":"DGSC Rate Contract"
+              },
+              {
+                 "key":"ULB Rate Contract",
+                 "value":"ULB Rate Contract"
+              },
+              {
+                 "key":"One Time Tender",
+                 "value":"One Time Tender"
+              },
+              {
+                 "key":"Quotation",
+                 "value":"Quotation"
+              }
+            ],
+            "isRequired": true,
+            "isDisabled": false,
+            "defaultValue": "",
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "rateContractNumber",
+            "jsonPath": "priceLists[0].rateContractNumber",
+            "label": "inventory.rateContractNumber",
+            "pattern": "",
+            "type": "text",
+            "isRequired": true,
+            "isDisabled": false,
+            "defaultValue": "",
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "rateContractDate",
+            "jsonPath": "priceLists[0].rateContractDate",
+            "label": "inventory.rateContractDate",
+            "pattern": "",
+            "type": "datePicker",
+            "isRequired": true,
+            "isDisabled": false,
+            "defaultValue": "",
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "agreementNumber",
+            "jsonPath": "priceLists[0].agreementNumber",
+            "label": "inventory.agreementNumber",
+            "pattern": "",
+            "type": "text",
+            "isRequired": true,
+            "isDisabled": false,
+            "defaultValue": "",
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "agreementDate",
+            "jsonPath": "priceLists[0].agreementDate",
+            "label": "inventory.agreementDate",
+            "pattern": "",
+             "type": "datePicker",
+            "isRequired": true,
+            "isDisabled": false,
+            "defaultValue": "",
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "agreementStartDate",
+            "jsonPath": "priceLists[0].agreementStartDate",
+            "label": "inventory.agreementStartDate",
+            "pattern": "",
+           "type": "datePicker",
+            "isRequired": true,
+            "isDisabled": false,
+            "defaultValue": "",
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "agreementEndDate",
+            "jsonPath": "priceLists[0].agreementEndDate",
+            "label": "inventory.agreementEndDate",
+            "pattern": "",
+            "type": "datePicker",
+            "isRequired": true,
+            "isDisabled": false,
+            "defaultValue": "",
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "active",
+            "jsonPath": "priceLists[0].active",
+            "label": "inventory.active",
+            "pattern": "",
+            "type": "radio",
+            "isRequired": true,
+            "isDisabled": false,
+            "defaultValue": true,
+            "patternErrorMsg": ""
+          }
+        ]
+      }
+    ],
+    "url": "/inventory-inventory/v110/pricelists/_update",
+    "tenantIdRequired": true,
+    "searchUrl": "/inventory-inventory/v110/pricelists/_search?tenantId={tenantId}"
+  }
+}
+ export default dat;

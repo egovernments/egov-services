@@ -2,7 +2,6 @@ package org.egov.works.estimate.web.contract;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ import javax.validation.constraints.*;
  * This is acting ID token of the authenticated user on the server. Any value provided by the clients will be ignored and actual user based on authtoken will be used on the server.
  */
 @ApiModel(description = "This is acting ID token of the authenticated user on the server. Any value provided by the clients will be ignored and actual user based on authtoken will be used on the server.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:32:33.802Z")
 
 public class UserInfo   {
   @JsonProperty("tenantId")
@@ -23,8 +22,8 @@ public class UserInfo   {
   @JsonProperty("id")
   private Integer id = null;
 
-  @JsonProperty("username")
-  private String username = null;
+  @JsonProperty("userName")
+  private String userName = null;
 
   @JsonProperty("mobile")
   private String mobile = null;
@@ -79,25 +78,25 @@ public class UserInfo   {
     this.id = id;
   }
 
-  public UserInfo username(String username) {
-    this.username = username;
+  public UserInfo userName(String userName) {
+    this.userName = userName;
     return this;
   }
 
    /**
    * Unique user name of the authenticated user
-   * @return username
+   * @return userName
   **/
   @ApiModelProperty(required = true, value = "Unique user name of the authenticated user")
   @NotNull
 
 
-  public String getUsername() {
-    return username;
+  public String getUserName() {
+    return userName;
   }
 
-  public void setUsername(String username) {
-    this.username = username;
+  public void setUserName(String userName) {
+    this.userName = userName;
   }
 
   public UserInfo mobile(String mobile) {
@@ -208,7 +207,7 @@ public class UserInfo   {
     UserInfo userInfo = (UserInfo) o;
     return Objects.equals(this.tenantId, userInfo.tenantId) &&
         Objects.equals(this.id, userInfo.id) &&
-        Objects.equals(this.username, userInfo.username) &&
+        Objects.equals(this.userName, userInfo.userName) &&
         Objects.equals(this.mobile, userInfo.mobile) &&
         Objects.equals(this.email, userInfo.email) &&
         Objects.equals(this.primaryrole, userInfo.primaryrole) &&
@@ -217,7 +216,7 @@ public class UserInfo   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(tenantId, id, username, mobile, email, primaryrole, additionalroles);
+    return Objects.hash(tenantId, id, userName, mobile, email, primaryrole, additionalroles);
   }
 
   @Override
@@ -227,7 +226,7 @@ public class UserInfo   {
     
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    username: ").append(toIndentedString(username)).append("\n");
+    sb.append("    userName: ").append(toIndentedString(userName)).append("\n");
     sb.append("    mobile: ").append(toIndentedString(mobile)).append("\n");
     sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("    primaryrole: ").append(toIndentedString(primaryrole)).append("\n");

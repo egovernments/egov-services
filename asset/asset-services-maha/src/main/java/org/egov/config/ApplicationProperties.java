@@ -46,6 +46,9 @@ public class ApplicationProperties {
     @Value("${kafka.topics.save.revaluation}")
     private String revaluationSaveTopic;
     
+    @Value("${kafka.topics.update.revaluation}")
+    private String revaluationUpdateTopic;
+    
     @Value("${kafka.topics.save.disposal}")
     private String disposalSaveTopicName;
     
@@ -57,6 +60,9 @@ public class ApplicationProperties {
     
     @Value("${mdms.modulename}")
     private String mdMsModuleName;
+    
+    @Value("${kafka.topics.save.depreciation}")
+    private String saveDepreciationTopic;
     
     @Autowired
     private Environment environment;

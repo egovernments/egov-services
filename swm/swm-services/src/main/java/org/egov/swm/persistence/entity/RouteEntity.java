@@ -2,6 +2,7 @@ package org.egov.swm.persistence.entity;
 
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.CollectionPoint;
+import org.egov.swm.domain.model.CollectionType;
 import org.egov.swm.domain.model.DumpingGround;
 import org.egov.swm.domain.model.Route;
 
@@ -50,6 +51,7 @@ public class RouteEntity {
 		route.setCode(code);
 		route.setTenantId(tenantId);
 		route.setName(name);
+		route.setCollectionType(CollectionType.builder().code(collectionType).build());
 		route.setStartingCollectionPoint(CollectionPoint.builder().name(startingCollectionPoint).build());
 		route.setEndingCollectionPoint(CollectionPoint.builder().name(endingCollectionPoint).build());
 		route.setEndingDumpingGroundPoint(DumpingGround.builder().code(endingDumpingGroundPoint).build());

@@ -1,6 +1,8 @@
 package org.egov.swm.persistence.entity;
 
 import org.egov.swm.domain.model.AuditDetails;
+import org.egov.swm.domain.model.Boundary;
+import org.egov.swm.domain.model.DumpingGround;
 import org.egov.swm.domain.model.Route;
 import org.egov.swm.domain.model.SanitationStaffTarget;
 import org.egov.swm.domain.model.SwmProcess;
@@ -29,11 +31,19 @@ public class SanitationStaffTargetEntity {
 
 	private String swmProcess = null;
 
+	private String location = null;
+
 	private String route = null;
 
 	private String employee = null;
 
 	private Double targetedGarbage = null;
+
+	private Double wetWaste = null;
+
+	private Double dryWaste = null;
+
+	private String dumpingGround = null;
 
 	private String createdBy = null;
 
@@ -49,11 +59,15 @@ public class SanitationStaffTargetEntity {
 		sanitationStaffTarget.setTenantId(tenantId);
 		sanitationStaffTarget.setTargetNo(targetNo);
 		sanitationStaffTarget.setTargetFrom(targetFrom);
-		sanitationStaffTarget.setTargetNo(targetNo);
+		sanitationStaffTarget.setTargetTo(targetTo);
+		sanitationStaffTarget.setLocation(Boundary.builder().code(location).build());
 		sanitationStaffTarget.setSwmProcess(SwmProcess.builder().code(swmProcess).build());
 		sanitationStaffTarget.setRoute(Route.builder().code(route).build());
 		sanitationStaffTarget.setEmployee(Employee.builder().code(employee).build());
 		sanitationStaffTarget.setTargetedGarbage(targetedGarbage);
+		sanitationStaffTarget.setDryWaste(dryWaste);
+		sanitationStaffTarget.setWetWaste(wetWaste);
+		sanitationStaffTarget.setDumpingGround(DumpingGround.builder().code(dumpingGround).build());
 		sanitationStaffTarget.setAuditDetails(new AuditDetails());
 		sanitationStaffTarget.getAuditDetails().setCreatedBy(createdBy);
 		sanitationStaffTarget.getAuditDetails().setCreatedTime(createdTime);

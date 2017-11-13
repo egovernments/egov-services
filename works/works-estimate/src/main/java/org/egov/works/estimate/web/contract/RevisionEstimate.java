@@ -2,16 +2,12 @@ package org.egov.works.estimate.web.contract;
 
 import java.util.Objects;
 import io.swagger.annotations.ApiModel;
-import java.math.BigDecimal;
-import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * An Object that hold Revision Estimate data
  */
 @ApiModel(description = "An Object that hold Revision Estimate data")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:32:33.802Z")
 
 public class RevisionEstimate extends DetailedEstimate  {
 

@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class VendorContractJdbcRepository extends JdbcRepository {
 
+	public static final String TABLE_NAME = "egswm_vendorcontract";
+
 	@Autowired
 	public JdbcTemplate jdbcTemplate;
 
@@ -27,7 +29,7 @@ public class VendorContractJdbcRepository extends JdbcRepository {
 
 	public Pagination<VendorContract> search(VendorContractSearch searchRequest) {
 
-		String searchQuery = "select * from egswm_vendorcontract :condition  :orderby ";
+		String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();

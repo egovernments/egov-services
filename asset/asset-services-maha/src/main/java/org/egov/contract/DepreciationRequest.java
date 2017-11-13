@@ -1,6 +1,7 @@
 package org.egov.contract;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.model.criteria.DepreciationCriteria;
@@ -24,5 +25,6 @@ public class DepreciationRequest {
 
 	@JsonProperty("Depreciation")
 	@Valid
+	@NotNull
 	private DepreciationCriteria depreciationCriteria;
 }

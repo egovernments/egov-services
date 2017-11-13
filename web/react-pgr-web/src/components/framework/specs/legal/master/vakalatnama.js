@@ -6,9 +6,12 @@ var dat = {
       "/lcms-services/legalcase/case/_search?code={id}",
     url:
       "/lcms-services/legalcase/case/_vakalatnamageneration",
+    ackUrl:"/print/notice/VakalatnamaTemplate",
+    passResToLocalStore:"cases[0]",
+    localStoreResponseKey: "templateData",
     tenantIdRequired: true,
     useTimestamp: true,
-    objectName: "vakalatnama",
+    objectName: "cases",
     groups: [
       {
         label: "legal.vakalatnama.create.group.title.generateVakalatnama",
@@ -21,7 +24,7 @@ var dat = {
             pattern: "",
             type: "text",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             requiredErrMsg: "",
             patternErrMsg: ""
           },
@@ -32,7 +35,7 @@ var dat = {
             pattern: "",
             type: "text",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             requiredErrMsg: "",
             patternErrMsg: ""
           },
@@ -43,18 +46,19 @@ var dat = {
             pattern: "",
             type: "text",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             requiredErrMsg: "",
             patternErrMsg: ""
           },
           {
-            name: "Exhibit Number",
+            name: "exhibitNumber",
             jsonPath: "exhibitNumber",
             label: "legal.vakalatnama.create.exhibitNumber",
+            isDisablePath:"cases[0].isVakalatnamaGenerated",
             pattern: "",
             type: "text",
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             requiredErrMsg: "",
             patternErrMsg: ""
           },
@@ -82,7 +86,7 @@ var dat = {
             label: "legal.vakalatnama.create.chiefOfficerDetails",
             pattern: "",
             type: "text",
-            isRequired: true,
+            isRequired: false,
             isDisabled: false,
             requiredErrMsg: "",
             patternErrMsg: ""
@@ -115,8 +119,28 @@ var dat = {
             label: "legal.vakalatnama.create.addWitness",
             pattern: "",
             type: "arrayText",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
+            requiredErrMsg: "",
+            patternErrMsg: ""
+          },{
+            name: "primaryAdvocate",
+            jsonPath: "cases[0].advocateDetails[0].advocate.name",
+            label: "legal.vakalatnama.create.primaryAdvocate",
+            pattern: "",
+            type: "text",
+            isRequired: false,
+            isDisabled: true,
+            requiredErrMsg: "",
+            patternErrMsg: ""
+          },{
+            name: "additionalAdvocate",
+            jsonPath: "cases[0].advocateDetails[1].advocate.name",
+            label: "legal.vakalatnama.create.additionalAdvocate",
+            pattern: "",
+            type: "text",
+            isRequired: false,
+            isDisabled: true,
             requiredErrMsg: "",
             patternErrMsg: ""
           },
@@ -129,7 +153,57 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",
-            patternErrMsg: ""
+            patternErrMsg: "",
+          }
+        ]
+      }, {
+        name: "assignAdvocate",
+        label: "legal.create.group.title.assignAdvocate",
+        fields: [
+          {
+            type: "tableList",
+            jsonPath: "cases[0].advocateDetails",
+            tableList: {
+              header: [
+                {
+                  label: "legal.create.advocateName"
+                },
+                {
+                  label: "legal.create.advocateAssignDate"
+                },
+                {
+                  label: "legal.create.advocateFee"
+                }
+              ],
+              values: [
+                {
+                  name: "advocateName",
+                  pattern: "",
+                  type: "singleValueList",
+                  jsonPath: "cases[0].advocateDetails[0].advocate.code",
+                  isRequired: true,
+                  isDisabled: true,
+                  url:
+                    "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
+                },
+                {
+                  name: "advocateAssignDate",
+                  pattern: "",
+                  type: "datePicker",
+                  jsonPath: "cases[0].advocateDetails[0].assignedDate",
+                  isRequired: true,
+                  isDisabled: true
+                },
+                {
+                  name: "advocateFee",
+                  pattern: "",
+                  type: "text",
+                  jsonPath: "cases[0].advocateDetails[0].fee",
+                  isRequired: true,
+                  isDisabled: true
+                }
+              ]
+            }
           }
         ]
       }

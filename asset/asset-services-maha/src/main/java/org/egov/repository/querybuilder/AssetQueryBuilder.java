@@ -4,7 +4,10 @@ package org.egov.repository.querybuilder;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.egov.model.criteria.AssetCriteria;
+import org.egov.model.enums.AssetCategoryType;
+import org.egov.model.enums.TransactionType;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -15,12 +18,24 @@ public class AssetQueryBuilder {
 
 	public final static String FINDBYNAMEQUERY = "SELECT asset.name FROM egasset_asset asset WHERE asset.name=? AND asset.tenantid=?";
 	
-    private static final String BASE_QUERY = "SELECT *,asd.code as landcode,asd.assetid as landassetid from egasset_asset asset left outer join egasset_asset_landdetails asd ON "
-    		+ " asset.id=asd.assetid AND asset.tenantid=asd.tenantid ";
+    private static final String BASE_QUERY = "SELECT *,asd.code as landcode,asd.assetid as landassetid,currentval.currentamount "
 
-	@SuppressWarnings("rawtypes")
+    										+ "from egasset_asset asset left outer join egasset_asset_landdetails asd ON  asset.id=asd.assetid AND asset.tenantid=asd.tenantid "
+    										
+    										+ "left outer join (select current.assetid,current.tenantid,current.transactiondate,"
+    										
+    										+ "maxcurr.currentamount from egasset_current_value current inner join (select max(transactiondate) as transactiondate,currentamount,assetid"
+    										
+    										+ ",tenantid from egasset_current_value where tenantid=? GROUP BY assetid,tenantid,currentamount ) as maxcurr "
+    										
+    										+ "ON current.assetid=maxcurr.assetid AND current.tenantid=maxcurr.tenantid AND current.transactiondate=maxcurr.transactiondate) as currentval "
+    										
+    										+ "ON asset.id=currentval.assetid AND asset.tenantid=currentval.tenantid ";
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String getQuery(final AssetCriteria searchAsset, final List preparedStatementValues) {
 		final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+		preparedStatementValues.add(searchAsset.getTenantId());
 		log.info("get query");
 		addWhereClause(selectQuery, preparedStatementValues, searchAsset);
 		addPagingClause(selectQuery, preparedStatementValues, searchAsset);
@@ -40,8 +55,8 @@ public class AssetQueryBuilder {
 		}
 
 		if (searchAsset.getAssetCategoryType() != null) {
-			selectQuery.append(" AND ASSET.assetcategorytype = ?");
-			preparedStatementValues.add(searchAsset.getAssetCategoryType().toString());
+			selectQuery.append(" AND ASSET.assetcategorytype IN (" + getCategoryType(searchAsset.getAssetCategoryType()).toString()+ ")");
+			/*preparedStatementValues.add(searchAsset.getAssetCategoryType().toString());*/
 		}
 		if (searchAsset.getName() != null) {
 			selectQuery.append(" AND ASSET.name ilike ?");
@@ -54,7 +69,7 @@ public class AssetQueryBuilder {
 		}
 
 		if (searchAsset.getDepartment() != null) {
-			selectQuery.append(" AND ASSET.department = ?");
+			selectQuery.append(" AND ASSET.departmentcode = ?");
 			preparedStatementValues.add(searchAsset.getDepartment());
 		}
 
@@ -64,7 +79,7 @@ public class AssetQueryBuilder {
 		}
 
 		if (searchAsset.getAssetCreatedFrom() != null && searchAsset.getAssetCreatedto() != null) {
-			selectQuery.append(" AND (ASSET.dateofcreation BETWEEN ? AND ?");
+			selectQuery.append(" AND (ASSET.dateofcreation BETWEEN ? AND ?)");
 			preparedStatementValues.add(searchAsset.getAssetCreatedFrom());
 			preparedStatementValues.add(searchAsset.getAssetCreatedto());
 		} else if (searchAsset.getAssetCreatedFrom() != null) {
@@ -76,7 +91,7 @@ public class AssetQueryBuilder {
 		}
 
 		if (searchAsset.getOriginalValueFrom() != null && searchAsset.getOriginalValueTo() != null) {
-			selectQuery.append(" AND (ASSET.originalvalue BETWEEN ? AND ?");
+			selectQuery.append(" AND (ASSET.originalvalue BETWEEN ? AND ?)");
 			preparedStatementValues.add(searchAsset.getOriginalValueFrom());
 			preparedStatementValues.add(searchAsset.getOriginalValueTo());
 		} else if (searchAsset.getOriginalValueFrom() != null) {
@@ -90,6 +105,11 @@ public class AssetQueryBuilder {
 		if (searchAsset.getStatus() != null) {
 			selectQuery.append(" AND ASSET.status = ?");
 			preparedStatementValues.add(searchAsset.getStatus());
+		}
+		
+		if(searchAsset.getToDate()!=null) {
+			selectQuery.append(" AND asset.dateofcreation<?");
+			preparedStatementValues.add(searchAsset.getToDate());
 		}
 
 		/*
@@ -121,6 +141,16 @@ public class AssetQueryBuilder {
 		if (searchAsset.getElectionWard() != null) {
 			selectQuery.append(" AND ASSET.electionWard = ?");
 			preparedStatementValues.add(searchAsset.getElectionWard());
+		}
+		
+		if (searchAsset.getTransaction() != null) {
+			if(searchAsset.getTransaction().toString().equals(TransactionType.REVALUATION.toString())) {
+				selectQuery.append(" AND ASSET.status!='DISPOSED'  AND ASSET.assetcategorytype!='LAND' ");
+			}else if(searchAsset.getTransaction().toString().equals(TransactionType.DISPOSAL.toString())) {
+				selectQuery.append(" AND ASSET.status!='DISPOSED'  AND ASSET.assetcategorytype!='LAND'");
+			}else if(searchAsset.getTransaction().toString().equals(TransactionType.DEPRECIATION.toString())) {
+				selectQuery.append(" AND ASSET.status!='DISPOSED' AND ASSET.assetcategorytype!='LAND' ");
+			}
 		}
 
 	}
@@ -164,6 +194,19 @@ public class AssetQueryBuilder {
 		query = new StringBuilder(arr[0].toString());
 		for (int i = 1; i < arr.length; i++)
 			query.append("," + arr[i]);
+		return query.toString();
+	}
+    
+    private String getCategoryType(final List<AssetCategoryType> assetCategoryTypeList) {
+		StringBuilder query = null;
+		AssetCategoryType[] arr= new AssetCategoryType[assetCategoryTypeList.size()];
+		arr=assetCategoryTypeList.toArray(arr);
+	  // String join = "'" + StringUtils.join(arr,"','") + "'";
+	   System.out.println("arr"+arr);
+		query = new StringBuilder("'"+arr[0].toString()+"'");
+	  for (int i = 1; i < arr.length; i++)
+			query.append("," +"'"+arr[i].toString()+"'");
+		System.err.println("query"+query);
 		return query.toString();
 	}
 }

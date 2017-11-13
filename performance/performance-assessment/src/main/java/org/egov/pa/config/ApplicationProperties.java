@@ -62,6 +62,41 @@ public class ApplicationProperties {
     
     @Value("${egov.services.tenant.searchpath}")
     private String tenantServiceSearchPath;
+    
+    @Value("${egov.services.mdms_service.hostname}")
+    private String mdmsServiceHostName;
+    
+    @Value("${egov.services.mdms_service.searchpath}")
+    private String mdmsServiceSearchPath;
+    
+    @Value("${egov.services.mdms_service.department_search}")
+    private String mdmsServiceSearchGetDepartmentUrl; 
+    
+    
+
+	public String getMdmsServiceHostName() {
+		return mdmsServiceHostName;
+	}
+
+	public void setMdmsServiceHostName(String mdmsServiceHostName) {
+		this.mdmsServiceHostName = mdmsServiceHostName;
+	}
+
+	public String getMdmsServiceSearchPath() {
+		return mdmsServiceSearchPath;
+	}
+
+	public void setMdmsServiceSearchPath(String mdmsServiceSearchPath) {
+		this.mdmsServiceSearchPath = mdmsServiceSearchPath;
+	}
+
+	public String getMdmsServiceSearchGetDepartmentUrl() {
+		return mdmsServiceSearchGetDepartmentUrl;
+	}
+
+	public void setMdmsServiceSearchGetDepartmentUrl(String mdmsServiceSearchGetDepartmentUrl) {
+		this.mdmsServiceSearchGetDepartmentUrl = mdmsServiceSearchGetDepartmentUrl;
+	}
 
 	public String getNewKpiCreateTopicName() {
 		return newKpiCreateTopicName;

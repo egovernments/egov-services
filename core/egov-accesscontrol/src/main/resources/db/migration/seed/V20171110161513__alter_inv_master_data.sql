@@ -1,0 +1,2 @@
+update eg_action set enabled = true where name = 'Store Search' and servicecode = 'STORE MASTER';
+update eg_action set enabled = true where name = 'Material Store Mapping Search' and servicecode = 'Material Store Mapping'; 

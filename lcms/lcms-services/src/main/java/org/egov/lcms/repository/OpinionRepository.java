@@ -57,6 +57,7 @@ public class OpinionRepository {
 		List<Opinion> opinions = new ArrayList<Opinion>();
 		try {
 			opinions = jdbcTemplate.query(searchQuery, preparedStatementValues.toArray(), opinionRowMapper);
+			getCaseNoWithSummonReference(opinions);
 		} catch (Exception ex) {
 			log.info("the exception in opinion :" + ex.getMessage());
 			throw new CustomException(propertiesManager.getOpinionSearchErrorCode(), ex.getMessage());
@@ -66,8 +67,9 @@ public class OpinionRepository {
 			if (opinion.getDepartmentName() != null)
 				opinion.setDepartmentName(searchDepartments(opinion, requestInfoWrapper));
 		}
-
-		setAdvocates(opinions, requestInfoWrapper);
+		if (opinions != null && opinions.size() > 0) {
+			setAdvocates(opinions, requestInfoWrapper);
+		}
 		return opinions;
 	}
 
@@ -82,8 +84,9 @@ public class OpinionRepository {
 
 	private void setAdvocates(List<Opinion> opinions, RequestInfoWrapper requestInfoWrapper) {
 
-		List<String> codes = opinions.stream().filter(
-				opinionData -> opinionData.getOpinionsBy() != null && opinionData.getOpinionsBy().getCode() != null)
+		List<String> codes = opinions.stream()
+				.filter(opinionData -> opinionData.getOpinionsBy() != null
+						&& opinionData.getOpinionsBy().getCode() != null)
 				.map(advocateCode -> advocateCode.getOpinionsBy().getCode()).collect(Collectors.toList());
 
 		AdvocateSearchCriteria advocateSearch = new AdvocateSearchCriteria();
@@ -99,6 +102,29 @@ public class OpinionRepository {
 						.collect(Collectors.toList()).get(0);
 				opinion.setOpinionsBy(advocate);
 
+			}
+		}
+	}
+
+	private void getCaseNoWithSummonReference(List<Opinion> opinions) {
+
+		for (Opinion opinion : opinions) {
+			if (opinion.getCaseDetails() != null && opinion.getCaseDetails().getSummonReferenceNo() != null) {
+
+				final List<Object> preparedStatementValues = new ArrayList<Object>();
+				String searchQuery = opinionBuilder.getCaseNo(opinion.getCaseDetails().getSummonReferenceNo(),
+						opinion.getTenantId(), preparedStatementValues);
+				try {
+
+					String caseNo = jdbcTemplate.queryForObject(searchQuery, preparedStatementValues.toArray(),
+							String.class);
+					opinion.getCaseDetails().setCaseNo(caseNo);
+				} catch (Exception ex) {
+
+					log.info("the exception in opinion :" + ex.getMessage());
+					throw new CustomException(propertiesManager.getCaseNoErrorCode(),
+							propertiesManager.getCaseNoErrorMsg());
+				}
 			}
 		}
 	}

@@ -89,6 +89,16 @@ public class LeaveApplicationRepository {
         return leaveApplications;
     }
 
+    public List<LeaveApplication> findForReportCriteria(final LeaveSearchRequest leaveSearchRequest,
+                                                        final RequestInfo requestInfo) {
+        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final String queryStr = leaveApplicationQueryBuilder.getLeaveReportQuery(leaveSearchRequest, preparedStatementValues,
+                requestInfo);
+        final List<LeaveApplication> leaveApplications = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+                leaveApplicationRowMapper);
+        return leaveApplications;
+    }
+
     public LeaveApplicationRequest saveLeaveApplication(final LeaveApplicationRequest leaveApplicationRequest) {
         ProcessInstance processInstance = new ProcessInstance();
         Long stateId = null;
@@ -104,6 +114,32 @@ public class LeaveApplicationRepository {
             leaveApplication.setStateId(stateId);
             final Object[] obj = new Object[]{leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
                     leaveApplication.getLeaveType().getId(),
+                    leaveApplication.getFromDate(), leaveApplication.getToDate(), leaveApplication.getCompensatoryForDate(),
+                    leaveApplication.getLeaveDays(),
+                    leaveApplication.getAvailableDays(), leaveApplication.getHalfdays(), leaveApplication.getFirstHalfleave(),
+                    leaveApplication.getReason(),
+                    leaveApplication.getStatus(), leaveApplication.getStateId(),
+                    userResponse.getUsers().get(0).getId(),
+                    now, userResponse.getUsers().get(0).getId(), now, leaveApplication.getTenantId()};
+            jdbcTemplate.update(leaveApplicationInsertQuery, obj);
+        }
+        return leaveApplicationRequest;
+    }
+
+    public LeaveApplicationRequest saveCompoffLeaveApplication(final LeaveApplicationRequest leaveApplicationRequest) {
+        ProcessInstance processInstance = new ProcessInstance();
+        Long stateId = null;
+        if (StringUtils.isEmpty(leaveApplicationRequest.getType()))
+            processInstance = workFlowService.start(leaveApplicationRequest);
+        if (processInstance.getId() != null)
+            stateId = Long.valueOf(processInstance.getId());
+        final String leaveApplicationInsertQuery = LeaveApplicationQueryBuilder.insertCompoffLeaveApplicationQuery();
+        final Date now = new Date();
+        final UserResponse userResponse = userService.findUserByUserNameAndTenantId(
+                leaveApplicationRequest.getRequestInfo());
+        for (LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
+            leaveApplication.setStateId(stateId);
+            final Object[] obj = new Object[]{leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
                     leaveApplication.getFromDate(), leaveApplication.getToDate(), leaveApplication.getCompensatoryForDate(),
                     leaveApplication.getLeaveDays(),
                     leaveApplication.getAvailableDays(), leaveApplication.getHalfdays(), leaveApplication.getFirstHalfleave(),

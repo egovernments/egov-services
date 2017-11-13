@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.swm.domain.model.Boundary;
-import org.egov.swm.domain.model.Contractor;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.ServicedLocations;
 import org.egov.swm.domain.model.ServicesOffered;
+import org.egov.swm.domain.model.Supplier;
 import org.egov.swm.domain.model.SwmProcess;
 import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorSearch;
@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class VendorJdbcRepository extends JdbcRepository {
 
+	public static final String TABLE_NAME = "egswm_vendor";
+
 	@Autowired
 	public JdbcTemplate jdbcTemplate;
 
@@ -31,7 +33,7 @@ public class VendorJdbcRepository extends JdbcRepository {
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
-	public ContractorJdbcRepository contractorJdbcRepository;
+	public SupplierJdbcRepository supplierJdbcRepository;
 
 	@Autowired
 	public ServicedLocationsJdbcRepository servicedLocationsJdbcRepository;
@@ -42,12 +44,12 @@ public class VendorJdbcRepository extends JdbcRepository {
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {
 
-		return uniqueCheck("egswm_vendor", tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
+		return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
 	}
 
 	public Pagination<Vendor> search(VendorSearch searchRequest) {
 
-		String searchQuery = "select * from egswm_vendor :condition  :orderby ";
+		String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
@@ -101,12 +103,12 @@ public class VendorJdbcRepository extends JdbcRepository {
 			paramValues.put("registrationNo", searchRequest.getRegistrationNo());
 		}
 
-		if (searchRequest.getContractorNo() != null) {
+		if (searchRequest.getSupplierNo() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("contractor =:contractor");
-			paramValues.put("contractor", searchRequest.getContractorNo());
+			params.append("supplier =:supplier");
+			paramValues.put("supplier", searchRequest.getSupplierNo());
 		}
 
 		Pagination<Vendor> page = new Pagination<>();
@@ -139,21 +141,21 @@ public class VendorJdbcRepository extends JdbcRepository {
 
 		List<VendorEntity> vendorEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
 		Vendor v;
-		Contractor cs;
+		Supplier cs;
 		ServicedLocations servicedLocations;
 		ServicesOffered servicesOffered;
-		List<Contractor> contractors;
+		List<Supplier> contractors;
 		List<ServicedLocations> sls;
 		List<ServicesOffered> sos;
 		for (VendorEntity vendorEntity : vendorEntities) {
 
 			v = vendorEntity.toDomain();
-			cs = Contractor.builder().tenantId(v.getTenantId()).contractorNo(vendorEntity.getContractor()).build();
+			cs = Supplier.builder().tenantId(v.getTenantId()).supplierNo(vendorEntity.getSupplier()).build();
 
-			contractors = contractorJdbcRepository.search(cs);
+			contractors = supplierJdbcRepository.search(cs);
 
 			if (contractors != null && !contractors.isEmpty()) {
-				v.setContractor(contractors.get(0));
+				v.setSupplier(contractors.get(0));
 			}
 
 			servicedLocations = ServicedLocations.builder().tenantId(v.getTenantId()).vendor(v.getVendorNo()).build();

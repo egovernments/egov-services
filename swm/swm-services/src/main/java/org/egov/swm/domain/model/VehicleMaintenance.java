@@ -31,7 +31,6 @@ public class VehicleMaintenance {
 	private String tenantId = null;
 
 	@NotNull
-
 	@JsonProperty("vehicle")
 	private Vehicle vehicle = null;
 
@@ -42,7 +41,7 @@ public class VehicleMaintenance {
 
 	@NotNull
 	@Min(1)
-	@Max(20000)
+	@Max(50000)
 	@JsonProperty("maintenanceAfter")
 	private Long maintenanceAfter = null;
 

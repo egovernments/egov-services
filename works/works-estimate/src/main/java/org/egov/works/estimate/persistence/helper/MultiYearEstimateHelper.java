@@ -59,8 +59,7 @@ public class MultiYearEstimateHelper   {
 		multiYearEstimate.getAuditDetails().setLastModifiedTime(this.lastModifiedTime);
 		multiYearEstimate.setId(this.id);
 		multiYearEstimate.setTenantId(this.tenantId);
-		multiYearEstimate.setDetailedEstimate(new DetailedEstimate());
-		multiYearEstimate.getDetailedEstimate().setId(this.detailedEstimate);
+		multiYearEstimate.setDetailedEstimate(this.detailedEstimate);
 		FinancialYear financialYear = new FinancialYear();
 		financialYear.setId(this.financialYear);
 		multiYearEstimate.setFinancialYear(financialYear);

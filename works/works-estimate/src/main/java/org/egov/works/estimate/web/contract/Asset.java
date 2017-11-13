@@ -1,16 +1,17 @@
 package org.egov.works.estimate.web.contract;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * Hold the asset specific information.
@@ -70,26 +71,11 @@ public class Asset   {
   @JsonProperty("titleDocumentsAvalable")
   private List<String> titleDocumentsAvalable = null;
 
-  @JsonProperty("usage")
-  private String usage = null;
-
   @JsonProperty("locationDetails")
   private Location locationDetails = null;
 
-  @JsonProperty("length")
-  private Double length = null;
-
-  @JsonProperty("width")
-  private Double width = null;
-
-  @JsonProperty("height")
-  private Double height = null;
-
   @JsonProperty("totalArea")
   private Double totalArea = null;
-
-  @JsonProperty("plinthArea")
-  private Double plinthArea = null;
 
   @JsonProperty("address")
   private String address = null;
@@ -100,14 +86,8 @@ public class Asset   {
   @JsonProperty("latitude")
   private Double latitude = null;
 
-  @JsonProperty("floors")
-  private Long floors = null;
-
   @JsonProperty("landSurveyNo")
   private String landSurveyNo = null;
-
-  @JsonProperty("cubicContents")
-  private String cubicContents = null;
 
   @JsonProperty("quantity")
   private Long quantity = null;
@@ -133,45 +113,8 @@ public class Asset   {
   @JsonProperty("assetCategory")
   private AssetCategory assetCategory = null;
 
-  /**
-   * asset mode of acquistion enumeration.
-   */
-  public enum ModeOfAcquisitionEnum {
-    ACQUIRED("ACQUIRED"),
-    
-    CONSTRUCTION("CONSTRUCTION"),
-    
-    PURCHASE("PURCHASE"),
-    
-    TENDER("TENDER"),
-    
-    DONATION("DONATION");
-
-    private String value;
-
-    ModeOfAcquisitionEnum(String value) {
-      this.value = value;
-    }
-
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static ModeOfAcquisitionEnum fromValue(String text) {
-      for (ModeOfAcquisitionEnum b : ModeOfAcquisitionEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
-
   @JsonProperty("modeOfAcquisition")
-  private ModeOfAcquisitionEnum modeOfAcquisition = null;
+  private ModeOfAcquisition modeOfAcquisition = null;
 
   @JsonProperty("status")
   private String status = null;
@@ -209,17 +152,29 @@ public class Asset   {
   @JsonProperty("yearWiseDepreciationRate")
   private List<YearWiseDepreciation> yearWiseDepreciationRate = null;
 
+  @JsonProperty("fundSource")
+  private String fundSource = null;
+
+  @JsonProperty("location")
+  private String location = null;
+
+  @JsonProperty("openingDate")
+  private Long openingDate = null;
+
+  @JsonProperty("landDetails")
+  private List<LandDetails> landDetails = null;
+
   public Asset anticipatedLife(Long anticipatedLife) {
     this.anticipatedLife = anticipatedLife;
     return this;
   }
 
    /**
-   * Anticipated life of asset.
+   * Anticipated life of asset, This value is being calculated by diving 100 by the depreciation rate. for eg if the depreciation rate is 10%, then the anticiapted life will be 100/10 which equals 10years.
    * @return anticipatedLife
   **/
-  @ApiModelProperty(required = true, value = "Anticipated life of asset.")
-  //@NotNull
+  @ApiModelProperty(required = true, value = "Anticipated life of asset, This value is being calculated by diving 100 by the depreciation rate. for eg if the depreciation rate is 10%, then the anticiapted life will be 100/10 which equals 10years.")
+  @NotNull
 
 
   public Long getAnticipatedLife() {
@@ -280,7 +235,7 @@ public class Asset   {
    * @return wipReferenceNo
   **/
   @ApiModelProperty(required = true, value = "Ref No of WIP(work in progress) Register.")
-  //@NotNull
+  @NotNull
 
 
   public String getWipReferenceNo() {
@@ -357,10 +312,10 @@ public class Asset   {
   }
 
    /**
-   * Get defectLiabilityPeriod
+   * This field contains year,month an day counts of the defect liability period in round figures.
    * @return defectLiabilityPeriod
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "This field contains year,month an day counts of the defect liability period in round figures.")
 
   @Valid
 
@@ -424,7 +379,7 @@ public class Asset   {
    * @return acquisitionDate
   **/
   @ApiModelProperty(required = true, value = "Date of the Acquisition.")
-  //@NotNull
+  @NotNull
 
 
   public Long getAcquisitionDate() {
@@ -445,7 +400,7 @@ public class Asset   {
    * @return originalValue
   **/
   @ApiModelProperty(required = true, value = "value of the asset when it was created originally, will be same as gross value if the asset is being created from the system.")
-  //@NotNull
+  @NotNull
 
   @Valid
 
@@ -463,11 +418,10 @@ public class Asset   {
   }
 
    /**
-   * Options are from the  chart of account master for the account code purpose \"Fixed Asset\".
+   * Options are from the  chart of account master for the account code purpose \"Fixed Asset\", this account field is mandatory only when the voucher enabled is true, the voucher enabled flag can be accesed from the mdms(master data service).
    * @return assetAccount
   **/
-  @ApiModelProperty(required = true, value = "Options are from the  chart of account master for the account code purpose \"Fixed Asset\".")
-  //@NotNull
+  @ApiModelProperty(value = "Options are from the  chart of account master for the account code purpose \"Fixed Asset\", this account field is mandatory only when the voucher enabled is true, the voucher enabled flag can be accesed from the mdms(master data service).")
 
 
   public String getAssetAccount() {
@@ -484,11 +438,10 @@ public class Asset   {
   }
 
    /**
-   * Options are from the  chart of account master for the account code purpose \"Accumulated Depreciation\".
+   * Options are from the  chart of account master for the account code purpose \"Accumulated Depreciation\", this account field is mandatory only when the voucher enabled is true, the voucher enabled flag can be accesed from the mdms(master data service).
    * @return accumulatedDepreciationAccount
   **/
-  @ApiModelProperty(required = true, value = "Options are from the  chart of account master for the account code purpose \"Accumulated Depreciation\".")
- // @NotNull
+  @ApiModelProperty(value = "Options are from the  chart of account master for the account code purpose \"Accumulated Depreciation\", this account field is mandatory only when the voucher enabled is true, the voucher enabled flag can be accesed from the mdms(master data service).")
 
 
   public String getAccumulatedDepreciationAccount() {
@@ -505,11 +458,10 @@ public class Asset   {
   }
 
    /**
-   * Options are from the  chart of account master for the account code purpose \"Revaluation Reserve Account\".
+   * Options are from the  chart of account master for the account code purpose \"Revaluation Reserve Account\", this account field is mandatory only when the voucher enabled is true, the voucher enabled flag can be accesed from the mdms(master data service).
    * @return revaluationReserveAccount
   **/
-  @ApiModelProperty(required = true, value = "Options are from the  chart of account master for the account code purpose \"Revaluation Reserve Account\".")
-  //@NotNull
+  @ApiModelProperty(value = "Options are from the  chart of account master for the account code purpose \"Revaluation Reserve Account\", this account field is mandatory only when the voucher enabled is true, the voucher enabled flag can be accesed from the mdms(master data service).")
 
 
   public String getRevaluationReserveAccount() {
@@ -526,11 +478,10 @@ public class Asset   {
   }
 
    /**
-   * Options are from the  chart of account master for the account code purpose \"Depreciation Expense Account\".
+   * Options are from the  chart of account master for the account code purpose \"Depreciation Expense Account\", this account field is mandatory only when the voucher enabled is true, the voucher enabled flag can be accesed from the mdms(master data service).
    * @return depreciationExpenseAccount
   **/
-  @ApiModelProperty(required = true, value = "Options are from the  chart of account master for the account code purpose \"Depreciation Expense Account\".")
- // @NotNull
+  @ApiModelProperty(value = "Options are from the  chart of account master for the account code purpose \"Depreciation Expense Account\", this account field is mandatory only when the voucher enabled is true, the voucher enabled flag can be accesed from the mdms(master data service).")
 
 
   public String getDepreciationExpenseAccount() {
@@ -555,10 +506,10 @@ public class Asset   {
   }
 
    /**
-   * names of the title documents available for the particular asset.
+   * names of the title documents available for the particular asset, values will be entered in comma separated format.
    * @return titleDocumentsAvalable
   **/
-  @ApiModelProperty(value = "names of the title documents available for the particular asset.")
+  @ApiModelProperty(value = "names of the title documents available for the particular asset, values will be entered in comma separated format.")
 
 
   public List<String> getTitleDocumentsAvalable() {
@@ -567,26 +518,6 @@ public class Asset   {
 
   public void setTitleDocumentsAvalable(List<String> titleDocumentsAvalable) {
     this.titleDocumentsAvalable = titleDocumentsAvalable;
-  }
-
-  public Asset usage(String usage) {
-    this.usage = usage;
-    return this;
-  }
-
-   /**
-   * usage.
-   * @return usage
-  **/
-  @ApiModelProperty(value = "usage.")
-
-
-  public String getUsage() {
-    return usage;
-  }
-
-  public void setUsage(String usage) {
-    this.usage = usage;
   }
 
   public Asset locationDetails(Location locationDetails) {
@@ -610,66 +541,6 @@ public class Asset   {
     this.locationDetails = locationDetails;
   }
 
-  public Asset length(Double length) {
-    this.length = length;
-    return this;
-  }
-
-   /**
-   * Length of the Land and Shop assets.
-   * @return length
-  **/
-  @ApiModelProperty(value = "Length of the Land and Shop assets.")
-
-
-  public Double getLength() {
-    return length;
-  }
-
-  public void setLength(Double length) {
-    this.length = length;
-  }
-
-  public Asset width(Double width) {
-    this.width = width;
-    return this;
-  }
-
-   /**
-   * Width of the Land and Shop assets.
-   * @return width
-  **/
-  @ApiModelProperty(value = "Width of the Land and Shop assets.")
-
-
-  public Double getWidth() {
-    return width;
-  }
-
-  public void setWidth(Double width) {
-    this.width = width;
-  }
-
-  public Asset height(Double height) {
-    this.height = height;
-    return this;
-  }
-
-   /**
-   * Height of the Land and Shop assets.
-   * @return height
-  **/
-  @ApiModelProperty(value = "Height of the Land and Shop assets.")
-
-
-  public Double getHeight() {
-    return height;
-  }
-
-  public void setHeight(Double height) {
-    this.height = height;
-  }
-
   public Asset totalArea(Double totalArea) {
     this.totalArea = totalArea;
     return this;
@@ -690,26 +561,6 @@ public class Asset   {
     this.totalArea = totalArea;
   }
 
-  public Asset plinthArea(Double plinthArea) {
-    this.plinthArea = plinthArea;
-    return this;
-  }
-
-   /**
-   * area of Land on which the asset is constructed.
-   * @return plinthArea
-  **/
-  @ApiModelProperty(value = "area of Land on which the asset is constructed.")
-
-
-  public Double getPlinthArea() {
-    return plinthArea;
-  }
-
-  public void setPlinthArea(Double plinthArea) {
-    this.plinthArea = plinthArea;
-  }
-
   public Asset address(String address) {
     this.address = address;
     return this;
@@ -720,7 +571,7 @@ public class Asset   {
    * @return address
   **/
   @ApiModelProperty(required = true, value = "address as entered by the user.")
-  //@NotNull
+  @NotNull
 
 
   public String getAddress() {
@@ -771,26 +622,6 @@ public class Asset   {
     this.latitude = latitude;
   }
 
-  public Asset floors(Long floors) {
-    this.floors = floors;
-    return this;
-  }
-
-   /**
-   * No of floors available in the building.
-   * @return floors
-  **/
-  @ApiModelProperty(value = "No of floors available in the building.")
-
-
-  public Long getFloors() {
-    return floors;
-  }
-
-  public void setFloors(Long floors) {
-    this.floors = floors;
-  }
-
   public Asset landSurveyNo(String landSurveyNo) {
     this.landSurveyNo = landSurveyNo;
     return this;
@@ -809,26 +640,6 @@ public class Asset   {
 
   public void setLandSurveyNo(String landSurveyNo) {
     this.landSurveyNo = landSurveyNo;
-  }
-
-  public Asset cubicContents(String cubicContents) {
-    this.cubicContents = cubicContents;
-    return this;
-  }
-
-   /**
-   * cubic contents.
-   * @return cubicContents
-  **/
-  @ApiModelProperty(value = "cubic contents.")
-
-
-  public String getCubicContents() {
-    return cubicContents;
-  }
-
-  public void setCubicContents(String cubicContents) {
-    this.cubicContents = cubicContents;
   }
 
   public Asset quantity(Long quantity) {
@@ -901,7 +712,7 @@ public class Asset   {
    * @return name
   **/
   @ApiModelProperty(required = true, value = "Name of the Asset.")
-  //@NotNull
+  @NotNull
 
 
   public String getName() {
@@ -918,10 +729,10 @@ public class Asset   {
   }
 
    /**
-   * Unique code for the asset. This will be auto generated. The format for the asset code will be given by the client in case of auto generation of asset code.
+   * Unique code for the asset. This will be auto generated. The format for the asset code will be given by the client in case of auto generation of asset code, The format of the code will be <ULB_NAME>/<Deprartmentcode>/<assetCategoryCode>/running sequence (for eg- mh.rohaRevenueBuilding12).
    * @return code
   **/
-  @ApiModelProperty(value = "Unique code for the asset. This will be auto generated. The format for the asset code will be given by the client in case of auto generation of asset code.")
+  @ApiModelProperty(value = "Unique code for the asset. This will be auto generated. The format for the asset code will be given by the client in case of auto generation of asset code, The format of the code will be <ULB_NAME>/<Deprartmentcode>/<assetCategoryCode>/running sequence (for eg- mh.rohaRevenueBuilding12).")
 
 
   public String getCode() {
@@ -962,7 +773,7 @@ public class Asset   {
    * @return departmentCode
   **/
   @ApiModelProperty(required = true, value = "code of the department to which the asset belongs")
-  //@NotNull
+  @NotNull
 
 
   public String getDepartmentCode() {
@@ -983,7 +794,7 @@ public class Asset   {
    * @return assetCategory
   **/
   @ApiModelProperty(required = true, value = "")
-  //@NotNull
+  @NotNull
 
   @Valid
 
@@ -995,23 +806,24 @@ public class Asset   {
     this.assetCategory = assetCategory;
   }
 
-  public Asset modeOfAcquisition(ModeOfAcquisitionEnum modeOfAcquisition) {
+  public Asset modeOfAcquisition(ModeOfAcquisition modeOfAcquisition) {
     this.modeOfAcquisition = modeOfAcquisition;
     return this;
   }
 
    /**
-   * asset mode of acquistion enumeration.
+   * Get modeOfAcquisition
    * @return modeOfAcquisition
   **/
-  @ApiModelProperty(value = "asset mode of acquistion enumeration.")
+  @ApiModelProperty(value = "")
 
+  @Valid
 
-  public ModeOfAcquisitionEnum getModeOfAcquisition() {
+  public ModeOfAcquisition getModeOfAcquisition() {
     return modeOfAcquisition;
   }
 
-  public void setModeOfAcquisition(ModeOfAcquisitionEnum modeOfAcquisition) {
+  public void setModeOfAcquisition(ModeOfAcquisition modeOfAcquisition) {
     this.modeOfAcquisition = modeOfAcquisition;
   }
 
@@ -1045,7 +857,7 @@ public class Asset   {
    * @return grossValue
   **/
   @ApiModelProperty(required = true, value = "current written down value of the asset when being created or brought in to the system. This will be same as the original value for the newly created assets.")
-  //@NotNull
+  @NotNull
 
   @Valid
 
@@ -1088,7 +900,7 @@ public class Asset   {
    * @return description
   **/
   @ApiModelProperty(required = true, value = "description of asset")
-  //@NotNull
+  @NotNull
 
 
   public String getDescription() {
@@ -1109,7 +921,7 @@ public class Asset   {
    * @return dateOfCreation
   **/
   @ApiModelProperty(required = true, value = "Date of asset creation.")
-  //@NotNull
+  @NotNull
 
 
   public Long getDateOfCreation() {
@@ -1278,6 +1090,95 @@ public class Asset   {
     this.yearWiseDepreciationRate = yearWiseDepreciationRate;
   }
 
+  public Asset fundSource(String fundSource) {
+    this.fundSource = fundSource;
+    return this;
+  }
+
+   /**
+   * Source of fund
+   * @return fundSource
+  **/
+  @ApiModelProperty(value = "Source of fund")
+
+
+  public String getFundSource() {
+    return fundSource;
+  }
+
+  public void setFundSource(String fundSource) {
+    this.fundSource = fundSource;
+  }
+
+  public Asset location(String location) {
+    this.location = location;
+    return this;
+  }
+
+   /**
+   * location of asset
+   * @return location
+  **/
+  @ApiModelProperty(value = "location of asset")
+
+
+  public String getLocation() {
+    return location;
+  }
+
+  public void setLocation(String location) {
+    this.location = location;
+  }
+
+  public Asset openingDate(Long openingDate) {
+    this.openingDate = openingDate;
+    return this;
+  }
+
+   /**
+   * The date asset is been registered
+   * @return openingDate
+  **/
+  @ApiModelProperty(value = "The date asset is been registered")
+
+
+  public Long getOpeningDate() {
+    return openingDate;
+  }
+
+  public void setOpeningDate(Long openingDate) {
+    this.openingDate = openingDate;
+  }
+
+  public Asset landDetails(List<LandDetails> landDetails) {
+    this.landDetails = landDetails;
+    return this;
+  }
+
+  public Asset addLandDetailsItem(LandDetails landDetailsItem) {
+    if (this.landDetails == null) {
+      this.landDetails = new ArrayList<LandDetails>();
+    }
+    this.landDetails.add(landDetailsItem);
+    return this;
+  }
+
+   /**
+   * multiple rows can be specified for each asset
+   * @return landDetails
+  **/
+  @ApiModelProperty(value = "multiple rows can be specified for each asset")
+
+  @Valid
+
+  public List<LandDetails> getLandDetails() {
+    return landDetails;
+  }
+
+  public void setLandDetails(List<LandDetails> landDetails) {
+    this.landDetails = landDetails;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -1305,19 +1206,12 @@ public class Asset   {
         Objects.equals(this.revaluationReserveAccount, asset.revaluationReserveAccount) &&
         Objects.equals(this.depreciationExpenseAccount, asset.depreciationExpenseAccount) &&
         Objects.equals(this.titleDocumentsAvalable, asset.titleDocumentsAvalable) &&
-        Objects.equals(this.usage, asset.usage) &&
         Objects.equals(this.locationDetails, asset.locationDetails) &&
-        Objects.equals(this.length, asset.length) &&
-        Objects.equals(this.width, asset.width) &&
-        Objects.equals(this.height, asset.height) &&
         Objects.equals(this.totalArea, asset.totalArea) &&
-        Objects.equals(this.plinthArea, asset.plinthArea) &&
         Objects.equals(this.address, asset.address) &&
         Objects.equals(this.longitude, asset.longitude) &&
         Objects.equals(this.latitude, asset.latitude) &&
-        Objects.equals(this.floors, asset.floors) &&
         Objects.equals(this.landSurveyNo, asset.landSurveyNo) &&
-        Objects.equals(this.cubicContents, asset.cubicContents) &&
         Objects.equals(this.quantity, asset.quantity) &&
         Objects.equals(this.tenantId, asset.tenantId) &&
         Objects.equals(this.id, asset.id) &&
@@ -1338,12 +1232,16 @@ public class Asset   {
         Objects.equals(this.enableYearWiseDepreciation, asset.enableYearWiseDepreciation) &&
         Objects.equals(this.assetAttributes, asset.assetAttributes) &&
         Objects.equals(this.depreciationRate, asset.depreciationRate) &&
-        Objects.equals(this.yearWiseDepreciationRate, asset.yearWiseDepreciationRate);
+        Objects.equals(this.yearWiseDepreciationRate, asset.yearWiseDepreciationRate) &&
+        Objects.equals(this.fundSource, asset.fundSource) &&
+        Objects.equals(this.location, asset.location) &&
+        Objects.equals(this.openingDate, asset.openingDate) &&
+        Objects.equals(this.landDetails, asset.landDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(anticipatedLife, orderNumber, orderDate, wipReferenceNo, acquiredFrom, warrantyAvailable, warrantyExpiryDate, defectLiabilityPeriod, securityDepositRetained, securityDepositRealized, acquisitionDate, originalValue, assetAccount, accumulatedDepreciationAccount, revaluationReserveAccount, depreciationExpenseAccount, titleDocumentsAvalable, usage, locationDetails, length, width, height, totalArea, plinthArea, address, longitude, latitude, floors, landSurveyNo, cubicContents, quantity, tenantId, id, name, code, oldCode, departmentCode, assetCategory, modeOfAcquisition, status, grossValue, accumulatedDepreciation, description, dateOfCreation, remarks, version, assetReference, enableYearWiseDepreciation, assetAttributes, depreciationRate, yearWiseDepreciationRate);
+    return Objects.hash(anticipatedLife, orderNumber, orderDate, wipReferenceNo, acquiredFrom, warrantyAvailable, warrantyExpiryDate, defectLiabilityPeriod, securityDepositRetained, securityDepositRealized, acquisitionDate, originalValue, assetAccount, accumulatedDepreciationAccount, revaluationReserveAccount, depreciationExpenseAccount, titleDocumentsAvalable, locationDetails, totalArea, address, longitude, latitude, landSurveyNo, quantity, tenantId, id, name, code, oldCode, departmentCode, assetCategory, modeOfAcquisition, status, grossValue, accumulatedDepreciation, description, dateOfCreation, remarks, version, assetReference, enableYearWiseDepreciation, assetAttributes, depreciationRate, yearWiseDepreciationRate, fundSource, location, openingDate, landDetails);
   }
 
   @Override
@@ -1368,19 +1266,12 @@ public class Asset   {
     sb.append("    revaluationReserveAccount: ").append(toIndentedString(revaluationReserveAccount)).append("\n");
     sb.append("    depreciationExpenseAccount: ").append(toIndentedString(depreciationExpenseAccount)).append("\n");
     sb.append("    titleDocumentsAvalable: ").append(toIndentedString(titleDocumentsAvalable)).append("\n");
-    sb.append("    usage: ").append(toIndentedString(usage)).append("\n");
     sb.append("    locationDetails: ").append(toIndentedString(locationDetails)).append("\n");
-    sb.append("    length: ").append(toIndentedString(length)).append("\n");
-    sb.append("    width: ").append(toIndentedString(width)).append("\n");
-    sb.append("    height: ").append(toIndentedString(height)).append("\n");
     sb.append("    totalArea: ").append(toIndentedString(totalArea)).append("\n");
-    sb.append("    plinthArea: ").append(toIndentedString(plinthArea)).append("\n");
     sb.append("    address: ").append(toIndentedString(address)).append("\n");
     sb.append("    longitude: ").append(toIndentedString(longitude)).append("\n");
     sb.append("    latitude: ").append(toIndentedString(latitude)).append("\n");
-    sb.append("    floors: ").append(toIndentedString(floors)).append("\n");
     sb.append("    landSurveyNo: ").append(toIndentedString(landSurveyNo)).append("\n");
-    sb.append("    cubicContents: ").append(toIndentedString(cubicContents)).append("\n");
     sb.append("    quantity: ").append(toIndentedString(quantity)).append("\n");
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
@@ -1402,6 +1293,10 @@ public class Asset   {
     sb.append("    assetAttributes: ").append(toIndentedString(assetAttributes)).append("\n");
     sb.append("    depreciationRate: ").append(toIndentedString(depreciationRate)).append("\n");
     sb.append("    yearWiseDepreciationRate: ").append(toIndentedString(yearWiseDepreciationRate)).append("\n");
+    sb.append("    fundSource: ").append(toIndentedString(fundSource)).append("\n");
+    sb.append("    location: ").append(toIndentedString(location)).append("\n");
+    sb.append("    openingDate: ").append(toIndentedString(openingDate)).append("\n");
+    sb.append("    landDetails: ").append(toIndentedString(landDetails)).append("\n");
     sb.append("}");
     return sb.toString();
   }

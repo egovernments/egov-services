@@ -1,17 +1,12 @@
 package org.egov.works.estimate.web.controller;
 
-import java.util.List;
-
 import org.egov.works.estimate.domain.service.AbstractEstimateService;
-import org.egov.works.estimate.utils.EstimateUtils;
-import org.egov.works.estimate.web.contract.AbstractEstimate;
 import org.egov.works.estimate.web.contract.AbstractEstimateRequest;
 import org.egov.works.estimate.web.contract.AbstractEstimateResponse;
 import org.egov.works.estimate.web.contract.AbstractEstimateSearchContract;
 import org.egov.works.estimate.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,43 +22,24 @@ public class AbstractEstimateController {
 	@Autowired
 	private AbstractEstimateService abstractEstimateService;
 	
-	@Autowired
-	private EstimateUtils estimateUtils;
-
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.OK)
-	public AbstractEstimateResponse create(@RequestBody AbstractEstimateRequest abstractEstimateRequest,
-			BindingResult errors) {
-		abstractEstimateService.validateEstimates(abstractEstimateRequest, errors, true);
-		final List<AbstractEstimate> abstractEstimates = abstractEstimateService.create(abstractEstimateRequest);
-		final AbstractEstimateResponse response = new AbstractEstimateResponse();
-		response.setAbstractEstimates(abstractEstimates);
-		response.setResponseInfo(estimateUtils.getResponseInfo(abstractEstimateRequest.getRequestInfo()));
-		return response;
+	public AbstractEstimateResponse create(@RequestBody AbstractEstimateRequest abstractEstimateRequest) {
+		return abstractEstimateService.create(abstractEstimateRequest);
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.OK)
-	public AbstractEstimateResponse update(@RequestBody AbstractEstimateRequest abstractEstimateRequest,
-			BindingResult errors) {
-		abstractEstimateService.validateEstimates(abstractEstimateRequest, errors, false);
-		final List<AbstractEstimate> abstractEstimates = abstractEstimateService.update(abstractEstimateRequest);
-		final AbstractEstimateResponse response = new AbstractEstimateResponse();
-		response.setAbstractEstimates(abstractEstimates);
-		response.setResponseInfo(estimateUtils.getResponseInfo(abstractEstimateRequest.getRequestInfo()));
-		return response;
+	public AbstractEstimateResponse update(@RequestBody AbstractEstimateRequest abstractEstimateRequest) {
+		return abstractEstimateService.update(abstractEstimateRequest);
 	}
 
 	@PostMapping("/_search")
 	@ResponseStatus(HttpStatus.OK)
 	public AbstractEstimateResponse search(
 			@ModelAttribute AbstractEstimateSearchContract abstractEstimateSearchContract,
-			@RequestBody RequestInfo requestInfo, BindingResult errors,
+			@RequestBody RequestInfo requestInfo,
 			@RequestParam(required = true) String tenantId) {
-		final List<AbstractEstimate> abstractEstimates = abstractEstimateService.search(abstractEstimateSearchContract);
-		final AbstractEstimateResponse response = new AbstractEstimateResponse();
-		response.setAbstractEstimates(abstractEstimates);
-		response.setResponseInfo(estimateUtils.getResponseInfo(requestInfo));
-		return response;
+		return abstractEstimateService.search(abstractEstimateSearchContract, requestInfo);
 	}
 }

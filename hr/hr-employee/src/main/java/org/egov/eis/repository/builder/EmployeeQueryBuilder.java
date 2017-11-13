@@ -95,6 +95,8 @@ public class EmployeeQueryBuilder {
             + " FROM egeis_employee e LEFT JOIN egeis_employeelanguages l ON e.id = l.employeeId AND l.tenantId = e.tenantId"
             + " WHERE e.tenantId = :tenantId";
 
+    private static final String EMPLOYEE_WITHOUT_ASSIGNMEN_REPORT_QUERY = "select emp.id as id, emp.code as code, emp.tenantid as tenantId from egeis_employee emp left join egeis_assignment assign on assign.employeeid = emp.id and " +
+            "emp.tenantid=:tenantId and assign.tenantId=:tenantId";
     @Autowired
     private ApplicationProperties applicationProperties;
 
@@ -120,6 +122,17 @@ public class EmployeeQueryBuilder {
         return selectQuery.toString();
     }
 
+    public String getQueryForEmployeewithoutAssignmentReport(EmployeeCriteria employeeCriteria, Map<String, Object> namedParameters) {
+        StringBuilder selectQuery = new StringBuilder(EMPLOYEE_WITHOUT_ASSIGNMEN_REPORT_QUERY);
+
+        addWhereClauseForReportQuery(selectQuery, namedParameters, employeeCriteria);
+        addPagingClauseForReports(selectQuery, namedParameters, employeeCriteria.getPageSize(), employeeCriteria.getPageNumber());
+
+
+        log.debug("Get Employee Report Query : " + selectQuery);
+        return selectQuery.toString();
+    }
+
     private void addWhereClauseForReportQuery(StringBuilder selectQuery, Map<String, Object> namedParameters,
                                               BaseRegisterReportRequest baseRegisterReportRequest) {
 
@@ -138,6 +151,19 @@ public class EmployeeQueryBuilder {
         if (!isEmpty(baseRegisterReportRequest.getRecruitmentType())) {
             selectQuery.append(" AND e.recruitmenttypeid = :recruitmentTypeId");
             namedParameters.put("recruitmentTypeId", baseRegisterReportRequest.getRecruitmentType());
+        }
+
+
+    }
+
+    private void addWhereClauseForReportQuery(StringBuilder selectQuery, Map<String, Object> namedParameters,
+                                              EmployeeCriteria employeeCriteria) {
+
+        namedParameters.put("tenantId", employeeCriteria.getTenantId());
+
+        if (!isEmpty(employeeCriteria.getAsOnDate())) {
+            selectQuery.append(" where emp.id not in(select employeeid from egeis_assignment where :asOnDate BETWEEN assign.fromDate AND assign.toDate and tenantid=:tenantId) ");
+            namedParameters.put("asOnDate", employeeCriteria.getAsOnDate());
         }
 
 

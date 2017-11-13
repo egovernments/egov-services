@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class SanitationStaffTargetMapJdbcRepository {
+public class SanitationStaffTargetMapJdbcRepository extends JdbcRepository {
+
+	public static final String TABLE_NAME = "egswm_sst_collectionpoints";
 
 	@Autowired
 	public JdbcTemplate jdbcTemplate;
@@ -22,15 +24,13 @@ public class SanitationStaffTargetMapJdbcRepository {
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Transactional
-	public void delete(String sanitationStaffTarget) {
-		String delQuery = "delete from  egswm_sst_collectionpoints where sanitationStaffTarget = '"
-				+ sanitationStaffTarget + "'";
-		jdbcTemplate.execute(delQuery);
+	public void delete(String tenantId, String sanitationStaffTarget) {
+		delete(TABLE_NAME, tenantId, "sanitationStaffTarget", sanitationStaffTarget);
 	}
 
 	public List<SanitationStaffTargetMap> search(SanitationStaffTargetMap searchRequest) {
 
-		String searchQuery = "select * from egswm_sst_collectionpoints :condition ";
+		String searchQuery = "select * from " + TABLE_NAME + " :condition ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();

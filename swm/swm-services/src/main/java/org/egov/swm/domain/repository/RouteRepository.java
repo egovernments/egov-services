@@ -26,7 +26,7 @@ public class RouteRepository {
 
 	public RouteRequest update(RouteRequest routeRequest) {
 
-		return routeQueueRepository.save(routeRequest);
+		return routeQueueRepository.update(routeRequest);
 
 	}
 

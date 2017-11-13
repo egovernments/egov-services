@@ -44,9 +44,9 @@ public class VendorQueueRepository {
 
 		for (Vendor cp : vendorRequest.getVendors()) {
 
-			servicedLocationsJdbcRepository.delete(cp.getVendorNo());
+			servicedLocationsJdbcRepository.delete(cp.getTenantId(), cp.getVendorNo());
 
-			servicesOfferedJdbcRepository.delete(cp.getVendorNo());
+			servicesOfferedJdbcRepository.delete(cp.getTenantId(), cp.getVendorNo());
 		}
 
 		kafkaTemplate.send(updateTopic, vendorRequest);

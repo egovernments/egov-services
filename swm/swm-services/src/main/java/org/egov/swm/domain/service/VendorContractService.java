@@ -10,19 +10,13 @@ import org.egov.swm.domain.model.VendorContract;
 import org.egov.swm.domain.model.VendorContractSearch;
 import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.domain.repository.VendorContractRepository;
-import org.egov.swm.web.contract.IdGenerationResponse;
 import org.egov.swm.web.repository.IdgenRepository;
 import org.egov.swm.web.requests.VendorContractRequest;
 import org.egov.tracer.model.CustomException;
-import org.egov.tracer.model.Error;
-import org.egov.tracer.model.ErrorRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 @Service
 @Transactional(readOnly = true)
@@ -46,14 +40,15 @@ public class VendorContractService {
 		validate(vendorContractRequest);
 
 		Long userId = null;
+
+		if (vendorContractRequest.getRequestInfo() != null
+				&& vendorContractRequest.getRequestInfo().getUserInfo() != null
+				&& null != vendorContractRequest.getRequestInfo().getUserInfo().getId()) {
+			userId = vendorContractRequest.getRequestInfo().getUserInfo().getId();
+		}
+
 		if (vendorContractRequest.getVendorContracts() != null)
 			for (VendorContract vc : vendorContractRequest.getVendorContracts()) {
-
-				if (vendorContractRequest.getRequestInfo() != null
-						&& vendorContractRequest.getRequestInfo().getUserInfo() != null
-						&& null != vendorContractRequest.getRequestInfo().getUserInfo().getId()) {
-					userId = vendorContractRequest.getRequestInfo().getUserInfo().getId();
-				}
 
 				setAuditDetails(vc, userId);
 
@@ -73,14 +68,14 @@ public class VendorContractService {
 
 		Long userId = null;
 
+		if (vendorContractRequest.getRequestInfo() != null
+				&& vendorContractRequest.getRequestInfo().getUserInfo() != null
+				&& null != vendorContractRequest.getRequestInfo().getUserInfo().getId()) {
+			userId = vendorContractRequest.getRequestInfo().getUserInfo().getId();
+		}
+
 		if (vendorContractRequest.getVendorContracts() != null)
 			for (VendorContract vc : vendorContractRequest.getVendorContracts()) {
-
-				if (vendorContractRequest.getRequestInfo() != null
-						&& vendorContractRequest.getRequestInfo().getUserInfo() != null
-						&& null != vendorContractRequest.getRequestInfo().getUserInfo().getId()) {
-					userId = vendorContractRequest.getRequestInfo().getUserInfo().getId();
-				}
 
 				setAuditDetails(vc, userId);
 
@@ -92,24 +87,7 @@ public class VendorContractService {
 
 	private String generateVendorContractNumber(String tenantId, RequestInfo requestInfo) {
 
-		String vendorContractNumber = null;
-		String response = null;
-		response = idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForVendorContractNumPath);
-		Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-		ErrorRes errorResponse = gson.fromJson(response, ErrorRes.class);
-		IdGenerationResponse idResponse = gson.fromJson(response, IdGenerationResponse.class);
-
-		if (errorResponse.getErrors() != null && errorResponse.getErrors().size() > 0) {
-			Error error = errorResponse.getErrors().get(0);
-			throw new CustomException(error.getMessage(), error.getDescription());
-		} else if (idResponse.getResponseInfo() != null) {
-			if (idResponse.getResponseInfo().getStatus().toString().equalsIgnoreCase("SUCCESSFUL")) {
-				if (idResponse.getIdResponses() != null && idResponse.getIdResponses().size() > 0)
-					vendorContractNumber = idResponse.getIdResponses().get(0).getId();
-			}
-		}
-
-		return vendorContractNumber;
+		return idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForVendorContractNumPath);
 	}
 
 	private void validate(VendorContractRequest vendorContractRequest) {
@@ -117,6 +95,11 @@ public class VendorContractService {
 		VendorSearch vendorSearch;
 		Pagination<Vendor> vendors;
 		for (VendorContract vendorContract : vendorContractRequest.getVendorContracts()) {
+
+			if (vendorContract.getVendor() != null && (vendorContract.getVendor().getVendorNo() == null
+					|| vendorContract.getVendor().getVendorNo().isEmpty()))
+				throw new CustomException("FuelType",
+						"The field Vendor number is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
 			if (vendorContract.getVendor() != null && vendorContract.getVendor().getVendorNo() != null) {
 				vendorSearch = new VendorSearch();

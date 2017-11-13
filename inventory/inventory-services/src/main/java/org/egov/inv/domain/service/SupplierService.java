@@ -41,11 +41,9 @@ package org.egov.inv.domain.service;
 
 import java.util.List;
 
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.inv.domain.exception.ErrorCode;
-import org.egov.inv.domain.exception.InvalidDataException;
 import org.egov.inv.domain.model.SupplierGetRequest;
 import org.egov.inv.persistence.entity.SupplierEntity;
+import org.egov.inv.persistence.repository.SupplierESRepository;
 import org.egov.inv.persistence.repository.SupplierJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
@@ -67,6 +65,9 @@ public class SupplierService {
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	@Autowired
+	private SupplierESRepository supplierESRepository;
+
+	@Autowired
 	private SupplierJdbcRepository supplierJdbcRepository;
 
 	@Value("${inv.supplier.save.topic}")
@@ -75,49 +76,55 @@ public class SupplierService {
 	@Value("${inv.supplier.update.topic}")
 	private String updateTopic;
 
-	public List<Supplier> create(SupplierRequest supplierRequest, String tenantId, BindingResult errors) {
+	@Value("${es.enabled}")
+	private Boolean isESEnabled;
+
+	public List<Supplier> create(SupplierRequest supplierRequest,
+			String tenantId, BindingResult errors) {
 
 		for (Supplier supplier : supplierRequest.getSuppliers()) {
-			supplier.setAuditDetails(
-					inventoryUtilityService.mapAuditDetails(supplierRequest.getRequestInfo(), tenantId));
-			if (!supplierJdbcRepository.uniqueCheck("code", new SupplierEntity().toEntity(supplier))) {
-				throw new CustomException("inv.004", "supplier code and tenantId combination should be unique");
+			supplier.setAuditDetails(inventoryUtilityService.mapAuditDetails(
+					supplierRequest.getRequestInfo(), tenantId));
+			if (!supplierJdbcRepository.uniqueCheck("code",
+					new SupplierEntity().toEntity(supplier))) {
+				throw new CustomException("inv.004",
+						"supplier code and tenantId combination should be unique");
 			}
 			supplier.setId(supplierJdbcRepository.getSequence(supplier));
 		}
-		return push(supplierRequest);
+		return push(supplierRequest, createTopic);
 	}
 
-	public List<Supplier> push(SupplierRequest supplierRequest) {
-		kafkaTemplate.send(createTopic, supplierRequest);
+	public List<Supplier> push(SupplierRequest supplierRequest, String topic) {
+		kafkaTemplate.send(topic, supplierRequest);
 		return supplierRequest.getSuppliers();
 	}
 
-	public List<Supplier> update(SupplierRequest supplierRequest, String tenantId, BindingResult errors) {
+	public List<Supplier> update(SupplierRequest supplierRequest,
+			String tenantId, BindingResult errors) {
 
 		for (Supplier supplier : supplierRequest.getSuppliers()) {
 			if (supplier.getId() == null) {
-				throw new CustomException("inv.005","Id is mandatory during updation");
+				throw new CustomException("inv.005",
+						"Id is mandatory during updation");
 			}
 			supplier.setAuditDetails(
-					inventoryUtilityService.mapAuditDetailsForUpdate(supplierRequest.getRequestInfo(), tenantId));
-			if (!supplierJdbcRepository.uniqueCheck("code", new SupplierEntity().toEntity(supplier))) {
-				throw new CustomException("inv.004", "supplier code and tenantId combination should be unique");
+					inventoryUtilityService.mapAuditDetailsForUpdate(
+							supplierRequest.getRequestInfo(), tenantId));
+			if (!supplierJdbcRepository.uniqueCheck("code",
+					new SupplierEntity().toEntity(supplier))) {
+				throw new CustomException("inv.004",
+						"supplier code and tenantId combination should be unique");
 			}
 		}
 
-		return pushForUpdate(supplierRequest);
-	}
-
-	public List<Supplier> pushForUpdate(SupplierRequest supplierRequest) {
-		kafkaTemplate.send(updateTopic, supplierRequest);
-		return supplierRequest.getSuppliers();
+		return push(supplierRequest, updateTopic);
 	}
 
 	public Pagination<Supplier> search(SupplierGetRequest supplierGetRequest) {
-		return supplierJdbcRepository.search(supplierGetRequest);
+		return isESEnabled ? supplierESRepository.search(supplierGetRequest)
+				: supplierJdbcRepository.search(supplierGetRequest);
 
 	}
-
 
 }

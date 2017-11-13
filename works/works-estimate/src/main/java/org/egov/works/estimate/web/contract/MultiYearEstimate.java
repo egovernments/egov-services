@@ -1,18 +1,19 @@
 package org.egov.works.estimate.web.contract;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.Objects;
 
 /**
  * An Object that holds the basic data of Multi Year Estimate
  */
 @ApiModel(description = "An Object that holds the basic data of Multi Year Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T07:36:50.343Z")
 
 public class MultiYearEstimate   {
   @JsonProperty("id")
@@ -25,7 +26,7 @@ public class MultiYearEstimate   {
   private FinancialYear financialYear = null;
 
   @JsonProperty("detailedEstimate")
-  private DetailedEstimate detailedEstimate = null;
+  private String detailedEstimate = null;
 
   @JsonProperty("percentage")
   private Double percentage = null;
@@ -65,7 +66,7 @@ public class MultiYearEstimate   {
   @ApiModelProperty(required = true, value = "Tenant id of the Multi Year Estimate")
   @NotNull
 
- @Size(min=4,max=128)
+ @Size(min=2,max=128)
   public String getTenantId() {
     return tenantId;
   }
@@ -96,7 +97,7 @@ public class MultiYearEstimate   {
     this.financialYear = financialYear;
   }
 
-  public MultiYearEstimate detailedEstimate(DetailedEstimate detailedEstimate) {
+  public MultiYearEstimate detailedEstimate(String detailedEstimate) {
     this.detailedEstimate = detailedEstimate;
     return this;
   }
@@ -105,16 +106,14 @@ public class MultiYearEstimate   {
    * Reference of the Detailed Estimate for Multi Year Estimate
    * @return detailedEstimate
   **/
-  @ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for Multi Year Estimate")
-  //@NotNull
+  @ApiModelProperty(value = "Reference of the Detailed Estimate for Multi Year Estimate")
 
-  @Valid
 
-  public DetailedEstimate getDetailedEstimate() {
+  public String getDetailedEstimate() {
     return detailedEstimate;
   }
 
-  public void setDetailedEstimate(DetailedEstimate detailedEstimate) {
+  public void setDetailedEstimate(String detailedEstimate) {
     this.detailedEstimate = detailedEstimate;
   }
 
@@ -162,7 +161,7 @@ public class MultiYearEstimate   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -202,7 +201,7 @@ public class MultiYearEstimate   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

@@ -1,0 +1,6 @@
+Dear {{Approving Authority}},
+
+	Opinion request from {{Department Name}} is received {{Opinion No}} dated {{Dated}} is received for approval.
+
+Sincerely,
+{{ULB Name}}

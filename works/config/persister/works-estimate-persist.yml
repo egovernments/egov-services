@@ -12,12 +12,13 @@ serviceMaps:
         referencenumber, function, description, budgethead, scheme, subscheme, 
         dateofproposal, department, adminsanctionnumber, adminsanctiondate, 
         adminsanctionby, status, beneficiary, modeofallotment, typeofwork, 
-        natureofwork, subtypeofwork, ward, technicalsanctionnumber, technicalsanctiondate, 
-        technicalsanctionby, locality, workcategory, councilresolutionnumber, 
+        natureofwork, subtypeofwork, ward, financialsanctionnumber, financialsanctiondate, 
+        financialsanctionby, locality, workcategory, councilresolutionnumber, 
         councilresolutiondate, workordercreated, billscreated, spilloverflag, 
         cancellationreason, cancellationremarks, detailedestimatecreated, 
-        stateid, Asset, implementationperiod, fundavailable, fundsanctioningauthority, 
-        pmcrequired, pmctype, pmcname, createdby, createdtime, lastmodifiedby, 
+        stateid, implementationperiod, fundavailable, fundsanctioningauthority, 
+        pmcrequired, pmctype, pmcname, workproposedasperdp, dpremarks, landassetrequired,
+        nooflands, otherassetspecificationremarks, createdby, createdtime, lastmodifiedby, 
         lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
         ?, ?, ?, ?, ?, 
         ?, ?, ?, ?, ?, 
@@ -26,7 +27,7 @@ serviceMaps:
         ?, ?, ?, 
         ?, ?, ?, ?, ?, 
         ?, ?, ?, ?, ?, ?, 
-        ?);
+        ?, ?, ?, ?, ?);
       basePath: $.abstractEstimates.*
       jsonMaps:
          
@@ -40,7 +41,7 @@ serviceMaps:
        
        - jsonPath: $.abstractEstimates.*.fund.code
        
-       - jsonPath: $.abstractEstimates.*.referenceType
+       - jsonPath: $.abstractEstimates.*.referenceType.code
        
        - jsonPath: $.abstractEstimates.*.referenceNumber
        
@@ -80,12 +81,12 @@ serviceMaps:
        
        - jsonPath: $.abstractEstimates.*.ward.code
        
-       - jsonPath: $.abstractEstimates.*.technicalSanctionNumber
+       - jsonPath: $.abstractEstimates.*.financialSanctionNumber
                
-       - jsonPath: $.abstractEstimates.*.technicalSanctionDate
+       - jsonPath: $.abstractEstimates.*.financialSanctionDate
          dbType: LONG
        
-       - jsonPath: $.abstractEstimates.*.technicalSanctionBy.userName
+       - jsonPath: $.abstractEstimates.*.financialSanctionBy.userName
        
        - jsonPath: $.abstractEstimates.*.locality.code
        
@@ -113,8 +114,6 @@ serviceMaps:
        
        - jsonPath: $.abstractEstimates.*.stateId
        
-       - jsonPath: $.abstractEstimates.*.asset
-       
        - jsonPath: $.abstractEstimates.*.implementationPeriod
          dbType: LONG
                 
@@ -129,6 +128,16 @@ serviceMaps:
        - jsonPath: $.abstractEstimates.*.pmcType
                
        - jsonPath: $.abstractEstimates.*.pmcName
+
+       - jsonPath: $.abstractEstimates.*.workProposedAsPerDP
+
+       - jsonPath: $.abstractEstimates.*.dpRemarks
+
+       - jsonPath: $.abstractEstimates.*.landAssetRequired
+
+       - jsonPath: $.abstractEstimates.*.noOfLands
+
+       - jsonPath: $.abstractEstimates.*.otherAssetSpecificationRemarks
        
        - jsonPath: $.abstractEstimates.*.auditDetails.createdBy
  
@@ -139,12 +148,11 @@ serviceMaps:
        - jsonPath: $.abstractEstimates.*.auditDetails.lastModifiedTime 
        
     - query: INSERT INTO egw_abstractestimate_details(
-            id, tenantid, abstractestimate, nameofwork, estimateamount, estimatenumber, 
+            id, tenantid, abstractestimate, nameofwork, estimateamount, 
             createdby, createdtime, lastmodifiedby, lastmodifiedtime, grossamountbilled, 
             projectcode) VALUES 
             (?, ?, ?, ?, ?, ?, 
-            ?, ?, ?, ?, ?, 
-            ?);
+            ?, ?, ?, ?, ?);
       basePath: $.abstractEstimates.*.abstractEstimateDetails.*
       jsonMaps:
          
@@ -157,8 +165,6 @@ serviceMaps:
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.nameOfWork
        
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.estimateAmount
-       
-       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.estimateNumber
        
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.auditDetails.createdBy
        
@@ -171,14 +177,95 @@ serviceMaps:
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.grossAmountBilled
        
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.projectCode.code
+
+    - query: INSERT INTO egw_abstractestimate_asset_details(id, tenantid, abstractestimate, asset, assetcondition, assetremarks, landasset, landassetcondition, constructionarea, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.abstractEstimates.*.assetDetails.*
+      jsonMaps:
+         
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.id
+         
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.tenantId
+         
+       - jsonPath: $.abstractEstimates[?({id} in @.assetDetails[*].id)].id
        
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.asset.code
+       
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.assetCondition.name
+       
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.assetRemarks
+
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.landAsset
+
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.landAssetCondition.name
+       
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.constructionArea
+       
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.auditDetails.createdBy
+       
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+    - query: INSERT INTO egw_abstractestimate_sanction_details(id, tenantid, abstractestimate, sanctiontype, sanctionauthority) VALUES (?, ?, ?, ?, ?);
+      basePath: $.abstractEstimates.*.sanctionDetails.*
+      jsonMaps:
+         
+       - jsonPath: $.abstractEstimates.*.sanctionDetails.*.id
+         
+       - jsonPath: $.abstractEstimates.*.sanctionDetails.*.tenantId
+         
+       - jsonPath: $.abstractEstimates[?({id} in @.sanctionDetails[*].id)].id
+       
+       - jsonPath: $.abstractEstimates.*.sanctionDetails.*.sanctionType
+       
+       - jsonPath: $.abstractEstimates.*.sanctionDetails.*.sanctionAuthority.name
+
+    - query: INSERT INTO egw_documentdetail(id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+      basePath: $.abstractEstimates.*.documentdetails.*
+      jsonMaps:
+         
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.id
+         
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.tenantId
+         
+       - jsonPath: $.abstractEstimates[?({id} in @.documentdetails[*].id)].id
+       
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.objectType
+       
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.documentType
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.fileStore
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.latitude
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.longitude
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.description
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.dateOfCapture
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.workProgress
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.createdBy
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.createdTime
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.lastModifiedBy
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.lastModifiedTime
+
  - version: 1.0
    name: AbstractEstimate Update
    description: Update abstract estimate  in egw_abstractestimate table
    fromTopic: works-abstract-estimate-update
    isTransaction: true
    queryMaps:
-    - query: UPDATE egw_abstractestimate SET abstractestimatenumber=?, subject=?, fund=?, referencetype=?, referencenumber=?, function=?, description=?, budgethead=?, scheme=?, subscheme=?, dateofproposal=?, department=?, adminsanctionnumber=?, adminsanctiondate=?, adminsanctionby=?, status=?, beneficiary=?, modeofallotment=?, typeofwork=?, natureofwork=?, subtypeofwork=?, ward=?, technicalsanctionnumber=?, technicalsanctiondate=?, technicalsanctionby=?, locality=?, workcategory=?, councilresolutionnumber=?, councilresolutiondate=?, workordercreated=?, billscreated=?, spilloverflag=?, cancellationreason=?, cancellationremarks=?, detailedestimatecreated=?, stateid=?, asset=?, implementationperiod=?, fundavailable=?, fundsanctioningauthority=?, pmcrequired=?, pmctype=?, pmcname=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+    - query: UPDATE egw_abstractestimate SET abstractestimatenumber=?, subject=?, fund=?, referencetype=?, referencenumber=?, function=?, description=?, budgethead=?, scheme=?, subscheme=?, dateofproposal=?, department=?, adminsanctionnumber=?, adminsanctiondate=?, adminsanctionby=?, status=?, beneficiary=?, modeofallotment=?, typeofwork=?, natureofwork=?, subtypeofwork=?, ward=?, financialsanctionnumber=?, financialsanctiondate=?, financialsanctionby=?, locality=?, workcategory=?, councilresolutionnumber=?, councilresolutiondate=?, workordercreated=?, billscreated=?, spilloverflag=?, cancellationreason=?, cancellationremarks=?, detailedestimatecreated=?, stateid=?, asset=?, implementationperiod=?, fundavailable=?, fundsanctioningauthority=?, pmcrequired=?, pmctype=?, pmcname=?, workproposedasperdp=?, dpremarks=?, landassetrequired=?, nooflands=?, otherassetspecificationremarks=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
       basePath: $.abstractEstimates.*
       jsonMaps:
          
@@ -228,12 +315,12 @@ serviceMaps:
        
        - jsonPath: $.abstractEstimates.*.ward.code
        
-       - jsonPath: $.abstractEstimates.*.technicalSanctionNumber
+       - jsonPath: $.abstractEstimates.*.financialSanctionNumber
                
-       - jsonPath: $.abstractEstimates.*.technicalSanctionDate
+       - jsonPath: $.abstractEstimates.*.financialSanctionDate
          dbType: LONG
        
-       - jsonPath: $.abstractEstimates.*.technicalSanctionBy.userName
+       - jsonPath: $.abstractEstimates.*.financialSanctionBy.userName
        
        - jsonPath: $.abstractEstimates.*.locality.code
        
@@ -277,6 +364,16 @@ serviceMaps:
        - jsonPath: $.abstractEstimates.*.pmcType
                
        - jsonPath: $.abstractEstimates.*.pmcName
+
+       - jsonPath: $.abstractEstimates.*.workProposedAsPerDP
+
+       - jsonPath: $.abstractEstimates.*.dpRemarks
+
+       - jsonPath: $.abstractEstimates.*.landAssetRequired
+
+       - jsonPath: $.abstractEstimates.*.noOfLands
+
+       - jsonPath: $.abstractEstimates.*.otherAssetSpecificationRemarks
        
        - jsonPath: $.abstractEstimates.*.auditDetails.lastModifiedBy
   
@@ -286,7 +383,7 @@ serviceMaps:
        
        - jsonPath: $.abstractEstimates.*.tenantId
        
-    - query: UPDATE egw_abstractestimate_details SET abstractestimate=?, nameofwork=?, estimateamount=?, estimatenumber=?, lastmodifiedby=?, lastmodifiedtime=?, grossamountbilled=?, projectcode=? WHERE id=? AND tenantid=?;
+    - query: UPDATE egw_abstractestimate_details SET abstractestimate=?, nameofwork=?, estimateamount=?, lastmodifiedby=?, lastmodifiedtime=?, grossamountbilled=?, projectcode=? WHERE id=? AND tenantid=?;
       basePath: $.abstractEstimates.*.abstractEstimateDetails.*
       jsonMaps:
          
@@ -295,8 +392,6 @@ serviceMaps:
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.nameOfWork
        
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.estimateAmount
-       
-       - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.estimateNumber
        
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.auditDetails.lastModifiedBy
        
@@ -309,6 +404,79 @@ serviceMaps:
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.id
          
        - jsonPath: $.abstractEstimates.*.abstractEstimateDetails.*.tenantId
+
+    - query: UPDATE egw_abstractestimate_asset_details SET asset=?, assetcondition=?, assetremarks=?, landasset=?, landassetcondition=?, constructionarea=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? and tenantid=?;
+      basePath: $.abstractEstimates.*.assetDetails.*
+      jsonMaps:
+                  
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.asset.code
+       
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.assetCondition.name
+       
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.assetRemarks
+
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.landAsset
+
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.landAssetCondition.name
+       
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.constructionArea
+       
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.id
+         
+       - jsonPath: $.abstractEstimates.*.assetDetails.*.tenantId
+
+    - query: UPDATE egw_abstractestimate_sanction_details SET sanctiontype=?, sanctionauthority=? WHERE id=? and tenantid=?;
+      basePath: $.abstractEstimates.*.sanctionDetails.*
+      jsonMaps:
+         
+       - jsonPath: $.abstractEstimates.*.sanctionDetails.*.sanctionType
+       
+       - jsonPath: $.abstractEstimates.*.sanctionDetails.*.sanctionAuthority.name
+
+       - jsonPath: $.abstractEstimates.*.sanctionDetails.*.id
+         
+       - jsonPath: $.abstractEstimates.*.sanctionDetails.*.tenantId
+
+    - query: UPDATE egw_documentdetail SET objectid=?, objecttype=?, documenttype=?, filestore=?, latitude=?, longitude=?, description=?, dateofcapture=?, workprogress=?, createdby=?, createdtime=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+
+      basePath: $.abstractEstimates.*.documentdetails.*
+      jsonMaps:
+         
+       - jsonPath: $.abstractEstimates[?({id} in @.documentdetails[*].id)].id
+       
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.objectType
+       
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.documentType
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.fileStore
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.latitude
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.longitude
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.description
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.dateOfCapture
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.workProgress
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.createdBy
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.createdTime
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.lastModifiedBy
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.lastModifiedTime
+
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.id
+         
+       - jsonPath: $.abstractEstimates.*.documentdetails.*.tenantId
+
 
  - version: 1.0
    name: Project Code
@@ -760,13 +928,11 @@ serviceMaps:
        
        - jsonPath: $.detailedEstimates.*.worksSubtype.code
        
-       - jsonPath: $.detailedEstimates.*.subTypeOfWork.code
-       
        - jsonPath: $.detailedEstimates.*.natureOfWork.code
        
        - jsonPath: $.detailedEstimates.*.ward.code
        
-       - jsonPath: $.detailedEstimates.*.location.code
+       - jsonPath: $.detailedEstimates.*.location
        
        - jsonPath: $.detailedEstimates.*.longitude
        

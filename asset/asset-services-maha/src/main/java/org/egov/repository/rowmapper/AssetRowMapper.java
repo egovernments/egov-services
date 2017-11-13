@@ -84,7 +84,6 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 //String titleDocument = rs.getString("titledocumentsavalable");
               //  List<String> titleDocumentsAvalable= new ArrayList<>();
                // titleDocumentsAvalable.add(titleDocument);
-                asset.setTitleDocumentsAvalable(rs.getString("titledocumentsavalable"));
                 asset.setTotalArea(getDoubleFromBigDecimal(rs.getBigDecimal("totalArea")));
                 asset.setAddress(rs.getString("address"));
                 asset.setLongitude(getDoubleFromBigDecimal(rs.getBigDecimal("longitude")));
@@ -95,8 +94,23 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 asset.setOpeningDate(rs.getLong("openingDate"));
                 asset.setLocation(rs.getString("location"));
                 asset.setFundSource(rs.getString("fundSource"));
+                asset.setCurrentValue(rs.getBigDecimal("currentamount"));
               
-
+                final String tittleDocs = rs.getString("titledocumentsavalable");
+                List<String> tda = null;
+                try {
+                	tda = objectMapper.readValue(tittleDocs, List.class);
+                } catch (final JsonParseException e) {
+                    e.printStackTrace();
+                } catch (final JsonMappingException e) {
+                    e.printStackTrace();
+                } catch (final IOException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+          
+                }
+                asset.setTitleDocumentsAvalable(tda);
+                
                 final String properties = rs.getString("assetAttributes");
                 List<Attributes> asset2 = null;
                 try {
@@ -110,6 +124,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 }
 
                 asset.setAssetAttributes(asset2);
+         
                 asset.setDepartmentCode(rs.getString("departmentCode"));
 
                 final  DefectLiability defectLiabilityPeriod= new DefectLiability();

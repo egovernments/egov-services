@@ -40,7 +40,7 @@ public class RegisterService {
 
 			code = uniqueCodeGeneration.getUniqueCode(register.getTenantId(), registerRequest.getRequestInfo(),
 					propertiesManager.getRegisterUlbFormat(), propertiesManager.getRegisterUlbName(), Boolean.FALSE,
-					null);
+					null,Boolean.FALSE);
 			register.setCode(code);
 		}
 

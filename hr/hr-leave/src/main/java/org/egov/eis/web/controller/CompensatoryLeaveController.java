@@ -45,7 +45,7 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.CompensatoryLeave;
 import org.egov.eis.service.CompensatoryLeaveService;
 import org.egov.eis.web.contract.CompensatoryLeaveResponse;
-import org.egov.eis.web.contract.CompensatoryLeaveSearchRequest;
+import org.egov.eis.web.contract.LeaveSearchRequest;
 import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandlers.ErrorHandler;
@@ -77,7 +77,7 @@ public class CompensatoryLeaveController {
 
     @PostMapping("_search")
     @ResponseBody
-    public ResponseEntity<?> search(@ModelAttribute @Valid final CompensatoryLeaveSearchRequest compensatoryLeaveSearchRequest,
+    public ResponseEntity<?> search(@ModelAttribute @Valid final LeaveSearchRequest leaveSearchRequest,
                                     final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
                                     final BindingResult requestBodyBindingResult) {
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
@@ -94,9 +94,9 @@ public class CompensatoryLeaveController {
         List<CompensatoryLeave> compensatoryLeaves = null;
         try {
 
-            compensatoryLeaves = compensatoryLeaveService.getCompensatoryLeavesForEmployees(compensatoryLeaveSearchRequest, requestInfo);
+            compensatoryLeaves = compensatoryLeaveService.getCompensatoryLeavesForEmployees(leaveSearchRequest, requestInfo);
         } catch (final Exception exception) {
-            logger.error("Error while processing request " + compensatoryLeaveSearchRequest, exception);
+            logger.error("Error while processing request " + leaveSearchRequest, exception);
             return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 

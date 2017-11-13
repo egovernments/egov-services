@@ -9,6 +9,14 @@ html, body{
     width: 91% !important;
 }
 
+.custom-form-control-for-datepicker input {
+	height: 34px !important;
+	border: 1px solid #ccc !important;
+	background-color: #FBFBFB !important;
+	box-shadow: none !important;
+	font-size: 15px !important;
+}
+
 .custom-form-control-for-textfield, .custom-form-control-for-select{
 	margin-bottom: 14px;
 }
@@ -17,12 +25,12 @@ html, body{
 	font-size: 18px !important;
 }
 
-.custom-form-control-for-select > div:nth-child(2){
+/*.custom-form-control-for-select > div:nth-child(2){
 	bottom: 1px !important;
 	z-index: 1 !important;
 	left: 11px !important;
   pointer-events: none;
-}
+}*/
 
 .custom-form-control-for-select > div > div:nth-child(1){
 	border: 1px solid #ccc !important;

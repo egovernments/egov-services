@@ -3,7 +3,8 @@ package org.egov.works.masters.domain.repository.helper;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.egov.works.masters.web.contract.MarketRate;
-import org.egov.works.masters.web.contract.ScheduleOfRate;
+
+import java.math.BigDecimal;
 
 /**
  * Created by ramki on 6/11/17.
@@ -30,7 +31,7 @@ public class MarketRateHelper {
     private Long toDate = null;
 
     @JsonProperty("rate")
-    private Integer rate = null;
+    private BigDecimal rate = null;
 
     @JsonProperty("createdBy")
     private String createdBy = null;
@@ -48,8 +49,7 @@ public class MarketRateHelper {
         MarketRate marketRate = new MarketRate();
         marketRate.setId(this.id);
         marketRate.setTenantId(this.tenantId);
-        marketRate.setScheduleOfRate(new ScheduleOfRate());
-        marketRate.getScheduleOfRate().setCode(this.scheduleOfRate);
+        marketRate.setScheduleOfRate(this.scheduleOfRate);
         marketRate.setFromDate(this.fromDate);
         marketRate.setToDate(this.toDate);
         marketRate.setRate(this.rate);

@@ -163,9 +163,7 @@ public class EmployeeInfo {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date dateOfJoining;
 
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date dob;
+    private String dob;
 
     @Max(100)
     private Short retirementAge;

@@ -48,7 +48,8 @@ public class PersistRepository {
 	public void persistList(String query, List<JsonMap> jsonMaps, String basePath, Object document) {
 
 		log.debug("persistList arrObjJsonPath:" + basePath);
-
+		basePath=basePath.substring(0, basePath.lastIndexOf(".*")+2);
+		log.debug("basePath::"+basePath);
 		List<LinkedHashMap<String, Object>> list = null;
 		if (basePath != null && basePath.length() != 0)
 			list = JsonPath.read(document, basePath);
@@ -123,8 +124,17 @@ public class PersistRepository {
 						log.debug("k:" + k + "linkedHashMap1:" + linkedHashMap1);
 
 						if (objDepth.length > 1 && k != objDepth.length - 1) {
-							linkedHashMap1 = (LinkedHashMap<String, Object>) linkedHashMap.get(objDepth[k]);
+							log.info("objDepth[k]"+objDepth[k]);
+							if(linkedHashMap1 == null)
+								linkedHashMap1 = (LinkedHashMap<String, Object>) linkedHashMap.get(objDepth[k]);
+							else
+								linkedHashMap1 = (LinkedHashMap<String, Object>) linkedHashMap1.get(objDepth[k]);	
 							log.debug("k:" + k + "linkedHashMap1>>>" + linkedHashMap1);
+							if(linkedHashMap1 == null){
+								value = null;
+								break;
+							}
+								
 						}
 
 						if (k == objDepth.length - 1) {

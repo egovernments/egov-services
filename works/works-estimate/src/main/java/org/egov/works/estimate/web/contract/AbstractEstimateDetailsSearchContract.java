@@ -4,18 +4,15 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * Contract class to get search request.
  */
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
+@Builder
 public class AbstractEstimateDetailsSearchContract {
 
 	@NotNull
@@ -30,8 +27,6 @@ public class AbstractEstimateDetailsSearchContract {
 	private Integer pageNumber;
 
 	private String sortBy;
-
-	private List<String> estimateNumbers;
 
 	private List<String> workIdentificationNumbers;
 }

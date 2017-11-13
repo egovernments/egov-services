@@ -15,12 +15,16 @@ import $ from "jquery";
 var specifications={};
 let reqRequired = [];
 let baseUrl="https://raw.githubusercontent.com/abhiegov/test/master/specs/";
+
+const REGEXP_FIND_IDX = /\[(.*?)\]+/g;
+
 class Report extends Component {
   state={
     pathname:""
   }
   constructor(props) {
     super(props);
+    this.getVal=this.getVal.bind(this);
   }
 
   setLabelAndReturnRequired(configObject) {
@@ -165,6 +169,27 @@ class Report extends Component {
         }
       }
 
+
+      for(var j=0; j<specs[moduleName + "." + actionName].groups[i].fields.length; j++) {
+          if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields && specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length) {
+            for(var k=0; k<specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length; k++) {
+              if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].ifValue == _.get(form, specs[moduleName + "." + actionName].groups[i].fields[j].jsonPath)) {
+                if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide && specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length) {
+                  for(var a=0; a<specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length; a++) {
+                    this.hideField(specs, specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[a]);
+                  }
+                }
+
+                if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show && specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length) {
+                  for(var a=0; a<specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length; a++) {
+                    this.showField(specs, specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show[a]);
+                  }
+                }
+              }
+            }
+          }
+      }
+
       if(specs[moduleName + "." + actionName].groups[ind || i].children && specs[moduleName + "." + actionName].groups[ind || i].children.length) {
         this.setInitialUpdateChildData(form, specs[moduleName + "." + actionName].groups[ind || i].children);
       }
@@ -194,6 +219,18 @@ class Report extends Component {
       var query = {
         [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[1].split("=")[0]]: id
       };
+       //handle 2nd parameter
+       if(specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[1].split("=")[2])
+        {
+          var pval= specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[1].split("=")[2];
+          var pname= specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[1].split("=")[1].split('&')[1];
+
+          query = {
+        [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[1].split("=")[0]]: id,
+        [pname]:pval
+          };
+        }
+
       if(window.location.href.indexOf("?") > -1) {
        var qs =  window.location.href.split("?")[1];
        if(qs && qs.indexOf("=") > -1) {
@@ -210,8 +247,9 @@ class Report extends Component {
             self.props.setFormData(obj);
             self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
           } else {
-            self.props.setFormData(res);
+          
             self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
+              self.props.setFormData(res);
           }
             let obj1 = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
 
@@ -287,7 +325,7 @@ class Report extends Component {
         [param.substr(0,index)]: param.substr(index+1)
       };
     }
-    
+
     Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
         var formData = {...self.props.formData};
         for(var key in autoObject.autoFillFields) {
@@ -321,6 +359,12 @@ class Report extends Component {
 
 
           self.props.setRoute(hash + (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].queryString || ''));
+        } else if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].passResToLocalStore){
+             var hash = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl;
+             var obj = _.get(response,self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].passResToLocalStore);
+             localStorage.setItem(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].localStoreResponseKey,JSON.stringify(obj));
+              self.props.setRoute(hash);
+
         }
       }, 1500);
     }, function(err) {
@@ -424,10 +468,16 @@ class Report extends Component {
       _url = _url.replace(match, _.get(formData, jPath));
     }
 
-  
+
     //Check if documents, upload and get fileStoreId
     let formdocumentData = formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName];
+    let documentPath = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].documentsPath;
+
+
     formdocumentData = formdocumentData && formdocumentData.length &&  formdocumentData[0] || formdocumentData ;
+    if(documentPath){
+      formdocumentData=_.get(formData,documentPath);
+    }
 
     if(formdocumentData["documents"] && formdocumentData["documents"].length) {
       let documents = [...formdocumentData["documents"]];
@@ -466,6 +516,12 @@ class Report extends Component {
       return new Date(_date[0], (Number(_date[1])-1), _date[2]);
     }
 
+    return typeof _val != "undefined" ? _val : "";
+  }
+
+  getValFromDropdownData = (fieldJsonPath, key, path) => {
+    let dropdownData = this.props.dropDownData[fieldJsonPath] || [];
+    let _val = _.get(dropdownData.find((data)=>data.key == key) || [], path);
     return typeof _val != "undefined" ? _val : "";
   }
 
@@ -752,10 +808,36 @@ class Report extends Component {
   }
 
   handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch", expression, expErr, isDate) => {
-      let {getVal} = this;
+      let {getVal, getValFromDropdownData} = this;
       let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;
       let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+
+      const findLastIdxOnJsonPath = (jsonPath) => {
+        var str = jsonPath.split(REGEXP_FIND_IDX);
+        for (let i = str.length - 1; i > -1; i--) {
+          if (str[i].match(/\d+/)) {
+            return str[i];
+          }
+        }
+        return undefined;
+      }
+
+      const replaceLastIdxOnJsonPath = (jsonPath, replaceIdx) => {
+        var str = jsonPath.split(REGEXP_FIND_IDX);
+        var isReplaced = false;
+        for (let i = str.length - 1; i > -1; i--) {
+          if (str[i].match(/\d+/)) {
+            if (!isReplaced) {
+              isReplaced = true;
+              str[i] = `[${replaceIdx}]`;
+            } else
+              str[i] = `[${str[i]}]`;
+          }
+        }
+        return str.join("");
+      }
+
       if(expression && e.target.value){
         let str = expression;
         let pos = 0;
@@ -794,7 +876,60 @@ class Report extends Component {
           }
         }
       }
+
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
+      let dependantIdx;
+      if(depedants.length === 0 && property){
+        let currentProperty = property;
+        dependantIdx = findLastIdxOnJsonPath(property);
+        if(dependantIdx !== undefined)
+          currentProperty = replaceLastIdxOnJsonPath(property, 0); //RESET INDEX 0 TO FIND DEPENDANT FIELDS FROM TEMPLATE JSON
+        depedants = jp.query(obj,`$.groups..fields[?(@.type=="tableList")].tableList.values[?(@.jsonPath == "${currentProperty}")].depedants.*`);
+
+        //Changes to handle table sum
+        var jpathname= property.substr(0,property.lastIndexOf("[")+1) + '0' + property.substr(property.lastIndexOf("[")+2);
+
+       var dependency =jp.query(obj,`$.groups..values[?(@.jsonPath=="${jpathname}")].dependency`);
+       if(dependency.length>0)
+        {
+           let _formData = {...this.props.formData};
+           if( _formData)
+            {
+           let field= property.substr(0,property.lastIndexOf("["));
+           let last= property.substr(property.lastIndexOf("]")+2);
+           let curIndex= property.substr(property.lastIndexOf("[")+1,1);
+
+           let arrval = _.get(_formData,field);
+           if(arrval){
+             let len= _.get(_formData,field).length;
+
+           let amtsum=0;
+           let svalue="";
+           for(var i=0;i<len;i++)
+            {
+              let ifield=field+'['+i+']'+'.'+last;
+              if(i==curIndex)
+                {
+                   svalue=e.target.value;
+                }
+              else
+                {
+                  svalue=_.get(_formData,ifield);
+                }
+              
+              amtsum += parseInt(svalue);
+            }
+            if(amtsum>0)
+              {
+               handleChange({target: {value: amtsum}}, dependency[0], false, '', '');
+              
+              }
+           }
+           }
+            }
+      }
+
+
       this.checkIfHasShowHideFields(property, e.target.value);
       this.checkIfHasEnDisFields(property, e.target.value);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
@@ -845,12 +980,22 @@ class Report extends Component {
                     console.log(err);
                 });
             } else if (value.type == "textField") {
-              let object={
-                target: {
-                  value:eval(eval(value.pattern))
+              try{
+                let exp = value.valExp;
+                if(dependantIdx){
+                  value.jsonPath = replaceLastIdxOnJsonPath(value.jsonPath, dependantIdx);
+                  exp = exp && exp.replace(/\*/g, dependantIdx);
                 }
+                let object={
+                  target: {
+                    value: exp && eval(exp) || eval(eval(value.pattern))
+                  }
+                }
+                handleChange(object, value.jsonPath, value.isRequired, value.rg,value.requiredErrMsg, value.patternErrMsg);
               }
-              handleChange(object, value.jsonPath, value.isRequired, value.rg,value.requiredErrMsg, value.patternErrMsg);
+              catch(ex){
+                console.log('ex', ex);
+              }
             } else if (value.type == "autoFill") {
               let splitArray = value.pattern.split("?");
                 let context = "";
@@ -1189,7 +1334,8 @@ const mapStateToProps = state => ({
   formData:state.frameworkForm.form,
   fieldErrors: state.frameworkForm.fieldErrors,
   isFormValid: state.frameworkForm.isFormValid,
-  requiredFields: state.frameworkForm.requiredFields
+  requiredFields: state.frameworkForm.requiredFields,
+  dropDownData: state.framework.dropDownData
 });
 
 const mapDispatchToProps = dispatch => ({

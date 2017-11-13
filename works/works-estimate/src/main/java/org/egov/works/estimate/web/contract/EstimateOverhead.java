@@ -1,19 +1,20 @@
 package org.egov.works.estimate.web.contract;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.math.BigDecimal;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * An Object holds the basic data of Estimate Overheads
  */
 @ApiModel(description = "An Object holds the basic data of Estimate Overheads")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T07:36:50.343Z")
 
 public class EstimateOverhead   {
   @JsonProperty("id")
@@ -29,7 +30,7 @@ public class EstimateOverhead   {
   private BigDecimal amount = null;
 
   @JsonProperty("detailedEstimate")
-  private DetailedEstimate detailedEstimate = null;
+  private String detailedEstimate = null;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -66,7 +67,7 @@ public class EstimateOverhead   {
   @ApiModelProperty(required = true, value = "Tenant id of the Estimate Overheads")
   @NotNull
 
- @Size(min=4,max=128)
+ @Size(min=2,max=128)
   public String getTenantId() {
     return tenantId;
   }
@@ -119,7 +120,7 @@ public class EstimateOverhead   {
     this.amount = amount;
   }
 
-  public EstimateOverhead detailedEstimate(DetailedEstimate detailedEstimate) {
+  public EstimateOverhead detailedEstimate(String detailedEstimate) {
     this.detailedEstimate = detailedEstimate;
     return this;
   }
@@ -128,16 +129,14 @@ public class EstimateOverhead   {
    * Reference of the Detailed Estimate for Overheads
    * @return detailedEstimate
   **/
-  @ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for Overheads")
-  //@NotNull
+  @ApiModelProperty(value = "Reference of the Detailed Estimate for Overheads")
 
-  @Valid
 
-  public DetailedEstimate getDetailedEstimate() {
+  public String getDetailedEstimate() {
     return detailedEstimate;
   }
 
-  public void setDetailedEstimate(DetailedEstimate detailedEstimate) {
+  public void setDetailedEstimate(String detailedEstimate) {
     this.detailedEstimate = detailedEstimate;
   }
 
@@ -164,7 +163,7 @@ public class EstimateOverhead   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -204,7 +203,7 @@ public class EstimateOverhead   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

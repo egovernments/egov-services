@@ -1,20 +1,22 @@
 package org.egov.works.masters.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * This is acting ID token of the authenticated user on the server. Any value provided by the clients will be ignored and actual user based on authtoken will be used on the server.
  */
 @ApiModel(description = "This is acting ID token of the authenticated user on the server. Any value provided by the clients will be ignored and actual user based on authtoken will be used on the server.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T13:22:05.755Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T10:39:50.702Z")
 
 public class UserInfo   {
   @JsonProperty("tenantId")
@@ -43,10 +45,10 @@ public class UserInfo   {
     return this;
   }
 
-  /**
+   /**
    * Unique Identifier of the tenant to which user primarily belongs
    * @return tenantId
-   **/
+  **/
   @ApiModelProperty(required = true, value = "Unique Identifier of the tenant to which user primarily belongs")
   @NotNull
 
@@ -64,10 +66,10 @@ public class UserInfo   {
     return this;
   }
 
-  /**
+   /**
    * User id of the authenticated user. Will be deprecated in future
    * @return id
-   **/
+  **/
   @ApiModelProperty(value = "User id of the authenticated user. Will be deprecated in future")
 
 
@@ -84,10 +86,10 @@ public class UserInfo   {
     return this;
   }
 
-  /**
+   /**
    * Unique user name of the authenticated user
    * @return userName
-   **/
+  **/
   @ApiModelProperty(required = true, value = "Unique user name of the authenticated user")
   @NotNull
 
@@ -105,10 +107,10 @@ public class UserInfo   {
     return this;
   }
 
-  /**
+   /**
    * mobile number of the autheticated user
    * @return mobile
-   **/
+  **/
   @ApiModelProperty(value = "mobile number of the autheticated user")
 
 
@@ -125,10 +127,10 @@ public class UserInfo   {
     return this;
   }
 
-  /**
+   /**
    * email address of the authenticated user
    * @return email
-   **/
+  **/
   @ApiModelProperty(value = "email address of the authenticated user")
 
 
@@ -150,10 +152,10 @@ public class UserInfo   {
     return this;
   }
 
-  /**
+   /**
    * List of all the roles for the primary tenant
    * @return primaryrole
-   **/
+  **/
   @ApiModelProperty(required = true, value = "List of all the roles for the primary tenant")
   @NotNull
 
@@ -180,10 +182,10 @@ public class UserInfo   {
     return this;
   }
 
-  /**
+   /**
    * array of additional tenantids authorized for the authenticated user
    * @return additionalroles
-   **/
+  **/
   @ApiModelProperty(value = "array of additional tenantids authorized for the authenticated user")
 
   @Valid
@@ -207,12 +209,12 @@ public class UserInfo   {
     }
     UserInfo userInfo = (UserInfo) o;
     return Objects.equals(this.tenantId, userInfo.tenantId) &&
-            Objects.equals(this.id, userInfo.id) &&
-            Objects.equals(this.userName, userInfo.userName) &&
-            Objects.equals(this.mobile, userInfo.mobile) &&
-            Objects.equals(this.email, userInfo.email) &&
-            Objects.equals(this.primaryrole, userInfo.primaryrole) &&
-            Objects.equals(this.additionalroles, userInfo.additionalroles);
+        Objects.equals(this.id, userInfo.id) &&
+        Objects.equals(this.userName, userInfo.userName) &&
+        Objects.equals(this.mobile, userInfo.mobile) &&
+        Objects.equals(this.email, userInfo.email) &&
+        Objects.equals(this.primaryrole, userInfo.primaryrole) &&
+        Objects.equals(this.additionalroles, userInfo.additionalroles);
   }
 
   @Override
@@ -224,7 +226,7 @@ public class UserInfo   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class UserInfo {\n");
-
+    
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    userName: ").append(toIndentedString(userName)).append("\n");
@@ -247,3 +249,4 @@ public class UserInfo   {
     return o.toString().replace("\n", "\n    ");
   }
 }
+

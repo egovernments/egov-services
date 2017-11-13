@@ -4,8 +4,8 @@ ServiceMaps:
  mappings:
   - topic: inv-materials-save-topic
     indexes:
-    - name: materials
-      type: materials
+    - name: material
+      type: material
       id: $.id
       isBulk: true
       jsonPath: $.materials.*

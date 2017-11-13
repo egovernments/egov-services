@@ -1,0 +1,94 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "tenantId": {
+            "type": "keyword"
+        },
+        "type": {
+            "type": "keyword"
+        },
+        "code": {
+            "type": "keyword"
+        },
+        "name": {
+            "type": "keyword"
+        },
+        "address": {
+            "type": "keyword"
+        },
+        "status": {
+            "type": "keyword"
+        },
+        "inActiveDate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "contactNo": {
+            "type": "keyword"
+        },
+        "faxNo": {
+            "type": "keyword"
+        },
+        "website": {
+            "type": "keyword"
+        },
+        "email": {
+            "type": "keyword"
+        },
+        "description": {
+            "type": "keyword"
+        },
+        "panNo": {
+            "type": "keyword"
+        },
+        "tinNo": {
+            "type": "keyword"
+        },
+        "cstNo": {
+            "type": "keyword"
+        },
+        "vatNo": {
+            "type": "keyword"
+        },
+        "gstNo": {
+            "type": "keyword"
+        },
+        "contactPerson": {
+            "type": "keyword"
+        },
+        "contactPersonNo": {
+            "type": "keyword"
+        },
+        "bankCode": {
+            "type": "keyword"
+        },
+        "bankName": {
+            "type": "keyword"
+        },
+        "bankBranch": {
+            "type": "keyword"
+        },
+        "acctNo": {
+            "type": "keyword"
+        },
+        "ifsc": {
+            "type": "keyword"
+        },
+        "micr": {
+            "type": "keyword"
+        },
+        "createdTime": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "lastModifiedTime": {
+            "type": "date",
+            "format": "date_optional_time"
+        }
+    }
+}

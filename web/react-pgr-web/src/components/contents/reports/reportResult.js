@@ -20,7 +20,7 @@ window.JSZip = JSZip;
 
 var sumColumn = [];
 var footerexist = false;
-
+let rTable;
 class ShowField extends Component {
   constructor(props) {
        super(props);
@@ -99,7 +99,7 @@ class ShowField extends Component {
          {
             extend: 'pdf',
             exportOptions: {
-              rows: { selected: true }
+              rows: '.selected'
             },
             filename : this.state.reportName,
             title : this.state.reportSubTitle,
@@ -130,11 +130,16 @@ class ShowField extends Component {
 
   componentDidUpdate() {
     let self = this;
-    // console.log('did update');
-    $('#reportTable').DataTable({
+    let displayStart = 0;
+    if(rTable && rTable.page && rTable.page.info()) {
+      displayStart = rTable.page.info().start;
+    }
+
+    rTable = $('#reportTable').DataTable({
       dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
       order: [],
       select: true,
+      displayStart: displayStart,
       buttons: self.getExportOptions(),
       //  ordering: false,
        bDestroy: true,
@@ -254,12 +259,39 @@ class ShowField extends Component {
     }
   }
 
+  checkAllRows = (e) => {
+    let { reportResult } = this.props;
+    let ck = {...this.state.ck};
+    let rows = {...this.state.rows};
+    let showPrintBtn = true;
+
+    if(reportResult && reportResult.reportData && reportResult.reportData.length) {
+      if(e.target.checked)
+        for(let i=0; i<reportResult.reportData.length; i++) {
+          ck[i] = true;
+          rows[i] = reportResult.reportData[i];
+        }
+      else {
+        ck = {};
+        rows = {};
+        showPrintBtn = false;
+      }
+
+      this.setState({
+        ck,
+        rows,
+        showPrintBtn
+      })
+    }
+  }
+
   renderHeader = () => {
     let { reportResult, metaData } = this.props;
+    let { checkAllRows } = this;
     return(
       <thead style={{backgroundColor:"#f2851f",color:"white"}}>
         <tr>
-          { metaData && metaData.reportDetails && metaData.reportDetails.selectiveDownload ? <th key={"testKey"}></th> : "" }
+          { metaData && metaData.reportDetails && metaData.reportDetails.selectiveDownload ? <th key={"testKey"}><input type="checkbox" onChange={checkAllRows}/></th> : "" }
           {reportResult.hasOwnProperty("reportHeader") && reportResult.reportHeader.map((item,i)=>
           {
             if(item.showColumn){
@@ -267,7 +299,7 @@ class ShowField extends Component {
                 <th key={i}>{translate(item.label)}</th>
               )
             }else{
-              return null;
+                 return <th style={{display : 'none'}} key={i}>{translate(item.label)}</th>;
             }
           })
         }
@@ -341,7 +373,7 @@ class ShowField extends Component {
           return(
             <tr key={dataIndex} className={this.state.ck[dataIndex] ? "selected": ""}>
               {metaData && metaData.reportDetails && metaData.reportDetails.selectiveDownload ? <td>
-                <input type="checkbox" onClick={(e) => {
+                <input type="checkbox" checked={this.state.ck[dataIndex] ? true : false} onClick={(e) => {
                   let ck = {...this.state.ck};
                   ck[dataIndex] = e.target.checked;
                   let rows = this.state.rows;
@@ -369,6 +401,12 @@ class ShowField extends Component {
                   columnObj = {};
                   return (
                     <td key={itemIndex} onClick={(e)=>{ drillDown(e,dataIndex,itemIndex,dataItem,item) }}>
+                      {respHeader.defaultValue ? <a href="javascript:void(0)">{checkIfDate(item,itemIndex)}</a> : checkIfDate(item,itemIndex)}
+                    </td>
+                  )
+                }else{
+                   return (
+                    <td key={itemIndex} style = {{display:'none' }} onClick={(e)=>{ drillDown(e,dataIndex,itemIndex,dataItem,item) }}>
                       {respHeader.defaultValue ? <a href="javascript:void(0)">{checkIfDate(item,itemIndex)}</a> : checkIfDate(item,itemIndex)}
                     </td>
                   )
@@ -422,7 +460,7 @@ class ShowField extends Component {
       return;
     }
     // let responseSearchParams = metaData.reportDetails.searchParams;
-    let result = `${metaData.reportDetails.summary}`;
+    let result = ( metaData && metaData.reportDetails &&  metaData.reportDetails.summary ) ? metaData.reportDetails.summary : "";
     // searchParams.map((search, index) => {
     //   let idx = index+1;
     //   let lastText = (idx == paramsLength);

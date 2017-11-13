@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.egov.pa.model.Department;
-import org.egov.pa.model.DepartmentKpiList;
 import org.egov.pa.model.Document;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiTargetList;
@@ -16,6 +15,7 @@ import org.egov.pa.repository.KpiMasterRepository;
 import org.egov.pa.repository.builder.PerformanceAssessmentQueryBuilder;
 import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper;
 import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper.KPIMasterRowMapper;
+import org.egov.pa.validator.RestCallService;
 import org.egov.pa.web.contract.KPIGetRequest;
 import org.egov.pa.web.contract.KPIRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +31,9 @@ import lombok.extern.slf4j.Slf4j;
 @Component("kpiMasterRepo")
 @Slf4j
 public class KpiMasterRepositoryImpl implements KpiMasterRepository {
+	
+	@Autowired
+	private RestCallService restCallService; 
 	
 	@Autowired
 	private KafkaTemplate<String, Object> kafkaTemplate;
@@ -79,7 +82,7 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 
 	@Override
 	public List<Long> getNewKpiIds(int numberOfIds) {
-		String query = PerformanceAssessmentQueryBuilder.getNextKpiMasterId(numberOfIds);
+		String query = PerformanceAssessmentQueryBuilder.getNextKpiMasterId();
 		Map<String, Object> paramValues = new HashMap<>();
 		paramValues.put("size", numberOfIds);
 		List<Long> idList;
@@ -108,18 +111,22 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 	}
 
 	@Override
-	public List<DepartmentKpiList> searchKpi(KPIGetRequest kpiGetRequest) {
+	public List<KPI> searchKpi(KPIGetRequest kpiGetRequest) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
+		List<Department> deptList = restCallService.getDepartmentForId("mh");
+		log.info("Department List obtained for the Tenant ID : " + deptList.toString());
     	String query = queryBuilder.getKpiSearchQuery(kpiGetRequest, preparedStatementValues); 
-    	KPIMasterRowMapper mapper = new PerformanceAssessmentRowMapper().new KPIMasterRowMapper(); 
+    	KPIMasterRowMapper mapper = new PerformanceAssessmentRowMapper().new KPIMasterRowMapper();
     	jdbcTemplate.query(query, preparedStatementValues.toArray(), mapper);
     	List<KPI> kpiList = getListFromMapper(mapper.kpiMap);
-    	List<DepartmentKpiList> deptWiseList = new ArrayList<>();
+    	log.info("Number of KPIs Obtainted : " + kpiList.size()); 
+    	// List<DepartmentKpiList> deptWiseKpiList = new ArrayList<>();
     	if(null != kpiList && kpiList.size() > 0) { 
     		arrangeDocsToKpiList(kpiList, mapper.docMap);
-    		arrangeListDepartmentWise(kpiList, mapper.deptMap, deptWiseList);
+    		arrangeDeptToKpiList(kpiList, deptList);
+    		// arrangeListDepartmentWise(kpiList, deptList, deptWiseKpiList);
     	}
-    	return deptWiseList; 
+    	return kpiList; 
 	}
 	
 	private List<KPI> getListFromMapper(Map<String, KPI> kpiMap) { 
@@ -144,8 +151,20 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
     	}
     }
 	
-	private void arrangeListDepartmentWise(List<KPI> kpiList, Map<Long, Department> map, List<DepartmentKpiList> deptWiseList) { 
-    	Iterator<Entry<Long, Department>> itr = map.entrySet().iterator();
+	private void arrangeDeptToKpiList(List<KPI> kpiList, List<Department> deptList) {
+		Map<String, Department> deptMap = new HashMap<>();
+		if (null != deptList && deptList.size() > 0) {
+			sortDepartmentToMap(deptList, deptMap);
+			for (int i = 0; i < kpiList.size(); i++) {
+				kpiList.get(i).setDepartment(deptMap.get(String.valueOf(kpiList.get(i).getDepartmentId()))); 
+			}
+		}
+	}
+	
+	/*private void arrangeListDepartmentWise(List<KPI> kpiList, List<Department> deptList, List<DepartmentKpiList> deptWiseList) { 
+		Map<Long, Department> deptMap = new HashMap<>(); 
+		sortDepartmentToMap(deptList, deptMap);
+    	Iterator<Entry<Long, Department>> itr =deptMap.entrySet().iterator();
     	while(itr.hasNext()) { 
     		Entry<Long, Department> entry = itr.next();
     		List<KPI> tempList = new ArrayList<>();
@@ -157,10 +176,19 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
     		DepartmentKpiList deptKpi = new DepartmentKpiList(); 
     		deptKpi.setDepartment(entry.getValue());
     		deptKpi.setKpiList(tempList);
-    		deptWiseList.add(deptKpi);
+    		if(tempList.size() > 0) { 
+    			deptWiseList.add(deptKpi);
+    		}
+    		
     	}
     	for(KPI kpi : kpiList) kpi.setDepartment(null); 
-    }
+    }*/
+	
+	private void sortDepartmentToMap(List<Department> deptList, Map<String, Department> deptMap) { 
+		for(Department dept : deptList) { 
+			deptMap.put(dept.getId(), dept); 
+		}
+	}
 
 	@Override
 	public void persistKpiTarget(KpiTargetList kpiTargetList) {

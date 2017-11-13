@@ -1,5 +1,7 @@
 package org.egov.contract;
 
+import javax.validation.Valid;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.model.Revaluation;
 
@@ -21,6 +23,7 @@ public class RevaluationRequest   {
   private RequestInfo requestInfo;
 
   @JsonProperty("Revaluation")
+  @Valid
   private Revaluation revaluation;
 
 }

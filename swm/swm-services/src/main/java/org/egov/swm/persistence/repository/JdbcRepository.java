@@ -30,7 +30,7 @@ public abstract class JdbcRepository {
 	@Transactional
 	public void delete(String tableName, String tenantId, String fieldName, String fieldValue) {
 
-		String delQuery = "delete from " + tableName + " where tenantId = " + tenantId + " and " + fieldName + " = '"
+		String delQuery = "delete from " + tableName + " where tenantId = '" + tenantId + "' and " + fieldName + " = '"
 				+ fieldValue + "'";
 
 		jdbcTemplate.execute(delQuery);
@@ -103,7 +103,7 @@ public abstract class JdbcRepository {
 				+ " where tenantId=:tenantId and " + fieldName + "=:fieldValue ");
 
 		if (uniqueFieldValue != null) {
-			uniqueQuery.append(" and " + uniqueFieldName + ":=uniqueFieldValue ");
+			uniqueQuery.append(" and " + uniqueFieldName + "!=:uniqueFieldValue");
 			paramValues.put("uniqueFieldValue", uniqueFieldValue);
 		}
 

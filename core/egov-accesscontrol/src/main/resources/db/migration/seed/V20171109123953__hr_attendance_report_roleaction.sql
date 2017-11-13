@@ -1,0 +1,5 @@
+insert into eg_action (ID,NAME,URL,SERVICECODE,QUERYPARAMS,PARENTMODULE,ORDERNUMBER,DISPLAYNAME,ENABLED,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE) values (NEXTVAL('SEQ_EG_ACTION'),'SearchAttendanceReport','/hr-attendance/attendances/_attendancereport','ATTENDANCE',null,(select id from service where name='HR Attendance' and tenantid='default'),0,'SearchAttendanceReport','false',1,now(),1,now());
+
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('EMPLOYEE ADMIN', (select id from eg_action where name = 'SearchAttendanceReport'), 'default');
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('EMPLOYEE', (select id from eg_action where name = 'SearchAttendanceReport'), 'default');
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('SUPERUSER', (select id from eg_action where name = 'SearchAttendanceReport'), 'default');

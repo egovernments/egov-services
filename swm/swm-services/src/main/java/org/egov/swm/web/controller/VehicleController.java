@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.PaginationContract;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleSearch;
 import org.egov.swm.domain.service.VehicleService;
@@ -67,6 +68,7 @@ public class VehicleController {
 		VehicleResponse response = new VehicleResponse();
 		response.setVehicles(vehicleList.getPagedData());
 		response.setResponseInfo(getResponseInfo(requestInfo));
+		response.setPage(new PaginationContract(vehicleList));
 
 		return response;
 

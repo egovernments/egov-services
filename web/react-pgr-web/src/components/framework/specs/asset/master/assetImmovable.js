@@ -183,7 +183,7 @@ var dat = {
 						"label": "ac.create.Land.Asset.ID",
 						"pattern": "",
 						"type": "autoCompelete",
-						"url": "asset-services-maha/assets/_search?&assetCategoryType=LAND|$..name|$..name",
+						"url": "asset-services-maha/assets/_search?&assetCategoryType=LAND|$.Assets.*.name|$.Assets.*.name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -468,15 +468,16 @@ var dat = {
           },
           {
             "name": "SourceOfFunds",
-            "jsonPath": "Asset.funSource",
+            "jsonPath": "Asset.fundSource",
             "label": "ac.create.Source.of.funds",
             "pattern": "",
             "type": "singleValueList",
-            "url": "",
+            "url": "/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..name|$..name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+						"isStateLevel":true
           },
           {
             "name": "Warranty",
@@ -794,7 +795,7 @@ var dat = {
 						"key": "IMMOVABLE",
 						"value": "IMMOVABLE"
 					}]
-					},
+				},
 					{
 						"name": "AssetCategoryType",
 						"jsonPath": "assetCategoryType",
@@ -808,6 +809,50 @@ var dat = {
 						"patternErrMsg": "",
 						"defaultValue":"IMMOVABLE",
 						"isHidden": "true"
+					},
+					{
+						"name": "AssetCategory",
+						"jsonPath": "assetParentCategory",
+						"label": "ac.create.Asset.Category",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22MOVABLE%22)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"depedants": [{
+							"jsonPath": "assetCategory",
+							"type": "dropDown",
+							"pattern": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22MOVABLE%22)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name"
+						}]
+					},
+					{
+						"name": "AssetSearchAssetSubCategory",
+						"jsonPath": "assetCategory",
+						"label": "ac.create.Asset.SubCategory.Name",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22IMMOVABLE%22)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
+						// "url": "/egov-mdms-service/v1/_get?&masterName=AssetCategory&moduleName=ASSET|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"isStateLevel":true
+					},
+					{
+						"name": "Department",
+						"jsonPath": "department",
+						"label": "ac.create.Department",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"isStateLevel":true
 					},
 					{
 						"name": "AssetSearchCode",
@@ -833,36 +878,24 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
+
 					{
-						"name": "Department",
-						"jsonPath": "department",
-						"label": "ac.create.Department",
-						"pattern": "",
-						"type": "singleValueList",
-						"url": "/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name",
-						"isRequired": false,
-						"isDisabled": false,
-						"requiredErrMsg": "",
-						"patternErrMsg": "",
-						"isStateLevel":true
-					},
-					{
-						"name": "fromOriginalDate",
+						"name": "fromOriginalValue",
 						"jsonPath": "originalValueFrom",
 						"label": "ac.create.OriginalFromDate",
 						"pattern": "",
-						"type": "datePicker",
+						"type": "number",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
 					{
-						"name": "toOriginalDate",
+						"name": "toOriginalValue",
 						"jsonPath": "originalValueTo",
 						"label": "ac.create.OriginalToDate",
 						"pattern": "",
-						"type": "datePicker",
+						"type": "number",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -889,7 +922,7 @@ var dat = {
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
-					},
+					}
 				]
 			}
 		],
@@ -1095,19 +1128,13 @@ var dat = {
 						"jsonPath": "Assets[0].landDetails[0].code",
 						"label": "ac.create.Land.Asset.ID",
 						"pattern": "",
-						"type": "autoCompelete",
-						"url": "asset-services-maha/assets/_search?assetCategoryType=LAND|$..name|$..name",
+						"type": "text",
+						"url": "",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
-						"autoCompleteDependancy": {
-							"autoCompleteUrl": "asset-services-maha/assets/_search?name={value}",
-							"autoFillFields": {
-								"Assets[0].landDetails[0].surveyNo": "Assets[0].landSurveyNo",
-								"Assets[0].landDetails[0].area": "Assets[0].totalArea"
-							 }
-						 }
+
 					},
 					{
 						"name": "SurveyNoOfLandOnWhichStructureIsLocated ",
@@ -1121,7 +1148,6 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
-
 					{
             "name": "AreaofLandonwhichconstructed",
             "jsonPath": "Assets[0].landDetails[0].area",
@@ -1133,13 +1159,12 @@ var dat = {
             "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-
           }
 					]
 				},
       {
-				"label": "ac.create.Location.Details",
 				"name": "LocationField",
+				"label": "ac.create.Location.Details",
         "multiple":false,
         "jsonPath":"Asset",
 				"fields": [
@@ -1210,92 +1235,8 @@ var dat = {
 				"label": "ac.create.Asset.Details",
 				"name": "AssetField",
         "multiple":false,
-        "jsonPath":"Asset[0].",
+        "jsonPath":"Assets",
 				"fields": [
-					// {
-          //   "name": "No of Floors",
-          //   "jsonPath": "Assets[0].floors",
-          //   "label": "ac.create.No.of.Floors",
-          //   "pattern": "",
-          //   "type": "number",
-          //   "url": "",
-          //   "isRequired": false,
-          //   "isDisabled": false,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
-          // {
-          //   "name": "PlinthArea",
-          //   "jsonPath": "Assets[0].plinthArea",
-          //   "label": "ac.create.Plinth.Area",
-          //   "pattern": "",
-          //   "type": "number",
-          //   "url": "",
-          //   "isRequired": false,
-          //   "isDisabled": false,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
-          // {
-          //   "name": "CubicContents",
-          //   "jsonPath": "Assets[0].cubicContents",
-          //   "label": "ac.create.Cubic.Contents",
-          //   "pattern": "",
-          //   "type": "number",
-          //   "url": "",
-          //   "isRequired": false,
-          //   "isDisabled": false,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
-          // {
-          //   "name": "DimensionOfStructure(L,B,H)",
-          //   "jsonPath": "Assets[0].length",
-          //   "label": "ac.create.Dimension.of.Structure",
-          //   "pattern": "",
-          //   "type": "number",
-          //   "url": "",
-          //   "isRequired": false,
-          //   "isDisabled": false,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
-					// {
-          //   "name": "DimensionOfStructure(L,B,H)",
-          //   "jsonPath": "Assets[0].width",
-          //   "label": "ac.create.Dimension.breadth",
-          //   "pattern": "",
-          //   "type": "number",
-          //   "url": "",
-          //   "isRequired": false,
-          //   "isDisabled": false,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
-					// {
-          //   "name": "DimensionOfStructure(L,B,H)",
-          //   "jsonPath": "Assets[0].height",
-          //   "label": "ac.create.Dimension.height",
-          //   "pattern": "",
-          //   "type": "number",
-          //   "url": "",
-          //   "isRequired": false,
-          //   "isDisabled": false,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
-					// {
-          //   "name": "Usage",
-          //   "jsonPath": "Assets[0].usage",
-          //   "label": "ac.create.Usage",
-          //   "pattern": "",
-          //   "type": "text",
-          //   "url": "",
-          //   "isRequired": false,
-          //   "isDisabled": false,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
 					{
             "name": "AnticipatedLifeOfAsset",
             "jsonPath": "Assets[0].anticipatedLife",
@@ -1362,11 +1303,12 @@ var dat = {
             "label": "ac.create.Source.of.funds",
             "pattern": "",
             "type": "singleValueList",
-            "url": "",
+            "url": "/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..name|$..name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+						"isStateLevel":true
           },
           {
             "name": "Warranty",
@@ -1465,71 +1407,13 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          },
-          {
-            "name": "AssetAcountCode",
-            "jsonPath": "Assets[0].assetAccount",
-            "label": "ac.create.Asset.account.code",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "AccumulatedDepreciationAccount",
-            "jsonPath": "Assets[0].accumulatedDepreciationAccount",
-            "label": "ac.create.Accumulated.Depreciation.Account",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "RevaluationReserveAccount",
-            "jsonPath": "Assets[0].revaluationReserveAccount",
-            "label": "ac.create.Revaluation.Reserve.Account",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "DepreciationExpensesAccount ",
-            "jsonPath": "Assets[0].depreciationExpenseAccount",
-            "label": "ac.create.Depreciation.Expenses.Account",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-
+          }
 				]
 			},
       {
 				"name": "TableField",
-        "jsonPath":"Asset",
+        "jsonPath":"Assets",
 				"fields": [
-          // {
-          //   "name": "AnticipatedLifeOfAsset",
-          //   "label": "Anticipated life of Asset",
-          //   "type": "dynamicTable"
-          //   "resultList": {
-          //     "resultHeader": [{"label": "asset.create.test"}],
-          //     "resultValues": [[{}, ], [], []]
-          //   }
-          // },
           {
             "name": "OpeningDate",
             "jsonPath": "Assets[0].openingDate",
@@ -1651,6 +1535,61 @@ var dat = {
           //   "patternErrMsg": ""
           // }
 
+				]
+			},
+			{
+
+				"name": "AccoutCodeField",
+        "jsonPath":"Assets",
+				"fields": [
+					{
+            "name": "AssetAcountCode",
+            "jsonPath": "Assets[0].assetAccount",
+            "label": "ac.create.Asset.account.code",
+            "pattern": "",
+            "type": "text",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "AccumulatedDepreciationAccount",
+            "jsonPath": "Assets[0].accumulatedDepreciationAccount",
+            "label": "ac.create.Accumulated.Depreciation.Account",
+            "pattern": "",
+            "type": "text",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "RevaluationReserveAccount",
+            "jsonPath": "Assets[0].revaluationReserveAccount",
+            "label": "ac.create.Revaluation.Reserve.Account",
+            "pattern": "",
+            "type": "text",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "DepreciationExpensesAccount ",
+            "jsonPath": "Assets[0].depreciationExpenseAccount",
+            "label": "ac.create.Depreciation.Expenses.Account",
+            "pattern": "",
+            "type": "text",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          }
 				]
 			}
 		]
@@ -1839,7 +1778,7 @@ var dat = {
 						"label": "ac.create.Land.Asset.ID",
 						"pattern": "",
 						"type": "autoCompelete",
-						"url": "asset-services-maha/assets/_search?assetCategoryType=LAND|$..name|$..name",
+						"url": "asset-services-maha/assets/_search?&assetCategoryType=LAND|$..name|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -2124,15 +2063,16 @@ var dat = {
           },
           {
             "name": "SourceOfFunds",
-            "jsonPath": "Asset.funSource",
+            "jsonPath": "Asset.fundSource",
             "label": "ac.create.Source.of.funds",
             "pattern": "",
             "type": "singleValueList",
-            "url": "",
+            "url": "/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..name|$..name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+						"isStateLevel":true
           },
           {
             "name": "Warranty",

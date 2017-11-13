@@ -210,19 +210,23 @@ const menuConvention={
 "Asset Management.Asset Masters.Asset Category.CreateAssetCategory":"/create/asset/createAssetCategroy",
 "Asset Management.Asset Masters.Asset Category.ViewAssetCategory":"/search/asset/createAssetCategroy/view",
 "Asset Management.Asset Masters.Asset Category.ModifyAssetCategory":"/search/asset/createAssetCategroy/update",
-"Asset Management.Asset Masters.Asset.Asset Immovable.CreateAssetImmovable":"/non-framework/asset/master/assetImmovableCreate",
-"Asset Management.Asset Masters.Asset.Asset Immovable.ViewAssetImmovable":"/search/asset/assetImmovable/view",
-"Asset Management.Asset Masters.Asset.Asset Immovable.ModifyAssetImmovable":"/search/asset/assetImmovable/update",
+"Asset Management.Asset Masters.Immovable Asset.CreateImmovableAsset":"/non-framework/asset/master/assetImmovableCreate",
+"Asset Management.Asset Masters.Immovable Asset.ViewImmovableAsset":"/search/asset/assetImmovable/view",
+"Asset Management.Asset Masters.Immovable Asset.ModifyImmovableAsset":"/search/asset/assetImmovable/update",
 "Asset Management.Asset Transactions.Asset Revaluation.AssetRevaluationSearchToCreate":"/transactionRevaluation/asset/revaluationAsset",
 "Asset Management.Asset Transactions.Asset Revaluation.AssetRevaluationSearchToView":"",
 "Asset Management.Asset Transactions.Asset Sale And Disposal.AssetSaleAndDisposalSearchToCreate":"/transactionTransfer/asset/translateAsset",
 "Asset Management.Asset Transactions.Asset Sale And Disposal.AssetSaleAndDisposalSearchToView":"",
-"Asset Management.Asset Masters.Asset.Asset Movable.CreateAssetMovable":"/non-framework/asset/master/assetMovableCreate",
-"Asset Management.Asset Masters.Asset.Asset Movable.ModifyAssetMovable": "/search/asset/assetMovable/update",
-"Asset Management.Asset Masters.Asset.Asset Movable.SearchAssetMovable": "/search/asset/assetMovable/view",
+"Asset Management.Asset Masters.Movable Asset.CreateMovableAsset":"/non-framework/asset/master/assetMovableCreate",
+"Asset Management.Asset Masters.Movable Asset.ModifyMovableAsset": "/search/asset/assetMovable/update",
+"Asset Management.Asset Masters.Movable Asset.ViewMovableAsset": "/search/asset/assetMovable/view",
+"Asset Management.Asset Transactions.Generate Depreciation": "/transactionTransfer/asset/generalAsset",
 
 
 "Asset Management.Asset Reports.AssetImmovableRegister":"/report/asset/AssetImmovableRegister",
+"Asset Management.Asset Reports.AssetMovableRegister":"/report/asset/AssetMovableRegister",
+"Asset Management.Asset Reports.AssetSchedule":"/report/asset/AssetSchedule",
+"Asset Management.Asset Reports.LandRegister":"/report/asset/LandRegister",
 //SWM
 "Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Create": "/create/vehiclefuellingdetails",
 "Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Search": "/search/vehiclefuellingdetails/view",
@@ -252,7 +256,18 @@ const menuConvention={
 "Legal Case Management.Legal Case Reports.Case History Report":"/report/lcms/CaseHistoryReport",
 "Legal Case Management.Legal Case Reports.Case Pendency Report":"/report/lcms/CasePendencyReport",
 "Legal Case Management.Legal Case Reports.Case Status Report":"/report/lcms/CaseStatusReport",
-"Legal Case Management.Legal Case Reports.Due Date Report":"/report/lcms/DueDateReport"
+"Legal Case Management.Legal Case Reports.Due Date Report":"/report/lcms/DueDateReport",
+
+//Performance Assessment
+"Performance Assessment.Performance Assessment Masters.PerfAssmtKpiMasterCreate":"/create/perfManagement/kpi",
+"Performance Assessment.Performance Assessment Masters.PerfAssmtKpiMasterUpdate":"/search/perfManagement/kpi/update",
+"Performance Assessment.Performance Assessment Masters.PerfAssmtKpiMasterSearch":"/search/perfManagement/kpi/view",
+"Performance Assessment.Performance Assessment Actuals.PerfAssmtKpiValueUpdate":"/search/perfManagement/actualKpiUpdate/update",
+"Performance Assessment.Performance Assessment Actuals.PerfAssmtKpiValueCreate":"/create/perfManagement/actualKpiCreate/",
+
+//Inventoy Service
+"Inventory.Inventory Masters.Supplier Master.Supplier Search":"/non-framework/inventory/master/supplier",
+"Inventory.Inventory Masters.Store Master.Store Search":"/non-framework/inventory/master/store"
 
 }
 

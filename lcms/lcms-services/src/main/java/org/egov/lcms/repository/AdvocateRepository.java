@@ -5,6 +5,7 @@ import java.util.List;
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.models.Advocate;
 import org.egov.lcms.models.AdvocateSearchCriteria;
+import org.egov.lcms.models.Case;
 import org.egov.lcms.repository.builder.AdvocateBuilders;
 import org.egov.lcms.repository.rowmapper.AdvocateRowMapper;
 import org.egov.tracer.model.CustomException;
@@ -55,10 +56,10 @@ public class AdvocateRepository {
 	 * @param advocateCode
 	 * @return {@link String} AdvocateName
 	 */
-	public String getcaseCodeByAdvocateCode(String advocateCode) {
+	public List<String> getcaseCodeByAdvocateCode(String advocateCode) {
 		String searchQuery = AdvocateBuilders.SEARCH_CASE_CODE_BY_ADVOCATE;
-		String caseCode = jdbcTemplate.queryForObject(searchQuery, new Object[] { advocateCode }, String.class);
-		return caseCode;
+		List<String> caseCodes = jdbcTemplate.queryForList(searchQuery, new Object[] { advocateCode }, String.class);
+		return caseCodes;
 
 	}
 

@@ -1,6 +1,6 @@
 var dat = {
   "legal.update": {
-    numCols: 6,  
+    numCols: 12 / 3,
     title:"parawisecomments.create.document.title",
     searchUrl:
       "/lcms-services/legalcase/case/_search?code={id}",
@@ -9,6 +9,7 @@ var dat = {
     tenantIdRequired: true,
     useTimestamp: true,
     objectName: "cases",
+    documentsPath:"cases[0].parawiseComments[0]",
     groups: [
        {
         name: "CaseTypeDetails",
@@ -49,7 +50,7 @@ var dat = {
             label: "legal.create.caseType",
             type: "singleValueList",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: "",
             url:
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name"
@@ -115,7 +116,7 @@ var dat = {
             label: "legal.create.courtName",
             type: "singleValueList",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: "",
             url:
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name"
@@ -124,8 +125,8 @@ var dat = {
             name: "hearingTime",
             jsonPath: "cases[0].summon.hearingTime",
             label: "legal.create.hearingTime",
-            type: "text",
             isRequired: false,
+            type:"timePicker",
             isDisabled: true,
             patternErrorMsg: ""
           },
@@ -153,10 +154,11 @@ var dat = {
             name: "ward",
             jsonPath: "cases[0].summon.ward",
             label: "legal.create.ward",
-            type: "text",
+            type: "singleValueList",
             isRequired: false,
             isDisabled: true,
-            patternErrorMsg: ""
+            patternErrorMsg: "",
+            url:"/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name"
           },
          {
             name: "stamp",
@@ -164,7 +166,7 @@ var dat = {
             label: "legal.create.stamp",
             type: "singleValueList",
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: "",
             url:
               "/lcms-services/legalcase/register/_search?|$..code|$..register"
@@ -241,9 +243,9 @@ var dat = {
             patternErrMsg: ""
           },
           {
-            name: "referenceNo",
+            name: "caseReferenceNo",
             jsonPath: "cases[0].caseRefernceNo",
-            label: "legal.parawisecomments.create.referenceNo",
+            label: "legal.parawisecomments.create.caseReferenceNo",
             pattern: "",
             type: "text",
             isRequired: true,
@@ -257,6 +259,7 @@ var dat = {
             label: "legal.parawisecomments.create.group.parawiseComments",
             pattern: "",
             type: "textarea",
+            fullWidth:true,
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",

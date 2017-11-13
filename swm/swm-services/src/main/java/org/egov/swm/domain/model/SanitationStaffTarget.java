@@ -44,7 +44,9 @@ public class SanitationStaffTarget {
 	@JsonProperty("swmProcess")
 	private SwmProcess swmProcess = null;
 
-	@NotNull
+	@JsonProperty("location")
+	private Boundary location = null;
+
 	@JsonProperty("route")
 	private Route route = null;
 
@@ -52,13 +54,21 @@ public class SanitationStaffTarget {
 	@JsonProperty("employee")
 	private Employee employee = null;
 
-	@NotNull
 	@JsonProperty("collectionPoints")
 	private List<CollectionPoint> collectionPoints = new ArrayList<CollectionPoint>();
 
 	@NotNull
 	@JsonProperty("targetedGarbage")
 	private Double targetedGarbage = null;
+
+	@JsonProperty("wetWaste")
+	private Double wetWaste = null;
+
+	@JsonProperty("dryWaste")
+	private Double dryWaste = null;
+
+	@JsonProperty("dumpingGround")
+	private DumpingGround dumpingGround = null;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;

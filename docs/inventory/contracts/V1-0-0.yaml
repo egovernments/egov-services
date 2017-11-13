@@ -42,6 +42,43 @@ basePath: "/inventory-inventory/v110"
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/inventory-inventory/contracts/v1-0-0.yml'
 x-api-id: 'org.egov.inventory.inventory'
 paths:
+    /openingbalance/_search:
+      post:
+        summary: Get the opening balance
+        description: Get opening balance
+        tags: 
+          - Opening Balance
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: financialYear
+            type: string
+            in: query
+            description: |
+              search on basis of financial year
+          - name: receiptNumber
+            type: string
+            in: query
+            description: |
+              search on basis of receiptNumber
+          - name: materialName
+            type: string
+            in: query
+            description: |
+              search on basis of materialName
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
+        responses:
+          200:
+            description: opening balance retrieved Successfully
+            schema:
+              $ref: '#/definitions/OpeningBalanceResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
     /openingbalance/_create:
       post:
         summary: Create New Opening Balanace.
@@ -64,8 +101,7 @@ paths:
           '400':
             description: Invalid input.
             schema:
-              $ref: >-
-                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
                 
     /openingbalance/_update:
       post:
@@ -82,7 +118,7 @@ paths:
           - Opening Balance
         responses:
           '200':
-            description: Opening Balance  Updated Successfully.
+            description: Opening Balance Updated Successfully.
             schema:
               $ref: '#/definitions/OpeningBalanceResponse'
           400:
@@ -92,8 +128,8 @@ paths:
     
     /indents/_search:
       post:
-        summary: Get the list of common indent information
-        description: Indent is parent object that holds the common information for both Indent Note and Transfer Indent
+        summary: Get the list of indent notes/transfer indent information.
+        description: Indent object holds the information for both Indent Note and Transfer Indent.
         tags: 
           - Indent Note
           - Transfer Indent
@@ -133,14 +169,9 @@ paths:
               indent purpose of the Indent
             enum:
               - Consumption
-              - RepairsAndMaintenance
+              - Repairs and Maintenance
               - Capital
-              - MaterialTransferNote
-          - name: description
-            type: string
-            in: query
-            description: |
-              description of the Indent
+              - Material Transfer Note
           - name: indentStatus
             type: string
             in: query
@@ -172,8 +203,8 @@ paths:
               
     /indents/_create:
       post:
-        summary: Create new indent
-        description: Whenever an Indent Note OR Transfer Indent is created, this API will hold the common set of information. This API will be invoked intenrally during Indent Note OR Transfer Indent creation.
+        summary: Create new indent.
+        description: This API is invoked to create indent notes in the system.
         tags: 
           - Indent Note
           - Transfer Indent
@@ -197,7 +228,7 @@ paths:
     /indents/_update:
       post:
         summary: Update any of the indents
-        description: The common set of information shared by Indent Note/Transfer Indent will be updated upon invoking this API.
+        description: This API is invoked to update the indent notes in the system also during the workflow .
         tags: 
           - Indent Note
           - Transfer Indent
@@ -218,103 +249,6 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /indentnotes/_search:
-      post:
-        summary: Get the list of Indent Notes.
-        description: This API is used to search the indent notes raised in the system. There are 2 types of indents i.e., Indent Note (that is )raised by individual to request material(s) from store) and Transfer Indent(raised by store to request material(s) from other store).
-        tags: 
-          - Indent Note
-        parameters:
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: ids
-            type: array
-            items: 
-             type: string
-            in: query
-            maxItems: 50
-            description: comma seperated list of Ids.
-          - name: indentNumber
-            type: string
-            in: query
-            description: |
-              indent number of the Indent Note.
-          - name: indentStore
-            type: integer
-            format: int64
-            in: query
-            description: |
-              indent store of the Indent Note.
-          - name: inventoryType
-            type: string
-            in: query
-            description: |
-              inventory Type of the Indent Note.
-          - name: stateId
-            type: integer
-            format: int64
-            in: query
-            description: |
-              state id of the Indent Note
-          - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/pageNumber"
-          - $ref: "#/parameters/sortProperty"
-        responses:
-          200:
-            description: Indent Note retrieved Successfully
-            schema:
-              $ref: '#/definitions/IndentNoteResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /indentnotes/_create:
-      post:
-        summary: Create new Indent Note.
-        description: This API is invoked when a Indent Note is raised by an individual.
-        tags: 
-          - Indent Note
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: indentNoteRequest
-            in: body
-            description: Create new Indent Notes
-            schema:
-              $ref: '#/definitions/IndentNoteRequest'
-        responses:
-          200:
-            description: Indent Note created Successfully
-            schema:
-              $ref: '#/definitions/IndentNoteResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /indentnotes/_update:
-      post:
-        summary: Update Indent Notes.
-        description: This API is invoked during workflow approval/rejection and modify the indent note details.
-        tags: 
-          - Indent Note
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: indentNoteRequest
-            in: body
-            description: common Request info
-            schema:
-              $ref: '#/definitions/IndentNoteRequest'
-        responses:
-          200:
-            description: Indent Note updated Successfully.
-            schema:
-              $ref: '#/definitions/IndentNoteResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    
     /transferindentnotes/_search:
       post:
         summary: Get the list of transfer indent notes.
@@ -364,14 +298,14 @@ paths:
     /transferindentnotes/_create:
       post:
         summary: Create  new  transfer indent notes.
-        description: Transfer Indent Note is created when a store need materails available in other store. Indent store raised a Material Indent Note specifying list of materails required from issuing store.
+        description: Transfer Indent Note is created when a store need materails that are available in other store. Indent store raises a Material Indent Note specifying list of materails required from issuing store.
         tags: 
           - Transfer Indent
         parameters:
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - name: transferIndentNoteRequest
             in: body
-            description: Create  new 
+            description: Transfer indent create request.
             schema:
               $ref: '#/definitions/TransferIndentNoteRequest'
         responses:
@@ -447,59 +381,20 @@ paths:
             description: |
               rate type of the PurchaseOrder
             enum:
-            - DGSC_RATECONTRACT
-            - ULB_RATE_CONTRACT
-            - ONE_TIME_TENDER
-            - QUOTATION
+            - DGSC Rate Contract
+            - ULB Rate Contract
+            - One Time Tender
+            - Quotation
           - name: supplierCode
             type: string
             in: query
             description: |
               supplier code of the PurchaseOrder
-          - name: advanceAmount
-            type: number
-            format: BigDecimal
-            in: query
-            description: |
-              advance amount of the PurchaseOrder
-          - name: advancePercentage
-            type: number
-            format: BigDecimal
-            in: query
-            description: |
-              advance percentage of the PurchaseOrder
-          - name: expectedDeliveryDate
-            type: integer
-            format: int64
-            x-displayformat: 'dd/MM/yyyy'
-            in: query
-            description: |
-              expected delivery date of the PurchaseOrder
-          - name: deliveryTerms
-            type: string
-            in: query
-            description: |
-              delivery terms of the PurchaseOrder
-          - name: paymentTerms
-            type: string
-            in: query
-            description: |
-              payment terms of the PurchaseOrder
-          - name: description
-            type: string
-            in: query
-            description: |
-              description of the PurchaseOrder
           - name: status
             type: string
             in: query
             description: |
               status of the PurchaseOrder
-          - name: stateId
-            type: string
-            in: query
-            description: |
-              state id of the PurchaseOrder
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
@@ -801,98 +696,6 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /materailIssues/_search:
-      post:
-        summary: Get the list of indent issues.
-        description: This API is used to search the issues incurred for the indents raised in the system.
-        tags: 
-          - Indent Issue
-        parameters:
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: ids
-            type: array
-            items: 
-             type: string
-            in: query
-            maxItems: 50
-            description: comma seperated list of Ids 
-          - name: materialIssue
-            type: integer
-            format: int64
-            in: query
-            description: |
-              material issue of the IndentIssue
-          - name: issuedToEmployee
-            type: string
-            in: query
-            description: |
-              issued to employee of the IndentIssue
-          - name: stateId
-            type: integer
-            format: int64
-            in: query
-            description: |
-              state id of the IndentIssue
-          - $ref: "#/parameters/pageSize"
-          - $ref: "#/parameters/pageNumber"
-          - $ref: "#/parameters/sortProperty"
-        responses:
-          200:
-            description: IndentIssue retrieved Successfully
-            schema:
-              $ref: '#/definitions/MaterialIssueResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /materailIssues/_create:
-      post:
-        summary: Create new indent issues.
-        description: This API is invoked when the issuing store issues materials against the indent raised in the system.
-        tags: 
-          - Indent Issue
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: indentIssueRequest
-            in: body
-            description: Create  new 
-            schema:
-              $ref: '#/definitions/MaterialIssueRequest'
-        responses:
-          200:
-            description: IndentIssue created Successfully
-            schema:
-              $ref: '#/definitions/MaterialIssueResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /materailIssues/_update:
-      post:
-        summary: Update any of the indent issues.
-        description: This API is invoked to update the indent material issue information and during the workflow as well.
-        tags: 
-          - Indent Issue
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: indentIssueRequest
-            in: body
-            description: common Request info
-            schema:
-              $ref: '#/definitions/MaterialIssueRequest'
-        responses:
-          200:
-            description: IndentIssue updated Successfully
-            schema:
-              $ref: '#/definitions/MaterialIssueResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
     /materials/_search:
       post:
         summary: Get the list of materials
@@ -919,11 +722,6 @@ paths:
             in: query
             description: |
               name of the Material
-          - name: description
-            type: string
-            in: query
-            description: |
-              description of the Material
           - name: oldCode
             type: string
             in: query
@@ -1361,11 +1159,6 @@ paths:
             in: query
             description: |
               issued to employee of the TransferOutward
-          - name: description
-            type: string
-            in: query
-            description: |
-              description of the TransferOutward
           - name: outwardNoteNumber
             type: string
             in: query
@@ -1480,11 +1273,6 @@ paths:
             in: query
             description: |
               transfer out ward of the TransferInward
-          - name: description
-            type: string
-            in: query
-            description: |
-              description of the TransferInward
           - name: inwardNoteNumber
             type: string
             in: query
@@ -1598,11 +1386,6 @@ paths:
             in: query
             description: |
               scrap date of the Scrap
-          - name: description
-            type: string
-            in: query
-            description: |
-              description of the Scrap
           - name: scrapStatus
             type: string
             in: query
@@ -2047,10 +1830,11 @@ paths:
             description: |
               type of the information about the material we are getting from the supplier
             enum:
-              - DGSC_RATECONTRACT
-              - ULB_RATE_CONTRACT
-              - ONE_TIME_TENDER
-              - QUOTATION
+              - DGSC Rate Contract
+              - ULB Rate Contract
+              - One Time Tender
+              - Quotation
+              
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
@@ -2111,6 +1895,13 @@ paths:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
 definitions:
+    RateTypes:
+      type: string
+      enum: 
+        - DGSC Rate Contract
+        - ULB Rate Contract
+        - One Time Tender
+        - Quotation
     Indent:
       type: object
       description: | 
@@ -2150,7 +1941,7 @@ definitions:
         indentType:
           type: string
           enum:
-            - IndentNote
+            - Indent
             - TransferIndent
           description: |
             There are 2 types of indent namely Indent Note and Transfer Indent
@@ -2159,9 +1950,9 @@ definitions:
           format: singleValueList
           enum:
             - Consumption
-            - RepairsAndMaintenance
+            - Repairs and Maintenance
             - Capital
-            - MaterialTransferNote
+            - Material Transfer Note
           description: |
             Consumption, RepairsAndMaintenance, Capital - applicable for Indent Note.
             MaterialTransferNote - applicable for Transfer Indent.
@@ -2197,7 +1988,7 @@ definitions:
             - ISSUED
           description: |
             status of the Indent 
-        indentMaterials:
+        indentDetails:
           type:  array
           minItems: 1
           maxItems: 50
@@ -2237,7 +2028,7 @@ definitions:
       - indentStore
       - indentDate
       - indentPurpose
-      - indentMaterials
+      - indentDetails
       - indentType
       
     IndentDetail:
@@ -2261,8 +2052,8 @@ definitions:
           $ref: "#/definitions/Uom"
           format: singleValueList
         parentIndentLine:
-          $ref: "#/definitions/IndentDetail"  
-          description: In case of interstore transfer indent, this field is used to link with initial indent(if required)
+          type: string
+          description: In case of interstore transfer indent, this field is used to link with initial indent id (if required)
         orderNumber:
           type: number
           format: int32
@@ -2277,17 +2068,17 @@ definitions:
           description: |
             Mandatory if the purpose is Repair and Maintenance.Refer asset code
             format: autoComplete
-        indentQantity:
+        indentQuantity:
           type: number
           format: BigDecimal
           description: |
-            indent qantity of the IndentDetail. Quantity requested by indentor.
+            indent quantity of the IndentDetail. Quantity requested by indentor.
         totalProcessedQuantity:
           type: number
           format: BigDecimal
           description: |
             Quantity issued from indent issue.
-        indentIssuedQantity:
+        indentIssuedQuantity:
           type: number
           format: BigDecimal
           description: |
@@ -2314,28 +2105,29 @@ definitions:
       required:
       - uom
       - material
-      - indentQantity
+      - indentQuantity
       
     OpeningBalanceRequest:
       type: object
       description: Hold the Opening Balance request information.
       properties:
         RequestInfo:
-          $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
-        MaterialReceipt:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        materialReceipt:
           type: array
           items:
             $ref: '#/definitions/MaterialReceipt'
+      required:
+      - RequestInfo
+      - materialReceipt
             
     OpeningBalanceResponse:
       type: object
       description: Hold the Opening Balance Response information
       properties:
-        ResposneInfo:
-          $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
-        MaterialReceipt:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        materialReceipt:
           type: array
           items:
             $ref: '#/definitions/MaterialReceipt'  
@@ -2350,6 +2142,9 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/Indent'
+      required:
+      - RequestInfo
+      - indents
             
     IndentResponse:
       description: Contract class for web response. Array of Indent items  are used in case of search ,create or update request. 
@@ -2364,31 +2159,6 @@ definitions:
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
           
-    IndentNoteRequest:
-      description: Contract class for web request. Array of Indent Note items are used in case of create or update
-      properties:
-        RequestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        indentNotes:
-          description: Used for search result and create only
-          type:  array
-          items:
-            $ref: '#/definitions/Indent'
-            
-    IndentNoteResponse:
-      description: Contract class for web response. Array of Indent Note items  are used in case of search ,create or update request. 
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        indentNotes:
-          description: Used for search result and create only
-          type:  array
-          items:
-            $ref: '#/definitions/Indent'
-        page:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
-          
-    
     TransferIndentNoteRequest:
       description: Contract class for web request. Array of Indent items  are used in case of create or update
       properties:
@@ -2399,6 +2169,9 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/Indent'
+      required:
+      - RequestInfo
+      - transferIndentNotes
             
     TransferIndentNoteResponse:
       description: Contract class for web response. Array of Indent items  are used in case of search ,create or update request. 
@@ -2429,6 +2202,8 @@ definitions:
           minLength: 4
         store:
           $ref: "#/definitions/Store"
+          format: singleValueList
+          description: Store which orders item for purchase order
         purchaseOrderNumber:
           type: string
           readOnly: true
@@ -2440,19 +2215,21 @@ definitions:
           x-displayformat: 'dd/MM/yyyy'
           description: |
             purchase order date of the PurchaseOrder
-        rateType:
+        purchaseType:
           type: string
           enum:
-            - DGSC_RATECONTRACT
-            - ULB_RATE_CONTRACT
-            - ONE_TIME_TENDER
-            - QUOTATION
+            - Indent
+            - Non Indent
           description: |
             rate type of the PurchaseOrder
-        supplierCode:
+        rateType:
+          $ref: "#/definitions/RateTypes"
+          description: |
+            rate type of the PurchaseOrder
+        supplier:
           $ref: "#/definitions/Supplier"
           description: |
-            supplier code of the PurchaseOrder
+            supplier code of the purchase order
         advanceAmount:
           type: number
           format: BigDecimal
@@ -2471,26 +2248,29 @@ definitions:
             expected delivery date of the PurchaseOrder
         deliveryTerms:
           type: string
-          maxLength: 500
-          minLength: 1
+          maxLength: 512
           description: |
             delivery terms of the PurchaseOrder
         paymentTerms:
           type: string
-          maxLength: 500
+          maxLength: 512
           description: |
             payment terms of the PurchaseOrder
-        description:
+        remarks:
           type: string
           maxLength: 1000
           description: |
             description of the PurchaseOrder
         status:
           type: string
-          maxLength: 50
-          minLength: 5
+          enum:
+            - Created
+            - Approved
+            - Rejected
+            - Fulfilled and Paid
+            - Fulfilled and Unpaid
           description: |
-            status of the PurchaseOrder
+            status of the Ind PurchaseOrder
         workFlowDetails:
           $ref: "#/definitions/WorkFlowDetails"     
         stateId:
@@ -2501,7 +2281,7 @@ definitions:
         purchaseOrderDetails:
           type:  array
           items:
-            $ref: "#/definitions/PurchaseOrderDetails"
+            $ref: "#/definitions/PurchaseOrderDetail"
         fileStoreId:
           type: string
           description: |
@@ -2517,9 +2297,7 @@ definitions:
       - purchaseOrderNumber
       - purchaseOrderDate
       - rateType
-      - supplierCode
-      - expectedDeliveryDate
-      - deliveryTerms
+      - supplier
       - purchaseOrderDetails
       
     PurchaseOrderRequest:
@@ -2531,6 +2309,9 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/PurchaseOrder'
+      required:
+      - RequestInfo
+      - purchaseOrders
             
     PurchaseOrderResponse:
       description: Contract class for web response. Array of PurchaseOrder items  are used in case of search ,create or update request. 
@@ -2545,8 +2326,7 @@ definitions:
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
           
-    
-    PurchaseOrderDetails:
+    PurchaseOrderDetail:
       type: object
       description: |
         This object holds the purchase material information.  
@@ -2562,27 +2342,51 @@ definitions:
           minLength: 4    
         material:
           $ref: "#/definitions/Material"
+          format: autoComplete
+        orderNumber:
+          type: number
+          format: int32
+          description: Order of items selected.
         uom:
           $ref: "#/definitions/Uom"
+          format: singleValueList
+        priceList:  
+          $ref: "#/definitions/PriceList"
+          format: singleValueList
         orderQuantity:
           type: number
           format: BigDecimal
           description: |
             order quantity of the PurchaseMaterial
+        receivedQuantity:
+          type: number
+          format: BigDecimal
+          description: |
+            order quantity of the PurchaseMaterial
+        unitPrice:
+          type: number
+          format: BigDecimal
+          description: |
+            unit price of  PurchaseMaterial    
         description:
           type: string
-          maxLength: 1000
+          maxLength: 512
           description: |
-            remarks of the PurchaseMaterial
+            remarks of the Purchase material details
+        purchaseIndentDetails:
+          type:  array
+          items:
+            $ref: "#/definitions/PurchaseIndentDetail"    
       required:
       - material
       - uom
       - orderQuantity
+      - unitPrice
 
-    PurchaseIndentDetails:
+    PurchaseIndentDetail:
       type: object
       description: |
-          Purchase Indent object holds purchase order and associated indent mapping.
+          Purchase order and associated indent Detail mapping.
       properties:
         id:
           type: string
@@ -2593,15 +2397,17 @@ definitions:
           description: Tenant id of the Purchase Indent
           maxLength: 128
           minLength: 4
-        purchaseOrderDetail:
-          $ref: "#/definitions/PurchaseOrderDetails"
-        indent:
-          $ref: "#/definitions/Indent"
+        indentDetail:
+          $ref: "#/definitions/IndentDetail"
+        quantity:
+          type: number
+          format: BigDecimal
+          description: |
+            quantity used in each indent.  
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
-      - purchaseOrderDetail
-      - indent
+      - indentDetail
       
     MaterialReceipt:
       description: Hold the material receipt specific information.
@@ -2620,9 +2426,21 @@ definitions:
           type: string
           readOnly: true
           description: Unique number generated internally on creating a receipt.
+        manualReceiptNumber:
+          type: string
+          description: Manual Receipt Number, applicable only for Opening Balanace Entry.
+          maxLength: 128
         receiptDate:
           type: integer
           description: The date on which the receipt was made.
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
+        financialYear:
+          type: string
+          description: This field holds the financial year information for Opening Balance Entry.
+        manualReceiptDate:
+          type: integer
+          description: Manual Receipt Date, applicable only for Opening Balance Entry.
           format: int64
           x-displayformat: 'dd/MM/yyyy'
         receiptType:
@@ -2665,9 +2483,10 @@ definitions:
             materials.
           x-displayformat: 'dd/MM/yyyy'
         challanNo:
-          type: boolean
+          type: string
           description: The challan number associated with this receipt.
-          format: boolean
+          format: varchar
+          maxLength: 52
         challanDate:
           type: integer
           format: int64
@@ -2702,7 +2521,7 @@ definitions:
           description: >-
             The unique code of the employee who has inspected the receipt of
             materials.
-          format: boolean
+          format: varchar
         inspectionDate:
           type: integer
           format: int64
@@ -2737,6 +2556,7 @@ definitions:
         - receiptType
         - receivingStore
         - mrnStatus
+        
     MaterialReceiptDetail:
       description: >-
         Hold the material receipt note material level information. This will show
@@ -2748,39 +2568,37 @@ definitions:
           description: The unique identifier for the receipt details.
         tenantId:
           type: string
-          description: Tenant id of the Material Receipt Header
+          description: Tenant id of the Material Receipt Header.
           maxLength: 128
           minLength: 4  
-        mrnNumber:
-          $ref: '#/definitions/MaterialReceipt'
-          description: Unique number to identify the maretial receipt note.
         material:
           $ref: "#/definitions/Material"
+        orderNumber:
+          type: number
+          format: int32
+          description: Order of items received.
         uom:
           $ref: "#/definitions/Uom"  
           description: Auto populate stocking unit of measure of selected material.
-        poline:
-          $ref: "#/definitions/PurchaseOrder"
+        purchaseOrderDetail:
+          $ref: "#/definitions/PurchaseOrderDetail"
           description: po line mandatory if receipt type is purchase receipt.
         receivedQty:
           type: number
           format: BigDecimal
-          description: >-
-            The quantity of the material received for this particular purchase
-            order or inter store  transfer. All the quantity needs to be saved in the database in the based
-            UOM.
+          description: The quantity of the material received for this particular purchase order or inter store  transfer. All the quantity needs to be saved in the database in the based UOM. 
         acceptedQty:
           type: number
           format: BigDecimal
-          description: >-
-            The quantity of the material accepted from the total quantity of
-            materials received. All the quantity needs to be saved in the database
-            in the based UOM. Accepted quantity cannot be greater than the
-            received quantity.
+          description: The quantity of the material accepted from the total quantity of materials received. All the quantity needs to be saved in the database in the based UOM. Accepted quantity cannot be greater than the received quantity. This field also contains Opening Quantity when the receipt purpose is OPENING BALANCE.
         unitRate:
           type: number
           description: Per unit rate of the material as per the Purchase Order.
-          format: BigDecimal    
+          format: BigDecimal
+        openingRate:
+          type: number
+          description: Opening rate, applicable for Material Opening Balance Entry.
+          format: BigDecimal
         asset:
           $ref: >-
             https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/Asset
@@ -2797,6 +2615,10 @@ definitions:
           maxLength: 512
           description: General description about the materials.
           format: varchar
+        isScrapItem:
+          type: boolean
+          description: is scrap item flag. Donot use this data to issue material and show in any stock ledger report.
+          default: false
         receiptDetailsAddnInfo:
           type: array
           description: >-
@@ -2804,9 +2626,9 @@ definitions:
           items:
             $ref: '#/definitions/MaterialReceiptDetailAddnlinfo'  
       required:
-        - mrnNumber
         - id
         - receivedQty
+        - tenantId
         
     MaterialReceiptDetailAddnlinfo:
       description: >-
@@ -2821,8 +2643,6 @@ definitions:
           description: Tenant id of the Material Receipt Header
           maxLength: 128
           minLength: 4  
-        materialReceiptDetail:
-          $ref: "#/definitions/MaterialReceiptDetail"
         lotNo:
           type: string
           description: LOT number for the materials that are of LOT control.
@@ -2865,12 +2685,15 @@ definitions:
           type: array
           items:
             $ref: '#/definitions/MaterialReceipt'
+      required:
+      - RequestInfo
+      - MaterialReceipt
             
     MaterialReceiptResponse:
       type: object
       description: Hold the Material Receipt Note Response information
       properties:
-        ResposneInfo:
+        ResponseInfo:
           $ref: >-
             https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
         MaterialReceipt:
@@ -2897,11 +2720,16 @@ definitions:
           enum:
             - IndentIssue
             - NonIndentIssue
-        issuingStore:
+            - Material Outward
+        fromStore:
           $ref: "#/definitions/Store"
           description: |
             This field holds the issuing store information.
-        issueNoteNumber:
+        toStore:
+          $ref: "#/definitions/Store"
+          description: |
+            This field holds the receiving store information.    
+        issueNumber:
           type: string
           maxLength: 100
           readOnly: true
@@ -2926,7 +2754,7 @@ definitions:
             material issue status of the MaterialIssue
         description:
           type: string
-          maxLength: 1000
+          maxLength: 512
           description: description of the MaterialIssue
         totalIssueValue:
           type: number
@@ -2951,14 +2779,18 @@ definitions:
         issuePurpose:
           type: string
           enum:
-            - WriteOffORScrap
-            - ReturnToSupplier
+            - WriteOff OR Scrap
+            - Return To Supplier
           description: Applicable in case of None Indent Issue. This field holds information about Issuing purpose of the Non Indent Issue
+        supplier:
+          $ref: "#/definitions/Supplier"
+          description: |
+            supplier code. Return of material to supplier against receipt.
         materialIssueDetails:
           type: array
           description: List of materials issued for indent and non indent items.
           items:
-            $ref: '#/definitions/MaterialIssueDetails'
+            $ref: '#/definitions/MaterialIssueDetail'
         workFlowDetails:
           $ref: "#/definitions/WorkFlowDetails"
         stateId:
@@ -2969,11 +2801,12 @@ definitions:
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
-      - issuingStore
+      - fromStore
       - issueDate
       - materialIssueStatus
       - totalIssueValue
       - issueType
+      - tenantId
       
     MaterialIssueRequest:
       description: Contract class for web request. Array of MaterialIssue items  are used in case of create or update
@@ -2985,6 +2818,9 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/MaterialIssue'
+      required:
+      - RequestInfo
+      - materialIssues
             
     MaterialIssueResponse:
       description: Contract class for web response. Array of MaterialIssue items  are used in case of search ,create or update request. 
@@ -2999,7 +2835,7 @@ definitions:
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'      
 
-    MaterialIssueDetails:
+    MaterialIssueDetail:
       type: object
       description: |
         This object holds the materail issue detail information for both indent and non indent.
@@ -3013,40 +2849,105 @@ definitions:
           description: Tenant id of the Material Issue Details
           maxLength: 128
           minLength: 4
-        materialIssue:
-          $ref: "#/definitions/MaterialIssue"
+        material:
+          $ref: "#/definitions/Material"
+          description: |
+            Applicable for Non Indent Issue.
+          format: autoComplete  
+        orderNumber:
+          type: number
+          format: int32
+          description: Order of items issued.
+        quantityIssued:
+          type: number
+          format: BigDecimal
+          description: |
+            Quantity issued of the Material Issue Detail.
+        value:
+          type: number
+          format: BigDecimal
+          description: |
+            Total value of issued material.   Send value 0 if price not defined. 
+        uom:
+          $ref: "#/definitions/Uom"  
+          description: unit of measure of selected material.
+          format: singleValueList
+        voucherHeader:
+          type: string
+          description: financial voucher passed id map   
         indentDetail:
           description: >-
-            Applicable for Indent Issue. Balance quantity to be issued of the IndentDetails. 
+            Applicable for Indent Issue. Balance quantity to be issued of the IndentDetails. Mandatory in case of indent issue.
           $ref: "#/definitions/IndentDetail"
         quantityToBeIssued:
           type: number
           format: BigDecimal
           description: |
             Balance quantity to be issued of the IndentDetails.
-        materialReceipt:
-          description: >-
-            Applicable for Non Indent Issue.
-          $ref: "#/definitions/MaterialReceipt"  
-        material:
-          $ref: "#/definitions/Material"
+        scrapValue:
+          type: number
+          format: BigDecimal
           description: |
-            Applicable for Non Indent Issue.
-        quantityIssued:
+            If item writeoffed or scrapped, then define the scrap value.
+        description:
+          type: string
+          maxLength: 512
+          description: |
+            description of the Material Issue Detail.
+        materialIssuedFromReceipts:
+          type: array
+          description: List of materials issued from receipt detail
+          items:
+            $ref: '#/definitions/MaterialIssuedFromReceipt'    
+      required:
+      - quantityIssued
+      - value
+      - uom
+      - material
+      - tenantId
+      
+    MaterialIssuedFromReceipt:
+      type: object
+      description: |
+        This object holds the materail issue and receipts used for material issue. This table will be used in FIFO logic and total items issued againest a particular receipt.
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the Material Issue from receipt.
+        tenantId:
+          type: string
+          description: Tenant id of the Material Issue from receipt.
+          maxLength: 128
+          minLength: 4
+        materialReceiptId:
+          type: string
+          description: material receipt id
+          maxLength: 128
+        materialReceiptDetail:
+          description: >-
+             In case of return of material purpose type, select initial receipt to keep account. Do not use fifo logic in case of return to supplier. Supplier will received the same goods which are identified by lot number, expiry date, serial number or manufacture number or receive date wise.  For other purpose use FIFO logic to issue item.
+          $ref: "#/definitions/MaterialReceiptDetail"
+          format: autoComplete
+        materialReceiptDetailAddnlinfoId:
+          description: >-
+             if material has lot number, expiry date, serial number or manufacture number then save receipt additional info id also.
+          type: string
+          maxLength: 128
+        quantity:
           type: number
           format: BigDecimal
           description: |
             Quantity issued of the Material Issue Detail.
-        description:
-          type: string
-          maxLength: 1000
+        status:
+          type: boolean
           description: |
-            description of the Material Issue Detail.
+            If material issue cancelled or rejected in workflow, then use status as false.
+          default: true  
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
-      - materialIssue
-      - indentDetail
-      - quantityIssued
-      
+      - tenantId
     TransferInwardRequest:
       description: Contract class for material receipt inward request. Array of MaterialReceipt items  are used in case of create or update
       properties:
@@ -3057,6 +2958,9 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/MaterialReceipt'
+      required:
+      - RequestInfo
+      - transferInwards
             
     TransferInwardResponse:
       description: Contract class for material receipt inward web response. Array of MaterialReceipt items  are used in case of search ,create or update request. 
@@ -3081,6 +2985,9 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/MaterialIssue'
+      required:
+      - RequestInfo
+      - transferOutwards
             
     TransferOutwardResponse:
       description: Contract class for web response. Array of TransferOutward items  are used in case of search ,create or update request. 
@@ -3094,7 +3001,46 @@ definitions:
             $ref: '#/definitions/MaterialIssue'
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
-          
+    
+    MaterialType:
+      type: object
+      description: |
+        This object holds the material type information.  
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the Material Type
+        tenantId:
+          type: string
+          description: Tenant id of the Material Type
+          maxLength: 128
+          minLength: 4    
+        name:
+          type: string
+          description: |
+            name of the MaterialType
+        code:
+          type: string
+          description: |
+            code of the MaterialType
+        description:
+          type: string
+          maxLength: 512
+          description: |
+            description of the Material type 
+        storeMapping:
+          type:  array
+          items:
+            $ref: '#/definitions/StoreMapping'
+        parent:
+          type: integer
+          format: int64
+          description: |
+            parent of the MaterialType
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
+
     Material:
       type: object
       description: |
@@ -3150,10 +3096,17 @@ definitions:
             - Obsolete
           description: |
             status of the Material
+        inActiveDate:
+          type: integer
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
+          description: |
+            inactive date of the Material
         purchaseUom:
           $ref: "#/definitions/Uom"
         expenseAccount:
           $ref: "#/definitions/ChartofAccount"
+          description: Expense account code is mandatory , if inventory type is consumable
         minQuantity:
           type: number
           format: BigDecimal
@@ -3184,13 +3137,18 @@ definitions:
           format: BigDecimal
           description: |
             reorder quantity of the Material
-        materialControlType:
-          type: string
-          enum:
-            - LOTControl
-            - Shelf_life_Control
+        lotControl:
+          type: boolean
           description: |
-            material control type of the Material
+            LOT Control for Material.     
+        shelfLifeControl:
+          type: boolean
+          description: |
+            Shelf Life Control for Material.    
+        serialNumber:
+          type: boolean
+          description: |
+            serial Number for Material.                                
         model:
           type: string
           description: |
@@ -3207,14 +3165,17 @@ definitions:
           type: string
           description: |
             terms of delivery of the Material
-        overrideMaterialControlType:
-          type: boolean
-          description: |
-            override material control type of the Material
         scrapable:
           type: boolean
           description: |
-            Material is scrapable or not.    
+            Material is scrapable or not.
+        assetCategory:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml#/definitions/AssetCategory"
+          description:  Asset category is mandatory if the inventory type is asset
+        storeMapping:
+          type:  array
+          items:
+            $ref: '#/definitions/StoreMapping'
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
       required:
@@ -3229,37 +3190,6 @@ definitions:
       - materialClass
       - reorderLevel
       - reorderQuantity
-      - materialControlType
-    
-    MaterialType:
-      type: object
-      description: |
-        This object holds the material type information.  
-      properties:
-        id:
-          type: string
-          description: |
-            Unique Identifier of the Material Type
-        tenantId:
-          type: string
-          description: Tenant id of the Material Type
-          maxLength: 128
-          minLength: 4    
-        name:
-          type: string
-          description: |
-            name of the MaterialType
-        code:
-          type: string
-          description: |
-            code of the MaterialType
-        parent:
-          type: integer
-          format: int64
-          description: |
-            parent of the MaterialType
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"    
 
     MaterialStoreMapping:
       type: object
@@ -3280,12 +3210,38 @@ definitions:
           type: boolean
           description: |
             active or inactive flag of mapping
+        delete:
+          type: boolean
+          description: |
+            delete flag of mapping used during deleting the mapping.    
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"             
       required:
       - store
       - material
 
+    StoreMapping:
+      type: object
+      description: |
+        This object holds the store mapping details information.
+      properties:  
+        store:
+          $ref: "#/definitions/Store"
+        chartofAccount:
+          $ref: "#/definitions/ChartofAccount"
+        active:
+          type: boolean
+          description: |
+            active or inactive flag of mapping
+        delete:
+          type: boolean
+          description: |
+            delete flag of mapping used during deleting the mapping.    
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"             
+      required:
+      - store
+      
     Uom:
       type: object
       description: |
@@ -3346,6 +3302,9 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/Material'
+      required:
+      - RequestInfo
+      - materials
             
     MaterialResponse:
       description: Contract class for web response. Array of Material items  are used in case of search ,create or update request. 
@@ -3370,6 +3329,9 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/MaterialStoreMapping'
+      required:
+      - RequestInfo
+      - materialStoreMappings
 
     MaterialStoreMappingResponse:
       description: Contract class for web response. Array of Material Store Mapping items  are used in case of search ,create or update request. 
@@ -3426,13 +3388,13 @@ definitions:
         billingAddress:
           type: string
           pattern: ^[a-zA-Z0-9 ]+$
-          maxLength: 1000
+          maxLength: 512
           description: |
             billing address of the Store
         deliveryAddress:
           type: string
           pattern: ^[a-zA-Z0-9 ]+$
-          maxLength: 1000
+          maxLength: 512
           description: |
             delivery address of the Store
         contactNo1:
@@ -3498,7 +3460,6 @@ definitions:
       required:
       - code            
             
-      
     Department:
       type: object
       description: |
@@ -3539,6 +3500,9 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/Store'
+      required:
+      - RequestInfo
+      - stores
             
     StoreResponse:
       description: Contract class for web response. Array of Store items  are used in case of search ,create or update request. 
@@ -3756,6 +3720,9 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/Supplier'
+      required:
+      - RequestInfo
+      - suppliers
             
     SupplierResponse:
       description: Contract class for web response. Array of Supplier items  are used in case of search ,create or update request. 
@@ -3831,7 +3798,7 @@ definitions:
           description: Designation of the created by user at the time of Scrap Note creation.
           format: varchar    
         auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"   
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - store
       - scrapNumber
@@ -3890,6 +3857,9 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/Scrap'
+      required:
+      - RequestInfo
+      - scraps
             
     ScrapResponse:
       description: Contract class for web response. Array of Scrap items  are used in case of search ,create or update request. 
@@ -4011,6 +3981,9 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/Disposal'
+      required:
+      - RequestInfo
+      - disposals
             
     DisposalResponse:
       description: Contract class for web response. Array of Disposal items  are used in case of search ,create or update request. 
@@ -4091,11 +4064,7 @@ definitions:
           type: string
           description: |
             type of the information about the material we are getting from the supplier
-          enum:
-            - DGSC_RATECONTRACT
-            - ULB_RATE_CONTRACT
-            - ONE_TIME_TENDER
-            - QUOTATION
+          $ref: "#/definitions/RateTypes"
         rateContractNumber:
           type: string
           description: |
@@ -4138,10 +4107,9 @@ definitions:
           description: |
             File Store id of the rate contract with the supplier
         priceListDetails:
-          type:  array
+          type: array
           items:
-            $ref: '#/definitions/PriceList'
-          minItems: 1
+            $ref: '#/definitions/PriceListDetails'
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"   
       required:
@@ -4160,18 +4128,21 @@ definitions:
       properties:
         RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        transferInwards:
+        priceLists:
           description: Used for search result and create only
           type:  array
           items:
             $ref: '#/definitions/PriceList'
+      required:
+      - RequestInfo
+      - priceLists
             
     PriceListResponse:
       description: Contract class for web response. Array of PriceList items  are used in case of search ,create or update request. 
       properties:
         ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        transferInwards:
+        priceLists:
           description: Used for search result and create only
           type:  array
           items:
@@ -4247,4 +4218,3 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
-

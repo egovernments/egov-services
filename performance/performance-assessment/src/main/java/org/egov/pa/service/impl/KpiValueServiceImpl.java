@@ -33,8 +33,22 @@ public class KpiValueServiceImpl implements KpiValueService {
 
 	@Override
 	public KPIValueRequest createKpiValue(KPIValueRequest kpiValueRequest) {
+		int numberOfIds = kpiValueRequest.getKpiValues().size(); 
 		log.info("KPI Value Create Request Received at Service Level : " + kpiValueRequest);
-    	setCreatedDateAndUpdatedDate(kpiValueRequest);
+		List<Long> kpiValueIds = kpiValueRepository.getNewKpiIds(numberOfIds);
+		setCreatedDateAndUpdatedDate(kpiValueRequest);
+		if(kpiValueIds.size() == kpiValueRequest.getKpiValues().size()) { 
+			for(int i=0 ; i < kpiValueIds.size() ; i++) {
+				kpiValueRequest.getKpiValues().get(i).setId(String.valueOf(kpiValueIds.get(i)));
+				if(null != kpiValueRequest.getKpiValues().get(i).getDocuments()) { 
+					for(int j=0 ; j< kpiValueRequest.getKpiValues().get(i).getDocuments().size() ; j++) { 
+						kpiValueRequest.getKpiValues().get(i).getDocuments().get(j).setValueId(kpiValueIds.get(i));
+						kpiValueRequest.getKpiValues().get(i).getDocuments().get(j).setKpiCode(kpiValueRequest.getKpiValues().get(i).getKpi().getCode());
+						kpiValueRequest.getKpiValues().get(i).getDocuments().get(j).setAuditDetails(kpiValueRequest.getKpiValues().get(i).getAuditDetails()); 
+					}
+				}
+			}
+		}
     	kpiValueRepository.persistKpiValue(kpiValueRequest);
     	return kpiValueRequest; 
 	}

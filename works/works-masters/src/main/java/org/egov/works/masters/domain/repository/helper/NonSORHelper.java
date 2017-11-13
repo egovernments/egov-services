@@ -42,7 +42,7 @@ public class NonSORHelper {
         nonSOR.setId(this.id);
         nonSOR.setTenantId(this.tenantId);
         nonSOR.setDescription(this.description);
-        nonSOR.getUom().setCode(this.uom);
+        nonSOR.setUom(this.uom);
         return nonSOR;
     }
 }

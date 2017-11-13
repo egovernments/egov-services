@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.validation.constraints.NotNull;
 
 import org.egov.model.enums.AssetCategoryType;
+import org.egov.model.enums.TransactionType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,9 +25,10 @@ public class AssetCriteria {
 
 	@NotNull
 	private String tenantId;
-	private AssetCategoryType assetCategoryType;
+	private List<AssetCategoryType> assetCategoryType;
+	private Set<Long> assetSubCategory;
 	private Long assetCategory;
-	private Long department;
+	private String department;
 	private String name;
 	private String code;
 	private Set<Long> id;
@@ -34,6 +36,7 @@ public class AssetCriteria {
 	private BigDecimal originalValueTo;
 	private Long assetCreatedFrom;
 	private Long assetCreatedto;
+	private Long toDate; // exclusive for depreciation search
 
 	private Long locality;
 	private Long zone;
@@ -44,6 +47,7 @@ public class AssetCriteria {
 	private String doorNo;
 	private String status;
 	private List<String> sort=null;
+	private TransactionType transaction;
 	
 	
 	private Long size;

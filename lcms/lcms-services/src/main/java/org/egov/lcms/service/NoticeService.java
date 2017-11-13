@@ -37,7 +37,7 @@ public class NoticeService {
 	public NoticeResponse createNotice(NoticeRequest noticeRequest) throws Exception {
 
 		String code = uniqueCodeGeneration.getUniqueCode(noticeRequest.getNotice().getTenantId(), noticeRequest.getRequestInfo(),
-				propertiesManager.getNoticeUlbFormat(), propertiesManager.getNoticeUlbName(), Boolean.FALSE, null);
+				propertiesManager.getNoticeUlbFormat(), propertiesManager.getNoticeUlbName(), Boolean.FALSE, null,Boolean.FALSE);
 		noticeRequest.getNotice().setCode(code);
 		kafkaTemplate.send(propertiesManager.getCreateNoticeTopic(), noticeRequest);
 

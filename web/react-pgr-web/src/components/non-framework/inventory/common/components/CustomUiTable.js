@@ -207,7 +207,7 @@ class CustomUiTable extends Component {
 																	 onCheck={onChangeSelectionCheckbox.bind(this, item2)}/></td>);
 															}
 															else if(typeof item2 === 'object'){
-																return(<td  key={i2}><Checkbox checked={item2.value}/></td>)
+																return(<td  key={i2}><Checkbox checked={item2 && item2.value || ""}/></td>)
 															}
 
 			                        return (

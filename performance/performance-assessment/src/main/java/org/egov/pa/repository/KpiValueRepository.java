@@ -25,4 +25,6 @@ public interface KpiValueRepository {
     public KpiValue checkKpiValueExistsForTenant(String kpiCode, String tenantId); 
     
     public String searchPossibilityCheck(String tenantCount, String kpiCount, String finYearCount);
+    
+    public List<Long> getNewKpiIds(int numberOfIds); 
 }

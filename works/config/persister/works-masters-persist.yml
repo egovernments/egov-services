@@ -10,78 +10,78 @@ serviceMaps:
     - query: INSERT INTO egw_scheduleofrate(id, tenantid, code, description, schedulecategory, uom, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.scheduleOfRates.*
       jsonMaps:
-         
+
        - jsonPath: $.scheduleOfRates.*.id
-       
+
        - jsonPath: $.scheduleOfRates.*.tenantId
-         
+
        - jsonPath: $.scheduleOfRates.*.code
-         
+
        - jsonPath: $.scheduleOfRates.*.description
-       
-       - jsonPath: $.scheduleOfRates.*.scheduleCategory.code
-       
-       - jsonPath: $.scheduleOfRates.*.uom.code
-       
+
+       - jsonPath: $.scheduleOfRates.*.scheduleCategory
+
+       - jsonPath: $.scheduleOfRates.*.uom
+
        - jsonPath: $.scheduleOfRates.*.auditDetails.createdBy
- 
+
        - jsonPath: $.scheduleOfRates.*.auditDetails.createdTime
-       
+
        - jsonPath: $.scheduleOfRates.*.auditDetails.lastModifiedBy
-  
+
        - jsonPath: $.scheduleOfRates.*.auditDetails.lastModifiedTime
-       
+
     - query: INSERT INTO egw_sorrate(id, tenantid, scheduleofrate, fromdate, todate, rate,  createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.scheduleOfRates.*.sorRates.*
       jsonMaps:
-         
+
        - jsonPath: $.scheduleOfRates.*.sorRates.*.id
-         
+
        - jsonPath: $.scheduleOfRates.*.sorRates.*.tenantId
-         
+
        - jsonPath: $.scheduleOfRates[?({id} in @.sorRates[*].id)].id
-       
+
        - jsonPath: $.scheduleOfRates.*.sorRates.*.fromDate
-       
+
        - jsonPath: $.scheduleOfRates.*.sorRates.*.toDate
-       
+
        - jsonPath: $.scheduleOfRates.*.sorRates.*.rate
-       
+
        - jsonPath: $.scheduleOfRates.*.sorRates.*.auditDetails.createdBy
-       
+
        - jsonPath: $.scheduleOfRates.*.sorRates.*.auditDetails.createdTime
 
        - jsonPath: $.scheduleOfRates.*.sorRates.*.auditDetails.lastModifiedBy
-       
+
        - jsonPath: $.scheduleOfRates.*.sorRates.*.auditDetails.lastModifiedTime
 
     - query: INSERT INTO egw_marketrate(id, tenantid, scheduleofrate, fromdate, todate, rate,  createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.scheduleOfRates.*.marketRates.*
       jsonMaps:
-         
+
        - jsonPath: $.scheduleOfRates.*.marketRates.*.id
-         
+
        - jsonPath: $.scheduleOfRates.*.marketRates.*.tenantId
-         
+
        - jsonPath: $.scheduleOfRates[?({id} in @.marketRates[*].id)].id
-       
+
        - jsonPath: $.scheduleOfRates.*.marketRates.*.fromDate
-       
+
        - jsonPath: $.scheduleOfRates.*.marketRates.*.toDate
-       
+
        - jsonPath: $.scheduleOfRates.*.marketRates.*.rate
-       
+
        - jsonPath: $.scheduleOfRates.*.marketRates.*.auditDetails.createdBy
-       
+
        - jsonPath: $.scheduleOfRates.*.marketRates.*.auditDetails.createdTime
 
        - jsonPath: $.scheduleOfRates.*.marketRates.*.auditDetails.lastModifiedBy
-       
+
        - jsonPath: $.scheduleOfRates.*.marketRates.*.auditDetails.lastModifiedTime
 
  - version: 1.0
    name: ScheduleOfRate Update
-   description: Persists Schedule Of Rate in egw_scheduleofrate table
+   description: Updates Schedule Of Rate in egw_scheduleofrate table
    fromTopic: works-sorrate-update-validated
    isTransaction: true
    queryMaps:
@@ -93,9 +93,9 @@ serviceMaps:
 
        - jsonPath: $.scheduleOfRates.*.description
 
-       - jsonPath: $.scheduleOfRates.*.scheduleCategory.code
+       - jsonPath: $.scheduleOfRates.*.scheduleCategory
 
-       - jsonPath: $.scheduleOfRates.*.uom.code
+       - jsonPath: $.scheduleOfRates.*.uom
 
        - jsonPath: $.scheduleOfRates.*.auditDetails.lastModifiedBy
 
@@ -119,7 +119,7 @@ serviceMaps:
 
        - jsonPath: $.scheduleOfRates.*.sorRates.*.auditDetails.lastModifiedTime
 
-       - jsonPath: $.scheduleOfRates.*.id
+       - jsonPath: $.scheduleOfRates[?({id} in @.sorRates[*].id)].id
 
        - jsonPath: $.scheduleOfRates.*.sorRates.*.id
 
@@ -139,7 +139,7 @@ serviceMaps:
 
        - jsonPath: $.scheduleOfRates.*.marketRates.*.auditDetails.lastModifiedTime
 
-       - jsonPath: $.scheduleOfRates.*.id
+       - jsonPath: $.scheduleOfRates[?({id} in @.marketRates[*].id)].id
 
        - jsonPath: $.scheduleOfRates.*.marketRates.*.id
 
@@ -148,10 +148,10 @@ serviceMaps:
  - version: 1.0
    name: Contractor Create
    description: Persists Contractor in egw_contractor table
-   fromTopic: works-contractor-create
+   fromTopic: works-contractor-create-validated
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO egw_contractor(id, tenantid, name, code, correspondenceaddress, paymentaddress, contactperson, email, narration, mobilenumber, pannumber, tinnumber, bank, bankaccountnumber, pwdapprovalcode, exemptedfrom, pwdapprovalvalidtill, epfregistrationnumber, accountcode, ifsccode, contractorclass, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egw_contractor(id, tenantid, name, code, correspondenceaddress, paymentaddress, contactperson, email, narration, mobilenumber, pannumber, tinnumber, bank, bankaccountnumber, pwdapprovalcode, exemptedfrom, pwdapprovalvalidtill, epfregistrationnumber, accountcode, ifsccode, contractorclass, pmc, status, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.contractors.*
       jsonMaps:
          
@@ -192,12 +192,17 @@ serviceMaps:
        
        - jsonPath: $.contractors.*.epfRegistrationNumber
        
-       - jsonPath: $.contractors.*.accountCode
+       - jsonPath: $.contractors.*.accountCode.glcode
        
        - jsonPath: $.contractors.*.ifscCode
        
-       - jsonPath: $.contractors.*.contractorClass
+       - jsonPath: $.contractors.*.contractorClass.class
        
+       - jsonPath: $.contractors.*.pmc
+         type: BOOLEAN
+
+       - jsonPath: $.contractors.*.status       
+
        - jsonPath: $.contractors.*.auditDetails.createdBy
  
        - jsonPath: $.contractors.*.auditDetails.createdTime
@@ -209,10 +214,10 @@ serviceMaps:
  - version: 1.0
    name: Contractor Update
    description: Update Contractor in egw_contractor table
-   fromTopic: works-contractor-update
+   fromTopic: works-contractor-update-validated
    isTransaction: true
    queryMaps:
-    - query: UPDATE egw_contractor SET name=?, code=?, correspondenceaddress=?, paymentaddress=?, contactperson=?, email=?, narration=?, mobilenumber=?, pannumber=?, tinnumber=?, bank=?, bankaccountnumber=?, pwdapprovalcode=?, exemptedfrom=?, pwdapprovalvalidtill=?, epfregistrationnumber=?, accountcode=?, ifsccode=?, contractorclass=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+    - query: UPDATE egw_contractor SET name=?, code=?, correspondenceaddress=?, paymentaddress=?, contactperson=?, email=?, narration=?, mobilenumber=?, pannumber=?, tinnumber=?, bank=?, bankaccountnumber=?, pwdapprovalcode=?, exemptedfrom=?, pwdapprovalvalidtill=?, epfregistrationnumber=?, accountcode=?, ifsccode=?, contractorclass=?, pmc=?, status=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
       basePath: $.contractors.*
       jsonMaps:
          
@@ -249,11 +254,16 @@ serviceMaps:
        
        - jsonPath: $.contractors.*.epfRegistrationNumber
        
-       - jsonPath: $.contractors.*.accountCode
+       - jsonPath: $.contractors.*.accountCode.glcode
        
        - jsonPath: $.contractors.*.ifscCode
        
-       - jsonPath: $.contractors.*.contractorClass
+       - jsonPath: $.contractors.*.contractorClass.class
+       
+       - jsonPath: $.contractors.*.pmc
+         type: BOOLEAN
+
+       - jsonPath: $.contractors.*.status
        
        - jsonPath: $.contractors.*.auditDetails.lastModifiedBy
   
@@ -285,9 +295,9 @@ serviceMaps:
 
        - jsonPath: $.estimateTemplates.*.description
 
-       - jsonPath: $.estimateTemplates.*.typeOfWork.code
+       - jsonPath: $.estimateTemplates.*.typeOfWork
 
-       - jsonPath: $.estimateTemplates.*.subTypeOfWork.code
+       - jsonPath: $.estimateTemplates.*.subTypeOfWork
 
        - jsonPath: $.estimateTemplates.*.auditDetails.createdBy
 
@@ -307,9 +317,9 @@ serviceMaps:
 
        - jsonPath: $.estimateTemplates[?({id} in @.estimateTemplateActivities[*].id)].id
 
-       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.scheduleOfRate.id
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.scheduleOfRate
 
-       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.uom.code
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.uom
 
        - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.id
 
@@ -333,5 +343,57 @@ serviceMaps:
 
        - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.description
 
-       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.uom.code
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.uom
+
+ - version: 1.0
+   name: Estimate Template Update
+   description: Updates Estimate Template in egw_estimatetemplate table
+   fromTopic: works-estimatetemplate-update-validated
+   isTransaction: true
+   queryMaps:
+    - query: update egw_estimatetemplate set code=?, name=?, active=?, description=?, typeofwork=?, subtypeofwork=? where id=? and tenantid=?;
+      basePath: $.estimateTemplates.*
+      jsonMaps:
+
+       - jsonPath: $.estimateTemplates.*.code
+
+       - jsonPath: $.estimateTemplates.*.name
+
+       - jsonPath: $.estimateTemplates.*.active
+
+       - jsonPath: $.estimateTemplates.*.description
+
+       - jsonPath: $.estimateTemplates.*.typeOfWork
+
+       - jsonPath: $.estimateTemplates.*.subTypeOfWork
+
+       - jsonPath: $.estimateTemplates.*.id
+
+       - jsonPath: $.estimateTemplates.*.tenantId
+
+    - query: update egw_estimatetemplateactivities set schedulerofrate=?, uom=?, unitrate=? where id=? and tenantid=?;
+      basePath: $.estimateTemplates.*.estimateTemplateActivities.*
+      jsonMaps:
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.scheduleOfRate.id
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.uom
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.unitRate
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.id
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.tenantId
+
+    - query: update egw_nonsor set description=?, uom=? where id=? and tenantid=?;
+      basePath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR
+      jsonMaps:
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.description
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.uom
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.id
+
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.tenantId
 

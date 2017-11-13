@@ -3,6 +3,7 @@ package org.egov.lcms.repository.builder;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import org.egov.lcms.models.Case;
 import org.egov.lcms.models.CaseSearchCriteria;
 import org.egov.lcms.models.HearingRepository;
@@ -62,10 +63,10 @@ public class CaseBuilder {
 			preparedStatementValues.add(caseSearchCriteria.getSummonReferenceNo());
 		}
 
-		if (caseSearchCriteria.getCaseRefernceNo() != null && !caseSearchCriteria.getCaseRefernceNo().isEmpty()) {
+		if (caseSearchCriteria.getCaseReferenceNo() != null && !caseSearchCriteria.getCaseReferenceNo().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" caserefernceno= ?");
-			preparedStatementValues.add(caseSearchCriteria.getCaseRefernceNo());
+			preparedStatementValues.add(caseSearchCriteria.getCaseReferenceNo());
 		}
 
 		if (caseSearchCriteria.getCaseType() != null && !caseSearchCriteria.getCaseType().isEmpty()) {
@@ -102,9 +103,21 @@ public class CaseBuilder {
 		}
 
 		if (caseSearchCriteria.getAdvocateName() != null && !caseSearchCriteria.getAdvocateName().isEmpty()) {
-			String caseCode = AdvocateRepository.getcaseCodeByAdvocateCode(caseSearchCriteria.getAdvocateName());
+			List<String> caseCodes = AdvocateRepository.getcaseCodeByAdvocateCode(caseSearchCriteria.getAdvocateName());
+			
+			
+			int count = 1;
+			String code = "";
+			for (String caseCode : caseCodes) {
+				if (count < caseCodes.size())
+					code = code + "'" + caseCode + "',";
+				else
+					code = code + "'" + caseCode + "'";
+				count++;
+
+			}
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" code IN('" + caseCode + "')");
+			selectQuery.append(" code IN(" + code + ")");
 
 		}
 
@@ -163,21 +176,32 @@ public class CaseBuilder {
 		if (caseSearchCriteria.getSort() != null && !caseSearchCriteria.getSort().isEmpty()) {
 			selectQuery.append(" ORDER BY " + caseSearchCriteria.getSort());
 		}
+		else{
+			selectQuery.append(" ORDER BY lastmodifiedtime desc");
+		}
 	}
 
-	public String searchByCaseCodeQuery(Case caseObj, String tableName, Boolean isTenantIdExixts,
-			final List<Object> preparedStatementValues) {
-		StringBuilder paraWiseSearchQuery = new StringBuilder();
-		paraWiseSearchQuery.append("SELECT * FROM " + tableName);
+	public String searchByCaseCodeQuery(Case caseObj, String tableName, final List<Object> preparedStatementValues) {
+		StringBuilder searchQuery = new StringBuilder();
+		searchQuery.append("SELECT * FROM " + tableName);
 		log.info("case code for getting hearing details is" + caseObj.getCode());
-		paraWiseSearchQuery.append(" WHERE casecode=?");
+		
+		searchQuery.append(" WHERE casecode=?");
 		preparedStatementValues.add(caseObj.getCode());
 
-		if (isTenantIdExixts) {
-			paraWiseSearchQuery.append(" AND tenantid=?");
-			preparedStatementValues.add(caseObj.getTenantId());
-		}
+		searchQuery.append(" AND tenantid=?");
+		preparedStatementValues.add(caseObj.getTenantId());
 
-		return paraWiseSearchQuery.toString();
+		return searchQuery.toString();
+	}
+
+	public String searchCaseDetailsByTenantId(String tenantId, String caseTableName, List<Object> preparedStatementValues) {
+		StringBuilder searchQuery = new StringBuilder();
+		searchQuery.append("SELECT caseno, summonreferenceno FROM " + caseTableName);
+		
+		searchQuery.append(" WHERE tenantId=?");
+		preparedStatementValues.add(tenantId);
+		
+		return searchQuery.toString();
 	}
 }

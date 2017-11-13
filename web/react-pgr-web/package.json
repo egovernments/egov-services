@@ -31,6 +31,7 @@
     "react-bootstrap": "^0.31.0",
     "react-bootstrap-datetimepicker": "0.0.22",
     "react-burger-menu": "^2.0.2",
+    "react-datetime": "^2.10.3",
     "react-dom": "^15.5.4",
     "react-google-maps": "^7.1.0",
     "react-icons": "^2.2.5",

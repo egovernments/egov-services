@@ -23,6 +23,7 @@ import './styles/bootstrap.min.css';
 import './styles/jquery.dataTables.min.css';
 import './styles/buttons.dataTables.min.css';
 import './styles/bootstrap.datepicker.css';
+import './styles/react.datetimepicker.css';
 // import router from "./router";
 
 // Needed for onTouchTap

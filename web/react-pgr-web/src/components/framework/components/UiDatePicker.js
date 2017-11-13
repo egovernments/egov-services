@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import TextField from 'material-ui/TextField';
 import {translate} from '../../common/common';
-var DateTimeField = require('react-bootstrap-datetimepicker');
+var DateTime = require('react-datetime');
 var moment = require('moment');
 
 const datePat = /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g;
@@ -108,23 +108,31 @@ export default class UiEmailField extends Component {
 		switch (this.props.ui) {
 			case 'google':
 				return (
-					<div style={{"marginTop": "17px", "display": (item.hide ? 'none' : 'inline-block')}} className="custom-form-control-for-datepicker">
+					<div style={{"width": "100%", "marginTop": "17px", "display": (item.hide ? 'none' : 'inline-block')}} className="custom-form-control-for-datepicker">
 						<label>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></label><br/>
-						<DateTimeField
-							mode='date'
-							dateTime={this.props.getVal(item.jsonPath) || undefined}
-							size='sm'
-							inputFormat='DD/MM/YYYY'
+						<DateTime
+							value={this.props.getVal(item.jsonPath)}
+							dateFormat='DD/MM/YYYY'
+							timeFormat={false}
 							inputProps={{
 								"placeholder": "DD/MM/YYYY",
 								"id": item.jsonPath.split(".").join("-")
 							}}
-							defaultText=""
-							minDate={item.minDate ? this.calcMinMaxDate(item.minDate) : ""}
-							maxDate={item.maxDate ? this.calcMinMaxDate(item.maxDate) : ""}
+							isValidDate={(currentDate) => {
+								if(item.minDate && item.maxDate) {
+									return (this.calcMinMaxDate(item.minDate).isBefore(currentDate) && this.calcMinMaxDate(item.maxDate).isAfter(currentDate));
+								} else if(item.minDate) {
+									return this.calcMinMaxDate(item.minDate).isBefore(currentDate);
+								} else if(item.maxDate) {
+									return this.calcMinMaxDate(item.maxDate).isAfter(currentDate);
+								} else 
+									return true;
+							}}
+							closeOnSelect={true}
+							closeOnTab={true}
 							onChange={(e) => {
-		                            this.props.handler({target: {value: e}}, item.jsonPath, item.isRequired ? true : false, /\d{12,13}/, item.requiredErrMsg, (item.patternErrMsg || translate("framework.date.error.message")), item.expression, item.expressionMsg, true)
-		                        }}
+		                        this.props.handler({target: {value: (typeof e == 'string' ? e : e.valueOf())}}, item.jsonPath, item.isRequired ? true : false, /\d{12,13}/, item.requiredErrMsg, (item.patternErrMsg || translate("framework.date.error.message")), item.expression, item.expressionMsg, true)
+		                    }}
 							/>
 						<div style={{"height": "23px" ,"visibility": (this.props.fieldErrors && this.props.fieldErrors[item.jsonPath] ? "visible" : "hidden"), "position": "relative", "fontSize": "12px", "lineHeight": "23px", "color": "rgb(244, 67, 54)", "transition": "all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms", "float": "left"}}>
 							{this.props.fieldErrors && this.props.fieldErrors[item.jsonPath] ? this.props.fieldErrors[item.jsonPath] : " "}

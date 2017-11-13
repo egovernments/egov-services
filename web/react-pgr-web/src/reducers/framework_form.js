@@ -159,7 +159,6 @@ function validate(fieldErrors, property, value, isRequired, form, requiredFields
 
   for(let key in fieldErrors) {
     if(fieldErrors[key] && key != property) {
-        console.log(fieldErrors[key] + "--" + key);
         isFormValid = false;
         break;
     }

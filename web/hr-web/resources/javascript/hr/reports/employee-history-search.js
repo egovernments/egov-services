@@ -5,15 +5,16 @@ class EmployeeReport extends React.Component {
     this.state = {
         "result": [],
         "searchSet": {
-            "employeeCode": "",
-            "department": "",
-            "designation": "",
+            "code": "",
+            "departmentId": "",
+            "designationId": "",
             "employeeType": "",
             "employeeStatus": ""
         },
         "employeeTypes": [],
         "departments": [],
         "designations": [],
+        "status":[],
         "isSearchClicked": false
     };
     this.handleChange = this.handleChange.bind(this);
@@ -45,11 +46,18 @@ class EmployeeReport extends React.Component {
       var employeeType = [];
     }
 
+    var employeeStatusList;
+
+    getDropdown("employeeStatus", function(res) {
+      employeeStatusList = res;
+    });
+
      this.setState({
          ...this.state,
          departments: Object.assign([], assignments_department),
          designations: Object.assign([], assignments_designation),
          employeeTypes: Object.assign([], employeeType),
+         status: Object.assign([], employeeStatusList),
          assignments_department,
          assignments_designation
 
@@ -84,25 +92,30 @@ class EmployeeReport extends React.Component {
   }
 
   searchEmployee (e) {
+    var _this = this;
     e.preventDefault();
-    var result;
+    $('#employeeTable').DataTable().destroy();
+
     try {
-        result = commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId,pageSize:500}).responseJSON["Employee"] || [];
+        commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId,pageSize:500}, function(err, res) {
+          if(res && res.Employee) {
+            _this.setState({
+              ..._this.state,
+                isSearchClicked: true,
+                result : res.Employee
+            })
+          }
+        });
     } catch (e) {
         result = [];
         console.log(e);
     }
-    this.setState({
-        ...this.state,
-        isSearchClicked: true,
-        result: result
-    })
   }
 
   render() {
     let {handleChange, searchEmployee, closeWindow} = this;
-    let {result, employeeTypes, departments, designations,assignments_designation,assignments_department} = this.state;
-    let {employeeCode, department, designation, employeeType, employeeStatus} = this.state.searchSet;
+    let {result, employeeTypes, departments, status, employeeStatusList, designations,assignments_designation,assignments_department} = this.state;
+    let {code, departmentId, designationId, employeeType, employeeStatus} = this.state.searchSet;
 
     const renderOptions = function(list)
     {
@@ -111,7 +124,7 @@ class EmployeeReport extends React.Component {
             return list.map((item)=>
             {
                 return (<option key={item.id} value={item.id}>
-                        {item.name}
+                        {item.name?item.name:item.code}
                     </option>)
             })
         }
@@ -125,7 +138,7 @@ class EmployeeReport extends React.Component {
                     <td>{item.name}</td>
                     <td data-label="designation">{getNameById(assignments_designation,item.assignments[0].designation)}</td>
                     <td data-label="department">{getNameById(assignments_department,item.assignments[0].department)}</td>
-                    <td><a href="#" Employee>Employee </a></td>
+                    <td><a href={"app/hr/reports/employee-history-report.html?id=" + item.id} >Employee History </a></td>
                 </tr>
             )
         })
@@ -170,11 +183,11 @@ class EmployeeReport extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for="">Department </label>
+                                        <label htmlFor="">Department </label>
                                     </div>
                                     <div className="col-sm-6">
                                       <div className="styled-select">
-                                        <select id="department" value={department} onChange={(e) => {handleChange(e, "department")}}>
+                                        <select id="departmentId" value={departmentId} onChange={(e) => {handleChange(e, "departmentId")}}>
                                             <option value="">Select department</option>
                                             {renderOptions(departments)}
                                         </select>
@@ -185,11 +198,11 @@ class EmployeeReport extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for="">Designation </label>
+                                        <label htmlFor="">Designation </label>
                                     </div>
                                     <div className="col-sm-6">
                                       <div className="styled-select">
-                                        <select id="designation" value={designation} onChange={(e) => {handleChange(e, "designation")}}>
+                                        <select id="designationId" value={designationId} onChange={(e) => {handleChange(e, "designationId")}}>
                                             <option value="">Select Designation</option>
                                             {renderOptions(designations)}
                                         </select>
@@ -202,17 +215,17 @@ class EmployeeReport extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for="">Employee Code/Name </label>
+                                        <label htmlFor="">Employee Code/Name </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <input id="employeeCode" type="text" value={employeeCode} onChange={(e) => {handleChange(e, "employeeCode")}}/>
+                                        <input id="code" type="text" value={code} onChange={(e) => {handleChange(e, "code")}}/>
                                     </div>
                                 </div>
                             </div>
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for="">Employee Type </label>
+                                        <label htmlFor="">Employee Type </label>
                                     </div>
                                     <div className="col-sm-6">
                                       <div className="styled-select">
@@ -229,10 +242,15 @@ class EmployeeReport extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for="">Status </label>
+                                        <label htmlFor="">Status </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <input id="employeeStatus" type="text" value={employeeStatus} onChange={(e) => {handleChange(e, "employeeStatus")}}/>
+                                      <div className="styled-select">
+                                        <select id="employeeStatus" value={employeeStatus} onChange={(e) => {handleChange(e, "employeeStatus")}}>
+                                          <option value="">Select EmployeeStatus</option>
+                                            {renderOptions(status)}
+                                        </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -45,7 +45,7 @@ renderTimePicker = (item) => {
 							size='sm'
 							inputFormat='h:mm A'
 							inputProps={{
-								"placeholder": "hh:mm A",
+								"placeholder": "h:mm A",
 								"id": item.jsonPath.split(".").join("-")
 							}}
 							defaultText=""

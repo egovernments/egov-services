@@ -57,9 +57,19 @@ export default class assetImmovableReport extends Component {
 	 }
 }
 
+	printAttributesVal = (attributes, key)=> {
+		let _values = JSON.parse(attributes);
+		for (var i = 0; i < _values.length; i++) {
+			if (_values[i].key.toLowerCase() == key.toLowerCase()) {
+				return _values[i].value;
+			}
+		}
+		return "";
+	}
+
 
 	render () {
-		let {convertToDate,numberWithCommas}= this;
+		let {convertToDate,numberWithCommas,printAttributesVal}= this;
 		return (
 			<Card className="uiCard">
 			    <CardHeader title="" />
@@ -107,7 +117,7 @@ export default class assetImmovableReport extends Component {
 												<b>जमिनीसह , इमारत , वृक्ष , कोणतेही असल्यास , संपादित केलेली </b>
 										</td>
 										<td colSpan={3} style={{textAlign: "left"}}>
-												<b>{"N/A"}</b>
+												<b>{}</b>
 										</td>
 									</tbody>
 
@@ -122,7 +132,7 @@ export default class assetImmovableReport extends Component {
 												<b>इमारत , वृक्ष संपादित करण्याकरिता देण्यात आलेले मूल्य </b>
 										</td>
 										<td colSpan={3} style={{textAlign: "left"}}>
-												<b>{"N/A"}</b>
+												<b>{}</b>
 										</td>
 									</tbody>
 
@@ -132,13 +142,13 @@ export default class assetImmovableReport extends Component {
 															<b>करारनाम्याचा  संदर्भ  क्रमांक</b>
 													</td>
 													<td colSpan={3} style={{textAlign: "left"}} >
-															<b>{"N/A"}</b>
+															<b>{this.props.data[45] ? printAttributesVal(this.props.data[45], "Agreement Reference No") : ""}</b>
 													</td>
 													<td colSpan={3} style={{textAlign: "left"}}>
 															<b>त्यावर स्थिरमत्ता नोंदवहीचा संदर्भ क्रमांक</b>
 													</td>
 													<td colSpan={3} style={{textAlign: "left"}}>
-															<b>{"N/A"}</b>
+															<b>{}</b>
 													</td>
 											</tr>
 									</tbody>
@@ -148,7 +158,7 @@ export default class assetImmovableReport extends Component {
 												<b>उद्देश</b>
 										</td>
 										<td colSpan={3} style={{textAlign: "left"}}>
-												<b>{"N/A"}</b>
+												<b>{this.props.data[45] ? printAttributesVal(this.props.data[45], "Purpose") : ""}</b>
 										</td>
 										<td colSpan={3} style={{textAlign: "left"}}>
 												<b>राखून ठेवलेली प्रतिभूती ठेव</b>
@@ -178,7 +188,7 @@ export default class assetImmovableReport extends Component {
 												<b>जमिनीचे क्षेत्र</b>
 										</td>
 										<td colSpan={3} style={{textAlign: "left"}}>
-												<b>{"N/A"}</b>
+												<b>{this.props.data[45] ? printAttributesVal(this.props.data[45], "Area of Land") : ""}</b>
 										</td>
 										<td colSpan={3} style={{textAlign: "left"}}>
 												<b>दिनांक</b>
@@ -220,7 +230,7 @@ export default class assetImmovableReport extends Component {
 												<b>पट्ट्याने घेतली आहे / मालकीची आहे किंवा कसे</b>
 										</td>
 										<td colSpan={3} style={{textAlign: "left"}}>
-												<b>{"NA"}</b>
+												<b>{this.props.data[45] ? printAttributesVal(this.props.data[45], "Holding Type") : ""}</b>
 										</td>
 										<td colSpan={6} style={{textAlign: "left"}}>
 												<b> ज्यास मत्ता विकण्यात आली त्या व्यक्तीचे नाव</b>
@@ -234,7 +244,7 @@ export default class assetImmovableReport extends Component {
 													<b>जमिनीचा सर्वक्षण क्रमांक</b>
 											</td>
 											<td colSpan={3} style={{textAlign: "left"}}>
-													<b>{"NA"}</b>
+													<b>{this.props.data[45] ? printAttributesVal(this.props.data[45], "Survey Number") : ""}</b>
 											</td>
 											<td rowSpan={4} colSpan={6} style={{textAlign: "left"}}>
 													<b>{this.props.data[39]?this.props.data[39]:""}</b>
@@ -369,7 +379,7 @@ export default class assetImmovableReport extends Component {
 													<b>{numberWithCommas(this.props.data[20]?this.props.data[20]:"")}</b>
 											</td>
 											<td style={{textAlign: "center"}} >
-													<b>{"N/A"}</b>
+													<b>{}</b>
 											</td>
 											<td style={{textAlign: "center"}} >
 													<b>{convertToDate(this.props.data[27]?this.props.data[27]:"")}</b>
@@ -393,10 +403,10 @@ export default class assetImmovableReport extends Component {
 													<b>{this.props.data[25]?this.props.data[25]:""}</b>
 											</td>
 											<td style={{textAlign: "center"}} >
-													<b>{"NA"}</b>
+													<b>{}</b>
 											</td>
 											<td style={{textAlign: "center"}} >
-													<b>{"NA"}</b>
+													<b>{}</b>
 											</td>
 
 									</tr>

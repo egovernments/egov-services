@@ -324,7 +324,7 @@ getVal = (path,isDate) => {
              + _date.getFullYear();
   }
 
-  return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ? (val + "") : "";
+  return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ? ((val === true || val === "true" ? "Yes" : (val === "false" || val === false ? "No" : val )) + "") : "";
 }
 
 printer = () => {

@@ -1915,7 +1915,7 @@ var localization_EN_Data = {
     "ac.create.Closing.Date": "Closing Date",
     "ac.create.Closing.written.Down.Value": "Closing written Down Value",
     "ac.create.Asset.Category": "Asset Category",
-    "ac.create.No.of.Quantity": "No of Quantity",
+    "ac.create.No.of.Quantity": "No. or Quantity",
     "ac.transaction.gd.title": "Generate Depreciation",
     "ac.create.Date.of.Depreciation": "Date of Depreciation",
     "ac.create.Asset.SubCategory": "Asset Sub Category",

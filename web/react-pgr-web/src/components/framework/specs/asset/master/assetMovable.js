@@ -130,18 +130,29 @@ var dat = {
               "requiredErrMsg": "",
               "patternErrMsg": ""
             },
-            {
-  						"name": "OriginalValueofAsset",
-  						"jsonPath": "Asset.originalValue",
-  						"label": "ac.create.Original.Value.of.Asset",
-  						"pattern": "",
-  						"type": "number",
-  						"url": "",
-  						"isRequired": true,
-  						"isDisabled": false,
-  						"requiredErrMsg": "",
-  						"patternErrMsg": ""
-  					},
+						{
+							"name": "ModeofAcquisition",
+							"jsonPath": "Asset.modeOfAcquisition",
+							"label": "ac.create.Mode.of.Acquisition",
+							"pattern": "",
+							"type": "singleValueList",
+							"url": "",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "",
+							"defaultValue": [  {
+							"key": "ACQUIRED",
+							"value": "ACQUIRED"
+						},  {
+							"key": "CONSTRUCTION",
+							"value": "CONSTRUCTION"
+						},  {
+							"key": "PURCHASE",
+							"value": "PURCHASE"
+						}
+					]
+				}
 				]},
       {
 				"label": "ac.create.Location.Details",
@@ -244,28 +255,17 @@ var dat = {
             "patternErrMsg": ""
           },
 					{
-						"name": "ModeofAcquisition",
-						"jsonPath": "Asset.modeOfAcquisition",
-						"label": "ac.create.Mode.of.Acquisition",
+						"name": "OriginalValueofAsset",
+						"jsonPath": "Asset.originalValue",
+						"label": "ac.create.Original.Value.of.Asset",
 						"pattern": "",
-						"type": "singleValueList",
+						"type": "number",
 						"url": "",
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
-						"patternErrMsg": "",
-						"defaultValue": [  {
-						"key": "ACQUIRED",
-						"value": "ACQUIRED"
-					},  {
-						"key": "CONSTRUCTION",
-						"value": "CONSTRUCTION"
-					},  {
-						"key": "PURCHASE",
-						"value": "PURCHASE"
-					}
-				]
-			},
+						"patternErrMsg": ""
+					},
           {
             "name": "FromWhomAcquired",
             "jsonPath": "Asset.acquiredFrom",
@@ -335,7 +335,7 @@ var dat = {
             "jsonPath": "Asset.warrantyExpiryDate",
             "label": "ac.create.Warranty.expiry.date",
             "pattern": "",
-            "type": "datePicker", 
+            "type": "datePicker",
             "url": "",
             "isRequired": true,
             "isDisabled": false,

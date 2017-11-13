@@ -33,7 +33,7 @@ public class ReceiptNoteApiEntity {
 
 	private Long supplierBillDate = null;
 
-	private Boolean challanNo = false;
+	private String challanNo = null;
 
 	private Long challanDate = null;
 

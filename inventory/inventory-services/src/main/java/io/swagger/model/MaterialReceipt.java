@@ -1,29 +1,30 @@
 package io.swagger.model;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.model.AuditDetails;
+import io.swagger.model.MaterialReceiptDetail;
+import io.swagger.model.Store;
+import io.swagger.model.Supplier;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
  * Hold the material receipt specific information.
  */
 @ApiModel(description = "Hold the material receipt specific information.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-08T06:17:26.594Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-13T06:33:50.051Z")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -40,8 +41,17 @@ public class MaterialReceipt   {
   @JsonProperty("mrnStatus")
   private String mrnStatus = null;
 
+  @JsonProperty("manualReceiptNumber")
+  private String manualReceiptNumber = null;
+
   @JsonProperty("receiptDate")
   private Long receiptDate = null;
+
+  @JsonProperty("financialYear")
+  private String financialYear = null;
+
+  @JsonProperty("manualReceiptDate")
+  private Long manualReceiptDate = null;
 
   /**
    * Different receipt types enumeration. By default the value will be \"PURCHASE RECEIPT\".
@@ -131,7 +141,7 @@ public class MaterialReceipt   {
   private Long supplierBillDate = null;
 
   @JsonProperty("challanNo")
-  private Boolean challanNo = null;
+  private String challanNo = null;
 
   @JsonProperty("challanDate")
   private Long challanDate = null;
@@ -213,14 +223,10 @@ public class MaterialReceipt   {
     this.mrnNumber = mrnNumber;
     return this;
   }
-  
-  public MaterialReceipt mrnstatus(String mrnStatus) {
+  public MaterialReceipt mrnStatus(String mrnStatus) {
 	    this.mrnStatus = mrnStatus;
 	    return this;
 	  }
-  
-  
-
    /**
    * Unique number generated internally on creating a receipt.
    * @return mrnNumber
@@ -237,13 +243,33 @@ public class MaterialReceipt   {
     this.mrnNumber = mrnNumber;
   }
   
-  public String getmrnStatus() {
+  public String getMrnStatus() {
 	    return mrnStatus;
 	  }
-
-	  public void setMrnStatus(String mrnStatus) {
+  
+  public void setMrnStatus(String mrnStatus) {
 	    this.mrnStatus = mrnStatus;
 	  }
+
+  public MaterialReceipt manualReceiptNumber(String manualReceiptNumber) {
+    this.manualReceiptNumber = manualReceiptNumber;
+    return this;
+  }
+
+   /**
+   * Manual Receipt Number, applicable only for Opening Balanace Entry.
+   * @return manualReceiptNumber
+  **/
+  @ApiModelProperty(value = "Manual Receipt Number, applicable only for Opening Balanace Entry.")
+
+ @Size(max=128)
+  public String getManualReceiptNumber() {
+    return manualReceiptNumber;
+  }
+
+  public void setManualReceiptNumber(String manualReceiptNumber) {
+    this.manualReceiptNumber = manualReceiptNumber;
+  }
 
   public MaterialReceipt receiptDate(Long receiptDate) {
     this.receiptDate = receiptDate;
@@ -264,6 +290,46 @@ public class MaterialReceipt   {
 
   public void setReceiptDate(Long receiptDate) {
     this.receiptDate = receiptDate;
+  }
+
+  public MaterialReceipt financialYear(String financialYear) {
+    this.financialYear = financialYear;
+    return this;
+  }
+
+   /**
+   * This field holds the financial year information for Opening Balance Entry.
+   * @return financialYear
+  **/
+  @ApiModelProperty(value = "This field holds the financial year information for Opening Balance Entry.")
+
+
+  public String getFinancialYear() {
+    return financialYear;
+  }
+
+  public void setFinancialYear(String financialYear) {
+    this.financialYear = financialYear;
+  }
+
+  public MaterialReceipt manualReceiptDate(Long manualReceiptDate) {
+    this.manualReceiptDate = manualReceiptDate;
+    return this;
+  }
+
+   /**
+   * Manual Receipt Date, applicable only for Opening Balance Entry.
+   * @return manualReceiptDate
+  **/
+  @ApiModelProperty(value = "Manual Receipt Date, applicable only for Opening Balance Entry.")
+
+
+  public Long getManualReceiptDate() {
+    return manualReceiptDate;
+  }
+
+  public void setManualReceiptDate(Long manualReceiptDate) {
+    this.manualReceiptDate = manualReceiptDate;
   }
 
   public MaterialReceipt receiptType(ReceiptTypeEnum receiptType) {
@@ -319,6 +385,7 @@ public class MaterialReceipt   {
   @ApiModelProperty(required = true, value = "The unique code of the store that is receiving the materials.")
   @NotNull
 
+  @Valid
 
   public Store getReceivingStore() {
     return receivingStore;
@@ -410,7 +477,7 @@ public class MaterialReceipt   {
     this.supplierBillDate = supplierBillDate;
   }
 
-  public MaterialReceipt challanNo(Boolean challanNo) {
+  public MaterialReceipt challanNo(String challanNo) {
     this.challanNo = challanNo;
     return this;
   }
@@ -421,12 +488,12 @@ public class MaterialReceipt   {
   **/
   @ApiModelProperty(value = "The challan number associated with this receipt.")
 
-
-  public Boolean getChallanNo() {
+ @Size(max=52)
+  public String getChallanNo() {
     return challanNo;
   }
 
-  public void setChallanNo(Boolean challanNo) {
+  public void setChallanNo(String challanNo) {
     this.challanNo = challanNo;
   }
 
@@ -695,7 +762,10 @@ public class MaterialReceipt   {
         Objects.equals(this.tenantId, materialReceipt.tenantId) &&
         Objects.equals(this.mrnNumber, materialReceipt.mrnNumber) &&
         Objects.equals(this.mrnStatus, materialReceipt.mrnStatus) &&
+        Objects.equals(this.manualReceiptNumber, materialReceipt.manualReceiptNumber) &&
         Objects.equals(this.receiptDate, materialReceipt.receiptDate) &&
+        Objects.equals(this.financialYear, materialReceipt.financialYear) &&
+        Objects.equals(this.manualReceiptDate, materialReceipt.manualReceiptDate) &&
         Objects.equals(this.receiptType, materialReceipt.receiptType) &&
         Objects.equals(this.receiptPurpose, materialReceipt.receiptPurpose) &&
         Objects.equals(this.receivingStore, materialReceipt.receivingStore) &&
@@ -720,7 +790,7 @@ public class MaterialReceipt   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, mrnNumber, mrnStatus, receiptDate, receiptType, receiptPurpose, receivingStore, issueingStore, supplier, supplierBillNo, supplierBillDate, challanNo, challanDate, description, receivedBy, designation, bill, inspectedBy, inspectionDate, inspectionRemarks, totalReceiptValue, receiptDetails, fileStoreId, auditDetails);
+    return Objects.hash(id, tenantId, mrnNumber,mrnStatus, manualReceiptNumber, receiptDate, financialYear, manualReceiptDate, receiptType, receiptPurpose, receivingStore, issueingStore, supplier, supplierBillNo, supplierBillDate, challanNo, challanDate, description, receivedBy, designation, bill, inspectedBy, inspectionDate, inspectionRemarks, totalReceiptValue, receiptDetails, fileStoreId, auditDetails);
   }
 
   @Override
@@ -732,7 +802,10 @@ public class MaterialReceipt   {
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    mrnNumber: ").append(toIndentedString(mrnNumber)).append("\n");
     sb.append("    mrnStatus: ").append(toIndentedString(mrnStatus)).append("\n");
+    sb.append("    manualReceiptNumber: ").append(toIndentedString(manualReceiptNumber)).append("\n");
     sb.append("    receiptDate: ").append(toIndentedString(receiptDate)).append("\n");
+    sb.append("    financialYear: ").append(toIndentedString(financialYear)).append("\n");
+    sb.append("    manualReceiptDate: ").append(toIndentedString(manualReceiptDate)).append("\n");
     sb.append("    receiptType: ").append(toIndentedString(receiptType)).append("\n");
     sb.append("    receiptPurpose: ").append(toIndentedString(receiptPurpose)).append("\n");
     sb.append("    receivingStore: ").append(toIndentedString(receivingStore)).append("\n");

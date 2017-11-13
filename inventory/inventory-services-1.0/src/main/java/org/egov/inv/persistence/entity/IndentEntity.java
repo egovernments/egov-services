@@ -62,12 +62,13 @@ public class IndentEntity {
 		indent.setIndentDate(this.indentDate);
 		indent.setIndentNumber(this.indentNumber);
 		indent.setIndentType(IndentTypeEnum.valueOf(this.indentType));
-		indent.setIndentPurpose(IndentPurposeEnum.valueOf(this.indentPurpose));
-		indent.setInventoryType(InventoryTypeEnum.valueOf(this.inventoryType));
+		indent.setIndentPurpose(IndentPurposeEnum.fromValue(this.indentPurpose));
+		indent.setInventoryType(InventoryTypeEnum.fromValue(this.inventoryType));
 		indent.setExpectedDeliveryDate(this.expectedDeliveryDate);
 		indent.setMaterialHandOverTo(this.materialHandOverTo);
 		indent.setNarration(this.narration);
-		indent.setIndentStatus(IndentStatusEnum.valueOf(this.indentStatus));
+		if(indentStatus!=null)
+		indent.setIndentStatus(IndentStatusEnum.fromValue(this.indentStatus));
 		indent.setDepartment(new Department().id(departmentId));
 		indent.setTotalIndentValue(this.totalIndentValue);
 		indent.setFileStoreId(this.fileStoreId);

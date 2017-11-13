@@ -284,6 +284,7 @@ serviceMaps:
             - jsonPath: $.materialStoreMappings.*.store.code
             - jsonPath: $.materialStoreMappings.*.auditDetails.tenantId
 
+<<<<<<< HEAD
 
     - version: 1.0
       name: material store mapping delete
@@ -444,3 +445,77 @@ serviceMaps:
 
 
 
+=======
+    - version: 1
+      name: Indents create
+      description: create Indents in ulb
+      fromTopic: inv-indents-save-topic
+      queryMaps:
+        - query: >-
+            insert into indent (issueStore, indentStore, indentDate, indentNumber, indentType, indentPurpose, inventoryType, 
+            expectedDeliveryDate, materialHandOverTo, narration, indentStatus, departmentId, totalIndentValue, fileStoreId,
+             indentCreatedBy, designation, stateId, createdBy, lastModifiedBy, createdTime, lastModifiedTime, id, tenantId) 
+             values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ;
+          basePath: $.indents.*
+          jsonMaps:
+            - jsonPath: $.indents.*.issueStore 
+            - jsonPath: $.indents.*.indentStore 
+            - jsonPath: $.indents.*.indentDate 
+            - jsonPath: $.indents.*.indentNumber 
+            - jsonPath: $.indents.*.indentType 
+            - jsonPath: $.indents.*.indentPurpose 
+            - jsonPath: $.indents.*.inventoryType 
+            - jsonPath: $.indents.*.expectedDeliveryDate 
+              dbType: LONG
+            - jsonPath: $.indents.*.materialHandOverTo 
+            - jsonPath: $.indents.*.narration 
+            - jsonPath: $.indents.*.indentStatus 
+            - jsonPath: $.indents.*.departmentId 
+            - jsonPath: $.indents.*.totalIndentValue 
+              dbType: DOUBLE
+            - jsonPath: $.indents.*.fileStoreId 
+            - jsonPath: $.indents.*.indentCreatedBy 
+            - jsonPath: $.indents.*.designation 
+            - jsonPath: $.indents.*.stateId 
+            - jsonPath: $.indents.*.createdBy 
+            - jsonPath: $.indents.*.lastModifiedBy 
+            - jsonPath: $.indents.*.createdTime 
+              dbType: LONG
+            - jsonPath: $.indents.*.lastModifiedTime 
+              dbType: LONG
+            - jsonPath: $.indents.*.id 
+            - jsonPath: $.indents.*.tenantId
+        - query: >-
+            insert into indentdetail (material, uom, parentIndentLine, orderNumber, projectCode, indent, asset, indentQuantity, 
+            totalProcessedQuantity, indentIssuedQuantity, poOrderedQuantity, interstoreRequestQuantity, deliveryTerms, remarks, id, tenantId)
+             values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
+          basePath: $.indents.indentDetails.*
+          jsonMaps:
+            - jsonPath: $.indents.*.issueStore 
+            - jsonPath: $.indents.*.indentStore 
+            - jsonPath: $.indents.*.indentDate 
+            - jsonPath: $.indents.*.indentNumber 
+            - jsonPath: $.indents.*.indentType 
+            - jsonPath: $.indents.*.indentPurpose 
+            - jsonPath: $.indents.*.inventoryType 
+            - jsonPath: $.indents.*.expectedDeliveryDate 
+              dbType: LONG
+            - jsonPath: $.indents.*.materialHandOverTo 
+            - jsonPath: $.indents.*.narration 
+            - jsonPath: $.indents.*.indentStatus 
+            - jsonPath: $.indents.*.departmentId 
+            - jsonPath: $.indents.*.totalIndentValue 
+              dbType: DOUBLE
+            - jsonPath: $.indents.*.fileStoreId 
+            - jsonPath: $.indents.*.indentCreatedBy 
+            - jsonPath: $.indents.*.designation 
+            - jsonPath: $.indents.*.stateId 
+            - jsonPath: $.indents.*.createdBy 
+            - jsonPath: $.indents.*.lastModifiedBy 
+            - jsonPath: $.indents.*.createdTime 
+              dbType: LONG
+            - jsonPath: $.indents.*.lastModifiedTime 
+              dbType: LONG
+            - jsonPath: $.indents.*.id 
+            - jsonPath: $.indents.*.tenantId
+>>>>>>> stash

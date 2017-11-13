@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
@@ -353,11 +354,32 @@ public abstract class JdbcRepository {
     }
     
     public String getSequence(Object ob) {
+    	 
         String seqQuery = "select nextval('seq_" + ob.getClass().getSimpleName() + "')";
         return String.valueOf(jdbcTemplate.queryForObject(seqQuery, Long.class) + 1);
     }
+    /**
+     * Pass the object you want to persist. 
+     * @param ob 
+     * @param count
+     * @return
+     */
+    public List<String> getSequence(Object ob,int count) {
+   	 
+        String seqQuery = "select nextval('seq_" + ob.getClass().getSimpleName() + "')  FROM GENERATE_SERIES(1,"+count+")";
+         List<String> ids = jdbcTemplate.queryForList(seqQuery, String.class) ;
+         return ids;
+    }
+    
+    public List<String> getSequence(String className,int count) {
+      	 
+        String seqQuery = "select nextval('seq_" + className + "')  FROM GENERATE_SERIES(1,"+count+")";
+         List<String> ids = jdbcTemplate.queryForList(seqQuery, String.class) ;
+         return ids;
+    }
 
-    @Transactional
+
+    @Transactional(propagation=Propagation.REQUIRES_NEW)
     public void createSequence(String seqName) {
         String seqQuery = "create sequence " + seqName + "";
         jdbcTemplate.execute(seqQuery);

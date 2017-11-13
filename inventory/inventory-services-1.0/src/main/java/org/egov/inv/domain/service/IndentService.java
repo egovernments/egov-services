@@ -4,17 +4,16 @@ import java.util.List;
 
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
+import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.Indent;
+import org.egov.inv.model.IndentDetail;
 import org.egov.inv.model.IndentRequest;
 import org.egov.inv.model.IndentResponse;
-import org.egov.inv.model.ResponseInfo.StatusEnum;
-import org.egov.inv.model.RequestInfo;
-import org.egov.inv.model.ResponseInfo;
+import org.egov.inv.model.IndentSearch;
 import org.egov.inv.persistence.repository.IndentJdbcRepository;
-import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -29,8 +28,7 @@ public class IndentService extends DomainService {
 	 * @Autowired private DepartmentRepository departmentRepository;
 	 */
 
-	@Autowired
-	protected LogAwareKafkaTemplate<String, Object> kafkaQue;
+	 
 	@Autowired
 	private IndentJdbcRepository indentRepository;
 	@Value("${inv.indents.save.topic}")
@@ -49,9 +47,21 @@ public class IndentService extends DomainService {
 		try {
 			List<Indent> indents = fetchRelated(indentRequest.getIndents());
 			validate(indents, Constants.ACTION_CREATE);
+		    List<String> sequenceNos = indentRepository.getSequence(Indent.class.getSimpleName(),indents.size());
+		    int i=0;
 			for (Indent b : indents) {
-				b.setId(indentRepository.getSequence(b));
-				// b.add();
+				b.setId(sequenceNos.get(i));
+				//move to id-gen with format <ULB short code>/<Store Code>/<fin. Year>/<serial No.>
+				b.setIndentNumber(sequenceNos.get(i));
+			    i++;
+			    int j=0;
+			    List<String> detailSequenceNos = indentRepository.getSequence(IndentDetail.class.getSimpleName(),indents.size()); 
+			    for(IndentDetail d : b.getIndentDetails())
+			    {
+			    	 d.setId(detailSequenceNos.get(j));
+			    	 d.setTenantId(b.getTenantId());
+			    	 j++;
+			    }
 			}
 			kafkaQue.send(saveTopic, saveKey, indentRequest);
 			
@@ -63,6 +73,36 @@ public class IndentService extends DomainService {
 			throw e;
 		}
 
+	}
+	@Transactional
+	public IndentResponse update(IndentRequest indentRequest) {
+
+		try {
+			List<Indent> indents = fetchRelated(indentRequest.getIndents());
+			validate(indents, Constants.ACTION_UPDATE);
+		   
+		    
+			 
+			kafkaQue.send(saveTopic, saveKey, indentRequest);
+			
+			IndentResponse response = new IndentResponse();
+			response.setIndents(indentRequest.getIndents());
+			response.setResponseInfo(getResponseInfo(indentRequest.getRequestInfo()));
+			return response;
+		} catch (CustomBindException e) {
+			throw e;
+		}
+
+	}
+	
+	 
+	public IndentResponse search(IndentSearch is) {
+		IndentResponse response=new IndentResponse();
+		 Pagination<Indent> search = indentRepository.search(is);
+		 response.setIndents(search.getPagedData());
+		// response.setPage(search.));
+		 return response;
+	
 	}
 	private void validate(List<Indent> indents, String method) {
 

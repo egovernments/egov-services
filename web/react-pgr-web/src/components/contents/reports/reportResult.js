@@ -460,7 +460,7 @@ class ShowField extends Component {
       return;
     }
     // let responseSearchParams = metaData.reportDetails.searchParams;
-    let result = `${metaData.reportDetails.summary}`;
+    let result = ( metaData && metaData.reportDetails &&  metaData.reportDetails.summary ) ? metaData.reportDetails.summary : "";
     // searchParams.map((search, index) => {
     //   let idx = index+1;
     //   let lastText = (idx == paramsLength);

@@ -226,7 +226,7 @@ const menuConvention={
 "Asset Management.Asset Reports.AssetImmovableRegister":"/report/asset/AssetImmovableRegister",
 "Asset Management.Asset Reports.AssetMovableRegister":"/report/asset/AssetMovableRegister",
 "Asset Management.Asset Reports.AssetSchedule":"/report/asset/AssetSchedule",
-"Asset Management.Asset Reports.AssetLandRegister":"/report/asset/AssetLandRegister",
+"Asset Management.Asset Reports.LandRegister":"/report/asset/LandRegister",
 //SWM
 "Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Create": "/create/vehiclefuellingdetails",
 "Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Search": "/search/vehiclefuellingdetails/view",

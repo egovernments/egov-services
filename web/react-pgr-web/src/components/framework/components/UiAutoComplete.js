@@ -145,7 +145,7 @@ class UiAutoComplete extends Component {
              disabled={item.isDisabled}
              errorText={this.props.fieldErrors[item.jsonPath]}
              onKeyUp={(e) => {
-             	this.props.handler({target: {value: (item.allowWrite ? e.target.value : "")}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
+             	//this.props.handler({target: {value: (item.allowWrite ? e.target.value : "")}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
              }}
              onNewRequest={(value,index) =>{
               this.props.handler({target: {value: value.key}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)

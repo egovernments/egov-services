@@ -195,7 +195,7 @@ public class DepreciationService {
 	private BigDecimal getAmountToBeDepreciated(DepreciationInputs depInputs, Long fromDate, Long toDate) {
 
 		// deciding the from date from the last depreciation date
-		if (depInputs.getLastDepreciationDate().compareTo(fromDate) >= 0) {
+		if (depInputs.getLastDepreciationDate()!=null && depInputs.getLastDepreciationDate().compareTo(fromDate) >= 0) {
 			fromDate = depInputs.getLastDepreciationDate();
 			fromDate += 3600000l; // adding one day in milli seconds to start depreciation from next day
 		} else if (depInputs.getDateOfCreation() > fromDate) {

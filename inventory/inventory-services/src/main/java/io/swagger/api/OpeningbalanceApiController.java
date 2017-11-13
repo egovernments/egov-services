@@ -52,7 +52,7 @@ public class OpeningbalanceApiController implements OpeningbalanceApi {
     {
     	List<MaterialReceipt> openbal = openingBalanceService.create(openingBalance, tenantId);
 		OpeningBalanceResponse materialResponse = buildOpenBalanceResponse(openbal, openingBalance.getRequestInfo());
-		        return new ResponseEntity<OpeningBalanceResponse>(materialResponse,HttpStatus.CREATED);
+		        return new ResponseEntity<OpeningBalanceResponse>(materialResponse,HttpStatus.OK);
     }
     
     public ResponseEntity<OpeningBalanceResponse> openingbalanceUpdatePost(
@@ -61,7 +61,7 @@ public class OpeningbalanceApiController implements OpeningbalanceApi {
     		@Valid @RequestBody OpeningBalanceRequest openingBalanace) {
     	List<MaterialReceipt> openbal = openingBalanceService.update(openingBalanace, tenantId);
 		OpeningBalanceResponse materialResponse = buildOpenBalanceResponse(openbal, openingBalanace.getRequestInfo());
-		return new ResponseEntity<OpeningBalanceResponse>(materialResponse,HttpStatus.CREATED);
+		return new ResponseEntity<OpeningBalanceResponse>(materialResponse,HttpStatus.OK);
 
     }
     

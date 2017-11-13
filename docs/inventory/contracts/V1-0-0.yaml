@@ -2113,13 +2113,13 @@ definitions:
       properties:
         RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        MaterialReceipt:
+        materialReceipt:
           type: array
           items:
             $ref: '#/definitions/MaterialReceipt'
       required:
       - RequestInfo
-      - MaterialReceipt
+      - materialReceipt
             
     OpeningBalanceResponse:
       type: object
@@ -2127,7 +2127,7 @@ definitions:
       properties:
         ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        MaterialReceipt:
+        materialReceipt:
           type: array
           items:
             $ref: '#/definitions/MaterialReceipt'  
@@ -3225,10 +3225,6 @@ definitions:
       description: |
         This object holds the store mapping details information.
       properties:  
-        id:
-          type: string
-          description: |
-            Unique Identifier of the Store Mapping      
         store:
           $ref: "#/definitions/Store"
         chartofAccount:

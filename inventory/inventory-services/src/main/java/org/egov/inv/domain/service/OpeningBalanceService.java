@@ -1,5 +1,6 @@
 package org.egov.inv.domain.service;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -42,12 +43,14 @@ public class OpeningBalanceService {
 
 		headerRequest.getMaterialReceipt().stream().forEach(materialReceipt -> {
 			materialReceipt.setId(openingBalanceRepository.getSequence(materialReceipt));
-			materialReceipt.setMrnNumber(generateTargetNumber(materialReceipt.getTenantId(), headerRequest.getRequestInfo()));
-			
+			materialReceipt.setMrnStatus("CREATED");
+			materialReceipt.setMrnNumber(openingBalanceRepository.getSequence(materialReceipt));
 			materialReceipt.getReceiptDetails().stream().forEach(detail ->{
 				detail.setId(Integer.valueOf(openingBalanceRepository.getSequence(detail)));
+				detail.setTenantId(tenantId);
 				detail.getReceiptDetailsAddnInfo().stream().forEach(addinfo -> {
 					addinfo.setId(Integer.valueOf(openingBalanceRepository.getSequence(addinfo)));
+					addinfo.setTenantId(tenantId);
 				});
 			});
 		});
@@ -71,9 +74,9 @@ public class OpeningBalanceService {
 
 	}
 	
+	
 	private String generateTargetNumber(String tenantId, RequestInfo requestInfo) {
 
 		return idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForTargetNumPath);
 	}
-
 }

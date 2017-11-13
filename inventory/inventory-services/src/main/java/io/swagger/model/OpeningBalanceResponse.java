@@ -1,24 +1,26 @@
 package io.swagger.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-
-import javax.validation.Valid;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.model.MaterialReceipt;
+import io.swagger.model.ResponseInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
  * Hold the Opening Balance Response information
  */
 @ApiModel(description = "Hold the Opening Balance Response information")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T05:08:03.613Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-13T06:33:50.051Z")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,7 +28,7 @@ public class OpeningBalanceResponse   {
   @JsonProperty("ResponseInfo")
   private org.egov.common.contract.response.ResponseInfo responseInfo = null;
 
-  @JsonProperty("MaterialReceipt")
+  @JsonProperty("materialReceipt")
   private List<MaterialReceipt> materialReceipt = null;
 
   public OpeningBalanceResponse responseInfo(org.egov.common.contract.response.ResponseInfo responseInfo) {

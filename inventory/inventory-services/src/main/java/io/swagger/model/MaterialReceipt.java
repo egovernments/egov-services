@@ -36,6 +36,9 @@ public class MaterialReceipt   {
 
   @JsonProperty("mrnNumber")
   private String mrnNumber = null;
+  
+  @JsonProperty("mrnStatus")
+  private String mrnStatus = null;
 
   @JsonProperty("receiptDate")
   private Long receiptDate = null;
@@ -210,6 +213,13 @@ public class MaterialReceipt   {
     this.mrnNumber = mrnNumber;
     return this;
   }
+  
+  public MaterialReceipt mrnstatus(String mrnStatus) {
+	    this.mrnStatus = mrnStatus;
+	    return this;
+	  }
+  
+  
 
    /**
    * Unique number generated internally on creating a receipt.
@@ -226,6 +236,14 @@ public class MaterialReceipt   {
   public void setMrnNumber(String mrnNumber) {
     this.mrnNumber = mrnNumber;
   }
+  
+  public String getmrnStatus() {
+	    return mrnStatus;
+	  }
+
+	  public void setMrnStatus(String mrnStatus) {
+	    this.mrnStatus = mrnStatus;
+	  }
 
   public MaterialReceipt receiptDate(Long receiptDate) {
     this.receiptDate = receiptDate;
@@ -676,6 +694,7 @@ public class MaterialReceipt   {
     return Objects.equals(this.id, materialReceipt.id) &&
         Objects.equals(this.tenantId, materialReceipt.tenantId) &&
         Objects.equals(this.mrnNumber, materialReceipt.mrnNumber) &&
+        Objects.equals(this.mrnStatus, materialReceipt.mrnStatus) &&
         Objects.equals(this.receiptDate, materialReceipt.receiptDate) &&
         Objects.equals(this.receiptType, materialReceipt.receiptType) &&
         Objects.equals(this.receiptPurpose, materialReceipt.receiptPurpose) &&
@@ -701,7 +720,7 @@ public class MaterialReceipt   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, mrnNumber, receiptDate, receiptType, receiptPurpose, receivingStore, issueingStore, supplier, supplierBillNo, supplierBillDate, challanNo, challanDate, description, receivedBy, designation, bill, inspectedBy, inspectionDate, inspectionRemarks, totalReceiptValue, receiptDetails, fileStoreId, auditDetails);
+    return Objects.hash(id, tenantId, mrnNumber, mrnStatus, receiptDate, receiptType, receiptPurpose, receivingStore, issueingStore, supplier, supplierBillNo, supplierBillDate, challanNo, challanDate, description, receivedBy, designation, bill, inspectedBy, inspectionDate, inspectionRemarks, totalReceiptValue, receiptDetails, fileStoreId, auditDetails);
   }
 
   @Override
@@ -712,6 +731,7 @@ public class MaterialReceipt   {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    mrnNumber: ").append(toIndentedString(mrnNumber)).append("\n");
+    sb.append("    mrnStatus: ").append(toIndentedString(mrnStatus)).append("\n");
     sb.append("    receiptDate: ").append(toIndentedString(receiptDate)).append("\n");
     sb.append("    receiptType: ").append(toIndentedString(receiptType)).append("\n");
     sb.append("    receiptPurpose: ").append(toIndentedString(receiptPurpose)).append("\n");

@@ -104,6 +104,14 @@ public class LeaveApplicationQueryBuilder {
                 + "(nextval('seq_egeis_leaveapplication'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     }
 
+    public static String insertCompoffLeaveApplicationQuery() {
+        return "INSERT INTO egeis_leaveapplication(id, applicationnumber, employeeid, "
+                + " fromdate, todate, compensatoryfordate, leavedays, availabledays,"
+                + " halfdays, firsthalfleave, reason, status, stateid, createdby, createddate, "
+                + "lastmodifiedby, lastmodifieddate, tenantid) VALUES "
+                + "(nextval('seq_egeis_leaveapplication'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    }
+
     public static String updateLeaveApplicationQuery() {
         return "UPDATE egeis_leaveapplication SET applicationnumber=?, employeeid=?,"
                 + " leavetypeid=?, fromdate=?, todate=?, compensatoryfordate=?, leavedays=?,"

@@ -233,7 +233,10 @@ public class LeaveApplicationService {
     }
 
     public LeaveApplicationRequest create(final LeaveApplicationRequest leaveApplicationRequest) {
-        return leaveApplicationRepository.saveLeaveApplication(leaveApplicationRequest);
+        if (leaveApplicationRequest.getLeaveApplication().size() > 0 && leaveApplicationRequest.getLeaveApplication().get(0).getLeaveType() != null)
+            return leaveApplicationRepository.saveLeaveApplication(leaveApplicationRequest);
+        else
+            return leaveApplicationRepository.saveCompoffLeaveApplication(leaveApplicationRequest);
     }
 
     public ResponseEntity<?> updateLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {

@@ -1012,7 +1012,7 @@
           "columns": []
         },
         {
-          "name": "Survey No. of Land",
+          "name": "Survey Number",
           "type": "Text",
           "isActive": true,
           "isMandatory": false,
@@ -1128,7 +1128,7 @@
           "columns": []
         },
         {
-          "name": "Survey No. of Land",
+          "name": "Survey Number",
           "type": "Text",
           "isActive": true,
           "isMandatory": false,
@@ -1244,7 +1244,7 @@
           "columns": []
         },
         {
-          "name": "Survey No. of Land",
+          "name": "Survey Number",
           "type": "Text",
           "isActive": true,
           "isMandatory": false,
@@ -1360,7 +1360,7 @@
           "columns": []
         },
         {
-          "name": "Survey No. of Land",
+          "name": "Survey Number",
           "type": "Text",
           "isActive": true,
           "isMandatory": false,
@@ -1476,7 +1476,7 @@
           "columns": []
         },
         {
-          "name": "Survey No. of Land",
+          "name": "Survey Number",
           "type": "Text",
           "isActive": true,
           "isMandatory": false,
@@ -1592,7 +1592,7 @@
           "columns": []
         },
         {
-          "name": "Survey No. of Land",
+          "name": "Survey Number",
           "type": "Text",
           "isActive": true,
           "isMandatory": false,
@@ -1708,7 +1708,7 @@
           "columns": []
         },
         {
-          "name": "Survey No. of Land",
+          "name": "Survey Number",
           "type": "Text",
           "isActive": true,
           "isMandatory": false,
@@ -1824,7 +1824,7 @@
           "columns": []
         },
         {
-          "name": "Survey No. of Land",
+          "name": "Survey Number",
           "type": "Text",
           "isActive": true,
           "isMandatory": false,
@@ -1940,7 +1940,7 @@
           "columns": []
         },
         {
-          "name": "Survey No. of Land",
+          "name": "Survey Number",
           "type": "Text",
           "isActive": true,
           "isMandatory": false,

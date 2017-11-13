@@ -62,6 +62,9 @@ public class AbstractEstimateHelper {
 
 	@JsonProperty("budgetHead")
 	private String budgetHead = null;
+	
+	@JsonProperty("accountCode")
+	private String accountCode = null;
 
 	@JsonProperty("scheme")
 	private String scheme = null;
@@ -262,7 +265,7 @@ public class AbstractEstimateHelper {
 		abstractEstimate.setDpRemarks(this.dpRemarks);
 		abstractEstimate.setLandAssetRequired(this.landAssetRequired);
 		abstractEstimate.setNoOfLands(this.noOfLands);
-		
+		abstractEstimate.setAccountCode(this.accountCode);
 		BudgetGroup budgetGroup = new BudgetGroup();
 		budgetGroup.setName(this.budgetHead);
 		abstractEstimate.setBudgetGroup(budgetGroup);

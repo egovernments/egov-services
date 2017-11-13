@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import io.swagger.model.MaterialReceipt;
+import io.swagger.model.MaterialReceipt.ReceiptTypeEnum;
 import io.swagger.model.OpeningBalanceRequest;
 import io.swagger.model.Pagination;
 
@@ -44,7 +45,9 @@ public class OpeningBalanceService {
 		headerRequest.getMaterialReceipt().stream().forEach(materialReceipt -> {
 			materialReceipt.setId(openingBalanceRepository.getSequence(materialReceipt));
 			materialReceipt.setMrnStatus("CREATED");
-			materialReceipt.setMrnNumber(openingBalanceRepository.getSequence(materialReceipt));
+			//materialReceipt.setReceiptType();
+			materialReceipt.setReceiptType(ReceiptTypeEnum.valueOf("OPENING_BALANCE"));
+			materialReceipt.setMrnNumber(appendString(materialReceipt));
 			materialReceipt.getReceiptDetails().stream().forEach(detail ->{
 				detail.setId(Integer.valueOf(openingBalanceRepository.getSequence(detail)));
 				detail.setTenantId(tenantId);
@@ -79,4 +82,16 @@ public class OpeningBalanceService {
 
 		return idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForTargetNumPath);
 	}
+	
+	private String appendString(MaterialReceipt headerRequest)
+	{  
+	    Calendar cal = Calendar.getInstance();
+	    int year= cal.get(Calendar.YEAR);
+		String code="MRN/";
+			int id=	Integer.valueOf(openingBalanceRepository.getSequence(headerRequest));
+			String idgen =String.format("%05d", id);
+			String mrnNumber= code  + idgen +"/"+ year;
+		return mrnNumber;
+	}
+	
 }

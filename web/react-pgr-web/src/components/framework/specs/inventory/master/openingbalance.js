@@ -61,7 +61,7 @@ var dat = {
   "inventory.create": {
     "numCols": 4,
     "useTimestamp": true,
-    "objectName": "MaterialReceipt",
+    "objectName": "materialReceipt",
     "groups": [
       {
         "name": "openingBalance",
@@ -69,7 +69,7 @@ var dat = {
         "fields": [
           {
             "name": "financialYear",
-            "jsonPath": "MaterialReceipt[0].financialYear",
+            "jsonPath": "materialReceipt[0].financialYear",
             "label": "inventory.financialYear",
             "pattern": "",
             "type": "singleValueList",
@@ -82,7 +82,7 @@ var dat = {
           },
           {
             "name": "code",
-            "jsonPath": "MaterialReceipt[0].receivingStore.code",
+            "jsonPath": "materialReceipt[0].receivingStore.code",
             "label": "inventory.store.name",
             "pattern": "^[a-zA-Z0-9]+$",
             "type": "singleValueList",
@@ -142,13 +142,13 @@ var dat = {
           			"name":"material",
                  "pattern":"",
                  "type":"singleValueList",
-                 "jsonPath":"MaterialReceipt[0].receiptDetails[0].material.code",
+                 "jsonPath":"materialReceipt[0].receiptDetails[0].material.code",
                  "isRequired":true,
                  "isDisabled":false,
                  "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description",
                  "depedants":[
                       {
-                         "jsonPath":"MaterialReceipt[0].receiptDetails[0].material.description",
+                         "jsonPath":"materialReceipt[0].receiptDetails[0].material.description",
                          "type":"textField",
                          "valExp":"getValFromDropdownData('materialStoreMappings[*].material.code', getVal('materialStoreMappings[*].material.code'), 'others[0]')"
                       }
@@ -156,7 +156,7 @@ var dat = {
                },
                {  
                   "name":"materialDescription",
-                  "jsonPath":"MaterialReceipt[0].receiptDetails[0].material.description",
+                  "jsonPath":"materialReceipt[0].receiptDetails[0].material.description",
                   "pattern":"",
                   "type":"text",
                   "isRequired":false,
@@ -166,7 +166,7 @@ var dat = {
                },
                {  
                   "name":"uom",
-                  "jsonPath":"MaterialReceipt[0].receiptDetails[0].uom.code",
+                  "jsonPath":"materialReceipt[0].receiptDetails[0].uom.code",
                   "pattern":"",
                   "type":"singleValueList",
                   "isRequired":true,
@@ -176,7 +176,7 @@ var dat = {
               
                {  
                   "name":"receivedQty",
-                  "jsonPath":"MaterialReceipt[0].receiptDetails[0].receivedQty",
+                  "jsonPath":"materialReceipt[0].receiptDetails[0].receivedQty",
                   "pattern":"",
                   "type":"number",
                   "isRequired":true,
@@ -185,7 +185,7 @@ var dat = {
                   "patternErrorMsg":""
                }, {  
                   "name":"openingRate",
-                  "jsonPath":"MaterialReceipt[0].receiptDetails[0].openingRate",
+                  "jsonPath":"materialReceipt[0].receiptDetails[0].openingRate",
                   "pattern":"",
                   "type":"number",
                   "isRequired":true,
@@ -196,7 +196,7 @@ var dat = {
                },
                {
             "name": "oldReceiptNumber",
-            "jsonPath": "MaterialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].oldReceiptNumber",
+            "jsonPath": "materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].oldReceiptNumber",
             "pattern": "",
             "type": "text",
             "isRequired": false,
@@ -206,7 +206,7 @@ var dat = {
           },
           {
             "name": "receivedDate",
-            "jsonPath": "MaterialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].receivedDate",
+            "jsonPath": "materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].receivedDate",
              "pattern": "",
             "type": "datePicker",
             "isRequired": false,
@@ -216,7 +216,7 @@ var dat = {
           },
           {
             "name": "lotNo",
-            "jsonPath": "MaterialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].lotNo",
+            "jsonPath": "materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].lotNo",
              "pattern": "^[a-zA-Z ]+$",
             "type": "text",
             "isRequired": false,
@@ -226,7 +226,7 @@ var dat = {
           },
           {
             "name": "expiryDate",
-            "jsonPath": "MaterialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].expiryDate",
+            "jsonPath": "materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].expiryDate",
             "pattern": "",
             "type": "datePicker",
             "isRequired": false,

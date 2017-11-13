@@ -219,6 +219,18 @@ class Report extends Component {
       var query = {
         [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[1].split("=")[0]]: id
       };
+       //handle 2nd parameter
+       if(specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[1].split("=")[2])
+        {
+          var pval= specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[1].split("=")[2];
+          var pname= specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[1].split("=")[1].split('&')[1];
+
+          query = {
+        [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[1].split("=")[0]]: id,
+        [pname]:pval
+          };
+        }
+
       if(window.location.href.indexOf("?") > -1) {
        var qs =  window.location.href.split("?")[1];
        if(qs && qs.indexOf("=") > -1) {

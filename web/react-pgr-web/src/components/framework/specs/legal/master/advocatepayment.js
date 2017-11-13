@@ -75,6 +75,10 @@ var dat =  {
             {
               label: "Make Payment",
               url: "/update/legal/advmakepayment/"
+            },
+            {
+              label: "Advocate Payment Details",
+              url: "/update/legal/advpaymentdetails/"
             }
           ],
       header: [

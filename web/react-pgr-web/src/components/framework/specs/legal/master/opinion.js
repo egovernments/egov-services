@@ -70,6 +70,10 @@ var dat = {
             {
               label: "Update Opinion",
               url: "/update/legal/updateopinion/"
+            },
+            {
+              label: "Opinion Details",
+              url: "/update/legal/opiniondetails/"
             }
           ],
       header: [

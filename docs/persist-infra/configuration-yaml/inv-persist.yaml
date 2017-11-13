@@ -311,8 +311,7 @@ serviceMaps:
             - jsonPath: $.materialReceipt.*.mrnStatus
             - jsonPath: $.materialReceipt.*.mrnNumber
             - jsonPath: $.materialReceipt.*.receivingStore.code
-            - type: CURRENTDATE
-              dbType: LONG
+            - jsonPath: $.materialReceipt.*.receiptDate
             - jsonPath: $.materialReceipt.*.receiptType
             - jsonPath: $.materialReceipt.*.auditDetails.createdBy
               type: LONG

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 public class PriceListService {
 
     public static final String SEQ_PRICELIST = "seq_priceList";
+    public static final String SEQ_PRICELISTDETAILS = "seq_pricelistdetails";
     private PriceListRepository priceListRepository;
     private InventoryUtilityService inventoryUtilityService;
 
@@ -36,6 +37,13 @@ public class PriceListService {
         for (int i = 0; i <= priceListIdList.size() - 1; i++) {
             priceListRequest.getPriceLists().get(i)
                     .setId(priceListIdList.get(i).toString());
+            
+            List<Long> priceListDetailsIdList = inventoryUtilityService.getIdList(priceListRequest.getPriceLists().get(i).getPriceListDetails().size(), SEQ_PRICELISTDETAILS);
+            for(int j =0; j <= priceListDetailsIdList.size()-1; j++){
+            	priceListRequest.getPriceLists().get(i)
+			            		.getPriceListDetails().get(j)
+			            		.setId(priceListDetailsIdList.get(j).toString());
+            }
         }
 
         priceListRepository.save(priceListRequest);

@@ -40,11 +40,11 @@ public class PriceList   {
    * type of the information about the material we are getting from the supplier 
    */
   public enum RateTypeEnum {
-    DGSC_RATE_CONTRACT("DGSC Rate Contract"),
+    DGSC_RATE_CONTRACT("DGSC_Rate_Contract"),
     
-    ULB_RATE_CONTRACT("ULB Rate Contract"),
+    ULB_RATE_CONTRACT("ULB_Rate_Contract"),
     
-    ONE_TIME_TENDER("One Time Tender"),
+    ONE_TIME_TENDER("One_Time_Tender"),
     
     QUOTATION("Quotation");
 

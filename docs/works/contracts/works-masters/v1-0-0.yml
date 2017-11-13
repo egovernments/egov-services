@@ -455,12 +455,17 @@ paths:
           description: The full name of the Contractor Agency/Firm.
           type: string
           allowEmptyValue: true
+          format: autoComplete
         - name: code
           in: query
+          type: array
+          items:
+            type: string
+          maxItems: 50
           required: false
-          description: Code of the contractor Agency/Firm.
-          type: string
           allowEmptyValue: true
+          format: autoComplete
+          description: Comma separated list of Codes of the contractor Agency/Firm
         - name: contractorClass
           in: query
           type: array
@@ -481,6 +486,19 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of the Contractor Status    
+        - name: correspondenceAddress
+          in: query
+          type: string
+          required: false
+          allowEmptyValue: true
+          description: The corresepondence address of the Contractor Agency/Firm.
+        - name: mobileNumber
+          in: query
+          type: number
+          required: false
+          allowEmptyValue: true
+          format: mobileNumber
+          description: The Mobile number of the Contractor Agency/Firm
       responses:
         200:
           description: Contractor(s) Retrieved Successfully

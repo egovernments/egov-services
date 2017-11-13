@@ -1885,7 +1885,6 @@ definitions:
       - fuelType
       - manufacturingDetails
       - operatorsReq
-      - insuranceDetails
  
     PurchaseInfo:
       type: object
@@ -2370,7 +2369,11 @@ definitions:
         securityDeposit:
           type: number 
           format: double
-          description: securityDeposit (in Rs.)provided by the Vendor
+          description: securityDeposit (in Rs.) provided by the Vendor
+        paymentAmount:
+          type: number 
+          format: double
+          description: payment amount (in Rs.) for contract.
         servicesOffered:
           type: array
           items:
@@ -2397,6 +2400,7 @@ definitions:
       - securityDeposit
       - servicesOffered
       - paymentTerms
+      - paymentAmount
       
     VendorContractRequest:
       description: Contract class to receive request. Array of VendorContract items are used in case of create, whereas single VendorContract item is used for update
@@ -2926,10 +2930,7 @@ definitions:
       - targetFrom
       - targetTo
       - swmProcess
-      - location
-      - route
       - employee
-      - collectionPoints
       - targetedGarbage
       
     SanitationStaffTargetRequest:
@@ -3358,8 +3359,8 @@ definitions:
           description: tenant id of the SourceSegregation
           maxLength: 128
           minLength: 1
-        name:
-          $ref: "#/definitions/Vendor"
+        vendorContract:
+          $ref: "#/definitions/VendorContract"
           format: singleValueList
         invoiceNo:
           type: string
@@ -3374,10 +3375,6 @@ definitions:
           type: integer
           format: int64
           description: service period end date for which invoice is being submitted
-        approvalAmount:
-          type: number 
-          format: double
-          description: approval amount in Rs. Populate this field from vendor contract master
         vendorInvoiceAmount:
           type: number 
           format: double
@@ -3387,13 +3384,13 @@ definitions:
           description: List of Documents. Invoice or document supporting the invoice etc
           items:
             $ref: '#/definitions/Document'
-        employeeName:
+        employee:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/hr/contracts/hr-employee/v1-0-0.yml#/definitions/Employee'
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - tenantId
-      - name
+      - vendorContract
       - invoiceNo
       - fromDate
       - toDate

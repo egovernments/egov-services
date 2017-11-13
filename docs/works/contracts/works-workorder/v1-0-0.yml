@@ -203,6 +203,11 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of codes of the contractor to which Letter Of Acceptance belongs to.
+        - name: spillOverFlag
+          in: query
+          type: boolean
+          required: false
+          description: Boolean value of the LOA whether its Spillover or not
       responses:
         200:
           description: Letter Of Acceptance(s) Retrieved Successfully
@@ -1204,6 +1209,20 @@ definitions:
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: remarks for cancellation of the LOA, Required only while cancelling LOA
         maxLength: 512
+      councilResolutionNumber:
+        type: string
+        pattern: '[a-zA-Z0-9-\\]+'
+        description: Council resolution number of the Letter Of Acceptance. This field is required on final approval of LOA.
+        maxLength: 50
+      councilResolutionDate:
+        type: integer
+        format: int64
+        description: Epoch time of the council resolution date of the Letter Of Acceptance. The future date is now allowed. This field is required on final approval of LOA.
+        x-displayformat: 'dd/MM/yyyy'
+      spillOverFlag:  
+        type: boolean
+        description: Boolean value to identify whether the LOA is spillover or not.
+        default: false
       letterOfAcceptanceEstimates:
         type: array
         description: Array of Letter Of Acceptance Estimate Details
@@ -1973,5 +1992,6 @@ tags:
     description: APIs required for Track Milestone.
   - name: Contractor Advance Requisition
     description: APIs required for Contractor Advance Requisition.
+
 
 

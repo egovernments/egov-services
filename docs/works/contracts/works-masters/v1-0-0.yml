@@ -452,13 +452,13 @@ paths:
         - name: name
           in: query
           required: false
-          description: The full name of the contractor.
+          description: The full name of the Contractor Agency/Firm.
           type: string
           allowEmptyValue: true
         - name: code
           in: query
           required: false
-          description: code of the contractor.
+          description: Code of the contractor Agency/Firm.
           type: string
           allowEmptyValue: true
         - name: contractorClass
@@ -527,7 +527,8 @@ paths:
       summary: Update existing Contractor(s).
       description: |
           To update existing Contractor in the system. API supports bulk updation with max limit as defined in the Contractor Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Contractor, please pass array with one Contractor object.
-          In updade fields can be modified based on confguration defined in the system.
+          
+          In updade fields can be modified based on confguration defined in the system. The contractor code is now allowed to modify.
           
       parameters:
         - name: ContractorRequest
@@ -799,5 +800,6 @@ tags:
     description: APIs required for Contractor.
   - name: Remarks
     description: APIs required for Remarks.  
+
 
 

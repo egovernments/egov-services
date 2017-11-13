@@ -419,31 +419,35 @@ definitions:
     
   Contractor:
     type: object
-    description: An Object that holds Contractor Information
+    description: An Object that holds the Contractor Agency/Firm Information
     properties:
       id:
         type: string
         description: Unique Identifier of the Contractor.
       tenantId:
         type: string
-        description: Tenant id of the Contractor.
+        description: Tenant id of the Contractor Agency/Firm.
         maxLength: 128
         minLength: 2
       name:
         type: string
-        description: Name of the Contractor.
+        description: Name of the Contractor Agency/Firm.
         pattern: '[a-zA-Z0-9\s\.,]+'
         maxLength: 100
         minLength: 1
+      localName:
+        type: string
+        description: Name of the Contractor Agency/Firm in Local Language.
+        maxLength: 100
       code:
         type: string
-        description: Code of the Contractor.
+        description: Code of the Contractor Agency/Firm.
         pattern: '[a-zA-Z0-9-\\]+'
         maxLength: 100
         minLength: 1
       correspondenceAddress:
         type: string
-        description: Correspondence Address of the Contractor.
+        description: Correspondence Address of the Contractor Agency/Firm.
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 512
         minLength: 1
@@ -454,60 +458,60 @@ definitions:
         maxLength: 512
       contactPerson:
         type: string
-        description: Contact Person of the Contractor.
+        description: Contact Person of the Contractor Agency/Firm.
         maxLength: 100
       email:
         type: string
         format: email
-        description: Email of the Contractor.
+        description: Email of the Contractor Agency/Firm.
         pattern: '^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$'
         maxLength: 100
       narration:
         type: string
-        description: Narration of the Contractor.
+        description: Narration of the Contractor Agency/Firm.
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
       mobileNumber:
         type: number
         format: mobileNumber
-        description: Mobile Number of the Contractor
+        description: Mobile Number of the Contractor Agency/Firm
         pattern: "[0-9]"
         maxLength: 10
         exclusiveMaximum: true
       panNumber:
         type: string
         format: pan
-        description: PAN Number of the Contractor
+        description: PAN Number of the Contractor Agency/Firm
         maxLength: 10
         pattern: '[A-Z]{5}[0-9]{4}[A-Z]{1}'
         exclusiveMaximum: true
       tinNumber:
         type: string
-        description: TIN Number of the Contractor
+        description: TIN Number of the Contractor Agency/Firm
         maxLength: 12
       bank:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Bank"
-        description: Bank of the Contractor. If Financial integration is true at state/ULB level configuation then bank is mandatory else its optional.
+        description: Bank of the Contractor Agency/Firm. If Financial integration is true at state/ULB level configuation then bank is mandatory else its optional.
         format: singleValueList
       bankAccountNumber:
         type: number
-        description: Bank Account Number of the Contractor. If Financial integration is true at state/ULB level configuation then bank account number is mandatory else its optional.
+        description: Bank Account Number of the Contractor Agency/Firm. If Financial integration is true at state/ULB level configuation then bank account number is mandatory else its optional.
         maxLength: 20
         pattern: "[0-9]"
       pwdApprovalCode:
         type: string
         pattern: '[a-zA-Z0-9-\\]+'
-        description: PWD Approval Code of the Contractor
+        description: PWD Approval Code of the Contractor Agency/Firm
         maxLength: 20
       exemptedFrom:
         $ref: '#/definitions/ContractorExemption'
-        description: Excemption allowed for of the Contractor
+        description: Excemption allowed for of the Contractor Agency/Firm
         format: singleValueList
       pwdApprovalValidTill:
         type: integer
         format: int64
         x-displayformat: 'dd/MM/yyyy'
-        description: PWD Approval Valid Till
+        description: PWD Approval Valid Till date of Contractor Agency/Firm
       epfRegistrationNumber:
         type: string
         description: EPF Registration Number of the Contractor,Only Number value with decimal should be accepted
@@ -520,16 +524,16 @@ definitions:
         format: autoComplete
       ifscCode:
         type: number
-        description: IFSC Code of the Bank Account for the Contractor. If Financial integration is true at state/ULB level configuation then ifscCode is mandatory else its optional.
+        description: IFSC Code of the Bank Account for the Contractor Agency/Firm. If Financial integration is true at state/ULB level configuation then ifscCode is mandatory else its optional.
         pattern: '[a-zA-Z0-9]+'
         maxLength: 20
       contractorClass:
         $ref: '#/definitions/ContractorClass'
-        description: Contractor Class for which Contractor belongs to
+        description: Contractor Class for which Contractor Agency/Firm belongs to
         format: singleValueList
       pmc:
         type: boolean
-        description: The boolean value to indicate whether the contractor is PMC(Project Management Consultant). The default value is false.
+        description: The boolean value to indicate whether the contractor Agency/Firm is PMC(Project Management Consultant). The default value is false.
         default: false
       status:
         $ref: '#/definitions/ContractorStatus'
@@ -542,15 +546,7 @@ definitions:
       - name
       - code
       - correspondenceAddress
-      - paymentAddress
-      - contactPerson
-      - email
       - mobileNumber
-      - panNumber
-      - tinNumber
-      - pwdApprovalCode
-      - pwdApprovalValidTill
-      - epfRegistrationNumber
       - contractorClass
       - status
       
@@ -1258,5 +1254,6 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
+
 
 

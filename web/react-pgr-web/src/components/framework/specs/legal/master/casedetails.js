@@ -615,7 +615,7 @@ var dat = {
                 ]
             }
         ],
-        url: "/lcms-services/legalcase/case/_dataentry",
+          url: "/lcms-services/legalcase/case/_update",
         tenantIdRequired: true
     }
 };

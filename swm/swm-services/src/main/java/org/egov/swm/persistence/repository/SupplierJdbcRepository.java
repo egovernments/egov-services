@@ -27,9 +27,7 @@ public class SupplierJdbcRepository extends JdbcRepository {
 		StringBuffer params = new StringBuffer();
 
 		if (searchRequest.getSupplierNo() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("supplierNo =:supplierNo");
 			paramValues.put("supplierNo", searchRequest.getSupplierNo());
 		}

@@ -36,49 +36,37 @@ public class VehicleMaintenanceJdbcRepository extends JdbcRepository {
 		}
 
 		if (searchRequest.getRegNumber() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("vehicle in (:vehicle)");
 			paramValues.put("vehicle", searchRequest.getRegNumber());
 		}
 
 		if (searchRequest.getCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("code in (:code)");
 			paramValues.put("code", searchRequest.getCode());
 		}
 
 		if (searchRequest.getCodes() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("code in(:codes) ");
 			paramValues.put("codes", new ArrayList<String>(Arrays.asList(searchRequest.getCodes().split(","))));
 		}
 
 		if (searchRequest.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", searchRequest.getTenantId());
 		}
 
 		if (searchRequest.getDowntimeforMaintenance() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("downtimeforMaintenance =:downtimeforMaintenance");
 			paramValues.put("downtimeforMaintenance", searchRequest.getDowntimeforMaintenance());
 		}
 
 		if (searchRequest.getMaintenanceAfter() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("maintenanceAfter =:maintenanceAfter");
 			paramValues.put("maintenanceAfter", searchRequest.getMaintenanceAfter());
 		}

@@ -27,25 +27,19 @@ public class SanitationStaffTargetMapJdbcRepository extends JdbcRepository {
 		StringBuffer params = new StringBuffer();
 
 		if (searchRequest.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", searchRequest.getTenantId());
 		}
 
 		if (searchRequest.getSanitationStaffTarget() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("sanitationStaffTarget =:sanitationStaffTarget");
 			paramValues.put("sanitationStaffTarget", searchRequest.getSanitationStaffTarget());
 		}
 
 		if (searchRequest.getCollectionPoint() != null && searchRequest.getCollectionPoint() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("collectionPoint =:collectionPoint");
 			paramValues.put("collectionPoint", searchRequest.getCollectionPoint());
 		}

@@ -46,48 +46,36 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 		}
 
 		if (searchRequest.getTargetNo() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("targetNo in (:targetNo)");
 			paramValues.put("targetNo", searchRequest.getTargetNo());
 		}
 
 		if (searchRequest.getTargetNos() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("targetNo in (:targetNos)");
 			paramValues.put("targetNos", new ArrayList<String>(Arrays.asList(searchRequest.getTargetNos().split(","))));
 		}
 		if (searchRequest.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", searchRequest.getTenantId());
 		}
 
 		if (searchRequest.getRouteCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("route =:route");
 			paramValues.put("route", searchRequest.getRouteCode());
 		}
 
 		if (searchRequest.getSwmProcessCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("swmProcess =:swmProcess");
 			paramValues.put("swmProcess", searchRequest.getSwmProcessCode());
 		}
 
 		if (searchRequest.getEmployeeCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("employee =:employee");
 			paramValues.put("employee", searchRequest.getEmployeeCode());
 		}

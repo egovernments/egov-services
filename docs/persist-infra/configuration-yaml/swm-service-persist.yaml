@@ -1459,3 +1459,55 @@ serviceMaps:
        - jsonPath: $.vendorPaymentDetails.*.documents.auditDetails.lastModifiedTime
          dbType: LONG
 
+
+
+ - version: 1.0
+   name: sanitationstaffschedule create
+   description: create sanitationstaffschedule in egswm_sanitationstaffschedule
+   fromTopic: swm-sanitationstaffschedule-save-topic
+   queryMaps: 
+    - query: INSERT INTO egswm_sanitationstaffschedule (transactionNo, tenantid, sanitationStaffTarget, shift, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.sanitationStaffSchedules.*
+      jsonMaps:
+       
+       - jsonPath: $.sanitationStaffSchedules.*.transactionNo
+
+       - jsonPath: $.sanitationStaffSchedules.*.tenantId
+
+       - jsonPath: $.sanitationStaffSchedules.*.sanitationStaffTarget.targetNo
+
+       - jsonPath: $.sanitationStaffSchedules.*.shift.code
+
+       - jsonPath: $.sanitationStaffSchedules.*.auditDetails.createdBy
+
+       - jsonPath: $.sanitationStaffSchedules.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.sanitationStaffSchedules.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.sanitationStaffSchedules.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+
+ - version: 1.0
+   name: sanitationstaffschedule update
+   description: update sanitationstaffschedule in egswm_sanitationstaffschedule
+   fromTopic: swm-sanitationstaffschedule-update-topic
+   queryMaps: 
+    - query: update egswm_sanitationstaffschedule set sanitationStaffTarget=?, shift=?, lastmodifiedby=?, lastmodifiedtime=? where transactionNo=? and tenantid=?;
+      basePath: $.sanitationStaffSchedules.*
+      jsonMaps:
+       
+       - jsonPath: $.sanitationStaffSchedules.*.sanitationStaffTarget.targetNo
+
+       - jsonPath: $.sanitationStaffSchedules.*.shift.code
+
+       - jsonPath: $.sanitationStaffSchedules.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.sanitationStaffSchedules.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+       - jsonPath: $.sanitationStaffSchedules.*.transactionNo
+
+       - jsonPath: $.sanitationStaffSchedules.*.tenantId
+

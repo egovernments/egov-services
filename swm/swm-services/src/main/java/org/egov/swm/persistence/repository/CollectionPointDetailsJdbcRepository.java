@@ -36,48 +36,36 @@ public class CollectionPointDetailsJdbcRepository extends JdbcRepository {
 		}
 
 		if (searchRequest.getIds() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("id in (:ids)");
 			paramValues.put("ids", new ArrayList<String>(Arrays.asList(searchRequest.getIds().split(","))));
 		}
 		if (searchRequest.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", searchRequest.getTenantId());
 		}
 
 		if (searchRequest.getId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("id =:id");
 			paramValues.put("id", searchRequest.getId());
 		}
 
 		if (searchRequest.getCollectionPoint() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("collectionPoint =:collectionPoint");
 			paramValues.put("collectionPoint", searchRequest.getCollectionPoint());
 		}
 
 		if (searchRequest.getCollectionTypeCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("collectionType =:collectionType");
 			paramValues.put("collectionType", searchRequest.getCollectionTypeCode());
 		}
 
 		if (searchRequest.getGarbageEstimate() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("garbageEstimate =:garbageEstimate");
 			paramValues.put("garbageEstimate", searchRequest.getGarbageEstimate());
 		}

@@ -52,57 +52,43 @@ public class VehicleScheduleJdbcRepository extends JdbcRepository {
 		}
 
 		if (searchRequest.getTransactionNo() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("transactionNo in (:transactionNo)");
 			paramValues.put("transactionNo", searchRequest.getTransactionNo());
 		}
 
 		if (searchRequest.getTransactionNos() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("transactionNo in (:transactionNos)");
 			paramValues.put("transactionNos",
 					new ArrayList<String>(Arrays.asList(searchRequest.getTransactionNos().split(","))));
 		}
 		if (searchRequest.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", searchRequest.getTenantId());
 		}
 
 		if (searchRequest.getRouteCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("route =:route");
 			paramValues.put("route", searchRequest.getRouteCode());
 		}
 
 		if (searchRequest.getRegNumber() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("vehicle =:vehicle");
 			paramValues.put("vehicle", searchRequest.getRegNumber());
 		}
 
 		if (searchRequest.getScheduledFrom() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("scheduledFrom =:scheduledFrom");
 			paramValues.put("scheduledFrom", searchRequest.getScheduledFrom());
 		}
 
 		if (searchRequest.getScheduledTo() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("scheduledTo =:scheduledTo");
 			paramValues.put("scheduledTo", searchRequest.getScheduledTo());
 		}

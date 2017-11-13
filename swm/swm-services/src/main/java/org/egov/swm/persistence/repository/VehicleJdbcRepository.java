@@ -47,49 +47,37 @@ public class VehicleJdbcRepository extends JdbcRepository {
 		}
 
 		if (searchRequest.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", searchRequest.getTenantId());
 		}
 		if (searchRequest.getRegNumber() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("regNumber =:regNumber");
 			paramValues.put("regNumber", searchRequest.getRegNumber());
 		}
 		if (searchRequest.getManufacturingDetails() != null) {
 
 			if (searchRequest.getManufacturingDetails().getChassisSrNumber() != null) {
-				if (params.length() > 0) {
-					params.append(" and ");
-				}
+				addAnd(params);
 				params.append("chassisSrNumber =:chassisSrNumber");
 				paramValues.put("chassisSrNumber", searchRequest.getManufacturingDetails().getChassisSrNumber());
 			}
 
 			if (searchRequest.getManufacturingDetails().getEngineSrNumber() != null) {
-				if (params.length() > 0) {
-					params.append(" and ");
-				}
+				addAnd(params);
 				params.append("engineSrNumber =:engineSrNumber");
 				paramValues.put("engineSrNumber", searchRequest.getManufacturingDetails().getEngineSrNumber());
 			}
 
 			if (searchRequest.getInsuranceDetails().getInsuranceNumber() != null) {
-				if (params.length() > 0) {
-					params.append(" and ");
-				}
+				addAnd(params);
 				params.append("insuranceNumber =:insuranceNumber");
 				paramValues.put("insuranceNumber", searchRequest.getInsuranceDetails().getInsuranceNumber());
 			}
 
 			if (searchRequest.getManufacturingDetails().getModel() != null) {
-				if (params.length() > 0) {
-					params.append(" and ");
-				}
+				addAnd(params);
 				params.append("model =:model");
 				paramValues.put("model", searchRequest.getManufacturingDetails().getModel());
 			}
@@ -98,9 +86,7 @@ public class VehicleJdbcRepository extends JdbcRepository {
 
 		if (searchRequest.getInsuranceDetails() != null) {
 			if (searchRequest.getInsuranceDetails().getInsuranceValidityDate() != null) {
-				if (params.length() > 0) {
-					params.append(" and ");
-				}
+				addAnd(params);
 				params.append("insuranceValidityDate =:insuranceValidityDate");
 				paramValues.put("insuranceValidityDate",
 						searchRequest.getInsuranceDetails().getInsuranceValidityDate());
@@ -110,9 +96,7 @@ public class VehicleJdbcRepository extends JdbcRepository {
 		if (searchRequest.getPurchaseInfo() != null) {
 
 			if (searchRequest.getPurchaseInfo().getPurchaseDate() != null) {
-				if (params.length() > 0) {
-					params.append(" and ");
-				}
+				addAnd(params);
 				params.append("purchaseDate =:purchaseDate");
 				paramValues.put("purchaseDate", searchRequest.getPurchaseInfo().getPurchaseDate());
 			}
@@ -120,33 +104,25 @@ public class VehicleJdbcRepository extends JdbcRepository {
 		}
 
 		if (searchRequest.getVehicleTypeCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("vehicleType =:vehicleType");
 			paramValues.put("vehicleType", searchRequest.getVehicleTypeCode());
 		}
 
 		if (searchRequest.getFuelTypeCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("fuelType =:fuelType");
 			paramValues.put("fuelType", searchRequest.getFuelTypeCode());
 		}
 
 		if (searchRequest.getPurchaseYear() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("yearOfPurchase =:yearOfPurchase");
 			paramValues.put("yearOfPurchase", searchRequest.getPurchaseYear());
 		}
 
 		if (searchRequest.getVendorName() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("vendor =:vendor");
 			paramValues.put("vendor", searchRequest.getVendorName());
 		}

@@ -117,4 +117,10 @@ public abstract class JdbcRepository {
 		return count >= 1 ? false : true;
 
 	}
+
+	public void addAnd(StringBuffer params) {
+		if (params.length() > 0) {
+			params.append(" and ");
+		}
+	}
 }

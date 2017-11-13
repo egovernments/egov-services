@@ -41,7 +41,10 @@
 		"4496ca1f-9cb3-a553-eea1-8a7936b78d52",
 		"c36bd36a-c318-1c56-2dfe-4d81937cfcf8",
 		"0c75214f-37e8-9d66-014a-4113cd59a930",
-		"6afe348d-fc91-21f5-b9b9-237d968c43d7"
+		"6afe348d-fc91-21f5-b9b9-237d968c43d7",
+		"ac2f28e5-7bc8-6af1-1a3a-a3d08b7fc8e3",
+		"fbc5f897-c5a2-82de-3725-04b373602fb4",
+		"634e0fe7-0d08-0a3d-7d7d-83cda7664514"
 	],
 	"folders": [],
 	"folders_order": [],
@@ -428,6 +431,37 @@
 			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
 			"responses": [],
 			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"a5aabf33-0d0f-4044-842e-ea629ffbf64d\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+		},
+		{
+			"id": "634e0fe7-0d08-0a3d-7d7d-83cda7664514",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8899/swm-services/sanitationstaffschedules/_create",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Sanitation Staff Schedule Create",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1510602111867,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"sanitationStaffSchedules\":[\n      {\n      \t\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"sanitationStaffTarget\" :{\n            \t\"targetNo\":\"MH-SWM-SNTS-TRGT-000001\"\n            },\n            \"shift\" :{\n            \t\"code\":\"Fake Shift Code 1\"\n            }\n      }\n   ]\n } "
 		},
 		{
 			"id": "6443d2c5-7104-821c-896f-b2c5cc805be8",
@@ -919,6 +953,50 @@
 			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
 			"responses": [],
 			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"sourceSegregations\":[\n      {\n      \t\n      \t\t\"code\": \"c3aabbe82ed144ce9fcf9f50e422b6ed\",\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"dumpingGround\" :{\n            \t\"code\":\"Fake Dumping Ground Code 2\"\n            },\n            \"sourceSegregationDate\":1234567890,\n            \"collectionDetails\":[\n            \t{\n            \t\t\"collectionType\":{\n            \t\t\t\n            \t\t\t\"code\":\"Fake Collection Type Code 2\"\n            \t\t\t\n            \t\t},\n            \t\t\"wetWasteCollected\":400,\n            \t\t\"dryWasteCollected\":400\n            \t}\n            ]\n      }\n   ]\n } "
+		},
+		{
+			"id": "ac2f28e5-7bc8-6af1-1a3a-a3d08b7fc8e3",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8899/swm-services/sanitationstaffschedules/_search?tenantId=default&transactionNo=MH-SWM-STF-TRN-000001",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "transactionNo",
+					"value": "MH-SWM-STF-TRN-000001",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510602057291,
+			"name": "Sanitation Staff Schedule Search",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"a5aabf33-0d0f-4044-842e-ea629ffbf64d\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
 		},
 		{
 			"id": "b07d5c1d-1733-3d09-4f51-b0642b59c700",
@@ -1438,6 +1516,37 @@
 			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
 			"responses": [],
 			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"a5aabf33-0d0f-4044-842e-ea629ffbf64d\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"sanitationStaffTargets\":[\n      {\n      \t\n      \t\t\"targetNo\": \"MH-SWM-SNTS-TRGT-000001\",\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"swmProcess\" :{\n            \t\"code\":\"Segregation\"\n            },\n            \"location\" :{\n            \t\"code\":\"99\"\n            },\n            \"route\" :{\n            \t\"code\":\"b9af15c98a8d4e7d8b5bb7d4d708e21f\"\n            },\n            \"employee\" :{\n            \t\"code\":\"EC5\"\n            },\n            \"targetFrom\":\"1234567890\",\n            \"targetTo\":1234567890,\n            \"targetedGarbage\":200,\n            \"wetWaste\":20,\n            \"dryWaste\":30,\n            \"dumpingGround\":{\n            \t\"code\":\"Fake Dumping Ground Code 2\"\n            },\n            \"collectionPoints\": [\n            \t{\n            \t\t\"code\":\"14a24c72c39f48689a551becc8f96fe2\"\n            \t},\n            \t{\n            \t\t\"code\":\"71758a4df0614c7cbe0a9a62f29f3dbc\"\n            \t}\n            ]\n      }\n   ]\n } "
+		},
+		{
+			"id": "fbc5f897-c5a2-82de-3725-04b373602fb4",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8899/swm-services/sanitationstaffschedules/_update",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Sanitation Staff Schedule Update",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1510602100801,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"sanitationStaffSchedules\":[\n      {\n      \t\n      \t\t\"transactionNo\": \"MH-SWM-STF-TRN-000001\",\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"sanitationStaffTarget\" :{\n            \t\"targetNo\":\"MH-SWM-SNTS-TRGT-000001\"\n            },\n            \"shift\" :{\n            \t\"code\":\"Fake Shift Code 2\"\n            }\n      }\n   ]\n } "
 		}
 	]
 }

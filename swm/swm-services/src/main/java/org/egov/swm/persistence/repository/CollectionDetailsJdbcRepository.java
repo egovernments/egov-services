@@ -30,25 +30,19 @@ public class CollectionDetailsJdbcRepository extends JdbcRepository {
 		StringBuffer params = new StringBuffer();
 
 		if (searchRequest.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", searchRequest.getTenantId());
 		}
 
 		if (searchRequest.getSourceSegregationCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("sourceSegregation =:sourceSegregation");
 			paramValues.put("sourceSegregation", searchRequest.getSourceSegregationCode());
 		}
 
 		if (searchRequest.getCollectionTypeCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("collectionType =:collectionType");
 			paramValues.put("collectionType", searchRequest.getCollectionTypeCode());
 		}

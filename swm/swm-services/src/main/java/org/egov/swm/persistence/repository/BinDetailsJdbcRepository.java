@@ -34,73 +34,55 @@ public class BinDetailsJdbcRepository extends JdbcRepository {
 		StringBuffer params = new StringBuffer();
 
 		if (searchRequest.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", searchRequest.getTenantId());
 		}
 
 		if (searchRequest.getId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("id =:id");
 			paramValues.put("id", searchRequest.getId());
 		}
 
 		if (searchRequest.getRfidAssigned() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("rfidAssigned =:rfidAssigned");
 			paramValues.put("rfidAssigned", searchRequest.getRfidAssigned());
 		}
 
 		if (searchRequest.getAssetOrBinId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("assetOrBinId =:assetOrBinId");
 			paramValues.put("assetOrBinId", searchRequest.getAssetOrBinId());
 		}
 
 		if (searchRequest.getCollectionPoint() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("collectionPoint =:collectionPoint");
 			paramValues.put("collectionPoint", searchRequest.getCollectionPoint());
 		}
 
 		if (searchRequest.getLongitude() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("longitude =:longitude");
 			paramValues.put("longitude", searchRequest.getLongitude());
 		}
 
 		if (searchRequest.getLatitude() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("latitude =:latitude");
 			paramValues.put("latitude", searchRequest.getLatitude());
 		}
 
 		if (searchRequest.getCollectionPoint() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("collectionPoint =:collectionPoint");
 			paramValues.put("collectionPoint", searchRequest.getCollectionPoint());
 		}
 
 		if (searchRequest.getRfid() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("rfid =:rfid");
 			paramValues.put("rfid", searchRequest.getRfid());
 		}

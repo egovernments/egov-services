@@ -42,59 +42,45 @@ public class VehicleTripSheetDetailsJdbcRepository extends JdbcRepository {
 		}
 
 		if (searchRequest.getTripNos() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tripNo in(:tripNo) ");
 			paramValues.put("tripNo", new ArrayList<String>(Arrays.asList(searchRequest.getTripNos().split(","))));
 		}
 
 		if (searchRequest.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", searchRequest.getTenantId());
 		}
 		if (searchRequest.getRegNumber() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("vehicle =:vehicle");
 			paramValues.put("vehicle", searchRequest.getRegNumber());
 		}
 
 		if (searchRequest.getRouteCode() != null) {
 
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("route =:route");
 			paramValues.put("route", searchRequest.getRouteCode());
 		}
 
 		if (searchRequest.getVendorNo() != null) {
 
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("vendor =:vendor");
 			paramValues.put("vendor", searchRequest.getVendorNo());
 
 		}
 
 		if (searchRequest.getTripStartDate() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tripStartDate =:tripStartDate");
 			paramValues.put("tripStartDate", searchRequest.getTripStartDate());
 		}
 
 		if (searchRequest.getTripEndDate() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tripEndDate =:tripEndDate");
 			paramValues.put("tripEndDate", searchRequest.getTripEndDate());
 		}

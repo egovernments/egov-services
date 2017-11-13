@@ -57,48 +57,36 @@ public class VendorJdbcRepository extends JdbcRepository {
 		}
 
 		if (searchRequest.getVendorNo() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("vendorNo in (:vendorNo)");
 			paramValues.put("vendorNo", searchRequest.getVendorNo());
 		}
 
 		if (searchRequest.getVendorNos() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("vendorNo in (:vendorNos)");
 			paramValues.put("vendorNos", new ArrayList<String>(Arrays.asList(searchRequest.getVendorNos().split(","))));
 		}
 		if (searchRequest.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", searchRequest.getTenantId());
 		}
 
 		if (searchRequest.getName() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("name =:name");
 			paramValues.put("name", searchRequest.getName());
 		}
 
 		if (searchRequest.getRegistrationNo() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("registrationNo =:registrationNo");
 			paramValues.put("registrationNo", searchRequest.getRegistrationNo());
 		}
 
 		if (searchRequest.getSupplierNo() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("supplier =:supplier");
 			paramValues.put("supplier", searchRequest.getSupplierNo());
 		}

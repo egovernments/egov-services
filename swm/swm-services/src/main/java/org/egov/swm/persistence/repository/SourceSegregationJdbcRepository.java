@@ -47,40 +47,30 @@ public class SourceSegregationJdbcRepository extends JdbcRepository {
 		}
 
 		if (searchRequest.getCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("code in (:code)");
 			paramValues.put("code", searchRequest.getCode());
 		}
 
 		if (searchRequest.getCodes() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("code in (:codes)");
 			paramValues.put("codes", new ArrayList<String>(Arrays.asList(searchRequest.getCodes().split(","))));
 		}
 		if (searchRequest.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", searchRequest.getTenantId());
 		}
 
 		if (searchRequest.getSourceSegregationDate() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("sourceSegregationDate =:sourceSegregationDate");
 			paramValues.put("sourceSegregationDate", searchRequest.getSourceSegregationDate());
 		}
 
 		if (searchRequest.getDumpingGroundCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("dumpingGround =:dumpingGround");
 			paramValues.put("dumpingGround", searchRequest.getDumpingGroundCode());
 		}

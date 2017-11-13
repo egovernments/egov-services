@@ -32,10 +32,6 @@ public class AdvocatePayment {
 	@JsonProperty("caseType")
 	private CaseType caseType = null;
 
-	@NonNull
-	@JsonProperty("caseNo")
-	private String caseNo = null;
-
 	@JsonProperty("caseStatus")
 	private CaseStatus caseStatus = null;
 
@@ -48,7 +44,6 @@ public class AdvocatePayment {
 	@JsonProperty("allowance")
 	private Double allowance = null;
 
-	@NonNull
 	@JsonProperty("isPartialPayment")
 	private Boolean isPartialPayment = null;
 

@@ -40,4 +40,10 @@ public class OpinionSearchCriteria {
 
 	@JsonProperty("sort")
 	private String sort;
+	
+	@JsonProperty("fromDate")
+	private Long fromDate;
+	
+	@JsonProperty("toDate")
+	private Long toDate;	
 }

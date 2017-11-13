@@ -62,45 +62,38 @@ public class Consumer {
 			
 			SummonRequest summonRequest = objectMapper.convertValue(consumerRecord, SummonRequest.class);			
 			notificationService.sendEmailAndSmsForSummon(summonRequest);
-		}
-		
-		if (topic.equalsIgnoreCase(propertiesManager.getAssigningAdvocateTopic())) {
 			
-			SummonRequest summonRequest = objectMapper.convertValue(consumerRecord, SummonRequest.class);
-			notificationService.sendEmailAndSmsForAssignAdvocate(summonRequest);
-		}		
-		
-		if (topic.equalsIgnoreCase(propertiesManager.getCaseRegistrationTopic())) {
+		} else if (topic.equalsIgnoreCase(propertiesManager.getAssigningAdvocateTopic())) {
+			
+			CaseRequest caseRequest = objectMapper.convertValue(consumerRecord, CaseRequest.class);
+			notificationService.sendEmailAndSmsForAssignAdvocate(caseRequest);
+			
+		} else if (topic.equalsIgnoreCase(propertiesManager.getCaseRegistrationTopic())) {
 			
 			CaseRequest caseRequest = objectMapper.convertValue(consumerRecord, CaseRequest.class);
 			notificationService.sendEmailAndSmsForCaseRegistration(caseRequest);
-		}		
-		
-		if (topic.equalsIgnoreCase(propertiesManager.getVakalatnamaGenerationTopic())) {
+			
+		} else if (topic.equalsIgnoreCase(propertiesManager.getVakalatnamaGenerationTopic())) {
 			
 			CaseRequest caseRequest = objectMapper.convertValue(consumerRecord, CaseRequest.class);
 			notificationService.sendEmailAndSmsForVakalatnama(caseRequest);
-		}	
-		
-		if (topic.equalsIgnoreCase(propertiesManager.getParawiseCommentsTopic())) {
+			
+		} else if (topic.equalsIgnoreCase(propertiesManager.getParawiseCommentsTopic())) {
 			
 			CaseRequest caseRequest = objectMapper.convertValue(consumerRecord, CaseRequest.class);
 			notificationService.sendEmailAndSmsForParawiseComments(caseRequest);
-		}
-		
-		if (topic.equalsIgnoreCase(propertiesManager.getHearingProcessdetailsTopic())) {
+			
+		} else if (topic.equalsIgnoreCase(propertiesManager.getHearingProcessdetailsTopic())) {
 			
 			CaseRequest caseRequest = objectMapper.convertValue(consumerRecord, CaseRequest.class);
 			notificationService.sendEmailAndSmsForHearingProcessDetails(caseRequest);
-		}
-		
-		if (topic.equalsIgnoreCase(propertiesManager.getAdvocatePaymentTopic())) {
+			
+		} else if (topic.equalsIgnoreCase(propertiesManager.getAdvocatePaymentTopic())) {
 			
 			AdvocatePaymentRequest advocatePaymentRequest = objectMapper.convertValue(consumerRecord, AdvocatePaymentRequest.class);
 			notificationService.sendEmailAndSmsForAdvocatePayment(advocatePaymentRequest);
-		}
-		
-		if (topic.equalsIgnoreCase(propertiesManager.getOpinionTopic())) {
+			
+		} else if (topic.equalsIgnoreCase(propertiesManager.getOpinionTopic())) {
 			
 			OpinionRequest opinionRequest = objectMapper.convertValue(consumerRecord, OpinionRequest.class);
 			notificationService.sendEmailAndSmsForOpinion(opinionRequest);

@@ -9,17 +9,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class AdvocateCharge {
+@NoArgsConstructor
+public class CaseDetails {
 
-	@JsonProperty("charge")
-	private String charge = null;
-
-	@JsonProperty("caseDetails")
-	private CaseDetails caseDetails = null;
-
-	@JsonProperty("amount")
-	private Double amount = null;
-
+	@JsonProperty("caseNo")
+	private String caseNo;
+	
+	@JsonProperty("summonReferenceNo")
+	private String summonReferenceNo;
 }
+

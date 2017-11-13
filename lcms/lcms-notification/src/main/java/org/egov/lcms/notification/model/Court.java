@@ -2,8 +2,6 @@ package org.egov.lcms.notification.model;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.apache.tomcat.jni.Address;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;

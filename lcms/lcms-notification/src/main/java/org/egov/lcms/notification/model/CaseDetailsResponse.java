@@ -1,5 +1,9 @@
 package org.egov.lcms.notification.model;
 
+import java.util.List;
+
+import org.egov.common.contract.response.ResponseInfo;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -11,15 +15,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdvocateCharge {
+public class CaseDetailsResponse {
 
-	@JsonProperty("charge")
-	private String charge = null;
-
+	@JsonProperty("responseInfo")
+	private ResponseInfo responseInfo;
+	
 	@JsonProperty("caseDetails")
-	private CaseDetails caseDetails = null;
-
-	@JsonProperty("amount")
-	private Double amount = null;
-
+	private List<CaseDetails> caseDetails;
 }

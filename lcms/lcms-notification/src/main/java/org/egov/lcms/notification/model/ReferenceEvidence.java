@@ -17,7 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReferenceEvidence {
-	
+
 	@JsonProperty("code")
 	private String code;
 
@@ -29,7 +29,6 @@ public class ReferenceEvidence {
 	@JsonProperty("referenceDate")
 	private Long referenceDate;
 
-	@NotNull
 	@JsonProperty("caseNo")
 	private String caseNo;
 

@@ -335,7 +335,7 @@ var dat = {
             "jsonPath": "Asset.warrantyExpiryDate",
             "label": "ac.create.Warranty.expiry.date",
             "pattern": "",
-            "type": "datePicker",
+            "type": "datePicker", 
             "url": "",
             "isRequired": true,
             "isDisabled": false,

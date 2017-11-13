@@ -68,27 +68,39 @@ public class DataUploadService {
 	            else{
 	            	dataList.add(cell.getStringCellValue());
 	            }
-	            
+            }
+            
+	        logger.info("jsonPathList: "+jsonPathList);
+	        logger.info("dataList: "+dataList);
+	        
+	        if(!dataList.isEmpty()){
 	            if(!uploadDefinition.getIsBulkApi()){
 	            	for(int i = 0; i < jsonPathList.size(); i++){
 	            		String[] expressionArray = (jsonPathList.get(i)).split("[.]");
 	            		StringBuilder expression = new StringBuilder();
 	            		for(int j = 0; j < (expressionArray.length - 1) ; j++ ){
-	            			expression.append(expressionArray[i]);
+	            			expression.append(expressionArray[j]);
 	            			if(j != expressionArray.length - 2)
 	            				expression.append(".");
 	            		}
+	            		
+	            		logger.info("expression: "+expression.toString());
+	            		logger.info("key: "+expressionArray[expressionArray.length - 1]);
+	            		logger.info("value: "+dataList.get(i));
+	            		
 	            		documentContext.put(expression.toString(), expressionArray[expressionArray.length - 1], 
 	            				dataList.get(i));	            	
 	            		}
+	            	
+	            	logger.info("RequestInfo: "+requestInfo);
 	            	documentContext.put("$", "RequestInfo", requestInfo);
 	            	String request = documentContext.jsonString().toString();
 	            	logger.info("Request: "+request);
 	            	
 	            	response = dataUploadRepository.doApiCall(request, uploadDefinition.getUri());
 	            	
-	            }
             }
+        }
                         
             
         }
@@ -110,10 +122,13 @@ public class DataUploadService {
 					"There's no Upload Definition provided for this excel file");
 		}
 		if(0 == definitions.size()){
-			logger.error("There's no Uploaded Definition provided for this excel file");
+			logger.error("There's no Upload Definition provided for this excel file");
 			throw new CustomException(HttpStatus.BAD_REQUEST.toString(), 
 					"There's no Upload Definition provided for this excel file");
 		}
+		
+		logger.info("Definition to be used: "+definitions.get(0));
+
 		return definitions.get(0);
 		
 	}

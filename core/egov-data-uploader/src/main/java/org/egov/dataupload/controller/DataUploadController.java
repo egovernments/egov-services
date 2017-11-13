@@ -14,10 +14,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -33,12 +35,15 @@ public class DataUploadController {
 	
 	public static final Logger logger = LoggerFactory.getLogger(DataUploadController.class);
 
+	/* @RequestMapping(value = {"/{moduleName}/_get"}, method = RequestMethod.POST, 
+	        consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE}) */
+	
 	@PostMapping("/{moduleName}/_get")
 	@ResponseBody
-	public ResponseEntity<?> getReportData(MultipartFile inputFile, 
-			@RequestBody RequestInfo requestInfo, @PathVariable("moduleName") String moduleName) throws Exception {
+	public ResponseEntity<?> getReportData(@RequestParam("ciziten-data-upload.xls") MultipartFile inputFile, @PathVariable("moduleName") String moduleName) throws Exception {
 		try {
-			Object result = dataUploadService.buildRequest(inputFile, moduleName, requestInfo);
+			logger.info("Inside controller");
+			Object result = dataUploadService.buildRequest(inputFile, moduleName, new RequestInfo());
 		    Type type = new TypeToken<Map<String, Object>>() {}.getType();
 			Gson gson = new Gson();
 			Map<String, Object> data = gson.fromJson(result.toString(), type);

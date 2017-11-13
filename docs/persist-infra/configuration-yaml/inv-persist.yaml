@@ -354,8 +354,90 @@ serviceMaps:
               type: LONG
      
     
+    - version: 1.0
+      name: priceLists create
+      description: create pricelist in inventory
+      fromTopic: inv-pricelist-save-topic
+      queryMaps:
+        - query: INSERT INTO pricelist(id, supplier, rateType, rateContractNumber, rateContractDate, agreementNumber, agreementDate, agreementStartDate, agreementEndDate, active, fileStoreId, priceListDetails, tenantid, createdby, lastmodifiedby, createdtime, lastmodifiedtime ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: $.priceLists.*
+          jsonMaps:
+            - jsonPath: $.priceLists.*.id
+            - jsonPath: $.priceLists.*.supplier.id
+            - jsonPath: $.priceLists.*.rateType
+            - jsonPath: $.priceLists.*.rateContractNumber
+            - jsonPath: $.priceLists.*.rateContractDate
+            - jsonPath: $.priceLists.*.agreementNumber
+            - jsonPath: $.priceLists.*.agreementDate
+              dbType: LONG
+            - jsonPath: $.priceLists.*.agreementStartDate
+              dbType: LONG
+            - jsonPath: $.priceLists.*.agreementEndDate
+              dbType: LONG
+            - jsonPath: $.priceLists.*.active
+              dbType: BOOLEAN
+            - jsonPath: $.priceLists.*.fileStoreId
+            - jsonPath: $.priceLists.*.priceListDetails.*.id
+            - jsonPath: $.priceLists.*.auditDetails.tenantId
+            - jsonPath: $.priceLists.*.auditDetails.createdBy
+            - jsonPath: $.priceLists.*.auditDetails.lastModifiedBy
+            - jsonPath: $.priceLists.*.auditDetails.createdTime
+              dbType: LONG
+            - jsonPath: $.priceLists.*.auditDetails.lastModifiedTime
+              dbType: LONG
+
+        - query: INSERT INTO pricelistdetails(id, pricelist, material, fromDate, toDate, ratePerUnit, quantity, uom, active, tenantid, createdby, lastmodifiedby, createdtime, lastmodifiedtime ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: $.priceLists.*.priceListDetails.*
+          jsonMaps:
+            - jsonPath: $.priceLists.*.priceListDetails.*.id
+            - jsonPath: $.priceLists[?({id} in @.priceListDetails[*].id)].id
+            - jsonPath: $.priceLists.*.priceListDetails.*.material.id
+            - jsonPath: $.priceLists.*.priceListDetails.*.fromDate
+            - jsonPath: $.priceLists.*.priceListDetails.*.toDate
+            - jsonPath: $.priceLists.*.priceListDetails.*.ratePerUnit
+            - jsonPath: $.priceLists.*.priceListDetails.*.quantity
+            - jsonPath: $.priceLists.*.priceListDetails.*.uom.id
+            - jsonPath: $.priceLists.*.priceListDetails.*.active
+              dbType: BOOLEAN
+            - jsonPath: $.priceLists.*.priceListDetails.*.tenantId
+            - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.createdBy
+            - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.lastModifiedBy
+            - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.createdTime
+              dbType: LONG
+            - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.lastModifiedTime
+              dbType: LONG
 
 
+    - version: 1.0
+      name: priceLists update
+      description: update pricelist in inventory
+      fromTopic: inv-pricelist-update-topic
+      queryMaps:
+        - query: update pricelist SET active=?, lastmodifiedby=?,  lastmodifiedtime=? WHERE id=? AND tenantid=?;
+          basePath: $.priceLists.*
+          jsonMaps:
+            - jsonPath: $.priceLists.*.active
+              dbType: BOOLEAN
+            - jsonPath: $.priceLists.*.auditDetails.lastModifiedBy
+            - jsonPath: $.priceLists.*.auditDetails.lastModifiedTime
+              dbType: LONG
+            - jsonPath: $.priceLists.*.id
+            - jsonPath: $.priceLists.*.auditDetails.tenantId
+
+        - query: update pricelistdetails SET active=?, quantity=?, ratePerUnit=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+          basePath: $.priceLists.*.priceListDetails.*
+          jsonMaps:
+            - jsonPath: $.priceLists.*.priceListDetails.*.active
+              dbType: BOOLEAN
+            - jsonPath: $.priceLists.*.priceListDetails.*.quantity
+              dbType: LONG
+            - jsonPath: $.priceLists.*.priceListDetails.*.ratePerUnit
+              dbType: LONG
+            - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.lastModifiedBy
+            - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.lastModifiedTime
+              dbType: LONG
+            - jsonPath: $.priceLists.*.priceListDetails.*.id
+            - jsonPath: $.priceLists.*.priceListDetails.*.tenantId
 
 
 

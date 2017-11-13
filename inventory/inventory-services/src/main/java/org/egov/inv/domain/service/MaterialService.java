@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @Service
 public class MaterialService {
 
@@ -49,6 +51,7 @@ public class MaterialService {
             materialRequest.getMaterials().get(i).setAuditDetails(inventoryUtilityService.mapAuditDetails(materialRequest.getRequestInfo(), tenantId));
             materialStoreMappings = buildMaterialStoreMapping(materialRequest.getMaterials().get(i).getCode(), materialRequest.getMaterials().get(i).getStoreMapping());
             uniqueCheck(materialRequest.getMaterials().get(i));
+            validateAsset(materialRequest.getMaterials().get(i));
         }
 
         materialRepository.save(materialRequest);
@@ -66,6 +69,7 @@ public class MaterialService {
                     inventoryUtilityService.mapAuditDetailsForUpdate(materialRequest.getRequestInfo(), tenantId));
             materialStoreMappings = buildMaterialStoreMapping(material.getCode(), material.getStoreMapping());
             uniqueCheck(material);
+            validateAsset(material);
         }
 
         materialRepository.update(materialRequest);
@@ -138,6 +142,15 @@ public class MaterialService {
                 .requestInfo(requestInfo)
                 .materialStoreMappings(materialStoreMappings)
                 .build();
+    }
+
+    private void validateAsset(Material material) {
+        if (!isEmpty(material.getInventoryType()) &&
+                material.getInventoryType().toString().equalsIgnoreCase("Asset")
+                && (null == material.getAssetCategory() ||
+                (null != material.getAssetCategory() && isEmpty(material.getAssetCategory().getCode())))) {
+            throw new CustomException("inv.0012", "Asset Category is mandatory when Inventory type  is Asset");
+        }
     }
 
     private void uniqueCheck(Material material) {

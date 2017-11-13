@@ -370,8 +370,7 @@ var dat = {
             isNumber: true,
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: "",
-            defaultValue:"00:00"
+            patternErrorMsg: ""
           },
           {
             name: "courtName",

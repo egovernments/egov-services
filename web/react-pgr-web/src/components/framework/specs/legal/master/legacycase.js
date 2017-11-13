@@ -142,8 +142,7 @@ var dat = {
             type: "timePicker",
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: "",
-            defaultValue:'00:00'
+            patternErrorMsg: ""
           },
           {
             name: "hearingDate",

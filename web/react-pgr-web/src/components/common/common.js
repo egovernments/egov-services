@@ -2490,6 +2490,7 @@ var localization_EN_Data = {
 
 "legal.create.uploadInvoice":"Upload Invoice",
 "framework.date.error.message": "Please enter date in DD/MM/YYYY format",
+"framework.time.error.message": "Please enter time in H:MM AM/PM format",
 "legal.create.code":"Code",
 "legal.create.paymentNote":"Note: Total amount shown in window is valid and it is not necessarily same as the amount mentioned in invoice document that is attached",
 "advocatepayment.update.document.title":"Advocate Payment Update",
@@ -4549,7 +4550,7 @@ var localization_MR_Data = {
 
 "legal.create.uploadInvoice":"Upload Invoice-marathi",
 "framework.date.error.message": "Please enter date in DD/MM/YYYY format-Marathi",
-
+"framework.time.error.message": "Please enter time in H:MM AM/PM format-Marathi",
 "legal.create.code":"Code-Marathi ",
 "legal.create.paymentNote":"Note: Total amount shown in window is valid and it is not necessarily same as the amount mentioned in invoice document that is attached-Marathi",
 "advocatepayment.update.document.title":"Advocate Payment Update-Marathi",

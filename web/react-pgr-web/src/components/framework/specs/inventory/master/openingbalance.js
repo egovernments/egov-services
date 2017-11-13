@@ -1,5 +1,5 @@
 var dat = {
-  "inventory.openingbalance.search.title": {
+  "inventory.search": {
     "numCols": 4,
     "useTimestamp": true,
     "objectName": "",
@@ -10,17 +10,17 @@ var dat = {
         "label": "inventory.openingbalance.search.title",
         "fields": [
           {
-            "name": "finanncilaYear",
-            "jsonPath": "finanncilaYear",
-            "label": "inventory.create.finanncilaYear",
+            "name": "financialYear",
+            "jsonPath": "financialYear",
+            "label": "inventory.financialYear",
             "type": "text",
             "isDisabled": false,
-            "patternErrorMsg": "inventory.create.field.message.finanncilaYear"
+            "patternErrorMsg": "inventory.create.field.message.financialYear"
           },
           {
             "name": "receiptNumber",
             "jsonPath": "receiptNumber",
-            "label": "inventory.create.receiptNumber",
+            "label": "inventory.receiptNumber",
             "type": "text",
             "isDisabled": false,
             "patternErrorMsg": "inventory.create.field.message.receiptNumber"
@@ -28,19 +28,10 @@ var dat = {
           {
             "name": "materialName",
             "jsonPath": "materialName",
-            "label": "inventory.create.materialName",
+            "label": "inventory.materialName",
             "type": "text",
             "isDisabled": false,
             "patternErrorMsg": "inventory.create.field.message.materialName"
-          },
-          {
-            "name": "sortBy",
-            "jsonPath": "sortBy",
-            "label": "inventory.create.sortBy",
-            "type": "text",
-            "isDisabled": false,
-            "defaultValue": "id",
-            "patternErrorMsg": "inventory.create.field.message.sortBy"
           }
         ]
       }
@@ -48,23 +39,23 @@ var dat = {
     "result": {
       "header": [
         {
-          "label": "inventory.search.result.MaterialReceipt[0].receivingStore.code"
+          "label": "inventory.receivingStore"
         },
         {
-          "label": "inventory.search.result.MaterialReceipt[0].receiptNumber"
+          "label": "inventory.mrnNumber"
         },
         {
-          "label": "inventory.search.result.MaterialReceipt[0].materialName"
+          "label": "inventory.materialName"
         }
       ],
       "values": [
-        "MaterialReceipt[0].receivingStore.code",
-	"MaterialReceipt[0].receiptNumber",
-	"MaterialReceipt[0].materialName"
+        "receivingStore.code",
+	"mrnNumber",
+	"materialName"
       ],
       "resultPath": "openingbalance",
-      "rowClickUrlUpdate": "/update/openingbalance/{mrnNumber}",
-      "rowClickUrlView": "/view/openingbalance/{mrnNumber}"
+      "rowClickUrlUpdate": "/update/inventory/openingbalance/{mrnNumber}",
+      "rowClickUrlView": "/view/inventory/openingbalance/{mrnNumber}"
     }
   },
   "inventory.create": {
@@ -74,12 +65,12 @@ var dat = {
     "groups": [
       {
         "name": "openingBalance",
-        "label": "inventory.create.group.title.openingBalance",
+        "label": "inventory.create.openingBalance.title",
         "fields": [
           {
             "name": "financialYear",
             "jsonPath": "MaterialReceipt[0].financialYear",
-            "label": "inventory.create.financialYear",
+            "label": "inventory.financialYear",
             "pattern": "",
             "type": "singleValueList",
             "isRequired": true,
@@ -92,7 +83,7 @@ var dat = {
           {
             "name": "code",
             "jsonPath": "MaterialReceipt[0].receivingStore.code",
-            "label": "inventory.create.group.store.name",
+            "label": "inventory.store.name",
             "pattern": "^[a-zA-Z0-9]+$",
             "type": "singleValueList",
             "isRequired": true,
@@ -109,7 +100,7 @@ var dat = {
     {
 
 						 "name":"Opening Balance Details",
-            "label":"inventory.create.group.openingbalance.title.opbdetails",
+            "label":"inventory.openingbalance.opbdetails.title",
             "fields":[
                {
                   "type":"tableList",
@@ -117,31 +108,31 @@ var dat = {
                   "tableList":{
                      "header":[
                         {
-                           "label":"Material Name"
+                           "label":"inventory.materialName"
                         },
                         {
-                           "label":"Material Descr."
+                           "label":"inventory.materialDesc"
                         },
                         {
-                           "label":"Uom"
+                           "label":"inventory.Uom"
                         },
 												 {
-                           "label":"Quantity"
+                           "label":"inventory.quantity"
                         },
                         {
-                           "label":"Rate"
+                           "label":	"inventory.Rate"
                         },
                         {
-                           "label":"Receipt Number"
+                           "label": "inventory.receiptNumber"
                         },
                         {
-                           "label":"Receipt Date"
+                           "label": "inventory.receiptDate"
                         },
                         {
-                           "label":"Lot Number"
+                           "label": 	"inventory.lotNumber"
                         },
                         {
-                           "label":"Expiry Date"
+                           "label":"inventory.expiryDate"
                         }
 
                      ],

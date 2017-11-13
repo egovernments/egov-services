@@ -2610,8 +2610,32 @@ var localization_EN_Data = {
  "inventory.common.ifsc":"Bank IFSC Code",
  "inventory.common.micr":"MICR Code",
  "inventory.common.active":"Active",
+
+ "inventory.pricelist.page.title":"Material Opening Balance Entry",
+ "inventory.pricelist.group.title":"Material Opening Balance Entry",
+ "inventory.pricelist.search.title":"Search Price List",
+ "inventory.supplierName":"Supplier Name",
+"inventory.agreementNumber":"Agreement Number",
+"inventory.rateContractNumber":"Rate contract Number",
+ "inventory.rateContractDate":"Rate contract Date",
+ "inventory.agreementDate":"Agreement Date",
+"inventory.agreementStartDate":"Agreement start date",
+"inventory.agreementEndDate":"Agreement end date",
+ "inventory.rateType":"Rate Type",
+ "inventory.supplier":"Supplier",
+"inventory.supplierDetail":"Supplier Details",
+"inventory.active":"Active",
+"inventory.materialName":"Material Name",
+"inventory.materialDesc":"Mateiral Description",
+"inventory.Uom":"Unit of Measure",
+"inventory.Rate":"Rate",
+ "inventory.from.date":"From Date",
+ "inventory.TO.date":"To Date",
+"inventory.quantity" :"Quantity",
+"inventory.pricebdetails.title":"Price Rates",
+
  "legal.vakalatnama.create.primaryAdvocate":"Primary Advocate",
-  "legal.vakalatnama.create.additionalAdvocate":"Additional Advocate",
+  "legal.vakalatnama.create.additionalAdvocate":"Additional Advocate"
 
 
 

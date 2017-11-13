@@ -7,12 +7,12 @@ var dat = {
     "groups": [
       {
         "name": "search",
-        "label": "inventory.search.title",
+        "label": "inventory.pricelist.search.title",
         "fields": [
           {
             "name": "supplierName",
             "jsonPath": "supplierName",
-            "label": "inventory.create.supplierName",
+            "label": "inventory.supplierName",
             "type": "singleValueList",
             "isDisabled": false,
 	    "url":"inventory-services/supplier/_search?|$.supplier[*].code|$.supplier[*].name",
@@ -21,7 +21,7 @@ var dat = {
           {
             "name": "rateContractNumber",
             "jsonPath": "rateContractNumber",
-            "label": "inventory.create.rateContractNumber",
+            "label": "inventory.rateContractNumber",
             "type": "text",
             "isDisabled": false,
             "patternErrorMsg": "inventory.create.field.message.rateContractNumber"
@@ -29,7 +29,7 @@ var dat = {
           {
             "name": "agreementNumber",
             "jsonPath": "agreementNumber",
-            "label": "inventory.create.agreementNumber",
+            "label": "inventory.agreementNumber",
             "type": "text",
             "isDisabled": false,
             "patternErrorMsg": "inventory.create.field.message.agreementNumber"
@@ -37,7 +37,7 @@ var dat = {
           {
             "name": "rateContractDate",
             "jsonPath": "rateContractDate",
-            "label": "inventory.create.rateContractDate",
+            "label": "inventory.rateContractDate",
             "type": "datePicker",
             "isDisabled": false,
             "patternErrorMsg": "inventory.create.field.message.rateContractDate"
@@ -45,7 +45,7 @@ var dat = {
           {
             "name": "agreementDate",
             "jsonPath": "agreementDate",
-            "label": "inventory.create.agreementDate",
+            "label": "inventory.agreementDate",
            "type": "datePicker",
             "isDisabled": false,
             "patternErrorMsg": "inventory.create.field.message.agreementDate"
@@ -53,7 +53,7 @@ var dat = {
           {
             "name": "agreementStartDate",
             "jsonPath": "agreementStartDate",
-            "label": "inventory.create.agreementStartDate",
+            "label": "inventory.agreementStartDate",
            "type": "datePicker",
             "isDisabled": false,
             "patternErrorMsg": "inventory.create.field.message.agreementStartDate"
@@ -61,7 +61,7 @@ var dat = {
           {
             "name": "agreementEndDate",
             "jsonPath": "agreementEndDate",
-            "label": "inventory.create.agreementEndDate",
+            "label": "inventory.agreementEndDate",
             "type": "datePicker",
             "isDisabled": false,
             "patternErrorMsg": "inventory.create.field.message.agreementEndDate"
@@ -69,7 +69,7 @@ var dat = {
           {
             "name": "rateType",
             "jsonPath": "rateType",
-            "label": "inventory.create.rateType",
+            "label": "inventory.rateType",
             "type": "singleValueList",
 	    "defaultValue":[
               {key: null, value: "-- Please Select --"},
@@ -92,15 +92,6 @@ var dat = {
             ],
             "isDisabled": false,
             "patternErrorMsg": "inventory.create.field.message.rateType"
-          },
-          {
-            "name": "sortBy",
-            "jsonPath": "sortBy",
-            "label": "inventory.create.sortBy",
-            "type": "text",
-            "isDisabled": false,
-            "defaultValue": "id",
-            "patternErrorMsg": "inventory.create.field.message.sortBy"
           }
         ]
       }
@@ -108,39 +99,50 @@ var dat = {
     "result": {
       "header": [
         {
-          "label": "Supplier"
+          "label": "inventory.supplier"
         },
         {
-          "label": "inventory.search.result.rateType"
+          "label": "inventory.rateType"
         },
         {
-          "label": "inventory.search.result.rateContractNumber"
+          "label": "inventory.rateContractNumber"
         },
         {
-          "label": "inventory.search.result.rateContractDate"
+          "label": "inventory.rateContractDate"
         },
         {
-          "label": "inventory.search.result.agreementNumber"
+          "label": "inventory.agreementNumber"
         },
         {
-          "label": "inventory.search.result.agreementDate"
+          "label": "inventory.agreementDate"
         },
         {
-          "label": "inventory.search.result.agreementStartDate"
+          "label": "inventory.agreementStartDate"
         },
         {
-          "label": "inventory.search.result.agreementEndDate"
+          "label": "inventory.agreementEndDate"
         },
         {
-          "label": "inventory.search.result.active"
+          "label": "inventory.active"
         }
       ],
       "values": [
-        "priceLists[0].supplier.name"
+        "supplier.name",
+	"rateType",
+        "rateContractNumber",
+	"agreementNumber",
+	"agreementDate",
+	"agreementStartDate",
+	"agreementEndDate",
+	{valuePath:"active", type:"checkbox"}
       ],
       "resultPath": "pricelists",
-      "rowClickUrlUpdate": "/update/pricelists/{id}",
-      "rowClickUrlView": "/view/pricelists/{id}"
+      "resultIdKey":"rateContractNumber",
+      "rowClickUrlUpdate": "/update/inventory/pricelists/{code}",
+      "rowClickUrlView": "/view/inventory/pricelists/{code}",
+      "rowClickUrlAdd" : "/create/inventory/pricelists",
+      "rowClickUrlDelete" : "inventory-services/pricelists/_update"
+
     }
   },
   "inventory.create": {
@@ -150,12 +152,12 @@ var dat = {
     "groups": [
       {
         "name": "Group1",
-        "label": "Supplier Details",
+        "label": "inventory.supplierDetail",
         "fields": [
           {
             "name": "supplier",
             "jsonPath": "priceLists[0].supplier.code",
-            "label": "inventory.create.supplier",
+            "label": "inventory.supplier",
             "url":"inventory-services/supplier/_search?|$.supplier[*].code|$.supplier[*].name",
             "type": "singleValueList",
             "isRequired": true,
@@ -168,7 +170,7 @@ var dat = {
           {
             "name": "rateType",
             "jsonPath": "priceLists[0].rateType",
-            "label": "inventory.create.rateType",
+            "label": "inventory.rateType",
             "pattern": "",
             "type": "singleValueList",
 	    "defaultValue":[
@@ -197,7 +199,7 @@ var dat = {
           {
             "name": "rateContractNumber",
             "jsonPath": "priceLists[0].rateContractNumber",
-            "label": "inventory.create.rateContractNumber",
+            "label": "inventory.rateContractNumber",
             "pattern": "",
             "type": "text",
             "isRequired": true,
@@ -208,7 +210,7 @@ var dat = {
           {
             "name": "rateContractDate",
             "jsonPath": "priceLists[0].rateContractDate",
-            "label": "inventory.create.rateContractDate",
+            "label": "inventory.rateContractDate",
             "pattern": "",
             "type": "datePicker",
             "isRequired": true,
@@ -219,7 +221,7 @@ var dat = {
           {
             "name": "agreementNumber",
             "jsonPath": "priceLists[0].agreementNumber",
-            "label": "inventory.create.agreementNumber",
+            "label": "inventory.agreementNumber",
             "pattern": "^[a-zA-Z0-9]+$",
             "type": "text",
             "isRequired": true,
@@ -230,7 +232,7 @@ var dat = {
           {
             "name": "agreementDate",
             "jsonPath": "priceLists[0].agreementDate",
-            "label": "inventory.create.agreementDate",
+            "label": "inventory.agreementDate",
             "pattern": "",
              "type": "datePicker",
             "isRequired": true,
@@ -241,7 +243,7 @@ var dat = {
           {
             "name": "agreementStartDate",
             "jsonPath": "priceLists[0].agreementStartDate",
-            "label": "inventory.create.agreementStartDate",
+            "label": "inventory.agreementStartDate",
             "pattern": "",
              "type": "datePicker",
             "isRequired": true,
@@ -252,7 +254,7 @@ var dat = {
           {
             "name": "agreementEndDate",
             "jsonPath": "priceLists[0].agreementEndDate",
-            "label": "inventory.create.agreementEndDate",
+            "label": "inventory.agreementEndDate",
             "pattern": "",
              "type": "datePicker",
             "isRequired": true,
@@ -263,7 +265,7 @@ var dat = {
           {
             "name": "active",
             "jsonPath": "priceLists[0].active",
-            "label": "inventory.create.active",
+            "label": "inventory.active",
             "pattern": "",
               "type":"checkbox",
             "defaultValue":true,
@@ -276,7 +278,7 @@ var dat = {
       },
       {
         "name": "Rate contract Details",
-        "label": "inventory.create.group.pricelist.title.pricebdetails",
+        "label": "inventory.pricebdetails.title",
         "fields": [
           {
             "type": "tableList",
@@ -284,25 +286,25 @@ var dat = {
             "tableList": {
               "header": [
                 {
-                  "label": "Material Name"
+                  "label": "inventory.materialName"
                 },
                 {
-                  "label": "Material Descr."
+                  "label": "inventory.materialDesc"
                 },
                 {
-                  "label": "Uom"
+                  "label": "inventory.Uom"
                 },
                 {
-                  "label": "Rate"
+                  "label":"inventory.Rate"
                 },
                 {
-                  "label": "From Date"
+                  "label": "inventory.from.date"
                 },
                 {
-                  "label": "To Date"
+                  "label": "inventory.to.date"
                 },
                 {
-                  "label": "Quantity"
+                  "label": "inventory.quantity" 
                 }
               ],
               "values": [
@@ -399,12 +401,12 @@ var dat = {
     "groups": [
       {
         "name": "Group1",
-        "label": "inventory.create.group.title.Group1",
+        "label": "inventory.supplierDetail",
         "fields": [
           {
             "name": "code",
             "jsonPath": "priceLists[0].supplier.code",
-            "label": "inventory.create.supplier.code",
+            "label": "inventory.supplier",
             "pattern": "^[a-zA-Z0-9]+$",
             "type": "text",
             "isRequired": false,
@@ -417,7 +419,7 @@ var dat = {
           {
             "name": "rateType",
             "jsonPath": "priceLists[0].rateType",
-            "label": "inventory.create.rateType",
+            "label": "inventory.rateType",
             "pattern": "",
             "type": "singleValueList",
 	    "defaultValue":[
@@ -447,7 +449,7 @@ var dat = {
           {
             "name": "rateContractNumber",
             "jsonPath": "priceLists[0].rateContractNumber",
-            "label": "inventory.create.rateContractNumber",
+            "label": "inventory.rateContractNumber",
             "pattern": "",
             "type": "text",
             "isRequired": true,
@@ -458,7 +460,7 @@ var dat = {
           {
             "name": "rateContractDate",
             "jsonPath": "priceLists[0].rateContractDate",
-            "label": "inventory.create.rateContractDate",
+            "label": "inventory.rateContractDate",
             "pattern": "",
              "type": "datePicker",
             "isRequired": true,
@@ -469,7 +471,7 @@ var dat = {
           {
             "name": "agreementNumber",
             "jsonPath": "priceLists[0].agreementNumber",
-            "label": "inventory.create.agreementNumber",
+            "label": "inventory.agreementNumber",
             "pattern": "",
             "type": "text",
             "isRequired": true,
@@ -480,7 +482,7 @@ var dat = {
           {
             "name": "agreementDate",
             "jsonPath": "priceLists[0].agreementDate",
-            "label": "inventory.create.agreementDate",
+            "label": "inventory.agreementDate",
             "pattern": "",
             "type": "datePicker",
             "isRequired": true,
@@ -491,7 +493,7 @@ var dat = {
           {
             "name": "agreementStartDate",
             "jsonPath": "priceLists[0].agreementStartDate",
-            "label": "inventory.create.agreementStartDate",
+            "label": "inventory.agreementStartDate",
             "pattern": "",
              "type": "datePicker",
             "isRequired": true,
@@ -502,7 +504,7 @@ var dat = {
           {
             "name": "agreementEndDate",
             "jsonPath": "priceLists[0].agreementEndDate",
-            "label": "inventory.create.agreementEndDate",
+            "label": "inventory.agreementEndDate",
             "pattern": "",
           "type": "datePicker",
             "isRequired": true,
@@ -513,7 +515,7 @@ var dat = {
           {
             "name": "active",
             "jsonPath": "priceLists[0].active",
-            "label": "inventory.create.active",
+            "label": "inventory.active",
             "pattern": "",
             "type": "radio",
             "isRequired": true,
@@ -534,12 +536,12 @@ var dat = {
     "groups": [
       {
         "name": "Group1",
-        "label": "inventory.create.group.title.Group1",
+        "label": "inventory.supplierDetail",
         "fields": [
           {
             "name": "code",
             "jsonPath": "priceLists[0].supplier.code",
-            "label": "inventory.create.supplier.code",
+            "label": "inventory.supplier",
             "pattern": "^[a-zA-Z0-9]+$",
             "type": "text",
             "isRequired": false,
@@ -552,7 +554,7 @@ var dat = {
           {
             "name": "rateType",
             "jsonPath": "priceLists[0].rateType",
-            "label": "inventory.create.rateType",
+            "label": "inventory.rateType",
             "pattern": "",
             "type": "singleValueList",
 		"defaultValue":[
@@ -582,7 +584,7 @@ var dat = {
           {
             "name": "rateContractNumber",
             "jsonPath": "priceLists[0].rateContractNumber",
-            "label": "inventory.create.rateContractNumber",
+            "label": "inventory.rateContractNumber",
             "pattern": "",
             "type": "text",
             "isRequired": true,
@@ -593,7 +595,7 @@ var dat = {
           {
             "name": "rateContractDate",
             "jsonPath": "priceLists[0].rateContractDate",
-            "label": "inventory.create.rateContractDate",
+            "label": "inventory.rateContractDate",
             "pattern": "",
             "type": "datePicker",
             "isRequired": true,
@@ -604,7 +606,7 @@ var dat = {
           {
             "name": "agreementNumber",
             "jsonPath": "priceLists[0].agreementNumber",
-            "label": "inventory.create.agreementNumber",
+            "label": "inventory.agreementNumber",
             "pattern": "",
             "type": "text",
             "isRequired": true,
@@ -615,7 +617,7 @@ var dat = {
           {
             "name": "agreementDate",
             "jsonPath": "priceLists[0].agreementDate",
-            "label": "inventory.create.agreementDate",
+            "label": "inventory.agreementDate",
             "pattern": "",
              "type": "datePicker",
             "isRequired": true,
@@ -626,7 +628,7 @@ var dat = {
           {
             "name": "agreementStartDate",
             "jsonPath": "priceLists[0].agreementStartDate",
-            "label": "inventory.create.agreementStartDate",
+            "label": "inventory.agreementStartDate",
             "pattern": "",
            "type": "datePicker",
             "isRequired": true,
@@ -637,7 +639,7 @@ var dat = {
           {
             "name": "agreementEndDate",
             "jsonPath": "priceLists[0].agreementEndDate",
-            "label": "inventory.create.agreementEndDate",
+            "label": "inventory.agreementEndDate",
             "pattern": "",
             "type": "datePicker",
             "isRequired": true,
@@ -648,7 +650,7 @@ var dat = {
           {
             "name": "active",
             "jsonPath": "priceLists[0].active",
-            "label": "inventory.create.active",
+            "label": "inventory.active",
             "pattern": "",
             "type": "radio",
             "isRequired": true,

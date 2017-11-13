@@ -59,7 +59,6 @@
       "isDepreciationApplicable": true,
       "assetFieldsDefination": null
     },
-    
     {
       "tenantId": "default",
       "id": 12,
@@ -203,7 +202,7 @@
     {
       "tenantId": "default",
       "id": 13,
-      "name": "Sewerage and Drainage",
+      "name": "Drainage",
       "code": "013",
       "assetCategoryType": "IMMOVABLE",
       "parent": 2,
@@ -218,18 +217,6 @@
       "depreciationRate": 6.66,
       "isDepreciationApplicable": true,
       "assetFieldsDefination": [
-        {
-          "name": "Capacity",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
         {
           "name": "Pipe Type",
           "type": "Text",
@@ -256,19 +243,7 @@
         },
         {
           "name": "Collection Mains",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Layer Type",
-          "type": "Text",
+          "type": "Number",
           "isActive": true,
           "isMandatory": false,
           "values": null,
@@ -281,6 +256,18 @@
         {
           "name": "Trunk Main",
           "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Usage",
+          "type": "Text",
           "isActive": true,
           "isMandatory": false,
           "values": null,
@@ -1062,6 +1049,54 @@
           "url": null,
           "order": null,
           "columns": []
+        },
+        {
+          "name": "Agreement Reference No",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Area of Land",
+          "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Holding Type",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Survey No. of Land",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
         }
       ]
     },
@@ -1120,7 +1155,31 @@
           "columns": []
         },
         {
-          "name": "Width",
+          "name": "Possession Date",
+          "type": "Date",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Agreement Reference No",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Area of Land",
           "type": "Number",
           "isActive": true,
           "isMandatory": false,
@@ -1132,8 +1191,20 @@
           "columns": []
         },
         {
-          "name": "Possession Date",
-          "type": "Date",
+          "name": "Holding Type",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Survey No. of Land",
+          "type": "Text",
           "isActive": true,
           "isMandatory": false,
           "values": null,
@@ -1210,6 +1281,54 @@
           "url": null,
           "order": null,
           "columns": []
+        },
+        {
+          "name": "Agreement Reference No",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Area of Land",
+          "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Holding Type",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Survey No. of Land",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
         }
       ]
     },
@@ -1270,6 +1389,54 @@
         {
           "name": "Possession Date",
           "type": "Date",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Agreement Reference No",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Area of Land",
+          "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Holding Type",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Survey No. of Land",
+          "type": "Text",
           "isActive": true,
           "isMandatory": false,
           "values": null,
@@ -1346,6 +1513,54 @@
           "url": null,
           "order": null,
           "columns": []
+        },
+        {
+          "name": "Agreement Reference No",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Area of Land",
+          "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Holding Type",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Survey No. of Land",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
         }
       ]
     },
@@ -1406,6 +1621,54 @@
         {
           "name": "Possession Date",
           "type": "Date",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Agreement Reference No",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Area of Land",
+          "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Holding Type",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Survey No. of Land",
+          "type": "Text",
           "isActive": true,
           "isMandatory": false,
           "values": null,
@@ -1482,6 +1745,54 @@
           "url": null,
           "order": null,
           "columns": []
+        },
+        {
+          "name": "Agreement Reference No",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Area of Land",
+          "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Holding Type",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Survey No. of Land",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
         }
       ]
     },
@@ -1550,6 +1861,54 @@
           "url": null,
           "order": null,
           "columns": []
+        },
+        {
+          "name": "Agreement Reference No",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Area of Land",
+          "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Holding Type",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Survey No. of Land",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
         }
       ]
     },
@@ -1610,6 +1969,98 @@
         {
           "name": "Possession Date",
           "type": "Date",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Agreement Reference No",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Area of Land",
+          "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Holding Type",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Survey No. of Land",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        }
+      ]
+    },
+    {
+      "tenantId": "default",
+      "id": 51,
+      "name": "Sewerage",
+      "code": "051",
+      "assetCategoryType": "IMMOVABLE",
+      "parent": 2,
+      "depreciationMethod": "STRAIGHT_LINE_METHOD",
+      "isAssetAllow": true,
+      "assetAccount": null,
+      "accumulatedDepreciationAccount": null,
+      "revaluationReserveAccount": null,
+      "depreciationExpenseAccount": null,
+      "unitOfMeasurement": "NOS",
+      "version": "1.0",
+      "depreciationRate": 6.66,
+      "isDepreciationApplicable": true,
+      "assetFieldsDefination": [
+        {
+          "name": "Capacity",
+          "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
+          "name": "Area",
+          "type": "Number",
           "isActive": true,
           "isMandatory": false,
           "values": null,

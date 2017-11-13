@@ -54,6 +54,7 @@ var dat = {
             name: "exhibitNumber",
             jsonPath: "exhibitNumber",
             label: "legal.vakalatnama.create.exhibitNumber",
+            isDisablePath:"cases[0].isVakalatnamaGenerated",
             pattern: "",
             type: "text",
             isRequired: false,
@@ -153,11 +154,6 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: "",
             patternErrMsg: "",
-            "enableDisableFields": [{
-								"ifValue": true,
-								"disable": [],
-								"enable": ["exhibitNumber"]
-							}]
           }
         ]
       }, {

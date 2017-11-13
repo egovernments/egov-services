@@ -24,6 +24,7 @@ class Report extends Component {
   }
   constructor(props) {
     super(props);
+    this.getVal=this.getVal.bind(this);
   }
 
   setLabelAndReturnRequired(configObject) {

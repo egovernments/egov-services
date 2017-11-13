@@ -611,7 +611,7 @@ var dat = {
         fields: [
           {
             name: "actionType",
-            jsonPath: "advocates[0].actionType",
+            jsonPath: "advocates[0].isActive",
             label: "advocates.create.actionType",
             type: "radio",
             isRequired: false,
@@ -620,11 +620,11 @@ var dat = {
             values: [
               {
                 label: "advocates.create.active",
-                value: "active"
+                value: true
               },
               {
                 label: "advocates.create.inactive",
-                value: "inactive"
+                value: false
               },{
                 label: "advocates.create.terminate",
                 value: "terminate"
@@ -1179,7 +1179,7 @@ var dat = {
         fields: [
           {
             name: "actionType",
-            jsonPath: "advocates[0].actionType",
+            jsonPath: "advocates[0].isActive",
             label: "advocates.create.actionType",
             type: "radio",
             isRequired: false,
@@ -1188,11 +1188,11 @@ var dat = {
             values: [
               {
                 label: "advocates.create.active",
-                value: "active"
+                value: true
               },
               {
                 label: "advocates.create.inactive",
-                value: "inactive"
+                value: false
               },{
                 label: "advocates.create.terminate",
                 value: "terminate"

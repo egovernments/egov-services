@@ -462,7 +462,7 @@ public class EstimateValidator {
 
                 if(StringUtils.isBlank(detailedEstimate.getNameOfWork()) && detailedEstimate.getNameOfWork().equalsIgnoreCase(Constants.ESTIMATE_NAMEOFWORK_NEW)
                   && StringUtils.isBlank(assetsForEstimate.getLandAsset()))
-                    messages.put(KEY_ESTIMATE_ASSET_REQUIRED, MESSAGE_ESTIMATE_ASSET_REQUIRED);
+                    messages.put(KEY_ESTIMATE_LAND_ASSET_REQUIRED, MESSAGE_ESTIMATE_LAND_ASSET_REQUIRED);
                 //TODO FIX aset code validation
                /* else {
                     List<Asset> assets = assetRepository.searchAssets(assetsForEstimate.getTenantId(),assetsForEstimate.getAsset().getCode(),requestInfo);

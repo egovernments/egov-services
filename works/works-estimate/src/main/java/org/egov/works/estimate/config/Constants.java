@@ -195,7 +195,7 @@ public class Constants {
     public static final String MESSAGE_ESTIMATE_ASSET_REQUIRED= "Invalid data for esimate asset code";
 
     public static final String KEY_ESTIMATE_LAND_ASSET_REQUIRED= "ESTIMATE_LAND_ASSET_REQUIRED";
-    public static final String MESSAGE_ESTIMATE__LAND_ASSET_REQUIRED= "Esimate land asset is required";
+    public static final String MESSAGE_ESTIMATE_LAND_ASSET_REQUIRED= "Esimate land asset is required";
 
     public static final String KEY_ESTIMATE_ACTIVITY_ESTIMATE_RATE_REQUIRED= "ESTIMATE_ACTIVITY_ESTIMATE_RATE_REQUIRED";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_ESTIMATE_RATE_REQUIRED= "Estimate rate is required for activity";

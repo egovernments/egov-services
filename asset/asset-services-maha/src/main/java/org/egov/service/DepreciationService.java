@@ -38,6 +38,9 @@ public class DepreciationService {
 
 	@Autowired
 	private AssetCommonService assetCommonService;
+	
+	@Autowired
+	private MasterDataService mDService;
 
 	@Autowired
 	private ApplicationProperties applicationProperties;
@@ -50,9 +53,6 @@ public class DepreciationService {
 
 	@Autowired
 	private SequenceGenService genService;
-
-	@Autowired
-	private MasterDataService masterDataService;
 
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
@@ -204,8 +204,15 @@ public class DepreciationService {
 		Set<Long> assetCategoryIds = depreciationInputsList.stream().map(dil -> dil.getAssetCategory())
 				.collect(Collectors.toSet());
 
-		Map<Long, AssetCategory> assetCatMap = masterDataService.getAssetCategoryMap(assetCategoryIds, requestInfo,
-				tenantId);
+		Map<String, Map<String, Map<String, String>>> moduleMap = new HashMap<>();
+		Map<String, Map<String, String>> masterMap = new HashMap<>();
+		Map<String, String> fieldMap = new HashMap<>();
+		
+		fieldMap.put("id", assetCommonService.getIdQuery(assetCategoryIds));
+		masterMap.put("AssetCategory", fieldMap);
+		moduleMap.put("ASSET", masterMap);
+		
+		Map<Long, AssetCategory> assetCatMap = mDService.getAssetCategoryMapFromJSONArray(mDService.getStateWideMastersByListParams(moduleMap, requestInfo, tenantId).get("ASSET"));
 
 		depreciationInputsList
 				.forEach(a -> a.setDepreciationRate(assetCatMap.get(a.getAssetCategory()).getDepreciationRate()));

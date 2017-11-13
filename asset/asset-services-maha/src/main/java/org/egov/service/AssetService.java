@@ -2,6 +2,7 @@ package org.egov.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +45,7 @@ public class AssetService {
 	private AssetCommonService assetCommonService;
 
 	@Autowired
-	private MasterDataService masterDataService;
+	private MasterDataService mDService;
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
@@ -120,6 +121,7 @@ public class AssetService {
 			assetCategoryMdms.get
 		}*/
 		final List<Asset> assets = assetRepository.findForCriteria(searchAsset);
+		
 		Set<Long> idSet=null;
 		if (!assets.isEmpty()) {
 			 idSet = assets.stream().map(asset -> asset.getAssetCategory().getId()).collect(Collectors.toSet());
@@ -150,9 +152,19 @@ public class AssetService {
 	private void mapAssetCategories(List<Asset> assets, RequestInfo requestInfo, String tenantId) {
 
 		Set<Long> idSet = assets.stream().map(asset -> asset.getAssetCategory().getId()).collect(Collectors.toSet());
-
-		Map<Long, AssetCategory> assetCatMap = masterDataService.getAssetCategoryMap(idSet, requestInfo, tenantId);
-
+		
+		Map<String, Map<String, Map<String, String>>> moduleMap = new HashMap<>();
+		Map<String, Map<String, String>> masterMap = new HashMap<>();
+		Map<String, String> fieldMap = new HashMap<>();
+		
+		fieldMap.put("id", assetCommonService.getIdQuery(idSet));
+		System.err.println("the field map : " + fieldMap);
+		masterMap.put("AssetCategory", fieldMap);
+		System.err.println("the master map : " + masterMap);
+		moduleMap.put("ASSET", masterMap);
+		System.err.println("the module map : " + moduleMap);
+		
+		Map<Long, AssetCategory> assetCatMap = mDService.getAssetCategoryMapFromJSONArray(mDService.getStateWideMastersByListParams(moduleMap, requestInfo, tenantId).get("ASSET"));
 		assets.forEach(asset -> {
 			Long key = asset.getAssetCategory().getId();
 			asset.setAssetCategory(assetCatMap.get(key));

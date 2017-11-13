@@ -926,3 +926,370 @@ ReportDefinitions:
     ('epoch' from (select endingdate from egf_financialyear where (current_date between startingdate and endingdate) AND 
     tenantid=$tenantid))*1000)) GROUP BY assetid,tenantid ) currdep ON current.assetid=currdep.assetid AND current.tenantid=
     currdep.tenantid) as transactions ON asset.id=transactions.assetid AND asset.tenantid=transactions.tenantid WHERE asset.tenantid=$tenantid
+
+- reportName: LandRegister
+  summary: Land Register Report
+  version: 1.0.0
+  moduleName: asset
+  viewPath: LandRegisterReport
+  selectiveDownload: true
+  sourceColumns:
+  - name: name
+    label: reports.asset.name
+    type: string
+    source: asset
+  - name: code
+    label: reports.asset.code
+    type: string
+    linkedReport:
+      reportName: AssetImmovableRegisterDetail
+      linkedColumn: _parent?reportName={reportName}&assetdetail={code}
+    source: asset      
+  - name: dateofcreation
+    label: reports.asset.dateofcreation
+    type: epoch
+    source: asset
+  - name: grossvalue
+    label: reports.asset.grossvalue
+    type: number
+    source: asset
+  - name: originalvalue
+    label: reports.asset.originalvalue
+    type: number
+    source: asset
+  searchParams:
+  - name: fromDate
+    label: reports.asset.fromDate
+    type: date
+    source: asset
+    searchClause : AND asset.createddate>=$fromDate
+    isMandatory: false
+  - name: toDate
+    label: reports.asset.toDate
+    type: date
+    source: asset
+    searchClause : AND asset.createddate<=$toDate
+    isMandatory: false
+  - name: originalvaluefrom
+    label: reports.asset.originalvaluefrom
+    type: number
+    source: asset
+    searchClause : AND asset.originalvalue>=$originalvaluefrom
+    isMandatory: false
+  - name: originalvalueto
+    label: reports.asset.originalvalueto
+    type: number
+    source: asset
+    searchClause : AND asset.originalvalue<=$originalvalueto
+    isMandatory: false
+  - name: assetcategory
+    label: reports.asset.assetCategory
+    isMandatory: false
+    type: singlevaluelist
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.assetCategoryType%3D%3D%27IMMOVABLE%27%20%26%26%20%40.isAssetAllow%3D%3Dfalse)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name
+    source: asset
+    wrapper: true
+    searchClause : 
+  - name: assetsubcategory
+    label: reports.asset.assetSubCategory
+    isMandatory: false
+    type: url
+    pattern: /egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.parent%3D%3D{assetcategory})%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name
+    source: asset
+    wrapper: true
+    searchClause : AND asset.assetcategory=$assetsubcategory
+  - name: department
+    label: reports.asset.departmentCode
+    isMandatory: false
+    type: singlevaluelist
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department&tenantId=$tenantid|$..id|$..name
+    source: asset
+    wrapper: true
+    searchClause : AND asset.departmentcode=$department
+  - name: name
+    label: reports.asset.name
+    type: string
+    isMandatory: false
+    source: asset
+    searchClause : AND asset.name=$name
+  - name: code
+    label: reports.asset.code
+    type: string
+    isMandatory: false
+    source: asset
+    searchClause : AND asset.code in ($code)
+
+  
+  query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.landsurveyno,asset.totalarea,asset.openingdate,asset.fundsource,asset.location,(select string_agg(land.surveynumber,',') from egasset_asset_landdetails land  where asset.id=land.assetid group by asset.id) as totalsurveyno,
+         asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,asset.assetcategorytype,
+         asset.defectliabilityday as defectliabilityday,asset.securitydepositretained,
+         asset.securitydepositrealized,asset.dateofcreation,asset.acquisitiondate,asset.grossvalue,asset.originalvalue,currentvalue.currentamount,
+         disposal.salevalue as disposalsalevalue,disposal.profitlossvoucherreference as disposalvoucherno,disposal.disposaldate,disposal.buyername,disposal.buyeraddress,
+         revaluation.revaluationdate,revaluation.incrementalrevalsum,revaluation.decrementalrevalsum
+         from egasset_asset asset left outer join 
+         (select b.* from egasset_current_value b inner join ( select assetid,tenantid,max(createdtime) as createdtime from egasset_current_value 
+         where  tenantid = $tenantid group by assetid,tenantid)  c 
+         ON b.assetid = c.assetid and b.tenantid=c.tenantid AND c.createdtime=b.createdtime) currentvalue 
+         ON asset.id=currentvalue.assetid AND asset.tenantid=currentvalue.tenantid  
+         left outer join egasset_disposal disposal ON asset.id=disposal.assetid AND asset.tenantId = disposal.tenantid
+         left outer join
+         (select rev1.*,revinc.incrementalrevalsum,revdec.decrementalrevalsum from egasset_revaluation rev1 inner join 
+         (select assetid,tenantid,max(createddate) as createddate from egasset_revaluation where tenantid = $tenantid
+         group by assetid,tenantid ) revalmax ON rev1.assetid=revalmax.assetid AND rev1.tenantid=revalmax.tenantid AND rev1.createddate=revalmax.createddate
+         inner join
+         (select assetid,tenantid,sum(revaluationamount) as incrementalrevalsum from egasset_revaluation where tenantid = $tenantid 
+         AND typeofchange='INCREASED' group by assetid,tenantid) revinc ON rev1.assetid=revinc.assetid and rev1.tenantid=revinc.tenantid 
+         inner join (select assetid,tenantid,sum(revaluationamount) as decrementalrevalsum from egasset_revaluation 
+         where  tenantid = $tenantid AND typeofchange='DECREASED' group by assetid,tenantid) revdec 
+         ON rev1.assetid=revdec.assetid and rev1.tenantid=revdec.tenantid 
+         where rev1.tenantid = $tenantid) revaluation 
+         ON asset.tenantid=revaluation.tenantid AND asset.id=revaluation.assetid
+         where asset.tenantid = $tenantid AND asset.assetcategorytype='LAND'    
+    
+- reportName: LandRegisterDetail
+  summary: Land Register Report
+  version: 1.0.0
+  moduleName: asset
+  viewPath: LandRegisterReport
+  selectiveDownload: true
+  sourceColumns:
+  - name: id
+    label: reports.asset.id
+    type: number
+    source: asset
+  - name: quantity
+    label: reports.asset.quantity
+    type: number
+    source: asset
+  - name: plintharea
+    label: reports.asset.plintharea
+    type: number
+    source: asset
+    showColumn: true
+  - name: cubiccontents
+    label: reports.asset.cubiccontents
+    type: string
+    source: asset
+  - name: landsurveyno
+    label: reports.asset.landsurveyno
+    type: string
+    source: asset
+  - name: length
+    label: reports.asset.length
+    type: number
+    source: asset
+  - name: width
+    label: reports.asset.width
+    type: number
+    source: asset
+  - name: height
+    label: reports.asset.height
+    type: number
+    source: asset
+  - name: totalarea
+    label: reports.asset.totalarea
+    type: number
+    source: asset
+  - name: acquiredfrom
+    label: reports.asset.acquiredfrom
+    type: string
+    source: asset
+  - name: anticipatedLife
+    label: reports.asset.anticipatedLife
+    type: number
+    source: asset
+  - name: modeofacquisition
+    label: reports.asset.modeofacquisition
+    type: string
+    source: asset
+  - name: warrantyexpirydate
+    label: reports.asset.warrantyexpirydate
+    type: number
+    source: asset
+  - name: defectliability
+    label: reports.asset.defectliability
+    type: number
+    source: asset
+  - name: defectliabilitymonth
+    label: reports.asset.defectliabilitymonth
+    type: number
+    source: asset
+  - name: defectliabilityday
+    label: reports.asset.defectliabilityday
+    type: string
+    source: asset
+  - name: securitydepositretained
+    label: reports.asset.securitydepositretained
+    type: number
+    source: asset
+  - name: securitydepositrealized
+    label: reports.asset.securitydepositrealized
+    type: number
+    source: asset
+  - name: dateofcreation
+    label: reports.asset.dateofcreation
+    type: string
+    source: asset
+  - name: acquisitiondate
+    label: reports.asset.acquisitiondate
+    type: string
+    source: asset
+  - name: grossvalue
+    label: reports.asset.grossvalue
+    type: number
+    source: asset
+  - name: originalvalue
+    label: reports.asset.originalvalue
+    type: number
+    source: asset
+  - name: currentvalue
+    label: reports.asset.currentvalue
+    type: number
+    source: asset
+  - name: currentamount
+    label: reports.asset.currentamount
+    type: number
+    source: asset
+  - name: disposalsalevalue
+    label: reports.asset.disposalsalevalue
+    type: number
+    source: asset
+  - name: disposalvoucherno
+    label: reports.asset.disposalvoucherno
+    type: number
+    source: asset
+  - name: disposaldate
+    label: reports.asset.disposaldate
+    type: string
+    source: asset
+  - name: revaluationdate
+    label: reports.asset.revaluationdate
+    type: string
+    source: asset
+  - name: incrementalrevalsum
+    label: reports.asset.incrementalrevalsum
+    type: number
+    source: asset
+  - name: decrementalrevalsum
+    label: reports.asset.decrementalrevalsum
+    type: number
+    source: asset
+  - name: depreciationvalue
+    label: reports.asset.depreciationvalue
+    type: number
+    source: asset
+  - name: totaldepreciationval
+    label: reports.asset.totaldepreciationval
+    type: number
+    source: asset
+  - name: name
+    label: reports.asset.name
+    type: string
+    source: asset
+  - name: code
+    label: reports.asset.code
+    type: string
+    source: asset    
+  - name: ordernumber
+    label: reports.asset.ordernumber
+    type: number
+  - name: warrantyavailable
+    label: reports.asset.warrantyavailable
+    type: string
+    source: asset   
+  - name: wipreferenceno
+    label: reports.asset.wipreferenceno
+    type: string
+    source: asset
+  - name: floors
+    label: reports.asset.floors
+    type: number
+    source: asset   
+  - name: titledocumentsavailable
+    label: reports.asset.titledocumentsavailable
+    type: number
+  - name: buyername
+    label: reports.asset.buyername
+    type: string
+    source: asset   
+  - name: accumulateddepreciation
+    label: reports.asset.accumulateddepreciation
+    type: number
+    source: asset
+  - name: openingdate
+    label: reports.asset.openingdate
+    type: number
+    source: asset
+  - name: fundsource
+    label: reports.asset.fundsource
+    type: string
+    source: asset
+  - name: location
+    label: reports.asset.location
+    type: string
+    source: asset
+  - name: totalsurveyno
+    label: reports.asset.totalsurveyno
+    type: string
+    source: asset
+  - name: assetattributes
+    label: reports.asset.assetattributes
+    type: string
+    source: asset
+  searchParams:
+  - name: fromDate
+    label: reports.asset.fromDate
+    type: date
+    source: asset
+    searchClause : AND asset.createddate>=$fromDate
+    isMandatory: false
+  - name: toDate
+    label: reports.asset.toDate
+    type: date
+    source: asset
+    searchClause : AND asset.createddate<=$toDate
+    isMandatory: false
+  - name: name
+    label: reports.asset.name
+    type: string
+    isMandatory: false
+    source: asset
+    searchClause : AND asset.name=$name
+  - name: code
+    label: reports.asset.code
+    type: string
+    isMandatory: false
+    source: asset
+    searchClause : AND asset.code=$code
+  - name: assetdetail
+    label: reports.asset.detail
+    type: number
+    isMandatory: false
+    source: asset
+    searchClause : and asset.code in ($assetdetail)
+  
+  query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.assetattributes,asset.wipreferenceno,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.landsurveyno,asset.totalarea,asset.openingdate,asset.fundsource,asset.location,(select string_agg(land.surveynumber,',') from egasset_asset_landdetails land  where asset.id=land.assetid group by asset.id) as totalsurveyno,
+         asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,asset.assetcategorytype,
+         asset.defectliabilityday as defectliabilityday,asset.securitydepositretained,
+         asset.securitydepositrealized,asset.dateofcreation,asset.acquisitiondate,asset.grossvalue,asset.originalvalue,currentvalue.currentamount,
+         disposal.salevalue as disposalsalevalue,disposal.profitlossvoucherreference as disposalvoucherno,disposal.disposaldate,disposal.buyername,disposal.buyeraddress,
+         revaluation.revaluationdate,revaluation.incrementalrevalsum,revaluation.decrementalrevalsum
+         from egasset_asset asset left outer join 
+         (select b.* from egasset_current_value b inner join ( select assetid,tenantid,max(createdtime) as createdtime from egasset_current_value 
+         where  tenantid = $tenantid group by assetid,tenantid)  c 
+         ON b.assetid = c.assetid and b.tenantid=c.tenantid AND c.createdtime=b.createdtime) currentvalue 
+         ON asset.id=currentvalue.assetid AND asset.tenantid=currentvalue.tenantid  
+         left outer join egasset_disposal disposal ON asset.id=disposal.assetid AND asset.tenantId = disposal.tenantid
+         left outer join
+         (select rev1.*,revinc.incrementalrevalsum,revdec.decrementalrevalsum from egasset_revaluation rev1 inner join 
+         (select assetid,tenantid,max(createddate) as createddate from egasset_revaluation where tenantid = $tenantid
+         group by assetid,tenantid ) revalmax ON rev1.assetid=revalmax.assetid AND rev1.tenantid=revalmax.tenantid AND rev1.createddate=revalmax.createddate
+         inner join
+         (select assetid,tenantid,sum(revaluationamount) as incrementalrevalsum from egasset_revaluation where tenantid = $tenantid 
+         AND typeofchange='INCREASED' group by assetid,tenantid) revinc ON rev1.assetid=revinc.assetid and rev1.tenantid=revinc.tenantid 
+         inner join (select assetid,tenantid,sum(revaluationamount) as decrementalrevalsum from egasset_revaluation 
+         where  tenantid = $tenantid AND typeofchange='DECREASED' group by assetid,tenantid) revdec 
+         ON rev1.assetid=revdec.assetid and rev1.tenantid=revdec.tenantid 
+         where rev1.tenantid = $tenantid) revaluation 
+         ON asset.tenantid=revaluation.tenantid AND asset.id=revaluation.assetid
+         where asset.tenantid = $tenantid AND asset.assetcategorytype='LAND'

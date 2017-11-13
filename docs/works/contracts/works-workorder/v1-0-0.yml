@@ -1144,11 +1144,6 @@ definitions:
         description: EMD Amount Deposited for the Letter Of Acceptance
         maxLength: 20
         minLength: 1
-      securityDeposit:
-        type: array
-        description: Array to hold the Security Deposit details
-        items:
-          $ref: '#/definitions/SecurityDeposit'
       engineerIncharge:
         type: string
         description: User who is incharge of the work, primary key is ref. here.
@@ -1322,10 +1317,10 @@ definitions:
         maxLength: 50
         minLength: 1
       percentage:
-        type: string
+        type: number
+        format: double
+        maxLength: 6
         description: Percentage for the given mode
-        maxLength: 10
-        minLength: 1
       amount:
         type: number
         format: BigDecimal
@@ -1356,9 +1351,13 @@ definitions:
       letterOfAcceptanceEstimate:
         type: string
         description: Letter of acceptance reference. Primary key is ref here.
+        maxLength: 100
+        minLength: 1
       estimateActivity:
         type: string
         description: Reference of Estimate Activity, primary key is ref here.
+        maxLength: 100
+        minLength: 1
       parent:
         $ref: '#/definitions/LOAActivity'
         description: Parent of the Letter Of Acceptance Activity. This is required for Revision Workrder parent activity.
@@ -1412,7 +1411,7 @@ definitions:
           description: Tenant id of the Measurement Sheet
           maxLength: 128
           minLength: 2
-        no:
+        number:
           type: number
           format: BigDecimal
           description: No. of the Measurement sheet
@@ -1964,4 +1963,5 @@ tags:
     description: APIs required for Track Milestone.
   - name: Contractor Advance Requisition
     description: APIs required for Contractor Advance Requisition.
+
 

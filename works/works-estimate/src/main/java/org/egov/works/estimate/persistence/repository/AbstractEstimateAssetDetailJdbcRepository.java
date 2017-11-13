@@ -16,9 +16,11 @@ import org.springframework.stereotype.Service;
 public class AbstractEstimateAssetDetailJdbcRepository  extends JdbcRepository
 {
 
+	public static final String TABLE_NAME = "egw_abstractestimate_asset_details";
+	
     public List<AbstractEstimateAssetDetail> search(
     		AbstractEstimateAssetDetailSearchContract abstractEstimateAssetDetailSearchContract) {
-        String searchQuery = "select * from egw_abstractestimate_asset_details where id is not null ";
+    	String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
         Map<String, Object> paramValues = new HashMap<>();
         StringBuffer params = new StringBuffer();
@@ -34,6 +36,10 @@ public class AbstractEstimateAssetDetailJdbcRepository  extends JdbcRepository
                 && !abstractEstimateAssetDetailSearchContract.getSortBy().isEmpty()) {
             orderBy = "order by " + abstractEstimateAssetDetailSearchContract.getSortBy();
         }
+        
+        searchQuery = searchQuery.replace(":tablename", TABLE_NAME);
+
+		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 
         if (abstractEstimateAssetDetailSearchContract.getTenantId() != null) {
@@ -58,6 +64,16 @@ public class AbstractEstimateAssetDetailJdbcRepository  extends JdbcRepository
             params.append("abstractEstimate in(:abstractEstimateIds) ");
             paramValues.put("abstractEstimateIds", abstractEstimateAssetDetailSearchContract.getAbstractEstimateIds());
         }
+        
+        if (params.length() > 0) {
+
+			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+
+		} else
+
+			searchQuery = searchQuery.replace(":condition", "");
+
+		searchQuery = searchQuery.replace(":orderby", orderBy);
 
         BeanPropertyRowMapper row = new BeanPropertyRowMapper(AbstractEstimateAssetDetailHelper.class);
 

@@ -13,7 +13,11 @@ public class DepreciationQueryBuilder {
 				
 				+ "asset.accumulateddepreciation,asset.assetcategory,currentval.currentamount as currentvalue,depreciation.todate "
 				
-				+ "as lastdepreciationdate,depreciation.depreciationvaluesum,asset.originalvalue from egasset_asset asset left outer join "
+				+ "as lastdepreciationdate,depreciation.depreciationvaluesum,asset.originalvalue,asset.dateofcreation,"
+				
+				+ "asset.assetaccount,asset.accumulateddepreciationaccount,asset.revaluationreserveaccount,"
+				
+				+ "asset.depreciationexpenseaccount from egasset_asset asset left outer join "
 				
 				+ "(select currval.assetid,currval.createdtime,currval.currentamount,currval.tenantid from egasset_current_value currval "
 				

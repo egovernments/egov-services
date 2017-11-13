@@ -10,6 +10,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.contract.FinancialYear;
 import org.egov.model.AssetCategory;
 import org.egov.repository.MasterDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,11 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
 
 @Service
+@Slf4j
 public class MasterDataService {
 
 	@Autowired
@@ -68,5 +71,10 @@ public class MasterDataService {
 			throw new RuntimeException(e);
 		}
 		return assetCategorys.stream().collect(Collectors.toMap(AssetCategory::getId, Function.identity()));
+	}
+
+	public FinancialYear getFinancialYear(Long toDate, RequestInfo requestInfo, String tenantId) {
+
+		return mDRepo.getFinancialYears(toDate, requestInfo, tenantId);
 	}
 }

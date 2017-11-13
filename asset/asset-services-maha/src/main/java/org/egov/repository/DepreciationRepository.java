@@ -11,7 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Repository
+@Slf4j
 public class DepreciationRepository {
 	
 	@Autowired
@@ -27,6 +30,8 @@ public class DepreciationRepository {
 	
 		List<Object> preparedStatementValues = new ArrayList<>();
 		String sql = depreciationQueryBuilder.getDepreciationQuery(depreciationCriteria, preparedStatementValues);
+		log.info("the query for depreciation inputs : "+sql);
+		log.info("prepared stsmt values : "+preparedStatementValues);
 		return jdbcTemplate.query(sql, preparedStatementValues.toArray(), depreciationInputRowMapper);
 	}
 }

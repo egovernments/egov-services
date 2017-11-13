@@ -28,148 +28,145 @@ public class Asset   {
 
 	  @NotNull
 	  @JsonProperty("anticipatedLife")
-	  private Long anticipatedLife = null;
+	  private Long anticipatedLife;
 
 	  @JsonProperty("orderNumber")
-	  private String orderNumber = null;
+	  private String orderNumber;
 
 	  @JsonProperty("orderDate")
-	  private Long orderDate = null;
+	  private Long orderDate;
 
 	  @NotNull
 	  @JsonProperty("wipReferenceNo")
-	  private String wipReferenceNo = null;
+	  private String wipReferenceNo;
 
 	  @JsonProperty("acquiredFrom")
-	  private String acquiredFrom = null;
+	  private String acquiredFrom;
 
 	  @JsonProperty("warrantyAvailable")
-	  private Boolean warrantyAvailable = null;
+	  private Boolean warrantyAvailable;
 
 	  @JsonProperty("warrantyExpiryDate")
-	  private Long warrantyExpiryDate = null;
+	  private Long warrantyExpiryDate;
 
 	  @JsonProperty("defectLiabilityPeriod")
-	  private DefectLiability defectLiabilityPeriod = null;
+	  private DefectLiability defectLiabilityPeriod;
 
 	  @JsonProperty("securityDepositRetained")
-	  private BigDecimal securityDepositRetained = null;
+	  private BigDecimal securityDepositRetained;
 
 	  @JsonProperty("securityDepositRealized")
-	  private BigDecimal securityDepositRealized = null;
+	  private BigDecimal securityDepositRealized;
 
 	  @NotNull
 	  @JsonProperty("acquisitionDate")
-	  private Long acquisitionDate = null;
+	  private Long acquisitionDate;
 
 	  @NotNull
 	  @JsonProperty("originalValue")
-	  private BigDecimal originalValue = null;
+	  private BigDecimal originalValue;
 
 	  @JsonProperty("assetAccount")
-	  private String assetAccount = null;
+	  private String assetAccount;
 	  
 	  @JsonProperty("accumulatedDepreciationAccount")
-	  private String accumulatedDepreciationAccount = null;
+	  private String accumulatedDepreciationAccount;
 
 	  @JsonProperty("revaluationReserveAccount")
-	  private String revaluationReserveAccount = null;
+	  private String revaluationReserveAccount;
 	  
 	  @JsonProperty("depreciationExpenseAccount")
-	  private String depreciationExpenseAccount = null;
+	  private String depreciationExpenseAccount;
 
 	  @JsonProperty("titleDocumentsAvalable")
-	  private List<String> titleDocumentsAvalable = null;
+	  private List<String> titleDocumentsAvalable;
 
 	  @JsonProperty("locationDetails")
-	  private Location locationDetails = null;
+	  private Location locationDetails;
 
 	  @JsonProperty("totalArea")
-	  private Double totalArea = null;
+	  private Double totalArea;
 
 	  @NotNull
 	  @JsonProperty("address")
-	  private String address = null;
+	  private String address;
 
 	  @JsonProperty("longitude")
-	  private Double longitude = null;
+	  private Double longitude;
 
 	  @JsonProperty("latitude")
-	  private Double latitude = null;
-
-	  @JsonProperty("landSurveyNo")
-	  private String landSurveyNo = null;
+	  private Double latitude;
 
 	  @JsonProperty("quantity")
-	  private Long quantity = null;
+	  private Long quantity;
 
 	  @JsonProperty("tenantId")
-	  private String tenantId = null;
+	  private String tenantId;
 
 	  @JsonProperty("id")
-	  private Long id = null;
+	  private Long id;
 
 	  @NotNull
 	  @JsonProperty("name")
-	  private String name = null;
+	  private String name;
 
 	  @JsonProperty("code")
-	  private String code = null;
+	  private String code;
 
 	  @JsonProperty("oldCode")
-	  private String oldCode = null;
+	  private String oldCode;
 
 	  @NotNull
 	  @JsonProperty("departmentCode")
-	  private String departmentCode = null;
+	  private String departmentCode;
 
 	  @NotNull
 	  @Valid
 	  @JsonProperty("assetCategory")
-	  private AssetCategory assetCategory = null;
+	  private AssetCategory assetCategory;
 
 	  @NotNull
 	  @JsonProperty("modeOfAcquisition")
-	  private ModeOfAcquisitionEnum modeOfAcquisition = null;
+	  private ModeOfAcquisitionEnum modeOfAcquisition;
 
 	  @JsonProperty("status")
-	  private String status = null;
+	  private String status;
 
 	  @NotNull
 	  @JsonProperty("grossValue")
-	  private BigDecimal grossValue = null;
+	  private BigDecimal grossValue;
 
 	  @JsonProperty("accumulatedDepreciation")
-	  private BigDecimal accumulatedDepreciation = null;
+	  private BigDecimal accumulatedDepreciation;
 
 	  @NotNull
 	  @JsonProperty("description")
-	  private String description = null;
+	  private String description;
 
 	  @NotNull
 	  @JsonProperty("dateOfCreation")
-	  private Long dateOfCreation = null;
+	  private Long dateOfCreation;
 
 	  @JsonProperty("remarks")
-	  private String remarks = null;
+	  private String remarks;
 
 	  @JsonProperty("version")
-	  private String version = null;
+	  private String version;
 
 	  @JsonProperty("assetReference")
-	  private Long assetReference = null;
+	  private Long assetReference;
 
 	  @JsonProperty("enableYearWiseDepreciation")
-	  private Boolean enableYearWiseDepreciation = null;
+	  private Boolean enableYearWiseDepreciation;
 
 	  @JsonProperty("assetAttributes")
-	  private List<Attributes> assetAttributes = null;
+	  private List<Attributes> assetAttributes;
 
 	  @JsonProperty("depreciationRate")
-	  private Double depreciationRate = null;
+	  private Double depreciationRate;
 
 	  @JsonProperty("yearWiseDepreciationRate")
-	  private List<YearWiseDepreciation> yearWiseDepreciationRate = null;
+	  private List<YearWiseDepreciation> yearWiseDepreciationRate;
 	  
 	  @JsonProperty("auditDetails")
 	  private AuditDetails auditDetails;

@@ -15,10 +15,8 @@ import org.egov.works.estimate.config.Constants;
 import org.egov.works.estimate.domain.repository.AbstractEstimateRepository;
 import org.egov.works.estimate.domain.service.AbstractEstimateService;
 import org.egov.works.estimate.domain.service.DetailedEstimateService;
-import org.egov.works.estimate.persistence.repository.AbstractEstimateDetailsJdbcRepository;
-import org.egov.works.estimate.persistence.repository.AssetRepository;
-import org.egov.works.estimate.persistence.repository.EstimateTechnicalSanctionRepository;
-import org.egov.works.estimate.persistence.repository.WorksMastersRepository;
+import org.egov.works.estimate.persistence.helper.DetailedEstimateHelper;
+import org.egov.works.estimate.persistence.repository.*;
 import org.egov.works.estimate.utils.EstimateUtils;
 import org.egov.works.estimate.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +54,9 @@ public class EstimateValidator {
 
     @Autowired
     private EstimateTechnicalSanctionRepository estimateTechnicalSanctionRepository;
+
+    @Autowired
+    private DetailedEstimateJdbcRepository detailedEstimateJdbcRepository;
 
     public void validateEstimates(AbstractEstimateRequest abstractEstimateRequest, Boolean isNew) {
         Map<String, String> messages = new HashMap<>();
@@ -315,11 +316,25 @@ public class EstimateValidator {
             if(StringUtils.isBlank(detailedEstimate.getEstimateNumber()))
                 messages.put(Constants.KEY_NULL_DETAILEDESTIMATE_NUMBER,
                         Constants.MESSAGE_NULL_DETAILEDESTIMATE_NUMBER);
+            else
+               validateEstimateNumberUnique(detailedEstimate, messages);
             if(detailedEstimate.getEstimateDate() == null)
                 messages.put(Constants.KEY_NULL_DETAILEDESTIMATE_DATE,
                         Constants.MESSAGE_NULL_DETAILEDESTIMATE_DATE);
+            else if(detailedEstimate.getEstimateDate() > new Date().getTime())
+                messages.put(Constants.KEY_FUTUREDATE_ESTIMATEDATE_SPILLOVER,
+                        Constants.MESSAGE_FUTUREDATE_ESTIMATEDATE_SPILLOVER);
             validateTechnicalSanctionDetail(detailedEstimate, messages);
         }
+    }
+
+    private void validateEstimateNumberUnique(DetailedEstimate detailedEstimate, Map<String, String> messages) {
+        DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
+                .tenantId(detailedEstimate.getTenantId()).estimateAmount(detailedEstimate.getEstimateNumber()).build();
+        List<DetailedEstimateHelper> lists= detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
+        if(lists != null && !lists.isEmpty())
+            messages.put(Constants.KEY_INVALID_ESTIMATNUMBER_SPILLOVER,
+                    Constants.MESSAGE_INVALID_ESTIMATNUMBER_SPILLOVER);
     }
 
     public void validateOverheads(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo, Map<String, String> messages) {
@@ -424,17 +439,29 @@ public class EstimateValidator {
 
         JSONArray mdmsArray = estimateUtils.getMDMSData(APPCONFIGURATION_OBJECT, CommonConstants.CODE, ASSET_DETAILES_REQUIRED_APPCONFIG,
                 detailedEstimate.getTenantId(), requestInfo, WORKS_MODULE_CODE);
+        boolean assetsAdded = false;
         if (mdmsArray != null && !mdmsArray.isEmpty()) {
             Map<String, Object> jsonMap = (Map<String, Object>) mdmsArray.get(0);
-            if (jsonMap.get("value").equals("Yes") && detailedEstimate.getAssets() != null
-                    && detailedEstimate.getAssets().isEmpty())
-                messages.put(KEY_ESTIMATE_ASSET_DETAILS_REQUIRED, MESSAGE_ESTIMATE_ASSET_DETAILS_REQUIRED);
+            if (jsonMap.get("value").equals("Yes"))
+                if(detailedEstimate.getAssets() != null && detailedEstimate.getAssets().isEmpty())
+                    assetsAdded = true;
+
+                for(AssetsForEstimate assetsForEstimate : detailedEstimate.getAssets())
+                  if(!assetsAdded && StringUtils.isBlank(assetsForEstimate.getLandAsset()))
+                    messages.put(KEY_ESTIMATE_ASSET_DETAILS_REQUIRED, MESSAGE_ESTIMATE_ASSET_DETAILS_REQUIRED);
         }
 
         Asset asset = null;
         for (final AssetsForEstimate assetsForEstimate : detailedEstimate.getAssets())
             if (assetsForEstimate != null) {
-                if (StringUtils.isBlank(assetsForEstimate.getAsset().getCode()))
+                if (StringUtils.isBlank(detailedEstimate.getNameOfWork()) &&
+                        (detailedEstimate.getNameOfWork().equalsIgnoreCase(Constants.ESTIMATE_NAMEOFWORK_ADDITION) ||
+                                detailedEstimate.getNameOfWork().equalsIgnoreCase(Constants.ESTIMATE_NAMEOFWORK_REPAIRS))
+                        && StringUtils.isBlank(assetsForEstimate.getAsset().getCode()))
+                    messages.put(KEY_ESTIMATE_ASSET_REQUIRED, MESSAGE_ESTIMATE_ASSET_REQUIRED);
+
+                if(StringUtils.isBlank(detailedEstimate.getNameOfWork()) && detailedEstimate.getNameOfWork().equalsIgnoreCase(Constants.ESTIMATE_NAMEOFWORK_NEW)
+                  && StringUtils.isBlank(assetsForEstimate.getLandAsset()))
                     messages.put(KEY_ESTIMATE_ASSET_REQUIRED, MESSAGE_ESTIMATE_ASSET_REQUIRED);
                 //TODO FIX aset code validation
                /* else {
@@ -460,7 +487,10 @@ public class EstimateValidator {
                 if(StringUtils.isNotBlank(estimateTechnicalSanction.getTechnicalSanctionNumber()))
                    validateUniqueTechnicalSanctionForDetailedEstimate(detailedEstimate, estimateTechnicalSanction, messages);
 
-                if(detailedEstimate.getEstimateDate() != null && new Date(estimateTechnicalSanction.getTechnicalSanctionDate()).before(new Date(detailedEstimate.getEstimateDate())))
+                if(estimateTechnicalSanction.getTechnicalSanctionDate() != null && estimateTechnicalSanction.getTechnicalSanctionDate() > new Date().getTime())
+                    messages.put(KEY_TECHNICAL_SANCTION_DATE_FUTUREDATE, MESSAGE_TECHNICAL_SANCTION_DATE_FUTUREDATE);
+
+                if(detailedEstimate.getEstimateDate() != null && estimateTechnicalSanction.getTechnicalSanctionDate() < detailedEstimate.getEstimateDate())
                     messages.put(KEY_INVALID_TECHNICALSANCTION_DATE, MESSAGE_INVALID_TECHNICALSANCTION_DATE);
 
                 if(detailedEstimate.getAbstractEstimateDetail() != null && detailedEstimate.getEstimateDate() != null) {
@@ -473,7 +503,7 @@ public class EstimateValidator {
                                 .ids(Arrays.asList(abstractEstimateId)).build();
                         List<AbstractEstimate> abstractEstimates = abstractEstimateRepository.search(abstractEstimateSearchContract);
                         if (!abstractEstimates.isEmpty() && abstractEstimates.get(0).getAdminSanctionDate() != null &&
-                                new Date(detailedEstimate.getEstimateDate()).before(new Date(abstractEstimates.get(0).getAdminSanctionDate()))) {
+                                detailedEstimate.getEstimateDate() < abstractEstimates.get(0).getAdminSanctionDate()) {
                             messages.put(KEY_INVALID_ADMINSANCTION_DATE, MESSAGE_INVALID_ADMINSANCTION_DATE);
                         }
 

@@ -6,14 +6,15 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
 /**
- * An Object holds the basic data for Assets for Estimate
+ * An Object holds the basic data for Assets or Land assets for Estimate
  */
-@ApiModel(description = "An Object holds the basic data for Assets for Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T07:36:50.343Z")
+@ApiModel(description = "An Object holds the basic data for Assets or Land assets for Estimate")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-13T07:49:38.552Z")
 
 public class AssetsForEstimate   {
   @JsonProperty("id")
@@ -24,6 +25,9 @@ public class AssetsForEstimate   {
 
   @JsonProperty("asset")
   private Asset asset = null;
+
+  @JsonProperty("landAsset")
+  private String landAsset = null;
 
   @JsonProperty("detailedEstimate")
   private String detailedEstimate = null;
@@ -78,13 +82,12 @@ public class AssetsForEstimate   {
   }
 
    /**
-   * Asset Reference from Asset module
+   * Asset for which the Detailed Estimate is created. This field is required and to be shown if Nature of work is 'Repairs or Addition'.
    * @return asset
   **/
-  @ApiModelProperty(required = true, value = "Asset Reference from Asset module")
-  @NotNull
+  @ApiModelProperty(value = "Asset for which the Detailed Estimate is created. This field is required and to be shown if Nature of work is 'Repairs or Addition'.")
 
-  //@Valid
+  @Valid
 
   public Asset getAsset() {
     return asset;
@@ -92,6 +95,26 @@ public class AssetsForEstimate   {
 
   public void setAsset(Asset asset) {
     this.asset = asset;
+  }
+
+  public AssetsForEstimate landAsset(String landAsset) {
+    this.landAsset = landAsset;
+    return this;
+  }
+
+   /**
+   * Land Asset ID. This field needs to be shown if Nature of work is 'New'.
+   * @return landAsset
+  **/
+  @ApiModelProperty(value = "Land Asset ID. This field needs to be shown if Nature of work is 'New'.")
+
+ @Pattern(regexp="[a-zA-Z0-9-\\\\]+")
+  public String getLandAsset() {
+    return landAsset;
+  }
+
+  public void setLandAsset(String landAsset) {
+    this.landAsset = landAsset;
   }
 
   public AssetsForEstimate detailedEstimate(String detailedEstimate) {
@@ -103,7 +126,8 @@ public class AssetsForEstimate   {
    * Reference of the Detailed Estimate for Estimate and Assets linking
    * @return detailedEstimate
   **/
-  @ApiModelProperty(value = "Reference of the Detailed Estimate for Estimate and Assets linking")
+  @ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for Estimate and Assets linking")
+  @NotNull
 
 
   public String getDetailedEstimate() {
@@ -148,13 +172,14 @@ public class AssetsForEstimate   {
     return Objects.equals(this.id, assetsForEstimate.id) &&
         Objects.equals(this.tenantId, assetsForEstimate.tenantId) &&
         Objects.equals(this.asset, assetsForEstimate.asset) &&
+        Objects.equals(this.landAsset, assetsForEstimate.landAsset) &&
         Objects.equals(this.detailedEstimate, assetsForEstimate.detailedEstimate) &&
         Objects.equals(this.auditDetails, assetsForEstimate.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, asset, detailedEstimate, auditDetails);
+    return Objects.hash(id, tenantId, asset, landAsset, detailedEstimate, auditDetails);
   }
 
   @Override
@@ -165,6 +190,7 @@ public class AssetsForEstimate   {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    asset: ").append(toIndentedString(asset)).append("\n");
+    sb.append("    landAsset: ").append(toIndentedString(landAsset)).append("\n");
     sb.append("    detailedEstimate: ").append(toIndentedString(detailedEstimate)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");

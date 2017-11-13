@@ -62,6 +62,12 @@ public class Constants {
 
     public static final String KEY_FUTUREDATE_DATEOFPROPOSAL = "INVALID_DATEOFPROPOSAL";
     public static final String MESSAGE_FUTUREDATE_DATEOFPROPOSAL = "Date of proposal cannot be future date";
+
+    public static final String KEY_FUTUREDATE_ESTIMATEDATE_SPILLOVER = "INVALID_ESTIMATE_DATE_SPILLOVER";
+    public static final String MESSAGE_FUTUREDATE_ESTIMATEDATE_SPILLOVER = "Estimate Date cannot be future date";
+
+    public static final String KEY_INVALID_ESTIMATNUMBER_SPILLOVER = "INVALID_ESTIMATNUMBER_SPILLOVER";
+    public static final String MESSAGE_INVALID_ESTIMATNUMBER_SPILLOVER = "Duplicate estimate number";
     
     public static final String KEY_NULL_TENANTID = "INVALID_TENANTID";
     public static final String MESSAGE_NULL_TENANTID = "Tenantid of should be entered";
@@ -154,8 +160,8 @@ public class Constants {
     public static final String KEY_INVALID_TECHNICALSANCTION_NUMBER = "INVALID_TECHNICALSANCTION_NUMBER";
     public static final String MESSAGE_INVALID_TECHNICALSANCTION_NUMBER= "Duplicate technical sanction number";
 
-    public static final String KEY_TECHNICAL_SANCTION_DATE_NULL = "TECHNICAL_SANCTION_DATE_NULL";
-    public static final String MESSAGE_TECHNICAL_SANCTION_DATE_NULL= "Estimate technical sanction date is required";
+    public static final String KEY_TECHNICAL_SANCTION_DATE_FUTUREDATE = "TECHNICAL_SANCTION_DATE_FUTUREDATE";
+    public static final String MESSAGE_TECHNICAL_SANCTION_DATE_FUTUREDATE= "Estimate technical sanction date cannot be a future date";
 
     public static final String KEY_FUND_REQUIRED = "FUND_REQUIRED";
     public static final String MESSAGE_FUND_REQUIRED = "Fund data is required";
@@ -188,6 +194,9 @@ public class Constants {
     public static final String KEY_ESTIMATE_ASSET_REQUIRED= "ESTIMATE_ASSET_CODE_REQUIRED";
     public static final String MESSAGE_ESTIMATE_ASSET_REQUIRED= "Invalid data for esimate asset code";
 
+    public static final String KEY_ESTIMATE_LAND_ASSET_REQUIRED= "ESTIMATE_LAND_ASSET_REQUIRED";
+    public static final String MESSAGE_ESTIMATE__LAND_ASSET_REQUIRED= "Esimate land asset is required";
+
     public static final String KEY_ESTIMATE_ACTIVITY_ESTIMATE_RATE_REQUIRED= "ESTIMATE_ACTIVITY_ESTIMATE_RATE_REQUIRED";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_ESTIMATE_RATE_REQUIRED= "Estimate rate is required for activity";
 
@@ -214,6 +223,10 @@ public class Constants {
 
     public static final String KEY_WORKS_ESTIMATE_ASSET_CODE_INVALID= "WORKS_ESTIMATE_ASSET_CODE_INVALID";
     public static final String MESSAGE_WORKS_ESTIMATE_ASSET_CODE_INVALID= "Invalid data for estimate asset code";
+
+    public static final String ESTIMATE_NAMEOFWORK_NEW= "New";
+    public static final String ESTIMATE_NAMEOFWORK_REPAIRS= "Repairs";
+    public static final String ESTIMATE_NAMEOFWORK_ADDITION= "Addition";
 
 
 

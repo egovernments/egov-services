@@ -48,7 +48,8 @@ public class PersistRepository {
 	public void persistList(String query, List<JsonMap> jsonMaps, String basePath, Object document) {
 
 		log.debug("persistList arrObjJsonPath:" + basePath);
-
+		basePath=basePath.substring(0, basePath.lastIndexOf(".*")+2);
+		log.debug("basePath::"+basePath);
 		List<LinkedHashMap<String, Object>> list = null;
 		if (basePath != null && basePath.length() != 0)
 			list = JsonPath.read(document, basePath);

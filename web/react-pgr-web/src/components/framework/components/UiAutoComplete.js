@@ -118,7 +118,7 @@ class UiAutoComplete extends Component {
 		// console.log(dropDownData.hasOwnProperty(item.jsonpath) && dropDownData[item.jsonpath].replace(".", "\."));
 		// console.log(dropDownData);
 		// console.log(dropDownData.hasOwnProperty(item.jsonPath));
-		console.log(searchTextCom);
+		// console.log(searchTextCom);
 		switch (this.props.ui) {
 			case 'google':
 				// let {dropDownData}=this.state;
@@ -141,7 +141,7 @@ class UiAutoComplete extends Component {
              dataSourceConfig={dataSourceConfig}
              floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
              fullWidth={true}
-						 searchText={this.state.searchText}
+						 searchText={this.state.searchText || searchTextCom}
              disabled={item.isDisabled}
              errorText={this.props.fieldErrors[item.jsonPath]}
              onKeyUp={(e) => {

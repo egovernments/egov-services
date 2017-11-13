@@ -1559,7 +1559,7 @@ definitions:
         landAsset:
           type: string
           pattern: '[a-zA-Z0-9-\\]+'
-          description: Land Asset ID. This field needs to be shown if Nature of work is 'New'.
+          description: Land Asset ID. This field needs to be shown if Nature of work is 'New' and landAssetRequired=true from Abstract Estimate.
           format: singleValueList 
         detailedEstimate:
           type: string

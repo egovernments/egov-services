@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import io.swagger.model.MaterialReceipt;
 import io.swagger.model.MaterialReceipt.ReceiptTypeEnum;
 import io.swagger.model.OpeningBalanceRequest;
-import io.swagger.model.Pagination;
+import io.swagger.model.OpeningBalanceResponse;
 
 @Service
 public class OpeningBalanceService {
@@ -67,12 +67,25 @@ public class OpeningBalanceService {
 	}
 	
 	public List<MaterialReceipt> update(OpeningBalanceRequest openBalReq, String tenantId) {
+		openBalReq.getMaterialReceipt().stream().forEach(materialReceipt -> {
+			materialReceipt.getReceiptDetails().stream().forEach(detail ->{
+				detail.setTenantId(tenantId);
+				detail.getReceiptDetailsAddnInfo().stream().forEach(addinfo -> {
+					addinfo.setTenantId(tenantId);
+				});
+			});
+		});
+		
+		for (MaterialReceipt material : openBalReq.getMaterialReceipt()) {
+			material.setAuditDetails(
+					inventoryUtilityService.mapAuditDetails(openBalReq.getRequestInfo(), tenantId));
+		}
 		kafkaTemplate.send(updateTopic, openBalReq);
 		return openBalReq.getMaterialReceipt();	
 	}
 	
 	
-	public Pagination<MaterialReceipt> search(OpeningBalanceSearchCriteria request) {
+	public OpeningBalanceResponse search(OpeningBalanceSearchCriteria request) {
 		return openingBalanceRepository.search(request);
 
 	}
@@ -93,5 +106,7 @@ public class OpeningBalanceService {
 			String mrnNumber= code  + idgen +"/"+ year;
 		return mrnNumber;
 	}
+	
+	
 	
 }

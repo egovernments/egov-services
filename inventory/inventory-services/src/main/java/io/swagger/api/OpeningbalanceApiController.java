@@ -27,7 +27,6 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.model.MaterialReceipt;
 import io.swagger.model.OpeningBalanceRequest;
 import io.swagger.model.OpeningBalanceResponse;
-import io.swagger.model.Pagination;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-07T12:05:30.189Z")
 
 @Controller
@@ -58,7 +57,7 @@ public class OpeningbalanceApiController implements OpeningbalanceApi {
     public ResponseEntity<OpeningBalanceResponse> openingbalanceUpdatePost(
     		@ApiParam(value = "Details for the new opening balance." ,required=true )  
     		@Valid @RequestParam(value = "tenantId", required = true) String tenantId,
-    		@Valid @RequestBody OpeningBalanceRequest openingBalanace) {
+    		 @RequestBody OpeningBalanceRequest openingBalanace) {
     	List<MaterialReceipt> openbal = openingBalanceService.update(openingBalanace, tenantId);
 		OpeningBalanceResponse materialResponse = buildOpenBalanceResponse(openbal, openingBalanace.getRequestInfo());
 		return new ResponseEntity<OpeningBalanceResponse>(materialResponse,HttpStatus.OK);
@@ -87,10 +86,7 @@ public class OpeningbalanceApiController implements OpeningbalanceApi {
 				.pageNumber(pageNumber)
 				.sortBy(sortBy)
 				.build();
-    	Pagination<MaterialReceipt> materialHeader = openingBalanceService.search(receiptSearch);
-    	OpeningBalanceResponse response = new OpeningBalanceResponse();
-		response.setMaterialReceipt(materialHeader.getPagedData());
-            return new ResponseEntity<OpeningBalanceResponse>(HttpStatus.OK);
+            return  new ResponseEntity<>(openingBalanceService.search(receiptSearch) ,HttpStatus.OK);
         }
 
     

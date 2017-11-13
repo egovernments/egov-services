@@ -55,7 +55,7 @@ public interface OpeningbalanceApi {
     ResponseEntity<OpeningBalanceResponse> openingbalanceUpdatePost(
     		@ApiParam(value = "Details for the new opening balance." ,required=true ) 
     		@Valid @RequestParam(value = "tenantId", required = true) String tenantId,
-    		@Valid @RequestBody OpeningBalanceRequest openingBalanace);
+    		 @RequestBody OpeningBalanceRequest openingBalanace);
             
             @ApiOperation(value = "Get the opening balance", notes = "Get opening balance", response = OpeningBalanceResponse.class, tags={ "Opening Balance", })
             @ApiResponses(value = { 

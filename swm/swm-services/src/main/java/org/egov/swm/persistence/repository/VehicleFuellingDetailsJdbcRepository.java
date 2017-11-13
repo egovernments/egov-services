@@ -9,18 +9,13 @@ import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.VehicleFuellingDetails;
 import org.egov.swm.domain.model.VehicleFuellingDetailsSearch;
 import org.egov.swm.persistence.entity.VehicleFuellingDetailsEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_vehiclefuellingdetails";
-
-	@Autowired
-	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {

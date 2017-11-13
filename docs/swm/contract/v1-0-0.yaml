@@ -3349,14 +3349,14 @@ definitions:
     VendorPaymentDetails:
       type: object
       properties:
-        code:
+        paymentNo:
           type: string
-          description: Unique Identifier of the SourceSegregation
+          description: Unique Identifier of the VendorPaymentDetails and it is system generated.
           maxLength: 256
           minLength: 1
         tenantId:
           type: string
-          description: tenant id of the SourceSegregation
+          description: tenant id of the VendorPaymentDetails
           maxLength: 128
           minLength: 1
         vendorContract:

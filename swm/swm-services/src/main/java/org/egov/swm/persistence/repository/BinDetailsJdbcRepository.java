@@ -6,10 +6,7 @@ import java.util.Map;
 
 import org.egov.swm.domain.model.BinDetails;
 import org.egov.swm.domain.model.BinDetailsSearch;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,12 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class BinDetailsJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_bindetails";
-
-	@Autowired
-	public JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {

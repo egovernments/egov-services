@@ -13,16 +13,12 @@ import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.persistence.entity.VehicleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class VehicleJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_vehicle";
-
-	@Autowired
-	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
 	public VendorJdbcRepository vendorJdbcRepository;
@@ -191,7 +187,7 @@ public class VehicleJdbcRepository extends JdbcRepository {
 		VendorSearch vendorSearch;
 		Pagination<Vendor> vendors;
 		for (VehicleEntity vehicleEntity : vehicleEntities) {
-			
+
 			v = vehicleEntity.toDomain();
 			vendorSearch = new VendorSearch();
 			vendorSearch.setTenantId(v.getTenantId());

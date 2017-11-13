@@ -15,8 +15,6 @@ import org.egov.swm.domain.model.RouteSearch;
 import org.egov.swm.persistence.entity.RouteEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,12 +27,6 @@ public class RouteJdbcRepository extends JdbcRepository {
 
 	@Autowired
 	public CollectionPointJdbcRepository collectionPointJdbcRepository;
-
-	@Autowired
-	public JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {

@@ -10,22 +10,13 @@ import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.VendorContract;
 import org.egov.swm.domain.model.VendorContractSearch;
 import org.egov.swm.persistence.entity.VendorContractEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class VendorContractJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_vendorcontract";
-
-	@Autowired
-	public JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public Pagination<VendorContract> search(VendorContractSearch searchRequest) {
 
@@ -39,7 +30,7 @@ public class VendorContractJdbcRepository extends JdbcRepository {
 			validateEntityFieldName(searchRequest.getSortBy(), VendorContractSearch.class);
 		}
 
-		String orderBy = "order by code";
+		String orderBy = "order by contractNo";
 		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
 			orderBy = "order by " + searchRequest.getSortBy();
 		}
@@ -139,6 +130,11 @@ public class VendorContractJdbcRepository extends JdbcRepository {
 
 		List<VendorContractEntity> vendorContractEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
 				paramValues, row);
+
+		for (VendorContractEntity entity : vendorContractEntities) {
+
+			vendorContractList.add(entity.toDomain());
+		}
 
 		page.setTotalResults(vendorContractList.size());
 

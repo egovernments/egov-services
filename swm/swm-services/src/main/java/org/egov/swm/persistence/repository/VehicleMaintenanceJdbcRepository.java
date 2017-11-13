@@ -10,22 +10,13 @@ import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.VehicleMaintenance;
 import org.egov.swm.domain.model.VehicleMaintenanceSearch;
 import org.egov.swm.persistence.entity.VehicleMaintenanceEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class VehicleMaintenanceJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_vehiclemaintenance";
-
-	@Autowired
-	public JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public Pagination<VehicleMaintenance> search(VehicleMaintenanceSearch searchRequest) {
 

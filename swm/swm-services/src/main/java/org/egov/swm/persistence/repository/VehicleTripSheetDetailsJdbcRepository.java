@@ -10,29 +10,23 @@ import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.VehicleTripSheetDetails;
 import org.egov.swm.domain.model.VehicleTripSheetDetailsSearch;
 import org.egov.swm.persistence.entity.VehicleTripSheetDetailsEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class VehicleTripSheetDetailsJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_vehicletripsheetdetails";
-	
-	@Autowired
-	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {
 
-		return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName,
-				uniqueFieldValue);
+		return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
 	}
 
 	public Pagination<VehicleTripSheetDetails> search(VehicleTripSheetDetailsSearch searchRequest) {
 
-		String searchQuery = "select * from "+TABLE_NAME+" :condition  :orderby ";
+		String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();

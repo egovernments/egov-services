@@ -15,20 +15,12 @@ import org.egov.swm.domain.model.SanitationStaffTargetSearch;
 import org.egov.swm.persistence.entity.SanitationStaffTargetEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_sanitationstafftarget";
-
-	@Autowired
-	public JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
 	public SanitationStaffTargetMapJdbcRepository sanitationStaffTargetMapJdbcRepository;

@@ -5,10 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.swm.domain.model.Document;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,12 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class DocumentJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_document";
-
-	@Autowired
-	public JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Transactional
 	public void delete(String tenantId, String refCode) {

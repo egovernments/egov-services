@@ -17,20 +17,12 @@ import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.persistence.entity.VendorEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class VendorJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_vendor";
-
-	@Autowired
-	public JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
 	public SupplierJdbcRepository supplierJdbcRepository;

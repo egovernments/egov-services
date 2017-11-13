@@ -122,7 +122,7 @@ public class SanitationStaffTargetService {
 
 			// Validate Boundary
 
-			if (sanitationStaffTarget.getLocation() != null && (sanitationStaffTarget.getLocation().getCode() == null
+			/*if (sanitationStaffTarget.getLocation() != null && (sanitationStaffTarget.getLocation().getCode() == null
 					|| sanitationStaffTarget.getLocation().getCode().isEmpty()))
 				throw new CustomException("Location",
 						"The field Location Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
@@ -137,7 +137,7 @@ public class SanitationStaffTargetService {
 				else
 					throw new CustomException("Location",
 							"Given Location is Invalid: " + sanitationStaffTarget.getLocation().getCode());
-			}
+			}*/
 
 			if (sanitationStaffTarget.getSwmProcess() != null
 					&& (sanitationStaffTarget.getSwmProcess().getCode() == null
@@ -192,7 +192,7 @@ public class SanitationStaffTargetService {
 
 			// Validate Employee
 
-			if (sanitationStaffTarget.getEmployee() != null && sanitationStaffTarget.getEmployee().getCode() != null) {
+			/*if (sanitationStaffTarget.getEmployee() != null && sanitationStaffTarget.getEmployee().getCode() != null) {
 
 				employeeResponse = employeeRepository.getEmployeeByCode(sanitationStaffTarget.getEmployee().getCode(),
 						sanitationStaffTarget.getTenantId(), sanitationStaffTargetRequest.getRequestInfo());
@@ -205,7 +205,7 @@ public class SanitationStaffTargetService {
 					sanitationStaffTarget.setEmployee(employeeResponse.getEmployees().get(0));
 				}
 
-			}
+			}*/
 
 			if (sanitationStaffTarget.getDumpingGround() != null
 					&& (sanitationStaffTarget.getDumpingGround().getCode() == null

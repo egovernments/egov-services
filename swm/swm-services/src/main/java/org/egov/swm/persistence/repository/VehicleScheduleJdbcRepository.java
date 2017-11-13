@@ -12,20 +12,12 @@ import org.egov.swm.domain.model.VehicleScheduleSearch;
 import org.egov.swm.persistence.entity.VehicleScheduleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class VehicleScheduleJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_vehicleschedule";
-
-	@Autowired
-	public JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
 	public SupplierJdbcRepository contractorJdbcRepository;

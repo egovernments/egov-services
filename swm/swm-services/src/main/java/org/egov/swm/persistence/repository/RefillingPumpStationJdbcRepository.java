@@ -10,17 +10,12 @@ import org.egov.swm.domain.model.RefillingPumpStation;
 import org.egov.swm.domain.model.RefillingPumpStationSearch;
 import org.egov.swm.persistence.entity.RefillingPumpStationEntity;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class RefillingPumpStationJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_refillingpumpstation";
-
-	public RefillingPumpStationJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-	}
 
 	public Boolean checkForUniqueRecords(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {

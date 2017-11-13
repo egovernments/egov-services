@@ -18,7 +18,7 @@ import io.swagger.annotations.ApiModelProperty;
  * AN Object which holds the basic data for AbstractEstimate
  */
 @ApiModel(description = "AN Object which holds the basic data for AbstractEstimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:32:33.802Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-13T10:25:38.385Z")
 
 public class AbstractEstimate   {
   @JsonProperty("id")
@@ -82,16 +82,16 @@ public class AbstractEstimate   {
   private Long councilResolutionDate = null;
 
   @JsonProperty("spillOverFlag")
-  private Boolean spillOverFlag = null;
+  private Boolean spillOverFlag = false;
 
   @JsonProperty("detailedEstimateCreated")
-  private Boolean detailedEstimateCreated = null;
+  private Boolean detailedEstimateCreated = false;
 
   @JsonProperty("workOrderCreated")
-  private Boolean workOrderCreated = null;
+  private Boolean workOrderCreated = false;
 
   @JsonProperty("billsCreated")
-  private Boolean billsCreated = null;
+  private Boolean billsCreated = false;
 
   @JsonProperty("cancellationReason")
   private String cancellationReason = null;
@@ -135,6 +135,9 @@ public class AbstractEstimate   {
   @JsonProperty("budgetGroup")
   private BudgetGroup budgetGroup = null;
 
+  @JsonProperty("accountCode")
+  private String accountCode = null;
+
   @JsonProperty("scheme")
   private Scheme scheme = null;
 
@@ -142,13 +145,13 @@ public class AbstractEstimate   {
   private SubScheme subScheme = null;
 
   @JsonProperty("fundAvailable")
-  private Boolean fundAvailable = null;
+  private Boolean fundAvailable = false;
 
   @JsonProperty("fundSanctioningAuthority")
   private String fundSanctioningAuthority = null;
 
   @JsonProperty("pmcRequired")
-  private Boolean pmcRequired = null;
+  private Boolean pmcRequired = false;
 
   @JsonProperty("pmcType")
   private String pmcType = null;
@@ -157,13 +160,13 @@ public class AbstractEstimate   {
   private String pmcName = null;
 
   @JsonProperty("workProposedAsPerDP")
-  private String workProposedAsPerDP = null;
+  private Boolean workProposedAsPerDP = false;
 
   @JsonProperty("dpRemarks")
   private String dpRemarks = null;
 
   @JsonProperty("landAssetRequired")
-  private Boolean landAssetRequired = null;
+  private Boolean landAssetRequired = false;
 
   @JsonProperty("noOfLands")
   private Integer noOfLands = null;
@@ -233,10 +236,10 @@ public class AbstractEstimate   {
   }
 
    /**
-   * Epoch time of the Date of Proposal
+   * Epoch time of the Date of Proposal. Default the current date for new estimates and do not allow to modify. This field is user entered for spillover works. Allowed to edit during rejected status or drafts for Spillover Estimates. Future date is not allowed to enter.
    * @return dateOfProposal
   **/
-  @ApiModelProperty(required = true, value = "Epoch time of the Date of Proposal")
+  @ApiModelProperty(required = true, value = "Epoch time of the Date of Proposal. Default the current date for new estimates and do not allow to modify. This field is user entered for spillover works. Allowed to edit during rejected status or drafts for Spillover Estimates. Future date is not allowed to enter.")
   @NotNull
 
 
@@ -254,10 +257,10 @@ public class AbstractEstimate   {
   }
 
    /**
-   * Unique number for the Abstract Estimate. If the work is spillover then the Abstract Estimate number is user entered. Otherwise it is auto generated.
+   * Unique number for the Abstract Estimate. If the work is spillover then the Abstract Estimate number is user entered. Otherwise it is auto generated. This field is allowed to edit during rejected status or drafts for Spillover Estimates.
    * @return abstractEstimateNumber
   **/
-  @ApiModelProperty(required = true, value = "Unique number for the Abstract Estimate. If the work is spillover then the Abstract Estimate number is user entered. Otherwise it is auto generated.")
+  @ApiModelProperty(required = true, value = "Unique number for the Abstract Estimate. If the work is spillover then the Abstract Estimate number is user entered. Otherwise it is auto generated. This field is allowed to edit during rejected status or drafts for Spillover Estimates.")
   @NotNull
 
  @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(min=1,max=50)
@@ -539,7 +542,8 @@ public class AbstractEstimate   {
    * The Locality in which the Abstract Estimate belongs to
    * @return locality
   **/
-  @ApiModelProperty(value = "The Locality in which the Abstract Estimate belongs to")
+  @ApiModelProperty(required = true, value = "The Locality in which the Abstract Estimate belongs to")
+  @NotNull
 
 //  @Valid
 
@@ -619,10 +623,10 @@ public class AbstractEstimate   {
   }
 
    /**
-   * Boolean value if spill over or not. Required only if Abstract Estimate is Spill Over. Default value is false.
+   * Boolean value if spill over or not. Required only if Abstract Estimate is Spill Over.
    * @return spillOverFlag
   **/
-  @ApiModelProperty(value = "Boolean value if spill over or not. Required only if Abstract Estimate is Spill Over. Default value is false.")
+  @ApiModelProperty(value = "Boolean value if spill over or not. Required only if Abstract Estimate is Spill Over.")
 
 
   public Boolean getSpillOverFlag() {
@@ -639,10 +643,10 @@ public class AbstractEstimate   {
   }
 
    /**
-   * Boolean value if the detailed estimate created or not. Required only if Abstract Estimate is Spill Over. Default value is false.
+   * Boolean value if the detailed estimate created or not. Required only if Abstract Estimate is Spill Over.
    * @return detailedEstimateCreated
   **/
-  @ApiModelProperty(value = "Boolean value if the detailed estimate created or not. Required only if Abstract Estimate is Spill Over. Default value is false.")
+  @ApiModelProperty(value = "Boolean value if the detailed estimate created or not. Required only if Abstract Estimate is Spill Over.")
 
 
   public Boolean getDetailedEstimateCreated() {
@@ -659,10 +663,10 @@ public class AbstractEstimate   {
   }
 
    /**
-   * Boolean value if work order created or not, Required only if Abstract Estimate is Spill Over. Default value is false.
+   * Boolean value if work order created or not, Required only if Abstract Estimate is Spill Over.
    * @return workOrderCreated
   **/
-  @ApiModelProperty(value = "Boolean value if work order created or not, Required only if Abstract Estimate is Spill Over. Default value is false.")
+  @ApiModelProperty(value = "Boolean value if work order created or not, Required only if Abstract Estimate is Spill Over.")
 
 
   public Boolean getWorkOrderCreated() {
@@ -679,10 +683,10 @@ public class AbstractEstimate   {
   }
 
    /**
-   * Boolean value if bills created or not. Required only if Abstract Estimate is Spill Over. Default value is false.
+   * Boolean value if bills created or not. Required only if Abstract Estimate is Spill Over. The grossAmountBilled field needs to be shown in Works detail tab if  the billsCreated flag is true for Abstract Estimate.
    * @return billsCreated
   **/
-  @ApiModelProperty(value = "Boolean value if bills created or not. Required only if Abstract Estimate is Spill Over. Default value is false.")
+  @ApiModelProperty(value = "Boolean value if bills created or not. Required only if Abstract Estimate is Spill Over. The grossAmountBilled field needs to be shown in Works detail tab if  the billsCreated flag is true for Abstract Estimate.")
 
 
   public Boolean getBillsCreated() {
@@ -739,10 +743,10 @@ public class AbstractEstimate   {
   }
 
    /**
-   * Unique number after admin sanction for the Abstract Estimate
+   * Unique number of admin sanction for the Abstract Estimate
    * @return adminSanctionNumber
   **/
-  @ApiModelProperty(value = "Unique number after admin sanction for the Abstract Estimate")
+  @ApiModelProperty(value = "Unique number of admin sanction for the Abstract Estimate")
 
  @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(min=1,max=50)
   public String getAdminSanctionNumber() {
@@ -759,10 +763,10 @@ public class AbstractEstimate   {
   }
 
    /**
-   * Epoch time of when the admin santion done
+   * Epoch time of when the admin santion done. Future date is not allowed to enter in this field. Admin sanction date should be on or after the Date of Proposal.
    * @return adminSanctionDate
   **/
-  @ApiModelProperty(value = "Epoch time of when the admin santion done")
+  @ApiModelProperty(value = "Epoch time of when the admin santion done. Future date is not allowed to enter in this field. Admin sanction date should be on or after the Date of Proposal.")
 
 
   public Long getAdminSanctionDate() {
@@ -784,7 +788,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "User who admin sanctioned")
 
-//  @Valid
+  @Valid
 
   public User getAdminSanctionBy() {
     return adminSanctionBy;
@@ -820,10 +824,10 @@ public class AbstractEstimate   {
   }
 
    /**
-   * Epoch time of when Financial sanctioned
+   * Epoch time of when Financial sanctioned. Future date is not allowed to enter in this field.
    * @return financialSanctionDate
   **/
-  @ApiModelProperty(value = "Epoch time of when Financial sanctioned")
+  @ApiModelProperty(value = "Epoch time of when Financial sanctioned. Future date is not allowed to enter in this field.")
 
 
   public Long getFinancialSanctionDate() {
@@ -922,10 +926,11 @@ public class AbstractEstimate   {
   }
 
    /**
-   * Fund of the Abstract Estimate
+   * Fund of the Abstract Estimate. This data comes from financials.
    * @return fund
   **/
-  @ApiModelProperty(value = "Fund of the Abstract Estimate")
+  @ApiModelProperty(required = true, value = "Fund of the Abstract Estimate. This data comes from financials.")
+  @NotNull
 
 //  @Valid
 
@@ -943,10 +948,11 @@ public class AbstractEstimate   {
   }
 
    /**
-   * Function of the Abstract Estimate
+   * Function of the Abstract Estimate. This data comes from financials.
    * @return function
   **/
-  @ApiModelProperty(value = "Function of the Abstract Estimate")
+  @ApiModelProperty(required = true, value = "Function of the Abstract Estimate. This data comes from financials.")
+  @NotNull
 
 //  @Valid
 
@@ -964,10 +970,11 @@ public class AbstractEstimate   {
   }
 
    /**
-   * Budget head of the Abstract Estimate
+   * Budget head of the Abstract Estimate. This data comes from financials.
    * @return budgetGroup
   **/
-  @ApiModelProperty(value = "Budget head of the Abstract Estimate")
+  @ApiModelProperty(required = true, value = "Budget head of the Abstract Estimate. This data comes from financials.")
+  @NotNull
 
 //  @Valid
 
@@ -979,16 +986,36 @@ public class AbstractEstimate   {
     this.budgetGroup = budgetGroup;
   }
 
+  public AbstractEstimate accountCode(String accountCode) {
+    this.accountCode = accountCode;
+    return this;
+  }
+
+   /**
+   * Account code of the Abstract Estimate. This data comes from financials. This field is required only if Financial Integration required flag is turned on and it should be mandatory.
+   * @return accountCode
+  **/
+  @ApiModelProperty(value = "Account code of the Abstract Estimate. This data comes from financials. This field is required only if Financial Integration required flag is turned on and it should be mandatory.")
+
+
+  public String getAccountCode() {
+    return accountCode;
+  }
+
+  public void setAccountCode(String accountCode) {
+    this.accountCode = accountCode;
+  }
+
   public AbstractEstimate scheme(Scheme scheme) {
     this.scheme = scheme;
     return this;
   }
 
    /**
-   * Scheme of the Abstract Estimate
+   * Scheme of the Abstract Estimate. This data comes from financials.
    * @return scheme
   **/
-  @ApiModelProperty(value = "Scheme of the Abstract Estimate")
+  @ApiModelProperty(value = "Scheme of the Abstract Estimate. This data comes from financials.")
 
 //  @Valid
 
@@ -1006,12 +1033,12 @@ public class AbstractEstimate   {
   }
 
    /**
-   * Sub scheme of the Abstract Estimate
+   * Sub scheme of the Abstract Estimate. This data comes from financials.
    * @return subScheme
   **/
-  @ApiModelProperty(value = "Sub scheme of the Abstract Estimate")
+  @ApiModelProperty(value = "Sub scheme of the Abstract Estimate. This data comes from financials.")
 
-//  @Valid
+  @Valid
 
   public SubScheme getSubScheme() {
     return subScheme;
@@ -1067,10 +1094,10 @@ public class AbstractEstimate   {
   }
 
    /**
-   * Boolean vlaue to capture whether the PMC need to appoint or not. True if PMC needs to be appointed. Otherwise the value will be false. The valid values are 'Yes' and 'No'
+   * Boolean vlaue to capture whether the PMC need to appoint or not. True if PMC needs to be appointed. Otherwise the value will be false. The valid values are 'Yes' and 'No'.
    * @return pmcRequired
   **/
-  @ApiModelProperty(value = "Boolean vlaue to capture whether the PMC need to appoint or not. True if PMC needs to be appointed. Otherwise the value will be false. The valid values are 'Yes' and 'No'")
+  @ApiModelProperty(value = "Boolean vlaue to capture whether the PMC need to appoint or not. True if PMC needs to be appointed. Otherwise the value will be false. The valid values are 'Yes' and 'No'.")
 
 
   public Boolean getPmcRequired() {
@@ -1121,7 +1148,7 @@ public class AbstractEstimate   {
     this.pmcName = pmcName;
   }
 
-  public AbstractEstimate workProposedAsPerDP(String workProposedAsPerDP) {
+  public AbstractEstimate workProposedAsPerDP(Boolean workProposedAsPerDP) {
     this.workProposedAsPerDP = workProposedAsPerDP;
     return this;
   }
@@ -1133,12 +1160,12 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "Work proposed as per DP. The valid values are 'Yes' and 'No'.")
   @NotNull
 
- @Pattern(regexp="[a-zA-Z0-9\\s\\.,]+") @Size(max=100)
-  public String getWorkProposedAsPerDP() {
+
+  public Boolean getWorkProposedAsPerDP() {
     return workProposedAsPerDP;
   }
 
-  public void setWorkProposedAsPerDP(String workProposedAsPerDP) {
+  public void setWorkProposedAsPerDP(Boolean workProposedAsPerDP) {
     this.workProposedAsPerDP = workProposedAsPerDP;
   }
 
@@ -1169,10 +1196,10 @@ public class AbstractEstimate   {
   }
 
    /**
-   * Boolean value to capture whether the Land Asset required. True if Land Asset required. False if the Land Asset value is not required. The values should be shown in UI are Yes and No. This field needs to be shown if Nature of work is 'New'.
+   * Boolean value to capture whether the Land Asset required. True if Land Asset required. False if the Land Asset value is not required. The values should be shown in UI are 'Yes' and 'No'. This field needs to be shown if Nature of work is 'New'.
    * @return landAssetRequired
   **/
-  @ApiModelProperty(value = "Boolean value to capture whether the Land Asset required. True if Land Asset required. False if the Land Asset value is not required. The values should be shown in UI are Yes and No. This field needs to be shown if Nature of work is 'New'.")
+  @ApiModelProperty(value = "Boolean value to capture whether the Land Asset required. True if Land Asset required. False if the Land Asset value is not required. The values should be shown in UI are 'Yes' and 'No'. This field needs to be shown if Nature of work is 'New'.")
 
 
   public Boolean getLandAssetRequired() {
@@ -1319,7 +1346,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "Array of Asset/Land details")
 
-  @Valid
+//  @Valid
 
   public List<AbstractEstimateAssetDetail> getAssetDetails() {
     return assetDetails;
@@ -1348,7 +1375,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "Array of document details")
 
-  @Valid
+//  @Valid
 
   public List<DocumentDetail> getDocumentDetails() {
     return documentDetails;
@@ -1406,6 +1433,7 @@ public class AbstractEstimate   {
         Objects.equals(this.fund, abstractEstimate.fund) &&
         Objects.equals(this.function, abstractEstimate.function) &&
         Objects.equals(this.budgetGroup, abstractEstimate.budgetGroup) &&
+        Objects.equals(this.accountCode, abstractEstimate.accountCode) &&
         Objects.equals(this.scheme, abstractEstimate.scheme) &&
         Objects.equals(this.subScheme, abstractEstimate.subScheme) &&
         Objects.equals(this.fundAvailable, abstractEstimate.fundAvailable) &&
@@ -1427,7 +1455,7 @@ public class AbstractEstimate   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, dateOfProposal, abstractEstimateNumber, subject, referenceType, referenceNumber, description, department, status, beneficiary, modeOfAllotment, typeOfWork, subTypeOfWork, natureOfWork, ward, locality, workCategory, councilResolutionNumber, councilResolutionDate, spillOverFlag, detailedEstimateCreated, workOrderCreated, billsCreated, cancellationReason, cancellationRemarks, adminSanctionNumber, adminSanctionDate, adminSanctionBy, financialSanctionNumber, financialSanctionDate, financialSanctionBy, workFlowDetails, stateId, implementationPeriod, fund, function, budgetGroup, scheme, subScheme, fundAvailable, fundSanctioningAuthority, pmcRequired, pmcType, pmcName, workProposedAsPerDP, dpRemarks, landAssetRequired, noOfLands, otherAssetSpecificationRemarks, auditDetails, abstractEstimateDetails, sanctionDetails, assetDetails, documentDetails);
+    return Objects.hash(id, tenantId, dateOfProposal, abstractEstimateNumber, subject, referenceType, referenceNumber, description, department, status, beneficiary, modeOfAllotment, typeOfWork, subTypeOfWork, natureOfWork, ward, locality, workCategory, councilResolutionNumber, councilResolutionDate, spillOverFlag, detailedEstimateCreated, workOrderCreated, billsCreated, cancellationReason, cancellationRemarks, adminSanctionNumber, adminSanctionDate, adminSanctionBy, financialSanctionNumber, financialSanctionDate, financialSanctionBy, workFlowDetails, stateId, implementationPeriod, fund, function, budgetGroup, accountCode, scheme, subScheme, fundAvailable, fundSanctioningAuthority, pmcRequired, pmcType, pmcName, workProposedAsPerDP, dpRemarks, landAssetRequired, noOfLands, otherAssetSpecificationRemarks, auditDetails, abstractEstimateDetails, sanctionDetails, assetDetails, documentDetails);
   }
 
   @Override
@@ -1473,6 +1501,7 @@ public class AbstractEstimate   {
     sb.append("    fund: ").append(toIndentedString(fund)).append("\n");
     sb.append("    function: ").append(toIndentedString(function)).append("\n");
     sb.append("    budgetGroup: ").append(toIndentedString(budgetGroup)).append("\n");
+    sb.append("    accountCode: ").append(toIndentedString(accountCode)).append("\n");
     sb.append("    scheme: ").append(toIndentedString(scheme)).append("\n");
     sb.append("    subScheme: ").append(toIndentedString(subScheme)).append("\n");
     sb.append("    fundAvailable: ").append(toIndentedString(fundAvailable)).append("\n");
@@ -1505,4 +1534,3 @@ public class AbstractEstimate   {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

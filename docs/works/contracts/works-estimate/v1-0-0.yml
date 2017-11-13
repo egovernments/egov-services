@@ -1846,6 +1846,7 @@ definitions:
         active:
           type: boolean
           description: The active/inactive status of the project which refresents the boolean value True/False. By default the boolean value will be True.
+          default: false
         projectValue:
           type: number
           format: BigDecimal

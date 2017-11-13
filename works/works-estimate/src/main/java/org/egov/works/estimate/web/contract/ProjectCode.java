@@ -34,7 +34,7 @@ public class ProjectCode   {
   private ProjectCodeStatus status = null;
 
   @JsonProperty("active")
-  private Boolean active = null;
+  private Boolean active = false;
 
   @JsonProperty("projectValue")
   private BigDecimal projectValue = null;

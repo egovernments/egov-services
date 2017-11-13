@@ -9,7 +9,9 @@ import java.util.Map;
 import org.egov.common.persistence.repository.JdbcRepository;
 import org.egov.works.estimate.persistence.helper.AbstractEstimateHelper;
 import org.egov.works.estimate.web.contract.AbstractEstimate;
+import org.egov.works.estimate.web.contract.AbstractEstimateAssetDetailSearchContract;
 import org.egov.works.estimate.web.contract.AbstractEstimateDetailsSearchContract;
+import org.egov.works.estimate.web.contract.AbstractEstimateSanctionSearchContract;
 import org.egov.works.estimate.web.contract.AbstractEstimateSearchContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -22,6 +24,12 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 	
 	@Autowired
 	private AbstractEstimateDetailsJdbcRepository abstractEstimateDetailsJdbcRepository;
+	
+	@Autowired
+	private AbstractEstimateSanctionDetailJdbcRepository abstractEstimateSanctionDetailJdbcRepository;
+	
+	@Autowired
+	private AbstractEstimateAssetDetailJdbcRepository abstractEstimateAssetDetailJdbcRepository;
 	
 	public List<AbstractEstimate> search(AbstractEstimateSearchContract abstractEstimateSearchContract) {
 		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
@@ -167,6 +175,8 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 		
 		AbstractEstimate abstractEstimate;
 		AbstractEstimateDetailsSearchContract abstractEstimateDetailsSearchContract;
+		AbstractEstimateSanctionSearchContract abstractEstimateSanctionSearchContract;
+		AbstractEstimateAssetDetailSearchContract abstractEstimateAssetDetailSearchContract;
 		
 		for(AbstractEstimateHelper abstractEstimateEntity : abstractEstimateEntities) {
 			abstractEstimate = abstractEstimateEntity.toDomain();
@@ -174,6 +184,17 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 			abstractEstimateDetailsSearchContract.setTenantId(abstractEstimateEntity.getTenantId());
 			abstractEstimateDetailsSearchContract.setAbstractEstimateIds(Arrays.asList(abstractEstimateEntity.getId()));
 			abstractEstimate.setAbstractEstimateDetails(abstractEstimateDetailsJdbcRepository.search(abstractEstimateDetailsSearchContract));
+			
+			abstractEstimateSanctionSearchContract = new AbstractEstimateSanctionSearchContract();
+			abstractEstimateSanctionSearchContract.setTenantId(abstractEstimateEntity.getTenantId());
+			abstractEstimateSanctionSearchContract.setAbstractEstimateIds(Arrays.asList(abstractEstimateEntity.getId()));
+			abstractEstimate.setSanctionDetails(abstractEstimateSanctionDetailJdbcRepository.search(abstractEstimateSanctionSearchContract));
+			
+			abstractEstimateAssetDetailSearchContract = new AbstractEstimateAssetDetailSearchContract();
+			abstractEstimateAssetDetailSearchContract.setTenantId(abstractEstimateEntity.getTenantId());
+			abstractEstimateAssetDetailSearchContract.setAbstractEstimateIds(Arrays.asList(abstractEstimateEntity.getId()));
+			abstractEstimate.setAssetDetails(abstractEstimateAssetDetailJdbcRepository.search(abstractEstimateAssetDetailSearchContract));
+			
 			abstractEstimates.add(abstractEstimate);
 		}
 		return abstractEstimates;

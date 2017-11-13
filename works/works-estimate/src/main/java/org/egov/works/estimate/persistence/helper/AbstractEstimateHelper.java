@@ -166,7 +166,7 @@ public class AbstractEstimateHelper {
 	private String pmcName = null;
 	
 	@JsonProperty("workProposedAsPerDP")
-	private String workProposedAsPerDP = null;
+	private Boolean workProposedAsPerDP = null;
 
 	@JsonProperty("dpRemarks")
 	private String dpRemarks = null;

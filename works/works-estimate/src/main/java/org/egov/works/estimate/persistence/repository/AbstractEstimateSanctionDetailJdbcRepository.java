@@ -1,0 +1,75 @@
+package org.egov.works.estimate.persistence.repository;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.egov.common.persistence.repository.JdbcRepository;
+import org.egov.works.estimate.persistence.helper.AbstractEstimateSanctionDetailHelper;
+import org.egov.works.estimate.web.contract.AbstractEstimateSanctionDetail;
+import org.egov.works.estimate.web.contract.AbstractEstimateSanctionSearchContract;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.stereotype.Service;
+
+@Service
+public class AbstractEstimateSanctionDetailJdbcRepository  extends JdbcRepository
+{
+
+    public List<AbstractEstimateSanctionDetail> search(
+            AbstractEstimateSanctionSearchContract abstractEstimateSanctionSearchContract) {
+        String searchQuery = "select * from egw_abstractestimate_sanction_details where id is not null ";
+
+        Map<String, Object> paramValues = new HashMap<>();
+        StringBuffer params = new StringBuffer();
+
+        if (abstractEstimateSanctionSearchContract.getSortBy() != null
+                && !abstractEstimateSanctionSearchContract.getSortBy().isEmpty()) {
+            validateSortByOrder(abstractEstimateSanctionSearchContract.getSortBy());
+            validateEntityFieldName(abstractEstimateSanctionSearchContract.getSortBy(), AbstractEstimateSanctionDetailHelper.class);
+        }
+
+        String orderBy = "order by id";
+        if (abstractEstimateSanctionSearchContract.getSortBy() != null
+                && !abstractEstimateSanctionSearchContract.getSortBy().isEmpty()) {
+            orderBy = "order by " + abstractEstimateSanctionSearchContract.getSortBy();
+        }
+
+
+        if (abstractEstimateSanctionSearchContract.getTenantId() != null) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("tenantId =:tenantId");
+            paramValues.put("tenantId", abstractEstimateSanctionSearchContract.getTenantId());
+        }
+        if (abstractEstimateSanctionSearchContract.getIds() != null) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("id in(:ids) ");
+            paramValues.put("ids", abstractEstimateSanctionSearchContract.getIds());
+        }
+
+        if (abstractEstimateSanctionSearchContract.getAbstractEstimateIds() != null) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("abstractEstimate in(:abstractEstimateIds) ");
+            paramValues.put("abstractEstimateIds", abstractEstimateSanctionSearchContract.getAbstractEstimateIds());
+        }
+
+        BeanPropertyRowMapper row = new BeanPropertyRowMapper(AbstractEstimateSanctionDetailHelper.class);
+
+        List<AbstractEstimateSanctionDetailHelper> abstractEstimateSanctionDetailHelpers = namedParameterJdbcTemplate
+                .query(searchQuery.toString(), paramValues, row);
+
+        List<AbstractEstimateSanctionDetail> abstractEstimateSanctionDetails = new ArrayList<>();
+
+        for (AbstractEstimateSanctionDetailHelper abstractEstimateSanctionDetailHelper : abstractEstimateSanctionDetailHelpers) {
+        	abstractEstimateSanctionDetails.add(abstractEstimateSanctionDetailHelper.toDomain());
+        }
+
+        return abstractEstimateSanctionDetails;
+    }
+}

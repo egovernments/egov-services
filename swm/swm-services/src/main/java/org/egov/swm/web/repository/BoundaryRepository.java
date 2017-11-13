@@ -2,6 +2,7 @@ package org.egov.swm.web.repository;
 
 import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.web.contract.BoundaryResponse;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -23,7 +24,11 @@ public class BoundaryRepository {
 	}
 
 	private BoundaryResponse getBoundaryServiceResponse(final String url, String code, String tenantId) {
-		return restTemplate.getForObject(url, BoundaryResponse.class, code, tenantId);
+		try {
+			return restTemplate.getForObject(url, BoundaryResponse.class, code, tenantId);
+		} catch (Exception e) {
+			throw new CustomException("Location", "Given Location is invalid: " + code);
+		}
 	}
 
 }

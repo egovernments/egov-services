@@ -164,7 +164,7 @@ public class VendorService {
 					}
 				}
 
-			if (vendor.getServicedLocations() != null)
+			/*if (vendor.getServicedLocations() != null)
 				for (Boundary location : vendor.getServicedLocations()) {
 
 					if (location != null && (location.getCode() == null || location.getCode().isEmpty()))
@@ -184,7 +184,7 @@ public class VendorService {
 							throw new CustomException("Location", "Given Location is Invalid: " + location.getCode());
 
 					}
-				}
+				}*/
 
 			validateUniqueFields(vendor);
 

@@ -1,5 +1,6 @@
 package org.egov.swm.domain.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -67,13 +68,16 @@ public class SanitationStaffTargetService {
 				&& null != sanitationStaffTargetRequest.getRequestInfo().getUserInfo().getId()) {
 			userId = sanitationStaffTargetRequest.getRequestInfo().getUserInfo().getId();
 		}
-		
+
 		for (SanitationStaffTarget v : sanitationStaffTargetRequest.getSanitationStaffTargets()) {
 
 			setAuditDetails(v, userId);
 
 			v.setTargetNo(generateTargetNumber(v.getTenantId(), sanitationStaffTargetRequest.getRequestInfo()));
 
+			if (v.getCollectionPoints() == null) {
+				v.setCollectionPoints(new ArrayList<>());
+			}
 		}
 
 		return sanitationStaffTargetRepository.save(sanitationStaffTargetRequest);
@@ -92,10 +96,14 @@ public class SanitationStaffTargetService {
 				&& null != sanitationStaffTargetRequest.getRequestInfo().getUserInfo().getId()) {
 			userId = sanitationStaffTargetRequest.getRequestInfo().getUserInfo().getId();
 		}
-		
+
 		for (SanitationStaffTarget v : sanitationStaffTargetRequest.getSanitationStaffTargets()) {
 
 			setAuditDetails(v, userId);
+			
+			if (v.getCollectionPoints() == null) {
+				v.setCollectionPoints(new ArrayList<>());
+			}
 
 		}
 

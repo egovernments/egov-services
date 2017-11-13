@@ -1,6 +1,5 @@
 package org.egov.swm.domain.model;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -26,7 +25,6 @@ public class InsuranceDetails {
 	private String insuranceNumber = null;
 
 	@NotNull
-	@Valid
 	@JsonProperty("insuranceValidityDate")
 	private Long insuranceValidityDate = null;
 

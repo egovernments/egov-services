@@ -47,7 +47,6 @@ public class SanitationStaffTarget {
 	@JsonProperty("location")
 	private Boundary location = null;
 
-	@NotNull
 	@JsonProperty("route")
 	private Route route = null;
 
@@ -55,7 +54,6 @@ public class SanitationStaffTarget {
 	@JsonProperty("employee")
 	private Employee employee = null;
 
-	@NotNull
 	@JsonProperty("collectionPoints")
 	private List<CollectionPoint> collectionPoints = new ArrayList<CollectionPoint>();
 

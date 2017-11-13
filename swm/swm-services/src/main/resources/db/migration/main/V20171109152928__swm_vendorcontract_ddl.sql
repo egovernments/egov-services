@@ -6,6 +6,7 @@ Create table egswm_vendorcontract(
   contractPeriodFrom bigint NOT NULL,
   contractPeriodTo bigint NOT NULL,
   securityDeposit bigint NOT NULL,
+  paymentAmount bigint NOT NULL,
   paymentTerms varchar(256) NOT NULL,
   remarks varchar(500),
   createdby varchar(50),

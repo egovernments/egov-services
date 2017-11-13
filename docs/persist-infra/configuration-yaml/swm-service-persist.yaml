@@ -727,7 +727,7 @@ serviceMaps:
    description: create vendorcontract in egswm_vendorcontract
    fromTopic: swm-vendorcontract-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_vendorcontract(tenantid, vendor, contractNo, contractDate, contractPeriodFrom, contractPeriodTo, securityDeposit, paymentTerms, remarks, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_vendorcontract(tenantid, vendor, contractNo, contractDate, contractPeriodFrom, contractPeriodTo, securityDeposit, paymentAmount, paymentTerms, remarks, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vendorContracts.*
       jsonMaps:
        
@@ -738,12 +738,19 @@ serviceMaps:
        - jsonPath: $.vendorContracts.*.contractNo
 
        - jsonPath: $.vendorContracts.*.contractDate
-       
+         dbType: LONG       
+
        - jsonPath: $.vendorContracts.*.contractPeriodFrom
+         dbType: LONG
        
        - jsonPath: $.vendorContracts.*.contractPeriodTo
+         dbType: LONG
        
        - jsonPath: $.vendorContracts.*.securityDeposit
+         dbType: DOUBLE
+
+       - jsonPath: $.vendorContracts.*.paymentAmount
+         dbType: DOUBLE
        
        - jsonPath: $.vendorContracts.*.paymentTerms.label
        
@@ -764,19 +771,26 @@ serviceMaps:
    description: update vendorcontract in egswm_vendorcontract
    fromTopic: swm-vendorcontract-update-topic
    queryMaps: 
-    - query: update egswm_vendorcontract set vendor=?, contractDate=?, contractPeriodFrom=?, contractPeriodTo=?, securityDeposit=?, paymentTerms=?, remarks=?, lastmodifiedby=?, lastmodifiedtime=? where contractNo=? and tenantId=?;
+    - query: update egswm_vendorcontract set vendor=?, contractDate=?, contractPeriodFrom=?, contractPeriodTo=?, securityDeposit=?, paymentAmount=?, paymentTerms=?, remarks=?, lastmodifiedby=?, lastmodifiedtime=? where contractNo=? and tenantId=?;
       basePath: $.vendorContracts.*
       jsonMaps:
 
        - jsonPath: $.vendorContracts.*.vendor.vendorNo
 
        - jsonPath: $.vendorContracts.*.contractDate
-       
+         dbType: LONG       
+
        - jsonPath: $.vendorContracts.*.contractPeriodFrom
+         dbType: LONG
        
        - jsonPath: $.vendorContracts.*.contractPeriodTo
+         dbType: LONG
        
        - jsonPath: $.vendorContracts.*.securityDeposit
+         dbType: DOUBLE
+
+       - jsonPath: $.vendorContracts.*.paymentAmount
+         dbType: DOUBLE
        
        - jsonPath: $.vendorContracts.*.paymentTerms.label
        

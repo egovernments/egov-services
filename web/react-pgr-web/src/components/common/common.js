@@ -2499,6 +2499,41 @@ var localization_EN_Data = {
 
 //works
 "works.create.groups.label.estandadminsanction": "Estimate and Administrative Sanction",
+"works.create.groups.fields.dateOfProposal":"Date of Proposal",
+"works.create.groups.fields.department":"Department",
+"works.create.groups.fields.referenceType":"Reference Type",
+"works.create.groups.fields.referenceNumber":"Reference Number",
+"works.create.groups.fields.subject":"Subject",
+"works.create.groups.fields.description":"Description",
+"works.create.groups.fields.natureOfWork":"Nature of Work",
+"works.create.groups.fields.modeOfAllotment": "Recommended Mode of Entrustment",
+"works.create.groups.fields.typeOfWork":"Type of Work",
+"works.create.groups.fields.subTypeOfWork":"Sub-Type of Work",
+"works.create.groups.fields.workCategory":"Work Category",
+"works.create.groups.fields.beneficiary":"Beneficiary",
+"works.create.groups.fields.locality":"Locality",
+"works.create.groups.fields.ward":"Ward",
+"works.create.groups.fields.workProposedAsPerDP":"Work Proposed is as per DP",
+"works.create.groups.fields.dpRemarks":"DP Remarks",
+"works.create.groups.fields.pmcRequired":"Is PMC need to Appoint?",
+"works.create.groups.fields.pmcType":"If Yes, from Panel or New Appointment",
+"works.create.groups.fields.pmcName":"",
+"works.create.groups.fields.implementationPeriod":"Approx. Period of implementation",
+"works.create.groups.label.assetdetails":"Asset Details",
+"works.create.groups.fields.assetCode":"Asset Code",
+"works.create.groups.fields.assetCondition":"Present Condition of the Asset",
+"works.create.groups.fields.assetRemarks":"Asset Remarks",
+"works.create.groups.label.workdetails":"Work Details",
+"works.create.groups.label.nameofthework":"Name of the Work",
+"works.create.groups.label.estimateAmount":"Estimated Amount",
+"works.create.groups.label.sanctionDetails":"Sanction Details",
+"works.create.groups.fields.sanctionType":"Sanction Type",
+"works.create.groups.fields.sanctionAuthority":"Sanction Authority",
+"works.create.groups.label.uploadDocs":"Upload Documents",
+
+
+
+
 
 //Performance Assessment
 "perfManagement.create.KPIs.groups.kpiMaster":"Key Performance Indicator Master",

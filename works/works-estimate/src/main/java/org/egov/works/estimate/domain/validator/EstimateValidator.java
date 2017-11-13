@@ -250,7 +250,7 @@ public class EstimateValidator {
     public void validateTypeOfWork(TypeOfWork typeOfWork, String tenantId, RequestInfo requestInfo,
                                    Map<String, String> messages) {
         JSONArray responseJSONArray;
-        if (typeOfWork != null && typeOfWork.getName() != null) {
+        if (typeOfWork != null && typeOfWork.getCode() != null) {
             responseJSONArray = estimateUtils.getMDMSData(Constants.TYPEOFWORK_OBJECT,
                     CommonConstants.CODE, typeOfWork.getCode(), tenantId, requestInfo,
                     Constants.WORKS_MODULE_CODE);
@@ -266,7 +266,7 @@ public class EstimateValidator {
     public void validateSubTypeOfWork(TypeOfWork subTypeOfWork, String tenantId, RequestInfo requestInfo,
                                       Map<String, String> messages) {
         JSONArray responseJSONArray;
-        if (subTypeOfWork != null && subTypeOfWork.getName() != null) {
+        if (subTypeOfWork != null && subTypeOfWork.getCode() != null) {
             responseJSONArray = estimateUtils.getMDMSData(Constants.TYPEOFWORK_OBJECT,
                     CommonConstants.CODE, subTypeOfWork.getCode(), tenantId, requestInfo,
                     Constants.WORKS_MODULE_CODE);
@@ -282,7 +282,7 @@ public class EstimateValidator {
     public void validateDepartment(Department department, String tenantId, RequestInfo requestInfo,
                                    Map<String, String> messages) {
         JSONArray responseJSONArray;
-        if (department != null && department.getName() != null) {
+        if (department != null && department.getCode() != null) {
             responseJSONArray = estimateUtils.getMDMSData(Constants.DEPARTMENT_OBJECT,
                     CommonConstants.CODE, department.getCode(), tenantId, requestInfo,
                     Constants.COMMON_MASTERS_MODULE_CODE);

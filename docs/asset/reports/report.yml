@@ -942,7 +942,7 @@ ReportDefinitions:
     label: reports.asset.code
     type: string
     linkedReport:
-      reportName: AssetImmovableRegisterDetail
+      reportName: LandRegisterDetail
       linkedColumn: _parent?reportName={reportName}&assetdetail={code}
     source: asset      
   - name: dateofcreation

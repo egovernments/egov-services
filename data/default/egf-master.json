@@ -9,7 +9,7 @@
       "code": "01",
       "identifier": "1",
       "parent": null,
-      "active": "t",
+      "active": true,
       "level": "1"
     },
     {
@@ -19,7 +19,7 @@
       "code": "02",
       "identifier": "2",
       "parent": null,
-      "active": "t",
+      "active": true,
       "level": "1"
     },
     {
@@ -29,7 +29,7 @@
       "code": "03",
       "identifier": "3",
       "parent": null,
-      "active": "t",
+      "active": true,
       "level": "1"
     },
     {
@@ -39,7 +39,7 @@
       "code": "04",
       "identifier": "4",
       "parent": null,
-      "active": "t",
+      "active": true,
       "level": "1"
     }
   ],
@@ -50,10 +50,10 @@
       "finYearRange": "2019-20",
       "startingDate": 1554076800000,
       "endingDate": 1585699199000,
-      "active": "t",
-      "isActiveForPosting": "f",
-      "isClosed": "f",
-      "transferClosingBalance": "f"
+      "active": true,
+      "isActiveForPosting": false,
+      "isClosed": false,
+      "transferClosingBalance": false
     },
     {
       "id": "3",
@@ -61,10 +61,10 @@
       "finYearRange": "2018-19",
       "startingDate": 1522540800000,
       "endingDate": 1554076799000,
-      "active": "t",
-      "isActiveForPosting": "f",
-      "isClosed": "f",
-      "transferClosingBalance": "f"
+      "active": true,
+      "isActiveForPosting": false,
+      "isClosed": false,
+      "transferClosingBalance": false
     },
     {
       "id": "4",
@@ -72,10 +72,10 @@
       "finYearRange": "2017-18",
       "startingDate": 1491004800000,
       "endingDate": 1522540799000,
-      "active": "t",
-      "isActiveForPosting": "t",
-      "isClosed": "f",
-      "transferClosingBalance": "f"
+      "active": true,
+      "isActiveForPosting": true,
+      "isClosed": false,
+      "transferClosingBalance": false
     },
     {
       "id": "5",
@@ -83,10 +83,10 @@
       "finYearRange": "2016-17",
       "startingDate": 1459468800000,
       "endingDate": 1491004799000,
-      "active": "t",
-      "isActiveForPosting": "t",
-      "isClosed": "f",
-      "transferClosingBalance": "f"
+      "active": true,
+      "isActiveForPosting": true,
+      "isClosed": false,
+      "transferClosingBalance": false
     },
     {
       "id": "6",
@@ -94,10 +94,10 @@
       "finYearRange": "2015-16",
       "startingDate": 1427846400000,
       "endingDate": 1459468799000,
-      "active": "t",
-      "isActiveForPosting": "t",
-      "isClosed": "f",
-      "transferClosingBalance": "f"
+      "active": true,
+      "isActiveForPosting": true,
+      "isClosed": false,
+      "transferClosingBalance": false
     },
     {
       "id": "7",
@@ -105,10 +105,10 @@
       "finYearRange": "2014-15",
       "startingDate": 1396310400000,
       "endingDate": 1427846399000,
-      "active": "t",
-      "isActiveForPosting": "t",
-      "isClosed": "f",
-      "transferClosingBalance": "f"
+      "active": true,
+      "isActiveForPosting": true,
+      "isClosed": false,
+      "transferClosingBalance": false
     },
     {
       "id": "8",
@@ -116,10 +116,10 @@
       "finYearRange": "2013-14",
       "startingDate": 1364774400000,
       "endingDate": 1396310399000,
-      "active": "t",
-      "isActiveForPosting": "t",
-      "isClosed": "f",
-      "transferClosingBalance": "f"
+      "active": true,
+      "isActiveForPosting": true,
+      "isClosed": false,
+      "transferClosingBalance": false
     }
   ],
   "Bank": [

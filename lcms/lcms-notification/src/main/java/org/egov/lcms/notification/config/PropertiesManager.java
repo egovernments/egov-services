@@ -14,6 +14,9 @@ public class PropertiesManager {
 	@Value("${app.timezone}")
 	private String appTimeZone;
 	
+	@Value("${roles.code}")
+	private String rolesCode;
+	
 	@Value("${lcms-notification.template.type}")
 	private String templateType;
 	
@@ -270,4 +273,16 @@ public class PropertiesManager {
 	
 	@Value("${opinion.advocate.email.body}")
 	private String opinionAdvocateEmailBody;
+	
+	/**
+	 * User search url info
+	 */
+	@Value("${egov.services.egov_user.hostname}")
+	private String userHostName;
+	
+	@Value("${egov.services.egov_user.basepath}")
+	private String userBasePath;
+	
+	@Value("${egov.services.egov_user.searchpath}")
+	private String userSearchPath;
 }

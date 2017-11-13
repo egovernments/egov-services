@@ -1,26 +1,56 @@
 package org.egov.lcms.notification.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.egov.lcms.notification.config.PropertiesManager;
 import org.egov.lcms.notification.model.AdvocatePayment;
 import org.egov.lcms.notification.model.AdvocatePaymentRequest;
 import org.egov.lcms.notification.model.Case;
 import org.egov.lcms.notification.model.CaseRequest;
+import org.egov.lcms.notification.model.EmailMessage;
+import org.egov.lcms.notification.model.EmailMessageContext;
+import org.egov.lcms.notification.model.EmailRequest;
 import org.egov.lcms.notification.model.HearingDetails;
 import org.egov.lcms.notification.model.Opinion;
 import org.egov.lcms.notification.model.OpinionRequest;
 import org.egov.lcms.notification.model.ParaWiseComment;
+import org.egov.lcms.notification.model.SmsMessage;
 import org.egov.lcms.notification.model.Summon;
 import org.egov.lcms.notification.model.SummonRequest;
+import org.egov.lcms.notification.model.UserDetail;
+import org.egov.lcms.notification.repository.UserReository;
+import org.egov.lcms.notification.util.NotificationUtil;
 import org.egov.lcms.notification.util.TimeStampUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class NotificationService {
 
-	public void sendEmailAndSmsForSummon(SummonRequest summonRequest) {
+	@Autowired
+	UserReository userReository;
+	
+	@Autowired
+	NotificationUtil notificationUtil;
+	
+	@Autowired
+	PropertiesManager propertiesManager;
+	
+	@Autowired
+	KafkaTemplate<String, Object> kafkaTemplate;
+
+	public void sendEmailAndSmsForSummon(SummonRequest summonRequest) throws Exception {
 
 		Map<Object, Object> summonMessage = new HashMap<Object, Object>();
+		List<String> roleCodes = new ArrayList<String>();
+		roleCodes.add(propertiesManager.getRolesCode());
+		List<UserDetail> userDetails = null;
+		String mobileNumber = null;
+		String emailAddress = null;		
 
 		for (Summon summon : summonRequest.getSummons()) {
 
@@ -28,10 +58,34 @@ public class NotificationService {
 
 				summonMessage.put("Reference No", summon.getSummonReferenceNo());
 				summonMessage.put("Dated", TimeStampUtil.getDateWithoutTimezone(summon.getSummonDate()));
-				summonMessage.put("ULB Name", summon.getTenantId());
-
-				summonMessage.put("Assigning Authority", "");
-				// Need mobile and Email details
+				summonMessage.put("ULB Name", summon.getTenantId());				
+				userDetails = userReository.getUser(summon.getTenantId(), roleCodes, summonRequest.getRequestInfo());				
+				
+				for(UserDetail userDetail : userDetails) {
+					
+					summonMessage.put("Assigning Authority", userDetail.getName());
+					
+					if (userDetail.getMobileNumber() != null && userDetail.getMobileNumber() != "") {
+						
+						mobileNumber = userDetail.getMobileNumber();
+						String message = notificationUtil.buildSmsMessage(propertiesManager.getSummonSms(), summonMessage);
+						SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
+						kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+					}
+					
+					if (userDetail.getEmailId() != null && userDetail.getEmailId() != "") {
+						
+						emailAddress = userDetail.getEmailId();
+						EmailMessageContext emailMessageContext = new EmailMessageContext();
+						emailMessageContext.setSubjectTemplateName(propertiesManager.getSummonEmailSubject());
+						emailMessageContext.setSubjectTemplateValues(summonMessage);
+						emailMessageContext.setBodyTemplateName(propertiesManager.getSummonEmailBody());
+						emailMessageContext.setBodyTemplateValues(summonMessage);						
+						EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
+						EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
+						kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);			
+					}							
+				}
 			}
 		}
 	}
@@ -126,14 +180,14 @@ public class NotificationService {
 				hearingProcessMessage.put("Court", caseObj.getSummon().getCourtName());
 
 				for (HearingDetails hearingDetails : caseObj.getHearingDetails()) {
-					
+
 					hearingProcessMessage.put("Next Hearing Date",
 							TimeStampUtil.getDateWithoutTimezone(hearingDetails.getNextHearingDate()));
-					hearingProcessMessage.put("Next Hearing Time",hearingDetails.getNextHearingTime());
+					hearingProcessMessage.put("Next Hearing Time", hearingDetails.getNextHearingTime());
 				}
-				
+
 				hearingProcessMessage.put("Legal Department/Concerned Department", "");
-				
+
 				// Need mobile and Email details
 
 			}
@@ -145,15 +199,14 @@ public class NotificationService {
 		Map<Object, Object> advocatePaymentMessage = new HashMap<Object, Object>();
 
 		for (AdvocatePayment advocatePayment : advocatePaymentRequest.getAdvocatePayments()) {
-			
+
 			advocatePaymentMessage.put("Advocate Name", advocatePayment.getAdvocate().getName());
-			advocatePaymentMessage.put("Case No", advocatePayment.getCaseNo());	
-			advocatePaymentMessage.put("Case Date", "");//case registraion form
-			advocatePaymentMessage.put("Demand No", "");//Advocate form
-			advocatePaymentMessage.put("Letter No", "");//Approval letter Form					
+			advocatePaymentMessage.put("Case No", advocatePayment.getCaseNo());
+			advocatePaymentMessage.put("Case Date", "");// case registraion form
+			advocatePaymentMessage.put("Demand No", "");// Advocate form
+			advocatePaymentMessage.put("Letter No", "");// Approval letter Form
 			advocatePaymentMessage.put("ULB Name", advocatePayment.getTenantId());
 
-			
 			advocatePaymentMessage.put("Legal Advisor", "");
 			advocatePaymentMessage.put("Legal Clerk", "");
 			advocatePaymentMessage.put("Approval Legal Clerk", "");
@@ -180,38 +233,3 @@ public class NotificationService {
 		}
 	}
 }
-
-/**
- * Map<Object, Object> propertyMessage = new HashMap<Object, Object>(); for
- * (Property property : properties) {
- * 
- * propertyMessage.put("acknowledgementNo",
- * property.getPropertyDetail().getApplicationNo());
- * propertyMessage.put("upicNo", property.getUpicNumber());
- * propertyMessage.put("assessmentDate", property.getAssessmentDate());
- * propertyMessage.put("tenantId", property.getTenantId());
- * 
- * for (User user : property.getOwners()) {
- * 
- * propertyMessage.put("name", user.getName()); propertyMessage.put("tenantId",
- * user.getTenantId()); String emailAddress = user.getEmailId(); String
- * mobileNumber = user.getMobileNumber(); String message =
- * notificationUtil.buildSmsMessage(propertiesManager.getAlterationAcknowledgementSms(),
- * propertyMessage); SmsMessage smsMessage = new SmsMessage(message,
- * mobileNumber); EmailMessageContext emailMessageContext = new
- * EmailMessageContext();
- * emailMessageContext.setBodyTemplateName(propertiesManager.getAlterationAcknowledgementEmailBody());
- * emailMessageContext.setBodyTemplateValues(propertyMessage);
- * emailMessageContext
- * .setSubjectTemplateName(propertiesManager.getAlterationAcknowledgementEmailSubject());
- * emailMessageContext.setSubjectTemplateValues(propertyMessage); EmailRequest
- * emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
- * EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest,
- * emailAddress); kafkaTemplate.send(propertiesManager.getSmsNotification(),
- * smsMessage); kafkaTemplate.send(propertiesManager.getEmailNotification(),
- * emailMessage); } }
- * 
- * @param summonRequest
- *            1.Assigning Authority 2.Reference No 3.Dated 4.ULB Name
- *            TimeStampUtil.getDateWithoutTimezone(property.getAssessmentDate());
- */

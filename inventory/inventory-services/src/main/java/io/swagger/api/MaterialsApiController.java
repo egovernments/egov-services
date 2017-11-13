@@ -48,6 +48,7 @@ public class MaterialsApiController implements MaterialsApi {
                                                                 @ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody org.egov.common.contract.request.RequestInfo requestInfo,
                                                                 @Size(max = 50) @ApiParam(value = "comma seperated list of Ids") @Valid @RequestParam(value = "ids", required = false) List<String> ids,
                                                                 @ApiParam(value = "code of the Material ") @Valid @RequestParam(value = "code", required = false) String code,
+                                                                @ApiParam(value = "store of the Material ") @Valid @RequestParam(value = "store", required = false) String store,
                                                                 @ApiParam(value = "name of the Material ") @Valid @RequestParam(value = "name", required = false) String name,
                                                                 @ApiParam(value = "description of the Material ") @Valid @RequestParam(value = "description", required = false) String description,
                                                                 @ApiParam(value = "old code of the Material ") @Valid @RequestParam(value = "oldCode", required = false) String oldCode,
@@ -79,6 +80,7 @@ public class MaterialsApiController implements MaterialsApi {
                 .tenantId(tenantId)
                 .ids(ids)
                 .code(code)
+                .store(store)
                 .name(name)
                 .description(description)
                 .oldCode(oldCode)

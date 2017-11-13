@@ -68,6 +68,16 @@ public class MaterialJdbcRepository extends JdbcRepository {
             paramValues.put("code", materialSearchRequest.getCode());
         }
 
+        if (materialSearchRequest.getStore() != null) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("code in (select material from materialstoremapping where store=:storeCode and tenantid=:tenantId)");
+            paramValues.put("storeCode", materialSearchRequest.getStore());
+            paramValues.put("tenantid", materialSearchRequest.getTenantId());
+
+        }
+
         if (materialSearchRequest.getName() != null) {
             if (params.length() > 0) {
                 params.append(" and ");

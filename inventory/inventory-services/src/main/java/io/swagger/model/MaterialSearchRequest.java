@@ -21,6 +21,8 @@ public class MaterialSearchRequest {
 
     private String name;
 
+    private String store;
+
     private String description;
 
     private String oldCode;

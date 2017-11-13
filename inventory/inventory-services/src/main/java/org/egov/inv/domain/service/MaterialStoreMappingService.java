@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -208,7 +209,7 @@ public class MaterialStoreMappingService {
 
     private StoreGetRequest getStoreGetRequest(String storeCode, String tenantId) {
         return StoreGetRequest.builder()
-             //   .code(storeCode)
+                .code(Arrays.asList(storeCode))
                 .tenantId(tenantId)
                 .build();
     }

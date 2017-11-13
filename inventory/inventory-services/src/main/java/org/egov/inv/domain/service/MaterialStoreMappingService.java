@@ -87,7 +87,8 @@ public class MaterialStoreMappingService {
 
     public List<MaterialStoreMapping> update(MaterialStoreMappingRequest materialStoreMappingRequest, String tenantId) {
         List<MaterialStoreMapping> deleteStoreMappings = materialStoreMappingRequest.getMaterialStoreMappings().stream()
-                .filter(materialStoreMapping -> materialStoreMapping.getDelete().equals(Boolean.TRUE))
+                .filter(materialStoreMapping ->
+                        null != materialStoreMapping.getDelete() && materialStoreMapping.getDelete().equals(Boolean.TRUE))
                 .collect(Collectors.toList());
 
         if (deleteStoreMappings.size() > 0) {

@@ -321,11 +321,12 @@ serviceMaps:
               type: LONG
             - type: CURRENTDATE
               dbType: LONG  
-        - query: INSERT INTO materialreceiptdetail(id, tenantId, mrnNumber,uomNo,receivedQty,acceptedQty, unitRate,createdby,createdTime,lastmodifiedby,lastModifiedTime )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?,?,? );
+        - query: INSERT INTO materialreceiptdetail(id, tenantId, material, mrnNumber,uomNo,receivedQty,acceptedQty, unitRate,createdby,createdTime,lastmodifiedby,lastModifiedTime )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,? );
           basePath: $.materialReceipt.*.receiptDetails.*
           jsonMaps:      
             - jsonPath: $.materialReceipt.*.receiptDetails.*.id
             - jsonPath: $.materialReceipt.*.receiptDetails.*.tenantId
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.material.code
             - jsonPath: $.materialReceipt.*.mrnNumber
             - jsonPath: $.materialReceipt.*.receiptDetails.*.uom.code
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receivedQty

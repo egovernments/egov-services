@@ -126,7 +126,7 @@ public class AbstractEstimateService {
 	}
 
 	public AbstractEstimateResponse update(AbstractEstimateRequest abstractEstimateRequest) {
-		validator.validateEstimates(abstractEstimateRequest, true);
+		validator.validateEstimates(abstractEstimateRequest, false);
 		for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
 			for (final AbstractEstimateDetails details : estimate.getAbstractEstimateDetails())
 				details.setAuditDetails(

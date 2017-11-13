@@ -357,11 +357,13 @@ public class CaseService {
 	 * @param caseStatus
 	 */
 	private void addHearingDetail(HearingDetails hearingDetail, List<CaseStatus> caseStatus) {
-		List<CaseStatus> caseStatusList = caseStatus.stream()
-				.filter(CaseStatus -> CaseStatus.getCode().equalsIgnoreCase(hearingDetail.getCaseStatus().getCode()))
-				.collect(Collectors.toList());
-		if (caseStatusList != null && caseStatusList.size() > 0)
-			hearingDetail.setCaseStatus((caseStatusList.get(0)));
+		if (hearingDetail.getCaseStatus() != null && hearingDetail.getCaseStatus().getCode() != null) {
+			List<CaseStatus> caseStatusList = caseStatus.stream().filter(
+					CaseStatus -> CaseStatus.getCode().equalsIgnoreCase(hearingDetail.getCaseStatus().getCode()))
+					.collect(Collectors.toList());
+			if (caseStatusList != null && caseStatusList.size() > 0)
+				hearingDetail.setCaseStatus((caseStatusList.get(0)));
+		}
 
 	}
 

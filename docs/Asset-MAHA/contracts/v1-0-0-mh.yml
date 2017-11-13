@@ -141,6 +141,16 @@ paths:
           required: false
           type: string
           format: varchar
+        - name: transaction
+          in: query
+          description: >-
+            Pass List of  Asset transaction type(s) then the API will return assets whose status is  not DISPOSED
+          required: false
+          type: array
+          items:
+           type: string
+           format: varchar
+  
         - $ref: '#/parameters/sortAssets'
       tags:
         - Asset

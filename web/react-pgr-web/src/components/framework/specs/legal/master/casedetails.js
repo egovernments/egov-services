@@ -497,6 +497,9 @@ var dat = {
                                     label: "legal.parawisecomments.create.dateOfCommentsReceived"
                                 },
                                 {
+                                      label: "legal.parawisecomments.create.dateOfInfoProvidedByHod",
+                                },
+                                {
                                     label: "legal.parawisecomments.create.resolutionDate"
                                 },
                                 {
@@ -518,6 +521,16 @@ var dat = {
                                     name: "parawiseCommentsReceivedDate",
                                     jsonPath:
                                     "cases[0].parawiseComments[0].parawiseCommentsReceivedDate",
+                                    pattern: "",
+                                    type: "datePicker",
+                                    isRequired: true,
+                                    isDisabled: false,
+                                    requiredErrMsg: "",
+                                    patternErrMsg: ""
+                                },
+                                {
+                                    name: "hodProvidedDate",
+                                    jsonPath: "cases[0].parawiseComments[0].hodProvidedDate",
                                     pattern: "",
                                     type: "datePicker",
                                     isRequired: true,
@@ -602,8 +615,7 @@ var dat = {
                 ]
             }
         ],
-        url:
-        "/lcms-services/legalcase/case/_dataentry",
+        url: "/lcms-services/legalcase/case/_dataentry",
         tenantIdRequired: true
     }
 };

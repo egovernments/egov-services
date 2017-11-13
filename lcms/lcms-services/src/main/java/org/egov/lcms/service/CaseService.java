@@ -233,13 +233,13 @@ public class CaseService {
 				}
 
 				List<String> caseStatusCodes = new ArrayList<String>();
+				String caseStatusCode = "";
 				if (serachResultLevel != null) {
 					for (HearingDetails hearingDetail : caseObj.getHearingDetails()) {
 						if (hearingDetail.getCaseStatus() != null)
 							caseStatusCodes.add(hearingDetail.getCaseStatus().getCode());
 					}
 
-					String caseStatusCode = "";
 					int count = 1;
 					for (String caseStatus : caseStatusCodes) {
 						if (count < caseStatusCodes.size())

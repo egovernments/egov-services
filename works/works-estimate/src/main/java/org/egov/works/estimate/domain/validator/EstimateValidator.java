@@ -99,7 +99,7 @@ public class EstimateValidator {
             messages.put(Constants.KEY_NULL_ABSTRACTESTIMATE_NUMBER,
                     Constants.MESSAGE_NULL_ABSTRACTESTIMATE_NUMBER);
         if (!estimate.getSpillOverFlag() && estimate.getDateOfProposal() != null
-                && new Date(estimate.getDateOfProposal()).after(new Date()))
+                && estimate.getDateOfProposal() > new Date().getTime())
             messages.put(Constants.KEY_FUTUREDATE_DATEOFPROPOSAL,
                     Constants.MESSAGE_FUTUREDATE_DATEOFPROPOSAL);
     }

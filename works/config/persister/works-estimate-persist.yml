@@ -186,7 +186,7 @@ serviceMaps:
          
        - jsonPath: $.abstractEstimates.*.assetDetails.*.tenantId
          
-       - jsonPath: $.abstractEstimates[?({id} in @.abstractEstimateDetails[*].id)].id
+       - jsonPath: $.abstractEstimates[?({id} in @.assetDetails[*].id)].id
        
        - jsonPath: $.abstractEstimates.*.assetDetails.*.asset.code
        
@@ -218,7 +218,7 @@ serviceMaps:
          
        - jsonPath: $.abstractEstimates.*.sanctionDetails.*.tenantId
          
-       - jsonPath: $.abstractEstimates[?({id} in @.abstractEstimateDetails[*].id)].id
+       - jsonPath: $.abstractEstimates[?({id} in @.sanctionDetails[*].id)].id
        
        - jsonPath: $.abstractEstimates.*.sanctionDetails.*.sanctionType
        

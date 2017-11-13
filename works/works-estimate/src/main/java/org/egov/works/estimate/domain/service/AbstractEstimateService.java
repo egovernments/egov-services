@@ -96,6 +96,7 @@ public class AbstractEstimateService {
 			}
 			for (final DocumentDetail documentDetail : estimate.getDocumentDetails()) {
 				documentDetail.setId(commonUtils.getUUID());
+				documentDetail.setObjectType(CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY);
 				documentDetail.setAuditDetails(
 						getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), false));
 			}

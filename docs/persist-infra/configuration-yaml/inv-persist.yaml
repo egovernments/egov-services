@@ -297,6 +297,67 @@ serviceMaps:
             - jsonPath: $.materialStoreMappings.*.store.code
             - jsonPath: $.materialStoreMappings.*.auditDetails.tenantId
 
+    - version: 1.0
+      name: Opening Balance 
+      description: Create Opening Balance 
+      fromTopic: inv-openbalance-save-topic
+      queryMaps: 
+        - query: INSERT INTO materialReceipt(id, tenantId, financialYear,mrnStatus,mrnNumber,receivingstore,receiptDate, receiptType, createdby, createdTime, lastmodifiedby,lastModifiedTime)VALUES ( ?,?,?,?, ?, ?, ? ,? ,? ,?,?,?);
+          basePath: $.materialReceipt.*
+          jsonMaps:
+            - jsonPath: $.materialReceipt.*.id
+            - jsonPath: $.materialReceipt.*.auditDetails.tenantId
+            - jsonPath: $.materialReceipt.*.financialYear
+            - jsonPath: $.materialReceipt.*.mrnStatus
+            - jsonPath: $.materialReceipt.*.mrnNumber
+            - jsonPath: $.materialReceipt.*.receivingStore.code
+            - type: CURRENTDATE
+              dbType: LONG
+            - jsonPath: $.materialReceipt.*.receiptType
+            - jsonPath: $.materialReceipt.*.auditDetails.createdBy
+              type: LONG
+            - type: CURRENTDATE
+              dbType: LONG  
+            - jsonPath: $.materialReceipt.*.auditDetails.lastModifiedBy
+              type: LONG
+            - type: CURRENTDATE
+              dbType: LONG  
+        - query: INSERT INTO materialreceiptdetail(id, tenantId, mrnNumber,uomNo,receivedQty,acceptedQty, unitRate,createdby,createdTime,lastmodifiedby,lastModifiedTime )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?,?,? );
+          basePath: $.materialReceipt.*.receiptDetails.*
+          jsonMaps:      
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.id
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.tenantId
+            - jsonPath: $.materialReceipt.*.mrnNumber
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.uom.code
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receivedQty
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receivedQty
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.openingRate
+            - jsonPath: $.materialReceipt.*.auditDetails.createdBy
+              type: LONG
+            - type: CURRENTDATE
+              dbType: LONG
+            - jsonPath: $.materialReceipt.*.auditDetails.lastModifiedBy
+              type: LONG
+            - type: CURRENTDATE
+              dbType: LONG  
+        - query: INSERT INTO materialreceiptdetailaddnlinfo(id, receiptDetailId,tenantId,receivedDate, lotNo,expiryDate,serialno )VALUES ( ?, ?, ?, ?, ?, ?,?);
+          basePath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*
+          jsonMaps:      
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.id
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.id
+            - jsonPath: $.materialReceipt.*.tenantId
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.receivedDate
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.lotNo
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.expiryDate
+              type: LONG
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.serialno
+              type: LONG
+     
+    
+
+
+
+
 
 
 

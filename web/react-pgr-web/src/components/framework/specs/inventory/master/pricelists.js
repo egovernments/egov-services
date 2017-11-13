@@ -158,7 +158,7 @@ var dat = {
             "name": "supplier",
             "jsonPath": "priceLists[0].supplier.code",
             "label": "inventory.supplier",
-            "url":"inventory-services/supplier/_search?|$.supplier[*].code|$.supplier[*].name",
+            "url":"inventory-services/suppliers/_search?|$.supplier[*].code|$.supplier[*].name",
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
@@ -273,7 +273,19 @@ var dat = {
             "isDisabled": false,
             "defaultValue": true,
             "patternErrorMsg": ""
-          }
+          },
+	   {
+                  "name": "UploadDocument",
+                  "jsonPath": "priceLists[0].fileStoreId",
+		  "label": "Upload Tender/Rate contract/Quotation",
+                  "pattern": "",
+                  "type": "singleFileUpload",
+                  "isRequired": false,
+                  "isDisabled": false,
+                  "defaultValue": "",
+                  "patternErrorMsg": ""
+                }
+
         ]
       },
       {
@@ -312,14 +324,14 @@ var dat = {
                   "name": "material",
                   "pattern": "",
                   "type":"autoCompelete",
-                  "jsonPath": "priceLists[0].PriceListDetails[0].material.code",
-		  "displayJsonPath":"priceLists[0].PriceListDetails[0].material.name",
+                  "jsonPath": "priceLists[0].priceListDetails[0].material.code",
+		  "displayJsonPath":"priceLists[0].priceListDetails[0].material.name",
                   "isRequired": true,
                   "isDisabled": false,
                   "url": "/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description",
                   "depedants": [
                     {
-                      "jsonPath": "priceLists[0].PriceListDetails[0].material.description",
+                      "jsonPath": "priceLists[0].priceListDetails[0].material.description",
                       "type": "textField",
                       "valExp": "getValFromDropdownData('materialStoreMappings[*].material.code', getVal('materialStoreMappings[*].material.code'), 'others[0]')"
                     }
@@ -327,7 +339,7 @@ var dat = {
                 },
                 {
                   "name": "materialDescription",
-                  "jsonPath": "priceLists[0].PriceListDetails[0].material.description",
+                  "jsonPath": "priceLists[0].priceListDetails[0].material.description",
                   "pattern": "",
                   "type": "text",
                   "isRequired": false,
@@ -337,7 +349,7 @@ var dat = {
                 },
                 {
                   "name": "uom",
-                  "jsonPath": "priceLists[0].PriceListDetails[0].uom.code",
+                  "jsonPath": "priceLists[0].priceListDetails[0].uom.code",
                   "pattern": "",
                   "type": "singleValueList",
                   "isRequired": true,
@@ -346,7 +358,7 @@ var dat = {
                 },
                 {
                   "name": "ratePerUnit",
-                  "jsonPath": "priceLists[0].PriceListDetails[0].ratePerUnit",
+                  "jsonPath": "priceLists[0].priceListDetails[0].ratePerUnit",
                   "pattern": "",
                   "type": "number",
                   "isRequired": true,
@@ -357,7 +369,7 @@ var dat = {
                 },
                 {
                   "name": "fromDate",
-                  "jsonPath": "priceLists[0].PriceListDetails[0].fromDate",
+                  "jsonPath": "priceLists[0].priceListDetails[0].fromDate",
                   "pattern": "",
                   "type": "text",
                   "isRequired": false,
@@ -367,7 +379,7 @@ var dat = {
                 },
                 {
                   "name": "toDate",
-                  "jsonPath": "priceLists[0].PriceListDetails[0].toDate",
+                  "jsonPath": "priceLists[0].priceListDetails[0].toDate",
                   "pattern": "",
                   "type": "text",
                   "isRequired": false,
@@ -377,7 +389,7 @@ var dat = {
                 },
                 {
                   "name": "quantity",
-                  "jsonPath": "priceLists[0].PriceListDetails[0].quantity",
+                  "jsonPath": "priceLists[0].priceListDetails[0].quantity",
                   "pattern": "",
                   "type": "number",
                   "isRequired": false,

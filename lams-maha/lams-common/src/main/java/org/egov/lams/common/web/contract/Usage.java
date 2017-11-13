@@ -9,12 +9,12 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * An object which holds the Register Name Master info
+ * An object which holds the  usage Type Master info
  */
-@ApiModel(description = "An object which holds the Register Name Master info")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T07:10:49.937Z")
+@ApiModel(description = "An object which holds the  usage Type Master info")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T07:54:53.690Z")
 
-public class Purpose   {
+public class Usage   {
   @JsonProperty("id")
   private String id = null;
 
@@ -30,16 +30,16 @@ public class Purpose   {
   @JsonProperty("isActive")
   private Boolean isActive = null;
 
-  public Purpose id(String id) {
+  public Usage id(String id) {
     this.id = id;
     return this;
   }
 
    /**
-   * Unique Identifier of the Purpose.
+   * Unique Identifier of the Usage.
    * @return id
   **/
-  @ApiModelProperty(value = "Unique Identifier of the Purpose.")
+  @ApiModelProperty(value = "Unique Identifier of the Usage.")
 
  @Size(min=1,max=256)
   public String getId() {
@@ -50,16 +50,16 @@ public class Purpose   {
     this.id = id;
   }
 
-  public Purpose tenantId(String tenantId) {
+  public Usage tenantId(String tenantId) {
     this.tenantId = tenantId;
     return this;
   }
 
    /**
-   * tenant id of the Purpose
+   * tenant id of the Usage
    * @return tenantId
   **/
-  @ApiModelProperty(required = true, value = "tenant id of the Purpose")
+  @ApiModelProperty(required = true, value = "tenant id of the Usage")
   @NotNull
 
  @Size(min=2,max=128)
@@ -71,16 +71,16 @@ public class Purpose   {
     this.tenantId = tenantId;
   }
 
-  public Purpose code(String code) {
+  public Usage code(String code) {
     this.code = code;
     return this;
   }
 
    /**
-   * code of the Purpose
+   * code of the Usage
    * @return code
   **/
-  @ApiModelProperty(required = true, value = "code of the Purpose")
+  @ApiModelProperty(required = true, value = "code of the Usage")
   @NotNull
 
  @Size(min=1,max=64)
@@ -92,16 +92,16 @@ public class Purpose   {
     this.code = code;
   }
 
-  public Purpose name(String name) {
+  public Usage name(String name) {
     this.name = name;
     return this;
   }
 
    /**
-   * name of purpose
+   * name of Usage
    * @return name
   **/
-  @ApiModelProperty(required = true, value = "name of purpose")
+  @ApiModelProperty(required = true, value = "name of Usage")
   @NotNull
 
  @Size(min=1,max=128)
@@ -113,16 +113,16 @@ public class Purpose   {
     this.name = name;
   }
 
-  public Purpose isActive(Boolean isActive) {
+  public Usage isActive(Boolean isActive) {
     this.isActive = isActive;
     return this;
   }
 
    /**
-   * is purpose is active.
+   * is Usage active.
    * @return isActive
   **/
-  @ApiModelProperty(required = true, value = "is purpose is active.")
+  @ApiModelProperty(required = true, value = "is Usage active.")
   @NotNull
 
 
@@ -143,12 +143,12 @@ public class Purpose   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Purpose purpose = (Purpose) o;
-    return Objects.equals(this.id, purpose.id) &&
-        Objects.equals(this.tenantId, purpose.tenantId) &&
-        Objects.equals(this.code, purpose.code) &&
-        Objects.equals(this.name, purpose.name) &&
-        Objects.equals(this.isActive, purpose.isActive);
+    Usage usage = (Usage) o;
+    return Objects.equals(this.id, usage.id) &&
+        Objects.equals(this.tenantId, usage.tenantId) &&
+        Objects.equals(this.code, usage.code) &&
+        Objects.equals(this.name, usage.name) &&
+        Objects.equals(this.isActive, usage.isActive);
   }
 
   @Override
@@ -159,7 +159,7 @@ public class Purpose   {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Purpose {\n");
+    sb.append("class Usage {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");

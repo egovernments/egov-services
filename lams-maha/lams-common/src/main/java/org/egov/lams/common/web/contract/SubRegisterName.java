@@ -27,10 +27,11 @@ public class SubRegisterName {
   private String code = null;
 
   @NotNull
-  @Size(min = 1, max = 128)
-  private String name = null;
+  private Long registerName = null;
+  
+  private String subRegister=null;
 
   @NotNull
-  private Boolean isActive = null;
+  private Boolean isactive = null;
 }
 

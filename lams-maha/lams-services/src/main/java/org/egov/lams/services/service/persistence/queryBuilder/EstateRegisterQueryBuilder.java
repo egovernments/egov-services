@@ -46,21 +46,21 @@ public class EstateRegisterQueryBuilder {
 			return;
 
 			if(estateSearchCriteria.getEstateRegisterId()!=null)
-				selectQuery.append(" rg.id="+estateSearchCriteria.getEstateRegisterId());
+				selectQuery.append(" AND rg.id="+estateSearchCriteria.getEstateRegisterId());
 			if(estateSearchCriteria.getGattNo()!=null)
-				selectQuery.append(" rg.gattno='"+estateSearchCriteria.getGattNo()+"'");
+				selectQuery.append(" AND rg.gattno='"+estateSearchCriteria.getGattNo()+"'");
 			if(estateSearchCriteria.getLocation()!=null)
-				selectQuery.append(" rg.location='"+estateSearchCriteria.getLocation()+"'");
+				selectQuery.append(" AND rg.location='"+estateSearchCriteria.getLocation()+"'");
 			if(estateSearchCriteria.getPropertyType()!=null)
-				selectQuery.append(" rg.propertytype='"+estateSearchCriteria.getPropertyType()+"'");
+				selectQuery.append(" AND rg.propertytype='"+estateSearchCriteria.getPropertyType()+"'");
 			if(estateSearchCriteria.getRegionalOffice()!= null)
-				selectQuery.append(" rg.regionaloffice='"+estateSearchCriteria.getRegionalOffice()+"'");
+				selectQuery.append(" AND rg.regionaloffice='"+estateSearchCriteria.getRegionalOffice()+"'");
 			if(estateSearchCriteria.getRegisterName()!=null)
-				selectQuery.append(" rg.registername='"+estateSearchCriteria.getRegisterName()+"'");
+				selectQuery.append(" AND rg.registername='"+estateSearchCriteria.getRegisterName()+"'");
 			if(estateSearchCriteria.getSubRegisterName()!=null)
-				selectQuery.append(" rg.subregistername='"+estateSearchCriteria.getSubRegisterName()+"'");
+				selectQuery.append(" AND rg.subregistername='"+estateSearchCriteria.getSubRegisterName()+"'");
 			if(estateSearchCriteria.getSurveyNo()!=null)
-				selectQuery.append(" rg.surveyno='"+estateSearchCriteria.getSurveyNo()+"'");
+				selectQuery.append(" AND rg.surveyno='"+estateSearchCriteria.getSurveyNo()+"'");
 	}	
 	
 	private void addPagingClause(final StringBuilder selectQuery,final EstateSearchCriteria estateSearchCriteria) {

@@ -1,5 +1,6 @@
 package org.egov.lams.services.service.repository.rowmapper;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,7 +12,9 @@ import org.egov.lams.common.web.contract.Boundary;
 import org.egov.lams.common.web.contract.EstateRegister;
 import org.egov.lams.common.web.contract.FloorDetail;
 import org.egov.lams.common.web.contract.PropertyType;
+import org.egov.lams.common.web.contract.Register;
 import org.egov.lams.common.web.contract.RegisterName;
+import org.egov.lams.common.web.contract.SubRegister;
 import org.egov.lams.common.web.contract.SubRegisterName;
 import org.egov.lams.common.web.contract.UnitDetail;
 import org.egov.lams.common.web.contract.WorkFlowDetails;
@@ -29,19 +32,19 @@ public class EstateRowMapper implements ResultSetExtractor<List<EstateRegister>>
 
 	@Override
 	public List<EstateRegister> extractData(ResultSet rs) throws SQLException, DataAccessException {
-		 Map<Long, EstateInfo> estateMap = getEstateMap(rs);
+		 Map<String, EstateInfo> estateMap = getEstateMap(rs);
 		 log.info(":estateMap.size::::"+estateMap.size());
 	        List<EstateRegister> estateList = getEstateList(estateMap);
 
 	        return estateList;
 	}
 
-	 private Map<Long, EstateInfo> getEstateMap(ResultSet rs) throws SQLException {
+	 private Map<String, EstateInfo> getEstateMap(ResultSet rs) throws SQLException {
 
-	        Map<Long, EstateInfo> estateInfoMap = new LinkedHashMap<>();
+	        Map<String, EstateInfo> estateInfoMap = new LinkedHashMap<>();
 	        
 	        while (rs.next()) {
-	            Long estateId = (Long) rs.getObject("rg_id");
+	        	String estateId = (String) rs.getObject("rg_id");
 	            log.info("estateId:::"+estateId);
 	            EstateInfo estateInfo = estateInfoMap.get(estateId);
 
@@ -49,10 +52,10 @@ public class EstateRowMapper implements ResultSetExtractor<List<EstateRegister>>
 	                estateInfo = new EstateInfo();
 	                estateInfo.setId(estateId);
 	                estateInfo.setTenantId(rs.getString("rg_tenantid"));
-					RegisterName regName=new RegisterName();
+					Register regName=new Register();
 					regName.setCode(rs.getString("rg_registername"));
 					estateInfo.setRegisterName(regName);
-					SubRegisterName subRegName=new SubRegisterName();
+					SubRegister subRegName=new SubRegister();
 					subRegName.setCode(rs.getString("rg_subregistername"));
 					estateInfo.setSubRegisterName(subRegName);
 					Boundary regionalOffice=new Boundary();
@@ -86,9 +89,9 @@ public class EstateRowMapper implements ResultSetExtractor<List<EstateRegister>>
 					estateInfoMap.put(estateId, estateInfo);
 	            }
 
-	            Map<Long, floorInfo> floorInfoMap = estateInfo.getFloors();
+	            Map<String, floorInfo> floorInfoMap = estateInfo.getFloors();
 
-	            Long floorId = (Long) rs.getObject("fl_id");
+	            String floorId = (String) rs.getObject("fl_id");
 	            floorInfo floor = floorInfoMap.get(floorId);
 
 	            // populate floor fields from result set
@@ -97,20 +100,20 @@ public class EstateRowMapper implements ResultSetExtractor<List<EstateRegister>>
 	                floor.setId(floorId);
 	                floor.setFloorNo(rs.getString("fl_floorno"));
 	    			floor.setFloorArea(rs.getDouble("fl_floorarea"));
-	    			floor.setNoOfUnits(rs.getInt("fl_noofunits"));
+	    			floor.setNoOfUnits(rs.getBigDecimal("fl_noofunits"));
 
 	                floorInfoMap.put(floorId, floor);
 	            }
 
-	            Map<Long, UnitDetail> unitMap = floor.getUnits();
-	            Long unitId = (Long) rs.getObject("ud_id");
+	            Map<String, UnitDetail> unitMap = floor.getUnits();
+	            String unitId = (String) rs.getObject("ud_id");
 
 	            if ((Long) rs.getObject("ud_id") != null) {
 	            	UnitDetail unit = unitMap.get(unitId);
 	                if (unit == null) {
 	                    unit = new UnitDetail();
 	                    unit.setId(unitId);
-	                    unit.setUsageType(rs.getString("ud_usagetype"));
+	                    unit.setUsage(rs.getString("ud_usagetype"));
 	        			unit.setPreviousUnitNo(rs.getString("ud_previousunitno"));
 	        			unit.setBuiltUpArea(rs.getDouble("ud_builtuparea"));
 	        			unit.setHoldingType(rs.getString("ud_holdingtype"));
@@ -124,9 +127,9 @@ public class EstateRowMapper implements ResultSetExtractor<List<EstateRegister>>
 	        return estateInfoMap;
 	    }
 	 
-	 private List<EstateRegister> getEstateList(Map<Long, EstateInfo> empInfoMap) {
+	 private List<EstateRegister> getEstateList(Map<String, EstateInfo> empInfoMap) {
 	        List<EstateRegister> estateInfoList = new ArrayList<>();
-	        for (Map.Entry<Long, EstateInfo> empInfoEntry : empInfoMap.entrySet()) {
+	        for (Map.Entry<String, EstateInfo> empInfoEntry : empInfoMap.entrySet()) {
 	        	EstateInfo estateInfo = empInfoEntry.getValue();
 
 	        	EstateRegister estateRegister = new EstateRegister();
@@ -152,13 +155,13 @@ public class EstateRowMapper implements ResultSetExtractor<List<EstateRegister>>
 	        	estateRegister.setProposedBuildingBudget(estateInfo.getProposedBuildingBudget());
 	        	estateRegister.setPurpose(estateInfo.getPurpose());
 	        	estateRegister.setRegionalOffice(estateInfo.getRegionalOffice());
-	        	estateRegister.setRegisterName(estateInfo.getRegisterName());
+	        	estateRegister.setRegister(estateInfo.getRegisterName());
 	        	estateRegister.setStateId(estateInfo.getStateId());
-	        	estateRegister.setSubRegisterName(estateInfo.getSubRegisterName());
+	        	estateRegister.setSubRegister(estateInfo.getSubRegisterName());
 	        	estateRegister.setSurveyNo(estateInfo.getSurveyNo());
 	        	
 	            List<FloorDetail> floorList = new ArrayList<>();
-	            for (Map.Entry<Long, floorInfo> floorInfoEntry : estateInfo.getFloors().entrySet()) {
+	            for (Map.Entry<String, floorInfo> floorInfoEntry : estateInfo.getFloors().entrySet()) {
 	            	floorInfo floorInfo = floorInfoEntry.getValue();
 
 	            	FloorDetail floorDetails =new FloorDetail();
@@ -168,7 +171,7 @@ public class EstateRowMapper implements ResultSetExtractor<List<EstateRegister>>
 	            	floorDetails.setNoOfUnits(floorInfo.getNoOfUnits());
 
 	                List<UnitDetail> unit = new ArrayList<>();
-	                for (Map.Entry<Long, UnitDetail> unitEntry : floorInfo.units.entrySet()) {
+	                for (Map.Entry<String, UnitDetail> unitEntry : floorInfo.units.entrySet()) {
 	                	UnitDetail unitDetails = unitEntry.getValue();
 	                    unit.add(unitDetails);
 	                }
@@ -190,11 +193,11 @@ public class EstateRowMapper implements ResultSetExtractor<List<EstateRegister>>
 @Getter
 @Setter
 private class EstateInfo {
-	private Long id = null;
+	private String id = null;
 	  private String tenantId = null;
 	  private String estateNumber = null;
-	  private RegisterName registerName = null;
-	  private SubRegisterName subRegisterName = null;
+	  private Register registerName = null;
+	  private SubRegister subRegisterName = null;
 	  private Boundary regionalOffice = null;
 	  private Boundary location = null;
 	  private String propertyName = null;
@@ -214,7 +217,7 @@ private class EstateInfo {
 	  private Double actualBuildingExpense = null;
 	  private Double latitude = null;
 	  private Double longitude = null;
-	  private Map<Long,floorInfo> floors =  new LinkedHashMap<>();
+	  private Map<String,floorInfo> floors =  new LinkedHashMap<>();
 	  private String stateId = null;
 	  private WorkFlowDetails workFlowDetails = null;
 	  private String comments = null;
@@ -222,10 +225,10 @@ private class EstateInfo {
 @Getter
 @Setter
 private class floorInfo{
-	private Long id = null;
+	private String id = null;
 	  private String floorNo = null;
 	  private Double floorArea = null;
-	  private Integer noOfUnits = null;
-	  private Map<Long,UnitDetail> units = new LinkedHashMap<>();
+	  private BigDecimal noOfUnits = null;
+	  private Map<String,UnitDetail> units = new LinkedHashMap<>();
 }
 }

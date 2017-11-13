@@ -39,11 +39,11 @@ public class AgreementService {
 	public AgreementResponse createAgreement(AgreementRequest agreementRequest) {
 		int index = 0;
 		int year = Calendar.getInstance().get(Calendar.YEAR);
-		List<Long> ids = sequenceGenService.getIds(agreementRequest.getAgreements().size(),
+		List<String> ids = sequenceGenService.getIds(agreementRequest.getAgreements().size(),
 				propertiesManager.getCreateAgreementSequence());
 
 		for (Agreement agreement : agreementRequest.getAgreements()) {
-			List<Long> docIds = sequenceGenService.getIds(agreement.getDocuments().size(),
+			List<String> docIds = sequenceGenService.getIds(agreement.getDocuments().size(),
 					propertiesManager.getCreateAgreementDocSequence());
 			agreement.setId(ids.get(index).toString());
 			agreement.setAgreementNumber(year + String.format("%05d", ids.get(index++)));

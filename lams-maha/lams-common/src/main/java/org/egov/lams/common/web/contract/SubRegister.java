@@ -1,12 +1,15 @@
 package org.egov.lams.common.web.contract;
 
 import java.util.Objects;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * An object which holds the Register Name Master info
@@ -14,7 +17,7 @@ import javax.validation.constraints.*;
 @ApiModel(description = "An object which holds the Register Name Master info")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T07:10:49.937Z")
 
-public class Purpose   {
+public class SubRegister   {
   @JsonProperty("id")
   private String id = null;
 
@@ -24,22 +27,25 @@ public class Purpose   {
   @JsonProperty("code")
   private String code = null;
 
+  @JsonProperty("register")
+  private Register register = null;
+
   @JsonProperty("name")
   private String name = null;
 
   @JsonProperty("isActive")
   private Boolean isActive = null;
 
-  public Purpose id(String id) {
+  public SubRegister id(String id) {
     this.id = id;
     return this;
   }
 
    /**
-   * Unique Identifier of the Purpose.
+   * Unique Identifier of the SubRegisterName.
    * @return id
   **/
-  @ApiModelProperty(value = "Unique Identifier of the Purpose.")
+  @ApiModelProperty(value = "Unique Identifier of the SubRegisterName.")
 
  @Size(min=1,max=256)
   public String getId() {
@@ -50,16 +56,16 @@ public class Purpose   {
     this.id = id;
   }
 
-  public Purpose tenantId(String tenantId) {
+  public SubRegister tenantId(String tenantId) {
     this.tenantId = tenantId;
     return this;
   }
 
    /**
-   * tenant id of the Purpose
+   * tenant id of the SubRegisterName
    * @return tenantId
   **/
-  @ApiModelProperty(required = true, value = "tenant id of the Purpose")
+  @ApiModelProperty(required = true, value = "tenant id of the SubRegisterName")
   @NotNull
 
  @Size(min=2,max=128)
@@ -71,16 +77,16 @@ public class Purpose   {
     this.tenantId = tenantId;
   }
 
-  public Purpose code(String code) {
+  public SubRegister code(String code) {
     this.code = code;
     return this;
   }
 
    /**
-   * code of the Purpose
+   * code of the SubRegisterName
    * @return code
   **/
-  @ApiModelProperty(required = true, value = "code of the Purpose")
+  @ApiModelProperty(required = true, value = "code of the SubRegisterName")
   @NotNull
 
  @Size(min=1,max=64)
@@ -92,16 +98,34 @@ public class Purpose   {
     this.code = code;
   }
 
-  public Purpose name(String name) {
+  public SubRegister register(Register register) {
+    this.register = register;
+    return this;
+  }
+
+   /**
+   * Get register
+   * @return register
+  **/
+
+  public Register getRegister() {
+    return register;
+  }
+
+  public void setRegister(Register register) {
+    this.register = register;
+  }
+
+  public SubRegister name(String name) {
     this.name = name;
     return this;
   }
 
    /**
-   * name of purpose
+   * name of sub register
    * @return name
   **/
-  @ApiModelProperty(required = true, value = "name of purpose")
+  @ApiModelProperty(required = true, value = "name of sub register")
   @NotNull
 
  @Size(min=1,max=128)
@@ -113,16 +137,16 @@ public class Purpose   {
     this.name = name;
   }
 
-  public Purpose isActive(Boolean isActive) {
+  public SubRegister isActive(Boolean isActive) {
     this.isActive = isActive;
     return this;
   }
 
    /**
-   * is purpose is active.
+   * is sub register is active.
    * @return isActive
   **/
-  @ApiModelProperty(required = true, value = "is purpose is active.")
+  @ApiModelProperty(required = true, value = "is sub register is active.")
   @NotNull
 
 
@@ -143,27 +167,29 @@ public class Purpose   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Purpose purpose = (Purpose) o;
-    return Objects.equals(this.id, purpose.id) &&
-        Objects.equals(this.tenantId, purpose.tenantId) &&
-        Objects.equals(this.code, purpose.code) &&
-        Objects.equals(this.name, purpose.name) &&
-        Objects.equals(this.isActive, purpose.isActive);
+    SubRegister subRegister = (SubRegister) o;
+    return Objects.equals(this.id, subRegister.id) &&
+        Objects.equals(this.tenantId, subRegister.tenantId) &&
+        Objects.equals(this.code, subRegister.code) &&
+        Objects.equals(this.register, subRegister.register) &&
+        Objects.equals(this.name, subRegister.name) &&
+        Objects.equals(this.isActive, subRegister.isActive);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, code, name, isActive);
+    return Objects.hash(id, tenantId, code, register, name, isActive);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Purpose {\n");
+    sb.append("class SubRegister {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    code: ").append(toIndentedString(code)).append("\n");
+    sb.append("    register: ").append(toIndentedString(register)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    isActive: ").append(toIndentedString(isActive)).append("\n");
     sb.append("}");

@@ -7,12 +7,13 @@ import org.egov.lams.common.web.contract.Boundary;
 import org.egov.lams.common.web.contract.CompensationMode;
 import org.egov.lams.common.web.contract.HoldingType;
 import org.egov.lams.common.web.contract.LandRegister;
+import org.egov.lams.common.web.contract.LandRegister.AcquisitionTypeEnum;
 import org.egov.lams.common.web.contract.ModeOfAcquisition;
-import org.egov.lams.common.web.contract.PlanningType;
+import org.egov.lams.common.web.contract.PlaningType;
 import org.egov.lams.common.web.contract.Purpose;
-import org.egov.lams.common.web.contract.RegisterName;
+import org.egov.lams.common.web.contract.Register;
 import org.egov.lams.common.web.contract.RoadType;
-import org.egov.lams.common.web.contract.SubRegisterName;
+import org.egov.lams.common.web.contract.SubRegister;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
@@ -33,19 +34,19 @@ public class LandRegisterRowMapper implements ResultSetExtractor<LandRegister> {
 			Purpose purpose = new Purpose();
 			purpose.setCode(rs.getString("purpose"));
 
-			RegisterName registerName = new RegisterName();
+			Register registerName = new Register();
 			registerName.setCode(rs.getString("registername"));
 
 			RoadType roadType = new RoadType();
 			roadType.setCode(rs.getString("roadtype"));
 
-			SubRegisterName subRegisterName = new SubRegisterName();
+			SubRegister subRegisterName = new SubRegister();
 			subRegisterName.setCode(rs.getString("subregistername"));
 
 			HoldingType typeOfHolding = new HoldingType();
 			typeOfHolding.setCode(rs.getString("typeofholding"));
 
-			PlanningType typeOfPlanning = new PlanningType();
+			PlaningType typeOfPlanning = new PlaningType();
 			typeOfPlanning.setCode(rs.getString("typeofplanning"));
 
 			Boundary regionalOfficeBoundary = new Boundary();
@@ -54,10 +55,11 @@ public class LandRegisterRowMapper implements ResultSetExtractor<LandRegister> {
 			Boundary locationBoundary = new Boundary();
 			locationBoundary.setId(rs.getString("location"));
 
-			landRegister.setId(rs.getLong("id"));
+			landRegister.setId(rs.getString("id"));
 			landRegister.setTenantId(rs.getString("tenantid"));
 			landRegister.setAcquisitionNo(rs.getString("acquisitionno"));
-			landRegister.setAcquisitionType(modeOfAcquisition);
+			
+			landRegister.setAcquisitionType(AcquisitionTypeEnum.fromValue(rs.getString("acquisitiontype")));
 			landRegister.setAreaAsPerRegister(rs.getDouble("areaasperregister"));
 			landRegister.setBuildingReference(rs.getString("buildingreference"));
 			landRegister.setCodeOfReservation(rs.getString("codeofreservation"));
@@ -68,7 +70,7 @@ public class LandRegisterRowMapper implements ResultSetExtractor<LandRegister> {
 			landRegister.setGattNo(rs.getString("gattno"));
 			landRegister.setLandArea(rs.getDouble("landarea"));
 			landRegister.setLandNumber(rs.getString("landnumber"));
-			landRegister.setLandType(rs.getString("landtype"));
+			landRegister.setLandType(null);
 			landRegister.setLocation(locationBoundary);
 			landRegister.setModeOfAcquisition(modeOfAcquisition);
 			landRegister.setModeOfCompensation(compensationMode);
@@ -76,11 +78,11 @@ public class LandRegisterRowMapper implements ResultSetExtractor<LandRegister> {
 			landRegister.setPossessionDate(rs.getLong("possessiondate"));
 			landRegister.setPurpose(purpose);
 			landRegister.setRegionalOffice(regionalOfficeBoundary);
-			landRegister.setRegisterName(registerName);
+			landRegister.setRegister(registerName);
 			landRegister.setReservationArea(rs.getDouble("reservationarea"));
 			landRegister.setRoadType(roadType);
 			landRegister.setStateId(rs.getString("stateid"));
-			landRegister.setSubRegisterName(subRegisterName);
+			landRegister.setSubRegister(subRegisterName);
 			landRegister.setSurveyNo(rs.getString("surveyno"));
 			landRegister.setTypeOfHolding(typeOfHolding);
 			landRegister.setTypeOfPlanning(typeOfPlanning);

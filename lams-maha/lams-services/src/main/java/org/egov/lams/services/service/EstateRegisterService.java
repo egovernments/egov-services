@@ -20,38 +20,47 @@ import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
 public class EstateRegisterService {
 
 	public static final String WF_ACTION_APPROVE = "Approve";
 	public static final String WF_ACTION_REJECT = "Reject";
 	public static final String WF_ACTION_CANCEL = "Cancel";
-	
+
 	@Autowired
 	private ResponseFactory responseInfoFactory;
 
 	@Autowired
 	private PropertiesManager propertiesManager;
-	
+
 	@Autowired
 	private SequenceGenUtil sequenceGenService;
-	
+
 	@Autowired
 	private EstateRegisterRepository estateRegisterRepository;
 
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-	
-	public EstateRegisterResponse getEstates(EstateSearchCriteria searchTaxHead, RequestInfo requestInfo) {
-		List<EstateRegister> estateRegister = estateRegisterRepository.findForCriteria(searchTaxHead);
+
+	@Autowired
+	private MasterDataService mdmsService;
+
+	public EstateRegisterResponse getEstates(EstateSearchCriteria searchEstateCriteria, RequestInfo requestInfo) {
+		
+		if(searchEstateCriteria.getRegisterName()!=null || searchEstateCriteria.getSubRegisterName()!=null || searchEstateCriteria.getPropertyType()!=null)
+			mdmsService.getEstateMasterCodes(requestInfo, searchEstateCriteria);
+		
+		List<EstateRegister> estateRegister = estateRegisterRepository.findForCriteria(searchEstateCriteria);
+		
+		estateRegister.stream().forEach(reg-> mdmsService.getEstateMaster(requestInfo, reg));
+		
 		return getEstateRegisterResponse(estateRegister, requestInfo);
 	}
 
 	public EstateRegisterResponse createAsync(EstateRegisterRequest estateRegisterRequest) {
-		
-		/*List<Long> registerIds = sequenceGenService.getIds(estateRegisterRequest.getLandRegisters().size(),
-				propertiesManager.getCreateEstateSequence());*/
-		
+
+//		estateRegisterRequest.getLandRegisters().stream()
+//				.forEach(reg -> mdmsService.getEstateMaster(estateRegisterRequest.getRequestInfo(), reg));
+
 		estateRegisterRequest.getLandRegisters().stream().forEach(landRegister -> {
 			landRegister.setId(sequenceGenService.getIds(1, propertiesManager.getCreateEstateSequence()).get(0));
 			landRegister.getFloors().stream().forEach(floor -> {
@@ -61,36 +70,23 @@ public class EstateRegisterService {
 				});
 			});
 		});
-		
-		/*int index = 0;
-		int floorIndex;
-		int unitIndex;
-		for (EstateRegister estateRegister : estateRegisterRequest.getLandRegisters()) {
-			estateRegister.setId(registerIds.get(index++));
-			List<Long> floorIds = sequenceGenService.getIds(estateRegister.getFloors().size(),
-					propertiesManager.getCreateEstateFloorsSequence());
-			floorIndex = 0;
-			for (FloorDetail floor : estateRegister.getFloors()) {
-				floor.setId(floorIds.get(floorIndex++));
-				List<Long> unitsIds = sequenceGenService.getIds(floor.getUnits().size(), propertiesManager.getCreateEstateUnitsSequence());
-				unitIndex = 0;
-				for (UnitDetail unit : floor.getUnits())
-					unit.setId(unitsIds.get(unitIndex++));
-			}
-		}*/
-		kafkaTemplate.send(propertiesManager.getStartEstateWorkflowTopic(), estateRegisterRequest);
+
+		kafkaTemplate.send(propertiesManager.getCreateEstateKafkaTopic(), estateRegisterRequest);
 		return getEstateRegisterResponse(estateRegisterRequest.getLandRegisters(),
 				estateRegisterRequest.getRequestInfo());
 	}
-	
+
 	public EstateRegisterResponse updateAsync(EstateRegisterRequest estateRegisterRequest) {
+		
+//		estateRegisterRequest.getLandRegisters().stream().forEach(reg -> mdmsService.getEstateMaster(estateRegisterRequest.getRequestInfo(), reg));
+		
 		int year = Calendar.getInstance().get(Calendar.YEAR);
 		estateRegisterRequest.getLandRegisters().stream().forEach(landRegister -> {
 			if (landRegister.getWorkFlowDetails().getAction().equals(WF_ACTION_APPROVE))
 				landRegister.setEstateNumber("E" + year + String.format("%05d",
 						sequenceGenService.getIds(1, propertiesManager.getCreateEstateSequence()).get(0)));
 		});
-		kafkaTemplate.send(propertiesManager.getUpdateEstateWorkflowTopic(), estateRegisterRequest);
+		kafkaTemplate.send(propertiesManager.getUpdateEstateKafkaTopic(), estateRegisterRequest);
 		return getEstateRegisterResponse(estateRegisterRequest.getLandRegisters(),
 				estateRegisterRequest.getRequestInfo());
 	}

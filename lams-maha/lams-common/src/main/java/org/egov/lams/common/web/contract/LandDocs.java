@@ -11,12 +11,12 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This object holds list of documents attached during the transacitons on agreement
+ * This object holds list of documents attached during the transactions on Land
  */
-@ApiModel(description = "This object holds list of documents attached during the transacitons on agreement")
+@ApiModel(description = "This object holds list of documents attached during the transactions on Land")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T07:10:49.937Z")
 
-public class AgreementDocs   {
+public class LandDocs   {
   @JsonProperty("id")
   private String id = null;
 
@@ -24,7 +24,7 @@ public class AgreementDocs   {
   private String tenantId = null;
 
   @JsonProperty("agreement")
-  private Agreement agreement = null;
+  private LandRegister agreement = null;
 
   @JsonProperty("documentType")
   private DocumentType documentType = null;
@@ -32,16 +32,16 @@ public class AgreementDocs   {
   @JsonProperty("fileStore")
   private String fileStore = null;
 
-  public AgreementDocs id(String id) {
+  public LandDocs id(String id) {
     this.id = id;
     return this;
   }
 
    /**
-   * Unique Identifier of the AgreementDocs.
+   * Unique Identifier of the LandDocs.
    * @return id
   **/
-  @ApiModelProperty(value = "Unique Identifier of the AgreementDocs.")
+  @ApiModelProperty(value = "Unique Identifier of the LandDocs.")
 
  @Size(min=1,max=256)
   public String getId() {
@@ -52,16 +52,16 @@ public class AgreementDocs   {
     this.id = id;
   }
 
-  public AgreementDocs tenantId(String tenantId) {
+  public LandDocs tenantId(String tenantId) {
     this.tenantId = tenantId;
     return this;
   }
 
    /**
-   * tenant id of the AgreementDocs
+   * tenant id of the LandDocs
    * @return tenantId
   **/
-  @ApiModelProperty(value = "tenant id of the AgreementDocs")
+  @ApiModelProperty(value = "tenant id of the LandDocs")
 
  @Size(min=2,max=128)
   public String getTenantId() {
@@ -72,7 +72,7 @@ public class AgreementDocs   {
     this.tenantId = tenantId;
   }
 
-  public AgreementDocs agreement(Agreement agreement) {
+  public LandDocs agreement(LandRegister agreement) {
     this.agreement = agreement;
     return this;
   }
@@ -85,15 +85,15 @@ public class AgreementDocs   {
 
   @Valid
 
-  public Agreement getAgreement() {
+  public LandRegister getAgreement() {
     return agreement;
   }
 
-  public void setAgreement(Agreement agreement) {
+  public void setAgreement(LandRegister agreement) {
     this.agreement = agreement;
   }
 
-  public AgreementDocs documentType(DocumentType documentType) {
+  public LandDocs documentType(DocumentType documentType) {
     this.documentType = documentType;
     return this;
   }
@@ -114,7 +114,7 @@ public class AgreementDocs   {
     this.documentType = documentType;
   }
 
-  public AgreementDocs fileStore(String fileStore) {
+  public LandDocs fileStore(String fileStore) {
     this.fileStore = fileStore;
     return this;
   }
@@ -143,12 +143,12 @@ public class AgreementDocs   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    AgreementDocs agreementDocs = (AgreementDocs) o;
-    return Objects.equals(this.id, agreementDocs.id) &&
-        Objects.equals(this.tenantId, agreementDocs.tenantId) &&
-        Objects.equals(this.agreement, agreementDocs.agreement) &&
-        Objects.equals(this.documentType, agreementDocs.documentType) &&
-        Objects.equals(this.fileStore, agreementDocs.fileStore);
+    LandDocs landDocs = (LandDocs) o;
+    return Objects.equals(this.id, landDocs.id) &&
+        Objects.equals(this.tenantId, landDocs.tenantId) &&
+        Objects.equals(this.agreement, landDocs.agreement) &&
+        Objects.equals(this.documentType, landDocs.documentType) &&
+        Objects.equals(this.fileStore, landDocs.fileStore);
   }
 
   @Override
@@ -159,7 +159,7 @@ public class AgreementDocs   {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class AgreementDocs {\n");
+    sb.append("class LandDocs {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");

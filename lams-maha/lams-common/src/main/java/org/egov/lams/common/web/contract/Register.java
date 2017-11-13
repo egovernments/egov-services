@@ -14,7 +14,7 @@ import javax.validation.constraints.*;
 @ApiModel(description = "An object which holds the Register Name Master info")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T07:10:49.937Z")
 
-public class Purpose   {
+public class Register   {
   @JsonProperty("id")
   private String id = null;
 
@@ -30,16 +30,16 @@ public class Purpose   {
   @JsonProperty("isActive")
   private Boolean isActive = null;
 
-  public Purpose id(String id) {
+  public Register id(String id) {
     this.id = id;
     return this;
   }
 
    /**
-   * Unique Identifier of the Purpose.
+   * Unique Identifier of the Register.
    * @return id
   **/
-  @ApiModelProperty(value = "Unique Identifier of the Purpose.")
+  @ApiModelProperty(value = "Unique Identifier of the Register.")
 
  @Size(min=1,max=256)
   public String getId() {
@@ -50,16 +50,16 @@ public class Purpose   {
     this.id = id;
   }
 
-  public Purpose tenantId(String tenantId) {
+  public Register tenantId(String tenantId) {
     this.tenantId = tenantId;
     return this;
   }
 
    /**
-   * tenant id of the Purpose
+   * tenant id of the RegisterName
    * @return tenantId
   **/
-  @ApiModelProperty(required = true, value = "tenant id of the Purpose")
+  @ApiModelProperty(required = true, value = "tenant id of the RegisterName")
   @NotNull
 
  @Size(min=2,max=128)
@@ -71,16 +71,16 @@ public class Purpose   {
     this.tenantId = tenantId;
   }
 
-  public Purpose code(String code) {
+  public Register code(String code) {
     this.code = code;
     return this;
   }
 
    /**
-   * code of the Purpose
+   * code of the RegisterName
    * @return code
   **/
-  @ApiModelProperty(required = true, value = "code of the Purpose")
+  @ApiModelProperty(required = true, value = "code of the RegisterName")
   @NotNull
 
  @Size(min=1,max=64)
@@ -92,16 +92,16 @@ public class Purpose   {
     this.code = code;
   }
 
-  public Purpose name(String name) {
+  public Register name(String name) {
     this.name = name;
     return this;
   }
 
    /**
-   * name of purpose
+   * name of register
    * @return name
   **/
-  @ApiModelProperty(required = true, value = "name of purpose")
+  @ApiModelProperty(required = true, value = "name of register")
   @NotNull
 
  @Size(min=1,max=128)
@@ -113,16 +113,16 @@ public class Purpose   {
     this.name = name;
   }
 
-  public Purpose isActive(Boolean isActive) {
+  public Register isActive(Boolean isActive) {
     this.isActive = isActive;
     return this;
   }
 
    /**
-   * is purpose is active.
+   * is register is active.
    * @return isActive
   **/
-  @ApiModelProperty(required = true, value = "is purpose is active.")
+  @ApiModelProperty(required = true, value = "is register is active.")
   @NotNull
 
 
@@ -143,12 +143,12 @@ public class Purpose   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Purpose purpose = (Purpose) o;
-    return Objects.equals(this.id, purpose.id) &&
-        Objects.equals(this.tenantId, purpose.tenantId) &&
-        Objects.equals(this.code, purpose.code) &&
-        Objects.equals(this.name, purpose.name) &&
-        Objects.equals(this.isActive, purpose.isActive);
+    Register register = (Register) o;
+    return Objects.equals(this.id, register.id) &&
+        Objects.equals(this.tenantId, register.tenantId) &&
+        Objects.equals(this.code, register.code) &&
+        Objects.equals(this.name, register.name) &&
+        Objects.equals(this.isActive, register.isActive);
   }
 
   @Override
@@ -159,7 +159,7 @@ public class Purpose   {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Purpose {\n");
+    sb.append("class Register {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");

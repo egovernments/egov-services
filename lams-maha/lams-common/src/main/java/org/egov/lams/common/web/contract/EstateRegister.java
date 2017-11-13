@@ -8,7 +8,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -17,23 +19,26 @@ import io.swagger.annotations.ApiModelProperty;
  * A Object holds the data for a Estate
  */
 @ApiModel(description = "A Object holds the data for a Estate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-24T08:31:19.650Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T07:10:49.937Z")
 
 public class EstateRegister   {
   @JsonProperty("id")
-  private Long id = null;
+  private String id = null;
 
   @JsonProperty("tenantId")
   private String tenantId = null;
 
+  @JsonProperty("oldEstateNumber")
+  private String oldEstateNumber = null;
+
   @JsonProperty("estateNumber")
   private String estateNumber = null;
 
-  @JsonProperty("registerName")
-  private RegisterName registerName = null;
+  @JsonProperty("register")
+  private Register register = null;
 
-  @JsonProperty("subRegisterName")
-  private SubRegisterName subRegisterName = null;
+  @JsonProperty("subRegister")
+  private SubRegister subRegister = null;
 
   @JsonProperty("regionalOffice")
   private Boundary regionalOffice = null;
@@ -95,6 +100,80 @@ public class EstateRegister   {
   @JsonProperty("floors")
   private List<FloorDetail> floors = new ArrayList<FloorDetail>();
 
+  /**
+   * enumeration of estate register statuses.
+   */
+  public enum StatusEnum {
+    ACTIVE("ACTIVE"),
+    
+    WORKFLOW("WORKFLOW"),
+    
+    INACTIVE("INACTIVE");
+
+    private String value;
+
+    StatusEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static StatusEnum fromValue(String text) {
+      for (StatusEnum b : StatusEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+  }
+
+  @JsonProperty("status")
+  private StatusEnum status = null;
+
+  /**
+   * source from which estate Register is being persisted.
+   */
+  public enum SourceEnum {
+    SYSTEM("SYSTEM"),
+    
+    DATE_ENTRY("DATE_ENTRY"),
+    
+    MIGRATION("MIGRATION"),
+    
+    CFC("CFC");
+
+    private String value;
+
+    SourceEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static SourceEnum fromValue(String text) {
+      for (SourceEnum b : SourceEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+  }
+
+  @JsonProperty("source")
+  private SourceEnum source = null;
+
   @JsonProperty("stateId")
   private String stateId = null;
 
@@ -104,23 +183,26 @@ public class EstateRegister   {
   @JsonProperty("comments")
   private String comments = null;
 
-  public EstateRegister id(Long id) {
+  @JsonProperty("auditDetails")
+  private AuditDetails auditDetails = null;
+
+  public EstateRegister id(String id) {
     this.id = id;
     return this;
   }
 
    /**
-   * unique id of the EstateRegister.
+   * Unique Identifier of the EstateRegister.
    * @return id
   **/
-  @ApiModelProperty(value = "unique id of the EstateRegister.")
+  @ApiModelProperty(value = "Unique Identifier of the EstateRegister.")
 
-
-  public Long getId() {
+ @Size(min=1,max=256)
+  public String getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(String id) {
     this.id = id;
   }
 
@@ -135,13 +217,33 @@ public class EstateRegister   {
   **/
   @ApiModelProperty(readOnly = true, value = "Unique Identifier of the tenant")
 
- @Size(min=4,max=128)
+ @Size(min=2,max=128)
   public String getTenantId() {
     return tenantId;
   }
 
   public void setTenantId(String tenantId) {
     this.tenantId = tenantId;
+  }
+
+  public EstateRegister oldEstateNumber(String oldEstateNumber) {
+    this.oldEstateNumber = oldEstateNumber;
+    return this;
+  }
+
+   /**
+   * Old estate ref no, this is mandatory when source is DATA_ENTRY or MIGRATION
+   * @return oldEstateNumber
+  **/
+  @ApiModelProperty(value = "Old estate ref no, this is mandatory when source is DATA_ENTRY or MIGRATION")
+
+ @Size(max=64)
+  public String getOldEstateNumber() {
+    return oldEstateNumber;
+  }
+
+  public void setOldEstateNumber(String oldEstateNumber) {
+    this.oldEstateNumber = oldEstateNumber;
   }
 
   public EstateRegister estateNumber(String estateNumber) {
@@ -155,7 +257,7 @@ public class EstateRegister   {
   **/
   @ApiModelProperty(value = "Unique Estate ref. no")
 
- @Size(min=1,max=64)
+ @Size(max=64)
   public String getEstateNumber() {
     return estateNumber;
   }
@@ -164,48 +266,48 @@ public class EstateRegister   {
     this.estateNumber = estateNumber;
   }
 
-  public EstateRegister registerName(RegisterName registerName) {
-    this.registerName = registerName;
+  public EstateRegister register(Register register) {
+    this.register = register;
     return this;
   }
 
    /**
-   * Get registerName
-   * @return registerName
+   * code of the master stored here as a ref.
+   * @return register
+  **/
+  @ApiModelProperty(required = true, value = "code of the master stored here as a ref.")
+  @NotNull
+
+  @Valid
+
+  public Register getRegister() {
+    return register;
+  }
+
+  public void setRegister(Register register) {
+    this.register = register;
+  }
+
+  public EstateRegister subRegister(SubRegister subRegister) {
+    this.subRegister = subRegister;
+    return this;
+  }
+
+   /**
+   * Get subRegister
+   * @return subRegister
   **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
   @Valid
 
-  public RegisterName getRegisterName() {
-    return registerName;
+  public SubRegister getSubRegister() {
+    return subRegister;
   }
 
-  public void setRegisterName(RegisterName registerName) {
-    this.registerName = registerName;
-  }
-
-  public EstateRegister subRegisterName(SubRegisterName subRegisterName) {
-    this.subRegisterName = subRegisterName;
-    return this;
-  }
-
-   /**
-   * Get subRegisterName
-   * @return subRegisterName
-  **/
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-
-  @Valid
-
-  public SubRegisterName getSubRegisterName() {
-    return subRegisterName;
-  }
-
-  public void setSubRegisterName(SubRegisterName subRegisterName) {
-    this.subRegisterName = subRegisterName;
+  public void setSubRegister(SubRegister subRegister) {
+    this.subRegister = subRegister;
   }
 
   public EstateRegister regionalOffice(Boundary regionalOffice) {
@@ -214,10 +316,10 @@ public class EstateRegister   {
   }
 
    /**
-   * Get regionalOffice
+   * code of the master stored here as a ref.
    * @return regionalOffice
   **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(required = true, value = "code of the master stored here as a ref.")
   @NotNull
 
   @Valid
@@ -236,13 +338,13 @@ public class EstateRegister   {
   }
 
    /**
-   * Get location
+   * code of the master stored here as a ref.
    * @return location
   **/
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
+  @ApiModelProperty(required = true, value = "code of the master stored here as a ref.")
+ // @NotNull
 
-  @Valid
+ // @Valid
 
   public Boundary getLocation() {
     return location;
@@ -278,10 +380,10 @@ public class EstateRegister   {
   }
 
    /**
-   * Get propertyType
+   * code of the master stored here as a ref.
    * @return propertyType
   **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(required = true, value = "code of the master stored here as a ref.")
   @NotNull
 
   @Valid
@@ -486,10 +588,10 @@ public class EstateRegister   {
   }
 
    /**
-   * construction start date of a Estate, time in epoch
+   * construction start date of a Estate, Date is inclduing timestamp, date in epoch
    * @return constructionStartDate
   **/
-  @ApiModelProperty(required = true, value = "construction start date of a Estate, time in epoch")
+  @ApiModelProperty(required = true, value = "construction start date of a Estate, Date is inclduing timestamp, date in epoch")
   @NotNull
 
 
@@ -507,10 +609,10 @@ public class EstateRegister   {
   }
 
    /**
-   * construction end date of a Estate, time in epoch
+   * construction end date of a Estate, Date is inclduing timestamp, date in epoch
    * @return constructionEndDate
   **/
-  @ApiModelProperty(required = true, value = "construction end date of a Estate, time in epoch")
+  @ApiModelProperty(required = true, value = "construction end date of a Estate, Date is inclduing timestamp, date in epoch")
   @NotNull
 
 
@@ -629,6 +731,46 @@ public class EstateRegister   {
     this.floors = floors;
   }
 
+  public EstateRegister status(StatusEnum status) {
+    this.status = status;
+    return this;
+  }
+
+   /**
+   * enumeration of estate register statuses.
+   * @return status
+  **/
+  @ApiModelProperty(value = "enumeration of estate register statuses.")
+
+
+  public StatusEnum getStatus() {
+    return status;
+  }
+
+  public void setStatus(StatusEnum status) {
+    this.status = status;
+  }
+
+  public EstateRegister source(SourceEnum source) {
+    this.source = source;
+    return this;
+  }
+
+   /**
+   * source from which estate Register is being persisted.
+   * @return source
+  **/
+  @ApiModelProperty(value = "source from which estate Register is being persisted.")
+
+
+  public SourceEnum getSource() {
+    return source;
+  }
+
+  public void setSource(SourceEnum source) {
+    this.source = source;
+  }
+
   public EstateRegister stateId(String stateId) {
     this.stateId = stateId;
     return this;
@@ -690,6 +832,27 @@ public class EstateRegister   {
     this.comments = comments;
   }
 
+  public EstateRegister auditDetails(AuditDetails auditDetails) {
+    this.auditDetails = auditDetails;
+    return this;
+  }
+
+   /**
+   * Get auditDetails
+   * @return auditDetails
+  **/
+  @ApiModelProperty(value = "")
+
+  @Valid
+
+  public AuditDetails getAuditDetails() {
+    return auditDetails;
+  }
+
+  public void setAuditDetails(AuditDetails auditDetails) {
+    this.auditDetails = auditDetails;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -702,9 +865,10 @@ public class EstateRegister   {
     EstateRegister estateRegister = (EstateRegister) o;
     return Objects.equals(this.id, estateRegister.id) &&
         Objects.equals(this.tenantId, estateRegister.tenantId) &&
+        Objects.equals(this.oldEstateNumber, estateRegister.oldEstateNumber) &&
         Objects.equals(this.estateNumber, estateRegister.estateNumber) &&
-        Objects.equals(this.registerName, estateRegister.registerName) &&
-        Objects.equals(this.subRegisterName, estateRegister.subRegisterName) &&
+        Objects.equals(this.register, estateRegister.register) &&
+        Objects.equals(this.subRegister, estateRegister.subRegister) &&
         Objects.equals(this.regionalOffice, estateRegister.regionalOffice) &&
         Objects.equals(this.location, estateRegister.location) &&
         Objects.equals(this.propertyName, estateRegister.propertyName) &&
@@ -725,14 +889,17 @@ public class EstateRegister   {
         Objects.equals(this.latitude, estateRegister.latitude) &&
         Objects.equals(this.longitude, estateRegister.longitude) &&
         Objects.equals(this.floors, estateRegister.floors) &&
+        Objects.equals(this.status, estateRegister.status) &&
+        Objects.equals(this.source, estateRegister.source) &&
         Objects.equals(this.stateId, estateRegister.stateId) &&
         Objects.equals(this.workFlowDetails, estateRegister.workFlowDetails) &&
-        Objects.equals(this.comments, estateRegister.comments);
+        Objects.equals(this.comments, estateRegister.comments) &&
+        Objects.equals(this.auditDetails, estateRegister.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, estateNumber, registerName, subRegisterName, regionalOffice, location, propertyName, propertyType, propertyAddress, surveyNo, gattNo, buildUpArea, purpose, modeOfAcquisition, carpetArea, holdingType, landID, constructionStartDate, constructionEndDate, proposedBuildingBudget, actualBuildingExpense, latitude, longitude, floors, stateId, workFlowDetails, comments);
+    return Objects.hash(id, tenantId, oldEstateNumber, estateNumber, register, subRegister, regionalOffice, location, propertyName, propertyType, propertyAddress, surveyNo, gattNo, buildUpArea, purpose, modeOfAcquisition, carpetArea, holdingType, landID, constructionStartDate, constructionEndDate, proposedBuildingBudget, actualBuildingExpense, latitude, longitude, floors, status, source, stateId, workFlowDetails, comments, auditDetails);
   }
 
   @Override
@@ -742,9 +909,10 @@ public class EstateRegister   {
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+    sb.append("    oldEstateNumber: ").append(toIndentedString(oldEstateNumber)).append("\n");
     sb.append("    estateNumber: ").append(toIndentedString(estateNumber)).append("\n");
-    sb.append("    registerName: ").append(toIndentedString(registerName)).append("\n");
-    sb.append("    subRegisterName: ").append(toIndentedString(subRegisterName)).append("\n");
+    sb.append("    register: ").append(toIndentedString(register)).append("\n");
+    sb.append("    subRegister: ").append(toIndentedString(subRegister)).append("\n");
     sb.append("    regionalOffice: ").append(toIndentedString(regionalOffice)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    propertyName: ").append(toIndentedString(propertyName)).append("\n");
@@ -765,9 +933,12 @@ public class EstateRegister   {
     sb.append("    latitude: ").append(toIndentedString(latitude)).append("\n");
     sb.append("    longitude: ").append(toIndentedString(longitude)).append("\n");
     sb.append("    floors: ").append(toIndentedString(floors)).append("\n");
+    sb.append("    status: ").append(toIndentedString(status)).append("\n");
+    sb.append("    source: ").append(toIndentedString(source)).append("\n");
     sb.append("    stateId: ").append(toIndentedString(stateId)).append("\n");
     sb.append("    workFlowDetails: ").append(toIndentedString(workFlowDetails)).append("\n");
     sb.append("    comments: ").append(toIndentedString(comments)).append("\n");
+    sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -783,3 +954,4 @@ public class EstateRegister   {
     return o.toString().replace("\n", "\n    ");
   }
 }
+

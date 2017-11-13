@@ -9,12 +9,12 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * An object which holds the Register Name Master info
+ * An object which holds the  planning Type Master info
  */
-@ApiModel(description = "An object which holds the Register Name Master info")
+@ApiModel(description = "An object which holds the  planning Type Master info")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T07:10:49.937Z")
 
-public class Purpose   {
+public class PlaningType   {
   @JsonProperty("id")
   private String id = null;
 
@@ -30,16 +30,16 @@ public class Purpose   {
   @JsonProperty("isActive")
   private Boolean isActive = null;
 
-  public Purpose id(String id) {
+  public PlaningType id(String id) {
     this.id = id;
     return this;
   }
 
    /**
-   * Unique Identifier of the Purpose.
+   * Unique Identifier of the PlanningType.
    * @return id
   **/
-  @ApiModelProperty(value = "Unique Identifier of the Purpose.")
+  @ApiModelProperty(value = "Unique Identifier of the PlanningType.")
 
  @Size(min=1,max=256)
   public String getId() {
@@ -50,16 +50,16 @@ public class Purpose   {
     this.id = id;
   }
 
-  public Purpose tenantId(String tenantId) {
+  public PlaningType tenantId(String tenantId) {
     this.tenantId = tenantId;
     return this;
   }
 
    /**
-   * tenant id of the Purpose
+   * tenant id of the PlanningType
    * @return tenantId
   **/
-  @ApiModelProperty(required = true, value = "tenant id of the Purpose")
+  @ApiModelProperty(required = true, value = "tenant id of the PlanningType")
   @NotNull
 
  @Size(min=2,max=128)
@@ -71,16 +71,16 @@ public class Purpose   {
     this.tenantId = tenantId;
   }
 
-  public Purpose code(String code) {
+  public PlaningType code(String code) {
     this.code = code;
     return this;
   }
 
    /**
-   * code of the Purpose
+   * code of the PlanningType
    * @return code
   **/
-  @ApiModelProperty(required = true, value = "code of the Purpose")
+  @ApiModelProperty(required = true, value = "code of the PlanningType")
   @NotNull
 
  @Size(min=1,max=64)
@@ -92,16 +92,16 @@ public class Purpose   {
     this.code = code;
   }
 
-  public Purpose name(String name) {
+  public PlaningType name(String name) {
     this.name = name;
     return this;
   }
 
    /**
-   * name of purpose
+   * name of planning Type
    * @return name
   **/
-  @ApiModelProperty(required = true, value = "name of purpose")
+  @ApiModelProperty(required = true, value = "name of planning Type")
   @NotNull
 
  @Size(min=1,max=128)
@@ -113,16 +113,16 @@ public class Purpose   {
     this.name = name;
   }
 
-  public Purpose isActive(Boolean isActive) {
+  public PlaningType isActive(Boolean isActive) {
     this.isActive = isActive;
     return this;
   }
 
    /**
-   * is purpose is active.
+   * is PlanningType active.
    * @return isActive
   **/
-  @ApiModelProperty(required = true, value = "is purpose is active.")
+  @ApiModelProperty(required = true, value = "is PlanningType active.")
   @NotNull
 
 
@@ -143,12 +143,12 @@ public class Purpose   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Purpose purpose = (Purpose) o;
-    return Objects.equals(this.id, purpose.id) &&
-        Objects.equals(this.tenantId, purpose.tenantId) &&
-        Objects.equals(this.code, purpose.code) &&
-        Objects.equals(this.name, purpose.name) &&
-        Objects.equals(this.isActive, purpose.isActive);
+    PlaningType planingType = (PlaningType) o;
+    return Objects.equals(this.id, planingType.id) &&
+        Objects.equals(this.tenantId, planingType.tenantId) &&
+        Objects.equals(this.code, planingType.code) &&
+        Objects.equals(this.name, planingType.name) &&
+        Objects.equals(this.isActive, planingType.isActive);
   }
 
   @Override
@@ -159,7 +159,7 @@ public class Purpose   {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Purpose {\n");
+    sb.append("class PlaningType {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");

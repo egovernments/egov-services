@@ -43,5 +43,4 @@ public class LandPossessionController {
 				landPossessionService.search(landPossessionSearchCriteria, requestInfoWrapper.getRequestInfo()),
 				HttpStatus.OK);
 	}
-	
 }

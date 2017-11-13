@@ -42,7 +42,7 @@ public LandTransferResponse  create(LandTransferRequest landTransferRequest) {
 			landPossession.setId(sequenceGenService.getIds(1, "seq_eg_lams_landtransfer").get(0));
 		});
 		landTransferRequest.getLandTransfer().stream().forEach(landPossession -> {
-			landPossession.setLandTransferNumber(sequenceGen());
+			landPossession.setTransferNumber(sequenceGen());
 		});
 		
 		kafkaTemplate.send(propertiesManager.getCreateLandTransferKafkaTopic(), landTransferRequest);
@@ -73,7 +73,7 @@ public LandTransferResponse  create(LandTransferRequest landTransferRequest) {
 		private String sequenceGen()
 		{  
 		    Calendar cal = Calendar.getInstance();
-			long id = sequenceGenService.getIds(1, "seq_eg_lams_landtransfer").get(0);
+			String id = sequenceGenService.getIds(1, "seq_eg_lams_landtransfer").get(0);
 			int year= cal.get(Calendar.YEAR);
 			String idgen =String.format("%05d", id);
 			String seqId =year +idgen;

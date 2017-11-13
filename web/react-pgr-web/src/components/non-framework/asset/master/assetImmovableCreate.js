@@ -1042,10 +1042,10 @@ delete formData.Asset.assetAttributesCheck;
 
           if (response && response.Assets && response.Assets[0] && response.Assets[0].assetAttributes) {
             for (var i = 0; i < response.Assets[0].assetAttributes.length; i++) {
-                if (response.Assets[0].assetAttributes[i].key=="surveyNo") {
+                if (response.Assets[0].assetAttributes[i].key=="Survey Number") {
                   var _surveyNo = response.Assets[0].assetAttributes[i].value;
                   self.props.handleChange({target:{value: _surveyNo}},SubProperty+".surveyNo",false,"","","");
-                } else if (response.Assets[0].assetAttributes[i].key=="area") {
+                } else if (response.Assets[0].assetAttributes[i].key=="Area of Land") {
                   var _area = response.Assets[0].assetAttributes[i].value;
                   self.props.handleChange({target:{value: _area}},SubProperty+".area",false,"","","");
                 }

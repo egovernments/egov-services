@@ -17,9 +17,9 @@ import lombok.Setter;
 @Builder
 public class StoreGetRequest {
 
-    private List<String> ids;
+    private List<String> id;
 
-    private String code;
+    private List<String> code;
 
     private String name;
 

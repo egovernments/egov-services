@@ -103,7 +103,7 @@ public class StoresApiController implements StoresApi {
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody RequestInfo requestInfo,
 			@Size(max = 50) @ApiParam(value = "comma seperated list of Ids") @Valid @RequestParam(value = "ids", required = false) List<String> ids,
-			@ApiParam(value = "code of the Store ") @Valid @RequestParam(value = "code", required = false) String code,
+			@ApiParam(value = "list of code of the Store ") @Valid @RequestParam(value = "codes", required = false) List<String> codes,
 			@ApiParam(value = "name of the Store ") @Valid @RequestParam(value = "name", required = false) String name,
 			@ApiParam(value = "description of the Store ") @Valid @RequestParam(value = "description", required = false) String description,
 			@ApiParam(value = "department of the Store ") @Valid @RequestParam(value = "department", required = false) String department,
@@ -121,8 +121,8 @@ public class StoresApiController implements StoresApi {
 			@RequestHeader(value = "Accept", required = false) String accept)
 			throws Exception {
 
-		StoreGetRequest storeGetRequest = StoreGetRequest.builder().ids(ids)
-				.code(code).name(name).active(active).tenantId(tenantId)
+		StoreGetRequest storeGetRequest = StoreGetRequest.builder().id(ids)
+				.code(codes).name(name).active(active).tenantId(tenantId)
 				.description(description).department(department)
 				.billingAddress(billingAddress).deliveryAddress(deliveryAddress)
 				.contactNo1(contactNo1).contactNo2(contactNo2).email(email)

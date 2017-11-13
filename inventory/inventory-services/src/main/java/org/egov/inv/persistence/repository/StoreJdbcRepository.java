@@ -84,11 +84,11 @@ public class StoreJdbcRepository extends JdbcRepository{
         if (storeGetRequest.getSortBy() != null && !storeGetRequest.getSortBy().isEmpty()) {
             orderBy = "order by " + storeGetRequest.getSortBy();
         }
-        if (storeGetRequest.getIds() != null) {
+        if (storeGetRequest.getId() != null) {
             if (params.length() > 0)
                 params.append(" and ");
             params.append("id in (:ids)");
-            paramValues.put("ids", storeGetRequest.getIds());
+            paramValues.put("ids", storeGetRequest.getId());
         }
         if (storeGetRequest.getCode() != null) {
             if (params.length() > 0)

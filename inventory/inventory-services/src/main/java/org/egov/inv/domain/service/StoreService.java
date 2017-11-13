@@ -47,6 +47,7 @@ import io.swagger.model.StoreRequest;
 import org.egov.inv.domain.exception.ErrorCode;
 import org.egov.inv.domain.exception.InvalidDataException;
 import org.egov.inv.persistence.entity.StoreEntity;
+import org.egov.inv.persistence.repository.StoreESRepository;
 import org.egov.inv.persistence.repository.StoreJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
@@ -67,12 +68,18 @@ public class StoreService {
 
 	@Value("${inv.store.update.topic}")
 	private String updateTopic;
+	
+	@Value("${es.enabled}")
+	private Boolean isESEnabled;
 
 	@Autowired
 	private InventoryUtilityService inventoryUtilityService;
 
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	
+	@Autowired
+	private StoreESRepository storeESRepository;
 
 	public List<Store> create(StoreRequest storeRequest, String tenantId,
 			BindingResult errors) {
@@ -114,7 +121,9 @@ public class StoreService {
 	}
 
 	public Pagination<Store> search(StoreGetRequest storeGetRequest) {
-		return storeJdbcRepository.search(storeGetRequest);
+		
+		return isESEnabled ? storeESRepository.search(storeGetRequest)
+				: storeJdbcRepository.search(storeGetRequest);
 	}
 
 	public List<Store> push(StoreRequest storeRequest, String topic) {

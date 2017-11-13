@@ -208,7 +208,7 @@ public class MaterialStoreMappingService {
 
     private StoreGetRequest getStoreGetRequest(String storeCode, String tenantId) {
         return StoreGetRequest.builder()
-                .code(storeCode)
+             //   .code(storeCode)
                 .tenantId(tenantId)
                 .build();
     }

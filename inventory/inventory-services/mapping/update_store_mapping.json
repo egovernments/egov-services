@@ -1,0 +1,45 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "tenantId": {
+            "type": "keyword"
+        },
+        "code": {
+            "type": "keyword"
+        },
+        "name": {
+            "type": "keyword"
+        },
+        "description": {
+            "type": "keyword"
+        },
+        "billingAddress": {
+            "type": "keyword"
+        },
+        "deliveryAddress": {
+            "type": "keyword"
+        },
+        "contactNo1": {
+            "type": "keyword"
+        },
+        "contactNo2": {
+            "type": "keyword"
+        },
+        "email": {
+            "type": "keyword"
+        },
+        "createdTime": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "lastModifiedTime": {
+            "type": "date",
+            "format": "date_optional_time"
+        }
+    }
+}

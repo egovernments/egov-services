@@ -130,7 +130,7 @@ public class AdvocateBuilders {
 		searchQuery.append("SELECT * FROM " + tableName);
 		searchQuery.append(" WHERE tenantId =?");
 		preparedStatementValues.add(tenantId);
-		
+
 		searchQuery.append(" AND agencycode =?");
 		preparedStatementValues.add(code);
 
@@ -153,21 +153,23 @@ public class AdvocateBuilders {
 		return deleteQuery.toString();
 	}
 
-	public static String getAdvocateSearchQuery(String tenantId, Boolean isIndividual, String advocateName, String agencyCode, String agencyName,
-			List<Object> preparedStatementValues) {
+	public static String getAdvocateSearchQuery(String tenantId, Boolean isIndividual, String advocateName,
+			String agencyCode, String agencyName, List<Object> preparedStatementValues) {
 		StringBuilder selectQuery = new StringBuilder();
 		selectQuery.append(BASE_QUERY);
 		selectQuery.append("WHERE tenantId=?");
 		preparedStatementValues.add(tenantId);
-		
-		selectQuery.append(" AND isindividual=?");
-		preparedStatementValues.add(isIndividual);
-		
-		if(agencyCode != null){
+
+		if (isIndividual != null) {
+			selectQuery.append(" AND isindividual=?");
+			preparedStatementValues.add(isIndividual);
+		}
+
+		if (agencyCode != null) {
 			selectQuery.append(" AND agencyCode=?");
 			preparedStatementValues.add(agencyCode);
 		}
-		
+
 		if (advocateName != null) {
 
 			StringJoiner name = new StringJoiner("", "%", "%");
@@ -187,22 +189,30 @@ public class AdvocateBuilders {
 		return selectQuery.toString();
 	}
 
-	public static String getAgencySearchQuery(String tenantId, Boolean isIndividual, String agencyName,
+	public static String getAgencySearchQuery(String tenantId, String code, Boolean isIndividual, String agencyName,
 			List<Object> preparedStatementValues) {
-		
+
 		StringBuilder searchQuery = new StringBuilder();
 		searchQuery.append("SELECT * FROM " + ConstantUtility.AGENCY_TABLE_NAME);
-		
+
 		searchQuery.append(" WHERE tenantId=?");
 		preparedStatementValues.add(tenantId);
-		
-		searchQuery.append(" AND isIndividual=?");
-		preparedStatementValues.add(isIndividual);
-		
-		if(agencyName != null){
+
+		if (isIndividual != null) {
+			searchQuery.append(" AND isIndividual=?");
+			preparedStatementValues.add(isIndividual);
+		}
+
+		if (code != null) {
+			searchQuery.append(" AND code=?");
+			preparedStatementValues.add(code);
+		}
+
+		if (agencyName != null) {
 			searchQuery.append(" AND name=?");
 			preparedStatementValues.add(agencyName);
 		}
+
 		return searchQuery.toString();
 	}
 }

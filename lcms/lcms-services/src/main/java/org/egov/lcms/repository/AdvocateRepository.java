@@ -87,8 +87,8 @@ public class AdvocateRepository {
 
 	public List<Advocate> getAdvocatesUsingCode(String tenantId, String code) {
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
-		String searchQuery = AdvocateBuilders.getAgencyFieldsSearchQuery(tenantId, code, ConstantUtility.ADVOCATE_TABLE_NAME,
-				preparedStatementValues);
+		String searchQuery = AdvocateBuilders.getAgencyFieldsSearchQuery(tenantId, code,
+				ConstantUtility.ADVOCATE_TABLE_NAME, preparedStatementValues);
 		List<Advocate> advocates = jdbcTemplate.query(searchQuery, preparedStatementValues.toArray(),
 				advocateRowMapper);
 		return advocates;
@@ -100,37 +100,35 @@ public class AdvocateRepository {
 		jdbcTemplate.update(deleteQuery, preparedStatementValues.toArray());
 	}
 
-	public List<Agency> searchAgencies(String tenantId, Boolean isIndividual, String advocateName, String agencyName,
-			RequestInfoWrapper requestInfoWrapper) {
+	public List<Agency> searchAgencies(String tenantId, String code, Boolean isIndividual, String advocateName,
+			String agencyName, RequestInfoWrapper requestInfoWrapper) {
 
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
 		List<Agency> agencies = new ArrayList<Agency>();
-		
-		if (isIndividual) {
+
+		if (isIndividual == null || !isIndividual) {
+			String agencySearchQuery = AdvocateBuilders.getAgencySearchQuery(tenantId, code, isIndividual, agencyName,
+					preparedStatementValues);
+
+			agencies = jdbcTemplate.query(agencySearchQuery, preparedStatementValues.toArray(), agencyRowMapper);
+			getPersonDetails(agencies);
+			getAdvocates(agencies, advocateName);
+		} else {
+			final List<Object> advocateValues = new ArrayList<Object>();
 			String advocateSearchQuery = AdvocateBuilders.getAdvocateSearchQuery(tenantId, isIndividual, advocateName,
-					null, agencyName, preparedStatementValues);
-			List<Advocate> advocates = jdbcTemplate.query(advocateSearchQuery, preparedStatementValues.toArray(),
+					null, agencyName, advocateValues);
+			List<Advocate> advocates = jdbcTemplate.query(advocateSearchQuery, advocateValues.toArray(),
 					advocateRowMapper);
 			Agency agency = new Agency();
 			agencies.add(agency);
 			agencies.get(0).setAdvocates(advocates);
 
-		} else {
-
-			String agencySearchQuery = AdvocateBuilders.getAgencySearchQuery(tenantId, isIndividual, agencyName,
-					preparedStatementValues);
-
-			agencies = jdbcTemplate.query(agencySearchQuery, preparedStatementValues.toArray(), agencyRowMapper);
-
-			getPersonDetails(agencies);
-			getAdvocates(agencies, advocateName);
 		}
-
 		return agencies;
 	}
 
 	private void getAdvocates(List<Agency> agencies, String advocateName) {
-		
+
 		List<Advocate> advocates = new ArrayList<Advocate>();
 		for (Agency agency : agencies) {
 			final List<Object> preparedStatementValues = new ArrayList<Object>();
@@ -142,9 +140,9 @@ public class AdvocateRepository {
 	}
 
 	private void getPersonDetails(List<Agency> agencies) {
-		
+
 		List<PersonDetails> personDetails = new ArrayList<PersonDetails>();
-		
+
 		for (Agency agency : agencies) {
 			final List<Object> preparedStatementValues = new ArrayList<Object>();
 			String searchQuery = AdvocateBuilders.getAgencyFieldsSearchQuery(agency.getTenantId(), agency.getCode(),

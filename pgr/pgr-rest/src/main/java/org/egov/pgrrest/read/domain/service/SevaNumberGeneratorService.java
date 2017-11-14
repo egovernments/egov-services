@@ -14,7 +14,7 @@ public class SevaNumberGeneratorService {
         this.crnRepository = crnRepository;
     }
 
-    public String generate() {
-        return crnRepository.getCrn().getValue();
+    public String generate(String tenantId) {
+        return crnRepository.getCrn(tenantId).getValue();
     }
 }

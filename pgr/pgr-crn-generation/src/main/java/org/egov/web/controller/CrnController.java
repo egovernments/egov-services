@@ -2,10 +2,7 @@ package org.egov.web.controller;
 
 import org.egov.web.contract.ComplaintRegistrationNumber;
 import org.egov.domain.service.CrnGeneratorService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/crn")
@@ -18,12 +15,12 @@ public class CrnController {
     }
 
     @GetMapping()
-    public ComplaintRegistrationNumber getCrn() {
-        return new ComplaintRegistrationNumber(crnGeneratorService.generate());
+    public ComplaintRegistrationNumber getCrn(@RequestParam(value = "tenantId") final String tenantId) {
+        return new ComplaintRegistrationNumber(crnGeneratorService.generate(tenantId));
     }
 
     @PostMapping("/v1/_create")
-    public ComplaintRegistrationNumber createCrn() {
-        return new ComplaintRegistrationNumber(crnGeneratorService.generate());
+    public ComplaintRegistrationNumber createCrn(@RequestParam(value = "tenantId")  final String tenantId) {
+        return new ComplaintRegistrationNumber(crnGeneratorService.generate(tenantId));
     }
 }

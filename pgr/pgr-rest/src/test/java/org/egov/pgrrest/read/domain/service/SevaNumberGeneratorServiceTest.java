@@ -21,11 +21,11 @@ public class SevaNumberGeneratorServiceTest {
     public void shouldGetCrn() {
         ServiceRequestRegistrationNumber expected = new ServiceRequestRegistrationNumber("crn");
         SevaNumberGeneratorService  sevaNumberGeneratorService = new SevaNumberGeneratorService(crnRepository);
-        when(crnRepository.getCrn()).thenReturn(expected);
+        when(crnRepository.getCrn("default")).thenReturn(expected);
 
-        String crn = sevaNumberGeneratorService.generate();
+        String crn = sevaNumberGeneratorService.generate("default");
 
         assertEquals(expected.getValue(), crn);
-        verify(crnRepository).getCrn();
+        verify(crnRepository).getCrn("default");
     }
 }

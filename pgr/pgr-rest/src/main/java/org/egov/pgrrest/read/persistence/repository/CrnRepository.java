@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class CrnRepository {
 
-    private static final String CREATE_CRN_URL = "crn-generation/crn/v1/_create";
+    private static final String CREATE_CRN_URL = "crn-generation/crn/v1/_create?tenantId={tenantId}";
     private RestTemplate restTemplate;
     private String crnServiceUrl;
 
@@ -23,9 +23,9 @@ public class CrnRepository {
         this.crnServiceUrl = crnHost + CREATE_CRN_URL;
     }
 
-    public ServiceRequestRegistrationNumber getCrn() {
+    public ServiceRequestRegistrationNumber getCrn(String tenantId) {
         RequestInfoBody requestBody = buildRequestInfo();
-        return restTemplate.postForObject(crnServiceUrl, requestBody, ServiceRequestRegistrationNumber.class);
+        return restTemplate.postForObject(crnServiceUrl, requestBody, ServiceRequestRegistrationNumber.class,tenantId);
     }
 
     private RequestInfoBody buildRequestInfo() {

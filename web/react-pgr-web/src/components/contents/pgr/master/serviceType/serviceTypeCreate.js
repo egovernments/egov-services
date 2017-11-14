@@ -121,6 +121,7 @@ class ServiceTypeCreate extends Component {
            "serviceCode": this.props.createServiceType.serviceCode,
            "serviceName" :this.props.createServiceType.serviceName,
            "description" :this.props.createServiceType.description,
+           "localName" :this.props.createServiceType.localName,
            "active" :this.props.createServiceType.active !== undefined ? this.props.createServiceType.active : true,
            "type" :this.props.createServiceType.type,
            "keywords": [
@@ -629,6 +630,18 @@ class ServiceTypeCreate extends Component {
                                      <MenuItem value={item.id} key={index} primaryText={item.name} />
                                       ))}
                                       </SelectField>
+                              </Col>
+                              <Col xs={12} sm={4} md={3} lg={3}>
+                                  <TextField
+                                      className="custom-form-control-for-textfield"
+                                      fullWidth={true}
+                                      floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
+                                      floatingLabelText={translate('pgr.service.localName')}
+                                      value={createServiceType.localName? createServiceType.localName : ""}
+                                      errorText={fieldErrors.localName ? fieldErrors.localName : ""}
+                                      onChange={(e, value) => handleChange(value, "localName", false, '', 'Please use only numbers')}
+                                      id="localName"
+                                  />
                               </Col>
                               <Col xs={12} sm={4} md={3} lg={3}>
                                   <Checkbox

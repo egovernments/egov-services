@@ -91,6 +91,7 @@ class ServiceGroupCreate extends Component {
            "name" :this.props.createServiceGroup.name,
            "code" :this.props.createServiceGroup.code,
            "description" :this.props.createServiceGroup.description,
+           "localName" :this.props.createServiceGroup.localName,
            "tenantId": localStorage.getItem("tenantId"),
            "keyword": "complaint"
           }
@@ -191,6 +192,19 @@ class ServiceGroupCreate extends Component {
                                       onChange={(e) => handleChange(e, "description", false, /^.[^]{0,250}$/, translate('pgr.lbl.max')+' 250 '+translate('pgr.lbl.characters'))}
                                       multiLine={true}
                                       id="description"
+                                  />
+                              </Col>
+                              <Col xs={12} sm={4} md={3} lg={3}>
+                                  <TextField
+                                      className="custom-form-control-for-textfield"
+                                      fullWidth={true}
+                                      floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
+                                      floatingLabelText={translate("pgr.service.localName")}
+                                      value={createServiceGroup.localName? createServiceGroup.localName : ""}
+                                      errorText={fieldErrors.localName ? fieldErrors.localName : ""}
+                                      maxLength="250"
+                                      onChange={(e) => handleChange(e, "localName", false, /^.[^]{0,250}$/, translate('pgr.lbl.max')+' 250 '+translate('pgr.lbl.characters'))}
+                                      id="localName"
                                   />
                               </Col>
                           </Row>

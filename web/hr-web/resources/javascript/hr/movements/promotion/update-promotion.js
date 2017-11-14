@@ -53,12 +53,15 @@ class UpdateMovement extends React.Component {
         pNameList: [],
         userList: [],
         buttons: [],
-        owner:""
+        owner:"",
+        status:""
       }
 
       this.handleChange = this.handleChange.bind(this);
       this.handleProcess = this.handleProcess.bind(this);
       this.setInitialState = this.setInitialState.bind(this);
+      this.vacantPositionFun = this.vacantPositionFun.bind(this);
+      this.getUsersFun = this.getUsersFun.bind(this);
 
     }
 
@@ -76,7 +79,6 @@ class UpdateMovement extends React.Component {
         }
       }
 
-      $("input,select,textarea").prop("disabled", true);
 
       var type = getUrlVars()["type"],
         _this = this;
@@ -121,6 +123,33 @@ class UpdateMovement extends React.Component {
       });
 
 
+      $('#enquiryPassedDate, #effectiveFrom').datepicker({
+          format: 'dd/mm/yyyy',
+          autoclose:true,
+          defaultDate: ""
+      });
+      $('#enquiryPassedDate').val("");
+      $('#effectiveFrom').val("");
+      $('#enquiryPassedDate,#effectiveFrom ').on('changeDate', function(e) {
+
+
+            _this.setState({
+                  movement: {
+                      ..._this.state.movement,
+                      "enquiryPassedDate":$("#enquiryPassedDate").val(),
+                      "effectiveFrom":$("#effectiveFrom").val()
+                  }
+            });
+            if(_this.state.movement.designationAssigned&&_this.state.movement.departmentAssigned){
+              var _designation = _this.state.movement.designationAssigned;
+              var _department = _this.state.movement.departmentAssigned;
+              var _effectiveFrom = _this.state.movement.effectiveFrom;
+                _this.vacantPositionFun(_department,_designation,_effectiveFrom);
+            }
+
+      });
+
+
       commonApiPost("hr-employee-movement", "movements", "_search", {tenantId: tenantId,stateId: stateId}, function(err, res) {
         if (res) {
           if(res.Movement[0]){
@@ -129,7 +158,13 @@ class UpdateMovement extends React.Component {
             if(!Movement.enquiryPassedDate)
               Movement.enquiryPassedDate = "";
 
-
+            if(!Movement.workflowDetails){
+              Movement.workflowDetails = {
+                assignee: "",
+                department: "",
+                designation: ""
+              };
+            }
           getCommonMasterById("hr-employee","employees", res.Movement[0].employeeId, function(err, res) {
               if(res && res.Employee) {
                 var obj = res.Employee[0];
@@ -185,7 +220,8 @@ class UpdateMovement extends React.Component {
             _this.setState({
               ..._this.state,
               buttons: _btns.length ? _btns : [],
-              owner:process.owner.id
+              owner:process.owner.id,
+              status : process.status
             })
           }
         }
@@ -194,14 +230,141 @@ class UpdateMovement extends React.Component {
     }
 
 
-    handleChange(e, name) {
-      this.setState({
-        leaveSet: {
-          ...this.state.leaveSet,
-          [name]: e.target.value
+    componentDidUpdate(){
+          if(this.state.status && this.state.status != "Rejected"){
+            console.log("Disabled called",this.state.status);
+          $("input,select,textarea").prop("disabled", true);
         }
-      })
+      }
+
+    getUsersFun(departmentId,designationId){
+      var _this = this;
+      commonApiPost("hr-employee","employees","_search", {tenantId,departmentId, designationId}, function(err, res) {
+          if(res) {
+            _this.setState({
+                ..._this.state,
+                userList:res.Employee
+            })
+          }
+    })
+  }
+
+    vacantPositionFun(departmentId,designationId,effectiveFrom){
+      var _this = this;
+      commonApiPost("hr-masters", "vacantpositions", "_search", {
+          tenantId,
+          departmentId: departmentId,
+          designationId: designationId,
+          asOnDate: effectiveFrom
+      }, function(err, res) {
+          if (res) {
+            _this.setState({
+                movement:{
+                    ..._this.state.movement,
+                },pNameList:res.Position
+            })
+          }
+      });
+
     }
+
+    handleChange(e,name) {
+      var _this = this;
+      switch (name) {
+        case "designationAssigned":
+          if(this.state.movement.departmentAssigned&&this.state.movement.effectiveFrom){
+            var _department = this.state.movement.departmentAssigned;
+            var _date = this.state.movement.effectiveFrom;
+            _this.vacantPositionFun(_department,e.target.value,_date);
+          }
+          break;
+          case "departmentAssigned":
+          if(this.state.movement.designationAssigned&&this.state.movement.effectiveFrom){
+            var _designation = this.state.movement.designationAssigned;
+            var _date = this.state.movement.effectiveFrom;
+              _this.vacantPositionFun(e.target.value,_designation,_date);
+          }
+          break;
+          case "department":
+          _this.state.movement.workflowDetails.assignee = "";
+          if(this.state.movement.workflowDetails.designation){
+            var _designation = this.state.movement.workflowDetails.designation;
+            _this.getUsersFun(e.target.value,_designation);
+          }
+          break;
+          case "designation":
+          _this.state.movement.workflowDetails.assignee = "";
+          if(this.state.movement.workflowDetails.department){
+            var _department = this.state.movement.workflowDetails.department;
+            _this.getUsersFun(_department,e.target.value);
+          }
+          break;
+
+      }
+
+      if(name === "promotionBasis"){
+        this.setState({
+            movement:{
+                ...this.state.movement,
+                promotionBasis:{id:e.target.value}
+            }
+        })
+      }else if (name === "department") {
+
+        this.setState({
+            movement:{
+                ...this.state.movement,
+                workflowDetails:{
+                  ...this.state.movement.workflowDetails,
+                  department : e.target.value
+                }
+            }
+        })
+
+        // getCommonMasterById("hr-employee","employees", e.target.value, function(err, res) {
+        //           if(res && res.Employee && res.Employee[0] && res.Employee[0].userName) {
+        //             _this.setState({
+        //               revaluationSet: {
+        //                 ..._this.state.revaluationSet,
+        //                 reevaluatedBy: res.Employee[0].userName
+        //               }
+        //             })
+        //           }
+        //         })
+
+      }else if (name === "designation") {
+        this.setState({
+            movement:{
+                ...this.state.movement,
+                workflowDetails:{
+                  ...this.state.movement.workflowDetails,
+                  designation : e.target.value
+                }
+            }
+        })
+
+      }else if (name === "assignee") {
+        this.setState({
+            movement:{
+                ...this.state.movement,
+                workflowDetails:{
+                  ...this.state.movement.workflowDetails,
+                  assignee : e.target.value
+                }
+            }
+        })
+
+      }else {
+        this.setState({
+            movement:{
+                ...this.state.movement,
+                [name]:e.target.value
+            }
+        })
+      }
+
+    }
+
 
 
     close() {
@@ -211,10 +374,11 @@ class UpdateMovement extends React.Component {
 
     handleProcess(e) {
       e.preventDefault();
+      if($('#update-promotion').valid()){
       var ID = e.target.id, _this = this;
       var stateId = getUrlVars()["stateId"];
       var tempInfo = Object.assign({}, _this.state.movement);
-      tempInfo.workflowDetails = {"action" : ID, "assignee": _this.state.owner};
+      tempInfo.workflowDetails = {"action" : ID};
 
       var body = {
         "RequestInfo": requestInfo,
@@ -232,18 +396,36 @@ class UpdateMovement extends React.Component {
           'auth-token': authToken
         },
         success: function(res) {
+          console.log("res",res.Movement[0].workflowDetails.assignee);
+          var employee,designation;
+          commonApiPost("hr-employee","employees","_search",{tenantId,positionId:res.Movement[0].workflowDetails.assignee }, function(err, res2) {
+              if(res2 && res2.Employee && res2.Employee[0])
+                employee = res2.Employee[0];
+
+              employee.assignments.forEach(function(item) {
+                                      if(item.isPrimary)
+                                        designation = item.designation;
+                                    });
+              var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList,designation);
+
+          if(ID === "Submit")
+          window.location.href=`app/hr/movements/ack-page.html?type=PromotionSubmit&owner=${ownerDetails}`;
           if(ID === "Approve")
-          showSuccess("Successfully Approved Application");
+          window.location.href=`app/hr/movements/ack-page.html?type=PromotionApprove&owner=${ownerDetails}`;
           if(ID === "Cancel")
-          showSuccess("Successfully Cancelled Application");
+          window.location.href=`app/hr/movements/ack-page.html?type=PromotionCancel&owner=${ownerDetails}`;
           if(ID === "Reject")
-          showSuccess("Successfully Rejected Application");
+          window.location.href=`app/hr/movements/ack-page.html?type=PromotionReject&owner=${ownerDetails}`;
+        });
         },
         error: function(err) {
           showError(err);
 
         }
       });
+    }else {
+      showError("Please fill all required feilds");
+    }
 
     }
     render() {
@@ -307,13 +489,84 @@ class UpdateMovement extends React.Component {
             }
 
 
+            const renderWorkflowDetails=function(status) {
 
+              if(status === "Rejected"){
+            return(
+              <div>
+              <br/>
+              <div className="form-section">
+                  <div className="row">
+                    <div className="col-md-8 col-sm-8">
+                      <h3 className="categoryType">Workflow Details </h3>
+                    </div>
+                  </div>
+              <div className="row">
+                <div className="col-sm-6">
+                    <div className="row">
+                        <div className="col-sm-6 label-text">
+                          <label htmlFor="">Department <span>*</span></label>
+                        </div>
+                        <div className="col-sm-6">
+                          <div className="styled-select">
+                              <select id="department" name="department" value={workflowDetails.department}
+                                   onChange={(e)=>{  handleChange(e,"department") }} required>
+                                   <option value="">Select Department</option>
+                                   {renderOption(_this.state.departmentList)}
+                              </select>
+                           </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div className="col-sm-6">
+                      <div className="row">
+                          <div className="col-sm-6 label-text">
+                            <label htmlFor="">Designation <span>*</span></label>
+                          </div>
+                          <div className="col-sm-6">
+                            <div className="styled-select">
+                                <select id="designation" name="designation" value={workflowDetails.designation}
+                                    onChange={(e)=>{  handleChange(e,"designation") }} required>
+                                    <option value="">Select Designation</option>
+                                    {renderOption(_this.state.designationList)}//TODO: get designation based on departments
+                               </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-sm-6">
+                        <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label htmlFor="">User Name <span>*</span></label>
+                            </div>
+                            <div className="col-sm-6">
+                              <div className="styled-select">
+                                <select id="assignee" name="assignee" value={workflowDetails.assignee}
+                                  onChange={(e)=>{  handleChange(e,"assignee") }}required>
+                                  <option value="">Select User</option>
+                                  {renderOptionForUser(_this.state.userList)}
+                               </select>
+                               </div>
+                            </div>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+                </div>
+            );
+
+            }
+
+
+            }
 
 
     return (
 
       <div>
-        <form onSubmit={(e)=> {addOrUpdate(e)}}>
+        <form id = "update-promotion">
         <div className="form-section">
             <div className="row">
               <div className="col-md-8 col-sm-8">
@@ -586,7 +839,7 @@ class UpdateMovement extends React.Component {
               </div>
           </div>
 
-
+            {renderWorkflowDetails(this.state.status)}
 
 
           <br/>

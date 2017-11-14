@@ -281,7 +281,9 @@ public class AdvocateService {
 
 				if (reqAdvocate.getIsTerminate() == null)
 					reqAdvocate.setIsTerminate(false);
-
+				
+				reqAdvocate.setIsIndividual(agency.getIsIndividual());
+				
 				if (!reqAdvocate.getIsIndividual()) {
 
 					reqAdvocate.setAgencyName(agency.getName());
@@ -300,6 +302,7 @@ public class AdvocateService {
 							createAgencyRequest.getRequestInfo(), propertiesManager.getAdvocateUlbFormat(),
 							propertiesManager.getAdvocateUlbName(), Boolean.FALSE, null, Boolean.FALSE);
 					reqAdvocate.setCode(advocateCode);
+					reqAdvocate.setAgencyCode(agency.getCode());
 					createAdvocates.add(reqAdvocate);
 					break;
 				} else {

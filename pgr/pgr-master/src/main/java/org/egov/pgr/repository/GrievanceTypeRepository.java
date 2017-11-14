@@ -78,7 +78,7 @@ public class GrievanceTypeRepository {
         final Object[] object = new Object[]{serviceRequest.getService().getServiceName(),
                 serviceRequest.getService().getServiceCode(), serviceRequest.getService().getDescription(), active, serviceRequest.getService().getSlaHours(),
                 serviceRequest.getService().getTenantId(), serviceRequest.getService().getType(),
-                serviceRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()), serviceRequest.getService().getCategory(), days
+                serviceRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()), serviceRequest.getService().getCategory(), days, serviceRequest.getService().getLocalName()
         };
         jdbcTemplate.update(complaintInsert, object);
 
@@ -146,7 +146,7 @@ public class GrievanceTypeRepository {
         final GrievanceType grievanceType = serviceRequest.getService();
         final Object[] obj = new Object[]{grievanceType.getServiceName(),
                 grievanceType.getDescription(), grievanceType.getCategory(), grievanceType.getSlaHours(), grievanceType.getActive(), grievanceType.isHasFinancialImpact(), grievanceType.getDays(), serviceRequest.getRequestInfo().getUserInfo().getId(),
-                new Date(new java.util.Date().getTime()), grievanceType.getServiceCode(), grievanceType.getTenantId()};
+                new Date(new java.util.Date().getTime()), grievanceType.getLocalName(), grievanceType.getServiceCode(), grievanceType.getTenantId()};
         jdbcTemplate.update(serviceTypeUpdate, obj);
         final String valueRemove = GrievanceTypeQueryBuilder.removeValueQuery();
         final Object[] objValueRemove = new Object[]{grievanceType.getServiceCode(), grievanceType.getTenantId()};

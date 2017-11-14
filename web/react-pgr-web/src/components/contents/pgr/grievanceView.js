@@ -24,6 +24,7 @@ const constants = require('../../common/constants');
 var currentThis;
 
 class grievanceView extends Component{
+  static isPrivate = false; 
   constructor(props){
     super(props);
     this.state={

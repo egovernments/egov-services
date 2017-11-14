@@ -51,7 +51,7 @@ public class ServiceGroupQueryBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceGroupQueryBuilder.class);
 
-    private static final String BASE_QUERY = "SELECT id, code, name, description,active, tenantId, keyword "
+    private static final String BASE_QUERY = "SELECT id, code, name, description,active, tenantId, keyword, localname "
             + " FROM egpgr_complainttype_category ";
 
     @SuppressWarnings("rawtypes")
@@ -124,13 +124,13 @@ public class ServiceGroupQueryBuilder {
     }
 
     public String insertServiceGroupQuery() {
-        return "INSERT INTO egpgr_complainttype_category(id, code, name,description,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid,keyword) values "
-                + "(NEXTVAL('seq_egpgr_complainttype_category'),?,?,?,?,?,?,?,?,?,?)";
+        return "INSERT INTO egpgr_complainttype_category(id, code, name,description,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid,keyword,localname) values "
+                + "(NEXTVAL('seq_egpgr_complainttype_category'),?,?,?,?,?,?,?,?,?,?,?)";
     }
 
     public String updateServiceGroupQuery() {
         return "UPDATE egpgr_complainttype_category SET name = ?, description = ?,active = ?, createdby = ?, lastmodifiedby = ?, "
-                + "createddate = ?, lastmodifieddate = ?, tenantid = ?, keyword = ? where code = ?";
+                + "createddate = ?, lastmodifieddate = ?, tenantid = ?, keyword = ?, localname = ? where code = ?";
     }
 
     public static String checkIfAvailable() {

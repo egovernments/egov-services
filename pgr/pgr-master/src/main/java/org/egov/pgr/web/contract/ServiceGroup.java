@@ -34,4 +34,6 @@ public class ServiceGroup {
 	@NotNull
 	private String tenantId;
 
+	private String localName;
+
 }

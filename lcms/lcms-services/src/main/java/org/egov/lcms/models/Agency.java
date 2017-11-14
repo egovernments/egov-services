@@ -19,14 +19,12 @@ import lombok.Setter;
 public class Agency {
 	
 	@Size(min = 1, max = 100)
-	@NotNull
 	@JsonProperty("name")
 	private String name ;
 
 	@JsonProperty("code")
 	private String code;
 	
-	@NotNull
 	@JsonProperty("agencyAddress")
 	private String agencyAddress;
 
@@ -100,7 +98,6 @@ public class Agency {
 	@JsonProperty("tenantId")
 	private String tenantId;
 
-	@NotNull
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
 }

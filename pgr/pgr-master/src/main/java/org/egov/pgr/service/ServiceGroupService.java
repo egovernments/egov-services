@@ -152,6 +152,7 @@ public class ServiceGroupService {
             group.setId(modelList.get(i).getId());
             group.setName(modelList.get(i).getName());
             group.setTenantId(modelList.get(i).getTenantId());
+            group.setLocalName(modelList.get(i).getLocalName());
             contractList.add(group);
         }
         return contractList;

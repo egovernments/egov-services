@@ -102,6 +102,8 @@ public class GrievanceType {
     private boolean hasFinancialImpact;
 
     private Boolean days;
+
+    private String localName;
     
 }
 

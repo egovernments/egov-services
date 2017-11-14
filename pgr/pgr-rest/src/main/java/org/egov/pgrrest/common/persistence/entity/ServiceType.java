@@ -62,6 +62,9 @@ public class ServiceType extends AbstractAuditable<Long> {
 	@Column(name = "tenantid")
 	private String tenantId;
 
+    @Column(name = "localname")
+    private String localName;
+
 	@Override
 	public Long getId() {
 		return id;

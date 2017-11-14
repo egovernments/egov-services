@@ -392,7 +392,7 @@ serviceMaps:
           basePath: $.priceLists.*
           jsonMaps:
             - jsonPath: $.priceLists.*.id
-            - jsonPath: $.priceLists.*.supplier.id
+            - jsonPath: $.priceLists.*.supplier.code
             - jsonPath: $.priceLists.*.rateType
             - jsonPath: $.priceLists.*.rateContractNumber
             - jsonPath: $.priceLists.*.rateContractDate
@@ -425,7 +425,7 @@ serviceMaps:
             - jsonPath: $.priceLists.*.priceListDetails.*.toDate
             - jsonPath: $.priceLists.*.priceListDetails.*.ratePerUnit
             - jsonPath: $.priceLists.*.priceListDetails.*.quantity
-            - jsonPath: $.priceLists.*.priceListDetails.*.uom.id
+            - jsonPath: $.priceLists.*.priceListDetails.*.uom.code
             - jsonPath: $.priceLists.*.priceListDetails.*.active
               dbType: BOOLEAN
             - jsonPath: $.priceLists.*.priceListDetails.*.tenantId

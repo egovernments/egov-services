@@ -42,4 +42,7 @@ public class ServiceTypeCategory extends AbstractPersistable<Long> {
     @Column(name = "tenantid")
     private String tenantId;
 
+    @Column(name = "localname")
+    private String localName;
+
 }

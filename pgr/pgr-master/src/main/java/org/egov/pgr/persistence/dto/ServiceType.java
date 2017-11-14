@@ -31,6 +31,7 @@ public class ServiceType {
     private Date createdDate;
     private Long lastModifiedBy;
     private Date lastModifiedDate;
+    private String localname;
 
     public org.egov.pgr.domain.model.ServiceType toDomain(){
         return org.egov.pgr.domain.model.ServiceType.builder()
@@ -48,6 +49,7 @@ public class ServiceType {
                 .isDay(isday)
                 .tenantId(tenantId)
                 .keywords(keywords)
+                .localName(localname)
                 .build();
     }
 

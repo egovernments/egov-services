@@ -554,5 +554,17 @@ public class PropertiesManager {
 	
 	@Value("${egov.personaldetails.create}")
 	private String createPersonalDetailsTopic;
+	
+	@Value("${egov.agencyaddress.error.code}")
+	private String agencyAddressErrorCode;
+	
+	@Value("${egov.agencyaddress.error.msg}")
+	private String agencyAddressErrorMsg;
+	
+	@Value("${egov.agencyname.error.code}")
+	private String agencyNameErrorCode;
+	
+	@Value("${egov.agencyname.error.msg}")
+	private String agencyNameErrorMsg;
 }
 

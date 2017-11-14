@@ -57,6 +57,12 @@ public class AdvocateService {
 
 				if (agency.getIsTerminate() == null)
 					agency.setIsTerminate(false);
+				
+				if(agency.getAgencyAddress() == null)
+					throw new CustomException(propertiesManager.getAgencyAddressErrorCode(),propertiesManager.getAgencyAddressErrorMsg());
+				
+				if(agency.getName() == null)
+					throw new CustomException(propertiesManager.getAgencyNameErrorCode(), propertiesManager.getAgencyNameErrorMsg());
 
 				String agencyCode = uniqueCodeGeneration.getUniqueCode(agency.getTenantId(), requestInfo,
 						propertiesManager.getAgencyUlbFormat(), propertiesManager.getAgencyUlbName(), Boolean.FALSE,

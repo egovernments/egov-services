@@ -1,7 +1,7 @@
 var dat = {
 	"asset.transaction": {
 		"numCols": 12/3,
-		"url": "/asset-services-maha/assets/revaluation/_create",
+		"url": "/asset-services-maha/assets/_search",
     "tenantIdRequired": true,
     "objectName": "Revaluation",
     "useTimestamp": true,

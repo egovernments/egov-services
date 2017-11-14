@@ -53,7 +53,6 @@ public class AssetQueryBuilder {
 	private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
 			final AssetCriteria searchAsset) {
 
-		preparedStatementValues.add(searchAsset.getTenantId());
 		selectQuery.append("WHERE ASSET.tenantId = ?");
 		preparedStatementValues.add(searchAsset.getTenantId());
 

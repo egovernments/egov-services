@@ -123,35 +123,32 @@ public class ReportQueryBuilder {
 			 StringBuffer finalString = new StringBuffer();
 			 
 			 for (int i = 0; i < mdmsArray.length(); i++) {
-				   JSONObject obj = mdmsArray.getJSONObject(i);
-				   Iterator j = obj.keys();
-				   StringBuffer sb = new StringBuffer();
-				   sb.append("(");
-				   int index = 0;
-				   while (j.hasNext()){
-					    
-					    String[] jsonKeys = es.getKeyOrder().split(",");
-					    if(index == jsonKeys.length){
-					    	index = 0;
-					    }
-					    String key = (String) j.next();
-				        String value = String.valueOf(obj.get(jsonKeys[index]));
-				        index++;
-					    sb.append("'"+value+"'");
-				        if((j.hasNext())) {
-				        sb.append(",");
-				        }
-				    }
-				   sb.append(")");
-				   if(i != (mdmsArray.length()-1)){
-					   sb.append(",");
-				   }
-				   
-			       
-			       finalString.append(sb);
-			       System.out.println(finalString);
-			       
-			    }
+					JSONObject obj = mdmsArray.getJSONObject(i);
+
+					StringBuffer sb = new StringBuffer();
+					sb.append("(");
+
+					String[] jsonKeys = es.getKeyOrder().split(",");
+
+					for (int k=0; k<jsonKeys.length; k++) {
+
+						String value = String.valueOf(obj.get(jsonKeys[k]));
+
+
+						sb.append("'" + value + "'");
+						if ((k != jsonKeys.length-1)) {
+							sb.append(",");
+						}
+					}
+					sb.append(")");
+					if (i != (mdmsArray.length() - 1)) {
+						sb.append(",");
+					}
+
+					finalString.append(sb);
+					System.out.println(finalString);
+
+				}
 			 
 		       
 			 replacetableQuery = replacetableQuery.replace(es.getTableName(), finalString.toString());

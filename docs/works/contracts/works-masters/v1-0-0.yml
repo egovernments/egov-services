@@ -78,6 +78,12 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of schedule category code of Schedule Of Rate
+        - name: description
+          in: query
+          type: string
+          required: false
+          allowEmptyValue: true
+          description: Description of Schedule Of Rate. The search result should return irrespective of case and partial description matching.
         - name: validSORRateDate
           in: query
           description: This validSORRateDate is a Epoch time of Date, this will be compared between the available from and to values of 'SORRate'.
@@ -189,23 +195,27 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Ids of Estimate Template to get the Estimate Templates.
-        - name: code
+        - name: codes
           in: query
-          type: string
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
           required: false
           allowEmptyValue: true
-          description: Code of the Estimate Template
+          description: Comma separated list of codes of Estimate Template
         - name: name
           in: query
           type: string
           required: false
           allowEmptyValue: true
-          description: name of the Estimate Template
+          description: Name of the Estimate Template. The search result should return irrespective of case and partial name matching.
         - name: active
           in: query
           type: boolean
           description: If the value is True then get only active estimate templates. If boolean value is false then get inactive estimate templates.
-        - name: typeOfWork
+        - name: typeOfWorks
           in: query
           type: string
           format: multiValueList
@@ -213,7 +223,7 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of the Type of work codes for which Estimate Template belongs to
-        - name: subTypeOfWork
+        - name: subTypeOfWorks
           in: query
           type: string
           format: multiValueList
@@ -319,23 +329,27 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Ids of Milestone Template to get the Milestone Templates.
-        - name: templatecode
+        - name: codes
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of codes of Milestone Template to get the Milestone Templates.
+        - name: name
           in: query
           type: string
           required: false
           allowEmptyValue: true
-          description: Code of the Milestone Template
-        - name: templatename
-          in: query
-          type: string
-          required: false
-          allowEmptyValue: true
-          description: name of the Milestone Template
+          description: Name of the Milestone Template. The search result should return irrespective of case and partial description matching.
         - name: active
           in: query
           type: boolean
           description: If the value is True then get only active milestone templates. If boolean value is false then get inactive milestone templates.
-        - name: typeOfWork
+        - name: typeOfWorks
           in: query
           type: string
           format: multiValueList
@@ -343,7 +357,7 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of the Type of work codes for which Milestone Template belongs to
-        - name: subTypeOfWork
+        - name: subTypeOfWorks
           in: query
           type: string
           format: multiValueList
@@ -456,7 +470,7 @@ paths:
           type: string
           allowEmptyValue: true
           format: autoComplete
-        - name: code
+        - name: codes
           in: query
           type: array
           items:
@@ -521,6 +535,8 @@ paths:
       description: |
           To create new Contractor in the system. API supports bulk creation with max limit as defined in the Contractor Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Contractor, please pass array with one Contractor object.
           
+          The Contractor is created with 'Active' status by default if status is not being passed to create API in the request.
+          
       parameters:
         - name: ContractorRequest
           in: body
@@ -550,7 +566,7 @@ paths:
       description: |
           To update existing Contractor in the system. API supports bulk updation with max limit as defined in the Contractor Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Contractor, please pass array with one Contractor object.
           
-          In updade fields can be modified based on confguration defined in the system. The contractor code is now allowed to modify.
+          In update fields can be modified based on configuration defined in the system. The contractor code is not allowed to modify. Status can be updated in the modify.
           
       parameters:
         - name: ContractorRequest
@@ -614,6 +630,12 @@ paths:
           allowEmptyValue: true
           description: remarks type of the remarks.
           type: string
+        - name: remarksDescription
+          in: query
+          type: string
+          required: false
+          allowEmptyValue: true
+          description: Remarks Condition
       responses:
         200:
           description: Remarks(s) Retrieved Successfully
@@ -822,7 +844,4 @@ tags:
     description: APIs required for Contractor.
   - name: Remarks
     description: APIs required for Remarks.  
-
-
-
 

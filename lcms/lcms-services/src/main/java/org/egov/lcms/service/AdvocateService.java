@@ -296,13 +296,14 @@ public class AdvocateService {
 
 				reqAdvocate.setName(name);
 				reqAdvocate.setAgencyCode(agency.getCode());
+				reqAdvocate.setTenantId(agency.getTenantId());
+				reqAdvocate.setAgencyCode(agency.getCode());
 
 				if (reqAdvocate.getCode() == null) {
 					String advocateCode = uniqueCodeGeneration.getUniqueCode(agency.getTenantId(),
 							createAgencyRequest.getRequestInfo(), propertiesManager.getAdvocateUlbFormat(),
 							propertiesManager.getAdvocateUlbName(), Boolean.FALSE, null, Boolean.FALSE);
 					reqAdvocate.setCode(advocateCode);
-					reqAdvocate.setAgencyCode(agency.getCode());
 					createAdvocates.add(reqAdvocate);
 					break;
 				} else {

@@ -9,7 +9,8 @@ let getFieldsFromInnerObject = function(fields, properties, module, jPath, isArr
 
     for (let key in properties) {
         if (["id", "tenantId", "auditDetails", "assigner"].indexOf(key) > -1) continue;
-
+        debugger;
+        console.log("i start from here "+ JSON.stringify(properties[key].properties));
         if(properties[key].properties) {
             getFieldsFromInnerObject(fields, properties[key].properties, module, (isArray ? (jPath + "[0]") : jPath) + "." + key, false, (properties[key].properties.required || []), localeFields);
         } else if(properties[key].item && properties[key].item.properties) {

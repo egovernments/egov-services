@@ -115,7 +115,7 @@ class UiSelectField extends Component {
 
    renderSelect =(item) => {
       let {dropDownData}=this.props;
-      console.log(dropDownData[item.jsonPath], this.props.getVal(item.jsonPath));
+      // console.log(dropDownData[item.jsonPath], this.props.getVal(item.jsonPath));
       switch (this.props.ui) {
          case 'google':
             return (

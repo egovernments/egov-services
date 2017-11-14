@@ -240,7 +240,7 @@ var dat ={
                 "depedants": [{
                   "jsonPath": "collectionPoints[0].location.block",
                   "type": "dropDown",
-                  "pattern": "egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId={collectionPoints[0].location.code}|$.Boundary.*.id|$.Boundary.*.name"
+                  "pattern": "egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId={collectionPoints[0].location.zone}|$.Boundary.*.id|$.Boundary.*.name"
                 }]
             },
             {  

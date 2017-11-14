@@ -1,7 +1,3 @@
-var insuranceDetails ={
-  
-}
-
 var dat = {
   "swm.search": {
     "numCols": 4,
@@ -388,7 +384,7 @@ var dat = {
             "maxLength": 128,
             "minLength": 1,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..code|$..code"
+            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..code|$..name"
           },
           {
             "name": "regNumber",
@@ -453,7 +449,7 @@ var dat = {
             "patternErrorMsg": ""
           },
           {
-            "name": "code",
+            "name": "fueltype",
             "jsonPath": "vehicles[0].fuelType.code",
             "label": "swm.vehicles.create.fuelType",
             "type": "singleValueList",
@@ -462,7 +458,7 @@ var dat = {
             "maxLength": 128,
             "minLength": 1,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=FuelType|$..code|$..code"
+            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=FuelType|$..code|$..name"
           }
         ]
       },
@@ -541,7 +537,7 @@ var dat = {
           },
           {
             "name": "vendorname",
-            "jsonPath": "vehicles[0].vendor.name",
+            "jsonPath": "vehicles[0].vendor.vendorNo",
             "label": "swm.vehicles.create.vendor",
             "type": "singleValueList",
             "isRequired": true,
@@ -550,7 +546,7 @@ var dat = {
             "maxLength": 256,
             "minLength": 1,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vendor|$..name|$..name"
+            "url": "swm-services/vendors/_search?|$.vendors.*.vendorNo|$.vendors.*.name"
           }
         ]
       },
@@ -824,7 +820,7 @@ var dat = {
             "maxLength": 256,
             "minLength": 1,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vendor|$..name|$..name"
+            "url": "swm-services/vendor/_search?|$..name|$..name"
           }
         ]
       },

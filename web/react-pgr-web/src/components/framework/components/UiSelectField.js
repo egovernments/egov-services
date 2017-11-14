@@ -43,6 +43,10 @@ class UiSelectField extends Component {
                let queries = splitArray[1].split("|");
                let keys=jp.query(response, queries[1]);
                let values=jp.query(response, queries[2]);
+                let otherPair=[];
+               if(item.hasOwnProperty("isKeyOtherPair") && item.isKeyOtherPair){
+                   otherPair=jp.query(response, `$..${item.isKeyOtherPair}`);
+               }
 
                let others=[];
                if(queries.length>3){
@@ -56,7 +60,10 @@ class UiSelectField extends Component {
                   let obj={};
                   obj["key"]= item.convertToString ? keys[k].toString() : (item.convertToNumber ? Number(keys[k]) : keys[k]);
                   obj["value"]= values[k];
-
+                    if (item.hasOwnProperty("isKeyOtherPair") && item.isKeyOtherPair) {
+                        otherPair[k]=(otherPair[k])?otherPair[k]:"";
+                     obj["value"]=keys[k]+"-"+otherPair[k]
+                     }
                   if(others && others.length>0)
                   {
                     let otherItemDatas=[];
@@ -65,7 +72,8 @@ class UiSelectField extends Component {
                     }
                     obj['others'] = otherItemDatas;
                   }
-
+                  
+                  
                   if (item.hasOwnProperty("isKeyValuePair") && item.isKeyValuePair) {
                      obj["value"]=keys[k]+"-"+values[k]
                   }
@@ -119,7 +127,7 @@ class UiSelectField extends Component {
                      hintText="Please Select"
                      floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
                      value={value}
-                     onChange={(event, key, value) =>{
+                     onChange={(event, key, value) =>{debugger;
                         this.props.handler({target: {value: value}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg, item.expression, item.expressionMsg)
                      }}
                      disabled={item.isDisabled}

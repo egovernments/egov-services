@@ -165,6 +165,125 @@ var dat = {
             patternErrMsg: ""
           }
         ]
+      },{
+        name: "advocateEmpanelmentDetails",
+        label: "advocates.create.group.title.empanelmentDetails",
+        fields: [
+          {
+            name: "dateOfEmpanelment",
+            jsonPath: "dateOfEmpanelment",
+            label: "advocates.create.dateOfEmpanelment",
+            pattern: "",
+            type: "datePicker",
+            isRequired: true,
+            isDisabled: false,
+            requiredErrMsg: "",
+            patternErrMsg: ""
+          },
+          {
+            name: "standingCommiteDecisionDate",
+            jsonPath: "standingCommitteeDecisionDate",
+            label: "advocates.create.standingCommiteDecisionDate",
+            pattern: "",
+            type: "datePicker",
+            isRequired: true,
+            isDisabled: false,
+            requiredErrMsg: "",
+            patternErrMsg: ""
+          }, {
+            name: "newsPaperAdvertismentDate",
+            jsonPath: "newsPaperAdvertismentDate",
+            label: "advocates.create.newsPaperAdvertismentDate",
+            pattern: "",
+            type: "datePicker",
+            isRequired: true,
+            isDisabled: false,
+            requiredErrMsg: "",
+            patternErrMsg: ""
+          },
+          {
+            name: "empanelmentFromDate",
+            jsonPath: "empanelmentFromDate",
+            label: "advocates.create.empanelmentFromDate",
+            pattern: "",
+            type: "datePicker",
+            isRequired: true,
+            isDisabled: false,
+            requiredErrMsg: "",
+            patternErrMsg: ""
+          },
+          {
+            name: "empanelementToDate",
+            jsonPath: "empanelmentToDate",
+            label: "advocates.create.empanelementToDate",
+            pattern: "",
+            type: "datePicker",
+            isRequired: true,
+            isDisabled: false,
+            requiredErrMsg: "",
+            patternErrMsg: ""
+          }
+        ]
+      }, {
+        name: "bankDetails",
+        label: "advocates.create.group.title.bankDetails",
+        fields: [
+          {
+            name: "bankName",
+            jsonPath: "bankName",
+            label: "advocates.create.bankName",
+            pattern: "",
+            type: "text",
+            isRequired: true,
+            isDisabled: false,
+            requiredErrMsg: "",
+            patternErrMsg: ""
+          },
+          {
+            name: "bankBranch",
+            jsonPath: "bankBranch",
+            label: "advocates.create.bankBranch",
+            pattern: "",
+            type: "text",
+            isRequired: true,
+            isDisabled: false,
+            requiredErrMsg: "",
+            patternErrMsg: ""
+          },
+          {
+            name: "bankAcc",
+            jsonPath: "bankAccountNo",
+            label: "advocates.create.bankAcc",
+            pattern: "",
+            type: "number",
+            isRequired: true,
+            isDisabled: false,
+            requiredErrMsg: "",
+            patternErrMsg: ""
+          },
+          {
+            name: "IFSCCode",
+            jsonPath: "ifscCode",
+            label: "advocates.create.IFSCCode",
+            pattern: "",
+            type: "text",
+            isRequired: true,
+            isDisabled: false,
+            requiredErrMsg: "",
+            patternErrMsg: ""
+          },
+          {
+            name: "MICRCode",
+            jsonPath: "micr",
+            label: "advocates.create.MICRCode",
+            pattern: "",
+            type: "text",
+            isRequired: true,
+            isDisabled: false,
+            requiredErrMsg: "",
+            patternErrMsg: ""
+          }
+        ]
       }
     ]
   }

@@ -223,13 +223,23 @@ var dat = {
             tableList: {
               header: [
                 {
-                  label: "legal.create.advocateName"
+                  label: "legal.create.advocateName",
+                 style:{
+                     width:"700px"
+                  }
+
                 },
                 {
-                  label: "legal.create.advocateAssignDate"
+                  label: "legal.create.advocateAssignDate",
+                  style:{
+                     width:"300px"
+                  }
                 },
                 {
-                  label: "legal.create.advocateFee"
+                  label: "legal.create.advocateFee",
+                  style:{
+                     width:"200px"
+                  }
                 }
               ],
               values: [
@@ -239,6 +249,7 @@ var dat = {
                   type: "singleValueList",
                   jsonPath: "cases[0].advocateDetails[0].advocate.code",
                   isRequired: true,
+                  isKeyOtherPair:"agencyName",
                   isDisabled: false,
                   url:
                     "/lcms-services/legalcase/advocate/_search?|$..code|$..name"

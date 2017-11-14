@@ -2283,7 +2283,7 @@ var localization_EN_Data = {
 "advocates.create.reasonOfTerminationOrDeactivation":"Reason Of Termination/Deactivation",
 "advocates.create.terminationDate":"Termination Date",
 "advocates.create.inActivationDate":"InActivation Date",
-"advocates.create.group.title.agencyDetails":"Agency Details",
+"advocates.create.group.title.agencyDetails":"Agency Owner Details",
 
 "advocatepayment.create.group.title.AdvocatePaymentDetails": "Advocate Request For Payment",
 "advocatepayment.create.advocateName":"Advocate Name",
@@ -2719,7 +2719,10 @@ var localization_EN_Data = {
  "legal.vakalatnama.create.primaryAdvocate":"Primary Advocate",
   "legal.vakalatnama.create.additionalAdvocate":"Additional Advocate",
     "legal.advocates.create.additionalOwnerWindow":"Additional Owner",
-  "legal.advocates.create.additionalAdvocateWindow":"Additional Advocate"
+  "legal.advocates.create.additionalAdvocateWindow":"Additional Advocate",
+    "legal.advocates.create.additionalAdvocateWindow":"Additional Advocate",
+  "advocates.create.group.title.orgEmpanelmentDetails":"Agency Details",
+  "advocates.create.agencyAddress":"Agency Address",
 
 
 
@@ -4328,7 +4331,7 @@ var localization_MR_Data = {
 "advocates.create.reasonOfTerminationOrDeactivation":"Reason Of Termination/Deactivation-marathi",
 "advocates.create.terminationDate":"Termination Date-marathi",
 "advocates.create.inActivationDate":"InActivation Date-marathi",
-"advocates.create.group.title.agencyDetails":"Agency Details-marathi",
+"advocates.create.group.title.agencyDetails":"Agency Owner Details-marathi",
 
 
 "opinion.create.group.title.OpinionRequest": "Opinion Request-Marathi",
@@ -4727,6 +4730,9 @@ var localization_MR_Data = {
  "referenceEvidence.create.description":"Description-marathi",
   "legal.vakalatnama.create.primaryAdvocate":"Primary Advocate-marathi",
   "legal.vakalatnama.create.additionalAdvocate":"Additional Advocate-marathi",
+   "legal.advocates.create.additionalAdvocateWindow":"Additional Advocate-marathi",
+  "advocates.create.group.title.orgEmpanelmentDetails":"Agency Details-marathi",
+  "advocates.create.agencyAddress":"Agency Address-marathi",
 }
 
 export function translate(locale_text) {

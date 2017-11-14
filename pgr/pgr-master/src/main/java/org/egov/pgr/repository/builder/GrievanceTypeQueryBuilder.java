@@ -54,7 +54,7 @@ public class GrievanceTypeQueryBuilder {
     private static final Logger logger = LoggerFactory.getLogger(GrievanceTypeQueryBuilder.class);
 
     private static final String BASE_QUERY = "select comp.id , comp.tenantid , comp.code as serviceCode, comp.name as serviceName, comp.description, comp.category, comp.slahours, "
-            + " comp.hasfinancialimpact, comp.isactive as active, comp.isday as days from egpgr_complainttype comp where comp.code in (select servicecode from servicetype_keyword where keyword = 'complaint')";
+            + " comp.hasfinancialimpact, comp.isactive as active, comp.isday as days, comp.localname from egpgr_complainttype comp where comp.code in (select servicecode from servicetype_keyword where keyword = 'complaint')";
 
     @SuppressWarnings("rawtypes")
     public String getQuery(final ServiceGetRequest serviceGetRequest, final List preparedStatementValues) {
@@ -168,8 +168,8 @@ public class GrievanceTypeQueryBuilder {
     }
 
     public String insertComplaintTypeQuery() {
-        return "INSERT into egpgr_complainttype (id, name, code, description, isactive, slahours, tenantid, type, createdby, createddate, category, isday) "
-                + "values (NEXTVAL('seq_egpgr_complainttype'),?,?,?,?,?,?,?,?,?,?,?)";
+        return "INSERT into egpgr_complainttype (id, name, code, description, isactive, slahours, tenantid, type, createdby, createddate, category, isday, localname) "
+                + "values (NEXTVAL('seq_egpgr_complainttype'),?,?,?,?,?,?,?,?,?,?,?,?)";
 
     }
 
@@ -201,7 +201,7 @@ public class GrievanceTypeQueryBuilder {
 
     public static String updateServiceTypeQuery() {
         return "UPDATE egpgr_complainttype SET name = ?, description = ?, category = ?, slaHours = ?,"
-                + "isactive = ?, hasfinancialimpact = ?, isday = ?, lastmodifiedby = ?, lastmodifieddate = ? where code = ? and tenantid = ? ";
+                + "isactive = ?, hasfinancialimpact = ?, isday = ?, lastmodifiedby = ?, lastmodifieddate = ?, localname = ? where code = ? and tenantid = ? ";
     }
 
     public static String removeAttributeQuery() {

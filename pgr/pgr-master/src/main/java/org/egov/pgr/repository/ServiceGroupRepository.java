@@ -88,7 +88,7 @@ public class ServiceGroupRepository {
                 Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
                 Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
                 new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
-                serviceGroup.getTenantId(), serviceGroup.getKeyword()};
+                serviceGroup.getTenantId(), serviceGroup.getKeyword(), serviceGroup.getLocalName()};
         jdbcTemplate.update(serviceGroupInsert, obj);
         return serviceGroupRequest;
     }
@@ -109,7 +109,7 @@ public class ServiceGroupRepository {
                 serviceGroup.getActive(), Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
                 Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
                 new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
-                serviceGroup.getTenantId(), serviceGroup.getKeyword(), serviceGroup.getCode()};
+                serviceGroup.getTenantId(), serviceGroup.getKeyword(), serviceGroup.getLocalName(), serviceGroup.getCode()};
         jdbcTemplate.update(serviceGroupUpdate, obj);
         return serviceGroupRequest;
     }

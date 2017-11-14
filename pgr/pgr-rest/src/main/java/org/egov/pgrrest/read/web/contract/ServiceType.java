@@ -17,6 +17,7 @@ public class ServiceType {
     private String groups;
     private Integer slaHours;
     private String tenantId;
+    private String localName;
 
     public ServiceType(org.egov.pgrrest.common.persistence.entity.ServiceType entityServiceType) {
         this.id = entityServiceType.getId();
@@ -30,5 +31,6 @@ public class ServiceType {
         this.groupId = entityServiceType.getCategory().getId();
         this.slaHours = entityServiceType.getSlaHours();
         this.tenantId = entityServiceType.getTenantId();
+        this.localName = entityServiceType.getLocalName();
     }
 }

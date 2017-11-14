@@ -194,7 +194,7 @@ public class MaterialStoreMappingService {
 
         Pagination<Store> store = storeService.search(storeGetRequest);
 
-        if (store.getPagedData().size() > 0) {
+        if (null != store && store.getPagedData().size() > 0) {
             return store.getPagedData().get(0);
         } else {
             throw new CustomException(INV_005, "Store Not Found " + storeCode);

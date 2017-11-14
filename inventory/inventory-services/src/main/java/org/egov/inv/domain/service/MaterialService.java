@@ -80,10 +80,12 @@ public class MaterialService {
     }
 
     public Pagination<Material> search(MaterialSearchRequest materialSearchRequest) {
-        List<StoreMapping> storeMappings = new ArrayList<>();
+
         Pagination<Material> searchMaterial = materialRepository.search(materialSearchRequest);
 
         for (Material material : searchMaterial.getPagedData()) {
+            List<StoreMapping> storeMappings = new ArrayList<>();
+
             MaterialStoreMappingSearchRequest materialStoreMappingSearchRequest = MaterialStoreMappingSearchRequest.builder()
                     .material(material.getCode())
                     .tenantId(material.getAuditDetails().getTenantId())
@@ -93,6 +95,7 @@ public class MaterialService {
 
             materialStoreMappings.getPagedData().stream().forEach(materialStoreMapping -> {
                         StoreMapping storeMapping = StoreMapping.builder()
+                                .id(materialStoreMapping.getId())
                                 .chartofAccount(materialStoreMapping.getChartofAccount())
                                 .active(materialStoreMapping.getActive())
                                 .store(materialStoreMapping.getStore())
@@ -102,7 +105,6 @@ public class MaterialService {
                     }
             );
             material.setStoreMapping(storeMappings);
-
         }
 
         return searchMaterial;

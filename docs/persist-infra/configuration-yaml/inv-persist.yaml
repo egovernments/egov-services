@@ -428,7 +428,7 @@ serviceMaps:
             - jsonPath: $.priceLists.*.priceListDetails.*.uom.code
             - jsonPath: $.priceLists.*.priceListDetails.*.active
               dbType: BOOLEAN
-            - jsonPath: $.priceLists.*.tenantId
+            - jsonPath: $.priceLists[?({id} in @.priceListDetails[*].id)].tenantId
             - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.createdBy
             - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.lastModifiedBy
             - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.createdTime

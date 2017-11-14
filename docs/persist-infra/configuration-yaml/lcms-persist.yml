@@ -1468,7 +1468,7 @@ serviceMaps:
     fromTopic: lcms-agency-create
     isTransaction: true
     queryMaps: 
-    - query: INSERT INTO egov_lcms_agency (name, code, agencyAddress, isIndividual, dateOfEmpanelment, standingCommitteeDecisionDate, empanelmentFromDate, newsPaperAdvertismentDate, empanelmentToDate, bankName, bankBranch, bankAccountNo, isfcCode, micr, isActive, isTerminate, inActiveDate, terminationDate, reasonOfTermination, tenantId, createdBy, lastModifiedBy, createdTime, lastModifiedTime) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+    - query: INSERT INTO egov_lcms_agency (name, code, agencyAddress, isIndividual, dateOfEmpanelment, standingCommitteeDecisionDate, empanelmentFromDate, newsPaperAdvertismentDate, empanelmentToDate, bankName, bankBranch, bankAccountNo, ifscCode, micr, isActive, isTerminate, inActiveDate, terminationDate, reasonOfTermination, tenantId, createdBy, lastModifiedBy, createdTime, lastModifiedTime) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
       basePath: $.agencies.*
       jsonMaps:
 
@@ -1502,7 +1502,7 @@ serviceMaps:
        
        - jsonPath: $.agencies.*.bankAccountNo
        
-       - jsonPath: $.agencies.*.isfcCode
+       - jsonPath: $.agencies.*.ifscCode
        
        - jsonPath: $.agencies.*.micr
        
@@ -1601,7 +1601,7 @@ serviceMaps:
     fromTopic: lcms-agency-update
     isTransaction: true
     queryMaps: 
-    - query: UPDATE egov_lcms_agency SET name = ?, agencyAddress =?, isIndividual=?, dateOfEmpanelment =? , standingCommitteeDecisionDate=?, empanelmentFromDate=?, newsPaperAdvertismentDate=?, empanelmentToDate=?, bankName=?, bankBranch=?, bankAccountNo=?, isfcCode=?, micr=?, isActive=?, isTerminate=?, inActiveDate=?, terminationDate=?, reasonOfTermination=?, lastModifiedBy=?, lastModifiedTime=? WHERE code=? AND tenantId =?;
+    - query: UPDATE egov_lcms_agency SET name = ?, agencyAddress =?, isIndividual=?, dateOfEmpanelment =? , standingCommitteeDecisionDate=?, empanelmentFromDate=?, newsPaperAdvertismentDate=?, empanelmentToDate=?, bankName=?, bankBranch=?, bankAccountNo=?, ifscCode=?, micr=?, isActive=?, isTerminate=?, inActiveDate=?, terminationDate=?, reasonOfTermination=?, lastModifiedBy=?, lastModifiedTime=? WHERE code=? AND tenantId =?;
       basePath: $.agencies.*
       jsonMaps:
 
@@ -1633,7 +1633,7 @@ serviceMaps:
        
        - jsonPath: $.agencies.*.bankAccountNo
        
-       - jsonPath: $.agencies.*.isfcCode
+       - jsonPath: $.agencies.*.ifscCode
        
        - jsonPath: $.agencies.*.micr
        

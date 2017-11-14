@@ -172,7 +172,7 @@ public class Asset   {
 	  private AuditDetails auditDetails;
 	  
 	  @JsonProperty("fundSource")
-	  private Fundsource fundSource;
+	  private FundSource fundSource;
 	  
 	  @JsonProperty("location")
 	  private String location;

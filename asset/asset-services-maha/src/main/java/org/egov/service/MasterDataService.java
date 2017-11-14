@@ -14,7 +14,7 @@ import org.egov.contract.FinancialYear;
 import org.egov.model.Asset;
 import org.egov.model.AssetCategory;
 import org.egov.model.Department;
-import org.egov.model.Fundsource;
+import org.egov.model.FundSource;
 import org.egov.repository.MasterDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -124,13 +124,13 @@ public class MasterDataService {
 		return Departments.stream().collect(Collectors.toMap(Department::getId, Function.identity()));
 	}
 	
-	public Map<String, Fundsource> getFundSourceMapFromJSONArray(Map<String, JSONArray> moduleMap) {
+	public Map<String, FundSource> getFundSourceMapFromJSONArray(Map<String, JSONArray> moduleMap) {
 
 		JSONArray jsonArray = moduleMap.get("funds");
-		List<Fundsource> Fundsources = new ArrayList<>();
+		List<FundSource> Fundsources = new ArrayList<>();
 		try {
 			Fundsources = Arrays
-					.asList(mapper.readValue(jsonArray.toJSONString(), Fundsource[].class));
+					.asList(mapper.readValue(jsonArray.toJSONString(), FundSource[].class));
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
@@ -141,7 +141,7 @@ public class MasterDataService {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
-		return Fundsources.stream().collect(Collectors.toMap(Fundsource::getId, Function.identity()));
+		return Fundsources.stream().collect(Collectors.toMap(FundSource::getId, Function.identity()));
 	}
 
 	public FinancialYear getFinancialYear(Long toDate, RequestInfo requestInfo, String tenantId) {

@@ -16,7 +16,7 @@ import org.egov.model.Asset;
 import org.egov.model.AssetCategory;
 import org.egov.model.CurrentValue;
 import org.egov.model.Department;
-import org.egov.model.Fundsource;
+import org.egov.model.FundSource;
 import org.egov.model.criteria.AssetCriteria;
 import org.egov.model.enums.KafkaTopicName;
 import org.egov.model.enums.Sequence;
@@ -137,7 +137,7 @@ public class AssetService {
 				requestInfo, tenantId);
 
 		Map<Long, AssetCategory> assetCatMap = mDService.getAssetCategoryMapFromJSONArray(RsMasterMap.get("ASSET"));
-		Map<String, Fundsource> fundMap = mDService.getFundSourceMapFromJSONArray(RsMasterMap.get("egf-master"));
+		Map<String, FundSource> fundMap = mDService.getFundSourceMapFromJSONArray(RsMasterMap.get("egf-master"));
 		Map<String, Department> departmentMap = mDService
 				.getDepartmentMapFromJSONArray(RsMasterMap.get("common-masters"));
 

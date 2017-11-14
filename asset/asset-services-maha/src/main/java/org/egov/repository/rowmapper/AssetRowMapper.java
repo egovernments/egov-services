@@ -16,7 +16,7 @@ import org.egov.model.Attributes;
 import org.egov.model.AuditDetails;
 import org.egov.model.DefectLiability;
 import org.egov.model.Department;
-import org.egov.model.Fundsource;
+import org.egov.model.FundSource;
 import org.egov.model.LandDetail;
 import org.egov.model.Location;
 import org.egov.model.enums.AssetCategoryType;
@@ -123,7 +123,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 }
 
                 asset.setAssetAttributes(asset2);
-                asset.setFundSource(Fundsource.builder().code(rs.getString("fundSource")).build());
+                asset.setFundSource(FundSource.builder().code(rs.getString("fundSource")).build());
                 asset.setDepartment(Department.builder().code(rs.getString("departmentCode")).build());
 
                 final  DefectLiability defectLiabilityPeriod= new DefectLiability();

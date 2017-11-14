@@ -14,7 +14,7 @@ import org.egov.model.Asset;
 import org.egov.model.AssetCategory;
 import org.egov.model.DefectLiability;
 import org.egov.model.Department;
-import org.egov.model.Fundsource;
+import org.egov.model.FundSource;
 import org.egov.model.Location;
 import org.egov.service.AssetService;
 import org.egov.service.MasterDataService;
@@ -79,7 +79,7 @@ public class AssetValidator implements Validator {
 				assetRequest.getRequestInfo(), asset.getTenantId());
 
 		Map<Long, AssetCategory> assetCatMap = mDService.getAssetCategoryMapFromJSONArray(ResultDataMap.get("ASSET"));
-		Map<String, Fundsource> fundMap = mDService.getFundSourceMapFromJSONArray(ResultDataMap.get("egf-master"));
+		Map<String, FundSource> fundMap = mDService.getFundSourceMapFromJSONArray(ResultDataMap.get("egf-master"));
 		Map<String, Department> departmentMap = mDService.getDepartmentMapFromJSONArray(ResultDataMap.get("common-masters"));
 
 		AssetCategory masterAssetCat = assetCatMap.get(asset.getAssetCategory().getId());
@@ -94,7 +94,7 @@ public class AssetValidator implements Validator {
 		else
 			asset.setDepartment(department);
 
-		Fundsource fundSource = fundMap.get(asset.getFundSource().getId());
+		FundSource fundSource = fundMap.get(asset.getFundSource().getId());
 		if (fundSource == null)
 			errorMap.put("EGASSET_INVALID_FUNDSOURCE", "The given FundSource id is Invalid");
 		else

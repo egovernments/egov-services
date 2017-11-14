@@ -61,7 +61,7 @@ public class AdvocateController {
 		return new ResponseEntity<>(advocateResponse, HttpStatus.CREATED);
 	}
 
-	@RequestMapping(path = "_search")
+	@RequestMapping(path = "agency/_search")
 	public ResponseEntity<?> searchAgency(@RequestParam(name = "tenantId", required = true) String tenantId,
 			@RequestParam(name = "isIndividual", required = true) Boolean isIndividual,
 			@RequestParam(name = "advocateName", required = false) String advocateName,

@@ -1324,17 +1324,11 @@ definitions:
         $ref: '#/definitions/ProjectCode'
         description: Project Code of the Detailed Estimate
       parent:
-        $ref: '#/definitions/DetailedEstimate'
-        description: Parent Detailed Estimate Reference. This represents the Parent Estimate reference for the Revision Estimate 
-      #parent:
-      #  type: string
-      #  description: Parent of the Detailed Estimate 
+        type: string
+        description:  Parent Detailed Estimate Reference. This represents the Parent Estimate reference for the Revision Estimate.
       copiedFrom:
-        $ref: '#/definitions/DetailedEstimate'
-        description: Reference of the Detailed Estimate for teh Copy Estimate 
-      #copiedFrom:
-      #  type: string
-      #  description: Refers to the Detailed Estimate   
+        type: string
+        description: Reference of the Detailed Estimate for teh Copy Estimate
       approvedDate:
         type: integer
         format: int64

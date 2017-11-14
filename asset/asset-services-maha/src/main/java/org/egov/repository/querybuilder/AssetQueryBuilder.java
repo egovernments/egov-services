@@ -26,7 +26,7 @@ public class AssetQueryBuilder {
     										
     										+ "maxcurr.currentamount from egasset_current_value current inner join (select max(transactiondate) as transactiondate,currentamount,assetid"
     										
-    										+ ",tenantid from egasset_current_value where tenantid=? GROUP BY assetid,tenantid,currentamount ) as maxcurr "
+    										+ ",tenantid from egasset_current_value where tenantid=? GROUP BY assetid,tenantid ORDER BY createdtime desc ) as maxcurr "
     										
     										+ "ON current.assetid=maxcurr.assetid AND current.tenantid=maxcurr.tenantid AND current.transactiondate=maxcurr.transactiondate) as currentval "
     										

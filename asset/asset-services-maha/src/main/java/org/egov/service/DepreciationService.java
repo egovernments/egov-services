@@ -200,10 +200,10 @@ public class DepreciationService {
 		// deciding the from date from the last depreciation date
 		if (depInputs.getLastDepreciationDate()!=null && depInputs.getLastDepreciationDate().compareTo(fromDate) >= 0) {
 			fromDate = depInputs.getLastDepreciationDate();
-			fromDate += 86400l; // adding one day in milli seconds to start depreciation from next day
+			fromDate += 86400000l; // adding one day in milli seconds to start depreciation from next day
 		} else if (depInputs.getDateOfCreation() > fromDate) {
 			fromDate = depInputs.getDateOfCreation();
-			fromDate += 86400l;
+			fromDate += 86400000l;
 		}
 
 		// getting the no of days betweeen the from and todate (including both from and

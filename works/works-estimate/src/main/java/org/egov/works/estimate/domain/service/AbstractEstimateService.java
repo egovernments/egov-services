@@ -40,6 +40,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import net.minidev.json.JSONArray;
+
 @Service
 @Transactional(readOnly = true)
 public class AbstractEstimateService {
@@ -126,7 +128,7 @@ public class AbstractEstimateService {
 	}
 
 	public AbstractEstimateResponse update(AbstractEstimateRequest abstractEstimateRequest) {
-		validator.validateEstimates(abstractEstimateRequest, true);
+		validator.validateEstimates(abstractEstimateRequest, false);
 		for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
 			for (final AbstractEstimateDetails details : estimate.getAbstractEstimateDetails())
 				details.setAuditDetails(
@@ -144,8 +146,18 @@ public class AbstractEstimateService {
 					abstractEstimateRequest.getRequestInfo()));
 
 			populateNextStatus(estimate);
+			
+			Boolean isFinIntReq = false;
+	        JSONArray responseJSONArray = estimateUtils.getMDMSData(Constants.APPCONFIGURATION_OBJECT,
+	                CommonConstants.CODE, Constants.FINANCIAL_INTEGRATION_KEY,
+	                estimate.getTenantId(), abstractEstimateRequest.getRequestInfo(), Constants.WORKS_MODULE_CODE);
+	        if (responseJSONArray != null && !responseJSONArray.isEmpty()) {
+	            Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
+	            if (jsonMap.get("value").equals("Yes"))
+	                isFinIntReq = true;
+	        }
 
-			if (estimate.getStatus().toString().equalsIgnoreCase(AbstractEstimateStatus.APPROVED.toString())) {
+			if (isFinIntReq && estimate.getStatus().toString().equalsIgnoreCase(AbstractEstimateStatus.APPROVED.toString())) {
 				for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
 					setEstimateAppropriation(abstractEstimateDetails, abstractEstimateRequest.getRequestInfo());
 

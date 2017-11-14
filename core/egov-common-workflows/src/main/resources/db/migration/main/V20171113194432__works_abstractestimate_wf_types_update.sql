@@ -1,0 +1,1 @@
+update eg_wf_types set link = '/non-framework/works/transaction/viewAbstractEstimate/:id' where type = 'AbstractEstimate' and tenantid = 'default';

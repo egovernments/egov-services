@@ -17,20 +17,12 @@ import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.persistence.entity.VendorEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class VendorJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_vendor";
-
-	@Autowired
-	public JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
 	public SupplierJdbcRepository supplierJdbcRepository;
@@ -65,48 +57,36 @@ public class VendorJdbcRepository extends JdbcRepository {
 		}
 
 		if (searchRequest.getVendorNo() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("vendorNo in (:vendorNo)");
 			paramValues.put("vendorNo", searchRequest.getVendorNo());
 		}
 
 		if (searchRequest.getVendorNos() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("vendorNo in (:vendorNos)");
 			paramValues.put("vendorNos", new ArrayList<String>(Arrays.asList(searchRequest.getVendorNos().split(","))));
 		}
 		if (searchRequest.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", searchRequest.getTenantId());
 		}
 
 		if (searchRequest.getName() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("name =:name");
 			paramValues.put("name", searchRequest.getName());
 		}
 
 		if (searchRequest.getRegistrationNo() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("registrationNo =:registrationNo");
 			paramValues.put("registrationNo", searchRequest.getRegistrationNo());
 		}
 
 		if (searchRequest.getSupplierNo() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("supplier =:supplier");
 			paramValues.put("supplier", searchRequest.getSupplierNo());
 		}

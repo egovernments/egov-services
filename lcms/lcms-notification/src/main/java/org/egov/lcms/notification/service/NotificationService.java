@@ -33,15 +33,31 @@ public class NotificationService {
 
 	@Autowired
 	UserReository userReository;
-	
+
 	@Autowired
 	NotificationUtil notificationUtil;
-	
+
 	@Autowired
 	PropertiesManager propertiesManager;
-	
+
 	@Autowired
 	KafkaTemplate<String, Object> kafkaTemplate;
+
+	private Boolean caseRegistrationAuthority = Boolean.FALSE;
+
+	private Boolean legalClerk = Boolean.FALSE;
+
+	private Boolean concernedDepartment = Boolean.FALSE;
+
+	private Boolean advocate = Boolean.FALSE;
+
+	private Boolean legalAdvisor = Boolean.FALSE;
+
+	private Boolean approvalLegalClerk = Boolean.FALSE;
+
+	private Boolean sanctioningLegalAdvisor = Boolean.FALSE;
+
+	private Boolean approvingAuthority = Boolean.FALSE;
 
 	public void sendEmailAndSmsForSummon(SummonRequest summonRequest) throws Exception {
 
@@ -49,8 +65,6 @@ public class NotificationService {
 		List<String> roleCodes = new ArrayList<String>();
 		roleCodes.add(propertiesManager.getRolesCode());
 		List<UserDetail> userDetails = null;
-		String mobileNumber = null;
-		String emailAddress = null;		
 
 		for (Summon summon : summonRequest.getSummons()) {
 
@@ -58,73 +72,143 @@ public class NotificationService {
 
 				summonMessage.put("Reference No", summon.getSummonReferenceNo());
 				summonMessage.put("Dated", TimeStampUtil.getDateWithoutTimezone(summon.getSummonDate()));
-				summonMessage.put("ULB Name", summon.getTenantId());				
-				userDetails = userReository.getUser(summon.getTenantId(), roleCodes, summonRequest.getRequestInfo());				
-				
-				for(UserDetail userDetail : userDetails) {
-					
+				summonMessage.put("ULB Name", summon.getTenantId());
+				userDetails = userReository.getUser(summon.getTenantId(), roleCodes, summonRequest.getRequestInfo());
+
+				for (UserDetail userDetail : userDetails) {
+
 					summonMessage.put("Assigning Authority", userDetail.getName());
-					
+
 					if (userDetail.getMobileNumber() != null && userDetail.getMobileNumber() != "") {
-						
-						mobileNumber = userDetail.getMobileNumber();
-						String message = notificationUtil.buildSmsMessage(propertiesManager.getSummonSms(), summonMessage);
-						SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
+
+						SmsMessage smsMessage = getSMS(propertiesManager.getSummonSms(), summonMessage,
+								userDetail.getMobileNumber());
 						kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
 					}
-					
+
 					if (userDetail.getEmailId() != null && userDetail.getEmailId() != "") {
-						
-						emailAddress = userDetail.getEmailId();
-						EmailMessageContext emailMessageContext = new EmailMessageContext();
-						emailMessageContext.setSubjectTemplateName(propertiesManager.getSummonEmailSubject());
-						emailMessageContext.setSubjectTemplateValues(summonMessage);
-						emailMessageContext.setBodyTemplateName(propertiesManager.getSummonEmailBody());
-						emailMessageContext.setBodyTemplateValues(summonMessage);						
-						EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
-						EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
-						kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);			
-					}							
+
+						EmailMessage emailMessage = getEmail(propertiesManager.getSummonEmailSubject(),
+								propertiesManager.getSummonEmailBody(), summonMessage, userDetail.getEmailId());
+						kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
+					}
 				}
 			}
 		}
 	}
 
-	public void sendEmailAndSmsForAssignAdvocate(SummonRequest summonRequest) {
+	public void sendEmailAndSmsForAssignAdvocate(CaseRequest caseRequest) throws Exception {
+
+		caseRegistrationAuthority = Boolean.TRUE;
+		legalClerk = Boolean.TRUE;
 
 		Map<Object, Object> assignAdvocateMessage = new HashMap<Object, Object>();
+		List<String> roleCodes = new ArrayList<String>();
+		roleCodes.add(propertiesManager.getRolesCode());
+		List<UserDetail> userDetails = null;
 
-		for (Summon summon : summonRequest.getSummons()) {
+		for (Case caseObj : caseRequest.getCases()) {
 
-			assignAdvocateMessage.put("Reference No", summon.getSummonReferenceNo());
-			assignAdvocateMessage.put("Dated", TimeStampUtil.getDateWithoutTimezone(summon.getSummonDate()));
-			assignAdvocateMessage.put("ULB Name", summon.getTenantId());
+			if (caseObj.getSummon() != null) {
 
-			assignAdvocateMessage.put("Case Registration Authority", "");
-			assignAdvocateMessage.put("Legal Clerk", "");
+				Summon summon = caseObj.getSummon();
+				assignAdvocateMessage.put("Reference No", summon.getSummonReferenceNo());
+				assignAdvocateMessage.put("Dated", TimeStampUtil.getDateWithoutTimezone(summon.getSummonDate()));
+				assignAdvocateMessage.put("ULB Name", summon.getTenantId());
+				userDetails = userReository.getUser(summon.getTenantId(), roleCodes, caseRequest.getRequestInfo());
 
-			// Need mobile and Email details
+				for (UserDetail userDetail : userDetails) {
+
+					assignAdvocateMessage.put("Case Registration Authority", userDetail.getName());
+					assignAdvocateMessage.put("Legal Clerk", userDetail.getName());
+
+					if (userDetail.getMobileNumber() != null && userDetail.getMobileNumber() != "") {
+
+						if (caseRegistrationAuthority) {
+
+							SmsMessage smsMessage = getSMS(propertiesManager.getAssignAdvocateRegAuthSms(),
+									assignAdvocateMessage, userDetail.getMobileNumber());
+							kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+						}
+
+						if (legalClerk) {
+
+							SmsMessage smsMessage = getSMS(propertiesManager.getAssignAdvocateLegalClerkSms(),
+									assignAdvocateMessage, userDetail.getMobileNumber());
+							kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+						}
+					}
+
+					if (userDetail.getEmailId() != null && userDetail.getEmailId() != "") {
+
+						if (caseRegistrationAuthority) {
+
+							EmailMessage emailMessage = getEmail(
+									propertiesManager.getAssignAdvocateRegAuthEmailSubject(),
+									propertiesManager.getAssignAdvocateRegAuthEmailBody(), assignAdvocateMessage,
+									userDetail.getEmailId());
+							kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
+						}
+
+						if (legalClerk) {
+
+							EmailMessage emailMessage = getEmail(
+									propertiesManager.getAssignAdvocateLegalClerkEmailSubject(),
+									propertiesManager.getAssignAdvocateLegalClerkEmailBody(), assignAdvocateMessage,
+									userDetail.getEmailId());
+							kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
+						}
+					}
+				}
+			}
 		}
 	}
 
-	public void sendEmailAndSmsForCaseRegistration(CaseRequest caseRequest) {
-
+	public void sendEmailAndSmsForCaseRegistration(CaseRequest caseRequest) throws Exception {
+		
 		Map<Object, Object> caseRegistraionMessage = new HashMap<Object, Object>();
+		List<String> roleCodes = new ArrayList<String>();
+		roleCodes.add(propertiesManager.getRolesCode());
+		List<UserDetail> userDetails = null;
 
 		for (Case caseObj : caseRequest.getCases()) {
 
 			caseRegistraionMessage.put("caseRegNo", caseObj.getCaseRefernceNo());
 			caseRegistraionMessage.put("ULB Name", caseObj.getTenantId());
-
-			caseRegistraionMessage.put("Legal Clerk", "");
-
-			// Need mobile and Email details
+			userDetails = userReository.getUser(caseObj.getTenantId(), roleCodes, caseRequest.getRequestInfo());
+			
+			for (UserDetail userDetail : userDetails) {
+				
+				caseRegistraionMessage.put("Legal Clerk", userDetail.getName());
+				
+				if (userDetail.getMobileNumber() != null && userDetail.getMobileNumber() != "") {
+					
+					SmsMessage smsMessage = getSMS(propertiesManager.getCaseRegLegalClerkSms(), caseRegistraionMessage,
+							userDetail.getMobileNumber());
+					kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+				}
+				
+				if (userDetail.getEmailId() != null && userDetail.getEmailId() != "") {
+					
+					EmailMessage emailMessage = getEmail(
+							propertiesManager.getCaseRegLegalClerkEmailSubject(),
+							propertiesManager.getCaseRegLegalClerkEmailBody(), caseRegistraionMessage,
+							userDetail.getEmailId());
+					kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
+				}
+			}
 		}
 	}
 
-	public void sendEmailAndSmsForVakalatnama(CaseRequest caseRequest) {
-
+	public void sendEmailAndSmsForVakalatnama(CaseRequest caseRequest) throws Exception {
+		
+		concernedDepartment = Boolean.TRUE;
+		advocate =  Boolean.TRUE;
+		
 		Map<Object, Object> vakalatnamaMessage = new HashMap<Object, Object>();
+		List<String> roleCodes = new ArrayList<String>();
+		roleCodes.add(propertiesManager.getRolesCode());
+		List<UserDetail> userDetails = null;
 
 		for (Case caseObj : caseRequest.getCases()) {
 
@@ -133,18 +217,60 @@ public class NotificationService {
 				vakalatnamaMessage.put("Dated", caseObj.getVakalatnamaGenerationDate());
 				vakalatnamaMessage.put("Case details date", caseObj.getCaseRegistrationDate());
 				vakalatnamaMessage.put("ULB Name", caseObj.getTenantId());
-
-				vakalatnamaMessage.put("Concerned Department", "");
-				vakalatnamaMessage.put("Advocate", "");
-
-				// Need mobile and Email details
+				userDetails = userReository.getUser(caseObj.getTenantId(), roleCodes, caseRequest.getRequestInfo());
+				
+				for (UserDetail userDetail : userDetails) {
+					
+					vakalatnamaMessage.put("Concerned Department", userDetail.getName());
+					vakalatnamaMessage.put("Advocate", userDetail.getName());
+					
+					if (userDetail.getMobileNumber() != null && userDetail.getMobileNumber() != "") {
+						
+						if (concernedDepartment) {
+							
+							SmsMessage smsMessage = getSMS(propertiesManager.getVakalatnamaConcernedDeptSms(), vakalatnamaMessage,
+									userDetail.getMobileNumber());
+							kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+						}
+						
+						if (advocate) {
+							
+							SmsMessage smsMessage = getSMS(propertiesManager.getVakalatnamaAdvocateSms(), vakalatnamaMessage,
+									userDetail.getMobileNumber());
+							kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+						}
+					}
+					if (userDetail.getEmailId() != null && userDetail.getEmailId() != "") {
+						
+						if (concernedDepartment) {
+							
+							EmailMessage emailMessage = getEmail(
+									propertiesManager.getVakalatnamaConcernedDeptEmailSubject(),
+									propertiesManager.getVakalatnamaConcernedDeptEmailBody(), vakalatnamaMessage,
+									userDetail.getEmailId());
+							kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
+						}
+						
+						if (advocate) {
+							
+							EmailMessage emailMessage = getEmail(
+									propertiesManager.getVakalatnamaAdvocateEmailSubject(),
+									propertiesManager.getVakalatnamaAdvocateEmailBody(), vakalatnamaMessage,
+									userDetail.getEmailId());
+							kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
+						}
+					}
+				}
 			}
 		}
 	}
 
-	public void sendEmailAndSmsForParawiseComments(CaseRequest caseRequest) {
+	public void sendEmailAndSmsForParawiseComments(CaseRequest caseRequest) throws Exception {
 
 		Map<Object, Object> parawiseMessage = new HashMap<Object, Object>();
+		List<String> roleCodes = new ArrayList<String>();
+		roleCodes.add(propertiesManager.getRolesCode());
+		List<UserDetail> userDetails = null;
 
 		for (Case caseObj : caseRequest.getCases()) {
 
@@ -156,18 +282,39 @@ public class NotificationService {
 					parawiseMessage.put("Dated",
 							TimeStampUtil.getDateWithoutTimezone(paraWiseComment.getParawiseCommentsReceivedDate()));
 					parawiseMessage.put("ULB Name", caseObj.getTenantId());
-
-					parawiseMessage.put("Legal Clerk/Law Officer", "");
-
-					// Need mobile and Email details
+					userDetails = userReository.getUser(caseObj.getTenantId(), roleCodes, caseRequest.getRequestInfo());
+					
+					for (UserDetail userDetail : userDetails) {
+						
+						parawiseMessage.put("Legal Clerk/Law Officer", userDetail.getName());
+						
+						if (userDetail.getMobileNumber() != null && userDetail.getMobileNumber() != "") {
+							
+							SmsMessage smsMessage = getSMS(propertiesManager.getParawiseCommentLegalClerkSms(), parawiseMessage,
+									userDetail.getMobileNumber());
+							kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+						}
+						
+						if (userDetail.getEmailId() != null && userDetail.getEmailId() != "") {
+							
+							EmailMessage emailMessage = getEmail(
+									propertiesManager.getParawiseCommentLegalClerkEmailSubject(),
+									propertiesManager.getParawiseCommentLegalClerkEmailBody(), parawiseMessage,
+									userDetail.getEmailId());
+							kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
+						}
+					}
 				}
 			}
 		}
 	}
 
-	public void sendEmailAndSmsForHearingProcessDetails(CaseRequest caseRequest) {
+	public void sendEmailAndSmsForHearingProcessDetails(CaseRequest caseRequest) throws Exception {
 
 		Map<Object, Object> hearingProcessMessage = new HashMap<Object, Object>();
+		List<String> roleCodes = new ArrayList<String>();
+		roleCodes.add(propertiesManager.getRolesCode());
+		List<UserDetail> userDetails = null;
 
 		for (Case caseObj : caseRequest.getCases()) {
 
@@ -178,6 +325,7 @@ public class NotificationService {
 						TimeStampUtil.getDateWithoutTimezone(caseObj.getCaseRegistrationDate()));
 				hearingProcessMessage.put("ULB Name", caseObj.getTenantId());
 				hearingProcessMessage.put("Court", caseObj.getSummon().getCourtName());
+				userDetails = userReository.getUser(caseObj.getTenantId(), roleCodes, caseRequest.getRequestInfo());
 
 				for (HearingDetails hearingDetails : caseObj.getHearingDetails()) {
 
@@ -185,51 +333,229 @@ public class NotificationService {
 							TimeStampUtil.getDateWithoutTimezone(hearingDetails.getNextHearingDate()));
 					hearingProcessMessage.put("Next Hearing Time", hearingDetails.getNextHearingTime());
 				}
-
-				hearingProcessMessage.put("Legal Department/Concerned Department", "");
-
-				// Need mobile and Email details
-
+				
+				for (UserDetail userDetail : userDetails) {
+					
+					hearingProcessMessage.put("Legal Department/Concerned Department", userDetail.getName());
+					
+					if (userDetail.getMobileNumber() != null && userDetail.getMobileNumber() != "") {
+						
+						SmsMessage smsMessage = getSMS(propertiesManager.getHearingProcessSms(), hearingProcessMessage,
+								userDetail.getMobileNumber());
+						kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+					}
+					
+					if (userDetail.getEmailId() != null && userDetail.getEmailId() != "") {
+						
+						EmailMessage emailMessage = getEmail(
+								propertiesManager.getHearingProcessEmailSubject(),
+								propertiesManager.getHearingProcessEmailBody(), hearingProcessMessage,
+								userDetail.getEmailId());
+						kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
+					}
+				}
 			}
 		}
 	}
 
-	public void sendEmailAndSmsForAdvocatePayment(AdvocatePaymentRequest advocatePaymentRequest) {
-
+	public void sendEmailAndSmsForAdvocatePayment(AdvocatePaymentRequest advocatePaymentRequest) throws Exception {
+		
+		legalAdvisor = Boolean.TRUE;
+		legalClerk =  Boolean.TRUE;
+		approvalLegalClerk = Boolean.TRUE;
+		sanctioningLegalAdvisor = Boolean.TRUE;
+		
 		Map<Object, Object> advocatePaymentMessage = new HashMap<Object, Object>();
+		List<String> roleCodes = new ArrayList<String>();
+		roleCodes.add(propertiesManager.getRolesCode());
+		List<UserDetail> userDetails = null;
 
 		for (AdvocatePayment advocatePayment : advocatePaymentRequest.getAdvocatePayments()) {
 
 			advocatePaymentMessage.put("Advocate Name", advocatePayment.getAdvocate().getName());
-			advocatePaymentMessage.put("Case No", advocatePayment.getCaseNo());
+			//advocatePaymentMessage.put("Case No", advocatePayment.getC.getCaseNo());//chke it
 			advocatePaymentMessage.put("Case Date", "");// case registraion form
 			advocatePaymentMessage.put("Demand No", "");// Advocate form
 			advocatePaymentMessage.put("Letter No", "");// Approval letter Form
 			advocatePaymentMessage.put("ULB Name", advocatePayment.getTenantId());
-
-			advocatePaymentMessage.put("Legal Advisor", "");
-			advocatePaymentMessage.put("Legal Clerk", "");
-			advocatePaymentMessage.put("Approval Legal Clerk", "");
-			advocatePaymentMessage.put("Sanctioning Legal Advisor", "");
+			userDetails = userReository.getUser(advocatePayment.getTenantId(), roleCodes, advocatePaymentRequest.getRequestInfo());
+			
+			for (UserDetail userDetail : userDetails) {
+				
+				advocatePaymentMessage.put("Legal Advisor", userDetail.getName());
+				advocatePaymentMessage.put("Legal Clerk", userDetail.getName());
+				advocatePaymentMessage.put("Approval Legal Clerk", userDetail.getName());
+				advocatePaymentMessage.put("Sanctioning Legal Advisor", userDetail.getName());
+				
+				if (userDetail.getMobileNumber() != null && userDetail.getMobileNumber() != "") {
+					
+					if (legalAdvisor) {
+						
+						SmsMessage smsMessage = getSMS(propertiesManager.getAdvovatePaymentLegalAdvisorSms(), advocatePaymentMessage,
+								userDetail.getMobileNumber());
+						kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+					}
+					
+					if (legalClerk) {
+						
+						SmsMessage smsMessage = getSMS(propertiesManager.getAdvovatePaymentLegalClerkSms(), advocatePaymentMessage,
+								userDetail.getMobileNumber());
+						kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+					}
+					
+					if (approvalLegalClerk) {
+						
+						SmsMessage smsMessage = getSMS(propertiesManager.getAdvovatePaymentLegalClerkApprovalSms(), advocatePaymentMessage,
+								userDetail.getMobileNumber());
+						kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+					}
+					
+					if (sanctioningLegalAdvisor) {
+						
+						SmsMessage smsMessage = getSMS(propertiesManager.getAdvovatePaymentSanctioningAuthSms(), advocatePaymentMessage,
+								userDetail.getMobileNumber());
+						kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+					}
+				}
+				if (userDetail.getEmailId() != null && userDetail.getEmailId() != "") {
+					
+					if (legalAdvisor) {
+						
+						EmailMessage emailMessage = getEmail(
+								propertiesManager.getAdvovatePaymentLegalAdvisorEmailSubject(),
+								propertiesManager.getAdvovatePaymentLegalAdvisorEmailBody(), advocatePaymentMessage,
+								userDetail.getEmailId());
+						kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
+					}
+					
+					if (legalClerk) {
+						
+						EmailMessage emailMessage = getEmail(
+								propertiesManager.getAdvovatePaymentLegalClerkEmailSubject(),
+								propertiesManager.getAdvovatePaymentLegalClerkEmailBody(), advocatePaymentMessage,
+								userDetail.getEmailId());
+						kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
+					}
+					
+					if (approvalLegalClerk) {
+						
+						EmailMessage emailMessage = getEmail(
+								propertiesManager.getAdvovatePaymentLegalClerkApprovalEmailSubject(),
+								propertiesManager.getAdvovatePaymentLegalClerkApprovalEmailBody(), advocatePaymentMessage,
+								userDetail.getEmailId());
+						kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
+					}
+					
+					if (sanctioningLegalAdvisor) {
+						
+						EmailMessage emailMessage = getEmail(
+								propertiesManager.getAdvovatePaymentSanctioningAuthEmailSubject(),
+								propertiesManager.getAdvovatePaymentSanctioningAuthEmailBody(), advocatePaymentMessage,
+								userDetail.getEmailId());
+						kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
+					}
+				}
+			}
 		}
-
 	}
 
-	public void sendEmailAndSmsForOpinion(OpinionRequest opinionRequest) {
-
+	public void sendEmailAndSmsForOpinion(OpinionRequest opinionRequest) throws Exception {
+		
+		advocate = Boolean.TRUE;
+		approvingAuthority =  Boolean.TRUE;
+		legalClerk = Boolean.TRUE;
+		
 		Map<Object, Object> opinionMessage = new HashMap<Object, Object>();
+		List<String> roleCodes = new ArrayList<String>();
+		roleCodes.add(propertiesManager.getRolesCode());
+		List<UserDetail> userDetails = null;
 
 		for (Opinion opinion : opinionRequest.getOpinions()) {
 
 			opinionMessage.put("Opinion No", opinion.getOpinionOn());
 			opinionMessage.put("Department Name", opinion.getDepartmentName());
 			opinionMessage.put("Dated", opinion.getOpinionRequestDate());
-
-			opinionMessage.put("Advocate", "");
-			opinionMessage.put("Approving Authority", "");
-			opinionMessage.put("Legal clerk", "");
-
-			// Need mobile and Email details
+			userDetails = userReository.getUser(opinion.getTenantId(), roleCodes, opinionRequest.getRequestInfo());
+			
+			for (UserDetail userDetail : userDetails) {
+				
+				opinionMessage.put("Advocate", userDetail.getName());
+				opinionMessage.put("Approving Authority", userDetail.getName());
+				opinionMessage.put("Legal clerk", userDetail.getName());
+				
+				if (userDetail.getMobileNumber() != null && userDetail.getMobileNumber() != "") {
+					
+					if (advocate) {
+						
+						SmsMessage smsMessage = getSMS(propertiesManager.getOpinionAdvocateSms(), opinionMessage,
+								userDetail.getMobileNumber());
+						kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+					}
+					
+					if (approvingAuthority) {
+						
+						SmsMessage smsMessage = getSMS(propertiesManager.getOpinionApproveAuthoritySms(), opinionMessage,
+								userDetail.getMobileNumber());
+						kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+					}
+					
+					if (legalClerk) {
+						
+						SmsMessage smsMessage = getSMS(propertiesManager.getOpinionLegalClerkSms(), opinionMessage,
+								userDetail.getMobileNumber());
+						kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+					}
+				}
+				if (userDetail.getEmailId() != null && userDetail.getEmailId() != "") {
+					
+					if (advocate) {
+						
+						EmailMessage emailMessage = getEmail(
+								propertiesManager.getOpinionAdvocateEmailSubject(),
+								propertiesManager.getOpinionAdvocateEmailBody(), opinionMessage,
+								userDetail.getEmailId());
+						kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
+					}
+					
+					if (approvingAuthority) {
+						
+						EmailMessage emailMessage = getEmail(
+								propertiesManager.getOpinionApproveAuthorityEmailSubject(),
+								propertiesManager.getOpinionApproveAuthorityEmailBody(), opinionMessage,
+								userDetail.getEmailId());
+						kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
+					}
+					
+					if (legalClerk) {
+						
+						EmailMessage emailMessage = getEmail(
+								propertiesManager.getOpinionLegalClerkEmailSubject(),
+								propertiesManager.getOpinionLegalClerkEmailBody(), opinionMessage,
+								userDetail.getEmailId());
+						kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
+					}
+				}
+			}
 		}
+	}
+
+	private SmsMessage getSMS(String smsTemplate, Map<Object, Object> mappingParams, String mobileNumber) {
+
+		String message = notificationUtil.buildSmsMessage(smsTemplate, mappingParams);
+		SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
+		return smsMessage;
+	}
+
+	private EmailMessage getEmail(String emailSubjectTemplate, String emailBodyTemplate,
+			Map<Object, Object> mappingParams, String emailId) {
+
+		EmailMessageContext emailMessageContext = new EmailMessageContext();
+		emailMessageContext.setSubjectTemplateName(emailSubjectTemplate);
+		emailMessageContext.setSubjectTemplateValues(mappingParams);
+		emailMessageContext.setBodyTemplateName(emailBodyTemplate);
+		emailMessageContext.setBodyTemplateValues(mappingParams);
+		EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
+		EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailId);
+		return emailMessage;
 	}
 }

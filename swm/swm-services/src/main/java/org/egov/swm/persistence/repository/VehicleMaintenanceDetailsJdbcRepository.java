@@ -1,18 +1,16 @@
 package org.egov.swm.persistence.repository;
 
-import org.egov.swm.domain.enums.MaintenanceType;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.egov.swm.domain.model.Pagination;
-import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleMaintenanceDetails;
 import org.egov.swm.domain.model.VehicleMaintenanceDetailsSearch;
 import org.egov.swm.persistence.entity.VehicleMaintenanceDetailsEntity;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Repository
 public class VehicleMaintenanceDetailsJdbcRepository extends JdbcRepository {

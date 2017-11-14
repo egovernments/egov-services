@@ -16,9 +16,11 @@ import org.springframework.stereotype.Service;
 public class AbstractEstimateSanctionDetailJdbcRepository  extends JdbcRepository
 {
 
+	public static final String TABLE_NAME = "egw_abstractestimate_sanction_details";
+	
     public List<AbstractEstimateSanctionDetail> search(
             AbstractEstimateSanctionSearchContract abstractEstimateSanctionSearchContract) {
-        String searchQuery = "select * from egw_abstractestimate_sanction_details where id is not null ";
+    	String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
         Map<String, Object> paramValues = new HashMap<>();
         StringBuffer params = new StringBuffer();
@@ -34,6 +36,10 @@ public class AbstractEstimateSanctionDetailJdbcRepository  extends JdbcRepositor
                 && !abstractEstimateSanctionSearchContract.getSortBy().isEmpty()) {
             orderBy = "order by " + abstractEstimateSanctionSearchContract.getSortBy();
         }
+        
+        searchQuery = searchQuery.replace(":tablename", TABLE_NAME);
+
+		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 
         if (abstractEstimateSanctionSearchContract.getTenantId() != null) {
@@ -58,6 +64,16 @@ public class AbstractEstimateSanctionDetailJdbcRepository  extends JdbcRepositor
             params.append("abstractEstimate in(:abstractEstimateIds) ");
             paramValues.put("abstractEstimateIds", abstractEstimateSanctionSearchContract.getAbstractEstimateIds());
         }
+        
+        if (params.length() > 0) {
+
+			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+
+		} else
+
+			searchQuery = searchQuery.replace(":condition", "");
+
+		searchQuery = searchQuery.replace(":orderby", orderBy);
 
         BeanPropertyRowMapper row = new BeanPropertyRowMapper(AbstractEstimateSanctionDetailHelper.class);
 

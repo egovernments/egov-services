@@ -138,7 +138,7 @@ public class SourceSegregationService {
 
 				if (cd.getCollectionType() != null && cd.getCollectionType().getCode() != null) {
 
-					responseJSONArray = mdmsRepository.getByCriteria(cd.getTenantId(), Constants.MODULE_CODE,
+					responseJSONArray = mdmsRepository.getByCriteria(sourceSegregation.getTenantId(), Constants.MODULE_CODE,
 							Constants.COLLECTIONTYPE_MASTER_NAME, "code", cd.getCollectionType().getCode(),
 							sourceSegregationRequest.getRequestInfo());
 

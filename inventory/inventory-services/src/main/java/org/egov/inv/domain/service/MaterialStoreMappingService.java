@@ -87,7 +87,8 @@ public class MaterialStoreMappingService {
 
     public List<MaterialStoreMapping> update(MaterialStoreMappingRequest materialStoreMappingRequest, String tenantId) {
         List<MaterialStoreMapping> deleteStoreMappings = materialStoreMappingRequest.getMaterialStoreMappings().stream()
-                .filter(materialStoreMapping -> materialStoreMapping.getDelete().equals(Boolean.TRUE))
+                .filter(materialStoreMapping ->
+                        null != materialStoreMapping.getDelete() && materialStoreMapping.getDelete().equals(Boolean.TRUE))
                 .collect(Collectors.toList());
 
         if (deleteStoreMappings.size() > 0) {
@@ -193,7 +194,7 @@ public class MaterialStoreMappingService {
 
         Pagination<Store> store = storeService.search(storeGetRequest);
 
-        if (store.getPagedData().size() > 0) {
+        if (null != store && store.getPagedData().size() > 0) {
             return store.getPagedData().get(0);
         } else {
             throw new CustomException(INV_005, "Store Not Found " + storeCode);

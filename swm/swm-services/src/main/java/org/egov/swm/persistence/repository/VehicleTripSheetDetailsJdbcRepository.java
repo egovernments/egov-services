@@ -10,29 +10,23 @@ import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.VehicleTripSheetDetails;
 import org.egov.swm.domain.model.VehicleTripSheetDetailsSearch;
 import org.egov.swm.persistence.entity.VehicleTripSheetDetailsEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class VehicleTripSheetDetailsJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_vehicletripsheetdetails";
-	
-	@Autowired
-	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {
 
-		return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName,
-				uniqueFieldValue);
+		return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
 	}
 
 	public Pagination<VehicleTripSheetDetails> search(VehicleTripSheetDetailsSearch searchRequest) {
 
-		String searchQuery = "select * from "+TABLE_NAME+" :condition  :orderby ";
+		String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
@@ -48,59 +42,45 @@ public class VehicleTripSheetDetailsJdbcRepository extends JdbcRepository {
 		}
 
 		if (searchRequest.getTripNos() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tripNo in(:tripNo) ");
 			paramValues.put("tripNo", new ArrayList<String>(Arrays.asList(searchRequest.getTripNos().split(","))));
 		}
 
 		if (searchRequest.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", searchRequest.getTenantId());
 		}
 		if (searchRequest.getRegNumber() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("vehicle =:vehicle");
 			paramValues.put("vehicle", searchRequest.getRegNumber());
 		}
 
 		if (searchRequest.getRouteCode() != null) {
 
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("route =:route");
 			paramValues.put("route", searchRequest.getRouteCode());
 		}
 
 		if (searchRequest.getVendorNo() != null) {
 
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("vendor =:vendor");
 			paramValues.put("vendor", searchRequest.getVendorNo());
 
 		}
 
 		if (searchRequest.getTripStartDate() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tripStartDate =:tripStartDate");
 			paramValues.put("tripStartDate", searchRequest.getTripStartDate());
 		}
 
 		if (searchRequest.getTripEndDate() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tripEndDate =:tripEndDate");
 			paramValues.put("tripEndDate", searchRequest.getTripEndDate());
 		}

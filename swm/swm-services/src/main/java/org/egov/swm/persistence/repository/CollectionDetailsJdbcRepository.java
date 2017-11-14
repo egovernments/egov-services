@@ -8,10 +8,7 @@ import java.util.Map;
 import org.egov.swm.domain.model.CollectionDetails;
 import org.egov.swm.domain.model.CollectionDetailsSearch;
 import org.egov.swm.persistence.entity.CollectionDetailsEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,12 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class CollectionDetailsJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_collectiondetails";
-
-	@Autowired
-	public JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Transactional
 	public void delete(String tenantId, String sourceSegregation) {
@@ -39,25 +30,19 @@ public class CollectionDetailsJdbcRepository extends JdbcRepository {
 		StringBuffer params = new StringBuffer();
 
 		if (searchRequest.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", searchRequest.getTenantId());
 		}
 
 		if (searchRequest.getSourceSegregationCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("sourceSegregation =:sourceSegregation");
 			paramValues.put("sourceSegregation", searchRequest.getSourceSegregationCode());
 		}
 
 		if (searchRequest.getCollectionTypeCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("collectionType =:collectionType");
 			paramValues.put("collectionType", searchRequest.getCollectionTypeCode());
 		}

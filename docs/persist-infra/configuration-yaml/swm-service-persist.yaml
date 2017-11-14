@@ -1397,3 +1397,117 @@ serviceMaps:
 
        - jsonPath: $.sourceSegregations.*.collectionDetails.*.dryWasteCollected
          dbType: DOUBLE
+
+
+ - version: 1.0
+   name: vendorpaymentdetails create
+   description: create vehiclemaintenancedetails in egswm_vendorpaymentdetails
+   fromTopic: swm-vendorpaymentdetails-save-topic
+   queryMaps: 
+    - query: INSERT INTO egswm_vendorpaymentdetails (paymentno, tenantid, vendorcontract, invoiceno, fromdate, todate, vendorinvoiceamount, employee,  createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.vendorPaymentDetails.*
+      jsonMaps:
+       
+       - jsonPath: $.vendorPaymentDetails.*.paymentNo
+
+       - jsonPath: $.vendorPaymentDetails.*.tenantId
+
+       - jsonPath: $.vendorPaymentDetails.*.vendorContract.contractNo
+
+       - jsonPath: $.vendorPaymentDetails.*.invoiceNo
+
+       - jsonPath: $.vendorPaymentDetails.*.fromDate
+         dbType: LONG
+
+       - jsonPath: $.vendorPaymentDetails.*.toDate
+         dbType: LONG
+
+       - jsonPath: $.vendorPaymentDetails.*.vendorInvoiceAmount
+         dbType: DOUBLE
+
+       - jsonPath: $.vendorPaymentDetails.*.employee.code
+         
+       - jsonPath: $.vendorPaymentDetails.*.auditDetails.createdBy
+
+       - jsonPath: $.vendorPaymentDetails.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.vendorPaymentDetails.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.vendorPaymentDetails.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+    - query: INSERT INTO egswm_document(id, tenantid, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.vendorPaymentDetails.*.documents
+      jsonMaps:
+       
+       - jsonPath: $.vendorPaymentDetails.*.documents.id
+
+       - jsonPath: $.vendorPaymentDetails.*.documents.tenantId
+         
+       - jsonPath: $.vendorPaymentDetails.*.documents.refCode
+
+       - jsonPath: $.vendorPaymentDetails.*.documents.fileStoreId
+
+       - jsonPath: $.vendorPaymentDetails.*.documents.auditDetails.createdBy
+
+       - jsonPath: $.vendorPaymentDetails.*.documents.auditDetails.lastModifiedBy
+
+       - jsonPath: $.vendorPaymentDetails.*.documents.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.vendorPaymentDetails.*.documents.auditDetails.lastModifiedTime
+         dbType: LONG
+
+
+
+ - version: 1.0
+   name: sanitationstaffschedule create
+   description: create sanitationstaffschedule in egswm_sanitationstaffschedule
+   fromTopic: swm-sanitationstaffschedule-save-topic
+   queryMaps: 
+    - query: INSERT INTO egswm_sanitationstaffschedule (transactionNo, tenantid, sanitationStaffTarget, shift, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.sanitationStaffSchedules.*
+      jsonMaps:
+       
+       - jsonPath: $.sanitationStaffSchedules.*.transactionNo
+
+       - jsonPath: $.sanitationStaffSchedules.*.tenantId
+
+       - jsonPath: $.sanitationStaffSchedules.*.sanitationStaffTarget.targetNo
+
+       - jsonPath: $.sanitationStaffSchedules.*.shift.code
+
+       - jsonPath: $.sanitationStaffSchedules.*.auditDetails.createdBy
+
+       - jsonPath: $.sanitationStaffSchedules.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.sanitationStaffSchedules.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.sanitationStaffSchedules.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+
+ - version: 1.0
+   name: sanitationstaffschedule update
+   description: update sanitationstaffschedule in egswm_sanitationstaffschedule
+   fromTopic: swm-sanitationstaffschedule-update-topic
+   queryMaps: 
+    - query: update egswm_sanitationstaffschedule set sanitationStaffTarget=?, shift=?, lastmodifiedby=?, lastmodifiedtime=? where transactionNo=? and tenantid=?;
+      basePath: $.sanitationStaffSchedules.*
+      jsonMaps:
+       
+       - jsonPath: $.sanitationStaffSchedules.*.sanitationStaffTarget.targetNo
+
+       - jsonPath: $.sanitationStaffSchedules.*.shift.code
+
+       - jsonPath: $.sanitationStaffSchedules.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.sanitationStaffSchedules.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+       - jsonPath: $.sanitationStaffSchedules.*.transactionNo
+
+       - jsonPath: $.sanitationStaffSchedules.*.tenantId
+

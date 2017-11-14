@@ -173,15 +173,17 @@ public class LeaveApplicationQueryBuilder {
                 && leaveApplicationGetRequest.getTenantId() == null)
             return;
 
+
+        if (leaveApplicationGetRequest.getTenantId() != null) {
+            selectQuery.append(" and lt.tenantId = ?");
+            preparedStatementValues.add(leaveApplicationGetRequest.getTenantId());
+        }
         selectQuery.append(" WHERE");
         boolean isAppendAndClause = false;
 
         if (leaveApplicationGetRequest.getTenantId() != null) {
             isAppendAndClause = true;
             selectQuery.append(" la.tenantId = ?");
-            preparedStatementValues.add(leaveApplicationGetRequest.getTenantId());
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" lt.tenantId = ?");
             preparedStatementValues.add(leaveApplicationGetRequest.getTenantId());
         }
 
@@ -234,6 +236,10 @@ public class LeaveApplicationQueryBuilder {
 
     private void addReportWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
                                       final LeaveSearchRequest leaveSearchRequest, final RequestInfo requestInfo) {
+        if (leaveSearchRequest.getTenantId() != null) {
+            selectQuery.append("  and lt.tenantId = ?");
+            preparedStatementValues.add(leaveSearchRequest.getTenantId());
+        }
 
         selectQuery.append(" WHERE");
         selectQuery.append(" la.status != ? and ");
@@ -245,9 +251,7 @@ public class LeaveApplicationQueryBuilder {
             isAppendAndClause = true;
             selectQuery.append(" la.tenantId = ?");
             preparedStatementValues.add(leaveSearchRequest.getTenantId());
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" lt.tenantId = ?");
-            preparedStatementValues.add(leaveSearchRequest.getTenantId());
+
         }
 
         if (leaveSearchRequest.getLeaveStatus() != null) {

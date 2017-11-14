@@ -14,20 +14,12 @@ import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.persistence.entity.CollectionPointEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CollectionPointJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_collectionpoint";
-
-	@Autowired
-	public JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
 	public BinDetailsJdbcRepository binIdDetailsJdbcRepository;
@@ -59,40 +51,30 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
 		}
 
 		if (searchRequest.getCodes() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("code in (:codes)");
 			paramValues.put("codes", new ArrayList<String>(Arrays.asList(searchRequest.getCodes().split(","))));
 		}
 		if (searchRequest.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", searchRequest.getTenantId());
 		}
 
 		if (searchRequest.getCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("code =:code");
 			paramValues.put("code", searchRequest.getCode());
 		}
 
 		if (searchRequest.getName() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("name =:name");
 			paramValues.put("name", searchRequest.getName());
 		}
 
 		if (searchRequest.getLocationCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("location =:location");
 			paramValues.put("location", searchRequest.getLocationCode());
 		}

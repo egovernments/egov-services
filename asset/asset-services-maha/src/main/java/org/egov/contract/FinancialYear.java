@@ -76,6 +76,7 @@ import lombok.Setter;
  */
 public class FinancialYear {
 
+	private String tenantId;
 	/**
 	 * id is the unique identifier. it is generated internally
 	 */
@@ -94,7 +95,7 @@ public class FinancialYear {
 	 * 1st April of that year.
 	 */
 	@NotNull
-	private Date startingDate;
+	private Long startingDate;
 
 	/**
 	 * endingDate is the date on which Financial Year ends. Usually it is 31st
@@ -102,7 +103,7 @@ public class FinancialYear {
 	 * 
 	 */
 	@NotNull
-	private Date endingDate;
+	private Long endingDate;
 	/**
 	 * active says whether Financial Year is active or not . Over a period
 	 * system will have number of Financial years. Reports
@@ -132,5 +133,4 @@ public class FinancialYear {
 	 * transferred or not .
 	 */
 	private Boolean transferClosingBalance;
-
 }

@@ -95,7 +95,7 @@ class UiSelectField extends Component {
    }
 
 	 componentWillReceiveProps(nextProps) {
- 		if(this.props.location.pathname != nextProps.history.location.pathname) {
+ 		if(this.props.location.pathname != nextProps.history.location.pathname || this.checkSelectHavingData(nextProps)) {
  			this.initData(nextProps);
  		}
  	}
@@ -105,8 +105,9 @@ class UiSelectField extends Component {
  		let {dropDownData}=nextProps;
  		if(nextProps.hasOwnProperty("item") && nextProps.item.type=="singleValueList" && _.isEmpty(dropDownData[nextProps.item.jsonPath]))
  		{
- 			this.initData(nextProps);
+ 			return true;
  		}
+    return false;
  	}
 
 
@@ -114,6 +115,7 @@ class UiSelectField extends Component {
 
    renderSelect =(item) => {
       let {dropDownData}=this.props;
+      console.log(dropDownData[item.jsonPath], this.props.getVal(item.jsonPath));
       switch (this.props.ui) {
          case 'google':
             return (
@@ -137,7 +139,7 @@ class UiSelectField extends Component {
                      errorText={this.props.fieldErrors[item.jsonPath]}
                      maxHeight={200}>
                            {dropDownData.hasOwnProperty(item.jsonPath) && dropDownData[item.jsonPath].map((dd, index) => (
-                               <MenuItem value={dd.key} key={index} primaryText={dd.value} />
+                               <MenuItem value={dd.key && dd.key.toString()} key={index} primaryText={dd.value} />
                            ))}
                      </SelectField>
 

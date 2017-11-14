@@ -321,16 +321,18 @@ serviceMaps:
     fromTopic: lcms-advocate-create
     isTransaction: true
     queryMaps: 
-    - query: INSERT INTO egov_lcms_advocate (code, name, organizationName, isIndividual, title, firstName, secondName, lastName, address, contactNo, dateOfEmpanelment, standingCommitteeDecisionDate, empanelmentFromDate, aadhar, gender, age, dob, mobileNumber, emailId, pan, vatTinNo, newsPaperAdvertismentDate, empanelmentToDate, bankName, bankBranch, bankAccountNo, isfcCode, micr, isActive, isTerminate, inActiveDate, terminationDate, reasonOfTermination, tenantId, createdBy, lastModifiedBy, createdTime, lastModifiedTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-      basePath: $.advocates.*
+    - query: INSERT INTO egov_lcms_advocate (code, name, agencyCode, agencyName, isIndividual, title, firstName, secondName, lastName, address, contactNo, dateOfEmpanelment, standingCommitteeDecisionDate, empanelmentFromDate, aadhar, gender, age, dob, mobileNumber, emailId, pan, vatTinNo, newsPaperAdvertismentDate, empanelmentToDate, bankName, bankBranch, bankAccountNo, isfcCode, micr, isActive, isTerminate, inActiveDate, terminationDate, reasonOfTermination, tenantId, createdBy, lastModifiedBy, createdTime, lastModifiedTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.agencies.*.advocates.*
       jsonMaps:
        - jsonPath: $.advocates.*.code
          type: STRING
 
        - jsonPath: $.advocates.*.name
          type: STRING
+
+       - jsonPath: $.advocates.*.agencyCode
        
-       - jsonPath: $.advocates.*.organizationName
+       - jsonPath: $.advocates.*.agencyName
          type: STRING
 
        - jsonPath: $.advocates.*.isIndividual
@@ -446,14 +448,15 @@ serviceMaps:
     fromTopic: lcms-advocate-update
     isTransaction: true
     queryMaps: 
-    - query: UPDATE egov_lcms_advocate SET name=?, organizationName=?, isIndividual=?, title=?, firstName=?, secondName=?, lastName=?, address=?, contactNo=?, dateOfEmpanelment=?, standingCommitteeDecisionDate=?, empanelmentFromDate=?, aadhar=?, gender=?, age=?, dob=?, mobileNumber=?, emailId=?, pan=?, vatTinNo=?, newsPaperAdvertismentDate=?, empanelmentToDate=?, bankName=?, bankBranch=?, bankAccountNo=?, isfcCode=?, micr=?, isActive=?, isTerminate=?, inActiveDate=?, terminationDate=?, reasonOfTermination=?, lastModifiedBy=?, lastModifiedTime=? WHERE code=? and tenantid=?;
-      basePath: $.advocates.*
+    - query: Update egov_lcms_advocate SET name=?, agencyCode=?, agencyName=?, isIndividual=?, title=?, firstName=?, secondName=?, lastName=?, address=?, contactNo=?, dateOfEmpanelment=?, standingCommitteeDecisionDate=?, empanelmentFromDate=?, aadhar=?, gender=?, age=?, dob=?, mobileNumber=?, emailId=?, pan=?, vatTinNo=?, newsPaperAdvertismentDate=?, empanelmentToDate=?, bankName=?, bankBranch=?, bankAccountNo=?, isfcCode=?, micr=?, isActive=?, isTerminate=?, inActiveDate=?, terminationDate=?, reasonOfTermination=?, lastModifiedBy=?,lastModifiedTime=? WHERE code=? AND tenantId=?;
+      basePath: $.agencies.*.advocates.*
       jsonMaps:
-
        - jsonPath: $.advocates.*.name
          type: STRING
+
+       - jsonPath: $.advocates.*.agencyCode
        
-       - jsonPath: $.advocates.*.organizationName
+       - jsonPath: $.advocates.*.agencyName
          type: STRING
 
        - jsonPath: $.advocates.*.isIndividual
@@ -467,7 +470,7 @@ serviceMaps:
        
        - jsonPath: $.advocates.*.secondName
          type: STRING
-         
+       
        - jsonPath: $.advocates.*.lastName
          type: STRING
 
@@ -547,7 +550,7 @@ serviceMaps:
          type: STRING
 
        - jsonPath: $.RequestInfo.userInfo.id
-         type: STRING        
+         type: STRING     
 
        - jsonPath: lastModifiedTime
          type: CURRENTDATE
@@ -555,7 +558,7 @@ serviceMaps:
          
        - jsonPath: $.advocates.*.code
          type: STRING
-       
+
        - jsonPath: $.advocates.*.tenantId
          type: STRING
          
@@ -833,7 +836,7 @@ serviceMaps:
     description: legacy load case load
     fromTopic: legacy-case-create
     queryMaps: 
-    - query: INSERT INTO egov_lcms_case (code, isSummon, summonReferenceNo, amountReceived, caseCategory, caseRefernceNo, side, caseType, caseNo, summonDate, plantiffName, plantiffAddress, pleaderEngagementDetails, receiptDate, resloution, resloutiondate, advocateInfoDate, vakalatnamaGenerationDate, coName, age, address, remarks, caseDetails, defendant, hearingDate, hearingTime, departmentName, year, courtName, ward, bench, register, sectionApplied, lastModifiedBy,createdBy, createdTime, lastModifiedTime, tenantId, isUlbinitiated, documents,caseRegistrationDate,departmentPerson) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+    - query: INSERT INTO egov_lcms_case (code, isSummon, summonReferenceNo, amountReceived, caseCategory, caseRefernceNo, side, caseType, caseNo, summonDate, plantiffName, plantiffAddress, pleaderEngagementDetails, receiptDate, resloution, resloutiondate, advocateInfoDate, vakalatnamaGenerationDate, coName, age, address, remarks, caseDetails, defendant, hearingDate, hearingTime, departmentName, year, courtName, ward, bench, register, sectionApplied, lastModifiedBy,createdBy, createdTime, lastModifiedTime, tenantId, isUlbinitiated, documents) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
       basePath: $.cases.*
       jsonMaps:       
       - jsonPath: $.cases.*.summon.code
@@ -1178,7 +1181,7 @@ serviceMaps:
     fromTopic: lcms-notice-create
     isTransaction: true
     queryMaps: 
-    - query: INSERT INTO egov_lcms_notice (code, tenantId, exhibitNo, courtName, courtAddress, applicant, defendant, chiefOfficerDetails, advocateName, day, witness, noticeType, fileStoreId, createdBy, lastModifiedBy, createdTime, lastModifiedTime, caseNo, caseCode, caseRefernceNo, summonReferenceNo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?);
+    - query: INSERT INTO egov_lcms_notice (code, tenantId, exhibitNo, courtName, courtAddress, applicant, defendant, chiefOfficerDetails, advocateName, day, witness, noticeType, fileStoreId, createdBy, lastModifiedBy, createdTime, lastModifiedTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.notice
       jsonMaps:
        - jsonPath: $.notice.code
@@ -1252,7 +1255,7 @@ serviceMaps:
     fromTopic: lcms-notice-update
     isTransaction: true
     queryMaps: 
-    - query: UPDATE egov_lcms_notice SET exhibitNo=?, courtName=?, courtAddress=?, applicant=?, defendant=?, chiefOfficerDetails=?, advocateName=?, day=?, witness=?, noticeType=?, fileStoreId=?, lastModifiedBy=?, lastModifiedTime=? caseNo=?, caseCode=?, caseRefernceNo = ?, summonReferenceNo = ? WHERE code=? and tenantid=?;
+    - query: UPDATE egov_lcms_notice SET exhibitNo=?, courtName=?, courtAddress=?, applicant=?, defendant=?, chiefOfficerDetails=?, advocateName=?, day=?, witness=?, noticeType=?, fileStoreId=?, lastModifiedBy=?, lastModifiedTime=? WHERE code=? and tenantid=?;
       basePath: $.notice
       jsonMaps:
        - jsonPath: $.notice.exhibitNo
@@ -1457,3 +1460,319 @@ serviceMaps:
        - jsonPath: $.referenceEvidences.*.code
 
        - jsonPath: $.referenceEvidences.*.tenantId
+
+
+  - version: 1.0
+    name: Agency And organization create
+    description: Creates Agency And organization
+    fromTopic: lcms-agency-create
+    isTransaction: true
+    queryMaps: 
+    - query: INSERT INTO egov_lcms_agency (name, code, agencyAddress, isIndividual, dateOfEmpanelment, standingCommitteeDecisionDate, empanelmentFromDate, newsPaperAdvertismentDate, empanelmentToDate, bankName, bankBranch, bankAccountNo, isfcCode, micr, isActive, isTerminate, inActiveDate, terminationDate, reasonOfTermination, tenantId, createdBy, lastModifiedBy, createdTime, lastModifiedTime) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+      basePath: $.agencies.*
+      jsonMaps:
+
+       - jsonPath: $.agencies.*.name
+       
+       - jsonPath: $.agencies.*.code
+       
+       - jsonPath: $.agencies.*.agencyAddress
+       
+       - jsonPath: $.agencies.*.isIndividual
+         type: BOOLEAN
+       
+       - jsonPath: $.agencies.*.dateOfEmpanelment
+         type: LONG
+
+       - jsonPath: $.agencies.*.standingCommitteeDecisionDate
+         type: LONG
+         
+       - jsonPath: $.agencies.*.empanelmentFromDate
+         type: LONG
+         
+       - jsonPath: $.agencies.*.newsPaperAdvertismentDate
+         type: LONG
+         
+       - jsonPath: $.agencies.*.empanelmentToDate
+         type: LONG
+         
+       - jsonPath: $.agencies.*.bankName
+       
+       - jsonPath: $.agencies.*.bankBranch
+       
+       - jsonPath: $.agencies.*.bankAccountNo
+       
+       - jsonPath: $.agencies.*.isfcCode
+       
+       - jsonPath: $.agencies.*.micr
+       
+       - jsonPath: $.agencies.*.isActive
+         type: BOOLEAN
+         
+       - jsonPath: $.agencies.*.isTerminate
+         type: BOOLEAN
+         
+       - jsonPath: $.agencies.*.inActiveDate
+         type: LONG
+       
+       - jsonPath: $.agencies.*.terminationDate
+         type: LONG
+         
+       - jsonPath: $.agencies.*.reasonOfTermination
+       
+       - jsonPath: $.agencies.*.tenantId
+       
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING
+
+       - jsonPath: createdTime
+         type: CURRENTDATE
+         dbType: LONG         
+
+       - jsonPath: lastModifiedTime
+         type: CURRENTDATE
+         dbType: LONG         
+
+         
+    - query: INSERT INTO egov_lcms_persondetails (name, code, agencyName, agencyCode, title, firstName, secondName, lastName, address, contactNo, vatTinNo, aadhar, gender, age, dob, mobileNumber, emailId, pan, tenantId, createdBy, lastModifiedBy, createdTime, lastModifiedTime) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+      basePath: $.agencies.*.personDetails.*
+      jsonMaps:
+
+       - jsonPath: $.personDetails.*.name
+       
+       - jsonPath: $.personDetails.*.code
+       
+       - jsonPath: $.personDetails.*.agencyName
+       
+       - jsonPath: $.personDetails.*.agencyCode
+       
+       - jsonPath: $.personDetails.*.title
+
+       - jsonPath: $.personDetails.*.firstName
+         
+       - jsonPath: $.personDetails.*.secondName
+         
+       - jsonPath: $.personDetails.*.lastName
+       
+       - jsonPath: $.personDetails.*.address
+         
+       - jsonPath: $.personDetails.*.contactNo
+         
+       - jsonPath: $.personDetails.*.vatTinNo
+       
+       - jsonPath: $.personDetails.*.aadhar
+       
+       - jsonPath: $.personDetails.*.gender
+       
+       - jsonPath: $.personDetails.*.age
+       
+       - jsonPath: $.personDetails.*.dob
+         type: LONG
+       
+       - jsonPath: $.personDetails.*.mobileNumber
+         
+       - jsonPath: $.personDetails.*.emailId
+         
+       - jsonPath: $.personDetails.*.pan
+       
+       - jsonPath: $.personDetails.*.tenantId
+       
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING
+
+       - jsonPath: createdTime
+         type: CURRENTDATE
+         dbType: LONG         
+
+       - jsonPath: lastModifiedTime
+         type: CURRENTDATE
+         dbType: LONG
+         
+
+  - version: 1.0
+    name: Agency And organization update
+    description: updates Agency And organization
+    fromTopic: lcms-agency-update
+    isTransaction: true
+    queryMaps: 
+    - query: UPDATE egov_lcms_agency SET name = ?, agencyAddress =?, isIndividual=?, dateOfEmpanelment =? , standingCommitteeDecisionDate=?, empanelmentFromDate=?, newsPaperAdvertismentDate=?, empanelmentToDate=?, bankName=?, bankBranch=?, bankAccountNo=?, isfcCode=?, micr=?, isActive=?, isTerminate=?, inActiveDate=?, terminationDate=?, reasonOfTermination=?, lastModifiedBy=?, lastModifiedTime=? WHERE code=? AND tenantId =?;
+      basePath: $.agencies.*
+      jsonMaps:
+
+       - jsonPath: $.agencies.*.name
+       
+       - jsonPath: $.agencies.*.agencyAddress
+       
+       - jsonPath: $.agencies.*.isIndividual
+         type: BOOLEAN
+       
+       - jsonPath: $.agencies.*.dateOfEmpanelment
+         type: LONG
+
+       - jsonPath: $.agencies.*.standingCommitteeDecisionDate
+         type: LONG
+         
+       - jsonPath: $.agencies.*.empanelmentFromDate
+         type: LONG
+         
+       - jsonPath: $.agencies.*.newsPaperAdvertismentDate
+         type: LONG
+         
+       - jsonPath: $.agencies.*.empanelmentToDate
+         type: LONG
+         
+       - jsonPath: $.agencies.*.bankName
+       
+       - jsonPath: $.agencies.*.bankBranch
+       
+       - jsonPath: $.agencies.*.bankAccountNo
+       
+       - jsonPath: $.agencies.*.isfcCode
+       
+       - jsonPath: $.agencies.*.micr
+       
+       - jsonPath: $.agencies.*.isActive
+         type: BOOLEAN
+         
+       - jsonPath: $.agencies.*.isTerminate
+         type: BOOLEAN
+         
+       - jsonPath: $.agencies.*.inActiveDate
+         type: LONG
+       
+       - jsonPath: $.agencies.*.terminationDate
+         type: LONG
+         
+       - jsonPath: $.agencies.*.reasonOfTermination
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING        
+
+       - jsonPath: lastModifiedTime
+         type: CURRENTDATE
+         dbType: LONG
+       
+       - jsonPath: $.agencies.*.code
+       
+       - jsonPath: $.agencies.*.tenantId
+
+         
+    - query: UPDATE egov_lcms_persondetails SET name=?,agencyName=?, agencyCode=?, title=?, firstName=?, secondName=?, lastName=?, address=?, contactNo=?, vatTinNo=?, aadhar=?, gender=?, age=?, dob=?, mobileNumber=?, emailId=?, pan=?,lastModifiedBy, lastModifiedTime WHERE code=? AND tenantId=?;
+      basePath: $.agencies.*.personDetails.*
+      jsonMaps:
+
+       - jsonPath: $.personDetails.*.name
+       
+       - jsonPath: $.personDetails.*.agencyName
+       
+       - jsonPath: $.personDetails.*.agencyCode
+       
+       - jsonPath: $.personDetails.*.title
+
+       - jsonPath: $.personDetails.*.firstName
+         
+       - jsonPath: $.personDetails.*.secondName
+         
+       - jsonPath: $.personDetails.*.lastName
+       
+       - jsonPath: $.personDetails.*.address
+         
+       - jsonPath: $.personDetails.*.contactNo
+         
+       - jsonPath: $.personDetails.*.vatTinNo
+       
+       - jsonPath: $.personDetails.*.aadhar
+       
+       - jsonPath: $.personDetails.*.gender
+       
+       - jsonPath: $.personDetails.*.age
+       
+       - jsonPath: $.personDetails.*.dob
+         type: LONG
+       
+       - jsonPath: $.personDetails.*.mobileNumber
+         
+       - jsonPath: $.personDetails.*.emailId
+         
+       - jsonPath: $.personDetails.*.pan
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING        
+
+       - jsonPath: lastModifiedTime
+         type: CURRENTDATE
+         dbType: LONG
+       
+       - jsonPath: $.personDetails.*.code
+       
+       - jsonPath: $.personDetails.*.tenantId
+         
+  
+  - version: 1.0
+    name: Perosnal details create
+    description: Creates Personal details on agency update
+    fromTopic: lcms-personal-details-create
+    isTransaction: true
+    queryMaps: 
+    - query: INSERT INTO egov_lcms_persondetails (name, code, agencyName, agencyCode, title, firstName, secondName, lastName, address, contactNo, vatTinNo, aadhar, gender, age, dob, mobileNumber, emailId, pan, tenantId, createdBy, lastModifiedBy, createdTime, lastModifiedTime) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+      basePath: $.agencies.*.personDetails.*
+      jsonMaps:
+
+       - jsonPath: $.personDetails.*.name
+       
+       - jsonPath: $.personDetails.*.code
+       
+       - jsonPath: $.personDetails.*.agencyName
+       
+       - jsonPath: $.personDetails.*.agencyCode
+       
+       - jsonPath: $.personDetails.*.title
+
+       - jsonPath: $.personDetails.*.firstName
+         
+       - jsonPath: $.personDetails.*.secondName
+         
+       - jsonPath: $.personDetails.*.lastName
+       
+       - jsonPath: $.personDetails.*.address
+         
+       - jsonPath: $.personDetails.*.contactNo
+         
+       - jsonPath: $.personDetails.*.vatTinNo
+       
+       - jsonPath: $.personDetails.*.aadhar
+       
+       - jsonPath: $.personDetails.*.gender
+       
+       - jsonPath: $.personDetails.*.age
+       
+       - jsonPath: $.personDetails.*.dob
+         type: LONG
+       
+       - jsonPath: $.personDetails.*.mobileNumber
+         
+       - jsonPath: $.personDetails.*.emailId
+         
+       - jsonPath: $.personDetails.*.pan
+       
+       - jsonPath: $.personDetails.*.tenantId
+       
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: STRING
+
+       - jsonPath: createdTime
+         type: CURRENTDATE
+         dbType: LONG         
+
+       - jsonPath: lastModifiedTime
+         type: CURRENTDATE
+         dbType: LONG

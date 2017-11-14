@@ -23,7 +23,6 @@ public class CollectionDetails {
 	@JsonProperty("id")
 	private String id = null;
 
-	@NotNull
 	@Size(min = 1, max = 256)
 	@JsonProperty("tenantId")
 	private String tenantId = null;

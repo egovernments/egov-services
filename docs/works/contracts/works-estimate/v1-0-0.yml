@@ -538,7 +538,7 @@ paths:
           in: query
           type: boolean
           required: false
-          description: Boolean value of the Detailed Estimate whether its Spill over or not
+          description: Boolean value of the Detailed Estimate whether its Spillover or not
         - name: createdBy
           in: query
           type: string
@@ -1398,7 +1398,7 @@ definitions:
       councilResolutionDate:
         type: integer
         format: int64
-        description: Epoch time of the council resolution date
+        description: Epoch time of the council resolution date. The future date is now allowed.
         x-displayformat: 'dd/MM/yyyy'
       workOrderCreated:
         type: boolean
@@ -1410,7 +1410,7 @@ definitions:
         default: false
       spillOverFlag:  
         type: boolean
-        description: Boolean value to identify whether the spill over or not.
+        description: Boolean value to identify whether the Detailed Estimate is spillover or not.
         default: false
       grossAmountBilled:  
         type: number
@@ -1559,7 +1559,7 @@ definitions:
         landAsset:
           type: string
           pattern: '[a-zA-Z0-9-\\]+'
-          description: Land Asset ID. This field needs to be shown if Nature of work is 'New'.
+          description: Land Asset ID. This field needs to be shown if Nature of work is 'New' and landAssetRequired=true from Abstract Estimate.
           format: singleValueList 
         detailedEstimate:
           type: string

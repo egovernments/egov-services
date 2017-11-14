@@ -13,11 +13,16 @@ public class DepreciationInputRowMapper implements RowMapper<DepreciationInputs>
 	@Override
 	public DepreciationInputs mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-		return DepreciationInputs.builder().lastDepreciationDate(rs.getLong("lastdepreciationdate"))
-				.currentValue(rs.getBigDecimal("currentValue")).assetCategory(rs.getLong("assetCategory"))
-				.accumulatedDepreciation(rs.getBigDecimal("accumulatedDepreciation")).originalValue(rs.getBigDecimal("originalValue"))
-				.grossValue(rs.getBigDecimal("grossValue")).tenantId(rs.getString("tenantid"))
-				.assetId(rs.getLong("assetId")).depreciationSum(rs.getBigDecimal("depreciationvaluesum")).build();
+		return DepreciationInputs.builder().lastDepreciationDate((Long) rs.getObject("lastdepreciationdate"))
+				.dateOfCreation((Long) rs.getObject("dateofcreation")).currentValue(rs.getBigDecimal("currentValue"))
+				.assetCategory((Long) rs.getObject("assetCategory")).assetaccount(rs.getString("assetaccount"))
+				.accumulatedDepreciation(rs.getBigDecimal("accumulatedDepreciation")).tenantId(rs.getString("tenantid"))
+				.accumulateddepreciationaccount(rs.getString("accumulateddepreciationaccount"))
+				.originalValue(rs.getBigDecimal("originalValue")).grossValue(rs.getBigDecimal("grossValue"))
+				.depreciationexpenseaccount(rs.getString("depreciationexpenseaccount"))
+				.revaluationreserveaccount(rs.getString("revaluationreserveaccount"))
+				.assetId((Long) rs.getObject("assetId")).depreciationSum(rs.getBigDecimal("depreciationvaluesum"))
+				.build();
 	}
 
 }

@@ -10,22 +10,13 @@ import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.VendorContract;
 import org.egov.swm.domain.model.VendorContractSearch;
 import org.egov.swm.persistence.entity.VendorContractEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class VendorContractJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_vendorcontract";
-
-	@Autowired
-	public JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public Pagination<VendorContract> search(VendorContractSearch searchRequest) {
 
@@ -39,72 +30,56 @@ public class VendorContractJdbcRepository extends JdbcRepository {
 			validateEntityFieldName(searchRequest.getSortBy(), VendorContractSearch.class);
 		}
 
-		String orderBy = "order by code";
+		String orderBy = "order by contractNo";
 		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
 			orderBy = "order by " + searchRequest.getSortBy();
 		}
 
 		if (searchRequest.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", searchRequest.getTenantId());
 		}
 
 		if (searchRequest.getContractNos() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("contractNo in(:contractNos) ");
 			paramValues.put("contractNos",
 					new ArrayList<String>(Arrays.asList(searchRequest.getContractNos().split(","))));
 		}
 
 		if (searchRequest.getVendorNo() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("vendor =:vendor");
 			paramValues.put("vendor", searchRequest.getVendorNo());
 		}
 
 		if (searchRequest.getContractNo() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("contractNo =:contractNo");
 			paramValues.put("contractNo", searchRequest.getContractNo());
 		}
 
 		if (searchRequest.getContractDate() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("contractDate =:contractDate");
 			paramValues.put("contractDate", searchRequest.getContractDate());
 		}
 
 		if (searchRequest.getContractPeriodFrom() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("contractPeriodFrom =:contractPeriodFrom");
 			paramValues.put("contractPeriodFrom", searchRequest.getContractPeriodFrom());
 		}
 
 		if (searchRequest.getContractPeriodTo() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("contractPeriodTo =:contractPeriodTo");
 			paramValues.put("contractPeriodTo", searchRequest.getContractPeriodTo());
 		}
 
 		if (searchRequest.getSecurityDeposit() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("securityDeposit =:securityDeposit");
 			paramValues.put("securityDeposit", searchRequest.getSecurityDeposit());
 		}
@@ -139,6 +114,11 @@ public class VendorContractJdbcRepository extends JdbcRepository {
 
 		List<VendorContractEntity> vendorContractEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
 				paramValues, row);
+
+		for (VendorContractEntity entity : vendorContractEntities) {
+
+			vendorContractList.add(entity.toDomain());
+		}
 
 		page.setTotalResults(vendorContractList.size());
 

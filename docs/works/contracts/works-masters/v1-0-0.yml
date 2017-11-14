@@ -452,15 +452,20 @@ paths:
         - name: name
           in: query
           required: false
-          description: The full name of the contractor.
+          description: The full name of the Contractor Agency/Firm.
           type: string
           allowEmptyValue: true
+          format: autoComplete
         - name: code
           in: query
+          type: array
+          items:
+            type: string
+          maxItems: 50
           required: false
-          description: code of the contractor.
-          type: string
           allowEmptyValue: true
+          format: autoComplete
+          description: Comma separated list of Codes of the contractor Agency/Firm
         - name: contractorClass
           in: query
           type: array
@@ -481,6 +486,19 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of the Contractor Status    
+        - name: correspondenceAddress
+          in: query
+          type: string
+          required: false
+          allowEmptyValue: true
+          description: The corresepondence address of the Contractor Agency/Firm.
+        - name: mobileNumber
+          in: query
+          type: number
+          required: false
+          allowEmptyValue: true
+          format: mobileNumber
+          description: The Mobile number of the Contractor Agency/Firm
       responses:
         200:
           description: Contractor(s) Retrieved Successfully
@@ -527,7 +545,8 @@ paths:
       summary: Update existing Contractor(s).
       description: |
           To update existing Contractor in the system. API supports bulk updation with max limit as defined in the Contractor Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Contractor, please pass array with one Contractor object.
-          In updade fields can be modified based on confguration defined in the system.
+          
+          In updade fields can be modified based on confguration defined in the system. The contractor code is now allowed to modify.
           
       parameters:
         - name: ContractorRequest
@@ -799,5 +818,6 @@ tags:
     description: APIs required for Contractor.
   - name: Remarks
     description: APIs required for Remarks.  
+
 
 

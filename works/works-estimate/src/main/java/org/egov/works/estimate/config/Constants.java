@@ -176,7 +176,10 @@ public class Constants {
     public static final String MESSAGE_SUBSCHEME_REQUIRED= "SubScheme data is required";
 
     public static final String KEY_BUDGETGROUP_NAME_REQUIRED= "BUDGET_NAME_REQUIRED";
-    public static final String MESSAGE_UDGETGROUP_NAME_REQUIRED= "Budget group name is required";
+    public static final String MESSAGE_BUDGETGROUP_NAME_REQUIRED= "Budget group name is required";
+    
+    public static final String KEY_ACCOUNTCODE_REQUIRED= "ACCOUNTCODE_REQUIRED";
+    public static final String MESSAGE_ACCOUNTCODE_REQUIRED= "Account Code is required";
 
     public static final String KEY_TYPEOFWORK_REQUIRED= "TYPEOFWORK_REQUIRED";
     public static final String MESSAGE_TYPEOFWORK_REQUIRED= "Type of work is required";

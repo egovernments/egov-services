@@ -1,9 +1,6 @@
 package org.egov.lcms.models;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.Email;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -19,141 +16,64 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Advocate {
-
-	@Size(min = 1, max = 100)
-	@JsonProperty("name")
-	private String name ;
-
-	@JsonProperty("code")
-	private String code ;
-
-	@Size(min = 1, max = 100)
-	@JsonProperty("organizationName")
-	private String organizationName ;
+public class Advocate extends PersonDetails {
 
 	@JsonProperty("isIndividual")
 	private Boolean isIndividual = true;
 
-	@NotNull	
-	@JsonProperty("title")
-	private String title ;
-
-	@NotNull	
-	@JsonProperty("firstName")
-	private String firstName ;
-
-	@NotNull	
-	@JsonProperty("secondName")
-	private String secondName ;
-
-	@NotNull	
-	@JsonProperty("lastName")
-	private String lastName ;
-
-	@NotNull	
-	@JsonProperty("address")
-	private String address ;
-
-	@NotNull	
-	@JsonProperty("contactNo")
-	private String contactNo ;
-
 	@NotNull
 	@JsonProperty("dateOfEmpanelment")
-	private Long dateOfEmpanelment ;
+	private Long dateOfEmpanelment;
 
 	@NotNull
 	@JsonProperty("standingCommitteeDecisionDate")
-	private Long standingCommitteeDecisionDate ;
+	private Long standingCommitteeDecisionDate;
 
 	@NotNull
 	@JsonProperty("empanelmentFromDate")
-	private Long empanelmentFromDate ;
-
-	@NotNull	
-	@Size(min = 12, max = 12)
-	@JsonProperty("aadhar")
-	private String aadhar ;
-
-	@NotNull	
-	@JsonProperty("gender")
-	private String gender ;
-
-	@NotNull	
-	@JsonProperty("age")
-	private String age ;
-
-	@NotNull
-	@JsonProperty("dob")
-	private Long dob ;
-
-	@NotNull	
-	@Size(min = 10, max = 10)
-	@JsonProperty("mobileNumber")
-	private String mobileNumber ;
-
-	@NotNull	
-	@Email
-	@JsonProperty("emailId")
-	private String emailId ;
-
-	@NotNull	
-	@Size(min = 10, max = 10)
-	@JsonProperty("pan")
-	private String pan ;
-
-	@JsonProperty("vatTinNo")
-	private String vatTinNo ;
+	private Long empanelmentFromDate;
 
 	@NotNull
 	@JsonProperty("newsPaperAdvertismentDate")
-	private Long newsPaperAdvertismentDate ;
+	private Long newsPaperAdvertismentDate;
 
 	@NotNull
 	@JsonProperty("empanelmentToDate")
-	private Long empanelmentToDate ;
+	private Long empanelmentToDate;
 
-	@NotNull	
+	@NotNull
 	@JsonProperty("bankName")
-	private String bankName ;
+	private String bankName;
 
-	@NotNull	
+	@NotNull
 	@JsonProperty("bankBranch")
-	private String bankBranch ;
+	private String bankBranch;
 
-	@NotNull	
+	@NotNull
 	@JsonProperty("bankAccountNo")
-	private String bankAccountNo ;
+	private String bankAccountNo;
 
-	@NotNull	
+	@NotNull
 	@JsonProperty("isfcCode")
-	private String isfcCode ;
+	private String isfcCode;
 
 	@NotNull
 	@JsonProperty("micr")
-	private String micr ;
+	private String micr;
 
 	@JsonProperty("isActive")
 	private Boolean isActive = true;
-	
+
 	@JsonProperty("isTerminate")
 	private Boolean isTerminate = false;
 
 	@JsonProperty("inActiveDate")
-	private Long inActiveDate ;
+	private Long inActiveDate;
 
 	@JsonProperty("terminationDate")
-	private Long terminationDate ;
+	private Long terminationDate;
 
 	@JsonProperty("reasonOfTermination")
-	private String reasonOfTermination ;
+	private String reasonOfTermination;
 
-	@NotNull
-	@Size(min = 4, max = 128)
-	@JsonProperty("tenantId")
-	private String tenantId ;
-
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails ;
 }

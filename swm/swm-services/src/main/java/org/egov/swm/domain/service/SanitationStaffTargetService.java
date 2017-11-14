@@ -100,7 +100,7 @@ public class SanitationStaffTargetService {
 		for (SanitationStaffTarget v : sanitationStaffTargetRequest.getSanitationStaffTargets()) {
 
 			setAuditDetails(v, userId);
-			
+
 			if (v.getCollectionPoints() == null) {
 				v.setCollectionPoints(new ArrayList<>());
 			}

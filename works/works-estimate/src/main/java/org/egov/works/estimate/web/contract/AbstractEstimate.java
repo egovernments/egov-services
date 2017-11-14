@@ -178,16 +178,16 @@ public class AbstractEstimate   {
   private AuditDetails auditDetails = null;
 
   @JsonProperty("abstractEstimateDetails")
-  private List<AbstractEstimateDetails> abstractEstimateDetails = new ArrayList<AbstractEstimateDetails>();
+  private List<AbstractEstimateDetails> abstractEstimateDetails = new ArrayList<>();
 
   @JsonProperty("sanctionDetails")
-  private List<AbstractEstimateSanctionDetail> sanctionDetails = null;
+  private List<AbstractEstimateSanctionDetail> sanctionDetails = new ArrayList<>();
 
   @JsonProperty("assetDetails")
-  private List<AbstractEstimateAssetDetail> assetDetails = null;
+  private List<AbstractEstimateAssetDetail> assetDetails = new ArrayList<>();
 
   @JsonProperty("documentDetails")
-  private List<DocumentDetail> documentDetails = null;
+  private List<DocumentDetail> documentDetails = new ArrayList<>();
 
   public AbstractEstimate id(String id) {
     this.id = id;

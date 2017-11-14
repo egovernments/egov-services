@@ -13,20 +13,12 @@ import org.egov.swm.domain.model.SourceSegregationSearch;
 import org.egov.swm.persistence.entity.SourceSegregationEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SourceSegregationJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_sourcesegregation";
-
-	@Autowired
-	public JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
 	public CollectionDetailsJdbcRepository collectionDetailsJdbcRepository;
@@ -55,40 +47,30 @@ public class SourceSegregationJdbcRepository extends JdbcRepository {
 		}
 
 		if (searchRequest.getCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("code in (:code)");
 			paramValues.put("code", searchRequest.getCode());
 		}
 
 		if (searchRequest.getCodes() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("code in (:codes)");
 			paramValues.put("codes", new ArrayList<String>(Arrays.asList(searchRequest.getCodes().split(","))));
 		}
 		if (searchRequest.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", searchRequest.getTenantId());
 		}
 
 		if (searchRequest.getSourceSegregationDate() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("sourceSegregationDate =:sourceSegregationDate");
 			paramValues.put("sourceSegregationDate", searchRequest.getSourceSegregationDate());
 		}
 
 		if (searchRequest.getDumpingGroundCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("dumpingGround =:dumpingGround");
 			paramValues.put("dumpingGround", searchRequest.getDumpingGroundCode());
 		}

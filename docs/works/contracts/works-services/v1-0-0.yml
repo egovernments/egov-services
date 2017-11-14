@@ -110,21 +110,8 @@ paths:
       summary: Create new offline status(s).
       description: |
           To create new offline status in the system. API supports bulk creation with max limit as defined in the offline status Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one offline status, please pass array with one offline status object.
-          List of offline status to be used to set Detailed Estimate
-                  - NOTICEINVITINGTENDERRELEASED
-                  - TENDER_DOCUMENT_RELEASED
-                  - TENDER_OPENED
-                  - TECHNICAL_EVALUATION_DONE
-                  - COMMERCIAL_EVALUATION_DONE
-                  - L1_TENDER_FINALIZED
-          List of offline status to be used to set LOA
-                  - ACCEPTANCE_LETTER_ISSUED
-                  - ACCEPTANCE_LETTER_ACKNOWLEDGED
-                  - AGREEMENT_ORDER_SIGNED
-          List of offline status to be used to set Work Order
-                  - WORK_ORDER_ACKNOWLEDGED
-                  - SITE_HANDED_OVER
-                  - WORK_COMMENCED
+          
+          The offline status feature used to set offline status for Detailed Estimate, Letter Of Acceptance and Work Order. The status, date, remarks and referencenumber will be captured as part of offline status along with object reference.
           
       parameters:
         - name: OfflineStatusRequest
@@ -154,22 +141,8 @@ paths:
       summary: Update existing Offline Status(s).
       description: |
           To update existing Offline Status in the system. API supports bulk updation with max limit as defined in the Offline Status Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Offline Status, please pass array with one Offline Status object.
-          List of offline status to be used to set Detailed Estimate
-                  - NOTICEINVITINGTENDERRELEASED
-                  - TENDER_DOCUMENT_RELEASED
-                  - TENDER_OPENED
-                  - TECHNICAL_EVALUATION_DONE
-                  - COMMERCIAL_EVALUATION_DONE
-                  - L1_TENDER_FINALIZED
-          List of offline status to be used to set LOA
-                  - ACCEPTANCE_LETTER_ISSUED
-                  - ACCEPTANCE_LETTER_ACKNOWLEDGED
-                  - AGREEMENT_ORDER_SIGNED
-          List of offline status to be used to set Work Order
-                  - WORK_ORDER_ACKNOWLEDGED
-                  - SITE_HANDED_OVER
-                  - WORK_COMMENCED
-          For a particular object type if any offline status is already setted then that field will be disabled in update mode.
+          
+          For a particular object type if any offline status is already there then that field will be disabled in update mode.
           
       parameters:
         - name: OfflineStatusRequest
@@ -450,34 +423,38 @@ definitions:
 
   OfflineStatus:
     type: object
-    description: An Object holds the basic data for a Offline Status
+    description: An Object that holds the basic data of Offline Status
     properties:
       id:
         type: string
         description: Unique Identifier of the Offline Status
       tenantId:
         type: string
-        description: tenant id of the Offline Status
+        description: Tenant id of the Offline Status
         maxLength: 128
         minLength: 2
       objectType:
         type: string
-        description: Object type for the offline status
+        description: Object type for the offline status. For example DetailedEstimate, LetterOfAcceptance and WorkOrder.
+      objectNumber:
+        type: string
+        description: Unique Identifier for the specified obect type. For example Detailed Estimate Number, LOA Number and Work Order number.
       status:
         type: string
         description: Offline status for the object type.
       statusDate:
         type: integer
         format: int64
-        description: Epoch time of Offline Status Date
+        description: Epoch time of Offline Status Date. The status and dates order is maintained.  Future date is not allowed to enter in this field. The current row date should be on or after the previous row date of the offline status.
         x-displayformat: 'dd/MM/yyyy'
-      objectNumber:
-        type: string
-        description: Unique Identifier for the specified obect type.
       remarks:
         type: string
+        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Remarks for the object type.
-
+      referenceNumber:
+        type: string
+        pattern: '[a-zA-Z0-9-\\]+'
+        description: Referenece number for the particular object. For example the Tender number needs to be captures for Tender Notice document release, Agreement number for Agreement order signed status.
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -579,4 +556,5 @@ tags:
     description: APIs required for Estimate Appropriation.
   - name: Document Detail
     description: APIs required for Document Detail
+
 

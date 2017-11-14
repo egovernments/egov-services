@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.config.ApplicationProperties;
 import org.egov.contract.AssetCurrentValueRequest;
@@ -62,7 +61,7 @@ public class AssetService {
 		// FIXME put asset code seq per ulb Ghanshyam will update
 		asset.setCode(asset.getTenantId() +"/"+ asset.getDepartmentCode() + "/"+asset.getAssetCategory().getCode()
 				+"/"+ assetCommonService.getCode(Sequence.ASSETCODESEQUENCE));
-		System.err.println("asset.getcode"+asset.getCode());
+		log.info("asset.getcode"+asset.getCode());
 
 		asset.setId(assetCommonService.getNextId(Sequence.ASSETSEQUENCE));
 		asset.setStatus(Status.CAPITALIZED.toString());
@@ -158,11 +157,11 @@ public class AssetService {
 		Map<String, String> fieldMap = new HashMap<>();
 		
 		fieldMap.put("id", assetCommonService.getIdQuery(idSet));
-		System.err.println("the field map : " + fieldMap);
+		log.info("the field map : " + fieldMap);
 		masterMap.put("AssetCategory", fieldMap);
-		System.err.println("the master map : " + masterMap);
+		log.info("the master map : " + masterMap);
 		moduleMap.put("ASSET", masterMap);
-		System.err.println("the module map : " + moduleMap);
+		log.info("the module map : " + moduleMap);
 		
 		Map<Long, AssetCategory> assetCatMap = mDService.getAssetCategoryMapFromJSONArray(mDService.getStateWideMastersByListParams(moduleMap, requestInfo, tenantId).get("ASSET"));
 		assets.forEach(asset -> {

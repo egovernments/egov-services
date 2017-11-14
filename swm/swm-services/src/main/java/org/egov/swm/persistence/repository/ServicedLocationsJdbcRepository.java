@@ -5,10 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.swm.domain.model.ServicedLocations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,12 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ServicedLocationsJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_vendorservicedlocations";
-
-	@Autowired
-	public JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Transactional
 	public void delete(String tenantId, String vendor) {
@@ -36,25 +27,19 @@ public class ServicedLocationsJdbcRepository extends JdbcRepository {
 		StringBuffer params = new StringBuffer();
 
 		if (searchRequest.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", searchRequest.getTenantId());
 		}
 
 		if (searchRequest.getVendor() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("vendor =:vendor");
 			paramValues.put("vendor", searchRequest.getVendor());
 		}
 
 		if (searchRequest.getLocation() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("location =:location");
 			paramValues.put("location", searchRequest.getLocation());
 		}

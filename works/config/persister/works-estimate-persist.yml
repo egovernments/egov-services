@@ -9,7 +9,7 @@ serviceMaps:
    queryMaps:
     - query: INSERT INTO egw_abstractestimate(
         id, tenantid, abstractestimatenumber, subject, fund, referencetype, 
-        referencenumber, function, description, budgethead, scheme, subscheme, 
+        referencenumber, function, description, budgethead, accountcode, scheme, subscheme, 
         dateofproposal, department, adminsanctionnumber, adminsanctiondate, 
         adminsanctionby, status, beneficiary, modeofallotment, typeofwork, 
         natureofwork, subtypeofwork, ward, financialsanctionnumber, financialsanctiondate, 
@@ -20,7 +20,7 @@ serviceMaps:
         pmcrequired, pmctype, pmcname, workproposedasperdp, dpremarks, landassetrequired,
         nooflands, otherassetspecificationremarks, createdby, createdtime, lastmodifiedby, 
         lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
-        ?, ?, ?, ?, ?, 
+        ?, ?, ?, ?, ?, ?,
         ?, ?, ?, ?, ?, 
         ?, ?, ?, ?, 
         ?, ?, ?, ?, 
@@ -50,6 +50,8 @@ serviceMaps:
        - jsonPath: $.abstractEstimates.*.description
        
        - jsonPath: $.abstractEstimates.*.budgetGroup.name
+
+       - jsonPath: $.abstractEstimates.*.accountCode
        
        - jsonPath: $.abstractEstimates.*.scheme.code
                  
@@ -265,7 +267,7 @@ serviceMaps:
    fromTopic: works-abstract-estimate-update
    isTransaction: true
    queryMaps:
-    - query: UPDATE egw_abstractestimate SET abstractestimatenumber=?, subject=?, fund=?, referencetype=?, referencenumber=?, function=?, description=?, budgethead=?, scheme=?, subscheme=?, dateofproposal=?, department=?, adminsanctionnumber=?, adminsanctiondate=?, adminsanctionby=?, status=?, beneficiary=?, modeofallotment=?, typeofwork=?, natureofwork=?, subtypeofwork=?, ward=?, financialsanctionnumber=?, financialsanctiondate=?, financialsanctionby=?, locality=?, workcategory=?, councilresolutionnumber=?, councilresolutiondate=?, workordercreated=?, billscreated=?, spilloverflag=?, cancellationreason=?, cancellationremarks=?, detailedestimatecreated=?, stateid=?, asset=?, implementationperiod=?, fundavailable=?, fundsanctioningauthority=?, pmcrequired=?, pmctype=?, pmcname=?, workproposedasperdp=?, dpremarks=?, landassetrequired=?, nooflands=?, otherassetspecificationremarks=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+    - query: UPDATE egw_abstractestimate SET abstractestimatenumber=?, subject=?, fund=?, referencetype=?, referencenumber=?, function=?, description=?, budgethead=?, accountcode=?, scheme=?, subscheme=?, dateofproposal=?, department=?, adminsanctionnumber=?, adminsanctiondate=?, adminsanctionby=?, status=?, beneficiary=?, modeofallotment=?, typeofwork=?, natureofwork=?, subtypeofwork=?, ward=?, financialsanctionnumber=?, financialsanctiondate=?, financialsanctionby=?, locality=?, workcategory=?, councilresolutionnumber=?, councilresolutiondate=?, workordercreated=?, billscreated=?, spilloverflag=?, cancellationreason=?, cancellationremarks=?, detailedestimatecreated=?, stateid=?, asset=?, implementationperiod=?, fundavailable=?, fundsanctioningauthority=?, pmcrequired=?, pmctype=?, pmcname=?, workproposedasperdp=?, dpremarks=?, landassetrequired=?, nooflands=?, otherassetspecificationremarks=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
       basePath: $.abstractEstimates.*
       jsonMaps:
          
@@ -275,7 +277,7 @@ serviceMaps:
        
        - jsonPath: $.abstractEstimates.*.fund.code
        
-       - jsonPath: $.abstractEstimates.*.referenceType
+       - jsonPath: $.abstractEstimates.*.referenceType.code
        
        - jsonPath: $.abstractEstimates.*.referenceNumber
        
@@ -284,6 +286,8 @@ serviceMaps:
        - jsonPath: $.abstractEstimates.*.description
        
        - jsonPath: $.abstractEstimates.*.budgetGroup.name
+
+       - jsonPath: $.abstractEstimates.*.accountCode
        
        - jsonPath: $.abstractEstimates.*.scheme.code
                  

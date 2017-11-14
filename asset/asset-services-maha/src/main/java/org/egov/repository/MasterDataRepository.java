@@ -14,6 +14,8 @@ import org.egov.mdms.service.MdmsClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import net.minidev.json.JSONArray;
 
 @Repository
@@ -25,11 +27,9 @@ public class MasterDataRepository {
 	public Map<String, Map<String, JSONArray>> getMastersByListParams(
 			Map<String, Map<String, Map<String, String>>> moduleMap, RequestInfo requestInfo, String tenantId) {
 
-		System.out.println("the map recieved : " +moduleMap);
 		Map<String, List<MasterDetail>> map = new HashMap<>();
 
 		for (String moduleKey : moduleMap.keySet()) {
-			System.out.println("the module key");
 			Map<String, Map<String, String>> masterMap = moduleMap.get(moduleKey);
 
 			List<MasterDetail> masterDetails = new ArrayList<>();
@@ -40,19 +40,15 @@ public class MasterDataRepository {
 				StringBuilder filterString = new StringBuilder("[?( ");
 
 				Set<String> fieldSet = fieldMap.keySet();
-				System.out.println("the field key set : "+ fieldSet);
 				String[] fieldSetArray = new String[fieldSet.size()];
 				fieldSetArray = fieldSet.toArray(fieldSetArray);
-				System.out.println("the array size : "+ fieldSetArray.length);
 				for (int index = 0; index < fieldSetArray.length; index++) {
 					String fieldName = fieldSetArray[index];
-					System.err.println("index : "+index + " value of name : "+fieldName);
 					if (index != 0)
 						filterString.append(" && ");
 					filterString.append("@." + fieldName + " in [" + fieldMap.get(fieldName) + "]");
 				}
 				filterString.append(")]");
-				System.err.println("the filter and master name : " + filterString + " module name : " + moduleKey);
 				masterDetails.add(MasterDetail.builder().name(masterKey).filter(filterString.toString()).build());
 			}
 			map.put(moduleKey, masterDetails);
@@ -76,8 +72,8 @@ public class MasterDataRepository {
 		mdmsClientService.getMaster(requestInfo, tenantId, map).getMdmsRes().get("egf-master").get("financialYears")
 				.get(0);
 
-		return (FinancialYear) mdmsClientService.getMaster(requestInfo, tenantId, map).getMdmsRes().get("egf-master")
-				.get("financialYears").get(0);
+		return new ObjectMapper().convertValue(mdmsClientService.getMaster(requestInfo, tenantId, map).getMdmsRes()
+				.get("egf-master").get("financialYears").get(0), FinancialYear.class);
 	}
 
 }

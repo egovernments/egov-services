@@ -1,8 +1,6 @@
 package org.egov.service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -10,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -17,12 +16,15 @@ import org.egov.config.ApplicationProperties;
 import org.egov.contract.AssetCurrentValueRequest;
 import org.egov.contract.DepreciationRequest;
 import org.egov.contract.DepreciationResponse;
+import org.egov.contract.FinancialYear;
 import org.egov.model.AssetCategory;
 import org.egov.model.CurrentValue;
 import org.egov.model.Depreciation;
 import org.egov.model.DepreciationDetail;
 import org.egov.model.DepreciationInputs;
 import org.egov.model.criteria.DepreciationCriteria;
+import org.egov.model.enums.DepreciationStatus;
+import org.egov.model.enums.ReasonForFailure;
 import org.egov.model.enums.Sequence;
 import org.egov.model.enums.TransactionType;
 import org.egov.repository.DepreciationRepository;
@@ -31,14 +33,17 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class DepreciationService {
 
-	//@Autowired private AssetService assetService;
+	// @Autowired private AssetService assetService;
 
 	@Autowired
 	private AssetCommonService assetCommonService;
-	
+
 	@Autowired
 	private MasterDataService mDService;
 
@@ -58,16 +63,16 @@ public class DepreciationService {
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	public DepreciationResponse createDepreciationAsync(DepreciationRequest depreciationRequest) {
-		
+
 		DepreciationCriteria criteria = depreciationRequest.getDepreciationCriteria();
 		RequestInfo requestInfo = depreciationRequest.getRequestInfo();
 
-		if(criteria.getToDate() > new Date().getTime()) {
-			Map<String,String> map = new HashMap<>();
-			map.put("egasset_depreciation_depreciationdate","Assets cannot be depreciated for future dates");
+		if (criteria.getToDate() > new Date().getTime()) {
+			Map<String, String> map = new HashMap<>();
+			map.put("egasset_depreciation_depreciationdate", "Assets cannot be depreciated for future dates");
 			throw new CustomException(map);
 		}
-		calculateFinancialStartDate(criteria);
+		getFinancialYearData(depreciationRequest);
 
 		Depreciation depreciation = depreciateAssets(depreciationRequest);
 
@@ -94,6 +99,8 @@ public class DepreciationService {
 
 		List<DepreciationInputs> depreciationInputsList = depreciationRepository
 				.getDepreciationInputs(depreciationCriteria);
+		
+		log.info("the list of assets fetched : "+ depreciationInputsList);
 
 		List<DepreciationDetail> depreciationDetailsList = new ArrayList<>();
 		List<CurrentValue> currentValues = new ArrayList<>();
@@ -144,20 +151,38 @@ public class DepreciationService {
 			List<DepreciationDetail> depDetList, List<CurrentValue> currValList, Long fromDate, Long toDate) {
 
 		depreciationInputsList.forEach(a -> {
-			// getting the amt to be depreciated
-			BigDecimal amtToBeDepreciated = getAmountToBeDepreciated(a, fromDate, toDate);
+			
+			log.info("the current depreciation input object : "+ a);
+			// TODO get value form master
+			BigDecimal minValue = BigDecimal.ONE;
+			DepreciationStatus status = DepreciationStatus.FAIL;
+			BigDecimal amtToBeDepreciated = null;
+			BigDecimal valueAfterDep = null;
+			ReasonForFailure reason = null;
 
-			// calculating the valueAfterDepreciation
-			BigDecimal valueAfterDep = a.getCurrentValue().subtract(amtToBeDepreciated);
+			if (a.getCurrentValue().compareTo(minValue) <= 0) {
+
+				reason = ReasonForFailure.ASSET_IS_FULLY_DEPRECIATED_TO_MINIMUN_VALUE;
+			} else {
+
+				status = DepreciationStatus.SUCCESS;
+				// getting the amt to be depreciated
+				amtToBeDepreciated = getAmountToBeDepreciated(a, fromDate, toDate);
+
+				// calculating the valueAfterDepreciation
+				valueAfterDep = a.getCurrentValue().subtract(amtToBeDepreciated);
+
+				// adding currval to the currval list
+				currValList.add(CurrentValue.builder().assetId(a.getAssetId())
+						.assetTranType(TransactionType.DEPRECIATION).currentAmount(valueAfterDep)
+						.transactionDate(toDate).tenantId(a.getTenantId()).build());
+			}
 
 			// adding the depreciation detail object to list
-			depDetList.add(DepreciationDetail.builder().assetId(a.getAssetId())
+			depDetList.add(DepreciationDetail.builder().assetId(a.getAssetId()).reasonForFailure(reason)
 					.depreciationRate(a.getDepreciationRate()).depreciationValue(amtToBeDepreciated)
-					.valueAfterDepreciation(valueAfterDep).valueBeforeDepreciation(a.getCurrentValue()).build());
-
-			// adding currval to the currval list
-			currValList.add(CurrentValue.builder().assetId(a.getAssetId()).assetTranType(TransactionType.DEPRECIATION)
-					.currentAmount(valueAfterDep).transactionDate(toDate).tenantId(a.getTenantId()).build());
+					.valueAfterDepreciation(valueAfterDep).valueBeforeDepreciation(a.getCurrentValue()).status(status)
+					.build());
 		});
 	}
 
@@ -172,23 +197,47 @@ public class DepreciationService {
 	 */
 	private BigDecimal getAmountToBeDepreciated(DepreciationInputs depInputs, Long fromDate, Long toDate) {
 
-		// deciding the from date for the current depreciation from the last
-		// depreciation date
-		if (depInputs.getLastDepreciationDate().compareTo(fromDate) >= 0)
+		// deciding the from date from the last depreciation date
+		if (depInputs.getLastDepreciationDate()!=null && depInputs.getLastDepreciationDate().compareTo(fromDate) >= 0) {
 			fromDate = depInputs.getLastDepreciationDate();
-		else {
-			// set asset dateofcreation as from date if it is greater than financial from date
+			fromDate += 86400l; // adding one day in milli seconds to start depreciation from next day
+		} else if (depInputs.getDateOfCreation() > fromDate) {
+			fromDate = depInputs.getDateOfCreation();
+			fromDate += 86400l;
 		}
 
-		// getting the no of days betweeen the from and todate using ChronoUnit
-		Long noOfDays = ((toDate - fromDate) / 1000 / 60 / 60 / 24)+1;
+		// getting the no of days betweeen the from and todate (including both from and
+		// to date)
+		Long noOfDays = ((toDate - fromDate) / 1000 / 60 / 60 / 24) + 1;
+		log.info("no of days between fromdate : " + fromDate + " and todate : " + toDate + " is : " + noOfDays);
 
 		// deprate for the no of days = no of days * calculated dep rate per day
 		Double depRateForGivenPeriod = noOfDays * depInputs.getDepreciationRate() / 365;
+		log.info("dep rate for given period is : " + depRateForGivenPeriod);
 
 		// returning the calculated amt to be depreciated using the currentvalue from
 		// dep inputs and depreciation rate for given period
 		return BigDecimal.valueOf(depInputs.getCurrentValue().doubleValue() * (depRateForGivenPeriod / 100));
+	}
+
+	private void getFinancialYearData(DepreciationRequest depreciationRequest) {
+
+		DepreciationCriteria criteria = depreciationRequest.getDepreciationCriteria();
+		Long todate = criteria.getToDate();
+
+		FinancialYear financialYear = mDService.getFinancialYear(todate, depreciationRequest.getRequestInfo(),
+				criteria.getTenantId());
+		// setting the toDate hours to 23 and mins to 59
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(todate);
+		calendar.setTimeZone(TimeZone.getTimeZone(applicationProperties.getTimeZone()));
+		calendar.set(Calendar.HOUR_OF_DAY, 23);
+		calendar.set(Calendar.MINUTE, 59);
+
+		log.info(" to date set to 23 59... : "+todate);
+		criteria.setToDate(calendar.getTimeInMillis());
+		criteria.setFinancialYear(financialYear.getFinYearRange());
+		criteria.setFromDate(financialYear.getStartingDate());
 	}
 
 	/***
@@ -207,49 +256,16 @@ public class DepreciationService {
 		Map<String, Map<String, Map<String, String>>> moduleMap = new HashMap<>();
 		Map<String, Map<String, String>> masterMap = new HashMap<>();
 		Map<String, String> fieldMap = new HashMap<>();
-		
+
 		fieldMap.put("id", assetCommonService.getIdQuery(assetCategoryIds));
 		masterMap.put("AssetCategory", fieldMap);
 		moduleMap.put("ASSET", masterMap);
-		
-		Map<Long, AssetCategory> assetCatMap = mDService.getAssetCategoryMapFromJSONArray(mDService.getStateWideMastersByListParams(moduleMap, requestInfo, tenantId).get("ASSET"));
+
+		Map<Long, AssetCategory> assetCatMap = mDService.getAssetCategoryMapFromJSONArray(
+				mDService.getStateWideMastersByListParams(moduleMap, requestInfo, tenantId).get("ASSET"));
 
 		depreciationInputsList
 				.forEach(a -> a.setDepreciationRate(assetCatMap.get(a.getAssetCategory()).getDepreciationRate()));
-
-		/*
-		 * //FIXME remove after testing depreciationInputsList.forEach(a ->
-		 * a.setDepreciationRate(10.0));
-		 */
-	}
-
-	private void calculateFinancialStartDate(DepreciationCriteria criteria) {
-
-		// setting the toDate hours to 23 and mins to 59
-		Long todate = criteria.getToDate();
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(todate);
-		int year = calendar.get(Calendar.YEAR);
-		int month = calendar.get(Calendar.MONTH);
-		calendar.set(Calendar.HOUR_OF_DAY, 23);
-		calendar.set(Calendar.MINUTE, 59);
-		criteria.setToDate(calendar.getTimeInMillis());
-
-		// choosing the finacial year based on todate month
-		if (month < 3) {
-			criteria.setFinancialYear(year-1+"-"+year);
-			year = year - 1;
-		}else
-			criteria.setFinancialYear(year+"-"+(year+1));
-
-		// setting from date value
-		calendar.set(Calendar.YEAR, year);
-		calendar.set(Calendar.MONTH, Calendar.APRIL);
-		calendar.set(Calendar.DATE, 1);
-		calendar.set(Calendar.HOUR_OF_DAY, 0);
-		calendar.set(Calendar.MINUTE, 0);
-		criteria.setFromDate(calendar.getTimeInMillis());
-		System.err.println("from date calculated : " + criteria.getFromDate());
 	}
 
 }

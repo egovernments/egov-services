@@ -14,7 +14,6 @@ import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.config.Constants;
 import org.egov.works.estimate.domain.repository.AbstractEstimateRepository;
 import org.egov.works.estimate.domain.service.AbstractEstimateService;
-import org.egov.works.estimate.domain.service.DetailedEstimateService;
 import org.egov.works.estimate.persistence.helper.DetailedEstimateHelper;
 import org.egov.works.estimate.persistence.repository.*;
 import org.egov.works.estimate.utils.EstimateUtils;
@@ -126,9 +125,7 @@ public class EstimateValidator {
                 isFinIntReq = true;
         }
 
-        if (isFinIntReq)
-            validateFinancialDetails(abstractEstimate, requestInfo, messages);
-
+        validateFinancialDetails(abstractEstimate, isFinIntReq, requestInfo, messages);
         validateTypeOfWork(abstractEstimate.getTypeOfWork(), abstractEstimate.getTenantId(), requestInfo, messages);
         validateSubTypeOfWork(abstractEstimate.getSubTypeOfWork(), abstractEstimate.getTenantId(), requestInfo,
                 messages);
@@ -160,16 +157,18 @@ public class EstimateValidator {
     }
 
 
-    private void validateFinancialDetails(AbstractEstimate abstractEstimate, RequestInfo requestInfo,
+    private void validateFinancialDetails(AbstractEstimate abstractEstimate, Boolean isFinIntReq, RequestInfo requestInfo,
                                           Map<String, String> messages) {
         validateFund(abstractEstimate.getFund(), abstractEstimate.getTenantId(), requestInfo, messages);
         validateFunction(abstractEstimate.getFunction(), abstractEstimate.getTenantId(), requestInfo, messages);
         validateScheme(abstractEstimate.getScheme(), abstractEstimate.getTenantId(), requestInfo, messages);
         validateSubScheme(abstractEstimate.getSubScheme(), abstractEstimate.getTenantId(), requestInfo, messages);
-        validateBudgetGroup(abstractEstimate.getBudgetGroup(), abstractEstimate.getTenantId(), requestInfo, messages);
+        // TODO: MDMS data needs to be added
+//        validateBudgetGroup(abstractEstimate.getBudgetGroup(), abstractEstimate.getTenantId(), requestInfo, messages);
+        validateAccountCode(abstractEstimate.getAccountCode(), isFinIntReq, messages);
     }
 
-    public void validateFund(Fund fund, String tenantId, RequestInfo requestInfo, Map<String, String> messages) {
+	public void validateFund(Fund fund, String tenantId, RequestInfo requestInfo, Map<String, String> messages) {
         JSONArray responseJSONArray;
         if (fund != null && fund.getCode() != null) {
             responseJSONArray = estimateUtils.getMDMSData(Constants.FUND_OBJECT,
@@ -182,7 +181,6 @@ public class EstimateValidator {
         } else
             messages.put(Constants.KEY_FUND_REQUIRED,
                     Constants.MESSAGE_FUND_REQUIRED);
-
     }
 
     public void validateFunction(Function function, String tenantId, RequestInfo requestInfo,
@@ -195,10 +193,10 @@ public class EstimateValidator {
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
                 messages.put(Constants.KEY_FUNCTION_INVALID,
                         Constants.MESSAGE_FUNCTION_INVALID);
-            } else
+            }
+        } else
                messages.put(Constants.KEY_FUNCTION_REQUIRED,
                     Constants.MESSAGE_FUNCTION_REQUIRED);
-        }
     }
 
     public void validateScheme(Scheme scheme, String tenantId, RequestInfo requestInfo, Map<String, String> messages) {
@@ -210,9 +208,7 @@ public class EstimateValidator {
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
                 messages.put(Constants.KEY_SCHEME_INVALID,
                         Constants.MESSAGE_SCHEME_INVALID);
-            } else
-                messages.put(Constants.KEY_SCHEME_REQUIRED,
-                        Constants.MESSAGE_SCHEME_REQUIRED);
+            }
         }
     }
 
@@ -226,9 +222,7 @@ public class EstimateValidator {
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
                 messages.put(Constants.KEY_SUBSCHEME_INVALID,
                         Constants.MESSAGE_SUBSCHEME_INVALID);
-            } else
-                messages.put(Constants.KEY_SUBSCHEME_REQUIRED,
-                        Constants.MESSAGE_SUBSCHEME_REQUIRED);
+            }
         }
     }
 
@@ -242,58 +236,64 @@ public class EstimateValidator {
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
                 messages.put(Constants.KEY_BUDGETGROUP_INVALID,
                         Constants.MESSAGE_BUDGETGROUP_INVALID);
-            } else
-                messages.put(Constants.KEY_BUDGETGROUP_NAME_REQUIRED,
-                        Constants.MESSAGE_UDGETGROUP_NAME_REQUIRED);
-        }
+            }
+        } else
+            messages.put(Constants.KEY_BUDGETGROUP_NAME_REQUIRED,
+                    Constants.MESSAGE_BUDGETGROUP_NAME_REQUIRED);
     }
+    
+    private void validateAccountCode(String accountCode, Boolean isFinIntReq, Map<String, String> messages) {
+    	if (isFinIntReq && accountCode == null)
+    		messages.put(Constants.KEY_ACCOUNTCODE_REQUIRED,
+                    Constants.MESSAGE_ACCOUNTCODE_REQUIRED);
+	}
 
     public void validateTypeOfWork(TypeOfWork typeOfWork, String tenantId, RequestInfo requestInfo,
                                    Map<String, String> messages) {
         JSONArray responseJSONArray;
-        if (typeOfWork != null && typeOfWork.getName() != null) {
+        if (typeOfWork != null && typeOfWork.getCode() != null) {
             responseJSONArray = estimateUtils.getMDMSData(Constants.TYPEOFWORK_OBJECT,
                     CommonConstants.CODE, typeOfWork.getCode(), tenantId, requestInfo,
                     Constants.WORKS_MODULE_CODE);
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
                 messages.put(Constants.KEY_TYPEOFWORK_INVALID,
                         Constants.MESSAGE_TYPEOFWORK_INVALID);
-            } else
-                messages.put(Constants.KEY_TYPEOFWORK_REQUIRED,
-                        Constants.MESSAGE_TYPEOFWORK_REQUIRED);
-        }
+            }
+        } else
+            messages.put(Constants.KEY_TYPEOFWORK_REQUIRED,
+                    Constants.MESSAGE_TYPEOFWORK_REQUIRED);
     }
 
     public void validateSubTypeOfWork(TypeOfWork subTypeOfWork, String tenantId, RequestInfo requestInfo,
                                       Map<String, String> messages) {
         JSONArray responseJSONArray;
-        if (subTypeOfWork != null && subTypeOfWork.getName() != null) {
+        if (subTypeOfWork != null && subTypeOfWork.getCode() != null) {
             responseJSONArray = estimateUtils.getMDMSData(Constants.TYPEOFWORK_OBJECT,
                     CommonConstants.CODE, subTypeOfWork.getCode(), tenantId, requestInfo,
                     Constants.WORKS_MODULE_CODE);
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
                 messages.put(Constants.KEY_SUBTYPEOFWORK_INVALID,
                         Constants.MESSAGE_SUBTYPEOFWORK_INVALID);
-            } else
-                messages.put(Constants.KEY_DEPARTMENT_CODE_REQUIRED,
-                        Constants.MESSAGE_DEPARTMENT_CODE_REQUIRED);
-        }
+            }
+        } else
+            messages.put(Constants.KEY_DEPARTMENT_CODE_REQUIRED,
+                    Constants.MESSAGE_DEPARTMENT_CODE_REQUIRED);
     }
 
     public void validateDepartment(Department department, String tenantId, RequestInfo requestInfo,
                                    Map<String, String> messages) {
         JSONArray responseJSONArray;
-        if (department != null && department.getName() != null) {
+        if (department != null && department.getCode() != null) {
             responseJSONArray = estimateUtils.getMDMSData(Constants.DEPARTMENT_OBJECT,
                     CommonConstants.CODE, department.getCode(), tenantId, requestInfo,
                     Constants.COMMON_MASTERS_MODULE_CODE);
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
                 messages.put(Constants.KEY_DEPARTMENT_INVALID,
                         Constants.MESSAGE_DEPARTMENT_INVALID);
-            } else
-                messages.put(Constants.KEY_SUBTYPEOFWORK_REQUIRED,
-                        Constants.MESSAGE_SUBTYPEOFWORK_REQUIRED);
-        }
+            }
+        } else
+            messages.put(Constants.KEY_SUBTYPEOFWORK_REQUIRED,
+                    Constants.MESSAGE_SUBTYPEOFWORK_REQUIRED);
     }
 
     public void validateDetailedEstimates(DetailedEstimateRequest detailedEstimateRequest) {

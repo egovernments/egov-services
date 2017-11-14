@@ -33,7 +33,7 @@ import UiDialogBox from './components/UiDialogBox'
 import UigoogleMaps from './components/UigoogleMaps'
 import UiWorkflow from './components/UiWorkflow';
 import UiTimeField from './components/UiTimeField';
-
+import UiWindowForm from './components/UiWindowForm';
 let styles={
   reducePadding: {
     paddingTop:4,
@@ -210,6 +210,10 @@ export default class ShowFields extends Component {
         return <UiWorkflow tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} initiateWF={this.props.initiateWF} workflowId={this.props.workflowId || ""}/>
       case 'timePicker':
         return <UiTimeField tabIndex={index} ui={this.props.ui}
+        getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors}
+        handler={this.props.handler} screen={screen}/>;
+      case 'window':
+        return <UiWindowForm tabIndex={index} ui={this.props.ui}
         getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors}
         handler={this.props.handler} screen={screen}/>;
       case 'customComponent':

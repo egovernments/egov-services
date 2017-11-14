@@ -90,6 +90,8 @@ public class Material   {
     public enum StatusEnum {
         ACTIVE("Active"),
 
+        INACTIVE("Inactive"),
+
         WITHDRAWN("Withdrawn"),
 
         OBSOLETE("Obsolete");
@@ -385,7 +387,7 @@ public class Material   {
      **/
     @ApiModelProperty(value = "inventory type of the Material ")
 
-
+    @NotNull
     public InventoryTypeEnum getInventoryType() {
         return inventoryType;
     }

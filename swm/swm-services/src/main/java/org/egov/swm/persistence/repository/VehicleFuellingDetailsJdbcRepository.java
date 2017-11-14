@@ -9,18 +9,13 @@ import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.VehicleFuellingDetails;
 import org.egov.swm.domain.model.VehicleFuellingDetailsSearch;
 import org.egov.swm.persistence.entity.VehicleFuellingDetailsEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_vehiclefuellingdetails";
-
-	@Autowired
-	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {
@@ -46,85 +41,63 @@ public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
 		}
 
 		if (searchRequest.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", searchRequest.getTenantId());
 		}
 		if (searchRequest.getTransactionNo() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("transactionNo =:transactionNo");
 			paramValues.put("transactionNo", searchRequest.getTransactionNo());
 		}
 		if (searchRequest.getTransactionDate() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("transactionDate =:transactionDate");
 			paramValues.put("transactionDate", searchRequest.getTransactionDate());
 		}
 		if (searchRequest.getFuelTypeCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("typeOfFuel =:typeOfFuel");
 			paramValues.put("typeOfFuel", searchRequest.getFuelTypeCode());
 		}
 		if (searchRequest.getRegNumber() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("vehicle =:vehicle");
 			paramValues.put("vehicle", searchRequest.getRegNumber());
 		}
 		if (searchRequest.getVehicleReadingDuringFuelling() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("vehicleReadingDuringFuelling =:vehicleReadingDuringFuelling");
 			paramValues.put("vehicleReadingDuringFuelling", searchRequest.getVehicleReadingDuringFuelling());
 		}
 
 		if (searchRequest.getRefuellingStationName() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("refuellingStation =:refuellingStation");
 			paramValues.put("refuellingStation", searchRequest.getRefuellingStationName());
 		}
 
 		if (searchRequest.getFuelFilled() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("fuelFilled =:fuelFilled");
 			paramValues.put("fuelFilled", searchRequest.getFuelFilled());
 		}
 
 		if (searchRequest.getTotalCostIncurred() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("totalCostIncurred =:totalCostIncurred");
 			paramValues.put("totalCostIncurred", searchRequest.getTotalCostIncurred());
 		}
 
 		if (searchRequest.getReceiptNo() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("receiptNo =:receiptNo");
 			paramValues.put("receiptNo", searchRequest.getReceiptNo());
 		}
 
 		if (searchRequest.getReceiptDate() != null) {
 
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("receiptDate =:receiptDate");
 			paramValues.put("receiptDate", searchRequest.getReceiptDate());
 		}

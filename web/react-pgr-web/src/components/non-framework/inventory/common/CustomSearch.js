@@ -126,7 +126,7 @@ export default class CustomSearch extends Component {
     let {moduleName, actionName, metaData, setRoute, tableSelectionData} = this.props;
     let obj = metaData[`${moduleName}.${actionName}`];
     if(tableSelectionData && tableSelectionData.length === 1){
-      let url = obj.result['rowClickUrlView'].replace(REGEXP_MATCH_PARAM, tableSelectionData[0])
+      let url = obj.result['rowClickUrlView'].replace(REGEXP_MATCH_PARAM, encodeURIComponent(tableSelectionData[0]))
       setRoute(url);
     }
   }
@@ -135,7 +135,7 @@ export default class CustomSearch extends Component {
     let {moduleName, actionName, metaData, setRoute, tableSelectionData} = this.props;
     let obj = metaData[`${moduleName}.${actionName}`];
     if(tableSelectionData && tableSelectionData.length === 1){
-      let url = obj.result['rowClickUrlUpdate'].replace(REGEXP_MATCH_PARAM, tableSelectionData[0])
+      let url = obj.result['rowClickUrlUpdate'].replace(REGEXP_MATCH_PARAM, encodeURIComponent(tableSelectionData[0]))
       setRoute(url);
     }
   }
@@ -182,7 +182,7 @@ export default class CustomSearch extends Component {
       };
       var specsValuesList = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.values;
       var values = _.get(res, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.resultPath);
-
+      let {getVal, getValFromDropdownData} = self;
       let resultIdKey = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.resultIdKey;
 
       if(values && values.length) {
@@ -194,6 +194,10 @@ export default class CustomSearch extends Component {
               let val = _.get(values[i], valuePath.valuePath);
               tmp.push({...valuePath,
                 value:valuePath.mappingValues && valuePath.mappingValues[val] || val});
+              continue;
+            }
+            else if(typeof valuePath === 'object' && valuePath.valExp){
+              tmp.push(eval(valuePath.valExp));
               continue;
             }
 
@@ -217,6 +221,12 @@ export default class CustomSearch extends Component {
 
   getVal = (path) => {
     return _.get(this.props.formData, path) || "";
+  }
+
+  getValFromDropdownData = (fieldJsonPath, key, path) => {
+    let dropdownData = this.props.dropDownData[fieldJsonPath] || [];
+    let _val = _.get(dropdownData.find((data)=>data.key == key) || [], path);
+    return typeof _val != "undefined" ? _val : "";
   }
 
   hideField = (_mockData, hideObject, reset) => {
@@ -431,7 +441,7 @@ export default class CustomSearch extends Component {
   }
 
   handleChange=(e, property, isRequired, pattern, requiredErrMsg="Required",patternErrMsg="Pattern Missmatch") => {
-      let {getVal} = this;
+      let {getVal, getValFromDropdownData} = this;
       let {handleChange,mockData,setDropDownData} = this.props;
       let hashLocation = window.location.hash;
       let obj = specifications[this.props.actionKey];

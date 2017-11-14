@@ -11,18 +11,15 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdvocateCharge   {
- 
-	
-  @JsonProperty("charge")
-  private String charge = null;
+public class AdvocateCharge {
 
-  @JsonProperty("caseNo")
-  private String caseNo = null;
+	@JsonProperty("charge")
+	private String charge = null;
 
-  @JsonProperty("amount")
-  private Double amount = null;
+	@JsonProperty("caseDetails")
+	private CaseDetails caseDetails = null;
 
- 
+	@JsonProperty("amount")
+	private Double amount = null;
+
 }
-

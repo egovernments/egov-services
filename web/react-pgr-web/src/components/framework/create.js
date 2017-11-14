@@ -215,7 +215,7 @@ class Report extends Component {
 
     if(hashLocation.split("/").indexOf("update") == 1) {
       var url = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[0];
-      var id = self.props.match.params.id || self.props.match.params.master;
+      var id = self.props.match.params.id && decodeURIComponent(self.props.match.params.id) || self.props.match.params.master;
       var query = {
         [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[1].split("=")[0]]: id
       };
@@ -247,7 +247,7 @@ class Report extends Component {
             self.props.setFormData(obj);
             self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
           } else {
-          
+
             self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
               self.props.setFormData(res);
           }
@@ -916,13 +916,13 @@ class Report extends Component {
                 {
                   svalue=_.get(_formData,ifield);
                 }
-              
+
               amtsum += parseInt(svalue);
             }
             if(amtsum>0)
               {
                handleChange({target: {value: amtsum}}, dependency[0], false, '', '');
-              
+
               }
            }
            }
@@ -1309,7 +1309,7 @@ class Report extends Component {
                                     autoComHandler={autoComHandler}
                                     initiateWF={initiateWF}
                                     screen={window.location.hash.split("/").indexOf("update") == 1 ? "update" : "create"}
-                                    workflowId={window.location.hash.split("/").indexOf("update") == 1 ? (this.props.match.params.id || this.props.match.params.master) : ""}
+                                    workflowId={window.location.hash.split("/").indexOf("update") == 1 ? (this.props.match.params.id && decodeURIComponent(this.props.match.params.id) || this.props.match.params.master) : ""}
                                     />}
           <div style={{"textAlign": "center"}}>
             <br/>

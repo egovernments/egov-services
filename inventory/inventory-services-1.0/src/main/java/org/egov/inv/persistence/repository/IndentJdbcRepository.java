@@ -1,9 +1,13 @@
 package org.egov.inv.persistence.repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.common.Pagination;
+import org.egov.inv.model.Indent;
+import org.egov.inv.model.IndentSearch;
 import org.egov.inv.persistence.entity.IndentEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -257,4 +261,148 @@ public class IndentJdbcRepository extends org.egov.common.JdbcRepository {
 
 	}
 
+	public Pagination<Indent> search(IndentSearch indentSearch) {
+	 
+		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
+
+		Map<String, Object> paramValues = new HashMap<>();
+		StringBuffer params = new StringBuffer();
+
+		if (indentSearch.getSortBy() != null && !indentSearch.getSortBy().isEmpty()) {
+			validateSortByOrder(indentSearch.getSortBy());
+			validateEntityFieldName(indentSearch.getSortBy(), IndentEntity.class);
+		}
+
+		String orderBy = "order by indentNumber";
+		if (indentSearch.getSortBy() != null && !indentSearch.getSortBy().isEmpty()) {
+			orderBy = "order by " + indentSearch.getSortBy();
+		}
+
+		searchQuery = searchQuery.replace(":tablename", IndentEntity.TABLE_NAME);
+
+		searchQuery = searchQuery.replace(":selectfields", " * ");
+
+		// implement jdbc specfic search
+	 
+		if (indentSearch.getTenantId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("tenantId =:tenantId");
+			paramValues.put("tenantId", indentSearch.getTenantId());
+		}
+		if (indentSearch.getIssueStore () != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("issueStore =:issueStore");
+			paramValues.put("issueStore", indentSearch.getIssueStore ());
+		}
+		 
+		if (indentSearch.getIndentDate() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("indentDate =:indentDate");
+			paramValues.put("indentDate", indentSearch.getIndentDate());
+		}
+		if (indentSearch.getIndentNumber() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("indentNumber =:indentNumber");
+			paramValues.put("indentNumber", indentSearch.getIndentNumber());
+		}
+		if (indentSearch.getIndentType() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("indentType =:indentType");
+			paramValues.put("indentType", indentSearch.getIndentType ());
+		}
+		if (indentSearch.getIndentPurpose () != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("indentPurpose =:indentPurpose");
+			paramValues.put("indentPurpose", indentSearch.getIndentPurpose ());
+		}
+		if (indentSearch.getInventoryType () != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("inventoryType =:inventoryType");
+			paramValues.put("inventoryType", indentSearch.getInventoryType ());
+		}
+		 
+	 
+		if (indentSearch.getIndentStatus () != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("indentStatus =:indentStatus");
+			paramValues.put("indentStatus", indentSearch.getIndentStatus ());
+		}
+		 
+		if (indentSearch.getDepartmentId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("department =:department");
+			paramValues.put("department", indentSearch.getDepartmentId());
+		}
+		if (indentSearch.getTotalIndentValue() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("totalIndentValue =:totalIndentValue");
+			paramValues.put("totalIndentValue", indentSearch.getTotalIndentValue());
+		}
+		 
+		if (indentSearch.getIndentRaisedBy() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("indentCreatedBy =:indentCreatedBy");
+			paramValues.put("indentCreatedBy", indentSearch.getIndentRaisedBy());
+		}
+		 
+		if (indentSearch.getStateId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("stateId =:stateId");
+			paramValues.put("stateId", indentSearch.getStateId());
+		}
+
+		 
+	 
+		Pagination<Indent> page = new Pagination<>();
+		if (indentSearch.getPageNumber() != null) {
+			page.setOffset(indentSearch.getPageNumber()-1);
+		}
+		if (indentSearch.getPageSize() != null) {
+			page.setPageSize(indentSearch.getPageSize());
+		}
+
+		if (params.length() > 0) {
+
+			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+
+		} else
+
+			searchQuery = searchQuery.replace(":condition", "");
+
+		searchQuery = searchQuery.replace(":orderby", orderBy);//orderBy
+		System.out.println(searchQuery);
+		page = (Pagination<Indent>) getPagination(searchQuery, page, paramValues);
+		searchQuery = searchQuery + " :pagination";
+
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
+
+		BeanPropertyRowMapper row = new BeanPropertyRowMapper(IndentEntity.class);
+
+		List<IndentEntity> indentEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+
+		page.setTotalResults(indentEntities.size());
+
+		List<Indent> indents = new ArrayList<>();
+		for (IndentEntity indentEntity : indentEntities) {
+
+			indents.add(indentEntity.toDomain());
+		}
+		page.setPagedData(indents);
+
+		return page;
+	   }
+	
 }

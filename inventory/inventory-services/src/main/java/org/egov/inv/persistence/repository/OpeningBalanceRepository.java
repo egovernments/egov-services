@@ -1,33 +1,65 @@
 package org.egov.inv.persistence.repository;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.egov.inv.domain.model.OpeningBalanceSearchCriteria;
-import org.egov.inv.domain.model.ReceiptNotesSearchCriteria;
-import org.egov.inv.persistence.entity.OpeningBalanceEntity;
 import org.egov.inv.persistence.entity.ReceiptNoteApiEntity;
+import org.egov.inv.persistence.queryBuilder.OpeningbalanceQueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
 import io.swagger.model.MaterialReceipt;
-import io.swagger.model.MaterialReceipt;
-import io.swagger.model.Pagination;
+import io.swagger.model.OpeningBalanceResponse;
 
 @Service
 public class OpeningBalanceRepository extends JdbcRepository{
+	
+    private OpeningbalanceQueryBuilder openingbalanceQueryBuilder;
+
 	private static final Logger LOG = LoggerFactory.getLogger(RecieptNoteApiJdbcRepository.class);
 	static {
-		LOG.debug("init supplier");
+		LOG.debug("init openingBalance");
 		init(ReceiptNoteApiEntity.class);
-		LOG.debug("end init supplier");
+		LOG.debug("end init openingBalance");
 	}
 	
-	public Pagination<MaterialReceipt> search(OpeningBalanceSearchCriteria openBalanceSearch) {
+public OpeningBalanceResponse search(OpeningBalanceSearchCriteria openBalSearchCriteria) {
+		
+		List<MaterialReceipt> materialList = getOpenbalList(
+				openingbalanceQueryBuilder.getQuery(openBalSearchCriteria),
+				getDetailNamedQuery(openBalSearchCriteria), new BeanPropertyRowMapper<>(MaterialReceipt.class));
+		System.out.println(openingbalanceQueryBuilder.getQuery(openBalSearchCriteria));
+
+		return OpeningBalanceResponse.builder()
+		.materialReceipt(materialList)
+		.build();
+		
+    }
+
+private List<MaterialReceipt> getOpenbalList(String sql, HashMap<String, Object> searchNamedQuery,
+		BeanPropertyRowMapper<MaterialReceipt> rowMapper) {
+	return namedParameterJdbcTemplate.query(sql, searchNamedQuery, rowMapper);
+}
+
+private HashMap<String, Object> getDetailNamedQuery(OpeningBalanceSearchCriteria searchCriteria) {
+	HashMap<String, Object> parametersMap = new HashMap<String, Object>();
+	parametersMap.put("tenantId", searchCriteria.getTenantId());
+	parametersMap.put("financialYear", searchCriteria.getFinancialYear());
+	parametersMap.put("mrnNumber", searchCriteria.getMrnNumber());
+	parametersMap.put("receiptNumber", searchCriteria.getReceiptNumber());
+	parametersMap.put("materialName", searchCriteria.getMaterialName());
+	parametersMap.put("supplierCode", searchCriteria.getSupplierCode());
+	parametersMap.put("id", searchCriteria.getId());
+	parametersMap.put("pageSize", searchCriteria.getPageSize());
+	parametersMap.put("pageNumber", searchCriteria.getPageNumber());
+
+	return parametersMap;
+}
+	
+	/*public Pagination<MaterialReceipt> search(OpeningBalanceSearchCriteria openBalanceSearch) {
 		
 		String searchQuery = "select * from MaterialReceiptHeader :condition :orderby";
 		StringBuffer params = new StringBuffer();
@@ -116,7 +148,7 @@ public class OpeningBalanceRepository extends JdbcRepository{
 		page.setPagedData(materialList);
 
 		return page;
-	}
+	}*/
 	
 
 }

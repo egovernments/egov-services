@@ -1,54 +1,108 @@
 {
-	"id": "91fd78e8-7b79-c216-ad4c-bf14935236d9",
-	"name": "SWM copy",
+	"id": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+	"name": "SWM",
 	"description": "",
 	"order": [
-		"cb3f9af3-27aa-ece4-560e-12c24c3d9976",
-		"2788bf90-2472-492e-f14c-6b91b31c2ba4",
-		"10954c76-c9bd-35e1-5d35-e34050a0d52a",
-		"f4deecfe-834e-b809-e800-309723ad0e42",
-		"73a7569c-0892-d539-30ce-272871bd9813",
-		"0ac4abea-c7a0-c4d9-b995-d55c63017292",
-		"3e8be94e-5b96-c5a7-7075-294575804611",
-		"f8fb7c3a-784f-5003-ccaa-125f5914c2b1",
-		"970bfffe-1fa5-b1a6-9755-56476567e50e",
-		"4634d0a0-39b3-fcf0-a3db-0d8a74037192",
-		"442b15d2-ded7-26e3-8dda-571ca4cea57a",
-		"6f5c31c8-7047-71f1-cdec-319d1152ae8f",
-		"1e50c3f4-2285-92b7-9e6a-af18e8fb1bf0",
-		"897d4bac-6a40-11d0-bc31-b82391b98a85",
-		"d93663e3-edaf-6026-f16a-80704688d548",
-		"dda5d765-042b-d351-5812-bf4f5f8223ac",
-		"1deb5c41-1dcd-b768-5dce-6afff99ee0dc",
-		"1079cb50-9da9-6cd6-3c70-6b2111cb982c",
-		"e636415a-13f0-1604-33ac-27d1e9da6929",
-		"d8731a2e-6c3f-13d5-6512-7381e476264a",
-		"c8a62e69-c7ca-cb38-3490-f646ca35e816"
+		"3608d14e-d716-a851-ff65-76150482dbca",
+		"e44fe437-9ee3-935d-77db-ceb10c4d2729",
+		"6443d2c5-7104-821c-896f-b2c5cc805be8",
+		"d141573c-ea45-7d90-95d4-5a7b84d5cf48",
+		"b07d5c1d-1733-3d09-4f51-b0642b59c700",
+		"8e042fb6-4e55-73b9-15a1-614902972b2a",
+		"82ee3749-ee0e-01e4-a808-7d102f5f688d",
+		"8f002aab-b802-5163-6820-a3772a5993f4",
+		"5f6b1ac8-d31c-d065-7afc-80c3f5f1626f",
+		"6254a0de-6025-467f-bbe3-8c1b6266dc45",
+		"e0b951ff-bca4-a0cb-32a4-6ca504be067f",
+		"c0876b53-8d59-0f1d-8f38-2ffa4e85a925",
+		"d742a5ca-6831-29ff-37a7-f04d2ad7f510",
+		"b09e9925-1c3a-757e-c913-b4a022b0f912",
+		"e6fc8fd5-35a9-3029-51f6-eabf503eebca",
+		"1018021f-aae6-1b61-5d50-2f7dc7ca79c2",
+		"bf9a921a-582c-8141-f0a7-8f6fcc628358",
+		"98f2958b-5cfd-d7ff-67a8-3f7c1922189c",
+		"56f9a89c-ffb8-e789-113c-cd921f278c0f",
+		"735dbc55-10b1-95de-362e-2d3becf1c8c2",
+		"bece2738-7590-090e-3952-77a72821aeec",
+		"c73f1229-202c-7e9a-f092-8f561e944abb",
+		"fac0694e-f7f3-fd25-e57c-5468e904e3f0",
+		"1a68dcae-b234-10c6-f368-03412e6c1c87",
+		"a217c970-c160-eb12-e482-0a0ca47a77ec",
+		"e834da2e-7b01-d243-4256-937d1a998f33",
+		"9ad52965-9eed-3596-d6f0-8f69d98677f8",
+		"2aa2919a-a43c-9a5d-a312-aa6db86317b8",
+		"b47b1b76-3a80-dfa5-b316-d260dc044828",
+		"d31e0a62-ff67-75ed-b16e-584c49ddd0b7",
+		"5851fb51-477f-faba-3154-562e4b7c0579",
+		"853c27c8-9b32-093a-7a29-0bf5024374a9",
+		"abcd2777-56d9-d5fc-7c36-32a6c0400bd9",
+		"2a47e9df-366a-eaaf-2dd5-99da417206e1",
+		"75438a0c-7d32-0732-f74e-c318250e5ee1",
+		"4496ca1f-9cb3-a553-eea1-8a7936b78d52",
+		"c36bd36a-c318-1c56-2dfe-4d81937cfcf8",
+		"0c75214f-37e8-9d66-014a-4113cd59a930",
+		"6afe348d-fc91-21f5-b9b9-237d968c43d7",
+		"ac2f28e5-7bc8-6af1-1a3a-a3d08b7fc8e3",
+		"fbc5f897-c5a2-82de-3725-04b373602fb4",
+		"634e0fe7-0d08-0a3d-7d7d-83cda7664514"
 	],
 	"folders": [],
 	"folders_order": [],
 	"timestamp": 1508333316521,
-	"owner": 0,
+	"owner": "1870454",
 	"public": false,
 	"requests": [
 		{
-			"id": "0ac4abea-c7a0-c4d9-b995-d55c63017292",
-			"headers": "Content-Type: application/json\nfi: \n",
+			"id": "0c75214f-37e8-9d66-014a-4113cd59a930",
+			"headers": "Content-Type: application/json\n",
 			"headerData": [
 				{
 					"key": "Content-Type",
 					"value": "application/json",
 					"description": "",
 					"enabled": true
-				},
+				}
+			],
+			"url": "http://localhost:8899/swm-services/vehiclemaintenancedetails/_search?tenantId=default",
+			"queryParams": [
 				{
-					"key": "fi",
-					"value": "",
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
 					"description": "",
 					"enabled": true
 				}
 			],
-			"url": "http://localhost:8899/swm-services/vehicles/_update",
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Vehicle Maintenance Details Search",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1510579606511,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"3d585dec-bd33-4cf2-88fb-36c48fcf3d78\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+		},
+		{
+			"id": "1018021f-aae6-1b61-5d50-2f7dc7ca79c2",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/swm-services/refillingpumpstations/_create",
 			"queryParams": [],
 			"preRequestScript": null,
 			"pathVariables": {},
@@ -60,16 +114,15 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1509531444903,
-			"name": "Vehicle Update",
+			"time": 1510225420470,
+			"name": "Refilling Pump Station Create",
 			"description": "",
-			"collectionId": "91fd78e8-7b79-c216-ad4c-bf14935236d9",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
 			"responses": [],
-			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24cc2960-0d9f-45b3-8c9b-c69ab7019abb\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vehicles\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"regNumber\":\"regNumber1\",\n\t\t\t\"vehicleType\" :{\n            \t\"code\":\"Fake Vehicle Type Code 2\"\n            },\n\t\t\t\"purchaseInfo\":{\n\t            \"purchaseDate\" : \"1508323548\",\n\t            \"price\" : 2000,\n\t            \"sourceOfPurchase\":\"sourceOfPurchase U\"\n            },\n            \"fuelType\" :{\n            \t\"code\":\"Fake Fuel Type Code 2\"\n            },\n            \"operatorsReq\":20,\n            \"driver\":{\n            \t\"code\":\"vehicleDriverName 2\"\n            \t\n            },\n            \"vendor\" :{\n            \t\"vendorNo\":\"2\"\n            },\n            \t\"manufacturingDetails\":{\n\t\t\t\t\"engineSrNumber\":\"engineSrNumber 2\",\n\t            \"chassisSrNumber\" : \"chassisSrNumber 2\",\n\t            \"model\":\"model 2\",\n\t            \"vehicleCapacity\":200\n\t\t\t},\n           \"insuranceDetails\":{\n           \t\t\"insuranceNumber\":\"MH-SWM-IN-00002\",\n            \t\"insuranceValidityDate\":1508323548,\n            \t\"insuranceDocument\":{\n            \t\t\"fileStoreId\":\"fileStoreId 2\"\n            \t}\n           },\n           \"kilometers\":200,\n           \"endOfWarranty\":1508323548,\n           \"remarks\":\"remarks 2\"\n      }\n   ]\n } ",
-			"collection_id": "91fd78e8-7b79-c216-ad4c-bf14935236d9"
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"a5aabf33-0d0f-4044-842e-ea629ffbf64d\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"refillingPumpStations\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"name\":\"Bharath Filling Station\",\n            \"location\" :{\n            \t\"code\":\"21\"\n            },\n            \"typeOfPump\" :{\n            \t\"code\":\"ONGC\"\n            },\n            \"remarks\":\"Ramarks\",\n            \"typeOfFuel\" :{\n            \t\"code\":\"Fake Fuel Type Code 1\"\n            },\n            \"quantity\" :10\n      }\n   ]\n } "
 		},
 		{
-			"id": "1079cb50-9da9-6cd6-3c70-6b2111cb982c",
+			"id": "1a68dcae-b234-10c6-f368-03412e6c1c87",
 			"headers": "Content-Type: application/json\n",
 			"headerData": [
 				{
@@ -79,18 +132,11 @@
 					"enabled": true
 				}
 			],
-			"url": "http://localhost:8899/swm-services/refillingpumpstations/_search?tenantId=default&quantity=250",
+			"url": "localhost:8899/swm-services/sanitationstafftargets/_search?tenantId=default",
 			"queryParams": [
 				{
 					"key": "tenantId",
 					"value": "default",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				},
-				{
-					"key": "quantity",
-					"value": "250",
 					"equals": true,
 					"description": "",
 					"enabled": true
@@ -102,19 +148,19 @@
 			"method": "POST",
 			"data": [],
 			"dataMode": "raw",
+			"version": 2,
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1510128455031,
-			"name": "Refilling Pump Station Search",
+			"time": 1510576036816,
+			"name": "Sanitation Staff Target Search",
 			"description": "",
-			"collectionId": "91fd78e8-7b79-c216-ad4c-bf14935236d9",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
 			"responses": [],
-			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24cc2960-0d9f-45b3-8c9b-c69ab7019abb\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  }\n}",
-			"collection_id": "91fd78e8-7b79-c216-ad4c-bf14935236d9"
+			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"a5aabf33-0d0f-4044-842e-ea629ffbf64d\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
 		},
 		{
-			"id": "10954c76-c9bd-35e1-5d35-e34050a0d52a",
+			"id": "2a47e9df-366a-eaaf-2dd5-99da417206e1",
 			"headers": "Content-Type: application/json\n",
 			"headerData": [
 				{
@@ -124,7 +170,311 @@
 					"enabled": true
 				}
 			],
-			"url": "http://localhost:8899/swm-services/vehiclefuellingdetails/_search?tenantId=default",
+			"url": "localhost:8899/swm-services/vehicletripsheetdetails/_create",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Vehicle Trip Sheet Details Create",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1510578318195,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vehicleTripSheetDetails\":[\n      {\n      \t\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"vehicle\" :{\n            \t\"regNumber\":\"regNumber Final2\"\n            },\n            \"vendor\" :{\n            \t\"vendorNo\":\"MH-SWM-VNDR-000005\"\n            },\n            \"route\" :{\n            \t\"code\":\"b9af15c98a8d4e7d8b5bb7d4d708e21f\"\n            },\n            \"tripStartDate\":1234567890,\n            \"tripEndDate\":1234567890,\n            \"inTime\":1234567890,\n            \"outTime\":1234567890,\n            \"entryWeight\":100,\n            \"exitWeight\":200\n      }\n   ]\n } "
+		},
+		{
+			"id": "2aa2919a-a43c-9a5d-a312-aa6db86317b8",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8899/swm-services/vendorcontracts/_create",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510574179294,
+			"name": "Vendor Contract Create",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vendorContracts\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"vendor\" :{\n            \t\"vendorNo\":\"MH-SWM-VNDR-000005\"\n            },\n            \"contractDate\":1234567890,\n            \"contractPeriodFrom\":\"1234567890\",\n            \"contractPeriodTo\":\"1234567890\",\n            \"securityDeposit\":10,\n            \"paymentAmount\":1000,\n            \"paymentTerms\":{\n            \t\"label\":\"label\"\n            },\n            \"remarks\":\"qwertyuiopqwertyuio\"\n      }\n   ]\n } "
+		},
+		{
+			"id": "3608d14e-d716-a851-ff65-76150482dbca",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/swm-services/vehiclefuellingdetails/_create",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510569776178,
+			"name": "VehicleFuellingDetailses Create",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n  \"requestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vehicleFuellingDetails\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n            \"transactionDate\" : \"1508323548\",\n             \"vehicle\" :{\n            \t\"regNumber\":\"regNumber Final2\"\n            },\n            \"refuellingStation\" :{\n            \t\"code\":\"52f38e3e3761481fb0e169d3e66fcff9\"\n            },\n            \"vehicleReadingDuringFuelling\" : 100,\n            \"fuelFilled\" : 100,\n            \"typeOfFuel\":{\n            \t\"code\":\"Fake Fuel Type Code 1\"\n            \t\n            },\n            \"totalCostIncurred\":10000,\n            \"receiptNo\":\"MH-SWM-REN-00001\",\n            \"receiptDate\":\"1508323548\",\n            \"receiptCopy\":{\n            \t\"fileStoreId\":\"fileStoreId\"\n            }\n      }\n   ]\n } "
+		},
+		{
+			"id": "4496ca1f-9cb3-a553-eea1-8a7936b78d52",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8899/swm-services/vehicletripsheetdetails/_update",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510578444455,
+			"name": "Vehicle Trip Sheet Details Update",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vehicleTripSheetDetails\":[\n      {\n      \t\n      \t\t\"tripNo\": \"MH-SWM-VHL-TRIP-000001\",\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"vehicle\" :{\n            \t\"regNumber\":\"regNumber Final2\"\n            },\n            \"vendor\" :{\n            \t\"vendorNo\":\"MH-SWM-VNDR-000005\"\n            },\n            \"route\" :{\n            \t\"code\":\"b9af15c98a8d4e7d8b5bb7d4d708e21f\"\n            },\n            \"tripStartDate\":1234567890,\n            \"tripEndDate\":1234567890,\n            \"inTime\":1234567890,\n            \"outTime\":1234567890,\n            \"entryWeight\":300,\n            \"exitWeight\":300\n      }\n   ]\n } "
+		},
+		{
+			"id": "56f9a89c-ffb8-e789-113c-cd921f278c0f",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/swm-services/vehiclemaintenances/_create",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Vehicle Maintenance Create",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1510234571592,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"a5aabf33-0d0f-4044-842e-ea629ffbf64d\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vehicleMaintenances\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"vehicle\" :{\n            \t\"regNumber\":\"regNumber\"\n            },\n            \"maintenanceUom\":\"Days\",\n            \"maintenanceAfter\":100,\n            \"downtimeforMaintenanceUom\":\"Hrs\",\n            \"downtimeforMaintenance\":10\n      }\n   ]\n } "
+		},
+		{
+			"id": "5851fb51-477f-faba-3154-562e4b7c0579",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8899/swm-services/sourcesegregations/_search?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Source Segregation Search",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1510577959619,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"a5aabf33-0d0f-4044-842e-ea629ffbf64d\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+		},
+		{
+			"id": "5f6b1ac8-d31c-d065-7afc-80c3f5f1626f",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8899/swm-services/collectionpoints/_search?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510575212916,
+			"name": "Collection Point Search",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+		},
+		{
+			"id": "6254a0de-6025-467f-bbe3-8c1b6266dc45",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8899/swm-services/routes/_search?tenantId=default&name=Route Name 12",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "name",
+					"value": "Route Name 12",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510575028575,
+			"name": "Route Search",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"a5aabf33-0d0f-4044-842e-ea629ffbf64d\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+		},
+		{
+			"id": "634e0fe7-0d08-0a3d-7d7d-83cda7664514",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8899/swm-services/sanitationstaffschedules/_create",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Sanitation Staff Schedule Create",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1510602111867,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"sanitationStaffSchedules\":[\n      {\n      \t\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"sanitationStaffTarget\" :{\n            \t\"targetNo\":\"MH-SWM-SNTS-TRGT-000001\"\n            },\n            \"shift\" :{\n            \t\"code\":\"Fake Shift Code 1\"\n            }\n      }\n   ]\n } "
+		},
+		{
+			"id": "6443d2c5-7104-821c-896f-b2c5cc805be8",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/swm-services/vehiclefuellingdetails/_search?tenantId=default&transactionNo=MH-SWM-TRN-000039",
 			"queryParams": [
 				{
 					"key": "tenantId",
@@ -142,10 +492,10 @@
 				},
 				{
 					"key": "transactionNo",
-					"value": "transactionNo 1",
+					"value": "MH-SWM-TRN-000039",
 					"equals": true,
 					"description": "",
-					"enabled": false
+					"enabled": true
 				},
 				{
 					"key": "transactionDate",
@@ -227,355 +577,15 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1509517620109,
+			"time": 1510569830867,
 			"name": "Vehicle Fuelling Detailses Search",
 			"description": "",
-			"collectionId": "91fd78e8-7b79-c216-ad4c-bf14935236d9",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
 			"responses": [],
-			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"3d585dec-bd33-4cf2-88fb-36c48fcf3d78\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}",
-			"collection_id": "91fd78e8-7b79-c216-ad4c-bf14935236d9"
+			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
 		},
 		{
-			"id": "1deb5c41-1dcd-b768-5dce-6afff99ee0dc",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://localhost:8899/swm-services/refillingpumpstations/_update",
-			"queryParams": [],
-			"pathVariables": {},
-			"pathVariableData": [],
-			"preRequestScript": null,
-			"method": "POST",
-			"collectionId": "91fd78e8-7b79-c216-ad4c-bf14935236d9",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Refilling Pump Station Update",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1510055192415,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24cc2960-0d9f-45b3-8c9b-c69ab7019abb\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"refillingPumpStations\":[\n      {\n            \"code\": \"dd5bb481213c493183ae825dbd8e7361\",\n            \"tenantId\": \"default\",\n            \"location\": {\n                \"code\": \"21\"\n            },\n            \"name\": \"Bharath Filling Station\",\n            \"typeOfPump\": {\n                \"code\": \"ONGC\"\n            },\n            \"remarks\": \"Ramarks\",\n            \"typeOfFuel\": {\n                \"code\": \"Fake Fuel Type Code 1\"\n            },\n            \"quantity\": 100\n        },\n        {\n            \"code\": \"a2d1879d49154e75887fa85d04e8f9b4\",\n            \"tenantId\": \"default\",\n            \"location\": {\n                \"code\": \"21\"\n            },\n            \"name\": \"Hinduja Filling Station\",\n            \"typeOfPump\": {\n                \"code\": \"RIO\"\n            },\n            \"remarks\": \"Ramarks\",\n            \"typeOfFuel\": {\n                \"code\": \"Fake Fuel Type Code 2\"\n            },\n            \"quantity\": 250\n        }\n   ]\n } ",
-			"collection_id": "91fd78e8-7b79-c216-ad4c-bf14935236d9"
-		},
-		{
-			"id": "1e50c3f4-2285-92b7-9e6a-af18e8fb1bf0",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://localhost:8899/swm-services/vendors/_create",
-			"queryParams": [],
-			"pathVariables": {},
-			"pathVariableData": [],
-			"preRequestScript": null,
-			"method": "POST",
-			"collectionId": "91fd78e8-7b79-c216-ad4c-bf14935236d9",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Vendor Create",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1509742453638,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "{\n  \"requestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"e65222de-8004-4ac1-9f72-14d41ccfea69\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vendors\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n            \"name\" : \"vendor name\",\n            \"registrationNo\":\"registrationNo\",\n            \"details\":\"detailsasdfghjkl\",\n             \"servicedLocations\" :\n             [\n             \t{\n            \t\t\"code\":\"servicedLocations Code 1\"\n            \t},\n            \t{\n            \t\t\"code\":\"servicedLocations Code 2\"\n            \t}\n            ],\n            \"contractor\" :{\n            \t\"email\":\"contractor email\",\n            \t\"tinNumber\":\"contractor tinNumber\",\n            \t\"gst\":\"contractor gst\",\n            \t\"mobileNo\":\"0000000000\",\n            \t\"contactNo\":\"1111111111\",\n            \t\"faxNumber\":\"2222222222\",\n            \t\"address\":\"contractor address\",\n            \t\"registrationNo\":\"contractor registrationNo\"\n            },\n            \"agreementDocument\":{\n            \t\"fileStoreId\":\"fileStoreId\"\n            \t\n            },\n            \"servicesOffered\":\n            [\n\t            {\n\t            \t\"name\": \"service 1\"\n\t            },\n\t            {\n            \t\t\"name\": \"service 2\"\n        \t\t}\n        \t]\n    \t}\n   ]\n } \n ",
-			"collection_id": "91fd78e8-7b79-c216-ad4c-bf14935236d9"
-		},
-		{
-			"id": "2788bf90-2472-492e-f14c-6b91b31c2ba4",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://localhost:8899/swm-services/vehiclefuellingdetails/_update",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1509531409210,
-			"name": "Vehicle Fuelling Detailses Update",
-			"description": "",
-			"collectionId": "91fd78e8-7b79-c216-ad4c-bf14935236d9",
-			"responses": [],
-			"rawModeData": "{\n  \"requestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"d46d13fb-5911-46ad-ac17-82f4e60ac1f6\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vehicleFuellingDetails\":[\n      {\n      \t\t\"transactionNo\":\"MH-SWM-TRN-000004\",\n\t\t\t\"tenantId\":\"default\",\n            \"transactionDate\" : \"1508323548\",\n             \"vehicle\" :{\n            \t\"regNumber\":\"regNumber1\"\n            },\n            \"refuellingStation\" :{\n            \t\"name\":\"Fake name 2\"\n            },\n            \"vehicleReadingDuringFuelling\" : 100,\n            \"fuelFilled\" : 1000,\n            \"typeOfFuel\":{\n            \t\"code\":\"Fake Fuel Type Code 2\"\n            \t\n            },\n            \"totalCostIncurred\":10000,\n            \"receiptNo\":\"MH-SWM-REN-00001\",\n            \"receiptDate\":\"1508323548\",\n            \"receiptCopy\":{\n            \t\"fileStoreId\":\"fileStoreId u\"\n            }\n      }\n   ]\n } ",
-			"collection_id": "91fd78e8-7b79-c216-ad4c-bf14935236d9"
-		},
-		{
-			"id": "3e8be94e-5b96-c5a7-7075-294575804611",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://localhost:8899/swm-services/collectionpoints/_create",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1509522918184,
-			"name": "Collection point Create",
-			"description": "",
-			"collectionId": "91fd78e8-7b79-c216-ad4c-bf14935236d9",
-			"responses": [],
-			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24cc2960-0d9f-45b3-8c9b-c69ab7019abb\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"collectionPoints\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"name\":\"name\",\n            \"location\" :{\n            \t\"code\":\"Colony Code 1\"\n            },\n            \"binDetails\":[\n\t            {\n\t            \t\"assetOrBinId\": \"assetOrBinId 1\",\n\t            \t\"rfidAssigned\": true,\n\t            \t\"rfid\": \"rfid 1\",\n\t            \t\"latitude\": 111.111,\n\t            \t\"longitude\": 222.222\n\t            },\n\t            {\n\t            \t\n\t            \t\"assetOrBinId\": \"assetOrBinId 2\",\n\t            \t\"rfidAssigned\": true,\n\t            \t\"rfid\": \"rfid 2\",\n\t            \t\"latitude\": 111.111,\n\t            \t\"longitude\": 222.222\n            \t}\n            \t\n            ],\n            \"collectionPointDetails\":[\n\t    \t\t{\n\t\t            \"collectionType\" :{\n\t\t            \t\"code\":\"Fake Collection Type Code 1\"\n\t\t            },\n\t\t            \"garbageEstimate\" :1000,\n\t\t            \"description\" :\"description\"\n\t    \t\t},\n\t    \t\t{\n\t\t            \"collectionType\" :{\n\t\t            \t\"code\":\"Fake Collection Type Code 2\"\n\t\t            },\n\t\t            \"garbageEstimate\" :2000,\n\t\t            \"description\" :\"description 2\"\n\t    \t\t}\n\t\t\t]\n            \n      }\n   ]\n } ",
-			"collection_id": "91fd78e8-7b79-c216-ad4c-bf14935236d9"
-		},
-		{
-			"id": "442b15d2-ded7-26e3-8dda-571ca4cea57a",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://localhost:8899/swm-services/routes/_update",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1509535910030,
-			"name": "Route Update",
-			"description": "",
-			"collectionId": "91fd78e8-7b79-c216-ad4c-bf14935236d9",
-			"responses": [],
-			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24cc2960-0d9f-45b3-8c9b-c69ab7019abb\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"routes\":[\n      {\n      \t\t\"code\":\"e5a7f9ce5e56422b915aca2a06fe9678\",\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"name\":\"Route Name\",\n            \"startingCollectionPoint\" :{\n            \t\"code\":\"c3deaa6c01e34071bf5907ddf01e9645\"\n            },\n            \"endingCollectionPoint\" :{\n            \t\"code\":\"87490c2c73444f548743c5218da18975\"\n            },\n            \"endingDumpingGroundPoint\" :{\n            \t\"code\":\"Fake Dumping Ground Code 2\"\n            },\n            \"distance\":100,\n            \"garbageEstimate\" :1000,\n            \"collectionPoints\":[\n            \t{\n            \t\t\"code\" :\"c3deaa6c01e34071bf5907ddf01e9645\"\n            \t},\n            \t\t{\n            \t\t\"code\" :\"87490c2c73444f548743c5218da18975\"\n            \t}\n            ]\n      }\n   ]\n } ",
-			"collection_id": "91fd78e8-7b79-c216-ad4c-bf14935236d9"
-		},
-		{
-			"id": "4634d0a0-39b3-fcf0-a3db-0d8a74037192",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://localhost:8899/swm-services/routes/_search?tenantId=default",
-			"queryParams": [
-				{
-					"key": "tenantId",
-					"value": "default",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"pathVariables": {},
-			"pathVariableData": [],
-			"preRequestScript": null,
-			"method": "POST",
-			"collectionId": "91fd78e8-7b79-c216-ad4c-bf14935236d9",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Route Search",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1509193620831,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"3d585dec-bd33-4cf2-88fb-36c48fcf3d78\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}",
-			"collection_id": "91fd78e8-7b79-c216-ad4c-bf14935236d9"
-		},
-		{
-			"id": "6f5c31c8-7047-71f1-cdec-319d1152ae8f",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://localhost:8899/swm-services/routes/_create",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1509535867974,
-			"name": "Route Create ",
-			"description": "",
-			"collectionId": "91fd78e8-7b79-c216-ad4c-bf14935236d9",
-			"responses": [],
-			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24cc2960-0d9f-45b3-8c9b-c69ab7019abb\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"routes\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"name\":\"Route Name\",\n            \"startingCollectionPoint\" :{\n            \t\"code\":\"c3deaa6c01e34071bf5907ddf01e9645\"\n            },\n            \"endingCollectionPoint\" :{\n            \t\"code\":\"87490c2c73444f548743c5218da18975\"\n            },\n            \"endingDumpingGroundPoint\" :{\n            \t\"code\":\"Fake Dumping Ground Code 1\"\n            },\n            \"distance\":100,\n            \"garbageEstimate\" :1000,\n            \"collectionPoints\":[\n            \t{\n            \t\t\"code\" :\"c3deaa6c01e34071bf5907ddf01e9645\"\n            \t},\n            \t\t{\n            \t\t\"code\" :\"87490c2c73444f548743c5218da18975\"\n            \t}\n            ]\n      }\n   ]\n } ",
-			"collection_id": "91fd78e8-7b79-c216-ad4c-bf14935236d9"
-		},
-		{
-			"id": "73a7569c-0892-d539-30ce-272871bd9813",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://localhost:8899/swm-services/vehicles/_search?tenantId=default",
-			"queryParams": [
-				{
-					"key": "tenantId",
-					"value": "default",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"pathVariables": {},
-			"pathVariableData": [],
-			"preRequestScript": null,
-			"method": "POST",
-			"collectionId": "91fd78e8-7b79-c216-ad4c-bf14935236d9",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Vehicle Search",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1508987087131,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"3d585dec-bd33-4cf2-88fb-36c48fcf3d78\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}",
-			"collection_id": "91fd78e8-7b79-c216-ad4c-bf14935236d9"
-		},
-		{
-			"id": "897d4bac-6a40-11d0-bc31-b82391b98a85",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://localhost:8899/swm-services/vendors/_update",
-			"queryParams": [],
-			"pathVariables": {},
-			"pathVariableData": [],
-			"preRequestScript": null,
-			"method": "POST",
-			"collectionId": "91fd78e8-7b79-c216-ad4c-bf14935236d9",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Vendor Update",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1509742463920,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "{\n  \"requestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"e65222de-8004-4ac1-9f72-14d41ccfea69\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vendors\":[\n      {\n      \t    \"vendorNo\":\"MH-SWM-VNDR-000006\",\n\t\t\t\"tenantId\":\"default\",\n            \"name\" : \"vendor name U\",\n            \"registrationNo\":\"registrationNo U\",\n            \"details\":\"detailsasdfghjkl U\",\n             \"servicedLocations\" :\n             [\n             \t{\n            \t\t\"code\":\"servicedLocations Code 3\"\n            \t},\n            \t{\n            \t\t\"code\":\"servicedLocations Code 4\"\n            \t}\n            ],\n            \"contractor\" :{\n            \t\"email\":\"contractor email U\",\n            \t\"tinNumber\":\"contractor tinNumber U\",\n            \t\"gst\":\"contractor gst U\",\n            \t\"mobileNo\":\"1000000000\",\n            \t\"contactNo\":\"2111111111\",\n            \t\"faxNumber\":\"3222222222\",\n            \t\"address\":\"contractor address U\",\n            \t\"registrationNo\":\"contractor registrationNo U\"\n            },\n            \"agreementDocument\":{\n            \t\"fileStoreId\":\"fileStoreId U\"\n            \t\n            },\n            \"servicesOffered\":\n            [\n\t            {\n\t            \t\"name\": \"service 3\"\n\t            },\n\t            {\n            \t\t\"name\": \"service 4\"\n        \t\t}\n        \t]\n    \t}\n   ]\n } \n ",
-			"collection_id": "91fd78e8-7b79-c216-ad4c-bf14935236d9"
-		},
-		{
-			"id": "970bfffe-1fa5-b1a6-9755-56476567e50e",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://localhost:8899/swm-services/collectionpoints/_search?tenantId=default",
-			"queryParams": [
-				{
-					"key": "tenantId",
-					"value": "default",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"pathVariables": {},
-			"pathVariableData": [],
-			"preRequestScript": null,
-			"method": "POST",
-			"collectionId": "91fd78e8-7b79-c216-ad4c-bf14935236d9",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Collection Point Search",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1509082133318,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"3d585dec-bd33-4cf2-88fb-36c48fcf3d78\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}",
-			"collection_id": "91fd78e8-7b79-c216-ad4c-bf14935236d9"
-		},
-		{
-			"id": "c8a62e69-c7ca-cb38-3490-f646ca35e816",
+			"id": "6afe348d-fc91-21f5-b9b9-237d968c43d7",
 			"headers": "Content-Type: application/json\n",
 			"headerData": [
 				{
@@ -591,24 +601,22 @@
 			"pathVariableData": [],
 			"preRequestScript": null,
 			"method": "POST",
-			"collectionId": "91fd78e8-7b79-c216-ad4c-bf14935236d9",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
 			"data": [],
 			"dataMode": "raw",
 			"name": "Vehicle Maintenance Details Update",
 			"description": "",
 			"descriptionFormat": "html",
-			"time": 1510292523956,
+			"time": 1510579616422,
 			"version": 2,
 			"responses": [],
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"isFromCollection": true,
-			"collectionRequestId": "69b22d1b-797a-6688-ef62-184348b972ec",
 			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24cc2960-0d9f-45b3-8c9b-c69ab7019abb\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n   },\n    \"vehicleMaintenanceDetails\": [\n        {\n            \"code\": \"e88876c3029241e59b02c3a9ffda3d5d\",\n            \"tenantId\": \"default\",\n            \"isScheduled\": true,\n            \"maintenanceType\": \"MAINTENANCE\",\n            \"vehicle\": {\n                \"regNumber\": \"regNumber1\"\n            },\n            \"actualMaintenanceDate\": 1510371526000,\n            \"vehicleScheduledMaintenanceDate\": null,\n            \"vehicleDowntimeActual\": 2,\n            \"vehicleDownTimeActualUom\": \"days\",\n            \"vehicleReadingDuringMaintenance\": 212145,\n            \"remarks\": \"Vehicle Given for Maintenance\",\n            \"costIncurred\": 666\n        }\n     ]\n}"
 		},
 		{
-			"id": "cb3f9af3-27aa-ece4-560e-12c24c3d9976",
+			"id": "735dbc55-10b1-95de-362e-2d3becf1c8c2",
 			"headers": "Content-Type: application/json\n",
 			"headerData": [
 				{
@@ -618,28 +626,28 @@
 					"enabled": true
 				}
 			],
-			"url": "http://localhost:8899/swm-services/vehiclefuellingdetails/_create",
+			"url": "http://egov-micro-dev.egovernments.org/swm-services/vehiclemaintenances/_update",
 			"queryParams": [],
-			"preRequestScript": null,
 			"pathVariables": {},
 			"pathVariableData": [],
+			"preRequestScript": null,
 			"method": "POST",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
 			"data": [],
 			"dataMode": "raw",
+			"name": "Vehicle Maintenance Update",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1510234626458,
 			"version": 2,
+			"responses": [],
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1509531411815,
-			"name": "VehicleFuellingDetailses Create",
-			"description": "",
-			"collectionId": "91fd78e8-7b79-c216-ad4c-bf14935236d9",
-			"responses": [],
-			"rawModeData": "{\n  \"requestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"d46d13fb-5911-46ad-ac17-82f4e60ac1f6\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vehicleFuellingDetails\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n            \"transactionDate\" : \"1508323548\",\n             \"vehicle\" :{\n            \t\"regNumber\":\"regNumber1\"\n            },\n            \"refuellingStation\" :{\n            \t\"name\":\"Fake name 1\"\n            },\n            \"vehicleReadingDuringFuelling\" : 100,\n            \"fuelFilled\" : 1000,\n            \"typeOfFuel\":{\n            \t\"code\":\"Fake Fuel Type Code 1\"\n            \t\n            },\n            \"totalCostIncurred\":10000,\n            \"receiptNo\":\"MH-SWM-REN-00001\",\n            \"receiptDate\":\"1508323548\",\n            \"receiptCopy\":{\n            \t\"fileStoreId\":\"fileStoreId\"\n            }\n      }\n   ]\n } ",
-			"collection_id": "91fd78e8-7b79-c216-ad4c-bf14935236d9"
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"a5aabf33-0d0f-4044-842e-ea629ffbf64d\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vehicleMaintenances\":[\n      {\n      \t\t\"code\":\"code\",\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"vehicle\" :{\n            \t\"regNumber\":\"regNumber\"\n            },\n            \"maintenanceUom\":\"Days\",\n            \"maintenanceAfter\":100,\n            \"downtimeforMaintenanceUom\":\"Hrs\",\n            \"downtimeforMaintenance\":10\n      }\n   ]\n } "
 		},
 		{
-			"id": "d8731a2e-6c3f-13d5-6512-7381e476264a",
+			"id": "75438a0c-7d32-0732-f74e-c318250e5ee1",
 			"headers": "Content-Type: application/json\n",
 			"headerData": [
 				{
@@ -649,7 +657,7 @@
 					"enabled": true
 				}
 			],
-			"url": "http://localhost:8899/swm-services/vehiclemaintenancedetails/_search?tenantId=default",
+			"url": "localhost:8899/swm-services/vehicletripsheetdetails/_search?tenantId=default",
 			"queryParams": [
 				{
 					"key": "tenantId",
@@ -663,24 +671,22 @@
 			"pathVariableData": [],
 			"preRequestScript": null,
 			"method": "POST",
-			"collectionId": "91fd78e8-7b79-c216-ad4c-bf14935236d9",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
 			"data": [],
 			"dataMode": "raw",
-			"name": "Vehicle Maintenance Details Search",
+			"name": "Vehicle Trip Sheet Details Search",
 			"description": "",
 			"descriptionFormat": "html",
-			"time": 1510292489766,
+			"time": 1510578427229,
 			"version": 2,
 			"responses": [],
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"isFromCollection": true,
-			"collectionRequestId": "67c303ad-3b80-6366-728b-2d5585e68eff",
-			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"3d585dec-bd33-4cf2-88fb-36c48fcf3d78\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"a5aabf33-0d0f-4044-842e-ea629ffbf64d\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
 		},
 		{
-			"id": "d93663e3-edaf-6026-f16a-80704688d548",
+			"id": "82ee3749-ee0e-01e4-a808-7d102f5f688d",
 			"headers": "Content-Type: application/json\n",
 			"headerData": [
 				{
@@ -690,7 +696,424 @@
 					"enabled": true
 				}
 			],
-			"url": "http://localhost:8899/swm-services/vendors/_search?tenantId=default",
+			"url": "localhost:8899/swm-services/collectionpoints/_create",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510575205795,
+			"name": "Collection point Create",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"32c07700-69a2-4cf1-8c17-9523e0634ef5\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"collectionPoints\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"name\":\"Collection Point 2\",\n            \"location\" :{\n            \t\"code\":\"99\"\n            },\n            \"binDetails\":[\n\t            {\n\t            \t\"assetOrBinId\": \"assetOrBinId 3\",\n\t            \t\"rfidAssigned\": true,\n\t            \t\"rfid\": \"rfid 3\",\n\t            \t\"latitude\": 111.111,\n\t            \t\"longitude\": 222.222\n\t            },\n\t            {\n\t            \t\n\t            \t\"assetOrBinId\": \"assetOrBinId 4\",\n\t            \t\"rfidAssigned\": true,\n\t            \t\"rfid\": \"rfid 4\",\n\t            \t\"latitude\": 111.111,\n\t            \t\"longitude\": 222.222\n            \t}\n            \t\n            ],\n            \"collectionPointDetails\":[\n\t    \t\t{\n\t\t            \"collectionType\" :{\n\t\t            \t\"code\":\"Fake Collection Type Code 1\"\n\t\t            },\n\t\t            \"garbageEstimate\" :1000,\n\t\t            \"description\" :\"description\"\n\t    \t\t},\n\t    \t\t{\n\t\t            \"collectionType\" :{\n\t\t            \t\"code\":\"Fake Collection Type Code 2\"\n\t\t            },\n\t\t            \"garbageEstimate\" :2000,\n\t\t            \"description\" :\"description\"\n\t    \t\t}\n\t\t\t]\n            \n      }\n   ]\n } "
+		},
+		{
+			"id": "853c27c8-9b32-093a-7a29-0bf5024374a9",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8899/swm-services/sourcesegregations/_create",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Source Segregation Create",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1510577977512,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"sourceSegregations\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"dumpingGround\" :{\n            \t\"code\":\"Fake Dumping Ground Code 1\"\n            },\n            \"sourceSegregationDate\":1234567890,\n            \"collectionDetails\":[\n            \t{\n            \t\t\"collectionType\":{\n            \t\t\t\n            \t\t\t\"code\":\"Fake Collection Type Code 1\"\n            \t\t\t\n            \t\t},\n            \t\t\"wetWasteCollected\":100,\n            \t\t\"dryWasteCollected\":200\n            \t}\n            ]\n      }\n   ]\n } "
+		},
+		{
+			"id": "8e042fb6-4e55-73b9-15a1-614902972b2a",
+			"headers": "Content-Type: application/json\nfi: \n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "fi",
+					"value": "",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/swm-services/vehicles/_update",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510569629002,
+			"name": "Vehicle Update",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vehicles\":[\n      {\n      \t\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"regNumber\":\"regNumber Final2\",\n\t\t\t\"vehicleType\" :{\n            \t\"code\":\"Fake Vehicle Type Code 2\"\n            },\n\t\t\t\"purchaseInfo\":{\n\t            \"purchaseDate\" : \"1508323548\",\n\t            \"price\" : 3000,\n\t            \"sourceOfPurchase\":\"sourceOfPurchase 3\"\n            },\n            \"fuelType\" :{\n            \t\"code\":\"Fake Fuel Type Code 1\"\n            },\n            \"operatorsReq\":10,\n            \"vendor\" :{\n            \t\"vendorNo\":\"MH-SWM-VNDR-000075\"\n            },\n           \"manufacturingDetails\":{\n\t\t\t\t\"engineSrNumber\":\"engineSrNumber Final2\",\n\t            \"chassisSrNumber\" : \"chassisSrNumber Final2\",\n\t            \"model\":\"model\",\n\t            \"vehicleCapacity\":100\n\t\t\t},\n           \"insuranceDetails\":{\n           \t\t\"insuranceNumber\":\"MH-SWM-VNDR-000080\",\n            \t\"insuranceValidityDate\":1514745000000,\n            \t\"insuranceDocument\":{\n            \t\t\"fileStoreId\":\"fileStoreId\"\n            \t}\n           },\n           \"kilometers\":100,\n           \"endOfWarranty\":1508323548,\n           \"remarks\":\"remarks\"\n      }\n   ]\n } "
+		},
+		{
+			"id": "8f002aab-b802-5163-6820-a3772a5993f4",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/swm-services/collectionpoints/_update",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510223581910,
+			"name": "Collection point Update",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"32c07700-69a2-4cf1-8c17-9523e0634ef5\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"collectionPoints\":[\n      {\n      \t    \"code\":\"941fa4349a3f4f7da82a01d22c10db93\",\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"name\":\"name\",\n            \"location\" :{\n            \t\"code\":\"99\"\n            },\n            \"binDetails\":[\n\t            {\n\t            \t\"assetOrBinId\": \"assetOrBinId 3\",\n\t            \t\"rfidAssigned\": true,\n\t            \t\"rfid\": \"rfid 3\",\n\t            \t\"latitude\": 333.333,\n\t            \t\"longitude\": 444.444\n\t            },\n\t            {\n\t            \t\n\t            \t\"assetOrBinId\": \"assetOrBinId 4\",\n\t            \t\"rfidAssigned\": true,\n\t            \t\"rfid\": \"rfid 4\",\n\t            \t\"latitude\": 555.555,\n\t            \t\"longitude\": 666.666\n            \t}\n            \t\n            ],\n            \"collectionPointDetails\":[\n\t    \t\t{\n\t\t            \"collectionType\" :{\n\t\t            \t\"code\":\"Fake Collection Type Code 2\"\n\t\t            },\n\t\t            \"garbageEstimate\" :2000,\n\t\t            \"description\" :\"description 2\"\n\t    \t\t},\n\t    \t\t{\n\t\t            \"collectionType\" :{\n\t\t            \t\"code\":\"Fake Collection Type Code 3\"\n\t\t            },\n\t\t            \"garbageEstimate\" :3000,\n\t\t            \"description\" :\"description 3\"\n\t    \t\t}\n\t\t\t]\n            \n      }\n   ]\n } "
+		},
+		{
+			"id": "98f2958b-5cfd-d7ff-67a8-3f7c1922189c",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/swm-services/refillingpumpstations/_search?tenantId=default&code=52f38e3e3761481fb0e169d3e66fcff9",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "code",
+					"value": "52f38e3e3761481fb0e169d3e66fcff9",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510569838659,
+			"name": "Refilling Pump Station Search",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  }\n}"
+		},
+		{
+			"id": "9ad52965-9eed-3596-d6f0-8f69d98677f8",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8899/swm-services/vehicleschedules/_search?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510576469188,
+			"name": "Vehicle Schedule Search",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"a5aabf33-0d0f-4044-842e-ea629ffbf64d\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+		},
+		{
+			"id": "a217c970-c160-eb12-e482-0a0ca47a77ec",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8899/swm-services/vehicleschedules/_create",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510576423860,
+			"name": "Vehicle Schedule Create",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"a5aabf33-0d0f-4044-842e-ea629ffbf64d\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vehicleSchedules\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"vehicle\" :{\n            \t\"regNumber\":\"regNumber Final2\"\n            },\n            \"route\" :{\n            \t\"code\":\"b9af15c98a8d4e7d8b5bb7d4d708e21f\"\n            },\n            \"scheduledFrom\":\"1234567890\",\n            \"scheduledTo\":1234567890,\n            \"targetedGarbage\":100\n      }\n   ]\n } "
+		},
+		{
+			"id": "abcd2777-56d9-d5fc-7c36-32a6c0400bd9",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8899/swm-services/sourcesegregations/_update",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510578451337,
+			"name": "Source Segregation Update",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"sourceSegregations\":[\n      {\n      \t\n      \t\t\"code\": \"c3aabbe82ed144ce9fcf9f50e422b6ed\",\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"dumpingGround\" :{\n            \t\"code\":\"Fake Dumping Ground Code 2\"\n            },\n            \"sourceSegregationDate\":1234567890,\n            \"collectionDetails\":[\n            \t{\n            \t\t\"collectionType\":{\n            \t\t\t\n            \t\t\t\"code\":\"Fake Collection Type Code 2\"\n            \t\t\t\n            \t\t},\n            \t\t\"wetWasteCollected\":400,\n            \t\t\"dryWasteCollected\":400\n            \t}\n            ]\n      }\n   ]\n } "
+		},
+		{
+			"id": "ac2f28e5-7bc8-6af1-1a3a-a3d08b7fc8e3",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8899/swm-services/sanitationstaffschedules/_search?tenantId=default&transactionNo=MH-SWM-STF-TRN-000001",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "transactionNo",
+					"value": "MH-SWM-STF-TRN-000001",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510602057291,
+			"name": "Sanitation Staff Schedule Search",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"a5aabf33-0d0f-4044-842e-ea629ffbf64d\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+		},
+		{
+			"id": "b07d5c1d-1733-3d09-4f51-b0642b59c700",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8899/swm-services/vehicles/_search?tenantId=default&regNumber=regNumber Final2",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "regNumber",
+					"value": "regNumber Final2",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510576380988,
+			"name": "Vehicle Search",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+		},
+		{
+			"id": "b09e9925-1c3a-757e-c913-b4a022b0f912",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/swm-services/vendors/_update",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510227196208,
+			"name": "Vendor Update",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n  \"requestInfo\": {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"a5aabf33-0d0f-4044-842e-ea629ffbf64d\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\": {\n      \"id\": 1\n    }\n  },\n  \"vendors\": [\n    {\n      \"vendorNo\": \"MH-SWM-VNDR-000035\",\n      \"tenantId\": \"default\",\n      \"name\": \"Vendor Name1\",\n      \"registrationNo\": \"registrationNo2\",\n      \"details\": \"detailsasdfghjkl U\",\n      \"servicedLocations\": [\n        {\n          \"code\": \"99\"\n        },\n        {\n          \"code\": \"99\"\n        }\n      ],\n      \"supplier\": {\n        \"email\": \"contractor email U\",\n        \"tinNumber\": \"contractor tinNU\",\n        \"gst\": \"contractor gst 3\",\n        \"mobileNo\": \"0000000000\",\n        \"contactNo\": \"1111111111\",\n        \"faxNumber\": \"2222222222\",\n        \"address\": \"contractor address\",\n        \"registrationNo\": \"contractor registrationNo\"\n      },\n      \"agreementDocument\": {\n        \"fileStoreId\": \"fileStoreId\"\n      },\n      \"servicesOffered\": [\n        {\n          \"code\": \"Collection\"\n        },\n        {\n          \"code\": \"Segregation\"\n        }\n      ]\n    }\n  ]\n}"
+		},
+		{
+			"id": "b47b1b76-3a80-dfa5-b316-d260dc044828",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/swm-services/vendorcontracts/_update",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510574373110,
+			"name": "Vendor Contract Update",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vendorContracts\":[\n      {\n      \t\t\"contractNo\": \"MH-SWM-VNDR-CTRT-000001\",\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"vendor\" :{\n            \t\"vendorNo\":\"MH-SWM-VNDR-000005\"\n            },\n            \"contractDate\":1234567890,\n            \"contractPeriodFrom\":\"1234567890\",\n            \"contractPeriodTo\":\"1234567890\",\n            \"securityDeposit\":20,\n            \"paymentAmount\":3000,\n            \"paymentTerms\":{\n            \t\"label\":\"label U\"\n            },\n            \"remarks\":\"qwertyuiopqwertyuio U\"\n      }\n   ]\n } "
+		},
+		{
+			"id": "bece2738-7590-090e-3952-77a72821aeec",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/swm-services/vehiclemaintenances/_search?tenantId=default",
 			"queryParams": [
 				{
 					"key": "tenantId",
@@ -704,23 +1127,22 @@
 			"pathVariableData": [],
 			"preRequestScript": null,
 			"method": "POST",
-			"collectionId": "91fd78e8-7b79-c216-ad4c-bf14935236d9",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
 			"data": [],
 			"dataMode": "raw",
-			"name": "Vendor Search",
+			"name": "Vehicle Maintenance Search",
 			"description": "",
 			"descriptionFormat": "html",
-			"time": 1509742474058,
+			"time": 1510234669312,
 			"version": 2,
 			"responses": [],
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"3d585dec-bd33-4cf2-88fb-36c48fcf3d78\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}",
-			"collection_id": "91fd78e8-7b79-c216-ad4c-bf14935236d9"
+			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"a5aabf33-0d0f-4044-842e-ea629ffbf64d\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
 		},
 		{
-			"id": "dda5d765-042b-d351-5812-bf4f5f8223ac",
+			"id": "bf9a921a-582c-8141-f0a7-8f6fcc628358",
 			"headers": "Content-Type: application/json\n",
 			"headerData": [
 				{
@@ -730,29 +1152,56 @@
 					"enabled": true
 				}
 			],
-			"url": "http://localhost:8899/swm-services/refillingpumpstations/_create",
+			"url": "http://egov-micro-dev.egovernments.org/swm-services/refillingpumpstations/_update",
 			"queryParams": [],
+			"preRequestScript": null,
 			"pathVariables": {},
 			"pathVariableData": [],
-			"preRequestScript": null,
 			"method": "POST",
-			"collectionId": "91fd78e8-7b79-c216-ad4c-bf14935236d9",
 			"data": [],
 			"dataMode": "raw",
-			"name": "Refilling Pump Station Create",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1510055175845,
 			"version": 2,
-			"responses": [],
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24cc2960-0d9f-45b3-8c9b-c69ab7019abb\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"refillingPumpStations\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"name\":\"Bharath Filling Station\",\n            \"location\" :{\n            \t\"code\":\"21\"\n            },\n            \"typeOfPump\" :{\n            \t\"code\":\"ONGC\"\n            },\n            \"remarks\":\"Ramarks\",\n            \"typeOfFuel\" :{\n            \t\"code\":\"Fake Fuel Type Code 1\"\n            },\n            \"quantity\" :10\n      },\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"name\":\"Hinduja Filling Station\",\n            \"location\" :{\n            \t\"code\":\"21\"\n            },\n            \"typeOfPump\" :{\n            \t\"code\":\"RIO\"\n            },\n            \"remarks\":\"Ramarks\",\n            \"typeOfFuel\" :{\n            \t\"code\":\"Fake Fuel Type Code 2\"\n            },\n            \"quantity\" :200\n      }\n   ]\n } ",
-			"collection_id": "91fd78e8-7b79-c216-ad4c-bf14935236d9"
+			"time": 1510225549113,
+			"name": "Refilling Pump Station Update",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"a5aabf33-0d0f-4044-842e-ea629ffbf64d\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"refillingPumpStations\":[\n      {\n      \t\t\"code\":\"52f38e3e3761481fb0e169d3e66fcff9\",\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"name\":\"Bharath Filling Station U\",\n            \"location\" :{\n            \t\"code\":\"21\"\n            },\n            \"typeOfPump\" :{\n            \t\"code\":\"ONGC\"\n            },\n            \"remarks\":\"Ramarks U\",\n            \"typeOfFuel\" :{\n            \t\"code\":\"Fake Fuel Type Code 2\"\n            },\n            \"quantity\" :11\n      }\n   ]\n } "
 		},
 		{
-			"id": "e636415a-13f0-1604-33ac-27d1e9da6929",
+			"id": "c0876b53-8d59-0f1d-8f38-2ffa4e85a925",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8899/swm-services/routes/_create",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510575234124,
+			"name": "Route Create ",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"a5aabf33-0d0f-4044-842e-ea629ffbf64d\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"routes\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"name\":\"Route Name 12\",\n\t\t\t\"collectionType\":{\n\t\t\t\t\"code\":\"Fake Collection Type Code 1\"\t\n\t\t\t},\n            \"startingCollectionPoint\" :{\n            \t\"code\":\"14a24c72c39f48689a551becc8f96fe2\"\n            },\n            \"endingCollectionPoint\" :{\n            \t\"code\":\"71758a4df0614c7cbe0a9a62f29f3dbc\"\n            },\n            \"endingDumpingGroundPoint\" :{\n            \t\"code\":\"Fake Dumping Ground Code 1\"\n            },\n            \"distance\":100,\n            \"garbageEstimate\" :1000,\n            \"collectionPoints\":[\n            \t{\n            \t\t\"code\" :\"14a24c72c39f48689a551becc8f96fe2\"\n            \t},\n            \t\t{\n            \t\t\"code\" :\"71758a4df0614c7cbe0a9a62f29f3dbc\"\n            \t}\n            ]\n      }\n   ]\n } "
+		},
+		{
+			"id": "c36bd36a-c318-1c56-2dfe-4d81937cfcf8",
 			"headers": "Content-Type: application/json\n",
 			"headerData": [
 				{
@@ -768,24 +1217,22 @@
 			"pathVariableData": [],
 			"preRequestScript": null,
 			"method": "POST",
-			"collectionId": "91fd78e8-7b79-c216-ad4c-bf14935236d9",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
 			"data": [],
 			"dataMode": "raw",
 			"name": "Vehicle Maintenance Details Create",
 			"description": "",
 			"descriptionFormat": "html",
-			"time": 1510219796497,
+			"time": 1510579595191,
 			"version": 2,
 			"responses": [],
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"isFromCollection": true,
-			"collectionRequestId": "759372d7-35a6-20d6-5538-931d79e8f631",
 			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24cc2960-0d9f-45b3-8c9b-c69ab7019abb\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vehicleMaintenanceDetails\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"isScheduled\": true,\n\t\t\t\"maintenanceType\": \"MAINTENANCE\",\n\t\t\t\"vehicle\":{\n\t\t\t\t\"regNumber\":\"regNumber1\"\n\t\t\t},\n\t\t\t\"actualMaintenanceDate\": 1510371526000,\n\t\t\t\"vehicleScheduledMaintenanceDate\": null,\n\t\t\t\"vehicleDowntimeActual\": 2,\n\t\t\t\"vehicleDownTimeActualUom\": \"days\",\n\t\t\t\"vehicleReadingDuringMaintenance\":212145,\n\t\t\t\"remarks\":\"Vehicle Given for Maintenance\",\n\t\t\t\"costIncurred\":555\n      }\n   ]\n } "
 		},
 		{
-			"id": "f4deecfe-834e-b809-e800-309723ad0e42",
+			"id": "c73f1229-202c-7e9a-f092-8f561e944abb",
 			"headers": "Content-Type: application/json\n",
 			"headerData": [
 				{
@@ -795,7 +1242,7 @@
 					"enabled": true
 				}
 			],
-			"url": "http://localhost:8899/swm-services/vehicles/_create",
+			"url": "localhost:8899/swm-services/sanitationstafftargets/_create",
 			"queryParams": [],
 			"preRequestScript": null,
 			"pathVariables": {},
@@ -807,16 +1254,15 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1509530636601,
-			"name": "Vehicle Create",
+			"time": 1510575377979,
+			"name": "Sanitation Staff Target Create",
 			"description": "",
-			"collectionId": "91fd78e8-7b79-c216-ad4c-bf14935236d9",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
 			"responses": [],
-			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24cc2960-0d9f-45b3-8c9b-c69ab7019abb\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vehicles\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"regNumber\":\"regNumber1\",\n\t\t\t\"vehicleType\" :{\n            \t\"code\":\"Fake Vehicle Type Code 1\"\n            },\n\t\t\t\"purchaseInfo\":{\n\t            \"purchaseDate\" : \"1508323548\",\n\t            \"price\" : 1000,\n\t            \"sourceOfPurchase\":\"sourceOfPurchase\"\n            },\n            \"fuelType\" :{\n            \t\"code\":\"Fake Fuel Type Code 1\"\n            },\n            \"operatorsReq\":10,\n            \"driver\":{\n            \t\"code\":\"vehicleDriverName\"\n            \t\n            },\n            \"vendor\" :{\n            \t\"vendorNo\":\"1\"\n            },\n            \t\"manufacturingDetails\":{\n\t\t\t\t\"engineSrNumber\":\"engineSrNumber\",\n\t            \"chassisSrNumber\" : \"chassisSrNumber\",\n\t            \"model\":\"model\",\n\t            \"vehicleCapacity\":100\n\t\t\t},\n           \"insuranceDetails\":{\n           \t\t\"insuranceNumber\":\"MH-SWM-IN-00001\",\n            \t\"insuranceValidityDate\":1508323548,\n            \t\"insuranceDocument\":{\n            \t\t\"fileStoreId\":\"fileStoreId\"\n            \t}\n           },\n           \"kilometers\":100,\n           \"endOfWarranty\":1508323548,\n           \"remarks\":\"remarks\"\n      }\n   ]\n } ",
-			"collection_id": "91fd78e8-7b79-c216-ad4c-bf14935236d9"
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"a5aabf33-0d0f-4044-842e-ea629ffbf64d\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"sanitationStaffTargets\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"swmProcess\" :{\n            \t\"code\":\"Collection\"\n            },\n            \"location\" :{\n            \t\"code\":\"99\"\n            },\n            \"route\" :{\n            \t\"code\":\"b9af15c98a8d4e7d8b5bb7d4d708e21f\"\n            },\n            \"employee\" :{\n            \t\"code\":\"EC4\"\n            },\n            \"targetFrom\":\"1234567890\",\n            \"targetTo\":1234567890,\n            \"targetedGarbage\":100,\n            \"wetWaste\":10,\n            \"dryWaste\":10,\n            \"dumpingGround\":{\n            \t\"code\":\"Fake Dumping Ground Code 1\"\n            },\n            \"collectionPoints\": [\n            \t{\n            \t\t\"code\":\"14a24c72c39f48689a551becc8f96fe2\"\n            \t},\n            \t{\n            \t\t\"code\":\"71758a4df0614c7cbe0a9a62f29f3dbc\"\n            \t}\n            ]\n      }\n   ]\n } "
 		},
 		{
-			"id": "f8fb7c3a-784f-5003-ccaa-125f5914c2b1",
+			"id": "d141573c-ea45-7d90-95d4-5a7b84d5cf48",
 			"headers": "Content-Type: application/json\n",
 			"headerData": [
 				{
@@ -826,7 +1272,7 @@
 					"enabled": true
 				}
 			],
-			"url": "http://localhost:8899/swm-services/collectionpoints/_update",
+			"url": "http://egov-micro-dev.egovernments.org/swm-services/vehicles/_create",
 			"queryParams": [],
 			"preRequestScript": null,
 			"pathVariables": {},
@@ -838,13 +1284,269 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1509522923063,
-			"name": "Collection point Update",
+			"time": 1510569527476,
+			"name": "Vehicle Create",
 			"description": "",
-			"collectionId": "91fd78e8-7b79-c216-ad4c-bf14935236d9",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
 			"responses": [],
-			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24cc2960-0d9f-45b3-8c9b-c69ab7019abb\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"collectionPoints\":[\n      {\n      \t    \"code\":\"1ea7a9ea0c4c4407870cd9a0e3572d56\",\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"name\":\"name\",\n            \"location\" :{\n            \t\"code\":\"Colony Code 2\"\n            },\n            \"binDetails\":[\n\t            {\n\t            \t\"assetOrBinId\": \"assetOrBinId 3\",\n\t            \t\"rfidAssigned\": true,\n\t            \t\"rfid\": \"rfid 3\",\n\t            \t\"latitude\": 333.333,\n\t            \t\"longitude\": 444.444\n\t            },\n\t            {\n\t            \t\n\t            \t\"assetOrBinId\": \"assetOrBinId 3\",\n\t            \t\"rfidAssigned\": true,\n\t            \t\"rfid\": \"rfid 3\",\n\t            \t\"latitude\": 555.555,\n\t            \t\"longitude\": 666.666\n            \t}\n            \t\n            ],\n            \"collectionPointDetails\":[\n\t    \t\t{\n\t\t            \"collectionType\" :{\n\t\t            \t\"code\":\"Fake Collection Type Code 2\"\n\t\t            },\n\t\t            \"garbageEstimate\" :2000,\n\t\t            \"description\" :\"description 2\"\n\t    \t\t},\n\t    \t\t{\n\t\t            \"collectionType\" :{\n\t\t            \t\"code\":\"Fake Collection Type Code 3\"\n\t\t            },\n\t\t            \"garbageEstimate\" :3000,\n\t\t            \"description\" :\"description 3\"\n\t    \t\t}\n\t\t\t]\n            \n      }\n   ]\n } ",
-			"collection_id": "91fd78e8-7b79-c216-ad4c-bf14935236d9"
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"1d837b4c-573a-49e4-be42-3d8879d7cfcc\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vehicles\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"regNumber\":\"regNumber Final2\",\n\t\t\t\"vehicleType\" :{\n            \t\"code\":\"Fake Vehicle Type Code 1\"\n            },\n\t\t\t\"purchaseInfo\":{\n\t            \"purchaseDate\" : \"1508323548\",\n\t            \"price\" : 1000,\n\t            \"sourceOfPurchase\":\"sourceOfPurchase\"\n            },\n            \"fuelType\" :{\n            \t\"code\":\"Fake Fuel Type Code 1\"\n            },\n            \"operatorsReq\":10,\n            \"vendor\" :{\n            \t\"vendorNo\":\"MH-SWM-VNDR-000075\"\n            },\n           \"manufacturingDetails\":{\n\t\t\t\t\"engineSrNumber\":\"engineSrNumber Final2\",\n\t            \"chassisSrNumber\" : \"chassisSrNumber Final2\",\n\t            \"model\":\"model\",\n\t            \"vehicleCapacity\":100\n\t\t\t},\n           \"insuranceDetails\":{\n           \t\t\"insuranceNumber\":\"MH-SWM-VNDR-000075\",\n            \t\"insuranceValidityDate\":1514745000000,\n            \t\"insuranceDocument\":{\n            \t\t\"fileStoreId\":\"fileStoreId\"\n            \t}\n           },\n           \"kilometers\":100,\n           \"endOfWarranty\":1508323548,\n           \"remarks\":\"remarks\"\n      }\n   ]\n } "
+		},
+		{
+			"id": "d31e0a62-ff67-75ed-b16e-584c49ddd0b7",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8899/swm-services/vendorcontracts/_search?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510574409034,
+			"name": "Vendor Contract Search",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+		},
+		{
+			"id": "d742a5ca-6831-29ff-37a7-f04d2ad7f510",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/swm-services/vendors/_create",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510569528744,
+			"name": "Vendor Create",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"1d837b4c-573a-49e4-be42-3d8879d7cfcc\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vendors\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n            \"name\" : \"Vendor Name1\",\n            \"registrationNo\":\"registrationNo3\",\n            \"details\":\"detailsasdfghjkl\",\n             \"servicedLocations\" :\n             [\n             \t{\n            \t\t\"code\":\"99\"\n            \t},\n            \t{\n            \t\t\"code\":\"99\"\n            \t}\n            ],\n            \"supplier\" :{\n            \t\"email\":\"contractor email\",\n            \t\"tinNumber\":\"contractor tinNumber\",\n            \t\"gst\":\"contractor gst 4\",\n            \t\"mobileNo\":\"0000000000\",\n            \t\"contactNo\":\"1111111111\",\n            \t\"faxNumber\":\"2222222222\",\n            \t\"address\":\"contractor address\",\n            \t\"registrationNo\":\"contractor registrationNo\"\n            },\n            \"agreementDocument\":{\n            \t\"fileStoreId\":\"fileStoreId\"\n            \t\n            },\n            \"servicesOffered\":\n            [\n\t            {\n\t            \t\"code\": \"Collection\"\n\t            },\n\t            {\n            \t\t\"code\": \"Segregation\"\n        \t\t}\n        \t]\n    \t}\n   ]\n } \n "
+		},
+		{
+			"id": "e0b951ff-bca4-a0cb-32a4-6ca504be067f",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/swm-services/routes/_update",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510224669260,
+			"name": "Route Update",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"a5aabf33-0d0f-4044-842e-ea629ffbf64d\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"routes\":[\n      {\n      \t\t\"code\":\"b0a20ac4a15449ac992e2843f5229c23\",\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"name\":\"Route Name 12\",\n\t\t\t\"collectionType\":{\n\t\t\t\t\"code\":\"Fake Collection Type Code 2\"\t\n\t\t\t},\n            \"startingCollectionPoint\" :{\n            \t\"code\":\"6d681bfaf31c49d7880bef2a09a76fbf\"\n            },\n            \"endingCollectionPoint\" :{\n            \t\"code\":\"160cb89b51da4a93b2bc341d752fe3bc\"\n            },\n            \"endingDumpingGroundPoint\" :{\n            \t\"code\":\"Fake Dumping Ground Code 2\"\n            },\n            \"distance\":200,\n            \"garbageEstimate\" :2000,\n            \"collectionPoints\":[\n            \t{\n            \t\t\"code\" :\"6d681bfaf31c49d7880bef2a09a76fbf\"\n            \t},\n            \t\t{\n            \t\t\"code\" :\"160cb89b51da4a93b2bc341d752fe3bc\"\n            \t}\n            ]\n      }\n   ]\n } "
+		},
+		{
+			"id": "e44fe437-9ee3-935d-77db-ceb10c4d2729",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/swm-services/vehiclefuellingdetails/_update",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510569934284,
+			"name": "Vehicle Fuelling Detailses Update",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n  \"requestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vehicleFuellingDetails\":[\n      {\n      \t    \"transactionNo\": \"MH-SWM-TRN-000039\",\n\t\t\t\"tenantId\":\"default\",\n            \"transactionDate\" : \"1508323548\",\n             \"vehicle\" :{\n            \t\"regNumber\":\"regNumber Final2\"\n            },\n            \"refuellingStation\" :{\n            \t\"code\":\"52f38e3e3761481fb0e169d3e66fcff9\"\n            },\n            \"vehicleReadingDuringFuelling\" : 200,\n            \"fuelFilled\" : 99,\n            \"typeOfFuel\":{\n            \t\"code\":\"Fake Fuel Type Code 2\"\n            \t\n            },\n            \"totalCostIncurred\":10000,\n            \"receiptNo\":\"MH-SWM-REN-00001\",\n            \"receiptDate\":\"1508323548\",\n            \"receiptCopy\":{\n            \t\"fileStoreId\":\"fileStoreId\"\n            }\n      }\n   ]\n } "
+		},
+		{
+			"id": "e6fc8fd5-35a9-3029-51f6-eabf503eebca",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8899/swm-services/vendors/_search?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510574414923,
+			"name": "Vendor Search",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+		},
+		{
+			"id": "e834da2e-7b01-d243-4256-937d1a998f33",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8899/swm-services/vehicleschedules/_update",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510576514052,
+			"name": "Vehicle Schedule Update",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"a5aabf33-0d0f-4044-842e-ea629ffbf64d\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vehicleSchedules\":[\n      {\n      \t\n      \t\t\"transactionNo\": \"MH-SWM-VS-TRN-000001\",\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"vehicle\" :{\n            \t\"regNumber\":\"regNumber Final2\"\n            },\n            \"route\" :{\n            \t\"code\":\"b9af15c98a8d4e7d8b5bb7d4d708e21f\"\n            },\n            \"scheduledFrom\":\"1234567890\",\n            \"scheduledTo\":1234567890,\n            \"targetedGarbage\":200\n      }\n   ]\n } "
+		},
+		{
+			"id": "fac0694e-f7f3-fd25-e57c-5468e904e3f0",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8899/swm-services/sanitationstafftargets/_update",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510576136915,
+			"name": "Sanitation Staff Target Update",
+			"description": "",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"a5aabf33-0d0f-4044-842e-ea629ffbf64d\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"sanitationStaffTargets\":[\n      {\n      \t\n      \t\t\"targetNo\": \"MH-SWM-SNTS-TRGT-000001\",\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"swmProcess\" :{\n            \t\"code\":\"Segregation\"\n            },\n            \"location\" :{\n            \t\"code\":\"99\"\n            },\n            \"route\" :{\n            \t\"code\":\"b9af15c98a8d4e7d8b5bb7d4d708e21f\"\n            },\n            \"employee\" :{\n            \t\"code\":\"EC5\"\n            },\n            \"targetFrom\":\"1234567890\",\n            \"targetTo\":1234567890,\n            \"targetedGarbage\":200,\n            \"wetWaste\":20,\n            \"dryWaste\":30,\n            \"dumpingGround\":{\n            \t\"code\":\"Fake Dumping Ground Code 2\"\n            },\n            \"collectionPoints\": [\n            \t{\n            \t\t\"code\":\"14a24c72c39f48689a551becc8f96fe2\"\n            \t},\n            \t{\n            \t\t\"code\":\"71758a4df0614c7cbe0a9a62f29f3dbc\"\n            \t}\n            ]\n      }\n   ]\n } "
+		},
+		{
+			"id": "fbc5f897-c5a2-82de-3725-04b373602fb4",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8899/swm-services/sanitationstaffschedules/_update",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "4b9a7987-0650-eeab-c41d-650d5a8edbc3",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Sanitation Staff Schedule Update",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1510602100801,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"sanitationStaffSchedules\":[\n      {\n      \t\n      \t\t\"transactionNo\": \"MH-SWM-STF-TRN-000001\",\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"sanitationStaffTarget\" :{\n            \t\"targetNo\":\"MH-SWM-SNTS-TRGT-000001\"\n            },\n            \"shift\" :{\n            \t\"code\":\"Fake Shift Code 2\"\n            }\n      }\n   ]\n } "
 		}
 	]
 }

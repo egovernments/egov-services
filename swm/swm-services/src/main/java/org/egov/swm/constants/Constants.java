@@ -21,5 +21,6 @@ public class Constants {
 	public static final String DUMPINGGROUND_MASTER_NAME = "DumpingGround";
 	public static final String OILCOMPANY_MASTER_NAME = "OilCompany";
 	public static final String SWMPROCESS_MASTER_NAME = "SwmProcess";
+	public static final String SHIFT_MASTER_NAME = "Shift";
 
 }

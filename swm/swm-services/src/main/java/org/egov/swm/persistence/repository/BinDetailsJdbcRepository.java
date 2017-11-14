@@ -6,10 +6,7 @@ import java.util.Map;
 
 import org.egov.swm.domain.model.BinDetails;
 import org.egov.swm.domain.model.BinDetailsSearch;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,12 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class BinDetailsJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_bindetails";
-
-	@Autowired
-	public JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {
@@ -43,73 +34,55 @@ public class BinDetailsJdbcRepository extends JdbcRepository {
 		StringBuffer params = new StringBuffer();
 
 		if (searchRequest.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", searchRequest.getTenantId());
 		}
 
 		if (searchRequest.getId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("id =:id");
 			paramValues.put("id", searchRequest.getId());
 		}
 
 		if (searchRequest.getRfidAssigned() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("rfidAssigned =:rfidAssigned");
 			paramValues.put("rfidAssigned", searchRequest.getRfidAssigned());
 		}
 
 		if (searchRequest.getAssetOrBinId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("assetOrBinId =:assetOrBinId");
 			paramValues.put("assetOrBinId", searchRequest.getAssetOrBinId());
 		}
 
 		if (searchRequest.getCollectionPoint() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("collectionPoint =:collectionPoint");
 			paramValues.put("collectionPoint", searchRequest.getCollectionPoint());
 		}
 
 		if (searchRequest.getLongitude() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("longitude =:longitude");
 			paramValues.put("longitude", searchRequest.getLongitude());
 		}
 
 		if (searchRequest.getLatitude() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("latitude =:latitude");
 			paramValues.put("latitude", searchRequest.getLatitude());
 		}
 
 		if (searchRequest.getCollectionPoint() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("collectionPoint =:collectionPoint");
 			paramValues.put("collectionPoint", searchRequest.getCollectionPoint());
 		}
 
 		if (searchRequest.getRfid() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("rfid =:rfid");
 			paramValues.put("rfid", searchRequest.getRfid());
 		}

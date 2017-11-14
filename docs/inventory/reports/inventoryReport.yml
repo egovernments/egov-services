@@ -6,10 +6,21 @@ ReportDefinitions:
   version: 1.0.0
   moduleName: inventory
   sourceColumns:
+
+  - name: financialyear
+    label: reports.inventory.openbal.financialyear         
+    type: string
+    source: materialReceipt
+
+  - name: storeName
+    label: reports.inventory.openbal.storeName         
+    type: string
+    source: materialReceipt
+
   - name: materialCode
     label: reports.inventory.openbal.MaterialCode         
     type: string
-    source: material
+    source: materialReceipt
     
   - name: materialName
     label: reports.inventory.openbal.MaterialName
@@ -45,19 +56,18 @@ ReportDefinitions:
     label: reports.inventory.openbal.Remarks
     type: string
     source: materialReceiptDetails
-    
-      
+
   searchParams:
   - name: financialYear
     label: reports.inventory.openbal.financialYear
-    type: String
+    type: singlevaluelist
     source: materialReceipt
     isMandatory: true
     
   - name: storeName
     label: reports.inventory.openbal.storeName
     type: singlevaluelist
-    pattern: http://hr-masters:8080/inventory-services/stores/_search?tenantId=$tenantId|$..code|$..name 
+    pattern: http://inventory-services:8080/inventory-services/stores/_search?tenantId=$tenantId|$..code|$..name 
     source: store
     isMandatory: true
     
@@ -66,15 +76,30 @@ ReportDefinitions:
     type: string
     source: materialReceipt 
     isMandatory: false
-    searchClause: and mrheader.receiptType=$materialTypeName
+    searchClause: AND matrcpt.receiptType = $materialTypeName
     
   - name: materialName
     label: reports.inventory.openbal.materialName
-    type: singlevaluelist
+    type: string
     source: materialReceipt  
     isMandatory: false
-    searchClause: and mrheader.materialName=$materialName
-  query: SELECt * FROM materialreceiptDetail where financialYear= $financialYear And receivingStore=$storeName AND tenantId=$tenantId
-    
-    
+    searchClause: AND mat.name = $materialName
+  query:  SELECT matrcpt.financialyear as financialyear,
+                  matrcpt.receivingstore as storeName,
+                  matrcptdtl.material as materialcode,
+                  matrcpt.receiptType as materialtypename,
+                  matrcptdtl.uomno as uom,
+                  matrcptdtl.receivedqty as qty,
+                  matrcptdtl.unitrate as rate,
+                  (matrcptdtl.unitrate * matrcptdtl.receivedqty) as totalamount,
+                  matrcptdtl.remarks as remarks
+          FROM materialreceipt matrcpt,
+               materialreceiptdetail matrcptdtl
+          WHERE matrcpt.financialyear = $financialyear
+                      AND matrcpt.receivingstore = $storeName
+                      AND matrcpt.receipttype ='OPENING BALANCE'
+                      AND matrcpt.tenantid= $tenantId
+                      AND matrcpt.tenantid=matrcptdtl.tenantid
+                      AND matrcpt.mrnnumber = matrcptdtl.mrnnumber
+                    
     

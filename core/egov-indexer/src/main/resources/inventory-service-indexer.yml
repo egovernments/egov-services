@@ -51,5 +51,19 @@ ServiceMaps:
       id: $.id
       isBulk: true
       jsonPath: $.materialStoreMappings.*
+  - topic: inv-openbalance-save-topic
+    indexes:
+    - name: openingBalance
+      type: openingBalance
+      id: $.id
+      isBulk: true
+      jsonPath: $.materialReceipt.*   
+  - topic: inv-openbalance-update-topic
+    indexes:
+    - name: openingBalance
+      type: openingBalance
+      id: $.id
+      isBulk: true
+      jsonPath: $.materialReceipt.*   
 
       

@@ -15,8 +15,6 @@ import org.egov.swm.domain.model.RouteSearch;
 import org.egov.swm.persistence.entity.RouteEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,12 +27,6 @@ public class RouteJdbcRepository extends JdbcRepository {
 
 	@Autowired
 	public CollectionPointJdbcRepository collectionPointJdbcRepository;
-
-	@Autowired
-	public JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {
@@ -60,73 +52,55 @@ public class RouteJdbcRepository extends JdbcRepository {
 		}
 
 		if (searchRequest.getCodes() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("code in (:codes)");
 			paramValues.put("codes", new ArrayList<String>(Arrays.asList(searchRequest.getCodes().split(","))));
 		}
 
 		if (searchRequest.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", searchRequest.getTenantId());
 		}
 
 		if (searchRequest.getCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("code =:code");
 			paramValues.put("code", searchRequest.getCode());
 		}
 
 		if (searchRequest.getName() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("name =:name");
 			paramValues.put("name", searchRequest.getName());
 		}
 
 		if (searchRequest.getCollectionTypeCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("collectionType =:collectionType");
 			paramValues.put("collectionType", searchRequest.getCollectionTypeCode());
 		}
 
 		if (searchRequest.getEndingCollectionPointCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("endingCollectionPoint =:endingCollectionPoint");
 			paramValues.put("endingCollectionPoint", searchRequest.getEndingCollectionPointCode());
 		}
 
 		if (searchRequest.getEndingDumpingGroundPointCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("endingDumpingGroundPoint =:endingDumpingGroundPoint");
 			paramValues.put("endingDumpingGroundPoint", searchRequest.getEndingDumpingGroundPointCode());
 		}
 
 		if (searchRequest.getDistance() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("distance =:distance");
 			paramValues.put("distance", searchRequest.getDistance());
 		}
 
 		if (searchRequest.getGarbageEstimate() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("gabageEstimate =:garbageEstimate");
 			paramValues.put("garbageEstimate", searchRequest.getGarbageEstimate());
 		}

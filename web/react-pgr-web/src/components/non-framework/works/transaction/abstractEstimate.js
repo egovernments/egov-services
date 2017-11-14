@@ -228,7 +228,6 @@ class AbstractEstimate extends Component {
 
     Api.commonApiPost("/egov-mdms-service/v1/_get",{"moduleName":"Works","masterName":"EstimateSanctionAuthority"},{}, false, false, false, "", "", false).then(function(response)
    {
-    //  console.log(response.MdmsRes['Works']['EstimateSanctionAuthority']);
      self.setState({sanctionAuthority:response.MdmsRes['Works']['EstimateSanctionAuthority']})
    },function(err) {
          console.log(err);
@@ -366,6 +365,16 @@ class AbstractEstimate extends Component {
       if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].constructor == Array) {
         for(var i=0; i< formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].length; i++) {
           formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][i]["tenantId"] = localStorage.getItem("tenantId") || "default";
+          let obj = formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][i];
+          for(let key in obj){
+            if(_.isArray(obj[key])){
+              for(let k=0;k<obj[key].length;k++){
+                obj[key][k]['tenantId']=localStorage.getItem("tenantId") || "default";
+              }
+            }else if(_.isObject(obj[key])){
+              obj[key]['tenantId']=localStorage.getItem("tenantId") || "default";
+            }
+          }
         }
       } else
         formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["tenantId"] = localStorage.getItem("tenantId") || "default";
@@ -382,21 +391,19 @@ class AbstractEstimate extends Component {
       console.log('Modified URL:',_url);
     }
 
+    // console.log(formData);
+
     //Check if documents, upload and get fileStoreId
     // let formdocumentData = formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName];
     // formdocumentData = formdocumentData && formdocumentData.length &&  formdocumentData[0] || formdocumentData ;
 
-    console.log(JSON.stringify(formData));
+    // console.log(JSON.stringify(formData));
     let objectName=self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName;
     let data = {...formData};
 
-    // console.log(_url, data);
-    // console.log(data[objectName][0].documents);
-
     if(data[objectName][0].documents && data[objectName][0].documents.length) {
       let documents = [...data[objectName][0].documents];
-      data[objectName][0]['tenantId'] = localStorage.getItem('tenantId') || 'default';
-      console.log(documents);
+      // console.log(documents);
       let formData = new FormData();
       formData.append("tenantId", localStorage.getItem('tenantId'));
       formData.append("module", 'works');
@@ -411,6 +418,7 @@ class AbstractEstimate extends Component {
         let _docs = [];
         for(let i=0;i<res.files.length;i++){
           _docs.push({
+            tenantId: localStorage.getItem('tenantId') || 'default',
             fileStore: res.files[i].fileStoreId
           })
         }
@@ -425,35 +433,6 @@ class AbstractEstimate extends Component {
     }else{
       self.makeAjaxCall(data, _url);
     }
-
-    // if(formdocumentData["documents"] && formdocumentData["documents"].length) {
-    //   let documents = [...formdocumentData["documents"]];
-    //   console.log(documents);
-    //   let _docs = [];
-    //   let counter = documents.length, breakOut = 0;
-    //   for(let i=0; i<documents.length; i++) {
-    //     fileUpload(documents[i].fileStoreId, self.props.moduleName, function(err, res) {
-    //       if(breakOut == 1) return;
-    //       if(err) {
-    //         breakOut = 1;
-    //         self.props.setLoadingStatus('hide');
-    //         self.props.toggleSnackbarAndSetText(true, err, false, true);
-    //       } else {
-    //         _docs.push({
-    //           ...documents[i],
-    //           fileStoreId: res.files[0].fileStoreId
-    //         })
-    //         counter--;
-    //         if(counter == 0 && breakOut == 0) {
-    //           formdocumentData["documents"] = _docs;
-    //           self.checkForOtherFiles(formData, _url);
-    //         }
-    //       }
-    //     })
-    //   }
-    // } else {
-    //   self.checkForOtherFiles(formData, _url);
-    // }
 
   }
 
@@ -1082,14 +1061,16 @@ class AbstractEstimate extends Component {
 
     return (
       <div className="Report">
-        <Row>
-          <Col xs={6} md={6}>
-            <h3 style={{paddingLeft: 15, "marginBottom": "0"}}>{!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && mockData[`${moduleName}.${actionName}`].title ? translate(mockData[`${moduleName}.${actionName}`].title) : ""}</h3>
-          </Col>
-          <Col xs={6} md={6}>
-            <div style={{"textAlign": "right", "color": "#FF0000", "marginTop": "15px", "marginRight": "15px", "paddingTop": "8px"}}><i>( * ) {translate("framework.required.note")}</i></div>
-          </Col>
-        </Row>
+        <div style={{padding:'0 15px'}}>
+          <Row>
+            <Col xs={6} md={6}>
+              <h3 style={{paddingLeft: 15, "marginBottom": "0"}}>{!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && mockData[`${moduleName}.${actionName}`].title ? translate(mockData[`${moduleName}.${actionName}`].title) : ""}</h3>
+            </Col>
+            <Col xs={6} md={6}>
+              <div style={{"textAlign": "right", "color": "#FF0000", "marginTop": "15px", "marginRight": "15px", "paddingTop": "8px"}}><i>( * ) {translate("framework.required.note")}</i></div>
+            </Col>
+          </Row>
+        </div>
         <form onSubmit={(e) => {
           create(e)
         }}>
@@ -1180,7 +1161,7 @@ class AbstractEstimate extends Component {
 }
 
 const mapStateToProps = state => {
-  // console.log(state.frameworkForm.form);
+  console.log(state.frameworkForm.isFormValid);
   return ({
     metaData:state.framework.metaData,
     mockData: state.framework.mockData,

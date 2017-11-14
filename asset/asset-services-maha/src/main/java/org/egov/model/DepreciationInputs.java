@@ -32,5 +32,14 @@ public class DepreciationInputs {
 	private BigDecimal currentValue;
 
 	private BigDecimal depreciationSum;
-
+	
+	private Long dateOfCreation;
+	
+	private String assetaccount;
+	
+	private String accumulateddepreciationaccount;
+	
+	private String revaluationreserveaccount;
+	
+	private String depreciationexpenseaccount;
 }

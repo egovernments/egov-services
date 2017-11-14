@@ -110,19 +110,21 @@ public class DemandRepository {
 	}
 
 	/*
+
 	 * API to fetch current installment end date based on agreement payment
 	 * cycle and current date
 	 */
 	private Date getEfectiveTodate(Agreement agreement) {
 		Calendar cal = Calendar.getInstance();
+		cal.setTime(agreement.getExpiryDate());
 		if (agreement.getPaymentCycle().equals(PaymentCycle.QUARTER)) {
-			cal = getEffectiveQuarterToDate();
+			cal = getEffectiveQuarterToDate(cal);
 		} else if (agreement.getPaymentCycle().equals(PaymentCycle.HALFYEAR)) {
 
-			cal = getEffectiveHalfYearToDate();
+			cal = getEffectiveHalfYearToDate(cal);
 		} else if (agreement.getPaymentCycle().equals(PaymentCycle.ANNUAL)) {
 
-			cal = getEffectiveFinYearToDate();
+			cal = getEffectiveFinYearToDate(cal);
 		}
 
 		cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DATE));
@@ -130,8 +132,7 @@ public class DemandRepository {
 
 	}
 
-	private Calendar getEffectiveQuarterToDate() {
-		Calendar cal = Calendar.getInstance();
+	private Calendar getEffectiveQuarterToDate(Calendar cal) {
 		int month = cal.get(Calendar.MONTH);
 		if (month < 3) {
 			cal.set(Calendar.MONTH, 2); // 4th quarter
@@ -145,8 +146,7 @@ public class DemandRepository {
 		return cal;
 	}
 
-	private Calendar getEffectiveHalfYearToDate() {
-		Calendar cal = Calendar.getInstance();
+	private Calendar getEffectiveHalfYearToDate(Calendar cal) {
 		int month = cal.get(Calendar.MONTH);
 		if (month < 3) {
 			cal.set(Calendar.MONTH, 2);
@@ -159,8 +159,7 @@ public class DemandRepository {
 		return cal;
 	}
 
-	private Calendar getEffectiveFinYearToDate() {
-		Calendar cal = Calendar.getInstance();
+	private Calendar getEffectiveFinYearToDate(Calendar cal) {
 		int month = cal.get(Calendar.MONTH);
 		if (month < 3) {
 			cal.set(Calendar.MONTH, 2);

@@ -111,7 +111,8 @@ public class AbstractEstimateService {
 				}
 			}
 			for (final DocumentDetail documentDetail : estimate.getDocumentDetails()) {
-				documentDetail.setId(estimate.getAbstractEstimateNumber());
+				documentDetail.setId(commonUtils.getUUID());
+				documentDetail.setObjectId(estimate.getAbstractEstimateNumber());
 				documentDetail.setObjectType(CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY);
 				documentDetail.setAuditDetails(
 						getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), false));
@@ -143,7 +144,9 @@ public class AbstractEstimateService {
 			estimate.setStateId(workflowService.enrichWorkflow(estimate.getWorkFlowDetails(), estimate.getTenantId(),
 					abstractEstimateRequest.getRequestInfo()));
 			for (final DocumentDetail documentDetail : estimate.getDocumentDetails()) {
-				documentDetail.setId(estimate.getAbstractEstimateNumber());
+				if(documentDetail.getId().isEmpty())
+					documentDetail.setId(commonUtils.getUUID());
+				documentDetail.setObjectId(estimate.getAbstractEstimateNumber());
 				documentDetail.setObjectType(CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY);
 				documentDetail.setAuditDetails(
 						getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), true));

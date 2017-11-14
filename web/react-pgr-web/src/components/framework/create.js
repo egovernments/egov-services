@@ -409,8 +409,6 @@ class Report extends Component {
   checkForOtherFiles = (formData, _url) => {
     let { mockData, actionName, moduleName } = this.props;
     let self = this;
-    //Loop through all groups and their inner children and get all files in an object
-    //If object not empty, then make file calls and replace with their json path
     let fileList = {};
     this.getFileList(mockData[moduleName + "." + actionName], formData, fileList);
     let counter = Object.keys(fileList).length;

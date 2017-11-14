@@ -391,14 +391,36 @@ class Report extends Component {
     }
   }
 
+  getFileList = (mockObject, formData, fileList = {}) => {
+    for(let i=0; i<mockObject.groups.length; i++) {
+      for(let j=0; j<mockObject.groups[i].fields.length; j++) {
+        if(mockObject.groups[i].fields[j].type == "singleFileUpload" && _.get(formData, mockObject.groups[i].fields[j].jsonPath)) {
+          fileList[mockObject.groups[i].fields[j].jsonPath] = _.get(formData, mockObject.groups[i].fields[j].jsonPath);
+        }
+      }
+
+      if(mockObject.groups[i].children && mockObject.groups[i].children.length) {
+        for(var k=0; k<mockObject.groups[i].children.length; k++) {
+          this.getFileList(mockObject.groups[i].children[k], formData, fileList);
+        }
+      }
+    }
+  }
+
   checkForOtherFiles = (formData, _url) => {
     let { mockData, actionName, moduleName } = this.props;
-    let counter = 0, breakOut = 0, self = this;
-    for(let i=0; i<mockData[moduleName + "." + actionName].groups.length; i++) {
-      for(let j=0; j<mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
-        if(mockData[moduleName + "." + actionName].groups[i].fields[j].type == "singleFileUpload" && _.get(formData, mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath)) {
-          counter++;
-          fileUpload(_.get(formData, mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath), self.props.moduleName, function(err, res) {
+    let self = this;
+    //Loop through all groups and their inner children and get all files in an object
+    //If object not empty, then make file calls and replace with their json path
+    let fileList = {};
+    this.getFileList(mockData[moduleName + "." + actionName], formData, fileList);
+    let counter = Object.keys(fileList).length;
+    if(!counter) {
+      self.makeAjaxCall(formData, _url);
+    } else {
+      let breakOut = 0;
+      for(let key in fileList) {
+        fileUpload(fileList[key], moduleName, function(err, res) {
             if(breakOut == 1) return;
             if(err) {
               breakOut = 1;
@@ -406,23 +428,13 @@ class Report extends Component {
               self.props.toggleSnackbarAndSetText(true, err, false, true);
             } else {
               counter--;
-              _.set(formData, mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, res.files[0].fileStoreId);
+              _.set(formData, key, res.files[0].fileStoreId);
               if(counter == 0 && breakOut == 0)
                 self.makeAjaxCall(formData, _url);
             }
-          })
-        } /*else if(mockData[moduleName + "." + actionName].groups[i].fields[j].type == "multiFileUpload") {
-          let files = _.get(formData, mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
-          if(files && files.length) {
-            counter += files.length;
-
-          }
-        }*/
+        })
       }
     }
-
-    if(counter == 0 && breakOut == 0)
-      self.makeAjaxCall(formData, _url);
   }
 
   initiateWF = (action, workflowItem, isHidden, status) => {

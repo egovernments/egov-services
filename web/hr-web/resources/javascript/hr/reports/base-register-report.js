@@ -114,7 +114,7 @@ class EmployeeReport extends React.Component {
     var _this = this
     var result;
     try {
-        result = commonApiPost("hr-employee", "employees", "_baseregisterreport", {..._this.state.searchSet, tenantId,pageSize:500,objectName:'Employee Master'},function(err, res) {
+        result = commonApiPost("hr-employee", "employees", "_baseregisterreport", {..._this.state.searchSet, tenantId,pageSize:500},function(err, res) {
           if(res && res.Employee) {
             _this.setState({
               ..._this.state,

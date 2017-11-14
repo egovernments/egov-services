@@ -1,6 +1,3 @@
-
-
-
 class LeaveReport extends React.Component {
 
   constructor(props) {
@@ -24,6 +21,7 @@ class LeaveReport extends React.Component {
         "leaveStatuses": [],
         "leaveTypes": [],
         "employeeStatuses": [],
+        "employeeList":[],
         "isSearchClicked": false
     };
     this.handleChange = this.handleChange.bind(this);
@@ -32,6 +30,7 @@ class LeaveReport extends React.Component {
   }
 
   componentWillMount() {
+
     try {
       var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
     } catch (e) {
@@ -53,17 +52,54 @@ class LeaveReport extends React.Component {
         console.log(e);
       var employeeType = [];
     }
-    
+
+    var employeeStatusList;
+    var leaveTypes;
+    var leaveStatuses;
+
+    getDropdown("employeeStatus", function(res) {
+      employeeStatusList = res;
+    });
+    getDropdown("leaveTypes", function(res) {
+      leaveTypes = res;
+    });
+    getDropdown("leaveStatus", function(res) {
+      leaveStatuses = res;
+    });
+
+
      this.setState({
          ...this.state,
          departments: Object.assign([], assignments_department),
          designations: Object.assign([], assignments_designation),
-         employeeTypes: Object.assign([], employeeType)
+         employeeTypes: Object.assign([], employeeType),
+         employeeStatuses: Object.assign([], employeeStatusList),
+         leaveTypes: Object.assign([], leaveTypes),
+         leaveStatuses: Object.assign([], leaveStatuses)
      });
+
+     var _this = this;
+
+     commonApiPost("hr-employee", "employees", "_search", {tenantId,pageSize:500}, function(err, res) {
+       if(res && res.Employee) {
+         res.Employee.forEach(function(item, index, theArray) {
+           console.log(item);
+           theArray[index] = {"id": item.id, "name": item.code + " - " + item.name};
+         });
+
+         _this.setState({
+             ..._this.state,
+             employeeList : res.Employee
+         });
+
+         console.log(res.Employee);
+       }
+     });
+
   }
 
   componentDidUpdate(prevProps, prevState) {
-      if (prevState.result.length!=this.state.result.length) {
+      if (this.state.result) {
           $('#employeeTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
@@ -78,20 +114,32 @@ class LeaveReport extends React.Component {
       open(location, '_self').close();
   }
 
+  // getEmployee(id) {
+  //   var name;
+  //
+  //   console.log(name);
+  //   return name;
+  // }
+
   searchEmployee (e) {
     e.preventDefault();
+    var _this= this;
     var result;
     try {
-        result = commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"] || [];
-    } catch (e) {
+        commonApiPost("hr-leave", "leaveapplications", "_leavereport", {...this.state.searchSet, tenantId},function(err, res) {
+
+          if(res && res.LeaveApplication) {
+            _this.setState({
+              ..._this.state,
+                result : res.LeaveApplication,
+                isSearchClicked: true
+            })
+          }
+        });
+      } catch (e) {
         result = [];
         console.log(e);
     }
-    this.setState({
-        ...this.state,
-        isSearchClicked: true,
-        result: result
-    })
   }
 
   handleChange(e, name)
@@ -106,8 +154,9 @@ class LeaveReport extends React.Component {
   }
 
   render() {
-    let {handleChange, searchEmployee, closeWindow} = this;
-    let {result, employeeTypes, departments, designations, leaveStatuses, leaveTypes, employeeStatuses} = this.state;
+
+    let {handleChange ,searchEmployee, closeWindow} = this;
+    let {result, employeeTypes, departments, designations, leaveStatuses, leaveTypes, employeeStatuses, employeeList} = this.state;
     let {employeeCode, department, designation, employeeType, employeeStatus, leaveStatus, leaveType, dateFrom, dateTo} = this.state.searchSet;
 
     const renderOptions = function(list)
@@ -117,7 +166,7 @@ class LeaveReport extends React.Component {
             return list.map((item)=>
             {
                 return (<option key={item.id} value={item.id}>
-                        {item.name}
+                        {item.name?item.name:item.code}
                     </option>)
             })
         }
@@ -127,13 +176,13 @@ class LeaveReport extends React.Component {
         return result.map((item, ind) => {
             return (
                 <tr key={ind}>
-                <td>{item.code}</td>
-                <td>{item.name}</td>
-                <td>{item.employeeStatus}</td>
-                <td>{item.employeeType}</td>
-                <td>{item.fromdate}</td>
-                <td>{item.enddate}</td>
-
+                <td>{getNameById(employeeList, item.employee)}</td>
+                <td>{item.applicationNumber}</td>
+                <td>{item.leaveType.name}</td>
+                <td>{item.fromDate +"-"+ item.toDate}</td>
+                <td>{item.leaveDays}</td>
+                <td>{getNameById(leaveStatuses,item.status)}</td>
+                <td>{item.reason}</td>
                 </tr>
             )
         })
@@ -147,12 +196,15 @@ class LeaveReport extends React.Component {
                         <table id="employeeTable" className="table table-bordered">
                             <thead>
                                 <tr>
-                                <th>Employee Code-Name</th>
-                                <th>Application No</th>
-                                <th>Leave Type</th>
-                                <th>No Of. Days</th>
-                                <th>Status</th>
-                                <th>Comment </th>
+                                  <th>Employee Code-Name</th>
+                                  <th>Application Number </th>
+                                  <th>Leave Type</th>
+                                  <th>Date Range</th>
+                                  <th>Number Of Days</th>
+                                  <th>Status</th>
+                                  <th>Comments</th>
+
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -174,26 +226,30 @@ class LeaveReport extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label for="">Department </label>
+                                            <label htmlFor="">Department </label>
                                         </div>
                                         <div className="col-sm-6">
+                                        <div className="styled-select">
                                             <select id="department" value={department} onChange={(e) => {handleChange(e, "department")}}>
-                                                <option value="" selected></option>
+                                                <option value=""></option>
                                                 {renderOptions(departments)}
                                             </select>
+                                        </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label for="">Designation </label>
+                                            <label htmlFor="">Designation </label>
                                         </div>
                                         <div className="col-sm-6">
+                                        <div className="styled-select">
                                             <select id="designation" value={designation} onChange={(e) => {handleChange(e, "designation")}}>
-                                                <option value="" selected></option>
+                                                <option value=""></option>
                                                 {renderOptions(designations)}
                                             </select>
+                                        </div>
                                         </div>
                                     </div>
                                 </div>
@@ -202,7 +258,7 @@ class LeaveReport extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label for="">Employee Code/Name </label>
+                                            <label htmlFor="">Employee Code/Name </label>
                                         </div>
                                         <div className="col-sm-6">
                                             <input id="employeeCode" type="text" value={employeeCode} onChange={(e) => {handleChange(e, "employeeCode")}}/>
@@ -212,14 +268,16 @@ class LeaveReport extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label for="">Employee Type </label>
+                                            <label htmlFor="">Employee Type </label>
                                         </div>
                                         <div className="col-sm-6">
+                                        <div className="styled-select">
                                             <select id="employeeType" value={employeeType} onChange={(e) => {handleChange(e, "employeeType")}}>
-                                                <option value="" selected></option>
+                                                <option value=""></option>
                                                 {renderOptions(employeeTypes)}
                                             </select>
                                         </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -227,26 +285,30 @@ class LeaveReport extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label for="">Employee Status </label>
+                                            <label htmlFor="">Employee Status </label>
                                         </div>
                                         <div className="col-sm-6">
+                                        <div className="styled-select">
                                             <select id="employeeStatus" value={employeeStatus} onChange={(e) => {handleChange(e, "employeeStatus")}}>
-                                                <option value="" selected></option>
+                                                <option value=""></option>
                                                 {renderOptions(employeeStatuses)}
                                             </select>
                                         </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label for="">Leave Type </label>
+                                            <label htmlFor="">Leave Type </label>
                                         </div>
                                         <div className="col-sm-6">
+                                        <div className="styled-select">
                                             <select id="leaveType" type="text" value={leaveType} onChange={(e) => {handleChange(e, "leaveType")}}>
-                                                <option value="" selected></option>
+                                                <option value=""></option>
                                                 {renderOptions(leaveTypes)}
                                             </select>
+                                        </div>
                                         </div>
                                     </div>
                                 </div>
@@ -255,7 +317,7 @@ class LeaveReport extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label for="">Date From </label>
+                                            <label htmlFor="">Date From </label>
                                         </div>
                                         <div className="col-sm-6">
                                             <div className="text-no-ui">
@@ -268,7 +330,7 @@ class LeaveReport extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label for="">Date To </label>
+                                            <label htmlFor="">Date To </label>
                                         </div>
                                         <div className="col-sm-6">
                                             <div className="text-no-ui">
@@ -283,13 +345,15 @@ class LeaveReport extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label for="">Leave Status </label>
+                                            <label htmlFor="">Leave Status </label>
                                         </div>
                                         <div className="col-sm-6">
+                                        <div className="styled-select">
                                             <select id="leaveStatus" type="text" value={leaveStatus} onChange={(e) => {handleChange(e, "leaveStatus")}}>
-                                                <option value="" selected></option>
+                                                <option value=""></option>
                                                 {renderOptions(leaveStatuses)}
                                             </select>
+                                        </div>
                                         </div>
                                     </div>
                                 </div>

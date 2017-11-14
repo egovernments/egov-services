@@ -5,13 +5,15 @@ class EmployeeAttendence extends React.Component {
     super(props);
     this.state = {
         "result": [],
+        "noOfDaysInMonth": "",
+        "noOfWorkingDays": "",
         "searchSet": {
-            "employeeCode": "",
-            "department": "",
-            "designation": "",
+            "code": "",
+            "departmentId": "",
+            "designationId": "",
             "employeeType": "",
             "month": "",
-            "calenderYear": ""
+            "year": ""
         },
         "employeeTypes": [],
         "departments": [],
@@ -36,46 +38,38 @@ class EmployeeAttendence extends React.Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.closeWindow = this.closeWindow.bind(this);
-    this.searchEmployee = this.searchEmployee.bind(this);
+    this.setInitialState = this.setInitialState.bind(this);
+    this.searchEmployeeAttendance = this.searchEmployeeAttendance.bind(this);
+ }
+
+ setInitialState(initState) {
+   this.setState(initState);
  }
 
  componentWillMount() {
-   try {
-     var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
-   } catch (e) {
-       console.log(e);
-        var assignments_designation = [];
+
+
+   var _state = {}, _this = this, count = 4;
+   const checkCountAndCall = function(key, res) {
+     _state[key] = res;
+     count--;
+     if(count == 0)
+       _this.setInitialState(_state);
    }
 
-   try {
-     var assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
-   } catch (e) {
-       console.log(e);
-     var  assignments_department = [];
-   }
+   getDropdown("employeeType", function(res) {
+     checkCountAndCall("employeeTypes", res);
+   });
+   getDropdown("assignments_department", function(res) {
+     checkCountAndCall("departments", res);
+   });
+   getDropdown("assignments_designation", function(res) {
+     checkCountAndCall("designations", res);
+   });
+   getDropdown("years", function(res) {
+     checkCountAndCall("calenderYears", res);
+   });
 
-   try {
-     var employeeType = !localStorage.getItem("employeeType") || localStorage.getItem("employeeType") == "undefined" ? (localStorage.setItem("employeeType", JSON.stringify(getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"] || [])), JSON.parse(localStorage.getItem("employeeType"))) : JSON.parse(localStorage.getItem("employeeType"));
-     }
-     catch (e) {
-       console.log(e);
-     var employeeType = [];
-   }
-
-   try {
-   var  year = !localStorage.getItem("year") || localStorage.getItem("year") == "undefined" ? (localStorage.setItem("year", JSON.stringify(getCommonMaster("egov-common-masters", "calendaryears", "CalendarYear").responseJSON["CalendarYear"] || [])), JSON.parse(localStorage.getItem("year"))) : JSON.parse(localStorage.getItem("year"));
-
-   } catch (e) {
-       console.log(e);
-     var  year = [];
-   }
-     this.setState({
-         ...this.state,
-         departments: Object.assign([], assignments_department),
-         designations: Object.assign([], assignments_designation),
-         employeeTypes: Object.assign([], employeeType),
-         calenderYears: Object.assign([], year)
-     });
   }
 
   componentDidUpdate(prevProps, prevState)
@@ -105,35 +99,68 @@ class EmployeeAttendence extends React.Component {
       open(location, '_self').close();
  }
 
- searchEmployee (e) {
+ searchEmployeeAttendance (e) {
    e.preventDefault();
-   var result;
+   var result, _this = this;
    try {
-        result = commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId,pageSize:500}).responseJSON["Employee"] || [];
+        result = commonApiPost("hr-attendance", "attendances", "_attendancereport", {..._this.state.searchSet, tenantId,pageSize:500},function(err, res) {
+          console.log(res);
+          if(res) {
+            console.log(res && res.Attendance);
+            _this.setState({
+              ..._this.state,
+                isSearchClicked: true,
+                noOfDaysInMonth:res.noOfDaysInMonth,
+                noOfWorkingDays:res.noOfWorkingDays,
+                result : res.Attendance
+            })
+          }
+        });
    } catch(e) {
         result = [];
         console.log(e);
    }
-   this.setState({
-       ...this.state,
-       isSearchClicked: true,
-       result: result
-   })
+
+ }
+
+ getEmployee(id) {
+
+   commonApiPost("hr-employee", "employees", "_search", {id, tenantId,pageSize:500}, function(err, res) {
+     if(res && res.Employee[0]) {
+       return res.Employee[0].code + " - " + res.Employee[0].name;
+     }
+   });
+
  }
 
  render () {
-    let {handleChange, searchEmployee, closeWindow} = this;
+    let {handleChange, searchEmployeeAttendance, closeWindow} = this;
     let {result, employeeTypes, departments, designations, months, calenderYears, error} = this.state;
-    let {employeeCode, department, designation, employeeType, month, calenderYear} = this.state.searchSet;
+    let {code, departmentId, designationId, employeeType, month, year} = this.state.searchSet;
+
+    const renderOptions = function(list)
+    {
+        if(list)
+        {
+            return list.map((item)=>
+            {
+                return (<option key={item.id} value={item.id}>
+                        {item.name}
+                    </option>)
+            })
+        }
+    }
+
+
     const renderTr = () => {
         return result.map((item, ind) => {
             return (
                 <tr key={ind}>
-                <td>{item.code}</td>
-                <td>{item.name}</td>
-                <td>{item.employeeStatus}</td>
-                <td>{item.employeeType}</td>
-                <td><a href="#" Employee>Employee </a></td>
+                <td>{getEmployee(item.employee)}</td>
+                <td>{item.presentDays}</td>
+                <td>{item.absentDays}</td>
+                <td>{item.leaveDays}</td>
+                <td>{item.noOfOts}</td>
                 </tr>
             )
         })
@@ -142,31 +169,31 @@ class EmployeeAttendence extends React.Component {
     const showTable = () => {
         if(this.state.isSearchClicked) {
             return (
-                // <div>
-                //     <br/>
-                //     <br/>
-                //     <div className="row">
-                //         <div className="col-sm-6">
-                //             <div className="row">
-                //                 <div className="col-sm-6 label-text">
-                //                 <label for="">Number Of Days In Month </label>
-                //                 </div>
-                //                 <div className="col-sm-6">
-                //                 <input type="text" id="days" name="days" />
-                //                 </div>
-                //             </div>
-                //         </div>
-                //         <div className="col-sm-6">
-                //             <div className="row">
-                //                 <div className="col-sm-6 label-text">
-                //                 <label for="">Number Of Working Days</label>
-                //                 </div>
-                //                 <div className="col-sm-6">
-                //                 <input  type="text" id="Workingday" name="Workingday"/>
-                //                 </div>
-                //             </div>
-                //         </div>
-                //     </div>
+                <div>
+                    <br/>
+                    <br/>
+                    <div className="row">
+                        <div className="col-sm-6">
+                            <div className="row">
+                                <div className="col-sm-6 label-text">
+                                <label htmlFor="">Number Of Days In Month </label>
+                                </div>
+                                <div className="col-sm-6">
+                                <input id="noOfDaysInMonth" type="text" value={noOfDaysInMonth} onChange={(e) => {handleChange(e, "noOfDaysInMonth")}} disabled/>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-sm-6">
+                            <div className="row">
+                                <div className="col-sm-6 label-text">
+                                <label htmlFor="">Number Of Working Days</label>
+                                </div>
+                                <div className="col-sm-6">
+                                <input id="noOfWorkingDays" type="text" value={noOfWorkingDays} onChange={(e) => {handleChange(e, "noOfWorkingDays")}} disabled/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 <div className="form-section" >
                     <h3 className="pull-left">Employee Details </h3>
                     <div className="clearfix"></div>
@@ -188,53 +215,45 @@ class EmployeeAttendence extends React.Component {
                         </table>
                     </div>
                 </div>
-
+                </div>
             )
         }
     }
 
-    const renderOptions = function(list)
-    {
-        if(list && list.constructor == Array)
-        {
-            return list.map((item)=>
-            {
-                return (<option key={item.id} value={item.id}>
-                        {item.name}
-                    </option>)
-            })
-        }
-    }
 
     return (
         <div>
             <form onSubmit={(e)=>
-                    {searchEmployee(e)}}>
+                    {searchEmployeeAttendance(e)}}>
                 <fieldset>
                     <div className="row">
                         <div className="col-sm-6">
                             <div className="row">
                                 <div className="col-sm-6 label-text">
-                                    <label for="">Month <span> * </span> </label>
+                                    <label htmlFor="">Month <span> * </span> </label>
                                 </div>
                                 <div className="col-sm-6">
+                                <div className="styled-select">
                                     <select id="month" value={month} onChange={(e) => {handleChange(e, "month")}} required>
-                                        <option value="" selected></option>
+                                        <option value=""></option>
                                         {renderOptions(months)}
                                     </select>
+                                </div>
                                 </div>
                             </div>
                         </div>
                         <div className="col-sm-6">
                             <div className="row">
                                 <div className="col-sm-6 label-text">
-                                    <label for="">Calender Year <span> *</span> </label>
+                                    <label htmlFor="">Calender Year <span> *</span> </label>
                                 </div>
                                 <div className="col-sm-6">
-                                    <select id="calenderYear" value={calenderYear} onChange={(e) => {handleChange(e, "calenderYear")}} required>
-                                        <option value="" selected></option>
+                                <div className="styled-select">
+                                    <select id="year" value={year} onChange={(e) => {handleChange(e, "year")}} required>
+                                        <option value=""></option>
                                         {renderOptions(calenderYears)}
                                     </select>
+                                </div>
                                 </div>
                             </div>
                         </div>
@@ -243,26 +262,30 @@ class EmployeeAttendence extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for="">Department </label>
+                                        <label htmlFor="">Department </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <select id="department" value={department} onChange={(e) => {handleChange(e, "department")}}>
-                                            <option value="" selected></option>
+                                    <div className="styled-select">
+                                        <select id="departmentId" value={departmentId} onChange={(e) => {handleChange(e, "departmentId")}}>
+                                            <option value=""></option>
                                             {renderOptions(departments)}
                                         </select>
+                                    </div>
                                     </div>
                                 </div>
                             </div>
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for="">Designation </label>
+                                        <label htmlFor="">Designation </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <select id="designation" value={designation} onChange={(e) => {handleChange(e, "designation")}}>
-                                            <option value="" selected></option>
+                                    <div className="styled-select">
+                                        <select id="designationId" value={designationId} onChange={(e) => {handleChange(e, "designationId")}}>
+                                            <option value=""></option>
                                             {renderOptions(designations)}
                                         </select>
+                                    </div>
                                     </div>
                                 </div>
                             </div>
@@ -271,23 +294,25 @@ class EmployeeAttendence extends React.Component {
                         <div className="col-sm-6">
                             <div className="row">
                                 <div className="col-sm-6 label-text">
-                                    <label for="">Employee Code/Name </label>
+                                    <label htmlFor="">Employee Code/Name </label>
                                 </div>
                                 <div className="col-sm-6">
-                                    <input id="employeeCode" type="text" value={employeeCode} onChange={(e) => {handleChange(e, "employeeCode")}}/>
+                                    <input id="code" type="text" value={code} onChange={(e) => {handleChange(e, "code")}}/>
                                 </div>
                             </div>
                         </div>
                         <div className="col-sm-6">
                             <div className="row">
                                 <div className="col-sm-6 label-text">
-                                    <label for="">Employee Type </label>
+                                    <label htmlFor="">Employee Type </label>
                                 </div>
                                 <div className="col-sm-6">
+                                <div className="styled-select">
                                     <select id="employeeType" value={employeeType} onChange={(e) => {handleChange(e, "employeeType")}}>
-                                        <option value="" selected></option>
+                                        <option value=""></option>
                                         {renderOptions(employeeTypes)}
                                     </select>
+                                </div>
                                 </div>
                             </div>
                         </div>
@@ -307,10 +332,6 @@ class EmployeeAttendence extends React.Component {
     );
   }
 }
-
-
-
-
 
 
 ReactDOM.render(

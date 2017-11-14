@@ -266,6 +266,40 @@ function getDropdown(name, cb, params) {
                 cb(JSON.parse(localStorage.getItem("employeeStatus")));
             }
             break;
+            case 'employeeStatus':
+                if (!localStorage.getItem("employeeStatus") || localStorage.getItem("employeeStatus") == "undefined") {
+                  var queryString = {tenantId, pageSize:500, objectName:"Employee Master"};
+                  if (params && typeof params == "object")
+                      queryString = Object.assign(queryString, params);
+                    commonApiPost("hr-masters", "hrstatuses", "_search", queryString, function(err, res) {
+                        if (res) {
+                            localStorage.setItem("employeeStatus", JSON.stringify(res["HRStatus"]));
+                            cb(res["HRStatus"]);
+                        } else {
+                            cb([]);
+                        }
+                    })
+                } else {
+                    cb(JSON.parse(localStorage.getItem("employeeStatus")));
+                }
+                break;
+            case 'leaveStatus':
+                if (!localStorage.getItem("leaveStatus") || localStorage.getItem("leaveStatus") == "undefined") {
+                  var queryString = {tenantId, pageSize:500, objectName:"LeaveApplication"};
+                  if (params && typeof params == "object")
+                      queryString = Object.assign(queryString, params);
+                    commonApiPost("hr-masters", "hrstatuses", "_search", queryString, function(err, res) {
+                        if (res) {
+                            localStorage.setItem("leaveStatus", JSON.stringify(res["HRStatus"]));
+                            cb(res["HRStatus"]);
+                        } else {
+                            cb([]);
+                        }
+                    })
+                } else {
+                    cb(JSON.parse(localStorage.getItem("leaveStatus")));
+                }
+                break;
         case 'group':
             if (!localStorage.getItem("group") || localStorage.getItem("group") == "undefined") {
                 getCommonMaster("hr-masters", "groups", function(err, res) {

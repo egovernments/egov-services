@@ -173,8 +173,8 @@ public class SupplierService extends DomainService {
 
 	public SupplierResponse search(SupplierGetRequest supplierGetRequest) {
 		SupplierResponse supplierResponse = new SupplierResponse();
-		Pagination<Supplier> search = isESEnabled ? supplierESRepository.search(supplierGetRequest)
-				: supplierJdbcRepository.search(supplierGetRequest);
+		//isESEnabled ? supplierESRepository.search(supplierGetRequest):
+		Pagination<Supplier> search = supplierJdbcRepository.search(supplierGetRequest);
 		 supplierResponse.setSuppliers(search.getPagedData());
 		 return supplierResponse;
 	}

@@ -596,6 +596,15 @@ class Login extends Component {
         signUpErrorMsg: ""
       })
    }
+
+   searchGrievanceSRN = () => {
+      let {setRoute, setHome} = this.props;
+      if(this.state.searchGrievanceSRN && this.state.searchGrievanceSRN.trim()){
+          setHome(true);
+          setRoute("/pgr/viewGrievance/"+ this.state.searchGrievanceSRN.trim());
+      }
+   }
+
    render() {
       //console.log("IN LOGIN");
       let {
@@ -773,7 +782,7 @@ class Login extends Component {
                           <p>{translate('pgr.lbl.apply.servicetag')}</p>
                         </div>
                       </Col>
-                      {/*<Col xs={12} md={12} style={styles.buttonTopMargin} onClick={this.openAnonymousComplaint}>
+                      <Col xs={12} md={12} style={styles.buttonTopMargin} onClick={this.openAnonymousComplaint}>
                         <IconButton  style={styles.floatingIconButton} >
                             <i className="material-icons">mode_edit</i>
                         </IconButton>
@@ -781,7 +790,21 @@ class Login extends Component {
                           <h4>{translate("pgr.lbl.register.grievance")}</h4>
                           <p>{translate('pgr.lbl.register.grievance')}</p>
                         </div>
-                      </Col>*/}
+                      </Col>
+                      <Col xs={12} md={12} style={styles.buttonTopMargin}>
+                        <IconButton  style={styles.floatingIconButton}  primary={true}>
+                            <i className="material-icons">search</i>
+                        </IconButton>
+                        <div style={styles.floatLeft}>
+                          <h4>{translate('pgr.lbl.search.grievance')}</h4>
+                          <TextField
+                            hintText={translate('pgr.lbl.search.grievance')}
+                            value={this.state.searchGrievanceSRN || ''}
+                            onChange={(e, newValue) => {this.setState({searchGrievanceSRN:newValue})}}
+                          />
+                          <RaisedButton label={translate('core.lbl.search')} onClick={(e)=>{this.searchGrievanceSRN(e)}} secondary={true} className="searchButton"/>
+                        </div>
+                      </Col>
                       <Col xs={12} md={12} style={styles.buttonTopMargin}>
                         <IconButton  style={styles.floatingIconButton}  primary={true}>
                             <i className="material-icons">search</i>
@@ -796,7 +819,6 @@ class Login extends Component {
                           <RaisedButton label={translate('core.lbl.search')} onClick={(e)=>{searchSRN(e)}} secondary={true} className="searchButton"/>
                         </div>
                       </Col>
-
                       <Col xs={12} md={12} style={styles.buttonTopMargin}>
                         <IconButton  style={styles.floatingIconButton}  primary={true}>
                             <i className="material-icons">search</i>

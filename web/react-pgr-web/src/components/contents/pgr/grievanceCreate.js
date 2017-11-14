@@ -25,6 +25,7 @@ var _this;
 var request = {};
 
 class grievanceCreate extends Component {
+  static isPrivate = false;
   constructor(props) {
        super(props);
        this.state = {

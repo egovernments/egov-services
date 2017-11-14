@@ -67,6 +67,14 @@ public class PriceListJdbcRepository {
 			paramValues.put("ids",
 					new ArrayList<String>(Arrays.asList(priceListSearchRequest.getIds().split(","))));
 		}
+        
+        if (!isEmpty(priceListSearchRequest.getSupplier())) {
+        	if (params.length() > 0) {
+        		params.append(" and ");
+        	}
+        	params.append("supplier =:supplier");
+        	paramValues.put("supplier", priceListSearchRequest.getSupplier());
+        }
 
         if (!isEmpty(priceListSearchRequest.getRateType())) {
             if (params.length() > 0) {
@@ -75,8 +83,7 @@ public class PriceListJdbcRepository {
             params.append("rateType =:rateType");
             paramValues.put("rateType", priceListSearchRequest.getRateType());
         }
-
-
+        
         if (!isEmpty(priceListSearchRequest.getRateContractNumber())) {
             if (params.length() > 0) {
                 params.append(" and ");
@@ -91,6 +98,39 @@ public class PriceListJdbcRepository {
         	}
         	params.append("agreementNumber =:agreementNumber");
         	paramValues.put("agreementNumber", priceListSearchRequest.getAgreementNumber());
+        }
+        
+		if (priceListSearchRequest.getAgreementNumbers() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("agreementNumber in(:agreementNumbers) ");
+			paramValues.put("agreementNumbers",
+					new ArrayList<String>(Arrays.asList(priceListSearchRequest.getAgreementNumbers().split(","))));
+		}
+        
+        if (!isEmpty(priceListSearchRequest.getAgreementStartDate())) {
+        	if (params.length() > 0) {
+        		params.append(" and ");
+        	}
+        	params.append("agreementStartDate =:agreementStartDate");
+        	paramValues.put("agreementStartDate", priceListSearchRequest.getAgreementStartDate());
+        }
+        
+        if (!isEmpty(priceListSearchRequest.getAgreementEndDate())) {
+        	if (params.length() > 0) {
+        		params.append(" and ");
+        	}
+        	params.append("agreementEndDate =:agreementEndDate");
+        	paramValues.put("agreementEndDate", priceListSearchRequest.getAgreementEndDate());
+        }
+        
+        if (!isEmpty(priceListSearchRequest.getActive())) {
+        	if (params.length() > 0) {
+        		params.append(" and ");
+        	}
+        	params.append("active =:active");
+        	paramValues.put("active", priceListSearchRequest.getActive());
         }
         
         Pagination<PriceList> page = new Pagination<>();

@@ -172,7 +172,7 @@ import assetMovableView from './components/non-framework/asset/master/assetMovab
 //inventory
 import SupplierSearch from './components/non-framework/inventory/master/supplier/SupplierSearch';
 import MaterialStoreMappingSearch from './components/non-framework/inventory/master/materialstoremapping/MaterialStoreMappingSearch';
-//import IndentSearch from './components/non-framework/inventory/master/indent/IndentSearch';
+import IndentSearch from './components/non-framework/inventory/transaction/indent/IndentSearch';
 import StoreSearch from './components/non-framework/inventory/master/store/StoreSearch';
 import MaterialSearch from './components/non-framework/inventory/master/material/MaterialSearch';
 
@@ -368,8 +368,7 @@ const Main = () => {
       <Route exact path = {base + '/non-framework/inventory/master/materialstoremapping'} component={MaterialStoreMappingSearch}/>
       <Route exact path= {base + '/non-framework/inventory/master/store'} component={StoreSearch}/>
       <Route exact path= {base + '/non-framework/inventory/master/material'} component={MaterialSearch}/>
-
-    {/*<Route exact path= {base + '/non-framework/inventory/master/indent'} component={IndentSearch}/>*/}
+	    <Route exact path= {base + '/non-framework/inventory/indent'} component={IndentSearch}/>
       {/* works */}
       <Route exact path= {base + '/non-framework/works/transaction/abstractEstimate'} component={abstractEstimate}/>
       <Route exact path= {base + '/non-framework/works/transaction/viewAbstractEstimate/:id'} component={viewAbstractEstimate}/>

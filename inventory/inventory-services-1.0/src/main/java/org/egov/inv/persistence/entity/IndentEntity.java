@@ -57,11 +57,11 @@ public class IndentEntity {
 		// super.toDomain(indent);
 		indent.setId(this.id);
 		indent.setTenantId(this.tenantId);
-		indent.setIssueStore(new Store().id(issueStore));
-		indent.setIndentStore(new Store().id(indentStore));
+		indent.setIssueStore(new Store().code(issueStore));
+		indent.setIndentStore(new Store().code(indentStore));
 		indent.setIndentDate(this.indentDate);
 		indent.setIndentNumber(this.indentNumber);
-		indent.setIndentType(IndentTypeEnum.valueOf(this.indentType));
+		indent.setIndentType(IndentTypeEnum.fromValue(this.indentType));
 		indent.setIndentPurpose(IndentPurposeEnum.fromValue(this.indentPurpose));
 		indent.setInventoryType(InventoryTypeEnum.fromValue(this.inventoryType));
 		indent.setExpectedDeliveryDate(this.expectedDeliveryDate);
@@ -69,7 +69,7 @@ public class IndentEntity {
 		indent.setNarration(this.narration);
 		if(indentStatus!=null)
 		indent.setIndentStatus(IndentStatusEnum.fromValue(this.indentStatus));
-		indent.setDepartment(new Department().id(departmentId));
+		indent.setDepartment(new Department().code(departmentId));
 		indent.setTotalIndentValue(this.totalIndentValue);
 		indent.setFileStoreId(this.fileStoreId);
 		indent.setIndentCreatedBy(this.indentCreatedBy);
@@ -88,8 +88,8 @@ public class IndentEntity {
 		// super.toEntity((Object) indent);
 		this.id = indent.getId();
 		this.tenantId = indent.getTenantId();
-		this.issueStore = indent.getIssueStore() != null ? indent.getIssueStore().getId() : null;
-		this.indentStore = indent.getIndentStore() != null ? indent.getIndentStore().getId() : null;
+		this.issueStore = indent.getIssueStore() != null ? indent.getIssueStore().getCode() : null;
+		this.indentStore = indent.getIndentStore() != null ? indent.getIndentStore().getCode() : null;
 		this.indentDate = indent.getIndentDate();
 		this.indentNumber = indent.getIndentNumber();
 		this.indentType = indent.getIndentType() != null ? indent.getIndentType().toString() : null;
@@ -99,7 +99,7 @@ public class IndentEntity {
 		this.materialHandOverTo = indent.getMaterialHandOverTo();
 		this.narration = indent.getNarration();
 		this.indentStatus = indent.getIndentStatus() != null ? indent.getIndentStatus().toString() : null;
-		this.departmentId = indent.getDepartment() != null ? indent.getDepartment().getId() : null;
+		this.departmentId = indent.getDepartment() != null ? indent.getDepartment().getCode() : null;
 		this.totalIndentValue = indent.getTotalIndentValue();
 		this.fileStoreId = indent.getFileStoreId();
 		this.indentCreatedBy = indent.getIndentCreatedBy();

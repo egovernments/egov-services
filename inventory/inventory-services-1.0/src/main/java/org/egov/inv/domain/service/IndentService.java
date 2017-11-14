@@ -55,6 +55,7 @@ public class IndentService extends DomainService {
 				b.setIndentNumber(sequenceNos.get(i));
 			    i++;
 			    int j=0;
+			    b.setAuditDetails(getAuditDetails(indentRequest.getRequestInfo(), Constants.ACTION_CREATE));
 			    List<String> detailSequenceNos = indentRepository.getSequence(IndentDetail.class.getSimpleName(),indents.size()); 
 			    for(IndentDetail d : b.getIndentDetails())
 			    {
@@ -100,7 +101,7 @@ public class IndentService extends DomainService {
 		IndentResponse response=new IndentResponse();
 		 Pagination<Indent> search = indentRepository.search(is);
 		 response.setIndents(search.getPagedData());
-		// response.setPage(search.));
+		 response.setPage(getPage(search));
 		 return response;
 	
 	}

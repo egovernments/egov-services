@@ -38,7 +38,7 @@ public class IndentsApiController implements IndentsApi {
     }
 
     public ResponseEntity<IndentResponse> indentsSearchPost( @NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
-        @ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @Valid @RequestBody RequestInfo requestInfo,
+        @ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @Valid @RequestBody org.egov.common.contract.request.RequestInfo RequestInfo,
          @Size(max=50)@ApiParam(value = "comma seperated list of Ids") @RequestParam(value = "ids", required = false) List<String> ids,
         @ApiParam(value = "issue store of the Indent ") @RequestParam(value = "issueStore", required = false) Long issueStore,
         @ApiParam(value = "indent date of the Indent ") @RequestParam(value = "indentDate", required = false) Long indentDate,

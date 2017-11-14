@@ -2,6 +2,7 @@ package org.egov.swm.web.controller;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.swm.domain.model.VendorPaymentDetails;
 import org.egov.swm.domain.service.VendorPaymentDetailsService;
 import org.egov.swm.web.requests.VendorPaymentDetailsRequest;
 import org.egov.swm.web.requests.VendorPaymentDetailsResponse;
@@ -33,6 +34,22 @@ public class VendorPaymentDetailsController {
 
         return vendorPaymentDetailsResponse;
     }
+
+
+    @PostMapping("/update")
+    @ResponseStatus(HttpStatus.CREATED)
+    public VendorPaymentDetailsResponse update(@RequestBody @Valid VendorPaymentDetailsRequest vendorPaymentDetailsRequest){
+
+        VendorPaymentDetailsResponse vendorPaymentDetailsResponse = new VendorPaymentDetailsResponse();
+        vendorPaymentDetailsResponse.setResponseInfo(getResponseInfo(vendorPaymentDetailsRequest.getRequestInfo()));
+
+        vendorPaymentDetailsRequest = vendorPaymentDetailsService.create(vendorPaymentDetailsRequest);
+
+        vendorPaymentDetailsResponse.setVendorPaymentDetails(vendorPaymentDetailsRequest.getVendorPaymentDetails());
+
+        return vendorPaymentDetailsResponse;
+    }
+
 
     private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
         return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())

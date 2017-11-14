@@ -34,4 +34,13 @@ public class VendorPaymentDetailsQueueRepository {
 
         return vendorPaymentDetailsRequest;
     }
+
+    public VendorPaymentDetailsRequest update(VendorPaymentDetailsRequest vendorPaymentDetailsRequest ){
+
+        kafkaTemplate.send(updateTopic, vendorPaymentDetailsRequest);
+
+        kafkaTemplate.send(indexTopic, vendorPaymentDetailsRequest.getVendorPaymentDetails());
+
+        return vendorPaymentDetailsRequest;
+    }
 }

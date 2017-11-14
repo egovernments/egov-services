@@ -16,4 +16,8 @@ public class VendorPaymentDetailsRepository {
     public VendorPaymentDetailsRequest create(VendorPaymentDetailsRequest vendorPaymentDetailsRequest){
         return vendorPaymentDetailsQueueRepository.save(vendorPaymentDetailsRequest);
     }
+
+    public VendorPaymentDetailsRequest update(VendorPaymentDetailsRequest vendorPaymentDetailsRequest){
+        return vendorPaymentDetailsQueueRepository.update(vendorPaymentDetailsRequest);
+    }
 }

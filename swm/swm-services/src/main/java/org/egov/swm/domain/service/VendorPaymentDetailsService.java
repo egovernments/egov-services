@@ -6,6 +6,7 @@ import org.egov.swm.domain.repository.VendorPaymentDetailsRepository;
 import org.egov.swm.web.contract.EmployeeResponse;
 import org.egov.swm.web.repository.EmployeeRepository;
 import org.egov.swm.web.repository.IdgenRepository;
+import org.egov.swm.web.requests.VehicleMaintenanceDetailsRequest;
 import org.egov.swm.web.requests.VendorPaymentDetailsRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Value;
@@ -58,6 +59,36 @@ public class VendorPaymentDetailsService {
             prepareDocuments(vendorPaymentDetails);
         }
         return vendorPaymentDetailsRepository.create(vendorPaymentDetailsRequest);
+    }
+
+    public VendorPaymentDetailsRequest update(VendorPaymentDetailsRequest vendorPaymentDetailsRequest){
+
+        Long userId = null;
+        if (vendorPaymentDetailsRequest.getRequestInfo() != null
+                && vendorPaymentDetailsRequest.getRequestInfo().getUserInfo() != null
+                && null != vendorPaymentDetailsRequest.getRequestInfo().getUserInfo().getId()) {
+            userId = vendorPaymentDetailsRequest.getRequestInfo().getUserInfo().getId();
+        }
+
+        for(VendorPaymentDetails vendorPaymentDetails : vendorPaymentDetailsRequest.getVendorPaymentDetails()){
+            setAuditDetails(vendorPaymentDetails, userId);
+        }
+
+        validateForUniquePaymentInfoInRequest(vendorPaymentDetailsRequest);
+        validate(vendorPaymentDetailsRequest);
+
+        return vendorPaymentDetailsRepository.update(vendorPaymentDetailsRequest);
+    }
+
+    private void validateForUniquePaymentInfoInRequest(VendorPaymentDetailsRequest vendorPaymentDetailsRequest){
+
+        List<String> paymentNumbersList = vendorPaymentDetailsRequest.getVendorPaymentDetails()
+                .stream().map(VendorPaymentDetails::getPaymentNo)
+                .collect(Collectors.toList());
+
+        if(paymentNumbersList.size() != paymentNumbersList.stream().distinct().count())
+            throw new CustomException("Payment No",
+                    "Duplicate paymentNo in given Vendor Payment Details:");
     }
 
     private void prepareDocuments(VendorPaymentDetails vendorPaymentDetail) {

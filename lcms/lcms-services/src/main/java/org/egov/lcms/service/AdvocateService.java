@@ -57,12 +57,27 @@ public class AdvocateService {
 
 				if (agency.getIsTerminate() == null)
 					agency.setIsTerminate(false);
-				
-				if(agency.getAgencyAddress() == null)
-					throw new CustomException(propertiesManager.getAgencyAddressErrorCode(),propertiesManager.getAgencyAddressErrorMsg());
-				
-				if(agency.getName() == null)
-					throw new CustomException(propertiesManager.getAgencyNameErrorCode(), propertiesManager.getAgencyNameErrorMsg());
+
+				if (agency.getAgencyAddress() == null)
+					throw new CustomException(propertiesManager.getAgencyAddressErrorCode(),
+							propertiesManager.getAgencyAddressErrorMsg());
+
+				if (agency.getName() == null)
+					throw new CustomException(propertiesManager.getAgencyNameErrorCode(),
+							propertiesManager.getAgencyNameErrorMsg());
+
+				if (agency.getDateOfEmpanelment() == null && agency.getStandingCommitteeDecisionDate() == null
+						&& agency.getEmpanelmentFromDate() == null && agency.getNewsPaperAdvertismentDate() == null
+						&& agency.getEmpanelmentToDate() == null) {
+					throw new CustomException(propertiesManager.getAgencyNameErrorCode(),
+							propertiesManager.getAgencyNameErrorMsg());
+				}
+
+				if (agency.getBankName() == null && agency.getBankBranch() == null && agency.getBankAccountNo() == null
+						&& agency.getIfscCode() == null && agency.getMicr() == null) {
+					throw new CustomException(propertiesManager.getBankDetailsErrorCode(),
+							propertiesManager.getBankDetailsErrorMsg());
+				}
 
 				String agencyCode = uniqueCodeGeneration.getUniqueCode(agency.getTenantId(), requestInfo,
 						propertiesManager.getAgencyUlbFormat(), propertiesManager.getAgencyUlbName(), Boolean.FALSE,
@@ -102,10 +117,14 @@ public class AdvocateService {
 
 					advocate.setIsIndividual(agency.getIsIndividual());
 
-					if (!advocate.getIsIndividual() && advocate.getAgencyName() == null) {
+					if (!advocate.getIsIndividual()) {
 
-						throw new CustomException(propertiesManager.getInvalidOrganizationCode(),
-								propertiesManager.getOrganizationExceptionMessage());
+						advocate.setAgencyName(agency.getName());
+						advocate.setDateOfEmpanelment(agency.getDateOfEmpanelment());
+						advocate.setStandingCommitteeDecisionDate(agency.getStandingCommitteeDecisionDate());
+						advocate.setNewsPaperAdvertismentDate(agency.getNewsPaperAdvertismentDate());
+						advocate.setEmpanelmentFromDate(agency.getEmpanelmentFromDate());
+						advocate.setEmpanelmentToDate(agency.getEmpanelmentToDate());
 					}
 
 					advocate.setAgencyCode(agency.getCode());

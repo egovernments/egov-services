@@ -32,23 +32,18 @@ public class Agency {
 	@JsonProperty("isIndividual")
 	private Boolean isIndividual ;
 
-	@NotNull
 	@JsonProperty("dateOfEmpanelment")
 	private Long dateOfEmpanelment ;
 
-	@NotNull
 	@JsonProperty("standingCommitteeDecisionDate")
 	private Long standingCommitteeDecisionDate ;
 
-	@NotNull
 	@JsonProperty("empanelmentFromDate")
 	private Long empanelmentFromDate ;
 
-	@NotNull
 	@JsonProperty("newsPaperAdvertismentDate")
 	private Long newsPaperAdvertismentDate ;
 
-	@NotNull
 	@JsonProperty("empanelmentToDate")
 	private Long empanelmentToDate ;
 
@@ -58,23 +53,18 @@ public class Agency {
 	@JsonProperty("advocates")
 	private List<Advocate> advocates;
 	
-	@NotNull
 	@JsonProperty("bankName")
 	private String bankName;
 
-	@NotNull
 	@JsonProperty("bankBranch")
 	private String bankBranch;
 
-	@NotNull
 	@JsonProperty("bankAccountNo")
 	private String bankAccountNo;
 
-	@NotNull
 	@JsonProperty("ifscCode")
 	private String ifscCode;
 
-	@NotNull
 	@JsonProperty("micr")
 	private String micr;
 

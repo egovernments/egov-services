@@ -3,14 +3,11 @@ package org.egov.dataupload.service;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -18,11 +15,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.egov.DataUploadApplicationRunnerImpl;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.dataupload.model.Definition;
-import org.egov.dataupload.model.ResponseInfoFactory;
 import org.egov.dataupload.model.UploadDefinition;
 import org.egov.dataupload.repository.DataUploadRepository;
 import org.egov.tracer.model.CustomException;
-import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,13 +41,8 @@ public class DataUploadService {
 	@Autowired
 	private DataUploadApplicationRunnerImpl runner;
 	
-	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
-	
 	public static final Logger logger = LoggerFactory.getLogger(DataUploadService.class);
 
-
-	@SuppressWarnings("deprecation")
 	public Object buildRequest(MultipartFile file, String moduleName, RequestInfo requestInfo) throws IOException {
 		Map<String, UploadDefinition> uploadDefinitionMap = runner.getUploadDefinitionMap();
 	    Definition uploadDefinition = getUploadDefinition(uploadDefinitionMap, moduleName, file.getName());
@@ -130,16 +120,10 @@ public class DataUploadService {
 	            		expression.append(expressionArray[j]);
 	            		if(j != expressionArray.length - 2)
 	            			expression.append(".");
-	            	}
-	            		
-	            	logger.info("expression: "+expression.toString());
-	            	logger.info("key: "+expressionArray[expressionArray.length - 1]);
-	            	logger.info("value: "+list.get(i));
-	            		
+	            	}	            		
 	            	documentContext.put(expression.toString(), expressionArray[expressionArray.length - 1], 
 	            				list.get(i));	            	
-	            	}
-	            	
+	            	} 	
 	            	logger.info("RequestInfo: "+requestInfo);
 	            	documentContext.put("$", "RequestInfo", requestInfo);
 	            	request = documentContext.jsonString().toString();	            	
@@ -154,8 +138,7 @@ public class DataUploadService {
 		     List<String> jsonPathList, Definition uploadDefinition, RequestInfo requestInfo) throws JsonProcessingException{
 		ObjectMapper mapper = new ObjectMapper();
     	DocumentContext documentContext = JsonPath.parse(uploadDefinition.getApiRequest());
-    	StringBuilder dataArray = new StringBuilder();
-    	dataArray.append("[");
+    	List<String> dataList = new ArrayList<>();
     	for(List<Object> list: excelData){
 	    	StringBuilder object = new StringBuilder(); 
 	    	object.append(JsonPath.read(uploadDefinition.getApiRequest(), uploadDefinition.getArrayPath()).toString());
@@ -174,14 +157,9 @@ public class DataUploadService {
 	    		}            	
 	    		docContext.put("$", expressionArray[expressionArray.length - 1], 
 	    				list.get(i));	            	
-	    		}
-	    	dataArray.append(docContext.jsonString().toString())
-	    	         .append(",");
-    	}
-	    dataArray.deleteCharAt(dataArray.length() - 1).append("]");
-	    String data = dataArray.toString();
-	    logger.info("Json array of excel sheet: "+data);
-	    
+	    		}	    	
+	    	dataList.add(docContext.jsonString().toString());
+    	}	    
 		String[] expressionArray = (uploadDefinition.getArrayPath()).split("[.]");
 		StringBuilder expression = new StringBuilder();
 		for(int j = 0; j < (expressionArray.length - 1) ; j++ ){
@@ -189,11 +167,10 @@ public class DataUploadService {
 			if(j != expressionArray.length - 2)
 				expression.append(".");
 		}
-		JSONArray jsonArray = new JSONArray(data);
 	    Type type = new TypeToken<ArrayList<Map<String, Object>>>() {}.getType();
 		Gson gson = new Gson();
-		List<Map<String, Object>> array = gson.fromJson(Arrays.asList(jsonArray).toString(), type);
-		documentContext.put(expression.toString(), expressionArray[expressionArray.length - 1], Arrays.asList(jsonArray).toString());	 
+		List<Map<String, Object>> array = gson.fromJson(dataList.toString(), type);
+		documentContext.put(expression.toString(), expressionArray[expressionArray.length - 1], array);	 
     	documentContext.put("$", "RequestInfo", requestInfo);
 
     	return documentContext.jsonString().toString();

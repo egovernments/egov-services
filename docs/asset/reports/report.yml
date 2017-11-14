@@ -989,12 +989,12 @@ ReportDefinitions:
     asset.accumulateddepreciationaccount,asset.assetaccount,asset.accumulateddepreciation,previousfynetblock,endcurrentamount,
     plusrevalsum,minusrevalsum,coalesce(prevdepsum,0)+coalesce(asset.accumulateddepreciation,0) as startdepval,
     coalesce(previousfynetblock,0.0)+coalesce(plusrevalsum,0.0)-coalesce(minusRevalsum,0.0) as revaltotal,prevdepsum, currdepsum,
-    coalesce(prevdepsum,0.0)+coalesce(currdepsum,0.0)+coalesce(asset.accumulateddepreciation,0.0) as totaldepsum from egasset_asset 
+    coalesce(prevdepsum,0.0)+coalesce(currdepsum,0.0)+coalesce(asset.accumulateddepreciation,0.0) as totaldepsum,assetsubcategoryname,assetSubCategory.depreciationrate,assetsubcategoryparent,
+    assetparentcategoryname from egasset_asset 
     asset inner join (select distinct(current.assetid),current.tenantid,current.transactiondate,previousfynetblock,
     endcurrentamount,plusrevalsum,minusrevalsum ,previousfynetblock+plusrevalsum-minusRevalsum as revaltotal,prevdepsum,currdepsum,
     prevdepsum+currdepsum as totaldepsum from egasset_current_value current inner join (select value.assetid,currentamount as 
-    endcurrentamount,value.tenantid,value.transactiondate,assetsubcategoryname,assetSubCategory.depreciationrate,assetsubcategoryparent,
-    assetparentcategoryname from egasset_current_value value inner join (select max(transactiondate) as transactiondate,
+    endcurrentamount,value.tenantid,value.transactiondate from egasset_current_value value inner join (select max(transactiondate) as transactiondate,
     assetid,tenantid from egasset_current_value where tenantid=$tenantid  AND transactiondate<=(select extract ('epoch' from 
     (select endingdate from egf_financialyear where (current_date between startingdate and endingdate) AND tenantid=$tenantid))*1000) 
     GROUP BY assetid,tenantid) as maxvalue ON value.assetid=maxvalue.assetid and value.tenantid=maxvalue.tenantid AND 
@@ -1025,7 +1025,7 @@ ReportDefinitions:
     ('epoch' from (select endingdate from egf_financialyear where (current_date between startingdate and endingdate) AND 
     tenantid=$tenantid))*1000)) GROUP BY assetid,tenantid ) currdep ON current.assetid=currdep.assetid AND current.tenantid=
     currdep.tenantid) as transactions ON asset.id=transactions.assetid AND asset.tenantid=transactions.tenantid 
-    left outer join ( select assetSubcategory.name assetsubcategoryname,assetSubcategory.depreciationrate as depreciationrate,
+    left outer join ( select assetSubcategory.name as assetsubcategoryname,assetSubcategory.depreciationrate as depreciationrate,
     assetSubcategory.parent as assetsubcategoryparent,assetSubcategory.tenantid as tenantid,assetSubcategory.id assetsubcategoryid,
     ac.name as assetparentcategoryname from (VALUES tbl_assetsubcategory) as assetSubcategory (id,name,depreciationRate,parent,tenantId) 
     inner join (VALUES tbl_assetcategory) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id and assetSubcategory.tenantid=ac.tenantid) as  

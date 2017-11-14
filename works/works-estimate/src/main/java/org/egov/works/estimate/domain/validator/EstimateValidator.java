@@ -173,7 +173,7 @@ public class EstimateValidator {
         if (fund != null && fund.getCode() != null) {
             responseJSONArray = estimateUtils.getMDMSData(Constants.FUND_OBJECT,
                     CommonConstants.CODE, fund.getCode(), tenantId, requestInfo,
-                    Constants.WORKS_MODULE_CODE);
+                    Constants.EGF_MODULE_CODE);
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
                 messages.put(Constants.KEY_FUND_INVALID,
                         Constants.MESSAGE_FUND_INVALID);
@@ -189,7 +189,7 @@ public class EstimateValidator {
         if (function != null && function.getCode() != null) {
             responseJSONArray = estimateUtils.getMDMSData(Constants.FUNCTION_OBJECT,
                     CommonConstants.CODE, function.getCode(), tenantId, requestInfo,
-                    Constants.WORKS_MODULE_CODE);
+                    Constants.EGF_MODULE_CODE);
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
                 messages.put(Constants.KEY_FUNCTION_INVALID,
                         Constants.MESSAGE_FUNCTION_INVALID);

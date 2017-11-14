@@ -96,12 +96,7 @@ public class AbstractEstimateService {
 				assetDetail.setAuditDetails(
 						getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), false));
 			}
-			for (final DocumentDetail documentDetail : estimate.getDocumentDetails()) {
-				documentDetail.setId(commonUtils.getUUID());
-				documentDetail.setObjectType(CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY);
-				documentDetail.setAuditDetails(
-						getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), false));
-			}
+			
 			if (!estimate.getSpillOverFlag()) {
 				String abstractEstimateNumber = idGenerationRepository
 						.generateAbstractEstimateNumber(estimate.getTenantId(), abstractEstimateRequest.getRequestInfo());
@@ -114,6 +109,12 @@ public class AbstractEstimateService {
 					abstractEstimateDetails.setProjectCode(projectCode);
 
 				}
+			}
+			for (final DocumentDetail documentDetail : estimate.getDocumentDetails()) {
+				documentDetail.setId(estimate.getAbstractEstimateNumber());
+				documentDetail.setObjectType(CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY);
+				documentDetail.setAuditDetails(
+						getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), false));
 			}
 			populateWorkFlowDetails(estimate, abstractEstimateRequest.getRequestInfo());
 			estimate.setStateId(workflowService.enrichWorkflow(estimate.getWorkFlowDetails(),
@@ -136,14 +137,17 @@ public class AbstractEstimateService {
 			for (final AbstractEstimateAssetDetail assetDetail : estimate.getAssetDetails())
 				assetDetail.setAuditDetails(
 						getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), true));
-			for (final DocumentDetail documentDetail : estimate.getDocumentDetails())
-				documentDetail.setAuditDetails(
-						getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), true));
 			populateWorkFlowDetails(estimate, abstractEstimateRequest.getRequestInfo());
 			estimate.setAuditDetails(
 					getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), true));
 			estimate.setStateId(workflowService.enrichWorkflow(estimate.getWorkFlowDetails(), estimate.getTenantId(),
 					abstractEstimateRequest.getRequestInfo()));
+			for (final DocumentDetail documentDetail : estimate.getDocumentDetails()) {
+				documentDetail.setId(estimate.getAbstractEstimateNumber());
+				documentDetail.setObjectType(CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY);
+				documentDetail.setAuditDetails(
+						getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), true));
+			}
 
 			populateNextStatus(estimate);
 			

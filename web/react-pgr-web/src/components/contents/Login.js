@@ -211,7 +211,7 @@ class Login extends Component {
       localStorage.setItem("expires-in", response.data.expires_in);
 
       window.timeObject= setInterval(function() {
-          console.log(window.counter);
+          // console.log(window.counter);
           window.counter++;
           if (window.counter==(parseInt(localStorage.getItem("expires-in"))-300)) {
             var instanceTwo = axios.create({

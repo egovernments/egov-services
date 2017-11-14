@@ -54,8 +54,8 @@ public class Advocate extends PersonDetails {
 	private String bankAccountNo;
 
 	@NotNull
-	@JsonProperty("isfcCode")
-	private String isfcCode;
+	@JsonProperty("ifscCode")
+	private String ifscCode;
 
 	@NotNull
 	@JsonProperty("micr")

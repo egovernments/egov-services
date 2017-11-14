@@ -339,7 +339,7 @@ public class EstimateValidator {
 
     }
 
-    private AbstractEstimate searchAbstractEstimate(DetailedEstimate detailedEstimate) {
+    public AbstractEstimate searchAbstractEstimate(DetailedEstimate detailedEstimate) {
         AbstractEstimate abstractEstimate = null;
         if(detailedEstimate.getAbstractEstimateDetail() != null) {
             String workIdentificationNumber = detailedEstimate.getAbstractEstimateDetail().getProjectCode().getCode();
@@ -512,10 +512,11 @@ public class EstimateValidator {
                             detailedEstimate.getTenantId(), requestInfo, WORKS_MODULE_CODE);
                     if (mdmsArray != null && !mdmsArray.isEmpty())  {
                         Map<String, Object> jsonMap = (Map<String, Object>) mdmsArray.get(0);
-                        if(jsonMap.get(CommonConstants.EXPENDITURETYPE).equals(ExpenditureType.REVENUE))
+                        if(jsonMap.get(CommonConstants.EXPENDITURETYPE).equals(ExpenditureType.REVENUE.toString()) && assetsForEstimate.getAsset() == null)
                           messages.put(KEY_ESTIMATE_ASSET_REQUIRED, MESSAGE_ESTIMATE_ASSET_REQUIRED);
 
-                        else if(jsonMap.get(CommonConstants.EXPENDITURETYPE).equals(ExpenditureType.CAPITAL))
+                        else if(jsonMap.get(CommonConstants.EXPENDITURETYPE).equals(ExpenditureType.CAPITAL.toString()) && StringUtils.isBlank(assetsForEstimate.getLandAsset())
+                                && abstractEstimate != null && abstractEstimate.getLandAssetRequired() != null && abstractEstimate.getLandAssetRequired())
                             messages.put(KEY_ESTIMATE_LAND_ASSET_REQUIRED, MESSAGE_ESTIMATE_LAND_ASSET_REQUIRED);
                     }
 
@@ -618,7 +619,7 @@ public class EstimateValidator {
             }
             else {
                 Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
-                if(jsonMap.get("expenditureType").equals(ExpenditureType.CAPITAL))
+                if(jsonMap.get("expenditureType").equals(ExpenditureType.CAPITAL.toString()))
                   natureOfWork.setExpenditureType(ExpenditureType.CAPITAL);
                 else
                   natureOfWork.setExpenditureType(ExpenditureType.REVENUE);

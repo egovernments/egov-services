@@ -95,7 +95,7 @@ public class Constants {
     public static final String KEY_UOM_INVALID = "UOM_INVALID";
     public static final String MESSAGE_UOM_INVALID = "Plese provide valid data for UOM";
 
-    public static final String KEY_MODEOFALLOTMENT_INVALID = "UOM_INVALID";
+    public static final String KEY_MODEOFALLOTMENT_INVALID = "MODEOFALLOTMENT_INVALID";
     public static final String MESSAGE_MODEOFALLOTMENT_INVALID = "Plese provide valid data for Mode of Allotment";
 
     public static final String KEY_NATUREOFWORK_INVALID = "UOM_INVALID";

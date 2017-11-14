@@ -60,12 +60,13 @@ public class DetailedEstimateService {
             detailedEstimate.setId(commonUtils.getUUID());
             detailedEstimate.setAuditDetails(auditDetails);
             detailedEstimate.setTotalIncludingRE(detailedEstimate.getEstimateValue());
-
+            AbstractEstimate abstactEstimate = null;
             if(detailedEstimate.getAbstractEstimateDetail() != null) {
-                        if(!validator.checkDetailedEstimateCreatedFlag(detailedEstimate)) {
+                abstactEstimate = validator.searchAbstractEstimate(detailedEstimate);
+                        if(abstactEstimate != null && !abstactEstimate.getDetailedEstimateCreated()) {
                             String estimateNumber = idGenerationRepository
                                     .generateDetailedEstimateNumber(detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());
-                            detailedEstimate.setEstimateNumber(propertiesManager.getDetailedEstimateNumberPrefix() + detailedEstimate.getDepartment().getCode() + estimateNumber);
+                            detailedEstimate.setEstimateNumber(propertiesManager.getDetailedEstimateNumberPrefix() + '/' + detailedEstimate.getDepartment().getCode() + estimateNumber);
                         }
                 }
 
@@ -111,7 +112,7 @@ public class DetailedEstimateService {
                     }
                 }
             }
-				populateWorkFlowDetails(detailedEstimate, detailedEstimateRequest.getRequestInfo());
+				populateWorkFlowDetails(detailedEstimate, detailedEstimateRequest.getRequestInfo(), abstactEstimate);
 				detailedEstimate.setStateId(workflowService.enrichWorkflow(detailedEstimate.getWorkFlowDetails(),
                         detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo()));
 				detailedEstimate.setStatus(DetailedEstimateStatus.CREATED);
@@ -134,8 +135,10 @@ public class DetailedEstimateService {
     public DetailedEstimateResponse update(DetailedEstimateRequest detailedEstimateRequest) {
         AuditDetails updateDetails = setAuditDetails(detailedEstimateRequest.getRequestInfo().getUserInfo().getUserName(), true);
         AuditDetails createDetails = setAuditDetails(detailedEstimateRequest.getRequestInfo().getUserInfo().getUserName(), false);
+        AbstractEstimate abstactEstimate = null;
         for (final DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
-        	populateWorkFlowDetails(detailedEstimate, detailedEstimateRequest.getRequestInfo());
+            abstactEstimate = validator.searchAbstractEstimate(detailedEstimate);
+        	populateWorkFlowDetails(detailedEstimate, detailedEstimateRequest.getRequestInfo(), abstactEstimate);
             detailedEstimate.setAuditDetails(updateDetails);
 
             for(final AssetsForEstimate assetsForEstimate : detailedEstimate.getAssets()) {
@@ -215,13 +218,12 @@ public class DetailedEstimateService {
 
 
     
-    private void populateWorkFlowDetails(DetailedEstimate detailedEstimate, RequestInfo requestInfo) {
+    private void populateWorkFlowDetails(DetailedEstimate detailedEstimate, RequestInfo requestInfo, AbstractEstimate abstactEstimate) {
 
 		if (null != detailedEstimate && null != detailedEstimate.getWorkFlowDetails()) {
 
 			WorkFlowDetails workFlowDetails = detailedEstimate.getWorkFlowDetails();
-
-            if (validator.checkDetailedEstimateCreatedFlag(detailedEstimate)) {
+            if (abstactEstimate != null && abstactEstimate.getDetailedEstimateCreated()) {
                 workFlowDetails.setType(CommonConstants.SPILLOVER_DETAILED_ESTIMATE_WF_TYPE);
                 workFlowDetails.setBusinessKey(CommonConstants.SPILLOVER_DETAILED_ESTIMATE_WF_TYPE);
             } else {

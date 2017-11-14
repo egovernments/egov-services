@@ -31,7 +31,11 @@ public class PriceListService {
 
         priceListRequest.getPriceLists().forEach(priceList -> {
             priceList.setAuditDetails(inventoryUtilityService.mapAuditDetails(priceListRequest.getRequestInfo(), tenantId));
+            priceList.getPriceListDetails().forEach(priceListDetail -> {
+            	priceListDetail.setAuditDetails(inventoryUtilityService.mapAuditDetails(priceListRequest.getRequestInfo(), tenantId));
+            });
         });
+        
 
         List<Long> priceListIdList = inventoryUtilityService.getIdList(priceListRequest.getPriceLists().size(), SEQ_PRICELIST);
         for (int i = 0; i <= priceListIdList.size() - 1; i++) {

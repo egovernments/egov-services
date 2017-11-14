@@ -97,13 +97,33 @@ class Report extends Component {
                 // }
                 Api.commonApiPost(context,id).then(function(response) {
                   if(response) {
-                    let keys=jp.query(response,splitArray[1].split("|")[1]);
-                    let values=jp.query(response,splitArray[1].split("|")[2]);
+
+                    let queries = splitArray[1].split("|");
+                    let keys=jp.query(response, queries[1]);
+                    let values=jp.query(response, queries[2]);
+
+                    let others=[];
+                    if(queries.length>3){
+                      for(let i=3;i<queries.length;i++){
+                        others.push(jp.query(response, queries[i]) || undefined);
+                      }
+                    }
+
                     let dropDownData=[];
                     for (let t = 0; t < keys.length; t++) {
                         let obj={};
                         obj["key"]=keys[t];
                         obj["value"]=values[t];
+
+                        if(others && others.length>0)
+                        {
+                          let otherItemDatas=[];
+                          for(let i=0;i<others.length;i++){
+                            otherItemDatas.push(others[i][k] || undefined);
+                          }
+                          obj['others'] = otherItemDatas;
+                        }
+
                         dropDownData.push(obj);
                     }
                     dropDownData.sort(function(s1, s2) {
@@ -239,7 +259,10 @@ class Report extends Component {
          }
        }
      }
+
+      self.props.setLoadingStatus('loading');
       Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
+          self.props.setLoadingStatus('hide');
           if(specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].isResponseArray) {
             var obj = {};
             _.set(obj, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName, jp.query(res, "$..[0]")[0]);
@@ -254,7 +277,7 @@ class Report extends Component {
 
           self.depedantValue(obj1.groups);
       }, function(err){
-
+          self.props.setLoadingStatus('hide');
       })
 
     } else {
@@ -1291,6 +1314,8 @@ class Report extends Component {
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler, initiateWF} = this;
+
+    //let isUpdateDataFetched = actionName==='update'? !_.isEmpty(formData) : true;
 
     return (
       <div className="Report">

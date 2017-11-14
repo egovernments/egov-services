@@ -141,8 +141,10 @@ var dat = {
       "rowClickUrlUpdate": "/update/inventory/pricelists/{code}",
       "rowClickUrlView": "/view/inventory/pricelists/{code}",
       "rowClickUrlAdd" : "/create/inventory/pricelists",
-      "rowClickUrlDelete" : "inventory-services/pricelists/_update"
-
+      "rowClickUrlDelete" : {
+        url:"inventory-services/pricelists/_update",
+        body:{ active:false, inActiveDate:function(){ return new Date().getTime() } }
+      }
     }
   },
   "inventory.create": {
@@ -316,7 +318,7 @@ var dat = {
                   "label": "inventory.to.date"
                 },
                 {
-                  "label": "inventory.quantity" 
+                  "label": "inventory.quantity"
                 }
               ],
               "values": [

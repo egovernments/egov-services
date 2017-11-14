@@ -141,30 +141,40 @@ export default class CustomSearch extends Component {
   }
 
   delete=()=> {
+    let self = this;
     let {moduleName, actionName, metaData, setRoute, tableSelectionData, setLoadingStatus} = this.props;
     let obj = metaData[`${moduleName}.${actionName}`];
     let resultIdKey = obj.result.resultIdKey;
+
+    let deleteRequestBodyParams = obj.result.rowClickUrlDelete.body;
+
+    Object.keys(deleteRequestBodyParams).map((key)=>{
+      if(typeof deleteRequestBodyParams[key] === "function")
+         deleteRequestBodyParams[key] = deleteRequestBodyParams[key]();
+    });
+
     if(tableSelectionData && tableSelectionData.length > 0){
       let inActiveDatas = this.state.values.filter((value)=> tableSelectionData.indexOf(value[resultIdKey]) > -1).map((value)=>{
-        value['active'] = false;
-        value['inActiveDate'] = new Date().getTime();
+        value={...value, ...deleteRequestBodyParams};
         return value;
       });
+
       setLoadingStatus('loading');
 
       let formData = {
         [obj.result.resultPath] : inActiveDatas
       };
 
-      Api.commonApiPost(obj.result.rowClickUrlDelete, "", formData, "", true).then(function(response){
+      Api.commonApiPost(obj.result.rowClickUrlDelete.url, "", formData, "", true).then(function(response){
         setLoadingStatus('hide');
-        this.search();
+        self.search();
       });
+
     }
   }
 
   search = (e) => {
-    e.preventDefault();
+    e && e.preventDefault();
     let self = this;
     self.props.setLoadingStatus('loading');
     self.props.setTableSelectionData([]);

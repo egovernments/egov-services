@@ -191,7 +191,7 @@ public class AdvocateService {
 	private void validatePersonDetails(Agency agency, AgencyRequest createAgencyRequest) throws Exception {
 
 		if (agency.getPersonDetails() != null) {
-			List<PersonDetails> personDetailsOnDb = advocateRepository.getPersonalDetailsUsingCode(agency.getCode());
+			List<PersonDetails> personDetailsOnDb = advocateRepository.getPersonalDetailsUsingCode(agency.getTenantId(), agency.getCode());
 			List<String> personDetailsCodes = personDetailsOnDb.stream().map(details -> details.getCode())
 					.collect(Collectors.toList());
 
@@ -236,7 +236,7 @@ public class AdvocateService {
 	private void validateAdvocates(Agency agency, AgencyRequest createAgencyRequest) throws Exception {
 
 		if (agency.getAdvocates() != null) {
-			List<Advocate> advocatesOnDb = advocateRepository.getAdvocatesUsingCode(agency.getCode());
+			List<Advocate> advocatesOnDb = advocateRepository.getAdvocatesUsingCode(agency.getTenantId(), agency.getCode());
 			List<String> advocateCodes = advocatesOnDb.stream().map(Advocate -> Advocate.getCode())
 					.collect(Collectors.toList());
 

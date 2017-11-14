@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.models.AdvocateSearchCriteria;
+import org.egov.lcms.utility.ConstantUtility;
 
 public class AdvocateBuilders {
 
@@ -122,12 +123,15 @@ public class AdvocateBuilders {
 
 	public static final String SEARCH_CASE_CODE_BY_ADVOCATE = "select casecode from egov_lcms_case_advocate where advocate->>'code'=?";
 
-	public static String getPersonalDetailsSearchQuery(String code, String tableName,
+	public static String getAgencyFieldsSearchQuery(String tenantId, String code, String tableName,
 			List<Object> preparedStatementValues) {
 		StringBuilder searchQuery = new StringBuilder();
 
 		searchQuery.append("SELECT * FROM " + tableName);
-		searchQuery.append(" WHERE agencycode =?");
+		searchQuery.append(" WHERE tenantId =?");
+		preparedStatementValues.add(tenantId);
+		
+		searchQuery.append(" AND agencycode =?");
 		preparedStatementValues.add(code);
 
 		return searchQuery.toString();
@@ -149,15 +153,20 @@ public class AdvocateBuilders {
 		return deleteQuery.toString();
 	}
 
-	public static String getAdvocateSearchQuery(String tenantId, Boolean isIndividual, String advocateName, String agencyName,
+	public static String getAdvocateSearchQuery(String tenantId, Boolean isIndividual, String advocateName, String agencyCode, String agencyName,
 			List<Object> preparedStatementValues) {
 		StringBuilder selectQuery = new StringBuilder();
 		selectQuery.append(BASE_QUERY);
 		selectQuery.append("WHERE tenantId=?");
 		preparedStatementValues.add(tenantId);
 		
-		selectQuery.append(" AND is isindividual=?");
+		selectQuery.append(" AND isindividual=?");
 		preparedStatementValues.add(isIndividual);
+		
+		if(agencyCode != null){
+			selectQuery.append(" AND agencyCode=?");
+			preparedStatementValues.add(agencyCode);
+		}
 		
 		if (advocateName != null) {
 
@@ -176,5 +185,24 @@ public class AdvocateBuilders {
 		}
 
 		return selectQuery.toString();
+	}
+
+	public static String getAgencySearchQuery(String tenantId, Boolean isIndividual, String agencyName,
+			List<Object> preparedStatementValues) {
+		
+		StringBuilder searchQuery = new StringBuilder();
+		searchQuery.append("SELECT * FROM " + ConstantUtility.AGENCY_TABLE_NAME);
+		
+		searchQuery.append(" WHERE tenantId=?");
+		preparedStatementValues.add(tenantId);
+		
+		searchQuery.append(" AND isIndividual=?");
+		preparedStatementValues.add(isIndividual);
+		
+		if(agencyName != null){
+			searchQuery.append(" AND name=?");
+			preparedStatementValues.add(agencyName);
+		}
+		return searchQuery.toString();
 	}
 }

@@ -65,7 +65,7 @@ public class AdvocateController {
 	public ResponseEntity<?> searchAgency(@RequestParam(name = "tenantId", required = true) String tenantId,
 			@RequestParam(name = "isIndividual", required = true) Boolean isIndividual,
 			@RequestParam(name = "advocateName", required = false) String advocateName,
-			@RequestParam(name = "agencyName", required = true) String agencyName,
+			@RequestParam(name = "agencyName", required = false) String agencyName,
 			@RequestBody @Valid RequestInfoWrapper requestInfoWrapper) throws Exception {
 
 		AgencyResponse agencyResponse = advocateService.searchAgency(tenantId, isIndividual, advocateName, agencyName,

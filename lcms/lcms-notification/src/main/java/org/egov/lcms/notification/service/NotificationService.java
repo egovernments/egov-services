@@ -214,8 +214,8 @@ public class NotificationService {
 
 			if (caseObj.getIsVakalatnamaGenerated()) {
 
-				vakalatnamaMessage.put("Dated", caseObj.getVakalatnamaGenerationDate());
-				vakalatnamaMessage.put("Case details date", caseObj.getCaseRegistrationDate());
+				vakalatnamaMessage.put("Dated", TimeStampUtil.getDateWithoutTimezone(caseObj.getVakalatnamaGenerationDate()));
+				vakalatnamaMessage.put("Case details date", TimeStampUtil.getDateWithoutTimezone(caseObj.getCaseRegistrationDate()));
 				vakalatnamaMessage.put("ULB Name", caseObj.getTenantId());
 				userDetails = userReository.getUser(caseObj.getTenantId(), roleCodes, caseRequest.getRequestInfo());
 				
@@ -324,7 +324,7 @@ public class NotificationService {
 				hearingProcessMessage.put("Dated",
 						TimeStampUtil.getDateWithoutTimezone(caseObj.getCaseRegistrationDate()));
 				hearingProcessMessage.put("ULB Name", caseObj.getTenantId());
-				hearingProcessMessage.put("Court", caseObj.getSummon().getCourtName());
+				hearingProcessMessage.put("Court", caseObj.getSummon().getCourtName().getName());
 				userDetails = userReository.getUser(caseObj.getTenantId(), roleCodes, caseRequest.getRequestInfo());
 
 				for (HearingDetails hearingDetails : caseObj.getHearingDetails()) {
@@ -473,8 +473,9 @@ public class NotificationService {
 		for (Opinion opinion : opinionRequest.getOpinions()) {
 
 			opinionMessage.put("Opinion No", opinion.getOpinionOn());
-			opinionMessage.put("Department Name", opinion.getDepartmentName());
-			opinionMessage.put("Dated", opinion.getOpinionRequestDate());
+			opinionMessage.put("Department Name", opinion.getDepartmentName().getName());
+			opinionMessage.put("Dated", TimeStampUtil.getDateWithoutTimezone(opinion.getOpinionRequestDate()));
+			opinionMessage.put("ULB Name", opinion.getTenantId());
 			userDetails = userReository.getUser(opinion.getTenantId(), roleCodes, opinionRequest.getRequestInfo());
 			
 			for (UserDetail userDetail : userDetails) {

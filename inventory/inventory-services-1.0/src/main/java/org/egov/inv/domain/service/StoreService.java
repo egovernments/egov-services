@@ -86,9 +86,6 @@ public class StoreService extends DomainService {
 	private Boolean isESEnabled;
 
 	@Autowired
-	private InventoryUtilityService inventoryUtilityService;
-
-	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 	
 	@Autowired

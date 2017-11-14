@@ -69,9 +69,6 @@ import org.springframework.validation.FieldError;
 public class SupplierService extends DomainService {
 
 	@Autowired
-	private InventoryUtilityService inventoryUtilityService;
-
-	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	@Autowired

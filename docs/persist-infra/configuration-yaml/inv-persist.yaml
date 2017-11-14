@@ -407,7 +407,7 @@ serviceMaps:
               dbType: BOOLEAN
             - jsonPath: $.priceLists.*.fileStoreId
             - jsonPath: $.priceLists.*.priceListDetails.*.id
-            - jsonPath: $.priceLists.*.auditDetails.tenantId
+            - jsonPath: $.priceLists.*.tenantId
             - jsonPath: $.priceLists.*.auditDetails.createdBy
             - jsonPath: $.priceLists.*.auditDetails.lastModifiedBy
             - jsonPath: $.priceLists.*.auditDetails.createdTime
@@ -428,7 +428,7 @@ serviceMaps:
             - jsonPath: $.priceLists.*.priceListDetails.*.uom.code
             - jsonPath: $.priceLists.*.priceListDetails.*.active
               dbType: BOOLEAN
-            - jsonPath: $.priceLists.*.auditDetails.tenantId
+            - jsonPath: $.priceLists.*.tenantId
             - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.createdBy
             - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.lastModifiedBy
             - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.createdTime

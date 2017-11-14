@@ -529,7 +529,7 @@ var dat = {
             "jsonPath": "priceLists[0].active",
             "label": "inventory.active",
             "pattern": "",
-            "type": "radio",
+            "type": "checkbox",
             "isRequired": true,
             "isDisabled": false,
             "defaultValue": true,
@@ -539,7 +539,7 @@ var dat = {
       }
     ],
     "tenantIdRequired": true,
-    "url": "/inventory-services/pricelists/_search?tenantId={tenantId}"
+    "url": "/inventory-services/pricelists/_search?id={id}"
   },
   "inventory.update": {
     "numCols": 4,
@@ -555,13 +555,14 @@ var dat = {
             "jsonPath": "priceLists[0].supplier.code",
             "label": "inventory.supplier",
             "pattern": "^[a-zA-Z0-9]+$",
-            "type": "text",
+            "type": "singleValueList",
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "defaultValue": "",
             "maxLength": 50,
             "minLength": 5,
-            "patternErrorMsg": "inventory.create.field.message.code"
+            "patternErrorMsg": "inventory.create.field.message.code",
+            "url":"inventory-services/suppliers/_search?|$.supplier[*].code|$.suppliers[*].name"
           },
           {
             "name": "rateType",
@@ -664,7 +665,7 @@ var dat = {
             "jsonPath": "priceLists[0].active",
             "label": "inventory.active",
             "pattern": "",
-            "type": "radio",
+            "type": "checkbox",
             "isRequired": true,
             "isDisabled": false,
             "defaultValue": true,
@@ -675,7 +676,7 @@ var dat = {
     ],
     "url": "/inventory-services/pricelists/_update",
     "tenantIdRequired": true,
-    "searchUrl": "/inventory-services/pricelists/_search?tenantId={tenantId}"
+    "searchUrl": "/inventory-services/pricelists/_search?id={id}"
   }
 }
  export default dat;

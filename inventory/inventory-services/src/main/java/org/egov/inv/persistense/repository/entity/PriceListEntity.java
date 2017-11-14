@@ -75,7 +75,7 @@ public class PriceListEntity {
 
     private Supplier getSupplier(String id) {
     	Supplier supplier = new Supplier();
-    	supplier.setId(id);
+    	supplier.setCode(id);
         return supplier;
     }
     

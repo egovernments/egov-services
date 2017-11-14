@@ -2495,7 +2495,8 @@ var localization_EN_Data = {
 "legal.create.paymentNote":"Note: Total amount shown in window is valid and it is not necessarily same as the amount mentioned in invoice document that is attached",
 "advocatepayment.update.document.title":"Advocate Payment Update",
 "legacycase.update.document.title":"Create Legacy Case",
-
+"legal.create.caseregistration.fromDate": "Case Registration From Date",
+"legal.create.caseregistration.toDate": "Case Registration To Date",
 
 //works
 "works.create.groups.label.estandadminsanction": "Estimate and Administrative Sanction",
@@ -4627,7 +4628,8 @@ var localization_MR_Data = {
 "legal.create.paymentNote":"Note: Total amount shown in window is valid and it is not necessarily same as the amount mentioned in invoice document that is attached-Marathi",
 "advocatepayment.update.document.title":"Advocate Payment Update-Marathi",
 "legacycase.update.document.title":"Create Legacy Case-marathi",
-
+"legal.create.caseregistration.fromDate": "Case Registration From Date-Marathi",
+"legal.create.caseregistration.toDate": "Case Registration To Date-Marathi",
 
 
 "swm.collectionpoints.search.title":"Search",

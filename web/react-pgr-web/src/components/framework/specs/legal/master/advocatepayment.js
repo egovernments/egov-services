@@ -8,34 +8,12 @@ var dat =  {
     groups: [
       {
         name: "search",
-        label: "legal.search.advocatepayment.title",
+        label: "",
         fields: [
-          // {
-          //   label: "advocatepayment.createundefined",
-          //   type: "",
-          //   isDisabled: false,
-          //   patternErrorMsg: "advocatepayment.create.field.message.undefined"
-          // },
-          // {
-          //   name: "sortCase",
-          //   jsonPath: "sortCase",
-          //   label: "advocatepayment.createsortCase",
-          //   type: "text",
-          //   isDisabled: false,
-          //   patternErrorMsg: "advocatepayment.create.field.message.sortCase"
-          // },
-          // {
-          //   name: "ids",
-          //   jsonPath: "ids",
-          //   label: "advocatepayment.createids",
-          //   type: "",
-          //   isDisabled: false,
-          //   patternErrorMsg: "advocatepayment.create.field.message.ids"
-          // },
-         {
+           {
             name: "fromDate",
             jsonPath: "fromDate",
-            label: "legal.create.fromDate",
+            label: "legal.create.caseregistration.fromDate",
             type: "datePicker",
             isRequired: false,
             isDisabled: false,
@@ -44,7 +22,7 @@ var dat =  {
           {
             name: "toDate",
             jsonPath: "toDate",
-             label: "legal.create.toDate",
+             label: "legal.create.caseregistration.toDate",
             type: "datePicker",
             isRequired: false,
             isDisabled: false,

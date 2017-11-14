@@ -72,8 +72,12 @@ var dat = {
               url: "/update/legal/updateopinion/"
             },
             {
-              label: "Opinion Details",
+              label: "Update Opinion Details",
               url: "/update/legal/opiniondetails/"
+            },
+             {
+              label: "View Opinion Details",
+              url: "/view/legal/opiniondetails/"
             }
           ],
       header: [

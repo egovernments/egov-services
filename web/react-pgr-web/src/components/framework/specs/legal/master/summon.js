@@ -122,8 +122,11 @@ var dat = {
               label: "Ref Evidence",
               url:"/update/legal/referenceevidence/"
             },{
-              label: "Case Details",
+              label: "Update Case Details",
               url:"/update/legal/casedetails/"
+            },{
+              label: "View Case Details",
+              url:"/view/legal/casedetails/"
             }
           ],
       header: [

@@ -431,11 +431,11 @@ serviceMaps:
             - jsonPath: $.priceLists.*.priceListDetails.*.active
               dbType: BOOLEAN
             - jsonPath: $.priceLists[?({id} in @.priceListDetails[*].id)].tenantId
-            - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.createdBy
-            - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.lastModifiedBy
-            - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.createdTime
+            - jsonPath: $.priceLists[?({id} in @.priceListDetails[*].id)].auditDetails.createdBy
+            - jsonPath: $.priceLists[?({id} in @.priceListDetails[*].id)].auditDetails.lastModifiedBy
+            - jsonPath: $.priceLists[?({id} in @.priceListDetails[*].id)].auditDetails.createdTime
               dbType: LONG
-            - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.lastModifiedTime
+            - jsonPath: $.priceLists[?({id} in @.priceListDetails[*].id)].auditDetails.lastModifiedTime
               dbType: LONG
 
 

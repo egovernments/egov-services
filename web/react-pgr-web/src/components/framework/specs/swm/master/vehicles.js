@@ -748,7 +748,7 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": "",
-            "defaultValue": false,
+            "defaultValue": "",
             "showHideFields": [{
               "ifValue": true,
               "hide": [],
@@ -798,7 +798,7 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": "",
-            "defaultValue": true,
+            "defaultValue": "",
             "showHideFields": [{
               "ifValue": false,
               "hide": [],
@@ -1022,7 +1022,7 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": "",
-            "defaultValue": false,
+            "defaultValue": "",
             "showHideFields": [{
               "ifValue": true,
               "hide": [],
@@ -1072,7 +1072,7 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": "",
-            "defaultValue": true,
+            "defaultValue": "",
             "showHideFields": [{
               "ifValue": false,
               "hide": [],

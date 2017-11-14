@@ -8,11 +8,11 @@ ReportDefinitions:
   selectiveDownload: true
   externalService:
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetcategorytype%3D%3D%27IMMOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27IMMOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
     keyOrder: id,name,depreciationRate,parent,tenantId
     tableName: tbl_assetsubcategory
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetcategorytype%3D%3D%27IMMOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27IMMOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
     keyOrder: id,name,tenantId
     tableName: tbl_assetcategory 
   sourceColumns:
@@ -106,7 +106,7 @@ ReportDefinitions:
        asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.totalarea,asset.openingdate,asset.fundsource,
        asset.location,(select string_agg(land.surveynumber,',') from egasset_asset_landdetails land  where asset.id=land.assetid group by asset.id) as 
        totalsurveyno,asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as 
-       defectliability,asset.defectliabilitymonth as defectliabilitymonth,asset.assetcategorytype,asset.defectliabilityday as defectliabilityday,
+       defectliability,asset.defectliabilitymonth as defectliabilitymonth,asset.assetCategoryType,asset.defectliabilityday as defectliabilityday,
        asset.securitydepositretained,asset.securitydepositrealized,asset.dateofcreation,asset.acquisitiondate,asset.grossvalue,asset.originalvalue,
        currentvalue.currentamount,disposal.salevalue as disposalsalevalue,disposal.profitlossvoucherreference as disposalvoucherno,disposal.disposaldate,
        disposal.buyername,disposal.buyeraddress,revaluation.revaluationdate,revaluation.incrementalrevalsum,revaluation.decrementalrevalsum,
@@ -133,7 +133,7 @@ ReportDefinitions:
        ac.name as assetparentcategoryname,ac.id assetparentcategoryid from (VALUES tbl_assetsubcategory) as assetSubcategory (id,name,depreciationRate,parent,tenantId) 
        inner join (VALUES tbl_assetcategory) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id and assetSubcategory.tenantid=ac.tenantid) as  
        assetsubcategory ON asset.assetcategory::character varying=assetsubcategory.assetsubcategoryid AND asset.tenantid=assetsubcategory.tenantid
-       where asset.tenantid = $tenantid AND asset.assetcategorytype='IMMOVABLE'
+       where asset.tenantid = $tenantid AND asset.assetCategoryType='IMMOVABLE'
        
          
 - reportName: AssetImmovableRegisterDetail
@@ -144,11 +144,11 @@ ReportDefinitions:
   selectiveDownload: true
   externalService:
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetcategorytype%3D%3D%27IMMOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27IMMOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
     keyOrder: id,name,depreciationRate,parent,tenantId
     tableName: tbl_assetsubcategory
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetcategorytype%3D%3D%27IMMOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27IMMOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
     keyOrder: id,name,tenantId
     tableName: tbl_assetcategory 
   sourceColumns:
@@ -383,7 +383,7 @@ ReportDefinitions:
        asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.totalarea,asset.openingdate,asset.fundsource,
        asset.location,(select string_agg(land.surveynumber,',') from egasset_asset_landdetails land  where asset.id=land.assetid group by asset.id) as 
        totalsurveyno,asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as 
-       defectliability,asset.defectliabilitymonth as defectliabilitymonth,asset.assetcategorytype,asset.defectliabilityday as defectliabilityday,
+       defectliability,asset.defectliabilitymonth as defectliabilitymonth,asset.assetCategoryType,asset.defectliabilityday as defectliabilityday,
        asset.securitydepositretained,asset.securitydepositrealized,asset.dateofcreation,asset.acquisitiondate,asset.grossvalue,asset.originalvalue,
        currentvalue.currentamount,disposal.salevalue as disposalsalevalue,disposal.profitlossvoucherreference as disposalvoucherno,disposal.disposaldate,
        disposal.buyername,disposal.buyeraddress,revaluation.revaluationdate,revaluation.incrementalrevalsum,revaluation.decrementalrevalsum,
@@ -410,7 +410,7 @@ ReportDefinitions:
        ac.name as assetparentcategoryname,ac.id assetparentcategoryid from (VALUES tbl_assetsubcategory) as assetSubcategory (id,name,depreciationRate,parent,tenantId) 
        inner join (VALUES tbl_assetcategory) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id and assetSubcategory.tenantid=ac.tenantid) as  
        assetsubcategory ON asset.assetcategory::character varying=assetsubcategory.assetsubcategoryid AND asset.tenantid=assetsubcategory.tenantid
-       where asset.tenantid = $tenantid AND asset.assetcategorytype='IMMOVABLE'
+       where asset.tenantid = $tenantid AND asset.assetCategoryType='IMMOVABLE'
          
          
 - reportName: AssetMovableRegister
@@ -421,11 +421,11 @@ ReportDefinitions:
   selectiveDownload: true
   externalService:
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetcategorytype%3D%3D%27MOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27MOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
     keyOrder: id,name,depreciationRate,parent,tenantId
     tableName: tbl_assetsubcategory
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetcategorytype%3D%3D%27MOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27MOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
     keyOrder: id,name,tenantId
     tableName: tbl_assetcategory 
   sourceColumns:
@@ -516,7 +516,7 @@ ReportDefinitions:
 
 
   
-  query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.totalarea,asset.openingdate,asset.fundsource,asset.location,asset.assetcategorytype,
+  query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.totalarea,asset.openingdate,asset.fundsource,asset.location,asset.assetCategoryType,
          asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,(select string_agg(land.surveynumber,',') from egasset_asset_landdetails land  where asset.id=land.assetid group by asset.id) as totalsurveyno,
          asset.defectliabilityday as defectliabilityday,asset.securitydepositretained,
          asset.securitydepositrealized,asset.dateofcreation,asset.acquisitiondate,asset.grossvalue,asset.originalvalue,currentvalue.currentamount,
@@ -554,7 +554,7 @@ ReportDefinitions:
          ac.name as assetparentcategoryname,ac.id assetparentcategoryid from (VALUES tbl_assetsubcategory) as assetSubcategory (id,name,depreciationRate,parent,tenantId) 
          inner join (VALUES tbl_assetcategory) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id and assetSubcategory.tenantid=ac.tenantid) as  
          assetsubcategory ON asset.assetcategory::character varying=assetsubcategory.assetsubcategoryid AND asset.tenantid=assetsubcategory.tenantid
-         where asset.tenantid = $tenantid AND asset.assetcategorytype='MOVABLE'
+         where asset.tenantid = $tenantid AND asset.assetCategoryType='MOVABLE'
          
          
 - reportName: AssetMovableRegisterDetail
@@ -565,11 +565,11 @@ ReportDefinitions:
   selectiveDownload: true
   externalService:
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetcategorytype%3D%3D%27MOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27MOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
     keyOrder: id,name,depreciationRate,parent,tenantId
     tableName: tbl_assetsubcategory
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetcategorytype%3D%3D%27MOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27MOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
     keyOrder: id,name,tenantId
     tableName: tbl_assetcategory 
   sourceColumns:
@@ -802,7 +802,7 @@ ReportDefinitions:
     source: asset
     searchClause : and asset.code in ($assetdetail)
   
-  query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.totalarea,asset.openingdate,asset.fundsource,asset.location,asset.assetcategorytype,
+  query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.totalarea,asset.openingdate,asset.fundsource,asset.location,asset.assetCategoryType,
          asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,(select string_agg(land.surveynumber,',') from egasset_asset_landdetails land  where asset.id=land.assetid group by asset.id) as totalsurveyno,
          asset.defectliabilityday as defectliabilityday,asset.securitydepositretained,
          asset.securitydepositrealized,asset.dateofcreation,asset.acquisitiondate,asset.grossvalue,asset.originalvalue,currentvalue.currentamount,
@@ -840,7 +840,7 @@ ReportDefinitions:
          ac.name as assetparentcategoryname,ac.id assetparentcategoryid from (VALUES tbl_assetsubcategory) as assetSubcategory (id,name,depreciationRate,parent,tenantId) 
          inner join (VALUES tbl_assetcategory) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id and assetSubcategory.tenantid=ac.tenantid) as  
          assetsubcategory ON asset.assetcategory::character varying=assetsubcategory.assetsubcategoryid AND asset.tenantid=assetsubcategory.tenantid
-         where asset.tenantid = $tenantid AND asset.assetcategorytype='MOVABLE'
+         where asset.tenantid = $tenantid AND asset.assetCategoryType='MOVABLE'
 
          
 - reportName: AssetSchedule
@@ -1041,11 +1041,11 @@ ReportDefinitions:
   selectiveDownload: true
   externalService:
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetcategorytype%3D%3D%27LAND%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27LAND%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
     keyOrder: id,name,depreciationRate,parent,tenantId
     tableName: tbl_assetsubcategory
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetcategorytype%3D%3D%27LAND%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27LAND%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
     keyOrder: id,name,tenantId
     tableName: tbl_assetcategory
   sourceColumns:
@@ -1136,7 +1136,7 @@ ReportDefinitions:
 
   
   query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.totalarea,asset.openingdate,asset.fundsource,asset.location,(select string_agg(land.surveynumber,',') from egasset_asset_landdetails land  where asset.id=land.assetid group by asset.id) as totalsurveyno,
-         asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,asset.assetcategorytype,
+         asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,asset.assetCategoryType,
          asset.defectliabilityday as defectliabilityday,asset.securitydepositretained,
          asset.securitydepositrealized,asset.dateofcreation,asset.acquisitiondate,asset.grossvalue,asset.originalvalue,currentvalue.currentamount,
          disposal.salevalue as disposalsalevalue,disposal.profitlossvoucherreference as disposalvoucherno,disposal.disposaldate,disposal.buyername,disposal.buyeraddress,
@@ -1165,7 +1165,7 @@ ReportDefinitions:
          ac.name as assetparentcategoryname from (VALUES tbl_assetsubcategory) as assetSubcategory (id,name,depreciationRate,parent,tenantId) 
          inner join (VALUES tbl_assetcategory) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id and assetSubcategory.tenantid=ac.tenantid) as  
          assetsubcategory ON asset.assetcategory::character varying=assetsubcategory.assetsubcategoryid AND asset.tenantid=assetsubcategory.tenantid
-         where asset.tenantid = $tenantid AND asset.assetcategorytype='LAND'
+         where asset.tenantid = $tenantid AND asset.assetCategoryType='LAND'
              
     
 - reportName: LandRegisterDetail
@@ -1176,11 +1176,11 @@ ReportDefinitions:
   selectiveDownload: true
   externalService:
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetcategorytype%3D%3D%27LAND%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27LAND%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
     keyOrder: id,name,depreciationRate,parent,tenantId
     tableName: tbl_assetsubcategory
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetcategorytype%3D%3D%27LAND%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27LAND%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
     keyOrder: id,name,tenantId
     tableName: tbl_assetcategory
   sourceColumns:
@@ -1412,7 +1412,7 @@ ReportDefinitions:
     searchClause : and asset.code in ($assetdetail)
   
   query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.totalarea,asset.openingdate,asset.fundsource,asset.location,(select string_agg(land.surveynumber,',') from egasset_asset_landdetails land  where asset.id=land.assetid group by asset.id) as totalsurveyno,
-         asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,asset.assetcategorytype,
+         asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,asset.assetCategoryType,
          asset.defectliabilityday as defectliabilityday,asset.securitydepositretained,
          asset.securitydepositrealized,asset.dateofcreation,asset.acquisitiondate,asset.grossvalue,asset.originalvalue,currentvalue.currentamount,
          disposal.salevalue as disposalsalevalue,disposal.profitlossvoucherreference as disposalvoucherno,disposal.disposaldate,disposal.buyername,disposal.buyeraddress,
@@ -1441,4 +1441,4 @@ ReportDefinitions:
          ac.name as assetparentcategoryname from (VALUES tbl_assetsubcategory) as assetSubcategory (id,name,depreciationRate,parent,tenantId) 
          inner join (VALUES tbl_assetcategory) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id and assetSubcategory.tenantid=ac.tenantid) as  
          assetsubcategory ON asset.assetcategory::character varying=assetsubcategory.assetsubcategoryid AND asset.tenantid=assetsubcategory.tenantid
-         where asset.tenantid = $tenantid AND asset.assetcategorytype='LAND'
+         where asset.tenantid = $tenantid AND asset.assetCategoryType='LAND'

@@ -2680,7 +2680,10 @@ var localization_EN_Data = {
         "inventory.openingbalance.opbdetails.title":"Opening Balance Detail",
 
  "legal.vakalatnama.create.primaryAdvocate":"Primary Advocate",
-  "legal.vakalatnama.create.additionalAdvocate":"Additional Advocate"
+  "legal.vakalatnama.create.additionalAdvocate":"Additional Advocate",
+    "legal.advocates.create.additionalOwnerWindow":"Additional Owner",
+  "legal.advocates.create.additionalAdvocateWindow":"Additional Advocate"
+
 
 
 

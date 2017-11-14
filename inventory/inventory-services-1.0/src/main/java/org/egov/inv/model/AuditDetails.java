@@ -5,6 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -13,7 +17,9 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Collection of audit related fields used by most models")
 @javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
-
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class AuditDetails   {
   @JsonProperty("createdBy")
   private String createdBy = null;

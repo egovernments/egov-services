@@ -2,10 +2,12 @@ package org.egov.inv.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import javax.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import javax.validation.constraints.*;
 
 /**
@@ -13,7 +15,9 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "This object holds the boundary information.   ")
 @javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
-
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Location   {
   @JsonProperty("id")
   private String id = null;
@@ -99,7 +103,7 @@ public class Location   {
   **/
   @ApiModelProperty(value = "name of the Location ")
 
- @Pattern(regexp="^[a-zA-Z ]$")
+ @Pattern(regexp="^[a-zA-Z ]+$")
   public String getName() {
     return name;
   }

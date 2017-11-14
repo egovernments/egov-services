@@ -5,15 +5,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.egov.inv.model.AuditDetails;
+import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * This object holds the department information.   
+ * 
  */
-@ApiModel(description = "This object holds the department information.   ")
-@javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
+@ApiModel(description = "")
+@Validated
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-28T13:21:55.964+05:30")
 
 public class Department   {
   @JsonProperty("id")
@@ -105,7 +106,7 @@ public class Department   {
   **/
   @ApiModelProperty(value = "name of the Department ")
 
- @Pattern(regexp="^[a-zA-Z ]$")
+
   public String getName() {
     return name;
   }
@@ -126,7 +127,7 @@ public class Department   {
   @ApiModelProperty(value = "Whether Department is Active or not. If the value is TRUE, then Department is active,If the value is FALSE then Department is inactive,Default value is TRUE ")
 
 
-  public Boolean getActive() {
+  public Boolean isActive() {
     return active;
   }
 

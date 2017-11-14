@@ -5,11 +5,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.egov.inv.model.Page;
-import org.egov.inv.model.ResponseInfo;
-import org.egov.inv.model.Store;
+
+
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -17,13 +22,17 @@ import javax.validation.constraints.*;
  * Contract class for web response. Array of Store items  are used in case of search ,create or update request.
  */
 @ApiModel(description = "Contract class for web response. Array of Store items  are used in case of search ,create or update request.")
-@javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
-
+@Validated
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-28T13:21:55.964+05:30")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class StoreResponse   {
-  @JsonProperty("ResponseInfo")
+  @JsonProperty("responseInfo")
   private ResponseInfo responseInfo = null;
 
   @JsonProperty("stores")
+  @Valid
   private List<Store> stores = null;
 
   @JsonProperty("page")

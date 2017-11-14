@@ -29,7 +29,7 @@ SearchDefinitions:
    query: 
     baseQuery: (select array_to_json(array_agg(row_to_json(comments)))from (select srn,commentfrom,comment from egov_citizen_service_req_comments $where) comments)
     groupBy:    
-    orderBy: srn,ASC
+    orderBy: srn,DESC
    searchParams:
     condition: AND
     params:

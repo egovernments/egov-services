@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,7 +41,10 @@ public class DataUploadController {
 	
 	@PostMapping("/{moduleName}/_get")
 	@ResponseBody
-	public ResponseEntity<?> getReportData(@RequestParam("ciziten-data-upload.xls") MultipartFile inputFile, @PathVariable("moduleName") String moduleName) throws Exception {
+	public ResponseEntity<?> getReportData(@RequestParam("file") MultipartFile inputFile,
+			/*@RequestPart("file") MultipartFile inputFile,
+			@RequestPart("RequestInfo") RequestInfo requestInfo, */
+			@PathVariable("moduleName") String moduleName) throws Exception {
 		try {
 			logger.info("Inside controller");
 			Object result = dataUploadService.buildRequest(inputFile, moduleName, new RequestInfo());

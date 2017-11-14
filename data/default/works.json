@@ -51,8 +51,8 @@
     {
       "id": 1,
       "tenantId": "default",
-      "code": "RoadsFake",
-      "name": "RoadsFake",
+      "code": "Roads",
+      "name": "Roads - Fake",
       "description": "Roads - Fake",
       "active": true,
       "parent": null
@@ -60,8 +60,8 @@
     {
       "id": 2,
       "tenantId": "default",
-      "code": "BuildingsFake",
-      "name": "BuildingsFake",
+      "code": "Buildings",
+      "name": "Buildings - Fake",
       "description": "Buildings - Fake",
       "active": true,
       "parent": null
@@ -69,11 +69,11 @@
     {
       "id": 3,
       "tenantId": "default",
-      "code": "CCRoadsFake",
-      "name": "CCRoadsFake",
+      "code": "CCRoads",
+      "name": "CCRoads - Fake",
       "description": "CC - Roads - Fake",
       "active": true,
-      "parent": "RoadsFake"
+      "parent": "Roads"
     }
   ],
   "Overhead": [

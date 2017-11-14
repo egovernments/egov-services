@@ -1,64 +1,90 @@
 package org.egov.inv.persistence.entity;
 
-import org.egov.inv.model.AuditDetails;
-import org.egov.inv.model.ChartofAccount;
-import org.egov.inv.model.Material;
-import org.egov.inv.model.MaterialStoreMapping;
-import org.egov.inv.model.Store;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+import lombok.*;
+import org.egov.inv.model.*;
 
 @Builder
-public class MaterialStoreMappingEntity   {
-	public static final String TABLE_NAME = "materialstoremapping";
-	private String id;
-	private String material;
-	private String store;
-	private String chartofAccount;
-	private Boolean active;
-	private String createdBy;
-	private String lastModifiedBy;
-	private Long createdTime;
-	private Long lastModifiedTime;
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class MaterialStoreMappingEntity {
+
+    public static final String TABLE_NAME = "materialstoremapping";
+    public static final String SEQUENCE_NAME = "seq_materialstoremapping";
+    public static final String ALIAS = "materialstoremapping";
+
+    private String id;
+
+    private String material;
+
+    private String store;
+
+    private Boolean active;
+
+    private String chartOfAccount;
+
+    private String tenantId;
+
+    private String createdBy;
+
+    private Long createdTime;
+
+    private String lastModifiedBy;
+
+    private Long lastModifiedTime;
 
 
-	public MaterialStoreMapping toDomain() {
-		MaterialStoreMapping materialStoreMapping = new MaterialStoreMapping();
-		materialStoreMapping.setId(this.id);
-		materialStoreMapping.setMaterial(new Material().id(material));
-		materialStoreMapping.setStore(new Store().id(store));
-		materialStoreMapping.setChartofAccount(new ChartofAccount().id(chartofAccount));
-		materialStoreMapping.setActive(this.active);
-		AuditDetails auditDetail = new AuditDetails()
-				.createdBy(createdBy)
-				.lastModifiedBy(lastModifiedBy)
-				.createdTime(createdTime)
-				.lastModifiedTime(lastModifiedTime);
-		materialStoreMapping.setAuditDetails(auditDetail);
-		return materialStoreMapping;
-	}
+    public MaterialStoreMapping toDomain() {
 
-	public MaterialStoreMappingEntity toEntity(MaterialStoreMapping materialStoreMapping) {
-		this.id = materialStoreMapping.getId();
-		this.material = materialStoreMapping.getMaterial() != null ? materialStoreMapping.getMaterial().getId() : null;
-		this.store = materialStoreMapping.getStore() != null ? materialStoreMapping.getStore().getId() : null;
-		this.chartofAccount = materialStoreMapping.getChartofAccount() != null
-				? materialStoreMapping.getChartofAccount().getId() : null;
-		this.active = materialStoreMapping.getActive();
-		this.createdBy=materialStoreMapping.getAuditDetails().getCreatedBy();
-		this.lastModifiedBy=materialStoreMapping.getAuditDetails().getLastModifiedBy();
-		this.createdTime=materialStoreMapping.getAuditDetails().getCreatedTime();
-		this.lastModifiedTime=materialStoreMapping.getAuditDetails().getLastModifiedTime(); 
-		return this;
-	}
+        return MaterialStoreMapping.builder()
+                .id(id)
+                .material(buildMaterial())
+                .store(buildStore())
+                .active(active)
+                .chartofAccount(buildChartOfAccount())
+                .auditDetails(buildAuditDetails())
+                .build();
+    }
 
+
+    public MaterialStoreMappingEntity toEntity(MaterialStoreMapping materialStoreMapping) {
+        AuditDetails auditDetails = materialStoreMapping.getAuditDetails();
+        return MaterialStoreMappingEntity.builder()
+                .id(materialStoreMapping.getId())
+                .material(null != materialStoreMapping.getMaterial() ? materialStoreMapping.getMaterial().getCode() : null)
+                .store(null != materialStoreMapping.getStore() ? materialStoreMapping.getStore().getCode() : null)
+                .active(materialStoreMapping.getActive())
+                .chartOfAccount(null != materialStoreMapping.getChartofAccount() ? materialStoreMapping.getChartofAccount().getGlCode() : null)
+                .tenantId(tenantId)
+                .build();
+    }
+
+    private Material buildMaterial() {
+        return Material.builder()
+                .code(material)
+                .build();
+    }
+
+    private Store buildStore() {
+        Store store = Store.builder()
+                .code(this.store)
+                .build();
+        return store;
+    }
+
+    private ChartofAccount buildChartOfAccount() {
+        return ChartofAccount.builder()
+                .glCode(chartOfAccount)
+                .build();
+    }
+
+    private AuditDetails buildAuditDetails() {
+        return AuditDetails.builder()
+                .createdBy(createdBy)
+                .createdTime(createdTime)
+                .lastModifiedBy(lastModifiedBy)
+                .lastModifiedTime(lastModifiedTime)
+                .build();
+    }
 }

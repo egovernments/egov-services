@@ -1,233 +1,237 @@
 package org.egov.inv.domain.service;
 
-import java.util.List;
-
+import org.egov.common.Constants;
 import org.egov.common.DomainService;
+import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
-import org.egov.inv.model.Material;
-import org.egov.inv.model.MaterialRequest;
+import org.egov.common.exception.ErrorCode;
+import org.egov.common.exception.InvalidDataException;
+import org.egov.inv.model.*;
+import org.egov.inv.persistence.entity.MaterialEntity;
 import org.egov.inv.persistence.repository.MaterialJdbcRepository;
-import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.inv.persistence.repository.MaterialRepository;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
-@Transactional(readOnly = true)
-public class MaterialService extends DomainService{
-	
-	
-	@Value("${inv.materials.save.topic}")
-	private String saveTopic;
-	@Value("${inv.materials.save.key}")
-	private String saveKey;
-	
-	@Value("${inv.materials.save.topic}")
-	private String updateTopic;
-	@Value("${inv.materials.save.key}")
-	private String updateKey;
+public class MaterialService extends DomainService {
 
-	@Autowired
-	private MaterialJdbcRepository  materialRepository;
+    public static final String UPDATE = "UPDATE";
+    public static final String CREATE = "CREATE";
+    @Autowired
+    private MaterialRepository materialRepository;
 
-	@Autowired
-	protected LogAwareKafkaTemplate<String, Object> kafkaQue;
+    @Autowired
+    private MaterialJdbcRepository materialJdbcRepository;
 
-	/*@Autowired
-	private MaterialTypeRepository materialTypeRepository;
-	@Autowired
-	private UomRepository uomRepository;
-	@Autowired
-	private ChartofAccountRepository chartofAccountRepository;
-	 */
+    @Autowired
+    private MaterialStoreMappingService materialStoreMappingService;
 
-	@Transactional
-	public MaterialRequest create(MaterialRequest materialRequest) {
+    @Value("${inv.materials.save.topic}")
+    private String saveTopic;
 
-		try {
-			List<Material> materials=materialRequest.getMaterials();
-			//materials = fetchRelated(materials);
-			//validate(materials, Constants.ACTION_CREATE);
+    @Value("${inv.materials.save.key}")
+    private String saveKey;
 
-			 
-			for (Material b : materials) {
-				b.setId(materialRepository.getSequence(b));
-				
-			}
-			
-			kafkaQue.send(saveTopic, saveKey, materialRequest);
+    @Value("${inv.materials.update.topic}")
+    private String updateTopic;
 
-		} catch (CustomBindException e) {
-			throw e;
-		}
+    @Value("${inv.materials.update.key}")
+    private String updateKey;
 
-		
-		return materialRequest;
+    public static final String SEQ_SERIAL_NO = "seq_material_code_serial_no";
 
-	}
+    public MaterialResponse save(MaterialRequest materialRequest, String tenantId) {
 
-	 
+        try {
+            List<MaterialStoreMapping> materialStoreMappings = new ArrayList<>();
 
-/*	private BindingResult validate(List<Material> materials, String method ) {
+            validate(materialRequest.getMaterials(), CREATE);
 
-		try {
-			switch (method) {
-			 
-			case Constants.ACTION_CREATE:
-				if (materials == null) {
-					throw new InvalidDataException("materials", ErrorCode.NOT_NULL.getCode(), null);
-				}
-				for (Material material : materials) {
-					if (!materialRepository.uniqueCheck("name", material)) {
-						errors.addError(new FieldError("material", "name", material.getName(), false,
-								new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
-					}
-					if (!materialRepository.uniqueCheck("code", material)) {
-						errors.addError(new FieldError("material", "code", material.getName(), false,
-								new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
-					}
-					 
+            List<String> materialIdList = materialJdbcRepository.getSequence(Material.class.getSimpleName(), materialRequest.getMaterials().size());
 
-				}
-				break;
-			case Constants.ACTION_UPDATE:
-				if (materials == null) {
-					throw new InvalidDataException("materials", ErrorCode.NOT_NULL.getCode(), null);
-				}
-				for (Material material : materials) {
-					if (material.getId() == null) {
-						throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
-								material.getId());
-					}
-					validator.validate(material, errors);
-					if (!materialRepository.uniqueCheck("name", material)) {
-						errors.addError(new FieldError("material", "name", material.getName(), false,
-								new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
-					}
-					if (!materialRepository.uniqueCheck("code", material)) {
-						errors.addError(new FieldError("material", "code", material.getName(), false,
-								new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
-					}
-					if (!materialRepository.uniqueCheck("identifier", material)) {
-						errors.addError(new FieldError("material", "identifier", material.getName(), false,
-								new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
-					}
+            for (int i = 0; i <= materialIdList.size() - 1; i++) {
+                materialRequest.getMaterials().get(i)
+                        .setId(materialIdList.get(i).toString());
+                materialRequest.getMaterials().get(i)
+                        .setCode(materialRequest.getMaterials().get(i).getMaterialType().getCode() + "/" + materialJdbcRepository.getSequence(SEQ_SERIAL_NO));
+                materialRequest.getMaterials().get(i).setAuditDetails(mapAuditDetails(materialRequest.getRequestInfo()));
+                materialStoreMappings = buildMaterialStoreMapping(materialRequest.getMaterials().get(i).getCode(), materialRequest.getMaterials().get(i).getStoreMapping());
+                uniqueCheck(materialRequest.getMaterials().get(i));
+                validateAsset(materialRequest.getMaterials().get(i));
+            }
 
-				}
-				break;
-			case Constants.ACTION_SEARCH:
-				if (materials == null) {
-					throw new InvalidDataException("materials", ErrorCode.NOT_NULL.getCode(), null);
-				}
-				for (Material material : materials) {
-					if (material.getTenantId() == null) {
-						throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
-								material.getTenantId());
-					}
-				}
-				break;
-			default:
+            kafkaQue.send(saveTopic, saveKey, materialRequest);
 
-			}
-		} catch (IllegalArgumentException e) {
-			errors.addError(new ObjectError("Missing data", e.getMessage()));
-		}
-		return errors;
-	}
+            materialStoreMappingService.create(buildMaterialStoreRequest(materialRequest.getRequestInfo(), materialStoreMappings), tenantId);
 
-	public List<Material> fetchRelated(List<Material> materials) {
-		for (Material material : materials) {
-			// fetch related items
-			if (material.getMaterialType() != null) {
-				MaterialType materialType = materialTypeRepository.findById(material.getMaterialType());
-				if (materialType == null) {
-					throw new InvalidDataException("materialType", "materialType.invalid", " Invalid materialType");
-				}
-				material.setMaterialType(materialType);
-			}
-			if (material.getBaseUom() != null) {
-				Uom baseUom = uomRepository.findById(material.getBaseUom());
-				if (baseUom == null) {
-					throw new InvalidDataException("baseUom", "baseUom.invalid", " Invalid baseUom");
-				}
-				material.setBaseUom(baseUom);
-			}
-			if (material.getPurchaseUom() != null) {
-				Uom purchaseUom = uomRepository.findById(material.getPurchaseUom());
-				if (purchaseUom == null) {
-					throw new InvalidDataException("purchaseUom", "purchaseUom.invalid", " Invalid purchaseUom");
-				}
-				material.setPurchaseUom(purchaseUom);
-			}
-			if (material.getExpenseAccount() != null) {
-				ChartofAccount expenseAccount = chartofAccountRepository.findById(material.getExpenseAccount());
-				if (expenseAccount == null) {
-					throw new InvalidDataException("expenseAccount", "expenseAccount.invalid",
-							" Invalid expenseAccount");
-				}
-				material.setExpenseAccount(expenseAccount);
-			}
-			if (material.getStockingUom() != null) {
-				Uom stockingUom = uomRepository.findById(material.getStockingUom());
-				if (stockingUom == null) {
-					throw new InvalidDataException("stockingUom", "stockingUom.invalid", " Invalid stockingUom");
-				}
-				material.setStockingUom(stockingUom);
-			}
-			if (material.getAuditDetails() != null) {
-				AuditDetails auditDetails = auditDetailsRepository.findById(material.getAuditDetails());
-				if (auditDetails == null) {
-					throw new InvalidDataException("auditDetails", "auditDetails.invalid", " Invalid auditDetails");
-				}
-				material.setAuditDetails(auditDetails);
-			}
+            MaterialResponse response = MaterialResponse.builder()
+                    .materials(materialRequest.getMaterials())
+                    .responseInfo(getResponseInfo(materialRequest.getRequestInfo()))
+                    .build();
 
-			material.setTenantId(ApplicationThreadLocals.getTenantId().get());
-			if (material.getTenantId() != null)
-				if (material.getParent() != null && material.getParent().getId() != null) {
-					material.getParent().setTenantId(material.getTenantId());
-					Material parentId = materialRepository.findById(material.getParent());
-					if (parentId == null) {
-						throw new InvalidDataException("parentId", ErrorCode.INVALID_REF_VALUE.getCode(),
-								material.getParent().getId());
-					}
-					material.setParent(parentId);
-				}
+            return response;
+        } catch (CustomBindException e) {
+            throw e;
+        }
+    }
 
-		}
+    public MaterialResponse update(MaterialRequest materialRequest, String tenantId) {
+        try {
+            List<MaterialStoreMapping> materialStoreMappings = new ArrayList<>();
 
-		return materials;
-	}
+            validate(materialRequest.getMaterials(), UPDATE);
+            for (Material material : materialRequest.getMaterials()) {
+                material.setAuditDetails(mapAuditDetails(materialRequest.getRequestInfo()));
+                materialStoreMappings = buildMaterialStoreMapping(material.getCode(), material.getStoreMapping());
+            }
 
-	public Pagination<Material> search(MaterialSearch materialSearch, BindingResult errors) {
+            kafkaQue.send(updateTopic, updateKey, materialRequest);
 
-		try {
+            materialStoreMappingService.update(buildMaterialStoreRequest(materialRequest.getRequestInfo(), materialStoreMappings), tenantId);
 
-			List<Material> materials = new ArrayList<>();
-			materials.add(materialSearch);
-			validate(materials, Constants.ACTION_SEARCH, errors);
+            MaterialResponse response = new MaterialResponse();
+            response.setResponseInfo(getResponseInfo(materialRequest.getRequestInfo()));
+            response.setMaterials(materialRequest.getMaterials());
+            return response;
 
-			if (errors.hasErrors()) {
-				throw new CustomBindException(errors);
-			}
+        } catch (CustomBindException e) {
+            throw e;
+        }
+    }
 
-		} catch (CustomBindException e) {
+    public MaterialResponse search(MaterialSearchRequest materialSearchRequest, RequestInfo requestInfo) {
 
-			throw new CustomBindException(errors);
-		}
+        Pagination<Material> searchMaterial = materialRepository.search(materialSearchRequest);
 
-		return materialRepository.search(materialSearch);
-	}
+        for (Material material : searchMaterial.getPagedData()) {
+            List<StoreMapping> storeMappings = new ArrayList<>();
 
-	@Transactional
-	public Material save(Material material) {
-		return materialRepository.save(material);
-	}
+            MaterialStoreMappingSearch materialStoreMappingSearch = MaterialStoreMappingSearch.builder()
+                    .material(material.getCode())
+                    .tenantId(material.getTenantId())
+                    .build();
 
-	@Transactional
-	public Material update(Material material) {
-		return materialRepository.update(material);
-	}*/
+            List<MaterialStoreMapping> materialStoreMappings = materialStoreMappingService.search(materialStoreMappingSearch, requestInfo).getMaterialStoreMappings();
+
+            materialStoreMappings.forEach(materialStoreMapping -> {
+                        StoreMapping storeMapping = StoreMapping.builder()
+                                .id(materialStoreMapping.getId())
+                                .chartofAccount(materialStoreMapping.getChartofAccount())
+                                .active(materialStoreMapping.getActive())
+                                .store(materialStoreMapping.getStore())
+                                .auditDetails(materialStoreMapping.getAuditDetails())
+                                .build();
+                        storeMappings.add(storeMapping);
+                    }
+            );
+            material.setStoreMapping(storeMappings);
+        }
+
+        MaterialResponse response = new MaterialResponse();
+        response.setMaterials(searchMaterial.getPagedData().size() > 0 ? searchMaterial.getPagedData() : Collections.emptyList());
+        response.setResponseInfo(getResponseInfo(requestInfo));
+        return response;
+    }
+
+    private void validate(List<Material> materials, String method) {
+
+        try {
+            switch (method) {
+
+                case Constants.ACTION_CREATE: {
+                    if (materials == null) {
+                        throw new InvalidDataException("materialstore", ErrorCode.NOT_NULL.getCode(), null);
+                    } else {
+                        materials.forEach(material -> {
+                            uniqueCheck(material);
+                            validateAsset(material);
+                        });
+                    }
+                }
+
+
+                case Constants.ACTION_UPDATE: {
+                    if (materials == null) {
+                        throw new InvalidDataException("materialstore", ErrorCode.NOT_NULL.getCode(), null);
+                    } else {
+                        materials.forEach(material -> {
+                            uniqueCheck(material);
+                            validateAsset(material);
+                        });
+                    }
+                }
+
+                break;
+            }
+        } catch (IllegalArgumentException e) {
+
+        }
+
+    }
+
+    private List<MaterialStoreMapping> buildMaterialStoreMapping(String materialCode, List<StoreMapping> storeMappings) {
+        List<MaterialStoreMapping> materialStoreMappings = new ArrayList<>();
+
+        storeMappings.stream().forEach(
+                storeMapping -> {
+                    MaterialStoreMapping materialStoreMapping = MaterialStoreMapping.builder()
+                            .id(storeMapping.getId())
+                            .material(buildMaterial(materialCode))
+                            .store(storeMapping.getStore())
+                            .chartofAccount(storeMapping.getChartofAccount())
+                            .active(storeMapping.getActive())
+                            .auditDetails(storeMapping.getAuditDetails())
+                            .delete(storeMapping.getDelete())
+                            .build();
+
+                    materialStoreMappings.add(materialStoreMapping);
+                }
+        );
+        return materialStoreMappings;
+    }
+
+    private Material buildMaterial(String materialCode) {
+        return Material
+                .builder()
+                .code(materialCode)
+                .build();
+    }
+
+    private MaterialStoreMappingRequest buildMaterialStoreRequest(RequestInfo requestInfo,
+                                                                  List<MaterialStoreMapping> materialStoreMappings) {
+        return MaterialStoreMappingRequest.builder()
+                .requestInfo(requestInfo)
+                .materialStoreMappings(materialStoreMappings)
+                .build();
+    }
+
+    private void validateAsset(Material material) {
+        if (!isEmpty(material.getInventoryType()) &&
+                material.getInventoryType().toString().equalsIgnoreCase("Asset")
+                && (null == material.getAssetCategory() ||
+                (null != material.getAssetCategory() && isEmpty(material.getAssetCategory().getCode())))) {
+            throw new CustomException("inv.0012", "Asset Category is mandatory when Inventory type  is Asset");
+        }
+    }
+
+    private void uniqueCheck(Material material) {
+
+        if (!materialJdbcRepository.uniqueCheck("name", new MaterialEntity().toEntity(material))) {
+            throw new CustomException("inv.010", "material name already exists " + material.getName());
+        }
+        if (!materialJdbcRepository.uniqueCheck("name", "code", new MaterialEntity().toEntity(material))) {
+            throw new CustomException("inv.0011", "Combination of Code and Name Already Exists " + material.getName()
+                    + ", " + material.getCode());
+        }
+    }
 
 }

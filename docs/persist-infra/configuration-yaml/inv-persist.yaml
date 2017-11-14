@@ -105,7 +105,7 @@ serviceMaps:
             - jsonPath: $.materials.*.termsOfDelivery
             - jsonPath: $.materials.*.inActiveDate
               dbType: LONG
-            - jsonPath: $.materials.*.auditDetails.tenantId
+            - jsonPath: $.materials.*.tenantId
             - jsonPath: $.materials.*.auditDetails.createdBy
             - jsonPath: $.materials.*.auditDetails.lastModifiedBy
             - jsonPath: $.materials.*.auditDetails.createdTime
@@ -155,7 +155,7 @@ serviceMaps:
             - jsonPath: $.materials.*.auditDetails.lastModifiedTime
               dbType: LONG
             - jsonPath: $.materials.*.code
-            - jsonPath: $.materials.*.auditDetails.tenantId
+            - jsonPath: $.materials.*.tenantId
     - version: 1
       name: Supplier create
       description: create suppliers in ulb
@@ -257,7 +257,7 @@ serviceMaps:
             - jsonPath: $.materialStoreMappings.*.store.code
             - jsonPath: $.materialStoreMappings.*.chartofAccount.glCode
             - jsonPath: $.materialStoreMappings.*.active
-            - jsonPath: $.materialStoreMappings.*.auditDetails.tenantId
+            - jsonPath: $.materialStoreMappings.*.tenantId
             - jsonPath: $.materialStoreMappings.*.auditDetails.createdBy
             - jsonPath: $.materialStoreMappings.*.auditDetails.lastModifiedBy
             - jsonPath: $.materialStoreMappings.*.auditDetails.createdTime
@@ -282,7 +282,7 @@ serviceMaps:
               dbType: LONG
             - jsonPath: $.materialStoreMappings.*.material.code
             - jsonPath: $.materialStoreMappings.*.store.code
-            - jsonPath: $.materialStoreMappings.*.auditDetails.tenantId
+            - jsonPath: $.materialStoreMappings.*.tenantId
 
 
     - version: 1.0
@@ -295,7 +295,7 @@ serviceMaps:
           jsonMaps:
             - jsonPath: $.materialStoreMappings.*.material.code
             - jsonPath: $.materialStoreMappings.*.store.code
-            - jsonPath: $.materialStoreMappings.*.auditDetails.tenantId
+            - jsonPath: $.materialStoreMappings.*.tenantId
 
 
     - version: 1.0

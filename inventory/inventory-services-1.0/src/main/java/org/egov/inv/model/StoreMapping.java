@@ -9,23 +9,19 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.Objects;
 
 /**
- * This object holds the material store mapping details information.
+ * This object holds the store mapping details information.
  */
-@ApiModel(description = "This object holds the material store mapping details information. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-14T07:04:08.897Z")
+@ApiModel(description = "This object holds the store mapping details information. ")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-12T13:22:52.081Z")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MaterialStoreMapping {
+public class StoreMapping {
     @JsonProperty("id")
     private String id = null;
-
-    @JsonProperty("material")
-    private Material material = null;
 
     @JsonProperty("store")
     private Store store = null;
@@ -39,23 +35,20 @@ public class MaterialStoreMapping {
     @JsonProperty("delete")
     private Boolean delete = null;
 
-    @JsonProperty("tenantId")
-    private String tenantId = null;
-
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;
 
-    public MaterialStoreMapping id(String id) {
+    public StoreMapping id(String id) {
         this.id = id;
         return this;
     }
 
     /**
-     * Unique Identifier of the Material Store Mapping
+     * Unique Identifier of the Store Mapping
      *
      * @return id
      **/
-    @ApiModelProperty(value = "Unique Identifier of the Material Store Mapping ")
+    @ApiModelProperty(value = "Unique Identifier of the Store Mapping       ")
 
 
     public String getId() {
@@ -66,30 +59,7 @@ public class MaterialStoreMapping {
         this.id = id;
     }
 
-    public MaterialStoreMapping material(Material material) {
-        this.material = material;
-        return this;
-    }
-
-    /**
-     * Get material
-     *
-     * @return material
-     **/
-    @ApiModelProperty(required = true, value = "")
-    @NotNull
-
-    @Valid
-
-    public Material getMaterial() {
-        return material;
-    }
-
-    public void setMaterial(Material material) {
-        this.material = material;
-    }
-
-    public MaterialStoreMapping store(Store store) {
+    public StoreMapping store(Store store) {
         this.store = store;
         return this;
     }
@@ -112,7 +82,7 @@ public class MaterialStoreMapping {
         this.store = store;
     }
 
-    public MaterialStoreMapping chartofAccount(ChartofAccount chartofAccount) {
+    public StoreMapping chartofAccount(ChartofAccount chartofAccount) {
         this.chartofAccount = chartofAccount;
         return this;
     }
@@ -134,7 +104,7 @@ public class MaterialStoreMapping {
         this.chartofAccount = chartofAccount;
     }
 
-    public MaterialStoreMapping active(Boolean active) {
+    public StoreMapping active(Boolean active) {
         this.active = active;
         return this;
     }
@@ -155,7 +125,7 @@ public class MaterialStoreMapping {
         this.active = active;
     }
 
-    public MaterialStoreMapping delete(Boolean delete) {
+    public StoreMapping delete(Boolean delete) {
         this.delete = delete;
         return this;
     }
@@ -165,7 +135,7 @@ public class MaterialStoreMapping {
      *
      * @return delete
      **/
-    @ApiModelProperty(value = "delete flag of mapping used during deleting the mapping. ")
+    @ApiModelProperty(value = "delete flag of mapping used during deleting the mapping.     ")
 
 
     public Boolean getDelete() {
@@ -176,29 +146,7 @@ public class MaterialStoreMapping {
         this.delete = delete;
     }
 
-    public MaterialStoreMapping tenantId(String tenantId) {
-        this.tenantId = tenantId;
-        return this;
-    }
-
-    /**
-     * Tenant id of the Material Store
-     *
-     * @return tenantId
-     **/
-    @ApiModelProperty(required = true, value = "Tenant id of the Material Store")
-    @NotNull
-
-    @Size(min = 4, max = 128)
-    public String getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
-    }
-
-    public MaterialStoreMapping auditDetails(AuditDetails auditDetails) {
+    public StoreMapping auditDetails(AuditDetails auditDetails) {
         this.auditDetails = auditDetails;
         return this;
     }
@@ -222,41 +170,37 @@ public class MaterialStoreMapping {
 
 
     @Override
-    public boolean equals(java.lang.Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        MaterialStoreMapping materialStoreMapping = (MaterialStoreMapping) o;
-        return Objects.equals(this.id, materialStoreMapping.id) &&
-                Objects.equals(this.material, materialStoreMapping.material) &&
-                Objects.equals(this.store, materialStoreMapping.store) &&
-                Objects.equals(this.chartofAccount, materialStoreMapping.chartofAccount) &&
-                Objects.equals(this.active, materialStoreMapping.active) &&
-                Objects.equals(this.delete, materialStoreMapping.delete) &&
-                Objects.equals(this.tenantId, materialStoreMapping.tenantId) &&
-                Objects.equals(this.auditDetails, materialStoreMapping.auditDetails);
+        StoreMapping storeMapping = (StoreMapping) o;
+        return Objects.equals(this.id, storeMapping.id) &&
+                Objects.equals(this.store, storeMapping.store) &&
+                Objects.equals(this.chartofAccount, storeMapping.chartofAccount) &&
+                Objects.equals(this.active, storeMapping.active) &&
+                Objects.equals(this.delete, storeMapping.delete) &&
+                Objects.equals(this.auditDetails, storeMapping.auditDetails);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, material, store, chartofAccount, active, delete, tenantId, auditDetails);
+        return Objects.hash(id, store, chartofAccount, active, delete, auditDetails);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("class MaterialStoreMapping {\n");
+        sb.append("class StoreMapping {\n");
 
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
-        sb.append("    material: ").append(toIndentedString(material)).append("\n");
         sb.append("    store: ").append(toIndentedString(store)).append("\n");
         sb.append("    chartofAccount: ").append(toIndentedString(chartofAccount)).append("\n");
         sb.append("    active: ").append(toIndentedString(active)).append("\n");
         sb.append("    delete: ").append(toIndentedString(delete)).append("\n");
-        sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
         sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
         sb.append("}");
         return sb.toString();
@@ -266,7 +210,7 @@ public class MaterialStoreMapping {
      * Convert the given object to string with each line indented by 4 spaces
      * (except the first line).
      */
-    private String toIndentedString(java.lang.Object o) {
+    private String toIndentedString(Object o) {
         if (o == null) {
             return "null";
         }

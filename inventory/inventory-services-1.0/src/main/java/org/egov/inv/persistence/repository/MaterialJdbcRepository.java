@@ -1,347 +1,258 @@
 package org.egov.inv.persistence.repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.egov.common.JdbcRepository;
 import org.egov.common.Pagination;
 import org.egov.inv.model.Material;
+import org.egov.inv.model.MaterialSearchRequest;
 import org.egov.inv.persistence.entity.MaterialEntity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.egov.tracer.model.CustomException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static org.springframework.util.StringUtils.isEmpty;
+
 @Service
 public class MaterialJdbcRepository extends JdbcRepository {
-	private static final Logger LOG = LoggerFactory.getLogger(MaterialJdbcRepository.class);
 
-	static {
-		LOG.debug("init material");
-		init(MaterialEntity.class);
-		LOG.debug("end init material");
-	}
+    static {
+        init(MaterialEntity.class);
+    }
 
-	public MaterialJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-	}
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	public MaterialEntity create(MaterialEntity entity) {
-		super.create(entity);
-		return entity;
-	}
+    public MaterialJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
 
-	public MaterialEntity update(MaterialEntity entity) {
-		super.update(entity);
-		return entity;
+    public Pagination<Material> search(MaterialSearchRequest materialSearchRequest) {
+        String searchQuery = "select * from material :condition  :orderby ";
 
-	}
+        Map<String, Object> paramValues = new HashMap<>();
+        StringBuffer params = new StringBuffer();
 
-	public boolean delete(MaterialEntity entity, String reason) {
-		super.delete(entity, reason);
-		return true;
+        if (!isEmpty(materialSearchRequest.getSortBy())) {
+            validateSortByOrder(materialSearchRequest.getSortBy());
+            validateEntityFieldName(materialSearchRequest.getSortBy(), MaterialSearchRequest.class);
+        }
 
-	}
+        String orderBy = "order by code";
+        if (!isEmpty(materialSearchRequest.getSortBy())) {
+            orderBy = "order by " + materialSearchRequest.getSortBy();
+        }
 
-	/*public Pagination<Material> search(MaterialSearch domain) {
-		MaterialSearchEntity materialSearchEntity = new MaterialSearchEntity();
-		materialSearchEntity.toEntity(domain);
+        if (materialSearchRequest.getTenantId() != null) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("tenantid =:tenantId");
+            paramValues.put("tenantId", materialSearchRequest.getTenantId());
+        }
 
-		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
+        if (materialSearchRequest.getIds() != null) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("id in (:ids)");
+            paramValues.put("ids", materialSearchRequest.getIds());
+        }
 
-		Map<String, Object> paramValues = new HashMap<>();
-		StringBuffer params = new StringBuffer();
+        if (materialSearchRequest.getCode() != null) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("code =:code");
+            paramValues.put("code", materialSearchRequest.getCode());
+        }
 
-		if (materialSearchEntity.getSortBy() != null && !materialSearchEntity.getSortBy().isEmpty()) {
-			validateSortByOrder(materialSearchEntity.getSortBy());
-			validateEntityFieldName(materialSearchEntity.getSortBy(), MaterialEntity.class);
-		}
+        if (materialSearchRequest.getStore() != null) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("code in (select material from materialstoremapping where store=:storeCode and tenantid=:tenantId)");
+            paramValues.put("storeCode", materialSearchRequest.getStore());
+            paramValues.put("tenantid", materialSearchRequest.getTenantId());
 
-		String orderBy = "order by name";
-		if (materialSearchEntity.getSortBy() != null && !materialSearchEntity.getSortBy().isEmpty()) {
-			orderBy = "order by " + materialSearchEntity.getSortBy();
-		}
+        }
 
-		searchQuery = searchQuery.replace(":tablename", MaterialEntity.TABLE_NAME);
+        if (materialSearchRequest.getName() != null) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("name =:name");
+            paramValues.put("name", materialSearchRequest.getName());
+        }
 
-		searchQuery = searchQuery.replace(":selectfields", " * ");
 
-		// implement jdbc specfic search
-		if (materialSearchEntity.getId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("id =:id");
-			paramValues.put("id", materialSearchEntity.getId());
-		}
-		if (materialSearchEntity.getTenantId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("tenantId =:tenantId");
-			paramValues.put("tenantId", materialSearchEntity.getTenantId());
-		}
-		if (materialSearchEntity.getCode() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("code =:code");
-			paramValues.put("code", materialSearchEntity.getCode());
-		}
-		if (materialSearchEntity.getName() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("name =:name");
-			paramValues.put("name", materialSearchEntity.getName());
-		}
-		if (materialSearchEntity.getDescription() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("description =:description");
-			paramValues.put("description", materialSearchEntity.getDescription());
-		}
-		if (materialSearchEntity.getOldCode() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("oldCode =:oldCode");
-			paramValues.put("oldCode", materialSearchEntity.getOldCode());
-		}
-		if (materialSearchEntity.getMaterialTypeId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("materialType =:materialType");
-			paramValues.put("materialType", materialSearchEntity.getMaterialTypeId());
-		}
-		if (materialSearchEntity.getBaseUomId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("baseUom =:baseUom");
-			paramValues.put("baseUom", materialSearchEntity.getBaseUomId());
-		}
-		if (materialSearchEntity.getInventoryTypeId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("inventoryType =:inventoryType");
-			paramValues.put("inventoryType", materialSearchEntity.getInventoryTypeId());
-		}
-		if (materialSearchEntity.getStatusId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("status =:status");
-			paramValues.put("status", materialSearchEntity.getStatusId());
-		}
-		if (materialSearchEntity.getPurchaseUomId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("purchaseUom =:purchaseUom");
-			paramValues.put("purchaseUom", materialSearchEntity.getPurchaseUomId());
-		}
-		if (materialSearchEntity.getExpenseAccountId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("expenseAccount =:expenseAccount");
-			paramValues.put("expenseAccount", materialSearchEntity.getExpenseAccountId());
-		}
-		if (materialSearchEntity.getMinQuantity() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("minQuantity =:minQuantity");
-			paramValues.put("minQuantity", materialSearchEntity.getMinQuantity());
-		}
-		if (materialSearchEntity.getMaxQuantity() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("maxQuantity =:maxQuantity");
-			paramValues.put("maxQuantity", materialSearchEntity.getMaxQuantity());
-		}
-		if (materialSearchEntity.getStockingUomId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("stockingUom =:stockingUom");
-			paramValues.put("stockingUom", materialSearchEntity.getStockingUomId());
-		}
-		if (materialSearchEntity.getMaterialClassId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("materialClass =:materialClass");
-			paramValues.put("materialClass", materialSearchEntity.getMaterialClassId());
-		}
-		if (materialSearchEntity.getReorderLevel() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("reorderLevel =:reorderLevel");
-			paramValues.put("reorderLevel", materialSearchEntity.getReorderLevel());
-		}
-		if (materialSearchEntity.getReorderQuantity() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("reorderQuantity =:reorderQuantity");
-			paramValues.put("reorderQuantity", materialSearchEntity.getReorderQuantity());
-		}
-		if (materialSearchEntity.getMaterialControlTypeId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("materialControlType =:materialControlType");
-			paramValues.put("materialControlType", materialSearchEntity.getMaterialControlTypeId());
-		}
-		if (materialSearchEntity.getModel() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("model =:model");
-			paramValues.put("model", materialSearchEntity.getModel());
-		}
-		if (materialSearchEntity.getManufacturePartNo() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("manufacturePartNo =:manufacturePartNo");
-			paramValues.put("manufacturePartNo", materialSearchEntity.getManufacturePartNo());
-		}
-		if (materialSearchEntity.getTechincalSpecs() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("techincalSpecs =:techincalSpecs");
-			paramValues.put("techincalSpecs", materialSearchEntity.getTechincalSpecs());
-		}
-		if (materialSearchEntity.getTermsOfDelivery() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("termsOfDelivery =:termsOfDelivery");
-			paramValues.put("termsOfDelivery", materialSearchEntity.getTermsOfDelivery());
-		}
-		if (materialSearchEntity.getOverrideMaterialControlType() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("overrideMaterialControlType =:overrideMaterialControlType");
-			paramValues.put("overrideMaterialControlType", materialSearchEntity.getOverrideMaterialControlType());
-		}
-		if (materialSearchEntity.getScrapable() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("scrapable =:scrapable");
-			paramValues.put("scrapable", materialSearchEntity.getScrapable());
-		}
-		if (materialSearchEntity.getAuditDetailsId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("auditDetails =:auditDetails");
-			paramValues.put("auditDetails", materialSearchEntity.getAuditDetailsId());
-		}
-		if (materialSearchEntity.getIds() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("ids =:ids");
-			paramValues.put("ids", materialSearchEntity.getIds());
-		}
+        if (materialSearchRequest.getDescription() != null) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("description =:description");
+            paramValues.put("description", materialSearchRequest.getDescription());
+        }
 
-		if (materialSearchEntity.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("tenantId =:tenantId");
-			paramValues.put("tenantId", materialSearchEntity.getTenantId());
-		}
-		if (materialSearchEntity.getId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("id =:id");
-			paramValues.put("id", materialSearchEntity.getId());
-		}
-		if (materialSearchEntity.getCode() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("code =:code");
-			paramValues.put("code", materialSearchEntity.getCode());
-		}
-		if (materialSearchEntity.getName() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("name =:name");
-			paramValues.put("name", materialSearchEntity.getName());
-		}
-		if (materialSearchEntity.getIdentifier() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("description =:description");
-			paramValues.put("description", materialSearchEntity.getIdentifier());
-		}
-		if (materialSearchEntity.getActive() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("active =:active");
-			paramValues.put("active", materialSearchEntity.getActive());
-		}
-		if (materialSearchEntity.getLevel() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("type =:type");
-			paramValues.put("type", materialSearchEntity.getLevel());
-		}
+        if (!isEmpty(materialSearchRequest.getOldCode())) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("oldcode =:oldCode");
+            paramValues.put("oldCode", materialSearchRequest.getOldCode());
+        }
 
-		Pagination<Material> page = new Pagination<>();
-		if (materialSearchEntity.getOffset() != null) {
-			page.setOffset(materialSearchEntity.getOffset());
-		}
-		if (materialSearchEntity.getPageSize() != null) {
-			page.setPageSize(materialSearchEntity.getPageSize());
-		}
+        if (null != materialSearchRequest.getMaterialType()) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("materialtype =:materialType");
+            paramValues.put("materialType", materialSearchRequest.getMaterialType());
+        }
 
-		if (params.length() > 0) {
+        if (!isEmpty(materialSearchRequest.getInventoryType())) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("inventorytype =:inventoryType");
+            paramValues.put("inventoryType", materialSearchRequest.getInventoryType());
+        }
 
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+        if (!isEmpty(materialSearchRequest.getStatus())) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("status =:status");
+            paramValues.put("status", materialSearchRequest.getStatus());
+        }
 
-		} else
+        if (!isEmpty(materialSearchRequest.getMaterialClass())) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("materialclass =:materialClass");
+            paramValues.put("materialClass", materialSearchRequest.getMaterialClass());
+        }
 
-			searchQuery = searchQuery.replace(":condition", "");
 
-		searchQuery = searchQuery.replace(":orderby", orderBy);
+        if (!isEmpty(materialSearchRequest.getMaterialControlType())) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("materialcontroltype =:materialControlType");
+            paramValues.put("materialControlType", materialSearchRequest.getMaterialControlType());
+        }
 
-		page = (Pagination<Material>) getPagination(searchQuery, page, paramValues);
-		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination",
-				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
+        if (!isEmpty(materialSearchRequest.getModel())) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("model =:model");
+            paramValues.put("model", materialSearchRequest.getModel());
+        }
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(MaterialEntity.class);
 
-		List<MaterialEntity> materialEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues,
-				row);
+        if (!isEmpty(materialSearchRequest.getManufacturePartNo())) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("manufacturepartno =:manufacturePartNo");
+            paramValues.put("manufacturePartNo", materialSearchRequest.getManufacturePartNo());
+        }
 
-		page.setTotalResults(materialEntities.size());
 
-		List<Material> materials = new ArrayList<>();
-		for (MaterialEntity materialEntity : materialEntities) {
+        Pagination<Material> page = new Pagination<>();
+        if (materialSearchRequest.getOffSet() != null) {
+            page.setOffset(materialSearchRequest.getOffSet());
+        }
+        if (materialSearchRequest.getPageSize() != null) {
+            page.setPageSize(materialSearchRequest.getPageSize());
+        }
 
-			materials.add(materialEntity.toDomain());
-		}
-		page.setPagedData(materials);
+        if (params.length() > 0) {
 
-		return page;
-	}*/
+            searchQuery = searchQuery.replace(":condition", " where " + params.toString());
 
-	public MaterialEntity findById(MaterialEntity entity) {
-		List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
+        } else
 
-		Map<String, Object> paramValues = new HashMap<>();
+            searchQuery = searchQuery.replace(":condition", "");
 
-		for (String s : list) {
-			paramValues.put(s, getValue(getField(entity, s), entity));
-		}
+        searchQuery = searchQuery.replace(":orderby", orderBy);
 
-		List<MaterialEntity> materials = namedParameterJdbcTemplate.query(
-				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
-				new BeanPropertyRowMapper(MaterialEntity.class));
-		if (materials.isEmpty()) {
-			return null;
-		} else {
-			return materials.get(0);
-		}
+        page = (Pagination<Material>) getPagination(searchQuery, page, paramValues);
+        searchQuery = searchQuery + " :pagination";
 
-	}
+        searchQuery = searchQuery.replace(":pagination",
+                "limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
+        BeanPropertyRowMapper row = new BeanPropertyRowMapper(MaterialEntity.class);
+
+        List<MaterialEntity> materialEntities = namedParameterJdbcTemplate
+                .query(searchQuery.toString(), paramValues, row);
+
+
+        List<Material> materialList = materialEntities.stream().map(MaterialEntity::toDomain)
+                .collect(Collectors.toList());
+
+        page.setTotalResults(materialList.size());
+
+        page.setPagedData(materialList);
+
+        return page;
+    }
+
+
+    public Pagination<?> getPagination(String searchQuery, Pagination<?> page, Map<String, Object> paramValues) {
+        String countQuery = "select count(*) from (" + searchQuery + ") as x";
+        Long count = namedParameterJdbcTemplate.queryForObject(countQuery.toString(), paramValues, Long.class);
+        Integer totalpages = (int) Math.ceil((double) count / page.getPageSize());
+        page.setTotalPages(totalpages);
+        page.setCurrentPage(page.getOffset());
+        return page;
+    }
+
+    public void validateSortByOrder(final String sortBy) {
+        List<String> sortByList = new ArrayList<String>();
+        if (sortBy.contains(",")) {
+            sortByList = Arrays.asList(sortBy.split(","));
+        } else {
+            sortByList = Arrays.asList(sortBy);
+        }
+        for (String s : sortByList) {
+            if (s.contains(" ")
+                    && (!s.toLowerCase().trim().endsWith("asc") && !s.toLowerCase().trim().endsWith("desc"))) {
+
+                throw new CustomException(s.split(" ")[0],
+                        "Please send the proper sortBy order for the field " + s.split(" ")[0]);
+            }
+        }
+
+    }
+
+    public void validateEntityFieldName(String sortBy, final Class<?> object) {
+        List<String> sortByList = new ArrayList<String>();
+        if (sortBy.contains(",")) {
+            sortByList = Arrays.asList(sortBy.split(","));
+        } else {
+            sortByList = Arrays.asList(sortBy);
+        }
+        Boolean isFieldExist = Boolean.FALSE;
+        for (String s : sortByList) {
+            for (int i = 0; i < object.getDeclaredFields().length; i++) {
+                if (object.getDeclaredFields()[i].getName().equals(s.contains(" ") ? s.split(" ")[0] : s)) {
+                    isFieldExist = Boolean.TRUE;
+                    break;
+                } else {
+                    isFieldExist = Boolean.FALSE;
+                }
+            }
+            if (!isFieldExist) {
+                throw new CustomException(s.contains(" ") ? s.split(" ")[0] : s, "Please send the proper Field Names ");
+
+            }
+        }
+
+    }
 }

@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.egov.inv.model.AttributeDefinition;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +20,9 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Categories defined under asset category type are shown in the drop down.")
 @javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
-
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AssetCategory   {
   @JsonProperty("tenantId")
   private String tenantId = null;

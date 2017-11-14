@@ -3220,11 +3220,17 @@ definitions:
           type: boolean
           description: |
             delete flag of mapping used during deleting the mapping.
+        tenantId:
+          type: string
+          description: Tenant id of the Material Store
+          maxLength: 128
+          minLength: 4
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
       - store
       - material
+      - tenantId
 
     StoreMapping:
       type: object

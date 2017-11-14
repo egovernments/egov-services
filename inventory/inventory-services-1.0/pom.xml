@@ -11,6 +11,13 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <springfox-version>2.6.1</springfox-version>
     </properties>
+    <repositories>
+        <repository>
+            <id>repo.egovernments.org.snapshots</id>
+            <name>eGov ERP Releases Repository</name>
+            <url>http://repo.egovernments.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -44,11 +51,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-            <scope>provided</scope>
         </dependency>
         <!--SpringFox dependencies -->
         <dependency>
@@ -107,13 +109,13 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
-        
+
         <dependency>
         <groupId>org.elasticsearch.client</groupId>
         <artifactId>transport</artifactId>
         <version>5.4.0</version>
         </dependency>
-        
+
         <dependency>
         <groupId>org.elasticsearch</groupId>
         <artifactId>elasticsearch</artifactId>
@@ -124,7 +126,7 @@
 			<artifactId>lombok</artifactId>
 			<version>1.16.12</version>
 			<scope>provided</scope>
-		</dependency> 
+		</dependency>
         <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
@@ -136,5 +138,9 @@
             <version>2.8.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
     </dependencies>
 </project>

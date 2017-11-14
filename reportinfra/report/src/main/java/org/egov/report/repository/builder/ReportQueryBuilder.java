@@ -160,9 +160,9 @@ public String generateQuery(List<SearchParam> searchParams, String tenantId, Rep
 		
 		LOGGER.info("searchParams:" + searchParams);
 		
-		//StringBuffer baseQuery = new StringBuffer(reportDefinition.getQuery());
+		StringBuffer baseQuery = new StringBuffer(reportDefinition.getQuery());
 		
-		StringBuffer baseQuery = new StringBuffer(inlineQuery);
+		//StringBuffer baseQuery = new StringBuffer(inlineQuery);
 
 		String orderByQuery = reportDefinition.getOrderByQuery();
 		

@@ -36,9 +36,7 @@ public class ReportQueryBuilder {
 	   
 	public String buildQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition){
 		
-		String baseQuery = "";
-		String url = "";
-		String res = "";
+		String baseQuery = null;
 			try {
 		if(reportDefinition.getExternalService().size() > 0) {
 			baseQuery = populateExternalServiceValues(reportDefinition, reportDefinition.getQuery());
@@ -160,13 +158,15 @@ public String generateQuery(List<SearchParam> searchParams, String tenantId, Rep
 		
 		LOGGER.info("searchParams:" + searchParams);
 		
-		StringBuffer baseQuery = new StringBuffer(reportDefinition.getQuery());
+		StringBuffer baseQuery = new StringBuffer();
 		
-		//StringBuffer baseQuery = new StringBuffer(inlineQuery);
-
+		if(inlineQuery != null){
+		
+		baseQuery = new StringBuffer(inlineQuery);
+		} else {
+			baseQuery = new StringBuffer(reportDefinition.getQuery());
+		}
 		String orderByQuery = reportDefinition.getOrderByQuery();
-		
-
 		String groupByQuery = reportDefinition.getGroupByQuery();
 		
 		for(SearchParam searchParam : searchParams){

@@ -563,6 +563,20 @@ class ServiceTypeCreate extends Component {
                                       className="custom-form-control-for-textfield"
                                       fullWidth={true}
                                       floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
+                                      floatingLabelText={translate('core.lbl.code') +" *"}
+                                      value={createServiceType.serviceCode? createServiceType.serviceCode : ""}
+                                      errorText={fieldErrors.serviceCode ? fieldErrors.serviceCode : ""}
+                                      maxLength="20"
+                                      onChange={(e, value) => handleChange(value, "serviceCode", true, /^[A-Z0-9]{0,20}$/,'Please use only upper case alphabets and numbers')}
+                                      id="serviceCode"
+                                      disabled={this.state.id ? true : false }
+                                  />
+                              </Col>
+                              <Col xs={12} sm={4} md={3} lg={3}>
+                                  <TextField
+                                      className="custom-form-control-for-textfield"
+                                      fullWidth={true}
+                                      floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                       floatingLabelText={translate("core.lbl.add.name")+" *"}
                                       value={createServiceType.serviceName? createServiceType.serviceName : ""}
                                       errorText={fieldErrors.serviceName ? fieldErrors.serviceName : ""}
@@ -577,13 +591,11 @@ class ServiceTypeCreate extends Component {
                                       className="custom-form-control-for-textfield"
                                       fullWidth={true}
                                       floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
-                                      floatingLabelText={translate('core.lbl.code') +" *"}
-                                      value={createServiceType.serviceCode? createServiceType.serviceCode : ""}
-                                      errorText={fieldErrors.serviceCode ? fieldErrors.serviceCode : ""}
-                                      maxLength="20"
-                                      onChange={(e, value) => handleChange(value, "serviceCode", true, /^[A-Z0-9]{0,20}$/,'Please use only upper case alphabets and numbers')}
-                                      id="serviceCode"
-                                      disabled={this.state.id ? true : false }
+                                      floatingLabelText={translate('pgr.service.localName')}
+                                      value={createServiceType.localName? createServiceType.localName : ""}
+                                      errorText={fieldErrors.localName ? fieldErrors.localName : ""}
+                                      onChange={(e, value) => handleChange(value, "localName", false, '', 'Please use only numbers')}
+                                      id="localName"
                                   />
                               </Col>
                               <Col xs={12} sm={4} md={3} lg={3}>
@@ -630,18 +642,6 @@ class ServiceTypeCreate extends Component {
                                      <MenuItem value={item.id} key={index} primaryText={item.name} />
                                       ))}
                                       </SelectField>
-                              </Col>
-                              <Col xs={12} sm={4} md={3} lg={3}>
-                                  <TextField
-                                      className="custom-form-control-for-textfield"
-                                      fullWidth={true}
-                                      floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
-                                      floatingLabelText={translate('pgr.service.localName')}
-                                      value={createServiceType.localName? createServiceType.localName : ""}
-                                      errorText={fieldErrors.localName ? fieldErrors.localName : ""}
-                                      onChange={(e, value) => handleChange(value, "localName", false, '', 'Please use only numbers')}
-                                      id="localName"
-                                  />
                               </Col>
                               <Col xs={12} sm={4} md={3} lg={3}>
                                   <Checkbox

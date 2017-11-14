@@ -158,6 +158,20 @@ class ServiceGroupCreate extends Component {
                                       className="custom-form-control-for-textfield"
                                       fullWidth={true}
                                       floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
+                                      floatingLabelText={translate("core.lbl.code")+"*"}
+                                      value={createServiceGroup.code? createServiceGroup.code : ""}
+                                      errorText={fieldErrors.code ? fieldErrors.code : ""}
+                                      maxLength="20"
+                                      onChange={(e) => handleChange(e, "code", true, /^[A-Z0-9]{0,20}$/,'Please use only upper case alphabets and numbers')}
+                                      id="code"
+                                      disabled={this.state.id ? true : false }
+                                  />
+                              </Col>
+                              <Col xs={12} sm={4} md={3} lg={3}>
+                                  <TextField
+                                      className="custom-form-control-for-textfield"
+                                      fullWidth={true}
+                                      floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                       floatingLabelText={translate("core.lbl.add.name")+"*"}
                                       value={createServiceGroup.name? createServiceGroup.name : ""}
                                       errorText={fieldErrors.name ? fieldErrors.name : ""}
@@ -171,13 +185,12 @@ class ServiceGroupCreate extends Component {
                                       className="custom-form-control-for-textfield"
                                       fullWidth={true}
                                       floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
-                                      floatingLabelText={translate("core.lbl.code")+"*"}
-                                      value={createServiceGroup.code? createServiceGroup.code : ""}
-                                      errorText={fieldErrors.code ? fieldErrors.code : ""}
-                                      maxLength="20"
-                                      onChange={(e) => handleChange(e, "code", true, /^[A-Z0-9]{0,20}$/,'Please use only upper case alphabets and numbers')}
-                                      id="code"
-                                      disabled={this.state.id ? true : false }
+                                      floatingLabelText={translate("pgr.service.localName")}
+                                      value={createServiceGroup.localName? createServiceGroup.localName : ""}
+                                      errorText={fieldErrors.localName ? fieldErrors.localName : ""}
+                                      maxLength="250"
+                                      onChange={(e) => handleChange(e, "localName", false, /^.[^]{0,250}$/, translate('pgr.lbl.max')+' 250 '+translate('pgr.lbl.characters'))}
+                                      id="localName"
                                   />
                               </Col>
                               <Col xs={12} sm={4} md={3} lg={3}>
@@ -192,19 +205,6 @@ class ServiceGroupCreate extends Component {
                                       onChange={(e) => handleChange(e, "description", false, /^.[^]{0,250}$/, translate('pgr.lbl.max')+' 250 '+translate('pgr.lbl.characters'))}
                                       multiLine={true}
                                       id="description"
-                                  />
-                              </Col>
-                              <Col xs={12} sm={4} md={3} lg={3}>
-                                  <TextField
-                                      className="custom-form-control-for-textfield"
-                                      fullWidth={true}
-                                      floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
-                                      floatingLabelText={translate("pgr.service.localName")}
-                                      value={createServiceGroup.localName? createServiceGroup.localName : ""}
-                                      errorText={fieldErrors.localName ? fieldErrors.localName : ""}
-                                      maxLength="250"
-                                      onChange={(e) => handleChange(e, "localName", false, /^.[^]{0,250}$/, translate('pgr.lbl.max')+' 250 '+translate('pgr.lbl.characters'))}
-                                      id="localName"
                                   />
                               </Col>
                           </Row>

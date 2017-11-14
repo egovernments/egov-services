@@ -3,7 +3,7 @@ var dat = {
     "numCols": 4,
     "useTimestamp": true,
     "objectName": "",
-    "url": "/inventory-inventory/v110/pricelists/_search",
+    "url": "/inventory-services/pricelists/_search",
     "groups": [
       {
         "name": "search",
@@ -15,7 +15,7 @@ var dat = {
             "label": "inventory.supplierName",
             "type": "singleValueList",
             "isDisabled": false,
-	    "url":"inventory-services/supplier/_search?|$.supplier[*].code|$.supplier[*].name",
+      "url":"inventory-services/suppliers/_search?|$.supplier[*].code|$.suppliers[*].name",
             "patternErrorMsg": "inventory.create.field.message.supplierName"
           },
           {
@@ -71,7 +71,7 @@ var dat = {
             "jsonPath": "rateType",
             "label": "inventory.rateType",
             "type": "singleValueList",
-	    "defaultValue":[
+      "defaultValue":[
               {key: null, value: "-- Please Select --"},
               {
                  "key":"DGSC Rate Contract",
@@ -128,13 +128,13 @@ var dat = {
       ],
       "values": [
         "supplier.name",
-	"rateType",
+  "rateType",
         "rateContractNumber",
-	"agreementNumber",
-	"agreementDate",
-	"agreementStartDate",
-	"agreementEndDate",
-	{valuePath:"active", type:"checkbox"}
+  "agreementNumber",
+  "agreementDate",
+  "agreementStartDate",
+  "agreementEndDate",
+  {valuePath:"active", type:"checkbox"}
       ],
       "resultPath": "pricelists",
       "resultIdKey":"rateContractNumber",
@@ -158,7 +158,7 @@ var dat = {
             "name": "supplier",
             "jsonPath": "priceLists[0].supplier.code",
             "label": "inventory.supplier",
-            "url":"inventory-services/suppliers/_search?|$.supplier[*].code|$.supplier[*].name",
+            "url":"inventory-services/suppliers/_search?|$.suppliers[*].code|$.suppliers[*].name",
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
@@ -173,7 +173,7 @@ var dat = {
             "label": "inventory.rateType",
             "pattern": "",
             "type": "singleValueList",
-	    "defaultValue":[
+      "defaultValue":[
               {key: null, value: "-- Please Select --"},
               {
                  "key":"DGSC Rate Contract",
@@ -274,10 +274,10 @@ var dat = {
             "defaultValue": true,
             "patternErrorMsg": ""
           },
-	   {
+     {
                   "name": "UploadDocument",
                   "jsonPath": "priceLists[0].fileStoreId",
-		  "label": "Upload Tender/Rate contract/Quotation",
+      "label": "Upload Tender/Rate contract/Quotation",
                   "pattern": "",
                   "type": "singleFileUpload",
                   "isRequired": false,
@@ -325,7 +325,7 @@ var dat = {
                   "pattern": "",
                   "type":"autoCompelete",
                   "jsonPath": "priceLists[0].priceListDetails[0].material.code",
-		  "displayJsonPath":"priceLists[0].priceListDetails[0].material.name",
+      "displayJsonPath":"priceLists[0].priceListDetails[0].material.name",
                   "isRequired": true,
                   "isDisabled": false,
                   "url": "/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description",
@@ -343,7 +343,7 @@ var dat = {
                   "pattern": "",
                   "type": "text",
                   "isRequired": false,
-                  "isDisabled": true,
+                  "isDisabled": false,
                   "defaultValue": "",
                   "patternErrorMsg": ""
                 },
@@ -371,9 +371,9 @@ var dat = {
                   "name": "fromDate",
                   "jsonPath": "priceLists[0].priceListDetails[0].fromDate",
                   "pattern": "",
-                  "type": "text",
+                  "type": "datePicker",
                   "isRequired": false,
-                  "isDisabled": true,
+                  "isDisabled": false,
                   "defaultValue": "",
                   "patternErrorMsg": ""
                 },
@@ -381,9 +381,9 @@ var dat = {
                   "name": "toDate",
                   "jsonPath": "priceLists[0].priceListDetails[0].toDate",
                   "pattern": "",
-                  "type": "text",
+                  "type": "datePicker",
                   "isRequired": false,
-                  "isDisabled": true,
+                  "isDisabled": false,
                   "defaultValue": "",
                   "patternErrorMsg": ""
                 },
@@ -403,7 +403,7 @@ var dat = {
         ]
       }
     ],
-    "url": "/inventory-inventory/v110/pricelists/_create",
+    "url": "/inventory-services/pricelists/_create",
     "tenantIdRequired": true
   },
   "inventory.view": {
@@ -434,7 +434,7 @@ var dat = {
             "label": "inventory.rateType",
             "pattern": "",
             "type": "singleValueList",
-	    "defaultValue":[
+      "defaultValue":[
               {key: null, value: "-- Please Select --"},
               {
                  "key":"DGSC Rate Contract",
@@ -539,7 +539,7 @@ var dat = {
       }
     ],
     "tenantIdRequired": true,
-    "url": "/inventory-inventory/v110/pricelists/_search?tenantId={tenantId}"
+    "url": "/inventory-services/pricelists/_search?tenantId={tenantId}"
   },
   "inventory.update": {
     "numCols": 4,
@@ -569,7 +569,7 @@ var dat = {
             "label": "inventory.rateType",
             "pattern": "",
             "type": "singleValueList",
-		"defaultValue":[
+    "defaultValue":[
               {key: null, value: "-- Please Select --"},
               {
                  "key":"DGSC Rate Contract",
@@ -673,9 +673,9 @@ var dat = {
         ]
       }
     ],
-    "url": "/inventory-inventory/v110/pricelists/_update",
+    "url": "/inventory-services/pricelists/_update",
     "tenantIdRequired": true,
-    "searchUrl": "/inventory-inventory/v110/pricelists/_search?tenantId={tenantId}"
+    "searchUrl": "/inventory-services/pricelists/_search?tenantId={tenantId}"
   }
 }
  export default dat;

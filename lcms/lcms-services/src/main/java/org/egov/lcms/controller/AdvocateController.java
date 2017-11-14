@@ -1,11 +1,13 @@
 package org.egov.lcms.controller;
 
 import javax.validation.Valid;
+
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.factory.ResponseFactory;
-import org.egov.lcms.models.AdvocateRequest;
 import org.egov.lcms.models.AdvocateResponse;
 import org.egov.lcms.models.AdvocateSearchCriteria;
+import org.egov.lcms.models.AgencyRequest;
+import org.egov.lcms.models.AgencyResponse;
 import org.egov.lcms.models.RequestInfoWrapper;
 import org.egov.lcms.service.AdvocateService;
 import org.egov.tracer.model.CustomException;
@@ -16,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,31 +30,47 @@ public class AdvocateController {
 
 	@Autowired
 	ResponseFactory responseInfoFactory;
-	
+
 	@Autowired
 	PropertiesManager propertiesManager;
 
-	@RequestMapping(path = "_create")
-	public ResponseEntity<?> createAdvocate(@RequestBody @Valid AdvocateRequest advocateRequest) throws Exception {
-
-		AdvocateResponse advocateResponse = advocateService.createAdvocate(advocateRequest);
+	@RequestMapping(path = "_search")
+	public ResponseEntity<?> searchAdvocate(@RequestBody RequestInfoWrapper requestInfoWrapper,
+			@ModelAttribute @Valid AdvocateSearchCriteria advocateSearchCriteria, BindingResult bindingResult)
+			throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new CustomException(propertiesManager.getInvalidTenantCode(),
+					propertiesManager.getExceptionMessage());
+		}
+		AdvocateResponse advocateResponse = advocateService.searchAdvocate(advocateSearchCriteria,
+				requestInfoWrapper.getRequestInfo());
 		return new ResponseEntity<>(advocateResponse, HttpStatus.CREATED);
 	}
 
-	@RequestMapping(path = "_update")
-	public ResponseEntity<?> updateAdvocate(@RequestBody @Valid AdvocateRequest advocateRequest) throws Exception {
+	@RequestMapping(path = "_create")
+	public ResponseEntity<?> createAgency(@RequestBody @Valid AgencyRequest agencyRequest) throws Exception {
 
-		AdvocateResponse advocateResponse = advocateService.updateAdvocate(advocateRequest);
+		AgencyResponse agencyResponse = advocateService.createAgency(agencyRequest);
+		return new ResponseEntity<>(agencyResponse, HttpStatus.CREATED);
+	}
+
+	@RequestMapping(path = "_update")
+	public ResponseEntity<?> updateAdvocate(@RequestBody @Valid AgencyRequest agencyRequest) throws Exception {
+
+		AgencyResponse advocateResponse = advocateService.updateAgency(agencyRequest);
 		return new ResponseEntity<>(advocateResponse, HttpStatus.CREATED);
 	}
 
 	@RequestMapping(path = "_search")
-	public ResponseEntity<?> searchAdvocate(@RequestBody RequestInfoWrapper requestInfoWrapper,
-			@ModelAttribute @Valid AdvocateSearchCriteria advocateSearchCriteria, BindingResult bindingResult) throws Exception {
-		if (bindingResult.hasErrors()) {
-			throw new CustomException(propertiesManager.getInvalidTenantCode(), propertiesManager.getExceptionMessage());
-		}
-		AdvocateResponse advocateResponse = advocateService.searchAdvocate(advocateSearchCriteria, requestInfoWrapper.getRequestInfo());
-		return new ResponseEntity<>(advocateResponse, HttpStatus.CREATED);
+	public ResponseEntity<?> searchAgency(@RequestParam(name = "tenantId", required = true) String tenantId,
+			@RequestParam(name = "isIndividual", required = true) Boolean isIndividual,
+			@RequestParam(name = "advocateName", required = false) String advocateName,
+			@RequestParam(name = "agencyName", required = true) String agencyName,
+			@RequestBody @Valid RequestInfoWrapper requestInfoWrapper) throws Exception {
+
+		AgencyResponse agencyResponse = advocateService.searchAgency(tenantId, isIndividual, advocateName, agencyName,
+				requestInfoWrapper);
+		return new ResponseEntity<>(agencyResponse, HttpStatus.CREATED);
 	}
+
 }

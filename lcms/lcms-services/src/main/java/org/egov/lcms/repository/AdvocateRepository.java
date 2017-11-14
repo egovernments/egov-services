@@ -2,16 +2,22 @@ package org.egov.lcms.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.models.Advocate;
 import org.egov.lcms.models.AdvocateSearchCriteria;
-import org.egov.lcms.models.Case;
+import org.egov.lcms.models.Agency;
+import org.egov.lcms.models.PersonDetails;
+import org.egov.lcms.models.RequestInfoWrapper;
 import org.egov.lcms.repository.builder.AdvocateBuilders;
 import org.egov.lcms.repository.rowmapper.AdvocateRowMapper;
+import org.egov.lcms.repository.rowmapper.PersonDetailRowMapper;
+import org.egov.lcms.utility.ConstantUtility;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Repository
@@ -26,6 +32,9 @@ public class AdvocateRepository {
 
 	@Autowired
 	AdvocateRowMapper advocateRowMapper;
+
+	@Autowired
+	PersonDetailRowMapper personDetailRowMapper;
 
 	public List<Advocate> search(AdvocateSearchCriteria advocateSearchCriteria) {
 
@@ -49,7 +58,7 @@ public class AdvocateRepository {
 
 		return advocates;
 	}
-	
+
 	/**
 	 * This will give the case codes for the given advocateName
 	 * 
@@ -63,4 +72,54 @@ public class AdvocateRepository {
 
 	}
 
+	public List<PersonDetails> getPersonalDetailsUsingCode(String code) {
+		final List<Object> preparedStatementValues = new ArrayList<Object>();
+		String searchQuery = AdvocateBuilders.getPersonalDetailsSearchQuery(code,
+				ConstantUtility.PERSONAL_DETAILS_TABLE_NAME, preparedStatementValues);
+		List<PersonDetails> personDetails = jdbcTemplate.query(searchQuery, preparedStatementValues.toArray(),
+				personDetailRowMapper);
+		return personDetails;
+	}
+
+	public List<Advocate> getAdvocatesUsingCode(String code) {
+		final List<Object> preparedStatementValues = new ArrayList<Object>();
+		String searchQuery = AdvocateBuilders.getPersonalDetailsSearchQuery(code, ConstantUtility.ADVOCATE_TABLE_NAME,
+				preparedStatementValues);
+		List<Advocate> advocates = jdbcTemplate.query(searchQuery, preparedStatementValues.toArray(),
+				advocateRowMapper);
+		return advocates;
+	}
+
+	public void delete(String code, String tenantId, String tableName) {
+		final List<Object> preparedStatementValues = new ArrayList<Object>();
+		String deleteQuery = AdvocateBuilders.getDeleteQuery(code, tenantId, tableName, preparedStatementValues);
+		jdbcTemplate.update(deleteQuery, preparedStatementValues.toArray());
+	}
+
+	public List<Agency> searchAgencies(String tenantId, Boolean isIndividual, String advocateName, String agencyName,
+			RequestInfoWrapper requestInfoWrapper) {
+
+		final List<Object> preparedStatementValues = new ArrayList<Object>();
+
+		if (isIndividual) {
+			String advocateSearchQuery = AdvocateBuilders.getAdvocateSearchQuery(tenantId, isIndividual, advocateName,
+					agencyName, preparedStatementValues);
+			List<Advocate> advocates = jdbcTemplate.query(advocateSearchQuery, preparedStatementValues.toArray(),
+					advocateRowMapper);
+		} else {
+			// String personalDetailsQuery =
+			// AdvocateBuilders.getPersonalDetailsSearchQuery(code, tableName,
+			// preparedStatementValues) getAgencyQuery(tenantId, advocateName,
+			// agencyName,
+			// preparedStatementValues);
+			//
+			// List<Advocate> advocates =
+			// jdbcTemplate.query(advocateSearchQuery,
+			// preparedStatementValues.toArray(),
+			// advocateRowMapper);
+		}
+
+		return null;
+
+	}
 }

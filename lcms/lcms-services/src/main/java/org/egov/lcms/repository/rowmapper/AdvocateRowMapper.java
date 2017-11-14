@@ -17,7 +17,8 @@ public class AdvocateRowMapper implements RowMapper<Advocate>{
 		Advocate advocate = new Advocate();
 		advocate.setCode(rs.getString("code"));
 		advocate.setName(rs.getString("name"));
-		advocate.setOrganizationName(rs.getString("organizationName"));
+		advocate.setAgencyName(rs.getString("agencyName"));
+		advocate.setAgencyCode(rs.getString("agencycode"));
 		advocate.setIsIndividual(rs.getBoolean("isIndividual"));
 		advocate.setTitle(rs.getString("title"));
 		advocate.setFirstName(rs.getString("firstName"));

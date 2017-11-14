@@ -533,4 +533,26 @@ public class PropertiesManager {
 	
 	@Value("${egov.lcms.caseno.error.msg}")
 	private String caseNoErrorMsg;
+	
+	@Value("${egov.agency.ulb.format}")
+	private String agencyUlbFormat;
+	
+	@Value("${egov.agency.ulb.name}")
+	private String agencyUlbName;
+	
+	@Value("${egov.personDetails.ulb.format}")
+	private String personDetailsUlbFormat;
+	
+	@Value("${egov.personDetails.ulb.name}")
+	private String personDetailsUlbName;
+	
+	@Value("${egov.agency.created}")
+	private String agencyCreated;
+	
+	@Value("${egov.agency.updated}")
+	private String agencyUpdated;
+	
+	@Value("${egov.personaldetails.create}")
+	private String createPersonalDetailsTopic;
 }
+

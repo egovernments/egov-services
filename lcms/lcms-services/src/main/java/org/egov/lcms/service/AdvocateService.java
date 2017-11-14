@@ -95,6 +95,7 @@ public class AdvocateService {
 								propertiesManager.getPersonDetailsUlbName(), Boolean.FALSE, null, Boolean.FALSE);
 						personDetails.setCode(personCode);
 						personDetails.setName(name);
+						personDetails.setTenantId(agency.getTenantId());
 						personDetails.setAgencyCode(agency.getCode());
 						personDetails.setAgencyName(agency.getName());
 					}

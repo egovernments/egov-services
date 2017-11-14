@@ -52,7 +52,6 @@ class Report extends Component {
         if(typeof groups[i].fields[j].defaultValue == 'string' || typeof groups[i].fields[j].defaultValue == 'number' || typeof groups[i].fields[j].defaultValue == 'boolean') {
           _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
-
         if(groups[i].children && groups[i].children.length) {
           for(var k=0; k<groups[i].children.length; k++) {
             this.setDefaultValues(groups[i].children[k].groups, dat);
@@ -877,7 +876,7 @@ class Report extends Component {
         }
       }
 
-      let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
+      let depedants= jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
       let dependantIdx;
       if(depedants.length === 0 && property){
         let currentProperty = property;

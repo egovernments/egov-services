@@ -347,6 +347,10 @@ ReportDefinitions:
     label: reports.asset.depreciationrate
     type: string
     source: asset
+  - name: totalrevalsum
+    label: reports.asset.totalrevalsum
+    type: string
+    source: asset
   searchParams:
   - name: fromDate
     label: reports.asset.fromDate
@@ -383,7 +387,7 @@ ReportDefinitions:
        asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.totalarea,asset.openingdate,asset.fundsource,
        asset.location,(select string_agg(land.surveynumber,',') from egasset_asset_landdetails land  where asset.id=land.assetid group by asset.id) as 
        totalsurveyno,asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as 
-       defectliability,asset.defectliabilitymonth as defectliabilitymonth,asset.assetCategoryType,asset.defectliabilityday as defectliabilityday,
+       defectliability,asset.defectliabilitymonth as defectliabilitymonth,asset.assetCategoryType,asset.defectliabilityday as defectliabilityday, coalesce(grossvalue,0.0)-coalesce(accumulateddepreciation,0.0)+coalesce(incrementalrevalsum.0.0)-coalesce(decrementalrevalsum,0.0) as totalrevalsum,
        asset.securitydepositretained,asset.securitydepositrealized,asset.dateofcreation,asset.acquisitiondate,asset.grossvalue,asset.originalvalue,
        currentvalue.currentamount,disposal.salevalue as disposalsalevalue,disposal.profitlossvoucherreference as disposalvoucherno,disposal.disposaldate,
        disposal.buyername,disposal.buyeraddress,revaluation.revaluationdate,revaluation.incrementalrevalsum,revaluation.decrementalrevalsum,
@@ -762,7 +766,11 @@ ReportDefinitions:
     source: asset
   - name: depreciationrate
     label: reports.asset.depreciationrate
-    type: string
+    type: number
+    source: asset
+  - name: totalrevalsum
+    label: reports.asset.totalrevalsum
+    type: number
     source: asset
   searchParams:
   - name: fromDate
@@ -803,7 +811,7 @@ ReportDefinitions:
     searchClause : and asset.code in ($assetdetail)
   
   query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.totalarea,asset.openingdate,asset.fundsource,asset.location,asset.assetCategoryType,
-         asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,(select string_agg(land.surveynumber,',') from egasset_asset_landdetails land  where asset.id=land.assetid group by asset.id) as totalsurveyno,
+         asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,(select string_agg(land.surveynumber,',') from egasset_asset_landdetails land  where asset.id=land.assetid group by asset.id) as totalsurveyno,coalesce(grossvalue,0.0)-coalesce(accumulateddepreciation,0.0)+coalesce(incrementalrevalsum.0.0)-coalesce(decrementalrevalsum,0.0) as totalrevalsum,
          asset.defectliabilityday as defectliabilityday,asset.securitydepositretained,
          asset.securitydepositrealized,asset.dateofcreation,asset.acquisitiondate,asset.grossvalue,asset.originalvalue,currentvalue.currentamount,
          disposal.salevalue as disposalsalevalue,disposal.profitlossvoucherreference as disposalvoucherno,disposal.disposaldate,disposal.buyername,disposal.buyeraddress,
@@ -868,7 +876,7 @@ ReportDefinitions:
     type: string
     source: asset
   - name: name
-    label: Details Head Description
+    label: reports.asset.assetanme
     type: string
     source: asset
   - name: depreciationrate
@@ -880,47 +888,47 @@ ReportDefinitions:
     type: string
     source: asset
   - name: revaluationreserveaccount
-    label: GROSS BLOCK-Account code
+    label: reports.asset.revaluationreserveaccount
     type: string
     source: asset
   - name: previousfynetblock
-    label: GROSS BLOCK-BALANCE as at <1st April of Current FY>
+    label: reports.asset.currentstartnetblock
     type: number
     source: asset      
   - name: plusrevalsum
-    label: GROSS BLOCK-Additional during the year
+    label: reports.asset.plusrevalsum
     type: string
     source: asset      
   - name: minusrevalsum
-    label: GROSS BLOCK-Deduction During the year
+    label: reports.asset.minusrevalsum
     type: number
     source: asset      
   - name: revaltotal
-    label: GROSS BLOCK-Total
+    label: reports.asset.revaltotal
     type: number
     source: asset      
   - name: accumulateddepreciationaccount
-    label: ACCUMULATED DEPRECIATION-Account Code
+    label: reports.asset.accumulateddepreciationaccount
     type: string
     source: asset      
   - name: startdepval
-    label: ACCUMULATED DEPRECIATION-BALANCE as at <1st April of Current FY>
+    label: reports.asset.startdepval
     type: number
     source: asset      
   - name: currdepsum
-    label: Depreciation on during the year
+    label: reports.asset.currdepsum
     type: number
     source: asset      
   - name: totaldepsum
-    label: ACCUMULATED DEPRECIATION Total
+    label: reports.asset.totaldepsum
     type: number
     source: asset      
   - name: endcurrentamount
-    label: Net Block as at <31st March of Current FY>
+    label: reports.asset.endcurrentamount
     type: string
     source: asset      
   - name: previousfynetblock
-    label: Net Block as at <31st March of Current FY>
+    label: reports.asset.previousfynetblock
     type: string
     source: asset      
   searchParams:
@@ -1377,7 +1385,11 @@ ReportDefinitions:
     source: asset
   - name: depreciationrate
     label: reports.asset.depreciationrate
-    type: string
+    type: number
+    source: asset
+  - name: totalrevalsum
+    label: reports.asset.totalrevalsum
+    type: number
     source: asset
   searchParams:
   - name: fromDate
@@ -1412,7 +1424,7 @@ ReportDefinitions:
     searchClause : and asset.code in ($assetdetail)
   
   query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.totalarea,asset.openingdate,asset.fundsource,asset.location,(select string_agg(land.surveynumber,',') from egasset_asset_landdetails land  where asset.id=land.assetid group by asset.id) as totalsurveyno,
-         asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,asset.assetCategoryType,
+         asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,asset.assetCategoryType,coalesce(grossvalue,0.0)-coalesce(accumulateddepreciation,0.0)+coalesce(incrementalrevalsum.0.0)-coalesce(decrementalrevalsum,0.0) as totalrevalsum,
          asset.defectliabilityday as defectliabilityday,asset.securitydepositretained,
          asset.securitydepositrealized,asset.dateofcreation,asset.acquisitiondate,asset.grossvalue,asset.originalvalue,currentvalue.currentamount,
          disposal.salevalue as disposalsalevalue,disposal.profitlossvoucherreference as disposalvoucherno,disposal.disposaldate,disposal.buyername,disposal.buyeraddress,

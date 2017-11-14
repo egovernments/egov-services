@@ -524,11 +524,11 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": "",
-            "defaultValue": true,
+            "defaultValue": false,
             "showHideFields": [{
-              "ifValue": false,
-              "hide": [],
-              "show": [{
+              "ifValue": true,
+              "show": [],
+              "hide": [{
                 "name": "vendorname",
                 "isGroup": false,
                 "isField": true
@@ -542,7 +542,7 @@ var dat = {
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
-            "hide": true,
+            "defaultValue": "",
             "maxLength": 256,
             "minLength": 1,
             "patternErrorMsg": "",

@@ -420,7 +420,7 @@ serviceMaps:
           jsonMaps:
             - jsonPath: $.priceLists.*.priceListDetails.*.id
             - jsonPath: $.priceLists[?({id} in @.priceListDetails[*].id)].id
-            - jsonPath: $.priceLists.*.priceListDetails.*.material.id
+            - jsonPath: $.priceLists.*.priceListDetails.*.material.code
             - jsonPath: $.priceLists.*.priceListDetails.*.fromDate
             - jsonPath: $.priceLists.*.priceListDetails.*.toDate
             - jsonPath: $.priceLists.*.priceListDetails.*.ratePerUnit

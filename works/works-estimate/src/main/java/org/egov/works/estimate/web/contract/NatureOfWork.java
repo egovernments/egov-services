@@ -85,7 +85,8 @@ public class NatureOfWork   {
    * @return name
   **/
   @ApiModelProperty(required = true, value = "Name of the Nature Of Work")
-  @NotNull
+  //@NotNull
+  //TODO only code is mandatory
 
  @Pattern(regexp="[a-zA-Z0-9\\s\\.,]+") @Size(min=1,max=100)
   public String getName() {
@@ -127,9 +128,10 @@ public class NatureOfWork   {
    * @return expenditureType
   **/
   @ApiModelProperty(required = true, value = "Expenditure type Enum for the nature of work")
-  @NotNull
+ // @NotNull
 
-  @Valid
+  //@Valid
+  //TODO Not mandatory from UI
 
   public ExpenditureType getExpenditureType() {
     return expenditureType;

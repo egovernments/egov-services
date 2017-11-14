@@ -85,7 +85,8 @@ public class DocumentDetail   {
    * @return objectId
   **/
   @ApiModelProperty(required = true, value = "Object id of the Document for which documents are attached.")
-  @NotNull
+  //@NotNull
+  //TODO setting internally
 
 
   public String getObjectId() {
@@ -106,7 +107,8 @@ public class DocumentDetail   {
    * @return objectType
   **/
   @ApiModelProperty(required = true, value = "Object type of the document for which documents are attached.")
-  @NotNull
+  //@NotNull
+  //TODO setting internally
 
  @Pattern(regexp="[a-zA-Z0-9\\s\\.,]+") @Size(min=1,max=100)
   public String getObjectType() {
@@ -149,7 +151,8 @@ public class DocumentDetail   {
   **/
   @ApiModelProperty(value = "DocumentType Enum for the Document details")
 
-  @Valid
+  //@Valid
+  //TODO setting internally
 
   public DocumentType getDocumentType() {
     return documentType;
@@ -271,7 +274,9 @@ public class DocumentDetail   {
   **/
   @ApiModelProperty(value = "WorkProgress Enum for Photos captured")
 
-  @Valid
+  //@Valid
+  //TODO Not required from UI
+
 
   public WorkProgress getWorkProgress() {
     return workProgress;
@@ -292,7 +297,7 @@ public class DocumentDetail   {
   **/
   @ApiModelProperty(value = "")
 
-  @Valid
+  //@Valid
 
   public AuditDetails getAuditDetails() {
     return auditDetails;

@@ -1,8 +1,5 @@
 package org.egov.works.estimate.domain.service;
 
-import java.util.Date;
-import java.util.List;
-
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.utils.CommonUtils;
@@ -16,6 +13,9 @@ import org.egov.works.workflow.service.WorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.List;
 
 @Service
 @Transactional(readOnly= true)
@@ -59,13 +59,13 @@ public class DetailedEstimateService {
         for (final DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
             detailedEstimate.setId(commonUtils.getUUID());
             detailedEstimate.setAuditDetails(auditDetails);
-            detailedEstimate.setTotalIncludingRE(detailedEstimate.getWorkValue());
+            detailedEstimate.setTotalIncludingRE(detailedEstimate.getEstimateValue());
 
             if(detailedEstimate.getAbstractEstimateDetail() != null) {
                         if(!validator.checkDetailedEstimateCreatedFlag(detailedEstimate)) {
                             String estimateNumber = idGenerationRepository
                                     .generateDetailedEstimateNumber(detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());
-                            detailedEstimate.setEstimateNumber(propertiesManager.getDetailedEstimateNumberPrefix() + estimateNumber);
+                            detailedEstimate.setEstimateNumber(propertiesManager.getDetailedEstimateNumberPrefix() + detailedEstimate.getDepartment().getCode() + estimateNumber);
                         }
                 }
 
@@ -115,6 +115,14 @@ public class DetailedEstimateService {
 				detailedEstimate.setStateId(workflowService.enrichWorkflow(detailedEstimate.getWorkFlowDetails(),
                         detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo()));
 				detailedEstimate.setStatus(DetailedEstimateStatus.CREATED);
+
+            if(detailedEstimate.getDocumentDetails() != null) {
+                for(DocumentDetail documentDetail : detailedEstimate.getDocumentDetails()) {
+                    documentDetail.setObjectId(detailedEstimate.getEstimateNumber());
+                    documentDetail.setObjectType(CommonConstants.DETAILEDESTIMATE);
+                    documentDetail.setAuditDetails(auditDetails);
+                }
+            }
         }
         kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateCreateTopic(), detailedEstimateRequest);
         final DetailedEstimateResponse response = new DetailedEstimateResponse();

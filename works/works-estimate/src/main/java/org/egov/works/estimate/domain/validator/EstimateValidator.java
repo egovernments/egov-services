@@ -57,6 +57,9 @@ public class EstimateValidator {
     @Autowired
     private DetailedEstimateJdbcRepository detailedEstimateJdbcRepository;
 
+    @Autowired
+    private FileStoreRepository fileStoreRepository;
+
     public void validateEstimates(AbstractEstimateRequest abstractEstimateRequest, Boolean isNew) {
         Map<String, String> messages = new HashMap<>();
         for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
@@ -300,28 +303,70 @@ public class EstimateValidator {
         final RequestInfo requestInfo = detailedEstimateRequest.getRequestInfo();
         Map<String, String> messages = new HashMap<>();
         for (DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
-            validateSpillOverEstimate(detailedEstimate, messages);
+            AbstractEstimate abstactEstimate = searchAbstractEstimate(detailedEstimate);
+            if(abstactEstimate == null)
+                messages.put(Constants.KEY_INVALID_ABSTRACTESTIMATE_DETAILS,
+                        Constants.MESSAGE_INVALID_ABSTRACTESTIMATE_DETAILS);
+            validateMasterData(detailedEstimate, requestInfo, messages);
+            validateEstimateAdminSanction(detailedEstimate, messages, abstactEstimate);
+            validateSpillOverEstimate(detailedEstimate, messages, abstactEstimate);
             validateActivities(detailedEstimate, messages, requestInfo);
             validateLocationDetails(detailedEstimate, requestInfo, messages);
-            validateAssetDetails(detailedEstimate, requestInfo, messages);
+            validateAssetDetails(detailedEstimate, requestInfo, messages, abstactEstimate);
             validateOverheads(detailedEstimate, requestInfo, messages);
-            validateMasterData(detailedEstimate, requestInfo, messages);
+            validateDocuments(detailedEstimate, requestInfo, messages);
+
+
         }
         if (messages != null && !messages.isEmpty())
             throw new CustomException(messages);
     }
 
-    public void validateSpillOverEstimate(final DetailedEstimate detailedEstimate, Map<String, String> messages) {
-        if(checkDetailedEstimateCreatedFlag(detailedEstimate)) {
+    private void validateDocuments(DetailedEstimate detailedEstimate, RequestInfo requestInfo, Map<String, String> messages) {
+        if(detailedEstimate.getDocumentDetails() != null) {
+        for(DocumentDetail documentDetail : detailedEstimate.getDocumentDetails()) {
+            boolean fileExists = fileStoreRepository.searchFileStore(detailedEstimate.getTenantId(), documentDetail.getFileStore(), requestInfo);
+            if(!fileExists)
+                messages.put(KEY_INVALID_FILESTORE_ID, MESSAGE_INVALID_FILESTORE_ID);
+         }
+        }
+    }
+
+    private void validateEstimateAdminSanction(DetailedEstimate detailedEstimate, Map<String, String> messages,AbstractEstimate abstractEstimate) {
+                if (abstractEstimate != null && detailedEstimate.getEstimateDate() != null && detailedEstimate.getEstimateDate() < abstractEstimate.getAdminSanctionDate()) {
+                    messages.put(KEY_INVALID_ADMINSANCTION_DATE, MESSAGE_INVALID_ADMINSANCTION_DATE);
+                }
+
+    }
+
+    private AbstractEstimate searchAbstractEstimate(DetailedEstimate detailedEstimate) {
+        AbstractEstimate abstractEstimate = null;
+        if(detailedEstimate.getAbstractEstimateDetail() != null) {
+            String workIdentificationNumber = detailedEstimate.getAbstractEstimateDetail().getProjectCode().getCode();
+            AbstractEstimateSearchContract abstractEstimateSearchContract = AbstractEstimateSearchContract.builder().tenantId(detailedEstimate.getTenantId())
+                        .workIdentificationNumbers(Arrays.asList(detailedEstimate.getAbstractEstimateDetail().getProjectCode().getCode())).build();
+                List<AbstractEstimate> abstractEstimates = abstractEstimateRepository.search(abstractEstimateSearchContract);
+                if (!abstractEstimates.isEmpty()) {
+                    abstractEstimate = abstractEstimates.get(0);
+                    for(AbstractEstimateDetails abstractEstimateDetails : abstractEstimate.getAbstractEstimateDetails()) {
+                        if(abstractEstimateDetails.getProjectCode() != null && abstractEstimateDetails.getProjectCode().getCode().equalsIgnoreCase(workIdentificationNumber))
+                            abstractEstimate.setAbstractEstimateDetails(Arrays.asList(abstractEstimateDetails));
+                            return abstractEstimate;
+                    }
+                }
+        }
+        return null;
+    }
+
+    public void validateSpillOverEstimate(final DetailedEstimate detailedEstimate, Map<String, String> messages, AbstractEstimate abstractEstimate) {
+        if(abstractEstimate != null && abstractEstimate.getDetailedEstimateCreated()) {
             if(StringUtils.isBlank(detailedEstimate.getEstimateNumber()))
                 messages.put(Constants.KEY_NULL_DETAILEDESTIMATE_NUMBER,
                         Constants.MESSAGE_NULL_DETAILEDESTIMATE_NUMBER);
             else
                validateEstimateNumberUnique(detailedEstimate, messages);
-            if(detailedEstimate.getEstimateDate() == null)
-                messages.put(Constants.KEY_NULL_DETAILEDESTIMATE_DATE,
-                        Constants.MESSAGE_NULL_DETAILEDESTIMATE_DATE);
-            else if(detailedEstimate.getEstimateDate() > new Date().getTime())
+
+           if(detailedEstimate.getEstimateDate() != null && detailedEstimate.getEstimateDate() > new Date().getTime())
                 messages.put(Constants.KEY_FUTUREDATE_ESTIMATEDATE_SPILLOVER,
                         Constants.MESSAGE_FUTUREDATE_ESTIMATEDATE_SPILLOVER);
             validateTechnicalSanctionDetail(detailedEstimate, messages);
@@ -331,6 +376,8 @@ public class EstimateValidator {
     private void validateEstimateNumberUnique(DetailedEstimate detailedEstimate, Map<String, String> messages) {
         DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
                 .tenantId(detailedEstimate.getTenantId()).estimateAmount(detailedEstimate.getEstimateNumber()).build();
+        if(detailedEstimate.getId() != null)
+            detailedEstimateSearchContract.setIds(Arrays.asList(detailedEstimate.getId()));
         List<DetailedEstimateHelper> lists= detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
         if(lists != null && !lists.isEmpty())
             messages.put(Constants.KEY_INVALID_ESTIMATNUMBER_SPILLOVER,
@@ -340,19 +387,11 @@ public class EstimateValidator {
     public void validateOverheads(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo, Map<String, String> messages) {
         for (final EstimateOverhead estimateOverhead : detailedEstimate.getEstimateOverheads()) {
 
-            JSONArray responseJSONArray = null;
             if (estimateOverhead != null) {
-                if (estimateOverhead.getOverhead() != null && StringUtils.isNotBlank(estimateOverhead.getOverhead().getCode())) {
-                    responseJSONArray = estimateUtils.getMDMSData(OVERHEAD_OBJECT,
-                            CommonConstants.CODE, estimateOverhead.getOverhead().getCode(), detailedEstimate.getTenantId(), requestInfo,
-                            WORKS_MODULE_CODE);
-                    if (responseJSONArray != null && responseJSONArray.isEmpty()) {
-                        messages.put(KEY_ESTIMATE_OVERHEAD_CODE_INVALID, MESSAGE_ESTIMATE_OVERHEAD_CODE_INVALID);
-                    }
-                }
+                validateEstimateOverHead(estimateOverhead.getOverhead(),requestInfo,messages);
 
-                if (estimateOverhead.getOverhead().getId() == null) {
-                    messages.put(KEY_ESIMATE_OVERHEAD_ID, MESSAGE_ESIMATE_OVERHEAD_ID);
+                if (estimateOverhead.getOverhead().getCode() == null) {
+                    messages.put(KEY_ESIMATE_OVERHEAD_CODE, MESSAGE_ESIMATE_OVERHEAD_CODE);
                 }
                 if (estimateOverhead.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
                     messages.put(KEY_ESIMATE_OVERHEAD_AMOUNT, MESSAGE_ESIMATE_OVERHEAD_AMOUNT);
@@ -362,24 +401,31 @@ public class EstimateValidator {
         }
     }
 
-    public void validateActivities(final DetailedEstimate detailedEstimate, Map<String, String> messages, final RequestInfo requestInfo) {
-        for (int i = 0; i < detailedEstimate.getEstimateActivities().size(); i++)
-            for (int j = i + 1; j < detailedEstimate.getEstimateActivities().size(); j++)
-                if (detailedEstimate.getEstimateActivities().get(i).getScheduleOfRate() != null
-                        && detailedEstimate.getEstimateActivities().get(i).getScheduleOfRate().getId()
-                        .equals(detailedEstimate.getEstimateActivities().get(j).getScheduleOfRate().getId())) {
-                    messages.put(KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATE, MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATE);
-                }
-        if (detailedEstimate.getEstimateActivities() == null || detailedEstimate.getEstimateActivities().isEmpty())
-            messages.put(KEY_ESTIMATE_ACTIVITY_REQUIRED, MESSAGE_ESTIMATE_ACTIVITY_REQUIRED);
+    private void validateEstimateOverHead(Overhead overhead, RequestInfo requestInfo, Map<String, String> messages) {
+        if (overhead != null && StringUtils.isNotBlank(overhead.getCode())) {
+            JSONArray  responseJSONArray = estimateUtils.getMDMSData(OVERHEAD_OBJECT,
+                    CommonConstants.CODE, overhead.getCode(), overhead.getTenantId(), requestInfo,
+                    WORKS_MODULE_CODE);
+            if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+                messages.put(KEY_ESTIMATE_OVERHEAD_CODE_INVALID, MESSAGE_ESTIMATE_OVERHEAD_CODE_INVALID);
+            }
+        }
+    }
 
+    public void validateActivities(final DetailedEstimate detailedEstimate, Map<String, String> messages, final RequestInfo requestInfo) {
+    
+        if(detailedEstimate.getWorkFlowDetails() != null && detailedEstimate.getWorkFlowDetails().getAction().equalsIgnoreCase(CommonConstants.WORKFLOW_ACTION_CREATE))
+          if (detailedEstimate.getEstimateActivities() == null || detailedEstimate.getEstimateActivities().isEmpty())
+              messages.put(KEY_ESTIMATE_ACTIVITY_REQUIRED, MESSAGE_ESTIMATE_ACTIVITY_REQUIRED);
+
+        ScheduleOfRate sor = null;
         for (final EstimateActivity activity : detailedEstimate.getEstimateActivities()) {
             if ((activity.getScheduleOfRate() != null && activity.getScheduleOfRate().getId() == null) || (activity.getNonSor() != null && activity.getNonSor().getId() == null))
                 messages.put(KEY_ESTIMATE_ACTIVITY_REQUIRED, MESSAGE_ESTIMATE_ACTIVITY_REQUIRED);
 
             if (activity.getScheduleOfRate() == null && activity.getNonSor() == null)
                 messages.put(KEY_ESTIMATE_ACTIVITY_INVALID, MESSAGE_ESTIMATE_ACTIVITY_INVALID);
-
+           //validate at pattern level
             if (activity.getQuantity() != null && activity.getQuantity() <= 0)
                 messages.put(KEY_ESTIMATE_ACTIVITY_QUANTITY, MESSAGE_ESTIMATE_ACTIVITY_QUANTITY);
 
@@ -391,19 +437,25 @@ public class EstimateValidator {
            if (activity.getUnitRate().compareTo(BigDecimal.ZERO) <= 0)
                 messages.put(KEY_ESTIMATE_ACTIVITY_UNIT_RATE_INVALID, MESSAGE_ESTIMATE_ACTIVITY_UNIT_RATE_INVALID);
 
+            if (activity.getScheduleOfRate() != null && StringUtils.isNotBlank(activity.getScheduleOfRate().getId())) {
+                List<ScheduleOfRate> scheduleOfRates = worksMastersRepository.searchScheduleOfRates(activity.getTenantId(), Arrays.asList(activity.getScheduleOfRate().getId()), requestInfo);
+                if (scheduleOfRates != null && scheduleOfRates.isEmpty())
+                    messages.put(KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID, MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID);
+                else if(sor != null && sor.getId().equals(activity.getScheduleOfRate().getId()))
+                   messages.put(KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_DUPLICATE, MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_DUPLICATE);
+            }
+
             if (activity.getEstimateMeasurementSheets() != null)
                 for (final EstimateMeasurementSheet estimateMeasurementSheet : activity.getEstimateMeasurementSheets()) {
+                    if(StringUtils.isBlank(estimateMeasurementSheet.getIdentifier()))
+                        messages.put(KEY_ESTIMATE_ACTIVITY_MEASUREMENT_IDENTIFIER_REQUIRED, MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_IDENTIFIER_REQUIRED);
                     if (estimateMeasurementSheet.getQuantity() == null)
                         messages.put(KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_REQUIRED, MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_REQUIRED);
                     else if (estimateMeasurementSheet.getQuantity().compareTo(BigDecimal.ZERO) <= 0)
                         messages.put(KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID, MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID);
                 }
 
-            if (activity.getScheduleOfRate() != null && StringUtils.isNotBlank(activity.getScheduleOfRate().getId())) {
-                List<ScheduleOfRate> scheduleOfRates = worksMastersRepository.searchScheduleOfRates(activity.getTenantId(), Arrays.asList(activity.getScheduleOfRate().getId()), requestInfo);
-                if (scheduleOfRates != null && scheduleOfRates.isEmpty())
-                    messages.put(KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID, MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID);
-            }
+
 
         }
 
@@ -435,34 +487,41 @@ public class EstimateValidator {
         }
     }
 
-    public void validateAssetDetails(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo, Map<String, String> messages) {
+    public void validateAssetDetails(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo, Map<String, String> messages, AbstractEstimate abstractEstimate) {
 
         JSONArray mdmsArray = estimateUtils.getMDMSData(APPCONFIGURATION_OBJECT, CommonConstants.CODE, ASSET_DETAILES_REQUIRED_APPCONFIG,
                 detailedEstimate.getTenantId(), requestInfo, WORKS_MODULE_CODE);
         boolean assetsAdded = false;
         if (mdmsArray != null && !mdmsArray.isEmpty()) {
             Map<String, Object> jsonMap = (Map<String, Object>) mdmsArray.get(0);
-            if (jsonMap.get("value").equals("Yes"))
-                if(detailedEstimate.getAssets() != null && detailedEstimate.getAssets().isEmpty())
+            if (jsonMap.get("value").equals("Yes")) {
+                if (detailedEstimate.getAssets() != null && detailedEstimate.getAssets().isEmpty())
                     assetsAdded = true;
 
-                for(AssetsForEstimate assetsForEstimate : detailedEstimate.getAssets())
-                  if(!assetsAdded && StringUtils.isBlank(assetsForEstimate.getLandAsset()))
-                    messages.put(KEY_ESTIMATE_ASSET_DETAILS_REQUIRED, MESSAGE_ESTIMATE_ASSET_DETAILS_REQUIRED);
+                for (AssetsForEstimate assetsForEstimate : detailedEstimate.getAssets())
+                    if (!assetsAdded && StringUtils.isBlank(assetsForEstimate.getLandAsset()))
+                        messages.put(KEY_ESTIMATE_ASSET_DETAILS_REQUIRED, MESSAGE_ESTIMATE_ASSET_DETAILS_REQUIRED);
+            }
         }
 
         Asset asset = null;
         for (final AssetsForEstimate assetsForEstimate : detailedEstimate.getAssets())
             if (assetsForEstimate != null) {
-                if (StringUtils.isBlank(detailedEstimate.getNameOfWork()) &&
-                        (detailedEstimate.getNameOfWork().equalsIgnoreCase(Constants.ESTIMATE_NAMEOFWORK_ADDITION) ||
-                                detailedEstimate.getNameOfWork().equalsIgnoreCase(Constants.ESTIMATE_NAMEOFWORK_REPAIRS))
-                        && StringUtils.isBlank(assetsForEstimate.getAsset().getCode()))
-                    messages.put(KEY_ESTIMATE_ASSET_REQUIRED, MESSAGE_ESTIMATE_ASSET_REQUIRED);
+                if (detailedEstimate.getNameOfWork() != null && detailedEstimate.getNatureOfWork().getExpenditureType() != null) {
+                     mdmsArray = estimateUtils.getMDMSData(NATUREOFWORK_OBJECT, CommonConstants.EXPENDITURETYPE, detailedEstimate.getNatureOfWork().getExpenditureType().toString(),
+                            detailedEstimate.getTenantId(), requestInfo, WORKS_MODULE_CODE);
+                    if (mdmsArray != null && !mdmsArray.isEmpty())  {
+                        Map<String, Object> jsonMap = (Map<String, Object>) mdmsArray.get(0);
+                        if(jsonMap.get(CommonConstants.EXPENDITURETYPE).equals(ExpenditureType.REVENUE))
+                          messages.put(KEY_ESTIMATE_ASSET_REQUIRED, MESSAGE_ESTIMATE_ASSET_REQUIRED);
 
-                if(StringUtils.isBlank(detailedEstimate.getNameOfWork()) && detailedEstimate.getNameOfWork().equalsIgnoreCase(Constants.ESTIMATE_NAMEOFWORK_NEW)
-                  && StringUtils.isBlank(assetsForEstimate.getLandAsset()))
-                    messages.put(KEY_ESTIMATE_LAND_ASSET_REQUIRED, MESSAGE_ESTIMATE_LAND_ASSET_REQUIRED);
+                        else if(jsonMap.get(CommonConstants.EXPENDITURETYPE).equals(ExpenditureType.CAPITAL))
+                            messages.put(KEY_ESTIMATE_LAND_ASSET_REQUIRED, MESSAGE_ESTIMATE_LAND_ASSET_REQUIRED);
+                    }
+
+                }
+
+
                 //TODO FIX aset code validation
                /* else {
                     List<Asset> assets = assetRepository.searchAssets(assetsForEstimate.getTenantId(),assetsForEstimate.getAsset().getCode(),requestInfo);
@@ -471,6 +530,7 @@ public class EstimateValidator {
                 }*/
                 if (asset != null && asset.getCode().equals(assetsForEstimate.getAsset().getCode()))
                     messages.put(KEY_DUPLICATE_ESTIMATE_ASSET_DETAILS, MESSAGE_DUPLICATE_ESTIMATE_ASSET_DETAILS);
+                asset = assetsForEstimate.getAsset();
             }
     }
 
@@ -490,25 +550,8 @@ public class EstimateValidator {
                 if(estimateTechnicalSanction.getTechnicalSanctionDate() != null && estimateTechnicalSanction.getTechnicalSanctionDate() > new Date().getTime())
                     messages.put(KEY_TECHNICAL_SANCTION_DATE_FUTUREDATE, MESSAGE_TECHNICAL_SANCTION_DATE_FUTUREDATE);
 
-                if(detailedEstimate.getEstimateDate() != null && estimateTechnicalSanction.getTechnicalSanctionDate() < detailedEstimate.getEstimateDate())
+                if(detailedEstimate.getEstimateDate() != null && estimateTechnicalSanction.getTechnicalSanctionDate() != null && estimateTechnicalSanction.getTechnicalSanctionDate() < detailedEstimate.getEstimateDate())
                     messages.put(KEY_INVALID_TECHNICALSANCTION_DATE, MESSAGE_INVALID_TECHNICALSANCTION_DATE);
-
-                if(detailedEstimate.getAbstractEstimateDetail() != null && detailedEstimate.getEstimateDate() != null) {
-                    AbstractEstimateDetailsSearchContract searchContract = AbstractEstimateDetailsSearchContract.builder().tenantId(detailedEstimate.getTenantId())
-                            .ids(Arrays.asList(detailedEstimate.getAbstractEstimateDetail().getId())).build();
-                    List<AbstractEstimateDetails> abstractEstimateDetails = abstractEstimateDetailsJdbcRepository.search(searchContract);
-                    if (!abstractEstimateDetails.isEmpty()) {
-                        String abstractEstimateId = abstractEstimateDetails.get(0).getAbstractEstimate();
-                        AbstractEstimateSearchContract abstractEstimateSearchContract = AbstractEstimateSearchContract.builder().tenantId(detailedEstimate.getTenantId())
-                                .ids(Arrays.asList(abstractEstimateId)).build();
-                        List<AbstractEstimate> abstractEstimates = abstractEstimateRepository.search(abstractEstimateSearchContract);
-                        if (!abstractEstimates.isEmpty() && abstractEstimates.get(0).getAdminSanctionDate() != null &&
-                                detailedEstimate.getEstimateDate() < abstractEstimates.get(0).getAdminSanctionDate()) {
-                            messages.put(KEY_INVALID_ADMINSANCTION_DATE, MESSAGE_INVALID_ADMINSANCTION_DATE);
-                        }
-
-                    }
-                }
             }
 
     }
@@ -516,6 +559,10 @@ public class EstimateValidator {
     private void validateUniqueTechnicalSanctionForDetailedEstimate(DetailedEstimate detailedEstimate, EstimateTechnicalSanction estimateTechnicalSanction, Map<String, String> messages) {
         TechnicalSanctionSearchContract technicalSanctionSearchContract = TechnicalSanctionSearchContract.builder().tenantId(detailedEstimate.getTenantId())
                 .technicalSanctionNumbers(Arrays.asList(estimateTechnicalSanction.getTechnicalSanctionNumber())).build();
+        if(estimateTechnicalSanction.getId() != null) {
+            technicalSanctionSearchContract.setIds(Arrays.asList(estimateTechnicalSanction.getId()));
+            technicalSanctionSearchContract.setDetailedEstimateIds(Arrays.asList(detailedEstimate.getId()));
+        }
         List<EstimateTechnicalSanction> technicalSanctions = estimateTechnicalSanctionRepository.search(technicalSanctionSearchContract);
         if(technicalSanctions != null && !technicalSanctions.isEmpty())
             messages.put(KEY_INVALID_ADMINSANCTION_DATE, MESSAGE_INVALID_ADMINSANCTION_DATE);
@@ -533,10 +580,51 @@ public class EstimateValidator {
                 validateFinancialDetailsForDetailedEstmate(detailedEstimate, requestInfo, messages);
         }
 
+        validateModeOfAllotment(detailedEstimate.getModeOfAllotment(), detailedEstimate.getTenantId(), requestInfo, messages);
+        validateNatureOfWork(detailedEstimate.getNatureOfWork(), detailedEstimate.getTenantId(), requestInfo, messages);
+        //MDMS data not found
+        //validateWardBoundary(detailedEstimate.getWard(), detailedEstimate.getTenantId(), requestInfo, messages);
+       // validateLocalityBoundary(detailedEstimate.getLocality(), detailedEstimate.getTenantId(), requestInfo, messages);
         validateTypeOfWork(detailedEstimate.getWorksType(), detailedEstimate.getTenantId(), requestInfo, messages);
         validateSubTypeOfWork(detailedEstimate.getWorksSubtype(), detailedEstimate.getTenantId(), requestInfo,
                 messages);
         validateDepartment(detailedEstimate.getDepartment(), detailedEstimate.getTenantId(), requestInfo, messages);
+    }
+
+    private void validateModeOfAllotment(ModeOfAllotment modeOfAllotment, String tenantId, RequestInfo requestInfo, Map<String, String> messages) {
+        JSONArray responseJSONArray;
+        if (modeOfAllotment != null && modeOfAllotment.getCode() != null) {
+            responseJSONArray = estimateUtils.getMDMSData(Constants.MODEOFALLOTMENT_OBJECT,
+                    CommonConstants.CODE, modeOfAllotment.getCode(), tenantId, requestInfo,
+                    Constants.WORKS_MODULE_CODE);
+            if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+                messages.put(Constants.KEY_MODEOFALLOTMENT_INVALID,
+                        Constants.MESSAGE_MODEOFALLOTMENT_INVALID);
+            }
+        }
+
+    }
+
+
+    private void validateNatureOfWork(NatureOfWork natureOfWork, String tenantId, RequestInfo requestInfo, Map<String, String> messages) {
+        JSONArray responseJSONArray;
+        if (natureOfWork != null && natureOfWork.getCode() != null) {
+            responseJSONArray = estimateUtils.getMDMSData(Constants.NATUREOFWORK_OBJECT,
+                    CommonConstants.CODE, natureOfWork.getCode(), tenantId, requestInfo,
+                    Constants.WORKS_MODULE_CODE);
+            if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+                messages.put(Constants.KEY_NATUREOFWORK_INVALID,
+                        Constants.MESSAGE_NATUREOFWORK_INVALID);
+            }
+            else {
+                Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
+                if(jsonMap.get("expenditureType").equals(ExpenditureType.CAPITAL))
+                  natureOfWork.setExpenditureType(ExpenditureType.CAPITAL);
+                else
+                  natureOfWork.setExpenditureType(ExpenditureType.REVENUE);
+            }
+
+        }
     }
 
     private void validateFinancialDetailsForDetailedEstmate(DetailedEstimate detailedEstimate, RequestInfo requestInfo,

@@ -9,6 +9,7 @@ const addUrls = uiUtilities.addUrls;
 const addDependents = uiUtilities.addDependents;
 const addAutoFills = uiUtilities.addAutoFills;
 const addRadios = uiUtilities.addRadios;
+const addShowHideFields = uiUtilities.addShowHideFields;
 const addGroups = uiUtilities.addGroups;
 
 let localeFields = {};
@@ -77,6 +78,7 @@ let viewTemplate = function(module, numCols, path, config, basePath, uiInfoDef) 
 
     if(uiInfoDef.radios && uiInfoDef.radios.length) {
         fieldsData = addRadios(fields, uiInfoDef, module);
+        fields = fieldsData.fields;
         errors = Object.assign({}, errors, fieldsData.errors);
         localeFields = Object.assign({}, localeFields, fieldsData.localeFields);
     }
@@ -85,6 +87,12 @@ let viewTemplate = function(module, numCols, path, config, basePath, uiInfoDef) 
     specifications = fieldsData.specifications;
     errors = Object.assign({}, errors, fieldsData.errors);
     localeFields = Object.assign({}, localeFields, fieldsData.localeFields);
+
+    if(uiInfoDef.showHideFields && Object.keys(uiInfoDef.showHideFields).length) {
+        fieldsData = addShowHideFields(specifications, fields, uiInfoDef);
+        specifications = fieldsData.specifications;
+        errors = Object.assign({}, errors, fieldsData.errors);
+    }
 
     setLabels(localeFields, "./output/" + module);
     if(Object.keys(errors).length) {

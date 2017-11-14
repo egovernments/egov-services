@@ -499,6 +499,10 @@ paths:
           allowEmptyValue: true
           format: mobileNumber
           description: The Mobile number of the Contractor Agency/Firm
+        - name: pcm
+          in: query
+          type: boolean
+          description: If the value is True then get only Contractors with pmc as true and If the value is False then get only Contractors with pmc as false.
       responses:
         200:
           description: Contractor(s) Retrieved Successfully
@@ -818,6 +822,7 @@ tags:
     description: APIs required for Contractor.
   - name: Remarks
     description: APIs required for Remarks.  
+
 
 
 

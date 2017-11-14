@@ -1,22 +1,23 @@
 package org.egov.inv.model;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.egov.inv.model.AuditDetails;
-import org.egov.inv.model.Material;
-import org.egov.inv.model.Uom;
+
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Size;
+
+import lombok.Builder;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * This object holds information about materials from different suppliers. 
  */
 @ApiModel(description = "This object holds information about materials from different suppliers. ")
 @javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
-
+@Builder
 public class PriceListDetails   {
   @JsonProperty("id")
   private String id = null;
@@ -98,8 +99,6 @@ public class PriceListDetails   {
    * @return material
   **/
   @ApiModelProperty(value = "name of a material stored in the system")
-
-  @Valid
 
   public Material getMaterial() {
     return material;

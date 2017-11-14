@@ -2192,6 +2192,9 @@ var localization_EN_Data = {
 "reports.asset.accumulateddepreciation":"Aaccumulated Depreciation",
 
 // TODO might be renamed
+"reports.asset.assetsubcategoryname":"Asset SubCategory Name",
+"reports.asset.assetparentcategoryname":"Asset Category Name",
+"reports.asset.depericiationrate":"Depericiation Rate",
 "reports.asset.schedulename":"Details Head Description",
 "reports.asset.assetcategory":"Asset Sub Category",
 "reports.asset.revaluationreserveaccount":"GROSS BLOCK-Account code",

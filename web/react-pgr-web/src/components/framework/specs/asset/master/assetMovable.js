@@ -96,12 +96,12 @@ var dat = {
 							"patternErrMsg": "",
 							"isStateLevel": true
   					},
-            {
+						{
   						"name": "NoOfOrder",
   						"jsonPath": "Asset.orderNumber",
   						"label": "ac.create.No.Of.Order",
-  						"pattern": "^[a-zA-Z0-9_]*$",
-  						"type": "number",
+  						"pattern": "^[a-zA-Z0-9_\\-\\/\\s]*$",
+  						"type": "text",
   						"url": "",
   						"isRequired": false,
   						"isDisabled": false,
@@ -886,12 +886,12 @@ var dat = {
 							"patternErrMsg": "",
 							"isStateLevel": true
   					},
-            {
+						{
   						"name": "NoOfOrder",
   						"jsonPath": "Assets[0].orderNumber",
   						"label": "ac.create.No.Of.Order",
-  						"pattern": "^[a-zA-Z0-9_]*$",
-  						"type": "number",
+  						"pattern": "^[a-zA-Z0-9_\\-\\/\\s]*$",
+  						"type": "text",
   						"url": "",
   						"isRequired": false,
   						"isDisabled": false,
@@ -1520,12 +1520,12 @@ var dat = {
 							"patternErrMsg": "",
 							"isStateLevel": true
   					},
-            {
+						{
   						"name": "NoOfOrder",
   						"jsonPath": "Asset.orderNumber",
   						"label": "ac.create.No.Of.Order",
-  						"pattern": "^[a-zA-Z0-9_]*$",
-  						"type": "number",
+  						"pattern": "^[a-zA-Z0-9_\\-\\/\\s]*$",
+  						"type": "text",
   						"url": "",
   						"isRequired": false,
   						"isDisabled": false,

@@ -3,6 +3,7 @@ package org.egov.inv.model;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -11,7 +12,13 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.egov.inv.model.Material.InventoryTypeEnum;
+import org.egov.inv.model.Material.MaterialClassEnum;
+import org.egov.inv.model.Material.StatusEnum;
+
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -23,6 +30,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 @ApiModel(description = "This object holds the pricelist information of different materials from various suppliers   ")
 @javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PriceList   {
   @JsonProperty("id")
   private String id = null;
@@ -152,8 +161,6 @@ public class PriceList   {
   **/
   @ApiModelProperty(required = true, value = "Name of the vendor supplying materials required ")
   @NotNull
-
-  @Valid
 
   public Supplier getSupplier() {
     return supplier;

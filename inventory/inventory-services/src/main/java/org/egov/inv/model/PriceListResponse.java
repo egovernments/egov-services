@@ -1,24 +1,28 @@
 package org.egov.inv.model;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.egov.inv.model.Page;
-import org.egov.inv.model.PriceList;
-import org.egov.inv.model.ResponseInfo;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Contract class for web response. Array of PriceList items  are used in case of search ,create or update request.
  */
 @ApiModel(description = "Contract class for web response. Array of PriceList items  are used in case of search ,create or update request.")
 @javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
-
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PriceListResponse   {
   @JsonProperty("ResponseInfo")
   private ResponseInfo responseInfo = null;

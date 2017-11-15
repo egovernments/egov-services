@@ -22,8 +22,8 @@ public class PriceListRepository {
 
     @Autowired
     public PriceListRepository(LogAwareKafkaTemplate logAwareKafkaTemplate,
-                              @Value("${inv.pricelist.save.topic}") String priceListSaveTopicName,
-                              @Value("${inv.pricelist.update.topic}") String priceListsUpdateTopicName,
+                              @Value("${inv.pricelists.save.topic}") String priceListSaveTopicName,
+                              @Value("${inv.pricelists.update.topic}") String priceListsUpdateTopicName,
                               PriceListJdbcRepository priceListJdbcRepository) {
         this.logAwareKafkaTemplate = logAwareKafkaTemplate;
         this.priceListSaveTopicName = priceListSaveTopicName;

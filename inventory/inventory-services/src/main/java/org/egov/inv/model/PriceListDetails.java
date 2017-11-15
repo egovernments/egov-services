@@ -3,12 +3,20 @@ package org.egov.inv.model;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
+import org.egov.inv.model.Material.InventoryTypeEnum;
+import org.egov.inv.model.Material.MaterialClassEnum;
+import org.egov.inv.model.Material.StatusEnum;
+
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -18,6 +26,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @ApiModel(description = "This object holds information about materials from different suppliers. ")
 @javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PriceListDetails   {
   @JsonProperty("id")
   private String id = null;

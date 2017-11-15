@@ -9,7 +9,7 @@ let getFieldsFromInnerObject = function(fields, properties, module, jPath, isArr
 
     for (let key in properties) {
         if (["id", "tenantId", "auditDetails", "assigner"].indexOf(key) > -1) continue;
-
+        debugger;
         if(properties[key].properties) {
             getFieldsFromInnerObject(fields, properties[key].properties, module, (isArray ? (jPath + "[0]") : jPath) + "." + key, false, (properties[key].properties.required || []), localeFields);
         } else if(properties[key].item && properties[key].item.properties) {
@@ -162,9 +162,95 @@ let addGroups = function(specifications, fields, uiInfoDef, module) {
     }
 }
 
+let addShowHideFields = function(specifications, fields, uiInfoDef) {
+    let errors = {};
+    for(let k=0; k<specifications.groups.length; k++) {
+        for(let m=0; m<specifications.groups[k].fields.length; m++) {
+            let key = specifications.groups[k].fields[m].jsonPath;
+            if(uiInfoDef.showHideFields[key]) {
+                specifications.groups[k].fields[m].showHideFields = [];
+                for(let i=0; i<uiInfoDef.showHideFields[key].length; i++) {
+                    let tmp = {};
+                    tmp.ifValue = uiInfoDef.showHideFields[key][i].ifValue;
+                    tmp.hide = [];
+                    tmp.show = [];
+                    if(uiInfoDef.showHideFields[key][i].showFields) {
+                        for(let j=0; j<uiInfoDef.showHideFields[key][i].showFields.length; j++) {
+                            let _f = uiInfoDef.showHideFields[key][i].showFields[j];
+                            if(fields[_f]) {
+                                tmp.show.push({
+                                    "name": fields[_f].name,
+                                    "isField": true,
+                                    "isGroup": false
+                                });
+                                for(let a=0; a<specifications.groups.length; a++) {
+                                    let flag = 0;
+                                    for(let b=0; b<specifications.groups[a].fields.length; b++) {
+                                        if(_f == specifications.groups[a].fields[b].jsonPath) {
+                                            specifications.groups[a].fields[b].hide = true;
+                                            flag = 1;
+                                            break;
+                                        }
+                                    }
+                                    if(flag == 1) break;
+                                }
+                            }
+                        }
+                    }
+
+                    if(uiInfoDef.showHideFields[key][i].hideFields) {
+                        for(let j=0; j<uiInfoDef.showHideFields[key][i].hideFields.length; j++) {
+                            let _f = uiInfoDef.showHideFields[key][i].hideFields[j];
+                            if(fields[_f]) 
+                                tmp.hide.push({
+                                    "name": fields[_f].name,
+                                    "isField": true,
+                                    "isGroup": false
+                                });
+                        }
+                    }
+
+                    if(uiInfoDef.showHideFields[key][i].showGroups) {
+                        for(let j=0; j<uiInfoDef.showHideFields[key][i].showGroups.length; j++) {
+                            tmp.show.push({
+                                "name": uiInfoDef.showHideFields[key][i].showGroups[j],
+                                "isField": false,
+                                "isGroup": true
+                            });
+                            for(let n=0; n<specifications.groups.length; n++) {
+                                if(specifications.groups[n].name == uiInfoDef.showHideFields[key][i].showGroups[j]) {
+                                    specifications.groups[n].hide = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if(uiInfoDef.showHideFields[key][i].hideGroups) {
+                        for(let j=0; j<uiInfoDef.showHideFields[key][i].hideGroups.length; j++) {
+                            tmp.hide.push({
+                                "name": uiInfoDef.showHideFields[key][i].hideGroups[j],
+                                "isField": false,
+                                "isGroup": true
+                            });
+                        }
+                    }
+                    specifications.groups[k].fields[m].showHideFields.push(tmp);
+                }
+            }
+        }
+    }
+
+    return {
+        errors,
+        specifications
+    }
+}
+
 exports.getFieldsFromInnerObject = getFieldsFromInnerObject;
 exports.addUrls = addUrls;
 exports.addDependents = addDependents;
 exports.addAutoFills = addAutoFills;
 exports.addRadios = addRadios;
+exports.addShowHideFields = addShowHideFields;
 exports.addGroups = addGroups;

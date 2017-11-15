@@ -35,15 +35,12 @@ public class DataUploadController {
     public static ResourceLoader resourceLoader;
 	
 	public static final Logger logger = LoggerFactory.getLogger(DataUploadController.class);
-
-	/* @RequestMapping(value = {"/{moduleName}/_get"}, method = RequestMethod.POST, 
-	        consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE}) */
 	
-	@PostMapping("/{moduleName}/_get")
+	@PostMapping("/{moduleName}/_upload")
 	@ResponseBody
-	public ResponseEntity<?> getReportData(@RequestParam("file") MultipartFile inputFile,
-			/*@RequestPart("file") MultipartFile inputFile,
-			@RequestPart("RequestInfo") RequestInfo requestInfo, */
+	public ResponseEntity<?> getReportData(//@RequestParam("file") MultipartFile inputFile,
+			@RequestPart("file") MultipartFile inputFile,
+			@RequestPart("RequestInfo") RequestInfo requestInfo,
 			@PathVariable("moduleName") String moduleName) throws Exception {
 		try {
 			logger.info("Inside controller");

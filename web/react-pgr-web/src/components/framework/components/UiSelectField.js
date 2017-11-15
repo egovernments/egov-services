@@ -10,12 +10,10 @@ import { withRouter } from 'react-router'
 
 
 class UiSelectField extends Component {
-   constructor(props) {
-        super(props);
-      this.state = {
-         dropDownData: []
-      }
-       }
+
+  constructor(props) {
+      super(props);
+  }
 
   initData(props) {
           let {item, setDropDownData, useTimestamp} = props;
@@ -45,6 +43,10 @@ class UiSelectField extends Component {
                let queries = splitArray[1].split("|");
                let keys=jp.query(response, queries[1]);
                let values=jp.query(response, queries[2]);
+                let otherPair=[];
+               if(item.hasOwnProperty("isKeyOtherPair") && item.isKeyOtherPair){
+                   otherPair=jp.query(response, `$..${item.isKeyOtherPair}`);
+               }
 
                let others=[];
                if(queries.length>3){
@@ -58,7 +60,11 @@ class UiSelectField extends Component {
                   let obj={};
                   obj["key"]= item.convertToString ? keys[k].toString() : (item.convertToNumber ? Number(keys[k]) : keys[k]);
                   obj["value"]= values[k];
+                    if (item.hasOwnProperty("isKeyOtherPair") && item.isKeyOtherPair) {
+                        otherPair[k]=(otherPair[k])?"-"+otherPair[k]:"";
 
+                     obj["value"]=values[k]+""+otherPair[k]
+                     }
                   if(others && others.length>0)
                   {
                     let otherItemDatas=[];
@@ -67,7 +73,8 @@ class UiSelectField extends Component {
                     }
                     obj['others'] = otherItemDatas;
                   }
-
+                  
+                  
                   if (item.hasOwnProperty("isKeyValuePair") && item.isKeyValuePair) {
                      obj["value"]=keys[k]+"-"+values[k]
                   }
@@ -95,27 +102,16 @@ class UiSelectField extends Component {
    }
 
 	 componentWillReceiveProps(nextProps) {
- 		if(this.props.location.pathname != nextProps.history.location.pathname || this.checkSelectHavingData(nextProps)) {
+    let {dropDownData} = this.props;
+ 		if(this.props.location.pathname != nextProps.history.location.pathname || dropDownData === undefined) {
  			this.initData(nextProps);
  		}
  	}
 
- 	checkSelectHavingData(nextProps)
- 	{
- 		let {dropDownData}=nextProps;
- 		if(nextProps.hasOwnProperty("item") && nextProps.item.type=="singleValueList" && _.isEmpty(dropDownData[nextProps.item.jsonPath]))
- 		{
- 			return true;
- 		}
-    return false;
- 	}
-
-
-
-
    renderSelect =(item) => {
-      let {dropDownData}=this.props;
-      console.log(dropDownData[item.jsonPath], this.props.getVal(item.jsonPath));
+      let {dropDownData, value}=this.props;
+      //console.log('jsonPath ---->', item.jsonPath, this.props.getVal(item.jsonPath));
+
       switch (this.props.ui) {
          case 'google':
             return (
@@ -131,14 +127,14 @@ class UiSelectField extends Component {
                      fullWidth={true}
                      hintText="Please Select"
                      floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
-                     value={this.props.getVal(item.jsonPath)}
-                     onChange={(event, key, value) =>{
+                     value={value}
+                     onChange={(event, key, value) =>{debugger;
                         this.props.handler({target: {value: value}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg, item.expression, item.expressionMsg)
                      }}
                      disabled={item.isDisabled}
                      errorText={this.props.fieldErrors[item.jsonPath]}
                      maxHeight={200}>
-                           {dropDownData.hasOwnProperty(item.jsonPath) && dropDownData[item.jsonPath].map((dd, index) => (
+                           {dropDownData && dropDownData.map((dd, index) => (
                                <MenuItem value={dd.key && dd.key.toString()} key={index} primaryText={dd.value} />
                            ))}
                      </SelectField>
@@ -154,10 +150,14 @@ class UiSelectField extends Component {
    }
 }
 
-const mapStateToProps = state => ({
-   dropDownData: state.framework.dropDownData,
-   formData: state.frameworkForm.form
-});
+const mapStateToProps = (state, props) => {
+  let {item} = props;
+  let value =  _.get(state.frameworkForm.form, item.jsonPath);
+  return {
+     dropDownData: state.framework.dropDownData[item.jsonPath],
+     value:value
+  }
+};
 
 const mapDispatchToProps = dispatch => ({
   setDropDownData:(fieldName,dropDownData)=>{

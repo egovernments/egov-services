@@ -6,15 +6,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.SanitationStaffSchedule;
 import org.egov.swm.domain.model.SanitationStaffScheduleSearch;
 import org.egov.swm.domain.model.SanitationStaffTarget;
 import org.egov.swm.domain.model.SanitationStaffTargetSearch;
+import org.egov.swm.domain.model.Shift;
 import org.egov.swm.persistence.entity.SanitationStaffScheduleEntity;
+import org.egov.swm.web.repository.MdmsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import net.minidev.json.JSONArray;
 
 @Service
 public class SanitationStaffScheduleJdbcRepository extends JdbcRepository {
@@ -23,6 +31,9 @@ public class SanitationStaffScheduleJdbcRepository extends JdbcRepository {
 
 	@Autowired
 	public SanitationStaffTargetJdbcRepository sanitationStaffTargetJdbcRepository;
+
+	@Autowired
+	private MdmsRepository mdmsRepository;
 
 	public Pagination<SanitationStaffSchedule> search(SanitationStaffScheduleSearch searchRequest) {
 
@@ -106,21 +117,37 @@ public class SanitationStaffScheduleJdbcRepository extends JdbcRepository {
 		SanitationStaffSchedule sss;
 		SanitationStaffTargetSearch ssts;
 		Pagination<SanitationStaffTarget> sanitationStaffTargets;
+		JSONArray responseJSONArray = null;
+		ObjectMapper mapper = new ObjectMapper();
 
 		for (SanitationStaffScheduleEntity sanitationStaffScheduleEntity : sanitationStaffScheduleEntities) {
 
 			sss = sanitationStaffScheduleEntity.toDomain();
-			ssts = new SanitationStaffTargetSearch();
-			ssts.setTenantId(sanitationStaffScheduleEntity.getTenantId());
-			ssts.setTargetNo(sanitationStaffScheduleEntity.getSanitationStaffTarget());
 
-			sanitationStaffTargets = sanitationStaffTargetJdbcRepository.search(ssts);
+			if (sss.getShift() != null && sss.getShift().getCode() != null) {
 
-			if (sanitationStaffTargets != null && sanitationStaffTargets.getPagedData() != null
-					&& !sanitationStaffTargets.getPagedData().isEmpty()) {
+				responseJSONArray = mdmsRepository.getByCriteria(sss.getTenantId(), Constants.MODULE_CODE,
+						Constants.SHIFT_MASTER_NAME, "code", sss.getShift().getCode(), new RequestInfo());
 
-				sss.setSanitationStaffTarget(sanitationStaffTargets.getPagedData().get(0));
+				if (responseJSONArray != null && responseJSONArray.size() > 0) {
+					sss.setShift(mapper.convertValue(responseJSONArray.get(0), Shift.class));
+				}
+			}
 
+			if (sanitationStaffScheduleEntity.getSanitationStaffTarget() != null
+					&& !sanitationStaffScheduleEntity.getSanitationStaffTarget().isEmpty()) {
+				ssts = new SanitationStaffTargetSearch();
+				ssts.setTenantId(sanitationStaffScheduleEntity.getTenantId());
+				ssts.setTargetNo(sanitationStaffScheduleEntity.getSanitationStaffTarget());
+
+				sanitationStaffTargets = sanitationStaffTargetJdbcRepository.search(ssts);
+
+				if (sanitationStaffTargets != null && sanitationStaffTargets.getPagedData() != null
+						&& !sanitationStaffTargets.getPagedData().isEmpty()) {
+
+					sss.setSanitationStaffTarget(sanitationStaffTargets.getPagedData().get(0));
+
+				}
 			}
 
 			sanitationStaffScheduleList.add(sss);

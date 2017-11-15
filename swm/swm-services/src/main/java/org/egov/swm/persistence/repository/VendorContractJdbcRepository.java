@@ -7,9 +7,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorContract;
 import org.egov.swm.domain.model.VendorContractSearch;
+import org.egov.swm.domain.model.VendorSearch;
+import org.egov.swm.domain.service.VendorService;
 import org.egov.swm.persistence.entity.VendorContractEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +21,9 @@ import org.springframework.stereotype.Service;
 public class VendorContractJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_vendorcontract";
+
+	@Autowired
+	private VendorService vendorService;
 
 	public Pagination<VendorContract> search(VendorContractSearch searchRequest) {
 
@@ -115,9 +122,27 @@ public class VendorContractJdbcRepository extends JdbcRepository {
 		List<VendorContractEntity> vendorContractEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
 				paramValues, row);
 
+		VendorContract vendorContract;
+		VendorSearch vendorSearch;
+		Pagination<Vendor> vendors;
+
 		for (VendorContractEntity entity : vendorContractEntities) {
 
-			vendorContractList.add(entity.toDomain());
+			vendorContract = entity.toDomain();
+
+			if (vendorContract.getVendor() != null && vendorContract.getVendor().getVendorNo() != null
+					&& !vendorContract.getVendor().getVendorNo().isEmpty()) {
+
+				vendorSearch = new VendorSearch();
+				vendorSearch.setTenantId(vendorContract.getTenantId());
+				vendorSearch.setVendorNo(vendorContract.getVendor().getVendorNo());
+				vendors = vendorService.search(vendorSearch);
+				if (vendors != null && vendors.getPagedData() != null && !vendors.getPagedData().isEmpty()) {
+					vendorContract.setVendor(vendors.getPagedData().get(0));
+				}
+			}
+
+			vendorContractList.add(vendorContract);
 		}
 
 		page.setTotalResults(vendorContractList.size());

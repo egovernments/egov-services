@@ -110,7 +110,7 @@ public class ServiceRequestService {
     }
 
     private void enrichWithCRN(ServiceRequest serviceRequest) {
-        final String crn = sevaNumberGeneratorService.generate();
+        final String crn = sevaNumberGeneratorService.generate(serviceRequest.getTenantId());
         serviceRequest.setCrn(crn);
     }
 

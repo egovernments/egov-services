@@ -165,13 +165,17 @@ public class VehicleJdbcRepository extends JdbcRepository {
 		for (VehicleEntity vehicleEntity : vehicleEntities) {
 
 			v = vehicleEntity.toDomain();
-			vendorSearch = new VendorSearch();
-			vendorSearch.setTenantId(v.getTenantId());
-			vendorSearch.setVendorNo(v.getVendor().getVendorNo());
 
-			vendors = vendorJdbcRepository.search(vendorSearch);
-			if (vendors != null && vendors.getPagedData() != null && !vendors.getPagedData().isEmpty()) {
-				v.setVendor(vendors.getPagedData().get(0));
+			if (v.getVendor() != null && v.getVendor().getVendorNo() != null
+					&& !v.getVendor().getVendorNo().isEmpty()) {
+				vendorSearch = new VendorSearch();
+				vendorSearch.setTenantId(v.getTenantId());
+				vendorSearch.setVendorNo(v.getVendor().getVendorNo());
+
+				vendors = vendorJdbcRepository.search(vendorSearch);
+				if (vendors != null && vendors.getPagedData() != null && !vendors.getPagedData().isEmpty()) {
+					v.setVendor(vendors.getPagedData().get(0));
+				}
 			}
 
 			vehicleList.add(v);

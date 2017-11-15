@@ -6,14 +6,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.CollectionDetailsSearch;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.SourceSegregation;
 import org.egov.swm.domain.model.SourceSegregationSearch;
+import org.egov.swm.persistence.entity.DumpingGroundEntity;
 import org.egov.swm.persistence.entity.SourceSegregationEntity;
+import org.egov.swm.web.repository.MdmsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import net.minidev.json.JSONArray;
 
 @Service
 public class SourceSegregationJdbcRepository extends JdbcRepository {
@@ -22,6 +30,9 @@ public class SourceSegregationJdbcRepository extends JdbcRepository {
 
 	@Autowired
 	public CollectionDetailsJdbcRepository collectionDetailsJdbcRepository;
+	
+	@Autowired
+	private MdmsRepository mdmsRepository;
 
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {
@@ -107,9 +118,25 @@ public class SourceSegregationJdbcRepository extends JdbcRepository {
 				.query(searchQuery.toString(), paramValues, row);
 		SourceSegregation ss;
 		CollectionDetailsSearch cds = new CollectionDetailsSearch();
+		JSONArray responseJSONArray = null;
+		ObjectMapper mapper = new ObjectMapper();
 		for (SourceSegregationEntity sourceSegregationEntity : sourceSegregationEntities) {
 
 			ss = sourceSegregationEntity.toDomain();
+			
+			if (ss.getDumpingGround() != null
+					&& ss.getDumpingGround().getCode() != null) {
+
+				responseJSONArray = mdmsRepository.getByCriteria(ss.getTenantId(), Constants.MODULE_CODE,
+						Constants.DUMPINGGROUND_MASTER_NAME, "code", ss.getDumpingGround().getCode(),
+						new RequestInfo());
+
+				if (responseJSONArray != null && responseJSONArray.size() > 0)
+					ss.setDumpingGround(
+							mapper.convertValue(responseJSONArray.get(0), DumpingGroundEntity.class).toDomain());
+
+			}
+			
 			cds.setTenantId(ss.getTenantId());
 			cds.setSourceSegregationCode(ss.getCode());
 			ss.setCollectionDetails(collectionDetailsJdbcRepository.search(cds));

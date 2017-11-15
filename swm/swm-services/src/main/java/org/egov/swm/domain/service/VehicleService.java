@@ -137,12 +137,13 @@ public class VehicleService {
 
 			if (vehicle.getVendor() != null
 					&& (vehicle.getVendor().getVendorNo() == null || vehicle.getVendor().getVendorNo().isEmpty()))
-				throw new CustomException("VehicleType",
+				throw new CustomException("Vendor",
 						"The field Vendor number is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
 			// Validate vendor
 
-			if (vehicle.getVendor() != null && vehicle.getVendor().getVendorNo() != null) {
+			if (vehicle.getVendor() != null && vehicle.getVendor().getVendorNo() != null
+					&& !vehicle.getVendor().getVendorNo().isEmpty()) {
 				vendorSearch = new VendorSearch();
 				vendorSearch.setTenantId(vehicle.getTenantId());
 				vendorSearch.setVendorNo(vehicle.getVendor().getVendorNo());

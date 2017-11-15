@@ -1,7 +1,9 @@
 package org.egov.persistence.util;
 
+import org.egov.persistence.util.repository.TenantRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
@@ -22,11 +24,14 @@ public class DBSequenceGeneratorTest {
     @Autowired
     DBSequenceGenerator dbSequenceGenerator;
 
+    @Autowired
+    TenantRepository tenantRepository;
+
     @Test
     @Sql(scripts = {"/dropSequence.sql"})
     public void shouldCreateSequenceAndGetNextValue() throws Exception {
         Serializable firstSequenceValue =
-                dbSequenceGenerator.createAndGetNextSequence("SEQ_APPLICATION_NUMBER2017");
+                dbSequenceGenerator.createAndGetNextSequence("SEQ_APPLICATION_NUMBER");
         assertEquals(BigInteger.valueOf(1), firstSequenceValue);
     }
 }

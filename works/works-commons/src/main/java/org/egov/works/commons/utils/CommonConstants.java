@@ -37,5 +37,9 @@ public class CommonConstants {
     public static final String CODE = "code";
     public static final String NAME = "name";
     public static final String KEYNAME = "keyname";
+    public static final String EXPENDITURETYPE = "expenditureType";
+
+
+    public static final String WORKFLOW_ACTION_CREATE = "Create";
     
 }

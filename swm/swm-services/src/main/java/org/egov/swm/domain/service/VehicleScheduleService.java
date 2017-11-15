@@ -45,7 +45,7 @@ public class VehicleScheduleService {
 		validate(vehicleScheduleRequest);
 
 		Long userId = null;
-		
+
 		if (vehicleScheduleRequest.getRequestInfo() != null
 				&& vehicleScheduleRequest.getRequestInfo().getUserInfo() != null
 				&& null != vehicleScheduleRequest.getRequestInfo().getUserInfo().getId()) {
@@ -83,7 +83,7 @@ public class VehicleScheduleService {
 
 	private void validate(VehicleScheduleRequest vehicleScheduleRequest) {
 
-		RouteSearch routeSearch = new RouteSearch();
+		RouteSearch routeSearch;
 		Pagination<Route> routes;
 		VehicleSearch vehicleSearch;
 		Pagination<Vehicle> vehicleList;
@@ -97,7 +97,8 @@ public class VehicleScheduleService {
 
 			// Validate Vehicle
 
-			if (vehicleSchedule.getVehicle() != null && vehicleSchedule.getVehicle().getRegNumber() != null) {
+			if (vehicleSchedule.getVehicle() != null && vehicleSchedule.getVehicle().getRegNumber() != null
+					&& !vehicleSchedule.getVehicle().getRegNumber().isEmpty()) {
 
 				vehicleSearch = new VehicleSearch();
 				vehicleSearch.setTenantId(vehicleSchedule.getTenantId());
@@ -115,8 +116,10 @@ public class VehicleScheduleService {
 
 			// Validate Route
 
-			if (vehicleSchedule.getRoute() != null && vehicleSchedule.getRoute().getCode() != null) {
+			if (vehicleSchedule.getRoute() != null && vehicleSchedule.getRoute().getCode() != null
+					&& !vehicleSchedule.getRoute().getCode().isEmpty()) {
 
+				routeSearch = new RouteSearch();
 				routeSearch.setTenantId(vehicleSchedule.getTenantId());
 				routeSearch.setCode(vehicleSchedule.getRoute().getCode());
 				routes = routeService.search(routeSearch);

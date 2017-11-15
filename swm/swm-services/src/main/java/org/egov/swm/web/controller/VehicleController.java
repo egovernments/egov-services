@@ -33,28 +33,20 @@ public class VehicleController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public VehicleResponse create(@RequestBody @Valid VehicleRequest vehicleRequest) {
 
-		VehicleResponse vehicleResponse = new VehicleResponse();
-		vehicleResponse.setResponseInfo(getResponseInfo(vehicleRequest.getRequestInfo()));
-
 		vehicleRequest = vehicleService.create(vehicleRequest);
 
-		vehicleResponse.setVehicles(vehicleRequest.getVehicles());
-
-		return vehicleResponse;
+		return VehicleResponse.builder().responseInfo(getResponseInfo(vehicleRequest.getRequestInfo()))
+				.vehicles(vehicleRequest.getVehicles()).build();
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
 	public VehicleResponse update(@RequestBody @Valid VehicleRequest vehicleRequest) {
 
-		VehicleResponse vehicleResponse = new VehicleResponse();
-		vehicleResponse.setResponseInfo(getResponseInfo(vehicleRequest.getRequestInfo()));
-
 		vehicleRequest = vehicleService.update(vehicleRequest);
 
-		vehicleResponse.setVehicles(vehicleRequest.getVehicles());
-
-		return vehicleResponse;
+		return VehicleResponse.builder().responseInfo(getResponseInfo(vehicleRequest.getRequestInfo()))
+				.vehicles(vehicleRequest.getVehicles()).build();
 	}
 
 	@PostMapping("/_search")
@@ -65,12 +57,8 @@ public class VehicleController {
 
 		Pagination<Vehicle> vehicleList = vehicleService.search(vehicleSearch);
 
-		VehicleResponse response = new VehicleResponse();
-		response.setVehicles(vehicleList.getPagedData());
-		response.setResponseInfo(getResponseInfo(requestInfo));
-		response.setPage(new PaginationContract(vehicleList));
-
-		return response;
+		return VehicleResponse.builder().responseInfo(getResponseInfo(requestInfo)).vehicles(vehicleList.getPagedData())
+				.page(new PaginationContract(vehicleList)).build();
 
 	}
 

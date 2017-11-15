@@ -122,9 +122,9 @@ ReportDefinitions:
        AND dep1.tenantid=depsum.tenantid ) depreciation ON asset.id=depreciation.assetid AND asset.tenantid=depreciation.tenantid  left outer join
        (select rev1.*,revinc.incrementalrevalsum,revdec.decrementalrevalsum from egasset_revaluation rev1 inner join (select assetid,tenantid,max(createddate) 
        as createddate from egasset_revaluation where tenantid = $tenantid group by assetid,tenantid ) revalmax ON rev1.assetid=revalmax.assetid AND 
-       rev1.tenantid=revalmax.tenantid AND rev1.createddate=revalmax.createddate inner join (select assetid,tenantid,sum(revaluationamount) as 
+       rev1.tenantid=revalmax.tenantid AND rev1.createddate=revalmax.createddate left outer join (select assetid,tenantid,sum(revaluationamount) as 
        incrementalrevalsum from egasset_revaluation where tenantid = $tenantid AND typeofchange='INCREASED' group by assetid,tenantid) revinc 
-       ON rev1.assetid=revinc.assetid and rev1.tenantid=revinc.tenantid inner join (select assetid,tenantid,sum(revaluationamount) as decrementalrevalsum 
+       ON rev1.assetid=revinc.assetid and rev1.tenantid=revinc.tenantid left outer join (select assetid,tenantid,sum(revaluationamount) as decrementalrevalsum 
        from egasset_revaluation where  tenantid = $tenantid AND typeofchange='DECREASED' group by assetid,tenantid) revdec 
        ON rev1.assetid=revdec.assetid and rev1.tenantid=revdec.tenantid where rev1.tenantid = $tenantid) revaluation 
        ON asset.tenantid=revaluation.tenantid AND asset.id=revaluation.assetid
@@ -347,6 +347,10 @@ ReportDefinitions:
     label: reports.asset.depreciationrate
     type: string
     source: asset
+  - name: totalrevalsum
+    label: reports.asset.totalrevalsum
+    type: string
+    source: asset
   searchParams:
   - name: fromDate
     label: reports.asset.fromDate
@@ -383,7 +387,7 @@ ReportDefinitions:
        asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.totalarea,asset.openingdate,asset.fundsource,
        asset.location,(select string_agg(land.surveynumber,',') from egasset_asset_landdetails land  where asset.id=land.assetid group by asset.id) as 
        totalsurveyno,asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as 
-       defectliability,asset.defectliabilitymonth as defectliabilitymonth,asset.assetCategoryType,asset.defectliabilityday as defectliabilityday,
+       defectliability,asset.defectliabilitymonth as defectliabilitymonth,asset.assetCategoryType,asset.defectliabilityday as defectliabilityday, coalesce(grossvalue,0.0)-coalesce(accumulateddepreciation,0.0)+coalesce(incrementalrevalsum,0.0)-coalesce(decrementalrevalsum,0.0) as totalrevalsum,
        asset.securitydepositretained,asset.securitydepositrealized,asset.dateofcreation,asset.acquisitiondate,asset.grossvalue,asset.originalvalue,
        currentvalue.currentamount,disposal.salevalue as disposalsalevalue,disposal.profitlossvoucherreference as disposalvoucherno,disposal.disposaldate,
        disposal.buyername,disposal.buyeraddress,revaluation.revaluationdate,revaluation.incrementalrevalsum,revaluation.decrementalrevalsum,
@@ -399,9 +403,9 @@ ReportDefinitions:
        AND dep1.tenantid=depsum.tenantid ) depreciation ON asset.id=depreciation.assetid AND asset.tenantid=depreciation.tenantid  left outer join
        (select rev1.*,revinc.incrementalrevalsum,revdec.decrementalrevalsum from egasset_revaluation rev1 inner join (select assetid,tenantid,max(createddate) 
        as createddate from egasset_revaluation where tenantid = $tenantid group by assetid,tenantid ) revalmax ON rev1.assetid=revalmax.assetid AND 
-       rev1.tenantid=revalmax.tenantid AND rev1.createddate=revalmax.createddate inner join (select assetid,tenantid,sum(revaluationamount) as 
+       rev1.tenantid=revalmax.tenantid AND rev1.createddate=revalmax.createddate left outer join (select assetid,tenantid,sum(revaluationamount) as 
        incrementalrevalsum from egasset_revaluation where tenantid = $tenantid AND typeofchange='INCREASED' group by assetid,tenantid) revinc 
-       ON rev1.assetid=revinc.assetid and rev1.tenantid=revinc.tenantid inner join (select assetid,tenantid,sum(revaluationamount) as decrementalrevalsum 
+       ON rev1.assetid=revinc.assetid and rev1.tenantid=revinc.tenantid left outer join (select assetid,tenantid,sum(revaluationamount) as decrementalrevalsum 
        from egasset_revaluation where  tenantid = $tenantid AND typeofchange='DECREASED' group by assetid,tenantid) revdec 
        ON rev1.assetid=revdec.assetid and rev1.tenantid=revdec.tenantid where rev1.tenantid = $tenantid) revaluation 
        ON asset.tenantid=revaluation.tenantid AND asset.id=revaluation.assetid
@@ -541,10 +545,10 @@ ReportDefinitions:
          (select rev1.*,revinc.incrementalrevalsum,revdec.decrementalrevalsum from egasset_revaluation rev1 inner join 
          (select assetid,tenantid,max(createddate) as createddate from egasset_revaluation where tenantid = $tenantid
          group by assetid,tenantid ) revalmax ON rev1.assetid=revalmax.assetid AND rev1.tenantid=revalmax.tenantid AND rev1.createddate=revalmax.createddate
-         inner join
+         left outer join
          (select assetid,tenantid,sum(revaluationamount) as incrementalrevalsum from egasset_revaluation where tenantid = $tenantid 
          AND typeofchange='INCREASED' group by assetid,tenantid) revinc ON rev1.assetid=revinc.assetid and rev1.tenantid=revinc.tenantid 
-         inner join (select assetid,tenantid,sum(revaluationamount) as decrementalrevalsum from egasset_revaluation 
+         left outer join (select assetid,tenantid,sum(revaluationamount) as decrementalrevalsum from egasset_revaluation 
          where  tenantid = $tenantid AND typeofchange='DECREASED' group by assetid,tenantid) revdec 
          ON rev1.assetid=revdec.assetid and rev1.tenantid=revdec.tenantid 
          where rev1.tenantid = $tenantid) revaluation 
@@ -762,7 +766,11 @@ ReportDefinitions:
     source: asset
   - name: depreciationrate
     label: reports.asset.depreciationrate
-    type: string
+    type: number
+    source: asset
+  - name: totalrevalsum
+    label: reports.asset.totalrevalsum
+    type: number
     source: asset
   searchParams:
   - name: fromDate
@@ -803,7 +811,7 @@ ReportDefinitions:
     searchClause : and asset.code in ($assetdetail)
   
   query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.totalarea,asset.openingdate,asset.fundsource,asset.location,asset.assetCategoryType,
-         asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,(select string_agg(land.surveynumber,',') from egasset_asset_landdetails land  where asset.id=land.assetid group by asset.id) as totalsurveyno,
+         asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,(select string_agg(land.surveynumber,',') from egasset_asset_landdetails land  where asset.id=land.assetid group by asset.id) as totalsurveyno,coalesce(grossvalue,0.0)-coalesce(accumulateddepreciation,0.0)+coalesce(incrementalrevalsum,0.0)-coalesce(decrementalrevalsum,0.0) as totalrevalsum,
          asset.defectliabilityday as defectliabilityday,asset.securitydepositretained,
          asset.securitydepositrealized,asset.dateofcreation,asset.acquisitiondate,asset.grossvalue,asset.originalvalue,currentvalue.currentamount,
          disposal.salevalue as disposalsalevalue,disposal.profitlossvoucherreference as disposalvoucherno,disposal.disposaldate,disposal.buyername,disposal.buyeraddress,
@@ -827,10 +835,10 @@ ReportDefinitions:
          (select rev1.*,revinc.incrementalrevalsum,revdec.decrementalrevalsum from egasset_revaluation rev1 inner join 
          (select assetid,tenantid,max(createddate) as createddate from egasset_revaluation where tenantid = $tenantid
          group by assetid,tenantid ) revalmax ON rev1.assetid=revalmax.assetid AND rev1.tenantid=revalmax.tenantid AND rev1.createddate=revalmax.createddate
-         inner join
+         left outer join
          (select assetid,tenantid,sum(revaluationamount) as incrementalrevalsum from egasset_revaluation where tenantid = $tenantid 
          AND typeofchange='INCREASED' group by assetid,tenantid) revinc ON rev1.assetid=revinc.assetid and rev1.tenantid=revinc.tenantid 
-         inner join (select assetid,tenantid,sum(revaluationamount) as decrementalrevalsum from egasset_revaluation 
+         left outer join (select assetid,tenantid,sum(revaluationamount) as decrementalrevalsum from egasset_revaluation 
          where  tenantid = $tenantid AND typeofchange='DECREASED' group by assetid,tenantid) revdec 
          ON rev1.assetid=revdec.assetid and rev1.tenantid=revdec.tenantid 
          where rev1.tenantid = $tenantid) revaluation 
@@ -868,7 +876,7 @@ ReportDefinitions:
     type: string
     source: asset
   - name: name
-    label: Details Head Description
+    label: reports.asset.assetanme
     type: string
     source: asset
   - name: depreciationrate
@@ -880,47 +888,47 @@ ReportDefinitions:
     type: string
     source: asset
   - name: revaluationreserveaccount
-    label: GROSS BLOCK-Account code
+    label: reports.asset.revaluationreserveaccount
     type: string
     source: asset
   - name: previousfynetblock
-    label: GROSS BLOCK-BALANCE as at <1st April of Current FY>
+    label: reports.asset.currentstartnetblock
     type: number
     source: asset      
   - name: plusrevalsum
-    label: GROSS BLOCK-Additional during the year
+    label: reports.asset.plusrevalsum
     type: string
     source: asset      
   - name: minusrevalsum
-    label: GROSS BLOCK-Deduction During the year
+    label: reports.asset.minusrevalsum
     type: number
     source: asset      
   - name: revaltotal
-    label: GROSS BLOCK-Total
+    label: reports.asset.revaltotal
     type: number
     source: asset      
   - name: accumulateddepreciationaccount
-    label: ACCUMULATED DEPRECIATION-Account Code
+    label: reports.asset.accumulateddepreciationaccount
     type: string
     source: asset      
   - name: startdepval
-    label: ACCUMULATED DEPRECIATION-BALANCE as at <1st April of Current FY>
+    label: reports.asset.startdepval
     type: number
     source: asset      
   - name: currdepsum
-    label: Depreciation on during the year
+    label: reports.asset.currdepsum
     type: number
     source: asset      
   - name: totaldepsum
-    label: ACCUMULATED DEPRECIATION Total
+    label: reports.asset.totaldepsum
     type: number
     source: asset      
   - name: endcurrentamount
-    label: Net Block as at <31st March of Current FY>
+    label: reports.asset.endcurrentamount
     type: string
     source: asset      
   - name: previousfynetblock
-    label: Net Block as at <31st March of Current FY>
+    label: reports.asset.previousfynetblock
     type: string
     source: asset      
   searchParams:
@@ -989,12 +997,12 @@ ReportDefinitions:
     asset.accumulateddepreciationaccount,asset.assetaccount,asset.accumulateddepreciation,previousfynetblock,endcurrentamount,
     plusrevalsum,minusrevalsum,coalesce(prevdepsum,0)+coalesce(asset.accumulateddepreciation,0) as startdepval,
     coalesce(previousfynetblock,0.0)+coalesce(plusrevalsum,0.0)-coalesce(minusRevalsum,0.0) as revaltotal,prevdepsum, currdepsum,
-    coalesce(prevdepsum,0.0)+coalesce(currdepsum,0.0)+coalesce(asset.accumulateddepreciation,0.0) as totaldepsum from egasset_asset 
+    coalesce(prevdepsum,0.0)+coalesce(currdepsum,0.0)+coalesce(asset.accumulateddepreciation,0.0) as totaldepsum,assetsubcategoryname,assetSubCategory.depreciationrate,assetsubcategoryparent,
+    assetparentcategoryname from egasset_asset 
     asset inner join (select distinct(current.assetid),current.tenantid,current.transactiondate,previousfynetblock,
     endcurrentamount,plusrevalsum,minusrevalsum ,previousfynetblock+plusrevalsum-minusRevalsum as revaltotal,prevdepsum,currdepsum,
     prevdepsum+currdepsum as totaldepsum from egasset_current_value current inner join (select value.assetid,currentamount as 
-    endcurrentamount,value.tenantid,value.transactiondate,assetsubcategoryname,assetSubCategory.depreciationrate,assetsubcategoryparent,
-    assetparentcategoryname from egasset_current_value value inner join (select max(transactiondate) as transactiondate,
+    endcurrentamount,value.tenantid,value.transactiondate from egasset_current_value value inner join (select max(transactiondate) as transactiondate,
     assetid,tenantid from egasset_current_value where tenantid=$tenantid  AND transactiondate<=(select extract ('epoch' from 
     (select endingdate from egf_financialyear where (current_date between startingdate and endingdate) AND tenantid=$tenantid))*1000) 
     GROUP BY assetid,tenantid) as maxvalue ON value.assetid=maxvalue.assetid and value.tenantid=maxvalue.tenantid AND 
@@ -1025,7 +1033,7 @@ ReportDefinitions:
     ('epoch' from (select endingdate from egf_financialyear where (current_date between startingdate and endingdate) AND 
     tenantid=$tenantid))*1000)) GROUP BY assetid,tenantid ) currdep ON current.assetid=currdep.assetid AND current.tenantid=
     currdep.tenantid) as transactions ON asset.id=transactions.assetid AND asset.tenantid=transactions.tenantid 
-    left outer join ( select assetSubcategory.name assetsubcategoryname,assetSubcategory.depreciationrate as depreciationrate,
+    left outer join ( select assetSubcategory.name as assetsubcategoryname,assetSubcategory.depreciationrate as depreciationrate,
     assetSubcategory.parent as assetsubcategoryparent,assetSubcategory.tenantid as tenantid,assetSubcategory.id assetsubcategoryid,
     ac.name as assetparentcategoryname from (VALUES tbl_assetsubcategory) as assetSubcategory (id,name,depreciationRate,parent,tenantId) 
     inner join (VALUES tbl_assetcategory) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id and assetSubcategory.tenantid=ac.tenantid) as  
@@ -1152,10 +1160,10 @@ ReportDefinitions:
          (select rev1.*,revinc.incrementalrevalsum,revdec.decrementalrevalsum from egasset_revaluation rev1 inner join 
          (select assetid,tenantid,max(createddate) as createddate from egasset_revaluation where tenantid = $tenantid
          group by assetid,tenantid ) revalmax ON rev1.assetid=revalmax.assetid AND rev1.tenantid=revalmax.tenantid AND rev1.createddate=revalmax.createddate
-         inner join
+         left outer join
          (select assetid,tenantid,sum(revaluationamount) as incrementalrevalsum from egasset_revaluation where tenantid = $tenantid 
          AND typeofchange='INCREASED' group by assetid,tenantid) revinc ON rev1.assetid=revinc.assetid and rev1.tenantid=revinc.tenantid 
-         inner join (select assetid,tenantid,sum(revaluationamount) as decrementalrevalsum from egasset_revaluation 
+         left outer join (select assetid,tenantid,sum(revaluationamount) as decrementalrevalsum from egasset_revaluation 
          where  tenantid = $tenantid AND typeofchange='DECREASED' group by assetid,tenantid) revdec 
          ON rev1.assetid=revdec.assetid and rev1.tenantid=revdec.tenantid 
          where rev1.tenantid = $tenantid) revaluation 
@@ -1377,7 +1385,11 @@ ReportDefinitions:
     source: asset
   - name: depreciationrate
     label: reports.asset.depreciationrate
-    type: string
+    type: number
+    source: asset
+  - name: totalrevalsum
+    label: reports.asset.totalrevalsum
+    type: number
     source: asset
   searchParams:
   - name: fromDate
@@ -1412,7 +1424,7 @@ ReportDefinitions:
     searchClause : and asset.code in ($assetdetail)
   
   query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.totalarea,asset.openingdate,asset.fundsource,asset.location,(select string_agg(land.surveynumber,',') from egasset_asset_landdetails land  where asset.id=land.assetid group by asset.id) as totalsurveyno,
-         asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,asset.assetCategoryType,
+         asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,asset.assetCategoryType,coalesce(grossvalue,0.0)-coalesce(accumulateddepreciation,0.0)+coalesce(incrementalrevalsum,0.0)-coalesce(decrementalrevalsum,0.0) as totalrevalsum,
          asset.defectliabilityday as defectliabilityday,asset.securitydepositretained,
          asset.securitydepositrealized,asset.dateofcreation,asset.acquisitiondate,asset.grossvalue,asset.originalvalue,currentvalue.currentamount,
          disposal.salevalue as disposalsalevalue,disposal.profitlossvoucherreference as disposalvoucherno,disposal.disposaldate,disposal.buyername,disposal.buyeraddress,
@@ -1428,10 +1440,10 @@ ReportDefinitions:
          (select rev1.*,revinc.incrementalrevalsum,revdec.decrementalrevalsum from egasset_revaluation rev1 inner join 
          (select assetid,tenantid,max(createddate) as createddate from egasset_revaluation where tenantid = $tenantid
          group by assetid,tenantid ) revalmax ON rev1.assetid=revalmax.assetid AND rev1.tenantid=revalmax.tenantid AND rev1.createddate=revalmax.createddate
-         inner join
+         left outer join
          (select assetid,tenantid,sum(revaluationamount) as incrementalrevalsum from egasset_revaluation where tenantid = $tenantid 
          AND typeofchange='INCREASED' group by assetid,tenantid) revinc ON rev1.assetid=revinc.assetid and rev1.tenantid=revinc.tenantid 
-         inner join (select assetid,tenantid,sum(revaluationamount) as decrementalrevalsum from egasset_revaluation 
+         left outer join (select assetid,tenantid,sum(revaluationamount) as decrementalrevalsum from egasset_revaluation 
          where  tenantid = $tenantid AND typeofchange='DECREASED' group by assetid,tenantid) revdec 
          ON rev1.assetid=revdec.assetid and rev1.tenantid=revdec.tenantid 
          where rev1.tenantid = $tenantid) revaluation 

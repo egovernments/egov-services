@@ -33,28 +33,20 @@ public class VendorController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public VendorResponse create(@RequestBody @Valid VendorRequest vendorRequest) {
 
-		VendorResponse vendorResponse = new VendorResponse();
-		vendorResponse.setResponseInfo(getResponseInfo(vendorRequest.getRequestInfo()));
-
 		vendorRequest = vendorService.create(vendorRequest);
 
-		vendorResponse.setVendors(vendorRequest.getVendors());
-
-		return vendorResponse;
+		return VendorResponse.builder().responseInfo(getResponseInfo(vendorRequest.getRequestInfo()))
+				.vendors(vendorRequest.getVendors()).build();
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
 	public VendorResponse update(@RequestBody @Valid VendorRequest vendorRequest) {
 
-		VendorResponse vendorResponse = new VendorResponse();
-		vendorResponse.setResponseInfo(getResponseInfo(vendorRequest.getRequestInfo()));
-
 		vendorRequest = vendorService.update(vendorRequest);
 
-		vendorResponse.setVendors(vendorRequest.getVendors());
-
-		return vendorResponse;
+		return VendorResponse.builder().responseInfo(getResponseInfo(vendorRequest.getRequestInfo()))
+				.vendors(vendorRequest.getVendors()).build();
 	}
 
 	@PostMapping("/_search")
@@ -65,12 +57,8 @@ public class VendorController {
 
 		Pagination<Vendor> vendorList = vendorService.search(vendorSearch);
 
-		VendorResponse response = new VendorResponse();
-		response.setVendors(vendorList.getPagedData());
-		response.setResponseInfo(getResponseInfo(requestInfo));
-		response.setPage(new PaginationContract(vendorList));
-
-		return response;
+		return VendorResponse.builder().responseInfo(getResponseInfo(requestInfo)).vendors(vendorList.getPagedData())
+				.page(new PaginationContract(vendorList)).build();
 
 	}
 

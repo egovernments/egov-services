@@ -55,8 +55,6 @@ class ViewServiceGroup extends Component {
 
       let {submitForm} = this;
 
-      console.log(isFormValid);
-
       return(
         <div className="viewServiceGroup">
         <Grid style={{width:'100%'}}>
@@ -77,6 +75,12 @@ class ViewServiceGroup extends Component {
                      <ListItem
                        primaryText={translate("core.lbl.code")}
                        secondaryText={<p style={styles.customColumnStyle}>{viewServiceGroup.code ? viewServiceGroup.code : ''}</p>}
+                     />
+                   </Col>
+                   <Col xs={12} sm={6} md={4} lg={3}>
+                     <ListItem
+                       primaryText={translate("pgr.service.localName")}
+                       secondaryText={<p style={styles.customColumnStyle}>{viewServiceGroup.localName? viewServiceGroup.localName : ''}</p>}
                      />
                    </Col>
                    <Col xs={12} sm={6} md={4} lg={3}>

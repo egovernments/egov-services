@@ -15,6 +15,8 @@ import org.egov.model.AssetCategory;
 import org.egov.model.Attributes;
 import org.egov.model.AuditDetails;
 import org.egov.model.DefectLiability;
+import org.egov.model.Department;
+import org.egov.model.FundSource;
 import org.egov.model.LandDetail;
 import org.egov.model.Location;
 import org.egov.model.enums.AssetCategoryType;
@@ -53,7 +55,6 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 asset.setName(rs.getString("name"));
                 asset.setCode(rs.getString("code"));
                 asset.setOldCode(rs.getString("oldcode"));
-               
                 asset.setTenantId(rs.getString("tenantId"));
                 asset.setModeOfAcquisition(ModeOfAcquisitionEnum.fromValue(rs.getString("modeofacquisition")));
                 asset.setStatus(rs.getString("status"));
@@ -92,9 +93,8 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 asset.setAssetReference((Long) rs.getObject("assetreference"));
                 asset.setOpeningDate(rs.getLong("openingDate"));
                 asset.setLocation(rs.getString("location"));
-                asset.setFundSource(rs.getString("fundSource"));
                 asset.setCurrentValue(rs.getBigDecimal("currentamount"));
-              
+                
                 final String tittleDocs = rs.getString("titledocumentsavalable");
                 List<String> tda = null;
                 try {
@@ -123,8 +123,8 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 }
 
                 asset.setAssetAttributes(asset2);
-         
-                asset.setDepartmentCode(rs.getString("departmentCode"));
+                asset.setFundSource(FundSource.builder().code(rs.getString("fundSource")).build());
+                asset.setDepartment(Department.builder().code(rs.getString("departmentCode")).build());
 
                 final  DefectLiability defectLiabilityPeriod= new DefectLiability();
                 defectLiabilityPeriod.setDay((Long) rs.getObject("defectliabilityday"));

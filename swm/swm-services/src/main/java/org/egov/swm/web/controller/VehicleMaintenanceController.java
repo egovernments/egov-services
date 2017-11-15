@@ -33,28 +33,22 @@ public class VehicleMaintenanceController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public VehicleMaintenanceResponse create(@RequestBody @Valid VehicleMaintenanceRequest vehicleMaintenanceRequest) {
 
-		VehicleMaintenanceResponse vehicleMaintenanceResponse = new VehicleMaintenanceResponse();
-		vehicleMaintenanceResponse.setResponseInfo(getResponseInfo(vehicleMaintenanceRequest.getRequestInfo()));
-
 		vehicleMaintenanceRequest = vehicleMaintenanceService.create(vehicleMaintenanceRequest);
 
-		vehicleMaintenanceResponse.setVehicleMaintenances(vehicleMaintenanceRequest.getVehicleMaintenances());
-
-		return vehicleMaintenanceResponse;
+		return VehicleMaintenanceResponse.builder()
+				.responseInfo(getResponseInfo(vehicleMaintenanceRequest.getRequestInfo()))
+				.vehicleMaintenances(vehicleMaintenanceRequest.getVehicleMaintenances()).build();
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
 	public VehicleMaintenanceResponse update(@RequestBody @Valid VehicleMaintenanceRequest vehicleMaintenanceRequest) {
 
-		VehicleMaintenanceResponse vehicleMaintenanceResponse = new VehicleMaintenanceResponse();
-		vehicleMaintenanceResponse.setResponseInfo(getResponseInfo(vehicleMaintenanceRequest.getRequestInfo()));
-
 		vehicleMaintenanceRequest = vehicleMaintenanceService.update(vehicleMaintenanceRequest);
 
-		vehicleMaintenanceResponse.setVehicleMaintenances(vehicleMaintenanceRequest.getVehicleMaintenances());
-
-		return vehicleMaintenanceResponse;
+		return VehicleMaintenanceResponse.builder()
+				.responseInfo(getResponseInfo(vehicleMaintenanceRequest.getRequestInfo()))
+				.vehicleMaintenances(vehicleMaintenanceRequest.getVehicleMaintenances()).build();
 	}
 
 	@PostMapping("/_search")
@@ -66,12 +60,9 @@ public class VehicleMaintenanceController {
 		Pagination<VehicleMaintenance> vehicleMaintenanceList = vehicleMaintenanceService
 				.search(vehicleMaintenanceSearch);
 
-		VehicleMaintenanceResponse response = new VehicleMaintenanceResponse();
-		response.setVehicleMaintenances(vehicleMaintenanceList.getPagedData());
-		response.setResponseInfo(getResponseInfo(requestInfo));
-		response.setPage(new PaginationContract(vehicleMaintenanceList));
-		
-		return response;
+		return VehicleMaintenanceResponse.builder().responseInfo(getResponseInfo(requestInfo))
+				.vehicleMaintenances(vehicleMaintenanceList.getPagedData())
+				.page(new PaginationContract(vehicleMaintenanceList)).build();
 
 	}
 

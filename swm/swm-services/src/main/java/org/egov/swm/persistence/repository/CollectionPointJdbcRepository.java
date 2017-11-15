@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.swm.domain.model.BinDetailsSearch;
+import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.CollectionPoint;
 import org.egov.swm.domain.model.CollectionPointDetailsSearch;
 import org.egov.swm.domain.model.CollectionPointSearch;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.persistence.entity.CollectionPointEntity;
+import org.egov.swm.web.repository.BoundaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,9 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
 
 	@Autowired
 	public BinDetailsJdbcRepository binIdDetailsJdbcRepository;
+
+	@Autowired
+	private BoundaryRepository boundaryRepository;
 
 	@Autowired
 	public CollectionPointDetailsJdbcRepository collectionPointDetailsJdbcRepository;
@@ -115,6 +120,15 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
 		for (CollectionPointEntity collectionPointEntity : collectionPointEntities) {
 
 			cp = collectionPointEntity.toDomain();
+
+			if (cp.getLocation() != null && cp.getLocation().getCode() != null) {
+
+				Boundary boundary = boundaryRepository.fetchBoundaryByCode(cp.getLocation().getCode(),
+						cp.getTenantId());
+
+				if (boundary != null)
+					cp.setLocation(boundary);
+			}
 
 			bds = new BinDetailsSearch();
 			bds.setCollectionPoint(cp.getCode());

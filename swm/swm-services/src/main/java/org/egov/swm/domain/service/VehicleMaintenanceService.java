@@ -57,7 +57,7 @@ public class VehicleMaintenanceService {
 		validate(vehicleMaintenanceRequest);
 
 		Long userId = null;
-		
+
 		if (vehicleMaintenanceRequest.getRequestInfo() != null
 				&& vehicleMaintenanceRequest.getRequestInfo().getUserInfo() != null
 				&& null != vehicleMaintenanceRequest.getRequestInfo().getUserInfo().getId()) {
@@ -87,7 +87,8 @@ public class VehicleMaintenanceService {
 						"The field Vehicle registration number is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
 			// Validate Vehicle
-			if (vehicleMaintenance.getVehicle() != null && vehicleMaintenance.getVehicle().getRegNumber() != null) {
+			if (vehicleMaintenance.getVehicle() != null && vehicleMaintenance.getVehicle().getRegNumber() != null
+					&& vehicleMaintenance.getVehicle().getRegNumber().isEmpty()) {
 
 				vehicleSearch = new VehicleSearch();
 				vehicleSearch.setTenantId(vehicleMaintenance.getTenantId());

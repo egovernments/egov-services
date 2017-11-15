@@ -20,7 +20,7 @@ serviceMaps:
        
        - jsonPath: $.Asset.oldCode
        
-       - jsonPath: $.Asset.departmentCode
+       - jsonPath: $.Asset.department.code
        
        - jsonPath: $.Asset.assetCategory.id
        
@@ -128,7 +128,7 @@ serviceMaps:
         
        - jsonPath: $.Asset.openingDate       
        
-       - jsonPath: $.Asset.fundSource
+       - jsonPath: $.Asset.fundSource.code
        
        - jsonPath: $.Asset.location
        
@@ -164,7 +164,7 @@ serviceMaps:
          
        - jsonPath: $.Asset.oldCode
        
-       - jsonPath: $.Asset.departmentCode
+       - jsonPath: $.Asset.department.code
        
        - jsonPath: $.Asset.assetCategory.id
        
@@ -266,7 +266,7 @@ serviceMaps:
        
        - jsonPath: $.Asset.openingDate
        
-       - jsonPath: $.Asset.fundSource
+       - jsonPath: $.Asset.fundSource.code
       
        - jsonPath: $.Asset.location
        

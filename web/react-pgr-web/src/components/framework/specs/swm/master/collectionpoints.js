@@ -240,7 +240,7 @@ var dat ={
                 "depedants": [{
                   "jsonPath": "collectionPoints[0].location.block",
                   "type": "dropDown",
-                  "pattern": "egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId={collectionPoints[0].location.code}|$.Boundary.*.id|$.Boundary.*.name"
+                  "pattern": "egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId={collectionPoints[0].location.zone}|$.Boundary.*.id|$.Boundary.*.name"
                 }]
             },
             {  
@@ -304,57 +304,8 @@ var dat ={
         "label":"swm.collectionpoints.create.group.title.LocationDetails",
         "fields":[  
           {  
-            "name":"Ward",
-            "jsonPath":"collectionPoints[0].location.ward",
-            "label":"swm.collectionpoints.create.ward",
-            "type":"singleValueList",
-            "isRequired":true,
-            "isDisabled":false,
-            "maxLength":128,
-            "url": "egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=REVENUE|$.Boundary.*.id|$.Boundary.*.name",
-            "minLength":1,
-            "patternErrorMsg":"",
-            "depedants": [{
-              "jsonPath": "collectionPoints[0].location.zone",
-              "type": "dropDown",
-              "pattern": "egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId={collectionPoints[0].location.ward}|$.Boundary.*.id|$.Boundary.*.name"
-            }]
-          },
-          {  
-              "name":"Zone",
-              "jsonPath":"collectionPoints[0].location.zone",
-              "label":"swm.collectionpoints.create.zone",
-              "type":"singleValueList",
-              "isRequired":true,
-              "isDisabled":false,
-              "maxLength":128,
-              "minLength":1,
-              "patternErrorMsg":"",
-              "depedants": [{
-                "jsonPath": "collectionPoints[0].location.block",
-                "type": "dropDown",
-                "pattern": "egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId={collectionPoints[0].location.zone}|$.Boundary.*.id|$.Boundary.*.name"
-              }]
-          },
-          {  
-              "name":"Road/Street",
-              "jsonPath":"collectionPoints[0].location.block",
-              "label":"swm.collectionpoints.create.block",
-              "type":"singleValueList",
-              "isRequired":true,
-              "isDisabled":false,
-              "maxLength":128,
-              "minLength":1,
-              "patternErrorMsg":"",
-              "depedants": [{
-                "jsonPath": "collectionPoints[0].location.name",
-                "type": "dropDown",
-                "pattern": "egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId={collectionPoints[0].location.block}|$.Boundary.*.id|$.Boundary.*.name"
-              }]
-          },
-          {  
               "name":"Colony",
-              "jsonPath":"collectionPoints[0].location.name",
+              "jsonPath":"collectionPoints[0].location.code",
               "label":"swm.collectionpoints.create.colony",
               "type":"singleValueList",
               "isRequired":true,
@@ -383,7 +334,7 @@ var dat ={
           }
         ]
       }
-     ],
+    ],
      "tenantIdRequired":true,
      "url":"/swm-services/collectionpoints/_search?code={code}"
   },
@@ -440,14 +391,14 @@ var dat ={
               "minLength":1,
               "patternErrorMsg":"",
               "depedants": [{
-                "jsonPath": "collectionPoints[0].location.name",
+                "jsonPath": "collectionPoints[0].location.code",
                 "type": "dropDown",
                 "pattern": "egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId={collectionPoints[0].location.block}|$.Boundary.*.id|$.Boundary.*.name"
               }]
           },
           {  
               "name":"Colony",
-              "jsonPath":"collectionPoints[0].location.name",
+              "jsonPath":"collectionPoints[0].location.code",
               "label":"swm.collectionpoints.create.colony",
               "type":"singleValueList",
               "isRequired":true,

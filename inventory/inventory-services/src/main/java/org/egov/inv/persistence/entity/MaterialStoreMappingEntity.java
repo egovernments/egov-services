@@ -1,7 +1,7 @@
 package org.egov.inv.persistence.entity;
 
-import io.swagger.model.*;
 import lombok.*;
+import org.egov.inv.model.*;
 
 @Builder
 @AllArgsConstructor
@@ -52,15 +52,11 @@ public class MaterialStoreMappingEntity {
         AuditDetails auditDetails = materialStoreMapping.getAuditDetails();
         return MaterialStoreMappingEntity.builder()
                 .id(materialStoreMapping.getId())
-                .material(materialStoreMapping.getMaterial().getCode())
-                .store(materialStoreMapping.getStore().getCode())
+                .material(null != materialStoreMapping.getMaterial() ? materialStoreMapping.getMaterial().getCode() : null)
+                .store(null != materialStoreMapping.getStore() ? materialStoreMapping.getStore().getCode() : null)
                 .active(materialStoreMapping.getActive())
                 .chartOfAccount(null != materialStoreMapping.getChartofAccount() ? materialStoreMapping.getChartofAccount().getGlCode() : null)
-                .createdBy(auditDetails.getCreatedBy())
-                .createdTime(auditDetails.getCreatedTime())
-                .lastModifiedBy(auditDetails.getLastModifiedBy())
-                .lastModifiedTime(auditDetails.getLastModifiedTime())
-                .tenantId(auditDetails.getTenantId())
+                .tenantId(tenantId)
                 .build();
     }
 
@@ -71,8 +67,9 @@ public class MaterialStoreMappingEntity {
     }
 
     private Store buildStore() {
-        Store store = new Store();
-        store.setCode(this.store);
+        Store store = Store.builder()
+                .code(this.store)
+                .build();
         return store;
     }
 
@@ -88,7 +85,6 @@ public class MaterialStoreMappingEntity {
                 .createdTime(createdTime)
                 .lastModifiedBy(lastModifiedBy)
                 .lastModifiedTime(lastModifiedTime)
-                .tenantId(tenantId)
                 .build();
     }
 }

@@ -21,13 +21,38 @@ ReportDefinitions:
     type: string
     source: lcms
     showColumn: true
+  - name: pleaderengagementdetails
+    label: reports.lcms.amountOfPleadersEngaged
+    type: string
+    source: lcms
+    showColumn: false
   - name: sectionapplied
     label: reports.lcms.sectionApplied
     type: string
     source: lcms
     showColumn: false
+  - name: receiptdate
+    label: reports.lcms.dateOfReceiptOfOfficer
+    type: epoch
+    source: lcms
+    showColumn: false
   - name: summondate
     label: reports.lcms.dateOfSummon
+    type: epoch
+    source: lcms
+    showColumn: false
+  - name: resolutiondetails
+    label: reports.lcms.resolutionOfMunicipalDate
+    type: string
+    source: lcms
+    showColumn: false
+  - name: pleaderfee
+    label: reports.lcms.particularsOfPleadersFee
+    type: string
+    source: lcms
+    showColumn: false
+  - name: vakalatnamagenerationdate
+    label: reports.lcms.dateOfProductionOfVakalatnama
     type: epoch
     source: lcms
     showColumn: false
@@ -36,6 +61,11 @@ ReportDefinitions:
     type: string
     source: lcms
     showColumn: true
+  - name: departmentperson
+    label: reports.lcms.nameOfResponsibleOfficer
+    type: string
+    source: lcms
+    showColumn: false
   - name: judgementdate
     label: reports.lcms.dateOfJudgment
     type: epoch
@@ -43,17 +73,47 @@ ReportDefinitions:
     showColumn: false
   - name: casejudgement
     label: reports.lcms.judgmentDetails
-    type: number
+    type: string
     source: lcms
     showColumn: false
   - name: advocateopinion
     label: reports.lcms.opinionOfPleader
-    type: number
+    type: string
     source: lcms
     showColumn: false
   - name: furtherprocesssdetails
     label: reports.lcms.furtherProcessDetails
-    type: number
+    type: string
+    source: lcms
+    showColumn: false
+  - name: particularsamount
+    label: reports.lcms.particularsOfActualAmount
+    type: string
+    source: lcms
+    showColumn: false
+  - name: voucherdate
+    label: reports.lcms.dateOfCredit
+    type: epoch
+    source: lcms
+    showColumn: false
+  - name: paymentdetails
+    label: reports.lcms.particularsOfPayment
+    type: string
+    source: lcms
+    showColumn: false
+  - name: voucherdate
+    label: reports.lcms.dateOfDebit
+    type: epoch
+    source: lcms
+    showColumn: false
+  - name: verificationremarks
+    label: reports.lcms.remarksRegardingReferenceToCourt
+    type: string
+    source: lcms
+    showColumn: false
+  - name: remarks
+    label: reports.lcms.remarks
+    type: string
     source: lcms
     showColumn: false
   searchParams:
@@ -72,7 +132,19 @@ ReportDefinitions:
     type: string
     isMandatory: false
     source: lcms
-    searchClause : AND lc.caseno=$caseNo
+    searchClause : AND upper(lc.caseno) = upper($caseNo)
+  - name: lcNumber
+    label: reports.lcms.lcNumber
+    type: string
+    isMandatory: false
+    source: lcms
+    searchClause : AND upper(lc.summonreferenceno) = upper($lcNumber)
+  - name: caseTitle
+    label: reports.lcms.caseTitle
+    type: string
+    isMandatory: false
+    source: lcms
+    searchClause : AND upper(lc.casedetails) = upper($caseTitle)
   - name: courtName
     label: reports.lcms.courtName
     type: singlevaluelist
@@ -86,13 +158,13 @@ ReportDefinitions:
     type: string
     isMandatory: false
     source: lcms
-    searchClause : AND lc.plantiffname = $plaintiff
+    searchClause : AND upper(lc.plantiffname) = upper($plaintiff)
   - name: defendant
     label: reports.lcms.defendant
     type: string
     isMandatory: false
     source: lcms
-    searchClause : AND lc.defendant = $defendant
+    searchClause : AND upper(lc.defendant) = upper($defendant)
   - name: department
     label: reports.lcms.department
     type: singlevaluelist
@@ -107,8 +179,8 @@ ReportDefinitions:
     source: lcms
     wrapper: true
     isMandatory: false
-    searchClause : AND lhd.casestatus ->> 'code'= $caseStatus
-  query: select lc.defendant, lc.caseno, lc.plantiffName, lc.sectionapplied, lc.summondate, lc.courtname::jsonb ->> 'code' as courtname, lhd.judgementdate, lhd.casejudgement, lhd.advocateopinion, lhd.furtherprocesssdetails from egov_lcms_case lc LEFT OUTER JOIN egov_lcms_hearing_details as lhd ON lc.code = lhd.casecode WHERE lc.caseregistrationdate>=$fromDate and lc.caseregistrationdate<=$toDate
+    searchClause : AND lhd.casestatus ->> 'code' = $caseStatus
+  query: select lc.caseno, lc.plantiffname, lc.defendant, lc.pleaderengagementdetails  ,lc.sectionapplied, lc.summondate, CONCAT(lc.resloution, ', ', lc.resloutiondate) AS resolutiondetails, lc.vakalatnamagenerationdate, lc.courtname::jsonb ->> 'code' as courtname, lc.departmentperson, lhd.judgementdate, lhd.casejudgement, lhd.advocateopinion, lhd.furtherprocesssdetails, lc.remarks from egov_lcms_case lc LEFT OUTER JOIN egov_lcms_hearing_details as lhd ON (lc.code = lhd.casecode AND lhd.casestatus ->> 'code'= 'FO') WHERE lc.caseregistrationdate>=$fromDate and lc.caseregistrationdate<=$toDate
 - reportName: CaseSummaryReport
   summary: Case Summary Report
   version: 1.0.0
@@ -137,6 +209,11 @@ ReportDefinitions:
     showColumn: true
   - name: defendant
     label: reports.lcms.defendant
+    type: string
+    source: lcms
+    showColumn: true
+  - name: courtname
+    label: reports.lcms.courtName
     type: string
     source: lcms
     showColumn: true
@@ -201,7 +278,7 @@ ReportDefinitions:
     isMandatory: false
     source: lcms
     searchClause : AND lc.defendant = $defendant
-  query: select lc.caseno, dept.name as department, lc.casetype::jsonb ->> 'code' as casetype, lc.plantiffName, lc.defendant, la.name as advocate, lhd.casestatus::jsonb ->> 'code' as casestatus from egov_lcms_case as lc LEFT OUTER JOIN egov_lcms_hearing_details as lhd ON lc.code = lhd.casecode LEFT OUTER JOIN eg_department as dept ON lc.departmentname ->> 'code' = dept.code LEFT OUTER JOIN egov_lcms_case_advocate as lca ON lc.code = lca.casecode LEFT OUTER JOIN egov_lcms_advocate as la ON lca.advocate::jsonb ->> 'code' = la.code  WHERE lc.caseregistrationdate>=$fromDate and lc.caseregistrationdate<=$toDate
+  query: select lc.caseno, dept.name as department, lc.casetype::jsonb ->> 'code' as casetype, lc.plantiffName, lc.defendant, lc.courtname::jsonb ->> 'code' as courtname, la.name as advocate, lhd.casestatus::jsonb ->> 'code' as casestatus from egov_lcms_case as lc LEFT OUTER JOIN egov_lcms_hearing_details as lhd ON lc.code = lhd.casecode LEFT OUTER JOIN eg_department as dept ON lc.departmentname ->> 'code' = dept.code LEFT OUTER JOIN egov_lcms_case_advocate as lca ON lc.code = lca.casecode LEFT OUTER JOIN egov_lcms_advocate as la ON lca.advocate::jsonb ->> 'code' = la.code  WHERE lc.caseregistrationdate>=$fromDate and lc.caseregistrationdate<=$toDate
 - reportName: CaseDetailReport
   summary: Case Detail Report
   version: 1.0.0
@@ -244,12 +321,12 @@ ReportDefinitions:
     source: lcms
     showColumn: false
   - name: plantiffname
-    label: reports.lcms.plaintiffName
+    label: reports.lcms.petitionName
     type: string
     source: lcms
     showColumn: true
   - name: casestatus
-    label: reports.lcms.status
+    label: reports.lcms.caseStatus
     type: string
     source: lcms
     showColumn: true
@@ -340,6 +417,11 @@ ReportDefinitions:
     type: string
     source: lcms
     showColumn: true
+  - name: summondate
+    label: reports.lcms.caseDate
+    type: epoch
+    source: lcms
+    showColumn: false
   - name: courtname
     label: reports.lcms.courtName
     type: string
@@ -350,16 +432,16 @@ ReportDefinitions:
     type: string
     source: lcms
     showColumn: true
-  - name: advocate
-    label: reports.lcms.advocateName
-    type: string
-    source: lcms
-    showColumn: true
   - name: department
     label: reports.lcms.department
     type: string
     source: lcms
     showColumn: false
+  - name: advocate
+    label: reports.lcms.advocateName
+    type: string
+    source: lcms
+    showColumn: true
   - name: plantiffname
     label: reports.lcms.plaintiff
     type: string
@@ -370,13 +452,13 @@ ReportDefinitions:
     type: string
     source: lcms
     showColumn: false
-  - name: casejudgement
-    label: reports.lcms.hearingDetails
-    type: string
+  - name: hearingdate
+    label: reports.lcms.hearingDate
+    type: epoch
     source: lcms
     showColumn: false
   - name: casestatus
-    label: reports.lcms.caseStatus
+    label: reports.lcms.status
     type: string
     source: lcms
     showColumn: false
@@ -429,7 +511,7 @@ ReportDefinitions:
     wrapper: true
     isMandatory: false
     searchClause : AND lhd.casestatus ->> 'code'= $caseStatus
-  query: select lc.caseno, lc.courtname::jsonb ->> 'code' as courtname, lc.casetype::jsonb ->> 'code' as casetype, la.name as advocate, dept.name as department, lc.plantiffName, lc.defendant, lhd.casejudgement, lhd.casestatus::jsonb ->> 'code' as casestatus from egov_lcms_case as lc LEFT OUTER JOIN egov_lcms_hearing_details as lhd ON lc.code = lhd.casecode LEFT OUTER JOIN eg_department as dept ON lc.departmentname ->> 'code' = dept.code LEFT OUTER JOIN egov_lcms_case_advocate as lca ON lc.code = lca.casecode LEFT OUTER JOIN egov_lcms_advocate as la ON lca.advocate::jsonb ->> 'code' = la.code  WHERE lc.caseregistrationdate>=$fromDate and lc.caseregistrationdate<=$toDate 
+  query: select lc.caseno, lc.summondate, lc.courtname::jsonb ->> 'code' as courtname, lc.casetype::jsonb ->> 'code' as casetype, la.name as advocate, dept.name as department, lc.plantiffName, lc.defendant, lc.hearingdate, lhd.casestatus::jsonb ->> 'code' as casestatus from egov_lcms_case as lc LEFT OUTER JOIN egov_lcms_hearing_details as lhd ON lc.code = lhd.casecode LEFT OUTER JOIN eg_department as dept ON lc.departmentname ->> 'code' = dept.code LEFT OUTER JOIN egov_lcms_case_advocate as lca ON lc.code = lca.casecode LEFT OUTER JOIN egov_lcms_advocate as la ON lca.advocate::jsonb ->> 'code' = la.code  WHERE lc.caseregistrationdate>=$fromDate and lc.caseregistrationdate<=$toDate 
 - reportName: CasePendencyReport
   summary: Case Pendency Report
   version: 1.0.0
@@ -554,7 +636,7 @@ ReportDefinitions:
     source: lcms
     showColumn: false
   - name: casestatus
-    label: reports.lcms.caseStatus
+    label: reports.lcms.status
     type: string
     source: lcms
     showColumn: true
@@ -594,13 +676,18 @@ ReportDefinitions:
     type: string
     source: lcms
     showColumn: false
+  - name: casetype
+    label: reports.lcms.caseType
+    type: string
+    source: lcms
+    showColumn: true
   - name: department
     label: reports.lcms.department
     type: string
     source: lcms
     showColumn: false
   - name: departmentperson
-    label: reports.lcms.departmentPerson
+    label: reports.lcms.concernedPersonName
     type: string
     source: lcms
     showColumn: false
@@ -624,9 +711,9 @@ ReportDefinitions:
     type: string
     source: lcms
     showColumn: true
-  - name: casejudgement
-    label: reports.lcms.hearingDetails
-    type: string
+  - name: hearingdate
+    label: reports.lcms.hearingDetailsDateAndTime
+    type: epoch
     source: lcms
     showColumn: false
   searchParams:
@@ -668,4 +755,4 @@ ReportDefinitions:
     wrapper: true
     isMandatory: false
     searchClause : AND lc.courtname ->> 'code' = $courtName
-  query: select lc.caseno, lc.courtname::jsonb ->> 'code' as courtname, dept.name as department, lc.departmentperson, la.name as advocate, lc.plantiffName, lc.defendant, lhd.casestatus::jsonb ->> 'code' as casestatus, lhd.casejudgement from egov_lcms_case as lc LEFT OUTER JOIN egov_lcms_hearing_details as lhd ON lc.code = lhd.casecode LEFT OUTER JOIN eg_department as dept ON lc.departmentname ->> 'code' = dept.code LEFT OUTER JOIN egov_lcms_case_advocate as lca ON lc.code = lca.casecode LEFT OUTER JOIN egov_lcms_advocate as la ON lca.advocate::jsonb ->> 'code' = la.code  WHERE lc.caseregistrationdate>=$fromDate and lc.caseregistrationdate<=$toDate
+  query: select lc.caseno, lc.courtname::jsonb ->> 'code' as courtname, lc.casetype::jsonb ->> 'code' as casetype, dept.name as department, lc.departmentperson, la.name as advocate, lc.plantiffName, lc.defendant, lhd.casestatus::jsonb ->> 'code' as casestatus, lc.hearingdate from egov_lcms_case as lc LEFT OUTER JOIN egov_lcms_hearing_details as lhd ON lc.code = lhd.casecode LEFT OUTER JOIN eg_department as dept ON lc.departmentname ->> 'code' = dept.code LEFT OUTER JOIN egov_lcms_case_advocate as lca ON lc.code = lca.casecode LEFT OUTER JOIN egov_lcms_advocate as la ON lca.advocate::jsonb ->> 'code' = la.code  WHERE lc.caseregistrationdate>=$fromDate and lc.caseregistrationdate<=$toDate

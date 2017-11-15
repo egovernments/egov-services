@@ -33,28 +33,22 @@ public class SourceSegregationController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public SourceSegregationResponse create(@RequestBody @Valid SourceSegregationRequest sourceSegregationRequest) {
 
-		SourceSegregationResponse sourceSegregationResponse = new SourceSegregationResponse();
-		sourceSegregationResponse.setResponseInfo(getResponseInfo(sourceSegregationRequest.getRequestInfo()));
-
 		sourceSegregationRequest = sourceSegregationService.create(sourceSegregationRequest);
 
-		sourceSegregationResponse.setSourceSegregations(sourceSegregationRequest.getSourceSegregations());
-
-		return sourceSegregationResponse;
+		return SourceSegregationResponse.builder()
+				.responseInfo(getResponseInfo(sourceSegregationRequest.getRequestInfo()))
+				.sourceSegregations(sourceSegregationRequest.getSourceSegregations()).build();
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
 	public SourceSegregationResponse update(@RequestBody @Valid SourceSegregationRequest sourceSegregationRequest) {
 
-		SourceSegregationResponse sourceSegregationResponse = new SourceSegregationResponse();
-		sourceSegregationResponse.setResponseInfo(getResponseInfo(sourceSegregationRequest.getRequestInfo()));
-
 		sourceSegregationRequest = sourceSegregationService.update(sourceSegregationRequest);
 
-		sourceSegregationResponse.setSourceSegregations(sourceSegregationRequest.getSourceSegregations());
-
-		return sourceSegregationResponse;
+		return SourceSegregationResponse.builder()
+				.responseInfo(getResponseInfo(sourceSegregationRequest.getRequestInfo()))
+				.sourceSegregations(sourceSegregationRequest.getSourceSegregations()).build();
 	}
 
 	@PostMapping("/_search")
@@ -65,12 +59,9 @@ public class SourceSegregationController {
 
 		Pagination<SourceSegregation> sourceSegregationList = sourceSegregationService.search(sourceSegregationSearch);
 
-		SourceSegregationResponse response = new SourceSegregationResponse();
-		response.setSourceSegregations(sourceSegregationList.getPagedData());
-		response.setResponseInfo(getResponseInfo(requestInfo));
-		response.setPage(new PaginationContract(sourceSegregationList));
-		
-		return response;
+		return SourceSegregationResponse.builder().responseInfo(getResponseInfo(requestInfo))
+				.sourceSegregations(sourceSegregationList.getPagedData())
+				.page(new PaginationContract(sourceSegregationList)).build();
 
 	}
 

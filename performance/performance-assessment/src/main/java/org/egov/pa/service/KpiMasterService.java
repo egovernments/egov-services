@@ -51,5 +51,7 @@ public interface KpiMasterService {
 	 */
 	public List<KPI> searchKpi(KPIGetRequest kpiGetRequest); 
 	
+	public Boolean getKpiType(String kpiCode, String tenantId); 
+	
 
 }

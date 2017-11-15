@@ -33,28 +33,20 @@ public class RouteController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public RouteResponse create(@RequestBody @Valid RouteRequest routeRequest) {
 
-		RouteResponse routeResponse = new RouteResponse();
-		routeResponse.setResponseInfo(getResponseInfo(routeRequest.getRequestInfo()));
-
 		routeRequest = routeService.create(routeRequest);
 
-		routeResponse.setRoutes(routeRequest.getRoutes());
-
-		return routeResponse;
+		return RouteResponse.builder().responseInfo(getResponseInfo(routeRequest.getRequestInfo()))
+				.routes(routeRequest.getRoutes()).build();
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
 	public RouteResponse update(@RequestBody @Valid RouteRequest routeRequest) {
 
-		RouteResponse routeResponse = new RouteResponse();
-		routeResponse.setResponseInfo(getResponseInfo(routeRequest.getRequestInfo()));
-
 		routeRequest = routeService.update(routeRequest);
 
-		routeResponse.setRoutes(routeRequest.getRoutes());
-
-		return routeResponse;
+		return RouteResponse.builder().responseInfo(getResponseInfo(routeRequest.getRequestInfo()))
+				.routes(routeRequest.getRoutes()).build();
 	}
 
 	@PostMapping("/_search")
@@ -65,12 +57,8 @@ public class RouteController {
 
 		Pagination<Route> routeList = routeService.search(routeSearch);
 
-		RouteResponse response = new RouteResponse();
-		response.setRoutes(routeList.getPagedData());
-		response.setResponseInfo(getResponseInfo(requestInfo));
-		response.setPage(new PaginationContract(routeList));
-		
-		return response;
+		return RouteResponse.builder().responseInfo(getResponseInfo(requestInfo)).routes(routeList.getPagedData())
+				.page(new PaginationContract(routeList)).build();
 
 	}
 

@@ -153,7 +153,7 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("id in (select abstractEstimate from egw_abstractestimate_details where projectCode in (select id from egw_projectcode where code in (:workIdentificationNumbers)))");
+			params.append("id in (select abstractEstimate from egw_abstractestimate_details where projectCode in (select code from egw_projectcode where code in (:workIdentificationNumbers)))");
 			paramValues.put("workIdentificationNumbers", abstractEstimateSearchContract.getWorkIdentificationNumbers());
 		}
 

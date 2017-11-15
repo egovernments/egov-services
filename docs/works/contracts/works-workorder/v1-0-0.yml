@@ -1148,12 +1148,12 @@ definitions:
         format: BigDecimal
         description: EMD Amount Deposited for the Letter Of Acceptance
         maxLength: 12
-        minLength: 1
       stampPaperAmount:
         type: number
         format: BigDecimal
         description: Stamp Paper amount for Agreement
         maxLength: 12
+        minLength: 1
       engineerIncharge:
         type: string
         description: User who is incharge of the work, primary key is reference here.
@@ -1252,6 +1252,7 @@ definitions:
       - fileNumber
       - fileDate
       - letterOfAcceptanceEstimates
+      - stampPaperAmount
     
   AssetsForLOA:
       type: object
@@ -1992,6 +1993,7 @@ tags:
     description: APIs required for Track Milestone.
   - name: Contractor Advance Requisition
     description: APIs required for Contractor Advance Requisition.
+
 
 
 

@@ -3,17 +3,16 @@
 	"name": "DetailedEstimate",
 	"description": "",
 	"order": [
-		"dada69be-2ecb-df41-7c79-c56fccaf77a2"
+		"10873ceb-9df1-6f9c-c36c-3b9176229cf6"
 	],
 	"folders": [],
 	"folders_order": [],
 	"timestamp": 1509706326922,
 	"owner": "3022735",
 	"public": false,
-	"hasRequests": true,
 	"requests": [
 		{
-			"id": "dada69be-2ecb-df41-7c79-c56fccaf77a2",
+			"id": "10873ceb-9df1-6f9c-c36c-3b9176229cf6",
 			"headers": "Content-Type: application/json\n",
 			"headerData": [
 				{
@@ -23,7 +22,7 @@
 					"enabled": true
 				}
 			],
-			"url": "http://localhost:8086/works-estimate/detailedestimates/_create",
+			"url": "http://localhost:8081/works-estimate/detailedestimates/_create",
 			"queryParams": [],
 			"preRequestScript": null,
 			"pathVariables": {},
@@ -34,12 +33,12 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1510311812853,
+			"time": 1510683314049,
 			"name": "Create detailed estimate",
 			"description": "Create Detailed Estimate",
 			"collectionId": "e9e1f56b-7f31-a5ae-dd47-0e7d97cd4e90",
 			"responses": [],
-			"rawModeData": "{\n  \"requestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"yosadhara\",\n    \"authToken\": \"810c15ca-75aa-406a-9afa-971d7a9ed605\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"mh\",\n    \"userInfo\": {\n      \"id\": 73,\n      \"userName\": \"abc\",\n      \"tenantId\" : \"default\"\n    }\n  },\n  \"detailedEstimates\": [\n    {\n      \"id\" : \"\",\n      \"tenantId\": \"default\",\n      \"estimateDate\" : \"234421122323\",\n     \"nameOfWork\" : \"Name of work for detailed estimate\",\n     \"description\" :  \"Detailed estimate create testing\",\n     \"department\" : {\n        \"code\" : \"AS\"\n     },\n     \"abstractEstimateDetail\" : {\n     \t\"id\" : \"262da0b2c965432486222057363c14ee\",\n     \t\"tenantId\" : \"default\"\n     },\n     \"status\" : \"CREATED\",\n     \"workValue\" : 100,\n     \"estimateValue\" : 90,\n     \"beneficiary\" : \"SC\",\n     \"modeOfAllotment\" : { \n     \t\"code\" : \"Capital\"\n     } ,\n     \"worksType\" : { \n     \t\"code\" : \"RoadsFake\" \n     \n     }, \n     \"worksSubtype\" : { \n     \t\"code\" : \"CCRoadsFake\"\n     },\n     \"natureOfWork\" : { \n     \t\"tenantId\" : \"default\",\n     \t \"name\" : \"natureOfWork\",\n     \t\"code\" : \"natureOfWork\",\n     \t \"expenditureType\" : \"CAPITAL\"}\n     \t ,\n     \"ward\" : { \"code\" : \"Ward1\"\n          },\n     \"location\" : \"Sarjapur Road\",\n     \"workCategory\" : \"NON_SLUM\",\n     \"workOrderCreated\" : false,\n    \n    \"detailedEstimateDeductions\" : [{\n    \t\"tenantId\" : \"default\",\n    \t\"chartOfAccounts\" : {\n    \t\t\"tenantId\" : \"default\",\n    \t\t\"glcode\" : \"0193\"\n    \t},\n    \t\"amount\" : 100\n    }],\n    \"documentDetails\" : [],\n    \"assets\" : [{\n    \t\"tenantId\" : \"default\",\n    \t\"asset\" : {\n    \t\t\"tenantId\" : \"default\",\n    \t\t\"code\" : \"default/TP/012/110\"\n    \t\t\n    \t }\n    \t}\n    \t],\n    \"estimateOverheads\" : \n       [{\n       \t\"tenantId\" : \"default\",\n    \t\"overhead\" : {\n    \t\t\"id\" : 1,\n    \t\t\"code\" : \"TAXFake\",\n    \t\t\"tenantId\" : \"default\",\n    \t\t\"name\" : \"test\",\n    \t\t\"accountCode\" : \"test\"\n    \t},\n    \t\"amount\" : 100\n    \t\n    \t}], \n    \"estimateActivities\" : [{\n    \t\"unitRate\" : 20,\n    \t\"quantity\" : 20,\n    \t\t\"estimateRate\" : 2,\n    \t\t\"uom\" : {\"code\" : \"KGS\"},\n    \t\t\"scheduleOfRate\" : {\"id\" : \"7d2e6e1fb7b846eab1c09a5a8d6c4494\", \"tenantId\" : \"default\"},\n    \t\t\"tenantId\" : \"default\"\n    \t\t\n    \t}\n    ],\n  \n    \"function\" : { \"code\" : \"00\"},\n    \"scheme\" :  { \"code\" : \"2906\" },\n    \"subScheme\" :  { \n    \t\"code\" : \"BSUP\"\n    },\n    \"budgetGroup\" : { \"name\" : \"4122001-CWIP-Office Buildings\"}\n     \n   }]\n}"
+			"rawModeData": "{\n  \"requestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"yosadhara\",\n    \"authToken\": \"cd669a45-29d1-4b74-92c8-164208ee95c5\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"mh\",\n    \"userInfo\": {\n      \"id\": 73,\n      \"userName\": \"abc\",\n      \"tenantId\" : \"default\"\n    }\n  },\n  \"detailedEstimates\": [\n    {\n      \"id\" : \"\",\n      \"tenantId\": \"default\",\n      \"estimateDate\" : \"234421122323\",\n     \"nameOfWork\" : \"New\",\n     \"description\" :  \"Detailed estimate create testing\",\n     \"estimateNumber\" : \"test123\",\n     \"department\" : {\n        \"code\" : \"AS\"\n     },\n     \"abstractEstimateDetail\" : {\n     \t\"projectCode\" : {\n     \t\t\"code\" : \"WIN/11/2017-18\"\n     \t},\n     \t\"tenantId\" : \"default\"\n     },\n     \"status\" : \"CREATED\",\n     \"workValue\" : 100,\n     \"estimateValue\" : 90,\n     \"beneficiary\" : \"SC\",\n     \"modeOfAllotment\" : { \n     \t\"code\" : \"Nomination\"\n     } ,\n     \"worksType\" : { \n     \t\"code\" : \"Buildings\" \n     \n     }, \n     \"worksSubtype\" : { \n     \t\"code\" : \"Buildings\"\n     },\n     \"natureOfWork\" : { \n     \t\"code\" : \"New\"}\n     \t ,\n     \"ward\" : { \"code\" : \"Ward1\"\n          },\n     \"location\" : \"Sarjapur Road\",\n     \"workCategory\" : \"NON_SLUM\",\n     \"workOrderCreated\" : false,\n    \n    \"detailedEstimateDeductions\" : [{\n    \t\"tenantId\" : \"default\",\n    \t\"chartOfAccounts\" : {\n    \t\t\"tenantId\" : \"default\",\n    \t\t\"glcode\" : \"0193\"\n    \t},\n    \t\"amount\" : 100\n    }],\n    \"documentDetails\" : [],\n    \"assets\" : [{\n    \t\"tenantId\" : \"default\",\n    \t\"asset\" : {\n    \t\t\"tenantId\" : \"default\",\n    \t\t\"code\" : \"default/TP/012/110\"\n    \t\t\n    \t }\n    \t}],\n    \"estimateOverheads\" : \n       [{\n       \t\"tenantId\" : \"default\",\n    \t\"overhead\" : {\n    \t\t\"id\" : 1,\n    \t\t\"code\" : \"TAXFake\",\n    \t\t\"tenantId\" : \"default\",\n    \t\t\"name\" : \"test\",\n    \t\t\"accountCode\" : \"test\"\n    \t},\n    \t\"amount\" : 100\n    \t\n    \t}], \n    \"estimateActivities\" : [{\n    \t\"unitRate\" : 20,\n    \t\"quantity\" : 20,\n    \t\t\"estimateRate\" : 2,\n    \t\t\"uom\" : {\"code\" : \"KGS\"},\n    \t\t\"scheduleOfRate\" : {\"id\" : \"7d2e6e1fb7b846eab1c09a5a8d6c4494\", \"tenantId\" : \"default\"},\n    \t\t\"tenantId\" : \"default\"\n    \t\t\n    \t}\n    ],\n  \n    \"function\" : { \"code\" : \"00\"},\n    \"scheme\" :  { \"code\" : \"2906\" },\n    \"subScheme\" :  { \n    \t\"code\" : \"BSUP\"\n    },\n    \"budgetGroup\" : { \"name\" : \"4122001-CWIP-Office Buildings\"},\n    \n       \"workFlowDetails\": {\n        \"action\": \"create\",\n        \"assignee\": \"1\"\n      }\n  \n   }]\n}"
 		}
 	]
 }

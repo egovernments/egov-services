@@ -97,4 +97,14 @@ public class AssetCommonService {
 			query.append("," + arr[i]);
 		return query.toString();
 	}
+	
+	public String getIdQueryFromString(final Set<String> idSet) {
+		StringBuilder query = null;
+		String[] arr = new String[idSet.size()];
+		arr = idSet.toArray(arr);
+		query = new StringBuilder(arr[0]);
+		for (int i = 1; i < arr.length; i++)
+			query.append("," + arr[i]);
+		return query.toString();
+	}
 }

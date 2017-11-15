@@ -12,7 +12,6 @@ import org.egov.swm.domain.model.SanitationStaffTarget;
 import org.egov.swm.domain.model.SanitationStaffTargetSearch;
 import org.egov.swm.domain.model.Shift;
 import org.egov.swm.domain.repository.SanitationStaffScheduleRepository;
-import org.egov.swm.web.contract.EmployeeResponse;
 import org.egov.swm.web.repository.IdgenRepository;
 import org.egov.swm.web.repository.MdmsRepository;
 import org.egov.swm.web.requests.SanitationStaffScheduleRequest;

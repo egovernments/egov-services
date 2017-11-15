@@ -34,16 +34,11 @@ public class VehicleTripSheetDetailsController {
 	public VehicleTripSheetDetailsResponse create(
 			@RequestBody @Valid VehicleTripSheetDetailsRequest vehicleTripSheetDetailsRequest) {
 
-		VehicleTripSheetDetailsResponse vehicleTripSheetDetailsResponse = new VehicleTripSheetDetailsResponse();
-		vehicleTripSheetDetailsResponse
-				.setResponseInfo(getResponseInfo(vehicleTripSheetDetailsRequest.getRequestInfo()));
-
 		vehicleTripSheetDetailsRequest = vehicleTripSheetDetailsService.create(vehicleTripSheetDetailsRequest);
 
-		vehicleTripSheetDetailsResponse
-				.setVehicleTripSheetDetails(vehicleTripSheetDetailsRequest.getVehicleTripSheetDetails());
-
-		return vehicleTripSheetDetailsResponse;
+		return VehicleTripSheetDetailsResponse.builder()
+				.responseInfo(getResponseInfo(vehicleTripSheetDetailsRequest.getRequestInfo()))
+				.vehicleTripSheetDetails(vehicleTripSheetDetailsRequest.getVehicleTripSheetDetails()).build();
 	}
 
 	@PostMapping("/_update")
@@ -51,16 +46,11 @@ public class VehicleTripSheetDetailsController {
 	public VehicleTripSheetDetailsResponse update(
 			@RequestBody @Valid VehicleTripSheetDetailsRequest vehicleTripSheetDetailsRequest) {
 
-		VehicleTripSheetDetailsResponse vehicleTripSheetDetailsResponse = new VehicleTripSheetDetailsResponse();
-		vehicleTripSheetDetailsResponse
-				.setResponseInfo(getResponseInfo(vehicleTripSheetDetailsRequest.getRequestInfo()));
-
 		vehicleTripSheetDetailsRequest = vehicleTripSheetDetailsService.update(vehicleTripSheetDetailsRequest);
 
-		vehicleTripSheetDetailsResponse
-				.setVehicleTripSheetDetails(vehicleTripSheetDetailsRequest.getVehicleTripSheetDetails());
-
-		return vehicleTripSheetDetailsResponse;
+		return VehicleTripSheetDetailsResponse.builder()
+				.responseInfo(getResponseInfo(vehicleTripSheetDetailsRequest.getRequestInfo()))
+				.vehicleTripSheetDetails(vehicleTripSheetDetailsRequest.getVehicleTripSheetDetails()).build();
 	}
 
 	@PostMapping("/_search")
@@ -73,12 +63,9 @@ public class VehicleTripSheetDetailsController {
 		Pagination<VehicleTripSheetDetails> vehicleTripSheetDetailsList = vehicleTripSheetDetailsService
 				.search(vehicleTripSheetDetailsSearch);
 
-		VehicleTripSheetDetailsResponse response = new VehicleTripSheetDetailsResponse();
-		response.setVehicleTripSheetDetails(vehicleTripSheetDetailsList.getPagedData());
-		response.setResponseInfo(getResponseInfo(requestInfo));
-		response.setPage(new PaginationContract(vehicleTripSheetDetailsList));
-
-		return response;
+		return VehicleTripSheetDetailsResponse.builder().responseInfo(getResponseInfo(requestInfo))
+				.vehicleTripSheetDetails(vehicleTripSheetDetailsList.getPagedData())
+				.page(new PaginationContract(vehicleTripSheetDetailsList)).build();
 
 	}
 

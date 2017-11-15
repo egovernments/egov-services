@@ -426,6 +426,61 @@ printer = () => {
 
             {renderBody()}
 
+            <Card className="uiCard">
+                <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}></div>}/>
+                  <CardText >
+                  <label>
+                    <span style={{"fontWeight":600, "fontSize": "13px"}}>
+                      {translate("ac.create.Asset.account.code")}
+                    </span>
+                  </label>
+                  <br/>
+                  <label>
+                    <span style={{"fontWeight":500, "fontSize": "13px"}}>
+                      {formData.Assets && formData.Assets[0] && formData.Assets[0].assetAccount ? formData.Assets[0].assetAccount :"" }
+                    </span>
+                  </label>
+                  <br/><br/>
+                  <label>
+                    <span style={{"fontWeight":600, "fontSize": "13px"}}>
+                      {translate("ac.create.Accumulated.Depreciation.Account")}
+                    </span>
+                  </label>
+                  <br/>
+                  <label>
+                    <span style={{"fontWeight":500, "fontSize": "13px"}}>
+                      {formData.Assets && formData.Assets[0] && formData.Assets[0].accumulatedDepreciationAccount ? formData.Assets[0].accumulatedDepreciationAccount :"" }
+                    </span>
+                  </label>
+                  <br/><br/>
+                  <label>
+                    <span style={{"fontWeight":600, "fontSize": "13px"}}>
+                      {translate("ac.create.Revaluation.Reserve.Account")}
+                    </span>
+                  </label>
+                  <br/>
+                  <label>
+                    <span style={{"fontWeight":500, "fontSize": "13px"}}>
+                      {formData.Assets && formData.Assets[0] && formData.Assets[0].revaluationReserveAccount ? formData.Assets[0].revaluationReserveAccount :"" }
+                    </span>
+                  </label>
+                  <br/><br/>
+                  <label>
+                    <span style={{"fontWeight":600, "fontSize": "13px"}}>
+                      {translate("ac.create.Depreciation.Expenses.Account")}
+                    </span>
+                  </label>
+                  <br/>
+                  <label>
+                    <span style={{"fontWeight":500, "fontSize": "13px"}}>
+                      {formData.Assets && formData.Assets[0] && formData.Assets[0].depreciationExpenseAccount ? formData.Assets[0].depreciationExpenseAccount :"" }
+                    </span>
+                  </label>
+                  <br/><br/>
+
+                </CardText>
+              </Card>
+
 
         </form>
 

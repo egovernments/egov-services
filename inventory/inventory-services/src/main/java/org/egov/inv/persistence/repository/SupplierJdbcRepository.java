@@ -44,15 +44,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.inv.domain.model.SupplierGetRequest;
+import org.egov.common.JdbcRepository;
+import org.egov.common.Pagination;
+import org.egov.inv.model.Supplier;
+import org.egov.inv.model.SupplierGetRequest;
 import org.egov.inv.persistence.entity.SupplierEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
-import io.swagger.model.Pagination;
-import io.swagger.model.Supplier;
+
 
 @Service
 public class SupplierJdbcRepository extends JdbcRepository {

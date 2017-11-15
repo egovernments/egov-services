@@ -108,7 +108,7 @@ export default class assetImmovableReport extends Component {
 												<b>घसारा रकमेचा दर</b>
 										</td>
 										<td colSpan={4} style={{textAlign: "left"}}>
-												<b>{}</b>
+												<b>{this.props.data[47]?this.props.data[47]:""}</b>
 										</td>
 									</tbody>
 

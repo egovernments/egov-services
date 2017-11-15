@@ -22,6 +22,8 @@ public class Constants {
     public static final String COMMON_MASTERS_MODULE_CODE = "common-masters";
     public static final String OVERHEAD_OBJECT = "Overhead";
     public static final String UOM_OBJECT = "Uom";
+    public static final String MODEOFALLOTMENT_OBJECT = "ModeOfAllotment";
+    public static final String NATUREOFWORK_OBJECT = "NatureOfWork";
 
     public static final String BOUNDARY_OBJECT = "Boundary";
     public static final String APPCONFIGURATION_OBJECT = "AppConfiguration";
@@ -36,8 +38,8 @@ public class Constants {
     public static final String CANCEL = "Cancel";
 
     //Error messages
-    public static final String KEY_ESIMATE_OVERHEAD_ID = "ESIMATE OVERHEAD_ID";
-    public static final String MESSAGE_ESIMATE_OVERHEAD_ID = "Overhead id is reqired for estimate";
+    public static final String KEY_ESIMATE_OVERHEAD_CODE = "ESIMATE OVERHEAD_CODE";
+    public static final String MESSAGE_ESIMATE_OVERHEAD_CODE = "Overhead code is reqired for estimate";
 
     public static final String KEY_ESIMATE_OVERHEAD_AMOUNT = "ESIMATE_OVERHEAD_AMOUNT";
     public static final String MESSAGE_ESIMATE_OVERHEAD_AMOUNT = "Overhead amount is required for estimate";
@@ -53,6 +55,9 @@ public class Constants {
 
     public static final String KEY_NULL_DETAILEDESTIMATE_NUMBER = "NULL_DETAILEDESTIMATE_NUMBER";
     public static final String MESSAGE_NULL_DETAILEDESTIMATE_NUMBER = "Detailed Estimate Number should be entered";
+
+    public static final String KEY_INVALID_ABSTRACTESTIMATE_DETAILS = "INVALID_ABSTRACTESTIMATE_DETAILS";
+    public static final String MESSAGE_INVALID_ABSTRACTESTIMATE_DETAILS = "Invalid data for abstractEstimate details";
 
     public static final String KEY_NULL_DETAILEDESTIMATE_DATE = "NULL_DETAILEDESTIMATE_DATE";
     public static final String MESSAGE_NULL_DETAILEDESTIMATE_DATE = "Detailed Estimate date should be entered";
@@ -89,6 +94,12 @@ public class Constants {
 
     public static final String KEY_UOM_INVALID = "UOM_INVALID";
     public static final String MESSAGE_UOM_INVALID = "Plese provide valid data for UOM";
+
+    public static final String KEY_MODEOFALLOTMENT_INVALID = "MODEOFALLOTMENT_INVALID";
+    public static final String MESSAGE_MODEOFALLOTMENT_INVALID = "Plese provide valid data for Mode of Allotment";
+
+    public static final String KEY_NATUREOFWORK_INVALID = "UOM_INVALID";
+    public static final String MESSAGE_NATUREOFWORK_INVALID = "Plese provide valid data for Nature of work";
 
     
     public static final String KEY_SCHEME_INVALID = "INVALID_SCHEME";
@@ -157,6 +168,9 @@ public class Constants {
     public static final String KEY_INVALID_ADMINSANCTION_DATE = "TECHNICAL_SANCTION_DATE_INVALID";
     public static final String MESSAGE_INVALID_ADMINSANCTION_DATE= "Abstract/Detailed Estimate Date cannot be prior to Admin Sanction Date of Estimate";
 
+    public static final String KEY_INVALID_FILESTORE_ID = "INVALID_FILESTORE_ID";
+    public static final String MESSAGE_INVALID_FILESTORE_ID= "Invalid data for document filestore id";
+
     public static final String KEY_INVALID_TECHNICALSANCTION_NUMBER = "INVALID_TECHNICALSANCTION_NUMBER";
     public static final String MESSAGE_INVALID_TECHNICALSANCTION_NUMBER= "Duplicate technical sanction number";
 
@@ -218,11 +232,17 @@ public class Constants {
     public static final String KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_REQUIRED= "ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_REQUIRED";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_REQUIRED= "Estimate measurement sheet quantity is required";
 
+    public static final String KEY_ESTIMATE_ACTIVITY_MEASUREMENT_IDENTIFIER_REQUIRED= "ESTIMATE_ACTIVITY_MEASUREMENT_IDENTIFIER_REQUIRED";
+    public static final String MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_IDENTIFIER_REQUIRED= "Estimate measurement sheet identifier is required";
+
     public static final String KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID= "ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID= "Estimate measurement sheet quantity should be greater than zero";
 
     public static final String KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID= "ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID= "Estimate activity schedule of rate is invalid";
+
+    public static final String KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_DUPLICATE= "ESTIMATE_ACTIVITY_SCHEDULEOFRATE_DUPLICATE";
+    public static final String MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_DUPLICATE= "Duplicate value for Estimate activity schedule of rate";
 
     public static final String KEY_WORKS_ESTIMATE_ASSET_CODE_INVALID= "WORKS_ESTIMATE_ASSET_CODE_INVALID";
     public static final String MESSAGE_WORKS_ESTIMATE_ASSET_CODE_INVALID= "Invalid data for estimate asset code";

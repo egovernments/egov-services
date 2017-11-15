@@ -28,6 +28,7 @@ import org.egov.model.enums.ReasonForFailure;
 import org.egov.model.enums.Sequence;
 import org.egov.model.enums.TransactionType;
 import org.egov.repository.DepreciationRepository;
+import org.egov.repository.MasterDataRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,9 @@ public class DepreciationService {
 
 	@Autowired
 	private MasterDataService mDService;
+	
+	@Autowired
+	private MasterDataRepository mDRepo;
 
 	@Autowired
 	private ApplicationProperties applicationProperties;
@@ -200,10 +204,10 @@ public class DepreciationService {
 		// deciding the from date from the last depreciation date
 		if (depInputs.getLastDepreciationDate()!=null && depInputs.getLastDepreciationDate().compareTo(fromDate) >= 0) {
 			fromDate = depInputs.getLastDepreciationDate();
-			fromDate += 86400l; // adding one day in milli seconds to start depreciation from next day
+			fromDate += 86400000l; // adding one day in milli seconds to start depreciation from next day
 		} else if (depInputs.getDateOfCreation() > fromDate) {
 			fromDate = depInputs.getDateOfCreation();
-			fromDate += 86400l;
+			fromDate += 86400000l;
 		}
 
 		// getting the no of days betweeen the from and todate (including both from and
@@ -261,8 +265,10 @@ public class DepreciationService {
 		masterMap.put("AssetCategory", fieldMap);
 		moduleMap.put("ASSET", masterMap);
 
+		if(!tenantId.equals("default"))
+			tenantId=tenantId.split(".")[0];
 		Map<Long, AssetCategory> assetCatMap = mDService.getAssetCategoryMapFromJSONArray(
-				mDService.getStateWideMastersByListParams(moduleMap, requestInfo, tenantId).get("ASSET"));
+				mDRepo.getMastersByListParams(moduleMap, requestInfo, tenantId).get("ASSET"));
 
 		depreciationInputsList
 				.forEach(a -> a.setDepreciationRate(assetCatMap.get(a.getAssetCategory()).getDepreciationRate()));

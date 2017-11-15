@@ -7,8 +7,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.Route;
+import org.egov.swm.domain.model.RouteSearch;
+import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleSchedule;
 import org.egov.swm.domain.model.VehicleScheduleSearch;
+import org.egov.swm.domain.model.VehicleSearch;
+import org.egov.swm.domain.service.RouteService;
+import org.egov.swm.domain.service.VehicleService;
 import org.egov.swm.persistence.entity.VehicleScheduleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -20,13 +26,10 @@ public class VehicleScheduleJdbcRepository extends JdbcRepository {
 	public static final String TABLE_NAME = "egswm_vehicleschedule";
 
 	@Autowired
-	public SupplierJdbcRepository contractorJdbcRepository;
+	private VehicleService vehicleService;
 
 	@Autowired
-	public ServicedLocationsJdbcRepository servicedLocationsJdbcRepository;
-
-	@Autowired
-	public ServicesOfferedJdbcRepository servicesOfferedJdbcRepository;
+	private RouteService routeService;
 
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {
@@ -123,9 +126,45 @@ public class VehicleScheduleJdbcRepository extends JdbcRepository {
 
 		List<VehicleScheduleEntity> vehicleScheduleEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
 				paramValues, row);
+
+		VehicleSchedule vehicleSchedule;
+		RouteSearch routeSearch;
+		Pagination<Route> routes;
+		VehicleSearch vehicleSearch;
+		Pagination<Vehicle> vehicleList;
+
 		for (VehicleScheduleEntity vehicleScheduleEntity : vehicleScheduleEntities) {
 
-			vehicleScheduleList.add(vehicleScheduleEntity.toDomain());
+			vehicleSchedule = vehicleScheduleEntity.toDomain();
+
+			if (vehicleSchedule.getVehicle() != null && vehicleSchedule.getVehicle().getRegNumber() != null
+					&& !vehicleSchedule.getVehicle().getRegNumber().isEmpty()) {
+
+				vehicleSearch = new VehicleSearch();
+				vehicleSearch.setTenantId(vehicleSchedule.getTenantId());
+				vehicleSearch.setRegNumber(vehicleSchedule.getVehicle().getRegNumber());
+				vehicleList = vehicleService.search(vehicleSearch);
+
+				if (vehicleList != null && vehicleList.getPagedData() != null && !vehicleList.getPagedData().isEmpty())
+					vehicleSchedule.setVehicle(vehicleList.getPagedData().get(0));
+
+			}
+
+			if (vehicleSchedule.getRoute() != null && vehicleSchedule.getRoute().getCode() != null
+					&& !vehicleSchedule.getRoute().getCode().isEmpty()) {
+
+				routeSearch = new RouteSearch();
+				routeSearch.setTenantId(vehicleSchedule.getTenantId());
+				routeSearch.setCode(vehicleSchedule.getRoute().getCode());
+				routes = routeService.search(routeSearch);
+
+				if (routes != null && routes.getPagedData() != null && !routes.getPagedData().isEmpty()) {
+					vehicleSchedule.setRoute(routes.getPagedData().get(0));
+				}
+
+			}
+
+			vehicleScheduleList.add(vehicleSchedule);
 
 		}
 

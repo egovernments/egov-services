@@ -118,6 +118,7 @@ public class SanitationStaffTargetService {
 		EmployeeResponse employeeResponse = null;
 		RouteSearch routeSearch = new RouteSearch();
 		Pagination<Route> routes;
+		Boundary boundary;
 		for (SanitationStaffTarget sanitationStaffTarget : sanitationStaffTargetRequest.getSanitationStaffTargets()) {
 
 			// Validate Boundary
@@ -129,8 +130,8 @@ public class SanitationStaffTargetService {
 
 			if (sanitationStaffTarget.getLocation() != null && sanitationStaffTarget.getLocation().getCode() != null) {
 
-				Boundary boundary = boundaryRepository.fetchBoundaryByCode(
-						sanitationStaffTarget.getLocation().getCode(), sanitationStaffTarget.getTenantId());
+				boundary = boundaryRepository.fetchBoundaryByCode(sanitationStaffTarget.getLocation().getCode(),
+						sanitationStaffTarget.getTenantId());
 
 				if (boundary != null)
 					sanitationStaffTarget.setLocation(boundary);

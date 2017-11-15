@@ -62,6 +62,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -149,6 +150,15 @@ public class KpiMasterController implements KpiMaster {
         }
         List<KPI> departmentKpiList = kpiMasterService.searchKpi(kpiGetRequest); 
         return getSuccessResponse(departmentKpiList, requestInfo); 
+    }
+    
+    @Override
+	@PostMapping(value = "/_getkpitype")
+    @ResponseBody
+    public Boolean getKpiType(@RequestParam(value = "kpiCode") String kpiCode) {
+    	log.info("KPI Type Request as recieved in Controller : " + kpiCode);
+    	String tenantId= "" ; 
+        return kpiMasterService.getKpiType(kpiCode, tenantId); 
     }
     
     public ResponseEntity<?> getSuccessResponse(final List<KPI> kpiList,

@@ -44,7 +44,7 @@ public class AdvocateRowMapper implements RowMapper<Advocate>{
 		advocate.setBankName(rs.getString("bankName"));
 		advocate.setBankBranch(rs.getString("bankBranch"));
 		advocate.setBankAccountNo(rs.getString("bankAccountNo"));
-		advocate.setIsfcCode(rs.getString("isfcCode"));
+		advocate.setIfscCode(rs.getString("ifscCode"));
 		advocate.setMicr(rs.getString("micr"));
 		advocate.setIsActive(rs.getBoolean("isActive"));
 		advocate.setIsTerminate(rs.getBoolean("isTerminate"));

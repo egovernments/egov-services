@@ -240,12 +240,8 @@ public class DetailedEstimateHelper   {
 		ProjectCode projectCode = new ProjectCode();
 		projectCode.setCode(this.projectCode);
 		detailedEstimate.setProjectCode(projectCode);
-		DetailedEstimate detailedEstimate2 = new DetailedEstimate();
-		detailedEstimate2.setId(this.parent);
-		detailedEstimate.setParent(detailedEstimate2);
-		DetailedEstimate detailedEstimate3 = new DetailedEstimate();
-		detailedEstimate3.setId(this.copiedFrom);
-		detailedEstimate.setCopiedFrom(detailedEstimate3);
+		detailedEstimate.setParent(this.parent);
+		detailedEstimate.setCopiedFrom(this.copiedFrom);
 		detailedEstimate.setCopiedEstimate(this.copiedEstimate);
 		ModeOfAllotment allotment = new ModeOfAllotment();
 		allotment.setCode(this.modeOfAllotment);

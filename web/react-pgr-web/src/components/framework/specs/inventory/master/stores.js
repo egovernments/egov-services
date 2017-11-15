@@ -62,7 +62,10 @@ var dat = {
          "resultPath":"stores",
          "resultIdKey":"code",
          "rowClickUrlAdd" : "/create/inventory/stores",
-         "rowClickUrlDelete" : "inventory-services/stores/_update",
+         "rowClickUrlDelete" : {
+           url:"inventory-services/stores/_update",
+           body:{ active:false, inActiveDate:function(){ return new Date().getTime() } }
+         },
          "rowClickUrlUpdate":"/update/inventory/stores/{code}",
          "rowClickUrlView":"/view/inventory/stores/{code}"
       }

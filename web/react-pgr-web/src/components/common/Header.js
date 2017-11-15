@@ -98,6 +98,8 @@ const RightIcon = (props) => {
             <MenuItem primaryText="Sign Out" onClick={(e)=>{
                 props.showHome && props.handleToggle();
                 props.signOut();
+                clearInterval(window.timeObject)
+                // console.log(window.timeObject);
             }} leftIcon={<i style={{color:"#555"}} className="material-icons">lock</i>}></MenuItem>
      </IconMenu>
      <i onClick={(e)=>{

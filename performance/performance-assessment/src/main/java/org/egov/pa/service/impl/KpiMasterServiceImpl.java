@@ -10,7 +10,6 @@ import org.egov.pa.model.KpiTarget;
 import org.egov.pa.model.KpiTargetList;
 import org.egov.pa.repository.KpiMasterRepository;
 import org.egov.pa.service.KpiMasterService;
-import org.egov.pa.validator.RestCallService;
 import org.egov.pa.web.contract.KPIGetRequest;
 import org.egov.pa.web.contract.KPIRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +26,6 @@ public class KpiMasterServiceImpl implements KpiMasterService {
 	@Qualifier("kpiMasterRepo")
 	private KpiMasterRepository kpiMasterRepository;
 	
-	@Autowired
-	private RestCallService restCallService; 
-
 	@Override
 	public KPIRequest createNewKpi(KPIRequest kpiRequest) {
 		int numberOfIds = kpiRequest.getKpIs().size(); 
@@ -100,6 +96,11 @@ public class KpiMasterServiceImpl implements KpiMasterService {
     	}*/
     }
 	
+	@Override
+	public Boolean getKpiType(String kpiCode, String tenantId) {
+		return kpiMasterRepository.getKpiType(kpiCode, tenantId);
+	}
+	
 	private void prepareDocumentObjects(KPIRequest kpiRequest) { 
     	List<KPI> kpiList = kpiRequest.getKpIs(); 
     	for(KPI kpi : kpiList) {
@@ -137,4 +138,6 @@ public class KpiMasterServiceImpl implements KpiMasterService {
     	else 
     		return false;
     }
+
+	
 }

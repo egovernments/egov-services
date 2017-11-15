@@ -5,13 +5,11 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -25,4 +23,5 @@ public class ContractorSearchCriteria {
     private List<String> statuses;
     private Integer pageSize;
     private Integer pageNumber;
+    private Boolean pmc;
 }

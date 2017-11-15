@@ -120,6 +120,12 @@ class ViewServiceType extends Component {
                      </Col>
                      <Col xs={12} sm={6} md={4} lg={3}>
                        <ListItem
+                         primaryText={translate('pgr.service.localName')}
+                         secondaryText={<p style={styles.customColumnStyle}>{viewServiceType.localName? viewServiceType.localName : ''}</p>}
+                       />
+                     </Col>
+                     <Col xs={12} sm={6} md={4} lg={3}>
+                       <ListItem
                          primaryText={translate("core.lbl.description")}
                          secondaryText={<p style={styles.customColumnStyle}>{viewServiceType.description? viewServiceType.description : ''}</p>}
                        />

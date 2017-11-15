@@ -122,6 +122,7 @@ class ViewEditServiceGroup extends Component {
                                           <th>#</th>
                                           <th>{translate("core.lbl.add.name")}</th>
                                           <th>{translate("core.lbl.code")}</th>
+                                          <th>{translate("pgr.service.localName")}</th>
                                           <th>{translate("core.lbl.description")}</th>
                                         </tr>
                                     </thead>
@@ -138,6 +139,7 @@ class ViewEditServiceGroup extends Component {
                                               <td>{e.id}</td>
                                               <td>{e.name}</td>
                                               <td>{e.code}</td>
+                                              <td>{e.localName}</td>
                                               <td>{e.description}</td>
                                             </tr>
                                           )

@@ -2,12 +2,10 @@ package org.egov.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.config.ApplicationProperties;
@@ -17,6 +15,8 @@ import org.egov.contract.AssetResponse;
 import org.egov.model.Asset;
 import org.egov.model.AssetCategory;
 import org.egov.model.CurrentValue;
+import org.egov.model.Department;
+import org.egov.model.FundSource;
 import org.egov.model.criteria.AssetCriteria;
 import org.egov.model.enums.KafkaTopicName;
 import org.egov.model.enums.Sequence;
@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONArray;
 
 @Service
 @Slf4j
@@ -59,41 +60,33 @@ public class AssetService {
 		final Asset asset = assetRequest.getAsset();
 
 		// FIXME put asset code seq per ulb Ghanshyam will update
-		asset.setCode(asset.getTenantId() +"/"+ asset.getDepartmentCode() + "/"+asset.getAssetCategory().getCode()
+		asset.setCode(asset.getTenantId() +"/"+ asset.getDepartment().getCode() + "/"+asset.getAssetCategory().getCode()
 				+"/"+ assetCommonService.getCode(Sequence.ASSETCODESEQUENCE));
 		log.info("asset.getcode"+asset.getCode());
 
 		asset.setId(assetCommonService.getNextId(Sequence.ASSETSEQUENCE));
 		asset.setStatus(Status.CAPITALIZED.toString());
 
-		log.debug("assetRequest createAsync::" + assetRequest);
 		asset.setAuditDetails(assetCommonService.getAuditDetails(assetRequest.getRequestInfo()));
-
 		logAwareKafkaTemplate.send(appProps.getCreateAssetTopicNameTemp(), assetRequest);
-		CurrentValue currentValue = new CurrentValue();
-		currentValue.setId(new Long(assetCommonService.getCode(Sequence.CURRENTVALUESEQUENCE)));
-		currentValue.setAssetId(asset.getId());
-		currentValue.setTransactionDate(asset.getDateOfCreation());
-		currentValue.setAssetTranType(TransactionType.CREATE);
-		currentValue.setTenantId(asset.getTenantId());
-		currentValue.setAuditDetails(assetCommonService.getAuditDetails(assetRequest.getRequestInfo()));
-		AssetCurrentValueRequest assetCurrentValueRequest = new AssetCurrentValueRequest();
-		List<CurrentValue> assetCurrentValueList = new ArrayList<>();
+		
+		CurrentValue currentValue = CurrentValue.builder().assetId(asset.getId()).tenantId(asset.getTenantId())
+				.transactionDate(asset.getDateOfCreation()).assetTranType(TransactionType.CREATE).build();
+		
 		BigDecimal grossValue = asset.getGrossValue();
 		BigDecimal accumulatedDepreciation = asset.getAccumulatedDepreciation();
-		//Accumulateddepreciation should be less than gross value todo in validator
-		if (grossValue != null && accumulatedDepreciation != null) {
+		
+		// Accumulateddepreciation should be less than gross value todo in validator
+		if (grossValue != null && accumulatedDepreciation != null)
 			currentValue.setCurrentAmount(grossValue.subtract(accumulatedDepreciation));
-		}else if(grossValue!=null) {
+		else if (grossValue != null)
 			currentValue.setCurrentAmount(grossValue);
-		}
 		else
 			currentValue.setCurrentAmount(asset.getOriginalValue());
 
+		List<CurrentValue> assetCurrentValueList = new ArrayList<>();
 		assetCurrentValueList.add(currentValue);
-		assetCurrentValueRequest.setAssetCurrentValue(assetCurrentValueList);
-		assetCurrentValueRequest.setRequestInfo(assetRequest.getRequestInfo());
-		logAwareKafkaTemplate.send(appProps.getSaveCurrentvalueTopic(), assetCurrentValueRequest);
+		currentValueService.createCurrentValueAsync(AssetCurrentValueRequest.builder().assetCurrentValue(assetCurrentValueList).requestInfo(assetRequest.getRequestInfo()).build());
 
 		final List<Asset> assets = new ArrayList<>();
 		assets.add(asset);
@@ -112,20 +105,10 @@ public class AssetService {
 
 	public AssetResponse getAssets(final AssetCriteria searchAsset, final RequestInfo requestInfo) {
 		log.info("AssetService getAssets");
-		/*if (searchAsset.getAssetCategory()!=null) {
-			Set<Long> assetCategory=new HashSet<>();
-			assetCategory.add(searchAsset.getAssetCategory());
-			Map<Long, AssetCategory> assetCatMap = masterDataService.getAssetCategoryMap(assetCategory, requestInfo,  searchAsset.getTenantId());
-			AssetCategory assetCategoryMdms = assetCatMap.get(searchAsset.getAssetCategory());
-			assetCategoryMdms.get
-		}*/
+
 		final List<Asset> assets = assetRepository.findForCriteria(searchAsset);
-		
-		Set<Long> idSet=null;
-		if (!assets.isEmpty()) {
-			 idSet = assets.stream().map(asset -> asset.getAssetCategory().getId()).collect(Collectors.toSet());
-			mapAssetCategories(assets, requestInfo, searchAsset.getTenantId());
-		}
+		if (!assets.isEmpty())
+			mapMasters(assets, requestInfo, searchAsset.getTenantId());
 		return getAssetResponse(assets, requestInfo);
 	}
 
@@ -148,36 +131,24 @@ public class AssetService {
 					"There is no asset exists for id ::" + assetId + " for tenant id :: " + tenantId);
 	}
 
-	private void mapAssetCategories(List<Asset> assets, RequestInfo requestInfo, String tenantId) {
+	private void mapMasters(List<Asset> assets, RequestInfo requestInfo, String tenantId) {
 
-		Set<Long> idSet = assets.stream().map(asset -> asset.getAssetCategory().getId()).collect(Collectors.toSet());
-		
-		Map<String, Map<String, Map<String, String>>> moduleMap = new HashMap<>();
-		Map<String, Map<String, String>> masterMap = new HashMap<>();
-		Map<String, String> fieldMap = new HashMap<>();
-		
-		fieldMap.put("id", assetCommonService.getIdQuery(idSet));
-		log.info("the field map : " + fieldMap);
-		masterMap.put("AssetCategory", fieldMap);
-		log.info("the master map : " + masterMap);
-		moduleMap.put("ASSET", masterMap);
-		log.info("the module map : " + moduleMap);
-		
-		Map<Long, AssetCategory> assetCatMap = mDService.getAssetCategoryMapFromJSONArray(mDService.getStateWideMastersByListParams(moduleMap, requestInfo, tenantId).get("ASSET"));
+		Map<String, Map<String, JSONArray>> RsMasterMap = mDService.getStateWideMastersByListParams(assets,
+				requestInfo, tenantId);
+
+		Map<Long, AssetCategory> assetCatMap = mDService.getAssetCategoryMapFromJSONArray(RsMasterMap.get("ASSET"));
+		Map<String, FundSource> fundMap = mDService.getFundSourceMapFromJSONArray(RsMasterMap.get("egf-master"));
+		Map<String, Department> departmentMap = mDService
+				.getDepartmentMapFromJSONArray(RsMasterMap.get("common-masters"));
+
 		assets.forEach(asset -> {
-			Long key = asset.getAssetCategory().getId();
-			asset.setAssetCategory(assetCatMap.get(key));
+			Long assetCatkey = asset.getAssetCategory().getId();
+			String fundKey = asset.getFundSource().getId();
+			String deptKey = asset.getDepartment().getId();
+
+			asset.setAssetCategory(assetCatMap.get(assetCatkey));
+			asset.setFundSource(fundMap.get(fundKey));
+			asset.setDepartment(departmentMap.get(deptKey));
 		});
 	}
-
-	private static String getIdQuery(final Set<Long> idSet) {
-		StringBuilder query = null;
-		Long[] arr = new Long[idSet.size()];
-		arr = idSet.toArray(arr);
-		query = new StringBuilder(arr[0].toString());
-		for (int i = 1; i < arr.length; i++)
-			query.append("," + arr[i]);
-		return query.toString();
-	}
-
 }

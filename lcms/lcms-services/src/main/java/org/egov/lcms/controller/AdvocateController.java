@@ -63,12 +63,13 @@ public class AdvocateController {
 
 	@RequestMapping(path = "agency/_search")
 	public ResponseEntity<?> searchAgency(@RequestParam(name = "tenantId", required = true) String tenantId,
-			@RequestParam(name = "isIndividual", required = true) Boolean isIndividual,
+			@RequestParam(name = "code", required = false) String code,
+			@RequestParam(name = "isIndividual", required = false) Boolean isIndividual,
 			@RequestParam(name = "advocateName", required = false) String advocateName,
-			@RequestParam(name = "agencyName", required = true) String agencyName,
+			@RequestParam(name = "agencyName", required = false) String agencyName,
 			@RequestBody @Valid RequestInfoWrapper requestInfoWrapper) throws Exception {
 
-		AgencyResponse agencyResponse = advocateService.searchAgency(tenantId, isIndividual, advocateName, agencyName,
+		AgencyResponse agencyResponse = advocateService.searchAgency(tenantId, code, isIndividual, advocateName, agencyName,
 				requestInfoWrapper);
 		return new ResponseEntity<>(agencyResponse, HttpStatus.CREATED);
 	}

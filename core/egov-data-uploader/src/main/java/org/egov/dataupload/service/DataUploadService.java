@@ -77,8 +77,9 @@ public class DataUploadService {
 	    	String request = prepareDataForNonBulkApi(excelData, jsonPathList, uploadDefinition, requestInfo);
 	    	response = hitApi(request, uploadDefinition.getUri());
 	    }
-	    
-        
+        if(null == response){
+        	throw new CustomException("500", "External Service returned an error");
+        }
         return response;
 	}
 	

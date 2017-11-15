@@ -34,15 +34,11 @@ public class VehicleFuellingDetailsController {
 	public VehicleFuellingDetailsResponse create(
 			@RequestBody @Valid VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
 
-		VehicleFuellingDetailsResponse vehicleFuellingDetailsResponse = new VehicleFuellingDetailsResponse();
-		vehicleFuellingDetailsResponse.setResponseInfo(getResponseInfo(vehicleFuellingDetailsRequest.getRequestInfo()));
-
 		vehicleFuellingDetailsRequest = vehicleFuellingDetailsService.create(vehicleFuellingDetailsRequest);
 
-		vehicleFuellingDetailsResponse
-				.setVehicleFuellingDetails(vehicleFuellingDetailsRequest.getVehicleFuellingDetails());
-
-		return vehicleFuellingDetailsResponse;
+		return VehicleFuellingDetailsResponse.builder()
+				.responseInfo(getResponseInfo(vehicleFuellingDetailsRequest.getRequestInfo()))
+				.vehicleFuellingDetails(vehicleFuellingDetailsRequest.getVehicleFuellingDetails()).build();
 	}
 
 	@PostMapping("/_update")
@@ -50,15 +46,11 @@ public class VehicleFuellingDetailsController {
 	public VehicleFuellingDetailsResponse update(
 			@RequestBody @Valid VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
 
-		VehicleFuellingDetailsResponse vehicleFuellingDetailsResponse = new VehicleFuellingDetailsResponse();
-		vehicleFuellingDetailsResponse.setResponseInfo(getResponseInfo(vehicleFuellingDetailsRequest.getRequestInfo()));
-
 		vehicleFuellingDetailsRequest = vehicleFuellingDetailsService.update(vehicleFuellingDetailsRequest);
 
-		vehicleFuellingDetailsResponse
-				.setVehicleFuellingDetails(vehicleFuellingDetailsRequest.getVehicleFuellingDetails());
-
-		return vehicleFuellingDetailsResponse;
+		return VehicleFuellingDetailsResponse.builder()
+				.responseInfo(getResponseInfo(vehicleFuellingDetailsRequest.getRequestInfo()))
+				.vehicleFuellingDetails(vehicleFuellingDetailsRequest.getVehicleFuellingDetails()).build();
 	}
 
 	@PostMapping("/_search")
@@ -71,12 +63,9 @@ public class VehicleFuellingDetailsController {
 		Pagination<VehicleFuellingDetails> vehicleFuellingDetailsList = vehicleFuellingDetailsService
 				.search(vehicleFuellingDetailsSearch);
 
-		VehicleFuellingDetailsResponse response = new VehicleFuellingDetailsResponse();
-		response.setVehicleFuellingDetails(vehicleFuellingDetailsList.getPagedData());
-		response.setResponseInfo(getResponseInfo(requestInfo));
-		response.setPage(new PaginationContract(vehicleFuellingDetailsList));
-
-		return response;
+		return VehicleFuellingDetailsResponse.builder().responseInfo(getResponseInfo(requestInfo))
+				.vehicleFuellingDetails(vehicleFuellingDetailsList.getPagedData())
+				.page(new PaginationContract(vehicleFuellingDetailsList)).build();
 
 	}
 

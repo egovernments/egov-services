@@ -1,44 +1,49 @@
 package org.egov.inv.domain.service;
 
-import io.swagger.model.Pagination;
-import io.swagger.model.PriceList;
-import io.swagger.model.PriceListRequest;
-import io.swagger.model.PriceListSearchRequest;
-
 import java.util.List;
 
-import org.egov.inv.domain.repository.PriceListRepository;
+import org.egov.common.DomainService;
+import org.egov.common.Pagination;
+import org.egov.inv.model.PriceList;
+import org.egov.inv.model.PriceListDetails;
+import org.egov.inv.model.PriceListRequest;
+import org.egov.inv.model.PriceListSearchRequest;
+import org.egov.inv.persistence.repository.PriceListJdbcRepository;
+import org.egov.inv.persistence.repository.PriceListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PriceListService {
+public class PriceListService extends DomainService {
 
     public static final String SEQ_PRICELIST = "seq_priceList";
     public static final String SEQ_PRICELISTDETAILS = "seq_pricelistdetails";
     private PriceListRepository priceListRepository;
-    private InventoryUtilityService inventoryUtilityService;
-
 
     @Autowired
-    public PriceListService(PriceListRepository priceListRepository,
-                           InventoryUtilityService inventoryUtilityService) {
+    PriceListJdbcRepository priceListJdbcRepository;
+    
+    @Autowired
+    public PriceListService(PriceListRepository priceListRepository) {
         this.priceListRepository = priceListRepository;
-        this.inventoryUtilityService = inventoryUtilityService;
     }
 
     public List<PriceList> save(PriceListRequest priceListRequest, String tenantId) {
 
         priceListRequest.getPriceLists().forEach(priceList -> {
-            priceList.setAuditDetails(inventoryUtilityService.mapAuditDetails(priceListRequest.getRequestInfo(), tenantId));
+            priceList.setAuditDetails(mapAuditDetails(priceListRequest.getRequestInfo()));
+            priceList.getPriceListDetails().forEach(priceListDetail -> {
+            	priceListDetail.setAuditDetails(mapAuditDetails(priceListRequest.getRequestInfo()));
+            });
         });
+        
 
-        List<Long> priceListIdList = inventoryUtilityService.getIdList(priceListRequest.getPriceLists().size(), SEQ_PRICELIST);
+        List<String> priceListIdList = priceListJdbcRepository.getSequence(PriceList.class.getSimpleName(), priceListRequest.getPriceLists().size());
         for (int i = 0; i <= priceListIdList.size() - 1; i++) {
             priceListRequest.getPriceLists().get(i)
                     .setId(priceListIdList.get(i).toString());
             
-            List<Long> priceListDetailsIdList = inventoryUtilityService.getIdList(priceListRequest.getPriceLists().get(i).getPriceListDetails().size(), SEQ_PRICELISTDETAILS);
+            List<String> priceListDetailsIdList = priceListJdbcRepository.getSequence(PriceListDetails.class.getSimpleName(), priceListRequest.getPriceLists().get(i).getPriceListDetails().size());
             for(int j =0; j <= priceListDetailsIdList.size()-1; j++){
             	priceListRequest.getPriceLists().get(i)
 			            		.getPriceListDetails().get(j)
@@ -55,8 +60,7 @@ public class PriceListService {
 
         priceListRequest.getPriceLists().stream()
                 .forEach(priceList -> {
-                    priceList.setAuditDetails(
-                            inventoryUtilityService.mapAuditDetailsForUpdate(priceListRequest.getRequestInfo(), tenantId));
+                    priceList.setAuditDetails(mapAuditDetailsForUpdate(priceListRequest.getRequestInfo()));
                 });
 
         priceListRepository.update(priceListRequest);

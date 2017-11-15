@@ -122,6 +122,10 @@ public class PerformanceAssessmentQueryBuilder {
 		return selectQuery.toString();
     }
     
+    public String getKpiTypeQuery() { 
+    	return "SELECT targettype FROM egpa_kpi_master WHERE code = ? " ; 
+    }
+    
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addKpiValueWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
 			final KPIValueSearchRequest kpiValueSearchReq) {
@@ -135,25 +139,22 @@ public class PerformanceAssessmentQueryBuilder {
 		selectQuery.append(" AND ");
 		boolean isAppendAndClause = false;
 
-		if (null != finYearList && finYearList.size() > 0) {
-			if (finYearList.size() == 1 && !finYearList.get(0).equals("ALL")) {
+		if (null != finYearList && finYearList.size() > 0 && 
+				finYearList.size() == 1 && !finYearList.get(0).equals("ALL")) {
 				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 				selectQuery.append(" master.finyear IN " + getStringQuery(finYearList));
-			}
 		}
 
-		if (null != tenantIdList && tenantIdList.size() > 0) {
-			if (tenantIdList.size() == 1 && !tenantIdList.get(0).equals("ALL")) {
+		if (null != tenantIdList && tenantIdList.size() > 0 && 
+				tenantIdList.size() == 1 && !tenantIdList.get(0).equals("ALL")) {
 				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 				selectQuery.append(" value.tenantid IN " + getStringQuery(tenantIdList));
-			}
 		}
 
-		if (null != kpiCodeList && kpiCodeList.size() > 0) {
-			if (kpiCodeList.size() == 1 && !kpiCodeList.get(0).equals("ALL")) {
+		if (null != kpiCodeList && kpiCodeList.size() > 0 && 
+				kpiCodeList.size() == 1 && !kpiCodeList.get(0).equals("ALL")) {
 				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 				selectQuery.append(" master.code IN " + getStringQuery(kpiCodeList));
-			}
 		}
 	}
     

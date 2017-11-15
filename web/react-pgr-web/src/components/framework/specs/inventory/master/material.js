@@ -97,7 +97,11 @@ var dat =
          "resultIdKey":"code",
          "rowClickUrlUpdate":"/update/inventory/material/{code}",
          "rowClickUrlView":"/view/inventory/material/{code}",
-         "rowClickUrlAdd" : "/create/inventory/material"
+         "rowClickUrlAdd" : "/create/inventory/material",
+         "rowClickUrlDelete" : {
+           url:"inventory-services/suppliers/_update",
+           body:{ status:'Inactive', inActiveDate:function(){ return new Date().getTime() } }
+         }
       }
    },
    "inventory.create":{
@@ -957,11 +961,11 @@ var dat =
                     "defaultValue":[
                       {key: null, value: "-- Please Select --"},
                       {
-                         "key":"ASSET",
+                         "key":"Asset",
                          "value":"Asset"
                       },
                       {
-                         "key":"CONSUMABLE",
+                         "key":"Consumable",
                          "value":"Consumable"
                       }
                     ],

@@ -16,7 +16,7 @@ public class RouteCollectionPointMapJdbcRepository extends JdbcRepository {
 
 	@Transactional
 	public void delete(String tenantId, String route) {
-		delete(TABLE_NAME, tenantId, "refCode", route);
+		delete(TABLE_NAME, tenantId, "route", route);
 	}
 
 	public List<RouteCollectionPointMap> search(RouteCollectionPointMap searchRequest) {

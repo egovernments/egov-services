@@ -57,12 +57,27 @@ public class AdvocateService {
 
 				if (agency.getIsTerminate() == null)
 					agency.setIsTerminate(false);
-				
-				if(agency.getAgencyAddress() == null)
-					throw new CustomException(propertiesManager.getAgencyAddressErrorCode(),propertiesManager.getAgencyAddressErrorMsg());
-				
-				if(agency.getName() == null)
-					throw new CustomException(propertiesManager.getAgencyNameErrorCode(), propertiesManager.getAgencyNameErrorMsg());
+
+				if (agency.getAgencyAddress() == null)
+					throw new CustomException(propertiesManager.getAgencyAddressErrorCode(),
+							propertiesManager.getAgencyAddressErrorMsg());
+
+				if (agency.getName() == null)
+					throw new CustomException(propertiesManager.getAgencyNameErrorCode(),
+							propertiesManager.getAgencyNameErrorMsg());
+
+				if (agency.getDateOfEmpanelment() == null && agency.getStandingCommitteeDecisionDate() == null
+						&& agency.getEmpanelmentFromDate() == null && agency.getNewsPaperAdvertismentDate() == null
+						&& agency.getEmpanelmentToDate() == null) {
+					throw new CustomException(propertiesManager.getAgencyNameErrorCode(),
+							propertiesManager.getAgencyNameErrorMsg());
+				}
+
+				if (agency.getBankName() == null && agency.getBankBranch() == null && agency.getBankAccountNo() == null
+						&& agency.getIfscCode() == null && agency.getMicr() == null) {
+					throw new CustomException(propertiesManager.getBankDetailsErrorCode(),
+							propertiesManager.getBankDetailsErrorMsg());
+				}
 
 				String agencyCode = uniqueCodeGeneration.getUniqueCode(agency.getTenantId(), requestInfo,
 						propertiesManager.getAgencyUlbFormat(), propertiesManager.getAgencyUlbName(), Boolean.FALSE,
@@ -80,6 +95,7 @@ public class AdvocateService {
 								propertiesManager.getPersonDetailsUlbName(), Boolean.FALSE, null, Boolean.FALSE);
 						personDetails.setCode(personCode);
 						personDetails.setName(name);
+						personDetails.setTenantId(agency.getTenantId());
 						personDetails.setAgencyCode(agency.getCode());
 						personDetails.setAgencyName(agency.getName());
 					}
@@ -102,10 +118,14 @@ public class AdvocateService {
 
 					advocate.setIsIndividual(agency.getIsIndividual());
 
-					if (!advocate.getIsIndividual() && advocate.getAgencyName() == null) {
+					if (!advocate.getIsIndividual()) {
 
-						throw new CustomException(propertiesManager.getInvalidOrganizationCode(),
-								propertiesManager.getOrganizationExceptionMessage());
+						advocate.setAgencyName(agency.getName());
+						advocate.setDateOfEmpanelment(agency.getDateOfEmpanelment());
+						advocate.setStandingCommitteeDecisionDate(agency.getStandingCommitteeDecisionDate());
+						advocate.setNewsPaperAdvertismentDate(agency.getNewsPaperAdvertismentDate());
+						advocate.setEmpanelmentFromDate(agency.getEmpanelmentFromDate());
+						advocate.setEmpanelmentToDate(agency.getEmpanelmentToDate());
 					}
 
 					advocate.setAgencyCode(agency.getCode());
@@ -140,6 +160,34 @@ public class AdvocateService {
 			createAgencyRequest.setRequestInfo(agencyRequest.getRequestInfo());
 
 			if (agency.getIsIndividual() == Boolean.FALSE) {
+				
+				if (agency.getIsActive() == null)
+					agency.setIsActive(true);
+
+				if (agency.getIsTerminate() == null)
+					agency.setIsTerminate(false);
+
+				if (agency.getAgencyAddress() == null)
+					throw new CustomException(propertiesManager.getAgencyAddressErrorCode(),
+							propertiesManager.getAgencyAddressErrorMsg());
+
+				if (agency.getName() == null)
+					throw new CustomException(propertiesManager.getAgencyNameErrorCode(),
+							propertiesManager.getAgencyNameErrorMsg());
+
+				if (agency.getDateOfEmpanelment() == null && agency.getStandingCommitteeDecisionDate() == null
+						&& agency.getEmpanelmentFromDate() == null && agency.getNewsPaperAdvertismentDate() == null
+						&& agency.getEmpanelmentToDate() == null) {
+					throw new CustomException(propertiesManager.getAgencyNameErrorCode(),
+							propertiesManager.getAgencyNameErrorMsg());
+				}
+
+				if (agency.getBankName() == null && agency.getBankBranch() == null && agency.getBankAccountNo() == null
+						&& agency.getIfscCode() == null && agency.getMicr() == null) {
+					throw new CustomException(propertiesManager.getBankDetailsErrorCode(),
+							propertiesManager.getBankDetailsErrorMsg());
+				}
+				
 				validatePersonDetails(agency, createAgencyRequest);
 
 				if (createAgencyRequest.getAgencies().get(0).getPersonDetails() != null
@@ -171,7 +219,7 @@ public class AdvocateService {
 	private void validatePersonDetails(Agency agency, AgencyRequest createAgencyRequest) throws Exception {
 
 		if (agency.getPersonDetails() != null) {
-			List<PersonDetails> personDetailsOnDb = advocateRepository.getPersonalDetailsUsingCode(agency.getCode());
+			List<PersonDetails> personDetailsOnDb = advocateRepository.getPersonalDetailsUsingCode(agency.getTenantId(), agency.getCode());
 			List<String> personDetailsCodes = personDetailsOnDb.stream().map(details -> details.getCode())
 					.collect(Collectors.toList());
 
@@ -184,6 +232,7 @@ public class AdvocateService {
 
 				reqPersonDetails.setName(name);
 				reqPersonDetails.setAgencyCode(agency.getCode());
+				reqPersonDetails.setTenantId(agency.getTenantId());
 
 				if (reqPersonDetails.getCode() == null) {
 					String code = uniqueCodeGeneration.getUniqueCode(agency.getTenantId(),
@@ -216,7 +265,7 @@ public class AdvocateService {
 	private void validateAdvocates(Agency agency, AgencyRequest createAgencyRequest) throws Exception {
 
 		if (agency.getAdvocates() != null) {
-			List<Advocate> advocatesOnDb = advocateRepository.getAdvocatesUsingCode(agency.getCode());
+			List<Advocate> advocatesOnDb = advocateRepository.getAdvocatesUsingCode(agency.getTenantId(), agency.getCode());
 			List<String> advocateCodes = advocatesOnDb.stream().map(Advocate -> Advocate.getCode())
 					.collect(Collectors.toList());
 
@@ -232,14 +281,22 @@ public class AdvocateService {
 
 				if (reqAdvocate.getIsTerminate() == null)
 					reqAdvocate.setIsTerminate(false);
+				
+				reqAdvocate.setIsIndividual(agency.getIsIndividual());
+				
+				if (!reqAdvocate.getIsIndividual()) {
 
-				if (!reqAdvocate.getIsIndividual() && reqAdvocate.getAgencyName() == null) {
-
-					throw new CustomException(propertiesManager.getInvalidOrganizationCode(),
-							propertiesManager.getOrganizationExceptionMessage());
+					reqAdvocate.setAgencyName(agency.getName());
+					reqAdvocate.setDateOfEmpanelment(agency.getDateOfEmpanelment());
+					reqAdvocate.setStandingCommitteeDecisionDate(agency.getStandingCommitteeDecisionDate());
+					reqAdvocate.setNewsPaperAdvertismentDate(agency.getNewsPaperAdvertismentDate());
+					reqAdvocate.setEmpanelmentFromDate(agency.getEmpanelmentFromDate());
+					reqAdvocate.setEmpanelmentToDate(agency.getEmpanelmentToDate());
 				}
 
 				reqAdvocate.setName(name);
+				reqAdvocate.setAgencyCode(agency.getCode());
+				reqAdvocate.setTenantId(agency.getTenantId());
 				reqAdvocate.setAgencyCode(agency.getCode());
 
 				if (reqAdvocate.getCode() == null) {
@@ -270,9 +327,9 @@ public class AdvocateService {
 		}
 	}
 
-	public AgencyResponse searchAgency(String tenantId, Boolean isIndividual, String advocateName, String agencyName,
+	public AgencyResponse searchAgency(String tenantId, String code, Boolean isIndividual, String advocateName, String agencyName,
 			RequestInfoWrapper requestInfoWrapper) {
-		List<Agency> agencies = advocateRepository.searchAgencies(tenantId, isIndividual, advocateName, agencyName,
+		List<Agency> agencies = advocateRepository.searchAgencies(tenantId, code, isIndividual, advocateName, agencyName,
 				requestInfoWrapper);
 		return new AgencyResponse(
 				responseInfoFactory.getResponseInfo(requestInfoWrapper.getRequestInfo(), HttpStatus.CREATED), agencies);

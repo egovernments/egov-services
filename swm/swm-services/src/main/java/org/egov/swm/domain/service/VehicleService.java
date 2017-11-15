@@ -135,8 +135,7 @@ public class VehicleService {
 
 			}
 
-			if (vehicle.getVendor() != null
-					&& (vehicle.getVendor().getVendorNo() == null || vehicle.getVendor().getVendorNo().isEmpty()))
+			if (vehicle.getVendor() != null && vehicle.getVendor().getVendorNo() == null)
 				throw new CustomException("Vendor",
 						"The field Vendor number is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 

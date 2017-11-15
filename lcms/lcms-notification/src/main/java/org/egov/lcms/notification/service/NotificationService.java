@@ -3,10 +3,13 @@ package org.egov.lcms.notification.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.egov.lcms.notification.config.PropertiesManager;
+import org.egov.lcms.notification.model.AdvocateCharge;
 import org.egov.lcms.notification.model.AdvocatePayment;
 import org.egov.lcms.notification.model.AdvocatePaymentRequest;
 import org.egov.lcms.notification.model.Case;

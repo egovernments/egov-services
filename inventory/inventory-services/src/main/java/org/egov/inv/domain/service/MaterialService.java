@@ -63,6 +63,9 @@ public class MaterialService extends DomainService {
                         .setId(materialIdList.get(i).toString());
                 materialRequest.getMaterials().get(i)
                         .setCode(materialRequest.getMaterials().get(i).getMaterialType().getCode() + "/" + materialJdbcRepository.getSequence(SEQ_SERIAL_NO));
+                if (isEmpty(materialRequest.getMaterials().get(i).getTenantId())) {
+                    materialRequest.getMaterials().get(i).setTenantId(tenantId);
+                }
                 materialRequest.getMaterials().get(i).setAuditDetails(mapAuditDetails(materialRequest.getRequestInfo()));
                 materialStoreMappings = buildMaterialStoreMapping(materialRequest.getMaterials().get(i).getCode(), materialRequest.getMaterials().get(i).getStoreMapping());
                 uniqueCheck(materialRequest.getMaterials().get(i));
@@ -90,6 +93,9 @@ public class MaterialService extends DomainService {
 
             validate(materialRequest.getMaterials(), UPDATE);
             for (Material material : materialRequest.getMaterials()) {
+                if (isEmpty(material.getTenantId())) {
+                    material.setTenantId(tenantId);
+                }
                 material.setAuditDetails(mapAuditDetails(materialRequest.getRequestInfo()));
                 materialStoreMappings = buildMaterialStoreMapping(material.getCode(), material.getStoreMapping());
             }

@@ -46,8 +46,6 @@ public class ReportQueryBuilder {
 		
 		StringBuffer csinput = new StringBuffer();
 		LOGGER.info("searchParams:" + searchParams);
-		System.out.println("ReportName : "+reportDefinition.getReportName());
-		System.out.println("Query : "+reportDefinition.getQuery());
 		if(reportDefinition.getQuery().contains("UNION")){
 			baseQuery = generateUnionQuery(searchParams, tenantId, reportDefinition);
 		}else if(reportDefinition.getQuery().contains("FULLJOIN")){
@@ -109,14 +107,10 @@ public class ReportQueryBuilder {
 			url = es.getApiURL();
 			URI uri = URI.create(url);
 			res = restTemplate.postForObject(uri, getRInfo(),String.class);
-			
-			JSONObject jObj = new JSONObject(res);
-			
+
 			Object jsonObject = JsonPath.read(res,es.getEntity());
 			
 			JSONArray mdmsArray = new JSONArray(jsonObject.toString());
-
-			//JSONArray slideContent = (JSONArray) jObj.get(es.getEntity());
 			 
 			 StringBuffer finalString = new StringBuffer();
 			 
@@ -132,7 +126,6 @@ public class ReportQueryBuilder {
 
 						String value = String.valueOf(obj.get(jsonKeys[k]));
 
-
 						sb.append("'" + value + "'");
 						if ((k != jsonKeys.length-1)) {
 							sb.append(",");
@@ -144,10 +137,8 @@ public class ReportQueryBuilder {
 					}
 
 					finalString.append(sb);
-					System.out.println(finalString);
-
+					LOGGER.info("Inline Table Values "+finalString.toString());
 				}
-			 
 		       
 			 replacetableQuery = replacetableQuery.replace(es.getTableName(), finalString.toString());
 			

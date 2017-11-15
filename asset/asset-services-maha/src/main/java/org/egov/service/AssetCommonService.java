@@ -107,6 +107,7 @@ public class AssetCommonService {
 	}
 	
 	public String getIdQueryFromString(final Set<String> idSet) {
+		log.info("the recieved id set : "+ idSet);
 		StringBuilder query = null;
 		String[] arr = new String[idSet.size()];
 		arr = idSet.toArray(arr);

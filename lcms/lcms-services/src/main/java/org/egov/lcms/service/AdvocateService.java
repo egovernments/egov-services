@@ -83,7 +83,9 @@ public class AdvocateService {
 						propertiesManager.getAgencyUlbFormat(), propertiesManager.getAgencyUlbName(), Boolean.FALSE,
 						null, Boolean.FALSE);
 
-				agencyCode = agencyCode.substring(0, 7) + propertiesManager.getAgencySubStringCode() + agencyCode.substring(7, agencyCode.length());
+				agencyCode = agencyCode.substring(0, agency.getTenantId().length())
+						+ propertiesManager.getAgencySubStringCode()
+						+ agencyCode.substring(agency.getTenantId().length(), agencyCode.length());
 				agency.setCode(agencyCode);
 
 				// Adding personal details to DB
@@ -119,6 +121,7 @@ public class AdvocateService {
 						advocate.setIsTerminate(false);
 
 					advocate.setIsIndividual(agency.getIsIndividual());
+					advocate.setTenantId(agency.getTenantId());
 
 					if (!advocate.getIsIndividual()) {
 
@@ -128,6 +131,7 @@ public class AdvocateService {
 						advocate.setNewsPaperAdvertismentDate(agency.getNewsPaperAdvertismentDate());
 						advocate.setEmpanelmentFromDate(agency.getEmpanelmentFromDate());
 						advocate.setEmpanelmentToDate(agency.getEmpanelmentToDate());
+
 					}
 
 					advocate.setAgencyCode(agency.getCode());
@@ -135,8 +139,10 @@ public class AdvocateService {
 					String advocateCode = uniqueCodeGeneration.getUniqueCode(advocate.getTenantId(), requestInfo,
 							propertiesManager.getAdvocateUlbFormat(), propertiesManager.getAdvocateUlbName(),
 							Boolean.FALSE, null, Boolean.FALSE);
-					
-					advocateCode = advocateCode.substring(0, 7) + propertiesManager.getAdvocateSubStringCode() + advocateCode.substring(7, advocateCode.length());
+
+					advocateCode = advocateCode.substring(0, advocate.getTenantId().length())
+							+ propertiesManager.getAdvocateSubStringCode()
+							+ advocateCode.substring(advocate.getTenantId().length(), advocateCode.length());
 					advocate.setCode(advocateCode);
 					advocate.setName(name);
 
@@ -164,7 +170,7 @@ public class AdvocateService {
 			createAgencyRequest.setRequestInfo(agencyRequest.getRequestInfo());
 
 			if (agency.getIsIndividual() == Boolean.FALSE) {
-				
+
 				if (agency.getIsActive() == null)
 					agency.setIsActive(true);
 
@@ -191,7 +197,7 @@ public class AdvocateService {
 					throw new CustomException(propertiesManager.getBankDetailsErrorCode(),
 							propertiesManager.getBankDetailsErrorMsg());
 				}
-				
+
 				validatePersonDetails(agency, createAgencyRequest);
 
 				if (createAgencyRequest.getAgencies().get(0).getPersonDetails() != null
@@ -289,6 +295,7 @@ public class AdvocateService {
 					reqAdvocate.setIsTerminate(false);
 
 				reqAdvocate.setIsIndividual(agency.getIsIndividual());
+				reqAdvocate.setTenantId(agency.getTenantId());
 
 				if (!reqAdvocate.getIsIndividual()) {
 
@@ -309,8 +316,10 @@ public class AdvocateService {
 					String advocateCode = uniqueCodeGeneration.getUniqueCode(agency.getTenantId(),
 							createAgencyRequest.getRequestInfo(), propertiesManager.getAdvocateUlbFormat(),
 							propertiesManager.getAdvocateUlbName(), Boolean.FALSE, null, Boolean.FALSE);
-					
-					advocateCode = advocateCode.substring(0, 7) + propertiesManager.getAdvocateSubStringCode() + advocateCode.substring(7, advocateCode.length());
+
+					advocateCode = advocateCode.substring(0, reqAdvocate.getTenantId().length())
+							+ propertiesManager.getAdvocateSubStringCode()
+							+ advocateCode.substring(reqAdvocate.getTenantId().length(), advocateCode.length());
 					reqAdvocate.setCode(advocateCode);
 					createAdvocates.add(reqAdvocate);
 					break;

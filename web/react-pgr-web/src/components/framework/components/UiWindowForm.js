@@ -70,7 +70,7 @@ class UiWindowForm extends Component {
   }
    editRow =(index)=>{
 	let {item,getVal}=this.props;
-	 var jsonPath= item.jsonPath+"["+index+"]";
+	 var jsonPath= item.jsonPath+"."+item.arrayPath+"["+index+"]";
 	 var data = getVal(jsonPath);
 	  this.setState({
 		 valuesObj:data,
@@ -163,8 +163,8 @@ class UiWindowForm extends Component {
   };
 
   renderField = item => {
-    let val = this.props.getVal(item.jsonPath);
-    if (item.displayField && val.constructor == Array) {
+    let val = this.props.getVal(item.jsonPath+"."+item.arrayPath);
+    if (item.displayField && val && val.constructor == Array) {
       val = jp.query(val, `$..${item.displayField}`);
     }
     if (this.props.readonly === "true") {
@@ -222,8 +222,8 @@ class UiWindowForm extends Component {
                   disabled={_.isEmpty(this.state.valuesObj)}
                   secondary={true}
                   style={{ marginTop: 39 }}
-                  onClick={e => {
-                    var oldData = self.props.getVal(self.props.item.jsonPath);
+                  onClick={e => {debugger;
+                    var oldData = self.props.getVal(self.props.item.jsonPath+"."+self.props.item.arrayPath);
 					if(self.state.index>=0){
 						oldData[self.state.index] = self.state.valuesObj;
 					}else{
@@ -234,7 +234,7 @@ class UiWindowForm extends Component {
                    
                     self.props.handler(
                       { target: { value: oldData } },
-                      self.props.item.jsonPath,
+                      self.props.item.jsonPath+"."+self.props.item.arrayPath,
                       self.props.item.isRequired ? true : false,
                       "",
                       self.props.item.requiredErrMsg,
@@ -255,7 +255,7 @@ class UiWindowForm extends Component {
               ]}
               modal={false}
               open={this.state.open}
-              contentStyle={{ width: "80%" }}
+              contentStyle={{ "width": "80%", "max-width": "80%" }}
               onRequestClose={this.handleClose}
               autoScrollBodyContent={true}
             >

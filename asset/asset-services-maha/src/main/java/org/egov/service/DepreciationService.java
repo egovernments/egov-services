@@ -207,7 +207,7 @@ public class DepreciationService {
 			fromDate += 86400000l; // adding one day in milli seconds to start depreciation from next day
 		} else if (depInputs.getDateOfCreation() > fromDate) {
 			fromDate = depInputs.getDateOfCreation();
-			fromDate += 86400000l;
+			//fromDate += 86400000l;
 		}
 
 		// getting the no of days betweeen the from and todate (including both from and

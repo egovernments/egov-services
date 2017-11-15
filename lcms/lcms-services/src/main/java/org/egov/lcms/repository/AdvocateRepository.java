@@ -125,7 +125,7 @@ public class AdvocateRepository {
 		} else {
 			final List<Object> advocateValues = new ArrayList<Object>();
 			String advocateSearchQuery = AdvocateBuilders.getAdvocateSearchQuery(tenantId, isIndividual, advocateName,
-					null, agencyName, advocateValues);
+					code, agencyName, advocateValues);
 			List<Advocate> advocates = jdbcTemplate.query(advocateSearchQuery, advocateValues.toArray(),
 					advocateRowMapper);
 			Agency agency = new Agency();

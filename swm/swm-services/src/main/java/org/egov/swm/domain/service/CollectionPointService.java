@@ -5,28 +5,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.BinDetails;
 import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.CollectionPoint;
 import org.egov.swm.domain.model.CollectionPointDetails;
 import org.egov.swm.domain.model.CollectionPointSearch;
-import org.egov.swm.domain.model.CollectionType;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.repository.BinDetailsRepository;
 import org.egov.swm.domain.repository.CollectionPointRepository;
 import org.egov.swm.web.repository.BoundaryRepository;
-import org.egov.swm.web.repository.MdmsRepository;
 import org.egov.swm.web.requests.CollectionPointRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import net.minidev.json.JSONArray;
 
 @Service
 @Transactional(readOnly = true)
@@ -39,10 +32,10 @@ public class CollectionPointService {
 	private BinDetailsRepository binDetailsRepository;
 
 	@Autowired
-	private MdmsRepository mdmsRepository;
+	private BoundaryRepository boundaryRepository;
 
 	@Autowired
-	private BoundaryRepository boundaryRepository;
+	private CollectionTypeService collectionTypeService;
 
 	@Transactional
 	public CollectionPointRequest create(CollectionPointRequest collectionPointRequest) {
@@ -117,9 +110,6 @@ public class CollectionPointService {
 
 	private void validate(CollectionPointRequest collectionPointRequest) {
 
-		JSONArray responseJSONArray;
-		ObjectMapper mapper = new ObjectMapper();
-
 		findDuplicatesInUniqueFields(collectionPointRequest);
 
 		for (CollectionPoint collectionPoint : collectionPointRequest.getCollectionPoints()) {
@@ -155,15 +145,8 @@ public class CollectionPointService {
 					// Validate Collection Type
 					if (cpd.getCollectionType() != null && cpd.getCollectionType().getCode() != null) {
 
-						responseJSONArray = mdmsRepository.getByCriteria(collectionPoint.getTenantId(),
-								Constants.MODULE_CODE, Constants.COLLECTIONTYPE_MASTER_NAME, "code",
-								cpd.getCollectionType().getCode(), collectionPointRequest.getRequestInfo());
-
-						if (responseJSONArray != null && responseJSONArray.size() > 0)
-							cpd.setCollectionType(mapper.convertValue(responseJSONArray.get(0), CollectionType.class));
-						else
-							throw new CustomException("CollectionType",
-									"Given CollectionType is invalid: " + cpd.getCollectionType().getCode());
+						cpd.setCollectionType(collectionTypeService.getCollectionType(collectionPoint.getTenantId(),
+								cpd.getCollectionType().getCode(), collectionPointRequest.getRequestInfo()));
 
 					} else
 						throw new CustomException("CollectionType", "CollectionType is required");

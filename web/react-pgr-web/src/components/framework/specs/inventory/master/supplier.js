@@ -86,7 +86,10 @@ var dat = {
       "rowClickUrlUpdate": "/update/inventory/supplier/{code}",
       "rowClickUrlView": "/view/inventory/supplier/{code}",
       "rowClickUrlAdd" : "/create/inventory/supplier",
-      "rowClickUrlDelete" : "inventory-services/suppliers/_update"
+      "rowClickUrlDelete" : {
+        url:"inventory-services/suppliers/_update",
+        body:{ active:false, inActiveDate:function(){ return new Date().getTime() } }
+      }
     }
   },
   "inventory.create": {

@@ -34,15 +34,11 @@ public class SanitationStaffTargetController {
 	public SanitationStaffTargetResponse create(
 			@RequestBody @Valid SanitationStaffTargetRequest sanitationStaffTargetRequest) {
 
-		SanitationStaffTargetResponse sanitationStaffTargetResponse = new SanitationStaffTargetResponse();
-		sanitationStaffTargetResponse.setResponseInfo(getResponseInfo(sanitationStaffTargetRequest.getRequestInfo()));
-
 		sanitationStaffTargetRequest = sanitationStaffTargetService.create(sanitationStaffTargetRequest);
 
-		sanitationStaffTargetResponse
-				.setSanitationStaffTargets(sanitationStaffTargetRequest.getSanitationStaffTargets());
-
-		return sanitationStaffTargetResponse;
+		return SanitationStaffTargetResponse.builder()
+				.responseInfo(getResponseInfo(sanitationStaffTargetRequest.getRequestInfo()))
+				.sanitationStaffTargets(sanitationStaffTargetRequest.getSanitationStaffTargets()).build();
 	}
 
 	@PostMapping("/_update")
@@ -50,15 +46,11 @@ public class SanitationStaffTargetController {
 	public SanitationStaffTargetResponse update(
 			@RequestBody @Valid SanitationStaffTargetRequest sanitationStaffTargetRequest) {
 
-		SanitationStaffTargetResponse sanitationStaffTargetResponse = new SanitationStaffTargetResponse();
-		sanitationStaffTargetResponse.setResponseInfo(getResponseInfo(sanitationStaffTargetRequest.getRequestInfo()));
-
 		sanitationStaffTargetRequest = sanitationStaffTargetService.update(sanitationStaffTargetRequest);
 
-		sanitationStaffTargetResponse
-				.setSanitationStaffTargets(sanitationStaffTargetRequest.getSanitationStaffTargets());
-
-		return sanitationStaffTargetResponse;
+		return SanitationStaffTargetResponse.builder()
+				.responseInfo(getResponseInfo(sanitationStaffTargetRequest.getRequestInfo()))
+				.sanitationStaffTargets(sanitationStaffTargetRequest.getSanitationStaffTargets()).build();
 	}
 
 	@PostMapping("/_search")
@@ -70,12 +62,9 @@ public class SanitationStaffTargetController {
 		Pagination<SanitationStaffTarget> sanitationStaffTargetList = sanitationStaffTargetService
 				.search(sanitationStaffTargetSearch);
 
-		SanitationStaffTargetResponse response = new SanitationStaffTargetResponse();
-		response.setSanitationStaffTargets(sanitationStaffTargetList.getPagedData());
-		response.setResponseInfo(getResponseInfo(requestInfo));
-		response.setPage(new PaginationContract(sanitationStaffTargetList));
-		
-		return response;
+		return SanitationStaffTargetResponse.builder().responseInfo(getResponseInfo(requestInfo))
+				.sanitationStaffTargets(sanitationStaffTargetList.getPagedData())
+				.page(new PaginationContract(sanitationStaffTargetList)).build();
 
 	}
 

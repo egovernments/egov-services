@@ -35,4 +35,11 @@ public class VehicleMaintenanceRepository {
 
 	}
 
+	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
+			String uniqueFieldValue) {
+
+		return vehicleMaintenanceJdbcRepository.uniqueCheck(tenantId, fieldName, fieldValue, uniqueFieldName,
+				uniqueFieldValue);
+	}
+
 }

@@ -25,4 +25,6 @@ public interface KpiMasterRepository {
     
     public List<KPI> checkNameOrCodeExists(KPIRequest kpiRequest);
     
+    public Boolean getKpiType(String kpiCode, String tenantId); 
+    
 }

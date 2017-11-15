@@ -2,12 +2,14 @@ package org.egov.works.estimate.domain.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.works.commons.exception.ErrorCode;
-import org.egov.works.commons.exception.InvalidDataException;
+import org.egov.tracer.model.CustomException;
+import org.egov.works.estimate.config.Constants;
 import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.domain.repository.ProjectCodeRepository;
 import org.egov.works.estimate.persistence.repository.IdGenerationRepository;
@@ -68,6 +70,7 @@ public class ProjectCodeService {
 	}
 
 	private void validateProjectCode(ProjectCodeRequest projectCodeRequest) {
+		Map<String, String> messages = new HashMap<>();
 		ProjectCode projectCode = projectCodeRequest.getProjectCodes().get(0);
 		ProjectCodeSearchContract projectCodeSearchContract = new ProjectCodeSearchContract();
 		List<String> workIdentificationNumbers = new ArrayList<>();
@@ -76,8 +79,9 @@ public class ProjectCodeService {
 
 		List<ProjectCode> projectCodes = search(projectCodeSearchContract);
 		if (!projectCodes.isEmpty()) {
-			throw new InvalidDataException("WorkIdentificationNumber", ErrorCode.NON_UNIQUE_VALUE.getCode(),
-					projectCode.getCode());
+			messages.put(Constants.KEY_UNIQUE_WORKIDENTIFICATIONNUMBER,
+					Constants.MESSAGE_UNIQUE_WORKIDENTIFICATIONNUMBER);
+			throw new CustomException(messages);
 		}
 	}
 

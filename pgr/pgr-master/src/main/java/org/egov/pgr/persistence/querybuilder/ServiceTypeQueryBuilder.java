@@ -8,15 +8,15 @@ import org.springframework.stereotype.Component;
 public class ServiceTypeQueryBuilder {
 
     public String getInsertQuery(){
-        return "INSERT INTO egpgr_complainttype (id, name, department, code, isactive, description, metadata, type, category, isday, createddate, lastmodifieddate, createdby, lastmodifiedby,slahours,hasfinancialimpact,tenantid)"
-                +"VALUES (NEXTVAL('seq_egpgr_complainttype'), :name, :department, :code, :isactive, :description, :metadata, :type, :category, :isday, :createddate, :lastmodifieddate, :createdby, :lastmodifiedby, :slahours, :hasfinancialimpact, :tenantid)";
+        return "INSERT INTO egpgr_complainttype (id, name, department, code, isactive, description, metadata, type, category, isday, createddate, lastmodifieddate, createdby, lastmodifiedby,slahours,hasfinancialimpact,tenantid, localname)"
+                +"VALUES (NEXTVAL('seq_egpgr_complainttype'), :name, :department, :code, :isactive, :description, :metadata, :type, :category, :isday, :createddate, :lastmodifieddate, :createdby, :lastmodifiedby, :slahours, :hasfinancialimpact, :tenantid, :localname)";
     }
 
     public String getUpdateQuery(){
         return "UPDATE egpgr_complainttype SET name = :name, department = :department, code = :code, isactive = :isactive," +
                 " description = :description, metadata = :metadata, type = :type, category = :category, isday = :isday, " +
                 "lastmodifieddate = :lastmodifieddate, lastmodifiedby = :lastmodifiedby, slahours = :slahours," +
-                "hasfinancialimpact = :hasfinancialimpact, tenantid = :tenantid WHERE code = :code AND tenantid = :tenantid";
+                "hasfinancialimpact = :hasfinancialimpact, tenantid = :tenantid, localname = :localname WHERE code = :code AND tenantid = :tenantid";
     }
 
     public String getSearchQueryForUpdateValidation(){

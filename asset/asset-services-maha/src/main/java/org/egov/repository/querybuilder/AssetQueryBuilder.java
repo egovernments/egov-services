@@ -1,10 +1,8 @@
 package org.egov.repository.querybuilder;
 
-
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.egov.model.criteria.AssetCriteria;
 import org.egov.model.enums.AssetCategoryType;
 import org.egov.model.enums.TransactionType;
@@ -17,20 +15,28 @@ import lombok.extern.slf4j.Slf4j;
 public class AssetQueryBuilder {
 
 	public final static String FINDBYNAMEQUERY = "SELECT asset.name FROM egasset_asset asset WHERE asset.name=? AND asset.tenantid=?";
-	
-    private static final String BASE_QUERY = "SELECT *,asd.code as landcode,asd.assetid as landassetid,currentval.currentamount "
 
-    										+ "from egasset_asset asset left outer join egasset_asset_landdetails asd ON  asset.id=asd.assetid AND asset.tenantid=asd.tenantid "
-    										
-    										+ "left outer join (select current.assetid,current.tenantid,current.transactiondate,"
-    										
-    										+ "maxcurr.currentamount from egasset_current_value current inner join (select max(transactiondate) as transactiondate,currentamount,assetid"
-    										
-    										+ ",tenantid from egasset_current_value where tenantid=? GROUP BY assetid,tenantid,currentamount ) as maxcurr "
-    										
-    										+ "ON current.assetid=maxcurr.assetid AND current.tenantid=maxcurr.tenantid AND current.transactiondate=maxcurr.transactiondate) as currentval "
-    										
-    										+ "ON asset.id=currentval.assetid AND asset.tenantid=currentval.tenantid ";
+	private static final String BASE_QUERY = "SELECT *,asd.code as landcode,asd.assetid as landassetid,currentval.currentamount "
+
+			+ "from egasset_asset asset left outer join egasset_asset_landdetails asd ON  asset.id=asd.assetid AND asset.tenantid=asd.tenantid "
+
+			+ "left outer join (select current.assetid,current.tenantid,current.transactiondate,"
+
+			+ "maxcurr.currentamount from egasset_current_value current inner join (select curr.currentamount,curr.assetid,curr.tenantid,curr.createdtime,"
+
+			+ "curr.transactiondate from egasset_current_value "
+
+			+ "curr inner join (select max(createdtime) as createdtime,assetid,tenantid from egasset_current_value where tenantid=? "
+
+			+ " GROUP BY assetid,tenantid)  maxtrans ON  curr.assetid=maxtrans.assetid and "
+
+			+ " curr.tenantid=maxtrans.tenantid and curr.createdtime=maxtrans.createdtime order by createdtime desc) as maxcurr "
+
+			+ "ON current.assetid=maxcurr.assetid AND current.tenantid=maxcurr.tenantid AND current.transactiondate=maxcurr.transactiondate"
+
+			+ " and current.createdtime=maxcurr.createdtime order by maxcurr.createdtime desc) as currentval "
+
+			+ "ON asset.id=currentval.assetid AND asset.tenantid=currentval.tenantid ";
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String getQuery(final AssetCriteria searchAsset, final List preparedStatementValues) {
@@ -55,8 +61,11 @@ public class AssetQueryBuilder {
 		}
 
 		if (searchAsset.getAssetCategoryType() != null) {
-			selectQuery.append(" AND ASSET.assetcategorytype IN (" + getCategoryType(searchAsset.getAssetCategoryType()).toString()+ ")");
-			/*preparedStatementValues.add(searchAsset.getAssetCategoryType().toString());*/
+			selectQuery.append(" AND ASSET.assetcategorytype IN ("
+					+ getCategoryType(searchAsset.getAssetCategoryType()).toString() + ")");
+			/*
+			 * preparedStatementValues.add(searchAsset.getAssetCategoryType().toString());
+			 */
 		}
 		if (searchAsset.getName() != null) {
 			selectQuery.append(" AND ASSET.name ilike ?");
@@ -106,8 +115,8 @@ public class AssetQueryBuilder {
 			selectQuery.append(" AND ASSET.status = ?");
 			preparedStatementValues.add(searchAsset.getStatus());
 		}
-		
-		if(searchAsset.getToDate()!=null) {
+
+		if (searchAsset.getToDate() != null) {
 			selectQuery.append(" AND asset.dateofcreation<?");
 			preparedStatementValues.add(searchAsset.getToDate());
 		}
@@ -142,13 +151,13 @@ public class AssetQueryBuilder {
 			selectQuery.append(" AND ASSET.electionWard = ?");
 			preparedStatementValues.add(searchAsset.getElectionWard());
 		}
-		
+
 		if (searchAsset.getTransaction() != null) {
-			if(searchAsset.getTransaction().toString().equals(TransactionType.REVALUATION.toString())) {
+			if (searchAsset.getTransaction().toString().equals(TransactionType.REVALUATION.toString())) {
 				selectQuery.append(" AND ASSET.status!='DISPOSED'  AND ASSET.assetcategorytype!='LAND' ");
-			}else if(searchAsset.getTransaction().toString().equals(TransactionType.DISPOSAL.toString())) {
+			} else if (searchAsset.getTransaction().toString().equals(TransactionType.DISPOSAL.toString())) {
 				selectQuery.append(" AND ASSET.status!='DISPOSED'  AND ASSET.assetcategorytype!='LAND'");
-			}else if(searchAsset.getTransaction().toString().equals(TransactionType.DEPRECIATION.toString())) {
+			} else if (searchAsset.getTransaction().toString().equals(TransactionType.DEPRECIATION.toString())) {
 				selectQuery.append(" AND ASSET.status!='DISPOSED' AND ASSET.assetcategorytype!='LAND' ");
 			}
 		}
@@ -186,8 +195,7 @@ public class AssetQueryBuilder {
 															// pageNo * pageSize
 	}
 
-  
-    private String getIdQuery(final Set<Long> idSet) {
+	private String getIdQuery(final Set<Long> idSet) {
 		StringBuilder query = null;
 		Long[] arr = new Long[idSet.size()];
 		arr = idSet.toArray(arr);
@@ -196,19 +204,17 @@ public class AssetQueryBuilder {
 			query.append("," + arr[i]);
 		return query.toString();
 	}
-    
-    private String getCategoryType(final List<AssetCategoryType> assetCategoryTypeList) {
+
+	private String getCategoryType(final List<AssetCategoryType> assetCategoryTypeList) {
 		StringBuilder query = null;
-		AssetCategoryType[] arr= new AssetCategoryType[assetCategoryTypeList.size()];
-		arr=assetCategoryTypeList.toArray(arr);
-	  // String join = "'" + StringUtils.join(arr,"','") + "'";
-	   System.out.println("arr"+arr);
-		query = new StringBuilder("'"+arr[0].toString()+"'");
-	  for (int i = 1; i < arr.length; i++)
-			query.append("," +"'"+arr[i].toString()+"'");
-		System.err.println("query"+query);
+		AssetCategoryType[] arr = new AssetCategoryType[assetCategoryTypeList.size()];
+		arr = assetCategoryTypeList.toArray(arr);
+		// String join = "'" + StringUtils.join(arr,"','") + "'";
+		System.out.println("arr" + arr);
+		query = new StringBuilder("'" + arr[0].toString() + "'");
+		for (int i = 1; i < arr.length; i++)
+			query.append("," + "'" + arr[i].toString() + "'");
+		System.err.println("query" + query);
 		return query.toString();
 	}
 }
-
-   

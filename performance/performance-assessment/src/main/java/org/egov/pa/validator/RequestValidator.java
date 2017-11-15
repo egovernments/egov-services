@@ -47,7 +47,6 @@ import org.egov.common.contract.response.ErrorField;
 import org.egov.pa.model.Document;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiValue;
-import org.egov.pa.service.impl.KpiMasterServiceImpl;
 import org.egov.pa.service.impl.KpiValueServiceImpl;
 import org.egov.pa.utils.PerformanceAssessmentConstants;
 import org.egov.pa.web.contract.KPIRequest;
@@ -69,9 +68,6 @@ public class RequestValidator {
 	
 	@Autowired
 	private RestCallService restCallService; 
-	
-	@Autowired 
-	private KpiMasterServiceImpl kpiMasterService;
 	
 	@Autowired 
 	private KpiValueServiceImpl kpiValueService;
@@ -132,17 +128,6 @@ public class RequestValidator {
 		                    PerformanceAssessmentConstants.DEPARTMENT_CODE_MANDATORY_FIELD_NAME));
 				}
 			
-			/*// Check whether KPI Name and Code already exists
-			if(StringUtils.isNotBlank(kpi.getName()) && StringUtils.isNotBlank(kpi.getCode())) { 
-				boolean recordExists = kpiMasterService.checkNameOrCodeExists(kpiRequest, createOrUpdate);
-				if (recordExists) { 
-					errorFields.add(buildErrorField(PerformanceAssessmentConstants.NAMECODE_UNIQUE_CODE, 
-		                    PerformanceAssessmentConstants.NAMECODE_UNIQUE_ERROR_MESSAGE,
-		                    PerformanceAssessmentConstants.NAMECODE_UNIQUE_FIELD_NAME));
-				}
-			}*/
-
-			
 			// Check whether the document details are available and validate them
 			if(createOrUpdate && null != kpi.getDocuments() && kpi.getDocuments().size() > 0) { 
 				for(Document doc : kpi.getDocuments()) { 
@@ -150,11 +135,6 @@ public class RequestValidator {
 						errorFields.add(buildErrorField(PerformanceAssessmentConstants.DOCNAME_MANDATORY_CODE, 
 			                    PerformanceAssessmentConstants.DOCNAME_MANDATORY_ERROR_MESSAGE,
 			                    PerformanceAssessmentConstants.DOCNAME_MANDATORY_FIELD_NAME));
-					}
-					if(StringUtils.isBlank(doc.getCode())) { 
-						errorFields.add(buildErrorField(PerformanceAssessmentConstants.DOCCODE_MANDATORY_CODE, 
-			                    PerformanceAssessmentConstants.DOCCODE_MANDATORY_ERROR_MESSAGE,
-			                    PerformanceAssessmentConstants.DOCCODE_MANDATORY_FIELD_NAME));
 					}
 					if(null == doc.getActive()) { 
 						errorFields.add(buildErrorField(PerformanceAssessmentConstants.DOCACTIVE_MANDATORY_CODE, 
@@ -272,7 +252,9 @@ public class RequestValidator {
                     PerformanceAssessmentConstants.TENANTID_SEARCH_MANDATORY_FIELD_NAME));
 		}
 		
-		String tenantCount = DEFAULT_COUNT, kpiCount = DEFAULT_COUNT, finYearCount = DEFAULT_COUNT; 
+		String tenantCount = DEFAULT_COUNT;
+		String kpiCount = DEFAULT_COUNT;
+		String finYearCount = DEFAULT_COUNT; 
 		if(null != kpiValueSearchRequest.getFinYear() && kpiValueSearchRequest.getFinYear().size() > 0) { 
 			finYearCount = (kpiValueSearchRequest.getFinYear().size() == 1 && !kpiValueSearchRequest.getFinYear().get(0).equals("ALL")) ? "1" : "*" ;  	
 		}

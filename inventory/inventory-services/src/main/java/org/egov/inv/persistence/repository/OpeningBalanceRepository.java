@@ -3,28 +3,27 @@ package org.egov.inv.persistence.repository;
 import java.util.HashMap;
 import java.util.List;
 
-import org.egov.inv.domain.model.OpeningBalanceSearchCriteria;
-import org.egov.inv.persistence.entity.ReceiptNoteApiEntity;
+import org.egov.common.JdbcRepository;
+import org.egov.inv.model.MaterialReceipt;
+import org.egov.inv.model.OpeningBalanceResponse;
+import org.egov.inv.model.OpeningBalanceSearchCriteria;
 import org.egov.inv.persistence.queryBuilder.OpeningbalanceQueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
-import io.swagger.model.MaterialReceipt;
-import io.swagger.model.OpeningBalanceResponse;
-
 @Service
 public class OpeningBalanceRepository extends JdbcRepository{
 	
     private OpeningbalanceQueryBuilder openingbalanceQueryBuilder;
 
-	private static final Logger LOG = LoggerFactory.getLogger(RecieptNoteApiJdbcRepository.class);
-	static {
+	//private static final Logger LOG = LoggerFactory.getLogger(RecieptNoteApiJdbcRepository.class);
+	/*static {
 		LOG.debug("init openingBalance");
 		init(ReceiptNoteApiEntity.class);
 		LOG.debug("end init openingBalance");
-	}
+	}*/
 	
 public OpeningBalanceResponse search(OpeningBalanceSearchCriteria openBalSearchCriteria) {
 		
@@ -49,9 +48,9 @@ private HashMap<String, Object> getDetailNamedQuery(OpeningBalanceSearchCriteria
 	parametersMap.put("tenantId", searchCriteria.getTenantId());
 	parametersMap.put("financialYear", searchCriteria.getFinancialYear());
 	parametersMap.put("mrnNumber", searchCriteria.getMrnNumber());
-	parametersMap.put("receiptNumber", searchCriteria.getReceiptNumber());
+	parametersMap.put("storeName", searchCriteria.getStoreName());
 	parametersMap.put("materialName", searchCriteria.getMaterialName());
-	parametersMap.put("supplierCode", searchCriteria.getSupplierCode());
+	parametersMap.put("materialcode", searchCriteria.getMaterialcode());
 	parametersMap.put("id", searchCriteria.getId());
 	parametersMap.put("pageSize", searchCriteria.getPageSize());
 	parametersMap.put("pageNumber", searchCriteria.getPageNumber());

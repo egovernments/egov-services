@@ -115,6 +115,34 @@
      - datePicker
      resultObjectName: autoUi //Object name from which above values will be picked from response
     ```
+  - ##### showHideFields
+    Show OR hide fields/groups based on certain conditions such as, show a text field only on click of a checkbox or hide a text field based on certain value of a dropdown and so on.
+    ```
+    showHideFields:
+    autoUi[0].textField: //JsonPath based on which you want to show/hide other fields/groups
+    - ifValue: abcd //Value @ in that JsonPath to trigger show/hide
+      showFields: //Show these fields if the value is abcd
+      - autoUi[0].textArea
+      hideFields: //Hide these fields if the value is abcd
+      - autoUi[0].datePicker
+      showGroups: //Show these groups if the value is abcd
+      - Group3
+      hideGroups: //Hide these groups if the value is abcd
+      - Group4
+    ```
+  - ##### tables
+    To add table components in UI which have dynamic fields such as dropdowns, textFields, etc.
+    ```
+    tables:
+    autoUi[0].table: \\Json path for the table component
+      group: Group2 \\In which group this table will be added(From the above mentioned groups)
+      columns: \\Table column header\labels
+      - pinCode
+      - email
+      values: \\Json path of the fields to be included in the table rows, these json paths will be replaced with their complete field objects that includes name, jsonPath, pattern, type, patternErrorMsg, etc
+      - autoUi[0].table[0].pinCode
+      - autoUi[0].table[0].email
+    ```
 #### Things to add/change in CONTRACT.yaml (*Refer example for additional help*)
 - ##### x-ui-info (**_MANDATORY_**)
   To refer the ui-info file in your contract, this is required.

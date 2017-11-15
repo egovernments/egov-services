@@ -1,5 +1,7 @@
 package org.egov.swm.web.controller;
 
+import javax.validation.Valid;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.swm.domain.model.Pagination;
@@ -10,9 +12,14 @@ import org.egov.swm.domain.service.RefillingPumpStationService;
 import org.egov.swm.web.requests.RefillingPumpStationRequest;
 import org.egov.swm.web.requests.RefillingPumpStationResponse;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/refillingpumpstations")
@@ -29,14 +36,11 @@ public class RefillingPumpStationController {
 	public RefillingPumpStationResponse create(
 			@RequestBody @Valid RefillingPumpStationRequest refillingPumpStationRequest) {
 
-		RefillingPumpStationResponse refillingPumpStationResponse = new RefillingPumpStationResponse();
-		refillingPumpStationResponse.setResponseInfo(getResponseInfo(refillingPumpStationRequest.getRequestInfo()));
-
 		refillingPumpStationRequest = refillingPumpStationService.create(refillingPumpStationRequest);
 
-		refillingPumpStationResponse.setRefillingPumpStations(refillingPumpStationRequest.getRefillingPumpStations());
-
-		return refillingPumpStationResponse;
+		return RefillingPumpStationResponse.builder()
+				.responseInfo(getResponseInfo(refillingPumpStationRequest.getRequestInfo()))
+				.refillingPumpStations(refillingPumpStationRequest.getRefillingPumpStations()).build();
 	}
 
 	@PostMapping("/_update")
@@ -44,14 +48,11 @@ public class RefillingPumpStationController {
 	public RefillingPumpStationResponse update(
 			@RequestBody @Valid RefillingPumpStationRequest refillingPumpStationRequest) {
 
-		RefillingPumpStationResponse refillingPumpStationResponse = new RefillingPumpStationResponse();
-		refillingPumpStationResponse.setResponseInfo(getResponseInfo(refillingPumpStationRequest.getRequestInfo()));
-
 		refillingPumpStationRequest = refillingPumpStationService.update(refillingPumpStationRequest);
 
-		refillingPumpStationResponse.setRefillingPumpStations(refillingPumpStationRequest.getRefillingPumpStations());
-
-		return refillingPumpStationResponse;
+		return RefillingPumpStationResponse.builder()
+				.responseInfo(getResponseInfo(refillingPumpStationRequest.getRequestInfo()))
+				.refillingPumpStations(refillingPumpStationRequest.getRefillingPumpStations()).build();
 	}
 
 	@PostMapping("/_search")
@@ -62,7 +63,7 @@ public class RefillingPumpStationController {
 
 		Pagination<RefillingPumpStation> refillingPumpStationList = refillingPumpStationService
 				.search(refillingPumpStationSearch);
-		
+
 		return RefillingPumpStationResponse.builder().refillingPumpStations(refillingPumpStationList.getPagedData())
 				.responseInfo(getResponseInfo(requestInfo)).page(new PaginationContract(refillingPumpStationList))
 				.build();

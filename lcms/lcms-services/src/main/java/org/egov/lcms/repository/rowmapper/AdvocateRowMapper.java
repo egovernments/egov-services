@@ -17,7 +17,8 @@ public class AdvocateRowMapper implements RowMapper<Advocate>{
 		Advocate advocate = new Advocate();
 		advocate.setCode(rs.getString("code"));
 		advocate.setName(rs.getString("name"));
-		advocate.setOrganizationName(rs.getString("organizationName"));
+		advocate.setAgencyName(rs.getString("agencyName"));
+		advocate.setAgencyCode(rs.getString("agencycode"));
 		advocate.setIsIndividual(rs.getBoolean("isIndividual"));
 		advocate.setTitle(rs.getString("title"));
 		advocate.setFirstName(rs.getString("firstName"));
@@ -43,7 +44,7 @@ public class AdvocateRowMapper implements RowMapper<Advocate>{
 		advocate.setBankName(rs.getString("bankName"));
 		advocate.setBankBranch(rs.getString("bankBranch"));
 		advocate.setBankAccountNo(rs.getString("bankAccountNo"));
-		advocate.setIsfcCode(rs.getString("isfcCode"));
+		advocate.setIfscCode(rs.getString("ifscCode"));
 		advocate.setMicr(rs.getString("micr"));
 		advocate.setIsActive(rs.getBoolean("isActive"));
 		advocate.setIsTerminate(rs.getBoolean("isTerminate"));
@@ -51,6 +52,8 @@ public class AdvocateRowMapper implements RowMapper<Advocate>{
 		advocate.setTerminationDate(rs.getLong("terminationDate"));
 		advocate.setReasonOfTermination(rs.getString("reasonOfTermination"));
 		advocate.setTenantId(rs.getString("tenantId"));
+		advocate.setStatus(getString(rs.getString("status")));
+		
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(rs.getString("createdBy"));
 		auditDetails.setLastModifiedBy(rs.getString("lastModifiedBy"));
@@ -60,5 +63,8 @@ public class AdvocateRowMapper implements RowMapper<Advocate>{
 		
 		return advocate;
 	}
-
+	
+	private String getString(Object object) {
+		return object == null ? null : object.toString();
+	}
 }

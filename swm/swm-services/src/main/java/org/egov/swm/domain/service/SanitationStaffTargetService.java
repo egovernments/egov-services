@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.Pagination;
@@ -12,24 +11,17 @@ import org.egov.swm.domain.model.Route;
 import org.egov.swm.domain.model.RouteSearch;
 import org.egov.swm.domain.model.SanitationStaffTarget;
 import org.egov.swm.domain.model.SanitationStaffTargetSearch;
-import org.egov.swm.domain.model.SwmProcess;
 import org.egov.swm.domain.repository.SanitationStaffTargetRepository;
-import org.egov.swm.persistence.entity.DumpingGroundEntity;
 import org.egov.swm.web.contract.EmployeeResponse;
 import org.egov.swm.web.repository.BoundaryRepository;
 import org.egov.swm.web.repository.EmployeeRepository;
 import org.egov.swm.web.repository.IdgenRepository;
-import org.egov.swm.web.repository.MdmsRepository;
 import org.egov.swm.web.requests.SanitationStaffTargetRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import net.minidev.json.JSONArray;
 
 @Service
 @Transactional(readOnly = true)
@@ -48,7 +40,10 @@ public class SanitationStaffTargetService {
 	private RouteService routeService;
 
 	@Autowired
-	private MdmsRepository mdmsRepository;
+	private DumpingGroundService dumpingGroundService;
+
+	@Autowired
+	private SwmProcessService swmProcessService;
 
 	@Autowired
 	private BoundaryRepository boundaryRepository;
@@ -113,11 +108,10 @@ public class SanitationStaffTargetService {
 
 	private void validate(SanitationStaffTargetRequest sanitationStaffTargetRequest) {
 
-		JSONArray responseJSONArray = null;
-		ObjectMapper mapper = new ObjectMapper();
 		EmployeeResponse employeeResponse = null;
 		RouteSearch routeSearch = new RouteSearch();
 		Pagination<Route> routes;
+		Boundary boundary;
 		for (SanitationStaffTarget sanitationStaffTarget : sanitationStaffTargetRequest.getSanitationStaffTargets()) {
 
 			// Validate Boundary
@@ -129,8 +123,8 @@ public class SanitationStaffTargetService {
 
 			if (sanitationStaffTarget.getLocation() != null && sanitationStaffTarget.getLocation().getCode() != null) {
 
-				Boundary boundary = boundaryRepository.fetchBoundaryByCode(
-						sanitationStaffTarget.getLocation().getCode(), sanitationStaffTarget.getTenantId());
+				boundary = boundaryRepository.fetchBoundaryByCode(sanitationStaffTarget.getLocation().getCode(),
+						sanitationStaffTarget.getTenantId());
 
 				if (boundary != null)
 					sanitationStaffTarget.setLocation(boundary);
@@ -150,16 +144,9 @@ public class SanitationStaffTargetService {
 			if (sanitationStaffTarget.getSwmProcess() != null
 					&& sanitationStaffTarget.getSwmProcess().getCode() != null) {
 
-				responseJSONArray = mdmsRepository.getByCriteria(sanitationStaffTarget.getTenantId(),
-						Constants.MODULE_CODE, Constants.SWMPROCESS_MASTER_NAME, "code",
-						sanitationStaffTarget.getSwmProcess().getCode(), sanitationStaffTargetRequest.getRequestInfo());
-
-				if (responseJSONArray != null && responseJSONArray.size() > 0) {
-					sanitationStaffTarget
-							.setSwmProcess(mapper.convertValue(responseJSONArray.get(0), SwmProcess.class));
-				} else
-					throw new CustomException("ServicesOffered",
-							"Given ServicesOffered is invalid: " + sanitationStaffTarget.getSwmProcess().getCode());
+				sanitationStaffTarget.setSwmProcess(swmProcessService.getSwmProcess(sanitationStaffTarget.getTenantId(),
+						sanitationStaffTarget.getSwmProcess().getCode(),
+						sanitationStaffTargetRequest.getRequestInfo()));
 
 			}
 
@@ -217,17 +204,9 @@ public class SanitationStaffTargetService {
 			if (sanitationStaffTarget.getDumpingGround() != null
 					&& sanitationStaffTarget.getDumpingGround().getCode() != null) {
 
-				responseJSONArray = mdmsRepository.getByCriteria(sanitationStaffTarget.getTenantId(),
-						Constants.MODULE_CODE, Constants.DUMPINGGROUND_MASTER_NAME, "code",
-						sanitationStaffTarget.getDumpingGround().getCode(),
-						sanitationStaffTargetRequest.getRequestInfo());
-
-				if (responseJSONArray != null && responseJSONArray.size() > 0)
-					sanitationStaffTarget.setDumpingGround(
-							mapper.convertValue(responseJSONArray.get(0), DumpingGroundEntity.class).toDomain());
-				else
-					throw new CustomException("DumpingGround",
-							"Given DumpingGround is invalid: " + sanitationStaffTarget.getDumpingGround().getCode());
+				sanitationStaffTarget.setDumpingGround(dumpingGroundService.getDumpingGround(
+						sanitationStaffTarget.getTenantId(), sanitationStaffTarget.getDumpingGround().getCode(),
+						sanitationStaffTargetRequest.getRequestInfo()));
 
 			}
 

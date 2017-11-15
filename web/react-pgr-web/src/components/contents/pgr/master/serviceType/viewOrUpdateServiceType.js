@@ -159,6 +159,7 @@ class viewOrUpdateServiceType extends Component {
                                           <th>#</th>
                                           <th>{translate('core.lbl.add.name')}</th>
                                           <th>{translate('core.lbl.code')}</th>
+                                          <th>{translate('pgr.service.localName')}</th>
                                           <th>{translate('core.category')}</th>
                                           <th>{translate('pgr.lbl.active')}</th>
                                           <th>{translate('core.lbl.description')}</th>
@@ -179,7 +180,9 @@ class viewOrUpdateServiceType extends Component {
                                               <td>{i+1}</td>
                                               <td>{e.serviceName}</td>
                                               <td>{e.serviceCode}</td>
+                                              <td>{e.localName}</td>
                                               <td>{getNameById(categorySource, e.category)}</td>
+
                                               <td>{e.active ? "Yes" : "No"}</td>
                                               <td>{e.description}</td>
                                               <td>{e.slaHours}</td>

@@ -226,18 +226,17 @@ public class PropertiesManager {
 	@Value("${advocate.assign.details.code.format}")
 	private String advocateDetailsCodeFormat;
 
-    @Value("${egov.lcms.legacy.case.create}")
-    private String createLegacyCase;
-    
-    @Value("${egov.lcms.legacy.hearing.create}")
-    private String createLegacyHearing;
-    
-    @Value("${egov.lcms.legacy.case.voucher.create}")
-    private String createLegacyCaseVoucher;
-    
-    @Value("${egov.lcms.legacy.case.advocate.create}")
-    private String createLegacyCaseAdvocate;
-    
+	@Value("${egov.lcms.legacy.case.create}")
+	private String createLegacyCase;
+
+	@Value("${egov.lcms.legacy.hearing.create}")
+	private String createLegacyHearing;
+
+	@Value("${egov.lcms.legacy.case.voucher.create}")
+	private String createLegacyCaseVoucher;
+
+	@Value("${egov.lcms.legacy.case.advocate.create}")
+	private String createLegacyCaseAdvocate;
 
 	@Value("${egov.lcms.update.notice}")
 	private String updateNoticeTopic;
@@ -398,7 +397,6 @@ public class PropertiesManager {
 	@Value("${egov.lcms.days.mandatory.message}")
 	private String daysMessage;
 
-
 	@Value("${egov.lcms.assign.advocate.mandatory.code}")
 	private String advocateDetailsMandatorycode;
 
@@ -416,121 +414,170 @@ public class PropertiesManager {
 
 	@Value("${egov.lcms.assign.advocatedetails.assigndate.message}")
 	private String advocateAssignDateMessage;
-	
+
 	@Value("${lcms.cases.error.code}")
 	private String caseResponseErrorCode;
-	
+
 	@Value("${lcms.parawisecomments.error.code}")
 	private String paraWiseResponseErrorCode;
-	
+
 	@Value("${lcms.hearingdetails.error.code}")
 	private String hearingDetailsResponseErrorCode;
-	
+
 	@Value("${lcms.advocatedetails.error.code}")
 	private String advocateDetailsResponseErrorCode;
-	
+
 	@Value("${lcms.casevoucher.error.code}")
 	private String caseVoucherResponseErrorCode;
-	
 
 	@Value("${lcms.advocatedetails.error.msg}")
 	private String advocateDetailsResponseErrorMsg;
-	
+
 	@Value("${lcms.hearingdetails.error.msg}")
 	private String hearingDetailsResponseErrorMsg;
-	
+
 	@Value("${lcms.parawisecomments.error.msg}")
 	private String paraWiseCommentsResponseErrorMsg;
-	
+
 	@Value("${lcms.casevoucher.error.msg}")
 	private String caseVoucherResponseErrorMsg;
-	
+
 	@Value("${lcms.opinion.error.msg}")
 	private String opinionSearchErrorMsg;
-	
+
 	@Value("${lcms.advocate.error.code}")
 	private String advocateErrorCode;
-	
+
 	@Value("${lcms.advocate.error.msg}")
 	private String advocateErrorMsg;
-	
+
 	@Value("${lcms.notice.error.code}")
 	private String noticeErrorMsg;
-	
+
 	@Value("${lcms.notice.error.msg}")
 	private String noticeErrorCode;
-	
+
 	@Value("${lcms.register.error.code}")
 	private String registerErrorCode;
-	
+
 	@Value("${lcms.register.error.msg}")
 	private String registerErrorMsg;
 
-
 	@Value("${egov.services.common-masters.hostname}")
 	private String commonServiceBasepath;
-	
+
 	@Value("${egov.services.common.masters.base.path}")
 	private String commonServiceSearchPath;
-	
+
 	@Value("${egov.services.mdms-services.hostname}")
 	private String mdmsBasePath;
-	
+
 	@Value("${egov.services.mdms.searchpath}")
 	private String mdmsSearhPath;
-	
+
 	@Value("${egov.lcms.create.summon.indexer}")
-    private String pushSummonCreateToIndexer;
-	
+	private String pushSummonCreateToIndexer;
+
 	@Value("${egov.lcms.legacy.case.create.indexer}")
-    private String createLegacyCaseIndexer;
-	
+	private String createLegacyCaseIndexer;
+
 	@Value("${egov.services.department.search.code}")
 	private String searchDeparatmentErrorCode;
-	
+
 	@Value("${egov.services.department.search.message}")
 	private String searchDepartmentErrorMessage;
-	
+
 	@Value("${egov.lcms.evidence.ulb.format}")
 	private String evidenceUlbFormat;
-	
+
 	@Value("${egov.lcms.evidence.ulb.name}")
 	private String evidenceUlbName;
-	
+
 	@Value("${egov.lcms.evidence.create}")
 	private String evidenceCreateTopic;
-	
+
 	@Value("${egov.lcms.evidence.update}")
 	private String evidenceUpdateTopic;
-	
+
 	@Value("${egov.lcms.evidence.error.code}")
 	private String evidenceResponseErrorCode;
-	
+
 	@Value("${egov.lcms.evidence.error.msg}")
 	private String evidenceResponseErrorMsg;
-	
+
 	@Value("${egov.lcms.lastmodifiedtime}")
 	private String lastModifiedTime;
-	
+
 	@Value("${egov.lcms.update.assign.advocate}")
 	private String updateAssignAdvocate;
-	
-	
+
 	@Value("${egov.lcms.assign.advocatedetails.size}")
 	private String advocateDetailsSize;
-	
+
 	@Value("${egov.lcms.assign.advocatedetails.size.message}")
 	private String advocateDetailsSizeMessage;
-	
+
 	@Value("${egov.lcms.casedetails.error.code}")
 	private String caseDetailsResponseErrorCode;
-	
+
 	@Value("${egov.lcms.casedetails.error.msg}")
 	private String caseDetailsResponseErrorMsg;
-	
+
 	@Value("${egov.lcms.caseno.error.code}")
 	private String caseNoErrorCode;
-	
+
 	@Value("${egov.lcms.caseno.error.msg}")
 	private String caseNoErrorMsg;
+
+	@Value("${egov.agency.ulb.format}")
+	private String agencyUlbFormat;
+
+	@Value("${egov.agency.ulb.name}")
+	private String agencyUlbName;
+
+	@Value("${egov.personDetails.ulb.format}")
+	private String personDetailsUlbFormat;
+
+	@Value("${egov.personDetails.ulb.name}")
+	private String personDetailsUlbName;
+
+	@Value("${egov.agency.created}")
+	private String agencyCreated;
+
+	@Value("${egov.agency.updated}")
+	private String agencyUpdated;
+
+	@Value("${egov.personaldetails.create}")
+	private String createPersonalDetailsTopic;
+
+	@Value("${egov.agencyaddress.error.code}")
+	private String agencyAddressErrorCode;
+
+	@Value("${egov.agencyaddress.error.msg}")
+	private String agencyAddressErrorMsg;
+
+	@Value("${egov.agencyname.error.code}")
+	private String agencyNameErrorCode;
+
+	@Value("${egov.agencyname.error.msg}")
+	private String agencyNameErrorMsg;
+
+	@Value("${egov.lcms.empanelment.error.code}")
+	private String empanelmentErrorCode;
+
+	@Value("${egov.lcms.empanelment.error.msg}")
+	private String empanelmentErrorMsg;
+
+	@Value("${egov.lcms.bankdetails.error.code}")
+	private String bankDetailsErrorCode;
+
+	@Value("${egov.lcms.bankdetails.error.msg}")
+	private String bankDetailsErrorMsg;
+	
+	@Value("${egov.lcms.agency.substring.code}")
+	private String agencySubStringCode;
+	
+	@Value("${egov.lcms.advocate.substring.code}")
+	private String advocateSubStringCode;
+
 }

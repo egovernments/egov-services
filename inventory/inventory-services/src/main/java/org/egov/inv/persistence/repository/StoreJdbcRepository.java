@@ -44,11 +44,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import io.swagger.model.Store;
-import io.swagger.model.StoreGetRequest;
-import io.swagger.model.Pagination;
 
-
+import org.egov.common.JdbcRepository;
+import org.egov.common.Pagination;
+import org.egov.inv.model.Store;
+import org.egov.inv.model.StoreGetRequest;
 import org.egov.inv.persistence.entity.StoreEntity;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
@@ -93,8 +93,8 @@ public class StoreJdbcRepository extends JdbcRepository{
         if (storeGetRequest.getCode() != null) {
             if (params.length() > 0)
                 params.append(" and ");
-            params.append("code = :code");
-            paramValues.put("code", storeGetRequest.getCode());
+            params.append("code in (:codes)");
+            paramValues.put("codes", storeGetRequest.getCode());
         }
         if (storeGetRequest.getName() != null) {
             if (params.length() > 0)

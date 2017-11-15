@@ -525,7 +525,7 @@ handleProcess(e) {
                   <div className="col-sm-6">
                       <div className="row">
                           <div className="col-sm-6 label-text">
-                            <label for="">From Date <span>*</span></label>
+                            <label for="">From Date </label>
                           </div>
                           <div className="col-sm-6">
                           <div className="text-no-ui">
@@ -540,7 +540,7 @@ handleProcess(e) {
                     <div className="col-sm-6">
                         <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label for="">To Date <span>*</span> </label>
+                              <label for="">To Date  </label>
                             </div>
                             <div className="col-sm-6">
                             <div className="text-no-ui">
@@ -559,7 +559,7 @@ handleProcess(e) {
                 <div className="col-sm-6">
                     <div className="row">
                         <div className="col-sm-6 label-text">
-                            <label for="leaveType">Leave Type<span>*</span></label>
+                            <label for="leaveType">Leave Type </label>
                         </div>
                         <div className="col-sm-6">
                             <div className="styled-select">
@@ -579,7 +579,7 @@ handleProcess(e) {
                   <div className="col-sm-6">
                       <div className="row">
                           <div className="col-sm-6 label-text">
-                              <label for="Reason">Reason <span>*</span></label>
+                              <label for="Reason">Reason </label>
                           </div>
                           <div className="col-sm-6">
                           <textarea rows="4" cols="50" id="reason" name="reason" value={reason}

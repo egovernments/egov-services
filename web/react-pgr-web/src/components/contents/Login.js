@@ -23,6 +23,8 @@ import IconButton from 'material-ui/IconButton';
 import $ from 'jquery';
 var axios = require('axios');
 
+window.counter=0;
+
 const hideAutoFillColorStyle = {
   WebkitBoxShadow: '0 0 0 1000px white inset'
 };
@@ -174,9 +176,9 @@ class Login extends Component {
    }
 
    loginRequest (e) {
-	    var current = this;
+     var current = this;
       this.props.setLoadingStatus('loading');
-	   e.preventDefault();
+    e.preventDefault();
       var self = this, props = this.props, flag = 0;
       let {setActionList}=this.props;
       self.setState({
@@ -202,9 +204,45 @@ class Login extends Component {
       localStorage.setItem("token", response.data.access_token);
       localStorage.setItem("userRequest", JSON.stringify(response.data.UserRequest));
       localStorage.setItem("auth", response.data.access_token);
-			localStorage.setItem("type", response.data.UserRequest.type);
-			localStorage.setItem("id", response.data.UserRequest.id);
-			localStorage.setItem("tenantId", response.data.UserRequest.tenantId);
+     localStorage.setItem("type", response.data.UserRequest.type);
+     localStorage.setItem("id", response.data.UserRequest.id);
+     localStorage.setItem("tenantId", response.data.UserRequest.tenantId);
+      localStorage.setItem("refresh-token", response.data.refresh_token);
+      localStorage.setItem("expires-in", response.data.expires_in);
+
+      window.timeObject= setInterval(function() {
+          // console.log(window.counter);
+          window.counter++;
+          if (window.counter==(parseInt(localStorage.getItem("expires-in"))-300)) {
+            var instanceTwo = axios.create({
+              baseURL: window.location.origin,
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': 'Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0',
+              }
+            });
+
+            var paramsTwo = new URLSearchParams();
+            paramsTwo.append('grant_type', 'refresh_token');
+            paramsTwo.append('tenantId', localStorage.getItem("tenantId"));
+            paramsTwo.append('refresh_token',localStorage.getItem("refresh-token"));
+
+            instanceTwo.post('/user/oauth/token', paramsTwo).then(function(responseTwo) {
+                localStorage.setItem("auth-token", responseTwo.data.access_token);
+                localStorage.setItem("token", responseTwo.data.access_token);
+                localStorage.setItem("userRequest", JSON.stringify(responseTwo.data.UserRequest));
+                localStorage.setItem("auth", responseTwo.data.access_token);
+               localStorage.setItem("type", responseTwo.data.UserRequest.type);
+               localStorage.setItem("id", responseTwo.data.UserRequest.id);
+               localStorage.setItem("tenantId", responseTwo.data.UserRequest.tenantId);
+                localStorage.setItem("refresh-token", responseTwo.data.refresh_token);
+                localStorage.setItem("expires-in", responseTwo.data.expires_in);
+                window.counter=0;
+           });
+          }
+      },1000);
+
+
 
 
       if(window.location.href.indexOf("?") > -1 && window.location.href.indexOf("link") > -1) {
@@ -281,7 +319,7 @@ class Login extends Component {
         });
 
       }).catch(function(response) {
-		    current.props.setLoadingStatus('hide');
+       current.props.setLoadingStatus('hide');
         self.setState({
           errorMsg: translate("login.error.msg")
         });
@@ -596,6 +634,15 @@ class Login extends Component {
         signUpErrorMsg: ""
       })
    }
+
+   searchGrievanceSRN = () => {
+      let {setRoute, setHome} = this.props;
+      if(this.state.searchGrievanceSRN && this.state.searchGrievanceSRN.trim()){
+          setRoute("/pgr/viewGrievance/"+ encodeURIComponent(this.state.searchGrievanceSRN.trim()));
+          setHome(true);
+      }
+   }
+
    render() {
       //console.log("IN LOGIN");
       let {
@@ -773,7 +820,7 @@ class Login extends Component {
                           <p>{translate('pgr.lbl.apply.servicetag')}</p>
                         </div>
                       </Col>
-                      {/*<Col xs={12} md={12} style={styles.buttonTopMargin} onClick={this.openAnonymousComplaint}>
+                      <Col xs={12} md={12} style={styles.buttonTopMargin} onClick={this.openAnonymousComplaint}>
                         <IconButton  style={styles.floatingIconButton} >
                             <i className="material-icons">mode_edit</i>
                         </IconButton>
@@ -781,7 +828,21 @@ class Login extends Component {
                           <h4>{translate("pgr.lbl.register.grievance")}</h4>
                           <p>{translate('pgr.lbl.register.grievance')}</p>
                         </div>
-                      </Col>*/}
+                      </Col>
+                      <Col xs={12} md={12} style={styles.buttonTopMargin}>
+                        <IconButton  style={styles.floatingIconButton}  primary={true}>
+                            <i className="material-icons">search</i>
+                        </IconButton>
+                        <div style={styles.floatLeft}>
+                          <h4>{translate('pgr.lbl.search.grievance')}</h4>
+                          <TextField
+                            hintText={translate('pgr.lbl.search.grievance')}
+                            value={this.state.searchGrievanceSRN || ''}
+                            onChange={(e, newValue) => {this.setState({searchGrievanceSRN:newValue})}}
+                          />
+                          <RaisedButton label={translate('core.lbl.search')} onClick={(e)=>{this.searchGrievanceSRN(e)}} secondary={true} className="searchButton"/>
+                        </div>
+                      </Col>
                       <Col xs={12} md={12} style={styles.buttonTopMargin}>
                         <IconButton  style={styles.floatingIconButton}  primary={true}>
                             <i className="material-icons">search</i>
@@ -796,7 +857,6 @@ class Login extends Component {
                           <RaisedButton label={translate('core.lbl.search')} onClick={(e)=>{searchSRN(e)}} secondary={true} className="searchButton"/>
                         </div>
                       </Col>
-
                       <Col xs={12} md={12} style={styles.buttonTopMargin}>
                         <IconButton  style={styles.floatingIconButton}  primary={true}>
                             <i className="material-icons">search</i>

@@ -6,13 +6,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.CollectionPoint;
 import org.egov.swm.domain.model.CollectionPointSearch;
 import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.Route;
+import org.egov.swm.domain.model.RouteSearch;
 import org.egov.swm.domain.model.SanitationStaffTarget;
 import org.egov.swm.domain.model.SanitationStaffTargetMap;
 import org.egov.swm.domain.model.SanitationStaffTargetSearch;
+import org.egov.swm.domain.service.DumpingGroundService;
+import org.egov.swm.domain.service.RouteService;
+import org.egov.swm.domain.service.SwmProcessService;
 import org.egov.swm.persistence.entity.SanitationStaffTargetEntity;
+import org.egov.swm.web.contract.EmployeeResponse;
+import org.egov.swm.web.repository.BoundaryRepository;
+import org.egov.swm.web.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
@@ -27,6 +37,21 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 
 	@Autowired
 	public CollectionPointJdbcRepository collectionPointJdbcRepository;
+
+	@Autowired
+	private DumpingGroundService dumpingGroundService;
+
+	@Autowired
+	private SwmProcessService swmProcessService;
+
+	@Autowired
+	private BoundaryRepository boundaryRepository;
+
+	@Autowired
+	private EmployeeRepository employeeRepository;
+
+	@Autowired
+	private RouteService routeService;
 
 	public Pagination<SanitationStaffTarget> search(SanitationStaffTargetSearch searchRequest) {
 
@@ -117,23 +142,78 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 		List<SanitationStaffTargetMap> collectionPoints;
 		CollectionPointSearch cps;
 		Pagination<CollectionPoint> collectionPointList;
+		Boundary boundary;
+		RouteSearch routeSearch = new RouteSearch();
+		Pagination<Route> routes;
+		EmployeeResponse employeeResponse = null;
+
 		for (SanitationStaffTargetEntity sanitationStaffTargetEntity : sanitationStaffTargetEntities) {
 
-			sstm = SanitationStaffTargetMap.builder().sanitationStaffTarget(sanitationStaffTargetEntity.getTargetNo())
-					.build();
-			sstm.setTenantId(sanitationStaffTargetEntity.getTenantId());
-			collectionPoints = sanitationStaffTargetMapJdbcRepository.search(sstm);
-			if (collectionPoints != null)
-				for (SanitationStaffTargetMap map : collectionPoints) {
-					if (cpCodes.length() > 0)
-						cpCodes.append(",");
-					cpCodes.append(map.getCollectionPoint());
-				}
-			cps = new CollectionPointSearch();
-			cps.setCodes(cpCodes.toString());
-			collectionPointList = collectionPointJdbcRepository.search(cps);
 			sst = sanitationStaffTargetEntity.toDomain();
-			sst.setCollectionPoints(collectionPointList.getPagedData());
+
+			if (sst.getLocation() != null && sst.getLocation().getCode() != null) {
+
+				boundary = boundaryRepository.fetchBoundaryByCode(sst.getLocation().getCode(), sst.getTenantId());
+
+				if (boundary != null)
+					sst.setLocation(boundary);
+			}
+
+			if (sst.getSwmProcess() != null && sst.getSwmProcess().getCode() != null) {
+
+				sst.setSwmProcess(swmProcessService.getSwmProcess(sst.getTenantId(), sst.getSwmProcess().getCode(),
+						new RequestInfo()));
+
+			}
+
+			if (sst.getRoute() != null && sst.getRoute().getCode() != null) {
+
+				routeSearch.setTenantId(sst.getTenantId());
+				routeSearch.setCode(sst.getRoute().getCode());
+				routes = routeService.search(routeSearch);
+
+				if (routes != null && routes.getPagedData() != null && !routes.getPagedData().isEmpty()) {
+					sst.setRoute(routes.getPagedData().get(0));
+				}
+
+			}
+
+			if (sst.getEmployee() != null && sst.getEmployee().getCode() != null) {
+
+				employeeResponse = employeeRepository.getEmployeeByCode(sst.getEmployee().getCode(), sst.getTenantId(),
+						new RequestInfo());
+
+				if (employeeResponse != null && employeeResponse.getEmployees() != null
+						&& !employeeResponse.getEmployees().isEmpty()) {
+					sst.setEmployee(employeeResponse.getEmployees().get(0));
+				}
+
+			}
+
+			if (sst.getDumpingGround() != null && sst.getDumpingGround().getCode() != null) {
+
+				sst.setDumpingGround(dumpingGroundService.getDumpingGround(sst.getTenantId(),
+						sst.getDumpingGround().getCode(), new RequestInfo()));
+
+			}
+			if (sanitationStaffTargetEntity.getTargetNo() != null
+					&& !sanitationStaffTargetEntity.getTargetNo().isEmpty()) {
+				sstm = SanitationStaffTargetMap.builder()
+						.sanitationStaffTarget(sanitationStaffTargetEntity.getTargetNo()).build();
+				sstm.setTenantId(sanitationStaffTargetEntity.getTenantId());
+				collectionPoints = sanitationStaffTargetMapJdbcRepository.search(sstm);
+				if (collectionPoints != null)
+					for (SanitationStaffTargetMap map : collectionPoints) {
+						if (cpCodes.length() > 0)
+							cpCodes.append(",");
+						cpCodes.append(map.getCollectionPoint());
+					}
+				cps = new CollectionPointSearch();
+				cps.setCodes(cpCodes.toString());
+				collectionPointList = collectionPointJdbcRepository.search(cps);
+
+				sst.setCollectionPoints(collectionPointList.getPagedData());
+			}
 			sanitationStaffTargetList.add(sst);
 
 		}

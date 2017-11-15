@@ -16,14 +16,14 @@ const AuthRoute = ({component, ...props}) => {
   const { isPrivate } = component;
   if (isAuthenticated()) {
     //User is Authenticated
-    if (isPrivate==undefined) {
+    if (isPrivate==undefined || isPrivate==false) {
       //If the route is private the user may proceed.
       return <Route { ...props } component={ component } />;
     }
-    else {
-      //If the route is public, the user is redirected to the app's private root.
-      return <Redirect to={ PRIVATE_ROOT } />;
-    }
+    // else {
+    //   //If the route is public, the user is redirected to the app's private root.
+    //   return <Redirect to={ PRIVATE_ROOT } />;
+    // }
   }
   else {
     //User is not Authenticated

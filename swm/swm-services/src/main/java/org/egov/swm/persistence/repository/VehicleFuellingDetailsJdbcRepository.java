@@ -5,10 +5,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.RefillingPumpStation;
+import org.egov.swm.domain.model.RefillingPumpStationSearch;
+import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleFuellingDetails;
 import org.egov.swm.domain.model.VehicleFuellingDetailsSearch;
+import org.egov.swm.domain.model.VehicleSearch;
+import org.egov.swm.domain.repository.RefillingPumpStationRepository;
+import org.egov.swm.domain.repository.VehicleRepository;
+import org.egov.swm.domain.service.FuelTypeService;
 import org.egov.swm.persistence.entity.VehicleFuellingDetailsEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +25,15 @@ import org.springframework.stereotype.Service;
 public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_vehiclefuellingdetails";
+
+	@Autowired
+	private FuelTypeService fuelTypeService;
+
+	@Autowired
+	private RefillingPumpStationRepository refillingPumpStationRepository;
+
+	@Autowired
+	private VehicleRepository vehicleRepository;
 
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {
@@ -133,9 +151,50 @@ public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
 		List<VehicleFuellingDetailsEntity> vehicleFuellingDetailsEntities = namedParameterJdbcTemplate
 				.query(searchQuery.toString(), paramValues, row);
 
-		for (VehicleFuellingDetailsEntity vehicleFuellingDetailsEntity : vehicleFuellingDetailsEntities) {
+		VehicleFuellingDetails vfd;
+		Pagination<RefillingPumpStation> refillingPumpStationList;
+		VehicleSearch vehicleSearch;
+		Pagination<Vehicle> vehicleList;
+		RefillingPumpStationSearch refillingPumpStationSearch;
 
-			vehicleFuellingDetailsList.add(vehicleFuellingDetailsEntity.toDomain());
+		for (VehicleFuellingDetailsEntity vehicleFuellingDetailsEntity : vehicleFuellingDetailsEntities) {
+			vfd = vehicleFuellingDetailsEntity.toDomain();
+
+			if (vfd.getTypeOfFuel() != null && vfd.getTypeOfFuel().getCode() != null
+					&& !vfd.getTypeOfFuel().getCode().isEmpty()) {
+
+				vfd.setTypeOfFuel(fuelTypeService.getFuelType(vfd.getTenantId(), vfd.getTypeOfFuel().getCode(),
+						new RequestInfo()));
+
+			}
+
+			if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
+					&& !vfd.getVehicle().getRegNumber().isEmpty()) {
+
+				vehicleSearch = new VehicleSearch();
+				vehicleSearch.setTenantId(vfd.getTenantId());
+				vehicleSearch.setRegNumber(vfd.getVehicle().getRegNumber());
+				vehicleList = vehicleRepository.search(vehicleSearch);
+
+				if (vehicleList != null && vehicleList.getPagedData() != null && !vehicleList.getPagedData().isEmpty())
+					vfd.setVehicle(vehicleList.getPagedData().get(0));
+
+			}
+
+			if (vfd.getRefuellingStation() != null && vfd.getRefuellingStation().getCode() != null
+					&& vfd.getRefuellingStation().getCode().isEmpty()) {
+				refillingPumpStationSearch = new RefillingPumpStationSearch();
+				refillingPumpStationSearch.setTenantId(vfd.getTenantId());
+				refillingPumpStationSearch.setCode(vfd.getRefuellingStation().getCode());
+
+				refillingPumpStationList = refillingPumpStationRepository.search(refillingPumpStationSearch);
+
+				if (refillingPumpStationList != null && refillingPumpStationList.getPagedData() != null
+						&& !refillingPumpStationList.getPagedData().isEmpty())
+					vfd.setRefuellingStation(refillingPumpStationList.getPagedData().get(0));
+			}
+
+			vehicleFuellingDetailsList.add(vfd);
 		}
 
 		page.setTotalResults(vehicleFuellingDetailsList.size());

@@ -188,7 +188,7 @@ public class LeaveApplicationService {
                     errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_FROMDATE_CUTOFFDATE)
                             + " ";
             }
-            if (leaveApplication.getCompensatoryForDate() != null && !leaveApplication.getCompensatoryForDate().equals("")) {
+            if (leaveApplication.getCompensatoryForDate() != null && !leaveApplication.getCompensatoryForDate().equals("") && leaveApplication.getStateId() == null) {
                 final List<Holiday> holidays = commonMastersRepository.getHolidayByDate(leaveApplicationRequest.getRequestInfo(), leaveApplication.getFromDate(), leaveApplication.getTenantId());
 
                 if (holidays.size() > 0)

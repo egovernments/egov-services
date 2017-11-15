@@ -2,12 +2,19 @@ package org.egov.inv.persistence.queryBuilder;
 
 import java.util.Set;
 
-import org.egov.inv.domain.model.OpeningBalanceSearchCriteria;
+import org.egov.inv.model.OpeningBalanceSearchCriteria;
 import org.springframework.stereotype.Component;
 @Component
 public class OpeningbalanceQueryBuilder {
 	
-	StringBuilder BASE_QUERY = new StringBuilder("SELECT * FROM materialReceipt matrcpt WHERE tenantId = :tenantId");
+	StringBuilder BASE_QUERY = new StringBuilder("SELECT matrcpt.financialyear as financialyear,"
+                  +"matrcpt.receivingstore as storeName,matrcptdtl.material as materialcode,matrcpt.receiptType as materialtypename,"
+                  +"matrcptdtl.uomno as uom,matrcptdtl.receivedqty as qty,matrcptdtl.unitrate as rate,"
+                  +"(matrcptdtl.unitrate * matrcptdtl.receivedqty) as totalamount,matrcptdtl.remarks as remarks"
+                +"FROM materialreceipt matrcpt,materialreceiptdetail matrcptdtl"
+                +"WHERE matrcpt.financialyear = $financialyear"
+                      +" matrcpt.receipttype ='OPENING BALANCE'"
+                      +"AND matrcpt.tenantid= tenantId AND matrcpt.tenantid=matrcptdtl.tenantid AND matrcpt.mrnnumber = matrcptdtl.mrnnumber");
 
 	
 public String getQuery(OpeningBalanceSearchCriteria searchCriteria) {
@@ -23,19 +30,19 @@ public String buildSearchQuery(StringBuilder selectQuery,OpeningBalanceSearchCri
 
 	
 	if(!searchCriteria.isMrnNumberAbsent())
-        addWhereClauseWithAnd(selectQuery,"financialYear","financialYear");
+        addWhereClauseWithAnd(selectQuery,"financialYear","matrcpt.financialYear");
 
     if(!searchCriteria.isFinancialYearAbsent())
     	addWhereClauseWithAnd(selectQuery, "receiptNumber", "receiptNumber");
 
     if(!searchCriteria.ismaterialNameAbsent())
-    	addWhereClauseWithAnd(selectQuery, "mrnNumber", "mrnNumber");
+    	addWhereClauseWithAnd(selectQuery, "mrnNumber", "matrcpt.mrnNumber");
     
-    if(!searchCriteria.isSupplierCodeAbsent())
+    if(!searchCriteria.isStoreNameAbsent())
     	addWhereClauseWithAnd(selectQuery, "supplierCode", "supplierCode");
     
-    if(!searchCriteria.isreceiptNumberAbsent())
-    	addWhereClauseWithAnd(selectQuery, "materialName", "materialName");
+    if(!searchCriteria.isMaterialcodeAbsent())
+    	addWhereClauseWithAnd(selectQuery, "materialcode", "matrcptdtl.material");
     
     return selectQuery.toString();
 }

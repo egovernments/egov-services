@@ -3,28 +3,25 @@ package org.egov.inv.domain.service;
 import java.util.Calendar;
 import java.util.List;
 
+import org.egov.common.DomainService;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.inv.domain.model.OpeningBalanceSearchCriteria;
-import org.egov.inv.persistence.repository.IdgenRepository;
+import org.egov.inv.model.MaterialReceipt;
+import org.egov.inv.model.MaterialReceipt.ReceiptTypeEnum;
+import org.egov.inv.model.OpeningBalanceRequest;
+import org.egov.inv.model.OpeningBalanceResponse;
+import org.egov.inv.model.OpeningBalanceSearchCriteria;
 import org.egov.inv.persistence.repository.OpeningBalanceRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import io.swagger.model.MaterialReceipt;
-import io.swagger.model.MaterialReceipt.ReceiptTypeEnum;
-import io.swagger.model.OpeningBalanceRequest;
-import io.swagger.model.OpeningBalanceResponse;
-
 @Service
-public class OpeningBalanceService {
+public class OpeningBalanceService extends DomainService{
 	
 	@Autowired
 	private IdgenRepository idgenRepository;
 	
-	@Autowired
-	private InventoryUtilityService inventoryUtilityService;
 
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
@@ -59,7 +56,7 @@ public class OpeningBalanceService {
 		});
 		for (MaterialReceipt material : headerRequest.getMaterialReceipt()) {
 			material.setAuditDetails(
-					inventoryUtilityService.mapAuditDetails(headerRequest.getRequestInfo(), tenantId));
+					getAuditDetails(headerRequest.getRequestInfo(),"CREATE"));
 			material.setId(openingBalanceRepository.getSequence(material));
 		}
 		kafkaTemplate.send(createTopic, headerRequest);
@@ -78,7 +75,7 @@ public class OpeningBalanceService {
 		
 		for (MaterialReceipt material : openBalReq.getMaterialReceipt()) {
 			material.setAuditDetails(
-					inventoryUtilityService.mapAuditDetails(openBalReq.getRequestInfo(), tenantId));
+					mapAuditDetails(openBalReq.getRequestInfo()));
 		}
 		kafkaTemplate.send(updateTopic, openBalReq);
 		return openBalReq.getMaterialReceipt();	

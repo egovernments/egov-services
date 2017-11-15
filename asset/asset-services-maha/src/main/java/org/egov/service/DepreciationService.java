@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -27,6 +28,7 @@ import org.egov.model.enums.ReasonForFailure;
 import org.egov.model.enums.Sequence;
 import org.egov.model.enums.TransactionType;
 import org.egov.repository.DepreciationRepository;
+import org.egov.repository.MasterDataRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,9 @@ public class DepreciationService {
 
 	@Autowired
 	private MasterDataService mDService;
+	
+	@Autowired
+	private MasterDataRepository mDRepo;
 
 	@Autowired
 	private ApplicationProperties applicationProperties;
@@ -150,6 +155,8 @@ public class DepreciationService {
 			List<DepreciationDetail> depDetList, List<CurrentValue> currValList, Long fromDate, Long toDate) {
 
 		depreciationInputsList.forEach(a -> {
+			
+			log.info("the current depreciation input object : "+ a);
 			// TODO get value form master
 			BigDecimal minValue = BigDecimal.ONE;
 			DepreciationStatus status = DepreciationStatus.FAIL;
@@ -197,17 +204,16 @@ public class DepreciationService {
 		// deciding the from date from the last depreciation date
 		if (depInputs.getLastDepreciationDate()!=null && depInputs.getLastDepreciationDate().compareTo(fromDate) >= 0) {
 			fromDate = depInputs.getLastDepreciationDate();
-			fromDate += 3600000l; // adding one day in milli seconds to start depreciation from next day
+			fromDate += 86400000l; // adding one day in milli seconds to start depreciation from next day
 		} else if (depInputs.getDateOfCreation() > fromDate) {
 			fromDate = depInputs.getDateOfCreation();
-			fromDate += 3600000l;
+			fromDate += 86400000l;
 		}
 
 		// getting the no of days betweeen the from and todate (including both from and
 		// to date)
 		Long noOfDays = ((toDate - fromDate) / 1000 / 60 / 60 / 24) + 1;
-		System.err
-				.println("no of days between fromdate : " + fromDate + " and todate : " + toDate + " is : " + noOfDays);
+		log.info("no of days between fromdate : " + fromDate + " and todate : " + toDate + " is : " + noOfDays);
 
 		// deprate for the no of days = no of days * calculated dep rate per day
 		Double depRateForGivenPeriod = noOfDays * depInputs.getDepreciationRate() / 365;
@@ -228,9 +234,11 @@ public class DepreciationService {
 		// setting the toDate hours to 23 and mins to 59
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(todate);
+		calendar.setTimeZone(TimeZone.getTimeZone(applicationProperties.getTimeZone()));
 		calendar.set(Calendar.HOUR_OF_DAY, 23);
 		calendar.set(Calendar.MINUTE, 59);
 
+		log.info(" to date set to 23 59... : "+todate);
 		criteria.setToDate(calendar.getTimeInMillis());
 		criteria.setFinancialYear(financialYear.getFinYearRange());
 		criteria.setFromDate(financialYear.getStartingDate());
@@ -257,8 +265,10 @@ public class DepreciationService {
 		masterMap.put("AssetCategory", fieldMap);
 		moduleMap.put("ASSET", masterMap);
 
+		if(!tenantId.equals("default"))
+			tenantId=tenantId.split(".")[0];
 		Map<Long, AssetCategory> assetCatMap = mDService.getAssetCategoryMapFromJSONArray(
-				mDService.getStateWideMastersByListParams(moduleMap, requestInfo, tenantId).get("ASSET"));
+				mDRepo.getMastersByListParams(moduleMap, requestInfo, tenantId).get("ASSET"));
 
 		depreciationInputsList
 				.forEach(a -> a.setDepreciationRate(assetCatMap.get(a.getAssetCategory()).getDepreciationRate()));

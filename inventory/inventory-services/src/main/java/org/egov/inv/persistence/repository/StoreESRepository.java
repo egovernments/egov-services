@@ -47,7 +47,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.egov.inv.domain.service.ElasticSearchUtils;
+import org.egov.common.ESRepository;
+import org.egov.common.ElasticSearchUtils;
+import org.egov.common.Pagination;
+import org.egov.inv.model.Store;
+import org.egov.inv.model.StoreGetRequest;
 import org.egov.inv.persistence.entity.StoreEntity;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
@@ -62,9 +66,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.swagger.model.Pagination;
-import io.swagger.model.Store;
-import io.swagger.model.StoreGetRequest;
+
+
 import lombok.extern.slf4j.Slf4j;
 
 @Service

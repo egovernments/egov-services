@@ -20,7 +20,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class AbstractEstimateJdbcRepository extends JdbcRepository {
 
-	public static final String TABLE_NAME = "egw_abstractestimate";
+	public static final String TABLE_NAME = "egw_abstractestimate estimate";
+	public static final String DETAILS_SEARCH_EXTENTION = ", egw_abstractestimate_details details";
 	
 	@Autowired
 	private AbstractEstimateDetailsJdbcRepository abstractEstimateDetailsJdbcRepository;
@@ -33,6 +34,13 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 	
 	public List<AbstractEstimate> search(AbstractEstimateSearchContract abstractEstimateSearchContract) {
 		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
+		
+		String tableName = TABLE_NAME;
+		
+		if (abstractEstimateSearchContract.getNameOfWork() != null
+				|| abstractEstimateSearchContract.getWorkIdentificationNumbers() != null)
+			tableName += DETAILS_SEARCH_EXTENTION;
+			
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
@@ -42,118 +50,114 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 			validateEntityFieldName(abstractEstimateSearchContract.getSortBy(), AbstractEstimate.class);
 		}
 
-		String orderBy = "order by id";
+		String orderBy = "order by estimate.id";
 		if (abstractEstimateSearchContract.getSortBy() != null && !abstractEstimateSearchContract.getSortBy().isEmpty()) {
-			orderBy = "order by " + abstractEstimateSearchContract.getSortBy();
+			orderBy = "order by estimate." + abstractEstimateSearchContract.getSortBy();
 		}
-
-		searchQuery = searchQuery.replace(":tablename", TABLE_NAME);
-
-		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		if (abstractEstimateSearchContract.getTenantId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("tenantId =:tenantId");
+			params.append("estimate.tenantId =:tenantId");
 			paramValues.put("tenantId", abstractEstimateSearchContract.getTenantId());
 		}
 		if (abstractEstimateSearchContract.getIds() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("id in(:ids) ");
+			params.append("estimate.id in(:ids) ");
 			paramValues.put("ids", abstractEstimateSearchContract.getIds());
 		}
 		if (abstractEstimateSearchContract.getAdminSanctionNumbers() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("adminSanctionNumber in (:adminSanctionNumbers)");
+			params.append("estimate.adminSanctionNumber in (:adminSanctionNumbers)");
 			paramValues.put("adminSanctionNumbers", abstractEstimateSearchContract.getAdminSanctionNumbers());
 		}
 		if (abstractEstimateSearchContract.getDepartmentCodes() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("department in (:departments)");
+			params.append("estimate.department in (:departments)");
 			paramValues.put("departments", abstractEstimateSearchContract.getDepartmentCodes());
 		}
 		if (abstractEstimateSearchContract.getFundCodes() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("fund in (:funds)");
+			params.append("estimate.fund in (:funds)");
 			paramValues.put("funds", abstractEstimateSearchContract.getFundCodes());
 		}
 		if (abstractEstimateSearchContract.getFunctionCodes() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("function in (:functions)");
+			params.append("estimate.function in (:functions)");
 			paramValues.put("functions", abstractEstimateSearchContract.getFunctionCodes());
 		}
 		if (abstractEstimateSearchContract.getBudgetHeadCodes() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("budgetHead in (:budgetHeads)");
+			params.append("estimate.budgetHead in (:budgetHeads)");
 			paramValues.put("budgetHeads", abstractEstimateSearchContract.getBudgetHeadCodes());
 		}
 		if (abstractEstimateSearchContract.getStatuses() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("status in (:statuses)");
+			params.append("estimate.status in (:statuses)");
 			paramValues.put("statuses", abstractEstimateSearchContract.getStatuses());
 		}
 		if (abstractEstimateSearchContract.getNameOfWork() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("id in (select abstractestimate from egw_abstractestimate_details where nameofwork = :nameOfWork)");
+			params.append("estimate.id = details.abstractestimate and details.nameofwork = :nameOfWork");
 			paramValues.put("nameOfWork", abstractEstimateSearchContract.getNameOfWork());
 		}
 		if (abstractEstimateSearchContract.getAdminSanctionFromDate() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("adminSanctionDate >=:adminSanctionFromDate");
+			params.append("estimate.adminSanctionDate >=:adminSanctionFromDate");
 			paramValues.put("adminSanctionFromDate", abstractEstimateSearchContract.getAdminSanctionFromDate());
 		}
 		if (abstractEstimateSearchContract.getAdminSanctionToDate() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("adminSanctionDate <=:adminSanctionToDate");
+			params.append("estimate.adminSanctionDate <=:adminSanctionToDate");
 			paramValues.put("adminSanctionToDate", abstractEstimateSearchContract.getAdminSanctionToDate());
 		}
 		if (abstractEstimateSearchContract.getSpillOverFlag() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("spillOverFlag =:spillOverFlag");
+			params.append("estimate.spillOverFlag =:spillOverFlag");
 			paramValues.put("spillOverFlag", abstractEstimateSearchContract.getSpillOverFlag());
 		}
 		if (abstractEstimateSearchContract.getCreatedBy() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("createdBy =:createdBy");
+			params.append("estimate.createdBy =:createdBy");
 			paramValues.put("createdBy", abstractEstimateSearchContract.getCreatedBy());
 		}
 		if (abstractEstimateSearchContract.getAbstractEstimateNumbers() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("abstractEstimateNumber in (:abstractEstimateNumbers)");
+			params.append("estimate.abstractEstimateNumber in (:abstractEstimateNumbers)");
 			paramValues.put("abstractEstimateNumbers", abstractEstimateSearchContract.getAbstractEstimateNumbers());
 		}
 		if (abstractEstimateSearchContract.getWorkIdentificationNumbers() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("id in (select abstractEstimate from egw_abstractestimate_details where projectCode in (select id from egw_projectcode where code in (:workIdentificationNumbers)))");
+			params.append("estimate.id = details.abstractEstimate and details.projectCode in (:workIdentificationNumbers)");
 			paramValues.put("workIdentificationNumbers", abstractEstimateSearchContract.getWorkIdentificationNumbers());
 		}
 
@@ -162,8 +166,11 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
 
 		} else
-
 			searchQuery = searchQuery.replace(":condition", "");
+		
+		searchQuery = searchQuery.replace(":tablename", tableName);
+
+		searchQuery = searchQuery.replace(":selectfields", " estimate.* ");
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 

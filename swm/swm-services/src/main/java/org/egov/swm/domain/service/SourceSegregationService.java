@@ -3,25 +3,17 @@ package org.egov.swm.domain.service;
 import java.util.Date;
 import java.util.UUID;
 
-import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.CollectionDetails;
-import org.egov.swm.domain.model.CollectionType;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.SourceSegregation;
 import org.egov.swm.domain.model.SourceSegregationSearch;
 import org.egov.swm.domain.repository.SourceSegregationRepository;
-import org.egov.swm.persistence.entity.DumpingGroundEntity;
-import org.egov.swm.web.repository.MdmsRepository;
 import org.egov.swm.web.requests.SourceSegregationRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import net.minidev.json.JSONArray;
 
 @Service
 @Transactional(readOnly = true)
@@ -31,7 +23,10 @@ public class SourceSegregationService {
 	private SourceSegregationRepository sourceSegregationRepository;
 
 	@Autowired
-	private MdmsRepository mdmsRepository;
+	private CollectionTypeService collectionTypeService;
+
+	@Autowired
+	private DumpingGroundService dumpingGroundService;
 
 	@Transactional
 	public SourceSegregationRequest create(SourceSegregationRequest sourceSegregationRequest) {
@@ -99,9 +94,6 @@ public class SourceSegregationService {
 
 	private void validate(SourceSegregationRequest sourceSegregationRequest) {
 
-		JSONArray responseJSONArray = null;
-		ObjectMapper mapper = new ObjectMapper();
-
 		for (SourceSegregation sourceSegregation : sourceSegregationRequest.getSourceSegregations()) {
 
 			if (sourceSegregation.getDumpingGround() != null && (sourceSegregation.getDumpingGround().getCode() == null
@@ -113,16 +105,9 @@ public class SourceSegregationService {
 			if (sourceSegregation.getDumpingGround() != null
 					&& sourceSegregation.getDumpingGround().getCode() != null) {
 
-				responseJSONArray = mdmsRepository.getByCriteria(sourceSegregation.getTenantId(), Constants.MODULE_CODE,
-						Constants.DUMPINGGROUND_MASTER_NAME, "code", sourceSegregation.getDumpingGround().getCode(),
-						sourceSegregationRequest.getRequestInfo());
-
-				if (responseJSONArray != null && responseJSONArray.size() > 0)
-					sourceSegregation.setDumpingGround(
-							mapper.convertValue(responseJSONArray.get(0), DumpingGroundEntity.class).toDomain());
-				else
-					throw new CustomException("DumpingGround",
-							"Given DumpingGround is invalid: " + sourceSegregation.getDumpingGround().getCode());
+				sourceSegregation.setDumpingGround(dumpingGroundService.getDumpingGround(
+						sourceSegregation.getTenantId(), sourceSegregation.getDumpingGround().getCode(),
+						sourceSegregationRequest.getRequestInfo()));
 
 			} else
 				throw new CustomException("DumpingGround", "DumpingGround is required");
@@ -138,15 +123,8 @@ public class SourceSegregationService {
 
 				if (cd.getCollectionType() != null && cd.getCollectionType().getCode() != null) {
 
-					responseJSONArray = mdmsRepository.getByCriteria(sourceSegregation.getTenantId(), Constants.MODULE_CODE,
-							Constants.COLLECTIONTYPE_MASTER_NAME, "code", cd.getCollectionType().getCode(),
-							sourceSegregationRequest.getRequestInfo());
-
-					if (responseJSONArray != null && responseJSONArray.size() > 0)
-						cd.setCollectionType(mapper.convertValue(responseJSONArray.get(0), CollectionType.class));
-					else
-						throw new CustomException("CollectionType",
-								"Given CollectionType is invalid: " + cd.getCollectionType().getCode());
+					cd.setCollectionType(collectionTypeService.getCollectionType(sourceSegregation.getTenantId(),
+							cd.getCollectionType().getCode(), sourceSegregationRequest.getRequestInfo()));
 
 				} else
 					throw new CustomException("CollectionType", "CollectionType is required");

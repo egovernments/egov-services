@@ -85,4 +85,6 @@ public class ServiceGroup {
 	@NotNull
 	private String keyword;
 
+	private String localName;
+
 }

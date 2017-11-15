@@ -8,7 +8,7 @@ serviceMaps:
    isTransaction: true
    queryMaps:
     - query: INSERT INTO egw_documentdetail(
-        id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.documentDetails.*
       jsonMaps:
          
@@ -38,11 +38,6 @@ serviceMaps:
        
        - jsonPath: $.documentDetails.*.auditDetails.createdTime
          dbType: LONG
-
-       - jsonPath: $.documentDetails.*.auditDetails.lastModifiedBy
-       
-       - jsonPath: $.documentDetails.*.auditDetails.lastModifiedTime
-         dbType: LONG
        
  - version: 1.0
    name: Works Documents Update
@@ -50,16 +45,10 @@ serviceMaps:
    fromTopic: works.documentdetails.update
    isTransaction: true
    queryMaps:   
-    - query: UPDATE egw_documentdetail SET id=?, objectid= ?,objectType = ?, documentType=?, fileStore=?, latitude=?, longitude=?, description=?, dateOfCapture=?, workProgress=?, lastModifiedBy=?, lastModifiedTime=?  WHERE id = ? AND tenantId = ?;
+    - query: UPDATE egw_documentdetail SET documentType=?, fileStore=?, latitude=?, longitude=?, description=?, dateOfCapture=?, workProgress=?, lastModifiedBy=?, lastModifiedTime=?  WHERE id = ? AND tenantId = ?;
       basePath: $.documentDetails.*
       jsonMaps:
          
-       - jsonPath: $.documentDetails.*.id
-         
-       - jsonPath: $.documentDetails.*.objectId
-         
-       - jsonPath: $.documentDetails.*.objectType
-       
        - jsonPath: $.documentDetails.*.documentType
        
        - jsonPath: $.documentDetails.*.fileStore
@@ -90,7 +79,7 @@ serviceMaps:
    isTransaction: true
    queryMaps:
     - query: INSERT INTO egw_estimate_appropriation(
-            id, tenantid, objecttype, objectnumber, budgetusage, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+            id, tenantid, objecttype, objectnumber, budgetusage, createdby, createdtime) VALUES (?, ?, ?, ?, ?, ?, ?);
       basePath: $.estimateAppropriations.*
       jsonMaps:
          
@@ -107,11 +96,6 @@ serviceMaps:
        - jsonPath: $.estimateAppropriations.*.auditDetails.createdBy
        
        - jsonPath: $.estimateAppropriations.*.auditDetails.createdTime
-         dbType: LONG
-
-       - jsonPath: $.estimateAppropriations.*.auditDetails.lastModifiedBy
-       
-       - jsonPath: $.estimateAppropriations.*.auditDetails.lastModifiedTime
          dbType: LONG
 
  - version: 1.0
@@ -145,7 +129,7 @@ serviceMaps:
    queryMaps:
     - query: INSERT INTO egw_offlinestatus(
             id, objecttype, objectnumber, remarks, statusdate, status, createdby, 
-            lastmodifiedby, createdtime, lastmodifiedtime, tenantid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+            createdtime, tenantid,referencenumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.offlineStatuses.*
       jsonMaps:
          
@@ -167,11 +151,9 @@ serviceMaps:
        - jsonPath: $.offlineStatuses.*.auditDetails.createdTime
          dbType: LONG
 
-       - jsonPath: $.offlineStatuses.*.auditDetails.lastModifiedBy
-       
-       - jsonPath: $.offlineStatuses.*.auditDetails.lastModifiedTime
-         dbType: LONG
        - jsonPath: $.offlineStatuses.*.tenantId
+
+       - jsonPath: $.offlineStatuses.*.referenceNumber
 
  - version: 1.0
    name: Works Offline Status Update

@@ -3,7 +3,7 @@ var dat = {
     "numCols": 4,
     "useTimestamp": true,
     "objectName": "",
-    "url": "/inventory-inventory/v110/pricelists/_search",
+    "url": "/inventory-services/pricelists/_search",
     "groups": [
       {
         "name": "search",
@@ -15,7 +15,7 @@ var dat = {
             "label": "inventory.supplierName",
             "type": "singleValueList",
             "isDisabled": false,
-	    "url":"inventory-services/supplier/_search?|$.supplier[*].code|$.supplier[*].name",
+      "url":"inventory-services/suppliers/_search?|$.supplier[*].code|$.suppliers[*].name",
             "patternErrorMsg": "inventory.create.field.message.supplierName"
           },
           {
@@ -71,7 +71,7 @@ var dat = {
             "jsonPath": "rateType",
             "label": "inventory.rateType",
             "type": "singleValueList",
-	    "defaultValue":[
+      "defaultValue":[
               {key: null, value: "-- Please Select --"},
               {
                  "key":"DGSC Rate Contract",
@@ -128,21 +128,23 @@ var dat = {
       ],
       "values": [
         "supplier.name",
-	"rateType",
+  "rateType",
         "rateContractNumber",
-	"agreementNumber",
-	"agreementDate",
-	"agreementStartDate",
-	"agreementEndDate",
-	{valuePath:"active", type:"checkbox"}
+  "agreementNumber",
+  "agreementDate",
+  "agreementStartDate",
+  "agreementEndDate",
+  {valuePath:"active", type:"checkbox"}
       ],
       "resultPath": "pricelists",
       "resultIdKey":"rateContractNumber",
       "rowClickUrlUpdate": "/update/inventory/pricelists/{code}",
       "rowClickUrlView": "/view/inventory/pricelists/{code}",
       "rowClickUrlAdd" : "/create/inventory/pricelists",
-      "rowClickUrlDelete" : "inventory-services/pricelists/_update"
-
+      "rowClickUrlDelete" : {
+        url:"inventory-services/pricelists/_update",
+        body:{ active:false, inActiveDate:function(){ return new Date().getTime() } }
+      }
     }
   },
   "inventory.create": {
@@ -158,7 +160,7 @@ var dat = {
             "name": "supplier",
             "jsonPath": "priceLists[0].supplier.code",
             "label": "inventory.supplier",
-            "url":"inventory-services/suppliers/_search?|$.supplier[*].code|$.supplier[*].name",
+            "url":"inventory-services/suppliers/_search?|$.suppliers[*].code|$.suppliers[*].name",
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
@@ -173,7 +175,7 @@ var dat = {
             "label": "inventory.rateType",
             "pattern": "",
             "type": "singleValueList",
-	    "defaultValue":[
+      "defaultValue":[
               {key: null, value: "-- Please Select --"},
               {
                  "key":"DGSC Rate Contract",
@@ -274,10 +276,10 @@ var dat = {
             "defaultValue": true,
             "patternErrorMsg": ""
           },
-	   {
+     {
                   "name": "UploadDocument",
                   "jsonPath": "priceLists[0].fileStoreId",
-		  "label": "Upload Tender/Rate contract/Quotation",
+      "label": "Upload Tender/Rate contract/Quotation",
                   "pattern": "",
                   "type": "singleFileUpload",
                   "isRequired": false,
@@ -317,6 +319,9 @@ var dat = {
                 },
                 {
                   "label": "inventory.quantity" 
+                },
+                {
+                  "label":"inventory.active"
                 }
               ],
               "values": [
@@ -325,7 +330,7 @@ var dat = {
                   "pattern": "",
                   "type":"autoCompelete",
                   "jsonPath": "priceLists[0].priceListDetails[0].material.code",
-		  "displayJsonPath":"priceLists[0].priceListDetails[0].material.name",
+      "displayJsonPath":"priceLists[0].priceListDetails[0].material.name",
                   "isRequired": true,
                   "isDisabled": false,
                   "url": "/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description",
@@ -343,7 +348,7 @@ var dat = {
                   "pattern": "",
                   "type": "text",
                   "isRequired": false,
-                  "isDisabled": true,
+                  "isDisabled": false,
                   "defaultValue": "",
                   "patternErrorMsg": ""
                 },
@@ -371,9 +376,9 @@ var dat = {
                   "name": "fromDate",
                   "jsonPath": "priceLists[0].priceListDetails[0].fromDate",
                   "pattern": "",
-                  "type": "text",
+                  "type": "datePicker",
                   "isRequired": false,
-                  "isDisabled": true,
+                  "isDisabled": false,
                   "defaultValue": "",
                   "patternErrorMsg": ""
                 },
@@ -381,9 +386,9 @@ var dat = {
                   "name": "toDate",
                   "jsonPath": "priceLists[0].priceListDetails[0].toDate",
                   "pattern": "",
-                  "type": "text",
+                  "type": "datePicker",
                   "isRequired": false,
-                  "isDisabled": true,
+                  "isDisabled": false,
                   "defaultValue": "",
                   "patternErrorMsg": ""
                 },
@@ -396,6 +401,17 @@ var dat = {
                   "isDisabled": false,
                   "defaultValue": "",
                   "patternErrorMsg": ""
+                },
+                {
+                  "name": "active",
+                  "jsonPath": "priceLists[0].priceListDetails[0].active",
+                  "label": "",
+                  "pattern": "",
+                  "type": "checkbox",
+                  "isRequired": true,
+                  "isDisabled": false,
+                  "defaultValue": true,
+                  "patternErrorMsg": ""
                 }
               ]
             }
@@ -403,7 +419,7 @@ var dat = {
         ]
       }
     ],
-    "url": "/inventory-inventory/v110/pricelists/_create",
+    "url": "/inventory-services/pricelists/_create",
     "tenantIdRequired": true
   },
   "inventory.view": {
@@ -434,7 +450,7 @@ var dat = {
             "label": "inventory.rateType",
             "pattern": "",
             "type": "singleValueList",
-	    "defaultValue":[
+      "defaultValue":[
               {key: null, value: "-- Please Select --"},
               {
                  "key":"DGSC Rate Contract",
@@ -529,7 +545,7 @@ var dat = {
             "jsonPath": "priceLists[0].active",
             "label": "inventory.active",
             "pattern": "",
-            "type": "radio",
+            "type": "checkbox",
             "isRequired": true,
             "isDisabled": false,
             "defaultValue": true,
@@ -539,7 +555,7 @@ var dat = {
       }
     ],
     "tenantIdRequired": true,
-    "url": "/inventory-inventory/v110/pricelists/_search?tenantId={tenantId}"
+    "url": "/inventory-services/pricelists/_search?id={id}"
   },
   "inventory.update": {
     "numCols": 4,
@@ -555,13 +571,14 @@ var dat = {
             "jsonPath": "priceLists[0].supplier.code",
             "label": "inventory.supplier",
             "pattern": "^[a-zA-Z0-9]+$",
-            "type": "text",
+            "type": "singleValueList",
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "defaultValue": "",
             "maxLength": 50,
             "minLength": 5,
-            "patternErrorMsg": "inventory.create.field.message.code"
+            "patternErrorMsg": "inventory.create.field.message.code",
+            "url":"inventory-services/suppliers/_search?|$.supplier[*].code|$.suppliers[*].name"
           },
           {
             "name": "rateType",
@@ -569,7 +586,7 @@ var dat = {
             "label": "inventory.rateType",
             "pattern": "",
             "type": "singleValueList",
-		"defaultValue":[
+    "defaultValue":[
               {key: null, value: "-- Please Select --"},
               {
                  "key":"DGSC Rate Contract",
@@ -664,7 +681,7 @@ var dat = {
             "jsonPath": "priceLists[0].active",
             "label": "inventory.active",
             "pattern": "",
-            "type": "radio",
+            "type": "checkbox",
             "isRequired": true,
             "isDisabled": false,
             "defaultValue": true,
@@ -673,9 +690,9 @@ var dat = {
         ]
       }
     ],
-    "url": "/inventory-inventory/v110/pricelists/_update",
+    "url": "/inventory-services/pricelists/_update",
     "tenantIdRequired": true,
-    "searchUrl": "/inventory-inventory/v110/pricelists/_search?tenantId={tenantId}"
+    "searchUrl": "/inventory-services/pricelists/_search?id={id}"
   }
 }
  export default dat;

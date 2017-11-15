@@ -25,6 +25,9 @@ public class Definition {
 	@JsonProperty("isBulkApi")
 	private Boolean isBulkApi;
 	
+	@JsonProperty("arrayPath")
+	private String arrayPath;
+	
 	@JsonProperty("uri")
 	private String uri;	
 	

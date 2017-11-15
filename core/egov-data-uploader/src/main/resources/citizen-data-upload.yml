@@ -3,10 +3,10 @@ UploadDefinitions:
  summary: Citizen Services Report
  version: 1.0.0
  definitions:
- - fileName: ciziten-data-upload.xls
-   apiRequest: {"serviceReq": {"tenantId": "mh.rohatest","serviceCode": "WATER_NEWCONN","lat": 12,"address": "address","attributeValues": [{"key": "tenantId","value": "mh.rohatest"}]},
+ - fileName: file
+   apiRequest: {"serviceReqs": [{"tenantId": "mh.rohatest","serviceCode": "WATER_NEWCONN","lat": 12,"address": "address","attributeValues": [{"key": "tenantId","value": "mh.rohatest"}]}],
                  "RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1506070685050,"action": "asd","authToken": "f551114d-68c5-4917-860c-73387d1e2df6"}}
-   isBulkApi: false
+   isBulkApi: true
+   arrayPath: $.serviceReqs
    uri: http://egov-micro-dev.egovernments.org/citizen-services/v1/requests/_create
-
-
+  

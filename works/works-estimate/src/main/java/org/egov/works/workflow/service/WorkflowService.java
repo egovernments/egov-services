@@ -1,5 +1,8 @@
 package org.egov.works.workflow.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.egov.works.estimate.web.contract.RequestInfo;
 import org.egov.works.estimate.web.contract.WorkFlowDetails;
 import org.egov.works.workflow.contracts.Attribute;
@@ -24,7 +27,9 @@ public class WorkflowService {
 		this.workflowRepository = workflowRepository;
 	}
 
-	public String enrichWorkflow(WorkFlowDetails workFlowDetails, String tenantId, RequestInfo requestInfo) {
+	public Map<String, String> enrichWorkflow(WorkFlowDetails workFlowDetails, String tenantId, RequestInfo requestInfo) {
+		
+		Map<String, String> workFlowResponse = new HashMap<>();
 
 		if (isWorkflowCreate(workFlowDetails)) {
 
@@ -35,7 +40,10 @@ public class WorkflowService {
 
 			processInstanceResponse = workflowRepository.start(request);
 			
-			return processInstanceResponse.getProcessInstance().getId();
+			workFlowResponse.put("id", processInstanceResponse.getProcessInstance().getId());
+			workFlowResponse.put("status", processInstanceResponse.getProcessInstance().getStatus());
+			
+			return workFlowResponse;
 
 		} else if (isWorkflowUpdate(workFlowDetails)) {
 
@@ -44,8 +52,11 @@ public class WorkflowService {
 			taskRequest.setRequestInfo(requestInfo);
 
 			taskResponse = workflowRepository.update(taskRequest);
+			
+			workFlowResponse.put("id", taskResponse.getTask().getId());
+			workFlowResponse.put("status", taskResponse.getTask().getStatus());
 
-			return taskResponse.getTask().getId();
+			return workFlowResponse;
 		}
 		return null;
 	}

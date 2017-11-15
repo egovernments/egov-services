@@ -1,8 +1,10 @@
 package org.egov.works.services.domain.repository;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.egov.works.commons.exception.ValidationException;
+import org.egov.tracer.model.CustomException;
 import org.egov.works.services.config.PropertiesManager;
 import org.egov.works.services.config.WorksServiceConstants;
 import org.egov.works.services.web.contract.IdGenerationRequest;
@@ -38,6 +40,7 @@ public class IdGenerationRepository {
 
 	public String generateAppropriationNumber(final String tenantId, final RequestInfo requestInfo) {
 		Object response = null;
+		Map<String, String> messages = new HashMap<>();
 		IdGenerationRequest idGenerationRequest = new IdGenerationRequest();
 		IdRequest idRequest = new IdRequest();
 		idRequest.setTenantId(tenantId);
@@ -48,8 +51,9 @@ public class IdGenerationRepository {
 		try {
 			response = restTemplate.postForObject(url, idGenerationRequest, Object.class);
 		} catch (Exception e) {
-			throw new ValidationException(null, WorksServiceConstants.APPROPRIATION_NUMBER_GENERATION_ERROR,
+			messages.put(WorksServiceConstants.APPROPRIATION_NUMBER_GENERATION_ERROR,
 					WorksServiceConstants.APPROPRIATION_NUMBER_GENERATION_ERROR);
+			throw new CustomException(messages);
 
 		}
 		log.info("Response from id gen service: " + response.toString());

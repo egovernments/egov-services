@@ -1,0 +1,25 @@
+UIInfo:
+- referencePath: "/vehiclemaintenances"
+  groups:
+    VehicleMaintenanceDetails:
+      fields:
+      - vehicleMaintenances[0].vehicle.vehicleType.name
+      - vehicleMaintenances[0].vehicle.regNumber
+      - vehicleMaintenances[0].maintenanceAfter
+      - vehicleMaintenances[0].maintenanceUom
+      - vehicleMaintenances[0].downtimeforMaintenance
+      - vehicleMaintenances[0].downtimeforMaintenanceUom
+  searchResult:
+    rowClickUrlUpdate: "/update/vehiclemaintenances/{regNumber}"
+    rowClickUrlView: "/view/vehiclemaintenances/{regNumber}"
+    columns:
+    - vehicleType
+    - regNumber
+    - maintenanceAfter
+    - downtimeforMaintenance
+    values:
+    - vehicleType
+    - regNumber
+    - maintenanceAfter
+    - downtimeforMaintenance
+    resultObjectName: vehiclemaintenances

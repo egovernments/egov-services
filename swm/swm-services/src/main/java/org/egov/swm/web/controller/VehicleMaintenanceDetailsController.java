@@ -37,16 +37,11 @@ public class VehicleMaintenanceDetailsController {
 	public VehicleMaintenanceDetailsResponse create(
 			@RequestBody @Valid VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest) {
 
-		VehicleMaintenanceDetailsResponse vehicleMaintenanceDetailsResponse = new VehicleMaintenanceDetailsResponse();
-		vehicleMaintenanceDetailsResponse
-				.setResponseInfo(getResponseInfo(vehicleMaintenanceDetailsRequest.getRequestInfo()));
-
 		vehicleMaintenanceDetailsRequest = vehicleMaintenanceDetailsService.create(vehicleMaintenanceDetailsRequest);
 
-		vehicleMaintenanceDetailsResponse
-				.setVehicleMaintenanceDetails(vehicleMaintenanceDetailsRequest.getVehicleMaintenanceDetails());
-
-		return vehicleMaintenanceDetailsResponse;
+		return VehicleMaintenanceDetailsResponse.builder()
+				.responseInfo(getResponseInfo(vehicleMaintenanceDetailsRequest.getRequestInfo()))
+				.vehicleMaintenanceDetails(vehicleMaintenanceDetailsRequest.getVehicleMaintenanceDetails()).build();
 	}
 
 	@PostMapping("/_update")
@@ -54,16 +49,11 @@ public class VehicleMaintenanceDetailsController {
 	public VehicleMaintenanceDetailsResponse update(
 			@RequestBody @Valid VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest) {
 
-		VehicleMaintenanceDetailsResponse vehicleMaintenanceDetailsResponse = new VehicleMaintenanceDetailsResponse();
-		vehicleMaintenanceDetailsResponse
-				.setResponseInfo(getResponseInfo(vehicleMaintenanceDetailsRequest.getRequestInfo()));
-
 		vehicleMaintenanceDetailsRequest = vehicleMaintenanceDetailsService.update(vehicleMaintenanceDetailsRequest);
 
-		vehicleMaintenanceDetailsResponse
-				.setVehicleMaintenanceDetails(vehicleMaintenanceDetailsRequest.getVehicleMaintenanceDetails());
-
-		return vehicleMaintenanceDetailsResponse;
+		return VehicleMaintenanceDetailsResponse.builder()
+				.responseInfo(getResponseInfo(vehicleMaintenanceDetailsRequest.getRequestInfo()))
+				.vehicleMaintenanceDetails(vehicleMaintenanceDetailsRequest.getVehicleMaintenanceDetails()).build();
 	}
 
 	@PostMapping("/_search")

@@ -5,16 +5,16 @@ UIInfo:
   groups:
     createRateMaster:
       fields:
-      - scheduleOfRates[0].scheduleCategory.code
+      - scheduleOfRates[0].scheduleCategory
       - scheduleOfRates[0].code
       - scheduleOfRates[0].description
-      - scheduleOfRates[0].uom.code
+      - scheduleOfRates[0].uom
   externalData:
-  - fieldName: scheduleOfRates[0].scheduleCategory.code
+  - fieldName: scheduleOfRates[0].scheduleCategory
     url: "/egov-mdms-service/v1/_get?&moduleName=Works&masterName=ScheduleCategory"
     keyPath: "$..code"
     valPath: "$..code"
-  - fieldName: scheduleOfRates[0].uom.code
+  - fieldName: scheduleOfRates[0].uom
     url: "/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom"
     keyPath: "$..code"
     valPath: "$..code"

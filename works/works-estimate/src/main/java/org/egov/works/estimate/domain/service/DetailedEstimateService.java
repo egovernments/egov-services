@@ -2,6 +2,7 @@ package org.egov.works.estimate.domain.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.commons.utils.CommonConstants;
@@ -11,7 +12,24 @@ import org.egov.works.estimate.domain.repository.DetailedEstimateRepository;
 import org.egov.works.estimate.domain.validator.EstimateValidator;
 import org.egov.works.estimate.persistence.repository.IdGenerationRepository;
 import org.egov.works.estimate.utils.EstimateUtils;
-import org.egov.works.estimate.web.contract.*;
+import org.egov.works.estimate.web.contract.AbstractEstimate;
+import org.egov.works.estimate.web.contract.AssetsForEstimate;
+import org.egov.works.estimate.web.contract.AuditDetails;
+import org.egov.works.estimate.web.contract.DetailedEstimate;
+import org.egov.works.estimate.web.contract.DetailedEstimateDeduction;
+import org.egov.works.estimate.web.contract.DetailedEstimateRequest;
+import org.egov.works.estimate.web.contract.DetailedEstimateResponse;
+import org.egov.works.estimate.web.contract.DetailedEstimateSearchContract;
+import org.egov.works.estimate.web.contract.DetailedEstimateStatus;
+import org.egov.works.estimate.web.contract.DocumentDetail;
+import org.egov.works.estimate.web.contract.EstimateActivity;
+import org.egov.works.estimate.web.contract.EstimateMeasurementSheet;
+import org.egov.works.estimate.web.contract.EstimateOverhead;
+import org.egov.works.estimate.web.contract.EstimateTechnicalSanction;
+import org.egov.works.estimate.web.contract.FinancialYear;
+import org.egov.works.estimate.web.contract.MultiYearEstimate;
+import org.egov.works.estimate.web.contract.RequestInfo;
+import org.egov.works.estimate.web.contract.WorkFlowDetails;
 import org.egov.works.workflow.service.WorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,13 +77,14 @@ public class DetailedEstimateService {
         for (final DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
             detailedEstimate.setId(commonUtils.getUUID());
             detailedEstimate.setAuditDetails(auditDetails);
-            detailedEstimate.setTotalIncludingRE(detailedEstimate.getWorkValue());
-
+            detailedEstimate.setTotalIncludingRE(detailedEstimate.getEstimateValue());
+            AbstractEstimate abstactEstimate = null;
             if(detailedEstimate.getAbstractEstimateDetail() != null) {
-                        if(!validator.checkDetailedEstimateCreatedFlag(detailedEstimate)) {
+                abstactEstimate = validator.searchAbstractEstimate(detailedEstimate);
+                        if(abstactEstimate != null && !abstactEstimate.getDetailedEstimateCreated()) {
                             String estimateNumber = idGenerationRepository
                                     .generateDetailedEstimateNumber(detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());
-                            detailedEstimate.setEstimateNumber(propertiesManager.getDetailedEstimateNumberPrefix() + estimateNumber);
+                            detailedEstimate.setEstimateNumber(propertiesManager.getDetailedEstimateNumberPrefix() + '/' + detailedEstimate.getDepartment().getCode() + estimateNumber);
                         }
                 }
 
@@ -111,10 +130,19 @@ public class DetailedEstimateService {
                     }
                 }
             }
-				populateWorkFlowDetails(detailedEstimate, detailedEstimateRequest.getRequestInfo());
-				detailedEstimate.setStateId(workflowService.enrichWorkflow(detailedEstimate.getWorkFlowDetails(),
-                        detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo()));
-				detailedEstimate.setStatus(DetailedEstimateStatus.CREATED);
+
+            if(detailedEstimate.getDocumentDetails() != null) {
+                for(DocumentDetail documentDetail : detailedEstimate.getDocumentDetails()) {
+                    documentDetail.setObjectId(detailedEstimate.getEstimateNumber());
+                    documentDetail.setObjectType(CommonConstants.DETAILEDESTIMATE);
+                    documentDetail.setAuditDetails(auditDetails);
+                }
+            }
+			populateWorkFlowDetails(detailedEstimate, detailedEstimateRequest.getRequestInfo(), abstactEstimate);
+			Map<String, String> workFlowResponse = workflowService.enrichWorkflow(detailedEstimate.getWorkFlowDetails(),
+					detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());
+			detailedEstimate.setStateId(workFlowResponse.get("id"));
+			detailedEstimate.setStatus(DetailedEstimateStatus.valueOf(workFlowResponse.get("status")));
         }
         kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateCreateTopic(), detailedEstimateRequest);
         final DetailedEstimateResponse response = new DetailedEstimateResponse();
@@ -126,8 +154,10 @@ public class DetailedEstimateService {
     public DetailedEstimateResponse update(DetailedEstimateRequest detailedEstimateRequest) {
         AuditDetails updateDetails = setAuditDetails(detailedEstimateRequest.getRequestInfo().getUserInfo().getUserName(), true);
         AuditDetails createDetails = setAuditDetails(detailedEstimateRequest.getRequestInfo().getUserInfo().getUserName(), false);
+        AbstractEstimate abstactEstimate = null;
         for (final DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
-        	populateWorkFlowDetails(detailedEstimate, detailedEstimateRequest.getRequestInfo());
+            abstactEstimate = validator.searchAbstractEstimate(detailedEstimate);
+        	populateWorkFlowDetails(detailedEstimate, detailedEstimateRequest.getRequestInfo(), abstactEstimate);
             detailedEstimate.setAuditDetails(updateDetails);
 
             for(final AssetsForEstimate assetsForEstimate : detailedEstimate.getAssets()) {
@@ -178,10 +208,10 @@ public class DetailedEstimateService {
                     }
                 }
             }
-            detailedEstimate.setStateId(workflowService.enrichWorkflow(detailedEstimate.getWorkFlowDetails(), detailedEstimate.getTenantId(),
-            		detailedEstimateRequest.getRequestInfo()));
-
-			populateNextStatus(detailedEstimate);
+			Map<String, String> workFlowResponse = workflowService.enrichWorkflow(detailedEstimate.getWorkFlowDetails(),
+					detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());
+			detailedEstimate.setStateId(workFlowResponse.get("id"));
+			detailedEstimate.setStatus(DetailedEstimateStatus.valueOf(workFlowResponse.get("status")));
         }
         kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateUpdateTopic(), detailedEstimateRequest);
         final DetailedEstimateResponse response = new DetailedEstimateResponse();
@@ -207,13 +237,12 @@ public class DetailedEstimateService {
 
 
     
-    private void populateWorkFlowDetails(DetailedEstimate detailedEstimate, RequestInfo requestInfo) {
+    private void populateWorkFlowDetails(DetailedEstimate detailedEstimate, RequestInfo requestInfo, AbstractEstimate abstactEstimate) {
 
 		if (null != detailedEstimate && null != detailedEstimate.getWorkFlowDetails()) {
 
 			WorkFlowDetails workFlowDetails = detailedEstimate.getWorkFlowDetails();
-
-            if (validator.checkDetailedEstimateCreatedFlag(detailedEstimate)) {
+            if (abstactEstimate != null && abstactEstimate.getDetailedEstimateCreated()) {
                 workFlowDetails.setType(CommonConstants.SPILLOVER_DETAILED_ESTIMATE_WF_TYPE);
                 workFlowDetails.setBusinessKey(CommonConstants.SPILLOVER_DETAILED_ESTIMATE_WF_TYPE);
             } else {
@@ -231,46 +260,6 @@ public class DetailedEstimateService {
 			if (detailedEstimate.getStateId() != null) {
 				workFlowDetails.setStateId(detailedEstimate.getStateId());
 			}
-		}
-	}
-	
-	private void populateNextStatus(DetailedEstimate detailedEstimate) {
-		WorkFlowDetails workFlowDetails = null;
-		String currentStatus = null;
-
-		if (null != detailedEstimate && null != detailedEstimate.getStatus()) {
-			workFlowDetails = detailedEstimate.getWorkFlowDetails();
-			currentStatus = detailedEstimate.getStatus().toString();
-		}
-
-		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
-				&& workFlowDetails.getAction().equalsIgnoreCase("Submit")
-				&& (currentStatus.equalsIgnoreCase(DetailedEstimateStatus.CREATED.toString())
-				|| currentStatus.equalsIgnoreCase(DetailedEstimateStatus.RESUBMITTED.toString()))) {
-			detailedEstimate.setStatus(DetailedEstimateStatus.CHECKED);
-		}
-
-		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
-				&& workFlowDetails.getAction().equalsIgnoreCase("Approve")
-				&& currentStatus.equalsIgnoreCase(DetailedEstimateStatus.CHECKED.toString())) {
-			detailedEstimate.setStatus(DetailedEstimateStatus.APPROVED);
-		}
-
-		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
-				&& workFlowDetails.getAction().equalsIgnoreCase("Reject")) {
-			detailedEstimate.setStatus(DetailedEstimateStatus.REJECTED);
-		}
-		
-		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
-				&& workFlowDetails.getAction().equalsIgnoreCase("Forward")
-				&& currentStatus.equalsIgnoreCase(DetailedEstimateStatus.REJECTED.toString())) {
-			detailedEstimate.setStatus(DetailedEstimateStatus.RESUBMITTED);
-		}
-		
-		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
-				&& workFlowDetails.getAction().equalsIgnoreCase("Cancel")
-				&& currentStatus.equalsIgnoreCase(DetailedEstimateStatus.REJECTED.toString())) {
-			detailedEstimate.setStatus(DetailedEstimateStatus.CANCELLED);
 		}
 	}
 }

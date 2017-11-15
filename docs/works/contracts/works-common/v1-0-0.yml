@@ -1070,6 +1070,7 @@ definitions:
         description: Unique Identifier of the Document Detail
       objectId:
         type: string
+        pattern: '[a-zA-Z0-9-\\]+'
         description: Object id of the Document for which documents are attached.
       objectType:
         type: string

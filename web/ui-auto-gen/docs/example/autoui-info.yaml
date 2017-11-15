@@ -33,15 +33,16 @@ UIInfo:
   autoFills:
   - onChangeField: autoUi[0].autoFill
     affectedFields:
-      - autoUi[0].chaildAutoFill
+    - autoUi[0].chaildAutoFill
     affectJSONPath:
-      - test
-    url: /test/test
+    - test
+    url: "/test/test"
   dependents:
   - onChangeField: autoUi[0].parentDropDown
     affectedFields:
       autoUi[0].chaildDropDown:
-        pattern: /egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vehicle&filter=[?(@.vehicleType == {autoUi[0].parentDropDown})]|$..id|$..regNumber
+        pattern: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vehicle&filter=[?(@.vehicleType
+          == {autoUi[0].parentDropDown})]|$..id|$..regNumber"
         type: dropDown
   externalData:
   - fieldName: autoUi[0].dropDown
@@ -112,3 +113,23 @@ UIInfo:
     - aadhar
     - panNo
     resultObjectName: autoUi
+  showHideFields:
+    autoUi[0].textField:
+    - ifValue: abcd
+      showFields:
+      - autoUi[0].textArea
+      hideFields:
+      - autoUi[0].datePicker
+      showGroups:
+      - Group3
+      hideGroups:
+      - Group4
+  tables:
+    autoUi[0].table:
+      group: Group2
+      columns:
+      - pinCode
+      - email
+      values:
+      - autoUi[0].table[0].pinCode
+      - autoUi[0].table[0].email

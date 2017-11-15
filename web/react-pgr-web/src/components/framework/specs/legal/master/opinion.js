@@ -8,7 +8,7 @@ var dat = {
    groups: [
       {
         name: "search",
-        label: "opinion.search.title",
+        label: " ",
         fields: [
           {
             name: "opinionFromDate",
@@ -72,8 +72,12 @@ var dat = {
               url: "/update/legal/updateopinion/"
             },
             {
-              label: "Opinion Details",
+              label: "Update",
               url: "/update/legal/opiniondetails/"
+            },
+             {
+              label: "View",
+              url: "/view/legal/opiniondetails/"
             }
           ],
       header: [

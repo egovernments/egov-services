@@ -6,10 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.CollectionDetailsSearch;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.SourceSegregation;
 import org.egov.swm.domain.model.SourceSegregationSearch;
+import org.egov.swm.domain.service.DumpingGroundService;
 import org.egov.swm.persistence.entity.SourceSegregationEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -22,6 +24,9 @@ public class SourceSegregationJdbcRepository extends JdbcRepository {
 
 	@Autowired
 	public CollectionDetailsJdbcRepository collectionDetailsJdbcRepository;
+
+	@Autowired
+	private DumpingGroundService dumpingGroundService;
 
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {
@@ -107,9 +112,18 @@ public class SourceSegregationJdbcRepository extends JdbcRepository {
 				.query(searchQuery.toString(), paramValues, row);
 		SourceSegregation ss;
 		CollectionDetailsSearch cds = new CollectionDetailsSearch();
+
 		for (SourceSegregationEntity sourceSegregationEntity : sourceSegregationEntities) {
 
 			ss = sourceSegregationEntity.toDomain();
+
+			if (ss.getDumpingGround() != null && ss.getDumpingGround().getCode() != null) {
+
+				ss.setDumpingGround(dumpingGroundService.getDumpingGround(ss.getTenantId(),
+						ss.getDumpingGround().getCode(), new RequestInfo()));
+
+			}
+
 			cds.setTenantId(ss.getTenantId());
 			cds.setSourceSegregationCode(ss.getCode());
 			ss.setCollectionDetails(collectionDetailsJdbcRepository.search(cds));

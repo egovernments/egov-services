@@ -257,8 +257,13 @@ class UiMultiFieldTable extends Component {
 							<th>#</th>
 							{
 								item.tableList.header.map((v, i) => {
+									 var style={};
+									 if(v.style){
+										style =v.style; 
+									 }
+									 
 									return (
-										<th key={i}>{translate(v.label)}</th>
+										<th style={style} key={i}>{translate(v.label)}</th>
 									)
 								})
 							}

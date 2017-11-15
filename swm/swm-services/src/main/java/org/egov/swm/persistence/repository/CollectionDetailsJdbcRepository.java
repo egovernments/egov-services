@@ -5,9 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.CollectionDetails;
 import org.egov.swm.domain.model.CollectionDetailsSearch;
+import org.egov.swm.domain.service.CollectionTypeService;
 import org.egov.swm.persistence.entity.CollectionDetailsEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class CollectionDetailsJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_collectiondetails";
+
+	@Autowired
+	private CollectionTypeService collectionTypeService;
 
 	@Transactional
 	public void delete(String tenantId, String sourceSegregation) {
@@ -62,8 +68,21 @@ public class CollectionDetailsJdbcRepository extends JdbcRepository {
 
 		List<CollectionDetails> resultList = new ArrayList<>();
 
+		CollectionDetails collectionDetails;
+
 		for (CollectionDetailsEntity cde : entityList) {
-			resultList.add(cde.toDomain());
+
+			collectionDetails = cde.toDomain();
+
+			if (collectionDetails.getCollectionType() != null
+					&& collectionDetails.getCollectionType().getCode() != null) {
+
+				collectionDetails
+						.setCollectionType(collectionTypeService.getCollectionType(collectionDetails.getTenantId(),
+								collectionDetails.getCollectionType().getCode(), new RequestInfo()));
+
+			}
+			resultList.add(collectionDetails);
 		}
 
 		return resultList;

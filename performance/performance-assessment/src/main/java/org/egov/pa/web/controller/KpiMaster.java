@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @RequestMapping("/kpimaster")
@@ -36,5 +37,9 @@ public interface KpiMaster {
     public ResponseEntity<?> search(@ModelAttribute @Valid final KPIGetRequest kpiGetRequest,
             final BindingResult errors, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult);
+	
+	@PostMapping(value = "/_getkpitype")
+    @ResponseBody
+	public Boolean getKpiType(@RequestParam(value = "kpiCode") String kpiCode); 
 
 }

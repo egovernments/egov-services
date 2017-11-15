@@ -1,0 +1,33 @@
+UIInfo:
+- referencePath: "/detailedestimates"
+  searchUrl: "/detailedestimates/_search?ids={ids}"
+  
+  groups:
+    workInfo:
+      fields:
+      - detailedEstimates[0].department.code
+      - detailedEstimates[0].estimateDate
+      - detailedEstimates[0].natureOfWork.code
+      - detailedEstimates[0].ward.code
+      - detailedEstimates[0].locality.code
+      - detailedEstimates[0].workCategory
+      - detailedEstimates[0].beneficiary
+      - detailedEstimates[0].location
+      - detailedEstimates[0].latitude
+      - detailedEstimates[0].longitude
+      - detailedEstimates[0].nameOfWork
+      - detailedEstimates[0].description
+  searchResult:
+    rowClickUrlUpdate: /update/detailedestimates/{ids}
+    rowClickUrlView: /view/detailedestimates/{ids}
+    columns:
+    - code
+    - description
+    - scheduleCategory
+    - uom
+    values:
+    - code
+    - description
+    - nameOfWork
+    - natureOfWork.code
+    resultObjectName: detailedEstimates

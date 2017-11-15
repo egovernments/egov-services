@@ -33,6 +33,7 @@ public class ServiceType {
     private Boolean active;
     private boolean hasFinancialImpact;
     private String action;
+    private String localName;
     @NotNull
     private Long createdBy;
     @JsonFormat(pattern = "dd/MM/yyyy")
@@ -57,6 +58,7 @@ public class ServiceType {
                 .isday(isDay)
                 .isactive(active)
                 .hasfinancialimpact(hasFinancialImpact)
+                .localname(localName)
                 .createdDate(createdDate)
                 .createdBy(createdBy)
                 .lastModifiedDate(lastModifiedDate)

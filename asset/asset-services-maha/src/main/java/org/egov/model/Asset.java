@@ -117,8 +117,8 @@ public class Asset   {
 	  private String oldCode;
 
 	  @NotNull
-	  @JsonProperty("departmentCode")
-	  private String departmentCode;
+	  @JsonProperty("department")
+	  private Department department;
 
 	  @NotNull
 	  @Valid
@@ -172,7 +172,7 @@ public class Asset   {
 	  private AuditDetails auditDetails;
 	  
 	  @JsonProperty("fundSource")
-	  private String fundSource;
+	  private FundSource fundSource;
 	  
 	  @JsonProperty("location")
 	  private String location;

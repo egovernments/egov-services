@@ -28,6 +28,8 @@ schemes:
 basePath: '/works-estimate/v1'
 x-api-id: 'org.egov.works.estimate'
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
+x-ui-info:
+  $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/works-estimate-ui-info.yml
 paths:
   /abstractestimates/_search:
     post:
@@ -849,10 +851,9 @@ definitions:
         description: Epoch time of the Date of Proposal. Default the current date for new estimates and do not allow to modify. This field is user entered for spillover works. Allowed to edit during rejected status or drafts for Spillover Estimates. Future date is not allowed to enter.
       abstractEstimateNumber:
         type: string
-        pattern: '[a-zA-Z0-9-\\]+'
+-        pattern: '[a-zA-Z0-9-\\]+'
         description: Unique number for the Abstract Estimate. If the work is spillover then the Abstract Estimate number is user entered. Otherwise it is auto generated. This field is allowed to edit during rejected status or drafts for Spillover Estimates.
         maxLength: 50
-        minLength: 1
       subject:
         type: string
         description: Subject of Abstract Estimate
@@ -1084,7 +1085,6 @@ definitions:
     required:
       - tenantId
       - dateOfProposal
-      - abstractEstimateNumber
       - department
       - subject
       - referenceType
@@ -1098,7 +1098,6 @@ definitions:
       - modeOfAllotment
       - ward
       - locality
-      - status
       - workProposedAsPerDP
       - dpRemarks
       - fund
@@ -1322,17 +1321,11 @@ definitions:
         $ref: '#/definitions/ProjectCode'
         description: Project Code of the Detailed Estimate
       parent:
-        $ref: '#/definitions/DetailedEstimate'
-        description: Parent Detailed Estimate Reference. This represents the Parent Estimate reference for the Revision Estimate 
-      #parent:
-      #  type: string
-      #  description: Parent of the Detailed Estimate 
+        type: string
+        description:  Parent Detailed Estimate Reference. This represents the Parent Estimate reference for the Revision Estimate.
       copiedFrom:
-        $ref: '#/definitions/DetailedEstimate'
-        description: Reference of the Detailed Estimate for teh Copy Estimate 
-      #copiedFrom:
-      #  type: string
-      #  description: Refers to the Detailed Estimate   
+        type: string
+        description: Reference of the Detailed Estimate for teh Copy Estimate
       approvedDate:
         type: integer
         format: int64

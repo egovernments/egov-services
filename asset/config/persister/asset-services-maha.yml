@@ -7,7 +7,8 @@ serviceMaps:
    fromTopic: save-asset-maha
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO egasset_asset(id, name, code, oldcode, departmentcode, assetcategory, modeofacquisition,status, grossvalue, accumulateddepreciation, description, dateofcreation,remarks, version, assetreference, enableyearwisedepreciation,assetattributes, depreciationrate, anticipatedlife, ordernumber,orderdate, wipreferenceno, acquiredfrom, warrantyavailable, warrantyexpirydate,defectliabilityyear, defectliabilitymonth, defectliabilityday,securitydepositretained, securitydepositrealized, acquisitiondate,originalvalue, assetaccount, accumulateddepreciationaccount,revaluationreserveaccount, depreciationexpenseaccount, titledocumentsavalable, totalarea, address,longitude, latitude,  landsurveyno,  quantity,tenantid, zone, revenueward, street, electionward, doorno, pincode,locality, block, createdby, createddate, lastmodifiedby, lastmodifieddate,fundsource,openingdate,location,assetcategorytype) VALUES (?,?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egasset_asset( id, name, code, oldcode, departmentcode, assetcategory, modeofacquisition,status, grossvalue, accumulateddepreciation, description, dateofcreation,remarks, version, assetreference, enableyearwisedepreciation, assetattributes, depreciationrate, anticipatedlife, ordernumber,  orderdate, wipreferenceno, acquiredfrom, warrantyavailable, warrantyexpirydate,  defectliabilityyear, defectliabilitymonth, defectliabilityday,securitydepositretained, securitydepositrealized, acquisitiondate,originalvalue, assetaccount, accumulateddepreciationaccount,revaluationreserveaccount, depreciationexpenseaccount, titledocumentsavalable, totalarea, address, longitude, latitude, quantity, tenantid, zone, revenueward, street, electionward, doorno, pincode, locality, block, createdby, createddate, lastmodifiedby, lastmodifieddate, openingdate, fundsource, location, assetcategorytype)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,  ?, ?, ?,?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
       basePath: Asset
       jsonMaps:
            
@@ -19,7 +20,7 @@ serviceMaps:
        
        - jsonPath: $.Asset.oldCode
        
-       - jsonPath: $.Asset.departmentCode
+       - jsonPath: $.Asset.department.code
        
        - jsonPath: $.Asset.assetCategory.id
        
@@ -96,9 +97,7 @@ serviceMaps:
        - jsonPath: $.Asset.longitude
                 
        - jsonPath: $.Asset.latitude
-                
-       - jsonPath: $.Asset.landSurveyNo
-       
+     
        - jsonPath: $.Asset.quantity
          
        - jsonPath: $.Asset.tenantId
@@ -125,11 +124,11 @@ serviceMaps:
        
        - jsonPath: $.Asset.auditDetails.lastModifiedBy
        
-       - jsonPath: $.Asset.auditDetails.lastModifiedDate       
+       - jsonPath: $.Asset.auditDetails.lastModifiedDate
+        
+       - jsonPath: $.Asset.openingDate       
        
-       - jsonPath: $.Asset.fundSource
-       
-       - jsonPath: $.Asset.openingDate
+       - jsonPath: $.Asset.fundSource.code
        
        - jsonPath: $.Asset.location
        
@@ -157,7 +156,7 @@ serviceMaps:
    fromTopic: update-asset-maha
    isTransaction: true
    queryMaps:
-    - query: UPDATE egasset_asset SET name=?, oldcode=?, departmentcode=?, assetcategory=?,modeofacquisition=?, status=?, grossvalue=?, accumulateddepreciation=?,description=?, dateofcreation=?, remarks=?, version=?, assetreference=?,enableyearwisedepreciation=?, assetattributes=?, depreciationrate=?,anticipatedlife=?, ordernumber=?, orderdate=?, wipreferenceno=?,acquiredfrom=?, warrantyavailable=?, warrantyexpirydate=?, defectliabilityyear=?,defectliabilitymonth=?, defectliabilityday=?, securitydepositretained=?,securitydepositrealized=?, acquisitiondate=?, originalvalue=?,assetaccount=?, accumulateddepreciationaccount=?, revaluationreserveaccount=?,depreciationexpenseaccount=?, titledocumentsavalable=?, totalarea=?, address=?,longitude=?, latitude=?, landsurveyno=?, quantity=?, zone=?, revenueward=?, street=?, electionward=?,doorno=?, pincode=?, locality=?, block=? , lastmodifiedby=?, lastmodifieddate=?, fundsource=?, openingdate=?, location=?, assetcategorytype=? WHERE id = ? AND tenantId = ?;
+    - query: UPDATE  egasset_asset SET id=?, name=?, code=?, oldcode=?, departmentcode=?, assetcategory=?, modeofacquisition=?, status=?, grossvalue=?, accumulateddepreciation=?,description=?, dateofcreation=?, remarks=?, version=?, assetreference=?, enableyearwisedepreciation=?, assetattributes=?, depreciationrate=?, anticipatedlife=?, ordernumber=?, orderdate=?, wipreferenceno=?, acquiredfrom=?, warrantyavailable=?, warrantyexpirydate=?, defectliabilityyear=?, defectliabilitymonth=?, defectliabilityday=?, securitydepositretained=?,securitydepositrealized=?, acquisitiondate=?, originalvalue=?,assetaccount=?, accumulateddepreciationaccount=?, revaluationreserveaccount=?,depreciationexpenseaccount=?, titledocumentsavalable=?, totalarea=?,address=?, longitude=?, latitude=?, quantity=?, tenantid=?, zone=?,revenueward=?, street=?, electionward=?, doorno=?, pincode=?,locality=?, block=?, createdby=?, createddate=?, lastmodifiedby=?,lastmodifieddate=?, openingdate=?, fundsource=?, location=?,assetcategorytype=? WHERE id = ? AND tenantId = ?;
       basePath: Asset
       jsonMaps:
          
@@ -165,7 +164,7 @@ serviceMaps:
          
        - jsonPath: $.Asset.oldCode
        
-       - jsonPath: $.Asset.departmentCode
+       - jsonPath: $.Asset.department.code
        
        - jsonPath: $.Asset.assetCategory.id
        
@@ -242,9 +241,7 @@ serviceMaps:
        - jsonPath: $.Asset.longitude
                 
        - jsonPath: $.Asset.latitude
-       
-       - jsonPath: $.Asset.landSurveyNo
-       
+      
        - jsonPath: $.Asset.quantity
          
        - jsonPath: $.Asset.locationDetails.zone
@@ -267,10 +264,10 @@ serviceMaps:
        
        - jsonPath: $.Asset.auditDetails.lastModifiedDate
        
-       - jsonPath: $.Asset.fundSource
-       
        - jsonPath: $.Asset.openingDate
        
+       - jsonPath: $.Asset.fundSource.code
+      
        - jsonPath: $.Asset.location
        
        - jsonPath: $.Asset.assetCategory.assetCategoryType

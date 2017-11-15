@@ -3,28 +3,20 @@ package org.egov.swm.domain.service;
 import java.util.Date;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.SanitationStaffSchedule;
 import org.egov.swm.domain.model.SanitationStaffScheduleSearch;
 import org.egov.swm.domain.model.SanitationStaffTarget;
 import org.egov.swm.domain.model.SanitationStaffTargetSearch;
-import org.egov.swm.domain.model.Shift;
 import org.egov.swm.domain.repository.SanitationStaffScheduleRepository;
-import org.egov.swm.web.contract.EmployeeResponse;
 import org.egov.swm.web.repository.IdgenRepository;
-import org.egov.swm.web.repository.MdmsRepository;
 import org.egov.swm.web.requests.SanitationStaffScheduleRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import net.minidev.json.JSONArray;
 
 @Service
 @Transactional(readOnly = true)
@@ -40,7 +32,7 @@ public class SanitationStaffScheduleService {
 	private SanitationStaffTargetService sanitationStaffTargetService;
 
 	@Autowired
-	private MdmsRepository mdmsRepository;
+	private ShiftService shiftService;
 
 	@Value("${egov.swm.sanitation.staff.schedule.transaction.no.idgen.name}")
 	private String idGenNameForTransactionNumPath;
@@ -96,8 +88,6 @@ public class SanitationStaffScheduleService {
 
 	private void validate(SanitationStaffScheduleRequest sanitationStaffScheduleRequest) {
 
-		JSONArray responseJSONArray = null;
-		ObjectMapper mapper = new ObjectMapper();
 		SanitationStaffTargetSearch sanitationStaffTargetSearch = new SanitationStaffTargetSearch();
 		Pagination<SanitationStaffTarget> sanitationStaffTargets;
 		for (SanitationStaffSchedule sanitationStaffSchedule : sanitationStaffScheduleRequest
@@ -112,15 +102,8 @@ public class SanitationStaffScheduleService {
 
 			if (sanitationStaffSchedule.getShift() != null && sanitationStaffSchedule.getShift().getCode() != null) {
 
-				responseJSONArray = mdmsRepository.getByCriteria(sanitationStaffSchedule.getTenantId(),
-						Constants.MODULE_CODE, Constants.SHIFT_MASTER_NAME, "code",
-						sanitationStaffSchedule.getShift().getCode(), sanitationStaffScheduleRequest.getRequestInfo());
-
-				if (responseJSONArray != null && responseJSONArray.size() > 0) {
-					sanitationStaffSchedule.setShift(mapper.convertValue(responseJSONArray.get(0), Shift.class));
-				} else
-					throw new CustomException("Shift",
-							"Given Shift is invalid: " + sanitationStaffSchedule.getShift().getCode());
+				sanitationStaffSchedule.setShift(shiftService.getShift(sanitationStaffSchedule.getTenantId(),
+						sanitationStaffSchedule.getShift().getCode(), sanitationStaffScheduleRequest.getRequestInfo()));
 
 			}
 

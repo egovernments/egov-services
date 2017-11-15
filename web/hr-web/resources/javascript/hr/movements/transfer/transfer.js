@@ -84,51 +84,20 @@ addOrUpdate(e){
                 'auth-token': authToken
               },
               success: function(res) {
+                var employee,designation;
 
-                _this.setState({movement:
-                      	{
-                            employeeId: "",
-                            typeOfMovement: "TRANSFER",
-                            currentAssignment: "",
-                            transferType: "",
-                            promotionBasis: {
-                              id: ""
-                            },
-                            remarks: "",
-                            reason: {
-                            	id: ""
-                            },
-                            effectiveFrom: "",
-                            enquiryPassedDate: "",
-                            transferedLocation: "",
-                            departmentAssigned: "",
-                            designationAssigned: "",
-                            positionAssigned: "",
-                            fundAssigned: "",
-                            functionAssigned: "",
-                            employeeAcceptance: "",
-                            workflowDetails: {
-                            	assignee: "",
-                              department:"",
-                              designation:""
-                            },
-                            tenantId: tenantId
-                          },
-                          employee: {
-                            id:"",
-                            name:"",
-                            code:"",
-                            departmentId:"",
-                            designationId:"",
-                            positionId:""
-                          },
-                          transferWithPromotion:false,
-                    positionList:[],departmentList:[],designationList:[],employees:[],promotionList:[],wfDesignationList:[],
-                    fundList:[],functionaryList:[],districtList:[],transferList:[],reasonList:[],pNameList:[],userList:[]
-                  });
+                commonApiPost("hr-employee","employees","_search",{"positionId":movement.workflowDetails.assignee,tenantId}, function(err, res) {
+                    if(res && res.Employee && res.Employee[0])
+                      employee = res.Employee[0];
 
-                showSuccess("Transfer application is forwarded");
+                    employee.assignments.forEach(function(item) {
+                                            if(item.isPrimary)
+                                              designation = item.designation;
+                                          });
+                    var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList,designation);
 
+                window.location.href=`app/hr/movements/ack-page.html?type=TransferApply&owner=${ownerDetails}`;
+              });
               },
               error: function(err) {
                 if(err["responseJSON"].message)
@@ -806,7 +775,7 @@ componentDidUpdate(){
                           <div className="styled-select">
                               <select id="employeeAcceptance" name="employeeAcceptance" value={employeeAcceptance}
                                 onChange={(e)=>{  handleChange(e,"employeeAcceptance") }}>
-                              <option value="">Select Promotion</option>
+                              <option value="">Select Employee Acceptance</option>
                               <option value="true">Yes</option>
                               <option value="false">No</option>
                              </select>
@@ -836,7 +805,7 @@ componentDidUpdate(){
                       <div className="col-sm-6">
                         <div className="styled-select">
                             <select id="department" name="department" value={workflowDetails.department}
-                                 onChange={(e)=>{  handleChange(e,"department") }}>
+                                 onChange={(e)=>{  handleChange(e,"department") }} required >
                                  <option value="">Select Department</option>
                                  {renderOption(this.state.departmentList)}
                             </select>
@@ -852,7 +821,7 @@ componentDidUpdate(){
                         <div className="col-sm-6">
                           <div className="styled-select">
                               <select id="designation" name="designation" value={workflowDetails.designation}
-                                  onChange={(e)=>{  handleChange(e,"designation") }}>
+                                  onChange={(e)=>{  handleChange(e,"designation") }} required >
                                   <option value="">Select Designation</option>
                                   {renderOption(this.state.designationList)}//TODO: get designation based on departments
                              </select>

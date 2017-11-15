@@ -28,6 +28,7 @@ public class ServiceType {
     private Boolean days;
     private Boolean active;
     private boolean hasFinancialImpact;
+    private String localName;
 
     public ServiceType(org.egov.pgr.domain.model.ServiceType serviceType) {
         this.id = serviceType.getId();
@@ -44,6 +45,7 @@ public class ServiceType {
         this.keywords = serviceType.getKeywords();
         this.type = serviceType.getType();
         this.slaHours = serviceType.getSlaHours();
+        this.localName = serviceType.getLocalName();
     }
 
 }

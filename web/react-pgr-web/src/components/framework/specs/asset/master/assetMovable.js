@@ -85,7 +85,7 @@ var dat = {
   					},
             {
 							"name": "Department",
-							"jsonPath": "Asset.departmentCode",
+							"jsonPath": "Asset.department.code",
 							"label": "ac.create.Department",
 							"pattern": "",
 							"type": "singleValueList",
@@ -96,12 +96,12 @@ var dat = {
 							"patternErrMsg": "",
 							"isStateLevel": true
   					},
-            {
+						{
   						"name": "NoOfOrder",
   						"jsonPath": "Asset.orderNumber",
   						"label": "ac.create.No.Of.Order",
-  						"pattern": "^[a-zA-Z0-9_]*$",
-  						"type": "number",
+  						"pattern": "^[a-zA-Z0-9_\\-\\/\\s]*$",
+  						"type": "text",
   						"url": "",
   						"isRequired": false,
   						"isDisabled": false,
@@ -292,11 +292,11 @@ var dat = {
           },
           {
             "name": "SourceOfFunds",
-            "jsonPath": "Asset.fundSource",
+            "jsonPath": "Asset.fundSource.code",
             "label": "ac.create.Source.of.funds",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..name|$..name",
+            "url": "/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..code|$..name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -875,7 +875,7 @@ var dat = {
   					},
             {
 							"name": "Department",
-							"jsonPath": "Assets[0].departmentCode",
+							"jsonPath": "Assets[0].department.code",
 							"label": "ac.create.Department",
 							"pattern": "",
 							"type": "singleValueList",
@@ -886,12 +886,12 @@ var dat = {
 							"patternErrMsg": "",
 							"isStateLevel": true
   					},
-            {
+						{
   						"name": "NoOfOrder",
   						"jsonPath": "Assets[0].orderNumber",
   						"label": "ac.create.No.Of.Order",
-  						"pattern": "^[a-zA-Z0-9_]*$",
-  						"type": "number",
+  						"pattern": "^[a-zA-Z0-9_\\-\\/\\s]*$",
+  						"type": "text",
   						"url": "",
   						"isRequired": false,
   						"isDisabled": false,
@@ -1068,7 +1068,7 @@ var dat = {
           },
           {
             "name": "SourceOfFunds",
-            "jsonPath": "Assets[0].fundSource",
+            "jsonPath": "Assets[0].fundSource.code",
             "label": "ac.create.Source.of.funds",
             "pattern": "",
             "type": "text",
@@ -1176,113 +1176,64 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          },
-          {
-            "name": "AssetAcountCode",
-            "jsonPath": "Assets[0].assetAccount",
-            "label": "ac.create.Asset.account.code",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Fixed Assets|$..name|$..name",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "AccumulatedDepreciationAccount",
-            "jsonPath": "Assets[0].accumulatedDepreciationAccount",
-            "label": "ac.create.Accumulated.Depreciation.Account",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Accumulated Depreciation|$..name|$..name",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "RevaluationReserveAccount",
-            "jsonPath": "Assets[0].revaluationReserveAccount",
-            "label": "ac.create.Revaluation.Reserve.Account",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Revaluation Reserve Account|$..name|$..name",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "DepreciationExpensesAccount ",
-            "jsonPath": "Assets[0].depreciationExpenseAccount",
-            "label": "ac.create.Depreciation.Expenses.Account",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/egf-masters/accountcodepurposes/_search?tenantId=default&name=Depreciation Expense Account|$..name|$..name",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-
+          }
 				]
 			},
-			{
-				"name": "TableField",
-        "jsonPath":"Assets",
-				"label": "",
-				"fields": [
-					{
-            "name": "AssetAcountCode",
-            "jsonPath": "Assets[0].assetAccount",
-            "label": "ac.create.Asset.account.code",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "AccumulatedDepreciationAccount",
-            "jsonPath": "Assets[0].accumulatedDepreciationAccount",
-            "label": "ac.create.Accumulated.Depreciation.Account",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "RevaluationReserveAccount",
-            "jsonPath": "Assets[0].revaluationReserveAccount",
-            "label": "ac.create.Revaluation.Reserve.Account",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "DepreciationExpensesAccount ",
-            "jsonPath": "Assets[0].depreciationExpenseAccount",
-            "label": "ac.create.Depreciation.Expenses.Account",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-				]
-			},
+			// {
+			// 	"name": "TableField",
+      //   "jsonPath":"Assets",
+			// 	"label": "",
+			// 	"fields": [
+			// 		{
+      //       "name": "AssetAcountCode",
+      //       "jsonPath": "Assets[0].assetAccount",
+      //       "label": "ac.create.Asset.account.code",
+      //       "pattern": "",
+      //       "type": "text",
+      //       "url": "",
+      //       "isRequired": false,
+      //       "isDisabled": false,
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": ""
+      //     },
+      //     {
+      //       "name": "AccumulatedDepreciationAccount",
+      //       "jsonPath": "Assets[0].accumulatedDepreciationAccount",
+      //       "label": "ac.create.Accumulated.Depreciation.Account",
+      //       "pattern": "",
+      //       "type": "text",
+      //       "url": "",
+      //       "isRequired": false,
+      //       "isDisabled": false,
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": ""
+      //     },
+      //     {
+      //       "name": "RevaluationReserveAccount",
+      //       "jsonPath": "Assets[0].revaluationReserveAccount",
+      //       "label": "ac.create.Revaluation.Reserve.Account",
+      //       "pattern": "",
+      //       "type": "text",
+      //       "url": "",
+      //       "isRequired": false,
+      //       "isDisabled": false,
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": ""
+      //     },
+      //     {
+      //       "name": "DepreciationExpensesAccount ",
+      //       "jsonPath": "Assets[0].depreciationExpenseAccount",
+      //       "label": "ac.create.Depreciation.Expenses.Account",
+      //       "pattern": "",
+      //       "type": "text",
+      //       "url": "",
+      //       "isRequired": false,
+      //       "isDisabled": false,
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": ""
+      //     },
+			// 	]
+			// },
       {
 				"name": "TableField",
         "jsonPath":"openingDate",
@@ -1509,7 +1460,7 @@ var dat = {
   					},
             {
 							"name": "Department",
-							"jsonPath": "Asset.departmentCode",
+							"jsonPath": "Asset.department.code",
 							"label": "ac.create.Department",
 							"pattern": "",
 							"type": "singleValueList",
@@ -1520,12 +1471,12 @@ var dat = {
 							"patternErrMsg": "",
 							"isStateLevel": true
   					},
-            {
+						{
   						"name": "NoOfOrder",
   						"jsonPath": "Asset.orderNumber",
   						"label": "ac.create.No.Of.Order",
-  						"pattern": "^[a-zA-Z0-9_]*$",
-  						"type": "number",
+  						"pattern": "^[a-zA-Z0-9_\\-\\/\\s]*$",
+  						"type": "text",
   						"url": "",
   						"isRequired": false,
   						"isDisabled": false,
@@ -1730,11 +1681,11 @@ var dat = {
           },
           {
             "name": "SourceOfFunds",
-            "jsonPath": "Asset.fundSource",
+            "jsonPath": "Asset.fundSource.code",
             "label": "ac.create.Source.of.funds",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..name|$..name",
+            "url": "/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..code|$..name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",

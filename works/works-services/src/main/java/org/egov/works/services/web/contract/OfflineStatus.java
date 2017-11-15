@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,10 +13,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * An Object holds the basic data for a Offline Status
+ * An Object that holds the basic data of Offline Status
  */
-@ApiModel(description = "An Object holds the basic data for a Offline Status")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T05:48:31.479Z")
+@ApiModel(description = "An Object that holds the basic data of Offline Status")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-14T10:35:55.114Z")
 
 public class OfflineStatus {
 	@JsonProperty("id")
@@ -27,17 +28,20 @@ public class OfflineStatus {
 	@JsonProperty("objectType")
 	private String objectType = null;
 
+	@JsonProperty("objectNumber")
+	private String objectNumber = null;
+
 	@JsonProperty("status")
 	private String status = null;
 
 	@JsonProperty("statusDate")
 	private Long statusDate = null;
 
-	@JsonProperty("objectNumber")
-	private String objectNumber = null;
-
 	@JsonProperty("remarks")
 	private String remarks = null;
+
+	@JsonProperty("referenceNumber")
+	private String referenceNumber = null;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
@@ -68,11 +72,11 @@ public class OfflineStatus {
 	}
 
 	/**
-	 * tenant id of the Offline Status
+	 * Tenant id of the Offline Status
 	 * 
 	 * @return tenantId
 	 **/
-	@ApiModelProperty(required = true, value = "tenant id of the Offline Status")
+	@ApiModelProperty(required = true, value = "Tenant id of the Offline Status")
 	@NotNull
 
 	@Size(min = 2, max = 128)
@@ -90,11 +94,12 @@ public class OfflineStatus {
 	}
 
 	/**
-	 * Object type for the offline status
+	 * Object type for the offline status. For example DetailedEstimate,
+	 * LetterOfAcceptance and WorkOrder.
 	 * 
 	 * @return objectType
 	 **/
-	@ApiModelProperty(required = true, value = "Object type for the offline status")
+	@ApiModelProperty(required = true, value = "Object type for the offline status. For example DetailedEstimate, LetterOfAcceptance and WorkOrder.")
 	@NotNull
 
 	public String getObjectType() {
@@ -103,6 +108,28 @@ public class OfflineStatus {
 
 	public void setObjectType(String objectType) {
 		this.objectType = objectType;
+	}
+
+	public OfflineStatus objectNumber(String objectNumber) {
+		this.objectNumber = objectNumber;
+		return this;
+	}
+
+	/**
+	 * Unique Identifier for the specified obect type. For example Detailed
+	 * Estimate Number, LOA Number and Work Order number.
+	 * 
+	 * @return objectNumber
+	 **/
+	@ApiModelProperty(required = true, value = "Unique Identifier for the specified obect type. For example Detailed Estimate Number, LOA Number and Work Order number.")
+	@NotNull
+
+	public String getObjectNumber() {
+		return objectNumber;
+	}
+
+	public void setObjectNumber(String objectNumber) {
+		this.objectNumber = objectNumber;
 	}
 
 	public OfflineStatus status(String status) {
@@ -132,11 +159,14 @@ public class OfflineStatus {
 	}
 
 	/**
-	 * Epoch time of Offline Status Date
+	 * Epoch time of Offline Status Date. The status and dates order is
+	 * maintained. Future date is not allowed to enter in this field. The
+	 * current row date should be on or after the previous row date of the
+	 * offline status.
 	 * 
 	 * @return statusDate
 	 **/
-	@ApiModelProperty(required = true, value = "Epoch time of Offline Status Date")
+	@ApiModelProperty(required = true, value = "Epoch time of Offline Status Date. The status and dates order is maintained.  Future date is not allowed to enter in this field. The current row date should be on or after the previous row date of the offline status.")
 	@NotNull
 
 	public Long getStatusDate() {
@@ -145,27 +175,6 @@ public class OfflineStatus {
 
 	public void setStatusDate(Long statusDate) {
 		this.statusDate = statusDate;
-	}
-
-	public OfflineStatus objectNumber(String objectNumber) {
-		this.objectNumber = objectNumber;
-		return this;
-	}
-
-	/**
-	 * Unique Identifier for the specified obect type.
-	 * 
-	 * @return objectNumber
-	 **/
-	@ApiModelProperty(required = true, value = "Unique Identifier for the specified obect type.")
-	@NotNull
-
-	public String getObjectNumber() {
-		return objectNumber;
-	}
-
-	public void setObjectNumber(String objectNumber) {
-		this.objectNumber = objectNumber;
 	}
 
 	public OfflineStatus remarks(String remarks) {
@@ -180,12 +189,36 @@ public class OfflineStatus {
 	 **/
 	@ApiModelProperty(value = "Remarks for the object type.")
 
+	@Pattern(regexp = "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+")
 	public String getRemarks() {
 		return remarks;
 	}
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	public OfflineStatus referenceNumber(String referenceNumber) {
+		this.referenceNumber = referenceNumber;
+		return this;
+	}
+
+	/**
+	 * Referenece number for the particular object. For example the Tender
+	 * number needs to be captures for Tender Notice document release, Agreement
+	 * number for Agreement order signed status.
+	 * 
+	 * @return referenceNumber
+	 **/
+	@ApiModelProperty(value = "Referenece number for the particular object. For example the Tender number needs to be captures for Tender Notice document release, Agreement number for Agreement order signed status.")
+
+	@Pattern(regexp = "[a-zA-Z0-9-\\\\]+")
+	public String getReferenceNumber() {
+		return referenceNumber;
+	}
+
+	public void setReferenceNumber(String referenceNumber) {
+		this.referenceNumber = referenceNumber;
 	}
 
 	public OfflineStatus auditDetails(AuditDetails auditDetails) {
@@ -221,16 +254,18 @@ public class OfflineStatus {
 		OfflineStatus offlineStatus = (OfflineStatus) o;
 		return Objects.equals(this.id, offlineStatus.id) && Objects.equals(this.tenantId, offlineStatus.tenantId)
 				&& Objects.equals(this.objectType, offlineStatus.objectType)
+				&& Objects.equals(this.objectNumber, offlineStatus.objectNumber)
 				&& Objects.equals(this.status, offlineStatus.status)
 				&& Objects.equals(this.statusDate, offlineStatus.statusDate)
-				&& Objects.equals(this.objectNumber, offlineStatus.objectNumber)
 				&& Objects.equals(this.remarks, offlineStatus.remarks)
+				&& Objects.equals(this.referenceNumber, offlineStatus.referenceNumber)
 				&& Objects.equals(this.auditDetails, offlineStatus.auditDetails);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, tenantId, objectType, status, statusDate, objectNumber, remarks, auditDetails);
+		return Objects.hash(id, tenantId, objectType, objectNumber, status, statusDate, remarks, referenceNumber,
+				auditDetails);
 	}
 
 	@Override
@@ -241,10 +276,11 @@ public class OfflineStatus {
 		sb.append("    id: ").append(toIndentedString(id)).append("\n");
 		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
 		sb.append("    objectType: ").append(toIndentedString(objectType)).append("\n");
+		sb.append("    objectNumber: ").append(toIndentedString(objectNumber)).append("\n");
 		sb.append("    status: ").append(toIndentedString(status)).append("\n");
 		sb.append("    statusDate: ").append(toIndentedString(statusDate)).append("\n");
-		sb.append("    objectNumber: ").append(toIndentedString(objectNumber)).append("\n");
 		sb.append("    remarks: ").append(toIndentedString(remarks)).append("\n");
+		sb.append("    referenceNumber: ").append(toIndentedString(referenceNumber)).append("\n");
 		sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
 		sb.append("}");
 		return sb.toString();

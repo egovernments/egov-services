@@ -261,9 +261,9 @@ public class AbstractEstimate   {
    * @return abstractEstimateNumber
   **/
   @ApiModelProperty(required = true, value = "Unique number for the Abstract Estimate. If the work is spillover then the Abstract Estimate number is user entered. Otherwise it is auto generated. This field is allowed to edit during rejected status or drafts for Spillover Estimates.")
-  @NotNull
+//  @NotNull
 
- @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(min=1,max=50)
+// @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(min=1,max=50)
   public String getAbstractEstimateNumber() {
     return abstractEstimateNumber;
   }
@@ -389,7 +389,7 @@ public class AbstractEstimate   {
    * @return status
   **/
   @ApiModelProperty(required = true, value = "Status of the Abstract Estimate")
-  @NotNull
+//  @NotNull
 
 //  @Valid
 
@@ -435,7 +435,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "The Recommended Mode of Allotment of the work")
   @NotNull
 
-  @Valid
+//  @Valid
 
   public ModeOfAllotment getModeOfAllotment() {
     return modeOfAllotment;
@@ -501,7 +501,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "The Nature of work for which this Abstract Estimate belongs to")
   @NotNull
 
-  @Valid
+//  @Valid
 
   public NatureOfWork getNatureOfWork() {
     return natureOfWork;
@@ -788,7 +788,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "User who admin sanctioned")
 
-  @Valid
+//  @Valid
 
   public User getAdminSanctionBy() {
     return adminSanctionBy;
@@ -1038,7 +1038,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "Sub scheme of the Abstract Estimate. This data comes from financials.")
 
-  @Valid
+//  @Valid
 
   public SubScheme getSubScheme() {
     return subScheme;

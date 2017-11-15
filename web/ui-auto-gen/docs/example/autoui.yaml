@@ -11,7 +11,7 @@ info:
 basePath: "/egov-autoui"
 
 x-ui-info:
-  $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/web/ui-auto-gen/docs/example/autoui-info.yaml
+  $ref: C:\Users\GoodWorkLabs\Desktop\GIT\egov-services\web\ui-auto-gen\docs\example\autoui-info.yaml
 
 paths:
 
@@ -281,6 +281,10 @@ definitions:
           description: multiSelectDropDown of the AutoUi.
           maxLength: 256
           minLength: 1
+        table:
+          type: array
+          items:
+            $ref: '#/definitions/Table' 
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
@@ -328,7 +332,21 @@ definitions:
           maximum: 500
           items:
             $ref: '#/definitions/AutoUi'  
-
+    Table: 
+      type: object
+      properties:
+        pinCode:
+          type: string
+          format: pinCode
+          description: multiSelectDropDown of the AutoUi.
+          maxLength: 256
+          minLength: 1
+        email:
+          type: string
+          format: email
+          description: multiSelectDropDown of the AutoUi.
+          maxLength: 256
+          minLength: 1
     VehicleType:
       type: object
       properties:

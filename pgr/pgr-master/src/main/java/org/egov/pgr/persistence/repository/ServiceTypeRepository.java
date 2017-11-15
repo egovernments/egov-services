@@ -162,6 +162,7 @@ public class ServiceTypeRepository {
         parametersMap.put("lastmodifiedby", serviceType.getLastModifiedBy());
         parametersMap.put("lastmodifieddate", serviceType.getLastModifiedDate());
         parametersMap.put("department", serviceType.getDepartment());
+        parametersMap.put("localname", serviceType.getLocalname());
 
         return parametersMap;
     }

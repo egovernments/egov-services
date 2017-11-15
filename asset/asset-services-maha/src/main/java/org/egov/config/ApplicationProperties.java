@@ -34,6 +34,9 @@ public class ApplicationProperties {
     public String getBootstrapServer() {
         return environment.getProperty("spring.kafka.bootstrap.servers");
     }
+    
+    @Value("${app.timezone}")
+    private String timeZone;
    
     @Value("${kafka.topics.save.asset}")
     private String createAssetTopicName;

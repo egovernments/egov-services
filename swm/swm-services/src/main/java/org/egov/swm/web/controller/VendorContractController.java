@@ -33,28 +33,20 @@ public class VendorContractController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public VendorContractResponse create(@RequestBody @Valid VendorContractRequest vendorContractRequest) {
 
-		VendorContractResponse vendorContractResponse = new VendorContractResponse();
-		vendorContractResponse.setResponseInfo(getResponseInfo(vendorContractRequest.getRequestInfo()));
-
 		vendorContractRequest = vendorContractService.create(vendorContractRequest);
 
-		vendorContractResponse.setVendorContracts(vendorContractRequest.getVendorContracts());
-
-		return vendorContractResponse;
+		return VendorContractResponse.builder().responseInfo(getResponseInfo(vendorContractRequest.getRequestInfo()))
+				.vendorContracts(vendorContractRequest.getVendorContracts()).build();
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
 	public VendorContractResponse update(@RequestBody @Valid VendorContractRequest vendorContractRequest) {
 
-		VendorContractResponse vendorContractResponse = new VendorContractResponse();
-		vendorContractResponse.setResponseInfo(getResponseInfo(vendorContractRequest.getRequestInfo()));
-
 		vendorContractRequest = vendorContractService.update(vendorContractRequest);
 
-		vendorContractResponse.setVendorContracts(vendorContractRequest.getVendorContracts());
-
-		return vendorContractResponse;
+		return VendorContractResponse.builder().responseInfo(getResponseInfo(vendorContractRequest.getRequestInfo()))
+				.vendorContracts(vendorContractRequest.getVendorContracts()).build();
 	}
 
 	@PostMapping("/_search")
@@ -65,12 +57,9 @@ public class VendorContractController {
 
 		Pagination<VendorContract> vendorContractList = vendorContractService.search(vendorContractSearch);
 
-		VendorContractResponse response = new VendorContractResponse();
-		response.setVendorContracts(vendorContractList.getPagedData());
-		response.setResponseInfo(getResponseInfo(requestInfo));
-		response.setPage(new PaginationContract(vendorContractList));
-
-		return response;
+		return VendorContractResponse.builder().responseInfo(getResponseInfo(requestInfo))
+				.vendorContracts(vendorContractList.getPagedData()).page(new PaginationContract(vendorContractList))
+				.build();
 
 	}
 

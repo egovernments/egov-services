@@ -24,6 +24,7 @@ const constants = require('../../common/constants');
 var currentThis;
 
 class grievanceView extends Component{
+  static isPrivate = false;
   constructor(props){
     super(props);
     this.state={
@@ -57,7 +58,7 @@ class grievanceView extends Component{
 
     this.props.setLoadingStatus('loading');
 
-    Api.commonApiPost("/pgr/seva/v1/_search",{serviceRequestId:currentThis.props.match.params.srn},{}).then(function(response)
+    Api.commonApiPost("/pgr/seva/v1/_search",{serviceRequestId:decodeURIComponent(currentThis.props.match.params.srn)},{}).then(function(response)
     {
 
       if(response.serviceRequests.length === 0){
@@ -232,7 +233,7 @@ class grievanceView extends Component{
     }
   }
   checkUpdateEnabled = () => {
-    Api.commonApiPost("/pgr/seva/v1/_get",{crn : currentThis.props.match.params.srn}).then(function(response)
+    Api.commonApiPost("/pgr/seva/v1/_get",{crn : decodeURIComponent(currentThis.props.match.params.srn)}).then(function(response)
     {
       currentThis.setState({isUpdateAllowed : response.isUpdateAllowed});
       currentThis.getWard();

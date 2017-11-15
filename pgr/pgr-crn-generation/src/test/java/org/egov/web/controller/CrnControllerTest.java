@@ -29,10 +29,10 @@ public class CrnControllerTest {
 
     @Test
     public void testGetCrn() throws Exception {
-        when(crnGeneratorService.generate()).thenReturn("crn_value");
+        when(crnGeneratorService.generate("default")).thenReturn("crn_value");
 
         mockMvc.perform(
-                get("/crn")
+                get("/crn").param("tenantId","default")
         )
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -41,10 +41,11 @@ public class CrnControllerTest {
 
     @Test
     public void testCreateCrn() throws Exception {
-        when(crnGeneratorService.generate()).thenReturn("crn_value");
+        when(crnGeneratorService.generate("default")).thenReturn("crn_value");
 
         mockMvc.perform(
             post("/crn/v1/_create")
+            .param("tenantId","default")
         )
             .andExpect(status().isOk())
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

@@ -175,8 +175,7 @@ public class CaseBuilder {
 
 		if (caseSearchCriteria.getSort() != null && !caseSearchCriteria.getSort().isEmpty()) {
 			selectQuery.append(" ORDER BY " + caseSearchCriteria.getSort());
-		}
-		else{
+		} else {
 			selectQuery.append(" ORDER BY lastmodifiedtime desc");
 		}
 	}
@@ -195,13 +194,32 @@ public class CaseBuilder {
 		return searchQuery.toString();
 	}
 
-	public String searchCaseDetailsByTenantId(String tenantId, String caseTableName, List<Object> preparedStatementValues) {
+	public String searchCaseDetailsByTenantId(String tenantId, String advocateName, String caseTableName,
+			List<Object> preparedStatementValues) {
 		StringBuilder searchQuery = new StringBuilder();
 		searchQuery.append("SELECT caseno, summonreferenceno FROM " + caseTableName);
-		
+
 		searchQuery.append(" WHERE tenantId=?");
 		preparedStatementValues.add(tenantId);
-		
+
+		if (advocateName != null && !advocateName.isEmpty()) {
+			List<String> caseCodes = AdvocateRepository.getcaseCodeByAdvocateCode(advocateName);
+
+			int count = 1;
+			String code = "";
+			if (caseCodes != null && caseCodes.size() > 0) {
+				for (String caseCode : caseCodes) {
+					if (count < caseCodes.size())
+						code = code + "'" + caseCode + "',";
+					else
+						code = code + "'" + caseCode + "'";
+					count++;
+
+				}
+				searchQuery.append(" AND code IN(" + code + ")");
+			}
+		}
+
 		return searchQuery.toString();
 	}
 }

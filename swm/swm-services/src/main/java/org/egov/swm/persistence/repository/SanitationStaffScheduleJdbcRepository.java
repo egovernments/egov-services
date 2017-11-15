@@ -6,11 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.SanitationStaffSchedule;
 import org.egov.swm.domain.model.SanitationStaffScheduleSearch;
 import org.egov.swm.domain.model.SanitationStaffTarget;
 import org.egov.swm.domain.model.SanitationStaffTargetSearch;
+import org.egov.swm.domain.service.ShiftService;
 import org.egov.swm.persistence.entity.SanitationStaffScheduleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -23,6 +25,9 @@ public class SanitationStaffScheduleJdbcRepository extends JdbcRepository {
 
 	@Autowired
 	public SanitationStaffTargetJdbcRepository sanitationStaffTargetJdbcRepository;
+
+	@Autowired
+	private ShiftService shiftService;
 
 	public Pagination<SanitationStaffSchedule> search(SanitationStaffScheduleSearch searchRequest) {
 
@@ -110,17 +115,26 @@ public class SanitationStaffScheduleJdbcRepository extends JdbcRepository {
 		for (SanitationStaffScheduleEntity sanitationStaffScheduleEntity : sanitationStaffScheduleEntities) {
 
 			sss = sanitationStaffScheduleEntity.toDomain();
-			ssts = new SanitationStaffTargetSearch();
-			ssts.setTenantId(sanitationStaffScheduleEntity.getTenantId());
-			ssts.setTargetNo(sanitationStaffScheduleEntity.getSanitationStaffTarget());
 
-			sanitationStaffTargets = sanitationStaffTargetJdbcRepository.search(ssts);
+			if (sss.getShift() != null && sss.getShift().getCode() != null) {
 
-			if (sanitationStaffTargets != null && sanitationStaffTargets.getPagedData() != null
-					&& !sanitationStaffTargets.getPagedData().isEmpty()) {
+				sss.setShift(shiftService.getShift(sss.getTenantId(), sss.getShift().getCode(), new RequestInfo()));
+			}
 
-				sss.setSanitationStaffTarget(sanitationStaffTargets.getPagedData().get(0));
+			if (sanitationStaffScheduleEntity.getSanitationStaffTarget() != null
+					&& !sanitationStaffScheduleEntity.getSanitationStaffTarget().isEmpty()) {
+				ssts = new SanitationStaffTargetSearch();
+				ssts.setTenantId(sanitationStaffScheduleEntity.getTenantId());
+				ssts.setTargetNo(sanitationStaffScheduleEntity.getSanitationStaffTarget());
 
+				sanitationStaffTargets = sanitationStaffTargetJdbcRepository.search(ssts);
+
+				if (sanitationStaffTargets != null && sanitationStaffTargets.getPagedData() != null
+						&& !sanitationStaffTargets.getPagedData().isEmpty()) {
+
+					sss.setSanitationStaffTarget(sanitationStaffTargets.getPagedData().get(0));
+
+				}
 			}
 
 			sanitationStaffScheduleList.add(sss);

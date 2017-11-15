@@ -34,16 +34,11 @@ public class SanitationStaffScheduleController {
 	public SanitationStaffScheduleResponse create(
 			@RequestBody @Valid SanitationStaffScheduleRequest sanitationStaffScheduleRequest) {
 
-		SanitationStaffScheduleResponse sanitationStaffScheduleResponse = new SanitationStaffScheduleResponse();
-		sanitationStaffScheduleResponse
-				.setResponseInfo(getResponseInfo(sanitationStaffScheduleRequest.getRequestInfo()));
-
 		sanitationStaffScheduleRequest = sanitationStaffScheduleService.create(sanitationStaffScheduleRequest);
 
-		sanitationStaffScheduleResponse
-				.setSanitationStaffSchedules(sanitationStaffScheduleRequest.getSanitationStaffSchedules());
-
-		return sanitationStaffScheduleResponse;
+		return SanitationStaffScheduleResponse.builder()
+				.responseInfo(getResponseInfo(sanitationStaffScheduleRequest.getRequestInfo()))
+				.sanitationStaffSchedules(sanitationStaffScheduleRequest.getSanitationStaffSchedules()).build();
 	}
 
 	@PostMapping("/_update")
@@ -51,16 +46,11 @@ public class SanitationStaffScheduleController {
 	public SanitationStaffScheduleResponse update(
 			@RequestBody @Valid SanitationStaffScheduleRequest sanitationStaffScheduleRequest) {
 
-		SanitationStaffScheduleResponse sanitationStaffScheduleResponse = new SanitationStaffScheduleResponse();
-		sanitationStaffScheduleResponse
-				.setResponseInfo(getResponseInfo(sanitationStaffScheduleRequest.getRequestInfo()));
-
 		sanitationStaffScheduleRequest = sanitationStaffScheduleService.update(sanitationStaffScheduleRequest);
 
-		sanitationStaffScheduleResponse
-				.setSanitationStaffSchedules(sanitationStaffScheduleRequest.getSanitationStaffSchedules());
-
-		return sanitationStaffScheduleResponse;
+		return SanitationStaffScheduleResponse.builder()
+				.responseInfo(getResponseInfo(sanitationStaffScheduleRequest.getRequestInfo()))
+				.sanitationStaffSchedules(sanitationStaffScheduleRequest.getSanitationStaffSchedules()).build();
 	}
 
 	@PostMapping("/_search")
@@ -73,12 +63,9 @@ public class SanitationStaffScheduleController {
 		Pagination<SanitationStaffSchedule> sanitationStaffScheduleList = sanitationStaffScheduleService
 				.search(sanitationStaffScheduleSearch);
 
-		SanitationStaffScheduleResponse response = new SanitationStaffScheduleResponse();
-		response.setSanitationStaffSchedules(sanitationStaffScheduleList.getPagedData());
-		response.setResponseInfo(getResponseInfo(requestInfo));
-		response.setPage(new PaginationContract(sanitationStaffScheduleList));
-
-		return response;
+		return SanitationStaffScheduleResponse.builder().responseInfo(getResponseInfo(requestInfo))
+				.sanitationStaffSchedules(sanitationStaffScheduleList.getPagedData())
+				.page(new PaginationContract(sanitationStaffScheduleList)).build();
 
 	}
 

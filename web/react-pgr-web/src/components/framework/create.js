@@ -52,7 +52,6 @@ class Report extends Component {
         if(typeof groups[i].fields[j].defaultValue == 'string' || typeof groups[i].fields[j].defaultValue == 'number' || typeof groups[i].fields[j].defaultValue == 'boolean') {
           _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
-
         if(groups[i].children && groups[i].children.length) {
           for(var k=0; k<groups[i].children.length; k++) {
             this.setDefaultValues(groups[i].children[k].groups, dat);
@@ -98,13 +97,33 @@ class Report extends Component {
                 // }
                 Api.commonApiPost(context,id).then(function(response) {
                   if(response) {
-                    let keys=jp.query(response,splitArray[1].split("|")[1]);
-                    let values=jp.query(response,splitArray[1].split("|")[2]);
+
+                    let queries = splitArray[1].split("|");
+                    let keys=jp.query(response, queries[1]);
+                    let values=jp.query(response, queries[2]);
+
+                    let others=[];
+                    if(queries.length>3){
+                      for(let i=3;i<queries.length;i++){
+                        others.push(jp.query(response, queries[i]) || undefined);
+                      }
+                    }
+
                     let dropDownData=[];
                     for (let t = 0; t < keys.length; t++) {
                         let obj={};
                         obj["key"]=keys[t];
                         obj["value"]=values[t];
+
+                        if(others && others.length>0)
+                        {
+                          let otherItemDatas=[];
+                          for(let i=0;i<others.length;i++){
+                            otherItemDatas.push(others[i][k] || undefined);
+                          }
+                          obj['others'] = otherItemDatas;
+                        }
+
                         dropDownData.push(obj);
                     }
                     dropDownData.sort(function(s1, s2) {
@@ -240,7 +259,10 @@ class Report extends Component {
          }
        }
      }
+
+      self.props.setLoadingStatus('loading');
       Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
+          self.props.setLoadingStatus('hide');
           if(specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].isResponseArray) {
             var obj = {};
             _.set(obj, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName, jp.query(res, "$..[0]")[0]);
@@ -255,7 +277,7 @@ class Report extends Component {
 
           self.depedantValue(obj1.groups);
       }, function(err){
-
+          self.props.setLoadingStatus('hide');
       })
 
     } else {
@@ -391,14 +413,34 @@ class Report extends Component {
     }
   }
 
+  getFileList = (mockObject, formData, fileList = {}) => {
+    for(let i=0; i<mockObject.groups.length; i++) {
+      for(let j=0; j<mockObject.groups[i].fields.length; j++) {
+        if(mockObject.groups[i].fields[j].type == "singleFileUpload" && _.get(formData, mockObject.groups[i].fields[j].jsonPath)) {
+          fileList[mockObject.groups[i].fields[j].jsonPath] = _.get(formData, mockObject.groups[i].fields[j].jsonPath);
+        }
+      }
+
+      if(mockObject.groups[i].children && mockObject.groups[i].children.length) {
+        for(var k=0; k<mockObject.groups[i].children.length; k++) {
+          this.getFileList(mockObject.groups[i].children[k], formData, fileList);
+        }
+      }
+    }
+  }
+
   checkForOtherFiles = (formData, _url) => {
     let { mockData, actionName, moduleName } = this.props;
-    let counter = 0, breakOut = 0, self = this;
-    for(let i=0; i<mockData[moduleName + "." + actionName].groups.length; i++) {
-      for(let j=0; j<mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
-        if(mockData[moduleName + "." + actionName].groups[i].fields[j].type == "singleFileUpload" && _.get(formData, mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath)) {
-          counter++;
-          fileUpload(_.get(formData, mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath), self.props.moduleName, function(err, res) {
+    let self = this;
+    let fileList = {};
+    this.getFileList(mockData[moduleName + "." + actionName], formData, fileList);
+    let counter = Object.keys(fileList).length;
+    if(!counter) {
+      self.makeAjaxCall(formData, _url);
+    } else {
+      let breakOut = 0;
+      for(let key in fileList) {
+        fileUpload(fileList[key], moduleName, function(err, res) {
             if(breakOut == 1) return;
             if(err) {
               breakOut = 1;
@@ -406,23 +448,13 @@ class Report extends Component {
               self.props.toggleSnackbarAndSetText(true, err, false, true);
             } else {
               counter--;
-              _.set(formData, mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, res.files[0].fileStoreId);
+              _.set(formData, key, res.files[0].fileStoreId);
               if(counter == 0 && breakOut == 0)
                 self.makeAjaxCall(formData, _url);
             }
-          })
-        } /*else if(mockData[moduleName + "." + actionName].groups[i].fields[j].type == "multiFileUpload") {
-          let files = _.get(formData, mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
-          if(files && files.length) {
-            counter += files.length;
-
-          }
-        }*/
+        })
       }
     }
-
-    if(counter == 0 && breakOut == 0)
-      self.makeAjaxCall(formData, _url);
   }
 
   initiateWF = (action, workflowItem, isHidden, status) => {
@@ -877,7 +909,7 @@ class Report extends Component {
         }
       }
 
-      let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
+      let depedants= jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
       let dependantIdx;
       if(depedants.length === 0 && property){
         let currentProperty = property;
@@ -1282,6 +1314,8 @@ class Report extends Component {
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler, initiateWF} = this;
+
+    //let isUpdateDataFetched = actionName==='update'? !_.isEmpty(formData) : true;
 
     return (
       <div className="Report">

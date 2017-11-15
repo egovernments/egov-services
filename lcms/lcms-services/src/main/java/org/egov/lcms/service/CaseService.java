@@ -610,9 +610,9 @@ public class CaseService {
 		return getResponseInfo(caseRequest);
 	}
 
-	public CaseDetailsResponse getCaseNo(String tenantId, RequestInfo requestInfo) {
+	public CaseDetailsResponse getCaseNo(String tenantId, String advocateName, RequestInfo requestInfo) {
 
-		List<CaseDetails> caseDetails = caseSearchRepository.getCaseDetails(tenantId);
+		List<CaseDetails> caseDetails = caseSearchRepository.getCaseDetails(tenantId, advocateName);
 		ResponseInfo responseInfo = responseFactory.getResponseInfo(requestInfo, HttpStatus.CREATED);
 
 		return new CaseDetailsResponse(responseInfo, caseDetails);

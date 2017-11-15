@@ -16,9 +16,11 @@ import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
 
 @Repository
+@Slf4j
 public class MasterDataRepository {
 
 	@Autowired
@@ -53,7 +55,7 @@ public class MasterDataRepository {
 			}
 			map.put(moduleKey, masterDetails);
 		}
-
+		log.info(" the MDMS Request map : "+ map);
 		MdmsResponse mdmsResponse = mdmsClientService.getMaster(requestInfo, tenantId, map);
 
 		return mdmsResponse.getMdmsRes();

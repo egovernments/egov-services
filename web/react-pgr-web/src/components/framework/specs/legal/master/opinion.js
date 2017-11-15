@@ -8,7 +8,7 @@ var dat = {
    groups: [
       {
         name: "search",
-        label: "opinion.search.title",
+        label: " ",
         fields: [
           {
             name: "opinionFromDate",

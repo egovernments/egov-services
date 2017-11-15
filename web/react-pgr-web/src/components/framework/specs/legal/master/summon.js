@@ -121,10 +121,12 @@ var dat = {
             },{
               label: "Ref Evidence",
               url:"/update/legal/referenceevidence/"
-            },{
+            },
+            {
               label: "Update Case Details",
               url:"/update/legal/casedetails/"
-            },{
+            },
+            {
               label: "View Case Details",
               url:"/view/legal/casedetails/"
             }
@@ -137,7 +139,8 @@ var dat = {
             jsonPath:"checkedRow",
             label:"",
           }
-        },{
+        },
+        {
           label: "legal.create.referenceNo"
         },
         {

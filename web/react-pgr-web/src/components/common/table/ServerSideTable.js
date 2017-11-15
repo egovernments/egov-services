@@ -71,7 +71,7 @@ class ServerSideTable extends Component {
               {Object.values(obj).map((data, idx) => {
                 if(Object.values(resultList.reportActionData[0])[idx].trim()){
                   return (
-                    <td key={idx}><a href="javascript:void(0)" onClick={(e) => {this.handleNavigation(Object.values(resultList.reportActionData[0])[idx]+data)}}>{data}</a></td>
+                    <td key={idx}><a href="javascript:void(0)" onClick={(e) => {this.handleNavigation(Object.values(resultList.reportActionData[0])[idx]+encodeURIComponent(data))}}>{data}</a></td>
                   )
                 }else{
                   return (

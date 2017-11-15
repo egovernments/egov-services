@@ -112,9 +112,10 @@ var dat = {
                     //"hide":false,
                     "jsonPath": "KPIs[0].targetValue",
                     "label": "",
-                    "pattern": "",
+                    "pattern": "[0-9]",
                     "type": "text",
                     "isDisabled": false,
+                    "patternErrMsg": "Please enter a valid number",
                     "requiredErrMsg": ""
                 }]
             },

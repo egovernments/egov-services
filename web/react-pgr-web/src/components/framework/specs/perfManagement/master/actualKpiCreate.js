@@ -22,8 +22,9 @@ var dat = {
         "depedants": [
           {
            "jsonPath": "kpiValues[0].financialYear",
-          "type": "dropDown",
-          "pattern": "egf-master/financialyears/_search?tenantId=default|$.financialYears.*.finYearRange|$.financialYears.*.finYearRange" 
+           "type": "textField",
+           "valExp": "getVal('kpiValues[*].financialYear')"
+          /*"pattern": "egf-master/financialyears/_search?tenantId=default|$.financialYears.*.finYearRange|$.financialYears.*.finYearRange"*/
           },
           {
           "jsonPath": "kpiValues[0].documents",
@@ -42,17 +43,17 @@ var dat = {
           // }
           ]
       },
-       {
-        "name": "kpiDate",
-        "jsonPath": "kpiValues[0].financialYear",
-        "label": "Financial Year",
-        "isRequired": true,
-        "pattern": "",
-       // "url":"egf-master/financialyears/_search?tenantId=default|$.financialYears.*.finYearRange|$.financialYears.*.finYearRange",
-        "type": "singleValueList",
-        "isDisabled": false,
-        "requiredErrMsg": ""
-      },
+      {
+       "name": "kpiDateBlock",
+       "jsonPath": "kpiValues[0].financialYear",
+       "label": "Financial Year",
+       // "pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
+       "type": "text",
+       "isRequired": false,
+       "isDisabled": true,
+       "requiredErrMsg": "",
+       "patternErrMsg": "Length is more than 250"
+     },
       {
           "name": "kpitype",
           "jsonPath": "kpiValues[0].targetType",
@@ -85,17 +86,55 @@ var dat = {
               }]
           }]
       },
-      {
-        "name": "kpiActualValue",
-        "jsonPath": "kpiValues[0].resultValue",
-        "label": "Actual Value",
-        "pattern": "",
-        "type": "text",
-        "isDisabled": false,
-        "requiredErrMsg": ""
-      }]
+    ]
     },
-          {
+    {
+      "label": "perfManagement.create.KPIs.groups.kpiTargetBlock",
+        "name": "kpiTargetBlock",
+        "hide": false,
+        "multiple": false,
+        "fields": [{
+            "name": "kpiTarget",
+            //"hide":false,
+            "jsonPath": "kpiValues[0].resultValue",
+            "label": "",
+            "pattern": "[0-9]",
+            "type": "text",
+            "isDisabled": true,
+            "patternErrMsg": "Please enter a valid number",
+            "requiredErrMsg": ""
+        }]
+    },
+    {
+        "label": "perfManagement.create.KPIs.groups.kpiTargetRadioBlock",
+        "name": "kpiTargetRadioBlock",
+        "hide": true,
+        "multiple": false,
+        "fields": [{
+            "name": "kpiTargetRadio",
+            //"hide":true,
+            "jsonPath": "kpiValues[0].targetValue",
+            "label": "",
+            "pattern": "",
+            "type": "radio",
+            "isRequired": false,
+            "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "values": [{
+                "label": "perfManagement.create.KPIs.groups.kpiTargetRadioBlock.yes",
+                "value": 1
+            }, {
+                "label": "perfManagement.create.KPIs.groups.kpiTargetRadioBlock.no",
+                "value": 2
+            }, {
+                "label": "perfManagement.create.KPIs.groups.kpiTargetRadioBlock.inprogress",
+                "value": 3
+            }]
+        }]
+    },
+
+      {
           "name": "UploadDocument",
           "label": "legal.create.group.title.UploadDocument",
           fields:[{
@@ -308,7 +347,7 @@ var dat = {
   //               "value": 3
   //             }],
   //             "defaultValue": true
-  //           }, 
+  //           },
   //           {
   //             "name": "updatekpiInstruction",
   //             "jsonPath": "KPIs[0].instructions",
@@ -352,4 +391,3 @@ var dat = {
   // }
 }
 export default dat;
-

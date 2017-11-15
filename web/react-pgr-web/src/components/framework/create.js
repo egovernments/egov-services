@@ -841,132 +841,86 @@ class Report extends Component {
     setMockData(_mockData);
   }
 
-  handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch", expression, expErr, isDate) => {
-      let {getVal, getValFromDropdownData} = this;
-      let {handleChange,mockData,setDropDownData, formData} = this.props;
-      let hashLocation = window.location.hash;
-      let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
 
-      const findLastIdxOnJsonPath = (jsonPath) => {
-        var str = jsonPath.split(REGEXP_FIND_IDX);
-        for (let i = str.length - 1; i > -1; i--) {
-          if (str[i].match(/\d+/)) {
-            return str[i];
-          }
-        }
-        return undefined;
-      }
+  affectDependants = (obj, e, property)=>{
 
-      const replaceLastIdxOnJsonPath = (jsonPath, replaceIdx) => {
-        var str = jsonPath.split(REGEXP_FIND_IDX);
-        var isReplaced = false;
-        for (let i = str.length - 1; i > -1; i--) {
-          if (str[i].match(/\d+/)) {
-            if (!isReplaced) {
-              isReplaced = true;
-              str[i] = `[${replaceIdx}]`;
-            } else
-              str[i] = `[${str[i]}]`;
-          }
-        }
-        return str.join("");
-      }
+    let {handleChange, setDropDownData} = this.props;
+    let {getVal, getValFromDropdownData} = this;
 
-      if(expression && e.target.value){
-        let str = expression;
-        let pos = 0;
-        let values = [];
-        while(pos < str.length) {
-          if(str.indexOf("$", pos) > -1) {
-            let ind = str.indexOf("$", pos);
-            let spaceInd = str.indexOf(" ", ind) > -1 ? str.indexOf(" ", ind) : (str.length-1) ;
-            let value = str.substr(ind, spaceInd);
-            if(value != "$" + property)  {
-              values.push(value.substr(1));
-              str = str.replace(value, ("getVal('" + value.substr(1, value.length) + "')"));
-            } else
-              str = str.replace(value, ("e.target.value"));
-            pos++;
-          }
-          else {
-            pos++;
-          }
-        }
 
-        let _flag = 0;
-        for(var i=0; i<values.length; i++) {
-          if(!getVal(values[i])) {
-            _flag = 1;
-          }
-        }
-
-        if(isDate && e.target.value && [12, 13].indexOf((e.target.value+"").length) == -1) {
-          _flag = 1;
-        }
-
-        if(_flag == 0) {
-          if(!eval(str)) {
-            return this.props.toggleSnackbarAndSetText(true, translate(expErr), false, true);
-          }
+    const findLastIdxOnJsonPath = (jsonPath) => {
+      var str = jsonPath.split(REGEXP_FIND_IDX);
+      for (let i = str.length - 1; i > -1; i--) {
+        if (str[i].match(/\d+/)) {
+          return str[i];
         }
       }
+      return undefined;
+    }
 
-      let depedants= jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
-      let dependantIdx;
-      if(depedants.length === 0 && property){
-        let currentProperty = property;
-        dependantIdx = findLastIdxOnJsonPath(property);
-        if(dependantIdx !== undefined)
-          currentProperty = replaceLastIdxOnJsonPath(property, 0); //RESET INDEX 0 TO FIND DEPENDANT FIELDS FROM TEMPLATE JSON
-        depedants = jp.query(obj,`$.groups..fields[?(@.type=="tableList")].tableList.values[?(@.jsonPath == "${currentProperty}")].depedants.*`);
+    const replaceLastIdxOnJsonPath = (jsonPath, replaceIdx) => {
+      var str = jsonPath.split(REGEXP_FIND_IDX);
+      var isReplaced = false;
+      for (let i = str.length - 1; i > -1; i--) {
+        if (str[i].match(/\d+/)) {
+          if (!isReplaced) {
+            isReplaced = true;
+            str[i] = `[${replaceIdx}]`;
+          } else
+            str[i] = `[${str[i]}]`;
+        }
+      }
+      return str.join("");
+    }
 
-        //Changes to handle table sum
-        var jpathname= property.substr(0,property.lastIndexOf("[")+1) + '0' + property.substr(property.lastIndexOf("[")+2);
+    let depedants = jp.query(obj, `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
+    let dependantIdx;
+    if (depedants.length === 0 && property) {
+      let currentProperty = property;
+      dependantIdx = findLastIdxOnJsonPath(property);
+      if (dependantIdx !== undefined)
+        currentProperty = replaceLastIdxOnJsonPath(property, 0); //RESET INDEX 0 TO FIND DEPENDANT FIELDS FROM TEMPLATE JSON
+      depedants = jp.query(obj, `$.groups..fields[?(@.type=="tableList")].tableList.values[?(@.jsonPath == "${currentProperty}")].depedants.*`);
 
-       var dependency =jp.query(obj,`$.groups..values[?(@.jsonPath=="${jpathname}")].dependency`);
-       if(dependency.length>0)
-        {
-           let _formData = {...this.props.formData};
-           if( _formData)
-            {
-           let field= property.substr(0,property.lastIndexOf("["));
-           let last= property.substr(property.lastIndexOf("]")+2);
-           let curIndex= property.substr(property.lastIndexOf("[")+1,1);
+      //Changes to handle table sum
+      var jpathname = property.substr(0, property.lastIndexOf("[") + 1) + '0' + property.substr(property.lastIndexOf("[") + 2);
 
-           let arrval = _.get(_formData,field);
-           if(arrval){
-             let len= _.get(_formData,field).length;
+      var dependency = jp.query(obj, `$.groups..values[?(@.jsonPath=="${jpathname}")].dependency`);
+      if (dependency.length > 0) {
+        let _formData = { ...this.props.formData
+        };
+        if (_formData) {
+          let field = property.substr(0, property.lastIndexOf("["));
+          let last = property.substr(property.lastIndexOf("]") + 2);
+          let curIndex = property.substr(property.lastIndexOf("[") + 1, 1);
 
-           let amtsum=0;
-           let svalue="";
-           for(var i=0;i<len;i++)
-            {
-              let ifield=field+'['+i+']'+'.'+last;
-              if(i==curIndex)
-                {
-                   svalue=e.target.value;
-                }
-              else
-                {
-                  svalue=_.get(_formData,ifield);
-                }
+          let arrval = _.get(_formData, field);
+          if (arrval) {
+            let len = _.get(_formData, field).length;
+
+            let amtsum = 0;
+            let svalue = "";
+            for (var i = 0; i < len; i++) {
+              let ifield = field + '[' + i + ']' + '.' + last;
+              if (i == curIndex) {
+                svalue = e.target.value;
+              } else {
+                svalue = _.get(_formData, ifield);
+              }
 
               amtsum += parseInt(svalue);
             }
-            if(amtsum>0)
-              {
-               handleChange({target: {value: amtsum}}, dependency[0], false, '', '');
+            if (amtsum > 0) {
+              handleChange({
+                target: {
+                  value: amtsum
+                }
+              }, dependency[0], false, '', '');
 
-              }
-           }
-           }
             }
+          }
+        }
       }
-
-
-      this.checkIfHasShowHideFields(property, e.target.value);
-      this.checkIfHasEnDisFields(property, e.target.value);
-      handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
       _.forEach(depedants, function(value, key) {
             if (value.type == "dropDown") {
@@ -1064,6 +1018,60 @@ class Report extends Component {
                 });
             }
       });
+
+    }
+  }
+
+  handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch", expression, expErr, isDate) => {
+      let {getVal} = this.props;
+      let {handleChange,mockData,setDropDownData, formData} = this.props;
+      let hashLocation = window.location.hash;
+      let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+
+      if(expression && e.target.value){
+        let str = expression;
+        let pos = 0;
+        let values = [];
+        while(pos < str.length) {
+          if(str.indexOf("$", pos) > -1) {
+            let ind = str.indexOf("$", pos);
+            let spaceInd = str.indexOf(" ", ind) > -1 ? str.indexOf(" ", ind) : (str.length-1) ;
+            let value = str.substr(ind, spaceInd);
+            if(value != "$" + property)  {
+              values.push(value.substr(1));
+              str = str.replace(value, ("getVal('" + value.substr(1, value.length) + "')"));
+            } else
+              str = str.replace(value, ("e.target.value"));
+            pos++;
+          }
+          else {
+            pos++;
+          }
+        }
+
+        let _flag = 0;
+        for(var i=0; i<values.length; i++) {
+          if(!getVal(values[i])) {
+            _flag = 1;
+          }
+        }
+
+        if(isDate && e.target.value && [12, 13].indexOf((e.target.value+"").length) == -1) {
+          _flag = 1;
+        }
+
+        if(_flag == 0) {
+          if(!eval(str)) {
+            return this.props.toggleSnackbarAndSetText(true, translate(expErr), false, true);
+          }
+        }
+      }
+
+      this.checkIfHasShowHideFields(property, e.target.value);
+      this.checkIfHasEnDisFields(property, e.target.value);
+      handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
+      this.affectDependants(obj, e, property);
+
   }
 
   incrementIndexValue = (group, jsonPath) => {

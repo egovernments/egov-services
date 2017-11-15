@@ -99,7 +99,7 @@ var dat =
          "rowClickUrlView":"/view/inventory/material/{code}",
          "rowClickUrlAdd" : "/create/inventory/material",
          "rowClickUrlDelete" : {
-           url:"inventory-services/suppliers/_update",
+           url:"inventory-services/materials/_update",
            body:{ status:'Inactive', inActiveDate:function(){ return new Date().getTime() } }
          }
       }
@@ -176,11 +176,11 @@ var dat =
                   "defaultValue":[
                     {key: null, value: "-- Please Select --"},
                     {
-                       "key":"ASSET",
+                       "key":"Asset",
                        "value":"Asset"
                     },
                     {
-                       "key":"CONSUMABLE",
+                       "key":"Consumable",
                        "value":"Consumable"
                     }
                   ],
@@ -260,19 +260,20 @@ var dat =
                                "jsonPath":"materials[0].storeMapping[0].department.code",
                                "type":"textField",
                                "valExp":"getValFromDropdownData('materials[0].storeMapping[*].store.code', getVal('materials[0].storeMapping[*].store.code'), 'others[0].code')"
-                             },
-                             {
-                                "jsonPath":"materials[0].storeMapping[0].department.name",
-                                "type":"textField",
-                                "valExp":"getValFromDropdownData('departmentMaster', getVal('materials[0].storeMapping[*].department.code'), 'value')"
                              }
+                            //  ,{
+                            //     "jsonPath":"materials[0].storeMapping[0].department.name",
+                            //     "type":"textField",
+                            //     "valExp":"getValFromDropdownData('departmentMaster', getVal('materials[0].storeMapping[*].department.code'), 'value')"
+                            //  }
                           ]
                        },
                        {
                           "name":"department",
                           "pattern":"",
-                          "type":"text",
-                          "jsonPath":"materials[0].storeMapping[0].department.name",
+                          "type":"singleValueList",
+                          "jsonPath":"materials[0].storeMapping[0].department.code",
+                          "url":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name",
                           "isRequired":true,
                           "isDisabled":true
                        },
@@ -564,11 +565,11 @@ var dat =
                     "defaultValue":[
                       {key: null, value: "-- Please Select --"},
                       {
-                         "key":"ASSET",
+                         "key":"Asset",
                          "value":"Asset"
                       },
                       {
-                         "key":"CONSUMABLE",
+                         "key":"Consumable",
                          "value":"Consumable"
                       }
                     ],
@@ -629,13 +630,14 @@ var dat =
                     "type":"tableList",
                     "jsonPath":"materials[0].storeMapping",
                     "tableList":{
+                       actionsNotRequired:true,
                        "header":[
                           {
                              "label":"Store Name"
                           },
-                          {
-                             "label":"Department Name"
-                          },
+                          // {
+                          //    "label":"Department Name"
+                          // },
                           {
                              "label":"Account Code"
                           },
@@ -650,7 +652,7 @@ var dat =
                             "type":"singleValueList",
                             "jsonPath":"materials[0].storeMapping[0].store.code",
                             "isRequired":true,
-                            "isDisabled":false,
+                            "isDisabled":true,
                             "url":"inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$.stores[*].department",
                             "depedants":[
                                {
@@ -665,21 +667,21 @@ var dat =
                                }
                             ]
                          },
-                         {
-                            "name":"department",
-                            "pattern":"",
-                            "type":"text",
-                            "jsonPath":"materials[0].storeMapping[0].department.name",
-                            "isRequired":true,
-                            "isDisabled":true
-                         },
+                        //  {
+                        //     "name":"department",
+                        //     "pattern":"",
+                        //     "type":"text",
+                        //     "jsonPath":"materials[0].storeMapping[0].department.name",
+                        //     "isRequired":true,
+                        //     "isDisabled":true
+                        //  },
                          {
                             "name":"accountcode",
                             "pattern":"",
                             "type":"singleValueList",
                             "jsonPath":"materials[0].storeMapping[0].chartofAccount.glCode",
                             "isRequired":true,
-                            "isDisabled":false,
+                            "isDisabled":true,
                             "url": "/egf-master/chartofaccounts/_search?|$.chartOfAccounts[*].glcode|$.chartOfAccounts[*].name"
                          },
                          {
@@ -690,7 +692,7 @@ var dat =
                             "label":"",
                             "jsonPath":"materials[0].storeMapping[0].active",
                             "isRequired":false,
-                            "isDisabled":false
+                            "isDisabled":true
                          }
                        ]
                     }
@@ -1025,7 +1027,7 @@ var dat =
                     "jsonPath":"departmentMaster",
                     "isRequired":false,
                     "isDisabled":false,
-                    "isHidden":true,
+                    "hide":true,
                     "url":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name"
                   },
 
@@ -1058,24 +1060,26 @@ var dat =
                             "url":"inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$.stores[*].department",
                             "depedants":[
                                {
-                                 "jsonPath":"materials[0].storeMapping[0].department.code",
-                                 "type":"textField",
-                                 "valExp":"getValFromDropdownData('materials[0].storeMapping[*].store.code', getVal('materials[0].storeMapping[*].store.code'), 'others[0].code')"
-                               },
-                               {
-                                  "jsonPath":"materials[0].storeMapping[0].department.name",
+                                  "jsonPath":"materials[0].storeMapping[0].department.code",
                                   "type":"textField",
-                                  "valExp":"getValFromDropdownData('departmentMaster', getVal('materials[0].storeMapping[*].department.code'), 'value')"
+                                  "valExp":"getValFromDropdownData('materials[0].storeMapping[*].store.code', getVal('materials[0].storeMapping[*].store.code'), 'others[0].code')"
                                }
+                              //  ,
+                              //  {
+                              //     "jsonPath":"materials[0].storeMapping[0].department.name",
+                              //     "type":"textField",
+                              //     "valExp":"getValFromDropdownData('departmentMaster', getVal('materials[0].storeMapping[*].department.code'), 'value')"
+                              //  }
                             ]
                          },
                          {
                             "name":"department",
                             "pattern":"",
-                            "type":"text",
-                            "jsonPath":"materials[0].storeMapping[0].department.name",
+                            "type":"singleValueList",
+                            "jsonPath":"materials[0].storeMapping[0].department.code",
                             "isRequired":true,
-                            "isDisabled":true
+                            "isDisabled":true,
+                            "url":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name"
                          },
                          {
                             "name":"accountcode",

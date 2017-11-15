@@ -7,21 +7,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.CollectionPointDetails;
 import org.egov.swm.domain.model.CollectionPointDetailsSearch;
-import org.egov.swm.domain.model.CollectionType;
+import org.egov.swm.domain.service.CollectionTypeService;
 import org.egov.swm.persistence.entity.CollectionPointDetailsEntity;
-import org.egov.swm.web.repository.MdmsRepository;
-import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import net.minidev.json.JSONArray;
 
 @Service
 public class CollectionPointDetailsJdbcRepository extends JdbcRepository {
@@ -29,7 +22,7 @@ public class CollectionPointDetailsJdbcRepository extends JdbcRepository {
 	public static final String TABLE_NAME = "egswm_collectionpointdetails";
 
 	@Autowired
-	private MdmsRepository mdmsRepository;
+	private CollectionTypeService collectionTypeService;
 
 	@Transactional
 	public void delete(String tenantId, String collectionPoint) {
@@ -92,29 +85,21 @@ public class CollectionPointDetailsJdbcRepository extends JdbcRepository {
 			searchQuery = searchQuery.replace(":condition", "");
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(CollectionPointDetailsEntity.class);
+
 		CollectionPointDetails cpd;
 		List<CollectionPointDetails> collectionPointDetailsList = new ArrayList<>();
 
 		List<CollectionPointDetailsEntity> collectionPointDetailsEntities = namedParameterJdbcTemplate
 				.query(searchQuery.toString(), paramValues, row);
 
-		JSONArray responseJSONArray;
-		ObjectMapper mapper = new ObjectMapper();
 		for (CollectionPointDetailsEntity collectionPointDetailsEntity : collectionPointDetailsEntities) {
 
 			cpd = collectionPointDetailsEntity.toDomain();
 
 			if (cpd.getCollectionType() != null && cpd.getCollectionType().getCode() != null) {
 
-				responseJSONArray = mdmsRepository.getByCriteria(cpd.getTenantId(), Constants.MODULE_CODE,
-						Constants.COLLECTIONTYPE_MASTER_NAME, "code", cpd.getCollectionType().getCode(),
-						new RequestInfo());
-
-				if (responseJSONArray != null && responseJSONArray.size() > 0)
-					cpd.setCollectionType(mapper.convertValue(responseJSONArray.get(0), CollectionType.class));
-				else
-					throw new CustomException("CollectionType",
-							"Given CollectionType is invalid: " + cpd.getCollectionType().getCode());
+				cpd.setCollectionType(collectionTypeService.getCollectionType(cpd.getTenantId(),
+						cpd.getCollectionType().getCode(), new RequestInfo()));
 
 			}
 

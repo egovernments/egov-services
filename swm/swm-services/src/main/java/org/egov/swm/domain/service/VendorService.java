@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.Document;
@@ -18,17 +17,12 @@ import org.egov.swm.domain.repository.SupplierRepository;
 import org.egov.swm.domain.repository.VendorRepository;
 import org.egov.swm.web.repository.BoundaryRepository;
 import org.egov.swm.web.repository.IdgenRepository;
-import org.egov.swm.web.repository.MdmsRepository;
 import org.egov.swm.web.requests.VendorRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import net.minidev.json.JSONArray;
 
 @Service
 @Transactional(readOnly = true)
@@ -50,7 +44,7 @@ public class VendorService {
 	private String idGenNameForSupplierNumPath;
 
 	@Autowired
-	private MdmsRepository mdmsRepository;
+	private SwmProcessService swmProcessService;
 
 	@Autowired
 	private BoundaryRepository boundaryRepository;
@@ -132,8 +126,6 @@ public class VendorService {
 
 	private void validate(VendorRequest vendorRequest) {
 
-		JSONArray responseJSONArray = null;
-		ObjectMapper mapper = new ObjectMapper();
 		SwmProcess p;
 		Boundary boundary;
 		findDuplicatesInUniqueFields(vendorRequest);
@@ -149,17 +141,13 @@ public class VendorService {
 					// Validate Swm Process
 					if (process.getCode() != null) {
 
-						responseJSONArray = mdmsRepository.getByCriteria(vendor.getTenantId(), Constants.MODULE_CODE,
-								Constants.SWMPROCESS_MASTER_NAME, "code", process.getCode(),
+						p = swmProcessService.getSwmProcess(vendor.getTenantId(), process.getCode(),
 								vendorRequest.getRequestInfo());
 
-						if (responseJSONArray != null && responseJSONArray.size() > 0) {
-							p = mapper.convertValue(responseJSONArray.get(0), SwmProcess.class);
+						if (p != null) {
 							process.setTenantId(p.getTenantId());
 							process.setName(p.getName());
-						} else
-							throw new CustomException("ServicesOffered",
-									"Given ServicesOffered is invalid: " + process.getCode());
+						}
 
 					}
 				}

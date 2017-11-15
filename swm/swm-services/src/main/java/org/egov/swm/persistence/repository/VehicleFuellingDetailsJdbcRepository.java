@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.swm.constants.Constants;
-import org.egov.swm.domain.model.FuelType;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.RefillingPumpStation;
 import org.egov.swm.domain.model.RefillingPumpStationSearch;
@@ -17,15 +15,11 @@ import org.egov.swm.domain.model.VehicleFuellingDetailsSearch;
 import org.egov.swm.domain.model.VehicleSearch;
 import org.egov.swm.domain.repository.RefillingPumpStationRepository;
 import org.egov.swm.domain.repository.VehicleRepository;
+import org.egov.swm.domain.service.FuelTypeService;
 import org.egov.swm.persistence.entity.VehicleFuellingDetailsEntity;
-import org.egov.swm.web.repository.MdmsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import net.minidev.json.JSONArray;
 
 @Service
 public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
@@ -33,7 +27,7 @@ public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
 	public static final String TABLE_NAME = "egswm_vehiclefuellingdetails";
 
 	@Autowired
-	private MdmsRepository mdmsRepository;
+	private FuelTypeService fuelTypeService;
 
 	@Autowired
 	private RefillingPumpStationRepository refillingPumpStationRepository;
@@ -158,8 +152,6 @@ public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
 				.query(searchQuery.toString(), paramValues, row);
 
 		VehicleFuellingDetails vfd;
-		JSONArray responseJSONArray = null;
-		ObjectMapper mapper = new ObjectMapper();
 		Pagination<RefillingPumpStation> refillingPumpStationList;
 		VehicleSearch vehicleSearch;
 		Pagination<Vehicle> vehicleList;
@@ -171,11 +163,8 @@ public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
 			if (vfd.getTypeOfFuel() != null && vfd.getTypeOfFuel().getCode() != null
 					&& !vfd.getTypeOfFuel().getCode().isEmpty()) {
 
-				responseJSONArray = mdmsRepository.getByCriteria(vfd.getTenantId(), Constants.MODULE_CODE,
-						Constants.FUELTYPE_MASTER_NAME, "code", vfd.getTypeOfFuel().getCode(), new RequestInfo());
-
-				if (responseJSONArray != null && responseJSONArray.size() > 0)
-					vfd.setTypeOfFuel(mapper.convertValue(responseJSONArray.get(0), FuelType.class));
+				vfd.setTypeOfFuel(fuelTypeService.getFuelType(vfd.getTenantId(), vfd.getTypeOfFuel().getCode(),
+						new RequestInfo()));
 
 			}
 

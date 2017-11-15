@@ -7,24 +7,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.CollectionPoint;
 import org.egov.swm.domain.model.CollectionPointSearch;
-import org.egov.swm.domain.model.CollectionType;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Route;
 import org.egov.swm.domain.model.RouteCollectionPointMap;
 import org.egov.swm.domain.model.RouteSearch;
-import org.egov.swm.persistence.entity.DumpingGroundEntity;
+import org.egov.swm.domain.service.CollectionTypeService;
+import org.egov.swm.domain.service.DumpingGroundService;
 import org.egov.swm.persistence.entity.RouteEntity;
-import org.egov.swm.web.repository.MdmsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import net.minidev.json.JSONArray;
 
 @Service
 public class RouteJdbcRepository extends JdbcRepository {
@@ -38,7 +32,10 @@ public class RouteJdbcRepository extends JdbcRepository {
 	public CollectionPointJdbcRepository collectionPointJdbcRepository;
 
 	@Autowired
-	private MdmsRepository mdmsRepository;
+	private CollectionTypeService collectionTypeService;
+
+	@Autowired
+	private DumpingGroundService dumpingGroundService;
 
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {
@@ -147,9 +144,6 @@ public class RouteJdbcRepository extends JdbcRepository {
 
 		List<RouteEntity> routeEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
 
-		JSONArray responseJSONArray = null;
-		ObjectMapper mapper = new ObjectMapper();
-
 		StringBuffer cpCodes = new StringBuffer();
 		RouteCollectionPointMap sr;
 		List<RouteCollectionPointMap> collectionPoints;
@@ -162,12 +156,8 @@ public class RouteJdbcRepository extends JdbcRepository {
 
 			if (route.getCollectionType() != null && route.getCollectionType().getCode() != null) {
 
-				responseJSONArray = mdmsRepository.getByCriteria(route.getTenantId(), Constants.MODULE_CODE,
-						Constants.COLLECTIONTYPE_MASTER_NAME, "code", route.getCollectionType().getCode(),
-						new RequestInfo());
-
-				if (responseJSONArray != null && responseJSONArray.size() > 0)
-					route.setCollectionType(mapper.convertValue(responseJSONArray.get(0), CollectionType.class));
+				route.setCollectionType(collectionTypeService.getCollectionType(route.getTenantId(),
+						route.getCollectionType().getCode(), new RequestInfo()));
 
 			}
 
@@ -200,13 +190,8 @@ public class RouteJdbcRepository extends JdbcRepository {
 
 			if (route.getEndingDumpingGroundPoint() != null && route.getEndingDumpingGroundPoint().getCode() != null) {
 
-				responseJSONArray = mdmsRepository.getByCriteria(route.getTenantId(), Constants.MODULE_CODE,
-						Constants.DUMPINGGROUND_MASTER_NAME, "code", route.getEndingDumpingGroundPoint().getCode(),
-						new RequestInfo());
-
-				if (responseJSONArray != null && responseJSONArray.size() > 0)
-					route.setEndingDumpingGroundPoint(
-							mapper.convertValue(responseJSONArray.get(0), DumpingGroundEntity.class).toDomain());
+				dumpingGroundService.getDumpingGround(route.getTenantId(),
+						route.getEndingDumpingGroundPoint().getCode(), new RequestInfo());
 			}
 
 			sr = RouteCollectionPointMap.builder().route(routeEntity.getCode()).build();

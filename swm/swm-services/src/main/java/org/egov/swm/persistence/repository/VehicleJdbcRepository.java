@@ -5,11 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleSearch;
 import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorSearch;
+import org.egov.swm.domain.service.FuelTypeService;
+import org.egov.swm.domain.service.VehicleTypeService;
 import org.egov.swm.persistence.entity.VehicleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -22,6 +25,12 @@ public class VehicleJdbcRepository extends JdbcRepository {
 
 	@Autowired
 	public VendorJdbcRepository vendorJdbcRepository;
+
+	@Autowired
+	private VehicleTypeService vehicleTypeService;
+
+	@Autowired
+	private FuelTypeService fuelTypeService;
 
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {
@@ -165,6 +174,16 @@ public class VehicleJdbcRepository extends JdbcRepository {
 		for (VehicleEntity vehicleEntity : vehicleEntities) {
 
 			v = vehicleEntity.toDomain();
+
+			if (v.getVehicleType() != null && v.getVehicleType().getCode() != null) {
+				v.setVehicleType(vehicleTypeService.getVehicleType(v.getTenantId(), v.getVehicleType().getCode(),
+						new RequestInfo()));
+			}
+
+			if (v.getFuelType() != null && v.getFuelType().getCode() != null) {
+				v.setFuelType(
+						fuelTypeService.getFuelType(v.getTenantId(), v.getFuelType().getCode(), new RequestInfo()));
+			}
 
 			if (v.getVendor() != null && v.getVendor().getVendorNo() != null
 					&& !v.getVendor().getVendorNo().isEmpty()) {

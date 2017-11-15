@@ -6,20 +6,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.CollectionDetails;
 import org.egov.swm.domain.model.CollectionDetailsSearch;
-import org.egov.swm.domain.model.CollectionType;
+import org.egov.swm.domain.service.CollectionTypeService;
 import org.egov.swm.persistence.entity.CollectionDetailsEntity;
-import org.egov.swm.web.repository.MdmsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import net.minidev.json.JSONArray;
 
 @Service
 public class CollectionDetailsJdbcRepository extends JdbcRepository {
@@ -27,7 +21,7 @@ public class CollectionDetailsJdbcRepository extends JdbcRepository {
 	public static final String TABLE_NAME = "egswm_collectiondetails";
 
 	@Autowired
-	private MdmsRepository mdmsRepository;
+	private CollectionTypeService collectionTypeService;
 
 	@Transactional
 	public void delete(String tenantId, String sourceSegregation) {
@@ -74,8 +68,6 @@ public class CollectionDetailsJdbcRepository extends JdbcRepository {
 
 		List<CollectionDetails> resultList = new ArrayList<>();
 
-		JSONArray responseJSONArray = null;
-		ObjectMapper mapper = new ObjectMapper();
 		CollectionDetails collectionDetails;
 
 		for (CollectionDetailsEntity cde : entityList) {
@@ -85,13 +77,9 @@ public class CollectionDetailsJdbcRepository extends JdbcRepository {
 			if (collectionDetails.getCollectionType() != null
 					&& collectionDetails.getCollectionType().getCode() != null) {
 
-				responseJSONArray = mdmsRepository.getByCriteria(collectionDetails.getTenantId(), Constants.MODULE_CODE,
-						Constants.COLLECTIONTYPE_MASTER_NAME, "code", collectionDetails.getCollectionType().getCode(),
-						new RequestInfo());
-
-				if (responseJSONArray != null && responseJSONArray.size() > 0)
-					collectionDetails
-							.setCollectionType(mapper.convertValue(responseJSONArray.get(0), CollectionType.class));
+				collectionDetails
+						.setCollectionType(collectionTypeService.getCollectionType(collectionDetails.getTenantId(),
+								collectionDetails.getCollectionType().getCode(), new RequestInfo()));
 
 			}
 			resultList.add(collectionDetails);

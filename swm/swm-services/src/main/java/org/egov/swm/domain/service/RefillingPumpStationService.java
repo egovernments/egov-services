@@ -1,36 +1,36 @@
 package org.egov.swm.domain.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import net.minidev.json.JSONArray;
-import org.egov.swm.constants.Constants;
-import org.egov.swm.domain.model.*;
-import org.egov.swm.domain.repository.RefillingPumpStationRepository;
-import org.egov.swm.web.repository.BoundaryRepository;
-import org.egov.swm.web.repository.MdmsRepository;
-import org.egov.swm.web.requests.RefillingPumpStationRequest;
-import org.egov.tracer.model.CustomException;
-import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.egov.swm.domain.model.AuditDetails;
+import org.egov.swm.domain.model.Boundary;
+import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.RefillingPumpStation;
+import org.egov.swm.domain.model.RefillingPumpStationSearch;
+import org.egov.swm.domain.repository.RefillingPumpStationRepository;
+import org.egov.swm.web.repository.BoundaryRepository;
+import org.egov.swm.web.requests.RefillingPumpStationRequest;
+import org.egov.tracer.model.CustomException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 @Service
 public class RefillingPumpStationService {
 
-	private MdmsRepository mdmsRepository;
-
-	private BoundaryRepository boundaryRepository;
-
+	@Autowired
 	private RefillingPumpStationRepository refillingPumpStationRepository;
 
-	public RefillingPumpStationService(MdmsRepository mdmsRepository, BoundaryRepository boundaryRepository,
-									   RefillingPumpStationRepository refillingPumpStationRepository) {
-		this.mdmsRepository = mdmsRepository;
-		this.boundaryRepository = boundaryRepository;
-		this.refillingPumpStationRepository = refillingPumpStationRepository;
-	}
+	@Autowired
+	private OilCompanyService oilCompanyService;
+
+	@Autowired
+	private FuelTypeService fuelTypeService;
+
+	@Autowired
+	private BoundaryRepository boundaryRepository;
 
 	public RefillingPumpStationRequest create(RefillingPumpStationRequest refillingPumpStationRequest) {
 
@@ -58,7 +58,7 @@ public class RefillingPumpStationService {
 			userId = refillingPumpStationRequest.getRequestInfo().getUserInfo().getId();
 		}
 
-		for(RefillingPumpStation refillingPumpStation : refillingPumpStationRequest.getRefillingPumpStations()) {
+		for (RefillingPumpStation refillingPumpStation : refillingPumpStationRequest.getRefillingPumpStations()) {
 			setAuditDetails(refillingPumpStation, userId);
 		}
 
@@ -70,78 +70,55 @@ public class RefillingPumpStationService {
 		return refillingPumpStationRequest;
 	}
 
-	public Pagination<RefillingPumpStation> search(RefillingPumpStationSearch refillingPumpStationSearch){
+	public Pagination<RefillingPumpStation> search(RefillingPumpStationSearch refillingPumpStationSearch) {
 
 		return refillingPumpStationRepository.search(refillingPumpStationSearch);
 	}
 
-	private void validateForUniqueCodesInRequest(RefillingPumpStationRequest refillingPumpStationRequest){
+	private void validateForUniqueCodesInRequest(RefillingPumpStationRequest refillingPumpStationRequest) {
 
-		List<String> codesList = refillingPumpStationRequest.getRefillingPumpStations()
-				.stream().map(RefillingPumpStation::getCode)
-				.collect(Collectors.toList());
+		List<String> codesList = refillingPumpStationRequest.getRefillingPumpStations().stream()
+				.map(RefillingPumpStation::getCode).collect(Collectors.toList());
 
-		if(codesList.size() != codesList.stream().distinct().count())
-			throw new CustomException("Code",
-					"Duplicate codes in given Refilling Pump Stations:");
+		if (codesList.size() != codesList.stream().distinct().count())
+			throw new CustomException("Code", "Duplicate codes in given Refilling Pump Stations:");
 	}
 
 	private void validate(RefillingPumpStationRequest refillingPumpStationRequest) {
 
-		JSONArray responseJSONArray;
-		ObjectMapper mapper = new ObjectMapper();
-
 		for (RefillingPumpStation refillingPumpStation : refillingPumpStationRequest.getRefillingPumpStations()) {
 
 			// Validate Fuel Type
-			if(refillingPumpStation.getTypeOfFuel() != null && (refillingPumpStation.getTypeOfFuel().getCode() == null ||
-			 refillingPumpStation.getTypeOfFuel().getCode().isEmpty()))
-				throw new CustomException("FuelType",
-						"typeOfFuel code is mandatory: ");
+			if (refillingPumpStation.getTypeOfFuel() != null && (refillingPumpStation.getTypeOfFuel().getCode() == null
+					|| refillingPumpStation.getTypeOfFuel().getCode().isEmpty()))
+				throw new CustomException("FuelType", "typeOfFuel code is mandatory: ");
 
 			if (refillingPumpStation.getTypeOfFuel() != null) {
 
-				responseJSONArray = mdmsRepository.getByCriteria(refillingPumpStation.getTenantId(),
-						Constants.MODULE_CODE, Constants.FUELTYPE_MASTER_NAME, "code",
-						refillingPumpStation.getTypeOfFuel().getCode(), refillingPumpStationRequest.getRequestInfo());
-
-				if (responseJSONArray != null && responseJSONArray.size() > 0)
-					refillingPumpStation.setTypeOfFuel(mapper.convertValue(responseJSONArray.get(0), FuelType.class));
-				else
-					throw new CustomException("FuelType",
-							"Given FuelType is invalid: " + refillingPumpStation.getTypeOfFuel().getCode());
+				refillingPumpStation.setTypeOfFuel(fuelTypeService.getFuelType(refillingPumpStation.getTenantId(),
+						refillingPumpStation.getTypeOfFuel().getCode(), refillingPumpStationRequest.getRequestInfo()));
 
 			}
 
 			// validate Oil Company
-			if(refillingPumpStation.getTypeOfPump() != null && (refillingPumpStation.getTypeOfPump().getCode() == null ||
-					refillingPumpStation.getTypeOfPump().getCode().isEmpty()))
-				throw new CustomException("OilCompany",
-						"typeOfPump code is mandatory ");
+			if (refillingPumpStation.getTypeOfPump() != null && (refillingPumpStation.getTypeOfPump().getCode() == null
+					|| refillingPumpStation.getTypeOfPump().getCode().isEmpty()))
+				throw new CustomException("OilCompany", "typeOfPump code is mandatory ");
 
 			if (refillingPumpStation.getTypeOfPump() != null) {
 
-				responseJSONArray = mdmsRepository.getByCriteria(refillingPumpStation.getTenantId(),
-						Constants.MODULE_CODE, Constants.OILCOMPANY_MASTER_NAME, "code",
-						refillingPumpStation.getTypeOfPump().getCode(), refillingPumpStationRequest.getRequestInfo());
-
-				if (responseJSONArray != null && responseJSONArray.size() > 0)
-					refillingPumpStation
-							.setTypeOfPump(mapper.convertValue(responseJSONArray.get(0), OilCompanyName.class));
-				else
-					throw new CustomException("OilCompany",
-							"Given OilCompany is invalid: " + refillingPumpStation.getTypeOfPump().getCode());
+				refillingPumpStation.setTypeOfPump(oilCompanyService.getOilCompany(refillingPumpStation.getTenantId(),
+						refillingPumpStation.getTypeOfPump().getCode(), refillingPumpStationRequest.getRequestInfo()));
 			}
 
 			// Validate Boundary
-			if(refillingPumpStation.getLocation() != null && (refillingPumpStation.getLocation().getCode() == null ||
-					refillingPumpStation.getLocation().getCode().isEmpty()))
-				throw new CustomException("Boundary",
-						"Boundary code is Mandatory");
+			if (refillingPumpStation.getLocation() != null && (refillingPumpStation.getLocation().getCode() == null
+					|| refillingPumpStation.getLocation().getCode().isEmpty()))
+				throw new CustomException("Boundary", "Boundary code is Mandatory");
 
 			if (refillingPumpStation.getLocation() != null && refillingPumpStation.getLocation().getCode() != null) {
 
-				org.egov.swm.domain.model.Boundary boundary = boundaryRepository.fetchBoundaryByCode(refillingPumpStation.getLocation().getCode(),
+				Boundary boundary = boundaryRepository.fetchBoundaryByCode(refillingPumpStation.getLocation().getCode(),
 						refillingPumpStation.getTenantId());
 
 				if (boundary != null)

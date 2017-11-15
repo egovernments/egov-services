@@ -5,27 +5,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.CollectionPoint;
 import org.egov.swm.domain.model.CollectionPointSearch;
-import org.egov.swm.domain.model.CollectionType;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Route;
 import org.egov.swm.domain.model.RouteSearch;
 import org.egov.swm.domain.repository.CollectionPointRepository;
 import org.egov.swm.domain.repository.RouteRepository;
-import org.egov.swm.persistence.entity.DumpingGroundEntity;
-import org.egov.swm.web.repository.MdmsRepository;
 import org.egov.swm.web.requests.RouteRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import net.minidev.json.JSONArray;
 
 @Service
 @Transactional(readOnly = true)
@@ -38,7 +30,10 @@ public class RouteService {
 	private CollectionPointRepository collectionPointRepository;
 
 	@Autowired
-	private MdmsRepository mdmsRepository;
+	private CollectionTypeService collectionTypeService;
+
+	@Autowired
+	private DumpingGroundService dumpingGroundService;
 
 	@Transactional
 	public RouteRequest create(RouteRequest routeRequest) {
@@ -90,9 +85,6 @@ public class RouteService {
 
 	private void validate(RouteRequest routeRequest) {
 
-		JSONArray responseJSONArray = null;
-		ObjectMapper mapper = new ObjectMapper();
-
 		findDuplicatesInUniqueFields(routeRequest);
 
 		CollectionPointSearch search;
@@ -109,16 +101,8 @@ public class RouteService {
 						"The field CollectionType Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
 			if (route.getCollectionType() != null && route.getCollectionType().getCode() != null) {
-
-				responseJSONArray = mdmsRepository.getByCriteria(route.getTenantId(), Constants.MODULE_CODE,
-						Constants.COLLECTIONTYPE_MASTER_NAME, "code", route.getCollectionType().getCode(),
-						routeRequest.getRequestInfo());
-
-				if (responseJSONArray != null && responseJSONArray.size() > 0)
-					route.setCollectionType(mapper.convertValue(responseJSONArray.get(0), CollectionType.class));
-				else
-					throw new CustomException("CollectionType",
-							"Given CollectionType is invalid: " + route.getCollectionType().getCode());
+				route.setCollectionType(collectionTypeService.getCollectionType(route.getTenantId(),
+						route.getCollectionType().getCode(), routeRequest.getRequestInfo()));
 
 			} else
 				throw new CustomException("CollectionType", "CollectionType is required");
@@ -176,17 +160,8 @@ public class RouteService {
 
 			// Validate Ending Dumping ground
 			if (route.getEndingDumpingGroundPoint() != null && route.getEndingDumpingGroundPoint().getCode() != null) {
-
-				responseJSONArray = mdmsRepository.getByCriteria(route.getTenantId(), Constants.MODULE_CODE,
-						Constants.DUMPINGGROUND_MASTER_NAME, "code", route.getEndingDumpingGroundPoint().getCode(),
-						routeRequest.getRequestInfo());
-
-				if (responseJSONArray != null && responseJSONArray.size() > 0)
-					route.setEndingDumpingGroundPoint(
-							mapper.convertValue(responseJSONArray.get(0), DumpingGroundEntity.class).toDomain());
-				else
-					throw new CustomException("DumpingGround",
-							"Given DumpingGround is invalid: " + route.getEndingDumpingGroundPoint().getCode());
+				route.setEndingDumpingGroundPoint(dumpingGroundService.getDumpingGround(route.getTenantId(),
+						route.getEndingDumpingGroundPoint().getCode(), routeRequest.getRequestInfo()));
 
 			}
 

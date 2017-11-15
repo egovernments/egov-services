@@ -6,9 +6,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.AuditDetails;
-import org.egov.swm.domain.model.FuelType;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.RefillingPumpStation;
 import org.egov.swm.domain.model.RefillingPumpStationSearch;
@@ -20,17 +18,12 @@ import org.egov.swm.domain.repository.RefillingPumpStationRepository;
 import org.egov.swm.domain.repository.VehicleFuellingDetailsRepository;
 import org.egov.swm.domain.repository.VehicleRepository;
 import org.egov.swm.web.repository.IdgenRepository;
-import org.egov.swm.web.repository.MdmsRepository;
 import org.egov.swm.web.requests.VehicleFuellingDetailsRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import net.minidev.json.JSONArray;
 
 @Service
 @Transactional(readOnly = true)
@@ -46,7 +39,7 @@ public class VehicleFuellingDetailsService {
 	private IdgenRepository idgenRepository;
 
 	@Autowired
-	private MdmsRepository mdmsRepository;
+	private FuelTypeService fuelTypeService;
 
 	@Autowired
 	private RefillingPumpStationRepository refillingPumpStationRepository;
@@ -124,8 +117,6 @@ public class VehicleFuellingDetailsService {
 
 	private void validate(VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
 
-		JSONArray responseJSONArray = null;
-		ObjectMapper mapper = new ObjectMapper();
 		Pagination<RefillingPumpStation> refillingPumpStationList;
 		findDuplicatesInUniqueFields(vehicleFuellingDetailsRequest);
 		VehicleSearch vehicleSearch;
@@ -142,15 +133,8 @@ public class VehicleFuellingDetailsService {
 			// Validate Fuel Type
 			if (details.getTypeOfFuel() != null) {
 
-				responseJSONArray = mdmsRepository.getByCriteria(details.getTenantId(), Constants.MODULE_CODE,
-						Constants.FUELTYPE_MASTER_NAME, "code", details.getTypeOfFuel().getCode(),
-						vehicleFuellingDetailsRequest.getRequestInfo());
-
-				if (responseJSONArray != null && responseJSONArray.size() > 0)
-					details.setTypeOfFuel(mapper.convertValue(responseJSONArray.get(0), FuelType.class));
-				else
-					throw new CustomException("FuelType",
-							"Given FuelType is invalid: " + details.getTypeOfFuel().getCode());
+				details.setTypeOfFuel(fuelTypeService.getFuelType(details.getTenantId(),
+						details.getTypeOfFuel().getCode(), vehicleFuellingDetailsRequest.getRequestInfo()));
 
 			}
 

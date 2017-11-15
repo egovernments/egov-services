@@ -7,25 +7,18 @@ import java.util.UUID;
 
 import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.AuditDetails;
-import org.egov.swm.domain.model.FuelType;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleSearch;
-import org.egov.swm.domain.model.VehicleType;
 import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.domain.repository.VehicleRepository;
 import org.egov.swm.utils.Utils;
-import org.egov.swm.web.repository.MdmsRepository;
 import org.egov.swm.web.requests.VehicleRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import net.minidev.json.JSONArray;
 
 @Service
 @Transactional(readOnly = true)
@@ -35,7 +28,10 @@ public class VehicleService {
 	private VehicleRepository vehicleRepository;
 
 	@Autowired
-	private MdmsRepository mdmsRepository;
+	private VehicleTypeService vehicleTypeService;
+
+	@Autowired
+	private FuelTypeService fuelTypeService;
 
 	@Autowired
 	private VendorService vendorService;
@@ -106,8 +102,6 @@ public class VehicleService {
 
 	private void validate(String action, VehicleRequest vehicleRequest) {
 
-		JSONArray responseJSONArray = null;
-		ObjectMapper mapper = new ObjectMapper();
 		VendorSearch vendorSearch;
 		Pagination<Vendor> vendors;
 
@@ -123,15 +117,8 @@ public class VehicleService {
 			// Validate vehicle Type
 			if (vehicle.getVehicleType() != null && vehicle.getVehicleType().getCode() != null) {
 
-				responseJSONArray = mdmsRepository.getByCriteria(vehicle.getTenantId(), Constants.MODULE_CODE,
-						Constants.VEHICLETYPE_MASTER_NAME, "code", vehicle.getVehicleType().getCode(),
-						vehicleRequest.getRequestInfo());
-
-				if (responseJSONArray != null && responseJSONArray.size() > 0)
-					vehicle.setVehicleType(mapper.convertValue(responseJSONArray.get(0), VehicleType.class));
-				else
-					throw new CustomException("VehicleType",
-							"Given VehicleType is invalid: " + vehicle.getVehicleType().getCode());
+				vehicle.setVehicleType(vehicleTypeService.getVehicleType(vehicle.getTenantId(),
+						vehicle.getVehicleType().getCode(), vehicleRequest.getRequestInfo()));
 
 			}
 
@@ -163,15 +150,8 @@ public class VehicleService {
 			// Validate Fuel Type
 			if (vehicle.getFuelType() != null) {
 
-				responseJSONArray = mdmsRepository.getByCriteria(vehicle.getTenantId(), Constants.MODULE_CODE,
-						Constants.FUELTYPE_MASTER_NAME, "code", vehicle.getFuelType().getCode(),
-						vehicleRequest.getRequestInfo());
-
-				if (responseJSONArray != null && responseJSONArray.size() > 0)
-					vehicle.setFuelType(mapper.convertValue(responseJSONArray.get(0), FuelType.class));
-				else
-					throw new CustomException("FuelType",
-							"Given FuelType is invalid: " + vehicle.getFuelType().getCode());
+				vehicle.setFuelType(fuelTypeService.getFuelType(vehicle.getTenantId(), vehicle.getFuelType().getCode(),
+						vehicleRequest.getRequestInfo()));
 
 			}
 

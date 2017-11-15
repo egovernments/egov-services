@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.CollectionPoint;
 import org.egov.swm.domain.model.CollectionPointSearch;
@@ -17,21 +16,16 @@ import org.egov.swm.domain.model.RouteSearch;
 import org.egov.swm.domain.model.SanitationStaffTarget;
 import org.egov.swm.domain.model.SanitationStaffTargetMap;
 import org.egov.swm.domain.model.SanitationStaffTargetSearch;
-import org.egov.swm.domain.model.SwmProcess;
+import org.egov.swm.domain.service.DumpingGroundService;
 import org.egov.swm.domain.service.RouteService;
-import org.egov.swm.persistence.entity.DumpingGroundEntity;
+import org.egov.swm.domain.service.SwmProcessService;
 import org.egov.swm.persistence.entity.SanitationStaffTargetEntity;
 import org.egov.swm.web.contract.EmployeeResponse;
 import org.egov.swm.web.repository.BoundaryRepository;
 import org.egov.swm.web.repository.EmployeeRepository;
-import org.egov.swm.web.repository.MdmsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import net.minidev.json.JSONArray;
 
 @Service
 public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
@@ -45,7 +39,10 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 	public CollectionPointJdbcRepository collectionPointJdbcRepository;
 
 	@Autowired
-	private MdmsRepository mdmsRepository;
+	private DumpingGroundService dumpingGroundService;
+
+	@Autowired
+	private SwmProcessService swmProcessService;
 
 	@Autowired
 	private BoundaryRepository boundaryRepository;
@@ -146,8 +143,6 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 		CollectionPointSearch cps;
 		Pagination<CollectionPoint> collectionPointList;
 		Boundary boundary;
-		JSONArray responseJSONArray = null;
-		ObjectMapper mapper = new ObjectMapper();
 		RouteSearch routeSearch = new RouteSearch();
 		Pagination<Route> routes;
 		EmployeeResponse employeeResponse = null;
@@ -166,12 +161,8 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 
 			if (sst.getSwmProcess() != null && sst.getSwmProcess().getCode() != null) {
 
-				responseJSONArray = mdmsRepository.getByCriteria(sst.getTenantId(), Constants.MODULE_CODE,
-						Constants.SWMPROCESS_MASTER_NAME, "code", sst.getSwmProcess().getCode(), new RequestInfo());
-
-				if (responseJSONArray != null && responseJSONArray.size() > 0) {
-					sst.setSwmProcess(mapper.convertValue(responseJSONArray.get(0), SwmProcess.class));
-				}
+				sst.setSwmProcess(swmProcessService.getSwmProcess(sst.getTenantId(), sst.getSwmProcess().getCode(),
+						new RequestInfo()));
 
 			}
 
@@ -201,13 +192,8 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 
 			if (sst.getDumpingGround() != null && sst.getDumpingGround().getCode() != null) {
 
-				responseJSONArray = mdmsRepository.getByCriteria(sst.getTenantId(), Constants.MODULE_CODE,
-						Constants.DUMPINGGROUND_MASTER_NAME, "code", sst.getDumpingGround().getCode(),
-						new RequestInfo());
-
-				if (responseJSONArray != null && responseJSONArray.size() > 0)
-					sst.setDumpingGround(
-							mapper.convertValue(responseJSONArray.get(0), DumpingGroundEntity.class).toDomain());
+				sst.setDumpingGround(dumpingGroundService.getDumpingGround(sst.getTenantId(),
+						sst.getDumpingGround().getCode(), new RequestInfo()));
 
 			}
 			if (sanitationStaffTargetEntity.getTargetNo() != null

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.ServicedLocations;
@@ -16,16 +15,12 @@ import org.egov.swm.domain.model.Supplier;
 import org.egov.swm.domain.model.SwmProcess;
 import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorSearch;
+import org.egov.swm.domain.service.SwmProcessService;
 import org.egov.swm.persistence.entity.VendorEntity;
 import org.egov.swm.web.repository.BoundaryRepository;
-import org.egov.swm.web.repository.MdmsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import net.minidev.json.JSONArray;
 
 @Service
 public class VendorJdbcRepository extends JdbcRepository {
@@ -42,7 +37,7 @@ public class VendorJdbcRepository extends JdbcRepository {
 	public ServicesOfferedJdbcRepository servicesOfferedJdbcRepository;
 
 	@Autowired
-	private MdmsRepository mdmsRepository;
+	private SwmProcessService swmProcessService;
 
 	@Autowired
 	private BoundaryRepository boundaryRepository;
@@ -141,8 +136,6 @@ public class VendorJdbcRepository extends JdbcRepository {
 		List<Supplier> contractors;
 		List<ServicedLocations> sls;
 		List<ServicesOffered> sos;
-		JSONArray responseJSONArray = null;
-		ObjectMapper mapper = new ObjectMapper();
 		SwmProcess p;
 		Boundary boundary;
 
@@ -190,13 +183,9 @@ public class VendorJdbcRepository extends JdbcRepository {
 				for (ServicesOffered so : sos) {
 					if (so.getService() != null && !so.getService().isEmpty()) {
 
-						responseJSONArray = mdmsRepository.getByCriteria(so.getTenantId(), Constants.MODULE_CODE,
-								Constants.SWMPROCESS_MASTER_NAME, "code", so.getService(), new RequestInfo());
-
-						if (responseJSONArray != null && responseJSONArray.size() > 0) {
-							p = mapper.convertValue(responseJSONArray.get(0), SwmProcess.class);
+						p = swmProcessService.getSwmProcess(so.getTenantId(), so.getService(), new RequestInfo());
+						if (p != null)
 							v.getServicesOffered().add(p);
-						}
 
 					}
 				}

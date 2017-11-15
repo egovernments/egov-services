@@ -23,6 +23,8 @@ import lombok.NoArgsConstructor;
 @ApiModel(description = "Hold the material receipt note material level information. This will show which material is received based on which purchase order.")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-08T06:17:26.594Z")
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class MaterialReceiptDetail   {
   @JsonProperty("id")
   private String id = null;

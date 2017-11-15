@@ -1756,7 +1756,7 @@ ReportDefinitions:
         (select sub.createddate as createddate,sub.name as senderName,'Grievance' as natureoftask ,sub_a.code as status,
          'Complaint No.'|| sub.crn||' regarding '||
          (select name from egpgr_complainttype where code =sub.servicecode AND tenantid=sub.tenantid) ||' in '|| sub_a.code as details,
-         replace('_url?/pgr/viewGrievance/:srn',':srn',sub.crn::character varying) as url from submission sub inner join submission_attribute sub_a on  sub.crn = sub_a.crn where
+         replace('_url?/pgr/viewGrievance/:srn',':srn',ENCODE(CONVERT_TO(sub.crn, 'UTF-8'), 'base64')::character varying) as url from submission sub inner join submission_attribute sub_a on  sub.crn = sub_a.crn where
          sub_a.key in('systemStatus','status') and sub_a.code in ('REGISTERED','FORWARDED','PROCESSING','REOPENED','ONHOLD') and sub.positionid IN ($positionId) and sub.tenantid = $tenantid order by createdDate desc)
          union
          (select createddate as createddate,sendername as sendername,natureoftask as natureoftask,value as status,

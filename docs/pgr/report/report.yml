@@ -1544,7 +1544,7 @@ ReportDefinitions:
     type: string
     source: seva
     isMandatory: true
-  query: SELECT cs.crn,cs.createddate,cs.name as complainantname,requesteraddress as address,cs.details,cs.status, (select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback, CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS issla
+  query: SELECT replace(cs.crn, '/', '%2F'),cs.createddate,cs.name as complainantname,requesteraddress as address,cs.details,cs.status, (select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback, CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS issla
          FROM submission cs,submission_attribute sa,
           eg_boundary boundary, egpgr_complainttype ctype,eg_department dept,egeis_position pos,egeis_assignment ass, eg_user us WHERE
           cs.crn = sa.crn and boundary.id = sa.code::integer and cs.positionid = pos.id and

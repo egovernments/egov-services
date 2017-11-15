@@ -1,10 +1,5 @@
 package org.egov.model;
 
-import java.util.List;
-import java.util.jar.Attributes;
-
-import org.egov.model.enums.ModeOfAcquisitionEnum;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;

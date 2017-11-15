@@ -1,13 +1,14 @@
 package org.egov.inv.persistence.entity;
 
+import java.util.Date;
+
+import org.egov.common.contract.request.User;
+
+import io.swagger.model.Auditable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.egov.common.contract.request.User;
-import org.egov.inv.model.Auditable;
-
-import java.util.Date;
 
 @Getter
 @Setter
@@ -46,27 +47,4 @@ public class AuditableEntity {
     }
 
 }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+

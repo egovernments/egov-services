@@ -1,11 +1,11 @@
 package org.egov.inv.persistence.entity;
 
-
-import org.egov.inv.model.AuditDetails;
-import org.egov.inv.model.Supplier;
-import org.egov.inv.model.Supplier.StatusEnum;
-import org.egov.inv.model.Supplier.TypeEnum;
-
+import io.swagger.model.AuditDetails;
+import io.swagger.model.Bank;
+import io.swagger.model.CommonEnum;
+import io.swagger.model.Supplier;
+import io.swagger.model.Supplier.StatusEnum;
+import io.swagger.model.Supplier.TypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -127,7 +127,11 @@ public class SupplierEntity {
 		this.bankIfsc = supplier.getIfsc();
 		if(supplier.getMicr() != null)
 		this.bankMicr = supplier.getMicr();
-		this.tenantId = supplier.getTenantId();
+		this.createdBy = supplier.getAuditDetails().getCreatedBy();
+		this.createdTime = supplier.getAuditDetails().getCreatedTime();
+		this.lastmodifiedBy = supplier.getAuditDetails().getLastModifiedBy();
+		this.lastmodifiedTime = supplier.getAuditDetails().getLastModifiedTime();
+		this.tenantId = supplier.getAuditDetails().getTenantId();
 
 		return this;
 	}
@@ -162,12 +166,12 @@ public class SupplierEntity {
 	    supplier.setAcctNo(bankAcctNo);
 	    supplier.setIfsc(bankIfsc);
 	    supplier.setMicr(bankMicr);
-	    supplier.setTenantId(tenantId);
     	AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(createdBy);
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedBy(lastmodifiedBy);
 		auditDetails.setLastModifiedTime(lastmodifiedTime);
+		auditDetails.setTenantId(tenantId);
 		supplier.setAuditDetails(auditDetails);
 		return supplier;
 

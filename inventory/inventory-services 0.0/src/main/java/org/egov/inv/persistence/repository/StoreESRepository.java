@@ -39,6 +39,7 @@
  */
 package org.egov.inv.persistence.repository;
 
+import static org.elasticsearch.common.Strings.isEmpty;
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 
 import java.io.IOException;
@@ -46,12 +47,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.egov.common.ESRepository;
-import org.egov.common.ElasticSearchUtils;
-import org.egov.common.Pagination;
-import org.egov.inv.model.Supplier;
-import org.egov.inv.model.SupplierGetRequest;
-import org.egov.inv.persistence.entity.SupplierEntity;
+import org.egov.inv.domain.service.ElasticSearchUtils;
+import org.egov.inv.persistence.entity.StoreEntity;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.transport.TransportClient;
@@ -64,13 +61,15 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import static org.elasticsearch.common.Strings.isEmpty;
 
+import io.swagger.model.Pagination;
+import io.swagger.model.Store;
+import io.swagger.model.StoreGetRequest;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class SupplierESRepository extends ESRepository {
+public class StoreESRepository extends ESRepository {
 
 	private static final String TRUE = "true";
 
@@ -83,7 +82,7 @@ public class SupplierESRepository extends ESRepository {
 
 	private boolean isESRequestLoggingEnabled;
 
-	public SupplierESRepository(TransportClient esClient,
+	public StoreESRepository(TransportClient esClient,
 			ElasticSearchUtils elasticSearchUtils,
 			@Value("${es.log.request}") String isESRequestLoggingEnabled) {
 		this.esClient = esClient;
@@ -92,34 +91,33 @@ public class SupplierESRepository extends ESRepository {
 				.equalsIgnoreCase(isESRequestLoggingEnabled);
 	}
 
-	public Pagination<Supplier> search(SupplierGetRequest supplierGetRequest) {
+	public Pagination<Store> search(StoreGetRequest storeGetRequest) {
 		final SearchRequestBuilder searchRequestBuilder = getSearchRequest(
-				supplierGetRequest);
+				storeGetRequest);
 		final SearchResponse searchResponse = searchRequestBuilder.execute()
 				.actionGet();
 		logResponse(searchResponse);
 
-		return mapToSupplier(searchResponse);
+		return mapToStore(searchResponse);
 	}
 
-	private Pagination<Supplier> mapToSupplier(SearchResponse searchResponse) {
+	private Pagination<Store> mapToStore(SearchResponse searchResponse) {
 
-		Pagination<Supplier> page = new Pagination<>();
+		Pagination<Store> page = new Pagination<>();
 
 		if (searchResponse.getHits() == null
 				|| searchResponse.getHits().getTotalHits() == 0L) {
 			return page;
 		}
 
-		List<Supplier> suppliers = new ArrayList<>();
-		Supplier supplier = null;
+		List<Store> stores = new ArrayList<>();
+		Store store = null;
 
 		for (SearchHit hit : searchResponse.getHits()) {
 
 			ObjectMapper mapper = new ObjectMapper();
 			try {
-				supplier = mapper.readValue(hit.sourceAsString(),
-						Supplier.class);
+				store = mapper.readValue(hit.sourceAsString(), Store.class);
 			} catch (JsonParseException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -131,32 +129,32 @@ public class SupplierESRepository extends ESRepository {
 				e1.printStackTrace();
 			}
 
-			suppliers.add(supplier);
+			stores.add(store);
 		}
 
 		page.setTotalResults(Long
 				.valueOf(searchResponse.getHits().getTotalHits()).intValue());
-		page.setPagedData(suppliers);
+		page.setPagedData(stores);
 
 		return page;
 	}
 
-	private SearchRequestBuilder getSearchRequest(SupplierGetRequest criteria) {
+	private SearchRequestBuilder getSearchRequest(StoreGetRequest criteria) {
 
 		List<String> orderByList = new ArrayList<>();
 
 		if (criteria.getSortBy() != null && !criteria.getSortBy().isEmpty()) {
 
 			validateSortByOrder(criteria.getSortBy());
-			validateEntityFieldName(criteria.getSortBy(), SupplierEntity.class);
+			validateEntityFieldName(criteria.getSortBy(), StoreEntity.class);
 			orderByList = prepareOrderBy(criteria.getSortBy());
 
 		}
 
-		final BoolQueryBuilder boolQueryBuilder = boolQueryBuilderForSupplier(
+		final BoolQueryBuilder boolQueryBuilder = boolQueryBuilderForStore(
 				criteria);
 		SearchRequestBuilder searchRequestBuilder = esClient
-				.prepareSearch("suppliers");
+				.prepareSearch("stores");
 
 		if (!orderByList.isEmpty()) {
 			for (String orderBy : orderByList) {
@@ -173,79 +171,52 @@ public class SupplierESRepository extends ESRepository {
 
 	}
 
-	public BoolQueryBuilder boolQueryBuilderForSupplier(
-			SupplierGetRequest supplierGetRequest) {
+	public BoolQueryBuilder boolQueryBuilderForStore(
+			StoreGetRequest storeGetRequest) {
 
 		BoolQueryBuilder boolQueryBuilder = boolQuery();
 
-		if (null != supplierGetRequest.getId())
-			elasticSearchUtils.in(supplierGetRequest.getId(), "id",
+		if (null != storeGetRequest.getId())
+			elasticSearchUtils.in(storeGetRequest.getId(), "id",
 					boolQueryBuilder);
-		if (null != supplierGetRequest.getCode())
-			elasticSearchUtils.in(supplierGetRequest.getCode(), "code",
+		if (null != storeGetRequest.getCode())
+			elasticSearchUtils.in(storeGetRequest.getCode(), "code",
 					boolQueryBuilder);
-		if (null != supplierGetRequest.getActive())
-			elasticSearchUtils.add(supplierGetRequest.getActive(), "active",
+		if (null != storeGetRequest.getActive())
+			elasticSearchUtils.add(storeGetRequest.getActive(), "active",
 					boolQueryBuilder);
-		if (null != supplierGetRequest.getName())
-			elasticSearchUtils.add(supplierGetRequest.getName(), "name",
+		if (null != storeGetRequest.getName())
+			elasticSearchUtils.add(storeGetRequest.getName(), "name",
 					boolQueryBuilder);
-		if (null != supplierGetRequest.getType())
-			elasticSearchUtils.add(supplierGetRequest.getType(), "type",
+		if (null != storeGetRequest.getDescription())
+			elasticSearchUtils.add(storeGetRequest.getDescription(),
+					"description", boolQueryBuilder);
+		if (null != storeGetRequest.getBillingAddress())
+			elasticSearchUtils.add(storeGetRequest.getBillingAddress(),
+					"billingAddress", boolQueryBuilder);
+		if (null != storeGetRequest.getDeliveryAddress())
+			elasticSearchUtils.add(storeGetRequest.getDeliveryAddress(),
+					"deliveryAddress", boolQueryBuilder);
+		if (null != storeGetRequest.getDepartment())
+			elasticSearchUtils.add(storeGetRequest.getDepartment(),
+					"department.code", boolQueryBuilder);
+		if (null != storeGetRequest.getContactNo1())
+			elasticSearchUtils.add(storeGetRequest.getContactNo1(),
+					"contactNo1", boolQueryBuilder);
+		if (null != storeGetRequest.getContactNo2())
+			elasticSearchUtils.add(storeGetRequest.getContactNo2(),
+					"contactNo2", boolQueryBuilder);
+		if (null != storeGetRequest.getEmail())
+			elasticSearchUtils.add(storeGetRequest.getEmail(), "email",
 					boolQueryBuilder);
-		if (null != supplierGetRequest.getStatus())
-			elasticSearchUtils.add(supplierGetRequest.getStatus(), "status",
-					boolQueryBuilder);
-		if (null != supplierGetRequest.getInActiveDate())
-			elasticSearchUtils.add(supplierGetRequest.getInActiveDate(),
-					"inActiveDate", boolQueryBuilder);
-		if (null != supplierGetRequest.getContactNo())
-			elasticSearchUtils.add(supplierGetRequest.getContactNo(),
-					"contactNo", boolQueryBuilder);
-		if (null != supplierGetRequest.getFaxNo())
-			elasticSearchUtils.add(supplierGetRequest.getFaxNo(), "faxNo",
-					boolQueryBuilder);
-		if (null != supplierGetRequest.getWebsite())
-			elasticSearchUtils.add(supplierGetRequest.getWebsite(), "website",
-					boolQueryBuilder);
-		if (null != supplierGetRequest.getEmail())
-			elasticSearchUtils.add(supplierGetRequest.getEmail(), "email",
-					boolQueryBuilder);
-		if (null != supplierGetRequest.getPanNo())
-			elasticSearchUtils.add(supplierGetRequest.getPanNo(), "panNo",
-					boolQueryBuilder);
-		if (null != supplierGetRequest.getTinNo())
-			elasticSearchUtils.add(supplierGetRequest.getTinNo(), "tinNo",
-					boolQueryBuilder);
-		if (null != supplierGetRequest.getCstNo())
-			elasticSearchUtils.add(supplierGetRequest.getCstNo(), "cstNo",
-					boolQueryBuilder);
-		if (null != supplierGetRequest.getVatNo())
-			elasticSearchUtils.add(supplierGetRequest.getVatNo(), "vatNo",
-					boolQueryBuilder);
-		if (null != supplierGetRequest.getBankCode())
-			elasticSearchUtils.add(supplierGetRequest.getBankCode(), "bankCode",
-					boolQueryBuilder);
-		if (null != supplierGetRequest.getBankBranch())
-			elasticSearchUtils.add(supplierGetRequest.getBankBranch(),
-					"bankBranch", boolQueryBuilder);
-		if (null != supplierGetRequest.getGstNo())
-			elasticSearchUtils.add(supplierGetRequest.getGstNo(), "gstNo",
-					boolQueryBuilder);
-		if (null != supplierGetRequest.getContactPerson())
-			elasticSearchUtils.add(supplierGetRequest.getContactPerson(),
-					"contactPerson", boolQueryBuilder);
-		if (null != supplierGetRequest.getContactPersonNo())
-			elasticSearchUtils.add(supplierGetRequest.getContactPersonNo(),
-					"contactPersonNo", boolQueryBuilder);
-		if (null != supplierGetRequest.getBankAccNo())
-			elasticSearchUtils.add(supplierGetRequest.getBankAccNo(), "acctNo",
-					boolQueryBuilder);
-		if (null != supplierGetRequest.getBankIfsc())
-			elasticSearchUtils.add(supplierGetRequest.getBankIfsc(), "ifsc",
-					boolQueryBuilder);
-		if (!isEmpty(supplierGetRequest.getTenantId()))
-			elasticSearchUtils.add(supplierGetRequest.getTenantId(),
+		if (null != storeGetRequest.getStoreInCharge())
+			elasticSearchUtils.add(storeGetRequest.getStoreInCharge(),
+					"storeInCharge.code", boolQueryBuilder);
+		if (null != storeGetRequest.getIsCentralStore())
+			elasticSearchUtils.add(storeGetRequest.getIsCentralStore(),
+					"isCentralStore", boolQueryBuilder);
+		if (!isEmpty(storeGetRequest.getTenantId()))
+			elasticSearchUtils.add(storeGetRequest.getTenantId(),
 					"auditDetails.tenantId", boolQueryBuilder);
 
 		return boolQueryBuilder;

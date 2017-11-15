@@ -41,7 +41,18 @@ package org.egov.inv.domain.service;
 
 import java.util.List;
 
-import org.egov.inv.domain.model.SupplierGetRequest;
+import org.egov.common.Constants;
+import org.egov.common.DomainService;
+import org.egov.common.Pagination;
+import org.egov.common.exception.CustomBindException;
+import org.egov.common.exception.ErrorCode;
+import org.egov.common.exception.InvalidDataException;
+import org.egov.inv.model.Indent;
+import org.egov.inv.model.IndentResponse;
+import org.egov.inv.model.Supplier;
+import org.egov.inv.model.SupplierGetRequest;
+import org.egov.inv.model.SupplierRequest;
+import org.egov.inv.model.SupplierResponse;
 import org.egov.inv.persistence.entity.SupplierEntity;
 import org.egov.inv.persistence.repository.SupplierESRepository;
 import org.egov.inv.persistence.repository.SupplierJdbcRepository;
@@ -51,15 +62,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
-import io.swagger.model.Pagination;
-import io.swagger.model.Supplier;
-import io.swagger.model.SupplierRequest;
+import org.springframework.validation.FieldError;
+
 
 @Service
-public class SupplierService {
-
-	@Autowired
-	private InventoryUtilityService inventoryUtilityService;
+public class SupplierService extends DomainService {
 
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
@@ -75,56 +82,101 @@ public class SupplierService {
 
 	@Value("${inv.supplier.update.topic}")
 	private String updateTopic;
+	
+	@Value("${inv.supplier.save.key}")
+	private String createKey;
+	
+	@Value("${inv.supplier.update.key}")
+	private String updateKey;
 
 	@Value("${es.enabled}")
 	private Boolean isESEnabled;
 
-	public List<Supplier> create(SupplierRequest supplierRequest,
-			String tenantId, BindingResult errors) {
-
-		for (Supplier supplier : supplierRequest.getSuppliers()) {
-			supplier.setAuditDetails(inventoryUtilityService.mapAuditDetails(
-					supplierRequest.getRequestInfo(), tenantId));
-			if (!supplierJdbcRepository.uniqueCheck("code",
-					new SupplierEntity().toEntity(supplier))) {
-				throw new CustomException("inv.004",
-						"supplier code and tenantId combination should be unique");
-			}
-			supplier.setId(supplierJdbcRepository.getSequence(supplier));
+	public SupplierResponse create(SupplierRequest supplierRequest) {
+		try{
+         validate(supplierRequest.getSuppliers(),Constants.ACTION_CREATE);
+         List<String> sequenceNos = supplierJdbcRepository.getSequence(Supplier.class.getSimpleName(),supplierRequest.getSuppliers().size());
+ 	    int i=0;
+         for (Supplier supplier : supplierRequest.getSuppliers()) {
+        	 supplier.setId(sequenceNos.get(i));
+        	 i++;
+			supplier.setAuditDetails(mapAuditDetails(
+					supplierRequest.getRequestInfo()));
 		}
-		return push(supplierRequest, createTopic);
+         kafkaTemplate.send(createTopic, createKey, supplierRequest);
+         SupplierResponse response = new SupplierResponse();
+			response.setSuppliers(supplierRequest.getSuppliers());
+			response.setResponseInfo(getResponseInfo(supplierRequest.getRequestInfo()));
+			return response;
+		}
+		catch (CustomBindException e) {
+			throw e;
+		}
 	}
-
-	public List<Supplier> push(SupplierRequest supplierRequest, String topic) {
-		kafkaTemplate.send(topic, supplierRequest);
-		return supplierRequest.getSuppliers();
-	}
-
-	public List<Supplier> update(SupplierRequest supplierRequest,
-			String tenantId, BindingResult errors) {
-
-		for (Supplier supplier : supplierRequest.getSuppliers()) {
-			if (supplier.getId() == null) {
-				throw new CustomException("inv.005",
-						"Id is mandatory during updation");
+	
+	public SupplierResponse update(SupplierRequest supplierRequest) {
+		
+		try{
+	         validate(supplierRequest.getSuppliers(),Constants.ACTION_UPDATE);
+	 
+	         for (Supplier supplier : supplierRequest.getSuppliers()) {
+				supplier.setAuditDetails(mapAuditDetailsForUpdate(supplierRequest.getRequestInfo()));
 			}
-			supplier.setAuditDetails(
-					inventoryUtilityService.mapAuditDetailsForUpdate(
-							supplierRequest.getRequestInfo(), tenantId));
-			if (!supplierJdbcRepository.uniqueCheck("code",
-					new SupplierEntity().toEntity(supplier))) {
-				throw new CustomException("inv.004",
-						"supplier code and tenantId combination should be unique");
+	         kafkaTemplate.send(updateTopic, updateKey, supplierRequest);
+	         SupplierResponse response = new SupplierResponse();
+				response.setSuppliers(supplierRequest.getSuppliers());
+				response.setResponseInfo(getResponseInfo(supplierRequest.getRequestInfo()));
+				return response;
+			}
+			catch (CustomBindException e) {
+				throw e;
+			}
+	}
+	
+	private void validate(List<Supplier> suppliers, String method) {
+		try {
+			switch (method) {
+
+			case Constants.ACTION_CREATE: 
+				if (suppliers == null) {
+					throw new InvalidDataException("suppliers", ErrorCode.NOT_NULL.getCode(), null);
+				}
+				 for (Supplier supplier : suppliers) {
+					 if (!supplierJdbcRepository.uniqueCheck("code",
+								new SupplierEntity().toEntity(supplier))) {
+							throw new CustomException("inv.004",
+									"supplier code and tenantId combination should be unique");
+						}
+			}
+				break;
+			case Constants.ACTION_UPDATE:
+                if (suppliers == null) {
+                    throw new InvalidDataException("suppliers", ErrorCode.NOT_NULL.getCode(), null);
+                }
+                for (Supplier supplier : suppliers) {
+                    if (supplier.getId() == null) {
+                        throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), supplier.getId());
+                    }
+                    if (!supplierJdbcRepository.uniqueCheck("code",
+							new SupplierEntity().toEntity(supplier))) {
+						throw new CustomException("inv.004",
+								"supplier code and tenantId combination should be unique");
+					}
+
 			}
 		}
+		}catch (IllegalArgumentException e) {
 
-		return push(supplierRequest, updateTopic);
+		}
 	}
 
-	public Pagination<Supplier> search(SupplierGetRequest supplierGetRequest) {
-		return isESEnabled ? supplierESRepository.search(supplierGetRequest)
-				: supplierJdbcRepository.search(supplierGetRequest);
 
+	public SupplierResponse search(SupplierGetRequest supplierGetRequest) {
+		SupplierResponse supplierResponse = new SupplierResponse();
+		//isESEnabled ? supplierESRepository.search(supplierGetRequest):
+		Pagination<Supplier> search = supplierJdbcRepository.search(supplierGetRequest);
+		 supplierResponse.setSuppliers(search.getPagedData());
+		 return supplierResponse;
 	}
 
 }

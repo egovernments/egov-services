@@ -1,9 +1,8 @@
 package org.egov.inv.persistence.repository;
 
-import org.egov.common.JdbcRepository;
-import org.egov.common.Pagination;
-import org.egov.inv.model.MaterialStoreMapping;
-import org.egov.inv.model.MaterialStoreMappingSearch;
+import io.swagger.model.MaterialStoreMapping;
+import io.swagger.model.MaterialStoreMappingSearchRequest;
+import io.swagger.model.Pagination;
 import org.egov.inv.persistence.entity.MaterialStoreMappingEntity;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -28,59 +27,59 @@ public class MaterialStoreMappingJdbcRepository extends JdbcRepository {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public Pagination<MaterialStoreMapping> search(MaterialStoreMappingSearch materialStoreMappingSearch) {
+    public Pagination<MaterialStoreMapping> search(MaterialStoreMappingSearchRequest materialStoreMappingSearchRequest) {
         String searchQuery = "select * from materialstoremapping :condition :orderby";
         StringBuffer params = new StringBuffer();
         Map<String, Object> paramValues = new HashMap<>();
-        if (materialStoreMappingSearch.getSortBy() != null && !materialStoreMappingSearch.getSortBy().isEmpty()) {
-            validateSortByOrder(materialStoreMappingSearch.getSortBy());
-            validateEntityFieldName(materialStoreMappingSearch.getSortBy(), MaterialStoreMappingSearch.class);
+        if (materialStoreMappingSearchRequest.getSortBy() != null && !materialStoreMappingSearchRequest.getSortBy().isEmpty()) {
+            validateSortByOrder(materialStoreMappingSearchRequest.getSortBy());
+            validateEntityFieldName(materialStoreMappingSearchRequest.getSortBy(), MaterialStoreMappingSearchRequest.class);
         }
         String orderBy = "order by store";
-        if (materialStoreMappingSearch.getSortBy() != null && !materialStoreMappingSearch.getSortBy().isEmpty()) {
-            orderBy = "order by " + materialStoreMappingSearch.getSortBy();
+        if (materialStoreMappingSearchRequest.getSortBy() != null && !materialStoreMappingSearchRequest.getSortBy().isEmpty()) {
+            orderBy = "order by " + materialStoreMappingSearchRequest.getSortBy();
         }
-        if (materialStoreMappingSearch.getIds() != null) {
+        if (materialStoreMappingSearchRequest.getIds() != null) {
             if (params.length() > 0)
                 params.append(" and ");
             params.append("id in (:ids)");
-            paramValues.put("ids", materialStoreMappingSearch.getIds());
+            paramValues.put("ids", materialStoreMappingSearchRequest.getIds());
         }
-        if (materialStoreMappingSearch.getStore() != null) {
+        if (materialStoreMappingSearchRequest.getStore() != null) {
             if (params.length() > 0)
                 params.append(" and ");
             params.append("store = :store");
-            paramValues.put("store", materialStoreMappingSearch.getStore());
+            paramValues.put("store", materialStoreMappingSearchRequest.getStore());
         }
-        if (materialStoreMappingSearch.getMaterial() != null) {
+        if (materialStoreMappingSearchRequest.getMaterial() != null) {
             if (params.length() > 0)
                 params.append(" and ");
             params.append("material = :material");
-            paramValues.put("material", materialStoreMappingSearch.getMaterial());
+            paramValues.put("material", materialStoreMappingSearchRequest.getMaterial());
         }
-        if (materialStoreMappingSearch.getActive() != null) {
+        if (materialStoreMappingSearchRequest.getActive() != null) {
             if (params.length() > 0)
                 params.append(" and ");
             params.append("active = :active");
-            paramValues.put("active", materialStoreMappingSearch.getActive());
+            paramValues.put("active", materialStoreMappingSearchRequest.getActive());
         }
-        if (materialStoreMappingSearch.getGlCode() != null) {
+        if (materialStoreMappingSearchRequest.getGlCode() != null) {
             if (params.length() > 0)
                 params.append(" and ");
             params.append("glcode = :glCode");
-            paramValues.put("glCode", materialStoreMappingSearch.getGlCode());
+            paramValues.put("glCode", materialStoreMappingSearchRequest.getGlCode());
         }
-        if (materialStoreMappingSearch.getTenantId() != null) {
+        if (materialStoreMappingSearchRequest.getTenantId() != null) {
             if (params.length() > 0)
                 params.append(" and ");
             params.append("tenantId = :tenantId");
-            paramValues.put("tenantId", materialStoreMappingSearch.getTenantId());
+            paramValues.put("tenantId", materialStoreMappingSearchRequest.getTenantId());
         }
         Pagination<MaterialStoreMapping> page = new Pagination<>();
-        if (materialStoreMappingSearch.getPageSize() != null)
-            page.setPageSize(materialStoreMappingSearch.getPageSize());
-        if (materialStoreMappingSearch.getOffset() != null)
-            page.setOffset(materialStoreMappingSearch.getOffset());
+        if (materialStoreMappingSearchRequest.getPageSize() != null)
+            page.setPageSize(materialStoreMappingSearchRequest.getPageSize());
+        if (materialStoreMappingSearchRequest.getOffset() != null)
+            page.setOffset(materialStoreMappingSearchRequest.getOffset());
         if (params.length() > 0)
             searchQuery = searchQuery.replace(":condition", " where " + params.toString());
         else

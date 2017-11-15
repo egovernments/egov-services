@@ -163,7 +163,7 @@ public class EstimateValidator {
         validateSubTypeOfWork(abstractEstimate.getSubTypeOfWork(), abstractEstimate.getTenantId(), requestInfo,
                 messages);
         validateDepartment(abstractEstimate.getDepartment(), abstractEstimate.getTenantId(), requestInfo, messages);
-        validateWard(abstractEstimate.getWard(), abstractEstimate.getTenantId(), requestInfo, messages);
+//        validateWard(abstractEstimate.getWard(), abstractEstimate.getTenantId(), requestInfo, messages);
         validateLocality(abstractEstimate.getLocality(), abstractEstimate.getTenantId(), requestInfo, messages);
         validateNatureOfWork(abstractEstimate.getNatureOfWork(), abstractEstimate.getTenantId(), requestInfo, messages);
         validateReferenceType(abstractEstimate.getReferenceType(), abstractEstimate.getTenantId(), requestInfo, messages);

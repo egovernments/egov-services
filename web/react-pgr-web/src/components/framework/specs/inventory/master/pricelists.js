@@ -318,7 +318,10 @@ var dat = {
                   "label": "inventory.to.date"
                 },
                 {
-                  "label": "inventory.quantity"
+                  "label": "inventory.quantity" 
+                },
+                {
+                  "label":"inventory.active"
                 }
               ],
               "values": [
@@ -397,6 +400,17 @@ var dat = {
                   "isRequired": false,
                   "isDisabled": false,
                   "defaultValue": "",
+                  "patternErrorMsg": ""
+                },
+                {
+                  "name": "active",
+                  "jsonPath": "priceLists[0].priceListDetails[0].active",
+                  "label": "",
+                  "pattern": "",
+                  "type": "checkbox",
+                  "isRequired": true,
+                  "isDisabled": false,
+                  "defaultValue": true,
                   "patternErrorMsg": ""
                 }
               ]

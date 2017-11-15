@@ -79,16 +79,16 @@ public class AdvocateRepository {
 	public List<PersonDetails> getPersonalDetailsUsingCode(String tenantId, String code) {
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
 		String searchQuery = AdvocateBuilders.getAgencyFieldsSearchQuery(tenantId, code,
-				ConstantUtility.PERSONAL_DETAILS_TABLE_NAME, preparedStatementValues);
+				ConstantUtility.PERSONAL_DETAILS_TABLE_NAME, Boolean.FALSE, preparedStatementValues);
 		List<PersonDetails> personDetails = jdbcTemplate.query(searchQuery, preparedStatementValues.toArray(),
 				personDetailRowMapper);
 		return personDetails;
 	}
 
-	public List<Advocate> getAdvocatesUsingCode(String tenantId, String code) {
+	public List<Advocate> getAdvocatesUsingCode(String tenantId, String code, Boolean isIndividual) {
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
 		String searchQuery = AdvocateBuilders.getAgencyFieldsSearchQuery(tenantId, code,
-				ConstantUtility.ADVOCATE_TABLE_NAME, preparedStatementValues);
+				ConstantUtility.ADVOCATE_TABLE_NAME, isIndividual, preparedStatementValues);
 		List<Advocate> advocates = jdbcTemplate.query(searchQuery, preparedStatementValues.toArray(),
 				advocateRowMapper);
 		return advocates;
@@ -121,7 +121,7 @@ public class AdvocateRepository {
 			agencies = jdbcTemplate.query(agencySearchQuery, preparedStatementValues.toArray(), agencyRowMapper);
 			getPersonDetails(agencies);
 			getAdvocates(agencies, advocateName);
-			
+
 		} else {
 			final List<Object> advocateValues = new ArrayList<Object>();
 			String advocateSearchQuery = AdvocateBuilders.getAdvocateSearchQuery(tenantId, isIndividual, advocateName,
@@ -156,7 +156,7 @@ public class AdvocateRepository {
 		for (Agency agency : agencies) {
 			final List<Object> preparedStatementValues = new ArrayList<Object>();
 			String searchQuery = AdvocateBuilders.getAgencyFieldsSearchQuery(agency.getTenantId(), agency.getCode(),
-					ConstantUtility.PERSONAL_DETAILS_TABLE_NAME, preparedStatementValues);
+					ConstantUtility.PERSONAL_DETAILS_TABLE_NAME, Boolean.FALSE, preparedStatementValues);
 			personDetails = jdbcTemplate.query(searchQuery, preparedStatementValues.toArray(), personDetailRowMapper);
 			agency.setPersonDetails(personDetails);
 		}

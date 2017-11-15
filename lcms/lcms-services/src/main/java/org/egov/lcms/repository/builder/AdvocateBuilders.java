@@ -124,15 +124,20 @@ public class AdvocateBuilders {
 	public static final String SEARCH_CASE_CODE_BY_ADVOCATE = "select casecode from egov_lcms_case_advocate where advocate->>'code'=?";
 
 	public static String getAgencyFieldsSearchQuery(String tenantId, String code, String tableName,
-			List<Object> preparedStatementValues) {
+			Boolean isIndividual, List<Object> preparedStatementValues) {
 		StringBuilder searchQuery = new StringBuilder();
 
 		searchQuery.append("SELECT * FROM " + tableName);
 		searchQuery.append(" WHERE tenantId =?");
 		preparedStatementValues.add(tenantId);
 
-		searchQuery.append(" AND agencycode =?");
-		preparedStatementValues.add(code);
+		if (isIndividual) {
+			searchQuery.append(" AND code =?");
+			preparedStatementValues.add(code);
+		}else{
+			searchQuery.append(" AND agencycode =?");
+			preparedStatementValues.add(code);
+		}
 
 		return searchQuery.toString();
 	}

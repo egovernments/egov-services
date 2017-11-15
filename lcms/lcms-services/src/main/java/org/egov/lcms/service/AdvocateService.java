@@ -276,8 +276,15 @@ public class AdvocateService {
 	private void validateAdvocates(Agency agency, AgencyRequest createAgencyRequest) throws Exception {
 
 		if (agency.getAdvocates() != null && agency.getAdvocates().size() > 0) {
-			List<Advocate> advocatesOnDb = advocateRepository.getAdvocatesUsingCode(agency.getTenantId(),
-					agency.getCode());
+			List<Advocate> advocatesOnDb = new ArrayList<Advocate>();
+			if(agency.getIsIndividual()){
+				advocatesOnDb = advocateRepository.getAdvocatesUsingCode(agency.getTenantId(),
+						agency.getAdvocates().get(0).getCode(), agency.getIsIndividual());		
+			}else{
+				advocatesOnDb = advocateRepository.getAdvocatesUsingCode(agency.getTenantId(),
+						agency.getCode(), agency.getIsIndividual());	
+			}
+		
 			List<String> advocateCodes = advocatesOnDb.stream().map(Advocate -> Advocate.getCode())
 					.collect(Collectors.toList());
 

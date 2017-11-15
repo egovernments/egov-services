@@ -55,11 +55,11 @@ var dat =  {
               url: "/update/legal/advmakepayment/"
             },
             {
-              label: "Update Advocate Payment Details",
+              label: "Update",
               url: "/update/legal/advpaymentdetails/"
             },
             {
-              label: "View Advocate Payment Details",
+              label: "View",
               url: "/view/legal/advpaymentdetails/"
             }
           ],

@@ -123,11 +123,11 @@ var dat = {
               url:"/update/legal/referenceevidence/"
             },
             {
-              label: "Update Case Details",
+              label: "Update",
               url:"/update/legal/casedetails/"
             },
             {
-              label: "View Case Details",
+              label: "View",
               url:"/view/legal/casedetails/"
             }
           ],

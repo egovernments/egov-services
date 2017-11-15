@@ -13,7 +13,7 @@ var dat = {
            {
             name: "fromDate",
             jsonPath: "fromDate",
-            label: "legal.create.fromDate",
+            label: "legal.create.caseregistration.fromDate",
             type: "datePicker",
             isRequired: false,
             isDisabled: false,
@@ -22,7 +22,7 @@ var dat = {
           {
             name: "toDate",
             jsonPath: "toDate",
-            label: "legal.create.toDate",
+            label:  "legal.create.caseregistration.toDate",
             type: "datePicker",
             isRequired: false,
             isDisabled: false,

@@ -1031,7 +1031,6 @@ definitions:
         maxLength: 100
       pmcName:
         type: string
-        pattern: '[a-zA-Z0-9\s\.,]+'
         description: Name of the PMC for PMC type Panel. The PMC(Project Management Consultant) data will fetch from Contractor master based on the boolean flag pmc=true. This field is not required if pmcType is 'New Appointment'.
         format: singleValueList
         maxLength: 100

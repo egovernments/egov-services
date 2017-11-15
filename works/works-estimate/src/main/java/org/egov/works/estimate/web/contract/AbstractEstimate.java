@@ -1136,7 +1136,6 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "Name of the PMC for PMC type Panel. The PMC(Project Management Consultant) data will fetch from Contractor master based on the boolean flag pmc=true. This field is not required if pmcType is 'New Appointment'.")
 
- @Pattern(regexp="[a-zA-Z0-9\\s\\.,]+") @Size(max=100)
   public String getPmcName() {
     return pmcName;
   }

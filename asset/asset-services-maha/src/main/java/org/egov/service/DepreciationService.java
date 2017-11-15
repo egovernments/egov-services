@@ -222,11 +222,7 @@ public class DepreciationService {
 		// returning the calculated amt to be depreciated using the currentvalue from
 		// dep inputs and depreciation rate for given period
 
-		if (depInputs.getDepreciationSum() != null)
-			return BigDecimal.valueOf((depInputs.getCurrentValue().add(depInputs.getDepreciationSum())).doubleValue()
-					* (depRateForGivenPeriod / 100));
-		else
-			return BigDecimal.valueOf((depInputs.getCurrentValue()).doubleValue() * (depRateForGivenPeriod / 100));
+		return BigDecimal.valueOf((depInputs.getCurrentValue()).doubleValue() * (depRateForGivenPeriod / 100));
 	}
 
 	private void getFinancialYearData(DepreciationRequest depreciationRequest) {

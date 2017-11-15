@@ -278,7 +278,7 @@ public class Store {
     @ApiModelProperty(required = true, value = "billing address of the Store ")
     @NotNull
 
-    @Pattern(regexp = "^[#.-,a-zA-Z0-9 ]*$")
+    @Pattern(regexp = "^[#.0-9a-zA-Z,-]*$")
     @Size(max = 1000)
     public String getBillingAddress() {
         return billingAddress;
@@ -301,7 +301,7 @@ public class Store {
     @ApiModelProperty(required = true, value = "delivery address of the Store ")
     @NotNull
 
-    @Pattern(regexp = "^[#.-,a-zA-Z0-9 ]*$")
+    @Pattern(regexp = "^[#.0-9a-zA-Z,-]*$")
     @Size(max = 1000)
     public String getDeliveryAddress() {
         return deliveryAddress;

@@ -2226,7 +2226,7 @@ var localization_EN_Data = {
 "reports.asset.currdepsum":"ACCUMULATED DEPRECIATION-Depreciation during the year",
 "reports.asset.totaldepsum":"ACCUMULATED DEPRECIATION-Depreciation Total",
 "reports.asset.endcurrentamount":"Net Block as at 31/03/2018",
-"reports.asset.previousfynetblock":"Net Block as at 31/03/2018",
+"reports.asset.previousfynetblock":"Net Block as at 31/03/2017",
 
 
 

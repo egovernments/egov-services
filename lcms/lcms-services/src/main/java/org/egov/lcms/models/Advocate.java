@@ -75,5 +75,7 @@ public class Advocate extends PersonDetails {
 
 	@JsonProperty("reasonOfTermination")
 	private String reasonOfTermination;
-
+	
+	@JsonProperty("status")
+	private String status;
 }

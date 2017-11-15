@@ -96,7 +96,7 @@ public class SuppliersApiController implements SuppliersApi {
 	}
 
 	public ResponseEntity<SupplierResponse> suppliersSearchPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
-	        @ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @Valid @RequestBody RequestInfo requestInfo,
+	        @ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @Valid @RequestBody org.egov.common.contract.request.RequestInfo requestInfo,
 	         @Size(max=50)@ApiParam(value = "comma seperated list of Ids") @RequestParam(value = "ids", required = false) List<String> ids,
 	        @ApiParam(value = "list of codes  of the Supplier ") @RequestParam(value = "codes", required = false) List<String> codes,
 	        @ApiParam(value = "name of the Supplier ") @RequestParam(value = "name", required = false) String name,

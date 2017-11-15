@@ -82,6 +82,9 @@ public class Agency {
 
 	@JsonProperty("reasonOfTermination")
 	private String reasonOfTermination;
+	
+	@JsonProperty("status")
+	private String status;
 
 	@NotNull
 	@Size(min = 4, max = 128)

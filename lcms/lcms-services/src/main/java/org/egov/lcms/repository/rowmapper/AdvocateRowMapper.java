@@ -52,6 +52,8 @@ public class AdvocateRowMapper implements RowMapper<Advocate>{
 		advocate.setTerminationDate(rs.getLong("terminationDate"));
 		advocate.setReasonOfTermination(rs.getString("reasonOfTermination"));
 		advocate.setTenantId(rs.getString("tenantId"));
+		advocate.setStatus(getString(rs.getString("status")));
+		
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(rs.getString("createdBy"));
 		auditDetails.setLastModifiedBy(rs.getString("lastModifiedBy"));
@@ -61,5 +63,8 @@ public class AdvocateRowMapper implements RowMapper<Advocate>{
 		
 		return advocate;
 	}
-
+	
+	private String getString(Object object) {
+		return object == null ? null : object.toString();
+	}
 }

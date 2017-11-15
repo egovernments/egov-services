@@ -48,6 +48,7 @@ public class AgencyRowMapper implements RowMapper<Agency> {
 		agency.setTerminationDate(getLong(rs.getLong("terminationdate")));
 		agency.setReasonOfTermination(getString(rs.getString("reasonoftermination")));
 		agency.setTenantId(getString(rs.getString("tenantid")));
+		agency.setStatus(getString(rs.getString("status")));
 
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(rs.getString("createdby"));

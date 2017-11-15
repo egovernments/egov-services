@@ -11,6 +11,7 @@ const addAutoFills = uiUtilities.addAutoFills;
 const addRadios = uiUtilities.addRadios;
 const addShowHideFields = uiUtilities.addShowHideFields;
 const addGroups = uiUtilities.addGroups;
+const addTables = uiUtilities.addTables;
 
 let localeFields = {};
 let errors = {};
@@ -93,6 +94,13 @@ let updateTemplate = function(module, numCols, path, config, basePath, uiInfoDef
         fieldsData = addShowHideFields(specifications, fields, uiInfoDef);
         specifications = fieldsData.specifications;
         errors = Object.assign({}, errors, fieldsData.errors);
+    }
+
+    if(uiInfoDef.tables && Object.keys(uiInfoDef.tables).length) {
+        fieldsData = addTables(specifications, fields, uiInfoDef, module);
+        specifications = fieldsData.specifications;
+        errors = Object.assign({}, errors, fieldsData.errors);   
+        localeFields = Object.assign({}, localeFields, fieldsData.localeFields);
     }
 
     setLabels(localeFields, "./output/" + module);

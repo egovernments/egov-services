@@ -638,8 +638,8 @@ class Login extends Component {
    searchGrievanceSRN = () => {
       let {setRoute, setHome} = this.props;
       if(this.state.searchGrievanceSRN && this.state.searchGrievanceSRN.trim()){
+          setRoute("/pgr/viewGrievance/"+ encodeURIComponent(this.state.searchGrievanceSRN.trim()));
           setHome(true);
-          setRoute("/pgr/viewGrievance/"+ this.state.searchGrievanceSRN.trim());
       }
    }
 

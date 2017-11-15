@@ -36,7 +36,7 @@ public abstract class JdbcRepository {
 		jdbcTemplate.execute(delQuery);
 	}
 
-	public Pagination<?> getPagination(String searchQuery, Pagination<?> page, Map<String, Object> paramValues) {
+	protected Pagination<?> getPagination(String searchQuery, Pagination<?> page, Map<String, Object> paramValues) {
 
 		String countQuery = "select count(*) from (" + searchQuery + ") as x";
 		Long count = namedParameterJdbcTemplate.queryForObject(countQuery.toString(), paramValues, Long.class);
@@ -47,7 +47,7 @@ public abstract class JdbcRepository {
 		return page;
 	}
 
-	public void validateSortByOrder(final String sortBy) {
+	protected void validateSortByOrder(final String sortBy) {
 
 		List<String> sortByList = new ArrayList<String>();
 		if (sortBy.contains(",")) {
@@ -66,7 +66,7 @@ public abstract class JdbcRepository {
 
 	}
 
-	public void validateEntityFieldName(String sortBy, final Class<?> object) {
+	protected void validateEntityFieldName(String sortBy, final Class<?> object) {
 
 		List<String> sortByList = new ArrayList<String>();
 		if (sortBy.contains(",")) {
@@ -92,7 +92,7 @@ public abstract class JdbcRepository {
 
 	}
 
-	public Boolean uniqueCheck(String tableName, String tenantId, String fieldName, String fieldValue,
+	protected Boolean uniqueCheck(String tableName, String tenantId, String fieldName, String fieldValue,
 			String uniqueFieldName, String uniqueFieldValue) {
 
 		LOG.info("Unique Checking for combination of fields tenantId & " + fieldValue);
@@ -118,7 +118,7 @@ public abstract class JdbcRepository {
 
 	}
 
-	public void addAnd(StringBuffer params) {
+	protected void addAnd(StringBuffer params) {
 		if (params.length() > 0) {
 			params.append(" and ");
 		}

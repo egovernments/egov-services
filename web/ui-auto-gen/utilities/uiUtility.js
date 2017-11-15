@@ -9,11 +9,10 @@ let getFieldsFromInnerObject = function(fields, properties, module, jPath, isArr
 
     for (let key in properties) {
         if (["id", "tenantId", "auditDetails", "assigner"].indexOf(key) > -1) continue;
-        debugger;
         if(properties[key].properties) {
             getFieldsFromInnerObject(fields, properties[key].properties, module, (isArray ? (jPath + "[0]") : jPath) + "." + key, false, (properties[key].properties.required || []), localeFields);
-        } else if(properties[key].item && properties[key].item.properties) {
-            getFieldsFromInnerObject(fields, properties[key].item.properties, module, (isArray ? (jPath + "[0]") : jPath) + "." + key, true, (properties[key].properties.required || []), localeFields);
+        } else if(properties[key].items && properties[key].items.properties) {
+            getFieldsFromInnerObject(fields, properties[key].items.properties, module, (isArray ? (jPath + "[0]") : jPath) + "." + key, true, (properties[key].items.properties.required || []), localeFields);
         } else {
             fields[(isArray ? (jPath + "[0]") : jPath) + "." + key] = {
                 "name": key,
@@ -247,10 +246,56 @@ let addShowHideFields = function(specifications, fields, uiInfoDef) {
     }
 }
 
+let addTables = function(specifications, fields, uiInfoDef, module) {
+    let errors = {};
+    let localeFields = {};
+    let inGroups = {};
+    
+    for(let key in uiInfoDef.tables) {
+        let _f = {
+            "type": "tableList",
+            "jsonPath": key,
+            "tableList": {
+                "header": [],
+                "values": []
+            }
+        };
+        for(let i=0; i<uiInfoDef.tables[key].columns.length; i++) {
+            _f.tableList.header.push({
+                "label": module + ".create." + uiInfoDef.tables[key].columns[i]
+            });
+            localeFields[module + ".create." + uiInfoDef.tables[key].columns[i]] = getTitleCase(uiInfoDef.tables[key].columns[i]);
+        }
+        for(let i=0; i<uiInfoDef.tables[key].values.length; i++) {
+            if(fields[uiInfoDef.tables[key].values[i]]) {
+                _f.tableList.values.push(fields[uiInfoDef.tables[key].values[i]]);
+            } else {
+                errors[uiInfoDef.tables[key].values[i]] = "Field exists in x-ui-info tables section but not present in API specifications. REFERENCE PATH: " + uiInfoDef.referencePath;
+            }
+        }
+        
+        if(!inGroups[uiInfoDef.tables[key].group]) inGroups[uiInfoDef.tables[key].group] = [];
+        inGroups[uiInfoDef.tables[key].group].push(_f);
+    }
+    
+    for(let i=0; i<specifications.groups.length; i++) {
+        if(inGroups[specifications.groups[i].name]) {
+            specifications.groups[i].fields = specifications.groups[i].fields.concat(inGroups[specifications.groups[i].name]);
+        }
+    }
+
+    return {
+        errors,
+        localeFields,
+        specifications
+    }
+}
+
 exports.getFieldsFromInnerObject = getFieldsFromInnerObject;
 exports.addUrls = addUrls;
 exports.addDependents = addDependents;
 exports.addAutoFills = addAutoFills;
 exports.addRadios = addRadios;
 exports.addShowHideFields = addShowHideFields;
+exports.addTables = addTables;
 exports.addGroups = addGroups;
